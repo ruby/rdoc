@@ -344,7 +344,11 @@ Options may also be set in the 'RI' environment variable.
   end
 
   def read_yaml(path)
-    YAML.load File.read(path).gsub(/ \!ruby\/(object|struct):(RDoc::RI|RI|SM).*/, '')
+    data = File.read path
+    data = data.gsub(/ \!ruby\/(object|struct):(RDoc::RI|RI).*/, '')
+    data = data.gsub(/ \!ruby\/(object|struct):SM::(\S+)/,
+                     ' !ruby/\1:RDoc::Markup::\2')
+    YAML.load data
   end
 
   def get_info_for(arg)
