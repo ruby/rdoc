@@ -1,5 +1,7 @@
 require 'hoe'
-require './lib/rdoc'
+
+$:.unshift 'lib'
+require 'rdoc'
 
 Hoe.new "rdoc", RDoc::VERSION do |rdoc|
   rdoc.developer 'Eric Hodel', 'drbrain@segment7.net'
