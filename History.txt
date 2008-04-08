@@ -1,2 +1,7 @@
 === 2.0.0 / 2008-??-??
 
+* N Major Enhancements:
+  * Renamespaced everything RDoc under the RDoc module.
+  * New `ri` implementation.
+* N Minor Enhancements:
+  * Switched to an ERb-based TemplatePage, see RDoc::
