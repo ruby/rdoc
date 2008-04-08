@@ -315,7 +315,7 @@ class RDoc::Markup
 
       # skip leading invisible text
       i = 0
-      i += 1 while i < str_len and @str[i] == "\0"
+      i += 1 while i < str_len and @str[i].chr == "\0"
       start_pos = i
 
       # then scan the string, chunking it on attribute changes
@@ -341,7 +341,7 @@ class RDoc::Markup
         # move on, skipping any invisible characters
         begin
           i += 1
-        end while i < str_len and @str[i] == "\0"
+        end while i < str_len and @str[i].chr == "\0"
       end
 
       # tidy up trailing text

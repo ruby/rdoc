@@ -1,3 +1,5 @@
+$DEBUG_RDOC = nil
+
 ##
 # :include: rdoc/README
 

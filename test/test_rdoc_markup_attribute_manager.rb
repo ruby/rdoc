@@ -79,7 +79,6 @@ class TestRDocMarkupAttributeManager < Test::Unit::TestCase
 
     assert_equal(["cat ", @em_on, "_", @em_off, " dog"],
                   @am.flow("cat ___ dog"))
-
   end
 
   def test_bold
