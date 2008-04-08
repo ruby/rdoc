@@ -481,13 +481,13 @@ class RDoc::RI::HtmlFormatter < RDoc::RI::AttributeFormatter
     when :LABELED then
       list_type = "dl"
       prefixer = proc do |li|
-          "<dt><b>" + escape(li.label) + "</b><dd>"
+        "<dt><b>" + escape(li.label) + "</b><dd>"
       end
 
     when :NOTE then
       list_type = "table"
       prefixer = proc do |li|
-          %{<tr valign="top"><td>#{li.label.gsub(/ /, '&nbsp;')}</td><td>}
+        %{<tr valign="top"><td>#{li.label.gsub(/ /, '&nbsp;')}</td><td>}
       end
     else
       fail "unknown list type"
