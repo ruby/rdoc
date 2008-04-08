@@ -418,7 +418,7 @@ Options may also be set in the 'RI' environment variable.
 
 end
 
-class Hash
+class Hash # HACK don't add stuff to Hash.
   def method_missing method, *args
     self[method.to_s]
   end
@@ -428,7 +428,12 @@ class Hash
       if self[k] then
         case v
         when Array then
-          self[k] += v
+          # HACK dunno
+          if String === self[k] and self[k].empty? then
+            self[k] = v
+          else
+            self[k] += v
+          end
         when Hash then
           self[k].merge! v
         else
