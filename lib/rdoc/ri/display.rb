@@ -32,9 +32,9 @@ class RDoc::RI::DefaultDisplay
 
   include RDoc::RI::Display
 
-  def initialize(formatter, width, use_stdout)
+  def initialize(formatter, width, use_stdout, output = $stdout)
     @use_stdout = use_stdout
-    @formatter = formatter.new $stdout, width, "     "
+    @formatter = formatter.new output, width, "     "
   end
 
   def display_method_info(method)
