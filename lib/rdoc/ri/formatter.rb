@@ -3,7 +3,7 @@ require 'rdoc/markup'
 
 class RDoc::RI::Formatter
 
-  attr_reader :indent
+  attr_writer :indent
   attr_accessor :output
 
   FORMATTERS = { }
@@ -20,6 +20,7 @@ class RDoc::RI::Formatter
     @output = output
     @width  = width
     @indent = indent
+    @original_indent = indent.dup
   end
 
   def draw_line(label=nil)
@@ -39,6 +40,18 @@ class RDoc::RI::Formatter
       @output.puts
 
       @output.puts label
+    end
+  end
+
+  def indent
+    return @indent unless block_given?
+
+    begin
+      indent = @indent.dup
+      @indent += @original_indent
+      yield
+    ensure
+      @indent = indent
     end
   end
 
