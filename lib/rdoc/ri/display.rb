@@ -2,9 +2,9 @@ require 'rdoc/ri'
 
 ##
 # This is a kind of 'flag' module. If you want to write your own 'ri' display
-# module (perhaps because you'r writing an IDE or somesuch beast), you simply
-# write a class which implements the various 'display' methods in
-# 'DefaultDisplay', and include the 'RiDisplay' module in that class.
+# module (perhaps because you're writing an IDE), you write a class which
+# implements the various 'display' methods in RDoc::RI::DefaultDisplay, and
+# include the RDoc::RI::Display module in that class.
 #
 # To access your class from the command line, you can do
 #
@@ -37,21 +37,9 @@ class RDoc::RI::DefaultDisplay
     @formatter = formatter.new output, width, "     "
   end
 
-  def display_method_info(method)
-    page do
-      @formatter.draw_line(method.full_name)
-      display_params(method)
-
-      @formatter.draw_line
-      display_flow(method.comment)
-
-      if method.aliases and not method.aliases.empty? then
-        @formatter.blankline
-        aka = "(also known as #{method.aliases.map { |a| a.name }.join(', ')})"
-        @formatter.wrap aka
-      end
-    end
-  end
+  ##
+  # Display information about +klass+.  Fetches additional information from
+  # +ri_reader+ as necessary.
 
   def display_class_info(klass, ri_reader)
     page do
@@ -149,7 +137,37 @@ class RDoc::RI::DefaultDisplay
   end
 
   ##
-  # Display a list of method names
+  # Display an Array of RDoc::Markup::Flow objects, +flow+.
+
+  def display_flow(flow)
+    if flow and not flow.empty? then
+      @formatter.display_flow flow
+    else
+      @formatter.wrap '[no description]'
+    end
+  end
+
+  ##
+  # Display information about +method+.
+
+  def display_method_info(method)
+    page do
+      @formatter.draw_line(method.full_name)
+      display_params(method)
+
+      @formatter.draw_line
+      display_flow(method.comment)
+
+      if method.aliases and not method.aliases.empty? then
+        @formatter.blankline
+        aka = "(also known as #{method.aliases.map { |a| a.name }.join(', ')})"
+        @formatter.wrap aka
+      end
+    end
+  end
+
+  ##
+  # Display the list of +methods+.
 
   def display_method_list(methods)
     page do
@@ -161,44 +179,8 @@ class RDoc::RI::DefaultDisplay
     end
   end
 
-  def list_known_classes(classes)
-    if classes.empty?
-      warn_no_database
-    else
-      page do
-        @formatter.draw_line "Known classes and modules"
-        @formatter.blankline
-
-        @formatter.wrap classes.sort.join(', ')
-      end
-    end
-  end
-
-  def page
-    if pager = setup_pager then
-      begin
-        orig_output = @formatter.output
-        @formatter.output = pager
-        yield
-      ensure
-        @formatter.output = orig_output
-        pager.close
-      end
-    else
-      yield
-    end
-  rescue Errno::EPIPE
-  end
-
-  def setup_pager
-    unless @use_stdout then
-      for pager in [ ENV['PAGER'], "less", "more", 'pager' ].compact.uniq
-        return IO.popen(pager, "w") rescue nil
-      end
-      @use_stdout = true
-      nil
-    end
-  end
+  ##
+  # Display the params for +method+.
 
   def display_params(method)
     params = method.params
@@ -222,13 +204,56 @@ class RDoc::RI::DefaultDisplay
     end
   end
 
-  def display_flow(flow)
-    if flow and not flow.empty? then
-      @formatter.display_flow flow
+  ##
+  # List the classes in +classes+.
+
+  def list_known_classes(classes)
+    if classes.empty?
+      warn_no_database
     else
-      @formatter.wrap '[no description]'
+      page do
+        @formatter.draw_line "Known classes and modules"
+        @formatter.blankline
+
+        @formatter.wrap classes.sort.join(', ')
+      end
     end
   end
+
+  ##
+  # Paginates output through a pager program.
+
+  def page
+    if pager = setup_pager then
+      begin
+        orig_output = @formatter.output
+        @formatter.output = pager
+        yield
+      ensure
+        @formatter.output = orig_output
+        pager.close
+      end
+    else
+      yield
+    end
+  rescue Errno::EPIPE
+  end
+
+  ##
+  # Sets up a pager program to pass output through.
+
+  def setup_pager
+    unless @use_stdout then
+      for pager in [ ENV['PAGER'], "less", "more", 'pager' ].compact.uniq
+        return IO.popen(pager, "w") rescue nil
+      end
+      @use_stdout = true
+      nil
+    end
+  end
+
+  ##
+  # Displays a message that describes how to build RI data.
 
   def warn_no_database
     output = @formatter.output
@@ -244,5 +269,6 @@ class RDoc::RI::DefaultDisplay
     output.puts "If you installed Ruby from a packaging system, then you may need to"
     output.puts "install an additional package, or ask the packager to enable ri generation."
   end
+
 end
 
