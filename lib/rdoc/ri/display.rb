@@ -90,43 +90,60 @@ class RDoc::RI::DefaultDisplay
       unless klass.constants.empty?
         @formatter.blankline
         @formatter.display_heading("Constants:", 2, "")
-        len = 0
-        klass.constants.each { |c| len = c.name.length if c.name.length > len }
-        len += 2
-        klass.constants.each do |c|
-          @formatter.wrap(c.value,
-                          @formatter.indent+((c.name+":").ljust(len)))
+
+        constants = klass.constants.sort_by { |constant| constant.name }
+
+        constants.each do |constant|
+          if constant.comment then
+            @formatter.wrap "#{constant.name}:"
+
+            @formatter.indent do
+              @formatter.display_flow constant.comment
+            end
+          else
+            @formatter.wrap constant.name
+          end
         end
       end
 
-      unless klass.class_methods.empty?
-        @formatter.blankline
-        @formatter.display_heading("Class methods:", 2, "")
-        @formatter.wrap(klass.class_methods.map{|m| m.name}.sort.join(', '))
+      class_data = [
+        :class_methods,
+        :class_method_extensions,
+        :instance_methods,
+        :instance_method_extensions,
+      ]
+
+      class_data.each do |data_type|
+        data = klass.send data_type
+
+        unless data.empty? then
+          @formatter.blankline
+
+          heading = data_type.to_s.split('_').join(' ').capitalize << ':'
+          @formatter.display_heading heading, 2, ''
+
+          data = data.map { |item| item.name }.sort.join ', '
+          @formatter.wrap data
+        end
       end
 
-      unless klass.class_method_extensions.empty?
+      unless klass.attributes.empty? then
         @formatter.blankline
-        @formatter.display_heading("Class Method Extensions:", 2, "")
-        @formatter.wrap(klass.class_method_extensions.map{|m| m.name}.sort.join(', '))
-      end
 
-      unless klass.instance_methods.empty?
-        @formatter.blankline
-        @formatter.display_heading("Instance methods:", 2, "")
-        @formatter.wrap(klass.instance_methods.map{|m| m.name}.sort.join(', '))
-      end
+        @formatter.display_heading 'Attributes:', 2, ''
 
-      unless klass.instance_method_extensions.empty?
-        @formatter.blankline
-        @formatter.display_heading("Instance Method Extensions:", 2, "")
-        @formatter.wrap(klass.instance_method_extensions.map{|m| m.name}.sort.join(', '))
-      end
+        attributes = klass.attributes.sort_by { |attribute| attribute.name }
 
-      unless klass.attributes.empty?
-        @formatter.blankline
-        @formatter.wrap("Attributes:", "")
-        @formatter.wrap(klass.attributes.map{|a| a.name}.sort.join(', '))
+        attributes.each do |attribute|
+          if attribute.comment then
+            @formatter.wrap "#{attribute.name} (#{attribute.rw}):"
+            @formatter.indent do
+              @formatter.display_flow attribute.comment
+            end
+          else
+            @formatter.wrap "#{attribute.name} (#{attribute.rw})"
+          end
+        end
       end
     end
   end

@@ -16,50 +16,88 @@ class TestRDocRIDefaultDisplay < Test::Unit::TestCase
   end
 
   def test_display_class_info
+    ri_reader = nil
     klass = {
       'attributes' => [
-        { 'name' => 'author', 'rw' => 'RW',
-          'comment' => RDoc::Markup::Flow::P.new("<b>Recommended</b>: blah") },
+        { 'name' => 'attribute', 'rw' => 'RW',
+          'comment' => [RDoc::Markup::Flow::P.new('attribute comment')] },
+        { 'name' => 'attribute_no_comment', 'rw' => 'RW',
+          'comment' => nil },
       ],
-      'class_methods' => [],
-      'class_method_extensions' => [],
+      'class_methods' => [
+        { 'name' => 'class_method' },
+      ],
+      'class_method_extensions' => [
+        { 'name' => 'class_method_extension' },
+      ],
+      'comment' => [RDoc::Markup::Flow::P.new('SomeClass comment')],
       'constants' => [
-        { 'name' => 'VERSION', 'value' => '"1.5.1"',
-          'comment' => RDoc::Markup::Flow::P.new('The version of Hoe') },
+        { 'name' => 'CONSTANT', 'value' => '"value"',
+          'comment' => [RDoc::Markup::Flow::P.new('CONSTANT value')] },
+        { 'name' => 'CONSTANT_NOCOMMENT', 'value' => '"value"',
+          'comment' => nil },
       ],
       'display_name' => 'Class',
-      'full_name' => 'Hoe',
+      'full_name' => 'SomeClass',
       'includes' => [],
       'instance_methods' => [
-          { 'name' => 'developer' },
-          { 'name' => 'paragraphs_of' },
+        { 'name' => 'instance_method' },
       ],
-      'instance_method_extensions' => [],
+      'instance_method_extensions' => [
+        { 'name' => 'instance_method_extension' },
+      ],
       'superclass_string' => 'Object',
     }
-    ri_reader = nil
 
     @dd.display_class_info klass, ri_reader
 
     expected = <<-EOF
----------------------------------------------------------- Class: Hoe < Object
-     (no description...)
+---------------------------------------------------- Class: SomeClass < Object
+     SomeClass comment
+
 ------------------------------------------------------------------------------
 
 
 Constants:
 ----------
 
-     VERSION: \"1.5.1\"
+     CONSTANT:
+          CONSTANT value
+
+     CONSTANT_NOCOMMENT
+
+
+Class methods:
+--------------
+
+     class_method
+
+
+Class method extensions:
+------------------------
+
+     class_method_extension
 
 
 Instance methods:
 -----------------
 
-     developer, paragraphs_of
+     instance_method
+
+
+Instance method extensions:
+---------------------------
+
+     instance_method_extension
+
 
 Attributes:
-     author
+-----------
+
+     attribute (RW):
+          attribute comment
+
+     attribute_no_comment (RW)
     EOF
 
     assert_equal expected, @output.string

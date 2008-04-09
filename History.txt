@@ -4,4 +4,5 @@
   * Renamespaced everything RDoc under the RDoc module.
   * New `ri` implementation.
 * N Minor Enhancements:
-  * Switched to an ERb-based TemplatePage, see RDoc::
+  * Switched to an ERb-based TemplatePage, see RDoc::TemplatePage.
+  * Class/module ri now displays attribute and constant comments.
