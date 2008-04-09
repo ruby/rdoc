@@ -41,14 +41,14 @@ class RDoc::RI::DefaultDisplay
     page do
       @formatter.draw_line(method.full_name)
       display_params(method)
+
       @formatter.draw_line
       display_flow(method.comment)
-      if method.aliases && !method.aliases.empty?
+
+      if method.aliases and not method.aliases.empty? then
         @formatter.blankline
-        aka = "(also known as "
-        aka << method.aliases.map {|a| a.name }.join(", ")
-        aka << ")"
-        @formatter.wrap(aka)
+        aka = "(also known as #{method.aliases.map { |a| a.name }.join(', ')})"
+        @formatter.wrap aka
       end
     end
   end
@@ -153,17 +153,11 @@ class RDoc::RI::DefaultDisplay
 
   def display_method_list(methods)
     page do
-      @formatter.raw_print_line("More than one method matched your request. You can refine")
-      @formatter.raw_print_line("your search by asking for information on one of:\n\n")
-      @formatter.wrap(methods.map {|m| m.full_name} .join(", "))
-    end
-  end
+      @formatter.wrap "More than one method matched your request.  You can refine your search by asking for information on one of:"
 
-  def display_class_list(namespaces)
-    page do
-      @formatter.raw_print_line("More than one class or module matched your request. You can refine")
-      @formatter.raw_print_line("your search by asking for information on one of:\n\n")
-      @formatter.wrap(namespaces.map {|m| m.full_name}.join(", "))
+      @formatter.blankline
+
+      @formatter.wrap methods.map { |m| m.full_name }.join(", ")
     end
   end
 
@@ -172,24 +166,13 @@ class RDoc::RI::DefaultDisplay
       warn_no_database
     else
       page do
-        @formatter.draw_line("Known classes and modules")
+        @formatter.draw_line "Known classes and modules"
         @formatter.blankline
-        @formatter.wrap(classes.sort.join(", "))
+
+        @formatter.wrap classes.sort.join(', ')
       end
     end
   end
-
-  def list_known_names(names)
-    if names.empty?
-      warn_no_database
-    else
-      page do
-        names.each {|n| @formatter.raw_print_line(n)}
-      end
-    end
-  end
-
-  private
 
   def page
     if pager = setup_pager then
@@ -220,17 +203,19 @@ class RDoc::RI::DefaultDisplay
   def display_params(method)
     params = method.params
 
-    if params[0,1] == "("
+    if params[0,1] == "(" then
       if method.is_singleton
         params = method.full_name + params
       else
         params = method.name + params
       end
     end
-    params.split(/\n/).each do |p|
-      @formatter.wrap(p)
+
+    params.split(/\n/).each do |param|
+      @formatter.wrap param
       @formatter.break_to_newline
     end
+
     if method.source_path then
       @formatter.blankline
       @formatter.wrap("Extension from #{method.source_path}")
@@ -238,24 +223,26 @@ class RDoc::RI::DefaultDisplay
   end
 
   def display_flow(flow)
-    if !flow || flow.empty?
-      @formatter.wrap("(no description...)")
+    if flow and not flow.empty? then
+      @formatter.display_flow flow
     else
-      @formatter.display_flow(flow)
+      @formatter.wrap '[no description]'
     end
   end
 
   def warn_no_database
-    puts "No ri data found"
-    puts
-    puts "If you've installed Ruby yourself, you need to generate documentation using:"
-    puts
-    puts "  make install-doc"
-    puts
-    puts "from the same place you ran `make` to build ruby."
-    puts
-    puts "If you installed Ruby from a packaging system, then you may need to"
-    puts "install an additional package, or ask the packager to enable ri generation."
+    output = @formatter.output
+
+    output.puts "No ri data found"
+    output.puts
+    output.puts "If you've installed Ruby yourself, you need to generate documentation using:"
+    output.puts
+    output.puts "  make install-doc"
+    output.puts
+    output.puts "from the same place you ran `make` to build ruby."
+    output.puts
+    output.puts "If you installed Ruby from a packaging system, then you may need to"
+    output.puts "install an additional package, or ask the packager to enable ri generation."
   end
 end
 
