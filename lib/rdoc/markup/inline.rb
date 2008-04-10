@@ -39,11 +39,11 @@ class RDoc::Markup
     end
   end
 
+  AttrChanger = Struct.new(:turn_on, :turn_off)
+
   ##
   # An AttrChanger records a change in attributes. It contains a bitmap of the
   # attributes to turn on, and a bitmap of those to turn off.
-
-  AttrChanger = Struct.new(:turn_on, :turn_off)
 
   class AttrChanger
     def to_s
@@ -238,17 +238,18 @@ class RDoc::Markup
     end
 
     def add_word_pair(start, stop, name)
-      raise "Word flags may not start '<'" if start[0] == ?<
-      bitmap = Attribute.bitmap_for(name)
-      if start == stop
+      raise ArgumentError, "Word flags may not start with '<'" if
+        start[0,1] == '<'
+
+      bitmap = Attribute.bitmap_for name
+
+      if start == stop then
         MATCHING_WORD_PAIRS[start] = bitmap
       else
-        pattern = Regexp.new("(" + Regexp.escape(start) + ")" +
-#                             "([A-Za-z]+)" +
-                             "(\\S+)" +
-                             "(" + Regexp.escape(stop) +")")
+        pattern = /(#{Regexp.escape start})(\S+)(#{Regexp.escape stop})/
         WORD_PAIR_MAP[pattern] = bitmap
       end
+
       PROTECTABLE << start[0,1]
       PROTECTABLE.uniq!
     end
