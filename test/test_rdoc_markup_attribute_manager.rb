@@ -123,6 +123,29 @@ class TestRDocMarkupAttributeManager < Test::Unit::TestCase
                   @am.flow("cat _a__nd_ *dog*"))
   end
 
+  def test_convert_attrs
+    str = '+foo+'
+    attrs = RDoc::Markup::AttrSpan.new str.length
+
+    @am.convert_attrs str, attrs
+
+    assert_equal "\000foo\000", str
+
+    str = '+:foo:+'
+    attrs = RDoc::Markup::AttrSpan.new str.length
+
+    @am.convert_attrs str, attrs
+
+    assert_equal "\000:foo:\000", str
+
+    str = '+x-y+'
+    attrs = RDoc::Markup::AttrSpan.new str.length
+
+    @am.convert_attrs str, attrs
+
+    assert_equal "\000x-y\000", str
+  end
+
   def test_html_like_em_bold
     assert_equal ["cat ", @em_on, "and ", @em_to_bold, "dog", @bold_off],
                   @am.flow("cat <i>and </i><b>dog</b>")

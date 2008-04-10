@@ -77,7 +77,7 @@ class RDoc::Markup::AttributeManager
     # first do matching ones
     tags = MATCHING_WORD_PAIRS.keys.join("")
 
-    re = /(^|\W)([#{tags}])([#\\]?[\w.\/]+?\S?)\2(\W|$)/
+    re = /(^|\W)([#{tags}])([#:\\]?[\w.\/-]+?\S?)\2(\W|$)/
 
     1 while str.gsub!(re) do
       attr = MATCHING_WORD_PAIRS[$2]

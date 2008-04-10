@@ -155,7 +155,7 @@ after the start of the document element they are modifying.
 
 Comment blocks can contain other directives:
 
-[+:section: title+]
+[<tt>:section: title</tt>]
   Starts a new section in the output.  The title following +:section:+ is used
   as the section heading, and the remainder of the comment containing the
   section is used as introductory text.  Subsequent methods, aliases,
@@ -176,7 +176,7 @@ Comment blocks can contain other directives:
   yield arguments.
 
 [+:include:+ _filename_]
-  Include the contents of the named file at this point.  The file will be
+  \Include the contents of the named file at this point.  The file will be
   searched for in the directories listed by the +--include+ option, or in the
   current directory by default.  The contents of the file will be shifted to
   have the same indentation as the ':' at the start of the :include: directive.
@@ -210,7 +210,7 @@ Author::   Dave Thomas <dave@pragmaticprogrammer.com>
   parser for irb and the rtags package.
 
 * Code to diagram classes and modules was written by Sergey A Yanovitsky
-  (Jah) of Enticla. 
+  (Jah) of Enticla.
 
 * Charset patch from MoonWolf.
 
