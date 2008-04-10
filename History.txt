@@ -3,6 +3,8 @@
 * N Major Enhancements:
   * Renamespaced everything RDoc under the RDoc module.
   * New `ri` implementation.
+    * Reads from a cache in ~/.ri/ for enhanced speed.
+    * RubyGems aware, only searches latest gem versions.
 * N Minor Enhancements:
   * Switched to an ERb-based TemplatePage, see RDoc::TemplatePage.
   * Class/module ri now displays attribute and constant comments.
