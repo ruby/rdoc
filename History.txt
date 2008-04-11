@@ -1,11 +1,12 @@
-=== 2.0.0 / 2008-??-??
+=== 2.0.0 / 2008-04-10
 
-* N Major Enhancements:
+* 3 Major Enhancements:
   * Renamespaced everything RDoc under the RDoc module.
   * New `ri` implementation.
     * Reads from a cache in ~/.ri/ for enhanced speed.
     * RubyGems aware, only searches latest gem versions.
-* N Minor Enhancements:
+  * Now up to over 100 tests and 200 assertions.
+* 4 Minor Enhancements:
   * Switched to an ERb-based TemplatePage, see RDoc::TemplatePage.
   * Class/module ri now displays attribute and constant comments.
   * Cross-references can be disabled with a leading \.
