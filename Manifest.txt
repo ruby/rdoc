@@ -5,7 +5,6 @@ Rakefile
 bin/rdoc
 bin/ri
 lib/rdoc.rb
-lib/rdoc/README
 lib/rdoc/code_objects.rb
 lib/rdoc/diagram.rb
 lib/rdoc/dot.rb
@@ -22,6 +21,7 @@ lib/rdoc/generator/xml.rb
 lib/rdoc/generator/xml/rdf.rb
 lib/rdoc/generator/xml/xml.rb
 lib/rdoc/markup.rb
+lib/rdoc/markup/attribute_manager.rb
 lib/rdoc/markup/formatter.rb
 lib/rdoc/markup/fragments.rb
 lib/rdoc/markup/inline.rb
@@ -56,5 +56,6 @@ test/test_rdoc_c_parser.rb
 test/test_rdoc_markup.rb
 test/test_rdoc_markup_attribute_manager.rb
 test/test_rdoc_ri_attribute_formatter.rb
+test/test_rdoc_ri_default_display.rb
 test/test_rdoc_ri_formatter.rb
 test/test_rdoc_ri_overstrike_formatter.rb
