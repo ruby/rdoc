@@ -62,6 +62,11 @@ class RDoc::Options
   attr_accessor :generator
 
   ##
+  # Formatter to mark up text with
+
+  attr_accessor :formatter
+  
+  ##
   # image format for diagrams
 
   attr_reader :image_format

@@ -13,10 +13,8 @@ class TestRDocSections < Test::Unit::TestCase
 
   def setup
     # supress stdout
-    @real_stdout = $stdout.clone
-    @real_stderr = $stderr.clone
-    $stdout.reopen(File.new('/dev/null','w'))
-    $stderr.reopen(File.new('/dev/null','w'))
+    $stdout = File.new('/dev/null','w')
+    $stderr = File.new('/dev/null','w')
 
     @rdoc = RDoc::RDoc.new
     @rdoc.document(['--fmt=texinfo',
@@ -27,8 +25,8 @@ class TestRDocSections < Test::Unit::TestCase
   end
 
   def teardown
-    $stdout.reopen(@real_stdout)
-    $stderr.reopen(@real_stderr)
+    $stdout = STDOUT
+    $stderr = STDERR
     FileUtils.rm_rf OUTPUT_DIR
   end
 
@@ -63,10 +61,10 @@ class TestRDocSections < Test::Unit::TestCase
     assert_section "Generator", '@chapter'
   end
 
-#   def test_methods_are_shown_only_once
-#     methods = @rdoc.gen.classes.map { |c| c.methods.map{ |m| m.name } }.flatten
-#     assert_equal methods, methods.uniq
-#   end
+  def test_methods_are_shown_only_once
+    methods = @rdoc.gen.classes.map { |c| c.methods.map{ |m| c.name + '#' + m.name } }.flatten
+    assert_equal methods, methods.uniq
+  end
 
   def test_compiles_to_info
     system "cd #{OUTPUT_DIR} && makeinfo rdoc.texinfo 2> /dev/null"

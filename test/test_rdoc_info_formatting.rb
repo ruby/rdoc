@@ -1,30 +1,55 @@
+$LOAD_PATH << File.dirname(__FILE__) + '/../lib/'
+require 'fileutils'
 require 'test/unit'
+require 'rdoc/generator/texinfo'
+require 'yaml'
 
 # From chapter 18 of the Pickaxe 3rd ed. and the TexInfo manual.
 class TestRDocFormatting < Test::Unit::TestCase
+  OUTPUT_DIR = "/tmp/rdoc-#{$$}"
 
-#   def test_descriptions_are_not_html
-#     assert_no_match /\<.*\>/, OUTPUT, "We had some HTML; icky!"
-#   end
+  def setup
+    # supress stdout
+    $stdout = File.new('/dev/null','w')
+    $stderr = File.new('/dev/null','w')
 
+    RDoc::RDoc.new.document(['--fmt=texinfo',
+                             File.expand_path(__FILE__),
+                             "--op=#{OUTPUT_DIR}"])
+    @text = File.read(OUTPUT_DIR + '/rdoc.texinfo')
+  end
+
+  def teardown
+    $stdout = STDOUT
+    $stderr = STDERR
+    FileUtils.rm_rf OUTPUT_DIR
+  end
+
+  # Make sure tags like *this* do not make HTML
+  def test_descriptions_are_not_html
+    assert_no_match Regexp.new("\<b\>this\<\/b\>"), @text, "We had some HTML; icky!"
+  end
+
+  # This tests that *bold* and <b>bold me</b> become @strong{bold}
   def test_bold
-    # *bold* and <b>bold me</b>
-    # @strong{bold}
+    #
   end
 
+  # Test that _italicize_ <em>italicize me</em> becomes @emph{italicize}
   def test_italics
-    # _italicize_ <em>italicize me</em>
-    # @emph{italicize}
+    #
   end
 
+  # And that +typewriter+ and <tt>typewriter</tt> becomes @code{typewriter}
   def test_tt
-    # +typewriter+ and <tt>typewriter</tt>
-    # @code{typewriter}
+    #
   end
 
+  # Check that
+  #   anything indented is
+  #   verbatim @verb{|foo bar baz|}
   def test_literal_code
-    # anything indented is verbatim
-    # @verb{|foo bar baz|}
+    #
   end
 
   def test_internal_hyperlinks

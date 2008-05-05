@@ -80,11 +80,6 @@ module RDoc::Generator
     def markup(str, remove_para = false)
       return '' unless str
 
-      unless defined? @formatter then
-        @formatter = RDoc::Markup::ToHtmlCrossref.new(path, self,
-                                                       @options.show_hash)
-      end
-
       # Convert leading comment markers to spaces, but only if all non-blank
       # lines have them
       if str =~ /^(?>\s*)[^\#]/ then
@@ -181,6 +176,8 @@ module RDoc::Generator
     def initialize(context, options)
       @context = context
       @options = options
+      @formatter = @options.formatter ||
+        RDoc::Markup::ToHtmlCrossref.new(path, self, @options.show_hash)
 
       # HACK ugly
       @template = options.template_class
@@ -831,9 +828,12 @@ module RDoc::Generator
     end
 
     def initialize(context, html_class, options)
+      # TODO: rethink the class hierarchy here...
       @context    = context
       @html_class = html_class
       @options    = options
+      @formatter = @options.formatter ||
+        RDoc::Markup::ToHtmlCrossref.new(path, self, @options.show_hash)
 
       # HACK ugly
       @template = options.template_class
