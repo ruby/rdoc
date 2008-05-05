@@ -83,19 +83,65 @@ class TestRdocInfoFormatting < Test::Unit::TestCase
     assert_match /@heading\{Regardless of its nesting level\}/
   end
 
+  # * list item
+  # * list item2
+  #
+  # with a paragraph in between
+  #
+  # - hyphen lists
+  # - are also allowed
+  #   and items may flow over lines
   def test_bullet_lists
-    # test both - and *
+    assert_match "@itemize @bullet
+@item
+list item
+@item
+list item2
+@end itemize"
+    assert_match "@itemize @bullet
+@item
+hyphen lists
+@item
+are also allowed and items may flow over lines
+@end itemize"
   end
 
+  # 2. numbered lists
+  # 8. are made by
+  # 9. a digit followed by a period
   def test_numbered_lists
   end
 
+  # a. alpha lists
+  # b. should be parsed too
   def test_alpha_lists
   end
 
+  # [cat]   small domestic animal
+  # [+cat+] command to copy standard input
+  #         to standard output
   def test_labelled_lists
   end
 
+  # * First item.
+  #   * Inner item
+  #   * Second inner item.
+  # * Second outer item.
+  def test_nested_lists
+    assert_match "@itemize @bullet
+@item
+First item.
+@itemize @bullet
+@item
+Inner item.
+@item
+Second inner item.
+@end itemize
+@item
+Second outer item.
+@end itemize"
+  end
+  
   def test_internal_hyperlinks
     # be sure to test multi-word hyperlinks as well.
   end

@@ -21,25 +21,28 @@ class RDoc::Markup::ToTexInfo < RDoc::Markup::Formatter
   end
 
   def accept_paragraph(attributes, text)
-    @text << format(text.txt)
+    @text << format(text)
   end
 
   def accept_verbatim(attributes, text)
-    @text << "@verb{|#{format(text.txt)}|}"
+    @text << "@verb{|#{format(text)}|}"
   end
 
   def accept_heading(attributes, text)
     heading = ['@majorheading', '@chapheading'][text.head_level - 1] || '@heading'
-    @text << "#{heading}{#{format(text.txt)}}"
+    @text << "#{heading}{#{format(text)}}"
   end
 
   def accept_list_start(attributes, text)
+    @text << '@itemize @bullet'
   end
 
   def accept_list_end(attributes, text)
+    @text << '@end itemize'
   end
 
   def accept_list_item(attributes, text)
+    @text << "@item\n#{format(text)}"
   end
 
   def accept_blank_line(attributes, text)
@@ -51,7 +54,7 @@ class RDoc::Markup::ToTexInfo < RDoc::Markup::Formatter
   end
 
   def format(text)
-    text.
+    text.txt.
       gsub(/@/, "@@").
       gsub(/\{/, "@{").
       gsub(/\}/, "@}").
