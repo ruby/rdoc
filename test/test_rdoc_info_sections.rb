@@ -1,4 +1,4 @@
-$LOAD_PATH << File.dirname(__FILE__) + '/../lib/'
+$LOAD_PATH.unshift File.dirname(__FILE__) + '/../lib/'
 require 'fileutils'
 require 'test/unit'
 require 'rdoc/generator/texinfo'
@@ -8,7 +8,7 @@ require 'yaml'
 class RDoc::Generator::Texinfo; attr_reader :files, :classes; end
 class RDoc::RDoc; attr_reader :options; attr_reader :gen; end
 
-class TestRDocSections < Test::Unit::TestCase
+class TestRdocInfoSections < Test::Unit::TestCase
   OUTPUT_DIR = "/tmp/rdoc-#{$$}"
 
   def setup
