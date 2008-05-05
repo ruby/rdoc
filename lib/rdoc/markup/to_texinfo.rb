@@ -7,7 +7,9 @@ require 'rdoc/markup/formatter'
 
 ##
 # Convert SimpleMarkup to basic TexInfo format
-
+#
+# TODO: WTF is AttributeManager for?
+#
 class RDoc::Markup::ToTexInfo < RDoc::Markup::Formatter
 
   def start_accepting
@@ -19,11 +21,16 @@ class RDoc::Markup::ToTexInfo < RDoc::Markup::Formatter
   end
 
   def accept_paragraph(attributes, text)
-    @text << format(text.txt) + "\n"
+    @text << format(text.txt)
   end
 
   def accept_verbatim(attributes, text)
     @text << "@verb{|#{format(text.txt)}|}"
+  end
+
+  def accept_heading(attributes, text)
+    heading = ['@majorheading', '@chapheading'][text.head_level - 1] || '@heading'
+    @text << "#{heading}{#{format(text.txt)}}"
   end
 
   def accept_list_start(attributes, text)
@@ -39,18 +46,16 @@ class RDoc::Markup::ToTexInfo < RDoc::Markup::Formatter
     @text << "\n"
   end
 
-  def accept_heading(attributes, text)
-  end
-
   def accept_rule(attributes, text)
-    @text << '---'
+    @text << '-----'
   end
 
   def format(text)
     text.
-      gsub(/@/, "\\@").
-      gsub(/\{/, "\\{").
-      gsub(/\}/, "\\}").
+      gsub(/@/, "@@").
+      gsub(/\{/, "@{").
+      gsub(/\}/, "@}").
+      gsub(/,/, "@,"). # technically only required in cross-refs
       gsub(/\+([\w]+)\+/, "@code{\\1}").
       gsub(/\<tt\>([^<]+)\<\/tt\>/, "@code{\\1}").
       gsub(/\*([\w]+)\*/, "@strong{\\1}").

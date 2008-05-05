@@ -17,6 +17,7 @@ class TestRdocInfoFormatting < Test::Unit::TestCase
                              File.expand_path(__FILE__),
                              "--op=#{OUTPUT_DIR}"])
     @text = File.read(OUTPUT_DIR + '/rdoc.texinfo')
+    # File.open('rdoc.texinfo', 'w') { |f| f.puts @text }
   end
 
   def teardown
@@ -34,24 +35,32 @@ class TestRdocInfoFormatting < Test::Unit::TestCase
   #
   # of space in between paragraphs.
   def test_paragraphs_are_spaced
+    assert_match /amount\n\n\nof space/, @text
+  end
+
+  # @ and {} should be at-sign-prefixed
+  def test_escaping
+    assert_match /@@ and @\{@\} should be at-sign-prefixed/
   end
   
   # This tests that *bold* and <b>bold me</b> become @strong{bolded}
   def test_bold
-    assert_match /@strong\{bold\}/, @text
-    assert_match /@strong\{bold me\}/, @text
+    # Seems like a limitation of the Info format: @strong{bold}
+    # becomes *bold* when read in Info or M-x info. highly lame!
+    assert_match /@strong\{bold\}/
+    assert_match /@strong\{bold me\}/
   end
 
-  # Test that _italics_ <em>italicize me</em> becomes @emph{italicized}
+  # Test that _italics_ and <em>italicize me</em> becomes @emph{italicized}
   def test_italics
-    assert_match /@emph\{italics\}/, @text
-    assert_match /@emph\{italicize me\}/, @text
+    assert_match /@emph\{italics\}/
+    assert_match /@emph\{italicize me\}/
   end
 
   # And that typewriter +text+ and <tt>typewriter me</tt> becomes @code{typewriter}
   def test_tt
-    assert_match /@code\{text\}/, @text
-    assert_match /@code\{typewriter me\}/, @text
+    assert_match /@code\{text\}/
+    assert_match /@code\{typewriter me\}/
   end
 
   # Check that
@@ -59,8 +68,32 @@ class TestRdocInfoFormatting < Test::Unit::TestCase
   #   verbatim @verb{|foo bar baz|}
   def test_literal_code
     assert_match "@verb{|  anything indented is
-  verbatim \\@verb\\{|foo bar baz|\\}
-|}", @text
+  verbatim @@verb@{|foo bar baz|@}
+|}"
+  end
+
+  # = Huge heading should be a @majorheading
+  # == There is also @chapheading
+  # === Everything deeper becomes a regular @heading
+  # ====== Regardless of its nesting level
+  def test_headings
+    assert_match /@majorheading\{Huge heading should be a @@majorheading\}/
+    assert_match /@chapheading\{There is also @@chapheading\}/
+    assert_match /@heading\{Everything deeper becomes a regular @@heading\}/
+    assert_match /@heading\{Regardless of its nesting level\}/
+  end
+
+  def test_bullet_lists
+    # test both - and *
+  end
+
+  def test_numbered_lists
+  end
+
+  def test_alpha_lists
+  end
+
+  def test_labelled_lists
   end
 
   def test_internal_hyperlinks
@@ -82,32 +115,19 @@ class TestRdocInfoFormatting < Test::Unit::TestCase
     #      holds programs and texts.
   end
 
-  def test_bullet_lists
-    # test both - and *
-  end
-
-  def test_numbered_lists
-  end
-
-  def test_alpha_lists
-  end
-
-  def test_labelled_lists
-  end
-
-  def test_headings
-    # levels 1 - 6?
-  end
-
+  # three or more hyphens
+  # ----
+  # should produce a horizontal rule
   def test_horizontal_rule
-    # three or more hyphens
+    # gah; not sure texinfo supports horizontal rules
   end
 
   private
 
   # We don't want the whole string inspected if we pass our own
   # message in.
-  def assert_match(regex, string, message = "Didn't find #{regex} in #{string}.")
-    assert string.match(regex), message
+  def assert_match(regex, string = @text,
+                   message = "Didn't find #{regex.inspect} in #{string}.")
+    assert string[regex], message
   end
 end
