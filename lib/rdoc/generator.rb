@@ -495,6 +495,7 @@ module RDoc::Generator
 
     attr_reader :methods
     attr_reader :path
+    attr_reader :values
 
     def initialize(context, html_file, prefix, options)
       super(context, options)
@@ -680,6 +681,7 @@ module RDoc::Generator
 
     attr_reader :path
     attr_reader :name
+    attr_reader :values
 
     def initialize(context, options, file_dir)
       super(context, options)

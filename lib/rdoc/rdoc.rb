@@ -244,14 +244,14 @@ module RDoc
       if file_info.empty?
         $stderr.puts "\nNo newer files." unless @options.quiet
       else
-        gen = @options.generator
+        @gen = @options.generator
 
-        $stderr.puts "\nGenerating #{gen.key.upcase}..." unless @options.quiet
+        $stderr.puts "\nGenerating #{@gen.key.upcase}..." unless @options.quiet
 
-        require gen.file_name
+        require @gen.file_name
 
-        gen_class = ::RDoc::Generator.const_get gen.class_name
-        gen = gen_class.for @options
+        gen_class = ::RDoc::Generator.const_get @gen.class_name
+        @gen = gen_class.for @options
 
         pwd = Dir.pwd
 
@@ -259,7 +259,7 @@ module RDoc
 
         begin
           Diagram.new(file_info, @options).draw if @options.diagram
-          gen.generate(file_info)
+          @gen.generate(file_info)
           update_output_dir(".", start_time)
         ensure
           Dir.chdir(pwd)

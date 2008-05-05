@@ -6,6 +6,7 @@ require 'rdoc'
 Hoe.new "rdoc", RDoc::VERSION do |rdoc|
   rdoc.developer 'Eric Hodel', 'drbrain@segment7.net'
   rdoc.developer 'Dave Thomas', ''
+  rdoc.developer 'Phil Hagelberg', 'technomancy@gmail.com'
 end
 
 # These tasks expect to have the following directory structure:

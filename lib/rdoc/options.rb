@@ -95,7 +95,7 @@ class RDoc::Options
   ##
   # The name to use for the output
 
-  attr_reader :op_name
+  attr_accessor :op_name
 
   ##
   # Are we promiscuous about showing module contents across multiple files
