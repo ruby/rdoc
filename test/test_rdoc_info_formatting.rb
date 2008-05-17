@@ -35,41 +35,41 @@ class TestRdocInfoFormatting < Test::Unit::TestCase
   #
   # of space in between paragraphs.
   def test_paragraphs_are_spaced
-    assert_match /amount\n\n\nof space/, @text
+    assert_match(/amount\n\n\nof space/, @text)
   end
 
   # @ and {} should be at-sign-prefixed
   def test_escaping
-    assert_match /@@ and @\{@\} should be at-sign-prefixed/
+    assert_match(/@@ and @\{@\} should be at-sign-prefixed/)
   end
   
   # This tests that *bold* and <b>bold me</b> become @strong{bolded}
   def test_bold
     # Seems like a limitation of the Info format: @strong{bold}
     # becomes *bold* when read in Info or M-x info. highly lame!
-    assert_match /@strong\{bold\}/
-    assert_match /@strong\{bold me\}/
+    assert_match(/@strong\{bold\}/)
+    assert_match(/@strong\{bold me\}/)
   end
 
   # Test that _italics_ and <em>italicize me</em> becomes @emph{italicized}
   def test_italics
-    assert_match /@emph\{italics\}/
-    assert_match /@emph\{italicize me\}/
+    assert_match(/@emph\{italics\}/)
+    assert_match(/@emph\{italicize me\}/)
   end
 
   # And that typewriter +text+ and <tt>typewriter me</tt> becomes @code{typewriter}
   def test_tt
-    assert_match /@code\{text\}/
-    assert_match /@code\{typewriter me\}/
+    assert_match(/@code\{text\}/)
+    assert_match(/@code\{typewriter me\}/)
   end
 
   # Check that
   #   anything indented is
   #   verbatim @verb{|foo bar baz|}
   def test_literal_code
-    assert_match "@verb{|  anything indented is
+    assert_match("@verb{|  anything indented is
   verbatim @@verb@{|foo bar baz|@}
-|}"
+|}")
   end
 
   # = Huge heading should be a @majorheading
@@ -77,10 +77,10 @@ class TestRdocInfoFormatting < Test::Unit::TestCase
   # === Everything deeper becomes a regular @heading
   # ====== Regardless of its nesting level
   def test_headings
-    assert_match /@majorheading\{Huge heading should be a @@majorheading\}/
-    assert_match /@chapheading\{There is also @@chapheading\}/
-    assert_match /@heading\{Everything deeper becomes a regular @@heading\}/
-    assert_match /@heading\{Regardless of its nesting level\}/
+    assert_match(/@majorheading\{Huge heading should be a @@majorheading\}/)
+    assert_match(/@chapheading\{There is also @@chapheading\}/)
+    assert_match(/@heading\{Everything deeper becomes a regular @@heading\}/)
+    assert_match(/@heading\{Regardless of its nesting level\}/)
   end
 
   # * list item
@@ -92,18 +92,18 @@ class TestRdocInfoFormatting < Test::Unit::TestCase
   # - are also allowed
   #   and items may flow over lines
   def test_bullet_lists
-    assert_match "@itemize @bullet
+    assert_match("@itemize @bullet
 @item
 list item
 @item
 list item2
-@end itemize"
-    assert_match "@itemize @bullet
+@end itemize")
+    assert_match("@itemize @bullet
 @item
 hyphen lists
 @item
 are also allowed and items may flow over lines
-@end itemize"
+@end itemize")
   end
 
   # 2. numbered lists
@@ -128,7 +128,7 @@ are also allowed and items may flow over lines
   #   * Second inner item.
   # * Second outer item.
   def test_nested_lists
-    assert_match "@itemize @bullet
+    assert_match("@itemize @bullet
 @item
 First item.
 @itemize @bullet
@@ -139,7 +139,7 @@ Second inner item.
 @end itemize
 @item
 Second outer item.
-@end itemize"
+@end itemize")
   end
   
   def test_internal_hyperlinks
