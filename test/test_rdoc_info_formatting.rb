@@ -174,6 +174,6 @@ Second outer item.
   # message in.
   def assert_match(regex, string = @text,
                    message = "Didn't find #{regex.inspect} in #{string}.")
-    assert string[regex], message
+    assert string[regex] #, message
   end
 end

@@ -58,7 +58,7 @@ class RDoc::Markup::ToTexInfo < RDoc::Markup::Formatter
       gsub(/@/, "@@").
       gsub(/\{/, "@{").
       gsub(/\}/, "@}").
-      gsub(/,/, "@,"). # technically only required in cross-refs
+      # gsub(/,/, "@,"). # technically only required in cross-refs
       gsub(/\+([\w]+)\+/, "@code{\\1}").
       gsub(/\<tt\>([^<]+)\<\/tt\>/, "@code{\\1}").
       gsub(/\*([\w]+)\*/, "@strong{\\1}").
