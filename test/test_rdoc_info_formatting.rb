@@ -124,7 +124,7 @@ are also allowed and items may flow over lines
   end
 
   # * First item.
-  #   * Inner item
+  #   * Inner item.
   #   * Second inner item.
   # * Second outer item.
   def test_nested_lists
