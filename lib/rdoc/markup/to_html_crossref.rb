@@ -14,6 +14,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # correct relative paths for any hyperlinks that we find
 
   def initialize(from_path, context, show_hash)
+    raise ArgumentError, 'from_path cannot be nil' if from_path.nil?
     super()
 
     # class names, variable names, or instance variables

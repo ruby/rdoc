@@ -1,9 +1,8 @@
 #!/usr/local/bin/ruby
 
-# Parse a Ruby source file, building a set of objects
-# representing the modules, classes, methods,
-# requires, and includes we find (these classes
-# are defined in code_objects.rb).
+# Parse a Ruby source file, building a set of objects representing the
+# modules, classes, methods, requires, and includes we find (these classes are
+# defined in code_objects.rb).
 
 # This file contains stuff stolen outright from:
 #
@@ -18,17 +17,17 @@ require "irb/slex"
 
 require "rdoc/code_objects"
 require "rdoc/tokenstream"
-
 require "rdoc/markup/preprocess"
-
 require "rdoc/parsers/parserfactory"
 
 $TOKEN_DEBUG ||= nil
 #$TOKEN_DEBUG = $DEBUG_RDOC
 
+##
 # Definitions of all tokens involved in the lexical analysis
 
-module RubyToken
+module RDoc::RubyToken
+
   EXPR_BEG   = :EXPR_BEG
   EXPR_MID   = :EXPR_MID
   EXPR_END   = :EXPR_END
@@ -268,14 +267,12 @@ module RubyToken
   TkReading2Token = {}
   TkSymbol2Token = {}
 
-  def RubyToken.def_token(token_n, super_token = Token, reading = nil, *opts)
+  def self.def_token(token_n, super_token = Token, reading = nil, *opts)
     token_n = token_n.id2name unless token_n.kind_of?(String)
-    if RubyToken.const_defined?(token_n)
-      fail AlreadyDefinedToken, token_n
-    end
+    fail AlreadyDefinedToken, token_n if const_defined?(token_n)
 
     token_c =  Class.new super_token
-    RubyToken.const_set token_n, token_c
+    const_set token_n, token_c
 #    token_c.inspect
 
     if reading
@@ -306,12 +303,12 @@ module RubyToken
 
 end
 
+##
 # Lexical analyzer for Ruby source
 
-class RubyLex
+class RDoc::RubyLex
 
-  ######################################################################
-  #
+  ##
   # Read an input stream character by character. We allow for unlimited
   # ungetting of characters just read.
   #
@@ -435,13 +432,13 @@ class RubyLex
 		"key duplicate(token_n='%s', key='%s')")
   def_exception(:SyntaxError, "%s")
 
-  include RubyToken
+  include RDoc::RubyToken
   include IRB
 
   attr_reader :continue
   attr_reader :lex_state
 
-  def RubyLex.debug?
+  def self.debug?
     false
   end
 
@@ -636,7 +633,7 @@ class RubyLex
     end
 
     @OP.def_rule("\n") do
-      print "\\n\n" if RubyLex.debug?
+      print "\\n\n" if RDoc::RubyLex.debug?
       case @lex_state
       when EXPR_BEG, EXPR_FNAME, EXPR_DOT
 	@continue = TRUE
@@ -949,17 +946,17 @@ class RubyLex
 
     @OP.def_rule("") do
       |op, io|
-      printf "MATCH: start %s: %s\n", op, io.inspect if RubyLex.debug?
+      printf "MATCH: start %s: %s\n", op, io.inspect if RDoc::RubyLex.debug?
       if peek(0) =~ /[0-9]/
 	t = identify_number("")
       elsif peek(0) =~ /[\w_]/
 	t = identify_identifier
       end
-      printf "MATCH: end %s: %s\n", op, io.inspect if RubyLex.debug?
+      printf "MATCH: end %s: %s\n", op, io.inspect if RDoc::RubyLex.debug?
       t
     end
 
-    p @OP if RubyLex.debug?
+    p @OP if RDoc::RubyLex.debug?
   end
 
   def identify_gvar
@@ -1003,7 +1000,7 @@ class RubyLex
     token.concat getc if peek(0) == "@"
 
     while (ch = getc) =~ /\w|_/
-      print ":", ch, ":" if RubyLex.debug?
+      print ":", ch, ":" if RDoc::RubyLex.debug?
       token.concat ch
     end
     ungetc
@@ -1024,7 +1021,7 @@ class RubyLex
     end
 
     if @lex_state != EXPR_DOT
-      print token, "\n" if RubyLex.debug?
+      print token, "\n" if RDoc::RubyLex.debug?
 
       token_c, *trans = TkReading2Token[token]
       if token_c
@@ -1363,7 +1360,7 @@ end
 
 class RDoc::RubyParser
 
-  include RubyToken
+  include RDoc::RubyToken
   include RDoc::TokenStream
 
   extend RDoc::ParserFactory
@@ -1376,7 +1373,7 @@ class RDoc::RubyParser
     @size = 0
     @token_listeners = nil
     @input_file_name = file_name
-    @scanner = RubyLex.new content, @options
+    @scanner = RDoc::RubyLex.new content, @options
     @scanner.exception_on_syntax_error = false
     @top_level = top_level
     @progress = $stderr unless options.quiet
