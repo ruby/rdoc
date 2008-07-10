@@ -538,11 +538,19 @@ module RDoc::Generator
       name
     end
 
-    def write_on(f)
+    def write_on(f, file_list, class_list, method_list, overrides = {})
       value_hash
+
+      @values['file_list'] = file_list
+      @values['class_list'] = class_list
+      @values['method_list'] = method_list
+
+      @values.update overrides
+
       template = RDoc::TemplatePage.new(@template::BODY,
                                         @template::CLASS_PAGE,
                                         @template::METHOD_LIST)
+
       template.write_html_on(f, @values)
     end
 
@@ -563,7 +571,6 @@ module RDoc::Generator
       @values["includes"] = il unless il.empty?
 
       @values["sections"] = @context.sections.map do |section|
-
         secdata = {
           "sectitle" => section.title,
           "secsequence" => section.sequence,
@@ -771,8 +778,14 @@ module RDoc::Generator
       @values
     end
 
-    def write_on(f)
+    def write_on(f, file_list, class_list, method_list, overrides = {})
       value_hash
+
+      @values['file_list'] = file_list
+      @values['class_list'] = class_list
+      @values['method_list'] = method_list
+
+      @values.update overrides
 
       template = RDoc::TemplatePage.new(@template::BODY,
                                         @template::FILE_PAGE,
