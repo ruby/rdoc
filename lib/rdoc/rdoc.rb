@@ -198,9 +198,11 @@ module RDoc
                     File.read fn
                   end
 
-        if /coding:\s*(\S+)/ =~ content[/\A(?:.*\n){0,2}/]
-          if enc = Encoding.find($1)
-            content.force_encoding(enc)
+        if defined? Encoding then
+          if /coding:\s*(\S+)/ =~ content[/\A(?:.*\n){0,2}/]
+            if enc = ::Encoding.find($1)
+              content.force_encoding(enc)
+            end
           end
         end
 
