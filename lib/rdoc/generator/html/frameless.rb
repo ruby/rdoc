@@ -23,6 +23,8 @@ require 'rdoc/generator/html/one_page_html'
 
 module RDoc::Generator::HTML::FRAMELESS
 
+  FRAMELESS = true
+
   FONTS = "Verdana,Arial,Helvetica,sans-serif"
 
   STYLE = <<-EOF
