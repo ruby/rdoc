@@ -229,35 +229,41 @@ class RDoc::Generator::HTML
   # line.
 
   def gen_main_index
-    main = @files.find do |file|
-      @main_page == file.name
-    end
-
-    if main.nil? then
-      main = @classes.find do |klass|
-        main_page == klass.context.full_name
+    if @template.const_defined? :FRAMELESS then
+      main = @files.find do |file|
+        @main_page == file.name
       end
+
+      if main.nil? then
+        main = @classes.find do |klass|
+          main_page == klass.context.full_name
+        end
+      end
+    else
+      main = RDoc::TemplatePage.new @template::INDEX
     end
 
     open 'index.html', 'w'  do |f|
       style_url = style_url '', @options.css
-      main.write_on f, @file_list, @class_list, @method_list,
-                    'style_url' => style_url
 
-    #  classes = @classes.sort.map { |klass| klass.value_hash }
+      classes = @classes.sort.map { |klass| klass.value_hash }
 
-    #  values = {
-    #    'main_page'     => @main_page,
-    #    'initial_page'  => main_url,
-    #    'style_url'     => style_url('', @options.css),
-    #    'title'         => CGI.escapeHTML(@options.title),
-    #    'charset'       => @options.charset,
-    #    'classes'       => classes,
-    #  }
+      values = {
+        'main_page'     => @main_page,
+        'initial_page'  => main_url,
+        'style_url'     => style_url('', @options.css),
+        'title'         => CGI.escapeHTML(@options.title),
+        'charset'       => @options.charset,
+        'classes'       => classes,
+      }
 
-    #  values['inline_source'] = @options.inline_source
+      values['inline_source'] = @options.inline_source
 
-    #  template.write_html_on f, values
+      if main.respond_to? :write_on then
+        main.write_on f, @file_list, @class_list, @method_list, values
+      else
+        main.write_html_on f, values
+      end
     end
   end
 
