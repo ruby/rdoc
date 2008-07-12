@@ -39,7 +39,7 @@ class RDoc::Options
   ##
   # Pattern for additional attr_... style methods
 
-  attr_reader :extra_accessors
+  attr_accessor :extra_accessors
 
   ##
   # Should we draw fileboxes in diagrams
