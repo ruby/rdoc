@@ -264,6 +264,11 @@ Options may also be set in the 'RI' environment variable.
     @display.display_class_info klass, class_cache
   end
 
+  def get_info_for(arg)
+    @names = [arg]
+    run
+  end
+
   def load_cache_for(klassname)
     path = cache_file_for klassname
 
@@ -349,11 +354,6 @@ Options may also be set in the 'RI' environment variable.
     data = data.gsub(/ \!ruby\/(object|struct):SM::(\S+)/,
                      ' !ruby/\1:RDoc::Markup::\2')
     YAML.load data
-  end
-
-  def get_info_for(arg)
-    @names = [arg]
-    run
   end
 
   def run
