@@ -11,6 +11,16 @@ require 'rdoc/markup/to_flow'
 
 class RDoc::RI::Driver
 
+  class Error < RDoc::RI::Error; end
+
+  class NotFoundError < Error
+    def message
+      "Nothing known about #{super}"
+    end
+  end
+
+  attr_accessor :homepath # :nodoc:
+
   def self.process_args(argv)
     options = {}
     options[:use_stdout] = !$stdout.tty?
@@ -309,6 +319,20 @@ Options may also be set in the 'RI' environment variable.
     end
   end
 
+  ##
+  # Finds the method 
+
+  def lookup_method(name, klass)
+    cache = load_cache_for klass
+    raise NotFoundError, name unless cache
+
+    method = cache[name.gsub('.', '#')]
+    method = cache[name.gsub('.', '::')] unless method
+    raise NotFoundError, name unless method
+
+    method
+  end
+
   def map_dirs(file_name, system=false)
     dirs = if system == :all then
              @all_dirs
@@ -321,6 +345,22 @@ Options may also be set in the 'RI' environment variable.
            end
 
     dirs.map { |dir| yield File.join(dir, file_name) }.flatten.compact
+  end
+
+  ##
+  # Extract the class and method name parts from +name+ like Foo::Bar#baz
+
+  def parse_name(name)
+    parts = name.split(/(::|\#|\.)/)
+
+    if parts[-2] != '::' or parts.last !~ /^[A-Z]/ then
+      meth = parts.pop
+      parts.pop
+    end
+
+    klass = parts.join
+
+    [klass, meth]
   end
 
   def populate_class_cache(class_cache, classes, extension = false)
@@ -368,15 +408,10 @@ Options may also be set in the 'RI' environment variable.
           else
             meth = nil
 
-            parts = name.split(/::|\#|\./)
-            meth = parts.pop unless parts.last =~ /^[A-Z]/
-            klass = parts.join '::'
+            klass, meth = parse_name name
 
-            cache = load_cache_for klass
-            # HACK Does not support F.n
-            abort "Nothing known about #{name}" unless cache
-            method = cache[name.gsub(/\./, '#')]
-            abort "Nothing known about #{name}" unless method
+            method = lookup_method name, klass
+
             @display.display_method_info method
           end
         else
@@ -385,7 +420,7 @@ Options may also be set in the 'RI' environment variable.
           else
             methods = select_methods(/^#{name}/)
             if methods.size == 0
-              abort "Nothing known about #{name}"
+              raise NotFoundError, name
             elsif methods.size == 1
               @display.display_method_info methods.first
             else
@@ -395,6 +430,8 @@ Options may also be set in the 'RI' environment variable.
         end
       end
     end
+  rescue NotFoundError => e
+    abort e.message
   end
 
   def select_methods(pattern)
