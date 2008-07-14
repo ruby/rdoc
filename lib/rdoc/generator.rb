@@ -888,6 +888,23 @@ module RDoc::Generator
         RDoc::Markup::ToHtmlCrossref.new(path, self, @options.show_hash)
     end
 
+    def inspect
+      alias_for = if @context.is_alias_for then
+                    " (alias_for #{@context.is_alias_for})"
+                  else
+                    nil
+                  end
+
+      "#<%s:0x%x %s%s%s (%s)%s>" % [
+        self.class, object_id,
+        @context.parent.name,
+        @context.singleton ? '::' : '#',
+        name,
+        @context.visibility,
+        alias_for
+      ]
+    end
+
     def name
       @context.name
     end
