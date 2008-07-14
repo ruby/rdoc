@@ -112,10 +112,18 @@ module RDoc
   # are all Contexts.
 
   class Context < CodeObject
-    attr_reader   :name, :method_list, :attributes, :aliases, :constants
-    attr_reader   :requires, :includes, :in_files, :visibility
 
-    attr_reader   :sections
+    attr_reader :aliases
+    attr_reader :attributes
+    attr_reader :constants
+    attr_reader :current_section
+    attr_reader :in_files
+    attr_reader :includes
+    attr_reader :method_list
+    attr_reader :name
+    attr_reader :requires
+    attr_reader :sections
+    attr_reader :visibility
 
     class Section
       attr_reader :title, :comment, :sequence
@@ -130,12 +138,18 @@ module RDoc
         set_comment(comment)
       end
 
-      private
+      def inspect
+        "#<%s:0x%x %s %p>" % [
+          self.class, object_id,
+          @sequence, title
+        ]
+      end
 
-      # Set the comment for this section from the original comment block
-      # If the first line contains :section:, strip it and use the rest. Otherwise
-      # remove lines up to the line containing :section:, and look for 
-      # those lines again at the end and remove them. This lets us write
+      ##
+      # Set the comment for this section from the original comment block If
+      # the first line contains :section:, strip it and use the rest.
+      # Otherwise remove lines up to the line containing :section:, and look
+      # for those lines again at the end and remove them. This lets us write
       #
       #   # ---------------------
       #   # :SECTION: The title
@@ -161,9 +175,9 @@ module RDoc
     end
 
     def initialize
-      super()
+      super
 
-      @in_files    = []
+      @in_files = []
 
       @name    ||= "unknown"
       @comment ||= ""
