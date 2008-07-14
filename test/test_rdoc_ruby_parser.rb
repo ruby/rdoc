@@ -41,6 +41,23 @@ class TestRdocRubyParser < Test::Unit::TestCase
     assert_equal 'foo', foo.name
     assert_equal comment, foo.comment
 
+    assert_equal [],      foo.aliases
+    assert_equal nil,     foo.block_params
+    assert_equal nil,     foo.call_seq
+    assert_equal true,    foo.document_children
+    assert_equal true,    foo.document_self
+    assert_equal false,   foo.done_documenting
+    assert_equal false,   foo.dont_rename_initialize
+    assert_equal false,   foo.force_documentation
+    assert_equal nil,     foo.is_alias_for
+    assert_equal '',      foo.params
+    assert_equal klass,   foo.parent
+    assert_equal false,   foo.singleton
+    assert_equal 'add_my_method :foo', foo.text
+    assert_equal nil,     foo.viewer
+    assert_equal :public, foo.visibility
+    assert_equal klass.current_section, foo.section
+
     stream = [
       tk(:COMMENT, 1, 1, nil, "# File #{@top_level.file_absolute_name}, line 1"),
       RDoc::RubyParser::NEWLINE_TOKEN,
@@ -123,6 +140,58 @@ class TestRdocRubyParser < Test::Unit::TestCase
     foo = klass.method_list.first
     assert_equal 'foo', foo.name
     assert_equal comment, foo.comment
+  end
+
+  def test_parse_method
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# my method\n"
+
+    util_parser "def foo() :bar end"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::RubyParser::NORMAL, tk, comment
+
+    foo = klass.method_list.first
+    assert_equal 'foo',     foo.name
+    assert_equal comment,   foo.comment
+
+    assert_equal [],        foo.aliases
+    assert_equal nil,       foo.block_params
+    assert_equal nil,       foo.call_seq
+    assert_equal nil,       foo.is_alias_for
+    assert_equal nil,       foo.viewer
+    assert_equal true,      foo.document_children
+    assert_equal true,      foo.document_self
+    assert_equal '()',      foo.params
+    assert_equal false,     foo.done_documenting
+    assert_equal false,     foo.dont_rename_initialize
+    assert_equal false,     foo.force_documentation
+    assert_equal klass,     foo.parent
+    assert_equal false,     foo.singleton
+    assert_equal :public,   foo.visibility
+    assert_equal 'def foo', foo.text
+    assert_equal klass.current_section, foo.section
+
+    stream = [
+      tk(:COMMENT, 1, 1, nil, "# File #{@top_level.file_absolute_name}, line 1"),
+      RDoc::RubyParser::NEWLINE_TOKEN,
+      tk(:SPACE,      1, 1,  nil,   ''),
+      tk(:DEF,        1, 0,  'def', 'def'),
+      tk(:SPACE,      1, 3,  nil,   ' '),
+      tk(:IDENTIFIER, 1, 4,  'foo', 'foo'),
+      tk(:LPAREN,     1, 7,  nil,   '('),
+      tk(:RPAREN,     1, 8,  nil,   ')'),
+      tk(:SPACE,      1, 9,  nil,   ' '),
+      tk(:COLON,      1, 10, nil,   ':'),
+      tk(:IDENTIFIER, 1, 11, 'bar', 'bar'),
+      tk(:SPACE,      1, 14, nil,   ' '),
+      tk(:END,        1, 15, 'end', 'end'),
+    ]
+
+    assert_equal stream, foo.token_stream
   end
 
   def test_parse_statements_identifier_meta_method

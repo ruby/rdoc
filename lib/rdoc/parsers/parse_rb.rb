@@ -2015,9 +2015,7 @@ class RDoc::RubyParser
 
     skip_tkspace false
 
-    if comment.sub!(/(^# +:?)(singleton-)(method:)/, '\1\3') then
-      singleton = true
-    end
+    singleton = !!comment.sub!(/(^# +:?)(singleton-)(method:)/, '\1\3')
 
     if comment.sub!(/^# +:?method: *(\S*).*?\n/i, '') then
       name = $1 unless $1.empty?
@@ -2050,6 +2048,8 @@ class RDoc::RubyParser
     meth.add_tokens @token_stream
 
     add_token_listener meth
+
+    meth.params = ''
 
     extract_call_seq comment, meth
 
