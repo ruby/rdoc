@@ -1,6 +1,4 @@
-require 'rdoc/code_objects'
-require 'rdoc/parsers/parserfactory'
-require 'rdoc/rdoc'
+require 'rdoc/parser'
 require 'rdoc/known_classes'
 
 ##
@@ -93,13 +91,11 @@ require 'rdoc/known_classes'
 #    * block and return its value.
 #    */
 
-class RDoc::C_Parser
-
-  attr_writer :progress
-
-  extend RDoc::ParserFactory
+class RDoc::Parser::C < RDoc::Parser
 
   parse_files_matching(/\.(?:([CcHh])\1?|c([+xp])\2|y)\z/)
+
+  attr_writer :progress
 
   @@enclosure_classes = {}
   @@known_bodies = {}
@@ -107,19 +103,17 @@ class RDoc::C_Parser
   ##
   # Prepare to parse a C file
 
-  def initialize(top_level, file_name, body, options, stats)
+  def initialize(top_level, file_name, content, options, stats)
+    super
+
     @known_classes = RDoc::KNOWN_CLASSES.dup
-    @options = options
-    @body = handle_tab_width(handle_ifdefs_in(body))
-    @stats   = stats
-    @top_level = top_level
+    @content = handle_tab_width handle_ifdefs_in(@content)
     @classes = Hash.new
-    @file_dir = File.dirname(file_name)
-    @progress = $stderr unless @options.quiet
+    @file_dir = File.dirname(@file_name)
   end
 
   def do_aliases
-    @body.scan(%r{rb_define_alias\s*\(\s*(\w+),\s*"([^"]+)",\s*"([^"]+)"\s*\)}m) do
+    @content.scan(%r{rb_define_alias\s*\(\s*(\w+),\s*"([^"]+)",\s*"([^"]+)"\s*\)}m) do
       |var_name, new_name, old_name|
       @stats.num_methods += 1
       class_name = @known_classes[var_name] || var_name
@@ -130,13 +124,13 @@ class RDoc::C_Parser
  end
 
   def do_classes
-    @body.scan(/(\w+)\s* = \s*rb_define_module\s*\(\s*"(\w+)"\s*\)/mx) do 
+    @content.scan(/(\w+)\s* = \s*rb_define_module\s*\(\s*"(\w+)"\s*\)/mx) do 
       |var_name, class_name|
       handle_class_module(var_name, "module", class_name, nil, nil)
     end
 
     # The '.' lets us handle SWIG-generated files
-    @body.scan(/([\w\.]+)\s* = \s*rb_define_class\s*
+    @content.scan(/([\w\.]+)\s* = \s*rb_define_class\s*
               \(
                  \s*"(\w+)",
                  \s*(\w+)\s*
@@ -144,13 +138,13 @@ class RDoc::C_Parser
       handle_class_module(var_name, "class", class_name, parent, nil)
     end
 
-    @body.scan(/(\w+)\s*=\s*boot_defclass\s*\(\s*"(\w+?)",\s*(\w+?)\s*\)/) do
+    @content.scan(/(\w+)\s*=\s*boot_defclass\s*\(\s*"(\w+?)",\s*(\w+?)\s*\)/) do
       |var_name, class_name, parent|
       parent = nil if parent == "0"
       handle_class_module(var_name, "class", class_name, parent, nil)
     end
 
-    @body.scan(/(\w+)\s* = \s*rb_define_module_under\s*
+    @content.scan(/(\w+)\s* = \s*rb_define_module_under\s*
               \(
                  \s*(\w+),
                  \s*"(\w+)"
@@ -158,7 +152,7 @@ class RDoc::C_Parser
       handle_class_module(var_name, "module", class_name, nil, in_module)
     end
 
-    @body.scan(/([\w\.]+)\s* = \s*rb_define_class_under\s*
+    @content.scan(/([\w\.]+)\s* = \s*rb_define_class_under\s*
               \(
                  \s*(\w+),
                  \s*"(\w+)",
@@ -169,7 +163,7 @@ class RDoc::C_Parser
   end
 
   def do_constants
-    @body.scan(%r{\Wrb_define_
+    @content.scan(%r{\Wrb_define_
                    (
                       variable |
                       readonly_variable |
@@ -192,7 +186,7 @@ class RDoc::C_Parser
   #   rb_include_module(rb_cArray, rb_mEnumerable);
 
   def do_includes
-    @body.scan(/rb_include_module\s*\(\s*(\w+?),\s*(\w+?)\s*\)/) do |c,m|
+    @content.scan(/rb_include_module\s*\(\s*(\w+?),\s*(\w+?)\s*\)/) do |c,m|
       if cls = @classes[c]
         m = @known_classes[m] || m
         cls.add_include RDoc::Include.new(m, "")
@@ -201,7 +195,7 @@ class RDoc::C_Parser
   end
 
   def do_methods
-    @body.scan(%r{rb_define_
+    @content.scan(%r{rb_define_
                    (
                       singleton_method |
                       method           |
@@ -227,7 +221,7 @@ class RDoc::C_Parser
                     meth_body, param_count, source_file)
     end
 
-    @body.scan(%r{rb_define_attr\(
+    @content.scan(%r{rb_define_attr\(
                              \s*([\w\.]+),
                              \s*"([^"]+)",
                              \s*(\d+),
@@ -239,7 +233,7 @@ class RDoc::C_Parser
                   attr_writer.to_i != 0)
     end
 
-    @body.scan(%r{rb_define_global_function\s*\(
+    @content.scan(%r{rb_define_global_function\s*\(
                              \s*"([^"]+)",
                              \s*(?:RUBY_METHOD_FUNC\(|VALUEFUNC\()?(\w+)\)?,
                              \s*(-?\w+)\s*\)
@@ -249,7 +243,7 @@ class RDoc::C_Parser
                     meth_body, param_count, source_file)
     end
 
-    @body.scan(/define_filetest_function\s*\(
+    @content.scan(/define_filetest_function\s*\(
                              \s*"([^"]+)",
                              \s*(?:RUBY_METHOD_FUNC\(|VALUEFUNC\()?(\w+)\)?,
                              \s*(-?\w+)\s*\)/xm) do
@@ -261,10 +255,10 @@ class RDoc::C_Parser
  end
 
   def find_attr_comment(attr_name)
-    if @body =~ %r{((?>/\*.*?\*/\s+))
+    if @content =~ %r{((?>/\*.*?\*/\s+))
                    rb_define_attr\((?:\s*(\w+),)?\s*"#{attr_name}"\s*,.*?\)\s*;}xmi
       $1
-    elsif @body =~ %r{Document-attr:\s#{attr_name}\s*?\n((?>.*?\*/))}m
+    elsif @content =~ %r{Document-attr:\s#{attr_name}\s*?\n((?>.*?\*/))}m
       $1
     else
       ''
@@ -370,16 +364,16 @@ class RDoc::C_Parser
 
   def find_class_comment(class_name, class_meth)
     comment = nil
-    if @body =~ %r{((?>/\*.*?\*/\s+))
+    if @content =~ %r{((?>/\*.*?\*/\s+))
                    (static\s+)?void\s+Init_#{class_name}\s*(?:_\(\s*)?\(\s*(?:void\s*)\)}xmi
       comment = $1
-    elsif @body =~ %r{Document-(class|module):\s#{class_name}\s*?\n((?>.*?\*/))}m
+    elsif @content =~ %r{Document-(class|module):\s#{class_name}\s*?\n((?>.*?\*/))}m
       comment = $2
     else
-      if @body =~ /rb_define_(class|module)/m then
+      if @content =~ /rb_define_(class|module)/m then
         class_name = class_name.split("::").last
         comments = []
-        @body.split(/(\/\*.*?\*\/)\s*?\n/m).each_with_index do |chunk, index|
+        @content.split(/(\/\*.*?\*\/)\s*?\n/m).each_with_index do |chunk, index|
           comments[index] = chunk
           if chunk =~ /rb_define_(class|module).*?"(#{class_name})"/m then
             comment = comments[index-1]
@@ -396,10 +390,10 @@ class RDoc::C_Parser
   # comment or in the matching Document- section.
 
   def find_const_comment(type, const_name)
-    if @body =~ %r{((?>^\s*/\*.*?\*/\s+))
+    if @content =~ %r{((?>^\s*/\*.*?\*/\s+))
                    rb_define_#{type}\((?:\s*(\w+),)?\s*"#{const_name}"\s*,.*?\)\s*;}xmi
       $1
-    elsif @body =~ %r{Document-(?:const|global|variable):\s#{const_name}\s*?\n((?>.*?\*/))}m
+    elsif @content =~ %r{Document-(?:const|global|variable):\s#{const_name}\s*?\n((?>.*?\*/))}m
       $1
     else
       ''
@@ -430,7 +424,7 @@ class RDoc::C_Parser
 
   def find_override_comment(meth_name)
     name = Regexp.escape(meth_name)
-    if @body =~ %r{Document-method:\s#{name}\s*?\n((?>.*?\*/))}m
+    if @content =~ %r{Document-method:\s#{name}\s*?\n((?>.*?\*/))}m
       $1
     end
   end
@@ -595,7 +589,7 @@ class RDoc::C_Parser
         file_name = File.join(@file_dir, source_file)
         body = (@@known_bodies[source_file] ||= File.read(file_name))
       else
-        body = @body
+        body = @content
       end
       if find_body(meth_body, meth_obj, body) and meth_obj.document_self
         class_obj.add_method(meth_obj)
@@ -637,7 +631,7 @@ class RDoc::C_Parser
   # when scanning for classes and methods
 
   def remove_commented_out_lines
-    @body.gsub!(%r{//.*rb_define_}, '//')
+    @content.gsub!(%r{//.*rb_define_}, '//')
   end
 
   def remove_private_comments(comment)

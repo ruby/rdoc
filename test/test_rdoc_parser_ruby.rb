@@ -3,10 +3,10 @@ require 'tempfile'
 require 'test/unit'
 
 require 'rdoc/options'
-require 'rdoc/parsers/parse_rb'
+require 'rdoc/parser/ruby'
 require 'rdoc/stats'
 
-class TestRdocRubyParser < Test::Unit::TestCase
+class TestRdocParserRuby < Test::Unit::TestCase
 
   def setup
     @tempfile = Tempfile.new self.class.name
@@ -35,7 +35,7 @@ class TestRdocRubyParser < Test::Unit::TestCase
 
     tk = @parser.get_tk
 
-    @parser.parse_meta_method klass, RDoc::RubyParser::NORMAL, tk, comment
+    @parser.parse_meta_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
 
     foo = klass.method_list.first
     assert_equal 'foo', foo.name
@@ -60,7 +60,7 @@ class TestRdocRubyParser < Test::Unit::TestCase
 
     stream = [
       tk(:COMMENT, 1, 1, nil, "# File #{@top_level.file_absolute_name}, line 1"),
-      RDoc::RubyParser::NEWLINE_TOKEN,
+      RDoc::Parser::Ruby::NEWLINE_TOKEN,
       tk(:SPACE,      1, 1,  nil, ''),
       tk(:IDENTIFIER, 1, 0,  'add_my_method', 'add_my_method'),
       tk(:SPACE,      1, 13, nil, ' '),
@@ -84,7 +84,7 @@ class TestRdocRubyParser < Test::Unit::TestCase
 
     tk = @parser.get_tk
 
-    @parser.parse_meta_method klass, RDoc::RubyParser::NORMAL, tk, comment
+    @parser.parse_meta_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
 
     foo = klass.method_list.first
     assert_equal 'woo_hoo!', foo.name
@@ -101,7 +101,7 @@ class TestRdocRubyParser < Test::Unit::TestCase
 
     tk = @parser.get_tk
 
-    @parser.parse_meta_method klass, RDoc::RubyParser::NORMAL, tk, comment
+    @parser.parse_meta_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
 
     foo = klass.method_list.first
     assert_equal 'foo', foo.name
@@ -119,7 +119,7 @@ class TestRdocRubyParser < Test::Unit::TestCase
 
     tk = @parser.get_tk
 
-    @parser.parse_meta_method klass, RDoc::RubyParser::NORMAL, tk, comment
+    @parser.parse_meta_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
 
     foo = klass.method_list.first
     assert_equal 'woo_hoo!', foo.name
@@ -135,7 +135,7 @@ class TestRdocRubyParser < Test::Unit::TestCase
 
     tk = @parser.get_tk
 
-    @parser.parse_meta_method klass, RDoc::RubyParser::NORMAL, tk, comment
+    @parser.parse_meta_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
 
     foo = klass.method_list.first
     assert_equal 'foo', foo.name
@@ -152,7 +152,7 @@ class TestRdocRubyParser < Test::Unit::TestCase
 
     tk = @parser.get_tk
 
-    @parser.parse_method klass, RDoc::RubyParser::NORMAL, tk, comment
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
 
     foo = klass.method_list.first
     assert_equal 'foo',     foo.name
@@ -177,7 +177,7 @@ class TestRdocRubyParser < Test::Unit::TestCase
 
     stream = [
       tk(:COMMENT, 1, 1, nil, "# File #{@top_level.file_absolute_name}, line 1"),
-      RDoc::RubyParser::NEWLINE_TOKEN,
+      RDoc::Parser::Ruby::NEWLINE_TOKEN,
       tk(:SPACE,      1, 1,  nil,   ''),
       tk(:DEF,        1, 0,  'def', 'def'),
       tk(:SPACE,      1, 3,  nil,   ' '),
@@ -205,7 +205,7 @@ end
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::RubyParser::NORMAL, nil, ''
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
 
     foo = @top_level.classes.first.method_list.first
     assert_equal 'foo', foo.name
@@ -216,7 +216,7 @@ end
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::RubyParser::NORMAL, nil, ''
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
 
     foo2 = @top_level.classes.first.method_list.last
     assert_equal 'foo2', foo2.name
@@ -228,7 +228,7 @@ end
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::RubyParser::NORMAL, nil, ''
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
 
     foo = @top_level.classes.first.attributes.first
     assert_equal 'foo', foo.name
@@ -240,7 +240,7 @@ end
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::RubyParser::NORMAL, nil, ''
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
 
     foo = @top_level.classes.first.attributes.first
     assert_equal 'foo', foo.name
@@ -254,7 +254,7 @@ end
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::RubyParser::NORMAL, nil, ''
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
 
     foo = @top_level.classes.first.attributes.first
     assert_equal 'foo', foo.name
@@ -266,7 +266,7 @@ end
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::RubyParser::NORMAL, nil, ''
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
 
     foo = @top_level.classes.first
     assert_equal 'Foo', foo.name
@@ -278,7 +278,7 @@ end
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::RubyParser::NORMAL, nil, ''
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
 
     foo, s_foo = @top_level.modules.first.method_list
     assert_equal 'foo', foo.name, 'instance method name'
@@ -295,7 +295,7 @@ end
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::RubyParser::NORMAL, nil, ''
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
 
     foo = @top_level.classes.first.method_list.first
     assert_equal 'foo', foo.name
@@ -307,7 +307,7 @@ end
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::RubyParser::NORMAL, nil, ''
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
 
     assert_equal 1, @top_level.requires.length
   end
@@ -328,7 +328,7 @@ end
   end
 
   def util_parser(content)
-    @parser = RDoc::RubyParser.new @top_level, @fn, content, @options, @stats
+    @parser = RDoc::Parser::Ruby.new @top_level, @fn, content, @options, @stats
     @parser.progress = @progress
     @parser
   end

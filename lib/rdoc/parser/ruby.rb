@@ -1,9 +1,4 @@
-#!/usr/local/bin/ruby
-
-# Parse a Ruby source file, building a set of objects representing the
-# modules, classes, methods, requires, and includes we find (these classes are
-# defined in code_objects.rb).
-
+##
 # This file contains stuff stolen outright from:
 #
 #   rtags.rb -
@@ -18,7 +13,7 @@ require 'irb/slex'
 require 'rdoc/code_objects'
 require 'rdoc/tokenstream'
 require 'rdoc/markup/preprocess'
-require 'rdoc/parsers/parserfactory'
+require 'rdoc/parser'
 
 $TOKEN_DEBUG ||= nil
 #$TOKEN_DEBUG = $DEBUG_RDOC
@@ -1363,7 +1358,7 @@ class RDoc::RubyLex
 end
 
 ##
-# Extract code elements from a source file, returning a TopLevel object
+# Extracts code elements from a source file returning a TopLevel object
 # containing the constituent file elements.
 #
 # This file is based on rtags
@@ -1460,30 +1455,23 @@ end
 #   ##
 #   # :singleton-method: woo_hoo!
 
-class RDoc::RubyParser
+class RDoc::Parser::Ruby < RDoc::Parser
+
+  parse_files_matching(/\.rbw?$/)
 
   include RDoc::RubyToken
   include RDoc::TokenStream
 
-  extend RDoc::ParserFactory
-
   NORMAL = "::"
   SINGLE = "<<"
 
-  parse_files_matching(/\.rbw?$/)
-
-  attr_writer :progress
-
   def initialize(top_level, file_name, content, options, stats)
-    @options = options
-    @stats = stats
+    super
+
     @size = 0
     @token_listeners = nil
-    @input_file_name = file_name
     @scanner = RDoc::RubyLex.new content, @options
     @scanner.exception_on_syntax_error = false
-    @top_level = top_level
-    @progress = $stderr unless options.quiet
 
     reset
   end
@@ -1726,7 +1714,7 @@ class RDoc::RubyParser
   # This routine modifies it's parameter
 
   def look_for_directives_in(context, comment)
-    preprocess = RDoc::Markup::PreProcess.new(@input_file_name,
+    preprocess = RDoc::Markup::PreProcess.new(@file_name,
                                               @options.rdoc_include)
 
     preprocess.handle(comment) do |directive, param|
@@ -1765,7 +1753,7 @@ class RDoc::RubyParser
   end
 
   def make_message(msg)
-    prefix = "\n" + @input_file_name + ":"
+    prefix = "\n" + @file_name + ":"
     if @scanner
       prefix << "#{@scanner.line_no}:#{@scanner.char_no}: "
     end
@@ -2696,7 +2684,7 @@ class RDoc::RubyParser
           $stderr.puts <<-EOF
 
 
-RDoc failure in #@input_file_name at or around line #{@scanner.line_no} column
+RDoc failure in #{@file_name} at or around line #{@scanner.line_no} column
 #{@scanner.char_no}
 
 Before reporting this, could you check that the file you're documenting

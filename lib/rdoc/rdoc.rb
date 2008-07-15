@@ -1,9 +1,12 @@
 require 'rdoc'
 
-require 'rdoc/parsers/parse_rb.rb'
-require 'rdoc/parsers/parse_c.rb'
-require 'rdoc/parsers/parse_f95.rb'
-require 'rdoc/parsers/parse_simple.rb'
+require 'rdoc/parser'
+
+# Simple must come first
+require 'rdoc/parser/simple'
+require 'rdoc/parser/ruby'
+require 'rdoc/parser/c'
+require 'rdoc/parser/f95'
 
 require 'rdoc/stats'
 require 'rdoc/options'
@@ -206,8 +209,10 @@ module RDoc
           end
         end
 
-        top_level = TopLevel.new(fn)
-        parser = ParserFactory.parser_for(top_level, fn, content, options, @stats)
+        top_level = ::RDoc::TopLevel.new fn
+
+        parser = ::RDoc::Parser.for top_level, fn, content, options, @stats
+
         file_info << parser.scan
         @stats.num_files += 1
       end

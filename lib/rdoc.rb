@@ -1,7 +1,7 @@
 $DEBUG_RDOC = nil
 
 ##
-# = RDOC - Ruby Documentation System
+# RDoc - Ruby Documentation System
 #
 # This package contains RDoc and RDoc::Markup.  RDoc is an application that
 # produces documentation for one or more Ruby source files.  We work similarly
@@ -17,7 +17,7 @@ $DEBUG_RDOC = nil
 #
 # * If you want to use RDoc to create documentation for your Ruby source files,
 #   read on.
-# * If you want to include extensions written in C, see RDoc::C_Parser
+# * If you want to include extensions written in C, see RDoc::Parser::C
 # * For information on the various markups available in comment blocks, see
 #   RDoc::Markup.
 # * If you want to drive RDoc programatically, see RDoc::RDoc.
