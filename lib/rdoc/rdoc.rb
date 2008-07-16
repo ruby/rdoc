@@ -248,6 +248,8 @@ module RDoc
 
       file_info = parse_files @options
 
+      @options.title = "RDoc Documentation"
+
       if file_info.empty?
         $stderr.puts "\nNo newer files." unless @options.quiet
       else

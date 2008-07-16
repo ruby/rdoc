@@ -110,7 +110,7 @@ class RDoc::Options
   ##
   # Don't display progress as we process the files
 
-  attr_reader :quiet
+  attr_accessor :quiet
 
   ##
   # Array of directories to search for files to satisfy an :include:
@@ -180,7 +180,6 @@ class RDoc::Options
     @extra_accessor_flags = {}
     @promiscuous = false
     @force_update = false
-    @title = "RDoc Documentation"
 
     @css = nil
     @webcvs = nil

@@ -159,9 +159,10 @@ module RDoc
       def set_comment(comment)
         return unless comment
 
-        if comment =~ /^.*?:section:.*$/
+        if comment =~ /^.*?:section:.*\n/
           start = $`
           rest = $'
+
           if start.empty?
             @comment = rest
           else
@@ -760,6 +761,12 @@ $stderr.puts p
       res
     end
 
+  end
+
+  ##
+  # GhostMethod represents a method referenced only by a comment
+
+  class GhostMethod < AnyMethod
   end
 
   ##

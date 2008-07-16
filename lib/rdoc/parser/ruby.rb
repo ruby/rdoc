@@ -1454,6 +1454,23 @@ end
 #
 #   ##
 #   # :singleton-method: woo_hoo!
+#
+# == Hidden methods
+#
+# You can provide documentation for methods that don't appear using
+# the :method: and :singleton-method: directives:
+#
+#   ##
+#   # :method: ghost_method
+#   # There is a method here, but you can't see it!
+#   
+#   ##
+#   # this is a comment for a regular method
+#   
+#   def regular_method() end
+#
+# Note that by default, the :method: directive will be ignored if there is a
+# standard rdocable item following it.
 
 class RDoc::Parser::Ruby < RDoc::Parser
 
@@ -1719,33 +1736,30 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     preprocess.handle(comment) do |directive, param|
       case directive
-      when "stopdoc"
-        context.stop_doc
-        ""
-      when "startdoc"
-        context.start_doc
-        context.force_documentation = true
-        ""
-
-      when "enddoc"
+      when 'enddoc' then
         throw :enddoc
-
-      when "main"
+      when 'main' then
         @options.main_page = param
-        ""
-
-      when "title"
-        @options.title = param
-        ""
-
-      when "section"
+        ''
+      when 'method', 'singleton-method' then
+        false # ignore
+      when 'section' then
         context.set_current_section(param, comment)
         comment.replace ''
         break
-
+      when 'startdoc' then
+        context.start_doc
+        context.force_documentation = true
+        ''
+      when 'stopdoc' then
+        context.stop_doc
+        ''
+      when 'title' then
+        @options.title = param
+        ''
       else
         warn "Unrecognized directive '#{directive}'"
-        break
+        false
       end
     end
 
@@ -1974,6 +1988,39 @@ class RDoc::Parser::Ruby < RDoc::Parser
     if con.document_self
       container.add_constant(con)
     end
+  end
+
+  def parse_comment(container, tk, comment)
+    progress(".")
+    @stats.num_methods += 1
+    line_no = tk.line_no
+    column  = tk.char_no
+
+    singleton = !!comment.sub!(/(^# +:?)(singleton-)(method:)/, '\1\3')
+
+    if comment.sub!(/^# +:?method: *(\S*).*?\n/i, '') then
+      name = $1 unless $1.empty?
+    else
+      return nil
+    end
+
+    meth = RDoc::GhostMethod.new get_tkread, name
+    meth.singleton = singleton
+
+    meth.start_collecting_tokens
+    indent = TkSPACE.new 1, 1
+    indent.set_text " " * column
+
+    position_comment = TkCOMMENT.new(line_no, 1, "# File #{@top_level.file_absolute_name}, line #{line_no}")
+    meth.add_tokens [position_comment, NEWLINE_TOKEN, indent]
+
+    meth.params = ''
+
+    extract_call_seq comment, meth
+
+    container.add_method meth if meth.document_self
+
+    meth.comment = comment
   end
 
   def parse_include(context, comment)
@@ -2307,6 +2354,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
         if TkCOMMENT === tk then
           if non_comment_seen then
+            # Look for RDoc in a comment about to be thrown away
+            parse_comment container, tk, comment unless comment.empty?
+
             comment = ''
             non_comment_seen = false
           end

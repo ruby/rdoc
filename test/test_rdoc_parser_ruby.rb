@@ -10,12 +10,12 @@ class TestRdocParserRuby < Test::Unit::TestCase
 
   def setup
     @tempfile = Tempfile.new self.class.name
-    filename = @tempfile.path
+    @filename = @tempfile.path
 
-    RDoc::TopLevel.reset
-    @top_level = RDoc::TopLevel.new filename
-    @fn = filename
+    util_toplevel
+    @filename
     @options = RDoc::Options.new Hash.new
+    @options.quiet = true
     @stats = RDoc::Stats.new
 
     @progress = StringIO.new
@@ -23,6 +23,99 @@ class TestRdocParserRuby < Test::Unit::TestCase
 
   def teardown
     @tempfile.unlink
+  end
+
+  def test_look_for_directives_in_enddoc
+    util_parser ""
+
+    assert_throws :enddoc do
+      @parser.look_for_directives_in @top_level, "# :enddoc:\n"
+    end
+  end
+
+  def test_look_for_directives_in_main
+    util_parser ""
+
+    @parser.look_for_directives_in @top_level, "# :main: new main page\n"
+
+    assert_equal 'new main page', @options.main_page
+  end
+
+  def test_look_for_directives_in_method
+    util_parser ""
+
+    comment = "# :method: my_method\n"
+
+    @parser.look_for_directives_in @top_level, comment
+
+    assert_equal "# :method: my_method\n", comment
+
+    comment = "# :singleton-method: my_method\n"
+
+    @parser.look_for_directives_in @top_level, comment
+
+    assert_equal "# :singleton-method: my_method\n", comment
+  end
+
+  def test_look_for_directives_in_startdoc
+    util_parser ""
+
+    @top_level.stop_doc
+    assert !@top_level.document_self
+    assert !@top_level.document_children
+    assert !@top_level.force_documentation
+
+    @parser.look_for_directives_in @top_level, "# :startdoc:\n"
+
+    assert @top_level.document_self
+    assert @top_level.document_children
+    assert @top_level.force_documentation
+  end
+
+  def test_look_for_directives_in_stopdoc
+    util_parser ""
+
+    assert @top_level.document_self
+    assert @top_level.document_children
+
+    @parser.look_for_directives_in @top_level, "# :stopdoc:\n"
+
+    assert !@top_level.document_self
+    assert !@top_level.document_children
+  end
+
+  def test_look_for_directives_in_section
+    util_parser ""
+
+    comment = "# :section: new section\n# woo stuff\n"
+
+    @parser.look_for_directives_in @top_level, comment
+
+    section = @top_level.current_section
+    assert_equal 'new section', section.title
+    assert_equal "# woo stuff\n", section.comment
+
+    assert_equal '', comment
+  end
+
+  def test_look_for_directives_in_title
+    util_parser ""
+
+    @parser.look_for_directives_in @top_level, "# :title: new title\n"
+
+    assert_equal 'new title', @options.title
+  end
+
+  def test_look_for_directives_in_unhandled
+    util_parser ""
+
+    comment = "# :unhandled: \n# :title: hi\n"
+
+    @parser.look_for_directives_in @top_level, comment
+
+    assert_equal "# :unhandled: \n", comment
+
+    assert_equal 'hi', @options.title
   end
 
   def test_parse_meta_method
@@ -194,6 +287,56 @@ class TestRdocParserRuby < Test::Unit::TestCase
     assert_equal stream, foo.token_stream
   end
 
+  def test_parse_statements_comment
+    content = <<-EOF
+class Foo
+  ##
+  # :method: my_method
+  # my method comment
+
+end
+    EOF
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# :method: foo\n# my method\n"
+
+    util_parser "\n"
+
+    tk = @parser.get_tk
+
+    @parser.parse_comment klass, tk, comment
+
+    foo = klass.method_list.first
+    assert_equal 'foo',     foo.name
+    assert_equal comment,   foo.comment
+
+    assert_equal [],        foo.aliases
+    assert_equal nil,       foo.block_params
+    assert_equal nil,       foo.call_seq
+    assert_equal nil,       foo.is_alias_for
+    assert_equal nil,       foo.viewer
+    assert_equal true,      foo.document_children
+    assert_equal true,      foo.document_self
+    assert_equal '',        foo.params
+    assert_equal false,     foo.done_documenting
+    assert_equal false,     foo.dont_rename_initialize
+    assert_equal false,     foo.force_documentation
+    assert_equal klass,     foo.parent
+    assert_equal false,     foo.singleton
+    assert_equal :public,   foo.visibility
+    assert_equal "\n",      foo.text
+    assert_equal klass.current_section, foo.section
+
+    stream = [
+      tk(:COMMENT, 1, 1, nil, "# File #{@top_level.file_absolute_name}, line 1"),
+      RDoc::Parser::Ruby::NEWLINE_TOKEN,
+      tk(:SPACE,      1, 1,  nil,   ''),
+    ]
+
+    assert_equal stream, foo.token_stream
+  end
+
   def test_parse_statements_identifier_meta_method
     content = <<-EOF
 class Foo
@@ -328,9 +471,15 @@ end
   end
 
   def util_parser(content)
-    @parser = RDoc::Parser::Ruby.new @top_level, @fn, content, @options, @stats
+    @parser = RDoc::Parser::Ruby.new @top_level, @filename, content, @options,
+                                     @stats
     @parser.progress = @progress
     @parser
+  end
+
+  def util_toplevel
+    RDoc::TopLevel.reset
+    @top_level = RDoc::TopLevel.new @filename
   end
 
 end

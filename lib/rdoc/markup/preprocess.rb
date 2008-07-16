@@ -17,18 +17,20 @@ class RDoc::Markup::PreProcess
   # are passed back to our caller as |directive, param|
 
   def handle(text)
-    text.gsub!(/^([ \t#]*):(\w+):\s*(.+)?\n/) do
+    text.gsub!(/^([ \t#]*):(\w+):[ \t]*(.+)?\n/) do
       prefix    = $1
       directive = $2.downcase
       param     = $3
 
       case directive
-      when "include"
+      when 'include' then
         filename = param.split[0]
-        include_file(filename, prefix)
+        include_file filename, prefix
 
       else
-        yield(directive, param)
+        result = yield directive, param
+        result = "#{prefix}:#{directive}: #{param}\n" unless result
+        result
       end
     end
   end
