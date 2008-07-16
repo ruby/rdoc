@@ -138,6 +138,10 @@ module RDoc
         set_comment(comment)
       end
 
+      def ==(other)
+        self.class === other and @sequence == other.sequence
+      end
+
       def inspect
         "#<%s:0x%x %s %p>" % [
           self.class, object_id,
@@ -173,6 +177,7 @@ module RDoc
         end
         @comment = nil if @comment.empty?
       end
+
     end
 
     def initialize

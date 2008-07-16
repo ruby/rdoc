@@ -2065,7 +2065,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         name = 'unknown'
       end
     end
-
+    
     meth = RDoc::MetaMethod.new get_tkread, name
     meth.singleton = singleton
 

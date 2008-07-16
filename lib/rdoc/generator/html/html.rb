@@ -388,21 +388,20 @@ EOF
 #####################################################################
 
   METHOD_LIST = <<-EOF
-
   <div id="contextContent">
 <% if values["diagram"] then %>
     <div id="diagram">
       <%= values["diagram"] %>
     </div>
-<% end %>
+<% end
 
-<% if values["description"] then %>
+   if values["description"] then %>
     <div id="description">
       <%= values["description"] %>
     </div>
-<% end %>
+<% end
 
-<% if values["requires"] then %>
+   if values["requires"] then %>
     <div id="requires-list">
       <h3 class="section-bar">Required files</h3>
 
@@ -412,14 +411,14 @@ EOF
 <% end # values["requires"] %>
       </div>
     </div>
-<% end %>
+<% end
 
-<% if values["toc"] then %>
+   if values["toc"] then %>
     <div id="contents-list">
       <h3 class="section-bar">Contents</h3>
       <ul>
 <% values["toc"].each do |toc| %>
-      <li><a href="#<%= values["href"] %>"><%= values["secname"] %></a></li>
+      <li><a href="#<%= toc["href"] %>"><%= toc["secname"] %></a></li>
 <% end # values["toc"] %>
      </ul>
 <% end %>
@@ -430,15 +429,13 @@ EOF
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-<% values["methods"].each do |methods| %>
+<%   values["methods"].each do |methods| %>
         <%= href methods["aref"], methods["name"] %>&nbsp;&nbsp;
-<% end # values["methods"] %>
+<%   end # values["methods"] %>
       </div>
     </div>
 <% end %>
-
   </div>
-
 
     <!-- if includes -->
 <% if values["includes"] then %>
@@ -451,137 +448,134 @@ EOF
 <% end # values["includes"] %>
       </div>
     </div>
-<% end %>
+<% end
 
-<% values["sections"].each do |sections| %>
+   values["sections"].each do |sections| %>
     <div id="section">
-<% if sections["sectitle"] then %>
+<%   if sections["sectitle"] then %>
       <h2 class="section-title"><a name="<%= sections["secsequence"] %>"><%= sections["sectitle"] %></a></h2>
-<% if sections["seccomment"] then %>
+<%     if sections["seccomment"] then %>
       <div class="section-comment">
         <%= sections["seccomment"] %>
       </div>
-<% end %>
-<% end %>
+<%     end
+     end
 
-<% if values["classlist"] then %>
+     if sections["classlist"] then %>
     <div id="class-list">
       <h3 class="section-bar">Classes and Modules</h3>
 
       <%= values["classlist"] %>
     </div>
-<% end %>
+<%   end
 
-<% if values["constants"] then %>
+     if sections["constants"] then %>
     <div id="constants-list">
       <h3 class="section-bar">Constants</h3>
 
       <div class="name-list">
         <table summary="Constants">
-<% values["constants"].each do |constants| %>
+<%     sections["constants"].each do |constants| %>
         <tr class="top-aligned-row context-row">
           <td class="context-item-name"><%= constants["name"] %></td>
           <td>=</td>
           <td class="context-item-value"><%= constants["value"] %></td>
-<% if values["desc"] then %>
+<%       if sections["desc"] then %>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc"><%= constants["desc"] %></td>
-<% end %>
+<%       end %>
         </tr>
-<% end # values["constants"] %>
+<%     end # sections["constants"] %>
         </table>
       </div>
     </div>
-<% end %>
+<%   end
 
-<% if values["aliases"] then %>
+     if sections["aliases"] then %>
     <div id="aliases-list">
       <h3 class="section-bar">External Aliases</h3>
 
       <div class="name-list">
-                        <table summary="aliases">
-<% values["aliases"].each do |aliases| $stderr.puts({ :aliases => aliases }.inspect) %>
+      <table summary="aliases">
+<%     sections["aliases"].each do |aliases| %>
         <tr class="top-aligned-row context-row">
-          <td class="context-item-name"><%= values["old_name"] %></td>
+          <td class="context-item-name"><%= aliases["old_name"] %></td>
           <td>-&gt;</td>
-          <td class="context-item-value"><%= values["new_name"] %></td>
+          <td class="context-item-value"><%= aliases["new_name"] %></td>
         </tr>
-<% if values["desc"] then %>
+<%       if aliases["desc"] then %>
       <tr class="top-aligned-row context-row">
         <td>&nbsp;</td>
-        <td colspan="2" class="context-item-desc"><%= values["desc"] %></td>
+        <td colspan="2" class="context-item-desc"><%= aliases["desc"] %></td>
       </tr>
-<% end %>
-<% end # values["aliases"] %>
+<%       end
+       end # sections["aliases"] %>
         </table>
       </div>
     </div>
-<% end %>
+<%   end %>
 
-
-<% if values["attributes"] then %>
+<%   if sections["attributes"] then %>
     <div id="attribute-list">
       <h3 class="section-bar">Attributes</h3>
 
       <div class="name-list">
         <table>
-<% values["attributes"].each do |attributes| $stderr.puts({ :attributes => attributes }.inspect) %>
+<%     sections["attributes"].each do |attribute| %>
         <tr class="top-aligned-row context-row">
-          <td class="context-item-name"><%= values["name"] %></td>
-<% if values["rw"] then %>
-          <td class="context-item-value">&nbsp;[<%= values["rw"] %>]&nbsp;</td>
-<% end %>
-<% unless values["rw"] then %>
+          <td class="context-item-name"><%= attribute["name"] %></td>
+<%       if attribute["rw"] then %>
+          <td class="context-item-value">&nbsp;[<%= attribute["rw"] %>]&nbsp;</td>
+<%       end
+         unless attribute["rw"] then %>
           <td class="context-item-value">&nbsp;&nbsp;</td>
-<% end %>
-          <td class="context-item-desc"><%= values["a_desc"] %></td>
+<%       end %>
+          <td class="context-item-desc"><%= attribute["a_desc"] %></td>
         </tr>
-<% end # values["attributes"] %>
+<%     end # sections["attributes"] %>
         </table>
       </div>
     </div>
-<% end %>
-      
-
+<%   end %>
 
     <!-- if method_list -->
-<% if sections["method_list"] then %>
+<%   if sections["method_list"] then %>
     <div id="methods">
-<% sections["method_list"].each do |method_list| %>
-<% if method_list["methods"] then %>
+<%     sections["method_list"].each do |method_list|
+         if method_list["methods"] then %>
       <h3 class="section-bar"><%= method_list["type"] %> <%= method_list["category"] %> methods</h3>
 
-<% method_list["methods"].each do |methods| %>
+<%         method_list["methods"].each do |methods| %>
       <div id="method-<%= methods["aref"] %>" class="method-detail">
         <a name="<%= methods["aref"] %>"></a>
 
         <div class="method-heading">
-<% if methods["codeurl"] then %>
+<%           if methods["codeurl"] then %>
           <a href="<%= methods["codeurl"] %>" target="Code" class="method-signature"
             onclick="popupCode('<%= methods["codeurl"] %>');return false;">
-<% end %>
-<% if methods["sourcecode"] then %>
+<%           end
+             if methods["sourcecode"] then %>
           <a href="#<%= methods["aref"] %>" class="method-signature">
-<% end %>
-<% if methods["callseq"] then %>
+<%           end
+             if methods["callseq"] then %>
           <span class="method-name"><%= methods["callseq"] %></span>
-<% end %>
-<% unless methods["callseq"] then %>
+<%           end
+             unless methods["callseq"] then %>
           <span class="method-name"><%= methods["name"] %></span><span class="method-args"><%= methods["params"] %></span>
-<% end %>
-<% if methods["codeurl"] then %>
+<%           end
+             if methods["codeurl"] then %>
           </a>
-<% end %>
-<% if methods["sourcecode"] then %>
+<%           end
+             if methods["sourcecode"] then %>
           </a>
-<% end %>
+<%           end %>
         </div>
 
         <div class="method-description">
-<% if methods["m_desc"] then %>
+<%           if methods["m_desc"] then %>
           <%= methods["m_desc"] %>
-<% end %>
-<% if methods["sourcecode"] then %>
+<%           end   
+               if methods["sourcecode"] then %>
           <p><a class="source-toggle" href="#"
             onclick="toggleCode('<%= methods["aref"] %>-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="<%= methods["aref"] %>-source">
@@ -589,16 +583,16 @@ EOF
 <%= methods["sourcecode"] %>
 </pre>
           </div>
-<% end %>
+<%           end %>
         </div>
       </div>
 
-<% end # method_list["methods"] %>
-<% end %>
-<% end # sections["method_list"] %>
+<%         end # method_list["methods"]
+         end
+       end # sections["method_list"] %>
 
     </div>
-<% end %>
+<%   end %>
 <% end # values["sections"] %>
   EOF
 
