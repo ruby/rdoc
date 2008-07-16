@@ -25,6 +25,21 @@ class TestRdocParserRuby < Test::Unit::TestCase
     @tempfile.unlink
   end
 
+  def test_look_for_directives_in_commented
+    util_parser ""
+
+    comment = "# how to make a section:\n# # :section: new section\n"
+
+    @parser.look_for_directives_in @top_level, comment
+
+    section = @top_level.current_section
+    assert_equal nil, section.title
+    assert_equal nil, section.comment
+
+    assert_equal "# how to make a section:\n# # :section: new section\n",
+                 comment
+  end
+
   def test_look_for_directives_in_enddoc
     util_parser ""
 

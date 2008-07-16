@@ -149,7 +149,10 @@ module RDoc
         case type = stat.ftype
         when "file"
           next if @last_created and stat.mtime < @last_created
-          file_list << rel_file_name.sub(/^\.\//, '') if force_doc || ParserFactory.can_parse(rel_file_name)
+
+          if force_doc or ::RDoc::Parser.can_parse(rel_file_name) then
+            file_list << rel_file_name.sub(/^\.\//, '')
+          end
         when "directory"
           next if rel_file_name == "CVS" || rel_file_name == ".svn"
           dot_doc = File.join(rel_file_name, DOT_DOC_FILENAME)

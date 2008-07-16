@@ -159,7 +159,7 @@ module RDoc
       def set_comment(comment)
         return unless comment
 
-        if comment =~ /^.*?:section:.*\n/
+        if comment =~ /^#[ \t]*:section:.*\n/
           start = $`
           rest = $'
 
@@ -533,7 +533,7 @@ module RDoc
       cls = collection[name]
 
       if cls
-        puts "Reusing class/module #{name}" if $DEBUG_RDOC
+        puts "Reusing class/module #{name}" #if $DEBUG_RDOC
       else
         if class_type == NormalModule
           all = @@all_modules
@@ -671,15 +671,32 @@ module RDoc
   # Module
 
   class NormalModule < ClassModule
+
+    def comment=(comment)
+      return if comment.empty?
+      comment = @comment << "# ---\n" << comment unless @comment.empty?
+
+      super
+    end
+
+    def inspect
+      "#<%s:0x%x module %s includes: %p attributes: %p methods: %p aliases: %p>" % [
+        self.class, object_id,
+        @name, @includes, @attributes, @method_list, @aliases
+      ]
+    end
+
     def is_module?
       true
     end
+
   end
 
   ##
   # AnyMethod is the base class for objects representing methods
 
   class AnyMethod < CodeObject
+
     attr_accessor :name
     attr_accessor :visibility
     attr_accessor :block_params

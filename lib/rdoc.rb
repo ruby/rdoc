@@ -143,11 +143,11 @@ $DEBUG_RDOC = nil
 #       class Output
 #       end
 #     end
-#   
-#   In the above code, only class +MyModule::Input+ will be documented.
-#   :nodoc: is global across all files the class or module appears in, so use
-#   :stopdoc:/:startdoc: to only omit documentation for a particular set of
-#   methods, etc.
+#
+#   In the above code, only class +MyModule::Input+ will be documented.The
+#   The :nodoc: directive is global across all files the class or module
+#   appears in, so use :stopdoc:/:startdoc: to only omit documentation for a
+#   particular set of methods, etc.
 #
 # [+:doc:+]
 #   Force a method or attribute to be documented even if it wouldn't otherwise
@@ -188,8 +188,8 @@ $DEBUG_RDOC = nil
 #   \Include the contents of the named file at this point.  The file will be
 #   searched for in the directories listed by the +--include+ option, or in
 #   the current directory by default.  The contents of the file will be
-#   shifted to have the same indentation as the ':' at the start of the
-#   :include: directive.
+#   shifted to have the same indentation as the ':' at the start of
+#   the :include: directive.
 #
 # [+:title:+ _text_]
 #   Sets the title for the document.  Equivalent to the <tt>--title</tt>

@@ -795,7 +795,6 @@ class RDoc::RubyLex
     end
 
     @OP.def_rule("::") do
-#      p @lex_state.id2name, @space_seen
       if @lex_state == EXPR_BEG or @lex_state == EXPR_ARG && @space_seen
 	@lex_state = EXPR_BEG
 	tk = Token(TkCOLON3)
@@ -960,8 +959,6 @@ class RDoc::RubyLex
       printf "MATCH: end %s: %s\n", op, io.inspect if RDoc::RubyLex.debug?
       t
     end
-
-    p @OP if RDoc::RubyLex.debug?
   end
 
   def identify_gvar
@@ -1415,8 +1412,8 @@ end
 #
 # The parser extracts +yield+ expressions from method bodies to gather the
 # yielded argument names.  If your method manually calls a block instead of
-# yielding or you want to override the discovered argument names use the
-# :yields: directive:
+# yielding or you want to override the discovered argument names use
+# the :yields: directive:
 #
 #   ##
 #   # My method is awesome
@@ -2299,9 +2296,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def parse_module(container, single, tk, comment)
     progress("m")
     @stats.num_modules += 1
-    container, name_t  = get_class_or_module(container)
+    container, name_t = get_class_or_module(container)
 #      skip_tkspace
     name = name_t.name
+
     mod = container.add_module RDoc::NormalModule, name
     mod.record_location @top_level
     read_documentation_modifiers mod, RDoc::CLASS_MODIFIERS

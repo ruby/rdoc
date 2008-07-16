@@ -17,7 +17,7 @@ class RDoc::Markup::PreProcess
   # are passed back to our caller as |directive, param|
 
   def handle(text)
-    text.gsub!(/^([ \t#]*):(\w+):[ \t]*(.+)?\n/) do
+    text.gsub!(/^([ \t]*#?[ \t]*):(\w+):[ \t]*(.+)?\n/) do
       prefix    = $1
       directive = $2.downcase
       param     = $3
