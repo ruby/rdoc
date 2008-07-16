@@ -5,6 +5,7 @@
   * Reorganized parsers under RDoc::Parser base class.
 * N Bug Fixes:
   * `ri Foo.bar` now looks for class methods also
+  * :section: now works again
 
 === 2.0.0 / 2008-04-10
 
