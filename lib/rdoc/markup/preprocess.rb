@@ -14,13 +14,15 @@ class RDoc::Markup::PreProcess
 
   ##
   # Look for common options in a chunk of text. Options that we don't handle
-  # are passed back to our caller as |directive, param|
+  # are yielded to the caller.
 
   def handle(text)
-    text.gsub!(/^([ \t]*#?[ \t]*):(\w+):[ \t]*(.+)?\n/) do
+    text.gsub!(/^([ \t]*#?[ \t]*):(\w+):([ \t]*)(.+)?\n/) do
+      next $& if $3.empty? and $4 and $4[0, 1] == ':'
+
       prefix    = $1
       directive = $2.downcase
-      param     = $3
+      param     = $4
 
       case directive
       when 'include' then
