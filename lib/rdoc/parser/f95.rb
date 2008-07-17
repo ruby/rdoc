@@ -196,7 +196,7 @@ class RDoc::Parser::F95 < RDoc::Parser
   EXTERNAL_ALIAS_MES = "The entity is"
 
   ##
-  # devine code constructs
+  # Define code constructs
 
   def scan
     # remove private comment
@@ -1062,7 +1062,7 @@ class RDoc::Parser::F95 < RDoc::Parser
   # If "all" argument is true, information of all arguments are returned.
   #
   # If "modified_params" is true, list of arguments are decorated, for
-  # exameple, optional arguments are parenthetic as "[arg]".
+  # example, optional arguments are parenthetic as "[arg]".
 
   def find_arguments(args, text, all=nil, indent=nil, modified_params=nil)
     return unless args || all
@@ -1140,7 +1140,7 @@ EOF
   end
 
   ##
-  # Comments just after module or subprogram, or arguments are returnd. If
+  # Comments just after module or subprogram, or arguments are returned. If
   # "COMMENTS_ARE_UPPER" is true, comments just before modules or subprograms
   # are returnd
 

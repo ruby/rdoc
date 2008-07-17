@@ -2,7 +2,7 @@
 # This file contains stuff stolen outright from:
 #
 #   rtags.rb -
-#   ruby-lex.rb - ruby lexcal analizer
+#   ruby-lex.rb - ruby lexcal analyzer
 #   ruby-token.rb - ruby tokens
 #       by Keiju ISHITSUKA (Nippon Rational Inc.)
 #
@@ -1491,20 +1491,27 @@ class RDoc::Parser::Ruby < RDoc::Parser
     tk = get_tk
 
     while TkCOMMENT === tk
-      if first_line && tk.text[0,2] == "#!"
+      if first_line and tk.text =~ /\A#!/ then
+        skip_tkspace
+        tk = get_tk
+      elsif first_line and tk.text =~ /\A#\s*-\*-/ =~ tk.text then
+        first_line = false
         skip_tkspace
         tk = get_tk
       else
+        first_line = false
         res << tk.text << "\n"
         tk = get_tk
+
         if TkNL === tk then
-          skip_tkspace(false)
+          skip_tkspace false
           tk = get_tk
         end
       end
-      first_line = false
     end
-    unget_tk(tk)
+
+    unget_tk tk
+
     res
   end
 

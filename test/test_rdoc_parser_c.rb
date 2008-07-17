@@ -25,7 +25,7 @@ class TestRdocParserC < Test::Unit::TestCase
   end
 
   def teardown
-    @tempfile.unlink
+    @tempfile.close
   end
 
   def test_do_classes_boot_class
