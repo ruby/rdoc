@@ -2158,6 +2158,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
           else
             container = prev_container.add_module(type, name_t.name)
           end
+
+          container.record_location @top_level
         end
       else
         # warn("Unexpected token '#{name_t2.inspect}'")

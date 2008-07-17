@@ -22,27 +22,6 @@ module RDoc::Generator
   CSS_NAME  = "rdoc-style.css"
 
   ##
-  # Converts a target url to one that is relative to a given path
-
-  def self.gen_url(path, target)
-    from          = ::File.dirname path
-    to, to_file   = ::File.split target
-
-    from = from.split "/"
-    to   = to.split "/"
-
-    while from.size > 0 and to.size > 0 and from[0] == to[0] do
-      from.shift
-      to.shift
-    end
-
-    from.fill ".."
-    from.concat to
-    from << to_file
-    ::File.join(*from)
-  end
-
-  ##
   # Build a hash of all items that can be cross-referenced.  This is used when
   # we output required and included names: if the names appear in this hash,
   # we can generate an html cross reference to the appropriate description.
@@ -109,7 +88,7 @@ module RDoc::Generator
       if %r{^(https?:/)?/} =~ css_name
         css_name
       else
-        RDoc::Generator.gen_url path, css_name
+        RDoc::Markup::ToHtml.gen_relative_url path, css_name
       end
     end
 
@@ -201,7 +180,7 @@ module RDoc::Generator
       if @options.all_one_file
         "#" + path
       else
-        RDoc::Generator.gen_url from_path, path
+        RDoc::Markup::ToHtml.gen_relative_url from_path, path
       end
     end
 
@@ -444,7 +423,7 @@ module RDoc::Generator
     end
 
     def url(target)
-      RDoc::Generator.gen_url path, target
+      RDoc::Markup::ToHtml.gen_relative_url path, target
     end
 
     def aref_to(target)
@@ -874,7 +853,7 @@ module RDoc::Generator
         @source_code = markup_code(ts)
         unless @options.inline_source
           @src_url = create_source_code_file(@source_code)
-          @img_url = RDoc::Generator.gen_url path, 'source.png'
+          @img_url = RDoc::Markup::ToHtml.gen_relative_url path, 'source.png'
         end
       end
 
@@ -889,7 +868,7 @@ module RDoc::Generator
       if @options.all_one_file
         "#" + path
       else
-        RDoc::Generator.gen_url from_path, path
+        RDoc::Markup::ToHtml.gen_relative_url from_path, path
       end
     end
 
@@ -1011,7 +990,7 @@ module RDoc::Generator
         template.write_html_on(f, values)
       end
 
-      RDoc::Generator.gen_url path, file_path
+      RDoc::Markup::ToHtml.gen_relative_url path, file_path
     end
 
     def <=>(other)

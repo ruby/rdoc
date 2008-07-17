@@ -1,13 +1,19 @@
 === 2.1.0 / ??
 
 * N Major Enhancements:
-  * RDoc now knows about meta-programmed methods.  See RDoc::Parser::Ruby.
-  * Reorganized parsers under RDoc::Parser base class.
+  * RDoc now knows about meta-programmed methods, see RDoc::Parser::Ruby
+  * Reorganized parsers under RDoc::Parser base class
+* N Minor Enhancements:
+  * Allow links to files
+  * Default options now taken from RDOCOPT environment variable
+  * Methods can be added to classes/modules at toplevel now (def X.foo)
 * N Bug Fixes:
   * `ri Foo.bar` now looks for class methods also
   * Sections work in the default template again
   * Doesn't warn about :foo:: list item being an unrecognized directive
   * RDoc no longer converts characters inside tt tags
+  * Fixed "unitialized constant RDoc::Markup::ToHtml::HTML"
+  * Fixed generation of relative links
 
 === 2.0.0 / 2008-04-10
 

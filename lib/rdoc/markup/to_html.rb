@@ -35,6 +35,27 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   end
 
   ##
+  # Converts a target url to one that is relative to a given path
+
+  def self.gen_relative_url(path, target)
+    from        = File.dirname path
+    to, to_file = File.split target
+
+    from = from.split "/"
+    to   = to.split "/"
+
+    while from.size > 0 and to.size > 0 and from[0] == to[0] do
+      from.shift
+      to.shift
+    end
+
+    from.fill ".."
+    from.concat to
+    from << to_file
+    File.join(*from)
+  end
+
+  ##
   # Generate a hyperlink for url, labeled with text. Handle the
   # special cases for img: and link: described under handle_special_HYPEDLINK
 
@@ -52,8 +73,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
       url = if path[0, 1] == '#' then # is this meaningful?
               path
             else
-              require 'rdoc/generator' # HACK incestuous
-              RDoc::Generator.gen_url @from_path, path
+              self.class.gen_relative_url @from_path, path
             end
     end
 

@@ -460,7 +460,8 @@ module RDoc
       res = find_method_named(symbol) ||
             find_constant_named(symbol) ||
             find_attribute_named(symbol) ||
-            find_module_named(symbol) 
+            find_module_named(symbol) ||
+            find_file_named(symbol)
     end
 
     # Handle sections
@@ -492,6 +493,13 @@ module RDoc
       @attributes.find {|m| m.name == name}
     end
 
+    ##
+    # Find a named file, or return nil
+
+    def find_file_named(name)
+      toplevel.class.find_file_named(name)
+    end
+
   end
 
   ##
@@ -505,19 +513,22 @@ module RDoc
 
     @@all_classes = {}
     @@all_modules = {}
+    @@all_files   = {}
 
     def self.reset
       @@all_classes = {}
       @@all_modules = {}
+      @@all_files   = {}
     end
 
     def initialize(file_name)
       super()
       @name = "TopLevel"
-      @file_relative_name = file_name
-      @file_absolute_name = file_name
-      @file_stat          = File.stat(file_name)
-      @diagram            = nil
+      @file_relative_name    = file_name
+      @file_absolute_name    = file_name
+      @file_stat             = File.stat(file_name)
+      @diagram               = nil
+      @@all_files[file_name] = self
     end
 
     def file_base_name
@@ -573,6 +584,10 @@ module RDoc
         return res if res
       end
       nil
+    end
+
+    def self.find_file_named(name)
+      @@all_files[name]
     end
 
     def find_local_symbol(symbol)

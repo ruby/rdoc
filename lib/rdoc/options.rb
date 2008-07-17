@@ -517,6 +517,8 @@ Usage: #{opt.program_name} [options] [names...]
       end
     end
 
+    argv.insert(0, *ENV['RDOCOPT'].split) if ENV['RDOCOPT']
+
     opts.parse! argv
 
     @files = argv.dup

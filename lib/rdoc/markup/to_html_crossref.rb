@@ -57,16 +57,30 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       lookup = name
     end
 
+    #
     # Find class, module, or method in class or module.
-    if /([A-Z]\w*)[.\#](\w+[!?=]?)/ =~ lookup then
+    # Do not, however, use an if/elsif/else chain to do so.  Instead, test
+    # each possible pattern until one matches.  The reason for this is that
+    # a string like "YAML.txt" could be the txt() class method of class YAML
+    # (in which case it would match the first pattern, which splits the
+    # string into container and method components and looks up both) or a
+    # filename (in which case it would match the last pattern, which just
+    # checks whether the string as a whole is a known symbol).
+    #
+    if /([A-Z][\w:]*)[.\#](\w+[!?=]?)/ =~ lookup then
       container = $1
       method = $2
       ref = @context.find_symbol container, method
-    elsif /([A-Za-z]\w*)[.\#](\w+(\([\.\w+\*\/\+\-\=\<\>]+\))?)/ =~ lookup then
+    end
+
+    if (!ref &&
+        /([A-Za-z][\w:]*)[.\#](\w+(\([\.\w+\*\/\+\-\=\<\>]+\))?)/ =~ lookup) then
       container = $1
       method = $2
       ref = @context.find_symbol container, method
-    else
+    end
+
+    if(!ref)
       ref = @context.find_symbol lookup
     end
 
