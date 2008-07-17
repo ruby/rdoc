@@ -13,7 +13,6 @@ class TestRdocParserRuby < Test::Unit::TestCase
     @filename = @tempfile.path
 
     util_toplevel
-    @filename
     @options = RDoc::Options.new Hash.new
     @options.quiet = true
     @stats = RDoc::Stats.new
