@@ -11,6 +11,54 @@ require 'rdoc/markup/to_flow'
 
 class RDoc::RI::Driver
 
+  class Hash < ::Hash
+    def self.convert(hash)
+      hash = new.update hash
+
+      hash.each do |key, value|
+        hash[key] = case value
+                    when ::Hash then
+                      convert value
+                    when Array then
+                      value = value.map do |v|
+                        ::Hash === v ? convert(v) : v
+                      end
+                      value
+                    else
+                      value
+                    end
+      end
+
+      hash
+    end
+
+    def method_missing method, *args
+      self[method.to_s]
+    end
+
+    def merge_enums(other)
+      other.each do |k, v|
+        if self[k] then
+          case v
+          when Array then
+            # HACK dunno
+            if String === self[k] and self[k].empty? then
+              self[k] = v
+            else
+              self[k] += v
+            end
+          when Hash then
+            self[k].update v
+          else
+            # do nothing
+          end
+        else
+          self[k] = v
+        end
+      end
+    end
+  end
+
   class Error < RDoc::RI::Error; end
 
   class NotFoundError < Error
@@ -244,7 +292,7 @@ Options may also be set in the 'RI' environment variable.
     @class_cache = if up_to_date then
                      load_cache_for @class_cache_name
                    else
-                     class_cache = {}
+                     class_cache = RDoc::RI::Driver::Hash.new
 
                      classes = map_dirs('**/cdesc*.yaml', :sys) { |f| Dir[f] }
                      populate_class_cache class_cache, classes
@@ -271,6 +319,7 @@ Options may also be set in the 'RI' environment variable.
 
   def display_class(name)
     klass = class_cache[name]
+    klass = RDoc::RI::Driver::Hash.convert klass
     @display.display_class_info klass, class_cache
   end
 
@@ -282,10 +331,12 @@ Options may also be set in the 'RI' environment variable.
   def load_cache_for(klassname)
     path = cache_file_for klassname
 
+    cache = nil
+
     if File.exist? path and
        File.mtime(path) >= File.mtime(class_cache_file_path) then
       File.open path, 'rb' do |fp|
-        Marshal.load fp.read
+        cache = Marshal.load fp.read
       end
     else
       class_cache = nil
@@ -298,7 +349,7 @@ Options may also be set in the 'RI' environment variable.
       return nil unless klass
 
       method_files = klass["sources"]
-      cache = {}
+      cache = RDoc::RI::Driver::Hash.new
 
       sys_dir = @sys_dirs.first
       method_files.each do |f|
@@ -311,16 +362,18 @@ Options may also be set in the 'RI' environment variable.
           ext_path = f
           ext_path = "gem #{$1}" if f =~ %r%gems/[\d.]+/doc/([^/]+)%
           method["source_path"] = ext_path unless system_file
-          cache[name] = method
+          cache[name] = RDoc::RI::Driver::Hash.convert method
         end
       end
 
       write_cache cache, path
     end
+
+    RDoc::RI::Driver::Hash.convert cache
   end
 
   ##
-  # Finds the method 
+  # Finds the method
 
   def lookup_method(name, klass)
     cache = load_cache_for klass
@@ -457,33 +510,5 @@ Options may also be set in the 'RI' environment variable.
     cache
   end
 
-end
-
-class Hash # HACK don't add stuff to Hash.
-  def method_missing method, *args
-    self[method.to_s]
-  end
-
-  def merge_enums(other)
-    other.each do |k,v|
-      if self[k] then
-        case v
-        when Array then
-          # HACK dunno
-          if String === self[k] and self[k].empty? then
-            self[k] = v
-          else
-            self[k] += v
-          end
-        when Hash then
-          self[k].merge! v
-        else
-          # do nothing
-        end
-      else
-        self[k] = v
-      end
-    end
-  end
 end
 
