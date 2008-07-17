@@ -7,8 +7,8 @@ require 'rdoc/generator/html/one_page_html'
 # This is a template for RDoc that uses XHTML 1.0 Transitional and dictates a
 # bit more of the appearance of the output to cascading stylesheets than the
 # default. It was designed for clean inline code display, and uses DHTMl to
-# toggle the visbility of each method's source with each click on the '[source]'
-# link.
+# toggle the visibility of each method's source with each click on the
+# '[source]' link.
 #
 # == Authors
 #
@@ -16,10 +16,10 @@ require 'rdoc/generator/html/one_page_html'
 #
 # Copyright (c) 2002, 2003 The FaerieMUD Consortium. Some rights reserved.
 #
-# This work is licensed under the Creative Commons Attribution License. To view
-# a copy of this license, visit http://creativecommons.org/licenses/by/1.0/ or
-# send a letter to Creative Commons, 559 Nathan Abbott Way, Stanford, California
-# 94305, USA.
+# This work is licensed under the Creative Commons Attribution License. To
+# view a copy of this license, visit
+# http://creativecommons.org/licenses/by/1.0/ or send a letter to Creative
+# Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA.
 
 module RDoc::Generator::HTML::HTML
 

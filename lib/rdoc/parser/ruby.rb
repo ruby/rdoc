@@ -1494,7 +1494,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       if first_line and tk.text =~ /\A#!/ then
         skip_tkspace
         tk = get_tk
-      elsif first_line and tk.text =~ /\A#\s*-\*-/ =~ tk.text then
+      elsif first_line and tk.text =~ /\A#\s*-\*-/ then
         first_line = false
         skip_tkspace
         tk = get_tk
