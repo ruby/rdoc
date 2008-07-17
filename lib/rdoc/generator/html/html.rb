@@ -361,7 +361,7 @@ EOF
         &nbsp;(<a href="<%= infiles["cvsurl"] %>"><acronym title="Concurrent Versioning System">CVS</acronym></a>)
 <% end %>
         <br />
-<% end # values["infiles"] %>
+<% end %><%#  values["infiles"] %>
             </td>
         </tr>
 
@@ -408,7 +408,7 @@ EOF
       <div class="name-list">
 <% values["requires"].each do |requires| %>
         <%= href requires["aref"], requires["name"] %>&nbsp;&nbsp;
-<% end # values["requires"] %>
+<% end %><%#  values["requires"] %>
       </div>
     </div>
 <% end
@@ -419,7 +419,7 @@ EOF
       <ul>
 <% values["toc"].each do |toc| %>
       <li><a href="#<%= toc["href"] %>"><%= toc["secname"] %></a></li>
-<% end # values["toc"] %>
+<% end %><%# values["toc"] %>
      </ul>
 <% end %>
    </div>
@@ -431,7 +431,7 @@ EOF
       <div class="name-list">
 <%   values["methods"].each do |methods| %>
         <%= href methods["aref"], methods["name"] %>&nbsp;&nbsp;
-<%   end # values["methods"] %>
+<%   end %><%# values["methods"] %>
       </div>
     </div>
 <% end %>
@@ -445,7 +445,7 @@ EOF
       <div id="includes-list">
 <% values["includes"].each do |includes| %>
         <span class="include-name"><%= href includes["aref"], includes["name"] %></span>
-<% end # values["includes"] %>
+<% end %><%#  values["includes"] %>
       </div>
     </div>
 <% end
@@ -465,7 +465,7 @@ EOF
     <div id="class-list">
       <h3 class="section-bar">Classes and Modules</h3>
 
-      <%= values["classlist"] %>
+      <%= sections["classlist"] %>
     </div>
 <%   end
 
@@ -485,7 +485,7 @@ EOF
           <td class="context-item-desc"><%= constants["desc"] %></td>
 <%       end %>
         </tr>
-<%     end # sections["constants"] %>
+<%     end %><%# sections["constants"] %>
         </table>
       </div>
     </div>
@@ -509,7 +509,7 @@ EOF
         <td colspan="2" class="context-item-desc"><%= aliases["desc"] %></td>
       </tr>
 <%       end
-       end # sections["aliases"] %>
+       end %><%# sections["aliases"] %>
         </table>
       </div>
     </div>
@@ -532,7 +532,7 @@ EOF
 <%       end %>
           <td class="context-item-desc"><%= attribute["a_desc"] %></td>
         </tr>
-<%     end # sections["attributes"] %>
+<%     end %><%# sections["attributes"] %>
         </table>
       </div>
     </div>
@@ -574,7 +574,7 @@ EOF
         <div class="method-description">
 <%           if methods["m_desc"] then %>
           <%= methods["m_desc"] %>
-<%           end   
+<%           end
                if methods["sourcecode"] then %>
           <p><a class="source-toggle" href="#"
             onclick="toggleCode('<%= methods["aref"] %>-source');return false;">[Source]</a></p>
@@ -587,13 +587,13 @@ EOF
         </div>
       </div>
 
-<%         end # method_list["methods"]
+<%         end %><%# method_list["methods"] %><%
          end
-       end # sections["method_list"] %>
+       end %><%# sections["method_list"] %>
 
     </div>
 <%   end %>
-<% end # values["sections"] %>
+<% end %><%# values["sections"] %>
   EOF
 
 #####################################################################
@@ -657,7 +657,7 @@ EOF
   <div id="index-entries">
 <% values["entries"].each do |entries| %>
     <a href="<%= entries["href"] %>"><%= entries["name"] %></a><br />
-<% end # values["entries"] %>
+<% end %><%#  values["entries"] %>
   </div>
 </div>
 </body>

@@ -754,7 +754,7 @@ module RDoc::Generator
         }
 
         cl = build_class_list(0, @context, section, file_context)
-        @values["classlist"] = cl unless cl.empty?
+        secdata["classlist"] = cl unless cl.empty?
 
         mdl = build_method_detail_list(section)
         secdata["method_list"] = mdl unless mdl.empty?
@@ -763,7 +763,7 @@ module RDoc::Generator
         secdata["aliases"] = al unless al.empty?
 
         co = build_constants_summary_list(section)
-        @values["constants"] = co unless co.empty?
+        secdata["constants"] = co unless co.empty?
 
         secdata
       end
