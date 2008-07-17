@@ -297,7 +297,7 @@ class RDoc::Parser::C < RDoc::Parser
 
 #        meth_obj.params = params
       meth_obj.start_collecting_tokens
-      meth_obj.add_token(RubyToken::Token.new(1,1).set_text(body_text))
+      meth_obj.add_token(RDoc::RubyToken::Token.new(1,1).set_text(body_text))
       meth_obj.comment = mangle_comment(comment)
     when %r{((?>/\*.*?\*/\s*))^\s*\#\s*define\s+#{meth_name}\s+(\w+)}m
       comment = $1
@@ -328,10 +328,13 @@ class RDoc::Parser::C < RDoc::Parser
   def find_class(raw_name, name)
     unless @classes[raw_name]
       if raw_name =~ /^rb_m/
-        @classes[raw_name] = @top_level.add_module RDoc::NormalModule, name
+        container = @top_level.add_module RDoc::NormalModule, name
       else
-        @classes[raw_name] = @top_level.add_class RDoc::NormalClass, name, nil
+        container = @top_level.add_class RDoc::NormalClass, name, nil
       end
+
+      container.record_location @top_level
+      @classes[raw_name] = container
     end
     @classes[raw_name]
   end
