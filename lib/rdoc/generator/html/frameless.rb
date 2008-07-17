@@ -471,7 +471,7 @@ EOF
           &nbsp;(<a href="<%= infiles["cvsurl"] %>"><acronym title="Concurrent Versioning System">CVS</acronym></a>)
 <% end %>
           <br />
-<% end # values["infiles"] %>
+<% end %><%# values["infiles"] %>
         </td>
       </tr>
 
@@ -518,7 +518,7 @@ EOF
       <div class="name-list">
 <% values["requires"].each do |requires| %>
         <%= href requires["aref"], requires["name"] %>&nbsp;&nbsp;
-<% end # values["requires"] %>
+<% end %><%# values["requires"] %>
       </div>
     </div>
 <% end %>
@@ -529,7 +529,7 @@ EOF
       <ul>
 <% values["toc"].each do |toc| %>
       <li><a href="#<%= values["href"] %>"><%= values["secname"] %></a></li>
-<% end # values["toc"] %>
+<% end %><%# values["toc"] %>
      </ul>
 <% end %>
    </div>
@@ -541,7 +541,7 @@ EOF
       <div class="name-list">
 <% values["methods"].each do |methods| %>
         <%= href methods["aref"], methods["name"] %>&nbsp;&nbsp;
-<% end # values["methods"] %>
+<% end %><%# values["methods"] %>
       </div>
     </div>
 <% end %>
@@ -557,7 +557,7 @@ EOF
       <div id="includes-list">
 <% values["includes"].each do |includes| %>
         <span class="include-name"><%= href includes["aref"], includes["name"] %></span>
-<% end # values["includes"] %>
+<% end %><%# values["includes"] %>
       </div>
     </div>
 <% end %>
@@ -597,7 +597,7 @@ EOF
           <td class="context-item-desc"><%= constants["desc"] %></td>
 <% end %>
         </tr>
-<% end # values["constants"] %>
+<% end %><%# values["constants"] %>
         </table>
       </div>
     </div>
@@ -621,7 +621,7 @@ EOF
         <td colspan="2" class="context-item-desc"><%= values["desc"] %></td>
       </tr>
 <% end %>
-<% end # values["aliases"] %>
+<% end %><%# values["aliases"] %>
         </table>
       </div>
     </div>
@@ -645,7 +645,7 @@ EOF
 <% end %>
           <td class="context-item-desc"><%= values["a_desc"] %></td>
         </tr>
-<% end # values["attributes"] %>
+<% end %><%# values["attributes"] %>
         </table>
       </div>
     </div>
@@ -700,13 +700,13 @@ EOF
         </div>
       </div>
 
-<% end # method_list["methods"] %>
+<% end %><%# method_list["methods"] %>
 <% end %>
-<% end # sections["method_list"] %>
+<% end %><%# sections["method_list"] %>
 
     </div>
 <% end %>
-<% end # values["sections"] %>
+<% end %><%# values["sections"] %>
   EOF
 
   ##
@@ -761,7 +761,7 @@ EOF
   <div class="index-entries">
 <% values["entries"].each do |entries| %>
     <a href="<%= entries["href"] %>"><%= entries["name"] %></a><br />
-<% end # values["entries"] %>
+<% end %><%# values["entries"] %>
   </div>
 </div>
 </body>

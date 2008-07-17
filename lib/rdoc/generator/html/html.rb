@@ -361,7 +361,7 @@ EOF
         &nbsp;(<a href="<%= infiles["cvsurl"] %>"><acronym title="Concurrent Versioning System">CVS</acronym></a>)
 <% end %>
         <br />
-<% end %><%#  values["infiles"] %>
+<% end %><%# values["infiles"] %>
             </td>
         </tr>
 
@@ -408,7 +408,7 @@ EOF
       <div class="name-list">
 <% values["requires"].each do |requires| %>
         <%= href requires["aref"], requires["name"] %>&nbsp;&nbsp;
-<% end %><%#  values["requires"] %>
+<% end %><%# values["requires"] %>
       </div>
     </div>
 <% end
@@ -445,7 +445,7 @@ EOF
       <div id="includes-list">
 <% values["includes"].each do |includes| %>
         <span class="include-name"><%= href includes["aref"], includes["name"] %></span>
-<% end %><%#  values["includes"] %>
+<% end %><%# values["includes"] %>
       </div>
     </div>
 <% end
