@@ -408,26 +408,30 @@ module RDoc
       name <=> other.name
     end
 
-    # Look up the given symbol. If method is non-nil, then
-    # we assume the symbol references a module that
-    # contains that method
-    def find_symbol(symbol, method=nil)
+    ##
+    # Look up +symbol+.  If +method+ is non-nil, then we assume the symbol
+    # references a module that contains that method.
+
+    def find_symbol(symbol, method = nil)
       result = nil
+
       case symbol
-      when /^::(.*)/
+      when /^::(.*)/ then
         result = toplevel.find_symbol($1)
-      when /::/
+      when /::/ then
         modules = symbol.split(/::/)
-        unless modules.empty?
+
+        unless modules.empty? then
           module_name = modules.shift
           result = find_module_named(module_name)
-          if result
+          if result then
             modules.each do |name|
               result = result.find_module_named(name)
               break unless result
             end
           end
         end
+
       else
         # if a method is specified, then we're definitely looking for
         # a module, otherwise it could be any symbol
@@ -445,14 +449,12 @@ module RDoc
           end
         end
       end
-      if result && method
-        if !result.respond_to?(:find_local_symbol)
-          #p result.name
-          #p method
-          fail
-        end
+
+      if result and method then
+        fail unless result.respond_to? :find_local_symbol
         result = result.find_local_symbol(method)
       end
+
       result
     end
 

@@ -15,6 +15,10 @@
   * Fixed "unitialized constant RDoc::Markup::ToHtml::HTML"
   * Fixed generation of relative links
   * Fixed various diagram generation issues
+  * Fixed templates broken by switch to erb
+  * Fixed issue with <!-- --> style comments
+  * Lowercase words are no longer rdoc'd as methods without leading #, as
+    described in the documentation
 
 === 2.0.0 / 2008-04-10
 
