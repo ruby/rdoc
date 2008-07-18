@@ -700,7 +700,7 @@ class RDoc::RubyLex
         ch = getc
         if @lex_state == EXPR_ARG && ch !~ /\s/
           ungetc
-          @lex_state = EXPR_BEG;
+          @lex_state = EXPR_BEG
           Token(TkQUESTION).set_text(op)
         else
           str = op
@@ -788,7 +788,7 @@ class RDoc::RubyLex
         @lex_state = EXPR_BEG
         tk = Token(TkCOLON)
       else
-        @lex_state = EXPR_FNAME;
+        @lex_state = EXPR_FNAME
         tk = Token(TkSYMBEG)
       end
       tk.set_text(":")
@@ -2057,7 +2057,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         name = 'unknown'
       end
     end
-    
+
     meth = RDoc::MetaMethod.new get_tkread, name
     meth.singleton = singleton
 
@@ -2572,7 +2572,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
           when 'module_function' then
             singleton = true
             :public
-          else raise "Invalid visibility: #{tk.name}"
+          else
+            raise "Invalid visibility: #{tk.name}"
           end
 
     skip_tkspace_comment false
@@ -2590,18 +2591,22 @@ class RDoc::Parser::Ruby < RDoc::Parser
         args = parse_symbol_arg
         container.set_visibility_for args, :private, false
 
+        module_functions = []
+
         container.methods_matching args do |m|
           s_m = m.dup
+          s_m.singleton = true if RDoc::AnyMethod === s_m
+          s_m.visibility = :public
+          module_functions << s_m
+        end
 
+        module_functions.each do |s_m|
           case s_m
           when RDoc::AnyMethod then
             container.add_method s_m
           when RDoc::Attr then
-            container.add_attr s_m
+            container.add_attribute s_m
           end
-
-          s_m.singleton = true
-          s_m.visibility = :public
         end
       else
         args = parse_symbol_arg
