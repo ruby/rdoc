@@ -7,6 +7,8 @@
   * Allow links to files
   * Default options now taken from RDOCOPT environment variable
   * Methods can be added to classes/modules at toplevel now (def X.foo)
+  * Allow HTML templates distributed as gems to be loaded with the -T option,
+    just like the standard templates in rdoc/generator/html.
 * N Bug Fixes:
   * `ri Foo.bar` now looks for class methods also
   * Sections work in the default template again
