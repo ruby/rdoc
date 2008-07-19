@@ -23,6 +23,7 @@
   * Fixed issue with <!-- --> style comments
   * Lowercase words are no longer rdoc'd as methods without leading #, as
     described in the documentation
+  * RDoc now correctly sets superclasses if they were originally unknown
 
 === 2.0.0 / 2008-04-10
 

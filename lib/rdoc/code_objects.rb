@@ -264,7 +264,7 @@ module RDoc
     end
 
     def add_class(class_type, name, superclass)
-      add_class_or_module(@classes, class_type, name, superclass)
+      add_class_or_module @classes, class_type, name, superclass
     end
 
     def add_module(class_type, name)
@@ -550,10 +550,10 @@ module RDoc
     def add_class_or_module(collection, class_type, name, superclass)
       cls = collection[name]
 
-      if cls
+      if cls then
         puts "Reusing class/module #{name}" #if $DEBUG_RDOC
       else
-        if class_type == NormalModule
+        if class_type == NormalModule then
           all = @@all_modules
         else
           all = @@all_classes
@@ -561,9 +561,13 @@ module RDoc
 
         cls = all[name]
 
-        if !cls
+        unless cls then
           cls = class_type.new(name, superclass)
           all[name] = cls unless @done_documenting
+        end
+
+        if NormalClass === cls and cls.superclass.nil? then
+          cls.superclass = superclass
         end
 
         puts "Adding class/module #{name} to #{@name}" if $DEBUG_RDOC
@@ -628,6 +632,8 @@ module RDoc
 
     attr_accessor :diagram
 
+    attr_writer :superclass
+
     def initialize(name, superclass = nil)
       @name       = name
       @diagram    = nil
@@ -673,12 +679,12 @@ module RDoc
 
       scope = self
 
-      until TopLevel === scope do
+      begin
         superclass = scope.classes.find { |c| c.name == @superclass }
 
         return superclass.full_name if superclass
         scope = scope.parent
-      end
+      end until scope.nil? or TopLevel === scope
 
       @superclass
     end
@@ -807,9 +813,7 @@ module RDoc
       if (block = block_params)
         # If this method has explicit block parameters, remove any
         # explicit &block
-$stderr.puts p
         p.sub!(/,?\s*&\w+/)
-$stderr.puts p
 
         block.gsub!(/\s*\#.*/, '')
         block = block.tr("\n", " ").squeeze(" ")

@@ -482,13 +482,14 @@ class RDoc::Parser::C < RDoc::Parser
       enclosure = @top_level
     end
 
-    if class_mod == "class"
+    if class_mod == "class" then
       cm = enclosure.add_class RDoc::NormalClass, class_name, parent_name
       @stats.num_classes += 1
     else
       cm = enclosure.add_module RDoc::NormalModule, class_name
       @stats.num_modules += 1
     end
+
     cm.record_location(enclosure.toplevel)
 
     find_class_comment(cm.full_name, cm)
