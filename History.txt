@@ -3,6 +3,7 @@
 * N Major Enhancements:
   * RDoc now knows about meta-programmed methods, see RDoc::Parser::Ruby
   * Reorganized parsers under RDoc::Parser base class
+  * ri now walks the ancestors of a class looking for a method
 * N Minor Enhancements:
   * Allow links to files
   * Default options now taken from RDOCOPT environment variable

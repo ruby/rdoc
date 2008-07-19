@@ -1872,7 +1872,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     res
   end
 
-  def parse_class(container, single, tk, comment, &block)
+  def parse_class(container, single, tk, comment)
     progress("c")
 
     @stats.num_classes += 1
@@ -1891,22 +1891,19 @@ class RDoc::Parser::Ruby < RDoc::Parser
         superclass = "<unknown>" if superclass.empty?
       end
 
-      if single == SINGLE
-        cls_type = RDoc::SingleClass
-      else
-        cls_type = RDoc::NormalClass
-      end
-
+      cls_type = single == SINGLE ? RDoc::SingleClass : RDoc::NormalClass
       cls = container.add_class cls_type, name, superclass
+
       read_documentation_modifiers cls, RDoc::CLASS_MODIFIERS
-      cls.record_location(@top_level)
-      parse_statements(cls)
+      cls.record_location @top_level
+
+      parse_statements cls
       cls.comment = comment
 
     when TkLSHFT
       case name = get_class_specification
       when "self", container.name
-        parse_statements(container, SINGLE, &block)
+        parse_statements(container, SINGLE)
       else
         other = RDoc::TopLevel.find_class_named(name)
         unless other
@@ -1916,7 +1913,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           other = RDoc::NormalClass.new "Dummy", nil
         end
         read_documentation_modifiers other, RDoc::CLASS_MODIFIERS
-        parse_statements(other, SINGLE, &block)
+        parse_statements(other, SINGLE)
       end
 
     else
@@ -2293,7 +2290,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     progress("m")
     @stats.num_modules += 1
     container, name_t = get_class_or_module(container)
-#      skip_tkspace
+
     name = name_t.name
 
     mod = container.add_module RDoc::NormalModule, name

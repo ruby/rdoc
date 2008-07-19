@@ -609,6 +609,15 @@ module RDoc
       find_class_or_module_named(name) || find_enclosing_module_named(name)
     end
 
+    def inspect
+      "#<%s:0x%x %p modules: %p classes: %p>" % [
+        self.class, object_id,
+        file_base_name,
+        @modules.map { |n,m| m },
+        @classes.map { |n,c| c }
+      ]
+    end
+
   end
 
   ##
@@ -617,7 +626,6 @@ module RDoc
 
   class ClassModule < Context
 
-    attr_reader   :superclass
     attr_accessor :diagram
 
     def initialize(name, superclass = nil)
@@ -628,7 +636,15 @@ module RDoc
       super()
     end
 
+    def find_class_named(name)
+      return self if full_name == name
+      @classes.each_value {|c| return c if c.find_class_named(name) }
+      nil
+    end
+
+    ##
     # Return the fully qualified name of this class or module
+
     def full_name
       if @parent && @parent.full_name
         @parent.full_name + "::" + @name
@@ -642,24 +658,35 @@ module RDoc
       File.join(prefix, *path) + ".html"
     end
 
-    # Return +true+ if this object represents a module
-    def is_module?
+    ##
+    # Does this object represent a module?
+
+    def module?
       false
     end
 
-    # to_s is simply for debugging
-    def to_s
-      res = self.class.name + ": " + @name 
-      res << @comment.to_s
-      res << super
-      res
+    ##
+    # The superclass of this class
+
+    def superclass
+      raise NoMethodError, "#{full_name} is a module" if module?
+
+      scope = self
+
+      until TopLevel === scope do
+        superclass = scope.classes.find { |c| c.name == @superclass }
+
+        return superclass.full_name if superclass
+        scope = scope.parent
+      end
+
+      @superclass
     end
 
-    def find_class_named(name)
-      return self if full_name == name
-      @classes.each_value {|c| return c if c.find_class_named(name) }
-      nil
+    def to_s
+      "#{self.class}: #{@name} #{@comment} #{super}"
     end
+
   end
 
   ##
@@ -708,7 +735,7 @@ module RDoc
       ]
     end
 
-    def is_module?
+    def module?
       true
     end
 
