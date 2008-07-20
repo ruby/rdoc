@@ -303,6 +303,9 @@ Options may also be set in the 'RI' environment variable.
                      populate_class_cache class_cache, classes, true
                      write_cache class_cache, class_cache_file_path
                    end
+
+    @class_cache = RDoc::RI::Driver::Hash.convert @class_cache
+    @class_cache
   end
 
   def class_cache_file_path
@@ -375,12 +378,12 @@ Options may also be set in the 'RI' environment variable.
   ##
   # Finds the next ancestor of +orig_klass+ after +klass+.
 
-  def lookup_ancestor(klass, orig_klass, ancestor = nil)
+  def lookup_ancestor(klass, orig_klass)
     cache = class_cache[orig_klass]
 
     return nil unless cache
 
-    ancestors ||= [orig_klass]
+    ancestors = [orig_klass]
     ancestors.push(*cache.includes.map { |inc| inc['name'] })
     ancestors << cache.superclass
 
@@ -451,6 +454,8 @@ Options may also be set in the 'RI' environment variable.
           desc["instance_method_extensions"] = desc.delete "instance_methods"
           desc["class_method_extensions"] = desc.delete "class_methods"
         end
+
+        klass = RDoc::RI::Driver::Hash.convert klass
 
         klass.merge_enums desc
         klass["sources"] << cdesc

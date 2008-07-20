@@ -315,7 +315,9 @@ module RDoc
 
     def add_class_or_module(collection, class_type, name, superclass=nil)
       cls = collection[name]
-      if cls
+
+      if cls then
+        cls.superclass = superclass unless cls.module?
         puts "Reusing class/module #{name}" if $DEBUG_RDOC
       else
         cls = class_type.new(name, superclass)
@@ -551,7 +553,8 @@ module RDoc
       cls = collection[name]
 
       if cls then
-        puts "Reusing class/module #{name}" #if $DEBUG_RDOC
+        cls.superclass = superclass unless cls.module?
+        puts "Reusing class/module #{cls.full_name}" if $DEBUG_RDOC
       else
         if class_type == NormalModule then
           all = @@all_modules
@@ -562,15 +565,11 @@ module RDoc
         cls = all[name]
 
         unless cls then
-          cls = class_type.new(name, superclass)
+          cls = class_type.new name, superclass
           all[name] = cls unless @done_documenting
         end
 
-        if NormalClass === cls and cls.superclass.nil? then
-          cls.superclass = superclass
-        end
-
-        puts "Adding class/module #{name} to #{@name}" if $DEBUG_RDOC
+        puts "Adding class/module #{name} to #{full_name}" if $DEBUG_RDOC
 
         collection[name] = cls unless @done_documenting
 
@@ -632,8 +631,6 @@ module RDoc
 
     attr_accessor :diagram
 
-    attr_writer :superclass
-
     def initialize(name, superclass = nil)
       @name       = name
       @diagram    = nil
@@ -672,7 +669,8 @@ module RDoc
     end
 
     ##
-    # The superclass of this class
+    # Get the superclass of this class.  Attempts to retrieve the superclass'
+    # real name by following module nesting.
 
     def superclass
       raise NoMethodError, "#{full_name} is a module" if module?
@@ -687,6 +685,17 @@ module RDoc
       end until scope.nil? or TopLevel === scope
 
       @superclass
+    end
+
+    ##
+    # Set the superclass of this class
+
+    def superclass=(superclass)
+      raise NoMethodError, "#{full_name} is a module" if module?
+
+      if @superclass.nil? or @superclass == 'Object' then
+        @superclass = superclass 
+      end
     end
 
     def to_s
@@ -806,23 +815,24 @@ module RDoc
     end
 
     def param_seq
-      p = params.gsub(/\s*\#.*/, '')
-      p = p.tr("\n", " ").squeeze(" ")
-      p = "(" + p + ")" unless p[0] == ?(
+      params = params.gsub(/\s*\#.*/, '')
+      params = params.tr("\n", " ").squeeze(" ")
+      params = "(#{params})" unless p[0] == ?(
 
-      if (block = block_params)
-        # If this method has explicit block parameters, remove any
-        # explicit &block
-        p.sub!(/,?\s*&\w+/)
+      if block = block_params then # yes, =
+        # If this method has explicit block parameters, remove any explicit
+        # &block
+        params.sub!(/,?\s*&\w+/)
 
         block.gsub!(/\s*\#.*/, '')
         block = block.tr("\n", " ").squeeze(" ")
         if block[0] == ?(
           block.sub!(/^\(/, '').sub!(/\)/, '')
         end
-        p << " {|#{block}| ...}"
+        params << " { |#{block}| ... }"
       end
-      p
+
+      params
     end
 
     def to_s
