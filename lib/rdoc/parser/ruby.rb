@@ -1847,8 +1847,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     nest = 0
 
     loop do
-      puts("Call param: #{tk}, #{@scanner.continue} " +
-        "#{@scanner.lex_state} #{nest}") if $DEBUG_RDOC
         case tk
         when TkSEMICOLON
           break
@@ -1943,9 +1941,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     loop do
-      puts "Param: %p, %s %s %s" %
-        [tk.text, @scanner.continue, @scanner.lex_state, nest] if $DEBUG_RDOC
-
         case tk
         when TkSEMICOLON
           break
@@ -2236,8 +2231,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     nest = 0
 
     loop do
-      puts "Param: %p, %s %s %s" %
-        [tk.text, @scanner.continue, @scanner.lex_state, nest] if $DEBUG_RDOC
         case tk
         when TkSEMICOLON
           break
@@ -2419,22 +2412,16 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       when  TkUNTIL, TkWHILE then
         nest += 1
-        puts "Found #{tk.class} in #{container.name}, nest = #{nest}, " +
-             "line #{tk.line_no}" if $DEBUG_RDOC
         skip_optional_do_after_expression
 
       # 'for' is trickier
       when TkFOR then
         nest += 1
-        puts "Found #{tk.class} in #{container.name}, nest = #{nest}, " +
-             "line #{tk.line_no}" if $DEBUG_RDOC
         skip_for_variable
         skip_optional_do_after_expression
 
       when TkCASE, TkDO, TkIF, TkUNLESS, TkBEGIN then
         nest += 1
-        puts "Found #{tk.class} in #{container.name}, nest = #{nest}, " +
-             "line #{tk.line_no}" if $DEBUG_RDOC
 
       when TkIDENTIFIER then
         if nest == 1 and current_method.nil? then
@@ -2467,8 +2454,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       when TkEND then
         nest -= 1
-        puts "Found 'end' in #{container.name}, nest = #{nest}, line #{tk.line_no}" if $DEBUG_RDOC
-        puts "Method = #{current_method.name}" if $DEBUG_RDOC and current_method
         if nest == 0 then
           read_documentation_modifiers container, RDoc::CLASS_MODIFIERS
           container.ongoing_visibility = save_visibility
@@ -2659,7 +2644,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def read_directive(allowed)
     tk = get_tk
-    puts "directive: #{tk.text.inspect}" if $DEBUG_RDOC
     result = nil
     if TkCOMMENT === tk
       if tk.text =~ /\s*:?(\w+):\s*(.*)/
@@ -2766,8 +2750,6 @@ The internal error was:
     @scanner.instance_eval{@continue = false}
 
     loop do
-      puts("\nWhile: #{tk.text.inspect}, #{@scanner.continue} " \
-           "#{@scanner.lex_state} #{nest}") if $DEBUG_RDOC
       case tk
       when TkSEMICOLON
         break
