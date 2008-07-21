@@ -71,6 +71,14 @@ module RDoc
     # Do we _force_ documentation, even is we wouldn't normally show the entity
     attr_accessor :force_documentation
 
+    def parent_file_name
+      @parent ? @parent.file_base_name : '(unknown)'
+    end
+
+    def parent_name
+      @parent ? @parent.name : '(unknown)'
+    end
+
     # Default callbacks to nothing, but this is overridden for classes
     # and modules
     def remove_classes_and_modules
@@ -272,7 +280,6 @@ module RDoc
     end
 
     def add_method(a_method)
-      puts "Adding #@visibility method #{a_method.name} to #@name" if $DEBUG_RDOC
       a_method.visibility = @visibility
       add_to(@method_list, a_method)
     end
@@ -283,7 +290,8 @@ module RDoc
 
     def add_alias(an_alias)
       meth = find_instance_method_named(an_alias.old_name)
-      if meth
+
+      if meth then
         new_meth = AnyMethod.new(an_alias.text, an_alias.new_name)
         new_meth.is_alias_for = meth
         new_meth.singleton    = meth.singleton
@@ -294,6 +302,8 @@ module RDoc
       else
         add_to(@aliases, an_alias)
       end
+
+      an_alias
     end
 
     def add_include(an_include)
@@ -321,7 +331,6 @@ module RDoc
         puts "Reusing class/module #{name}" if $DEBUG_RDOC
       else
         cls = class_type.new(name, superclass)
-        puts "Adding class/module #{name} to #@name" if $DEBUG_RDOC
 #        collection[name] = cls if @document_self  && !@done_documenting
         collection[name] = cls if !@done_documenting
         cls.parent = self
@@ -569,8 +578,6 @@ module RDoc
           all[name] = cls unless @done_documenting
         end
 
-        puts "Adding class/module #{name} to #{full_name}" if $DEBUG_RDOC
-
         collection[name] = cls unless @done_documenting
 
         cls.parent = self
@@ -806,7 +813,7 @@ module RDoc
       alias_for = @is_alias_for ? " (alias for #{@is_alias_for.name})" : nil
       "#<%s:0x%x %s%s%s (%s)%s>" % [
         self.class, object_id,
-        @parent.name,
+        parent_name,
         singleton ? '::' : '#',
         name,
         visibility,
@@ -928,7 +935,7 @@ module RDoc
 
       "#<%s:0x%x %s.%s :%s>" % [
         self.class, object_id,
-        @parent.name, attr, @name,
+        parent_name, attr, @name,
       ]
     end
 
@@ -955,7 +962,7 @@ module RDoc
         self.class,
         object_id,
         @name,
-        @parent.file_base_name,
+        parent_file_name,
       ]
     end
 
@@ -979,8 +986,7 @@ module RDoc
       "#<%s:0x%x %s.include %s>" % [
         self.class,
         object_id,
-        @parent.name,
-        @name,
+        parent_name, @name,
       ]
     end
 

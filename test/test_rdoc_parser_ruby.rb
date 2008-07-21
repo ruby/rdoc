@@ -13,11 +13,9 @@ class TestRdocParserRuby < Test::Unit::TestCase
     @filename = @tempfile.path
 
     util_toplevel
-    @options = RDoc::Options.new Hash.new
+    @options = RDoc::Options.new
     @options.quiet = true
-    @stats = RDoc::Stats.new
-
-    @progress = StringIO.new
+    @stats = RDoc::Stats.new 0
   end
 
   def teardown
@@ -530,8 +528,6 @@ end
   def util_parser(content)
     @parser = RDoc::Parser::Ruby.new @top_level, @filename, content, @options,
                                      @stats
-    @parser.progress = @progress
-    @parser
   end
 
   def util_toplevel
