@@ -1,19 +1,20 @@
-=== 2.1.0 / ??
+=== 2.1.0 / 2008-07-20
 
-* N Major Enhancements:
+* 3 Major Enhancements:
   * RDoc now knows about meta-programmed methods, see RDoc::Parser::Ruby
   * Reorganized parsers under RDoc::Parser base class
   * ri now walks the ancestors of a class looking for a method e.g. ri
     File#read displays documentation for IO#read (may require regeneration of
     ri data)
-* N Minor Enhancements:
+* 5 Minor Enhancements:
   * Allow links to files
   * Default options now taken from RDOCOPT environment variable
-  * Methods can be added to classes/modules at toplevel now (def X.foo)
+  * Class method documentation can be found at toplevel now (def X.foo)
   * Allow HTML templates distributed as gems to be loaded with the -T option,
     just like the standard templates in rdoc/generator/html (so an HTML
     template lib/new_template.rb in a gem can be used with rdoc -T new_template)
-* N Bug Fixes:
+  * `rdoc -v` prints out files, classes, modules and methods as it goes
+* 11 Bug Fixes:
   * `ri Foo.bar` now looks for class methods also
   * Sections work in the default template again
   * Doesn't warn about :foo:: list item being an unrecognized directive
