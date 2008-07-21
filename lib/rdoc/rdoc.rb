@@ -288,6 +288,5 @@ module RDoc
       end
     end
   end
-
 end
 
