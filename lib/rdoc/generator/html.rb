@@ -94,6 +94,15 @@ class RDoc::Generator::HTML
   # If the template name contains a slash, use it literally
 
   def load_html_template
+    #
+    # If the template is not a path, first look for it
+    # in rdoc's HTML template directory.  Perhaps this behavior should
+    # be reversed (first try to include the template and, only if that
+    # fails, try to include it in the default template directory).
+    # One danger with reversing the behavior, however, is that
+    # if something like require 'html' could load up an
+    # unrelated file in the standard library or in a gem.
+    #
     template = @options.template
 
     unless template =~ %r{/|\\} then
@@ -101,14 +110,25 @@ class RDoc::Generator::HTML
                            template)
     end
 
-    require template
+    begin
+      require template
 
-    @template = self.class.const_get @options.template.upcase
-    @options.template_class = @template
+      @template = self.class.const_get @options.template.upcase
+      @options.template_class = @template      
+    rescue LoadError => e
+      #
+      # The template did not exist in the default template directory, so
+      # see if require can find the template elsewhere (in a gem, for
+      # instance).
+      #
+      if(e.message[template] && template != @options.template)
+        template = @options.template
+        retry
+      end
 
-  rescue LoadError
-    $stderr.puts "Could not find HTML template '#{template}'"
-    exit 99
+      $stderr.puts "Could not find HTML template '#{template}': #{e.message}"
+      exit 99
+    end
   end
 
   ##
