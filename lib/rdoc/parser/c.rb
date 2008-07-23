@@ -270,7 +270,7 @@ class RDoc::Parser::C < RDoc::Parser
   def find_body(meth_name, meth_obj, body, quiet = false)
     case body
     when %r"((?>/\*.*?\*/\s*))(?:static\s+)?VALUE\s+#{meth_name}
-            \s*(\([^)]*\))\s*\{.*?^\}"xm
+            \s*(\([^)]*\))([^;]|$)"xm
       comment, params = $1, $2
       body_text = $&
 
@@ -279,9 +279,7 @@ class RDoc::Parser::C < RDoc::Parser
       # see if we can find the whole body
 
       re = Regexp.escape(body_text) + '[^(]*^\{.*?^\}'
-      if Regexp.new(re, Regexp::MULTILINE).match(body)
-        body_text = $&
-      end
+      body_text = $& if /#{re}/m =~ body
 
       # The comment block may have been overridden with a 'Document-method'
       # block. This happens in the interpreter when multiple methods are
@@ -562,18 +560,16 @@ class RDoc::Parser::C < RDoc::Parser
 
     return unless class_name
 
-    class_obj  = find_class(var_name, class_name)
+    class_obj = find_class var_name, class_name
 
-    if class_obj
-      if meth_name == "initialize"
+    if class_obj then
+      if meth_name == "initialize" then
         meth_name = "new"
         type = "singleton_method"
       end
-      meth_obj = RDoc::AnyMethod.new("", meth_name)
-      meth_obj.singleton =
-  %w{singleton_method module_function}.include?(type)
 
-      @stats.add_method meth_obj
+      meth_obj = RDoc::AnyMethod.new '', meth_name
+      meth_obj.singleton = %w[singleton_method module_function].include? type
 
       p_count = (Integer(param_count) rescue -1)
 
@@ -585,14 +581,16 @@ class RDoc::Parser::C < RDoc::Parser
         meth_obj.params = "(" + (1..p_count).map{|i| "p#{i}"}.join(", ") + ")"
       end
 
-      if source_file
+      if source_file then
         file_name = File.join(@file_dir, source_file)
         body = (@@known_bodies[source_file] ||= File.read(file_name))
       else
         body = @content
       end
-      if find_body(meth_body, meth_obj, body) and meth_obj.document_self
-        class_obj.add_method(meth_obj)
+
+      if find_body(meth_body, meth_obj, body) and meth_obj.document_self then
+        class_obj.add_method meth_obj
+        @stats.add_method meth_obj
       end
     end
   end

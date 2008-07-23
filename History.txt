@@ -1,3 +1,9 @@
+=== 2.x / ??
+
+* N Bug fixes:
+  * Fixed prototype detection in C parser.  Can process ruby 1.8 C files
+    again.
+
 === 2.1.0 / 2008-07-20
 
 * 3 Major Enhancements:
