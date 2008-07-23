@@ -114,7 +114,7 @@ class RDoc::Generator::HTML
       require template
 
       @template = self.class.const_get @options.template.upcase
-      @options.template_class = @template      
+      @options.template_class = @template
     rescue LoadError => e
       #
       # The template did not exist in the default template directory, so
@@ -256,8 +256,16 @@ class RDoc::Generator::HTML
 
       if main.nil? then
         main = @classes.find do |klass|
-          main_page == klass.context.full_name
+          @main_page == klass.context.full_name
         end
+
+        main = @files.find do |file|
+          file.name =~ /^README/
+        end
+      end
+
+      unless main then
+        raise RDoc::Error, 'main page not found, please specify with --main'
       end
     else
       main = RDoc::TemplatePage.new @template::INDEX
