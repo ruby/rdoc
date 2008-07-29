@@ -4,6 +4,7 @@
   * Fixed prototype detection in C parser.  Can process ruby 1.8 C files
     again.
   * Fix main page for frameless template.  Patch by Marcin Raczkowski.
+  * Fix missing stylesheet in generated chm.  Patch by Gordon Thiesfeld.
 
 === 2.1.0 / 2008-07-20
 
