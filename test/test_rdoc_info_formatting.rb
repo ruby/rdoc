@@ -19,7 +19,7 @@ class TestRdocInfoFormatting < Test::Unit::TestCase
   end
 
   def teardown
-    FileUtils.rm_rf @output_dir
+    # FileUtils.rm_rf @output_dir
   end
 
   # Make sure tags like *this* do not make HTML
@@ -73,10 +73,10 @@ class TestRdocInfoFormatting < Test::Unit::TestCase
   # === Everything deeper becomes a regular @heading
   # ====== Regardless of its nesting level
   def test_headings
-    assert_match(/@majorheading\{Huge heading should be a @@majorheading\}/)
-    assert_match(/@chapheading\{There is also @@chapheading\}/)
-    assert_match(/@heading\{Everything deeper becomes a regular @@heading\}/)
-    assert_match(/@heading\{Regardless of its nesting level\}/)
+    assert_match(/@majorheading Huge heading should be a @@majorheading/)
+    assert_match(/@chapheading There is also @@chapheading/)
+    assert_match(/@heading Everything deeper becomes a regular @@heading/)
+    assert_match(/@heading Regardless of its nesting level/)
   end
 
   # * list item
