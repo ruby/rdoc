@@ -12,6 +12,8 @@ At this point in time, RDoc 2.x is a work in progress and may incur further
 API changes beyond what has been made to the RDoc 1.0.1.  Command-line tools
 are largely unaffected, but internal APIs may shift rapidly.
 
+See RDoc for a description of RDoc's markup and basic use.
+
 == SYNOPSIS:
 
   gem 'rdoc'
