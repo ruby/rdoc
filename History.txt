@@ -1,4 +1,8 @@
 === 2.x / ??
+* N Minor Enhancements
+  * RDoc now adds the package title to the web pages that it generates
+    for files and classes/modules, which helps them appear better in
+    search engine results.
 
 * N Bug fixes:
   * Fixed prototype detection in C parser.  Can process ruby 1.8 C files

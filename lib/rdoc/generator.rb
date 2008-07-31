@@ -616,7 +616,7 @@ module RDoc::Generator
 
       @values["path"]      = @path
       @values["classmod"]  = @is_module ? "Module" : "Class"
-      @values["title"]     = "#{@values['classmod']}: #{h_name}"
+      @values["title"]     = "#{@values['classmod']}: #{h_name} [#{@options.title}]"
 
       c = @context
       c = c.parent while c and not c.diagram
@@ -791,7 +791,7 @@ module RDoc::Generator
       full_path = @context.file_absolute_name
       short_name = ::File.basename full_path
 
-      @values["title"] = CGI.escapeHTML("File: #{short_name}")
+      @values["title"] = CGI.escapeHTML("File: #{short_name} [#{@options.title}]")
 
       if @context.diagram then
         @values["diagram"] = diagram_reference(@context.diagram)
