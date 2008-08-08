@@ -3,6 +3,8 @@
   * RDoc now adds the package title to the web pages that it generates
     for files and classes/modules, which helps them appear better in
     search engine results.
+  * RDoc now automatically generates cross-reference links for classes and
+    methods specified relative to the global namespace (i.e., ::A::B::C#method).
 
 * N Bug fixes:
   * Fixed prototype detection in C parser.  Can process ruby 1.8 C files

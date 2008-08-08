@@ -57,7 +57,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   ##
   # Generate a hyperlink for url, labeled with text. Handle the
-  # special cases for img: and link: described under handle_special_HYPEDLINK
+  # special cases for img: and link: described under handle_special_HYPERLINK
 
   def gen_url(url, text)
     if url =~ /([A-Za-z]+):(.*)/ then

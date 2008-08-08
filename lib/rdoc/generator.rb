@@ -821,17 +821,17 @@ module RDoc::Generator
     attr_reader :img_url
     attr_reader :source_code
 
-    @@seq = "M000000"
-
-    @@all_methods = []
-
     def self.all_methods
       @@all_methods
     end
 
     def self.reset
       @@all_methods = []
+      @@seq = "M000000"
     end
+
+    # Initialize the class variables.
+    self.reset
 
     def initialize(context, html_class, options)
       # TODO: rethink the class hierarchy here...

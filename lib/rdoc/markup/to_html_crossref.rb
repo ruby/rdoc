@@ -9,6 +9,22 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
   attr_accessor :context
 
+  # Regular expressions to match class and method references.
+  # 
+  # 1.) There can be a '\' in front of text to suppress
+  #     any cross-references (note, however, that the single '\'
+  #     is written as '\\\\' in order to escape it twice, once
+  #     in the Ruby String literal and once in the regexp).
+  # 2.) There can be a '::' in front of class names to reference
+  #     from the top-level namespace.
+  # 3.) The method can be followed by parenthesis,
+  #     which may or may not have things inside (this
+  #     apparently is allowed for Fortran 95, but I also think that this
+  #     is a good idea for Ruby, as it is very reasonable to want to
+  #     reference a call with arguments).
+  CLASS_REGEXP_STR = '\\\\?((?:\:{2})?[A-Za-z]\w*(?:\:\:\w+)*)'
+  METHOD_REGEXP_STR = '(\w+[!?=]?)(?:\([\.\w+\*\/\+\-\=\<\>]*\))?'
+
   ##
   # We need to record the html path of our caller so we can generate
   # correct relative paths for any hyperlinks that we find
@@ -17,16 +33,30 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     raise ArgumentError, 'from_path cannot be nil' if from_path.nil?
     super()
 
-    # class names, variable names, or instance variables
+    # Regular expressions matching text that should potentially have
+    # cross-reference links generated are passed to add_special.
+    # Note that these expressions are meant to pick up text for which
+    # cross-references have been suppressed, since the suppression
+    # characters are removed by the code that is triggered.
+
     @markup.add_special(/(
-                           # A::B.meth(**) (for operator in Fortran95)
-                           \w+(::\w+)*[.\#]\w+(\([\.\w+\*\/\+\-\=\<\>]+\))?
-                           # meth(**) (for operator in Fortran95)
-                         | \#\w+(\([.\w\*\/\+\-\=\<\>]+\))?
-                         | \b([A-Z]\w*(::\w+)*[.\#]\w+)  #    A::B.meth
-                         | \b([A-Z]\w+(::\w+)*)          #    A::B
-                         | \#\w+[!?=]?                   #    #meth_name
-                         | \\?\b\w+([_\/\.]+\w+)*[!?=]?  #    meth_name
+                           # A::B::C.meth
+                           #{CLASS_REGEXP_STR}[\.\#]#{METHOD_REGEXP_STR}
+
+                           # Stand-alone method (proceeded by a #)
+                         | \\?\##{METHOD_REGEXP_STR}
+
+                           # A::B::C
+                         | #{CLASS_REGEXP_STR}
+
+                           # Things that look like filenames
+                           # The key thing is that there must be at least
+                           # one special character (period, slash, or
+                           # underscore).
+                         | \w*[_\/\.][\w\/\.]*
+
+                           # Things that have markup suppressed
+                         | \\[^\s]
                          )/x,
                         :CROSSREF)
 
@@ -48,6 +78,9 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   def handle_special_CROSSREF(special)
     name = special.text
 
+    # This ensures that words entirely consisting of lowercase letters will
+    # not have cross-references generated (to suppress lots of
+    # erroneous cross-references to "new" in text, for instance)
     return name if name =~ /\A[a-z]*\z/
 
     return @seen[name] if @seen.include? name
@@ -70,14 +103,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     # (in which case it would match the last pattern, which just checks
     # whether the string as a whole is a known symbol).
 
-    if /([A-Z][\w:]*)[.\#](\w+[!?=]?)/ =~ lookup then
-      container = $1
-      method = $2
-      ref = @context.find_symbol container, method
-    end
-
-    if !ref and
-       /([A-Za-z][\w:]*)[.\#](\w+(\([\.\w+\*\/\+\-\=\<\>]+\))?)/ =~ lookup then
+    if /#{CLASS_REGEXP_STR}[\.\#]#{METHOD_REGEXP_STR}/ =~ lookup then
       container = $1
       method = $2
       ref = @context.find_symbol container, method
@@ -99,4 +125,3 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   end
 
 end
-
