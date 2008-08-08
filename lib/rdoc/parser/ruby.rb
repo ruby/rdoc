@@ -134,7 +134,7 @@ module RDoc::RubyToken
 
   TokenDefinitions = [
     [:TkCLASS,      TkKW,  "class",  EXPR_CLASS],
-    [:TkMODULE,     TkKW,  "module", EXPR_BEG],
+    [:TkMODULE,     TkKW,  "module", EXPR_CLASS],
     [:TkDEF,        TkKW,  "def",    EXPR_FNAME],
     [:TkUNDEF,      TkKW,  "undef",  EXPR_FNAME],
     [:TkBEGIN,      TkKW,  "begin",  EXPR_BEG],

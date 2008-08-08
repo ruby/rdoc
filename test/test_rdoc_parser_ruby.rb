@@ -158,6 +158,45 @@ class TestRdocParserRuby < Test::Unit::TestCase
     assert_equal 'Super', bar.superclass
   end
 
+  def test_parse_module
+    comment = "##\n# my module\n"
+
+    util_parser 'module Foo; end'
+
+    tk = @parser.get_tk
+
+    @parser.parse_module @top_level, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    foo = @top_level.modules.first
+    assert_equal 'Foo', foo.full_name
+    assert_equal comment, foo.comment
+  end
+
+  def test_parse_module_relative_to_top_level_namespace
+    comment = <<-EOF
+#
+# Weirdly named module
+#
+EOF
+
+    code = comment + <<-EOF
+module ::Foo
+  class Helper
+  end
+end
+EOF
+
+    util_parser code
+    @parser.scan()
+
+    foo = @top_level.modules.first
+    assert_equal 'Foo', foo.full_name
+    assert_equal comment, foo.comment
+
+    helper = foo.classes.first
+    assert_equal 'Foo::Helper', helper.full_name
+  end
+
   def test_parse_comment
     content = <<-EOF
 class Foo
