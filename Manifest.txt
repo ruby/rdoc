@@ -60,6 +60,7 @@ lib/rdoc/ri/writer.rb
 lib/rdoc/stats.rb
 lib/rdoc/template.rb
 lib/rdoc/tokenstream.rb
+test/rdoc_markup_to_html_crossref_reference.rb
 test/test_rdoc_info_formatting.rb
 test/test_rdoc_info_sections.rb
 test/test_rdoc_markup.rb
