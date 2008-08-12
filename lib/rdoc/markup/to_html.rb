@@ -318,10 +318,10 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
       gsub(/'/, '&#8216;').
 
     # convert double closing quote
-      gsub(%r{([^ \t\r\n\[\{\(])\'(?=\W)}, '\1&#8221;'). # }
+      gsub(%r{([^ \t\r\n\[\{\(])\"(?=\W)}, '\1&#8221;'). # }
 
     # convert double opening quote
-      gsub(/'/, '&#8220;').
+      gsub(/"/, '&#8220;').
 
     # convert copyright
       gsub(/\(c\)/, '&#169;').

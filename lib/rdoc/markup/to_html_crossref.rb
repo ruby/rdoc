@@ -25,6 +25,43 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   CLASS_REGEXP_STR = '\\\\?((?:\:{2})?[A-Za-z]\w*(?:\:\:\w+)*)'
   METHOD_REGEXP_STR = '(\w+[!?=]?)(?:\([\.\w+\*\/\+\-\=\<\>]*\))?'
 
+  # Regular expressions matching text that should potentially have
+  # cross-reference links generated are passed to add_special.
+  # Note that these expressions are meant to pick up text for which
+  # cross-references have been suppressed, since the suppression
+  # characters are removed by the code that is triggered.
+  CROSSREF_REGEXP = /(
+                      # A::B::C.meth
+                      #{CLASS_REGEXP_STR}[\.\#]#{METHOD_REGEXP_STR}
+
+                      # Stand-alone method (proceeded by a #)
+                      | \\?\##{METHOD_REGEXP_STR}
+
+                      # A::B::C
+                      # The stuff after CLASS_REGEXP_STR is a
+                      # nasty hack.  CLASS_REGEXP_STR unfortunately matches
+                      # words like dog and cat (these are legal "class"
+                      # names in Fortran 95).  When a word is flagged as a
+                      # potential cross-reference, limitations in the markup
+                      # engine suppress other processing, such as typesetting.
+                      # This is particularly noticeable for contractions.
+                      # In order that words like "can't" not
+                      # be flagged as potential cross-references, only
+                      # flag potential class cross-references if the character
+                      # after the cross-referece is a space or sentence
+                      # punctuation.
+                      | #{CLASS_REGEXP_STR}(?=[\s\)\.\?\!\,\;]|\z)
+
+                      # Things that look like filenames
+                      # The key thing is that there must be at least
+                      # one special character (period, slash, or
+                      # underscore).
+                      | \w+[_\/\.][\w\/\.]+
+
+                      # Things that have markup suppressed
+                      | \\[^\s]
+                      )/x
+
   ##
   # We need to record the html path of our caller so we can generate
   # correct relative paths for any hyperlinks that we find
@@ -33,32 +70,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     raise ArgumentError, 'from_path cannot be nil' if from_path.nil?
     super()
 
-    # Regular expressions matching text that should potentially have
-    # cross-reference links generated are passed to add_special.
-    # Note that these expressions are meant to pick up text for which
-    # cross-references have been suppressed, since the suppression
-    # characters are removed by the code that is triggered.
-
-    @markup.add_special(/(
-                           # A::B::C.meth
-                           #{CLASS_REGEXP_STR}[\.\#]#{METHOD_REGEXP_STR}
-
-                           # Stand-alone method (proceeded by a #)
-                         | \\?\##{METHOD_REGEXP_STR}
-
-                           # A::B::C
-                         | #{CLASS_REGEXP_STR}
-
-                           # Things that look like filenames
-                           # The key thing is that there must be at least
-                           # one special character (period, slash, or
-                           # underscore).
-                         | \w*[_\/\.][\w\/\.]*
-
-                           # Things that have markup suppressed
-                         | \\[^\s]
-                         )/x,
-                        :CROSSREF)
+    @markup.add_special(CROSSREF_REGEXP, :CROSSREF)
 
     @from_path = from_path
     @context = context

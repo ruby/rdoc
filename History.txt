@@ -12,6 +12,11 @@
   * Fixed main page for frameless template.  Patch by Marcin Raczkowski.
   * Fixed missing stylesheet in generated chm.  Patch by Gordon Thiesfeld.
   * Fixed the parsing of module names starting with '::'.
+  * Fixed some (but not all!) of the issues with RDoc's HTML typesetting:
+  ** RDoc now correctly converts ' characters to apostrophes, opening single
+     quotes, and closing single quotes in most cases (smart single quotes).
+  ** RDoc now correctly converts " characters to opening double quotes and
+     and closing double quotes in most cases (smart double quotes).
 
 === 2.1.0 / 2008-07-20
 

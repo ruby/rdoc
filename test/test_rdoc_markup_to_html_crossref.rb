@@ -160,8 +160,8 @@ class TestRdocMarkupToHtmlCrossref < Test::Unit::TestCase
     # The hyphen character is not a valid class/method separator character, so
     # rdoc just generates a class cross-reference (perhaps it should not
     # generate anything?).
-    result = "<a href=\"../classes/Ref_Class2/Ref_Class3.html\">Ref_Class2::Ref_Class3</a>-method(*)"
-    verify_convert xref, "Ref_Class2::Ref_Class3-method(*)", result
+    result = "<a href=\"../classes/Ref_Class2/Ref_Class3.html\">Ref_Class2::Ref_Class3</a>;method(*)"
+    verify_convert xref, "Ref_Class2::Ref_Class3;method(*)", result
 
     # There is one Ref_Class3 nested in Ref_Class2 and one defined in the
     # top-level namespace; regardless, ::Ref_Class3 (Ref_Class3 relative
