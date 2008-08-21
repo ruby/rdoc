@@ -50,7 +50,7 @@ class TestRdocMarkupToHtmlCrossref < Test::Unit::TestCase
     top_levels = []
     top_levels.push(parser.scan())
 
-    files, classes = RDoc::Generator::Context.build_indicies(top_levels, options)
+    files, classes = RDoc::Generator::Context.build_indices(top_levels, options)
 
     class_hash = {}
     classes.each do |klass|

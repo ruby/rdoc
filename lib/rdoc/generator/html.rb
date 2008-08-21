@@ -166,8 +166,8 @@ class RDoc::Generator::HTML
   end
 
   def build_indices
-    @files, @classes = RDoc::Generator::Context.build_indicies(@toplevels,
-                                                               @options)
+    @files, @classes = RDoc::Generator::Context.build_indices(@toplevels,
+                                                              @options)
   end
 
   ##
@@ -185,23 +185,50 @@ class RDoc::Generator::HTML
     gen_main_index
 
     # this method is defined in the template file
-    write_extra_pages if defined? write_extra_pages
+    values = {
+      'title_suffix' => CGI.escapeHTML("[#{@options.title}]"),
+      'charset'      => @options.charset,
+      'style_url'    => style_url('', @options.css),
+    }
+
+    @template.write_extra_pages(values) if @template.respond_to?(:write_extra_pages)
   end
 
   def gen_into(list)
-    @file_list ||= index_to_links @files
-    @class_list ||= index_to_links @classes
-    @method_list ||= index_to_links RDoc::Generator::Method.all_methods
+    #
+    # The file, class, and method lists technically should be regenerated
+    # for every output file, in order that the relative links be correct
+    # (we are worried here about frameless templates, which need this
+    # information for every generated page).  Doing this is a bit slow,
+    # however.  For a medium-sized gem, this increased rdoc's runtime by
+    # about 5% (using the 'time' command-line utility).  While this is not
+    # necessarily a problem, I do not want to pessimize rdoc for large
+    # projects, however, and so we only regenerate the lists when the
+    # directory of the output file changes, which seems like a reasonable
+    # optimization.
+    #
+    file_list = {}
+    class_list = {}
+    method_list = {}
+    prev_op_dir = nil
 
     list.each do |item|
       next unless item.document_self
 
       op_file = item.path
+      op_dir = File.dirname(op_file)
 
-      FileUtils.mkdir_p File.dirname(op_file)
+      if(op_dir != prev_op_dir)
+        file_list = index_to_links op_file, @files
+        class_list = index_to_links op_file, @classes
+        method_list = index_to_links op_file, RDoc::Generator::Method.all_methods
+      end
+      prev_op_dir = op_dir
+
+      FileUtils.mkdir_p op_dir
 
       open op_file, 'w' do |io|
-        item.write_on io, @file_list, @class_list, @method_list
+        item.write_on io, file_list, class_list, method_list
       end
     end
   end
@@ -231,6 +258,7 @@ class RDoc::Generator::HTML
 
     values = {
       "entries"    => res,
+      'title'      => CGI.escapeHTML("#{title} [#{@options.title}]"),
       'list_title' => CGI.escapeHTML(title),
       'index_url'  => main_url,
       'charset'    => @options.charset,
@@ -250,6 +278,15 @@ class RDoc::Generator::HTML
 
   def gen_main_index
     if @template.const_defined? :FRAMELESS then
+      #
+      # If we're using a template without frames, then just
+      # locate the main page and redirect to it from index.html.
+      #
+      # One alternative to this, expanding the main page's template into
+      # index.html, is tricky because the relative URLs will be different
+      # (since index.html is located in at the site's root,
+      # rather than within a files or a classes subdirectory).
+      #
       main = @files.find do |file|
         @main_page == file.name
       end
@@ -267,38 +304,48 @@ class RDoc::Generator::HTML
       unless main then
         raise RDoc::Error, 'main page not found, please specify with --main'
       end
+
+      open 'index.html', 'w'  do |f|
+        f.puts(%{<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">})
+        f.puts(%{<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+                lang="en">})
+        f.puts(%{<head>})
+        f.puts(%{<title>#{CGI.escapeHTML(@options.title)}</title>})
+        f.puts(%{<meta http-equiv="refresh" content="0; url=#{main.path}" />})
+        f.puts(%{</head>})
+        f.puts(%{<body></body>})
+        f.puts(%{</html>})
+      end
     else
       main = RDoc::TemplatePage.new @template::INDEX
-    end
 
-    open 'index.html', 'w'  do |f|
-      style_url = style_url '', @options.css
+      open 'index.html', 'w'  do |f|
+        style_url = style_url '', @options.css
+        
+        classes = @classes.sort.map { |klass| klass.value_hash }
+        
+        values = {
+          'main_page'     => @main_page,
+          'initial_page'  => main_url,
+          'style_url'     => style_url('', @options.css),
+          'title'         => CGI.escapeHTML(@options.title),
+          'charset'       => @options.charset,
+          'classes'       => classes,
+        }
+        
+        values['inline_source'] = @options.inline_source
 
-      classes = @classes.sort.map { |klass| klass.value_hash }
-
-      values = {
-        'main_page'     => @main_page,
-        'initial_page'  => main_url,
-        'style_url'     => style_url('', @options.css),
-        'title'         => CGI.escapeHTML(@options.title),
-        'charset'       => @options.charset,
-        'classes'       => classes,
-      }
-
-      values['inline_source'] = @options.inline_source
-
-      if main.respond_to? :write_on then
-        main.write_on f, @file_list, @class_list, @method_list, values
-      else
         main.write_html_on f, values
       end
     end
   end
 
-  def index_to_links(collection)
+  def index_to_links(output_path, collection)
     collection.sort.map do |f|
       next unless f.document_self
-      { "href" => f.path, "name" => f.index_name }
+      { "href" => RDoc::Markup::ToHtml.gen_relative_url(output_path, f.path),
+        "name" => f.index_name }
     end.compact
   end
 
@@ -377,11 +424,8 @@ class RDoc::Generator::HTMLInOne < RDoc::Generator::HTML
       'charset' => @options.charset,
       'files'   => gen_into(@files),
       'classes' => gen_into(@classes),
-      'title'        => CGI.escapeHTML(@options.title),
+      'title'   => CGI.escapeHTML(@options.title),
     }
-
-    # this method is defined in the template file
-    write_extra_pages if defined? write_extra_pages
 
     template = RDoc::TemplatePage.new @template::ONE_PAGE
 
@@ -400,26 +444,4 @@ class RDoc::Generator::HTMLInOne < RDoc::Generator::HTML
     end
     res
   end
-
-  def gen_file_index
-    gen_an_index(@files, 'Files')
-  end
-
-  def gen_class_index
-    gen_an_index(@classes, 'Classes')
-  end
-
-  def gen_method_index
-    gen_an_index(RDoc::Generator::Method.all_methods, 'Methods')
-  end
-
-  def gen_an_index(collection, title)
-    return {
-      "entries" => index_to_links(collection),
-      'list_title' => title,
-      'index_url'  => main_url,
-    }
-  end
-
 end
-

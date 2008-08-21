@@ -23,8 +23,8 @@ module RDoc
       # Generate the +texinfo+ files
       def generate(toplevels)
         @toplevels = toplevels
-        @files, @classes = ::RDoc::Generator::Context.build_indicies(@toplevels,
-                                                                     @options)
+        @files, @classes = ::RDoc::Generator::Context.build_indices(@toplevels,
+                                                                    @options)
 
         (@files + @classes).each { |x| x.value_hash }
 

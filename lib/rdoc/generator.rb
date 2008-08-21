@@ -127,7 +127,7 @@ module RDoc::Generator
     # * a complete list of all hyperlinkable terms (file, class, module, and
     #   method names)
 
-    def self.build_indicies(toplevels, options)
+    def self.build_indices(toplevels, options)
       files = []
       classes = []
 
@@ -215,7 +215,7 @@ module RDoc::Generator
       @methods.sort.map do |meth|
         {
           "name" => CGI.escapeHTML(meth.name),
-          "aref" => "#{path_prefix}\##{meth.aref}"
+          "aref" => "##{meth.aref}"
         }
       end
     end
@@ -614,7 +614,7 @@ module RDoc::Generator
     def class_attribute_values
       h_name = CGI.escapeHTML(name)
 
-      @values["path"]      = @path
+      @values["href"]      = @path
       @values["classmod"]  = @is_module ? "Module" : "Class"
       @values["title"]     = "#{@values['classmod']}: #{h_name} [#{@options.title}]"
 
@@ -704,7 +704,7 @@ module RDoc::Generator
 
     def filename_to_label
       @context.file_relative_name.gsub(/%|\/|\?|\#/) do
-        '%%%x' % $&[0].unpack('C')
+        ('%%%x' % $&[0]).unpack('C')
       end
     end
 

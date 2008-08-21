@@ -7,6 +7,7 @@ Hoe.new "rdoc", RDoc::VERSION do |rdoc|
   rdoc.developer 'Eric Hodel', 'drbrain@segment7.net'
   rdoc.developer 'Dave Thomas', ''
   rdoc.developer 'Phil Hagelberg', 'technomancy@gmail.com'
+  rdoc.developer 'Tony Strauss', 'tony.strauss@designingpatterns.com'
   rdoc.remote_rdoc_dir = ''
 end
 

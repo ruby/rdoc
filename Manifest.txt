@@ -12,10 +12,12 @@ lib/rdoc/generator.rb
 lib/rdoc/generator/chm.rb
 lib/rdoc/generator/chm/chm.rb
 lib/rdoc/generator/html.rb
+lib/rdoc/generator/html/common.rb
 lib/rdoc/generator/html/frameless.rb
 lib/rdoc/generator/html/hefss.rb
 lib/rdoc/generator/html/html.rb
 lib/rdoc/generator/html/kilmer.rb
+lib/rdoc/generator/html/kilmerfactory.rb
 lib/rdoc/generator/html/one_page_html.rb
 lib/rdoc/generator/ri.rb
 lib/rdoc/generator/texinfo.rb

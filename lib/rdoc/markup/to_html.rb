@@ -304,9 +304,12 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # some of these patterns are taken from SmartyPants...
 
   def convert_string_fancy(item)
-    # convert -- to em-dash, (-- to en-dash)
-    item.gsub(/---?/, '&#8212;'). #gsub(/--/, '&#8211;').
+    # convert ampersand before doing anything else
+    item.gsub(/&/, '&amp;').
 
+    # convert -- to em-dash, (-- to en-dash)
+      gsub(/---?/, '&#8212;'). #gsub(/--/, '&#8211;').
+      
     # convert ... to elipsis (and make sure .... becomes .<elipsis>)
       gsub(/\.\.\.\./, '.&#8230;').gsub(/\.\.\./, '&#8230;').
 
@@ -326,7 +329,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     # convert copyright
       gsub(/\(c\)/, '&#169;').
 
-    # convert and registered trademark
+    # convert registered trademark
       gsub(/\(r\)/, '&#174;')
   end
 

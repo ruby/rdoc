@@ -68,9 +68,6 @@ class RDoc::Generator::XML < RDoc::Generator::HTML
       'classes' => gen_into(@classes)
     }
 
-    # this method is defined in the template file
-    write_extra_pages if defined? write_extra_pages
-
     template = RDoc::TemplatePage.new @template::ONE_PAGE
 
     if @options.op_name

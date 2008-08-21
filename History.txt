@@ -5,18 +5,31 @@
     search engine results.
   * RDoc now automatically generates cross-reference links for classes and
     methods specified relative to the global namespace (i.e., ::A::B::C#method).
+  * All built-in templates now output valid, strict XHTML.
 
 * N Bug fixes:
   * Fixed prototype detection in C parser.  Can process ruby 1.8 C files
     again.
   * Fixed main page for frameless template.  Patch by Marcin Raczkowski.
   * Fixed missing stylesheet in generated chm.  Patch by Gordon Thiesfeld.
-  * Fixed the parsing of module names starting with '::'.
+  * Fixed the parsing of module names starting with '::'.  Patch by
+    Giuseppe Bilotta.
   * Fixed some (but not all!) of the issues with RDoc's HTML typesetting:
   ** RDoc now correctly converts ' characters to apostrophes, opening single
      quotes, and closing single quotes in most cases (smart single quotes).
   ** RDoc now correctly converts " characters to opening double quotes and
      and closing double quotes in most cases (smart double quotes).
+  * Fixed main page for frameless template.  Patch by Marcin Raczkowski.
+  * Fixed missing stylesheet in generated chm.  Patch by Gordon Thiesfeld.
+  * '&' characters in text now correctly are translated to HTML character
+     codes.
+  * All of the built-in templates now (should) generate completely valid HTML.
+  * Fixed broken method links in the built-in templates.
+  * RDoc properly links to files and classes in the one page HTML template.
+  * The kilmer and hefss templates properly syntax highlight when inlining
+    source code.
+  * The kilmer and hefss template class pages properly display methods again.
+  * Fixed broken class, file, and method links in the frameless template.
 
 === 2.1.0 / 2008-07-20
 
