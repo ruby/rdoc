@@ -33,6 +33,9 @@
     source code.
   * The kilmer and hefss template class pages properly display methods again.
   * Fixed broken class, file, and method links in the frameless template.
+  * Fixed the clipping of source code in the html and frameless templates when
+    the source code cannot fit into the window; a scrollbar now will allow
+    all of the source code to be viewed.
 
 === 2.1.0 / 2008-07-20
 

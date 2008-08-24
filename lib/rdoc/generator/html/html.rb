@@ -268,12 +268,11 @@ div.method-source-code {
   margin: 1em;
   padding: 0.5em;
   border: 1px dashed #999;
-  overflow: hidden;
+  overflow: auto;
 }
 
 div.method-source-code pre {
   color: #ffdead;
-  overflow: hidden;
 }
 
 /* --- Ruby keyword styles --------------------- */
@@ -281,7 +280,7 @@ div.method-source-code pre {
 .standalone-code {
   background: #221111;
   color: #ffdead;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .ruby-constant {
