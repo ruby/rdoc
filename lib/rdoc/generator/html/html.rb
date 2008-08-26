@@ -560,8 +560,8 @@ EOF
           <td class="context-item-name"><%= constants["name"] %></td>
           <td>=</td>
           <td class="context-item-value"><%= constants["value"] %></td>
-<%       if sections["desc"] then %>
-          <td width="3em">&nbsp;</td>
+<%       if constants["desc"] then %>
+          <td>&nbsp;</td>
           <td class="context-item-desc"><%= constants["desc"] %></td>
 <%       end %>
         </tr>

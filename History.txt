@@ -1,6 +1,7 @@
 === 2.x / ??
 * N Major Enhancements
-  * More extensive unit tests (special thanks to Chris Lowis).
+  * More extensive unit tests (special thanks to Chris Lowis for contributing
+    a test).
 
 * N Minor Enhancements
   * RDoc now adds the package title to the web pages that it generates
@@ -36,6 +37,8 @@
   * Fixed the clipping of source code in the html and frameless templates when
     the source code cannot fit into the window; a scrollbar now will allow
     all of the source code to be viewed.
+  * Fixed the missing constant descriptions in the html and frameless
+    templates.
 
 === 2.1.0 / 2008-07-20
 
