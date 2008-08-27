@@ -14,7 +14,7 @@ class RDoc::RI::ClassEntry
     @inferior_classes = []
   end
 
-  # We found this class in more tha one place, so add
+  # We found this class in more than one place, so add
   # in the name from there.
   def add_path(path)
     @path_names << path
@@ -168,7 +168,7 @@ class RDoc::RI::MethodEntry
 end
 
 ##
-# We represent everything know about all 'ri' files accessible to this program
+# We represent everything known about all 'ri' files accessible to this program
 
 class RDoc::RI::Cache
 
@@ -185,4 +185,3 @@ class RDoc::RI::Cache
   end
 
 end
-

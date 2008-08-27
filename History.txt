@@ -18,6 +18,9 @@
   * Fixed missing stylesheet in generated chm.  Patch by Gordon Thiesfeld.
   * Fixed the parsing of module names starting with '::'.  Patch by
     Giuseppe Bilotta.
+  * Fixed a case where RDoc first would encounter Foo::Bar and then would
+    encounter class Foo.  Previously, RDoc erroneously would have considered
+    that both a Foo class and a Foo module existed.
   * Fixed some (but not all!) of the issues with RDoc's HTML typesetting:
   ** RDoc now correctly converts ' characters to apostrophes, opening single
      quotes, and closing single quotes in most cases (smart single quotes).
@@ -27,7 +30,6 @@
   * Fixed missing stylesheet in generated chm.  Patch by Gordon Thiesfeld.
   * '&' characters in text now correctly are translated to HTML character
      codes.
-  * All of the built-in templates now (should) generate completely valid HTML.
   * Fixed broken method links in the built-in templates.
   * RDoc properly links to files and classes in the one page HTML template.
   * The kilmer and hefss templates properly syntax highlight when inlining

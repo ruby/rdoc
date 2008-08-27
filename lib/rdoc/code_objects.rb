@@ -220,6 +220,22 @@ module RDoc
     end
 
     ##
+    # return the classes Hash (only to be used internally)
+
+    def classes_hash
+      @classes
+    end
+    protected :classes_hash
+
+    ##
+    # return the modules Hash (only to be used internally)
+
+    def modules_hash
+      @modules
+    end
+    protected :modules_hash
+
+    ##
     # Change the default visibility for new methods
 
     def ongoing_visibility=(vis)
@@ -272,7 +288,23 @@ module RDoc
     end
 
     def add_class(class_type, name, superclass)
-      add_class_or_module @classes, class_type, name, superclass
+      klass = add_class_or_module @classes, class_type, name, superclass
+
+      #
+      # If the parser encounters Container::Item before encountering
+      # Container, then it assumes that Container is a module.  This
+      # may not be the case, so remove Container from the module list
+      # if present and transfer any contained classes and modules to
+      # the new class.
+      #
+      mod = @modules.delete(name)
+
+      if mod then
+        klass.classes_hash.update(mod.classes_hash)
+        klass.modules_hash.update(mod.modules_hash)
+      end
+
+      return klass
     end
 
     def add_module(class_type, name)

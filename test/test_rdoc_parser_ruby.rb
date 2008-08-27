@@ -171,6 +171,38 @@ class TestRdocParserRuby < Test::Unit::TestCase
     assert_equal 'Foo', foo.full_name
     assert_equal comment, foo.comment
   end
+  
+  def test_parse_class_mistaken_for_module
+#
+# The code below is not strictly legal Ruby (Foo must have been defined
+# before Foo::Bar is encountered), but RDoc might encounter Foo::Bar before
+# Foo if they live in different files.
+#
+    code = <<-EOF
+class Foo::Bar
+end
+
+module Foo::Baz
+end
+
+class Foo
+end
+EOF
+
+    util_parser code
+
+    @parser.scan()
+
+    assert(@top_level.modules.empty?)
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+
+    bar = foo.classes.first
+    assert_equal 'Foo::Bar', bar.full_name
+
+    baz = foo.modules.first
+    assert_equal 'Foo::Baz', baz.full_name
+  end
 
   def test_parse_module_relative_to_top_level_namespace
     comment = <<-EOF
