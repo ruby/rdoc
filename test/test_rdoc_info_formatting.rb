@@ -5,7 +5,7 @@ require 'test/unit'
 require 'rdoc/generator/texinfo'
 
 # From chapter 18 of the Pickaxe 3rd ed. and the TexInfo manual.
-class TestRdocInfoFormatting < Test::Unit::TestCase
+class TestRDocInfoFormatting < Test::Unit::TestCase
   def setup
     @output_dir = File.join Dir.tmpdir, "test_rdoc_info_formatting_#{$$}"
     @output_file = File.join @output_dir, 'rdoc.texinfo'

@@ -4,7 +4,7 @@ require 'rdoc/ri/formatter'
 require 'rdoc/ri/display'
 require 'rdoc/ri/driver'
 
-class TestRdocRiDefaultDisplay < Test::Unit::TestCase
+class TestRDocRiDefaultDisplay < Test::Unit::TestCase
 
   def setup
     @output = StringIO.new

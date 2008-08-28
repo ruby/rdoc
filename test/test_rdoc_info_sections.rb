@@ -9,7 +9,7 @@ require 'rdoc/generator/texinfo'
 class RDoc::Generator::TEXINFO; attr_reader :files, :classes; end
 class RDoc::RDoc; attr_reader :options; attr_reader :gen; end
 
-class TestRdocInfoSections < Test::Unit::TestCase
+class TestRDocInfoSections < Test::Unit::TestCase
 
   def setup
     @output_dir = File.join Dir.tmpdir, "test_rdoc_info_sections_#{$$}"

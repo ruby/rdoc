@@ -6,7 +6,7 @@ require 'rdoc/options'
 require 'rdoc/parser/ruby'
 require 'rdoc/stats'
 
-class TestRdocParserRuby < Test::Unit::TestCase
+class TestRDocParserRuby < Test::Unit::TestCase
 
   def setup
     @tempfile = Tempfile.new self.class.name

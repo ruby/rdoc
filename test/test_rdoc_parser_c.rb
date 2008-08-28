@@ -10,7 +10,7 @@ class RDoc::Parser::C
   public :do_classes, :do_constants
 end
 
-class TestRdocParserC < Test::Unit::TestCase
+class TestRDocParserC < Test::Unit::TestCase
 
   def setup
     @tempfile = Tempfile.new self.class.name

@@ -2,7 +2,7 @@ require 'test/unit'
 require 'rdoc/markup'
 require 'rdoc/markup/to_html'
 
-class TestRdocMarkupToHtml < Test::Unit::TestCase
+class TestRDocMarkupToHtml < Test::Unit::TestCase
 
   def setup
     @am = RDoc::Markup::AttributeManager.new

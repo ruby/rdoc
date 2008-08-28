@@ -4,7 +4,7 @@ require 'rdoc/markup/to_html_crossref'
 
 require 'pathname'
 
-class TestRdocMarkupToHtmlCrossref < Test::Unit::TestCase
+class TestRDocMarkupToHtmlCrossref < Test::Unit::TestCase
 
   #
   # This method parses a source file and returns a Hash mapping
