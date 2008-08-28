@@ -14,7 +14,9 @@
 * N Bug fixes:
   * Fixed prototype detection in C parser.  Can process ruby 1.8 C files
     again.
-  * Fixed main page for frameless template.  Patch by Marcin Raczkowski.
+  * Fixed the main page for frameless template.  Patch by Marcin Raczkowski.
+  * Fixed the main page for frame templates.  Now, if no main page is
+    specified, RDoc will default to the README.
   * Fixed missing stylesheet in generated chm.  Patch by Gordon Thiesfeld.
   * Fixed the parsing of module names starting with '::'.  Patch by
     Giuseppe Bilotta.

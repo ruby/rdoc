@@ -68,7 +68,6 @@ class RDoc::Generator::HTML
   def initialize(options) #:not-new:
     @options = options
     load_html_template
-    @main_page_path = nil
   end
 
   ##
@@ -174,6 +173,8 @@ class RDoc::Generator::HTML
   # Generate all the HTML
 
   def generate_html
+    @main_url = main_url
+
     # the individual descriptions for files and classes
     gen_into(@files)
     gen_into(@classes)
@@ -260,7 +261,7 @@ class RDoc::Generator::HTML
       "entries"    => res,
       'title'      => CGI.escapeHTML("#{title} [#{@options.title}]"),
       'list_title' => CGI.escapeHTML(title),
-      'index_url'  => main_url,
+      'index_url'  => @main_url,
       'charset'    => @options.charset,
       'style_url'  => style_url('', @options.css),
     }
@@ -279,32 +280,14 @@ class RDoc::Generator::HTML
   def gen_main_index
     if @template.const_defined? :FRAMELESS then
       #
-      # If we're using a template without frames, then just
-      # locate the main page and redirect to it from index.html.
+      # If we're using a template without frames, then just redirect
+      # to it from index.html.
       #
       # One alternative to this, expanding the main page's template into
       # index.html, is tricky because the relative URLs will be different
       # (since index.html is located in at the site's root,
       # rather than within a files or a classes subdirectory).
       #
-      main = @files.find do |file|
-        @main_page == file.name
-      end
-
-      if main.nil? then
-        main = @classes.find do |klass|
-          @main_page == klass.context.full_name
-        end
-
-        main = @files.find do |file|
-          file.name =~ /^README/
-        end
-      end
-
-      unless main then
-        raise RDoc::Error, 'main page not found, please specify with --main'
-      end
-
       open 'index.html', 'w'  do |f|
         f.puts(%{<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
                "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">})
@@ -312,7 +295,7 @@ class RDoc::Generator::HTML
                 lang="en">})
         f.puts(%{<head>})
         f.puts(%{<title>#{CGI.escapeHTML(@options.title)}</title>})
-        f.puts(%{<meta http-equiv="refresh" content="0; url=#{main.path}" />})
+        f.puts(%{<meta http-equiv="refresh" content="0; url=#{@main_url}" />})
         f.puts(%{</head>})
         f.puts(%{<body></body>})
         f.puts(%{</html>})
@@ -326,8 +309,7 @@ class RDoc::Generator::HTML
         classes = @classes.sort.map { |klass| klass.value_hash }
         
         values = {
-          'main_page'     => @main_page,
-          'initial_page'  => main_url,
+          'initial_page'  => @main_url,
           'style_url'     => style_url('', @options.css),
           'title'         => CGI.escapeHTML(@options.title),
           'charset'       => @options.charset,
@@ -353,32 +335,48 @@ class RDoc::Generator::HTML
   # Returns the url of the main page
 
   def main_url
-    @main_page = @options.main_page
-    @main_page_ref = nil
+    main_page = @options.main_page
 
-    if @main_page then
-      @main_page_ref = RDoc::Generator::AllReferences[@main_page]
+    #
+    # If a main page has been specified (--main), then search for it
+    # in the AllReferences array.  This allows either files or classes
+    # to be used for the main page.
+    #
+    if main_page then
+      main_page_ref = RDoc::Generator::AllReferences[main_page]
 
-      if @main_page_ref then
-        @main_page_path = @main_page_ref.path
+      if main_page_ref then
+        return main_page_ref.path
       else
-        $stderr.puts "Could not find main page #{@main_page}"
+        $stderr.puts "Could not find main page #{main_page}"
       end
     end
 
-    unless @main_page_path then
-      file = @files.find { |context| context.document_self }
-      @main_page_path = file.path if file
+    #
+    # No main page has been specified, so just use the README.
+    #
+    @files.each do |file|
+      if file.name =~ /^README/ then
+        return file.path
+      end
     end
 
-    unless @main_page_path then
-      $stderr.puts "Couldn't find anything to document"
-      $stderr.puts "Perhaps you've used :stopdoc: in all classes"
-      exit 1
+    #
+    # There's no README (shame! shame!).  Just use the first file
+    # that will be documented.
+    #
+    @files.each do |file|
+      if file.document_self then
+        return file.path
+      end
     end
 
-    @main_page_path
+    #
+    # There are no files to be documented...  Something seems very wrong.
+    #
+    raise RDoc::Error, "Couldn't find anything to document (perhaps :stopdoc: has been used in all classes)!"
   end
+  private :main_url
 
 end
 
