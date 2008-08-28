@@ -1,11 +1,11 @@
-=== 2.x / ??
-* N Major Enhancements
+=== 2.2.0 / ??
+* 2 Major Enhancements
   * More extensive unit tests (special thanks to Chris Lowis for contributing
     a test).
   * Made ri twice as fast for the most common use cases (when it's reading
     cached information).
 
-* N Minor Enhancements
+* 5 Minor Enhancements
   * RDoc now adds the package title to the web pages that it generates
     for files and classes/modules, which helps them appear better in
     search engine results.
@@ -17,7 +17,7 @@
   * Improved rdoc's HTML generation speed by about 20% (on Windows, the
     boost seems larger).
 
-* N Bug fixes:
+* 20 Bug fixes:
   * Fixed prototype detection in C parser.  Can process ruby 1.8 C files
     again.
   * Fixed the main page for frameless template.  Patch by Marcin Raczkowski.
