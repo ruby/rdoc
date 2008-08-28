@@ -11,6 +11,12 @@ require 'rdoc/markup/to_flow'
 
 class RDoc::RI::Driver
 
+  #
+  # This class offers both Hash and OpenStruct functionality.
+  # We convert from the Core Hash to this before calling any of
+  # the display methods, in order to give the display methods
+  # a cleaner API for accessing the data.
+  #
   class Hash < ::Hash
     def self.convert(hash)
       hash = new.update hash
@@ -36,27 +42,7 @@ class RDoc::RI::Driver
       self[method.to_s]
     end
 
-    def merge_enums(other)
-      other.each do |k, v|
-        if self[k] then
-          case v
-          when Array then
-            # HACK dunno
-            if String === self[k] and self[k].empty? then
-              self[k] = v
-            else
-              self[k] += v
-            end
-          when Hash then
-            self[k].update v
-          else
-            # do nothing
-          end
-        else
-          self[k] = v
-        end
-      end
-    end
+
   end
 
   class Error < RDoc::RI::Error; end
@@ -295,16 +281,16 @@ Options may also be set in the 'RI' environment variable.
                      class_cache = RDoc::RI::Driver::Hash.new
 
                      classes = map_dirs('**/cdesc*.yaml', :sys) { |f| Dir[f] }
+                     warn "Updating class cache with #{classes.size} system classes..."
                      populate_class_cache class_cache, classes
 
                      classes = map_dirs('**/cdesc*.yaml') { |f| Dir[f] }
-                     warn "Updating class cache with #{classes.size} classes..."
+                     warn "Updating class cache with #{classes.size} gem classes..."
 
                      populate_class_cache class_cache, classes, true
                      write_cache class_cache, class_cache_file_path
                    end
 
-    @class_cache = RDoc::RI::Driver::Hash.convert @class_cache
     @class_cache
   end
 
@@ -322,8 +308,11 @@ Options may also be set in the 'RI' environment variable.
 
   def display_class(name)
     klass = class_cache[name]
-    klass = RDoc::RI::Driver::Hash.convert klass
-    @display.display_class_info klass, class_cache
+    @display.display_class_info RDoc::RI::Driver::Hash.convert(klass)
+  end
+
+  def display_method(method)
+    @display.display_method_info RDoc::RI::Driver::Hash.convert(method)
   end
 
   def get_info_for(arg)
@@ -365,14 +354,14 @@ Options may also be set in the 'RI' environment variable.
           ext_path = f
           ext_path = "gem #{$1}" if f =~ %r%gems/[\d.]+/doc/([^/]+)%
           method["source_path"] = ext_path unless system_file
-          cache[name] = RDoc::RI::Driver::Hash.convert method
+          cache[name] = method
         end
       end
 
       write_cache cache, path
     end
 
-    RDoc::RI::Driver::Hash.convert cache
+    cache
   end
 
   ##
@@ -419,6 +408,29 @@ Options may also be set in the 'RI' environment variable.
 
     dirs.map { |dir| yield File.join(dir, file_name) }.flatten.compact
   end
+  
+  def merge_enums(first, second)
+    second.each do |k, v|
+      if first[k] then
+        case v
+        when Array then
+          # HACK dunno
+          if String === first[k] and first[k].empty? then
+            first[k] = v
+          else
+            first[k] += v
+          end
+        when Hash then
+          first[k].update v
+        else
+          # do nothing
+        end
+      else
+        first[k] = v
+      end
+    end
+  end
+  private :merge_enums
 
   ##
   # Extract the class and method name parts from +name+ like Foo::Bar#baz
@@ -455,9 +467,7 @@ Options may also be set in the 'RI' environment variable.
           desc["class_method_extensions"] = desc.delete "class_methods"
         end
 
-        klass = RDoc::RI::Driver::Hash.convert klass
-
-        klass.merge_enums desc
+        merge_enums klass, desc
         klass["sources"] << cdesc
       end
     end
@@ -501,7 +511,7 @@ Options may also be set in the 'RI' environment variable.
 
             raise NotFoundError, orig_name unless method
 
-            @display.display_method_info method
+            display_method method
           end
         else
           if class_cache.key? name then
@@ -512,7 +522,7 @@ Options may also be set in the 'RI' environment variable.
             if methods.size == 0
               raise NotFoundError, name
             elsif methods.size == 1
-              @display.display_method_info methods.first
+              display_method method
             else
               @display.display_method_list methods
             end
@@ -548,4 +558,3 @@ Options may also be set in the 'RI' environment variable.
   end
 
 end
-

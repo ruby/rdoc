@@ -1,7 +1,7 @@
 $DEBUG_RDOC = nil
 
 ##
-# = RDoc - Ruby Documentation System
+# = \RDoc - Ruby Documentation System
 #
 # This package contains RDoc and RDoc::Markup.  RDoc is an application that
 # produces documentation for one or more Ruby source files.  We work similarly
@@ -58,7 +58,36 @@ $DEBUG_RDOC = nil
 # markers).  If directory names are passed to RDoc, they are scanned
 # recursively for C and Ruby source files only.
 #
-# == Documenting with RDoc
+# == \Options
+# rdoc can be passed a variety of command-line options.  In addition,
+# options can be specified via the +RDOCOPT+ environment variable, which
+# functions similarly to the +RUBYOPT+ environment variable.
+#
+#   % export RDOCOPT="-S"
+#
+# will make rdoc default to inline method source code.  Command-line options
+# always will override those in +RDOCOPT+.
+#
+# Run
+# 
+#   % rdoc --help
+#
+# for full details on rdoc's options.
+#
+# Here are some of the most commonly used options.
+# [-d, --diagram]
+#   Generate diagrams showing modules and
+#   classes. You need dot V1.8.6 or later to
+#   use the --diagram option correctly. Dot is
+#   available from http://graphviz.org
+#
+# [-S, --inline-source]
+#   Show method source code inline, rather than via a popup link.
+#
+# [-T, --template=NAME]
+#   Set the template used when generating output.
+#
+# == Documenting Source Code
 #
 # Comment blocks can be written fairly naturally, either using '#' on
 # successive lines of the comment, or by including the comment in
@@ -119,7 +148,7 @@ $DEBUG_RDOC = nil
 # +:yields:+ is an example of a documentation directive.  These appear
 # immediately after the start of the document element they are modifying.
 #
-# == Markup
+# == \Markup
 #
 # * The markup engine looks for a document's natural left margin.  This is
 #   used as the initial margin for the document.

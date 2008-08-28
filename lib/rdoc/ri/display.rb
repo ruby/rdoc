@@ -41,7 +41,7 @@ class RDoc::RI::DefaultDisplay
   # Display information about +klass+.  Fetches additional information from
   # +ri_reader+ as necessary.
 
-  def display_class_info(klass, ri_reader)
+  def display_class_info(klass)
     page do
       superclass = klass.superclass_string
 
@@ -61,17 +61,11 @@ class RDoc::RI::DefaultDisplay
         @formatter.blankline
         @formatter.display_heading("Includes:", 2, "")
         incs = []
+
         klass.includes.each do |inc|
-          inc_desc = ri_reader.find_class_by_name(inc.name)
-          if inc_desc
-            str = inc.name + "("
-            str << inc_desc.instance_methods.map{|m| m.name}.join(", ")
-            str << ")"
-            incs << str
-          else
-            incs << inc.name
-          end
-      end
+          incs << inc.name
+        end
+
         @formatter.wrap(incs.sort.join(', '))
       end
 

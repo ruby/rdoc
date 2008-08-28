@@ -27,7 +27,6 @@ class TestRDocRiDefaultDisplay < Test::Unit::TestCase
   end
 
   def test_display_class_info
-    ri_reader = nil
     klass = h \
       'attributes' => [
         { 'name' => 'attribute', 'rw' => 'RW',
@@ -59,7 +58,7 @@ class TestRDocRiDefaultDisplay < Test::Unit::TestCase
       ],
       'superclass_string' => 'Object'
 
-    @dd.display_class_info klass, ri_reader
+    @dd.display_class_info klass
 
     expected = <<-EOF
 ---------------------------------------------------- Class: SomeClass < Object

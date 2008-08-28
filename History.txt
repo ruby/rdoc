@@ -2,6 +2,8 @@
 * N Major Enhancements
   * More extensive unit tests (special thanks to Chris Lowis for contributing
     a test).
+  * Made ri twice as fast for the most common use cases (when it's reading
+    cached information).
 
 * N Minor Enhancements
   * RDoc now adds the package title to the web pages that it generates

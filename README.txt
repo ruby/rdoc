@@ -1,4 +1,4 @@
-= RDoc
+= \RDoc
 
 * http://rubyforge.org/projects/rdoc/
 
@@ -13,6 +13,16 @@ API changes beyond what has been made to the RDoc 1.0.1.  Command-line tools
 are largely unaffected, but internal APIs may shift rapidly.
 
 See RDoc for a description of RDoc's markup and basic use.
+
+== TEMPLATE NOTE:
+
+RDoc comes with five built-in HTML templates.  We use a 3rd party template,
+however, for RDoc's own documentation site[http://rdoc.rubyforge.org].  This
+template is Hanna[http://github.com/mislav/hanna/tree/master].
+
+We strongly are considering making Hanna as RDoc's default template
+in a future release, but for now this template can be downloaded separately
+and used with the -T option.
 
 == SYNOPSIS:
 
