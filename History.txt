@@ -14,6 +14,7 @@
   * All built-in templates now output valid, strict XHTML.
   * The documentation is slightly better organized (the markup details were
     merged into the RDoc module's documentation).
+  * Improve rdoc's HTML generation speed by about 20%.
 
 * N Bug fixes:
   * Fixed prototype detection in C parser.  Can process ruby 1.8 C files
@@ -34,6 +35,7 @@
      quotes, and closing single quotes in most cases (smart single quotes).
   ** RDoc now correctly converts " characters to opening double quotes and
      and closing double quotes in most cases (smart double quotes).
+  ** (c) correctly is converted into the copyright symbol.
   * Fixed main page for frameless template.  Patch by Marcin Raczkowski.
   * Fixed missing stylesheet in generated chm.  Patch by Gordon Thiesfeld.
   * '&' characters in text now correctly are translated to HTML character

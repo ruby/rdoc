@@ -22,7 +22,16 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   #     apparently is allowed for Fortran 95, but I also think that this
   #     is a good idea for Ruby, as it is very reasonable to want to
   #     reference a call with arguments).
-  CLASS_REGEXP_STR = '\\\\?((?:\:{2})?[A-Za-z]\w*(?:\:\:\w+)*)'
+  #
+  # NOTE: In order to support Fortran 95 properly, the [A-Z] below
+  # should be changed to [A-Za-z].  This slows down rdoc significantly,
+  # however, and the Fortran 95 support is broken in any case due to
+  # the return in handle_special_CROSSREF if the token consists
+  # entirely of lowercase letters.
+  #
+  # The markup/cross-referencing engine needs a rewrite for
+  # Fortran 95 to be supported properly.
+  CLASS_REGEXP_STR = '\\\\?((?:\:{2})?[A-Z]\w*(?:\:\:\w+)*)'
   METHOD_REGEXP_STR = '(\w+[!?=]?)(?:\([\.\w+\*\/\+\-\=\<\>]*\))?'
 
   # Regular expressions matching text that should potentially have

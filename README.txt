@@ -1,6 +1,7 @@
 = \RDoc
 
-* http://rubyforge.org/projects/rdoc/
+* Project Page: http://rubyforge.org/projects/rdoc/
+* Documentation: http://rdoc.rubyforge.org/
 
 == DESCRIPTION:
 
@@ -32,10 +33,15 @@ and used with the -T option.
 
 == BUGS:
 
-If you found a bug, please report it at the RDoc project's tracker on
-RubyForge:
+RDoc's Fortran 95 support is pretty broken right now.
+The rdoc-f95[http://www.gfd-dennou.org/library/dcmodel/rdoc-f95/] project has
+patches for RDoc 1.x that provide excellent Fortran 95 support.  Properly
+supporting Fortran 95 requires a rewrite of RDoc's markup engine, which
+is high on our list of goals.  The Fortran 95 issue can be tracked
+here[http://rubyforge.org/tracker/index.php?func=detail&aid=21542&group_id=627&atid=2475].
 
-http://rubyforge.org/tracker/?group_id=627
+If you find a bug, please report it at the RDoc project's
+tracker[http://rubyforge.org/tracker/?group_id=627] on RubyForge:
 
 == LICENSE:
 
@@ -43,4 +49,3 @@ RDoc is Copyright (c) 2001-2003 Dave Thomas, The Pragmatic Programmers,
 portions (c) 2007-2008 Eric Hodel.  It is free software, and may be
 redistributed under the terms specified in the README file of the Ruby
 distribution.
-
