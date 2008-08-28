@@ -21,6 +21,8 @@
   * Fixed a case where RDoc first would encounter Foo::Bar and then would
     encounter class Foo.  Previously, RDoc erroneously would have considered
     that both a Foo class and a Foo module existed.
+  * Prevented RDoc from trying to parse binary files, which would produce
+    garbage output.
   * Fixed some (but not all!) of the issues with RDoc's HTML typesetting:
   ** RDoc now correctly converts ' characters to apostrophes, opening single
      quotes, and closing single quotes in most cases (smart single quotes).

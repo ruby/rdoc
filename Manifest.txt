@@ -62,6 +62,7 @@ lib/rdoc/ri/writer.rb
 lib/rdoc/stats.rb
 lib/rdoc/template.rb
 lib/rdoc/tokenstream.rb
+test/binary.dat
 test/rdoc_markup_to_html_crossref_reference.rb
 test/test_rdoc_info_formatting.rb
 test/test_rdoc_info_sections.rb
@@ -69,6 +70,7 @@ test/test_rdoc_markup.rb
 test/test_rdoc_markup_attribute_manager.rb
 test/test_rdoc_markup_to_html.rb
 test/test_rdoc_markup_to_html_crossref.rb
+test/test_rdoc_parser.rb
 test/test_rdoc_parser_c.rb
 test/test_rdoc_parser_ruby.rb
 test/test_rdoc_ri_attribute_formatter.rb
