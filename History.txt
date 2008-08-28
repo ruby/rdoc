@@ -1,4 +1,4 @@
-=== 2.2.0 / ??
+=== 2.2.0 / 2008-08-28
 * 2 Major Enhancements
   * More extensive unit tests (special thanks to Chris Lowis for contributing
     a test).
