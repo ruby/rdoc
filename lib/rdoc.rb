@@ -1,7 +1,7 @@
 $DEBUG_RDOC = nil
 
 ##
-# RDoc - Ruby Documentation System
+# = RDoc - Ruby Documentation System
 #
 # This package contains RDoc and RDoc::Markup.  RDoc is an application that
 # produces documentation for one or more Ruby source files.  We work similarly
@@ -18,8 +18,6 @@ $DEBUG_RDOC = nil
 # * If you want to use RDoc to create documentation for your Ruby source files,
 #   read on.
 # * If you want to include extensions written in C, see RDoc::Parser::C
-# * For information on the various markups available in comment blocks, see
-#   RDoc::Markup.
 # * If you want to drive RDoc programmatically, see RDoc::RDoc.
 # * If you want to use the library to format text blocks into HTML, have a look
 #   at RDoc::Markup.
@@ -60,10 +58,7 @@ $DEBUG_RDOC = nil
 # markers).  If directory names are passed to RDoc, they are scanned
 # recursively for C and Ruby source files only.
 #
-# = Markup
-#
-# For information on how to make lists, hyperlinks, etc. with RDoc, see
-# RDoc::Markup.
+# == Documenting with RDoc
 #
 # Comment blocks can be written fairly naturally, either using '#' on
 # successive lines of the comment, or by including the comment in
@@ -123,6 +118,101 @@ $DEBUG_RDOC = nil
 #
 # +:yields:+ is an example of a documentation directive.  These appear
 # immediately after the start of the document element they are modifying.
+#
+# == Markup
+#
+# * The markup engine looks for a document's natural left margin.  This is
+#   used as the initial margin for the document.
+#
+# * Consecutive lines starting at this margin are considered to be a
+#   paragraph.
+#
+# * If a paragraph starts with a "*", "-", or with "<digit>.", then it is
+#   taken to be the start of a list.  The margin in increased to be the first
+#   non-space following the list start flag.  Subsequent lines should be
+#   indented to this \new margin until the list ends.  For example:
+#
+#      * this is a list with three paragraphs in
+#        the first item.  This is the first paragraph.
+#
+#        And this is the second paragraph.
+#
+#        1. This is an indented, numbered list.
+#        2. This is the second item in that list
+#
+#        This is the third conventional paragraph in the
+#        first list item.
+#
+#      * This is the second item in the original list
+#
+# * You can also construct labeled lists, sometimes called description
+#   or definition lists.  Do this by putting the label in square brackets
+#   and indenting the list body:
+#
+#       [cat]  a small furry mammal
+#              that seems to sleep a lot
+#
+#       [ant]  a little insect that is known
+#              to enjoy picnics
+#
+#   A minor variation on labeled lists uses two colons to separate the
+#   label from the list body:
+#
+#       cat::  a small furry mammal
+#              that seems to sleep a lot
+#
+#       ant::  a little insect that is known
+#              to enjoy picnics
+#
+#   This latter style guarantees that the list bodies' left margins are
+#   aligned: think of them as a two column table.
+#
+# * Any line that starts to the right of the current margin is treated
+#   as verbatim text.  This is useful for code listings.  The example of a
+#   list above is also verbatim text.
+#
+# * A line starting with an equals sign (=) is treated as a
+#   heading.  Level one headings have one equals sign, level two headings
+#   have two,and so on.
+#
+# * A line starting with three or more hyphens (at the current indent)
+#   generates a horizontal rule.  The more hyphens, the thicker the rule
+#   (within reason, and if supported by the output device)
+#
+# * You can use markup within text (except verbatim) to change the
+#   appearance of parts of that text.  Out of the box, RDoc::Markup
+#   supports word-based and general markup.
+#
+#   Word-based markup uses flag characters around individual words:
+#
+#   [\*word*]  displays word in a *bold* font
+#   [\_word_]  displays word in an _emphasized_ font
+#   [\+word+]  displays word in a +code+ font
+#
+#   General markup affects text between a start delimiter and and end
+#   delimiter.  Not surprisingly, these delimiters look like HTML markup.
+#
+#   [\<b>text...</b>]    displays word in a *bold* font
+#   [\<em>text...</em>]  displays word in an _emphasized_ font
+#   [\<i>text...</i>]    displays word in an _emphasized_ font
+#   [\<tt>text...</tt>]  displays word in a +code+ font
+#
+#   Unlike conventional Wiki markup, general markup can cross line
+#   boundaries.  You can turn off the interpretation of markup by
+#   preceding the first character with a backslash, so \\\<b>bold
+#   text</b> and \\\*bold* produce \<b>bold text</b> and \*bold*
+#   respectively.
+#
+# * Hyperlinks to the web starting http:, mailto:, ftp:, or www. are
+#   recognized.  An HTTP url that references an external image file is
+#   converted into an inline <IMG..>.  Hyperlinks starting 'link:' are
+#   assumed to refer to local files whose path is relative to the --op
+#   directory.
+#
+#   Hyperlinks can also be of the form <tt>label</tt>[url], in which
+#   case the label is used in the displayed text, and <tt>url</tt> is
+#   used as the target.  If <tt>label</tt> contains multiple words,
+#   put it in braces: <em>{multi word label}[</em>url<em>]</em>.
 #
 # == Directives
 #
@@ -209,7 +299,7 @@ $DEBUG_RDOC = nil
 #   last.  If you don't specify a +:startdoc:+ by the end of the container,
 #   disables documentation for the entire class or module.
 #
-# = Other stuff
+# == Other stuff
 #
 # RDoc is currently being maintained by Eric Hodel <drbrain@segment7.net>
 #

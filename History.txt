@@ -10,6 +10,8 @@
   * RDoc now automatically generates cross-reference links for classes and
     methods specified relative to the global namespace (i.e., ::A::B::C#method).
   * All built-in templates now output valid, strict XHTML.
+  * The documentation is slightly better organized (the markup details were
+    merged into the RDoc module's documentation).
 
 * N Bug fixes:
   * Fixed prototype detection in C parser.  Can process ruby 1.8 C files
