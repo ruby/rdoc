@@ -151,7 +151,7 @@ Attributes:
   end
 
   def test_display_method_info_singleton
-    method = RDoc::RI::Driver::Hash.new.update \
+    method = RDoc::RI::Driver::OpenStructHash.new.update \
       'aliases' => [],
       'block_params' => nil,
       'comment' => nil,
@@ -175,7 +175,7 @@ Attributes:
 
   def test_display_method_list
     methods = [
-      RDoc::RI::Driver::Hash.new.update(
+      RDoc::RI::Driver::OpenStructHash.new.update(
         "aliases" => [],
         "block_params" => nil,
         "comment" =>  nil,
@@ -185,7 +185,7 @@ Attributes:
         "params" => "()",
         "visibility" => "public"
       ),
-      RDoc::RI::Driver::Hash.new.update(
+      RDoc::RI::Driver::OpenStructHash.new.update(
         "aliases" => [],
         "block_params" => nil,
         "comment" => nil,
@@ -288,8 +288,7 @@ install an additional package, or ask the packager to enable ri generation.
   end
 
   def h(hash)
-    RDoc::RI::Driver::Hash.convert hash
+    RDoc::RI::Driver::OpenStructHash.convert hash
   end
 
 end
-
