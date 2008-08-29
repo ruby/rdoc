@@ -17,32 +17,54 @@ class RDoc::RI::Driver
   # the display methods, in order to give the display methods
   # a cleaner API for accessing the data.
   #
-  class Hash < ::Hash
-    def self.convert(hash)
-      hash = new.update hash
+  class OpenStructHash < Hash
+    #
+    # This method converts from a Hash to an OpenStructHash.
+    #
+    def self.convert(object)
+      case object
+      when Hash then
+        new_hash = new # Convert Hash -> OpenStructHash
 
-      hash.each do |key, value|
-        hash[key] = case value
-                    when ::Hash then
-                      convert value
-                    when Array then
-                      value = value.map do |v|
-                        ::Hash === v ? convert(v) : v
-                      end
-                      value
-                    else
-                      value
-                    end
+        object.each do |key, value|
+          new_hash[key] = convert(value)
+        end
+
+        new_hash
+      when Array then
+        object.map do |element|
+          convert(element)
+        end
+      else
+        object
       end
+    end
 
-      hash
+    def merge_enums(other)
+      other.each do |k, v|
+        if self[k] then
+          case v
+          when Array then
+            # HACK dunno
+            if String === self[k] and self[k].empty? then
+              self[k] = v
+            else
+              self[k] += v
+            end
+          when Hash then
+            self[k].update v
+          else
+            # do nothing
+          end
+        else
+          self[k] = v
+        end
+      end
     end
 
     def method_missing method, *args
       self[method.to_s]
     end
-
-
   end
 
   class Error < RDoc::RI::Error; end
@@ -62,14 +84,14 @@ class RDoc::RI::Driver
     options[:formatter] = RDoc::RI::Formatter.for 'plain'
     options[:list_classes] = false
     options[:list_names] = false
+    options[:use_cache] = true
 
-    # By default all paths are used.  If any of these are true, only those
-    # directories are used.
-    use_system = false
-    use_site = false
-    use_home = false
-    use_gems = false
-    doc_dirs = []
+    # By default all standard paths are used.
+    options[:use_system] = true
+    options[:use_site] = true
+    options[:use_home] = true
+    options[:use_gems] = true
+    options[:extra_doc_dirs] = []
 
     opts = OptionParser.new do |opt|
       opt.program_name = File.basename $0
@@ -136,22 +158,6 @@ Options may also be set in the 'RI' environment variable.
 
       opt.separator nil
 
-      opt.on("--doc-dir=DIRNAME", "-d", Array,
-             "List of directories to search for",
-             "documentation. If not specified, we search",
-             "the standard rdoc/ri directories. May be",
-             "repeated.") do |value|
-        value.each do |dir|
-          unless File.directory? dir then
-            raise OptionParser::InvalidArgument, "#{dir} is not a directory"
-          end
-        end
-
-        doc_dirs.concat value
-      end
-
-      opt.separator nil
-
       opt.on("--fmt=FORMAT", "--format=FORMAT", "-f",
              RDoc::RI::Formatter::FORMATTERS.keys,
              "Format to use when displaying output:",
@@ -165,49 +171,96 @@ Options may also be set in the 'RI' environment variable.
 
       opt.separator nil
 
-      unless RDoc::RI::Paths::GEMDIRS.empty? then
-        opt.on("--[no-]gems",
-               "Include documentation from RubyGems.") do |value|
-          use_gems = value
+      opt.on("--doc-dir=DIRNAME", "-d", Array,
+             "List of directories from which to source",
+             "documentation in addition to the standard",
+             "directories.  May be repeated.") do |value|
+        value.each do |dir|
+          unless File.directory? dir then
+            raise OptionParser::InvalidArgument, "#{dir} is not a directory"
+          end
+
+          options[:extra_doc_dirs] << File.expand_path(dir)
         end
       end
 
       opt.separator nil
 
-      opt.on("--[no-]home",
-             "Include documentation stored in ~/.rdoc.") do |value|
-        use_home = value
+      opt.on("--[no-]use-cache",
+             "Whether or not to use ri's cache.",
+             "True by default.") do |value|
+        options[:use_cache] = value
       end
 
       opt.separator nil
 
-      opt.on("--[no-]list-names", "-l",
-             "List all the names known to RDoc, one per",
-             "line.") do |value|
-        options[:list_names] = value
-      end
-
-      opt.separator nil
-
-      opt.on("--no-pager", "-T",
-             "Send output directly to stdout.") do |value|
-        options[:use_stdout] = !value
-      end
-
-      opt.separator nil
-
-      opt.on("--[no-]site",
-             "Include documentation from libraries",
-             "installed in site_lib.") do |value|
-        use_site = value
+      opt.on("--no-standard-docs",
+             "Do not include documentation from",
+             "the Ruby standard library, site_lib,",
+             "installed gems, or ~/.rdoc.",
+             "Equivalent to specifying",
+             "the options --no-system, --no-site, --no-gems,",
+             "and --no-home") do
+        options[:use_system] = false
+        options[:use_site] = false
+        options[:use_gems] = false
+        options[:use_home] = false
       end
 
       opt.separator nil
 
       opt.on("--[no-]system",
              "Include documentation from Ruby's standard",
-             "library.") do |value|
-        use_system = value
+             "library.  Defaults to true.") do |value|
+        options[:use_system] = value
+      end
+
+      opt.separator nil
+
+      opt.on("--[no-]site",
+             "Include documentation from libraries",
+             "installed in site_lib.",
+             "Defaults to true.") do |value|
+        options[:use_site] = value
+      end
+
+      opt.separator nil
+
+      opt.on("--[no-]gems",
+             "Include documentation from RubyGems.",
+             "Defaults to true.") do |value|
+        options[:use_gems] = value
+      end
+
+      opt.separator nil
+
+      opt.on("--[no-]home",
+             "Include documentation stored in ~/.rdoc.",
+             "Defaults to true.") do |value|
+        options[:use_home] = value
+      end
+
+      opt.separator nil
+
+      opt.on("--list-doc-dirs",
+             "List the directories from which ri will",
+             "source documentation on stdout and exit.") do
+        options[:list_doc_dirs] = true
+      end
+
+      opt.separator nil
+
+      opt.on("--list-names", "-l",
+             "List all the names known to RDoc, one per",
+             "line.") do
+        options[:list_names] = true
+      end
+
+      opt.separator nil
+
+      opt.on("--no-pager", "-T",
+             "Send output directly to stdout.") do
+        options[:use_stdout] = true
       end
 
       opt.separator nil
@@ -223,11 +276,6 @@ Options may also be set in the 'RI' environment variable.
     opts.parse! argv
 
     options[:names] = argv
-
-    options[:path] = RDoc::RI::Paths.path(use_system, use_site, use_home,
-                                          use_gems, *doc_dirs)
-    options[:raw_path] = RDoc::RI::Paths.raw_path(use_system, use_site,
-                                                  use_home, use_gems, *doc_dirs)
 
     options
 
@@ -251,13 +299,22 @@ Options may also be set in the 'RI' environment variable.
     @names = options[:names]
 
     @class_cache_name = 'classes'
-    @all_dirs = RDoc::RI::Paths.path(true, true, true, true)
+
+    @doc_dirs = RDoc::RI::Paths.path(options[:use_system],
+                                     options[:use_site],
+                                     options[:use_home],
+                                     options[:use_gems],
+                                     options[:extra_doc_dirs])
+
     @homepath = RDoc::RI::Paths.raw_path(false, false, true, false).first
     @homepath = @homepath.sub(/\.rdoc/, '.ri')
-    @sys_dirs = RDoc::RI::Paths.raw_path(true, false, false, false)
+    @sys_dir = RDoc::RI::Paths.raw_path(true, false, false, false).first
+    @list_doc_dirs = options[:list_doc_dirs]
 
     FileUtils.mkdir_p cache_file_path unless File.directory? cache_file_path
+    @cache_doc_dirs_path = File.join cache_file_path, ".doc_dirs"
 
+    @use_cache = options[:use_cache]
     @class_cache = nil
 
     @display = RDoc::RI::DefaultDisplay.new(options[:formatter],
@@ -268,30 +325,92 @@ Options may also be set in the 'RI' environment variable.
   def class_cache
     return @class_cache if @class_cache
 
-    newest = map_dirs('created.rid', :all) do |f|
+    # Get the documentation directories used to make the cache in order to see
+    # whether the cache is valid for the current ri instantiation.
+    if(File.readable?(@cache_doc_dirs_path))
+      cache_doc_dirs = IO.read(@cache_doc_dirs_path).split("\n")
+    else
+      cache_doc_dirs = []
+    end
+
+    newest = map_dirs('created.rid') do |f|
       File.mtime f if test ?f, f
     end.max
 
+    # An up to date cache file must have been created more recently than
+    # the last modification of any of the documentation directories.  It also
+    # must have been created with the same documentation directories
+    # as those from which ri currently is sourcing documentation.
     up_to_date = (File.exist?(class_cache_file_path) and
-                  newest and newest < File.mtime(class_cache_file_path))
+                  newest and newest < File.mtime(class_cache_file_path) and
+                  (cache_doc_dirs == @doc_dirs))
 
-    @class_cache = if up_to_date then
-                     load_cache_for @class_cache_name
-                   else
-                     class_cache = RDoc::RI::Driver::Hash.new
-
-                     classes = map_dirs('**/cdesc*.yaml', :sys) { |f| Dir[f] }
-                     warn "Updating class cache with #{classes.size} system classes..."
-                     populate_class_cache class_cache, classes
-
-                     classes = map_dirs('**/cdesc*.yaml') { |f| Dir[f] }
-                     warn "Updating class cache with #{classes.size} gem classes..."
-
-                     populate_class_cache class_cache, classes, true
-                     write_cache class_cache, class_cache_file_path
-                   end
-
+    if up_to_date and @use_cache then
+      open class_cache_file_path, 'rb' do |fp|
+        begin
+          @class_cache = Marshal.load fp.read
+        rescue
+          #
+          # This shouldn't be necessary, since the up_to_date logic above
+          # should force the cache to be recreated when a new version of
+          # rdoc is installed.  This seems like a worthwhile enhancement
+          # to ri's robustness, however.
+          #
+          $stderr.puts "Error reading the class cache; recreating the class cache!"
+          @class_cache = create_class_cache
+        end
+      end
+    else
+      @class_cache = create_class_cache
+    end
+    
     @class_cache
+  end
+
+  def create_class_cache
+    class_cache = OpenStructHash.new
+
+    if(@use_cache)
+      # Dump the documentation directories to a file in the cache, so that
+      # we only will use the cache for future instantiations with identical
+      # documentation directories.
+      File.open @cache_doc_dirs_path, "wb" do |fp|
+        fp << @doc_dirs.join("\n")
+      end
+    end
+
+    classes = map_dirs('**/cdesc*.yaml') { |f| Dir[f] }
+    warn "Updating class cache with #{classes.size} classes..."
+    populate_class_cache class_cache, classes
+
+    write_cache class_cache, class_cache_file_path
+
+    class_cache
+  end
+
+  def populate_class_cache(class_cache, classes, extension = false)
+    classes.each do |cdesc|
+      desc = read_yaml cdesc
+      klassname = desc["full_name"]
+
+      unless class_cache.has_key? klassname then
+        desc["display_name"] = "Class"
+        desc["sources"] = [cdesc]
+        desc["instance_method_extensions"] = []
+        desc["class_method_extensions"] = []
+        class_cache[klassname] = desc
+      else
+        klass = class_cache[klassname]
+
+        if extension then
+          desc["instance_method_extensions"] = desc.delete "instance_methods"
+          desc["class_method_extensions"] = desc.delete "class_methods"
+        end
+
+        klass.merge_enums desc
+        klass["sources"] << cdesc
+      end
+    end
   end
 
   def class_cache_file_path
@@ -308,11 +427,11 @@ Options may also be set in the 'RI' environment variable.
 
   def display_class(name)
     klass = class_cache[name]
-    @display.display_class_info RDoc::RI::Driver::Hash.convert(klass)
+    @display.display_class_info klass
   end
 
   def display_method(method)
-    @display.display_method_info RDoc::RI::Driver::Hash.convert(method)
+    @display.display_method_info method
   end
 
   def get_info_for(arg)
@@ -326,42 +445,59 @@ Options may also be set in the 'RI' environment variable.
     cache = nil
 
     if File.exist? path and
-       File.mtime(path) >= File.mtime(class_cache_file_path) then
+       File.mtime(path) >= File.mtime(class_cache_file_path) and
+       @use_cache then
       open path, 'rb' do |fp|
-        cache = Marshal.load fp.read
-      end
-    else
-      class_cache = nil
-
-      open class_cache_file_path, 'rb' do |fp|
-        class_cache = Marshal.load fp.read
-      end
-
-      klass = class_cache[klassname]
-      return nil unless klass
-
-      method_files = klass["sources"]
-      cache = RDoc::RI::Driver::Hash.new
-
-      sys_dir = @sys_dirs.first
-      method_files.each do |f|
-        system_file = f.index(sys_dir) == 0
-        Dir[File.join(File.dirname(f), "*")].each do |yaml|
-          next unless yaml =~ /yaml$/
-          next if yaml =~ /cdesc-[^\/]+yaml$/
-          method = read_yaml yaml
-          name = method["full_name"]
-          ext_path = f
-          ext_path = "gem #{$1}" if f =~ %r%gems/[\d.]+/doc/([^/]+)%
-          method["source_path"] = ext_path unless system_file
-          cache[name] = method
+        begin
+          cache = Marshal.load fp.read
+        rescue
+          #
+          # The cache somehow is bad.  Recreate the cache.
+          #
+          $stderr.puts "Error reading the cache for #{klassname}; recreating the cache!"
+          cache = create_cache_for klassname, path
         end
       end
-
-      write_cache cache, path
+    else
+      cache = create_cache_for klassname, path
     end
 
     cache
+  end
+
+  def create_cache_for(klassname, path)
+    klass = class_cache[klassname]
+    return nil unless klass
+
+    method_files = klass["sources"]
+    cache = OpenStructHash.new
+
+    method_files.each do |f|
+      system_file = f.index(@sys_dir) == 0
+      Dir[File.join(File.dirname(f), "*")].each do |yaml|
+        next unless yaml =~ /yaml$/
+        next if yaml =~ /cdesc-[^\/]+yaml$/
+
+        method = read_yaml yaml
+
+        if system_file then
+          method["source_path"] = "system"
+        else
+          if(f =~ %r%gems/[\d.]+/doc/([^/]+)%) then
+            ext_path = "gem #{$1}"
+          else
+            ext_path = f
+          end
+
+          method["source_path"] = ext_path
+        end
+
+        name = method["full_name"]
+        cache[name] = method
+      end
+    end
+    
+    write_cache cache, path
   end
 
   ##
@@ -395,43 +531,10 @@ Options may also be set in the 'RI' environment variable.
     method
   end
 
-  def map_dirs(file_name, system=false)
-    dirs = if system == :all then
-             @all_dirs
-           else
-             if system then
-               @sys_dirs
-             else
-               @all_dirs - @sys_dirs
-             end
-           end
-
-    dirs.map { |dir| yield File.join(dir, file_name) }.flatten.compact
+  def map_dirs(file_name)
+    @doc_dirs.map { |dir| yield File.join(dir, file_name) }.flatten.compact
   end
   
-  def merge_enums(first, second)
-    second.each do |k, v|
-      if first[k] then
-        case v
-        when Array then
-          # HACK dunno
-          if String === first[k] and first[k].empty? then
-            first[k] = v
-          else
-            first[k] += v
-          end
-        when Hash then
-          first[k].update v
-        else
-          # do nothing
-        end
-      else
-        first[k] = v
-      end
-    end
-  end
-  private :merge_enums
-
   ##
   # Extract the class and method name parts from +name+ like Foo::Bar#baz
 
@@ -448,41 +551,21 @@ Options may also be set in the 'RI' environment variable.
     [klass, meth]
   end
 
-  def populate_class_cache(class_cache, classes, extension = false)
-    classes.each do |cdesc|
-      desc = read_yaml cdesc
-      klassname = desc["full_name"]
-
-      unless class_cache.has_key? klassname then
-        desc["display_name"] = "Class"
-        desc["sources"] = [cdesc]
-        desc["instance_method_extensions"] = []
-        desc["class_method_extensions"] = []
-        class_cache[klassname] = desc
-      else
-        klass = class_cache[klassname]
-
-        if extension then
-          desc["instance_method_extensions"] = desc.delete "instance_methods"
-          desc["class_method_extensions"] = desc.delete "class_methods"
-        end
-
-        merge_enums klass, desc
-        klass["sources"] << cdesc
-      end
-    end
-  end
-
   def read_yaml(path)
     data = File.read path
+
+    # Necessary to be backward-compatible with documentation generated
+    # by earliar RDoc versions.
     data = data.gsub(/ \!ruby\/(object|struct):(RDoc::RI|RI).*/, '')
     data = data.gsub(/ \!ruby\/(object|struct):SM::(\S+)/,
                      ' !ruby/\1:RDoc::Markup::\2')
-    YAML.load data
+    OpenStructHash.convert(YAML.load data)
   end
 
   def run
-    if @names.empty? then
+    if(@list_doc_dirs)
+      puts @doc_dirs.join("\n")
+    elsif @names.empty? then
       @display.list_known_classes class_cache.keys.sort
     else
       @names.each do |name|
@@ -539,21 +622,23 @@ Options may also be set in the 'RI' environment variable.
     class_cache.keys.sort.each do |klass|
       class_cache[klass]["instance_methods"].map{|h|h["name"]}.grep(pattern) do |name|
         method = load_cache_for(klass)[klass+'#'+name]
-        methods << RDoc::RI::Driver::Hash.convert(method) if method
+        methods << method if method
       end
       class_cache[klass]["class_methods"].map{|h|h["name"]}.grep(pattern) do |name|
         method = load_cache_for(klass)[klass+'::'+name]
-        methods << RDoc::RI::Driver::Hash.convert(method) if method
+        methods << method if method
       end
     end
     methods
   end
 
   def write_cache(cache, path)
-    File.open path, "wb" do |cache_file|
-      Marshal.dump cache, cache_file
+    if(@use_cache)
+      File.open path, "wb" do |cache_file|
+        Marshal.dump cache, cache_file
+      end
     end
-
+      
     cache
   end
 

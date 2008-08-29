@@ -39,9 +39,6 @@ module RDoc::RI::Paths
     HOMEDIR = nil
   end
 
-  # This is the search path for 'ri'
-  PATH = [ SYSDIR, SITEDIR, HOMEDIR ].find_all {|p| p && File.directory?(p)}
-
   begin
     require 'rubygems' unless defined?(Gem) and defined?(Gem::Enable) and
                               Gem::Enable
@@ -67,7 +64,6 @@ module RDoc::RI::Paths
     end
 
     GEMDIRS = ri_paths.map { |k,v| v.last }.sort
-    GEMDIRS.each { |dir| PATH << dir }
   rescue LoadError
     GEMDIRS = []
   end
@@ -85,9 +81,6 @@ module RDoc::RI::Paths
   # found.
 
   def self.raw_path(use_system, use_site, use_home, use_gems, *extra_dirs)
-    return PATH unless use_system or use_site or use_home or use_gems or
-                       not extra_dirs.empty?
-
     path = []
     path << extra_dirs unless extra_dirs.empty?
     path << SYSDIR if use_system
@@ -97,6 +90,4 @@ module RDoc::RI::Paths
 
     return path.flatten.compact
   end
-
 end
-

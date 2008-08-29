@@ -1,11 +1,15 @@
 === 2.2.0 / 2008-08-28
-* 2 Major Enhancements
+* 3 Major Enhancements
   * More extensive unit tests (special thanks to Chris Lowis for contributing
     a test).
-  * Made ri twice as fast for the most common use cases (when it's reading
-    cached information).
+  * Made ri twice as fast for the most common use case of displaying
+    information for a class or a fully-qualified method
+    (i.e., ri Array#flatten, after ri has created a cache the first time that
+    it runs).
+  * Made ri many times faster when searching for an unqualified method (i.e.,
+    ri read, again after the first such search has populated ri's cache)
 
-* 5 Minor Enhancements
+* 6 Minor Enhancements
   * RDoc now adds the package title to the web pages that it generates
     for files and classes/modules, which helps them appear better in
     search engine results.
@@ -16,8 +20,9 @@
     merged into the RDoc module's documentation).
   * Improved rdoc's HTML generation speed by about 20% (on Windows, the
     boost seems larger).
+  * Provided an ri command-line option to control its caching behavior.
 
-* 20 Bug fixes:
+* 21 Bug fixes:
   * Fixed prototype detection in C parser.  Can process ruby 1.8 C files
     again.
   * Fixed the main page for frameless template.  Patch by Marcin Raczkowski.
@@ -50,6 +55,8 @@
     all of the source code to be viewed.
   * Fixed the missing constant descriptions in the html and frameless
     templates.
+  * Fixed the ri command-line options that customize the directories to be
+    searched for documentation.
 
 === 2.1.0 / 2008-07-20
 
