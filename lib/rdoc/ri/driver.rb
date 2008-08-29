@@ -559,7 +559,7 @@ Options may also be set in the 'RI' environment variable.
     data = data.gsub(/ \!ruby\/(object|struct):(RDoc::RI|RI).*/, '')
     data = data.gsub(/ \!ruby\/(object|struct):SM::(\S+)/,
                      ' !ruby/\1:RDoc::Markup::\2')
-    OpenStructHash.convert(YAML.load data)
+    OpenStructHash.convert(YAML.load(data))
   end
 
   def run

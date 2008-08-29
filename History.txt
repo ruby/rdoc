@@ -22,7 +22,7 @@
     boost seems larger).
   * Provided an ri command-line option to control its caching behavior.
 
-* 21 Bug fixes:
+* 24 Bug fixes:
   * Fixed prototype detection in C parser.  Can process ruby 1.8 C files
     again.
   * Fixed the main page for frameless template.  Patch by Marcin Raczkowski.
@@ -57,6 +57,10 @@
     templates.
   * Fixed the ri command-line options that customize the directories to be
     searched for documentation.
+  * Fixed the XML generator.  Patch by Anthony Durity.
+  * Stopped the XML template from generating invalid XML due to malformed
+    embedded ruby.
+  * Adding missing information about a class' constants to the XML template.
 
 === 2.1.0 / 2008-07-20
 

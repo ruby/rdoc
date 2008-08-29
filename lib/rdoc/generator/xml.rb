@@ -34,15 +34,15 @@ class RDoc::Generator::XML < RDoc::Generator::HTML
   ##
   # Generate:
   #
-  # * a list of HtmlFile objects for each TopLevel object.
-  # * a list of HtmlClass objects for each first level
+  # * a list of File objects for each TopLevel object.
+  # * a list of Class objects for each first level
   #   class or module in the TopLevel objects
   # * a complete list of all hyperlinkable terms (file,
   #   class, module, and method names)
 
   def build_indices
     @info.each do |toplevel|
-      @files << RDoc::Generator::HtmlFile.new(toplevel, @options, RDoc::Generator::FILE_DIR)
+      @files << RDoc::Generator::File.new(toplevel, @options, RDoc::Generator::FILE_DIR)
     end
 
     RDoc::TopLevel.all_classes_and_modules.each do |cls|
@@ -51,7 +51,7 @@ class RDoc::Generator::XML < RDoc::Generator::HTML
   end
 
   def build_class_list(from, html_file, class_dir)
-    @classes << RDoc::Generator::HtmlClass.new(from, html_file, class_dir, @options)
+    @classes << RDoc::Generator::Class.new(from, html_file, class_dir, @options)
     from.each_classmodule do |mod|
       build_class_list(mod, html_file, class_dir)
     end
