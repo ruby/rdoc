@@ -539,11 +539,11 @@ Options may also be set in the 'RI' environment variable.
     class_cache.keys.sort.each do |klass|
       class_cache[klass]["instance_methods"].map{|h|h["name"]}.grep(pattern) do |name|
         method = load_cache_for(klass)[klass+'#'+name]
-        methods << method if method
+        methods << RDoc::RI::Driver::Hash.convert(method) if method
       end
       class_cache[klass]["class_methods"].map{|h|h["name"]}.grep(pattern) do |name|
         method = load_cache_for(klass)[klass+'::'+name]
-        methods << method if method
+        methods << RDoc::RI::Driver::Hash.convert(method) if method
       end
     end
     methods
