@@ -260,12 +260,20 @@ Options may also be set in the 'RI' environment variable.
       opt.separator nil
 
       opt.on("--no-pager", "-T",
-             "Send output directly to stdout.") do
+             "Send output directly to stdout,",
+             "rather than to a pager.") do
         options[:use_stdout] = true
       end
 
       opt.on("--interactive", "-i",
-             "Allow methods to be browsed interactively.") do
+             "This makes ri go into interactive mode.",
+             "When ri is in interactive mode it will",
+             "allow the user to disambiguate lists of",
+             "methods in case multiple methods match",
+             "against a method search string.  It also",
+             "will allow the user to enter in a method",
+             "name (with auto-completion, if readline",
+             "is supported) when viewing a class.") do
         options[:interactive] = true
       end
 
