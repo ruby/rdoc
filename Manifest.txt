@@ -2,7 +2,7 @@ History.txt
 Manifest.txt
 README.txt
 Rakefile
-ri.txt
+RI.txt
 bin/rdoc
 bin/ri
 lib/rdoc.rb

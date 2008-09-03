@@ -1,4 +1,7 @@
 === 2.2.0 / 2008-08-28
+This version includes some significant enhancements to ri.  See RI.txt for
+documentation about ri.
+
 * 5 Major Enhancements
   * More extensive unit tests (special thanks to Chris Lowis for contributing
     a test).
