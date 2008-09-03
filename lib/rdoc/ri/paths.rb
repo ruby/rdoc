@@ -26,9 +26,9 @@ module RDoc::RI::Paths
 
   DOC_DIR  = "doc/rdoc"
 
-  version = RbConfig::CONFIG['ruby_version']
+  VERSION = RbConfig::CONFIG['ruby_version']
 
-  base    = File.join(RbConfig::CONFIG['datadir'], "ri", version)
+  base    = File.join(RbConfig::CONFIG['datadir'], "ri", VERSION)
   SYSDIR  = File.join(base, "system")
   SITEDIR = File.join(base, "site")
   homedir = ENV['HOME'] || ENV['USERPROFILE'] || ENV['HOMEPATH']

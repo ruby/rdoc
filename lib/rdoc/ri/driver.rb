@@ -82,6 +82,7 @@ class RDoc::RI::Driver
     options[:use_stdout] = !$stdout.tty?
     options[:width] = 72
     options[:formatter] = RDoc::RI::Formatter.for 'plain'
+    options[:interactive] = false
     options[:list_classes] = false
     options[:list_names] = false
     options[:use_cache] = true
@@ -263,6 +264,11 @@ Options may also be set in the 'RI' environment variable.
         options[:use_stdout] = true
       end
 
+      opt.on("--interactive", "-i",
+             "Allow methods to be browsed interactively.") do
+        options[:interactive] = true
+      end
+
       opt.separator nil
 
       opt.on("--width=WIDTH", "-w", OptionParser::DecimalInteger,
@@ -276,6 +282,11 @@ Options may also be set in the 'RI' environment variable.
     opts.parse! argv
 
     options[:names] = argv
+
+    options[:formatter] ||= RDoc::RI::Formatter.for('plain')
+    options[:use_stdout] ||= !$stdout.tty?
+    options[:use_stdout] ||= options[:interactive]
+    options[:width] ||= 72
 
     options
 
@@ -293,9 +304,6 @@ Options may also be set in the 'RI' environment variable.
   end
 
   def initialize(options={})
-    options[:formatter] ||= RDoc::RI::Formatter.for('plain')
-    options[:use_stdout] ||= !$stdout.tty?
-    options[:width] ||= 72
     @names = options[:names]
 
     @class_cache_name = 'classes'
@@ -317,6 +325,7 @@ Options may also be set in the 'RI' environment variable.
     @use_cache = options[:use_cache]
     @class_cache = nil
 
+    @interactive = options[:interactive]
     @display = RDoc::RI::DefaultDisplay.new(options[:formatter],
                                             options[:width],
                                             options[:use_stdout])
@@ -481,7 +490,7 @@ Options may also be set in the 'RI' environment variable.
         method = read_yaml yaml
 
         if system_file then
-          method["source_path"] = "system"
+          method["source_path"] = "Ruby #{RDoc::RI::Paths::VERSION}"
         else
           if(f =~ %r%gems/[\d.]+/doc/([^/]+)%) then
             ext_path = "gem #{$1}"
@@ -569,43 +578,48 @@ Options may also be set in the 'RI' environment variable.
       @display.list_known_classes class_cache.keys.sort
     else
       @names.each do |name|
-        case name
-        when /::|\#|\./ then
-          if class_cache.key? name then
-            display_class name
-          else
-            klass, = parse_name name
+        if class_cache.key? name then
+          method_map = display_class name
+          if(@interactive)
+            method_name = @display.get_class_method_choice(method_map)
 
-            orig_klass = klass
-            orig_name = name
-
-            until klass == 'Kernel' do
-              method = lookup_method name, klass
-
-              break method if method
-
-              ancestor = lookup_ancestor klass, orig_klass
-
-              break unless ancestor
-
-              name = name.sub klass, ancestor
-              klass = ancestor
-            end
-
-            raise NotFoundError, orig_name unless method
-
-            display_method method
-          end
-        else
-          if class_cache.key? name then
-            display_class name
-          else
-            methods = select_methods(/^#{name}/)
-
-            if methods.size == 0
-              raise NotFoundError, name
-            elsif methods.size == 1
+            if(method_name != nil)
+              method = lookup_method "#{name}#{method_name}", name
               display_method method
+            end
+          end
+        elsif name =~ /::|\#|\./ then
+          klass, = parse_name name
+          
+          orig_klass = klass
+          orig_name = name
+          
+          loop do
+            method = lookup_method name, klass
+            
+            break method if method
+            
+            ancestor = lookup_ancestor klass, orig_klass
+            
+            break unless ancestor
+            
+            name = name.sub klass, ancestor
+            klass = ancestor
+          end
+          
+          raise NotFoundError, orig_name unless method
+          
+          display_method method
+        else
+          methods = select_methods(/#{name}/)
+          
+          if methods.size == 0
+            raise NotFoundError, name
+          elsif methods.size == 1
+            display_method methods[0]
+          else
+            if(@interactive)
+              @display.display_method_list_choice methods
             else
               @display.display_method_list methods
             end

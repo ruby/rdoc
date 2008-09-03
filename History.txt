@@ -1,5 +1,5 @@
 === 2.2.0 / 2008-08-28
-* 3 Major Enhancements
+* 5 Major Enhancements
   * More extensive unit tests (special thanks to Chris Lowis for contributing
     a test).
   * Made ri twice as fast for the most common use case of displaying
@@ -8,6 +8,13 @@
     it runs).
   * Made ri many times faster when searching for an unqualified method (i.e.,
     ri read, again after the first such search has populated ri's cache)
+  * Changed ri to do regular expression searches for unqualified methods;
+    now, a regular expression for a method can be passed to ri on the
+    command-line.
+  * Added an interactive mode to ri (patch by Daniel Choi).  Now, when ri
+    is given a -i argument, it will allow the user to disambiguate
+    unqualified methods if more than one is present and also will allow a
+    user to get information for a class' method.
 
 * 6 Minor Enhancements
   * RDoc now adds the package title to the web pages that it generates
