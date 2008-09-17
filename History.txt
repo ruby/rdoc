@@ -19,7 +19,7 @@ documentation about ri.
     unqualified methods if more than one is present and also will allow a
     user to get information for a class' method.
 
-* 6 Minor Enhancements
+* 7 Minor Enhancements
   * RDoc now adds the package title to the web pages that it generates
     for files and classes/modules, which helps them appear better in
     search engine results.
@@ -31,6 +31,7 @@ documentation about ri.
   * Improved rdoc's HTML generation speed by about 20% (on Windows, the
     boost seems larger).
   * Provided an ri command-line option to control its caching behavior.
+  * Improved RDoc's documentation.  Added RI.txt to document ri.
 
 * 24 Bug fixes:
   * Fixed prototype detection in C parser.  Can process ruby 1.8 C files

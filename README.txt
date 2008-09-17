@@ -6,7 +6,7 @@
 == DESCRIPTION:
 
 RDoc is an application that produces documentation for one or more Ruby source
-files.  RDoc includes the `rdoc` and `ri` tools for generating and displaying
+files.  RDoc includes the +rdoc+ and +ri+ tools for generating and displaying
 online documentation.
 
 At this point in time, RDoc 2.x is a work in progress and may incur further
@@ -23,7 +23,7 @@ template is Hanna[http://github.com/mislav/hanna/tree/master].
 
 We strongly are considering making Hanna as RDoc's default template
 in a future release, but for now this template can be downloaded separately
-and used with the -T option.
+and used with the +-T+ option.
 
 == SYNOPSIS:
 

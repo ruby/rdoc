@@ -4,40 +4,40 @@
 It is part of RDoc and is expected to work on any platform supported by Ruby.
 
 +ri+ will be a bit slow the first time that it runs (or any time that the
-underlying documentation changes) because it builds a cache in the .ri
+underlying documentation changes) because it builds a cache in the +.ri+
 directory within the user's home directory in order to make future accesses
-more efficient.
+faster.
 
 == Usage
 To see information for a class, do:
   ri class_name
 
-For example, for the Array class, do
+For example, for the +Array+ class, do
   ri Array
 
-To see information for an instance method,e do:
+To see information for an instance method, do:
   ri class_name#method_name
 
-For example, for Array's join method, do:
+For example, for Array's +join+ method, do:
   ri Array#join
 
 To see information for a class method, do:
   ri class_name.method_name
 
-For example, for Module's private method, do:
+For example, for Module's +private+ method, do:
   ri Module.private
 
-To search for all methods containing 'read', do:
+To search for all methods containing +read+, do:
   ri read
 
-To search for all methods starting with 'read', do:
+To search for all methods starting with +read+, do:
   ri '^read'
 
-To search for all 'read' methods, do:
+To search for all +read+ methods, do:
   ri '^read$'
 
 == Options
-+ri+ supports a variety of options, all of which can be viewed via --help.
++ri+ supports a variety of options, all of which can be viewed via +--help+.
 Of particular interest, are:
 [-d directory]
   List of directories from which to source documentation in addition to
@@ -51,6 +51,8 @@ Of particular interest, are:
   to enter in a method name (with auto-completion, if readline is supported)
   when viewing a class.
 [-T]
-  Send output to stdout, rather than to a page.
+  Send output to stdout, rather than to a pager.
 
 All options also can be specified through the +RI+ environment variable.
+Command-line options always override those specified in the +RI+ environment
+variable.
