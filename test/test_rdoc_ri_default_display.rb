@@ -76,6 +76,15 @@ Constants:
      CONSTANT_NOCOMMENT
 
 
+Attributes:
+-----------
+
+     attribute (RW):
+          attribute comment
+
+     attribute_no_comment (RW)
+
+
 Class methods:
 --------------
 
@@ -98,15 +107,6 @@ Instance method extensions:
 ---------------------------
 
      instance_method_extension
-
-
-Attributes:
------------
-
-     attribute (RW):
-          attribute comment
-
-     attribute_no_comment (RW)
     EOF
 
     assert_equal expected, @output.string
@@ -139,7 +139,7 @@ Attributes:
 -------------------------------------------------------- SomeClass#some_method
      some_method(arg1, arg2) {|block_param| ...}
 
-     Extension from /nonexistent
+     From /nonexistent
 ------------------------------------------------------------------------------
      some comment
 
@@ -166,6 +166,8 @@ Attributes:
     expected = <<-EOF
 ------------------------------------------------------- SomeClass::some_method
      SomeClass::some_method(arg1, arg2)
+
+     From 
 ------------------------------------------------------------------------------
      [no description]
     EOF
@@ -203,7 +205,8 @@ Attributes:
      More than one method matched your request.  You can refine your search by
      asking for information on one of:
 
-     SomeClass#some_method, SomeClass#some_other_method
+SomeClass#some_method []
+SomeClass#some_other_method []
     EOF
 
     assert_equal expected, @output.string
@@ -215,7 +218,7 @@ Attributes:
     expected = <<-EOF
      some_method(arg1, arg2) {|block_param| ...}
 
-     Extension from /nonexistent
+     From /nonexistent
     EOF
 
     assert_equal expected, @output.string
@@ -233,7 +236,7 @@ some_method(start, length)
      some_method(index)
      some_method(start, length)
 
-     Extension from /nonexistent
+     From /nonexistent
     EOF
 
     assert_equal expected, @output.string
@@ -248,7 +251,7 @@ some_method(start, length)
     expected = <<-EOF
      SomeClass::some_method(arg1, arg2) {|block_param| ...}
 
-     Extension from /nonexistent
+     From /nonexistent
     EOF
 
     assert_equal expected, @output.string
