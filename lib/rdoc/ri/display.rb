@@ -192,7 +192,7 @@ class RDoc::RI::DefaultDisplay
     class_data.each do |data_type|
       data = klass.send data_type
       
-      unless data.empty? then
+      unless data.nil? or data.empty? then
         @formatter.blankline
         
         heading = data_type.to_s.split('_').join(' ').capitalize << ':'
