@@ -228,9 +228,8 @@ $DEBUG_RDOC = nil
 #
 #   Unlike conventional Wiki markup, general markup can cross line
 #   boundaries.  You can turn off the interpretation of markup by
-#   preceding the first character with a backslash, so \\\<b>bold
-#   text</b> and \\\*bold* produce \<b>bold text</b> and \*bold*
-#   respectively.
+#   preceding the first character with a backslash.  This only works for
+#   simple markup, not HTML-style markup.
 #
 # * Hyperlinks to the web starting http:, mailto:, ftp:, or www. are
 #   recognized.  An HTTP url that references an external image file is
