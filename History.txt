@@ -33,7 +33,7 @@ documentation about ri.
   * Provided an ri command-line option to control its caching behavior.
   * Improved RDoc's documentation.  Added RI.txt to document ri.
 
-* 24 Bug fixes:
+* 25 Bug fixes:
   * Fixed prototype detection in C parser.  Can process ruby 1.8 C files
     again.
   * Fixed the main page for frameless template.  Patch by Marcin Raczkowski.
@@ -45,6 +45,8 @@ documentation about ri.
   * Fixed a case where RDoc first would encounter Foo::Bar and then would
     encounter class Foo.  Previously, RDoc erroneously would have considered
     that both a Foo class and a Foo module existed.
+  * Fix a clase where RDoc would not generate correct cross-reference links
+    to a class contained within a module of the same name (i.e. RDoc::RDoc)
   * Prevented RDoc from trying to parse binary files, which would produce
     garbage output.
   * RDoc now correctly converts ' characters to apostrophes, opening single

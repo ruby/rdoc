@@ -199,6 +199,10 @@ class TestRDocMarkupToHtmlCrossref < Test::Unit::TestCase
 
     # A link always should be generated for a file name.
     verify_file_crossref xref, @source_file_name, @source_file_name
+
+    # References should be generated correctly for a class scoped within
+    # a class of the same name.
+    verify_class_crossref xref, "Ref_Class4::Ref_Class4", "Ref_Class4::Ref_Class4"
   end
 
   def test_handle_special_CROSSREF_no_underscore
@@ -224,6 +228,7 @@ class TestRDocMarkupToHtmlCrossref < Test::Unit::TestCase
     verify_class_crossref xref, "Ref_Class3::Helper1", "Ref_Class3::Helper1"
     verify_class_crossref xref, "Ref_Class3::Helper2", "Ref_Class3::Helper2"
     verify_no_crossref xref, "Helper1"
+    verify_class_crossref xref, "Ref_Class4", "Ref_Class4"
 
     klass = class_hash["Ref_Class2"]
     xref = RDoc::Markup::ToHtmlCrossref.new 'from_path', klass, true
@@ -232,6 +237,7 @@ class TestRDocMarkupToHtmlCrossref < Test::Unit::TestCase
     verify_method_crossref xref, "Ref_Class3#method", "Ref_Class2::Ref_Class3", "M000001"
     verify_no_crossref xref, "#method"
     verify_class_crossref xref, "Ref_Class3::Helper1", "Ref_Class2::Ref_Class3::Helper1"
+    verify_class_crossref xref, "Ref_Class4", "Ref_Class4"
 
     # This one possibly is an rdoc bug...
     # Ref_Class2 has a nested Ref_Class3, but
@@ -251,6 +257,7 @@ class TestRDocMarkupToHtmlCrossref < Test::Unit::TestCase
     verify_class_crossref xref, "Ref_Class3::Helper1", "Ref_Class2::Ref_Class3::Helper1"
     verify_no_crossref xref, "Ref_Class3::Helper2"
     verify_class_crossref xref, "Helper1", "Ref_Class2::Ref_Class3::Helper1"
+    verify_class_crossref xref, "Ref_Class4", "Ref_Class4"
 
     klass = class_hash["Ref_Class3"]
     xref = RDoc::Markup::ToHtmlCrossref.new 'from_path', klass, true
@@ -261,5 +268,20 @@ class TestRDocMarkupToHtmlCrossref < Test::Unit::TestCase
     verify_class_crossref xref, "Ref_Class3::Helper1", "Ref_Class3::Helper1"
     verify_class_crossref xref, "Ref_Class3::Helper2", "Ref_Class3::Helper2"
     verify_class_crossref xref, "Helper1", "Ref_Class3::Helper1"
+    verify_class_crossref xref, "Ref_Class4", "Ref_Class4"
+
+    klass = class_hash["Ref_Class4"]
+    xref = RDoc::Markup::ToHtmlCrossref.new 'from_path', klass, true
+    verify_invariant_crossrefs xref
+    # A Ref_Class4 reference inside a Ref_Class4 class containing a
+    # Ref_Class4 class should resolve to the contained class.
+    verify_class_crossref xref, "Ref_Class4", "Ref_Class4::Ref_Class4"
+
+    klass = class_hash["Ref_Class4::Ref_Class4"]
+    xref = RDoc::Markup::ToHtmlCrossref.new 'from_path', klass, true
+    verify_invariant_crossrefs xref
+    # A Ref_Class4 reference inside a Ref_Class4 class contained within
+    # a Ref_Class4 class should resolve to the inner Ref_Class4 class.
+    verify_class_crossref xref, "Ref_Class4", "Ref_Class4::Ref_Class4"
   end
 end

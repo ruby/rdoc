@@ -406,9 +406,12 @@ module RDoc
 
     # Find a named module
     def find_module_named(name)
-      return self if self.name == name
+      # First check the enclosed modules, then check the module itself,
+      # then check the enclosing modules (this mirrors the check done by
+      # the Ruby parser)
       res = @modules[name] || @classes[name]
       return res if res
+      return self if self.name == name
       find_enclosing_module_named(name)
     end
 
@@ -467,6 +470,7 @@ module RDoc
         unless modules.empty? then
           module_name = modules.shift
           result = find_module_named(module_name)
+
           if result then
             modules.each do |name|
               result = result.find_module_named(name)

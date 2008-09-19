@@ -24,3 +24,8 @@ class Ref_Class3
   class Helper2
   end
 end
+
+class Ref_Class4
+  class Ref_Class4
+  end
+end
