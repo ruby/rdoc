@@ -626,8 +626,8 @@ class RDoc::Parser::C < RDoc::Parser
   end
 
   def remove_private_comments(comment)
-     comment.gsub!(/\/?\*--(.*?)\/?\*\+\+/m, '')
-     comment.sub!(/\/?\*--.*/m, '')
+     comment.gsub!(/\/?\*--\n(.*?)\/?\*\+\+/m, '')
+     comment.sub!(/\/?\*--\n.*/m, '')
   end
 
   ##

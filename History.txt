@@ -33,7 +33,7 @@ documentation about ri.
   * Provided an ri command-line option to control its caching behavior.
   * Improved RDoc's documentation.  Added RI.txt to document ri.
 
-* 25 Bug fixes:
+* 26 Bug fixes:
   * Fixed prototype detection in C parser.  Can process ruby 1.8 C files
     again.
   * Fixed the main page for frameless template.  Patch by Marcin Raczkowski.
@@ -74,6 +74,8 @@ documentation about ri.
   * Stopped the XML template from generating invalid XML due to malformed
     embedded ruby.
   * Adding missing information about a class' constants to the XML template.
+  * Fixed the horizontal rule markup (---) so that it correctly adds a
+    horizontal rule rather than suppressing all text that follows.
 
 === 2.1.0 / 2008-07-20
 

@@ -32,14 +32,21 @@ and used with the +-T+ option.
   # ... see RDoc
 
 == BUGS:
-
+---
 RDoc's Fortran 95 support is pretty broken right now.
 The rdoc-f95[http://www.gfd-dennou.org/library/dcmodel/rdoc-f95/] project has
 patches for RDoc 1.x that provide excellent Fortran 95 support.  Properly
 supporting Fortran 95 requires a rewrite of RDoc's markup engine, which
 is high on our list of goals.  The Fortran 95 issue can be tracked
 here[http://rubyforge.org/tracker/index.php?func=detail&aid=21542&group_id=627&atid=2475].
-
+---
+The markup engine has lots of little bugs.  In particular:
+* Escaping does not work for all markup.
+* Typesetting is not always correct.
+* Some output formats (ri, for example) do not correctly handle all of the
+  markup.
+The markup engine needs a rewrite, which can be tracked here[http://rubyforge.org/tracker/index.php?func=detail&aid=21540&group_id=627&atid=2475].
+-------
 If you find a bug, please report it at the RDoc project's
 tracker[http://rubyforge.org/tracker/?group_id=627] on RubyForge:
 
