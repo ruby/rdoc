@@ -1,4 +1,4 @@
-=== 2.2.0 / 2008-08-28
+=== 2.2.0 / 2008-09-19
 This version includes some significant enhancements to ri.  See RI.txt for
 documentation about ri.
 
