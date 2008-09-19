@@ -1043,12 +1043,18 @@ module RDoc::Generator
         first = $1.to_i - 1
         last  = first + src.count("\n")
         size = last.to_s.length
-        real_fmt = "%#{size}d: "
-        fmt = " " * (size+2)
+        fmt = "%#{size}d: "
+        is_first_line = true
+        line_num = first
         src.gsub!(/^/) do
-          res = sprintf(fmt, first)
-          first += 1
-          fmt = real_fmt
+          if is_first_line then
+            is_first_line = false
+            res = " " * (size+2)
+          else
+            res = sprintf(fmt, line_num)
+          end
+
+          line_num += 1
           res
         end
       end
