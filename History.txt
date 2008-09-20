@@ -1,4 +1,4 @@
-=== 2.2.0 / 2008-08-28
+=== 2.2.0 / 2008-09-19
 This version includes some significant enhancements to ri.  See RI.txt for
 documentation about ri.
 
@@ -19,7 +19,7 @@ documentation about ri.
     unqualified methods if more than one is present and also will allow a
     user to get information for a class' method.
 
-* 7 Minor Enhancements
+* 8 Minor Enhancements
   * RDoc now adds the package title to the web pages that it generates
     for files and classes/modules, which helps them appear better in
     search engine results.
@@ -32,8 +32,11 @@ documentation about ri.
     boost seems larger).
   * Provided an ri command-line option to control its caching behavior.
   * Improved RDoc's documentation.  Added RI.txt to document ri.
+  * Allow HTML templates distributed as gems to be loaded with the -T option,
+    just like the standard templates in rdoc/generator/html (so an HTML
+    template lib/new_template.rb in a gem can be used with rdoc -T new_template)
 
-* 26 Bug fixes:
+* 25 Bug fixes:
   * Fixed prototype detection in C parser.  Can process ruby 1.8 C files
     again.
   * Fixed the main page for frameless template.  Patch by Marcin Raczkowski.
@@ -55,7 +58,6 @@ documentation about ri.
     and closing double quotes in most cases (smart double quotes).
   * (c) correctly is converted into the copyright symbol.
   * '&' characters in text now correctly are translated to HTML character codes.
-  * Fixed main page for frameless template.  Patch by Marcin Raczkowski.
   * Fixed missing stylesheet in generated chm.  Patch by Gordon Thiesfeld.
   * Fixed broken method links in the built-in templates.
   * RDoc properly links to files and classes in the one page HTML template.
