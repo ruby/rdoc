@@ -1,3 +1,12 @@
+=== 2.2.1 / 2008-09-24
+This version provides some minor fixes and enhancements to 2.2.0.
+
+* X Major Enhancements
+
+* Y Minor Enhancements
+
+* Z Bug Fixes
+
 === 2.2.0 / 2008-09-19
 This version includes some significant enhancements to ri.  See RI.txt for
 documentation about ri.
