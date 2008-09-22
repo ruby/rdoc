@@ -37,6 +37,7 @@ body {
   margin-left: 40px;
   padding: 0;
   background: white;
+  color: black;
 }
 
 h1, h2, h3, h4 {
