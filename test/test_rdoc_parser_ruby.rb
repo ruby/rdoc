@@ -487,9 +487,55 @@ end
 
     @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
 
+    foo = @top_level.classes.first.method_list[0]
+    assert_equal 'foo', foo.name
+
     foo2 = @top_level.classes.first.method_list.last
     assert_equal 'foo2', foo2.name
     assert_equal 'foo', foo2.is_alias_for.name
+    assert @top_level.classes.first.aliases.empty?
+  end
+
+  def test_parse_statements_identifier_alias_method_before_original_method
+    # This is not strictly legal Ruby code, but it simulates finding an alias
+    # for a method before finding the original method, which might happen
+    # to rdoc if the alias is in a different file than the original method
+    # and rdoc processes the alias' file first.
+    content = <<-EOF
+class Foo
+  alias_method :foo2, :foo
+
+  alias_method :foo3, :foo
+
+  def foo()
+  end
+
+  alias_method :foo4, :foo
+
+  alias_method :foo5, :unknown
+end
+EOF
+
+    util_parser content
+
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
+
+    foo = @top_level.classes.first.method_list[0]
+    assert_equal 'foo', foo.name
+
+    foo2 = @top_level.classes.first.method_list[1]
+    assert_equal 'foo2', foo2.name
+    assert_equal 'foo', foo2.is_alias_for.name
+
+    foo3 = @top_level.classes.first.method_list[2]
+    assert_equal 'foo3', foo3.name
+    assert_equal 'foo', foo3.is_alias_for.name
+
+    foo4 = @top_level.classes.first.method_list.last
+    assert_equal 'foo4', foo4.name
+    assert_equal 'foo', foo4.is_alias_for.name
+
+    assert_equal @top_level.classes.first.aliases[0].old_name, "unknown"
   end
 
   def test_parse_statements_identifier_attr

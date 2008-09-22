@@ -314,6 +314,14 @@ module RDoc
     def add_method(a_method)
       a_method.visibility = @visibility
       add_to(@method_list, a_method)
+
+      unmatched_alias_list = @unmatched_alias_lists[a_method.name]
+      if unmatched_alias_list then
+        unmatched_alias_list.each do |unmatched_alias|
+          add_alias(unmatched_alias)
+          @aliases.delete(unmatched_alias)
+        end
+      end
     end
 
     def add_attribute(an_attribute)
@@ -333,6 +341,8 @@ module RDoc
         add_method(new_meth)
       else
         add_to(@aliases, an_alias)
+        unmatched_alias_list = @unmatched_alias_lists[an_alias.old_name] ||= []
+        unmatched_alias_list.push(an_alias)
       end
 
       an_alias
@@ -392,6 +402,10 @@ module RDoc
       @requires    = []
       @includes    = []
       @constants   = []
+
+      # This Hash maps a method name to a list of unmatched
+      # aliases (aliases of a method not yet encountered).
+      @unmatched_alias_lists = {}
     end
 
     # and remove classes and modules when we see a :nodoc: all

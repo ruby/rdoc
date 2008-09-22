@@ -10,6 +10,9 @@ to polish RDoc for Ruby 1.9.1.
   * Explicitly set the html template's text color, so that the generated
     documentation will display correctly on browsers with custom text and
     background color settings (thanks to Luther Thompson).
+  * Ensure that RDoc correctly will associate an alias and a method, even
+    if it encounters the alias first because the alias lives in a different
+    file.
 
 === 2.2.0 / 2008-09-19
 This version includes some significant enhancements to ri.  See RI.txt for
