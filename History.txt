@@ -1,8 +1,6 @@
-=== 2.2.1 / 2008-09-24
+=== 2.2.1 / 2008-09-23
 This version provides some minor fixes and enhancements to 2.2.0 intended
 to polish RDoc for Ruby 1.9.1.
-
-* X Major Enhancements
 
 * Y Minor Enhancements
   * Support for parsing RDoc from SWIG.  Ruby patch #10742 by Gonzalo
