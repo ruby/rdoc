@@ -258,7 +258,7 @@ Usage: #{opt.program_name} [options] [names...]
       opt.separator nil
 
       opt.on("--charset=CHARSET", "-c",
-             "Specifies the HTML character-set.") do |value|
+             "Specifies the output HTML character-set.") do |value|
         @charset = value
       end
 
