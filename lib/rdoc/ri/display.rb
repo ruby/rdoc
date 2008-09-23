@@ -86,21 +86,19 @@ class RDoc::RI::DefaultDisplay
         constants = klass.constants.sort_by { |constant| constant.name }
 
         constants.each do |constant|
+          @formatter.wrap "#{constant.name} = #{constant.value}"
           if constant.comment then
-            @formatter.wrap "#{constant.name}:"
-
             @formatter.indent do
               @formatter.display_flow constant.comment
             end
           else
-            @formatter.wrap constant.name
+            @formatter.break_to_newline
           end
         end
       end
 
       unless klass.attributes.empty? then
         @formatter.blankline
-
         @formatter.display_heading 'Attributes:', 2, ''
 
         attributes = klass.attributes.sort_by { |attribute| attribute.name }
@@ -113,6 +111,7 @@ class RDoc::RI::DefaultDisplay
             end
           else
             @formatter.wrap "#{attribute.name} (#{attribute.rw})"
+            @formatter.break_to_newline
           end
         end
       end

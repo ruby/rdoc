@@ -26,6 +26,8 @@ to polish RDoc for Ruby 1.9.1.
     ri documentation, allowing ri to lookup inherited methods (i.e., File#read).
   * Stop ri from crashing when it looks for a completely bogus method (i.e.,
     File#reada).  Now, ri exits with a helpful error message.
+  * Fixed missing display of constant values in ri.
+  * Fixed display of constants in ri's html output.
 
 === 2.2.0 / 2008-09-19
 This version includes some significant enhancements to ri.  See RI.txt for

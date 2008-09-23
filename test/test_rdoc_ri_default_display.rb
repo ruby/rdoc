@@ -42,9 +42,9 @@ class TestRDocRiDefaultDisplay < Test::Unit::TestCase
       ],
       'comment' => [RDoc::Markup::Flow::P.new('SomeClass comment')],
       'constants' => [
-        { 'name' => 'CONSTANT', 'value' => '"value"',
+        { 'name' => 'CONSTANT', 'value' => '"value1"',
           'comment' => [RDoc::Markup::Flow::P.new('CONSTANT value')] },
-        { 'name' => 'CONSTANT_NOCOMMENT', 'value' => '"value"',
+        { 'name' => 'CONSTANT_NOCOMMENT', 'value' => '"value2"',
           'comment' => nil },
       ],
       'display_name' => 'Class',
@@ -70,10 +70,10 @@ class TestRDocRiDefaultDisplay < Test::Unit::TestCase
 Constants:
 ----------
 
-     CONSTANT:
+     CONSTANT = "value1"
           CONSTANT value
 
-     CONSTANT_NOCOMMENT
+     CONSTANT_NOCOMMENT = "value2"
 
 
 Attributes:

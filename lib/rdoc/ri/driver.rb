@@ -524,8 +524,10 @@ Options may also be set in the 'RI' environment variable.
   def lookup_ancestor(klass, orig_klass)
     # This is a bit hacky, but ri will go into an infinite
     # loop otherwise, since Object has an Object ancestor
-    # for some reason.
-    if ((klass == "Kernel") && (orig_klass == "Object"))
+    # for some reason.  Depending on the documentation state, I've seen
+    # Kernel as an ancestor of Object and not as an ancestor of Object.
+    if ((orig_klass == "Object") &&
+        ((klass == "Kernel") || (klass == "Object")))
       return nil
     end
 
