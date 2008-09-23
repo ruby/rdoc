@@ -16,14 +16,15 @@ to polish RDoc for Ruby 1.9.1.
   * Ensure that RDoc correctly will associate an alias and a method, even
     if it encounters the alias first because the alias lives in a different
     file.
-  * Fix the parsing of multiline constants (patch by Chris Alfeld and Joel VanderWerf)
+  * Fix the parsing of multiline constants (patch by Chris Alfeld and
+    Joel VanderWerf)
   * Make --exclude usuable.  Ruby patch #11671 by Trans.
   * Detect inline C functions.  Ruby Bug #11993 by Florian Frank.
   * Fix an issue in which RDoc might not document a class'
     superclass correctly if the class was defined in multiple files and
     depending on the order in which RDoc processed the files.  This should
     ensure that the child class -> parent class relationship is correct in
-    ri documentation, allowing ri to lookup inherited methods (i.e., File#read).
+    ri documentation, allowing ri to lookup inherited methods (i.e., File.read).
   * Stop ri from crashing when it looks for a completely bogus method (i.e.,
     File#reada).  Now, ri exits with a helpful error message.
   * Fixed missing display of constant values in ri.
