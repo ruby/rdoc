@@ -5,6 +5,8 @@ to polish RDoc for Ruby 1.9.1.
 * X Major Enhancements
 
 * Y Minor Enhancements
+  * Support for parsing RDoc from SWIG.  Ruby patch #10742 by Gonzalo
+    Garramuno, #13993 by Steven Jenkins.
 
 * Z Bug Fixes
   * Explicitly set the html template's text color, so that the generated
@@ -14,7 +16,8 @@ to polish RDoc for Ruby 1.9.1.
     if it encounters the alias first because the alias lives in a different
     file.
   * Fix the parsing of multiline constants (patch by Chris Alfeld and Joel VanderWerf)
-  * Make --exclude usuable.  Patch #11671 by Trans.
+  * Make --exclude usuable.  Ruby patch #11671 by Trans.
+  * Detect inline C functions.  Ruby Bug #11993 by Florian Frank.
 
 === 2.2.0 / 2008-09-19
 This version includes some significant enhancements to ri.  See RI.txt for

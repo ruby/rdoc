@@ -155,7 +155,7 @@ class RDoc::Parser::C < RDoc::Parser
               \(
                  \s*(\w+),
                  \s*"(\w+)",
-                 \s*(\w+)\s*
+                 \s*([\w\*\s\(\)\.\->]+)\s*  # for SWIG
               \s*\)/mx) do |var_name, in_module, class_name, parent|
       handle_class_module(var_name, "class", class_name, parent, in_module)
     end
@@ -267,9 +267,9 @@ class RDoc::Parser::C < RDoc::Parser
   ##
   # Find the C code corresponding to a Ruby method
 
-  def find_body(meth_name, meth_obj, body, quiet = false)
+  def find_body(class_name, meth_name, meth_obj, body, quiet = false)
     case body
-    when %r"((?>/\*.*?\*/\s*))(?:static\s+)?VALUE\s+#{meth_name}
+    when %r"((?>/\*.*?\*/\s*)*)(?:static|SWIGINTERN\s+)?(?:intern\s+)?VALUE\s+#{meth_name}
             \s*(\([^)]*\))([^;]|$)"xm
       comment, params = $1, $2
       body_text = $&
@@ -287,7 +287,7 @@ class RDoc::Parser::C < RDoc::Parser
       # distinct (for example Kernel.hash and Kernel.object_id share the same
       # implementation
 
-      override_comment = find_override_comment(meth_obj.name)
+      override_comment = find_override_comment(class_name, meth_obj.name)
       comment = override_comment if override_comment
 
       find_modifiers(comment, meth_obj) if comment
@@ -298,7 +298,7 @@ class RDoc::Parser::C < RDoc::Parser
       meth_obj.comment = mangle_comment(comment)
     when %r{((?>/\*.*?\*/\s*))^\s*\#\s*define\s+#{meth_name}\s+(\w+)}m
       comment = $1
-      find_body($2, meth_obj, body, true)
+      find_body(class_name, $2, meth_obj, body, true)
       find_modifiers(comment, meth_obj)
       meth_obj.comment = mangle_comment(comment) + meth_obj.comment
     when %r{^\s*\#\s*define\s+#{meth_name}\s+(\w+)}m
@@ -309,7 +309,7 @@ class RDoc::Parser::C < RDoc::Parser
     else
 
       # No body, but might still have an override comment
-      comment = find_override_comment(meth_obj.name)
+      comment = find_override_comment(class_name, meth_obj.name)
 
       if comment
         find_modifiers(comment, meth_obj)
@@ -365,10 +365,10 @@ class RDoc::Parser::C < RDoc::Parser
   def find_class_comment(class_name, class_meth)
     comment = nil
     if @content =~ %r{((?>/\*.*?\*/\s+))
-                   (static\s+)?void\s+Init_#{class_name}\s*(?:_\(\s*)?\(\s*(?:void\s*)\)}xmi
+                   (static\s+)?void\s+Init_#{class_name}\s*(?:_\(\s*)?\(\s*(?:void\s*)\)}xmi then
       comment = $1
-    elsif @content =~ %r{Document-(class|module):\s#{class_name}\s*?\n((?>.*?\*/))}m
-      comment = $2
+    elsif @content =~ %r{Document-(?:class|module):\s#{class_name}\s*?(?:<\s+[:,\w]+)?\n((?>.*?\*/))}m
+      comment = $1
     else
       if @content =~ /rb_define_(class|module)/m then
         class_name = class_name.split("::").last
@@ -422,9 +422,11 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  def find_override_comment(meth_name)
+  def find_override_comment(class_name, meth_name)
     name = Regexp.escape(meth_name)
-    if @content =~ %r{Document-method:\s#{name}\s*?\n((?>.*?\*/))}m
+    if @content =~ %r{Document-method:\s+#{class_name}(?:\.|::)#{name}\s*?\n((?>.*?\*/))}m then
+      $1
+    elsif @content =~ %r{Document-method:\s#{name}\s*?\n((?>.*?\*/))}m then
       $1
     end
   end
@@ -478,6 +480,10 @@ class RDoc::Parser::C < RDoc::Parser
     end
 
     if class_mod == "class" then
+      full_name = enclosure.full_name.to_s + "::#{class_name}"
+      if @content =~ %r{Document-class:\s+#{full_name}\s*<\s+([:,\w]+)} then
+        parent_name = $1
+      end
       cm = enclosure.add_class RDoc::NormalClass, class_name, parent_name
       @stats.add_class cm
     else
@@ -588,7 +594,7 @@ class RDoc::Parser::C < RDoc::Parser
         body = @content
       end
 
-      if find_body(meth_body, meth_obj, body) and meth_obj.document_self then
+      if find_body(class_name, meth_body, meth_obj, body) and meth_obj.document_self then
         class_obj.add_method meth_obj
         @stats.add_method meth_obj
       end
