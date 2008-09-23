@@ -8,6 +8,8 @@ to polish RDoc for Ruby 1.9.1.
   * Support for parsing RDoc from SWIG.  Ruby patch #10742 by Gonzalo
     Garramuno, #13993 by Steven Jenkins.
   * Simple support for Perl POD documentation.  Patch by Hugh Sasse.
+  * Changed the default character set of RDoc's output from iso-8859-1 to
+    utf-8.
 
 * Z Bug Fixes
   * Explicitly set the html template's text color, so that the generated

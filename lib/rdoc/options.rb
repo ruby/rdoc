@@ -184,7 +184,7 @@ class RDoc::Options
     @css = nil
     @webcvs = nil
 
-    @charset = 'iso-8859-1'
+    @charset = 'utf-8'
   end
 
   ##
