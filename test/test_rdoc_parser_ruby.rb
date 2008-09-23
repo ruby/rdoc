@@ -535,7 +535,59 @@ EOF
     assert_equal 'foo4', foo4.name
     assert_equal 'foo', foo4.is_alias_for.name
 
-    assert_equal @top_level.classes.first.aliases[0].old_name, "unknown"
+    assert_equal 'unknown', @top_level.classes.first.aliases[0].old_name
+  end
+
+  def test_parse_statements_identifier_constant
+    content = <<-EOF
+class Foo
+  FIRST_CONSTANT = 5
+
+  SECOND_CONSTANT = [
+     1,
+     2,
+     3
+  ]
+
+  THIRD_CONSTANT = {
+     :foo => 'bar',
+     :x => 'y'
+  }
+
+  FOURTH_CONSTANT = SECOND_CONSTANT.map do |element|
+    element + 1
+    element + 2
+  end
+
+  FIFTH_CONSTANT = SECOND_CONSTANT.map { |element| element + 1 }
+end
+EOF
+
+    util_parser content
+
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
+
+    constants = @top_level.classes.first.constants
+
+    constant = constants[0]
+    assert_equal 'FIRST_CONSTANT', constant.name
+    assert_equal '5', constant.value
+
+    constant = constants[1]
+    assert_equal 'SECOND_CONSTANT', constant.name
+    assert_equal '[      1,      2,      3   ]', constant.value
+
+    constant = constants[2]
+    assert_equal 'THIRD_CONSTANT', constant.name
+    assert_equal "{      :foo => 'bar',      :x => 'y'   }", constant.value
+
+    constant = constants[3]
+    assert_equal 'FOURTH_CONSTANT', constant.name
+    assert_equal 'SECOND_CONSTANT.map do |element|     element + 1     element + 2   end', constant.value
+
+    constant = constants.last
+    assert_equal 'FIFTH_CONSTANT', constant.name
+    assert_equal 'SECOND_CONSTANT.map { |element| element + 1 }', constant.value
   end
 
   def test_parse_statements_identifier_attr

@@ -1945,9 +1945,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
         case tk
         when TkSEMICOLON
           break
-        when TkLPAREN, TkfLPAREN
+        when TkLPAREN, TkfLPAREN, TkLBRACE, TkLBRACK, TkDO
           nest += 1
-        when TkRPAREN
+        when TkRPAREN, TkRBRACE, TkRBRACK, TkEND
           nest -= 1
         when TkCOMMENT
           if nest <= 0 && @scanner.lex_state == EXPR_END
@@ -1955,7 +1955,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
             break
           end
         when TkNL
-          if (@scanner.lex_state == EXPR_END and nest <= 0) || !@scanner.continue
+           if (nest <= 0) && ((@scanner.lex_state == EXPR_END) || (!@scanner.continue))
             unget_tk(tk)
             break
           end
