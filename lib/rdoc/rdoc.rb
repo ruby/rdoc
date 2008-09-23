@@ -7,6 +7,7 @@ require 'rdoc/parser/simple'
 require 'rdoc/parser/ruby'
 require 'rdoc/parser/c'
 require 'rdoc/parser/f95'
+require 'rdoc/parser/perl'
 
 require 'rdoc/stats'
 require 'rdoc/options'

@@ -7,6 +7,7 @@ to polish RDoc for Ruby 1.9.1.
 * Y Minor Enhancements
   * Support for parsing RDoc from SWIG.  Ruby patch #10742 by Gonzalo
     Garramuno, #13993 by Steven Jenkins.
+  * Simple support for Perl POD documentation.  Patch by Hugh Sasse.
 
 * Z Bug Fixes
   * Explicitly set the html template's text color, so that the generated
