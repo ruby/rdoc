@@ -127,7 +127,8 @@ class TestRDocMarkupToHtmlCrossref < Test::Unit::TestCase
   # file_name (String) for String reference.
   #
   def verify_file_crossref(xref, reference, file_name)
-    result = "<a href=\"../files/#{file_name.gsub(/\./, '_')}.html\">#{reference}</a>"
+    generated_document_path = Pathname.new("../files/#{file_name.gsub(/\./, '_')}.html").cleanpath.to_s
+    result = "<a href=\"#{generated_document_path}\">#{reference}</a>"
 
     verify_convert xref, reference, result
   end
