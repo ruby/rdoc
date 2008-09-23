@@ -97,6 +97,7 @@ class RDoc::RI::Driver
     opts = OptionParser.new do |opt|
       opt.program_name = File.basename $0
       opt.version = RDoc::VERSION
+      opt.release = nil
       opt.summary_indent = ' ' * 4
 
       directories = [

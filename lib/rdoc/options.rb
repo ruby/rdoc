@@ -196,6 +196,7 @@ class RDoc::Options
     opts = OptionParser.new do |opt|
       opt.program_name = File.basename $0
       opt.version = RDoc::VERSION
+      opt.release = nil
       opt.summary_indent = ' ' * 4
       opt.banner = <<-EOF
 Usage: #{opt.program_name} [options] [names...]
