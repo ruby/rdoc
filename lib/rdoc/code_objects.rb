@@ -318,9 +318,11 @@ module RDoc
       unmatched_alias_list = @unmatched_alias_lists[a_method.name]
       if unmatched_alias_list then
         unmatched_alias_list.each do |unmatched_alias|
-          add_alias(unmatched_alias)
-          @aliases.delete(unmatched_alias)
+          add_alias unmatched_alias
+          @aliases.delete unmatched_alias
         end
+
+        @unmatched_alias_lists.delete a_method.name
       end
     end
 
