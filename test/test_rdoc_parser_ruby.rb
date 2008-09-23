@@ -12,6 +12,10 @@ class TestRDocParserRuby < Test::Unit::TestCase
     @tempfile = Tempfile.new self.class.name
     @filename = @tempfile.path
 
+    # Some tests need two paths.
+    @tempfile2 = Tempfile.new self.class.name
+    @filename2 = @tempfile2.path
+
     util_toplevel
     @options = RDoc::Options.new
     @options.quiet = true
@@ -20,6 +24,7 @@ class TestRDocParserRuby < Test::Unit::TestCase
 
   def teardown
     @tempfile.unlink
+    @tempfile2.unlink
   end
 
   def test_look_for_directives_in_commented
@@ -202,6 +207,34 @@ EOF
 
     baz = foo.modules.first
     assert_equal 'Foo::Baz', baz.full_name
+  end
+
+  def test_parse_class_definition_encountered_after_class_reference
+#
+# The code below is not strictly legal Ruby (Foo must have been defined
+# before Foo.bar is encountered), but RDoc might encounter Foo.bar before
+# Foo if they live in different files.
+#
+    code = <<-EOF
+def Foo.bar
+end
+
+class Foo < IO
+end
+EOF
+
+    util_parser code
+
+    @parser.scan()
+
+    assert(@top_level.modules.empty?)
+
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+    assert_equal 'IO', foo.superclass
+
+    bar = foo.method_list.first
+    assert_equal 'bar', bar.name
   end
 
   def test_parse_module_relative_to_top_level_namespace
@@ -699,9 +732,17 @@ EOF
                                      @stats
   end
 
+  def util_two_parsers(first_file_content, second_file_content)
+    util_parser first_file_content
+
+    @parser2 = RDoc::Parser::Ruby.new @top_level2, @filename,
+                                      second_file_content, @options, @stats
+  end
+
   def util_toplevel
     RDoc::TopLevel.reset
     @top_level = RDoc::TopLevel.new @filename
+    @top_level2 = RDoc::TopLevel.new @filename2
   end
 
 end

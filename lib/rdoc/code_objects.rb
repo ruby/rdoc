@@ -302,6 +302,7 @@ module RDoc
       if mod then
         klass.classes_hash.update(mod.classes_hash)
         klass.modules_hash.update(mod.modules_hash)
+        klass.method_list.concat(mod.method_list)
       end
 
       return klass
@@ -625,9 +626,18 @@ module RDoc
 
         cls = all[name]
 
-        unless cls then
+        if !cls then
           cls = class_type.new name, superclass
           all[name] = cls unless @done_documenting
+        else
+          # If the class has been encountered already, check that its
+          # superclass has been set (it may not have been, depending on
+          # the context in which it was encountered).
+          if class_type == NormalClass
+            if !cls.superclass then
+              cls.superclass = superclass
+            end
+          end
         end
 
         collection[name] = cls unless @done_documenting

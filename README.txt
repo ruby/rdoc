@@ -46,6 +46,10 @@ The markup engine has lots of little bugs.  In particular:
 * Some output formats (ri, for example) do not correctly handle all of the
   markup.
 The markup engine needs a rewrite, which can be tracked here[http://rubyforge.org/tracker/index.php?func=detail&aid=21540&group_id=627&atid=2475].
+---
+RDoc has some subtle bugs processing classes that are split across multiple
+files (bugs that may or may not manifest depending on the order in which
+the files are encountered).  This issue can be tracked here[http://rubyforge.org/tracker/index.php?func=detail&aid=22135&group_id=627&atid=2475].
 -------
 If you find a bug, please report it at the RDoc project's
 tracker[http://rubyforge.org/tracker/?group_id=627] on RubyForge:

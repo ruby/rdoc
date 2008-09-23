@@ -19,6 +19,11 @@ to polish RDoc for Ruby 1.9.1.
   * Fix the parsing of multiline constants (patch by Chris Alfeld and Joel VanderWerf)
   * Make --exclude usuable.  Ruby patch #11671 by Trans.
   * Detect inline C functions.  Ruby Bug #11993 by Florian Frank.
+  * Fix an issue in which RDoc might not document a class'
+    superclass correctly if the class was defined in multiple files and
+    depending on the order in which RDoc processed the files.  This should
+    ensure that the child class -> parent class relationship is correct in
+    ri documentation, allowing ri to lookup inherited methods (i.e., File#read).
 
 === 2.2.0 / 2008-09-19
 This version includes some significant enhancements to ri.  See RI.txt for
