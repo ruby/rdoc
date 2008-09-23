@@ -193,7 +193,7 @@ module RDoc
       files = options.files
       files = ["."] if files.empty?
 
-      file_list = normalized_file_list(options, files, true)
+      file_list = normalized_file_list(options, files, true, options.exclude)
 
       return [] if file_list.empty?
 

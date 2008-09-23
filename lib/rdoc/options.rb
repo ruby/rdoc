@@ -284,9 +284,7 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.on("--exclude=PATTERN", "-x", Regexp,
              "Do not process files or directories",
-             "matching PATTERN. Files given explicitly",
-             "on the command line will never be",
-             "excluded.") do |value|
+             "matching PATTERN.") do |value|
         @exclude << value
       end
 

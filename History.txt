@@ -14,6 +14,7 @@ to polish RDoc for Ruby 1.9.1.
     if it encounters the alias first because the alias lives in a different
     file.
   * Fix the parsing of multiline constants (patch by Chris Alfeld and Joel VanderWerf)
+  * Make --exclude usuable.  Patch #11671 by Trans.
 
 === 2.2.0 / 2008-09-19
 This version includes some significant enhancements to ri.  See RI.txt for
