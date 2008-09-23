@@ -381,7 +381,7 @@ Options may also be set in the 'RI' environment variable.
     else
       @class_cache = create_class_cache
     end
-    
+
     @class_cache
   end
 
@@ -514,7 +514,7 @@ Options may also be set in the 'RI' environment variable.
         cache[name] = method
       end
     end
-    
+
     write_cache cache, path
   end
 
@@ -552,7 +552,7 @@ Options may also be set in the 'RI' environment variable.
   def map_dirs(file_name)
     @doc_dirs.map { |dir| yield File.join(dir, file_name) }.flatten.compact
   end
-  
+
   ##
   # Extract the class and method name parts from +name+ like Foo::Bar#baz
 
@@ -599,29 +599,29 @@ Options may also be set in the 'RI' environment variable.
           end
         elsif name =~ /::|\#|\./ then
           klass, = parse_name name
-          
+
           orig_klass = klass
           orig_name = name
-          
+
           loop do
             method = lookup_method name, klass
-            
+
             break method if method
-            
+
             ancestor = lookup_ancestor klass, orig_klass
-            
+
             break unless ancestor
-            
+
             name = name.sub klass, ancestor
             klass = ancestor
           end
-          
+
           raise NotFoundError, orig_name unless method
-          
+
           display_method method
         else
           methods = select_methods(/#{name}/)
-          
+
           if methods.size == 0
             raise NotFoundError, name
           elsif methods.size == 1
@@ -661,7 +661,7 @@ Options may also be set in the 'RI' environment variable.
         Marshal.dump cache, cache_file
       end
     end
-      
+
     cache
   end
 

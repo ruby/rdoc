@@ -1955,7 +1955,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
             break
           end
         when TkNL
-           if (nest <= 0) && ((@scanner.lex_state == EXPR_END) || (!@scanner.continue))
+          if (nest <= 0) && ((@scanner.lex_state == EXPR_END) || (!@scanner.continue))
             unget_tk(tk)
             break
           end

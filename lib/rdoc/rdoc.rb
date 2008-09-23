@@ -190,7 +190,7 @@ module RDoc
 
     def parse_files(options)
       @stats = Stats.new options.verbosity
-      
+
       files = options.files
       files = ["."] if files.empty?
 

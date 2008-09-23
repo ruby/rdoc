@@ -76,7 +76,7 @@ class RDoc::Parser
   # Return a parser that can handle a particular extension
 
   def self.can_parse(file_name)
-    parser = RDoc::Parser.parsers.find { |regexp, parser| regexp =~ file_name }.last
+    parser = RDoc::Parser.parsers.find { |regexp,| regexp =~ file_name }.last
 
     #
     # The default parser should *NOT* parse binary files.

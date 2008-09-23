@@ -120,7 +120,7 @@ class RDoc::Parser::C < RDoc::Parser
 
       @stats.add_alias as
     end
- end
+  end
 
   def do_classes
     @content.scan(/(\w+)\s* = \s*rb_define_module\s*\(\s*"(\w+)"\s*\)/mx) do 
@@ -251,7 +251,7 @@ class RDoc::Parser::C < RDoc::Parser
       handle_method("method", "rb_mFileTest", meth_name, meth_body, param_count)
       handle_method("singleton_method", "rb_cFile", meth_name, meth_body, param_count)
     end
- end
+  end
 
   def find_attr_comment(attr_name)
     if @content =~ %r{((?>/\*.*?\*/\s+))
