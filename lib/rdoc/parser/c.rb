@@ -302,7 +302,7 @@ class RDoc::Parser::C < RDoc::Parser
       find_modifiers(comment, meth_obj)
       meth_obj.comment = mangle_comment(comment) + meth_obj.comment
     when %r{^\s*\#\s*define\s+#{meth_name}\s+(\w+)}m
-      unless find_body($1, meth_obj, body, true)
+      unless find_body(class_name, $1, meth_obj, body, true)
         warn "No definition for #{meth_name}" unless @options.quiet
         return false
       end

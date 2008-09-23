@@ -319,7 +319,7 @@ module RDoc
       unmatched_alias_list = @unmatched_alias_lists[a_method.name]
       if unmatched_alias_list then
         unmatched_alias_list.each do |unmatched_alias|
-          add_alias unmatched_alias
+          add_alias_impl unmatched_alias, a_method
           @aliases.delete unmatched_alias
         end
 
@@ -331,17 +331,21 @@ module RDoc
       add_to(@attributes, an_attribute)
     end
 
+    def add_alias_impl(an_alias, meth)
+      new_meth = AnyMethod.new(an_alias.text, an_alias.new_name)
+      new_meth.is_alias_for = meth
+      new_meth.singleton    = meth.singleton
+      new_meth.params       = meth.params
+      new_meth.comment = "Alias for \##{meth.name}"
+      meth.add_alias(new_meth)
+      add_method(new_meth)
+    end
+    
     def add_alias(an_alias)
       meth = find_instance_method_named(an_alias.old_name)
 
       if meth then
-        new_meth = AnyMethod.new(an_alias.text, an_alias.new_name)
-        new_meth.is_alias_for = meth
-        new_meth.singleton    = meth.singleton
-        new_meth.params       = meth.params
-        new_meth.comment = "Alias for \##{meth.name}"
-        meth.add_alias(new_meth)
-        add_method(new_meth)
+        add_alias_impl(an_alias, meth)
       else
         add_to(@aliases, an_alias)
         unmatched_alias_list = @unmatched_alias_lists[an_alias.old_name] ||= []

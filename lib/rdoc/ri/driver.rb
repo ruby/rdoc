@@ -522,6 +522,13 @@ Options may also be set in the 'RI' environment variable.
   # Finds the next ancestor of +orig_klass+ after +klass+.
 
   def lookup_ancestor(klass, orig_klass)
+    # This is a bit hacky, but ri will go into an infinite
+    # loop otherwise, since Object has an Object ancestor
+    # for some reason.
+    if ((klass == "Kernel") && (orig_klass == "Object"))
+      return nil
+    end
+
     cache = class_cache[orig_klass]
 
     return nil unless cache
@@ -529,10 +536,13 @@ Options may also be set in the 'RI' environment variable.
     ancestors = [orig_klass]
     ancestors.push(*cache.includes.map { |inc| inc['name'] })
     ancestors << cache.superclass
+    
+    ancestor_index = ancestors.index(klass)
 
-    ancestor = ancestors[ancestors.index(klass) + 1]
-
-    return ancestor if ancestor
+    if ancestor_index
+      ancestor = ancestors[ancestors.index(klass) + 1]
+      return ancestor if ancestor
+    end
 
     lookup_ancestor klass, cache.superclass
   end
