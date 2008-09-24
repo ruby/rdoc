@@ -1,15 +1,15 @@
-=== 2.2.1 / 2008-09-23
+=== 2.2.1 / 2008-09-24
 This version provides some minor fixes and enhancements to 2.2.0 intended
 to polish RDoc for Ruby 1.9.1.
 
-* Y Minor Enhancements
+* 3 Minor Enhancements
   * Support for parsing RDoc from SWIG.  Ruby patch #10742 by Gonzalo
     Garramuno, #13993 by Steven Jenkins.
   * Simple support for Perl POD documentation.  Patch by Hugh Sasse.
   * Changed the default character set of RDoc's output from iso-8859-1 to
     utf-8.
 
-* Z Bug Fixes
+* 9 Bug Fixes
   * Explicitly set the html template's text color, so that the generated
     documentation will display correctly on browsers with custom text and
     background color settings (patch by Luther Thompson).
