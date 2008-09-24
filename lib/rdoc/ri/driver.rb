@@ -77,14 +77,12 @@ class RDoc::RI::Driver
 
   attr_accessor :homepath # :nodoc:
 
-  def self.process_args(argv)
+  def self.default_options
     options = {}
     options[:use_stdout] = !$stdout.tty?
     options[:width] = 72
     options[:formatter] = RDoc::RI::Formatter.for 'plain'
     options[:interactive] = false
-    options[:list_classes] = false
-    options[:list_names] = false
     options[:use_cache] = true
 
     # By default all standard paths are used.
@@ -93,6 +91,12 @@ class RDoc::RI::Driver
     options[:use_home] = true
     options[:use_gems] = true
     options[:extra_doc_dirs] = []
+
+    return options
+  end
+
+  def self.process_args(argv)
+    options = default_options
 
     opts = OptionParser.new do |opt|
       opt.program_name = File.basename $0
@@ -150,14 +154,6 @@ Options may also be set in the 'RI' environment variable.
 
       opt.separator nil
       opt.separator "Options:"
-      opt.separator nil
-
-      opt.on("--classes", "-c",
-             "Display the names of classes and modules we",
-             "know about.") do |value|
-        options[:list_classes] = value
-      end
-
       opt.separator nil
 
       opt.on("--fmt=FORMAT", "--format=FORMAT", "-f",
@@ -252,14 +248,6 @@ Options may also be set in the 'RI' environment variable.
 
       opt.separator nil
 
-      opt.on("--list-names", "-l",
-             "List all the names known to RDoc, one per",
-             "line.") do
-        options[:list_names] = true
-      end
-
-      opt.separator nil
-
       opt.on("--no-pager", "-T",
              "Send output directly to stdout,",
              "rather than to a pager.") do
@@ -312,18 +300,11 @@ Options may also be set in the 'RI' environment variable.
     ri.run
   end
 
-  def initialize(options={})
+  def initialize(initial_options={})
+    options = self.class.default_options.update(initial_options)
+
     @names = options[:names]
-
-    options[:formatter] ||= RDoc::RI::Formatter
-
     @class_cache_name = 'classes'
-
-    options[:use_system] = true
-    options[:use_site]   = true
-    options[:use_home]   = true
-    options[:use_gems]   = true
-    options[:use_cache]  = true
 
     @doc_dirs = RDoc::RI::Paths.path(options[:use_system],
                                      options[:use_site],
