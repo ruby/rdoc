@@ -315,7 +315,15 @@ Options may also be set in the 'RI' environment variable.
   def initialize(options={})
     @names = options[:names]
 
+    options[:formatter] ||= RDoc::RI::Formatter
+
     @class_cache_name = 'classes'
+
+    options[:use_system] = true
+    options[:use_site]   = true
+    options[:use_home]   = true
+    options[:use_gems]   = true
+    options[:use_cache]  = true
 
     @doc_dirs = RDoc::RI::Paths.path(options[:use_system],
                                      options[:use_site],
