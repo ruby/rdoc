@@ -23,8 +23,8 @@ class TestRDocParserRuby < Test::Unit::TestCase
   end
 
   def teardown
-    @tempfile.unlink
-    @tempfile2.unlink
+    @tempfile.close
+    @tempfile2.close
   end
 
   def test_look_for_directives_in_commented
