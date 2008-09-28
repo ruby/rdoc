@@ -7,6 +7,7 @@
    enhancement 22182).
 
 * Z Bug Fixes
+** Fix missing superclass in ri output.
 
 === 2.2.1 / 2008-09-24
 This version provides some minor fixes and enhancements to 2.2.0 intended

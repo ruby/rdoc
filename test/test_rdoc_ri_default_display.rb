@@ -57,7 +57,7 @@ class TestRDocRiDefaultDisplay < Test::Unit::TestCase
       'instance_method_extensions' => [
         { 'name' => 'instance_method_extension' },
       ],
-      'superclass_string' => 'Object'
+      'superclass' => 'Object'
 
     @dd.display_class_info klass
 

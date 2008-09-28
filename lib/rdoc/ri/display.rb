@@ -53,7 +53,7 @@ class RDoc::RI::DefaultDisplay
 
   def display_class_info(klass)
     page do
-      superclass = klass.superclass_string
+      superclass = klass.superclass
 
       if superclass
         superclass = " < " + superclass
@@ -390,4 +390,3 @@ class RDoc::RI::DefaultDisplay
   end
 
 end
-
