@@ -217,7 +217,7 @@ class RDoc::RI::DefaultDisplay
         end
         method_names.sort!
 
-        @formatter.wrap method_names.join(',')
+        @formatter.wrap method_names.join(', ')
       end
     end
 

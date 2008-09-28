@@ -52,6 +52,7 @@ class TestRDocRiDefaultDisplay < Test::Unit::TestCase
       'includes' => [],
       'instance_methods' => [
         { 'name' => 'instance_method' },
+        { 'name' => 'instance_method2' },
       ],
       'instance_method_extensions' => [
         { 'name' => 'instance_method_extension' },
@@ -100,7 +101,7 @@ Class method extensions:
 Instance methods:
 -----------------
 
-     instance_method
+     instance_method, instance_method2
 
 
 Instance method extensions:

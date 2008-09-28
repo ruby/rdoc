@@ -1,3 +1,13 @@
+=== ? / 200?-??-??
+
+* X Major Enhancements
+
+* Y Minor Enhancements
+** Added a space after the commas in class method lists (rubyforge enhancement
+   22182).
+
+* Z Bug Fixes
+
 === 2.2.1 / 2008-09-24
 This version provides some minor fixes and enhancements to 2.2.0 intended
 to polish RDoc for Ruby 1.9.1.
