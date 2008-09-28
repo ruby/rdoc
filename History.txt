@@ -3,8 +3,8 @@
 * X Major Enhancements
 
 * Y Minor Enhancements
-** Added a space after the commas in class method lists (rubyforge enhancement
-   22182).
+** Added a space after the commas in ri class method lists (rubyforge
+   enhancement 22182).
 
 * Z Bug Fixes
 
