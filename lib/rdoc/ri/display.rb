@@ -5,8 +5,8 @@ require 'rdoc/ri'
 begin
   require('readline')
   require('abbrev')
-  CAN_USE_READLINE = true
-rescue
+  CAN_USE_READLINE = true # HACK use an RDoc namespace constant
+rescue LoadError
   CAN_USE_READLINE = false
 end
 
