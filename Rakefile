@@ -9,6 +9,8 @@ Hoe.new "rdoc", RDoc::VERSION do |rdoc|
   rdoc.developer 'Phil Hagelberg', 'technomancy@gmail.com'
   rdoc.developer 'Tony Strauss', 'tony.strauss@designingpatterns.com'
   rdoc.remote_rdoc_dir = ''
+
+  rdoc.extra_dev_deps << ['minitest', '~> 1.3']
 end
 
 # These tasks expect to have the following directory structure:

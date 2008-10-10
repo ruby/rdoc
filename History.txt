@@ -3,12 +3,13 @@
 * X Major Enhancements
 
 * Y Minor Enhancements
-** Added a space after the commas in ri class method lists (rubyforge
-   enhancement 22182).
+  * Added a space after the commas in ri class method lists (rubyforge
+    enhancement 22182).
+  * Converted to minitest.
 
 * Z Bug Fixes
-** Fix missing superclass in ri output.
-
+  * Fix missing superclass in ri output.
+ 
 === 2.2.1 / 2008-09-24
 This version provides some minor fixes and enhancements to 2.2.0 intended
 to polish RDoc for Ruby 1.9.1.

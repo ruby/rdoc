@@ -1,10 +1,11 @@
 require 'stringio'
-require 'test/unit'
+require 'rubygems'
+require 'minitest/unit'
 require 'rdoc/ri/formatter'
 require 'rdoc/ri/display'
 require 'rdoc/ri/driver'
 
-class TestRDocRiDefaultDisplay < Test::Unit::TestCase
+class TestRDocRiDefaultDisplay < MiniTest::Unit::TestCase
 
   def setup
     @output = StringIO.new
@@ -296,3 +297,5 @@ install an additional package, or ask the packager to enable ri generation.
   end
 
 end
+
+MiniTest::Unit.autorun
