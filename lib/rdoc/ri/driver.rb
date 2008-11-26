@@ -387,7 +387,7 @@ Options may also be set in the 'RI' environment variable.
     end
 
     classes = map_dirs('**/cdesc*.yaml') { |f| Dir[f] }
-    warn "Updating class cache with #{classes.size} classes..."
+    warn "Updating ri class cache with #{classes.size} classes..."
     populate_class_cache class_cache, classes
 
     write_cache class_cache, class_cache_file_path
