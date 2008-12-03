@@ -11,6 +11,7 @@ Hoe.new "rdoc", RDoc::VERSION do |rdoc|
   rdoc.remote_rdoc_dir = ''
 
   rdoc.extra_dev_deps << ['minitest', '~> 1.3']
+  rdoc.spec_extras['required_rubygems_version'] = '>= 1.3'
 end
 
 # These tasks expect to have the following directory structure:
