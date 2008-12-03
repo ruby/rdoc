@@ -327,8 +327,10 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
+      generator_text = @generators.keys.map { |name| "  #{name}" }.sort
+
       opt.on("--fmt=FORMAT", "--format=FORMAT", "-f", @generators.keys,
-             "Set the output formatter.") do |value|
+             "Set the output formatter.  One of:", *generator_text) do |value|
         @generator_name = value.downcase
         setup_generator
       end
