@@ -86,7 +86,7 @@ class RDoc::Parser
     #
     # The default parser should *NOT* parse binary files.
     #
-    if parser == RDoc::Parser::Simple then
+    if parser == RDoc::Parser::Simple && file_name !~ /\.(txt|rdoc)$/ then
       if binary? file_name then
         return nil
       end

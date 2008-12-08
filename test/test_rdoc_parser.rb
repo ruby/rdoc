@@ -17,6 +17,12 @@ class TestRDocParser < MiniTest::Unit::TestCase
 
     binary_file_name = File.join(File.dirname(__FILE__), "binary.dat")
     assert_equal(RDoc::Parser.can_parse(binary_file_name), nil)
+
+    jtest_file_name = File.join(File.dirname(__FILE__), "test.ja.txt")
+    assert_equal(RDoc::Parser::Simple, RDoc::Parser.can_parse(jtest_file_name))
+
+    jtest_rdoc_file_name = File.join(File.dirname(__FILE__), "test.ja.rdoc")
+    assert_equal(RDoc::Parser::Simple, RDoc::Parser.can_parse(jtest_rdoc_file_name))
   end
 end
 
