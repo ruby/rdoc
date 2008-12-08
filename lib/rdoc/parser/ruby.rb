@@ -1683,7 +1683,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     if TkSYMBEG === tk then
       set_token_position(tk.line_no, tk.char_no)
       tk1 = get_tk
-      if TkId === tk1 or TkOp === tk1 or TkSTRING === tk1 then
+      if TkId === tk1 or TkOp === tk1 or TkSTRING === tk1 or TkDSTRING === tk1 then
         if tk1.respond_to?(:name)
           tk = Token(TkSYMBOL).set_text(":" + tk1.name)
         else
