@@ -175,6 +175,9 @@ class RDoc::Generator::HTML
 
   def generate_html
     @main_url = main_url
+    @sorted_files = @files.sort
+    @sorted_classes = @classes.sort
+    @sorted_methods = RDoc::Generator::Method.all_methods.sort
 
     # the individual descriptions for files and classes
     gen_into(@files)
@@ -221,9 +224,9 @@ class RDoc::Generator::HTML
       op_dir = File.dirname(op_file)
 
       if(op_dir != prev_op_dir)
-        file_list = index_to_links op_file, @files
-        class_list = index_to_links op_file, @classes
-        method_list = index_to_links op_file, RDoc::Generator::Method.all_methods
+        file_list = index_to_links op_file, @sorted_files
+        class_list = index_to_links op_file, @sorted_classes
+        method_list = index_to_links op_file, @sorted_methods
       end
       prev_op_dir = op_dir
 
@@ -324,12 +327,14 @@ class RDoc::Generator::HTML
     end
   end
 
-  def index_to_links(output_path, collection)
-    collection.sort.map do |f|
+  def index_to_links(output_path, sorted_collection)
+    result = sorted_collection.map do |f|
       next unless f.document_self
       { "href" => RDoc::Markup::ToHtml.gen_relative_url(output_path, f.path),
         "name" => f.index_name }
-    end.compact
+    end
+    result.compact!
+    result
   end
 
   ##
