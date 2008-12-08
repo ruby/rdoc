@@ -89,6 +89,7 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 		@basedir = Pathname.pwd.expand_path
 
 		options.inline_source = true
+		options.diagram = false
 
 		super
 	end

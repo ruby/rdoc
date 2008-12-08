@@ -24,7 +24,7 @@ class RDoc::Options
   ##
   # Should diagrams be drawn
 
-  attr_reader :diagram
+  attr_accessor :diagram
 
   ##
   # Files matching this pattern will be excluded
