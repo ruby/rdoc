@@ -7,6 +7,9 @@ module RDoc
     # This generates Texinfo files for viewing with GNU Info or Emacs
     # from RDoc extracted from Ruby source files.
     class TEXINFO
+
+      ::RDoc::RDoc.add_generator self
+
       # What should the .info file be named by default?
       DEFAULT_INFO_FILENAME = 'rdoc.info'
 

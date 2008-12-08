@@ -8,6 +8,8 @@ require 'rdoc/ri/descriptions'
 
 class RDoc::Generator::RI
 
+  RDoc::RDoc.add_generator self
+
   ##
   # Generator may need to return specific subclasses depending on the
   # options they are passed. Because of this we create them using a factory

@@ -32,32 +32,22 @@ module RDoc
 
   class RDoc
 
-    Generator = Struct.new(:file_name, :class_name, :key)
-
     ##
     # Accessor for statistics.  Available after each call to parse_files
 
     attr_reader :stats
 
     ##
-    # This is the list of output generator that we support
+    # This is the list of supported output generators
 
     GENERATORS = {}
 
-    $LOAD_PATH.collect do |d|
-      File.expand_path d
-    end.find_all do |d|
-      File.directory? "#{d}/rdoc/generator"
-    end.each do |dir|
-      Dir.entries("#{dir}/rdoc/generator").each do |gen|
-        next unless /(\w+)\.rb$/ =~ gen
-        type = $1
-        unless GENERATORS.has_key? type
-          GENERATORS[type] = Generator.new("rdoc/generator/#{gen}",
-                                           "#{type.upcase}".intern,
-                                           type)
-        end
-      end
+    ##
+    # Add +klass+ that can generate output after parsing
+
+    def self.add_generator(klass)
+      name = klass.name.sub(/^RDoc::Generator::/, '').downcase
+      GENERATORS[name] = klass
     end
 
     def initialize
@@ -243,7 +233,7 @@ module RDoc
     def document(argv)
       TopLevel::reset
 
-      @options = Options.new GENERATORS
+      @options = Options.new
       @options.parse argv
 
       @last_created = nil
@@ -261,14 +251,12 @@ module RDoc
       if file_info.empty?
         $stderr.puts "\nNo newer files." unless @options.quiet
       else
-        @gen = @options.generator
+        generator = @options.generator
 
-        $stderr.puts "\nGenerating #{@gen.key.upcase}..." unless @options.quiet
+        $stderr.puts "\nGenerating #{generator.name.sub(/^.*::/, '')}..." unless
+          @options.quiet
 
-        require @gen.file_name
-
-        gen_class = ::RDoc::Generator.const_get @gen.class_name
-        @gen = gen_class.for @options
+        @gen = generator.for @options
 
         pwd = Dir.pwd
 
@@ -302,4 +290,12 @@ if Gem.respond_to? :find_files then
     end
   end
 end
+
+# require built-in generators after discovery in case they've been replaced
+require 'rdoc/generator/chm'
+require 'rdoc/generator/darkfish'
+require 'rdoc/generator/html'
+require 'rdoc/generator/ri'
+require 'rdoc/generator/texinfo'
+require 'rdoc/generator/xml'
 

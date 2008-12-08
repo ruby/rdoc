@@ -2,6 +2,8 @@ require 'rdoc/generator/html'
 
 class RDoc::Generator::CHM < RDoc::Generator::HTML
 
+  RDoc::RDoc.add_generator self
+
   HHC_PATH = "c:/Program Files/HTML Help Workshop/hhc.exe"
 
   ##

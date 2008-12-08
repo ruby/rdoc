@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title><%= fileinfo['classmod'] %>: <%= fileinfo['full_name'] %></title>
+
+	<link type="text/css" media="screen" href="<%= rel_prefix %>/rdoc.css" rel="stylesheet" />
+
+</head>
+<body class="file">
+	
+	<div id="metadata">
+		<dl>
+			<dt class="modified-date">Last Modified</dt>
+			<dd class="modified-date"><%= fileinfo['dtm_modified'] %></dd>
+			
+			<% if fileinfo['requires'] %>
+			<dt class="requires">Requires</dt>
+			<dd class="requires">
+				<ul>
+				<% fileinfo['requires'].each do |dependency| %>
+					<li><%= dependency['name'] %></li>
+				<% end %>
+				</ul>
+			</dd>
+			<% end %>
+			
+			<% if fileinfo['cvsurl'] %>
+			<dt class="scs-url">Trac URL</dt>
+			<dd class="scs-url"><a target="_top" 
+				href="<%= fileinfo['cvsurl'] %>"><%= fileinfo['cvsurl'] %></a></dd>
+			<% end %>
+		</dl>
+
+		<div class="description">
+			<h2>Description</h2>
+			<%= fileinfo['description'] %>
+		</div>
+	</div>
+
+	<div id="validator-badges">
+	  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+	  <p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish 
+		Rdoc Generator</a></small>.</p>
+	</div>
+</body>
+</html>
+

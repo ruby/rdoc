@@ -1,7 +1,8 @@
-=== ? / 200?-??-??
+=== 2.3.0 / 200?-??-??
 
 * X Major Enhancements
   * RDoc now automatically loads rdoc/discover.rb files from installed gems.
+  * RDoc now uses Michael Granger's Darkfish generator by default.
 
 * Y Minor Enhancements
   * Added a space after the commas in ri class method lists.  RubyForge

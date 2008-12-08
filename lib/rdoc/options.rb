@@ -154,16 +154,15 @@ class RDoc::Options
 
   attr_reader :webcvs
 
-  def initialize(generators = {}) # :nodoc:
+  def initialize # :nodoc:
     @op_dir = "doc"
     @op_name = nil
     @show_all = false
     @main_page = nil
     @merge = false
     @exclude = []
-    @generators = generators
-    @generator_name = 'html'
-    @generator = @generators[@generator_name]
+    @generators = RDoc::RDoc::GENERATORS
+    @generator = RDoc::Generator::Darkfish
     @rdoc_include = []
     @title = nil
     @template = nil
@@ -209,6 +208,8 @@ Usage: #{opt.program_name} [options] [names...]
 
   How RDoc generates output depends on the output formatter being used, and on
   the options you give.
+
+  - Darkfish is an improved, frameless HTML output by Michael Granger.
 
   - HTML output is normally produced into a number of separate files
     (one per class, module, and file, along with various indices).

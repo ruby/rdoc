@@ -5,6 +5,8 @@ require 'rdoc/generator/html'
 
 class RDoc::Generator::XML < RDoc::Generator::HTML
 
+  RDoc::RDoc.add_generator self
+
   ##
   # Standard generator factory
 
