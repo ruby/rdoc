@@ -45,7 +45,7 @@ require 'rdoc/generator/html'
 ### A erb-based RDoc HTML generator
 class RDoc::Generator::Darkfish < RDoc::Generator::XML
 
-  RDoc::RDoc.add_generator self
+	RDoc::RDoc.add_generator self
 
 	include ERB::Util
 
@@ -88,7 +88,7 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 
 		@basedir = Pathname.pwd.expand_path
 
-    options.inline_source = true
+		options.inline_source = true
 
 		super
 	end
@@ -447,31 +447,5 @@ end # module TimeConstantMethods
 # Extend Numeric with time constants
 class Numeric # :nodoc:
 	include TimeConstantMethods
-end
-
-
-### Monkeypatch RDoc::Generator::Method so it works with line numbers
-### turned on and $DEBUG = true. Also make it use a conditional instead
-### of a side-effect to get the initial blank line.
-class RDoc::Generator::Method # :nodoc:
-	def add_line_numbers(src)
-		if src =~ /\A.*, line (\d+)/
-			first = $1.to_i - 1
-			last  = first + src.count("\n")
-			size = last.to_s.length
-
-			line = first
-			src.gsub!(/^/) do
-				if line == first
-					res = " " * ( size + 2 )
-				else
-					res = sprintf( "%#{size}d: ", line )
-				end
-
-				line += 1
-				res
-			end
-		end
-	end
 end
 
