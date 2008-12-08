@@ -17,6 +17,7 @@ require 'rdoc/diagram'
 require 'find'
 require 'fileutils'
 require 'time'
+require 'thread'
 
 module RDoc
 
@@ -179,8 +180,6 @@ module RDoc
     # Parse each file on the command line, recursively entering directories.
 
     def parse_files(options)
-      @stats = Stats.new options.verbosity
-
       files = options.files
       files = ["."] if files.empty?
 
@@ -188,33 +187,49 @@ module RDoc
 
       return [] if file_list.empty?
 
+      jobs = SizedQueue.new(number_of_threads * 3)
+      workers = []
       file_info = []
+      file_info_lock = Mutex.new
 
-      file_list.each do |filename|
-        @stats.add_file filename
+      Thread.abort_on_exception = true
+      @stats = Stats.new(file_list.size, options.verbosity)
+      @stats.begin_adding(number_of_threads)
+      
+      # Create worker threads.
+      number_of_threads.times do
+        thread = Thread.new do
+          while (filename = jobs.pop)
+            @stats.add_file(filename)
+            content = read_file_contents(filename)
+            top_level = ::RDoc::TopLevel.new filename
 
-        content = if RUBY_VERSION >= '1.9' then
-                    File.open(filename, "r:ascii-8bit") { |f| f.read }
-                  else
-                    File.read filename
-                  end
-
-        if defined? Encoding then
-          if /coding:\s*(\S+)/ =~ content[/\A(?:.*\n){0,2}/]
-            if enc = ::Encoding.find($1)
-              content.force_encoding(enc)
+            parser = ::RDoc::Parser.for(top_level, filename, content, options,
+                                        @stats)
+            result = parser.scan
+            file_info_lock.synchronize do
+              file_info << result
             end
           end
         end
-
-        top_level = ::RDoc::TopLevel.new filename
-
-        parser = ::RDoc::Parser.for top_level, filename, content, options,
-                                    @stats
-
-        file_info << parser.scan
+        workers << thread
       end
 
+      # Feed filenames to the parser worker threads...
+      file_list.each do |filename|
+        jobs << filename
+      end
+      workers.size.times do
+        jobs << nil
+      end
+      
+      # ...and wait until they're done.
+      workers.each do |thread|
+        thread.join
+      end
+      
+      @stats.done_adding
+      
       file_info
     end
 
@@ -275,6 +290,35 @@ module RDoc
         puts
         @stats.print
       end
+    end
+    
+    private
+
+    def number_of_threads
+      @@number_of_threads ||=
+        if RUBY_PLATFORM == "java"
+          Java::java::lang::Runtime.getRuntime.availableProcessors * 2
+        else
+          2
+        end
+    end
+      
+    def read_file_contents(filename)
+      content = if RUBY_VERSION >= '1.9' then
+                  File.open(filename, "r:ascii-8bit") { |f| f.read }
+                else
+                  File.read filename
+                end
+
+      if defined? Encoding then
+        if /coding:\s*(\S+)/ =~ content[/\A(?:.*\n){0,2}/]
+          if enc = ::Encoding.find($1)
+            content.force_encoding(enc)
+          end
+        end
+      end
+
+      content
     end
   end
 end

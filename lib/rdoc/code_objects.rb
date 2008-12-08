@@ -1,6 +1,8 @@
 # We represent the various high-level code constructs that appear
 # in Ruby programs: classes, modules, methods, and so on.
 
+require 'thread'
+
 require 'rdoc/tokenstream'
 
 module RDoc
@@ -137,11 +139,14 @@ module RDoc
       attr_reader :title, :comment, :sequence
 
       @@sequence = "SEC00000"
+      @@sequence_lock = Mutex.new
 
       def initialize(title, comment)
         @title = title
-        @@sequence.succ!
-        @sequence = @@sequence.dup
+        @@sequence_lock.synchronize do
+          @@sequence.succ!
+          @sequence = @@sequence.dup
+        end
         @comment = nil
         set_comment(comment)
       end
@@ -581,14 +586,17 @@ module RDoc
     attr_accessor :file_absolute_name
     attr_accessor :diagram
 
+    @@lock = Mutex.new
     @@all_classes = {}
     @@all_modules = {}
     @@all_files   = {}
 
     def self.reset
-      @@all_classes = {}
-      @@all_modules = {}
-      @@all_files   = {}
+      @@lock.synchronize do
+        @@all_classes = {}
+        @@all_modules = {}
+        @@all_files   = {}
+      end
     end
 
     def initialize(file_name)
@@ -598,7 +606,9 @@ module RDoc
       @file_absolute_name    = file_name
       @file_stat             = File.stat(file_name)
       @diagram               = nil
-      @@all_files[file_name] = self
+      @@lock.synchronize do
+        @@all_files[file_name] = self
+      end
     end
 
     def file_base_name
@@ -622,17 +632,25 @@ module RDoc
         cls.superclass = superclass unless cls.module?
         puts "Reusing class/module #{cls.full_name}" if $DEBUG_RDOC
       else
-        if class_type == NormalModule then
-          all = @@all_modules
-        else
-          all = @@all_classes
-        end
+        all = nil
+        
+        @@lock.synchronize do
+          if class_type == NormalModule then
+            all = @@all_modules
+          else
+            all = @@all_classes
+          end
 
-        cls = all[name]
+          cls = all[name]
+        end
 
         if !cls then
           cls = class_type.new name, superclass
-          all[name] = cls unless @done_documenting
+          unless @done_documenting
+            @@lock.synchronize do
+              all[name] = cls
+            end
+          end
         else
           # If the class has been encountered already, check that its
           # superclass has been set (it may not have been, depending on
@@ -653,19 +671,25 @@ module RDoc
     end
 
     def self.all_classes_and_modules
-      @@all_classes.values + @@all_modules.values
+      @@lock.synchronize do
+        @@all_classes.values + @@all_modules.values
+      end
     end
 
     def self.find_class_named(name)
-     @@all_classes.each_value do |c|
-        res = c.find_class_named(name) 
-        return res if res
+      @@lock.synchronize do
+        @@all_classes.each_value do |c|
+          res = c.find_class_named(name)
+          return res if res
+        end
       end
       nil
     end
 
     def self.find_file_named(name)
-      @@all_files[name]
+      @@lock.synchronize do
+        @@all_files[name]
+      end
     end
 
     def find_local_symbol(symbol)
@@ -673,8 +697,10 @@ module RDoc
     end
 
     def find_class_or_module_named(symbol)
-      @@all_classes.each_value {|c| return c if c.name == symbol}
-      @@all_modules.each_value {|m| return m if m.name == symbol}
+      @@lock.synchronize do
+        @@all_classes.each_value {|c| return c if c.name == symbol}
+        @@all_modules.each_value {|m| return m if m.name == symbol}
+      end
       nil
     end
 
