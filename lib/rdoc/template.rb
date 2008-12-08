@@ -53,8 +53,12 @@ class RDoc::TemplatePage
     b = binding
     template_include = ""
 
-    @templates.reverse_each do |template|
-      template_include = ERB.new(template).result b
+    @compiled_templates ||= @templates.map do |template|
+      ERB.new(template)
+    end
+    
+    @compiled_templates.reverse_each do |template|
+      template_include = template.result(b)
     end
 
     io.write template_include

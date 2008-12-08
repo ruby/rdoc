@@ -6,6 +6,7 @@ Rakefile
 bin/rdoc
 bin/ri
 lib/rdoc.rb
+lib/rdoc/cache.rb
 lib/rdoc/code_objects.rb
 lib/rdoc/diagram.rb
 lib/rdoc/dot.rb

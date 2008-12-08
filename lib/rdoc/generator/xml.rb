@@ -1,4 +1,5 @@
 require 'rdoc/generator/html'
+require 'rdoc/cache'
 
 ##
 # Generate XML output as one big file
@@ -43,19 +44,23 @@ class RDoc::Generator::XML < RDoc::Generator::HTML
   #   class, module, and method names)
 
   def build_indices
+    template_cache = RDoc::Cache.instance
+    
     @info.each do |toplevel|
-      @files << RDoc::Generator::File.new(toplevel, @options, RDoc::Generator::FILE_DIR)
+      @files << RDoc::Generator::File.new(template_cache, toplevel, @options,
+                                          RDoc::Generator::FILE_DIR)
     end
 
     RDoc::TopLevel.all_classes_and_modules.each do |cls|
-      build_class_list(cls, @files[0], RDoc::Generator::CLASS_DIR)
+      build_class_list(template_cache, cls, @files[0], RDoc::Generator::CLASS_DIR)
     end
   end
 
-  def build_class_list(from, html_file, class_dir)
-    @classes << RDoc::Generator::Class.new(from, html_file, class_dir, @options)
+  def build_class_list(template_cache, from, html_file, class_dir)
+    @classes << RDoc::Generator::Class.new(template_cache, from, html_file,
+                                           class_dir, @options)
     from.each_classmodule do |mod|
-      build_class_list(mod, html_file, class_dir)
+      build_class_list(template_cache, mod, html_file, class_dir)
     end
   end
 

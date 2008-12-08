@@ -3,6 +3,7 @@ require 'rdoc'
 require 'rdoc/options'
 require 'rdoc/markup/to_html_crossref'
 require 'rdoc/template'
+require 'rdoc/cache'
 
 module RDoc::Generator
 
@@ -127,28 +128,29 @@ module RDoc::Generator
     # * a complete list of all hyperlinkable terms (file, class, module, and
     #   method names)
 
-    def self.build_indices(toplevels, options)
+    def self.build_indices(toplevels, options, template_cache = nil)
       files = []
       classes = []
+      template_cache ||= RDoc::Cache.instance
 
       toplevels.each do |toplevel|
-        files << RDoc::Generator::File.new(toplevel, options,
+        files << RDoc::Generator::File.new(template_cache, toplevel, options,
                                            RDoc::Generator::FILE_DIR)
       end
 
       RDoc::TopLevel.all_classes_and_modules.each do |cls|
-        build_class_list(classes, options, cls, files[0], 
+        build_class_list(template_cache, classes, options, cls, files[0], 
                          RDoc::Generator::CLASS_DIR)
       end
 
       return files, classes
     end
 
-    def self.build_class_list(classes, options, from, html_file, class_dir)
-      classes << RDoc::Generator::Class.new(from, html_file, class_dir, options)
+    def self.build_class_list(template_cache, classes, options, from, html_file, class_dir)
+      classes << RDoc::Generator::Class.new(template_cache, from, html_file, class_dir, options)
 
       from.each_classmodule do |mod|
-        build_class_list(classes, options, mod, html_file, class_dir)
+        build_class_list(template_cache, classes, options, mod, html_file, class_dir)
       end
     end
 
@@ -484,9 +486,10 @@ module RDoc::Generator
     attr_reader :path
     attr_reader :values
 
-    def initialize(context, html_file, prefix, options)
+    def initialize(template_cache, context, html_file, prefix, options)
       super context, options
 
+      @template_cache = template_cache
       @html_file = html_file
       @html_class = self
       @is_module = context.module?
@@ -538,11 +541,12 @@ module RDoc::Generator
 
       @values.update overrides
 
-      template = RDoc::TemplatePage.new(@template::BODY,
-                                        @template::CLASS_PAGE,
-                                        @template::METHOD_LIST)
-
-      template.write_html_on(f, @values)
+      template_page = @template_cache.cache(@template) do
+        RDoc::TemplatePage.new(@template::BODY,
+                               @template::CLASS_PAGE,
+                               @template::METHOD_LIST)
+      end
+      template_page.write_html_on(f, @values)
     end
 
     def value_hash
@@ -680,10 +684,11 @@ module RDoc::Generator
     attr_reader :name
     attr_reader :values
 
-    def initialize(context, options, file_dir)
+    def initialize(template_cache, context, options, file_dir)
       super context, options
 
       @values = {}
+      @template_cache = template_cache
 
       if options.all_one_file
         @path = filename_to_label
@@ -780,11 +785,12 @@ module RDoc::Generator
 
       @values.update overrides
 
-      template = RDoc::TemplatePage.new(@template::BODY,
-                                        @template::FILE_PAGE,
-                                        @template::METHOD_LIST)
-
-      template.write_html_on(f, @values)
+      template_page = @template_cache.cache(@template) do
+        RDoc::TemplatePage.new(@template::BODY,
+                               @template::FILE_PAGE,
+                               @template::METHOD_LIST)
+      end
+      template_page.write_html_on(f, @values)
     end
 
     def file_attribute_values

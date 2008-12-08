@@ -2,6 +2,7 @@ require 'fileutils'
 
 require 'rdoc/generator'
 require 'rdoc/markup/to_html'
+require 'rdoc/cache'
 
 ##
 # We're responsible for generating all the HTML files from the object tree
@@ -81,6 +82,7 @@ class RDoc::Generator::HTML
     @toplevels  = toplevels
     @files      = []
     @classes    = []
+    @template_cache = RDoc::Cache.instance
 
     write_style_sheet
     gen_sub_directories
@@ -164,7 +166,8 @@ class RDoc::Generator::HTML
 
   def build_indices
     @files, @classes = RDoc::Generator::Context.build_indices(@toplevels,
-                                                              @options)
+                                                              @options,
+                                                              @template_cache)
   end
 
   ##
