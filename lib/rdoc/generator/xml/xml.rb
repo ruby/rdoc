@@ -51,7 +51,7 @@ module RDoc::Generator::XML::XML
 <% sections[:method_list].each do |method_list| %>
 <% if method_list[:methods] then %>
 <% method_list[:methods].each do |methods| %>
-        <method name="<%= methods[:name] %>" type="<%= methods[:type] %>" category="<%= methods[:category] %>" id="<%= methods[:aref] %>">
+        <method name="<%= methods[:name] %>" type="<%= method_list[:type] %>" category="<%= method_list[:category] %>" id="<%= methods[:aref] %>">
           <parameters><%= methods[:params] %></parameters>
 <% if methods[:m_desc] then %>
           <description>

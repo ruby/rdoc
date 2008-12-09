@@ -17,6 +17,7 @@
   * .txt and .rdoc files are always considered text.  Patch #22897 by Aaron
     Patterson.
   * When merging ri data with a nonexistant directory, RDoc no longer crashes.
+  * Fix visibility of methods in XML output.  Issue by Yehuda Katz.
 
 === 2.2.1 / 2008-09-24
 This version provides some minor fixes and enhancements to 2.2.0 intended
