@@ -20,14 +20,14 @@ class RDoc::RI::ClassEntry
     @path_names << path
   end
 
-  # read in our methods and any classes
-  # and modules in our namespace. Methods are
-  # stored in files called name-c|i.yaml,
-  # where the 'name' portion is the external
-  # form of the method name and the c|i is a class|instance
-  # flag
+  ##
+  # read in our methods and any classes and modules in our namespace. Methods
+  # are stored in files called name-c|i.yaml, where the 'name' portion is the
+  # external form of the method name and the c|i is a class|instance flag
 
   def load_from(dir)
+    return unless File.exist? dir
+
     Dir.foreach(dir) do |name|
       next if name =~ /^\./
 
