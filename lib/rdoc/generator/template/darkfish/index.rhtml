@@ -24,7 +24,7 @@
 
 	<% if options.main_page && files.key?( options.main_page ) %>
     <div id="main">
-        <%= files[ options.main_page ]['description'].sub(%r{^\s*<h1.*?/h1>}i, '') %>
+        <%= files[ options.main_page ][:description].sub(%r{^\s*<h1.*?/h1>}i, '') %>
     </div>
 	<% else %>
 	<p>This is the API documentation for '<%= options.title %>'.</p>
@@ -34,8 +34,8 @@
 	<ul>
 		<% modsort.each do |classname| %>
 		<% classdata = classes[classname] %>
-		<li class="<%= classdata['classmod'].downcase %>"><a 
-			href="<%= classdata['full_name'].gsub( /::/, '/' ) + '.html' %>"><%= classdata['full_name'] %></a></li>
+		<li class="<%= classdata[:classmod].downcase %>"><a 
+			href="<%= classdata[:full_name].gsub( /::/, '/' ) + '.html' %>"><%= classdata[:full_name] %></a></li>
 		<% end %>
 	</ul>
 

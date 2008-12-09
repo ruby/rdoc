@@ -6,11 +6,11 @@ module RDoc::Generator::HTML::HEFSS
   FONTS = "Verdana, Arial, Helvetica, sans-serif"
 
   CENTRAL_STYLE = <<-EOF
-body,p { font-family: <%= values["fonts"] %>;
+body,p { font-family: <%= values[:fonts] %>;
        color: #000040; background: #BBBBBB;
 }
 
-td { font-family: <%= values["fonts"] %>;
+td { font-family: <%= values[:fonts] %>;
        color: #000040;
 }
 
@@ -21,12 +21,12 @@ td { font-family: <%= values["fonts"] %>;
 }
 
 .big-title-font { color: white;
-                  font-family: <%= values["fonts"] %>;
+                  font-family: <%= values[:fonts] %>;
                   font-size: large;
                   height: 50px}
 
 .small-title-font { color: purple;
-                    font-family: <%= values["fonts"] %>;
+                    font-family: <%= values[:fonts] %>;
                     font-size: small; }
 
 .aqua { color: purple }

@@ -216,8 +216,8 @@ module RDoc::Generator
 
       @methods.sort.map do |meth|
         {
-          "name" => CGI.escapeHTML(meth.name),
-          "aref" => "##{meth.aref}"
+          :name => CGI.escapeHTML(meth.name),
+          :aref => "##{meth.aref}"
         }
       end
     end
@@ -231,12 +231,12 @@ module RDoc::Generator
         next unless al.section == section
 
         res = {
-          'old_name' => al.old_name,
-          'new_name' => al.new_name,
+          :old_name => al.old_name,
+          :new_name => al.new_name,
         }
 
         if al.comment and not al.comment.empty? then
-          res['desc'] = markup al.comment, true
+          res[:desc] = markup al.comment, true
         end
 
         res
@@ -251,12 +251,12 @@ module RDoc::Generator
         next unless co.section == section
 
         res = {
-          'name'  => co.name,
-          'value' => CGI.escapeHTML(co.value)
+          :name  => co.name,
+          :value => CGI.escapeHTML(co.value)
         }
 
         if co.comment and not co.comment.empty? then
-          res['desc'] = markup co.comment, true
+          res[:desc] = markup co.comment, true
         end
 
         res
@@ -305,9 +305,9 @@ module RDoc::Generator
         h_name = CGI.escapeHTML(i.name)
         if ref and ref.document_self
           path = url(ref.path)
-          res << { "name" => h_name, "aref" => path }
+          res << { :name => h_name, :aref => path }
         else
-          res << { "name" => h_name }
+          res << { :name => h_name }
         end
       end
       res
@@ -335,38 +335,38 @@ module RDoc::Generator
             row = {}
 
             if m.call_seq then
-              row["callseq"] = m.call_seq.gsub(/->/, '&rarr;')
+              row[:callseq] = m.call_seq.gsub(/->/, '&rarr;')
             else
-              row["name"]        = CGI.escapeHTML(m.name)
-              row["params"]      = m.params
+              row[:name]        = CGI.escapeHTML(m.name)
+              row[:params]      = m.params
             end
 
             desc = m.description.strip
-            row["m_desc"]      = desc unless desc.empty?
-            row["aref"]        = m.aref
-            row["visibility"]  = m.visibility.to_s
+            row[:m_desc]      = desc unless desc.empty?
+            row[:aref]        = m.aref
+            row[:visibility]  = m.visibility.to_s
 
             alias_names = []
 
             m.aliases.each do |other|
               if other.viewer then # won't be if the alias is private
                 alias_names << {
-                  'name' => other.name,
-                  'aref'  => other.viewer.as_href(path)
+                  :name => other.name,
+                  :aref  => other.viewer.as_href(path)
                 }
               end
             end
 
-            row["aka"] = alias_names unless alias_names.empty?
+            row[:aka] = alias_names unless alias_names.empty?
 
             if @options.inline_source then
               code = m.source_code
-              row["sourcecode"] = code if code
+              row[:sourcecode] = code if code
             else
               code = m.src_url
               if code then
-                row["codeurl"] = code
-                row["imgurl"]  = m.img_url
+                row[:codeurl] = code
+                row[:imgurl]  = m.img_url
               end
             end
 
@@ -375,9 +375,9 @@ module RDoc::Generator
 
           if res.size > 0 then
             outer << {
-              "type"     => vis.to_s.capitalize,
-              "category" => singleton ? "Class" : "Instance",
-              "methods"  => res
+              :type     => vis.to_s.capitalize,
+              :category => singleton ? "Class" : "Instance",
+              :methods  => res
             }
           end
         end
@@ -466,13 +466,13 @@ module RDoc::Generator
       @context.sections.each do |section|
         if section.title then
           toc << {
-            'secname' => section.title,
-            'href'    => section.sequence
+            :secname => section.title,
+            :href    => section.sequence
           }
         end
       end
 
-      @values['toc'] = toc unless toc.empty?
+      @values[:toc] = toc unless toc.empty?
     end
 
   end
@@ -535,9 +535,9 @@ module RDoc::Generator
     def write_on(f, file_list, class_list, method_list, overrides = {})
       value_hash
 
-      @values['file_list'] = file_list
-      @values['class_list'] = class_list
-      @values['method_list'] = method_list
+      @values[:file_list] = file_list
+      @values[:class_list] = class_list
+      @values[:method_list] = method_list
 
       @values.update overrides
 
@@ -553,39 +553,39 @@ module RDoc::Generator
       class_attribute_values
       add_table_of_sections
 
-      @values["charset"] = @options.charset
-      @values["style_url"] = style_url(path, @options.css)
+      @values[:charset] = @options.charset
+      @values[:style_url] = style_url(path, @options.css)
 
       d = markup(@context.comment)
-      @values["description"] = d unless d.empty?
+      @values[:description] = d unless d.empty?
 
       ml = build_method_summary_list @path
-      @values["methods"] = ml unless ml.empty?
+      @values[:methods] = ml unless ml.empty?
 
       il = build_include_list @context
-      @values["includes"] = il unless il.empty?
+      @values[:includes] = il unless il.empty?
 
-      @values["sections"] = @context.sections.map do |section|
+      @values[:sections] = @context.sections.map do |section|
         secdata = {
-          "sectitle" => section.title,
-          "secsequence" => section.sequence,
-          "seccomment" => markup(section.comment),
+          :sectitle    => section.title,
+          :secsequence => section.sequence,
+          :seccomment  => markup(section.comment),
         }
 
         al = build_alias_summary_list section
-        secdata["aliases"] = al unless al.empty?
+        secdata[:aliases] = al unless al.empty?
 
         co = build_constants_summary_list section
-        secdata["constants"] = co unless co.empty?
+        secdata[:constants] = co unless co.empty?
 
         al = build_attribute_list section
-        secdata["attributes"] = al unless al.empty?
+        secdata[:attributes] = al unless al.empty?
 
         cl = build_class_list 0, @context, section
-        secdata["classlist"] = cl unless cl.empty?
+        secdata[:classlist] = cl unless cl.empty?
 
         mdl = build_method_detail_list section
-        secdata["method_list"] = mdl unless mdl.empty?
+        secdata[:method_list] = mdl unless mdl.empty?
 
         secdata
       end
@@ -601,13 +601,13 @@ module RDoc::Generator
            @options.show_all then
 
           entry = {
-            "name"   => CGI.escapeHTML(att.name),
-            "rw"     => att.rw,
-            "a_desc" => markup(att.comment, true)
+            :name   => CGI.escapeHTML(att.name),
+            :rw     => att.rw,
+            :a_desc => markup(att.comment, true)
           }
 
           unless att.visibility == :public or att.visibility == :protected then
-            entry["rw"] << "-"
+            entry[:rw] << "-"
           end
 
           entry
@@ -618,22 +618,22 @@ module RDoc::Generator
     def class_attribute_values
       h_name = CGI.escapeHTML(name)
 
-      @values["href"]      = @path
-      @values["classmod"]  = @is_module ? "Module" : "Class"
-      @values["title"]     = "#{@values['classmod']}: #{h_name} [#{@options.title}]"
+      @values[:href]      = @path
+      @values[:classmod]  = @is_module ? "Module" : "Class"
+      @values[:title]     = "#{@values['classmod']}: #{h_name} [#{@options.title}]"
 
       c = @context
       c = c.parent while c and not c.diagram
 
       if c and c.diagram then
-        @values["diagram"] = diagram_reference(c.diagram)
+        @values[:diagram] = diagram_reference(c.diagram)
       end
 
-      @values["full_name"] = h_name
+      @values[:full_name] = h_name
 
       if not @context.module? and @context.superclass then
         parent_class = @context.superclass
-        @values["parent"] = CGI.escapeHTML(parent_class)
+        @values[:parent] = CGI.escapeHTML(parent_class)
 
         if parent_name
           lookup = parent_name + "::" + parent_class
@@ -644,7 +644,7 @@ module RDoc::Generator
         parent_url = AllReferences[lookup] || AllReferences[parent_class]
 
         if parent_url and parent_url.document_self
-          @values["par_url"] = aref_to(parent_url.path)
+          @values[:par_url] = aref_to(parent_url.path)
         end
       end
 
@@ -653,17 +653,17 @@ module RDoc::Generator
         res = {}
         full_path = CGI.escapeHTML(f.file_absolute_name)
 
-        res["full_path"]     = full_path
-        res["full_path_url"] = aref_to(f.viewer.path) if f.document_self
+        res[:full_path]     = full_path
+        res[:full_path_url] = aref_to(f.viewer.path) if f.document_self
 
         if @options.webcvs
-          res["cvsurl"] = cvs_url( @options.webcvs, full_path )
+          res[:cvsurl] = cvs_url( @options.webcvs, full_path )
         end
 
         files << res
       end
 
-      @values['infiles'] = files
+      @values[:infiles] = files
     end
 
     def <=>(other)
@@ -725,23 +725,23 @@ module RDoc::Generator
       file_attribute_values
       add_table_of_sections
 
-      @values["charset"]   = @options.charset
-      @values["href"]      = path
-      @values["style_url"] = style_url(path, @options.css)
+      @values[:charset]   = @options.charset
+      @values[:href]      = path
+      @values[:style_url] = style_url(path, @options.css)
 
       if @context.comment
         d = markup(@context.comment)
-        @values["description"] = d if d.size > 0
+        @values[:description] = d if d.size > 0
       end
 
       ml = build_method_summary_list
-      @values["methods"] = ml unless ml.empty?
+      @values[:methods] = ml unless ml.empty?
 
       il = build_include_list(@context)
-      @values["includes"] = il unless il.empty?
+      @values[:includes] = il unless il.empty?
 
       rl = build_requires_list(@context)
-      @values["requires"] = rl unless rl.empty?
+      @values[:requires] = rl unless rl.empty?
 
       if @options.promiscuous
         file_context = nil
@@ -749,26 +749,25 @@ module RDoc::Generator
         file_context = @context
       end
 
-
-      @values["sections"] = @context.sections.map do |section|
+      @values[:sections] = @context.sections.map do |section|
 
         secdata = {
-          "sectitle" => section.title,
-          "secsequence" => section.sequence,
-          "seccomment" => markup(section.comment)
+          :sectitle => section.title,
+          :secsequence => section.sequence,
+          :seccomment => markup(section.comment)
         }
 
         cl = build_class_list(0, @context, section, file_context)
-        secdata["classlist"] = cl unless cl.empty?
+        secdata[:classlist] = cl unless cl.empty?
 
         mdl = build_method_detail_list(section)
-        secdata["method_list"] = mdl unless mdl.empty?
+        secdata[:method_list] = mdl unless mdl.empty?
 
         al = build_alias_summary_list(section)
-        secdata["aliases"] = al unless al.empty?
+        secdata[:aliases] = al unless al.empty?
 
         co = build_constants_summary_list(section)
-        secdata["constants"] = co unless co.empty?
+        secdata[:constants] = co unless co.empty?
 
         secdata
       end
@@ -779,9 +778,9 @@ module RDoc::Generator
     def write_on(f, file_list, class_list, method_list, overrides = {})
       value_hash
 
-      @values['file_list'] = file_list
-      @values['class_list'] = class_list
-      @values['method_list'] = method_list
+      @values[:file_list] = file_list
+      @values[:class_list] = class_list
+      @values[:method_list] = method_list
 
       @values.update overrides
 
@@ -797,18 +796,18 @@ module RDoc::Generator
       full_path = @context.file_absolute_name
       short_name = ::File.basename full_path
 
-      @values["title"] = CGI.escapeHTML("File: #{short_name} [#{@options.title}]")
+      @values[:title] = CGI.escapeHTML("File: #{short_name} [#{@options.title}]")
 
       if @context.diagram then
-        @values["diagram"] = diagram_reference(@context.diagram)
+        @values[:diagram] = diagram_reference(@context.diagram)
       end
 
-      @values["short_name"]   = CGI.escapeHTML(short_name)
-      @values["full_path"]    = CGI.escapeHTML(full_path)
-      @values["dtm_modified"] = @context.file_stat.mtime.to_s
+      @values[:short_name]   = CGI.escapeHTML(short_name)
+      @values[:full_path]    = CGI.escapeHTML(full_path)
+      @values[:dtm_modified] = @context.file_stat.mtime.to_s
 
       if @options.webcvs then
-        @values["cvsurl"] = cvs_url @options.webcvs, @values["full_path"]
+        @values[:cvsurl] = cvs_url @options.webcvs, @values[:full_path]
       end
     end
 
@@ -988,10 +987,10 @@ module RDoc::Generator
 
       open file_path, 'w' do |f|
         values = {
-          'title'     => CGI.escapeHTML(index_name),
-          'code'      => code_body,
-          'style_url' => style_url(file_path, @options.css),
-          'charset'   => @options.charset
+          :title     => CGI.escapeHTML(index_name),
+          :code      => code_body,
+          :style_url => style_url(file_path, @options.css),
+          :charset   => @options.charset
         }
         template.write_html_on(f, values)
       end

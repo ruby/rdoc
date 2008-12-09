@@ -26,17 +26,17 @@ module RDoc::Generator::CHM::CHM
 [OPTIONS]
 Auto Index = Yes
 Compatibility=1.1 or later
-Compiled file=<%= values["opname"] %>.chm
+Compiled file=<%= values[:opname] %>.chm
 Contents file=contents.hhc
 Full-text search=Yes
 Index file=index.hhk
 Language=0x409 English(United States)
-Title=<%= values["title"] %>
+Title=<%= values[:title] %>
 
 [FILES]
-<% values["all_html_files"].each do |all_html_files| %>
-<%= all_html_files["html_file_name"] %>
-<% end # values["all_html_files"] %>
+<% values[:all_html_files].each do |all_html_files| %>
+<%= all_html_files[:html_file_name] %>
+<% end # values[:all_html_files] %>
   EOF
 
   CONTENTS = <<-EOF
@@ -52,23 +52,23 @@ Title=<%= values["title"] %>
 	<param name="ImageType" value="Folder">
 </OBJECT>
 <UL>
-<% values["contents"].each do |contents| %>
+<% values[:contents].each do |contents| %>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="<%= contents["c_name"] %>">
-		<param name="Local" value="<%= contents["ref"] %>">
+		<param name="Name" value="<%= contents[:c_name] %>">
+		<param name="Local" value="<%= contents[:ref] %>">
 		</OBJECT>
-<% if contents["methods"] then %>
+<% if contents[:methods] then %>
 <ul>
-<% contents["methods"].each do |methods| %>
+<% contents[:methods].each do |methods| %>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="<%= methods["name"] %>">
-		<param name="Local" value="<%= methods["aref"] %>">
+		<param name="Name" value="<%= methods[:name] %>">
+		<param name="Local" value="<%= methods[:aref] %>">
 		</OBJECT>
-<% end # contents["methods"] %>
+<% end # contents[:methods] %>
 </ul>
 <% end %>
         </LI>
-<% end # values["contents"] %>
+<% end # values[:contents] %>
 </UL>
 </BODY></HTML>
   EOF
@@ -86,12 +86,12 @@ Title=<%= values["title"] %>
 	<param name="ImageType" value="Folder">
 </OBJECT>
 <UL>
-<% values["index"].each do |index| %>
+<% values[:index].each do |index| %>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="<%= index["name"] %>">
-		<param name="Local" value="<%= index["aref"] %>">
+		<param name="Name" value="<%= index[:name] %>">
+		<param name="Local" value="<%= index[:aref] %>">
 		</OBJECT>
-<% end # values["index"] %>
+<% end # values[:index] %>
 </UL>
 </BODY></HTML>
   EOF

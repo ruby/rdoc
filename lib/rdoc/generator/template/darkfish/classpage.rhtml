@@ -5,7 +5,7 @@
 <head>
 	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 
-	<title><%= classinfo['classmod'] %>: <%= classinfo['full_name'] %></title>
+	<title><%= classinfo[:classmod] %>: <%= classinfo[:full_name] %></title>
 
 	<link rel="stylesheet" href="<%= rel_prefix %>/rdoc.css" type="text/css" media="screen" />
 
@@ -29,7 +29,7 @@
 	</script>
 
 </head>
-<body class="<%= classinfo['classmod'].downcase %>">
+<body class="<%= classinfo[:classmod].downcase %>">
 	
 	<div id="metadata">
 		<div id="file-metadata">
@@ -37,9 +37,9 @@
 				<h3 class="section-header">In Files</h3>
 				<div class="section-body">
 					<ul>
-					<% classinfo['infiles'].each do |file| %>
-						<li><a href="<%= rel_prefix %>/<%= file['full_path'] %>.html?TB_iframe=true&height=400&width=600"
-							class="thickbox" title="<%= file['full_path'] %>"><%= file['full_path'] %></a></li>
+					<% classinfo[:infiles].each do |file| %>
+						<li><a href="<%= rel_prefix %>/<%= file[:full_path] %>.html?TB_iframe=true&height=400&width=600"
+							class="thickbox" title="<%= file[:full_path] %>"><%= file[:full_path] %></a></li>
 					<% end %>
 					</ul>
 				</div>
@@ -68,23 +68,23 @@
 		<div id="class-metadata">
 
 			<!-- Parent Class -->
-			<% if classinfo['classmod'] == 'Class' %>
+			<% if classinfo[:classmod] == 'Class' %>
 			<div id="parent-class-section" class="section">
 				<h3 class="section-header">Parent</h3>
-				<% if classinfo['par_url'] %>
-				<p class="link"><a href="<%= classinfo['par_url'] %>"><%= classinfo['parent'] %></a></p>
+				<% if classinfo[:par_url] %>
+				<p class="link"><a href="<%= classinfo[:par_url] %>"><%= classinfo[:parent] %></a></p>
 				<% else %>
-				<p class="link"><%= classinfo['parent'] %></p>
+				<p class="link"><%= classinfo[:parent] %></p>
 				<% end %>
 			</div>
 			<% end %>
 
 			<!-- Namespace Contents -->
-			<% if classinfo['sections'].first.key?( 'classlist' ) %>
+			<% if classinfo[:sections].first.key?( 'classlist' ) %>
 			<div id="namespace-list-section" class="section">
 				<h3 class="section-header">Namespace</h3>
 				<ul class="link-list">
-					<% classinfo['sections'].first['classlist'].each do |desc| %>
+					<% classinfo[:sections].first[:classlist].each do |desc| %>
 					<!-- Desc is: <%= desc.inspect %> -->
 					<li><%= desc.sub(/^(\w+)/, %Q{<span class="type">\\1</span>}) %></li>
 					<% end %>
@@ -97,8 +97,8 @@
 			<div id="method-list-section" class="section">
 				<h3 class="section-header">Methods</h3>
 				<ul class="link-list">
-					<% classinfo['methods'].each do |meth| %>
-					<li><a href="#<%= meth['name'] %>"><%= meth['name']
+					<% classinfo[:methods].each do |meth| %>
+					<li><a href="#<%= meth[:name] %>"><%= meth[:name]
 					 	%></a></li>
 					<% end %>
 				</ul>
@@ -106,15 +106,15 @@
 			<% end %>
 
 			<!-- Included Modules -->
-			<% if classinfo['includes'] %>
+			<% if classinfo[:includes] %>
 			<div id="includes-section" class="section">
 				<h3 class="section-header">Included Modules</h3>
 				<ul class="link-list">
-				<% classinfo['includes'].each do |inc| %>
-				<% if inc['aref'].nil? %>
-					<li><span class="include"><%= inc['name'] %></span></li>
+				<% classinfo[:includes].each do |inc| %>
+				<% if inc[:aref].nil? %>
+					<li><span class="include"><%= inc[:name] %></span></li>
 				<% else %>
-					<li><a class="include" href="<%= inc['aref'] %>"><%= inc['name'] %></a></li>
+					<li><a class="include" href="<%= inc[:aref] %>"><%= inc[:name] %></a></li>
 				<% end %>
 				<% end %>
 				</ul>
@@ -145,26 +145,26 @@
 	</div>
 
 	<div id="documentation">
-		<% if classinfo['classmod'] == 'Class' %>
-		<h1 class="class"><%= classinfo['full_name'] %></h1>
+		<% if classinfo[:classmod] == 'Class' %>
+		<h1 class="class"><%= classinfo[:full_name] %></h1>
 		<% else %>
-		<h1 class="module"><%= classinfo['full_name'] %></h1>
+		<h1 class="module"><%= classinfo[:full_name] %></h1>
 		<% end %>
 
 		<div id="description">
-			<%= classinfo['description'] %>
+			<%= classinfo[:description] %>
 		</div>
 
 
 		<!-- Constants -->
-		<% if classinfo['sections'].first['constants'] %>
+		<% if classinfo[:sections].first[:constants] %>
 		<div id="constants-list" class="section">
 			<h3 class="section-header">Constants</h3>
 			<dl>
-			<% classinfo['sections'].first['constants'].each do |const| %>
-				<dt><a name="<%= const['name'] %>"><%= const['name'] %></a></dt>
-				<% if const['desc'] %>
-				<dd class="description"><%= const['desc'].strip %></dd>
+			<% classinfo[:sections].first[:constants].each do |const| %>
+				<dt><a name="<%= const[:name] %>"><%= const[:name] %></a></dt>
+				<% if const[:desc] %>
+				<dd class="description"><%= const[:desc].strip %></dd>
 				<% else %>
 				<dd class="description missing-docs">(Not documented)</dd>
 				<% end %>
@@ -174,24 +174,24 @@
 		<% end %>
 
 		<!-- Attributes -->
-		<% if classinfo['sections'].first['attributes'] %>
+		<% if classinfo[:sections].first[:attributes] %>
 		<div id="attribute-method-details" class="method-section section">
 			<h3 class="section-header">Attributes</h3>
 
-			<% classinfo['sections'].first['attributes'].each do |attrib| %>
-			<div id="<%= attrib['name'].downcase.gsub(/[^a-z]+/, '-') %>-attribute-method" class="method-detail">
-				<a name="<%= attrib['name'] %>"></a>
-				<% if attrib['rw'] =~ /w/i %>
-				<a name="<%= attrib['name'] %>="></a>
+			<% classinfo[:sections].first[:attributes].each do |attrib| %>
+			<div id="<%= attrib[:name].downcase.gsub(/[^a-z]+/, '-') %>-attribute-method" class="method-detail">
+				<a name="<%= attrib[:name] %>"></a>
+				<% if attrib[:rw] =~ /w/i %>
+				<a name="<%= attrib[:name] %>="></a>
 				<% end %>
 				<div class="method-heading attribute-method-heading">
-					<span class="method-name"><%= h attrib['name'] %></span><span 
-						class="attribute-access-type">[<%= attrib['rw'] %>]</span>
+					<span class="method-name"><%= h attrib[:name] %></span><span 
+						class="attribute-access-type">[<%= attrib[:rw] %>]</span>
 				</div>
 
 				<div class="method-description">
-				<% if attrib['a_desc'] && !attrib['a_desc'].empty? %>
-				<%= attrib['a_desc'].strip %>
+				<% if attrib[:a_desc] && !attrib[:a_desc].empty? %>
+				<%= attrib[:a_desc].strip %>
 				<% else %>
 				<p class="missing-docs">(Not documented)</p>
 				<% end %>
@@ -202,59 +202,59 @@
 		<% end %>
 
 		<!-- Methods -->
-		<% if classinfo['sections'].first['method_list'] %>
-		<% classinfo['sections'].first['method_list'].each do |methodlist| %>
-		<div id="<%= methodlist['type'].downcase %>-<%= methodlist['category'].downcase %>-method-details" class="method-section section">
-			<h3 class="section-header"><%= methodlist['type'] %> <%= methodlist['category'] %> Methods</h3>
+		<% if classinfo[:sections].first[:method_list] %>
+		<% classinfo[:sections].first[:method_list].each do |methodlist| %>
+		<div id="<%= methodlist[:type].downcase %>-<%= methodlist[:category].downcase %>-method-details" class="method-section section">
+			<h3 class="section-header"><%= methodlist[:type] %> <%= methodlist[:category] %> Methods</h3>
 
-		<% methodlist['methods'].each do |methodinfo| %>
+		<% methodlist[:methods].each do |methodinfo| %>
 
 		<%
 		# If the method doesn't have a 'name' attribute, it's defined in C, so make one out of the
 		# first method name in the callseq.
-		unless methodinfo['name'] 
-			methodinfo['name'] = methodinfo['callseq'][/^.*?\.(\w+)/, 1] || methodinfo['callseq']
+		unless methodinfo[:name] 
+			methodinfo[:name] = methodinfo[:callseq][/^.*?\.(\w+)/, 1] || methodinfo[:callseq]
 		end
 		%>
-			<% if methodinfo['m_desc'] =~ /Alias for/ %>
-			<div id="<%= methodinfo['name'].gsub( /[^a-z]+/, '-' ) %>-method" class="method-detail method-alias">
+			<% if methodinfo[:m_desc] =~ /Alias for/ %>
+			<div id="<%= methodinfo[:name].gsub( /[^a-z]+/, '-' ) %>-method" class="method-detail method-alias">
 			<% else %>
-			<div id="<%= methodinfo['name'].gsub( /[^a-z]+/, '-' ) %>-method" class="method-detail">
+			<div id="<%= methodinfo[:name].gsub( /[^a-z]+/, '-' ) %>-method" class="method-detail">
 			<% end %>
-				<a name="<%= methodinfo['name'] %>"></a>
+				<a name="<%= methodinfo[:name] %>"></a>
 
 				<div class="method-heading">
-				<% if methodinfo['callseq'] %>
-					<span class="method-callseq"><%= methodinfo['callseq'].strip.gsub( /^\w.*?\./m, '') %></span>
+				<% if methodinfo[:callseq] %>
+					<span class="method-callseq"><%= methodinfo[:callseq].strip.gsub( /^\w.*?\./m, '') %></span>
 					<span class="method-click-advice">click to toggle source</span>
 				<% else %>
-					<span class="method-name"><%= methodinfo['name'] %></span><span 
-						class="method-args"><%= methodinfo['params'] %></span>
+					<span class="method-name"><%= methodinfo[:name] %></span><span 
+						class="method-args"><%= methodinfo[:params] %></span>
 					<span class="method-click-advice">click to toggle source</span>
 				<% end %>
 				</div>
 
 				<div class="method-description">
-					<% if methodinfo['m_desc'] %>
-	          		<p><%= methodinfo['m_desc'].strip %></p>
+					<% if methodinfo[:m_desc] %>
+	          		<p><%= methodinfo[:m_desc].strip %></p>
 					<% else %>
 	          		<p class="missing-docs">(Not documented)</p>
 					<% end %>
 					
-					<% if methodinfo['sourcecode'] %>
+					<% if methodinfo[:sourcecode] %>
 	          		<div class="method-source-code" 
-						id="<%= methodinfo['name'].gsub( /[^a-z]+/, '-' ) %>-source">
+						id="<%= methodinfo[:name].gsub( /[^a-z]+/, '-' ) %>-source">
 <pre>
-<%= methodinfo['sourcecode'] %>
+<%= methodinfo[:sourcecode] %>
 </pre>
 	          		</div>
 					<% end %>
 				</div>
 
-				<% if methodinfo['aka'] %>
+				<% if methodinfo[:aka] %>
 				<div class="aliases">
-					Also aliased as: <%= methodinfo['aka'].collect do |aliasinfo|
-						%{<a href="#{aliasinfo['aref']}">#{aliasinfo['name']}</a>}
+					Also aliased as: <%= methodinfo[:aka].collect do |aliasinfo|
+						%{<a href="#{aliasinfo[:aref]}">#{aliasinfo[:name]}</a>}
 					end.join(", ") %>
 				</div>
 				<% end %>
@@ -270,11 +270,11 @@
 
 
 	<div id="rdoc-debugging-section-dump">
-	<% classinfo['sections'].first.keys.each do |section| %>
+	<% classinfo[:sections].first.keys.each do |section| %>
 		<div class="section">
 		<h2 class="section-header"><%= section %></h2>
 	
-		<pre><%= h classinfo['sections'].first[section].to_yaml %></pre>
+		<pre><%= h classinfo[:sections].first[section].to_yaml %></pre>
 		</div>
 	<% end %>
 	</div>

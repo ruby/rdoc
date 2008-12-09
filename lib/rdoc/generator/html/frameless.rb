@@ -37,24 +37,24 @@ module RDoc::Generator::HTML::FRAMELESS
     <br />
     <h1 class="index-entries section-bar">Files</h1>
       <ul>
-<% values["file_list"].each do |file| %>
-        <li><a href="<%= file["href"] %>"><%= file["name"] %></a></li>
+<% values[:file_list].each do |file| %>
+        <li><a href="<%= file[:href] %>"><%= file[:name] %></a></li>
 <% end %>
       </ul>
 
     <br />
     <h1 class="index-entries section-bar">Classes</h1>
       <ul>
-<% values["class_list"].each do |klass| %>
-        <li><a href="<%= klass["href"] %>"><%= klass["name"] %></a></li>
+<% values[:class_list].each do |klass| %>
+        <li><a href="<%= klass[:href] %>"><%= klass[:name] %></a></li>
 <% end %>
       </ul>
 
     <br />
     <h1 class="index-entries section-bar">Methods</h1>
       <ul>
-<% values["method_list"].each do |method| %>
-        <li><a href="<%= method["href"] %>"><%= method["name"] %></a></li>
+<% values[:method_list].each do |method| %>
+        <li><a href="<%= method[:href] %>"><%= method[:name] %></a></li>
 <% end %>
       </ul>
   </div>

@@ -6,7 +6,7 @@ module RDoc::Generator::HTML::KILMER
   FONTS = "Verdana, Arial, Helvetica, sans-serif"
 
   CENTRAL_STYLE = <<-EOF
-body,td,p { font-family: <%= values["fonts"] %>;
+body,td,p { font-family: <%= values[:fonts] %>;
        color: #000040;
 }
 
@@ -19,14 +19,14 @@ body,td,p { font-family: <%= values["fonts"] %>;
 .big-title-font {
   color: black;
   font-weight: bold;
-  font-family: <%= values["fonts"] %>;
+  font-family: <%= values[:fonts] %>;
   font-size: large;
   height: 60px;
   padding: 10px 3px 10px 3px;
 }
 
 .small-title-font { color: black;
-                    font-family: <%= values["fonts"] %>;
+                    font-family: <%= values[:fonts] %>;
                     font-size:10; }
 
 .aqua { color: black }
@@ -36,7 +36,7 @@ body,td,p { font-family: <%= values["fonts"] %>;
 }
 
 .method-name, .attr-name {
-      font-family: font-family: <%= values["fonts"] %>;
+      font-family: font-family: <%= values[:fonts] %>;
       font-weight: bold;
       font-size: small;
       margin-left: 20px;

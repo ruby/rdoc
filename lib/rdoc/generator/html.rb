@@ -107,7 +107,8 @@ class RDoc::Generator::HTML
     template = @options.template
 
     unless template =~ %r{/|\\} then
-      template = File.join('rdoc', 'generator', @options.generator.key,
+      generator_name = @options.generator.name.sub(/^RDoc::Generator::/, '')
+      template = File.join('rdoc', 'generator', generator_name.downcase,
                            template)
     end
 
@@ -145,7 +146,7 @@ class RDoc::Generator::HTML
 
         if @template.constants.include? :FONTS or
            @template.constants.include? 'FONTS' then
-          values["fonts"] = @template::FONTS
+          values[:fonts] = @template::FONTS
         end
 
         template.write_html_on(f, values)
@@ -191,12 +192,13 @@ class RDoc::Generator::HTML
 
     # this method is defined in the template file
     values = {
-      'title_suffix' => CGI.escapeHTML("[#{@options.title}]"),
-      'charset'      => @options.charset,
-      'style_url'    => style_url('', @options.css),
+      :title_suffix => CGI.escapeHTML("[#{@options.title}]"),
+      :charset      => @options.charset,
+      :style_url    => style_url('', @options.css),
     }
 
-    @template.write_extra_pages(values) if @template.respond_to?(:write_extra_pages)
+    @template.write_extra_pages(values) if
+      @template.respond_to?(:write_extra_pages)
   end
 
   def gen_into(list)
@@ -223,7 +225,7 @@ class RDoc::Generator::HTML
     sorted_list = list.sort do |a, b|
       File.dirname(a.path) <=> File.dirname(b.path)
     end
-    
+
     sorted_list.each do |item|
       next unless item.document_self
 
@@ -264,17 +266,17 @@ class RDoc::Generator::HTML
     res = []
     collection.sort.each do |f|
       if f.document_self
-        res << { "href" => f.path, "name" => f.index_name }
+        res << { :href => f.path, :name => f.index_name }
       end
     end
 
     values = {
-      "entries"    => res,
-      'title'      => CGI.escapeHTML("#{title} [#{@options.title}]"),
-      'list_title' => CGI.escapeHTML(title),
-      'index_url'  => @main_url,
-      'charset'    => @options.charset,
-      'style_url'  => style_url('', @options.css),
+      :entries    => res,
+      :title      => CGI.escapeHTML("#{title} [#{@options.title}]"),
+      :list_title => CGI.escapeHTML(title),
+      :index_url  => @main_url,
+      :charset    => @options.charset,
+      :style_url  => style_url('', @options.css),
     }
 
     open filename, 'w' do |f|
@@ -316,18 +318,18 @@ class RDoc::Generator::HTML
 
       open 'index.html', 'w'  do |f|
         style_url = style_url '', @options.css
-        
+
         classes = @classes.sort.map { |klass| klass.value_hash }
-        
+
         values = {
-          'initial_page'  => @main_url,
-          'style_url'     => style_url('', @options.css),
-          'title'         => CGI.escapeHTML(@options.title),
-          'charset'       => @options.charset,
-          'classes'       => classes,
+          :initial_page  => @main_url,
+          :style_url     => style_url('', @options.css),
+          :title         => CGI.escapeHTML(@options.title),
+          :charset       => @options.charset,
+          :classes       => classes,
         }
-        
-        values['inline_source'] = @options.inline_source
+
+        values[:inline_source] = @options.inline_source
 
         main.write_html_on f, values
       end
@@ -337,8 +339,8 @@ class RDoc::Generator::HTML
   def index_to_links(output_path, sorted_collection)
     result = sorted_collection.map do |f|
       next unless f.document_self
-      { "href" => RDoc::Markup::ToHtml.gen_relative_url(output_path, f.path),
-        "name" => f.index_name }
+      { :href => RDoc::Markup::ToHtml.gen_relative_url(output_path, f.path),
+        :name => f.index_name }
     end
     result.compact!
     result
@@ -369,9 +371,7 @@ class RDoc::Generator::HTML
     # No main page has been specified, so just use the README.
     #
     @files.each do |file|
-      if file.name =~ /^README/ then
-        return file.path
-      end
+      return file.path if file.name =~ /^README/
     end
 
     #
@@ -379,9 +379,7 @@ class RDoc::Generator::HTML
     # that will be documented.
     #
     @files.each do |file|
-      if file.document_self then
-        return file.path
-      end
+      return file.path if file.document_self
     end
 
     #
@@ -432,19 +430,19 @@ class RDoc::Generator::HTMLInOne < RDoc::Generator::HTML
 
   def generate_xml
     values = {
-      'charset' => @options.charset,
-      'files'   => gen_into(@files),
-      'classes' => gen_into(@classes),
-      'title'   => CGI.escapeHTML(@options.title),
+      :charset => @options.charset,
+      :files   => gen_into(@files),
+      :classes => gen_into(@classes),
+      :title   => CGI.escapeHTML(@options.title),
     }
 
     template = RDoc::TemplatePage.new @template::ONE_PAGE
 
-    if @options.op_name
-      opfile = open @options.op_name, 'w'
-    else
-      opfile = $stdout
-    end
+    opfile = if @options.op_name then
+               open @options.op_name, 'w'
+             else
+               $stdout
+             end
     template.write_html_on(opfile, values)
   end
 

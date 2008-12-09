@@ -45,7 +45,7 @@ class RDoc::Generator::XML < RDoc::Generator::HTML
 
   def build_indices
     template_cache = RDoc::Cache.instance
-    
+
     @info.each do |toplevel|
       @files << RDoc::Generator::File.new(template_cache, toplevel, @options,
                                           RDoc::Generator::FILE_DIR)
@@ -70,9 +70,9 @@ class RDoc::Generator::XML < RDoc::Generator::HTML
 
   def generate_xml
     values = {
-      'charset' => @options.charset,
-      'files'   => gen_into(@files),
-      'classes' => gen_into(@classes)
+      :charset => @options.charset,
+      :files   => gen_into(@files),
+      :classes => gen_into(@classes)
     }
 
     template = RDoc::TemplatePage.new @template::ONE_PAGE
@@ -109,14 +109,14 @@ class RDoc::Generator::XML < RDoc::Generator::HTML
     res = []
     collection.sort.each do |f|
       if f.document_self
-        res << { "href" => f.path, "name" => f.index_name }
+        res << { :href => f.path, :name => f.index_name }
       end
     end
 
     return {
-      "entries" => res,
-      'list_title' => title,
-      'index_url'  => main_url,
+      :entries => res,
+      :list_title => title,
+      :index_url  => main_url,
     }
   end
 

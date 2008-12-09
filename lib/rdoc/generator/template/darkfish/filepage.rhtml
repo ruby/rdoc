@@ -6,7 +6,7 @@
 <head>
 	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 
-	<title><%= fileinfo['classmod'] %>: <%= fileinfo['full_name'] %></title>
+	<title><%= fileinfo[:classmod] %>: <%= fileinfo[:full_name] %></title>
 
 	<link type="text/css" media="screen" href="<%= rel_prefix %>/rdoc.css" rel="stylesheet" />
 
@@ -16,29 +16,29 @@
 	<div id="metadata">
 		<dl>
 			<dt class="modified-date">Last Modified</dt>
-			<dd class="modified-date"><%= fileinfo['dtm_modified'] %></dd>
+			<dd class="modified-date"><%= fileinfo[:dtm_modified] %></dd>
 			
-			<% if fileinfo['requires'] %>
+			<% if fileinfo[:requires] %>
 			<dt class="requires">Requires</dt>
 			<dd class="requires">
 				<ul>
-				<% fileinfo['requires'].each do |dependency| %>
-					<li><%= dependency['name'] %></li>
+				<% fileinfo[:requires].each do |dependency| %>
+					<li><%= dependency[:name] %></li>
 				<% end %>
 				</ul>
 			</dd>
 			<% end %>
 			
-			<% if fileinfo['cvsurl'] %>
+			<% if fileinfo[:cvsurl] %>
 			<dt class="scs-url">Trac URL</dt>
 			<dd class="scs-url"><a target="_top" 
-				href="<%= fileinfo['cvsurl'] %>"><%= fileinfo['cvsurl'] %></a></dd>
+				href="<%= fileinfo[:cvsurl] %>"><%= fileinfo[:cvsurl] %></a></dd>
 			<% end %>
 		</dl>
 
 		<div class="description">
 			<h2>Description</h2>
-			<%= fileinfo['description'] %>
+			<%= fileinfo[:description] %>
 		</div>
 	</div>
 

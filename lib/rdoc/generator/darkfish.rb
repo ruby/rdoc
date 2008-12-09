@@ -161,17 +161,17 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 
 		# Make a hash of class info keyed by class name
 		classes_by_classname = classes.inject({}) {|hash, classinfo|
-			hash[ classinfo['full_name'] ] = classinfo
-			hash[ classinfo['full_name'] ][:outfile] =
-				classinfo['full_name'].gsub( /::/, '/' ) + '.html'
+			hash[ classinfo[:full_name] ] = classinfo
+			hash[ classinfo[:full_name] ][:outfile] =
+				classinfo[:full_name].gsub( /::/, '/' ) + '.html'
 			hash
 		}
 
 		# Make a hash of file info keyed by path
 		files_by_path = files.inject({}) {|hash, fileinfo|
-			hash[ fileinfo['full_path'] ] = fileinfo
-			hash[ fileinfo['full_path'] ][:outfile] = 
-				fileinfo['full_path'] + '.html'
+			hash[ fileinfo[:full_path] ] = fileinfo
+			hash[ fileinfo[:full_path] ][:outfile] = 
+				fileinfo[:full_path] + '.html'
 			hash
 		}
 		
@@ -315,10 +315,10 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 	### Try to extract Subversion information out of the first constant whose value looks like
 	### a subversion Id tag. If no matching constant is found, and empty hash is returned.
 	def get_svninfo( classinfo )
-		return {} unless classinfo['sections']
-		constants = classinfo['sections'].first['constants'] or return {}
+		return {} unless classinfo[:sections]
+		constants = classinfo[:sections].first[:constants] or return {}
 	
-		constants.find {|c| c['value'] =~ SVNID_PATTERN } or return {}
+		constants.find {|c| c[:value] =~ SVNID_PATTERN } or return {}
 
 		filename, rev, date, time, committer = $~.captures
 		commitdate = Time.parse( date + ' ' + time )
