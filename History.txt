@@ -5,6 +5,7 @@
   * RDoc now uses Michael Granger's Darkfish generator by default.
   * Various RDoc speedups by Hongli Lai.  Patches #22555, #22556, #22557,
     #22562, #22565.
+  * Moved chm generator to it's own package.
 
 * Y Minor Enhancements
   * Added a space after the commas in ri class method lists.  RubyForge

@@ -338,7 +338,6 @@ if Gem.respond_to? :find_files then
 end
 
 # require built-in generators after discovery in case they've been replaced
-require 'rdoc/generator/chm'
 require 'rdoc/generator/darkfish'
 require 'rdoc/generator/html'
 require 'rdoc/generator/ri'
