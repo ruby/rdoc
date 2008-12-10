@@ -113,7 +113,9 @@ body.indexpage div {
 .indexpage li.class {
 	background: url(images/ruby.png) no-repeat left 4px;
 }
-
+.indexpage li.file {
+	background: url(images/page_white_text.png) no-repeat left 4px;
+}
 
 /* @end */
 
