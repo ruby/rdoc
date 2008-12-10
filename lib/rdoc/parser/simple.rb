@@ -27,6 +27,7 @@ class RDoc::Parser::Simple < RDoc::Parser
 
   def scan
     @top_level.comment = remove_private_comments(@content)
+    @top_level.parser = self.class
     @top_level
   end
 

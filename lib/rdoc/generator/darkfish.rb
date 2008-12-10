@@ -174,7 +174,7 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 				fileinfo[:full_path] + '.html'
 			hash
 		}
-		
+
 		self.write_style_sheet
 		self.generate_index( options, files_by_path, classes_by_classname )
 		self.generate_class_files( options, files_by_path, classes_by_classname )

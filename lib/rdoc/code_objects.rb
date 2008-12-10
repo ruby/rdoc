@@ -585,6 +585,7 @@ module RDoc
     attr_accessor :file_relative_name
     attr_accessor :file_absolute_name
     attr_accessor :diagram
+    attr_accessor :parser
 
     @@lock = Mutex.new
     @@all_classes = {}
@@ -602,10 +603,12 @@ module RDoc
     def initialize(file_name)
       super()
       @name = "TopLevel"
-      @file_relative_name    = file_name
-      @file_absolute_name    = file_name
-      @file_stat             = File.stat(file_name)
-      @diagram               = nil
+      @file_relative_name = file_name
+      @file_absolute_name = file_name
+      @file_stat          = File.stat(file_name)
+      @diagram            = nil
+      @parser             = nil
+
       @@lock.synchronize do
         @@all_files[file_name] = self
       end

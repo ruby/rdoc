@@ -140,7 +140,8 @@ module RDoc
 
       relative_files.each do |rel_file_name|
         next if exclude_pattern && exclude_pattern =~ rel_file_name
-        stat = File.stat(rel_file_name)
+        stat = File.stat rel_file_name rescue next
+
         case type = stat.ftype
         when "file"
           next if @last_created and stat.mtime < @last_created
@@ -207,6 +208,7 @@ module RDoc
             parser = ::RDoc::Parser.for(top_level, filename, content, options,
                                         @stats)
             result = parser.scan
+
             file_info_lock.synchronize do
               file_info << result
             end

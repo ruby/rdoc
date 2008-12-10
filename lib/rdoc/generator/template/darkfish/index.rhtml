@@ -30,6 +30,15 @@
 	<p>This is the API documentation for '<%= options.title %>'.</p>
 	<% end %>
 
+	<h2>Files</h2>
+	<ul>
+		<% files.select do |name, file| file[:parser] == RDoc::Parser::Simple end.
+				sort_by do |name,| name end.
+				each do |name, file| %>
+			<li class="file"><a href="<%= file[:short_name] %>.html"><%= h file[:short_name] %></a></li>
+		<% end %>
+	</ul>
+
 	<h2>Classes/Modules</h2>
 	<ul>
 		<% modsort.each do |classname| %>

@@ -13,7 +13,8 @@
 
 * Z Bug Fixes
   * Fix missing superclass in ri output.
-  * Fix an rdoc crash when told to parse an empty file.
+  * Fix an RDoc crash when told to parse an empty file.
+  * Ignore nonexistent files instead of crashing.
   * .txt and .rdoc files are always considered text.  Patch #22897 by Aaron
     Patterson.
   * When merging ri data with a nonexistant directory, RDoc no longer crashes.

@@ -727,6 +727,7 @@ module RDoc::Generator
 
       @values[:charset]   = @options.charset
       @values[:href]      = path
+      @values[:parser]    = @context.parser
       @values[:style_url] = style_url(path, @options.css)
 
       if @context.comment
@@ -743,14 +744,9 @@ module RDoc::Generator
       rl = build_requires_list(@context)
       @values[:requires] = rl unless rl.empty?
 
-      if @options.promiscuous
-        file_context = nil
-      else
-        file_context = @context
-      end
+      file_context = @context unless @options.promiscuous
 
       @values[:sections] = @context.sections.map do |section|
-
         secdata = {
           :sectitle => section.title,
           :secsequence => section.sequence,

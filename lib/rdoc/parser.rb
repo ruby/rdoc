@@ -111,12 +111,8 @@ class RDoc::Parser
 
     parser = can_parse file_name
 
-    #
     # This method must return a parser.
-    #
-    if !parser then
-      parser = RDoc::Parser::Simple
-    end
+    parser ||= RDoc::Parser::Simple
 
     parser.new top_level, file_name, body, options, stats
   end

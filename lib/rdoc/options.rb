@@ -632,7 +632,7 @@ Usage: #{opt.program_name} [options] [names...]
 
   def check_files
     @files.each do |f|
-      stat = File.stat f
+      stat = File.stat f rescue next
       raise RDoc::Error, "file '#{f}' not readable" unless stat.readable?
     end
   end
