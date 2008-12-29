@@ -1,13 +1,14 @@
-# We handle the parsing of options, and subsequently as a singleton
-# object to be queried for option values
-
-require "rdoc/ri/paths"
 require 'optparse'
+
+require 'rdoc/ri/paths'
+
+##
+# RDoc::Options handles the parsing and storage of options
 
 class RDoc::Options
 
   ##
-  # Should the output be placed into a single file
+  # Should the output be placed into a single file?
 
   attr_reader :all_one_file
 
@@ -22,7 +23,7 @@ class RDoc::Options
   attr_reader :css
 
   ##
-  # Should diagrams be drawn
+  # Should diagrams be drawn?
 
   attr_accessor :diagram
 
@@ -42,7 +43,7 @@ class RDoc::Options
   attr_accessor :extra_accessors
 
   ##
-  # Should we draw fileboxes in diagrams
+  # Should we draw fileboxes in diagrams?
 
   attr_reader :fileboxes
 
@@ -65,14 +66,14 @@ class RDoc::Options
   # Formatter to mark up text with
 
   attr_accessor :formatter
-  
+
   ##
-  # image format for diagrams
+  # Image format for diagrams
 
   attr_reader :image_format
 
   ##
-  # Include line numbers in the source listings
+  # Include line numbers in the source listings?
 
   attr_reader :include_line_numbers
 
@@ -103,7 +104,7 @@ class RDoc::Options
   attr_accessor :op_name
 
   ##
-  # Are we promiscuous about showing module contents across multiple files
+  # Are we promiscuous about showing module contents across multiple files?
 
   attr_reader :promiscuous
 
@@ -113,7 +114,7 @@ class RDoc::Options
   attr_reader :rdoc_include
 
   ##
-  # Include private and protected methods in the output
+  # Include private and protected methods in the output?
 
   attr_accessor :show_all
 
@@ -128,7 +129,7 @@ class RDoc::Options
   attr_reader :tab_width
 
   ##
-  # template to be used when generating output
+  # Template to be used when generating output
 
   attr_reader :template
 
@@ -155,6 +156,7 @@ class RDoc::Options
   attr_reader :webcvs
 
   def initialize # :nodoc:
+    require 'rdoc/rdoc'
     @op_dir = "doc"
     @op_name = nil
     @show_all = false
