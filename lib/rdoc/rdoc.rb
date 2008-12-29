@@ -341,6 +341,5 @@ end
 require 'rdoc/generator/darkfish'
 require 'rdoc/generator/html'
 require 'rdoc/generator/ri'
-require 'rdoc/generator/texinfo'
 require 'rdoc/generator/xml'
 
