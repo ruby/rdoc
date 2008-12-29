@@ -196,7 +196,7 @@ module RDoc
       Thread.abort_on_exception = true
       @stats = Stats.new(file_list.size, options.verbosity)
       @stats.begin_adding(number_of_threads)
-      
+
       # Create worker threads.
       number_of_threads.times do
         thread = Thread.new do
@@ -224,14 +224,14 @@ module RDoc
       workers.size.times do
         jobs << nil
       end
-      
+
       # ...and wait until they're done.
       workers.each do |thread|
         thread.join
       end
-      
+
       @stats.done_adding
-      
+
       file_info
     end
 
@@ -293,7 +293,7 @@ module RDoc
         @stats.print
       end
     end
-    
+
     private
 
     def number_of_threads
@@ -304,7 +304,7 @@ module RDoc
           2
         end
     end
-      
+
     def read_file_contents(filename)
       content = if RUBY_VERSION >= '1.9' then
                   File.open(filename, "r:ascii-8bit") { |f| f.read }
