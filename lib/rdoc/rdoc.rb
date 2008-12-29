@@ -288,7 +288,7 @@ module RDoc
         end
       end
 
-      unless @options.quiet
+      unless @options.quiet or not @stats then
         puts
         @stats.print
       end
