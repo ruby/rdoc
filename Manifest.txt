@@ -46,12 +46,6 @@ lib/rdoc/generator/template/darkfish/js/jquery.js
 lib/rdoc/generator/template/darkfish/js/quicksearch.js
 lib/rdoc/generator/template/darkfish/js/thickbox-compressed.js
 lib/rdoc/generator/template/darkfish/rdoc.css
-lib/rdoc/generator/texinfo.rb
-lib/rdoc/generator/texinfo/.document
-lib/rdoc/generator/texinfo/class.texinfo.erb
-lib/rdoc/generator/texinfo/file.texinfo.erb
-lib/rdoc/generator/texinfo/method.texinfo.erb
-lib/rdoc/generator/texinfo/texinfo.erb
 lib/rdoc/generator/xml.rb
 lib/rdoc/generator/xml/rdf.rb
 lib/rdoc/generator/xml/xml.rb
@@ -95,8 +89,6 @@ test/rdoc_markup_to_html_crossref_reference.rb
 test/test.ja.rdoc
 test/test.ja.txt
 test/test_attribute_manager.rb
-test/test_rdoc_info_formatting.rb
-test/test_rdoc_info_sections.rb
 test/test_rdoc_markup.rb
 test/test_rdoc_markup_attribute_manager.rb
 test/test_rdoc_markup_to_html.rb
