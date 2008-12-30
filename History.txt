@@ -7,6 +7,7 @@
     #22562, #22565.
   * Moved unmaintained CHM generator to it's own package.
   * Moved unmaintained extra HTML templates to their own package.
+  * Removed experimental texinfo generator.
 
 * Y Minor Enhancements
   * Added a space after the commas in ri class method lists.  RubyForge
