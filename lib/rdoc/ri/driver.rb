@@ -27,13 +27,13 @@ class RDoc::RI::Driver
         new_hash = new # Convert Hash -> OpenStructHash
 
         object.each do |key, value|
-          new_hash[key] = convert(value)
+          new_hash[key] = convert value
         end
 
         new_hash
       when Array then
         object.map do |element|
-          convert(element)
+          convert element
         end
       else
         object
@@ -511,12 +511,11 @@ Options may also be set in the 'RI' environment variable.
   # Finds the next ancestor of +orig_klass+ after +klass+.
 
   def lookup_ancestor(klass, orig_klass)
-    # This is a bit hacky, but ri will go into an infinite
-    # loop otherwise, since Object has an Object ancestor
-    # for some reason.  Depending on the documentation state, I've seen
-    # Kernel as an ancestor of Object and not as an ancestor of Object.
-    if ((orig_klass == "Object") &&
-        ((klass == "Kernel") || (klass == "Object")))
+    # This is a bit hacky, but ri will go into an infinite loop otherwise,
+    # since Object has an Object ancestor for some reason.  Depending on the
+    # documentation state, I've seen Kernel as an ancestor of Object and not
+    # as an ancestor of Object.
+    if orig_klass == "Object" && (klass == "Kernel" || klass == "Object") then
       return nil
     end
 
@@ -528,7 +527,7 @@ Options may also be set in the 'RI' environment variable.
     ancestors.push(*cache.includes.map { |inc| inc['name'] })
     ancestors << cache.superclass
 
-    ancestor_index = ancestors.index(klass)
+    ancestor_index = ancestors.index klass
 
     if ancestor_index
       ancestor = ancestors[ancestors.index(klass) + 1]
@@ -578,22 +577,23 @@ Options may also be set in the 'RI' environment variable.
     data = data.gsub(/ \!ruby\/(object|struct):(RDoc::RI|RI).*/, '')
     data = data.gsub(/ \!ruby\/(object|struct):SM::(\S+)/,
                      ' !ruby/\1:RDoc::Markup::\2')
-    OpenStructHash.convert(YAML.load(data))
+
+    OpenStructHash.convert YAML.load(data)
   end
 
   def run
-    if(@list_doc_dirs)
-      puts @doc_dirs.join("\n")
+    if @list_doc_dirs then
+      puts @doc_dirs
     elsif @names.empty? then
       @display.list_known_classes class_cache.keys.sort
     else
       @names.each do |name|
         if class_cache.key? name then
           method_map = display_class name
-          if(@interactive)
+          if @interactive then
             method_name = @display.get_class_method_choice(method_map)
 
-            if(method_name != nil)
+            if method_name then
               method = lookup_method "#{name}#{method_name}", name
               display_method method
             end
@@ -628,7 +628,7 @@ Options may also be set in the 'RI' environment variable.
           elsif methods.size == 1
             display_method methods[0]
           else
-            if(@interactive)
+            if @interactive then
               @display.display_method_list_choice methods
             else
               @display.display_method_list methods
@@ -657,7 +657,7 @@ Options may also be set in the 'RI' environment variable.
   end
 
   def write_cache(cache, path)
-    if(@use_cache)
+    if @use_cache then
       File.open path, "wb" do |cache_file|
         Marshal.dump cache, cache_file
       end

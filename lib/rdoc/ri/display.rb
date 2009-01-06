@@ -126,7 +126,7 @@ class RDoc::RI::DefaultDisplay
   # the methods.
 
   def get_class_method_choice(method_map)
-    if CAN_USE_READLINE
+    if CAN_USE_READLINE then
       # prepare abbreviations for tab completion
       abbreviations = method_map.keys.abbrev
       Readline.completion_proc = proc do |string|
