@@ -11,16 +11,16 @@ require 'rdoc/markup/to_flow'
 
 class RDoc::RI::Driver
 
-  #
-  # This class offers both Hash and OpenStruct functionality.
-  # We convert from the Core Hash to this before calling any of
-  # the display methods, in order to give the display methods
-  # a cleaner API for accessing the data.
-  #
+  ##
+  # This class offers both Hash and OpenStruct functionality.  We convert from
+  # the Core Hash to this before calling any of the display methods, in order
+  # to give the display methods a cleaner API for accessing the data.
+
   class OpenStructHash < Hash
-    #
+
+    ##
     # This method converts from a Hash to an OpenStructHash.
-    #
+
     def self.convert(object)
       case object
       when Hash then
@@ -527,7 +527,7 @@ Options may also be set in the 'RI' environment variable.
     ancestors = [orig_klass]
     ancestors.push(*cache.includes.map { |inc| inc['name'] })
     ancestors << cache.superclass
-    
+
     ancestor_index = ancestors.index(klass)
 
     if ancestor_index
