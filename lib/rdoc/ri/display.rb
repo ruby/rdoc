@@ -1,15 +1,5 @@
 require 'rdoc/ri'
 
-# readline support might not be present, so be careful
-# when requiring it.
-begin
-  require('readline')
-  require('abbrev')
-  CAN_USE_READLINE = true # HACK use an RDoc namespace constant
-rescue LoadError
-  CAN_USE_READLINE = false
-end
-
 ##
 # This is a kind of 'flag' module. If you want to write your own 'ri' display
 # module (perhaps because you're writing an IDE), you write a class which
@@ -41,6 +31,8 @@ end
 class RDoc::RI::DefaultDisplay
 
   include RDoc::RI::Display
+
+  attr_reader :formatter
 
   def initialize(formatter, width, use_stdout, output = $stdout)
     @use_stdout = use_stdout
@@ -126,51 +118,6 @@ class RDoc::RI::DefaultDisplay
   # the methods.
 
   def get_class_method_choice(method_map)
-    if CAN_USE_READLINE then
-      # prepare abbreviations for tab completion
-      abbreviations = method_map.keys.abbrev
-      Readline.completion_proc = proc do |string|
-        abbreviations.values.uniq.grep(/^#{string}/)
-      end
-    end
-
-    @formatter.raw_print_line "\nEnter the method name you want.\n"
-    @formatter.raw_print_line "Class methods can be preceeded by '::' and instance methods by '#'.\n"
-
-    if CAN_USE_READLINE
-      @formatter.raw_print_line "You can use tab to autocomplete.\n"
-      @formatter.raw_print_line "Enter a blank line to exit.\n"
-
-      choice_string = Readline.readline(">> ").strip
-    else
-      @formatter.raw_print_line "Enter a blank line to exit.\n"
-      @formatter.raw_print_line ">> "
-      choice_string = $stdin.gets.strip
-    end
-
-    if choice_string == ''
-      return nil
-    else
-      class_or_instance = method_map[choice_string]
-
-      if class_or_instance
-        # If the user's choice is not preceeded by a '::' or a '#', figure
-        # out whether they want a class or an instance method and decorate
-        # the choice appropriately.
-        if(choice_string =~ /^[a-zA-Z]/)
-          if(class_or_instance == :class)
-            choice_string = "::#{choice_string}"
-          else
-            choice_string = "##{choice_string}"
-          end
-        end
-
-        return choice_string
-      else
-        @formatter.raw_print_line "No method matched '#{choice_string}'.\n"
-        return nil
-      end
-    end
   end
 
   ##
@@ -326,7 +273,7 @@ class RDoc::RI::DefaultDisplay
   # List the classes in +classes+.
 
   def list_known_classes(classes)
-    if classes.empty?
+    if classes.empty? then
       warn_no_database
     else
       page do

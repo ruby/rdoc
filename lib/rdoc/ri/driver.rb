@@ -1,5 +1,11 @@
+require 'abbrev'
 require 'optparse'
 require 'yaml'
+
+begin
+  require 'readline'
+rescue LoadError
+end
 
 require 'rdoc/ri'
 require 'rdoc/ri/paths'
@@ -77,6 +83,9 @@ class RDoc::RI::Driver
 
   attr_accessor :homepath # :nodoc:
 
+  ##
+  # Default options for ri
+
   def self.default_options
     options = {}
     options[:use_stdout] = !$stdout.tty?
@@ -94,6 +103,9 @@ class RDoc::RI::Driver
 
     return options
   end
+
+  ##
+  # Parses +argv+ and returns a Hash of options
 
   def self.process_args(argv)
     options = default_options
@@ -294,6 +306,9 @@ Options may also be set in the 'RI' environment variable.
     exit 1
   end
 
+  ##
+  # Runs the ri command line executable using +argv+
+
   def self.run(argv = ARGV)
     options = process_args argv
     ri = new options
@@ -328,6 +343,9 @@ Options may also be set in the 'RI' environment variable.
                                             options[:width],
                                             options[:use_stdout])
   end
+
+  ##
+  # Cache of classes ri knows about
 
   def class_cache
     return @class_cache if @class_cache
@@ -374,6 +392,9 @@ Options may also be set in the 'RI' environment variable.
     @class_cache
   end
 
+  ##
+  # Creates the class cache if it is empty
+
   def create_class_cache
     class_cache = OpenStructHash.new
 
@@ -394,6 +415,10 @@ Options may also be set in the 'RI' environment variable.
 
     class_cache
   end
+
+  ##
+  # Populates +class_cache+ with +classes+, adding +extension+ data for found
+  # methods when asked
 
   def populate_class_cache(class_cache, classes, extension = false)
     classes.each do |cdesc|
@@ -420,31 +445,183 @@ Options may also be set in the 'RI' environment variable.
     end
   end
 
+  ##
+  # Path to the class_cache
+
   def class_cache_file_path
     File.join cache_file_path, @class_cache_name
   end
+
+  ##
+  # Path to the cache file for +klassname+
 
   def cache_file_for(klassname)
     File.join cache_file_path, klassname.gsub(/:+/, "-")
   end
 
+  ##
+  # Directory where cache files live
+
   def cache_file_path
     File.join @homepath, 'cache'
   end
+
+  ##
+  # Displays the module, class or method +name+.  For methods, locates the
+  # method in the ancestors list if it isn't in the named module.
+
+  def display_name(name)
+    if class_cache.key? name then
+      method_map = display_class name
+    elsif name =~ /::|\#|\./ then
+      method = nil
+      klass, = parse_name name
+
+      klass = expand_klass klass unless class_cache.key? klass
+
+      orig_klass = klass
+      orig_name = name
+
+      loop do
+        method = lookup_method name, klass
+
+        break if method
+
+        ancestor = lookup_ancestor klass, orig_klass
+
+        break unless ancestor
+
+        name = name.sub klass, ancestor
+        klass = ancestor
+      end
+
+      raise NotFoundError, orig_name unless method
+
+      display_method method
+    else
+      methods = select_methods(/#{name}/)
+
+      if methods.size == 0
+        raise NotFoundError, name
+      elsif methods.size == 1
+        display_method methods[0]
+      else
+        @display.display_method_list methods
+      end
+    end
+  end
+
+  ##
+  # Displays info for class or module +name+
 
   def display_class(name)
     klass = class_cache[name]
     @display.display_class_info klass
   end
 
+  ##
+  # Displays info for method +method+
+
   def display_method(method)
     @display.display_method_info method
   end
 
-  def get_info_for(arg)
-    @names = [arg]
-    run
+  ##
+  # Runs ri interactively using Readline if it is available.
+
+  def interactive
+    formatter = @display.formatter
+
+    if defined? Readline then
+      # prepare abbreviations for tab completion
+      klasses = class_cache.keys
+
+      Readline.completion_proc = proc do |name|
+        case name
+        when /(#|\.|::)([^A-Z]|$)/ then
+          methods = []
+          method_type = $1 == '.' ? '#|::' : $1
+
+          klass, method = if $2.empty? then
+                            [$`, '']
+                          else
+                            parse_name name
+                          end
+
+          cache = load_cache_for klass
+
+          methods += cache.keys.select do |name|
+            name =~ /^#{klass}#{method_type}#{method}/
+          end
+
+          # TODO ancestor lookup
+
+          if method_type == '::' and method.empty? then
+            methods += klasses.grep(/^#{klass}::/)
+          end
+
+          methods
+        when /^[A-Z]\w*/ then
+          klasses.grep(/^#{name}/)
+        else
+          []
+        end
+      end
+    end
+
+    formatter.raw_print_line "\nEnter the method name you want to look up.\n"
+
+    if defined? Readline then
+      formatter.raw_print_line "You can use tab to autocomplete.\n"
+    end
+
+    formatter.raw_print_line "Enter a blank line to exit.\n\n"
+
+    loop do
+      name = if defined? Readline then
+               Readline.readline ">> "
+             else
+               formatter.raw_print_line ">> "
+               $stdin.gets
+             end
+
+      return if name.nil? or name.empty?
+
+      name = name.strip
+
+      begin
+        display_name name
+      rescue NotFoundError => e
+        formatter.raw_print_line "#{e.message}\n"
+      end
+    end
   end
+
+  ##
+  # Expands abbreviated klass +klass+ into a fully-qualified klass.  "Zl::Da"
+  # will be expanded to Zlib::DataError.
+
+  def expand_klass(klass)
+    klass.split('::').inject '' do |expanded, klass_part|
+      expanded << '::' unless expanded.empty?
+      expanded << klass_part
+
+      subset = class_cache.keys.select do |klass|
+        klass =~ /^#{expanded}[^:]*$/
+      end
+
+      abbrevs = Abbrev.abbrev subset
+
+      expanded = abbrevs[expanded].dup
+
+      raise NotFoundError, expanded unless expanded
+
+      expanded
+    end
+  end
+
+  ##
+  # Loads the cache for +klassname+
 
   def load_cache_for(klassname)
     path = cache_file_for klassname
@@ -471,6 +648,9 @@ Options may also be set in the 'RI' environment variable.
 
     cache
   end
+
+  ##
+  # Writes a cache file for +klassname+ to +path+
 
   def create_cache_for(klassname, path)
     klass = class_cache[klassname]
@@ -569,6 +749,10 @@ Options may also be set in the 'RI' environment variable.
     [klass, meth]
   end
 
+  ##
+  # Reads ri YAML data from +path+, converting RDoc 1.x classes to RDoc 2.x
+  # classes
+
   def read_yaml(path)
     data = File.read path
 
@@ -581,65 +765,27 @@ Options may also be set in the 'RI' environment variable.
     OpenStructHash.convert YAML.load(data)
   end
 
+  ##
+  # Looks up and displays ri data according to the options given.
+
   def run
     if @list_doc_dirs then
       puts @doc_dirs
+    elsif @interactive then
+      interactive
     elsif @names.empty? then
       @display.list_known_classes class_cache.keys.sort
     else
       @names.each do |name|
-        if class_cache.key? name then
-          method_map = display_class name
-          if @interactive then
-            method_name = @display.get_class_method_choice(method_map)
-
-            if method_name then
-              method = lookup_method "#{name}#{method_name}", name
-              display_method method
-            end
-          end
-        elsif name =~ /::|\#|\./ then
-          klass, = parse_name name
-
-          orig_klass = klass
-          orig_name = name
-
-          loop do
-            method = lookup_method name, klass
-
-            break method if method
-
-            ancestor = lookup_ancestor klass, orig_klass
-
-            break unless ancestor
-
-            name = name.sub klass, ancestor
-            klass = ancestor
-          end
-
-          raise NotFoundError, orig_name unless method
-
-          display_method method
-        else
-          methods = select_methods(/#{name}/)
-
-          if methods.size == 0
-            raise NotFoundError, name
-          elsif methods.size == 1
-            display_method methods[0]
-          else
-            if @interactive then
-              @display.display_method_list_choice methods
-            else
-              @display.display_method_list methods
-            end
-          end
-        end
+        display_name name
       end
     end
   rescue NotFoundError => e
     abort e.message
   end
+
+  ##
+  # Selects methods matching +pattern+ from all modules
 
   def select_methods(pattern)
     methods = []
@@ -656,6 +802,9 @@ Options may also be set in the 'RI' environment variable.
     methods
   end
 
+  ##
+  # Writes +cache+ to +path+
+
   def write_cache(cache, path)
     if @use_cache then
       File.open path, "wb" do |cache_file|
@@ -664,6 +813,9 @@ Options may also be set in the 'RI' environment variable.
     end
 
     cache
+  rescue Errno::EISDIR # HACK toplevel, replace with main
+    cache
   end
 
 end
+
