@@ -133,14 +133,26 @@ module RDoc::Generator
       classes = []
       template_cache ||= RDoc::Cache.instance
 
+      file_dir = if defined? options.generator::FILE_DIR then
+                   options.generator::FILE_DIR
+                 else
+                   RDoc::Generator::FILE_DIR
+                 end
+
       toplevels.each do |toplevel|
         files << RDoc::Generator::File.new(template_cache, toplevel, options,
-                                           RDoc::Generator::FILE_DIR)
+                                           file_dir)
       end
+
+      class_dir = if defined? options.generator::CLASS_DIR then
+                   options.generator::CLASS_DIR
+                 else
+                   RDoc::Generator::CLASS_DIR
+                 end
 
       RDoc::TopLevel.all_classes_and_modules.each do |cls|
         build_class_list(template_cache, classes, options, cls, files[0], 
-                         RDoc::Generator::CLASS_DIR)
+                         class_dir)
       end
 
       return files, classes
@@ -517,7 +529,9 @@ module RDoc::Generator
 
       path.gsub!(/<<\s*(\w*)/, 'from-\1') if path['<<']
 
-      ::File.join(prefix, path.split("::")) + ".html"
+      path = [prefix] + path.split('::')
+
+      ::File.join(*path.compact) + ".html"
     end
 
     def name
@@ -670,6 +684,32 @@ module RDoc::Generator
       self.name <=> other.name
     end
 
+    def inspect
+      "#<#{self.class} name: #{name} path: #{@path}>"
+    end
+
+    def pretty_print(q)
+      q.group 1, "#<#{self.class} ", '>' do
+        q.text 'name: '
+        q.pp name
+        q.text ','
+        q.breakable
+
+        q.text 'path: '
+        q.pp @path
+        q.text ','
+        q.breakable
+
+        q.text 'values: '
+        q.pp @values
+        q.text ','
+        q.breakable
+
+        q.text 'methods: '
+        q.pp @methods
+      end
+    end
+
   end
 
   ##
@@ -704,7 +744,9 @@ module RDoc::Generator
     end
 
     def http_url(file_dir)
-      ::File.join file_dir, "#{@context.file_relative_name.tr '.', '_'}.html"
+      path = [file_dir, "#{@context.file_relative_name.tr '.', '_'}.html"]
+
+      ::File.join path.compact
     end
 
     def filename_to_label
@@ -809,6 +851,27 @@ module RDoc::Generator
 
     def <=>(other)
       self.name <=> other.name
+    end
+
+    def inspect
+      "#<#{self.class} name: #{@name} path: #{@path}>"
+    end
+
+    def pretty_print(q)
+      q.group 1, "#<#{self.class} ", '>' do
+        q.text 'name: '
+        q.pp @name
+        q.text ','
+        q.breakable
+
+        q.text 'path: '
+        q.pp @path
+        q.text ','
+        q.breakable
+
+        q.text 'values: '
+        q.pp @values
+      end
     end
 
   end

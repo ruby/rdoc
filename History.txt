@@ -12,6 +12,7 @@
 * Y Minor Enhancements
   * Added a space after the commas in ri class method lists.  RubyForge
     enhancement #22182.
+  * Generators can now override generated file locations.
   * Converted to minitest.
 
 * Z Bug Fixes
@@ -22,6 +23,7 @@
     Patterson.
   * When merging ri data with a nonexistant directory, RDoc no longer crashes.
   * Fix visibility of methods in XML output.  Issue by Yehuda Katz.
+  * Fixed relative link generation.
 
 === 2.2.1 / 2008-09-24
 This version provides some minor fixes and enhancements to 2.2.0 intended

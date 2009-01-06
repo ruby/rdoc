@@ -10,6 +10,19 @@ class TestRDocMarkupToHtml < MiniTest::Unit::TestCase
     @th = RDoc::Markup::ToHtml.new
   end
 
+  def test_class_gen_relative_url
+    def gen(from, to)
+      RDoc::Markup::ToHtml.gen_relative_url from, to
+    end
+
+    assert_equal 'a.html',    gen('a.html',   'a.html')
+    assert_equal 'b.html',    gen('a.html',   'b.html')
+
+    assert_equal 'd.html',    gen('a/c.html', 'a/d.html')
+    assert_equal '../a.html', gen('a/c.html', 'a.html')
+    assert_equal 'a/c.html',  gen('a.html',   'a/c.html')
+  end
+
   def test_tt_formatting
     assert_equal "<p>\n<tt>--</tt> &#8212; <tt>cats'</tt> cats&#8217;\n</p>\n",
                  util_format("<tt>--</tt> -- <tt>cats'</tt> cats'")

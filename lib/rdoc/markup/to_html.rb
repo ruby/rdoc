@@ -44,6 +44,9 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     from = from.split "/"
     to   = to.split "/"
 
+    from.delete '.'
+    to.delete '.'
+
     while from.size > 0 and to.size > 0 and from[0] == to[0] do
       from.shift
       to.shift
