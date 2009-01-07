@@ -7,38 +7,30 @@ require 'rdoc/markup/to_html'
 
 class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
-  attr_accessor :context
-
+  ##
   # Regular expressions to match class and method references.
   #
-  # 1.) There can be a '\' in front of text to suppress
-  #     any cross-references (note, however, that the single '\'
-  #     is written as '\\\\' in order to escape it twice, once
-  #     in the Ruby String literal and once in the regexp).
-  # 2.) There can be a '::' in front of class names to reference
-  #     from the top-level namespace.
-  # 3.) The method can be followed by parenthesis,
-  #     which may or may not have things inside (this
-  #     apparently is allowed for Fortran 95, but I also think that this
-  #     is a good idea for Ruby, as it is very reasonable to want to
-  #     reference a call with arguments).
+  # 1) There can be a '\' in front of text to suppress any cross-references
+  # 2) There can be a '::' in front of class names to reference from the
+  #    top-level namespace.
+  # 3) The method can be followed by parenthesis which may
   #
   # NOTE: In order to support Fortran 95 properly, the [A-Z] below
   # should be changed to [A-Za-z].  This slows down rdoc significantly,
   # however, and the Fortran 95 support is broken in any case due to
   # the return in handle_special_CROSSREF if the token consists
   # entirely of lowercase letters.
-  #
-  # The markup/cross-referencing engine needs a rewrite for
-  # Fortran 95 to be supported properly.
+
   CLASS_REGEXP_STR = '\\\\?((?:\:{2})?[A-Z]\w*(?:\:\:\w+)*)'
   METHOD_REGEXP_STR = '(\w+[!?=]?)(?:\([\.\w+\*\/\+\-\=\<\>]*\))?'
 
+  ##
   # Regular expressions matching text that should potentially have
-  # cross-reference links generated are passed to add_special.
-  # Note that these expressions are meant to pick up text for which
-  # cross-references have been suppressed, since the suppression
-  # characters are removed by the code that is triggered.
+  # cross-reference links generated are passed to add_special.  Note that
+  # these expressions are meant to pick up text for which cross-references
+  # have been suppressed, since the suppression characters are removed by the
+  # code that is triggered.
+
   CROSSREF_REGEXP = /(
                       # A::B::C.meth
                       #{CLASS_REGEXP_STR}[\.\#]#{METHOD_REGEXP_STR}
@@ -72,8 +64,14 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
                       )/x
 
   ##
-  # We need to record the html path of our caller so we can generate
-  # correct relative paths for any hyperlinks that we find
+  # RDoc::Generator::Context for generating references
+
+  attr_accessor :context
+
+  ##
+  # Creates a new crossref resolver that generates links relative to +context+
+  # which lives at +from_path+ in the generated files.  '#' characters on
+  # references are removed unless +show_hash+ is true.
 
   def initialize(from_path, context, show_hash)
     raise ArgumentError, 'from_path cannot be nil' if from_path.nil?
@@ -89,19 +87,18 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   end
 
   ##
-  # We're invoked when any text matches the CROSSREF pattern
-  # (defined in MarkUp). If we fine the corresponding reference,
-  # generate a hyperlink. If the name we're looking for contains
-  # no punctuation, we look for it up the module/class chain. For
-  # example, HyperlinkHtml is found, even without the Generator::
-  # prefix, because we look for it in module Generator first.
+  # We're invoked when any text matches the CROSSREF pattern (defined in
+  # MarkUp).  If we find the corresponding reference, generate a hyperlink.
+  # If the name we're looking for contains no punctuation, we look for it up
+  # the module/class chain.  For example, HyperlinkHtml is found, even without
+  # the Generator:: prefix, because we look for it in module Generator first.
 
   def handle_special_CROSSREF(special)
     name = special.text
 
     # This ensures that words entirely consisting of lowercase letters will
-    # not have cross-references generated (to suppress lots of
-    # erroneous cross-references to "new" in text, for instance)
+    # not have cross-references generated (to suppress lots of erroneous
+    # cross-references to "new" in text, for instance)
     return name if name =~ /\A[a-z]*\z/
 
     return @seen[name] if @seen.include? name

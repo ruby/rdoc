@@ -605,7 +605,7 @@ module RDoc
       @name = "TopLevel"
       @file_relative_name = file_name
       @file_absolute_name = file_name
-      @file_stat          = File.stat(file_name)
+      @file_stat          = File.stat(file_name) rescue nil # HACK for testing
       @diagram            = nil
       @parser             = nil
 
