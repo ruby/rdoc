@@ -82,7 +82,6 @@ lib/rdoc/stats.rb
 lib/rdoc/template.rb
 lib/rdoc/tokenstream.rb
 test/binary.dat
-test/rdoc_markup_to_html_crossref_reference.rb
 test/test.ja.rdoc
 test/test.ja.txt
 test/test_attribute_manager.rb
