@@ -2045,8 +2045,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
         name = name_t.text[1..-1]
       when TkSTRING then
         name = name_t.text[1..-2]
+      when TkASSIGN then # ignore
+        remove_token_listener self
+        return
       else
-        warn "#{container.top_level.file_relative_name}:#{name_t.line_no} unknown name token #{name_t.inspect} for meta-method"
+        warn "#{container.toplevel.file_relative_name}:#{name_t.line_no} unknown name token #{name_t.inspect} for meta-method '#{tk.name}'"
         name = 'unknown'
       end
     end

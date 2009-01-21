@@ -25,6 +25,8 @@
   * When merging ri data with a nonexistant directory, RDoc no longer crashes.
   * Fix visibility of methods in XML output.  Issue by Yehuda Katz.
   * Fixed relative link generation.
+  * Fix crash, RDoc now ignores comments above local variable assignments in
+    modules.
 
 === 2.2.1 / 2008-09-24
 This version provides some minor fixes and enhancements to 2.2.0 intended
