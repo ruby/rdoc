@@ -13,25 +13,42 @@ module RDoc
 
   class CodeObject
 
-    attr_accessor :parent
+    ##
+    # Our comment
 
-    # We are the model of the code, but we know that at some point
-    # we will be worked on by viewers. By implementing the Viewable
-    # protocol, viewers can associated themselves with these objects.
+    attr_reader :comment
 
-    attr_accessor :viewer
+    ##
+    # Do we document our children?
 
-    # are we done documenting (ie, did we come across a :enddoc:)?
+    attr_reader :document_children
+
+    ##
+    # Do we document ourselves?
+
+    attr_reader :document_self
+
+    ##
+    # Are we done documenting (ie, did we come across a :enddoc:)?
 
     attr_accessor :done_documenting
 
+    ##
+    # Our parent CodeObject
+
+    attr_accessor :parent
+
+    ##
     # Which section are we in
 
     attr_accessor :section
 
-    # do we document ourselves?
+    ##
+    # We are the model of the code, but we know that at some point we will be
+    # worked on by viewers. By implementing the Viewable protocol, viewers can
+    # associated themselves with these objects.
 
-    attr_reader :document_self
+    attr_accessor :viewer
 
     def initialize
       @document_self = true
@@ -40,68 +57,86 @@ module RDoc
       @done_documenting = false
     end
 
-    def document_self=(val)
-      @document_self = val
-      if !val
-	remove_methods_etc
-      end
+    ##
+    # Enables or disables documentation of this CodeObject.  Calls
+    # remove_methods_etc when disabling.
+
+    def document_self=(document_self)
+      @document_self = document_self
+      remove_methods_etc unless document_self
     end
 
-    # set and cleared by :startdoc: and :enddoc:, this is used to toggle
-    # the capturing of documentation
+    ##
+    # Enable capture of documentation
+
     def start_doc
       @document_self = true
       @document_children = true
     end
+
+    ##
+    # Disable capture of documentation
 
     def stop_doc
       @document_self = false
       @document_children = false
     end
 
-    # do we document ourselves and our children
+    ##
+    # Enables or disables documentation of this CodeObject's children.  Calls
+    # remove_classes_and_modules when disabling.
 
-    attr_reader :document_children
-
-    def document_children=(val)
-      @document_children = val
-      if !val
-	remove_classes_and_modules
-      end
+    def document_children=(document_children)
+      @document_children = document_children
+      remove_classes_and_modules unless document_children
     end
 
-    # Do we _force_ documentation, even is we wouldn't normally show the entity
+    ##
+    # Force documentation of this CodeObject
+
     attr_accessor :force_documentation
+
+    ##
+    # File name of our parent
 
     def parent_file_name
       @parent ? @parent.file_base_name : '(unknown)'
     end
 
+    ##
+    # Name of our parent
+
     def parent_name
       @parent ? @parent.name : '(unknown)'
     end
 
-    # Default callbacks to nothing, but this is overridden for classes
-    # and modules
+    ##
+    # Callback called upon disabling documentation of children.  See
+    # #document_children=
+
     def remove_classes_and_modules
     end
+
+    ##
+    # Callback called upon disabling documentation of ourself.  See
+    # #document_self=
 
     def remove_methods_etc
     end
 
-    # Access the code object's comment
-    attr_reader :comment
+    ##
+    # Replaces our comment with +comment+, unless it is empty.
 
-    # Update the comment, but don't overwrite a real comment with an empty one
     def comment=(comment)
       @comment = comment unless comment.empty?
     end
 
+    ##
     # There's a wee trick we pull. Comment blocks can have directives that
     # override the stuff we extract during the parse. So, we have a special
-    # class method, attr_overridable, that lets code objects list
-    # those directives. Wehn a comment is assigned, we then extract
-    # out any matching directives and update our object
+    # class method, attr_overridable, that lets code objects list those
+    # directives. When a comment is assigned, we then extract out any matching
+    # directives and update our object
 
     def self.attr_overridable(name, *aliases)
       @overridables ||= {}
