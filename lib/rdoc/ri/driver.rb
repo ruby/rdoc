@@ -595,6 +595,9 @@ Options may also be set in the 'RI' environment variable.
         formatter.raw_print_line "#{e.message}\n"
       end
     end
+
+  rescue Interrupt
+    exit
   end
 
   ##
@@ -670,13 +673,17 @@ Options may also be set in the 'RI' environment variable.
         if system_file then
           method["source_path"] = "Ruby #{RDoc::RI::Paths::VERSION}"
         else
-          if(f =~ %r%gems/[\d.]+/doc/([^/]+)%) then
-            ext_path = "gem #{$1}"
-          else
-            ext_path = f
+          gem = Gem.path.any? do |path|
+            pattern = File.join Regexp.escape(path), 'doc', '(.*?)', ''
+
+            f =~ /^#{pattern}/
           end
 
-          method["source_path"] = ext_path
+          method["source_path"] = if gem then
+                                    "gem #{$1}"
+                                  else
+                                    f
+                                  end
         end
 
         name = method["full_name"]

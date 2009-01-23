@@ -1,8 +1,8 @@
 === 2.3.0 / 200?-??-??
 
 * X Major Enhancements
-  * RDoc now automatically loads rdoc/discover.rb files from installed gems.
-  * RDoc now uses Michael Granger's Darkfish generator by default.
+  * rdoc/discover.rb files are loaded automatically from installed gems
+  * Michael Granger's Darkfish generator is now the default
   * Various rdoc generation speedups by Hongli Lai.  Patches #22555, #22556,
     #22557, #22562, #22565.
 
@@ -10,11 +10,12 @@
   * Added a space after the commas in ri class method lists.  RubyForge
     enhancement #22182.
   * Improved ri --interactive
-  * Generators can now override generated file locations.
-  * Moved unmaintained CHM generator to it's own package.
-  * Moved unmaintained extra HTML templates to their own package.
-  * Removed experimental texinfo generator.
-  * Converted to minitest.
+  * Generators can now override generated file locations
+  * Moved unmaintained CHM generator to it's own package
+  * Moved unmaintained extra HTML templates to their own package
+  * Removed experimental texinfo generator
+  * Converted to minitest
+  * Known classes and modules list outputs once per line now for grep
 
 * Z Bug Fixes
   * Fix missing superclass in ri output
@@ -30,6 +31,7 @@
   * RDoc now only accepts adjacent comments for rb_define_module and
     rb_define_class
   * C file RDoc is no longer included in token stream
+  * Scan all gem paths to match gem name for ri output
 
 === 2.2.1 / 2008-09-24
 This version provides some minor fixes and enhancements to 2.2.0 intended

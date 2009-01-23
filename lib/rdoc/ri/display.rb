@@ -280,7 +280,9 @@ class RDoc::RI::DefaultDisplay
         @formatter.draw_line "Known classes and modules"
         @formatter.blankline
 
-        @formatter.wrap classes.sort.join(', ')
+        classes.sort.each do |klass|
+          @formatter.wrap klass
+        end
       end
     end
   end
