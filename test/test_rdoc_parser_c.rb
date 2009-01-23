@@ -21,6 +21,9 @@ class TestRDocParserC < MiniTest::Unit::TestCase
     @fn = filename
     @options = RDoc::Options.new
     @stats = RDoc::Stats.new 0
+
+    RDoc::Parser::C.reset
+    RDoc::TopLevel.reset
   end
 
   def teardown
@@ -137,12 +140,12 @@ void Init_foo(){
 }
     EOF
 
-    parser = util_parser content
+    @parser = util_parser content
 
-    parser.do_classes
-    parser.do_constants
+    @parser.do_classes
+    @parser.do_constants
 
-    klass = parser.classes['cFoo']
+    klass = @parser.classes['cFoo']
     assert klass
 
     constants = klass.constants
@@ -223,7 +226,7 @@ VALUE foo = rb_define_class("Foo", rb_cObject);
 
     klass = util_get_class content, 'foo'
 
-    assert_equal "  \n   a comment for class Foo\n   ", klass.comment
+    assert_equal "  \n   a comment for class Foo\n   \n", klass.comment
   end
 
   def test_find_class_comment_define_class_Init_Foo
@@ -243,6 +246,26 @@ Init_Foo(void) {
     klass = util_get_class content, 'foo'
 
     assert_equal "  \n   a comment for class Foo on Init\n   \n", klass.comment
+  end
+
+  def test_find_class_comment_define_class_bogus_comment
+    content = <<-EOF
+/*
+ * a comment for other_function
+ */
+void
+other_function() {
+}
+
+void
+Init_Foo(void) {
+    VALUE foo = rb_define_class("Foo", rb_cObject);
+}
+    EOF
+
+    klass = util_get_class content, 'foo'
+
+    assert_equal '', klass.comment
   end
 
   def test_define_method
@@ -273,9 +296,9 @@ Init_IO(void) {
   end
 
   def util_get_class(content, name)
-    parser = util_parser content
-    parser.scan
-    parser.classes[name]
+    @parser = util_parser content
+    @parser.scan
+    @parser.classes[name]
   end
 
   def util_parser(content)

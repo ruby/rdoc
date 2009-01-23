@@ -96,8 +96,21 @@ class RDoc::Parser::C < RDoc::Parser
 
   parse_files_matching(/\.(?:([CcHh])\1?|c([+xp])\2|y)\z/)
 
-  @@enclosure_classes = {}
-  @@known_bodies = {}
+  ##
+  # C file the parser is parsing
+
+  attr_accessor :content
+
+  ##
+  # Resets cross-file state.  Call when parsing different projects that need
+  # separate documentation.
+
+  def self.reset
+    @@enclosure_classes = {}
+    @@known_bodies = {}
+  end
+
+  reset
 
   ##
   # Prepare to parse a C file
@@ -365,25 +378,18 @@ class RDoc::Parser::C < RDoc::Parser
 
   def find_class_comment(class_name, class_meth)
     comment = nil
+
     if @content =~ %r{((?>/\*.*?\*/\s+))
                    (static\s+)?void\s+Init_#{class_name}\s*(?:_\(\s*)?\(\s*(?:void\s*)\)}xmi then
       comment = $1
-    elsif @content =~ %r{Document-(?:class|module):\s#{class_name}\s*?(?:<\s+[:,\w]+)?\n((?>.*?\*/))}m
+    elsif @content =~ %r{Document-(?:class|module):\s+#{class_name}\s*?(?:<\s+[:,\w]+)?\n((?>.*?\*/))}m then
       comment = $1
-    else
-      if @content =~ /rb_define_(class|module)/m then
-        class_name = class_name.split("::").last
-        comments = []
-        @content.split(/(\/\*.*?\*\/)\s*?\n/m).each_with_index do |chunk, index|
-          comments[index] = chunk
-          if chunk =~ /rb_define_(class|module).*?"(#{class_name})"/m then
-            comment = comments[index-1]
-            break
-          end
-        end
-      end
+    elsif @content =~ %r{((?>/\*.*?\*/\s+))
+                         ([\w\.\s]+\s* = \s+)?rb_define_(class|module).*?"(#{class_name})"}xm then
+      comment = $1
     end
-    class_meth.comment = mangle_comment(comment) if comment
+
+    class_meth.comment = mangle_comment comment if comment
   end
 
   ##
@@ -492,9 +498,10 @@ class RDoc::Parser::C < RDoc::Parser
       @stats.add_module cm
     end
 
-    cm.record_location(enclosure.toplevel)
+    cm.record_location enclosure.toplevel
 
-    find_class_comment(cm.full_name, cm)
+    find_class_comment cm.full_name, cm
+
     @classes[var_name] = cm
     @@enclosure_classes[var_name] = cm
     @known_classes[var_name] = cm.full_name

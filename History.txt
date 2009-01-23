@@ -27,6 +27,8 @@
   * Fixed relative link generation.
   * Fix crash, RDoc now ignores comments above local variable assignments in
     modules.
+  * RDoc now only accepts adjacent comments for rb_define_module and
+    rb_define_class
 
 === 2.2.1 / 2008-09-24
 This version provides some minor fixes and enhancements to 2.2.0 intended
