@@ -268,6 +268,36 @@ Init_Foo(void) {
     assert_equal '', klass.comment
   end
 
+  def test_find_body
+    content = <<-EOF
+/*
+ * a comment for other_function
+ */
+VALUE
+other_function() {
+}
+
+void
+Init_Foo(void) {
+    VALUE foo = rb_define_class("Foo", rb_cObject);
+
+    rb_define_method(foo, "my_method", other_function, 0);
+}
+    EOF
+
+    klass = util_get_class content, 'foo'
+    other_function = klass.method_list.first
+
+    assert_equal 'my_method', other_function.name
+    assert_equal "  \n   a comment for other_function\n   \n",
+                 other_function.comment
+    assert_equal '()', other_function.params
+
+    code = other_function.token_stream.first.text
+
+    assert_equal "VALUE\nother_function() ", code
+  end
+
   def test_define_method
     content = <<-EOF
 /*Method Comment! */

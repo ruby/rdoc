@@ -830,9 +830,7 @@ module RDoc
     def superclass=(superclass)
       raise NoMethodError, "#{full_name} is a module" if module?
 
-      if @superclass.nil? or @superclass == 'Object' then
-        @superclass = superclass 
-      end
+      @superclass = superclass if @superclass.nil? or @superclass == 'Object'
     end
 
     def to_s

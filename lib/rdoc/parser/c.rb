@@ -283,12 +283,13 @@ class RDoc::Parser::C < RDoc::Parser
 
   def find_body(class_name, meth_name, meth_obj, body, quiet = false)
     case body
-    when %r"((?>/\*.*?\*/\s*))(?:(?:static|SWIGINTERN)\s+)?(?:intern\s+)?VALUE\s+#{meth_name}
-            \s*(\([^)]*\))([^;]|$)"xm
-      comment, params = $1, $2
-      body_text = $&
+    when %r"((?>/\*.*?\*/\s*))((?:(?:static|SWIGINTERN)\s+)?(?:intern\s+)?VALUE\s+#{meth_name}
+            \s*(\([^)]*\))([^;]|$))"xm
+      comment = $1
+      body_text = $2
+      params = $3
 
-      remove_private_comments(comment) if comment
+      remove_private_comments comment if comment
 
       # see if we can find the whole body
 
@@ -301,15 +302,15 @@ class RDoc::Parser::C < RDoc::Parser
       # distinct (for example Kernel.hash and Kernel.object_id share the same
       # implementation
 
-      override_comment = find_override_comment(class_name, meth_obj.name)
+      override_comment = find_override_comment class_name, meth_obj.name
       comment = override_comment if override_comment
 
-      find_modifiers(comment, meth_obj) if comment
+      find_modifiers comment, meth_obj if comment
 
 #        meth_obj.params = params
       meth_obj.start_collecting_tokens
-      meth_obj.add_token(RDoc::RubyToken::Token.new(1,1).set_text(body_text))
-      meth_obj.comment = mangle_comment(comment)
+      meth_obj.add_token RDoc::RubyToken::Token.new(1,1).set_text(body_text)
+      meth_obj.comment = mangle_comment comment
     when %r{((?>/\*.*?\*/\s*))^\s*\#\s*define\s+#{meth_name}\s+(\w+)}m
       comment = $1
       find_body(class_name, $2, meth_obj, body, true)

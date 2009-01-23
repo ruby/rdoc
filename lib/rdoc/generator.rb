@@ -913,15 +913,16 @@ module RDoc::Generator
 
       context.viewer = self
 
-      if (ts = @context.token_stream)
-        @source_code = markup_code(ts)
-        unless @options.inline_source
-          @src_url = create_source_code_file(@source_code)
+      if ts = @context.token_stream then
+        @source_code = markup_code ts
+
+        unless @options.inline_source then
+          @src_url = create_source_code_file @source_code
           @img_url = RDoc::Markup::ToHtml.gen_relative_url path, 'source.png'
         end
       end
 
-      AllReferences.add(name, self)
+      AllReferences.add name, self
     end
 
     ##
