@@ -1,36 +1,7 @@
 #!ruby
-#
-#  Darkfish RDoc HTML Generator
-#  $Id: darkfish.rb 35 2008-09-22 15:14:43Z deveiant $
-#
-#  Author: Michael Granger <ged@FaerieMUD.org>
-#  
-#  == License
-#  
-#  Copyright (c) 2007, 2008, The FaerieMUD Consortium
-#  All rights reserved.
-#  
-#  Permission is hereby granted, free of charge, to any person obtaining a copy
-#  of this software and associated documentation files (the "Software"), to deal
-#  in the Software without restriction, including without limitation the rights
-#  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#  copies of the Software, and to permit persons to whom the Software is
-#  furnished to do so, subject to the following conditions:
-#  
-#  The above copyright notice and this permission notice shall be included in
-#  all copies or substantial portions of the Software.
-#  
-#  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-#  THE SOFTWARE.
-#  
 
 require 'rubygems'
-gem 'rdoc', '>= 2.0.0'
+gem 'rdoc', '>= 2.3'
 
 require 'pp'
 require 'pathname'
@@ -42,25 +13,46 @@ require 'rdoc/rdoc'
 require 'rdoc/generator/xml'
 require 'rdoc/generator/html'
 
-### A erb-based RDoc HTML generator
+#
+#  Darkfish RDoc HTML Generator
+#  
+#  $Id: darkfish.rb 52 2009-01-07 02:08:11Z deveiant $
+#
+#  == Author/s
+#  * Michael Granger (ged@FaerieMUD.org)
+#  
+#  == Contributors
+#  * Mahlon E. Smith (mahlon@martini.nu)
+#  * Eric Hodel (drbrain@segment7.net)
+#  
+#  == License
+#  
+#  :include: LICENSE
+#  
 class RDoc::Generator::Darkfish < RDoc::Generator::XML
 
-	RDoc::RDoc.add_generator self
+	RDoc::RDoc.add_generator( self )
 
 	include ERB::Util
 
 	# Subversion rev
-	SVNRev = %$Rev: 35 $
+	SVNRev = %$Rev: 52 $
 	
 	# Subversion ID
-	SVNId = %$Id: darkfish.rb 35 2008-09-22 15:14:43Z deveiant $
+	SVNId = %$Id: darkfish.rb 52 2009-01-07 02:08:11Z deveiant $
 
 	# Path to this file's parent directory. Used to find templates and other
 	# resources.
 	GENERATOR_DIR = Pathname.new( __FILE__ ).expand_path.dirname
 
 	# Release Version
-	VERSION = '1.1.5'
+	VERSION = '1.1.6'
+
+	# Directory where generated classes live relative to the root
+	CLASS_DIR = nil
+
+	# Directory where generated files live relative to the root
+	FILE_DIR = nil
 
 
 	#################################################################
@@ -78,7 +70,7 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 	#################################################################
 
 	### Initialize a few instance variables before we start
-	def initialize(options)
+	def initialize( options )
 		@template = nil
 		@template_dir = GENERATOR_DIR + 'template/darkfish'
 		
@@ -170,8 +162,7 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 		# Make a hash of file info keyed by path
 		files_by_path = files.inject({}) {|hash, fileinfo|
 			hash[ fileinfo[:full_path] ] = fileinfo
-			hash[ fileinfo[:full_path] ][:outfile] = 
-				fileinfo[:full_path] + '.html'
+			hash[ fileinfo[:full_path] ][:outfile] = fileinfo[:full_path] + '.html'
 			hash
 		}
 
@@ -261,6 +252,7 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 			rel_prefix = outputdir.relative_path_from( outfile.dirname )
 			svninfo    = self.get_svninfo( classinfo )
 
+			debug_msg "  rendering #{outfile}"
 			self.render_template( templatefile, binding(), outfile )
 		end
 	end
@@ -272,13 +264,15 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 		debug_msg "Generating file documentation in #@outputdir"
 		templatefile = @template_dir + 'filepage.rhtml'
 
+		modsort = self.get_sorted_module_list( classes )
+
 		files.sort_by {|k,v| k }.each do |path, fileinfo|
 			outfile     = @outputdir + fileinfo[:outfile]
 			debug_msg "  working on %s (%s)" % [ path, outfile ]
 			rel_prefix  = @outputdir.relative_path_from( outfile.dirname )
 			context     = binding()
 
-			debug_msg "  rending #{outfile}"
+			debug_msg "  rendering #{outfile}"
 			self.render_template( templatefile, binding(), outfile )
 		end
 	end
@@ -301,7 +295,7 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 	end
 
 
-	# %q$Id: darkfish.rb 35 2008-09-22 15:14:43Z deveiant $"
+	# %q$Id: darkfish.rb 52 2009-01-07 02:08:11Z deveiant $"
 	SVNID_PATTERN = /
 		\$Id:\s 
 			(\S+)\s					# filename

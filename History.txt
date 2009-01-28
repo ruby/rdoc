@@ -1,12 +1,12 @@
-=== 2.3.0 / 200?-??-??
+=== 2.3.0 / 2009-01-28
 
-* X Major Enhancements
-  * rdoc/discover.rb files are loaded automatically from installed gems
-  * Michael Granger's Darkfish generator is now the default
+* 3 Major Enhancements
+  * Michael Granger's Darkfish generator is now the default for HTML output
   * Various rdoc generation speedups by Hongli Lai.  Patches #22555, #22556,
     #22557, #22562, #22565.
+  * rdoc/discover.rb files are loaded automatically from installed gems
 
-* Y Minor Enhancements
+* 8 Minor Enhancements
   * Added a space after the commas in ri class method lists.  RubyForge
     enhancement #22182.
   * Improved ri --interactive
@@ -17,7 +17,7 @@
   * Converted to minitest
   * Known classes and modules list outputs once per line now for grep
 
-* Z Bug Fixes
+* 11 Bug Fixes
   * Fix missing superclass in ri output
   * Fix an RDoc crash when told to parse an empty file
   * Ignore nonexistent files instead of crashing

@@ -6,13 +6,78 @@
 <head>
 	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 
-	<title><%= fileinfo[:classmod] %>: <%= fileinfo[:full_name] %></title>
+	<title><%= fileinfo[:title] %></title>
 
 	<link type="text/css" media="screen" href="<%= rel_prefix %>/rdoc.css" rel="stylesheet" />
 
+	<script src="<%= rel_prefix %>/js/jquery.js" type="text/javascript" 
+		charset="utf-8"></script>
+	<script src="<%= rel_prefix %>/js/thickbox-compressed.js" type="text/javascript" 
+		charset="utf-8"></script>
+	<script src="<%= rel_prefix %>/js/quicksearch.js" type="text/javascript" 
+		charset="utf-8"></script>
+	<script src="<%= rel_prefix %>/js/darkfish.js" type="text/javascript" 
+		charset="utf-8"></script>
 </head>
-<body class="file">
 	
+<% if fileinfo[:parser] == RDoc::Parser::Simple %>
+<body class="file">
+  <div id="metadata">
+		<div id="project-metadata">
+			<% simple_files = files.select {|_, file| file[:parser] == RDoc::Parser::Simple } %>
+			<% unless simple_files.empty? then %>
+			<div id="fileindex-section" class="section project-section">
+				<h3 class="section-header">Files</h3>
+				<ul>
+				<% simple_files.sort_by {|name,_| name }.each do |name, file| %>
+					<li class="file"><a href="<%= rel_prefix %>/<%= 
+						file[:short_name] %>.html"><%= h file[:short_name] %></a></li>
+				<% end %>
+				</ul>
+			</div>
+			<% end %>
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index 
+					<span class="search-toggle"><img src="<%= rel_prefix %>/images/find.png" 
+						height="16" width="16" alt="[+]" 
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value="" 
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				<% modsort.each do |cname| %>
+				<% cinfo = classes[cname] %>
+					<li><a href="<%= rel_prefix %>/<%= cinfo[:outfile] %>"><%= cname %></a></li>
+				<% end %>
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+			
+			<% if $DEBUG %>
+			<div id="debugging-toggle"><img src="<%= rel_prefix %>/images/bug.png" 
+				alt="toggle debugging" height="16" width="16" /></div>
+			<% end %>
+		</div>
+	</div>
+
+	<div id="documentation">
+		<%= fileinfo[:description] %>
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish 
+			Rdoc Generator</a> <%= RDoc::Generator::Darkfish::VERSION %></small>.</p>
+	</div>
+</body>
+<% else %>
+<body class="file file-popup">
 	<div id="metadata">
 		<dl>
 			<dt class="modified-date">Last Modified</dt>
@@ -36,17 +101,14 @@
 			<% end %>
 		</dl>
 
+		<% if fileinfo[:description] %>
 		<div class="description">
 			<h2>Description</h2>
 			<%= fileinfo[:description] %>
 		</div>
-	</div>
-
-	<div id="validator-badges">
-	  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
-	  <p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish 
-		Rdoc Generator</a> <%= RDoc::Generator::Darkfish::VERSION %></small>.</p>
+		<% end %>
 	</div>
 </body>
+<% end %>
 </html>
 
