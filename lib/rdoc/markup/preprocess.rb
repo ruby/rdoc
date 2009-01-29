@@ -44,15 +44,16 @@ class RDoc::Markup::PreProcess
 
   def include_file(name, indent)
     if full_name = find_include_file(name) then
-      content = File.open(full_name) {|f| f.read}
+      content = File.read full_name
+
       # strip leading '#'s, but only if all lines start with them
-      if content =~ /^[^#]/
+      if content =~ /^[^#]/ then
         content.gsub(/^/, indent)
       else
         content.gsub(/^#?/, indent)
       end
     else
-      $stderr.puts "Couldn't find file to include: '#{name}'"
+      $stderr.puts "Couldn't find file to include '#{name}' from #{@input_file_name}"
       ''
     end
   end
