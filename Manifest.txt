@@ -23,8 +23,12 @@ lib/rdoc/generator/template/darkfish/classpage.rhtml
 lib/rdoc/generator/template/darkfish/filepage.rhtml
 lib/rdoc/generator/template/darkfish/images/brick.png
 lib/rdoc/generator/template/darkfish/images/brick_link.png
+lib/rdoc/generator/template/darkfish/images/bug.png
 lib/rdoc/generator/template/darkfish/images/bullet_black.png
+lib/rdoc/generator/template/darkfish/images/bullet_toggle_minus.png
+lib/rdoc/generator/template/darkfish/images/bullet_toggle_plus.png
 lib/rdoc/generator/template/darkfish/images/date.png
+lib/rdoc/generator/template/darkfish/images/find.png
 lib/rdoc/generator/template/darkfish/images/loadingAnimation.gif
 lib/rdoc/generator/template/darkfish/images/macFFBgHack.png
 lib/rdoc/generator/template/darkfish/images/package.png

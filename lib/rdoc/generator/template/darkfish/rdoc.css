@@ -1,6 +1,6 @@
 /*
  * "Darkfish" Rdoc CSS
- * $Id: rdoc.css 40 2008-09-26 06:08:54Z deveiant $
+ * $Id: rdoc.css 54 2009-01-27 01:09:48Z deveiant $
  * 
  * Author: Michael Granger <ged@FaerieMUD.org>
  * 
@@ -14,23 +14,18 @@ body {
     background: #efefef;
 	font: 14px "Helvetica Neue", Helvetica, Tahoma, sans-serif;
 }
-body.class, body.module {
+body.class, body.module, body.file {
     margin-left: 40px;
 }
-body.file {
+body.file-popup {
 	font-size: 90%;
+	margin-left: 0;
 }
 
 h1 {
-	font-size: 200%;
-	text-shadow: rgba(70,70,70,0.65) 2px 2px 3px;
-	background-color: #6C8C22;
-	color: white;
-	padding: 4px 8px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	-webkit-box-shadow: 3px 3px 4px rgba(70,70,70,0.59);
-	border: 1px solid #6c8238;
+	font-size: 300%;
+	text-shadow: rgba(135,145,135,0.65) 2px 2px 3px;
+	color: #6C8C22;
 }
 h2,h3,h4 { margin-top: 1.5em; }
 
@@ -49,6 +44,10 @@ pre {
 
 
 /* @group Generic Classes */
+
+.initially-hidden {
+	display: none;
+}
 
 .quicksearch-field {
 	width: 98%;
@@ -86,24 +85,28 @@ pre {
 /* @end */
 
 
-/* @group Index Page */
+/* @group Index Page, Standalone file pages */
 body.indexpage {
 	margin: 1em 3em;
 }
 body.indexpage p,
-body.indexpage div {
+body.indexpage div,
+body.file p {
 	margin: 1em 0;
 }
 
-.indexpage ul {
+.indexpage ul,
+.file #documentation ul {
 	line-height: 160%;
 	list-style: none;
 }
-.indexpage ul a {
+.indexpage ul a,
+.file #documentation ul a {
 	font-size: 16px;
 }
 
-.indexpage li {
+.indexpage li,
+.file #documentation li {
 	padding-left: 20px;
 	background: url(images/bullet_black.png) no-repeat left 4px;
 }
@@ -122,12 +125,14 @@ body.indexpage div {
 /* @group Top-Level Structure */
 
 .class #metadata,
+.file #metadata,
 .module #metadata {
 	float: left;
 	width: 260px;
 }
 
 .class #documentation,
+.file #documentation,
 .module #documentation {
 	margin: 2em 1em 5em 300px;
 	min-width: 340px;
@@ -181,6 +186,9 @@ dl.svninfo {
 	color: #666;
 	margin: 0;
 }
+dl.svninfo dt {
+	font-weight: bold;
+}
 
 ul.link-list li {
 	white-space: nowrap;
@@ -202,22 +210,28 @@ ul.link-list .type {
 	margin-top: 3em;
 }
 
+.file #project-metadata {
+  margin-top: 0em;
+}
+
 #project-metadata .section {
 	border: 1px solid #aaa;
 }
 #project-metadata h3.section-header {
 	border-bottom: 1px solid #aaa;
+	position: relative;
 }
+#project-metadata h3.section-header .search-toggle {
+	position: absolute;
+	right: 5px;
+}
+
 
 #project-metadata form {
 	color: #777;
 	background: #ccc;
 	padding: 8px 8px 16px;
-	border-top: 1px solid #bbb;
-	-webkit-border-bottom-left-radius: 4px;
-	-webkit-border-bottom-right-radius: 4px;
-	-moz-border-radius-bottomleft: 4px;
-	-moz-border-radius-bottomright: 4px;
+	border-bottom: 1px solid #bbb;
 }
 #project-metadata fieldset {
 	border: 0;
@@ -289,22 +303,27 @@ ul.link-list .type {
 	-webkit-border-radius: 3px;
 }
 
-#constants-list dl,
-#attributes-list dl {
-	margin: 1em 1em 2em;
-	margin-bottom: 2em;
-	margin-top: 1em;
-	
+#constants-list > dl,
+#attributes-list > dl {
+	margin: 1em 0 2em;
 	border: 0;
 }
-#constants-list dl dt,
-#attributes-list dl dt {
+#constants-list > dl dt,
+#attributes-list > dl dt {
+	padding-left: 0;
 	font-weight: bold;
 	font-family: Monaco, "Andale Mono";
+	background: inherit;
 }
-#constants-list dl dd,
-#attributes-list dl dd {
+#constants-list > dl dt a,
+#attributes-list > dl dt a {
+	color: inherit;
+}
+#constants-list > dl dd,
+#attributes-list > dl dd {
 	margin: 0 0 1em 0;
+	padding: 0;
+	color: #666;
 }
 
 /* @group Method Details */
@@ -437,10 +456,11 @@ div.method-source-code pre {
 
 /* @group File Popup Contents */
 
-.file #metadata {
+.file #metadata,
+.file-popup #metadata {
 }
 
-.file dl {
+.file-popup dl {
 	font-size: 80%;
 	padding: 0.75em;
 	background-color: #dedede;
@@ -657,8 +677,18 @@ margin-top: expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = d
 
 /* @group Debugging Section */
 
+#debugging-toggle {
+	text-align: center;
+}
+#debugging-toggle img {
+	cursor: pointer;
+}
+
 #rdoc-debugging-section-dump {
 	display: none;
+	margin: 0 2em 2em;
+	background: #ccc;
+	border: 1px solid #999;
 }
 
 

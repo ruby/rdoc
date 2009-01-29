@@ -18,16 +18,6 @@
 	<script src="<%= rel_prefix %>/js/darkfish.js" type="text/javascript" 
 		charset="utf-8"></script>
 
-	<script type="text/javascript" charset="utf-8">
-		$(document).ready( function() {
-			hookSourceViews();
-			hookQuickSearch();
-			highlightLocationTarget();
-
-			$('ul.link-list a').bind( "click", highlightClickTarget );
-		});
-	</script>
-
 </head>
 <body class="<%= classinfo[:classmod].downcase %>">
 	
@@ -38,7 +28,7 @@
 				<div class="section-body">
 					<ul>
 					<% classinfo[:infiles].each do |file| %>
-						<li><a href="<%= rel_prefix %>/<%= file[:full_path] %>.html?TB_iframe=true&height=400&width=600"
+						<li><a href="<%= rel_prefix %>/<%= file[:full_path] %>.html?TB_iframe=true&amp;height=550&amp;width=785"
 							class="thickbox" title="<%= file[:full_path] %>"><%= file[:full_path] %></a></li>
 					<% end %>
 					</ul>
@@ -80,12 +70,11 @@
 			<% end %>
 
 			<!-- Namespace Contents -->
-			<% if classinfo[:sections].first.key?( 'classlist' ) %>
+			<% if classinfo[:sections].first.key?( :classlist ) %>
 			<div id="namespace-list-section" class="section">
 				<h3 class="section-header">Namespace</h3>
 				<ul class="link-list">
 					<% classinfo[:sections].first[:classlist].each do |desc| %>
-					<!-- Desc is: <%= desc.inspect %> -->
 					<li><%= desc.sub(/^(\w+)/, %Q{<span class="type">\\1</span>}) %></li>
 					<% end %>
 				</ul>
@@ -93,7 +82,7 @@
 			<% end %>
 
 			<!-- Method Quickref -->
-			<% if classinfo.key?( 'methods' ) %>
+			<% if classinfo.key?( :methods ) %>
 			<div id="method-list-section" class="section">
 				<h3 class="section-header">Methods</h3>
 				<ul class="link-list">
@@ -123,8 +112,31 @@
 		</div>
 	
 		<div id="project-metadata">
+			<% simple_files = files.select {|_, file| file[:parser] == RDoc::Parser::Simple } %>
+			<% unless simple_files.empty? then %>
+			<div id="fileindex-section" class="section project-section">
+				<h3 class="section-header">Files</h3>
+				<ul>
+				<% simple_files.sort_by {|name,_| name }.each do |name, file| %>
+					<li class="file"><a href="<%= rel_prefix %>/<%= file[:short_name] %>.html"><%= h file[:short_name] %></a></li>
+				<% end %>
+				</ul>
+			</div>
+			<% end %>
+			
 			<div id="classindex-section" class="section project-section">
-				<h3 class="section-header">Class Index</h3>
+				<h3 class="section-header">Class Index 
+					<span class="search-toggle"><img src="<%= rel_prefix %>/images/find.png" 
+						height="16" width="16" alt="[+]" 
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value="" 
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
 				<ul class="link-list">
 				<% modsort.each do |cname| %>
 				<% cinfo = classes[cname] %>
@@ -132,15 +144,12 @@
 				<% end %>
 				</ul>
 				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
-				
-				<form action="#" method="get" accept-charset="utf-8">
-				<fieldset>
-					<legend>Quicksearch</legend>
-					<input type="text" name="quicksearch" value="" 
-						class="quicksearch-field" />
-				</fieldset>
-				</form>
 			</div>
+			
+			<% if $DEBUG %>
+			<div id="debugging-toggle"><img src="<%= rel_prefix %>/images/bug.png" 
+				alt="toggle debugging" height="16" width="16" /></div>
+			<% end %>
 		</div>
 	</div>
 
@@ -236,18 +245,18 @@
 
 				<div class="method-description">
 					<% if methodinfo[:m_desc] %>
-	          		<p><%= methodinfo[:m_desc].strip %></p>
+					<%= methodinfo[:m_desc].strip %>
 					<% else %>
-	          		<p class="missing-docs">(Not documented)</p>
+					<p class="missing-docs">(Not documented)</p>
 					<% end %>
 					
 					<% if methodinfo[:sourcecode] %>
-	          		<div class="method-source-code" 
+					<div class="method-source-code" 
 						id="<%= methodinfo[:name].gsub( /[^a-z]+/, '-' ) %>-source">
 <pre>
 <%= methodinfo[:sourcecode] %>
 </pre>
-	          		</div>
+					</div>
 					<% end %>
 				</div>
 
@@ -265,11 +274,11 @@
 	<% end %>
 	<% end %>
 
-	  </div>
 	</div>
 
 
-	<div id="rdoc-debugging-section-dump">
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	<% if $DEBUG %>
 	<% classinfo[:sections].first.keys.each do |section| %>
 		<div class="section">
 		<h2 class="section-header"><%= section %></h2>
@@ -277,12 +286,15 @@
 		<pre><%= h classinfo[:sections].first[section].to_yaml %></pre>
 		</div>
 	<% end %>
+	<% else %>
+		<p>Disabled; run with $DEBUG to generate this.</p>
+	<% end %>
 	</div>
 
 	<div id="validator-badges">
-	  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
-	  <p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish 
-		Rdoc Generator</a> <%= RDoc::Generator::Darkfish::VERSION %></small>.</p>
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish 
+			Rdoc Generator</a> <%= RDoc::Generator::Darkfish::VERSION %></small>.</p>
 	</div>
 
 </body>
