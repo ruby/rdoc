@@ -50,6 +50,9 @@ module RDoc
 
     attr_accessor :viewer
 
+    ##
+    # Creates a new CodeObject that will document itself and its children
+
     def initialize
       @document_self = true
       @document_children = true
@@ -158,23 +161,86 @@ module RDoc
 
   class Context < CodeObject
 
+    ##
+    # Aliased methods
+
     attr_reader :aliases
+
+    ##
+    # attr* methods
+
     attr_reader :attributes
+
+    ##
+    # Constants defined
+
     attr_reader :constants
+
+    ##
+    # Current section of documentation
+
     attr_reader :current_section
+
+    ##
+    # Files this context is found in
+
     attr_reader :in_files
+
+    ##
+    # Modules this context includes
+
     attr_reader :includes
+
+    ##
+    # Methods defined in this context
+
     attr_reader :method_list
+
+    ##
+    # Name
+
     attr_reader :name
+
+    ##
+    # Files this context requires
+
     attr_reader :requires
+
+    ##
+    # Sections in this context
+
     attr_reader :sections
+
+    ##
+    # Current visibility of this context
+
     attr_reader :visibility
 
+    ##
+    # A per-comment section of documentation
+
     class Section
-      attr_reader :title, :comment, :sequence
+
+      ##
+      # Section comment
+
+      attr_reader :comment
+
+      ##
+      # Section sequence number (for linking)
+
+      attr_reader :sequence
+
+      ##
+      # Section title
+
+      attr_reader :title
 
       @@sequence = "SEC00000"
       @@sequence_lock = Mutex.new
+
+      ##
+      # Creates a new section with +title+ and +comment+
 
       def initialize(title, comment)
         @title = title
@@ -186,11 +252,14 @@ module RDoc
         set_comment(comment)
       end
 
+      ##
+      # Sections are equal when they have the same sequence
+
       def ==(other)
         self.class === other and @sequence == other.sequence
       end
 
-      def inspect
+      def inspect # :nodoc:
         "#<%s:0x%x %s %p>" % [
           self.class, object_id,
           @sequence, title
@@ -228,6 +297,9 @@ module RDoc
 
     end
 
+    ##
+    # Creates an unnamed empty context with public visibility
+
     def initialize
       super
 
@@ -238,29 +310,29 @@ module RDoc
       @parent  = nil
       @visibility = :public
 
-      @current_section = Section.new(nil, nil)
-      @sections = [ @current_section ]
+      @current_section = Section.new nil, nil
+      @sections = [@current_section]
 
       initialize_methods_etc
       initialize_classes_and_modules
     end
 
     ##
-    # map the class hash to an array externally
+    # Array of classes in this context
 
     def classes
       @classes.values
     end
 
     ##
-    # map the module hash to an array externally
+    # Array of modules in this context
 
     def modules
       @modules.values
     end
 
     ##
-    # return the classes Hash (only to be used internally)
+    # Hash of classes keyed by class name
 
     def classes_hash
       @classes
@@ -268,7 +340,7 @@ module RDoc
     protected :classes_hash
 
     ##
-    # return the modules Hash (only to be used internally)
+    # Hash of modules keyed by module name
 
     def modules_hash
       @modules
@@ -276,10 +348,10 @@ module RDoc
     protected :modules_hash
 
     ##
-    # Change the default visibility for new methods
+    # Changes the visibility for new methods to +visibility+
 
-    def ongoing_visibility=(vis)
-      @visibility = vis
+    def ongoing_visibility=(visibility)
+      @visibility = visibility
     end
 
     ##
@@ -298,89 +370,105 @@ module RDoc
 
       return if count == methods.size || singleton
 
-      # perhaps we need to look at attributes
-
       @attributes.each do |a|
         yield a if methods.include? a.name
       end
     end
 
     ##
-    # Given an array +methods+ of method names, set the visibility of the
-    # corresponding AnyMethod object
+    # Given an array +methods+ of method names, set the visibility of each to
+    # +visibility+
 
-    def set_visibility_for(methods, vis, singleton = false)
+    def set_visibility_for(methods, visibility, singleton = false)
       methods_matching methods, singleton do |m|
-        m.visibility = vis
+        m.visibility = visibility
       end
     end
 
     ##
-    # Record the file that we happen to find it in
+    # Record which file +toplevel+ is in
 
     def record_location(toplevel)
       @in_files << toplevel unless @in_files.include?(toplevel)
     end
 
-    # Return true if at least part of this thing was defined in +file+
+    ##
+    # Is part of this thing was defined in +file+?
+
     def defined_in?(file)
       @in_files.include?(file)
     end
 
+    ##
+    # Adds a class named +name+ with +superclass+
+
     def add_class(class_type, name, superclass)
       klass = add_class_or_module @classes, class_type, name, superclass
 
-      #
       # If the parser encounters Container::Item before encountering
-      # Container, then it assumes that Container is a module.  This
-      # may not be the case, so remove Container from the module list
-      # if present and transfer any contained classes and modules to
-      # the new class.
-      #
-      mod = @modules.delete(name)
+      # Container, then it assumes that Container is a module.  This may not
+      # be the case, so remove Container from the module list if present and
+      # transfer any contained classes and modules to the new class.
+
+      mod = @modules.delete name
 
       if mod then
-        klass.classes_hash.update(mod.classes_hash)
-        klass.modules_hash.update(mod.modules_hash)
-        klass.method_list.concat(mod.method_list)
+        klass.classes_hash.update mod.classes_hash
+        klass.modules_hash.update mod.modules_hash
+        klass.method_list.concat mod.method_list
       end
 
       return klass
     end
 
+    ##
+    # Adds a module named +name+
+
     def add_module(class_type, name)
-      add_class_or_module(@modules, class_type, name, nil)
+      add_class_or_module @modules, class_type, name, nil
     end
 
-    def add_method(a_method)
-      a_method.visibility = @visibility
-      add_to(@method_list, a_method)
+    ##
+    # Adds +method+
 
-      unmatched_alias_list = @unmatched_alias_lists[a_method.name]
+    def add_method(method)
+      method.visibility = @visibility
+      add_to(@method_list, method)
+
+      unmatched_alias_list = @unmatched_alias_lists[method.name]
       if unmatched_alias_list then
         unmatched_alias_list.each do |unmatched_alias|
-          add_alias_impl unmatched_alias, a_method
+          add_alias_impl unmatched_alias, method
           @aliases.delete unmatched_alias
         end
 
-        @unmatched_alias_lists.delete a_method.name
+        @unmatched_alias_lists.delete method.name
       end
     end
 
-    def add_attribute(an_attribute)
-      add_to(@attributes, an_attribute)
+    ##
+    # Adds +attribute+
+
+    def add_attribute(attribute)
+      add_to @attributes, attribute
     end
 
+    ##
+    # Adds +an_alias+ pointing to +meth+
+
     def add_alias_impl(an_alias, meth)
-      new_meth = AnyMethod.new(an_alias.text, an_alias.new_name)
+      new_meth = AnyMethod.new an_alias.text, an_alias.new_name
       new_meth.is_alias_for = meth
       new_meth.singleton    = meth.singleton
       new_meth.params       = meth.params
       new_meth.comment = "Alias for \##{meth.name}"
-      meth.add_alias(new_meth)
-      add_method(new_meth)
+      meth.add_alias new_meth
+      add_method new_meth
     end
     
+    ##
+    # Adds +an_alias+ that is automatically resolved
+
     def add_alias(an_alias)
       meth = find_instance_method_named(an_alias.old_name)
 
@@ -395,38 +483,53 @@ module RDoc
       an_alias
     end
 
-    def add_include(an_include)
-      add_to(@includes, an_include)
+    ##
+    # Adds +include+
+
+    def add_include(include)
+      add_to @includes, include
     end
 
-    def add_constant(const)
-      add_to(@constants, const)
+    ##
+    # Adds +constant+
+
+    def add_constant(constant)
+      add_to @constants, constant
     end
 
-    # Requires always get added to the top-level (file) context
-    def add_require(a_require)
+    ##
+    # Adds +require+ to this context's top level
+
+    def add_require(require)
       if TopLevel === self then
-        add_to @requires, a_require
+        add_to @requires, require
       else
-        parent.add_require a_require
+        parent.add_require require
       end
     end
 
-    def add_class_or_module(collection, class_type, name, superclass=nil)
-      cls = collection[name]
+    ##
+    # Instantiates a +class_type+ named +name+ and adds it the modules or
+    # classes Hash +collection+.
 
-      if cls then
-        cls.superclass = superclass unless cls.module?
+    def add_class_or_module(collection, class_type, name, superclass = nil)
+      klass = collection[name]
+
+      if klass then
+        klass.superclass = superclass unless klass.module?
         puts "Reusing class/module #{name}" if $DEBUG_RDOC
       else
-        cls = class_type.new(name, superclass)
-#        collection[name] = cls if @document_self  && !@done_documenting
-        collection[name] = cls if !@done_documenting
-        cls.parent = self
-        cls.section = @current_section
+        klass = class_type.new name, superclass
+        collection[name] = klass unless @done_documenting
+        klass.parent = self
+        klass.section = @current_section
       end
-      cls
+
+      klass
     end
+
+    ##
+    # Adds +thing+ to the collection +array+
 
     def add_to(array, thing)
       array << thing if @document_self and not @done_documenting
@@ -434,13 +537,16 @@ module RDoc
       thing.section = @current_section
     end
 
-    # If a class's documentation is turned off after we've started
-    # collecting methods etc., we need to remove the ones
-    # we have
+    ##
+    # If a class's documentation is turned off after we've started collecting
+    # methods etc., we need to remove the ones we have
 
     def remove_methods_etc
       initialize_methods_etc
     end
+
+    ##
+    # Sets the defaults for methods and so-forth
 
     def initialize_methods_etc
       @method_list = []
@@ -455,17 +561,24 @@ module RDoc
       @unmatched_alias_lists = {}
     end
 
-    # and remove classes and modules when we see a :nodoc: all
+    ##
+    # Removes classes and modules when we see a :nodoc: all
+
     def remove_classes_and_modules
       initialize_classes_and_modules
     end
 
+    ##
+    # Sets the defaults for classes and modules
+
     def initialize_classes_and_modules
-      @classes     = {}
-      @modules     = {}
+      @classes = {}
+      @modules = {}
     end
 
-    # Find a named module
+    ##
+    # Find a module with +name+ using ruby's constant scoping rules
+
     def find_module_named(name)
       # First check the enclosed modules, then check the module itself,
       # then check the enclosing modules (this mirrors the check done by
@@ -476,31 +589,43 @@ module RDoc
       find_enclosing_module_named(name)
     end
 
-    # find a module at a higher scope
+    ##
+    # Find a module at a higher scope
+
     def find_enclosing_module_named(name)
       parent && parent.find_module_named(name)
     end
 
-    # Iterate over all the classes and modules in
-    # this object
+    ##
+    # Iterator for classes and modules
 
     def each_classmodule
       @modules.each_value {|m| yield m}
       @classes.each_value {|c| yield c}
     end
 
+    ##
+    # Iterator for methods
+
     def each_method
       @method_list.each {|m| yield m}
     end
+
+    ##
+    # Iterator for attributes
 
     def each_attribute 
       @attributes.each {|a| yield a}
     end
 
+    ##
+    # Iterator for constants
+
     def each_constant
       @constants.each {|c| yield c}
     end
 
+    ##
     # Return the toplevel that owns us
 
     def toplevel
@@ -510,7 +635,9 @@ module RDoc
       @toplevel
     end
 
-    # allow us to sort modules by name
+    ##
+    # Contexts are sorted by name
+
     def <=>(other)
       name <=> other.name
     end
@@ -566,6 +693,10 @@ module RDoc
       result
     end
 
+    ##
+    # Finds a method, constant, attribute, module or files named +symbol+ in
+    # this context
+
     def find_local_symbol(symbol)
       res = find_method_named(symbol) ||
             find_constant_named(symbol) ||
@@ -574,37 +705,44 @@ module RDoc
             find_file_named(symbol)
     end
 
-    # Handle sections
+    ##
+    # Creates a new section with +title+ and +comment+
 
     def set_current_section(title, comment)
       @current_section = Section.new(title, comment)
       @sections << @current_section
     end
 
-    private
+    ##
+    # Finds a instance or module method with +name+ in this context
 
-    # Find a named method, or return nil
     def find_method_named(name)
       @method_list.find {|meth| meth.name == name}
     end
 
-    # Find a named instance method, or return nil
+    ##
+    # Finds an instance method with +name+ in this context
+
     def find_instance_method_named(name)
       @method_list.find {|meth| meth.name == name && !meth.singleton}
     end
 
-    # Find a named constant, or return nil
+    ##
+    # Finds a constant with +name+ in this context
+
     def find_constant_named(name)
       @constants.find {|m| m.name == name}
     end
 
-    # Find a named attribute, or return nil
+    ##
+    # Finds an attribute with +name+ in this context
+
     def find_attribute_named(name)
       @attributes.find {|m| m.name == name}
     end
 
     ##
-    # Find a named file, or return nil
+    # Finds a file with +name+ in this context
 
     def find_file_named(name)
       toplevel.class.find_file_named(name)
@@ -613,19 +751,67 @@ module RDoc
   end
 
   ##
-  # A TopLevel context is a source file
+  # A TopLevel context is a representation of the contents of a single file
 
   class TopLevel < Context
+
+    ##
+    # This TopLevel's File::Stat struct
+
     attr_accessor :file_stat
+
+    ##
+    # Relative name of this file
+
     attr_accessor :file_relative_name
+
+    ##
+    # Absolute name of this file
+
     attr_accessor :file_absolute_name
+
     attr_accessor :diagram
+
+    ##
+    # The parser that processed this file
+
     attr_accessor :parser
 
     @@lock = Mutex.new
-    @@all_classes = {}
-    @@all_modules = {}
-    @@all_files   = {}
+
+    ##
+    # Returns all classes and modules discovered by RDoc
+
+    def self.all_classes_and_modules
+      @@lock.synchronize do
+        @@all_classes.values + @@all_modules.values
+      end
+    end
+
+    ##
+    # Finds the class with +name+ in all discovered classes
+
+    def self.find_class_named(name)
+      @@lock.synchronize do
+        @@all_classes.each_value do |c|
+          res = c.find_class_named(name)
+          return res if res
+        end
+      end
+      nil
+    end
+
+    ##
+    # Finds the file with +name+ in all discovered files
+
+    def self.find_file_named(name)
+      @@lock.synchronize do
+        @@all_files[name]
+      end
+    end
+
+    ##
+    # Empties RDoc of stored class, module and file information
 
     def self.reset
       @@lock.synchronize do
@@ -634,6 +820,11 @@ module RDoc
         @@all_files   = {}
       end
     end
+
+    reset
+
+    ##
+    # Creates a new TopLevel for +file_name+
 
     def initialize(file_name)
       super()
@@ -649,9 +840,15 @@ module RDoc
       end
     end
 
+    ##
+    # Base name of this file
+
     def file_base_name
       File.basename @file_absolute_name
     end
+
+    ##
+    # TopLevel's don't have full names
 
     def full_name
       nil
@@ -708,31 +905,16 @@ module RDoc
       cls
     end
 
-    def self.all_classes_and_modules
-      @@lock.synchronize do
-        @@all_classes.values + @@all_modules.values
-      end
-    end
-
-    def self.find_class_named(name)
-      @@lock.synchronize do
-        @@all_classes.each_value do |c|
-          res = c.find_class_named(name)
-          return res if res
-        end
-      end
-      nil
-    end
-
-    def self.find_file_named(name)
-      @@lock.synchronize do
-        @@all_files[name]
-      end
-    end
+    ##
+    # Finds a class or module named +symbol+
 
     def find_local_symbol(symbol)
       find_class_or_module_named(symbol) || super
     end
+
+    ##
+    # Find class or module named +symbol+ in all discovered classes and
+    # modules
 
     def find_class_or_module_named(symbol)
       @@lock.synchronize do
@@ -743,13 +925,13 @@ module RDoc
     end
 
     ##
-    # Find a named module
+    # Finds a module or class with +name+
 
     def find_module_named(name)
       find_class_or_module_named(name) || find_enclosing_module_named(name)
     end
 
-    def inspect
+    def inspect # :nodoc:
       "#<%s:0x%x %p modules: %p classes: %p>" % [
         self.class, object_id,
         file_base_name,
