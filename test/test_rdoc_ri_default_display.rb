@@ -267,7 +267,8 @@ some_method(start, length)
     expected = <<-EOF
 ---------------------------------------------------- Known classes and modules
 
-     SomeClass, SomeModule
+     SomeClass
+     SomeModule
     EOF
 
     assert_equal expected, @output.string

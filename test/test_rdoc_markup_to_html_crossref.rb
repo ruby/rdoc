@@ -89,10 +89,10 @@ end
 
     refute_ref '#m', '#m'
 
-    assert_ref 'C2/C3.html', 'C2::C3'
-    assert_ref 'C2/C3.html#M000003', 'C2::C3#m'
-    assert_ref 'C2/C3/H1.html', 'C3::H1'
-    assert_ref 'C4.html', 'C4'
+    assert_ref '../C2/C3.html', 'C2::C3'
+    assert_ref '../C2/C3.html#M000003', 'C2::C3#m'
+    assert_ref '../C2/C3/H1.html', 'C3::H1'
+    assert_ref '../C4.html', 'C4'
 
     # TODO there is a C3::H2 in the top-level namespace and RDoc should follow
     # constant scoping rules
@@ -104,15 +104,15 @@ end
     @klass = @class_hash['C2::C3']
     @xref = RDoc::Markup::ToHtmlCrossref.new 'classes/C2/C3.html', @klass, true
 
-    assert_ref 'C3.html#M000003', '#m'
+    assert_ref '../../C2/C3.html#M000003', '#m'
 
-    assert_ref 'C3.html', 'C3'
-    assert_ref 'C3.html#M000003', 'C3#m'
+    assert_ref '../../C2/C3.html', 'C3'
+    assert_ref '../../C2/C3.html#M000003', 'C3#m'
 
-    assert_ref 'C3/H1.html', 'H1'
-    assert_ref 'C3/H1.html', 'C3::H1'
+    assert_ref '../../C2/C3/H1.html', 'H1'
+    assert_ref '../../C2/C3/H1.html', 'C3::H1'
 
-    assert_ref '../C4.html', 'C4'
+    assert_ref '../../C4.html', 'C4'
 
     refute_ref 'C3::H2', 'C3::H2'
   end
@@ -121,17 +121,17 @@ end
     @klass = @class_hash['C3']
     @xref = RDoc::Markup::ToHtmlCrossref.new 'classes/C3.html', @klass, true
 
-    assert_ref 'C3.html', 'C3'
+    assert_ref '../C3.html', 'C3'
 
     refute_ref '#m',   '#m'
     refute_ref 'C3#m', 'C3#m'
 
-    assert_ref 'C3/H1.html', 'H1'
+    assert_ref '../C3/H1.html', 'H1'
 
-    assert_ref 'C3/H1.html', 'C3::H1'
-    assert_ref 'C3/H2.html', 'C3::H2'
+    assert_ref '../C3/H1.html', 'C3::H1'
+    assert_ref '../C3/H2.html', 'C3::H2'
 
-    assert_ref 'C4.html', 'C4'
+    assert_ref '../C4.html', 'C4'
   end
 
   def test_handle_special_CROSSREF_C4
@@ -139,7 +139,7 @@ end
     @xref = RDoc::Markup::ToHtmlCrossref.new 'classes/C4.html', @klass, true
 
     # C4 ref inside a C4 containing a C4 should resolve to the contained class
-    assert_ref 'C4/C4.html', 'C4'
+    assert_ref '../C4/C4.html', 'C4'
   end
 
   def test_handle_special_CROSSREF_C4_C4
@@ -148,53 +148,53 @@ end
 
     # A C4 reference inside a C4 class contained within a C4 class should
     # resolve to the inner C4 class.
-    assert_ref 'C4.html', 'C4'
+    assert_ref '../../C4/C4.html', 'C4'
   end
 
   def test_handle_special_CROSSREF_class
-    assert_ref 'classes/C1.html', 'C1'
+    assert_ref 'C1.html', 'C1'
     refute_ref 'H1', 'H1'
 
-    assert_ref 'classes/C2.html',       'C2'
-    assert_ref 'classes/C2/C3.html',    'C2::C3'
-    assert_ref 'classes/C2/C3/H1.html', 'C2::C3::H1'
+    assert_ref 'C2.html',       'C2'
+    assert_ref 'C2/C3.html',    'C2::C3'
+    assert_ref 'C2/C3/H1.html', 'C2::C3::H1'
 
-    assert_ref 'classes/C3.html',    '::C3'
-    assert_ref 'classes/C3/H1.html', '::C3::H1'
+    assert_ref 'C3.html',    '::C3'
+    assert_ref 'C3/H1.html', '::C3::H1'
 
-    assert_ref 'classes/C4/C4.html', 'C4::C4'
+    assert_ref 'C4/C4.html', 'C4::C4'
   end
 
   def test_handle_special_CROSSREF_file
-    assert_ref 'files/xref_data_rb.html', 'xref_data.rb'
+    assert_ref 'xref_data_rb.html', 'xref_data.rb'
   end
 
   def test_handle_special_CROSSREF_method
     refute_ref 'm', 'm'
-    assert_ref 'classes/C1.html#M000001', '#m'
+    assert_ref 'C1.html#M000001', '#m'
 
-    assert_ref 'classes/C1.html#M000001', 'C1#m'
-    assert_ref 'classes/C1.html#M000001', 'C1#m()'
-    assert_ref 'classes/C1.html#M000001', 'C1#m(*)'
+    assert_ref 'C1.html#M000001', 'C1#m'
+    assert_ref 'C1.html#M000001', 'C1#m()'
+    assert_ref 'C1.html#M000001', 'C1#m(*)'
 
-    assert_ref 'classes/C1.html#M000001', 'C1.m'
-    assert_ref 'classes/C1.html#M000001', 'C1.m()'
-    assert_ref 'classes/C1.html#M000001', 'C1.m(*)'
+    assert_ref 'C1.html#M000001', 'C1.m'
+    assert_ref 'C1.html#M000001', 'C1.m()'
+    assert_ref 'C1.html#M000001', 'C1.m(*)'
 
     # HACK should this work
     #assert_ref 'classes/C1.html#M000001', 'C1::m'
     #assert_ref 'classes/C1.html#M000001', 'C1::m()'
     #assert_ref 'classes/C1.html#M000001', 'C1::m(*)'
 
-    assert_ref 'classes/C2/C3.html#M000003', 'C2::C3#m'
+    assert_ref 'C2/C3.html#M000003', 'C2::C3#m'
 
-    assert_ref 'classes/C2/C3.html#M000003', 'C2::C3.m'
+    assert_ref 'C2/C3.html#M000003', 'C2::C3.m'
 
-    assert_ref 'classes/C2/C3/H1.html#M000004', 'C2::C3::H1#m?'
+    assert_ref 'C2/C3/H1.html#M000004', 'C2::C3::H1#m?'
 
-    assert_ref 'classes/C2/C3.html#M000003', '::C2::C3#m'
-    assert_ref 'classes/C2/C3.html#M000003', '::C2::C3#m()'
-    assert_ref 'classes/C2/C3.html#M000003', '::C2::C3#m(*)'
+    assert_ref 'C2/C3.html#M000003', '::C2::C3#m'
+    assert_ref 'C2/C3.html#M000003', '::C2::C3#m()'
+    assert_ref 'C2/C3.html#M000003', '::C2::C3#m(*)'
   end
 
   def test_handle_special_CROSSREF_no_ref
@@ -216,7 +216,7 @@ end
   end
 
   def test_handle_special_CROSSREF_special
-    assert_equal "<p>\n<a href=\"classes/C2/C3.html\">C2::C3</a>;method(*)\n</p>\n",
+    assert_equal "<p>\n<a href=\"C2/C3.html\">C2::C3</a>;method(*)\n</p>\n",
                  @xref.convert('C2::C3;method(*)')
   end
 
