@@ -730,6 +730,14 @@ module RDoc
     end
 
     ##
+    # Creates a new section with +title+ and +comment+
+
+    def set_current_section(title, comment)
+      @current_section = Section.new(title, comment)
+      @sections << @current_section
+    end
+
+    ##
     # Return the toplevel that owns us
 
     def toplevel
