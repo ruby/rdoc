@@ -6,6 +6,10 @@ class RDoc::Markup
   # and an indentation level.
 
   class Line
+    
+    ##
+    # Not really
+
     INFINITY = 9999
 
     LINE_TYPES = [

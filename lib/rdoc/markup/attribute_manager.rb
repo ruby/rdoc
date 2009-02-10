@@ -1,6 +1,12 @@
 require 'rdoc/markup/inline'
 
+##
+# Manages changes of attributes in a block of text
+
 class RDoc::Markup::AttributeManager
+
+  ##
+  # The NUL character
 
   NULL = "\000".freeze
 
@@ -96,6 +102,9 @@ class RDoc::Markup::AttributeManager
     end
   end
 
+  ##
+  # Converts HTML tags to RDoc attributes
+
   def convert_html(str, attrs)
     tags = HTML_TAGS.keys.join '|'
 
@@ -107,6 +116,9 @@ class RDoc::Markup::AttributeManager
       seq + $2 + seq + NULL
     }
   end
+
+  ##
+  # Converts special sequences to RDoc attributes
 
   def convert_specials(str, attrs)
     unless SPECIAL.empty?
@@ -125,14 +137,24 @@ class RDoc::Markup::AttributeManager
 
   PROTECTABLE = %w[<\\]
 
+  ##
+  # Escapes special sequences of text to prevent conversion to RDoc
+
   def mask_protected_sequences
     protect_pattern = Regexp.new("\\\\([#{Regexp.escape(PROTECTABLE.join(''))}])")
     @str.gsub!(protect_pattern, "\\1#{PROTECT_ATTR}")
   end
 
+  ##
+  # Unescapes special sequences of text
+
   def unmask_protected_sequences
     @str.gsub!(/(.)#{PROTECT_ATTR}/, "\\1\000")
   end
+
+  ##
+  # Creates a new attribute manager that understands bold, emphasized and
+  # teletype text.
 
   def initialize
     add_word_pair("*", "*", :BOLD)
@@ -145,6 +167,12 @@ class RDoc::Markup::AttributeManager
     add_html("tt",   :TT)
     add_html("code", :TT)
   end
+
+  ##
+  # Adds a markup class with +name+ for words wrapped in the +start+ and
+  # +stop+ character.  To make words wrapped with "*" bold:
+  #
+  #   am.add_word_pair '*', '*', :BOLD
 
   def add_word_pair(start, stop, name)
     raise ArgumentError, "Word flags may not start with '<'" if
@@ -163,13 +191,28 @@ class RDoc::Markup::AttributeManager
     PROTECTABLE.uniq!
   end
 
+  ##
+  # Adds a markup class with +name+ for words surrounded by HTML tag +tag+.
+  # To process emphasis tags:
+  #
+  #   am.add_html 'em', :EM
+
   def add_html(tag, name)
     HTML_TAGS[tag.downcase] = RDoc::Markup::Attribute.bitmap_for name
   end
 
+  ##
+  # Adds a special handler for +pattern+ with +name+.  A simple URL handler
+  # would be:
+  #
+  #   @am.add_special(/((https?:)\S+\w)/, :HYPERLINK)
+
   def add_special(pattern, name)
     SPECIAL[pattern] = RDoc::Markup::Attribute.bitmap_for name
   end
+
+  ##
+  # Processes +str+ converting attributes, HTML and specials
 
   def flow(str)
     @str = str
@@ -186,6 +229,9 @@ class RDoc::Markup::AttributeManager
 
     return split_into_flow
   end
+
+  ##
+  # Debug method that prints a string along with its attributes
 
   def display_attributes
     puts

@@ -23,30 +23,47 @@ module RDoc::Generator
   CSS_NAME  = "rdoc-style.css"
 
   ##
-  # Build a hash of all items that can be cross-referenced.  This is used when
-  # we output required and included names: if the names appear in this hash,
-  # we can generate an html cross reference to the appropriate description.
-  # We also use this when parsing comment blocks: any decorated words matching
-  # an entry in this list are hyperlinked.
+  # A hash of all items that can be cross-referenced.
+  #
+  # This is used when we output required and included names.  If the names
+  # appear in this hash we can generate an html cross reference to the
+  # appropriate description.
+  #
+  # We also use this when parsing comment blocks.  Any decorated words
+  # matching an entry in this list are hyperlinked.
 
   class AllReferences
-    @@refs = {}
 
-    def AllReferences::reset
-      @@refs = {}
-    end
+    ##
+    # Access +name+ in the reference store
 
-    def AllReferences.add(name, html_class)
-      @@refs[name] = html_class
-    end
-
-    def AllReferences.[](name)
+    def self.[](name)
       @@refs[name]
     end
 
-    def AllReferences.keys
+    ##
+    # Add +name+ that references +html_class+
+
+    def self.add(name, html_class)
+      @@refs[name] = html_class
+    end
+
+    ##
+    # List of all known names
+
+    def self.keys
       @@refs.keys
     end
+
+    ##
+    # Empties the reference store
+
+    def self.reset
+      @@refs = {}
+    end
+
+    reset
+
   end
 
   ##
@@ -490,7 +507,7 @@ module RDoc::Generator
   end
 
   ##
-  # Wrap a ClassModule context
+  # Wraps a ClassModule CodeObject for use by a Generator
 
   class Class < Context
 
@@ -534,9 +551,15 @@ module RDoc::Generator
       ::File.join(*path.compact) + ".html"
     end
 
+    ##
+    # Name of this class
+
     def name
       @context.full_name
     end
+
+    ##
+    # Name of this class' parent
 
     def parent_name
       @context.parent.full_name
@@ -545,6 +568,9 @@ module RDoc::Generator
     def index_name
       name
     end
+
+    ##
+    # Writes this class to +f+
 
     def write_on(f, file_list, class_list, method_list, overrides = {})
       value_hash
@@ -560,8 +586,12 @@ module RDoc::Generator
                                @template::CLASS_PAGE,
                                @template::METHOD_LIST)
       end
+
       template_page.write_html_on(f, @values)
     end
+
+    ##
+    # A Hash representation of this class used for filling in templates
 
     def value_hash
       class_attribute_values
@@ -606,6 +636,9 @@ module RDoc::Generator
 
       @values
     end
+
+    ##
+    # Hash representation of this class' attributes that belongs to +section+
 
     def build_attribute_list(section)
       @context.attributes.sort.map do |att|
@@ -680,15 +713,18 @@ module RDoc::Generator
       @values[:infiles] = files
     end
 
+    ##
+    # Classes are ordered by name
+
     def <=>(other)
       self.name <=> other.name
     end
 
-    def inspect
+    def inspect # :nodoc:
       "#<#{self.class} name: #{name} path: #{@path}>"
     end
 
-    def pretty_print(q)
+    def pretty_print(q) # :nodoc:
       q.group 1, "#<#{self.class} ", '>' do
         q.text 'name: '
         q.pp name
@@ -713,15 +749,20 @@ module RDoc::Generator
   end
 
   ##
-  # Handles the mapping of a file's information to HTML. In reality, a file
-  # corresponds to a +TopLevel+ object, containing modules, classes, and
-  # top-level methods. In theory it _could_ contain attributes and aliases,
-  # but we ignore these for now.
+  # Wraps a TopLevel CodeObject for use by a Generator
 
   class File < Context
 
+    ##
+    # Path this file was found at
+
     attr_reader :path
+
+    ##
+    # Name of the file
+
     attr_reader :name
+
     attr_reader :values
 
     def initialize(template_cache, context, options, file_dir)
@@ -759,9 +800,15 @@ module RDoc::Generator
       name
     end
 
+    ##
+    # A file doesn't have a parent
+
     def parent_name
       nil
     end
+
+    ##
+    # Hash representation of this file
 
     def value_hash
       file_attribute_values
@@ -813,6 +860,9 @@ module RDoc::Generator
       @values
     end
 
+    ##
+    # Writes this file to +f+
+
     def write_on(f, file_list, class_list, method_list, overrides = {})
       value_hash
 
@@ -849,15 +899,18 @@ module RDoc::Generator
       end
     end
 
+    ##
+    # Files are ordered by name
+
     def <=>(other)
       self.name <=> other.name
     end
 
-    def inspect
+    def inspect # :nodoc:
       "#<#{self.class} name: #{@name} path: #{@path}>"
     end
 
-    def pretty_print(q)
+    def pretty_print(q) # :nodoc:
       q.group 1, "#<#{self.class} ", '>' do
         q.text 'name: '
         q.pp @name
@@ -876,18 +929,30 @@ module RDoc::Generator
 
   end
 
+  ##
+  # Wraps an AnyMethod CodeObject for use by a Generator
+
   class Method
 
     include MarkUp
+
+    ##
+    # CodeObject this method points to
 
     attr_reader :context
     attr_reader :src_url
     attr_reader :img_url
     attr_reader :source_code
 
+    ##
+    # All methods known by the generator
+
     def self.all_methods
       @@all_methods
     end
+
+    ##
+    # Resets the method cache
 
     def self.reset
       @@all_methods = []
@@ -942,7 +1007,7 @@ module RDoc::Generator
         RDoc::Markup::ToHtmlCrossref.new(path, self, @options.show_hash)
     end
 
-    def inspect
+    def inspect # :nodoc:
       alias_for = if @context.is_alias_for then
                     " (alias_for #{@context.is_alias_for})"
                   else
@@ -959,9 +1024,15 @@ module RDoc::Generator
       ]
     end
 
+    ##
+    # Method name
+
     def name
       @context.name
     end
+
+    ##
+    # Section this method belongs to
 
     def section
       @context.section
@@ -995,9 +1066,15 @@ module RDoc::Generator
       markup(@context.comment)
     end
 
+    ##
+    # public, protected, private
+
     def visibility
       @context.visibility
     end
+
+    ##
+    # Is this method a singleton method?
 
     def singleton
       @context.singleton
@@ -1058,13 +1135,16 @@ module RDoc::Generator
       RDoc::Markup::ToHtml.gen_relative_url path, file_path
     end
 
+    ##
+    # Methods are sorted by name
+
     def <=>(other)
       @context <=> other.context
     end
 
     ##
-    # Given a sequence of source tokens, mark up the source code
-    # to make it look purty.
+    # Given a sequence of source tokens, mark up the source code to make it
+    # look purty.
 
     def markup_code(tokens)
       src = ""
@@ -1083,7 +1163,7 @@ module RDoc::Generator
                 when RDoc::RubyToken::TkSTRING   then "ruby-value str"
                 when RDoc::RubyToken::TkVal      then "ruby-value"
                 else
-                    nil
+                  nil
                 end
 
         text = CGI.escapeHTML(t.text)
@@ -1123,9 +1203,15 @@ module RDoc::Generator
       end
     end
 
+    ##
+    # Should this method be included in generated documentation?
+
     def document_self
       @context.document_self
     end
+
+    ##
+    # Array of other names for this method
 
     def aliases
       @context.aliases

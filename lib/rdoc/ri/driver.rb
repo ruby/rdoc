@@ -607,7 +607,7 @@ Options may also be set in the 'RI' environment variable.
   def expand_klass(klass)
     klass.split('::').inject '' do |expanded, klass_part|
       expanded << '::' unless expanded.empty?
-      expanded << klass_part
+      short = expanded << klass_part
 
       subset = class_cache.keys.select do |klass|
         klass =~ /^#{expanded}[^:]*$/
@@ -615,11 +615,11 @@ Options may also be set in the 'RI' environment variable.
 
       abbrevs = Abbrev.abbrev subset
 
-      expanded = abbrevs[expanded].dup
+      expanded = abbrevs[short]
 
-      raise NotFoundError, expanded unless expanded
+      raise NotFoundError, short unless expanded
 
-      expanded
+      expanded.dup
     end
   end
 

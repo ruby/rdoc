@@ -54,16 +54,26 @@ class RDoc::Markup
     type_name :PARAGRAPH
   end
 
+  ##
+  # An empty line
+
   class BlankLine < Paragraph
     type_name :BLANK
   end
 
+  ##
+  # A heading
+
   class Heading < Paragraph
     type_name :HEADING
+
+    ##
+    # Level of heading, smaller is more important
 
     def head_level
       @param.to_i
     end
+
   end
 
   ##
@@ -80,10 +90,13 @@ class RDoc::Markup
     ]
   end
 
+  ##
+  # An item in a list
+
   class ListItem < ListBase
     type_name :LIST
 
-    def to_s
+    def to_s # :nodoc:
       text = if [:NOTE, :LABELED].include? type then
                "#{@param}: #{@txt}"
              else
@@ -95,13 +108,27 @@ class RDoc::Markup
 
   end
 
+  ##
+  # Start of a list
+
   class ListStart < ListBase
+
+    ##
+    # Creates a ListStart with nesting +level+
+
     def initialize(level, param, type)
       super(level, param, type, nil)
     end
   end
 
+  ##
+  # End of a list
+
   class ListEnd < ListBase
+
+    ##
+    # Creates a ListEnd with nesting +level+
+
     def initialize(level, type)
       super(level, "", type, nil)
     end
@@ -112,6 +139,9 @@ class RDoc::Markup
 
   class Verbatim < Fragment
     type_name  :VERBATIM
+
+    ##
+    # Adds +txt+ to this verbatim
 
     def add_text(txt)
       @txt << txt.chomp << "\n"
@@ -132,13 +162,22 @@ class RDoc::Markup
 
   class LineCollection
 
+    ##
+    # Creates a new collection of lines
+
     def initialize
       @fragments = []
     end
 
+    ##
+    # Adds +fragment+ to the collection
+
     def add(fragment)
       @fragments << fragment
     end
+
+    ##
+    # Iterates over the lines in the collection
 
     def each(&b)
       @fragments.each(&b)
@@ -165,7 +204,7 @@ class RDoc::Markup
       tidy_blank_lines
     end
 
-    def to_s
+    def to_s # :nodoc:
       @fragments.join("\n----\n")
     end
 
@@ -198,6 +237,7 @@ class RDoc::Markup
 
     private
 
+    ##
     # If you have:
     #
     #    normal paragraph text.

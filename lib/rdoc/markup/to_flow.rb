@@ -6,9 +6,25 @@ require 'cgi'
 class RDoc::Markup
 
   module Flow
+
+    ##
+    # Paragraph
+
     P = Struct.new(:body)
+
+    ##
+    # Verbatim
+
     VERB = Struct.new(:body)
+
+    ##
+    # Horizontal rule
+
     RULE = Struct.new(:width)
+
+    ##
+    # List
+
     class LIST
       attr_reader :type, :contents
       def initialize(type)
@@ -19,11 +35,21 @@ class RDoc::Markup
         @contents << stuff
       end
     end
+
+    ##
+    # List item
+
     LI = Struct.new(:label, :body)
+
+    ##
+    # Heading
+
     H = Struct.new(:level, :text)
+
   end
 
   class ToFlow < RDoc::Markup::Formatter
+
     LIST_TYPE_TO_HTML = {
       :BULLET     =>  [ "<ul>", "</ul>" ],
       :NUMBER     =>  [ "<ol>", "</ol>" ],
@@ -70,7 +96,7 @@ class RDoc::Markup
     end
 
     ##
-    # Here's the client side of the visitor pattern
+    # :section: Visitor
 
     def start_accepting
       @res = []

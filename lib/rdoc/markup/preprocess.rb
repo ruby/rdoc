@@ -7,6 +7,10 @@ require 'rdoc/markup'
 
 class RDoc::Markup::PreProcess
 
+  ##
+  # Creates a new pre-processor for +input_file_name+ that will look for
+  # included files in +include_path+
+
   def initialize(input_file_name, include_path)
     @input_file_name = input_file_name
     @include_path = include_path

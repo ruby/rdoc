@@ -6,6 +6,9 @@ require 'rdoc/markup/formatter'
 
 class RDoc::Markup::ToTest < RDoc::Markup::Formatter
 
+  ##
+  # :section: Visitor
+
   def start_accepting
     @res = []
   end

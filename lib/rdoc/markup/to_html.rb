@@ -116,14 +116,14 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   end
 
   ##
-  # are we currently inside <tt> tags?
+  # are we currently inside tt tags?
 
   def in_tt?
     @in_tt > 0
   end
 
   ##
-  # is +tag+ a <tt> tag?
+  # is +tag+ a tt tag?
 
   def tt?(tag)
     tag.bit == @tt_bit
@@ -158,7 +158,37 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   end
 
   ##
-  # Here's the client side of the visitor pattern
+  # This is a higher speed (if messier) version of wrap
+
+  def wrap(txt, line_len = 76)
+    res = ""
+    sp = 0
+    ep = txt.length
+    while sp < ep
+      # scan back for a space
+      p = sp + line_len - 1
+      if p >= ep
+        p = ep
+      else
+        while p > sp and txt[p] != ?\s
+          p -= 1
+        end
+        if p <= sp
+          p = sp + line_len
+          while p < ep and txt[p] != ?\s
+            p += 1
+          end
+        end
+      end
+      res << txt[sp...p] << "\n"
+      sp = p
+      sp += 1 while sp < ep and txt[sp] == ?\s
+    end
+    res
+  end
+
+  ##
+  # :section: Visitor
 
   def start_accepting
     @res = ""
@@ -217,36 +247,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   def accept_heading(am, fragment)
     @res << convert_heading(fragment.head_level, am.flow(fragment.txt))
-  end
-
-  ##
-  # This is a higher speed (if messier) version of wrap
-
-  def wrap(txt, line_len = 76)
-    res = ""
-    sp = 0
-    ep = txt.length
-    while sp < ep
-      # scan back for a space
-      p = sp + line_len - 1
-      if p >= ep
-        p = ep
-      else
-        while p > sp and txt[p] != ?\s
-          p -= 1
-        end
-        if p <= sp
-          p = sp + line_len
-          while p < ep and txt[p] != ?\s
-            p += 1
-          end
-        end
-      end
-      res << txt[sp...p] << "\n"
-      sp = p
-      sp += 1 while sp < ep and txt[sp] == ?\s
-    end
-    res
   end
 
   private
