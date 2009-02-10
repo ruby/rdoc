@@ -443,37 +443,30 @@ end
 
 class RDoc::RI::HtmlFormatter < RDoc::RI::AttributeFormatter
 
-  def write_attribute_text(prefix, line)
-    curr_attr = 0
-    line.each do |achar|
-      attr = achar.attr
-      if achar.attr != curr_attr
-        update_attributes(curr_attr, achar.attr)
-        curr_attr = achar.attr
-      end
-      @output.print(escape(achar.char))
-    end
-    update_attributes(curr_attr, 0) unless curr_attr.zero?
+  ##
+  # We depend on HTML4-conforming user agents to ignore an empty p element
+
+  def blankline
+    @output.puts '<p />'
   end
 
-  def draw_line(label=nil)
-    if label != nil
-      bold_print(label)
-    end
-    @output.puts("<hr>")
+  ##
+  # Emboldens +text+
+
+  def bold_print(text)
+    tag("b") { text }
   end
 
-  def bold_print(txt)
-    tag("b") { txt }
-  end
-
-  def blankline()
-    @output.puts("<p>")
-  end
+  ##
+  # Outputs a forced line break element
 
   def break_to_newline
-    @output.puts("<br>")
+    @output.puts '<br />'
   end
+
+  ##
+  # Outputs heading elements for +text+ with +level+ up to 4.  Ignores
+  # +indent+.
 
   def display_heading(text, level, indent)
     level = 4 if level > 4
@@ -481,50 +474,95 @@ class RDoc::RI::HtmlFormatter < RDoc::RI::AttributeFormatter
     @output.puts
   end
 
+  ##
+  # Outputs +list+ which is displayed as follows:
+  #
+  # BULLET:: unordered list
+  # NUMBER:: ordered list
+  # LABELED:: definition list
+  # NOTE:: table
+
   def display_list(list)
     case list.type
     when :BULLET then
       list_type = "ul"
-      prefixer = proc { |ignored| "<li>" }
+      prefixer = proc { |ignored| '<li>' }
+      suffix = '</li>'
 
     when :NUMBER, :UPPERALPHA, :LOWERALPHA then
       list_type = "ol"
-      prefixer = proc { |ignored| "<li>" }
+      prefixer = proc { |ignored| '<li>' }
+      suffix = '</li>'
 
     when :LABELED then
       list_type = "dl"
       prefixer = proc do |li|
-        "<dt><b>" + escape(li.label) + "</b><dd>"
+        "<dt><b>#{escape li.label}</b></dt><dd>"
       end
+      suffix = '</dd>'
 
     when :NOTE then
       list_type = "table"
       prefixer = proc do |li|
         %{<tr valign="top"><td>#{li.label.gsub(/ /, '&nbsp;')}</td><td>}
       end
+      suffix = '</td></tr>'
     else
       fail "unknown list type"
     end
 
     @output.print "<#{list_type}>"
+
     list.contents.each do |item|
       if item.kind_of? RDoc::Markup::Flow::LI
-        prefix = prefixer.call(item)
+        prefix = prefixer.call item
         @output.print prefix
-        display_flow_item(item, prefix)
+        display_flow_item item, prefix
+        @output.print suffix
       else
-        display_flow_item(item)
+        display_flow_item item
       end
     end
+
     @output.print "</#{list_type}>"
   end
 
+  ##
+  # Outputs a preformatted section for +item+.  +prefix+ is ignored.
+
   def display_verbatim_flow_item(item, prefix=@indent)
-    @output.print("<pre>")
+    @output.print '<pre>'
+
     item.body.split(/\n/).each do |line|
-      @output.puts conv_html(line)
+      @output.puts escape(line)
     end
-    @output.puts("</pre>")
+
+    @output.puts '</pre>'
+  end
+
+  ##
+  # Outputs a horizontal rule element, optionally labeled above with +label+ in
+  # bold.
+
+  def draw_line(label = nil)
+    bold_print label if label
+
+    @output.puts "<hr />"
+  end
+
+  def write_attribute_text(prefix, line)
+    curr_attr = 0
+
+    line.each do |achar|
+      attr = achar.attr
+      if achar.attr != curr_attr then
+        update_attributes curr_attr, achar.attr
+        curr_attr = achar.attr
+      end
+      @output.print escape(achar.char)
+    end
+
+    update_attributes curr_attr, 0 unless curr_attr.zero?
   end
 
   private
