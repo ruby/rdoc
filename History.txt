@@ -3,6 +3,10 @@
 * N Minor Enhancements
   * `ri -f html` is now XHTML-happy.
 
+* N Bug Fixes
+  * nodoc'd classes no longer appear in the index.  Bug #23751 by Clifford
+    Heath.
+
 === 2.3.0 / 2009-01-28
 
 * 3 Major Enhancements

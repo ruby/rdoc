@@ -881,7 +881,7 @@ module RDoc
         puts "Reusing class/module #{cls.full_name}" if $DEBUG_RDOC
       else
         all = nil
-        
+
         @@lock.synchronize do
           if class_type == NormalModule then
             all = @@all_modules

@@ -168,7 +168,9 @@ module RDoc::Generator
                  end
 
       RDoc::TopLevel.all_classes_and_modules.each do |cls|
-        build_class_list(template_cache, classes, options, cls, files[0], 
+        next unless cls.document_self
+
+        build_class_list(template_cache, classes, options, cls, files[0],
                          class_dir)
       end
 
