@@ -3,6 +3,7 @@
 * N Minor Enhancements
   * `ri -f html` is now XHTML-happy.
   * Clarified RDoc::Markup link syntax.  Bug #23517 by Eric Armstrong.
+  * Number of threads to parse with is now configurable.
 
 * N Bug Fixes
   * nodoc'd classes no longer appear in the index.  Bug #23751 by Clifford

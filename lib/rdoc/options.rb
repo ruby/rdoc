@@ -141,6 +141,11 @@ class RDoc::Options
   attr_accessor :template_class # :nodoc:
 
   ##
+  # Number of threads to parse with
+
+  attr_accessor :threads
+
+  ##
   # Documentation title
 
   attr_reader :title
@@ -168,6 +173,11 @@ class RDoc::Options
     @rdoc_include = []
     @title = nil
     @template = nil
+    @threads = if RUBY_PLATFORM == 'java' then
+                 Java::java::lang::Runtime.getRuntime.availableProcessors * 2
+               else
+                 2
+               end
     @template_class = nil
     @diagram = false
     @fileboxes = false
@@ -431,14 +441,6 @@ Usage: #{opt.program_name} [options] [names...]
         @verbosity = 0
       end
 
-      opt.on("--verbose", "-v",
-             "Display extra progress as we parse.") do |value|
-        @verbosity = 2
-      end
-
-
-      opt.separator nil
-
       opt.on("--ri", "-r",
              "Generate output for use by `ri`. The files",
              "are stored in the '.rdoc' directory under",
@@ -510,10 +512,24 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
+      opt.on("--threads=THREADS", Integer,
+             "Number of threads to parse with.") do |threads|
+        @threads = threads
+      end
+
+      opt.separator nil
+
       opt.on("--title=TITLE", "-t",
              "Set TITLE as the title for HTML output.") do |value|
         @title = value
       end
+
+      opt.on("--verbose", "-v",
+             "Display extra progress as we parse.") do |value|
+        @verbosity = 2
+      end
+
+      opt.separator nil
 
       opt.separator nil
 

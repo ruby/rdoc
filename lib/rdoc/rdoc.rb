@@ -188,17 +188,17 @@ module RDoc
 
       return [] if file_list.empty?
 
-      jobs = SizedQueue.new(number_of_threads * 3)
+      jobs = SizedQueue.new(@options.threads * 3)
       workers = []
       file_info = []
       file_info_lock = Mutex.new
 
       Thread.abort_on_exception = true
       @stats = Stats.new(file_list.size, options.verbosity)
-      @stats.begin_adding(number_of_threads)
+      @stats.begin_adding @options.threads
 
       # Create worker threads.
-      number_of_threads.times do
+      @options.threads.times do
         thread = Thread.new do
           while (filename = jobs.pop)
             @stats.add_file(filename)
@@ -295,15 +295,6 @@ module RDoc
     end
 
     private
-
-    def number_of_threads
-      @@number_of_threads ||=
-        if RUBY_PLATFORM == "java"
-          Java::java::lang::Runtime.getRuntime.availableProcessors * 2
-        else
-          2
-        end
-    end
 
     def read_file_contents(filename)
       content = if RUBY_VERSION >= '1.9' then
