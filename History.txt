@@ -2,10 +2,12 @@
 
 * N Minor Enhancements
   * `ri -f html` is now XHTML-happy.
+  * Clarified RDoc::Markup link syntax.  Bug #23517 by Eric Armstrong.
 
 * N Bug Fixes
   * nodoc'd classes no longer appear in the index.  Bug #23751 by Clifford
     Heath.
+  * Fix 1.9 compatibility issues.  Bug #23815 by paddor.
 
 === 2.3.0 / 2009-01-28
 

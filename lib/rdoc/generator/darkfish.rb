@@ -352,9 +352,10 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 	end
 
 
-	### Load and render the erb template in the given +templatefile+ within the specified 
-	### +context+ (a Binding object) and write it out to +outfile+. Both +templatefile+ and 
-	### +outfile+ should be Pathname-like objects.
+	### Load and render the erb template in the given +templatefile+ within the
+	### specified +context+ (a Binding object) and write it out to +outfile+.
+	### Both +templatefile+ and +outfile+ should be Pathname-like objects.
+
 	def render_template( templatefile, context, outfile )
 		template_src = templatefile.read
 		template = ERB.new( template_src, nil, '<>' )
@@ -363,11 +364,11 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 		output = begin
 			template.result( context )
 		rescue NoMethodError => err
-			raise "Error while evaluating %s: %s (at %p)" % [
+			raise RDoc::Error, "Error while evaluating %s: %s (at %p)" % [
 				templatefile.to_s,
 				err.message,
 				eval( "_erbout[-50,50]", context )
-			]
+			], err.backtrace
 		end
 
 		unless $dryrun

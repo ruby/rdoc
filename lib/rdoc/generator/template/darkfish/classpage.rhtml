@@ -74,7 +74,7 @@
 			<div id="namespace-list-section" class="section">
 				<h3 class="section-header">Namespace</h3>
 				<ul class="link-list">
-					<% classinfo[:sections].first[:classlist].each do |desc| %>
+					<% classinfo[:sections].first[:classlist].each_line do |desc| %>
 					<li><%= desc.sub(/^(\w+)/, %Q{<span class="type">\\1</span>}) %></li>
 					<% end %>
 				</ul>

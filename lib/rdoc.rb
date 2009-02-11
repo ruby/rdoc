@@ -223,7 +223,7 @@ $DEBUG_RDOC = nil
 #
 #   [\<b>text...</b>]    displays word in a *bold* font
 #   [\<em>text...</em>]  displays word in an _emphasized_ font
-#   [\\<i>text...</i>]    displays word in an <i>italicized</i> font
+#   [\<i>text...</i>]    displays word in an <i>italicized</i> font
 #   [\<tt>text...</tt>]  displays word in a +code+ font
 #
 #   Unlike conventional Wiki markup, general markup can cross line
@@ -233,7 +233,7 @@ $DEBUG_RDOC = nil
 #
 # * Hyperlinks to the web starting http:, mailto:, ftp:, or www. are
 #   recognized.  An HTTP url that references an external image file is
-#   converted into an inline <IMG..>.  Hyperlinks starting 'link:' are
+#   converted into an inline \<IMG..>.  Hyperlinks starting 'link:' are
 #   assumed to refer to local files whose path is relative to the --op
 #   directory.
 #
@@ -241,6 +241,14 @@ $DEBUG_RDOC = nil
 #   case the label is used in the displayed text, and +url+ is
 #   used as the target.  If +label+ contains multiple words,
 #   put it in braces: <em>{multi word label}[</em>url<em>]</em>.
+#
+#   Example hyperlinks:
+#
+#     link:RDoc.html
+#     http://rdoc.rubyforge.org
+#     mailto:user@example.com
+#     {RDoc Documentation}[http://rdoc.rubyforge.org]
+#     {RDoc Markup}[link:RDoc/Markup.html]
 #
 # == Directives
 #
