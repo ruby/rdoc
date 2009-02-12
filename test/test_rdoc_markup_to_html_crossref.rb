@@ -1,68 +1,18 @@
 require 'rubygems'
 require 'minitest/unit'
 require 'rdoc/generator'
-require 'rdoc/stats'
-require 'rdoc/code_objects'
 require 'rdoc/markup/to_html_crossref'
-require 'rdoc/parser/ruby'
+require 'test/xref_test_case'
 
-require 'pathname'
-
-class TestRDocMarkupToHtmlCrossref < MiniTest::Unit::TestCase
-
-  XREF_DATA = <<-XREF_DATA
-class C1
-  def self.m
-  end
-
-  def m
-  end
-end
-
-class C2
-  class C3
-    def m
-    end
-
-    class H1
-      def m?
-      end
-    end
-  end
-end
-
-class C3
-  class H1
-  end
-
-  class H2
-  end
-end
-
-class C4
-  class C4
-  end
-end
-  XREF_DATA
+class TestRDocMarkupToHtmlCrossref < XrefTestCase
 
   def setup
-    RDoc::TopLevel.reset
-
     RDoc::Generator::Method.reset
-    top_level = RDoc::TopLevel.new 'xref_data.rb'
 
-    options = RDoc::Options.new
-    options.quiet = true
-    options.inline_source = true # don't build HTML files
+    super
 
-    stats = RDoc::Stats.new 0
-
-    parser = RDoc::Parser::Ruby.new top_level, 'xref_data.rb', XREF_DATA,
-                                    options, stats
-    top_levels = []
-    top_levels.push parser.scan
-
-    files, classes = RDoc::Generator::Context.build_indices top_levels, options
+    files, classes = RDoc::Generator::Context.build_indices @top_levels,
+                                                            @options
 
     @class_hash = {}
 
@@ -90,7 +40,7 @@ end
     refute_ref '#m', '#m'
 
     assert_ref '../C2/C3.html', 'C2::C3'
-    assert_ref '../C2/C3.html#M000003', 'C2::C3#m'
+    assert_ref '../C2/C3.html#M000005', 'C2::C3#m'
     assert_ref '../C2/C3/H1.html', 'C3::H1'
     assert_ref '../C4.html', 'C4'
 
@@ -104,10 +54,10 @@ end
     @klass = @class_hash['C2::C3']
     @xref = RDoc::Markup::ToHtmlCrossref.new 'classes/C2/C3.html', @klass, true
 
-    assert_ref '../../C2/C3.html#M000003', '#m'
+    assert_ref '../../C2/C3.html#M000005', '#m'
 
     assert_ref '../../C2/C3.html', 'C3'
-    assert_ref '../../C2/C3.html#M000003', 'C3#m'
+    assert_ref '../../C2/C3.html#M000005', 'C3#m'
 
     assert_ref '../../C2/C3/H1.html', 'H1'
     assert_ref '../../C2/C3/H1.html', 'C3::H1'
@@ -171,30 +121,30 @@ end
 
   def test_handle_special_CROSSREF_method
     refute_ref 'm', 'm'
-    assert_ref 'C1.html#M000001', '#m'
+    assert_ref 'C1.html#M000003', '#m'
 
-    assert_ref 'C1.html#M000001', 'C1#m'
-    assert_ref 'C1.html#M000001', 'C1#m()'
-    assert_ref 'C1.html#M000001', 'C1#m(*)'
+    assert_ref 'C1.html#M000003', 'C1#m'
+    assert_ref 'C1.html#M000003', 'C1#m()'
+    assert_ref 'C1.html#M000003', 'C1#m(*)'
 
-    assert_ref 'C1.html#M000001', 'C1.m'
-    assert_ref 'C1.html#M000001', 'C1.m()'
-    assert_ref 'C1.html#M000001', 'C1.m(*)'
+    assert_ref 'C1.html#M000003', 'C1.m'
+    assert_ref 'C1.html#M000003', 'C1.m()'
+    assert_ref 'C1.html#M000003', 'C1.m(*)'
 
     # HACK should this work
     #assert_ref 'classes/C1.html#M000001', 'C1::m'
     #assert_ref 'classes/C1.html#M000001', 'C1::m()'
     #assert_ref 'classes/C1.html#M000001', 'C1::m(*)'
 
-    assert_ref 'C2/C3.html#M000003', 'C2::C3#m'
+    assert_ref 'C2/C3.html#M000005', 'C2::C3#m'
 
-    assert_ref 'C2/C3.html#M000003', 'C2::C3.m'
+    assert_ref 'C2/C3.html#M000005', 'C2::C3.m'
 
-    assert_ref 'C2/C3/H1.html#M000004', 'C2::C3::H1#m?'
+    assert_ref 'C2/C3/H1.html#M000007', 'C2::C3::H1#m?'
 
-    assert_ref 'C2/C3.html#M000003', '::C2::C3#m'
-    assert_ref 'C2/C3.html#M000003', '::C2::C3#m()'
-    assert_ref 'C2/C3.html#M000003', '::C2::C3#m(*)'
+    assert_ref 'C2/C3.html#M000005', '::C2::C3#m'
+    assert_ref 'C2/C3.html#M000005', '::C2::C3#m()'
+    assert_ref 'C2/C3.html#M000005', '::C2::C3#m(*)'
   end
 
   def test_handle_special_CROSSREF_no_ref
@@ -223,3 +173,4 @@ end
 end
 
 MiniTest::Unit.autorun
+

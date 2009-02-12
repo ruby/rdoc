@@ -6,6 +6,7 @@ require 'rdoc/markup/to_html'
 class TestRDocMarkupToHtml < MiniTest::Unit::TestCase
 
   def setup
+    @m = RDoc::Markup.new
     @am = RDoc::Markup::AttributeManager.new
     @th = RDoc::Markup::ToHtml.new
   end
@@ -21,6 +22,27 @@ class TestRDocMarkupToHtml < MiniTest::Unit::TestCase
     assert_equal 'd.html',    gen('a/c.html', 'a/d.html')
     assert_equal '../a.html', gen('a/c.html', 'a.html')
     assert_equal 'a/c.html',  gen('a.html',   'a/c.html')
+  end
+
+  def test_list_verbatim
+    str = "* one\n    verb1\n    verb2\n* two\n"
+
+    expected = <<-EXPECTED
+<ul>
+<li>one
+
+<pre>
+  verb1
+  verb2
+</pre>
+</li>
+<li>two
+
+</li>
+</ul>
+    EXPECTED
+
+    assert_equal expected, @m.convert(str, @th)
   end
 
   def test_tt_formatting

@@ -34,6 +34,16 @@ module RDoc
   class RDoc
 
     ##
+    # Generator instance used for creating output
+
+    attr_reader :generator
+
+    ##
+    # RDoc options
+
+    attr_reader :options
+
+    ##
     # Accessor for statistics.  Available after each call to parse_files
 
     attr_reader :stats
@@ -51,7 +61,23 @@ module RDoc
       GENERATORS[name] = klass
     end
 
+    ##
+    # Active RDoc::RDoc instance
+
+    def self.current
+      @current
+    end
+
+    ##
+    # Sets the active RDoc::RDoc instance
+
+    def self.current=(rdoc)
+      @current = rdoc
+    end
+
     def initialize
+      @generator = nil
+      @options = nil
       @stats = nil
     end
 
@@ -94,14 +120,14 @@ module RDoc
     # Update the flag file in an output directory.
 
     def update_output_dir(op_dir, time)
-      File.open(output_flag_file(op_dir), "w") {|f| f.puts time.rfc2822 }
+      File.open(output_flag_file(op_dir), "w") { |f| f.puts time.rfc2822 }
     end
 
     ##
     # Return the path name of the flag file in an output directory.
 
     def output_flag_file(op_dir)
-      File.join(op_dir, "created.rid")
+      File.join op_dir, "created.rid"
     end
 
     ##
@@ -119,6 +145,7 @@ module RDoc
         candidates = Dir.glob(File.join(in_dir, patt))
         result.concat(normalized_file_list(options,  candidates))
       end
+
       result
     end
 
@@ -248,7 +275,7 @@ module RDoc
     # Throws: RDoc::Error on error
 
     def document(argv)
-      TopLevel::reset
+      TopLevel.reset
 
       @options = Options.new
       @options.parse argv
@@ -268,23 +295,26 @@ module RDoc
       if file_info.empty?
         $stderr.puts "\nNo newer files." unless @options.quiet
       else
-        generator = @options.generator
+        gen_klass = @options.generator
 
         $stderr.puts "\nGenerating #{generator.name.sub(/^.*::/, '')}..." unless
           @options.quiet
 
-        @gen = generator.for @options
+        @generator = gen_klass.for @options
 
         pwd = Dir.pwd
 
         Dir.chdir @options.op_dir unless @options.all_one_file
 
         begin
+          self.class.current = self
+
           Diagram.new(file_info, @options).draw if @options.diagram
-          @gen.generate(file_info)
-          update_output_dir(".", start_time)
+          @generator.generate file_info
+          update_output_dir ".", start_time
         ensure
-          Dir.chdir(pwd)
+          self.class.current = nil
+          Dir.chdir pwd
         end
       end
 

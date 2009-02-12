@@ -18,12 +18,12 @@ class TestRDocMarkup < MiniTest::Unit::TestCase
 
     block = m.convert(str, mock)
 
-    if block != expected
+    unless block == expected then
       rows = (0...([expected.size, block.size].max)).collect{|i|
         [expected[i]||"nil", block[i]||"nil"]
       }
       printf "\n\n%35s %35s\n", "Expected", "Got"
-      rows.each {|e,g| printf "%35s %35s\n", e.dump, g.dump }
+      rows.each { |e,g| printf "%35s %35s\n", e.dump, g.dump }
     end
 
     assert_equal(expected, block)
@@ -383,6 +383,17 @@ class TestRDocMarkup < MiniTest::Unit::TestCase
                   "L0: Paragraph\nthe time"
                 ])
 
+  end
+
+  def test_list_verbatim
+    str = "* one\n    verb1\n    verb2\n* two\n"
+
+    line_groups(str,
+                [ "L1: ListStart\n",
+                  "L1: BULLET ListItem\none",
+                  "L1: Verbatim\n  verb1\n  verb2\n",
+                  "L1: BULLET ListItem\ntwo",
+                  "L1: ListEnd\n" ])
   end
 
   def test_paragraph
