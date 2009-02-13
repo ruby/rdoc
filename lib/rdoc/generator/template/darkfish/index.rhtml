@@ -6,7 +6,7 @@
 <head>
 	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 
-	<title><%= h options.title %></title>
+	<title><%= h @options.title %></title>
 
 	<link type="text/css" media="screen" href="rdoc.css" rel="stylesheet" />
 
@@ -19,32 +19,30 @@
 <body class="indexpage">
 
 	<% $stderr.sync = true %>
-	<h1><%= h options.title %></h1>
+	<h1><%= h @options.title %></h1>
 
-	<% if options.main_page && files.key?( options.main_page ) %>
+	<% if @options.main_page && main_page = @files.find { |f| f.full_name == @options.main_page } %>
 	<div id="main">
-		<%= files[ options.main_page ][:description].sub(%r{^\s*<h1.*?/h1>}i, '') %>
+		<%= main_page.description.sub(%r{^\s*<h1.*?/h1>}i, '') %>
 	</div>
 	<% else %>
-	<p>This is the API documentation for '<%= options.title %>'.</p>
+	<p>This is the API documentation for '<%= @options.title %>'.</p>
 	<% end %>
 
-	<% simple_files = files.select {|_, file| file[:parser] == RDoc::Parser::Simple } %>
+	<% simple_files = @files.select {|tl| tl.parser == RDoc::Parser::Simple } %>
 	<% unless simple_files.empty? then %>
 	<h2>Files</h2>
 	<ul>
-		<% simple_files.sort_by {|name,_| name }.each do |name, file| %>
-			<li class="file"><a href="<%= file[:short_name] %>.html"><%= h file[:short_name] %></a></li>
+		<% simple_files.sort.each do |file| %>
+			<li class="file"><a href="<%= file.file_base_name %>.html"><%= h file.file_base_name %></a></li>
 		<% end %>
 	</ul>
 	<% end %>
 
 	<h2>Classes/Modules</h2>
 	<ul>
-		<% modsort.each do |classname| %>
-		<% classdata = classes[classname] %>
-		<li class="<%= classdata[:classmod].downcase %>"><a 
-			href="<%= classdata[:full_name].gsub( /::/, '/' ) + '.html' %>"><%= classdata[:full_name] %></a></li>
+		<% @modsort.each do |klass| %>
+		<li class="<%= klass.type %>"><a href="<%= klass.path %>"><%= klass.full_name %></a></li>
 		<% end %>
 	</ul>
 

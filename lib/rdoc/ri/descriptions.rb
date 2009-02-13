@@ -129,7 +129,7 @@ class RDoc::RI::ClassDescription < RDoc::RI::ModuleDescription
   attr_accessor :superclass
 
   def display_name
-      "Class"
+    "Class"
   end
 
   def superclass_string

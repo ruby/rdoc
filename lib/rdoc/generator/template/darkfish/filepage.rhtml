@@ -6,7 +6,7 @@
 <head>
 	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 
-	<title><%= fileinfo[:title] %></title>
+	<title>File: <%= file.file_base_name %> [<%= @options.title %>]</title>
 
 	<link type="text/css" media="screen" href="<%= rel_prefix %>/rdoc.css" rel="stylesheet" />
 
@@ -20,18 +20,17 @@
 		charset="utf-8"></script>
 </head>
 	
-<% if fileinfo[:parser] == RDoc::Parser::Simple %>
+<% if file.parser == RDoc::Parser::Simple %>
 <body class="file">
   <div id="metadata">
 		<div id="project-metadata">
-			<% simple_files = files.select {|_, file| file[:parser] == RDoc::Parser::Simple } %>
+			<% simple_files = @files.select { |f| f.parser == RDoc::Parser::Simple } %>
 			<% unless simple_files.empty? then %>
 			<div id="fileindex-section" class="section project-section">
 				<h3 class="section-header">Files</h3>
 				<ul>
-				<% simple_files.sort_by {|name,_| name }.each do |name, file| %>
-					<li class="file"><a href="<%= rel_prefix %>/<%= 
-						file[:short_name] %>.html"><%= h file[:short_name] %></a></li>
+				<% simple_files.each do |f| %>
+					<li class="file"><a href="<%= rel_prefix %>/<%= f.file_base_name %>.html"><%= h f.file_base_name %></a></li>
 				<% end %>
 				</ul>
 			</div>
@@ -51,15 +50,14 @@
 				</form>
 
 				<ul class="link-list">
-				<% modsort.each do |cname| %>
-				<% cinfo = classes[cname] %>
-					<li><a href="<%= rel_prefix %>/<%= cinfo[:outfile] %>"><%= cname %></a></li>
+				<% @modsort.each do |index_klass| %>
+					<li><a href="<%= rel_prefix %>/<%= index_klass.path %>"><%= index_klass.full_name %></a></li>
 				<% end %>
 				</ul>
 				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
 			</div>
 			
-			<% if $DEBUG %>
+			<% if $DEBUG_RDOC %>
 			<div id="debugging-toggle"><img src="<%= rel_prefix %>/images/bug.png" 
 				alt="toggle debugging" height="16" width="16" /></div>
 			<% end %>
@@ -67,7 +65,7 @@
 	</div>
 
 	<div id="documentation">
-		<%= fileinfo[:description] %>
+		<%= file.description %>
 	</div>
 
 	<div id="validator-badges">
@@ -81,30 +79,30 @@
 	<div id="metadata">
 		<dl>
 			<dt class="modified-date">Last Modified</dt>
-			<dd class="modified-date"><%= fileinfo[:dtm_modified] %></dd>
+			<dd class="modified-date"><%= file.last_modified %></dd>
 			
-			<% if fileinfo[:requires] %>
+			<% if file.requires %>
 			<dt class="requires">Requires</dt>
 			<dd class="requires">
 				<ul>
-				<% fileinfo[:requires].each do |dependency| %>
-					<li><%= dependency[:name] %></li>
+				<% file.requires.each do |require| %>
+					<li><%= require.name %></li>
 				<% end %>
 				</ul>
 			</dd>
 			<% end %>
 			
-			<% if fileinfo[:cvsurl] %>
+			<% if @options.webcvs %>
 			<dt class="scs-url">Trac URL</dt>
 			<dd class="scs-url"><a target="_top" 
-				href="<%= fileinfo[:cvsurl] %>"><%= fileinfo[:cvsurl] %></a></dd>
+				href="<%= file.cvs_url %>"><%= file.cvs_url %></a></dd>
 			<% end %>
 		</dl>
 
-		<% if fileinfo[:description] %>
+		<% if file.comment %>
 		<div class="description">
 			<h2>Description</h2>
-			<%= fileinfo[:description] %>
+			<%= file.description %>
 		</div>
 		<% end %>
 	</div>

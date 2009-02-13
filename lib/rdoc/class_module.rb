@@ -15,7 +15,6 @@ class RDoc::ClassModule < RDoc::Context
     @name       = name
     @diagram    = nil
     @superclass = superclass
-    @comment    = ""
     super()
   end
 
@@ -32,19 +31,18 @@ class RDoc::ClassModule < RDoc::Context
   # Return the fully qualified name of this class or module
 
   def full_name
-    if @parent && @parent.full_name
-      @parent.full_name + "::" + @name
+    if RDoc::ClassModule === @parent then
+      "#{@parent.full_name}::#{@name}"
     else
       @name
     end
   end
 
   ##
-  # URL for this with a +prefix+
+  # 'module' or 'class'
 
-  def http_url(prefix)
-    path = full_name.split("::")
-    File.join(prefix, *path) + ".html"
+  def type
+    module? ? 'module' : 'class'
   end
 
   ##
@@ -55,22 +53,20 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
-  # Get the superclass of this class.  Attempts to retrieve the superclass'
-  # real name by following module nesting.
+  # Path to this class or module
+
+  def path
+    http_url RDoc::RDoc.current.generator.class_dir
+  end
+
+  ##
+  # Get the superclass of this class.  Attempts to retrieve the superclass
+  # object, returns the name if it is not known.
 
   def superclass
     raise NoMethodError, "#{full_name} is a module" if module?
 
-    scope = self
-
-    begin
-      superclass = scope.classes.find { |c| c.name == @superclass }
-
-      return superclass.full_name if superclass
-      scope = scope.parent
-    end until scope.nil? or RDoc::TopLevel === scope
-
-    @superclass
+    RDoc::TopLevel.find_class_named(@superclass) || @superclass
   end
 
   ##

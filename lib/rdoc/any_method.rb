@@ -9,7 +9,7 @@ class RDoc::AnyMethod < RDoc::CodeObject
   ##
   # Method name
 
-  attr_accessor :name
+  attr_writer :name
 
   ##
   # public, protected, private
@@ -31,12 +31,20 @@ class RDoc::AnyMethod < RDoc::CodeObject
 
   attr_accessor :singleton
 
+  ##
+  # Source file token stream
+
   attr_reader :text
 
   ##
   # Array of other names for this method
 
-  attr_reader   :aliases
+  attr_reader :aliases
+
+  ##
+  # Fragment reference for this method
+
+  attr_reader :aref
 
   ##
   # The method we're aliasing
@@ -55,6 +63,15 @@ class RDoc::AnyMethod < RDoc::CodeObject
 
   include RDoc::TokenStream
 
+  ##
+  # Resets method fragment reference counter
+
+  def self.reset
+    @@aref = 'M000000'
+  end
+
+  reset
+
   def initialize(text, name)
     super()
     @text = text
@@ -65,15 +82,17 @@ class RDoc::AnyMethod < RDoc::CodeObject
     @block_params  = nil
     @aliases       = []
     @is_alias_for  = nil
-    @comment = ""
     @call_seq = nil
+
+    @aref  = @@aref
+    @@aref = @@aref.succ
   end
 
   ##
-  # Order by #name
+  # Order by #singleton then #name
 
   def <=>(other)
-    @name <=> other.name
+    [@singleton ? 0 : 1, @name] <=> [other.singleton ? 0 : 1, other.name]
   end
 
   ##
@@ -81,6 +100,13 @@ class RDoc::AnyMethod < RDoc::CodeObject
 
   def add_alias(method)
     @aliases << method
+  end
+
+  ##
+  # HTML id-friendly method name
+
+  def html_name
+    @name.gsub(/[^a-z]+/, '-')
   end
 
   def inspect # :nodoc:
@@ -93,6 +119,15 @@ class RDoc::AnyMethod < RDoc::CodeObject
         visibility,
         alias_for,
       ]
+  end
+
+  ##
+  # Method name
+
+  def name
+    return @name if @name
+
+    @name = @call_seq[/^.*?\.(\w+)/, 1] || @call_seq
   end
 
   ##
@@ -119,10 +154,23 @@ class RDoc::AnyMethod < RDoc::CodeObject
     params
   end
 
+  ##
+  # Path to this method
+
+  def path
+    "#{@parent.path}##{@aref}"
+  end
+
   def to_s # :nodoc:
-      "#{self.class.name}: #{full_name} (#{@text})\n#{@comment}"
+    "#{self.class.name}: #{full_name} (#{@text})\n#{@comment}"
+  end
+
+  ##
+  # Type of method (class or instance)
+
+  def type
+    singleton ? 'class' : 'instance'
   end
 
 end
-
 

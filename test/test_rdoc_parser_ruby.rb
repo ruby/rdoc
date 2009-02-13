@@ -198,9 +198,8 @@ end
 
     @parser.scan
 
-    assert_empty RDoc::TopLevel.modules_hash
-    # HACK why does it fail?
-    #assert_empty @top_level.modules
+    assert_equal %w[Foo::Baz], RDoc::TopLevel.modules_hash.keys
+    assert_empty @top_level.modules
 
     foo = @top_level.classes.first
     assert_equal 'Foo', foo.full_name

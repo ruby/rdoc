@@ -488,7 +488,12 @@ class RDoc::Parser::C < RDoc::Parser
     end
 
     if class_mod == "class" then
-      full_name = enclosure.full_name.to_s + "::#{class_name}"
+      full_name = if RDoc::ClassModule === enclosure then
+                    enclosure.full_name + "::#{class_name}"
+                  else
+                    class_name
+                  end
+
       if @content =~ %r{Document-class:\s+#{full_name}\s*<\s+([:,\w]+)} then
         parent_name = $1
       end

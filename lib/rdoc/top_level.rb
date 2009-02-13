@@ -32,9 +32,7 @@ class RDoc::TopLevel < RDoc::Context
   # Returns all classes and modules discovered by RDoc
 
   def self.all_classes_and_modules
-    @lock.synchronize do
-      classes_hash.values + modules_hash.values
-    end
+    classes_hash.values + modules_hash.values
   end
 
   ##
@@ -73,6 +71,20 @@ class RDoc::TopLevel < RDoc::Context
     end
   end
 
+  ##
+  # Finds the module with +name+ in all discovered modules
+
+  def self.find_module_named(name)
+    @lock.synchronize do
+      modules_hash.each_value do |c|
+        res = c.find_module_named name
+        return res if res
+      end
+    end
+
+    nil
+  end
+
   @lock = Mutex.new
 
   ##
@@ -107,7 +119,7 @@ class RDoc::TopLevel < RDoc::Context
 
   def initialize(file_name)
     super()
-    @name = "TopLevel"
+    @name = nil
     @file_relative_name = file_name
     @file_absolute_name = file_name
     @file_stat          = File.stat(file_name) rescue nil # HACK for testing
@@ -117,56 +129,6 @@ class RDoc::TopLevel < RDoc::Context
     RDoc::TopLevel.lock.synchronize do
       RDoc::TopLevel.files_hash[file_name] = self
     end
-  end
-
-  ##
-  # Adding a class or module to a TopLevel is special, as we only want one
-  # copy of a particular top-level class. For example, if both file A and file
-  # B implement class C, we only want one ClassModule object for C.  This code
-  # arranges to share classes and modules between files.
-
-  def add_class_or_module(collection, class_type, name, superclass)
-    mod = collection[name]
-
-    if mod then
-      mod.superclass = superclass unless mod.module?
-      puts "Reusing class/module #{mod.full_name}" if $DEBUG_RDOC
-    else
-      all = nil
-
-      RDoc::TopLevel.lock.synchronize do
-        all = if class_type == RDoc::NormalModule then
-                RDoc::TopLevel.modules_hash
-              else
-                RDoc::TopLevel.classes_hash
-              end
-
-        mod = all[name]
-      end
-
-      unless mod then
-        mod = class_type.new name, superclass
-
-        unless @done_documenting
-          RDoc::TopLevel.lock.synchronize do
-            all[mod.full_name] = mod
-          end
-        end
-      else
-        # If the class has been encountered already, check that its
-        # superclass has been set (it may not have been, depending on the
-        # context in which it was encountered).
-        if class_type == RDoc::NormalClass then
-          mod.superclass = superclass unless mod.superclass
-        end
-      end
-
-      collection[mod.full_name] = mod unless @done_documenting
-
-      mod.parent = self
-    end
-
-    mod
   end
 
   ##
@@ -181,13 +143,12 @@ class RDoc::TopLevel < RDoc::Context
   # modules
 
   def find_class_or_module_named(symbol)
-    RDoc::TopLevel.lock.synchronize do
-      RDoc::TopLevel.classes_hash.each_value do |c|
-        return c if c.full_name == symbol
-      end
-      RDoc::TopLevel.modules_hash.each_value do |m|
-        return m if m.full_name == symbol
-      end
+    RDoc::TopLevel.classes_hash.each_value do |c|
+      return c if c.full_name == symbol
+    end
+
+    RDoc::TopLevel.modules_hash.each_value do |m|
+      return m if m.full_name == symbol
     end
 
     nil
@@ -211,7 +172,7 @@ class RDoc::TopLevel < RDoc::Context
   # The name of this file
 
   def full_name
-    @name
+    @file_relative_name
   end
 
   def inspect # :nodoc:
@@ -221,6 +182,27 @@ class RDoc::TopLevel < RDoc::Context
       @modules.map { |n,m| m },
       @classes.map { |n,c| c }
     ]
+  end
+
+  ##
+  # Base name of this file
+
+  def name
+    file_base_name
+  end
+
+  ##
+  # Date this file was last modified, if known
+
+  def last_modified
+    @file_stat ? file_stat.mtime.to_s : 'Unknown'
+  end
+
+  ##
+  # Path to this file
+
+  def path
+    http_url RDoc::RDoc.current.generator.file_dir
   end
 
 end

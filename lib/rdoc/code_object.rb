@@ -75,6 +75,7 @@ class RDoc::CodeObject
     @document_children = true
     @force_documentation = false
     @done_documenting = false
+    @comment = nil
   end
 
   ##

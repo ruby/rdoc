@@ -10,8 +10,8 @@ require 'erb'
 require 'yaml'
 
 require 'rdoc/rdoc'
-require 'rdoc/generator/xml'
-require 'rdoc/generator/html'
+require 'rdoc/generator'
+require 'rdoc/generator/markup'
 
 #
 #  Darkfish RDoc HTML Generator
@@ -54,15 +54,15 @@ require 'rdoc/generator/html'
 #  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 #  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #  
-class RDoc::Generator::Darkfish < RDoc::Generator::XML
+class RDoc::Generator::Darkfish
 
 	RDoc::RDoc.add_generator( self )
 
 	include ERB::Util
-
+	
 	# Subversion rev
 	SVNRev = %$Rev: 52 $
-	
+
 	# Subversion ID
 	SVNId = %$Id: darkfish.rb 52 2009-01-07 02:08:11Z deveiant $
 
@@ -105,10 +105,9 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 
 		@basedir = Pathname.pwd.expand_path
 
-		options.inline_source = true
-		options.diagram = false
-
-		super
+		@options = options
+		@options.inline_source = true
+		@options.diagram = false
 	end
 	
 	
@@ -122,17 +121,23 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 	
 	### Output progress information if debugging is enabled
 	def debug_msg( *msg )
-		return unless $DEBUG
+		return unless $DEBUG_RDOC
 		$stderr.puts( *msg )
 	end
-	
-	
+
+	def class_dir
+		CLASS_DIR
+	end
+
+	def file_dir
+		FILE_DIR
+	end
+
 	### Create the directories the generated docs will live in if
 	### they don't already exist.
 	def gen_sub_directories
 		@outputdir.mkpath
 	end
-	
 
 	### Copy over the stylesheet into the appropriate place in the
 	### output directory.
@@ -143,92 +148,63 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 			FileUtils.cp_r( @template_dir + path, '.', :verbose => $DEBUG, :noop => $dryrun )
 		end
 	end
-	
-	
+
+
 
 	### Build the initial indices and output objects
 	### based on an array of TopLevel objects containing
 	### the extracted information. 
-	def generate( toplevels )
+	def generate( top_levels )
 		@outputdir = Pathname.new( @options.op_dir ).expand_path( @basedir )
-		if RDoc::Generator::Context.respond_to?( :build_indicies)
-	    	@files, @classes = RDoc::Generator::Context.build_indicies( toplevels, @options )
-		else
-	    	@files, @classes = RDoc::Generator::Context.build_indices( toplevels, @options )
-		end
+
+		@files = top_levels.sort
+		@classes = RDoc::TopLevel.all_classes_and_modules.sort
+		@methods = @classes.map { |m| m.method_list }.flatten.sort
+		@modsort = get_sorted_module_list( @classes )
 
 		# Now actually write the output
-		generate_xhtml( @options, @files, @classes )
+		write_style_sheet
+		generate_index
+		generate_class_files
+		generate_file_files
 
 	rescue StandardError => err
 		debug_msg "%s: %s\n  %s" % [ err.class.name, err.message, err.backtrace.join("\n  ") ]
 		raise
 	end
 
-
-	### No-opped
-	def load_html_template # :nodoc:
-	end
-
-
-	### Generate output
-	def generate_xhtml( options, files, classes )
-		files = gen_into( @files )
-		classes = gen_into( @classes )
-
-		# Make a hash of class info keyed by class name
-		classes_by_classname = classes.inject({}) {|hash, classinfo|
-			hash[ classinfo[:full_name] ] = classinfo
-			hash[ classinfo[:full_name] ][:outfile] =
-				classinfo[:full_name].gsub( /::/, '/' ) + '.html'
-			hash
-		}
-
-		# Make a hash of file info keyed by path
-		files_by_path = files.inject({}) {|hash, fileinfo|
-			hash[ fileinfo[:full_path] ] = fileinfo
-			hash[ fileinfo[:full_path] ][:outfile] = fileinfo[:full_path] + '.html'
-			hash
-		}
-
-		self.write_style_sheet
-		self.generate_index( options, files_by_path, classes_by_classname )
-		self.generate_class_files( options, files_by_path, classes_by_classname )
-		self.generate_file_files( options, files_by_path, classes_by_classname )
-	end
-
-
-
 	#########
 	protected
 	#########
 
-	### Return a list of the documented modules sorted by salience first, then by name.
+	### Return a list of the documented modules sorted by salience first, then
+	### by name.
 	def get_sorted_module_list( classes )
-		nscounts = classes.keys.inject({}) do |counthash, name|
-			toplevel = name.gsub( /::.*/, '' )
+		nscounts = classes.inject({}) do |counthash, klass|
+			toplevel = klass.full_name.gsub( /::.*/, '' )
 			counthash[toplevel] ||= 0
 			counthash[toplevel] += 1
-			
+
 			counthash
 		end
 
-		# Sort based on how often the toplevel namespace occurs, and then on the name 
-		# of the module -- this works for projects that put their stuff into a 
-		# namespace, of course, but doesn't hurt if they don't.
-		return classes.keys.sort_by do |name| 
-			toplevel = name.gsub( /::.*/, '' )
+		# Sort based on how often the toplevel namespace occurs, and then on the
+		# name of the module -- this works for projects that put their stuff into
+		# a namespace, of course, but doesn't hurt if they don't.
+		classes.sort_by do |klass| 
+			toplevel = klass.full_name.gsub( /::.*/, '' )
 			[
 				nscounts[ toplevel ] * -1,
-				name
+				klass.full_name
 			]
+		end.select do |klass|
+			klass.document_self
 		end
 	end
-	
-	
+
 	### Generate an index page which lists all the classes which
 	### are documented.
-	def generate_index( options, files, classes )
+	def generate_index
 		debug_msg "Rendering the index page..."
 
 		templatefile = @template_dir + 'index.rhtml'
@@ -237,16 +213,16 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 		template.filename = templatefile.to_s
 		context = binding()
 
-		modsort = self.get_sorted_module_list( classes )
 		output = nil
+
 		begin
 			output = template.result( context )
 		rescue NoMethodError => err
-			raise "Error while evaluating %s: %s (at %p)" % [
+			raise RDoc::Error, "Error while evaluating %s: %s (at %p)" % [
 				templatefile,
 				err.message,
 				eval( "_erbout[-50,50]", context )
-			]
+			], err.backtrace
 		end
 
 		outfile = @basedir + @options.op_dir + 'index.html'
@@ -260,40 +236,30 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 		end
 	end
 
-
-
-	### Generate a documentation file for each class present in the
-	### given hash of +classes+.
-	def generate_class_files( options, files, classes )
+	### Generate a documentation file for each class
+	def generate_class_files
 		debug_msg "Generating class documentation in #@outputdir"
 		templatefile = @template_dir + 'classpage.rhtml'
-		outputdir = @outputdir
 
-		modsort = self.get_sorted_module_list( classes )
-
-		classes.sort_by {|k,v| k }.each do |classname, classinfo|
-			debug_msg "  working on %s (%s)" % [ classname, classinfo[:outfile] ]
-			outfile    = outputdir + classinfo[:outfile]
-			rel_prefix = outputdir.relative_path_from( outfile.dirname )
-			svninfo    = self.get_svninfo( classinfo )
+		@classes.each do |klass|
+			debug_msg "  working on %s (%s)" % [ klass.full_name, klass.path ]
+			outfile    = @outputdir + klass.path
+			rel_prefix = @outputdir.relative_path_from( outfile.dirname )
+			svninfo    = self.get_svninfo( klass )
 
 			debug_msg "  rendering #{outfile}"
 			self.render_template( templatefile, binding(), outfile )
 		end
 	end
 
-
-	### Generate a documentation file for each file present in the
-	### given hash of +files+.
-	def generate_file_files( options, files, classes )
+	### Generate a documentation file for each file
+	def generate_file_files
 		debug_msg "Generating file documentation in #@outputdir"
 		templatefile = @template_dir + 'filepage.rhtml'
 
-		modsort = self.get_sorted_module_list( classes )
-
-		files.sort_by {|k,v| k }.each do |path, fileinfo|
-			outfile     = @outputdir + fileinfo[:outfile]
-			debug_msg "  working on %s (%s)" % [ path, outfile ]
+		@files.each do |file|
+			outfile     = @outputdir + file.path
+			debug_msg "  working on %s (%s)" % [ file.full_name, outfile ]
 			rel_prefix  = @outputdir.relative_path_from( outfile.dirname )
 			context     = binding()
 
@@ -333,15 +299,14 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 
 	### Try to extract Subversion information out of the first constant whose value looks like
 	### a subversion Id tag. If no matching constant is found, and empty hash is returned.
-	def get_svninfo( classinfo )
-		return {} unless classinfo[:sections]
-		constants = classinfo[:sections].first[:constants] or return {}
-	
-		constants.find {|c| c[:value] =~ SVNID_PATTERN } or return {}
+	def get_svninfo( klass )
+		constants = klass.constants or return {}
+
+		constants.find {|c| c.value =~ SVNID_PATTERN } or return {}
 
 		filename, rev, date, time, committer = $~.captures
 		commitdate = Time.parse( date + ' ' + time )
-		
+
 		return {
 			:filename    => filename,
 			:rev         => Integer( rev ),
@@ -362,14 +327,14 @@ class RDoc::Generator::Darkfish < RDoc::Generator::XML
 		template.filename = templatefile.to_s
 
 		output = begin
-			template.result( context )
-		rescue NoMethodError => err
-			raise RDoc::Error, "Error while evaluating %s: %s (at %p)" % [
-				templatefile.to_s,
-				err.message,
-				eval( "_erbout[-50,50]", context )
-			], err.backtrace
-		end
+							 template.result( context )
+						 rescue NoMethodError => err
+							 raise RDoc::Error, "Error while evaluating %s: %s (at %p)" % [
+								 templatefile.to_s,
+								 err.message,
+								 eval( "_erbout[-50,50]", context )
+							 ], err.backtrace
+						 end
 
 		unless $dryrun
 			outfile.dirname.mkpath
@@ -388,7 +353,7 @@ end # Roc::Generator::Darkfish
 
 ### Time constants
 module TimeConstantMethods # :nodoc:
-	
+
 	### Number of seconds (returns receiver unmodified)
 	def seconds
 		return self
@@ -443,7 +408,7 @@ module TimeConstantMethods # :nodoc:
 	def before( time )
 		return time - self
 	end
-	
+
 
 	### Returns the Time <receiver> number of seconds ago. (e.g., 
 	### expiration > 2.hours.ago )

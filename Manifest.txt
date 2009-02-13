@@ -25,6 +25,7 @@ lib/rdoc/generator/html.rb
 lib/rdoc/generator/html/common.rb
 lib/rdoc/generator/html/html.rb
 lib/rdoc/generator/html/one_page_html.rb
+lib/rdoc/generator/markup.rb
 lib/rdoc/generator/ri.rb
 lib/rdoc/generator/template/darkfish/.document
 lib/rdoc/generator/template/darkfish/classpage.rhtml

@@ -25,6 +25,13 @@ class RDoc::Constant < RDoc::CodeObject
     self.comment = comment
   end
 
+  ##
+  # Path to this constant
+
+  def path
+    "#{@parent.path}##{@name}"
+  end
+
 end
 
 

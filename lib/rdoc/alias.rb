@@ -21,6 +21,9 @@ class RDoc::Alias < RDoc::CodeObject
 
   attr_accessor :old_name
 
+  ##
+  # Source file token stream
+
   attr_accessor :text
 
   def initialize(text, old_name, new_name, comment)

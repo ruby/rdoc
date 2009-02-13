@@ -297,8 +297,9 @@ module RDoc
       else
         gen_klass = @options.generator
 
-        $stderr.puts "\nGenerating #{generator.name.sub(/^.*::/, '')}..." unless
-          @options.quiet
+        unless @options.quiet then
+          $stderr.puts "\nGenerating #{gen_klass.name.sub(/^.*::/, '')}..."
+        end
 
         @generator = gen_klass.for @options
 

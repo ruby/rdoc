@@ -9,6 +9,16 @@ require 'rdoc/code_object'
 class RDoc::Context < RDoc::CodeObject
 
   ##
+  # Types of methods
+
+  TYPES = %w[class instance]
+
+  ##
+  # Method visibilities
+
+  VISIBILITIES = [:public, :protected, :private]
+
+  ##
   # Aliased methods
 
   attr_reader :aliases
@@ -77,6 +87,11 @@ class RDoc::Context < RDoc::CodeObject
     attr_reader :comment
 
     ##
+    # Context this Section lives in
+
+    attr_reader :parent
+
+    ##
     # Section sequence number (for linking)
 
     attr_reader :sequence
@@ -92,14 +107,16 @@ class RDoc::Context < RDoc::CodeObject
     ##
     # Creates a new section with +title+ and +comment+
 
-    def initialize(title, comment)
+    def initialize(parent, title, comment)
+      @parent = parent
       @title = title
+
       @@sequence_lock.synchronize do
         @@sequence.succ!
         @sequence = @@sequence.dup
       end
-      @comment = nil
-      set_comment(comment)
+
+      set_comment comment
     end
 
     ##
@@ -130,7 +147,7 @@ class RDoc::Context < RDoc::CodeObject
     def set_comment(comment)
       return unless comment
 
-      if comment =~ /^#[ \t]*:section:.*\n/
+      if comment =~ /^#[ \t]*:section:.*\n/ then
         start = $`
         rest = $'
 
@@ -142,6 +159,7 @@ class RDoc::Context < RDoc::CodeObject
       else
         @comment = comment
       end
+
       @comment = nil if @comment.empty?
     end
 
@@ -160,7 +178,7 @@ class RDoc::Context < RDoc::CodeObject
     @parent  = nil
     @visibility = :public
 
-    @current_section = Section.new nil, nil
+    @current_section = Section.new self, nil, nil
     @sections = [@current_section]
 
     initialize_methods_etc
@@ -236,7 +254,11 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Adds a class named +name+ with +superclass+
+  # Adds a class named +name+ with +superclass+.
+  #
+  # Given <tt>class Container::Item</tt> RDoc assumes +Container+ is a module
+  # unless it later sees <tt>class Container</tt>.  add_class automatically
+  # upgrades +name+ to a class in this case.
 
   def add_class(class_type, name, superclass)
     klass = add_class_or_module @classes, class_type, name, superclass
@@ -253,6 +275,8 @@ class RDoc::Context < RDoc::CodeObject
         klass.classes_hash.update mod.classes_hash
         klass.modules_hash.update mod.modules_hash
         klass.method_list.concat mod.method_list
+
+        @modules.delete klass.full_name
       end
 
       RDoc::TopLevel.classes_hash[klass.full_name] = klass
@@ -266,19 +290,51 @@ class RDoc::Context < RDoc::CodeObject
   # classes Hash +collection+.
 
   def add_class_or_module(collection, class_type, name, superclass = nil)
-    klass = collection[name]
+    full_name = if RDoc::TopLevel === self then # HACK
+                  name
+                else
+                  "#{self.full_name}::#{name}"
+                end
+    mod = collection[name]
 
-    if klass then
-      klass.superclass = superclass unless klass.module?
-      puts "Reusing class/module #{name}" if $DEBUG_RDOC
+    if mod then
+      mod.superclass = superclass unless mod.module?
     else
-      klass = class_type.new name, superclass
-      collection[name] = klass unless @done_documenting
-      klass.parent = self
-      klass.section = @current_section
+      all = nil
+
+      RDoc::TopLevel.lock.synchronize do
+        all = if class_type == RDoc::NormalModule then
+                RDoc::TopLevel.modules_hash
+              else
+                RDoc::TopLevel.classes_hash
+              end
+
+        mod = all[full_name]
+      end
+
+      unless mod then
+        mod = class_type.new name, superclass
+      else
+        # If the class has been encountered already, check that its
+        # superclass has been set (it may not have been, depending on the
+        # context in which it was encountered).
+        if class_type == RDoc::NormalClass then
+          mod.superclass = superclass unless mod.superclass
+        end
+      end
+
+      unless @done_documenting then
+        RDoc::TopLevel.lock.synchronize do
+          all[full_name] = mod
+        end
+        collection[name] = mod
+      end
+
+      mod.section = @current_section
+      mod.parent = self
     end
 
-    klass
+    mod
   end
 
   ##
@@ -314,9 +370,12 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Adds a module named +name+
+  # Adds a module named +name+.  If RDoc already knows +name+ is a class then
+  # that class is returned instead.  See also #add_class
 
   def add_module(class_type, name)
+    return @classes[name] if @classes.key? name
+
     add_class_or_module @modules, class_type, name, nil
   end
 
@@ -348,6 +407,13 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
+  # All classes and modules in this namespace
+
+  def classes_and_modules
+    classes + modules
+  end
+
+  ##
   # Hash of classes keyed by class name
 
   def classes_hash
@@ -364,30 +430,36 @@ class RDoc::Context < RDoc::CodeObject
   ##
   # Iterator for attributes
 
-  def each_attribute 
+  def each_attribute # :yields: attribute
     @attributes.each {|a| yield a}
   end
 
   ##
   # Iterator for classes and modules
 
-  def each_classmodule
-    @modules.each_value {|m| yield m}
-    @classes.each_value {|c| yield c}
+  def each_classmodule(&block) # :yields: module
+    classes_and_modules.sort.each(&block)
   end
 
   ##
   # Iterator for constants
 
-  def each_constant
+  def each_constant # :yields: constant
     @constants.each {|c| yield c}
+  end
+
+  ##
+  # Iterator for included modules
+
+  def each_include # :yields: include
+    @includes.each do |i| yield i end
   end
 
   ##
   # Iterator for methods
 
-  def each_method
-    @method_list.each {|m| yield m}
+  def each_method # :yields: method
+    @method_list.sort.each {|m| yield m}
   end
 
   ##
@@ -506,6 +578,40 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
+  # URL for this with a +prefix+
+
+  def http_url(prefix)
+    path = full_name
+    path = path.gsub(/<<\s*(\w*)/, 'from-\1') if path =~ /<</
+    path = [prefix] + path.split('::')
+
+    File.join(*path.compact) + '.html'
+  end
+
+  ##
+  # Breaks method_list into a nested hash by type (class or instance) and
+  # visibility (public, protected private)
+
+  def methods_by_type
+    methods = {}
+
+    TYPES.each do |type|
+      visibilities = {}
+      VISIBILITIES.each do |vis|
+        visibilities[vis] = []
+      end
+
+      methods[type] = visibilities
+    end
+
+    each_method do |method|
+      methods[method.type][method.visibility] << method
+    end
+
+    methods
+  end
+
+  ##
   # Yields Method and Attr entries matching the list of names in +methods+.
   # Attributes are only returned when +singleton+ is false.
 
@@ -583,7 +689,7 @@ class RDoc::Context < RDoc::CodeObject
   # Creates a new section with +title+ and +comment+
 
   def set_current_section(title, comment)
-    @current_section = Section.new(title, comment)
+    @current_section = Section.new self, title, comment
     @sections << @current_section
   end
 

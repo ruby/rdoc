@@ -55,7 +55,9 @@ class RDoc::Generator::RI
       cls_desc = RDoc::RI::ModuleDescription.new
     else
       cls_desc = RDoc::RI::ClassDescription.new
-      cls_desc.superclass = cls.superclass
+      superclass = cls.superclass
+      superclass = superclass.full_name unless String === superclass
+      cls_desc.superclass = superclass
     end
 
     cls_desc.name        = cls.name

@@ -16,7 +16,18 @@ begin
 rescue Interrupt
   $stderr.puts
   $stderr.puts "Interrupted"
-rescue RDoc::Error => e
-  $stderr.puts e.message
+  exit 1
+rescue Exception => e
+  if $DEBUG_RDOC then
+    $stderr.puts e.message
+    $stderr.puts "#{e.backtrace.join "\n\t"}"
+    $stderr.puts
+  else
+    $stderr.puts "uh-oh! RDoc had a problem:"
+    $stderr.puts e.message
+    $stderr.puts
+    $stderr.puts "run with -D for full backtrace"
+  end
   exit 1
 end
+

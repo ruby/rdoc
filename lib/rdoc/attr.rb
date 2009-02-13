@@ -16,6 +16,9 @@ class RDoc::Attr < RDoc::CodeObject
 
   attr_accessor :rw
 
+  ##
+  # Source file token stream
+
   attr_accessor :text
 
   ##
@@ -31,11 +34,16 @@ class RDoc::Attr < RDoc::CodeObject
     @visibility = :public
     self.comment = comment
   end
+
   ##
   # Attributes are ordered by name
 
   def <=>(other)
     self.name <=> other.name
+  end
+
+  def html_name
+    @name.gsub(/[^a-z]+/, '-')
   end
 
   def inspect # :nodoc:
@@ -51,6 +59,10 @@ class RDoc::Attr < RDoc::CodeObject
         self.class, object_id,
         parent_name, attr, @name,
       ]
+  end
+
+  def path
+    "#{@parent.path}##{@name}"
   end
 
   def to_s # :nodoc:

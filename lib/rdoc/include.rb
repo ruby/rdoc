@@ -24,5 +24,13 @@ class RDoc::Include < RDoc::CodeObject
     ]
   end
 
+  ##
+  # Attempts to locate the included module object.  Returns the name if not
+  # known.
+
+  def module
+    RDoc::TopLevel.find_module_named(@name) || @name
+  end
+
 end
 
