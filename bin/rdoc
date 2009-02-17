@@ -26,7 +26,7 @@ rescue Exception => e
     $stderr.puts "uh-oh! RDoc had a problem:"
     $stderr.puts e.message
     $stderr.puts
-    $stderr.puts "run with -D for full backtrace"
+    $stderr.puts "run with --debug for full backtrace"
   end
   exit 1
 end

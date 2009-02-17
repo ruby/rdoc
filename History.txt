@@ -1,9 +1,10 @@
 === 2.3.1 / ??
 
 * N Minor Enhancements
-  * `ri -f html` is now XHTML-happy.
+  * `ri -f html` is now XHTML-happy
   * Clarified RDoc::Markup link syntax.  Bug #23517 by Eric Armstrong.
-  * Number of threads to parse with is now configurable.
+  * Number of threads to parse with is now configurable
+  * Darkfish can now use alternate templates from $LOAD_PATH via -T
 
 * N Bug Fixes
   * nodoc'd classes no longer appear in the index.  Bug #23751 by Clifford

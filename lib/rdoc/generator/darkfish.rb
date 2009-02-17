@@ -1,4 +1,5 @@
 #!ruby
+# vim: noet ts=2 sts=8 sw=2
 
 require 'rubygems'
 gem 'rdoc', '>= 2.3'
@@ -59,7 +60,7 @@ class RDoc::Generator::Darkfish
 	RDoc::RDoc.add_generator( self )
 
 	include ERB::Util
-	
+
 	# Subversion rev
 	SVNRev = %$Rev: 52 $
 
@@ -68,7 +69,7 @@ class RDoc::Generator::Darkfish
 
 	# Path to this file's parent directory. Used to find templates and other
 	# resources.
-	GENERATOR_DIR = Pathname.new( __FILE__ ).expand_path.dirname
+	GENERATOR_DIR = File.join 'rdoc', 'generator'
 
 	# Release Version
 	VERSION = '1.1.6'
@@ -96,29 +97,37 @@ class RDoc::Generator::Darkfish
 
 	### Initialize a few instance variables before we start
 	def initialize( options )
-		@template = nil
-		@template_dir = GENERATOR_DIR + 'template/darkfish'
-		
-		@files      = []
-		@classes    = []
-		@hyperlinks = {}
-
-		@basedir = Pathname.pwd.expand_path
-
 		@options = options
 		@options.inline_source = true
 		@options.diagram = false
+
+		template = @options.template || 'darkfish'
+
+		template_dir = $LOAD_PATH.map do |path|
+			File.join path, GENERATOR_DIR, 'template', template
+		end.find do |dir|
+			File.directory? dir
+		end
+
+		raise RDoc::Error, "could not find template #{template.inspect}" unless
+			template_dir
+
+		@template_dir = Pathname.new File.expand_path(template_dir)
+
+		@files      = nil
+		@classes    = nil
+
+		@basedir = Pathname.pwd.expand_path
 	end
-	
-	
+
 	######
 	public
 	######
 
 	# The output directory
 	attr_reader :outputdir
-	
-	
+
+
 	### Output progress information if debugging is enabled
 	def debug_msg( *msg )
 		return unless $DEBUG_RDOC
@@ -153,7 +162,7 @@ class RDoc::Generator::Darkfish
 
 	### Build the initial indices and output objects
 	### based on an array of TopLevel objects containing
-	### the extracted information. 
+	### the extracted information.
 	def generate( top_levels )
 		@outputdir = Pathname.new( @options.op_dir ).expand_path( @basedir )
 
@@ -191,7 +200,7 @@ class RDoc::Generator::Darkfish
 		# Sort based on how often the toplevel namespace occurs, and then on the
 		# name of the module -- this works for projects that put their stuff into
 		# a namespace, of course, but doesn't hurt if they don't.
-		classes.sort_by do |klass| 
+		classes.sort_by do |klass|
 			toplevel = klass.full_name.gsub( /::.*/, '' )
 			[
 				nscounts[ toplevel ] * -1,
@@ -272,7 +281,7 @@ class RDoc::Generator::Darkfish
 	### Return a string describing the amount of time in the given number of
 	### seconds in terms a human can understand easily.
 	def time_delta_string( seconds )
-		return 'less than a minute' if seconds < 1.minute 
+		return 'less than a minute' if seconds < 1.minute
 		return (seconds / 1.minute).to_s + ' minute' + (seconds/60 == 1 ? '' : 's') if seconds < 50.minutes
 		return 'about one hour' if seconds < 90.minutes
 		return (seconds / 1.hour).to_s + ' hours' if seconds < 18.hours
@@ -288,7 +297,7 @@ class RDoc::Generator::Darkfish
 
 	# %q$Id: darkfish.rb 52 2009-01-07 02:08:11Z deveiant $"
 	SVNID_PATTERN = /
-		\$Id:\s 
+		\$Id:\s
 			(\S+)\s					# filename
 			(\d+)\s					# rev
 			(\d{4}-\d{2}-\d{2})\s	# Date (YYYY-MM-DD)
@@ -364,7 +373,7 @@ module TimeConstantMethods # :nodoc:
 	def minutes
 		return self * 60
 	end
-	alias_method :minute, :minutes  
+	alias_method :minute, :minutes
 
 	### Returns the number of seconds in <receiver> hours
 	def hours
@@ -403,14 +412,14 @@ module TimeConstantMethods # :nodoc:
 	alias_method :year, :years
 
 
-	### Returns the Time <receiver> number of seconds before the 
+	### Returns the Time <receiver> number of seconds before the
 	### specified +time+. E.g., 2.hours.before( header.expiration )
 	def before( time )
 		return time - self
 	end
 
 
-	### Returns the Time <receiver> number of seconds ago. (e.g., 
+	### Returns the Time <receiver> number of seconds ago. (e.g.,
 	### expiration > 2.hours.ago )
 	def ago
 		return self.before( ::Time.now )
