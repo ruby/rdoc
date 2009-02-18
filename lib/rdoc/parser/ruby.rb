@@ -1803,8 +1803,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     when "attr_writer"   then rw = "W"
     when "attr_accessor" then rw = "RW"
     else
-      rw = @options.extra_accessor_flags[tk.name]
-      rw = '?' if rw.nil?
+      rw = '?'
     end
 
     for name in args
@@ -2437,7 +2436,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
             keep_comment = true
           when 'attr' then
             parse_attr container, single, tk, comment
-          when /^attr_(reader|writer|accessor)$/, @options.extra_accessors then
+          when /^attr_(reader|writer|accessor)$/ then
             parse_attr_accessor container, single, tk, comment
           when 'alias_method' then
             if container.document_self then

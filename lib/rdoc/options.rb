@@ -8,19 +8,9 @@ require 'rdoc/ri/paths'
 class RDoc::Options
 
   ##
-  # Should the output be placed into a single file?
-
-  attr_reader :all_one_file
-
-  ##
   # Character-set
 
   attr_reader :charset
-
-  ##
-  # URL of stylesheet
-
-  attr_reader :css
 
   ##
   # Should diagrams be drawn?
@@ -31,16 +21,6 @@ class RDoc::Options
   # Files matching this pattern will be excluded
 
   attr_accessor :exclude
-
-  ##
-  # Additional attr_... style method flags
-
-  attr_reader :extra_accessor_flags
-
-  ##
-  # Pattern for additional attr_... style methods
-
-  attr_accessor :extra_accessors
 
   ##
   # Should we draw fileboxes in diagrams?
@@ -78,11 +58,6 @@ class RDoc::Options
   attr_reader :include_line_numbers
 
   ##
-  # Should source code be included inline, or displayed in a popup
-
-  attr_accessor :inline_source
-
-  ##
   # Name of the file, class or module to display in the initial index page (if
   # not specified the first file we encounter is used)
 
@@ -97,16 +72,6 @@ class RDoc::Options
   # The name of the output directory
 
   attr_accessor :op_dir
-
-  ##
-  # The name to use for the output
-
-  attr_accessor :op_name
-
-  ##
-  # Are we promiscuous about showing module contents across multiple files?
-
-  attr_reader :promiscuous
 
   ##
   # Array of directories to search for files to satisfy an :include:
@@ -134,13 +99,6 @@ class RDoc::Options
   attr_reader :template
 
   ##
-  # Template class for file generation
-  #--
-  # HACK around dependencies in lib/rdoc/generator/html.rb
-
-  attr_accessor :template_class # :nodoc:
-
-  ##
   # Number of threads to parse with
 
   attr_accessor :threads
@@ -162,8 +120,7 @@ class RDoc::Options
 
   def initialize # :nodoc:
     require 'rdoc/rdoc'
-    @op_dir = "doc"
-    @op_name = nil
+    @op_dir = 'doc'
     @show_all = false
     @main_page = nil
     @merge = false
@@ -178,21 +135,15 @@ class RDoc::Options
                else
                  2
                end
-    @template_class = nil
     @diagram = false
     @fileboxes = false
     @show_hash = false
     @image_format = 'png'
-    @inline_source = false
-    @all_one_file = false
     @tab_width = 8
     @include_line_numbers = false
-    @extra_accessor_flags = {}
-    @promiscuous = false
     @force_update = false
     @verbosity = 1
 
-    @css = nil
     @webcvs = nil
 
     @charset = 'utf-8'
@@ -202,8 +153,6 @@ class RDoc::Options
   # Parse command line options.
 
   def parse(argv)
-    accessors = []
-
     opts = OptionParser.new do |opt|
       opt.program_name = File.basename $0
       opt.version = RDoc::VERSION
@@ -221,45 +170,13 @@ Usage: #{opt.program_name} [options] [names...]
   How RDoc generates output depends on the output formatter being used, and on
   the options you give.
 
-  - Darkfish is an improved, frameless HTML output by Michael Granger.
+  - Darkfish creates frameless HTML output by Michael Granger.
 
-  - HTML output is normally produced into a number of separate files
-    (one per class, module, and file, along with various indices).
-    These files will appear in the directory given by the --op
-    option (doc/ by default).
-
-  - XML output by default is written to standard output. If a
-    --opname option is given, the output will instead be written
-    to a file with that name in the output directory.
-
-  - .chm files (Windows help files) are written in the --op directory.
-    If an --opname parameter is present, that name is used, otherwise
-    the file will be called rdoc.chm.
+  - ri creates ri data files
       EOF
 
       opt.separator nil
       opt.separator "Options:"
-      opt.separator nil
-
-      opt.on("--accessor=ACCESSORS", "-A", Array,
-             "A comma separated list of additional class",
-             "methods that should be treated like",
-             "'attr_reader' and friends.",
-             " ",
-             "Option may be repeated.",
-             " ",
-             "Each accessorname may have '=text'",
-             "appended, in which case that text appears",
-             "where the r/w/rw appears for normal.",
-             "accessors") do |value|
-        value.each do |accessor|
-          if accessor =~ /^(\w+)(=(.*))?$/
-            accessors << $1
-            @extra_accessor_flags[$1] = $3
-          end
-        end
-      end
-
       opt.separator nil
 
       opt.on("--all", "-a",
@@ -370,14 +287,6 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--inline-source", "-S",
-             "Show method source code inline, rather than",
-             "via a popup link.") do |value|
-        @inline_source = value
-      end
-
-      opt.separator nil
-
       opt.on("--line-numbers", "-N",
              "Include line numbers in the source code.") do |value|
         @include_line_numbers = value
@@ -401,37 +310,9 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--one-file", "-1",
-             "Put all the output into a single file.") do |value|
-        @all_one_file = value
-        @inline_source = value if value
-        @template = 'one_page_html'
-      end
-
-      opt.separator nil
-
-      opt.on("--op=DIR", "-o",
+      opt.on("--output=DIR", "--op", "-o",
              "Set the output directory.") do |value|
         @op_dir = value
-      end
-
-      opt.separator nil
-
-      opt.on("--opname=NAME", "-n",
-             "Set the NAME of the output. Has no effect",
-             "for HTML.") do |value|
-        @op_name = value
-      end
-
-      opt.separator nil
-
-      opt.on("--promiscuous", "-p",
-             "When documenting a file that contains a",
-             "module or class also defined in other",
-             "files, show all stuff for that module or",
-             "class in each files page. By default, only",
-             "show stuff defined in that particular file.") do |value|
-        @promiscuous = value
       end
 
       opt.separator nil
@@ -440,6 +321,8 @@ Usage: #{opt.program_name} [options] [names...]
              "Don't show progress as we parse.") do |value|
         @verbosity = 0
       end
+
+      opt.separator nil
 
       opt.on("--ri", "-r",
              "Generate output for use by `ri`. The files",
@@ -466,33 +349,12 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--ri-system", "-Y",
-             "Generate output for use by `ri`. The files",
-             "are stored in a site-wide directory,",
-             "making them accessible to others, so",
-             "special privileges are needed.  This",
-             "option is intended to be used during Ruby",
-             "installation.") do |value|
-        @generator_name = "ri"
-        @op_dir = RDoc::RI::Paths::SYSDIR
-        setup_generator
-      end
-
-      opt.separator nil
-
       opt.on("--show-hash", "-H",
              "A name of the form #name in a comment is a",
              "possible hyperlink to an instance method",
              "name. When displayed, the '#' is removed",
              "unless this option is specified.") do |value|
         @show_hash = value
-      end
-
-      opt.separator nil
-
-      opt.on("--style=URL", "-s",
-             "Specifies the URL of a separate stylesheet.") do |value|
-        @css = value
       end
 
       opt.separator nil
@@ -524,12 +386,12 @@ Usage: #{opt.program_name} [options] [names...]
         @title = value
       end
 
+      opt.separator nil
+
       opt.on("--verbose", "-v",
              "Display extra progress as we parse.") do |value|
         @verbosity = 2
       end
-
-      opt.separator nil
 
       opt.separator nil
 
@@ -563,12 +425,6 @@ Usage: #{opt.program_name} [options] [names...]
     # formatter
 
     @template ||= @generator_name
-
-    # Generate a regexp from the accessors
-    unless accessors.empty? then
-      re = '^(' + accessors.map { |a| Regexp.quote a }.join('|') + ')$'
-      @extra_accessors = Regexp.new re
-    end
 
   rescue OptionParser::InvalidArgument, OptionParser::InvalidOption => e
     puts opts
@@ -606,11 +462,6 @@ Usage: #{opt.program_name} [options] [names...]
 
     unless @generator then
       raise OptionParser::InvalidArgument, "Invalid output formatter"
-    end
-
-    if @generator_name == "xml" then
-      @all_one_file = true
-      @inline_source = true
     end
   end
 

@@ -650,20 +650,6 @@ EOF
     assert_equal 'RW', foo.rw
   end
 
-  def test_parse_statements_identifier_extra_accessors
-    @options.extra_accessors = /^my_accessor$/
-
-    content = "class Foo; my_accessor :foo; end"
-
-    util_parser content
-
-    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
-
-    foo = @top_level.classes.first.attributes.first
-    assert_equal 'foo', foo.name
-    assert_equal '?', foo.rw
-  end
-
   def test_parse_statements_identifier_include
     content = "class Foo; include Bar; end"
 
