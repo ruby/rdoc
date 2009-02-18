@@ -1,0 +1,6 @@
+Autotest.add_hook :initialize do |at|
+  at.add_mapping %r%^lib/rdoc/(.*).rb$% do |_, m|
+    "test/test_rdoc_#{m[1].tr '/', '_'}.rb"
+  end
+end
+

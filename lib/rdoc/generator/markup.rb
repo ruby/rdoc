@@ -1,6 +1,6 @@
 require 'rdoc/code_objects'
 require 'rdoc/generator'
-require 'rdoc/markup/to_html'
+require 'rdoc/markup/to_html_crossref'
 
 ##
 # Handle common HTML markup tasks for various CodeObjects

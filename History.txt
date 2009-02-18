@@ -5,11 +5,20 @@
   * Clarified RDoc::Markup link syntax.  Bug #23517 by Eric Armstrong.
   * Number of threads to parse with is now configurable
   * Darkfish can now use alternate templates from $LOAD_PATH via -T
+  * Removed F95 parser in favor of the rdoc-f95 gem
+  * Moved HTML and XML generators to unmaintained
+    * No gem will be provided as it's too difficult to make them work
+		* Removed options --one-file, --style=, --inline-source, --promiscuous,
+		  --op-name
+  * Removed support for --accessor, use regular documentation or
+    the method directive instead.  See RDoc::Parser::Ruby
+  * Removed --ri-system as it is unused by Ruby's makefiles
 
 * N Bug Fixes
   * nodoc'd classes no longer appear in the index.  Bug #23751 by Clifford
     Heath.
   * Fix 1.9 compatibility issues.  Bug #23815 by paddor.
+  * Darkfish now respects --charset
 
 === 2.3.0 / 2009-01-28
 
