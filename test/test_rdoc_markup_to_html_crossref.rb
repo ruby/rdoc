@@ -1,27 +1,32 @@
 require 'rubygems'
 require 'minitest/unit'
-require 'rdoc/generator'
+require 'rdoc/rdoc'
+require 'rdoc/code_objects'
 require 'rdoc/markup/to_html_crossref'
 require 'test/xref_test_case'
 
 class TestRDocMarkupToHtmlCrossref < XrefTestCase
 
   def setup
-    RDoc::Generator::Method.reset
+    RDoc::AnyMethod.reset
+    rdoc = RDoc::RDoc.new
+    RDoc::RDoc.current = rdoc
+
+    generator = Object.new
+
+    def generator.class_dir
+      nil
+    end
+
+    def generator.file_dir
+      nil
+    end
+
+    rdoc.generator = generator
 
     super
 
-    files, classes = RDoc::Generator::Context.build_indices @top_levels,
-                                                            @options
-
-    @class_hash = {}
-
-    classes.each do |klass|
-      @class_hash[klass.name] = klass
-    end
-
-    @klass = @class_hash['C1']
-    @xref = RDoc::Markup::ToHtmlCrossref.new 'index.html', @klass, true
+    @xref = RDoc::Markup::ToHtmlCrossref.new 'index.html', @c1, true
   end
 
   def assert_ref(path, ref)
@@ -34,13 +39,12 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
   end
 
   def test_handle_special_CROSSREF_C2
-    @klass = @class_hash['C2']
-    @xref = RDoc::Markup::ToHtmlCrossref.new 'classes/C2.html', @klass, true
+    @xref = RDoc::Markup::ToHtmlCrossref.new 'classes/C2.html', @c2, true
 
     refute_ref '#m', '#m'
 
     assert_ref '../C2/C3.html', 'C2::C3'
-    assert_ref '../C2/C3.html#M000005', 'C2::C3#m'
+    assert_ref '../C2/C3.html#M000002', 'C2::C3#m'
     assert_ref '../C2/C3/H1.html', 'C3::H1'
     assert_ref '../C4.html', 'C4'
 
@@ -51,13 +55,12 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
   end
 
   def test_handle_special_CROSSREF_C2_C3
-    @klass = @class_hash['C2::C3']
-    @xref = RDoc::Markup::ToHtmlCrossref.new 'classes/C2/C3.html', @klass, true
+    @xref = RDoc::Markup::ToHtmlCrossref.new 'classes/C2/C3.html', @c2_c3, true
 
-    assert_ref '../../C2/C3.html#M000005', '#m'
+    assert_ref '../../C2/C3.html#M000002', '#m'
 
     assert_ref '../../C2/C3.html', 'C3'
-    assert_ref '../../C2/C3.html#M000005', 'C3#m'
+    assert_ref '../../C2/C3.html#M000002', 'C3#m'
 
     assert_ref '../../C2/C3/H1.html', 'H1'
     assert_ref '../../C2/C3/H1.html', 'C3::H1'
@@ -68,8 +71,7 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
   end
 
   def test_handle_special_CROSSREF_C3
-    @klass = @class_hash['C3']
-    @xref = RDoc::Markup::ToHtmlCrossref.new 'classes/C3.html', @klass, true
+    @xref = RDoc::Markup::ToHtmlCrossref.new 'classes/C3.html', @c3, true
 
     assert_ref '../C3.html', 'C3'
 
@@ -85,16 +87,14 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
   end
 
   def test_handle_special_CROSSREF_C4
-    @klass = @class_hash['C4']
-    @xref = RDoc::Markup::ToHtmlCrossref.new 'classes/C4.html', @klass, true
+    @xref = RDoc::Markup::ToHtmlCrossref.new 'classes/C4.html', @c4, true
 
     # C4 ref inside a C4 containing a C4 should resolve to the contained class
     assert_ref '../C4/C4.html', 'C4'
   end
 
   def test_handle_special_CROSSREF_C4_C4
-    @klass = @class_hash['C4::C4']
-    @xref = RDoc::Markup::ToHtmlCrossref.new 'classes/C4/C4.html', @klass, true
+    @xref = RDoc::Markup::ToHtmlCrossref.new 'classes/C4/C4.html', @c4_c4, true
 
     # A C4 reference inside a C4 class contained within a C4 class should
     # resolve to the inner C4 class.
@@ -121,30 +121,30 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
 
   def test_handle_special_CROSSREF_method
     refute_ref 'm', 'm'
-    assert_ref 'C1.html#M000003', '#m'
+    assert_ref 'C1.html#M000000', '#m'
 
-    assert_ref 'C1.html#M000003', 'C1#m'
-    assert_ref 'C1.html#M000003', 'C1#m()'
-    assert_ref 'C1.html#M000003', 'C1#m(*)'
+    assert_ref 'C1.html#M000000', 'C1#m'
+    assert_ref 'C1.html#M000000', 'C1#m()'
+    assert_ref 'C1.html#M000000', 'C1#m(*)'
 
-    assert_ref 'C1.html#M000003', 'C1.m'
-    assert_ref 'C1.html#M000003', 'C1.m()'
-    assert_ref 'C1.html#M000003', 'C1.m(*)'
+    assert_ref 'C1.html#M000000', 'C1.m'
+    assert_ref 'C1.html#M000000', 'C1.m()'
+    assert_ref 'C1.html#M000000', 'C1.m(*)'
 
     # HACK should this work
     #assert_ref 'classes/C1.html#M000001', 'C1::m'
     #assert_ref 'classes/C1.html#M000001', 'C1::m()'
     #assert_ref 'classes/C1.html#M000001', 'C1::m(*)'
 
-    assert_ref 'C2/C3.html#M000005', 'C2::C3#m'
+    assert_ref 'C2/C3.html#M000002', 'C2::C3#m'
 
-    assert_ref 'C2/C3.html#M000005', 'C2::C3.m'
+    assert_ref 'C2/C3.html#M000002', 'C2::C3.m'
 
-    assert_ref 'C2/C3/H1.html#M000007', 'C2::C3::H1#m?'
+    assert_ref 'C2/C3/H1.html#M000003', 'C2::C3::H1#m?'
 
-    assert_ref 'C2/C3.html#M000005', '::C2::C3#m'
-    assert_ref 'C2/C3.html#M000005', '::C2::C3#m()'
-    assert_ref 'C2/C3.html#M000005', '::C2::C3#m(*)'
+    assert_ref 'C2/C3.html#M000002', '::C2::C3#m'
+    assert_ref 'C2/C3.html#M000002', '::C2::C3#m()'
+    assert_ref 'C2/C3.html#M000002', '::C2::C3#m(*)'
   end
 
   def test_handle_special_CROSSREF_no_ref

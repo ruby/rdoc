@@ -175,6 +175,15 @@ class RDoc::TopLevel < RDoc::Context
     @file_relative_name
   end
 
+  ##
+  # URL for this with a +prefix+
+
+  def http_url(prefix)
+    path = [prefix, @file_relative_name.tr('.', '_')]
+
+    File.join(*path.compact) + '.html'
+  end
+
   def inspect # :nodoc:
     "#<%s:0x%x %p modules: %p classes: %p>" % [
       self.class, object_id,
@@ -185,17 +194,17 @@ class RDoc::TopLevel < RDoc::Context
   end
 
   ##
-  # Base name of this file
-
-  def name
-    file_base_name
-  end
-
-  ##
   # Date this file was last modified, if known
 
   def last_modified
     @file_stat ? file_stat.mtime.to_s : 'Unknown'
+  end
+
+  ##
+  # Base name of this file
+
+  def name
+    file_base_name
   end
 
   ##
@@ -206,5 +215,4 @@ class RDoc::TopLevel < RDoc::Context
   end
 
 end
-
 

@@ -16,7 +16,6 @@ class XrefTestCase < MiniTest::Unit::TestCase
 
     @options = RDoc::Options.new
     @options.quiet = true
-    @options.inline_source = true # don't build HTML files
 
     stats = RDoc::Stats.new 0
 
@@ -24,7 +23,16 @@ class XrefTestCase < MiniTest::Unit::TestCase
                                     stats
     @top_levels = []
     @top_levels.push parser.scan
+
+    @c1    = @top_level.find_module_named 'C1'
+    @c2    = @top_level.find_module_named 'C2'
+    @c2_c3 = @top_level.find_module_named 'C2::C3'
+    @c3    = @top_level.find_module_named 'C3'
+    @c4    = @top_level.find_module_named 'C4'
+    @c4_c4 = @top_level.find_module_named 'C4::C4'
   end
 
 end
+
+MiniTest::Unit.autorun
 

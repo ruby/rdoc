@@ -114,7 +114,7 @@ class RDoc::CodeObject
   # Name of our parent
 
   def parent_name
-    @parent ? @parent.name : '(unknown)'
+    @parent ? @parent.full_name : '(unknown)'
   end
 
   ##

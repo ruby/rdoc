@@ -6,7 +6,6 @@ require 'rdoc/parser'
 require 'rdoc/parser/simple'
 require 'rdoc/parser/ruby'
 require 'rdoc/parser/c'
-require 'rdoc/parser/f95'
 require 'rdoc/parser/perl'
 
 require 'rdoc/stats'
@@ -36,7 +35,7 @@ module RDoc
     ##
     # Generator instance used for creating output
 
-    attr_reader :generator
+    attr_accessor :generator
 
     ##
     # RDoc options
@@ -94,9 +93,10 @@ module RDoc
     # we may clobber some manually generated documentation
 
     def setup_output_dir(op_dir, force)
-      flag_file = output_flag_file(op_dir)
-      if File.exist?(op_dir)
-        unless File.directory?(op_dir)
+      flag_file = output_flag_file op_dir
+
+      if File.exist? op_dir then
+        unless File.directory? op_dir then
           error "'#{op_dir}' exists, and is not a directory"
         end
         begin
@@ -280,11 +280,7 @@ module RDoc
       @options = Options.new
       @options.parse argv
 
-      @last_created = nil
-
-      unless @options.all_one_file then
-        @last_created = setup_output_dir @options.op_dir, @options.force_update
-      end
+      @last_created = setup_output_dir @options.op_dir, @options.force_update
 
       start_time = Time.now
 
@@ -305,7 +301,7 @@ module RDoc
 
         pwd = Dir.pwd
 
-        Dir.chdir @options.op_dir unless @options.all_one_file
+        Dir.chdir @options.op_dir
 
         begin
           self.class.current = self
@@ -361,7 +357,5 @@ end
 
 # require built-in generators after discovery in case they've been replaced
 require 'rdoc/generator/darkfish'
-require 'rdoc/generator/html'
 require 'rdoc/generator/ri'
-require 'rdoc/generator/xml'
 

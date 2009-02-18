@@ -1,9 +1,8 @@
 require 'rdoc/markup/to_html'
 
 ##
-# Subclass of the RDoc::Markup::ToHtml class that supports looking up words in
-# the AllReferences list. Those that are found (like AllReferences in this
-# comment) will be hyperlinked
+# Subclass of the RDoc::Markup::ToHtml class that supports looking up words
+# from a context.  Those that are found will be hyperlinked.
 
 class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
@@ -14,12 +13,6 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # 2) There can be a '::' in front of class names to reference from the
   #    top-level namespace.
   # 3) The method can be followed by parenthesis which may
-  #
-  # NOTE: In order to support Fortran 95 properly, the [A-Z] below
-  # should be changed to [A-Za-z].  This slows down rdoc significantly,
-  # however, and the Fortran 95 support is broken in any case due to
-  # the return in handle_special_CROSSREF if the token consists
-  # entirely of lowercase letters.
 
   CLASS_REGEXP_STR = '\\\\?((?:\:{2})?[A-Z]\w*(?:\:\:\w+)*)'
   METHOD_REGEXP_STR = '(\w+[!?=]?)(?:\([\.\w+\*\/\+\-\=\<\>]*\))?'
@@ -64,7 +57,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
                       )/x
 
   ##
-  # RDoc::Generator::Context for generating references
+  # RDoc::CodeObject for generating references
 
   attr_accessor :context
 
@@ -110,7 +103,6 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       lookup = name
     end
 
-
     # Find class, module, or method in class or module.
     #
     # Do not, however, use an if/elsif/else chain to do so.  Instead, test
@@ -143,3 +135,4 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   end
 
 end
+
