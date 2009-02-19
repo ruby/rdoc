@@ -499,6 +499,21 @@ end
     assert_equal stream, foo.token_stream
   end
 
+  def test_parse_method_funky
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# my method\n"
+
+    util_parser "def (blah).foo() :bar end"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    assert klass.method_list.empty?
+  end
+
   def test_parse_statements_class_nested
     comment = "##\n# my method\n"
 

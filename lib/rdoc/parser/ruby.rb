@@ -2048,7 +2048,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         remove_token_listener self
         return
       else
-        warn "#{@file_name}:#{name_t.line_no} unknown name token #{name_t.inspect} for meta-method '#{tk.name}'"
+        warn "unknown name token #{name_t.inspect} for meta-method '#{tk.name}'"
         name = 'unknown'
       end
     end
@@ -2149,7 +2149,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           container.record_location @top_level
         end
       else
-        # warn("Unexpected token '#{name_t2.inspect}'")
+        warn "unexpected method name token #{name_t2.inspect}"
         # break
         skip_method(container)
         return
@@ -2162,6 +2162,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
       back_tk.reverse_each do |token|
         unget_tk token
       end
+
+      unless name_t.respond_to? :name then
+        warn "unexpected method name token #{name_t.inspect}"
+        skip_method container
+        return
+      end
+
       name = name_t.name
 
       meth = RDoc::AnyMethod.new get_tkread, name

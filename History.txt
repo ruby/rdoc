@@ -19,6 +19,7 @@
     Heath.
   * Fix 1.9 compatibility issues.  Bug #23815 by paddor.
   * Darkfish now respects --charset
+  * RDoc doesn't crash with def (blah).foo() end
 
 === 2.3.0 / 2009-01-28
 
