@@ -17,7 +17,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     @tempfile2 = Tempfile.new self.class.name
     @filename2 = @tempfile2.path
 
-    util_toplevel
+    util_top_level
     @options = RDoc::Options.new
     @options.quiet = true
     @stats = RDoc::Stats.new 0
@@ -307,7 +307,7 @@ end
     assert_equal klass.current_section, foo.section
 
     stream = [
-      tk(:COMMENT, 1, 1, nil, "# File #{@top_level.file_absolute_name}, line 1"),
+      tk(:COMMENT, 1, 1, nil, "# File #{@top_level.absolute_name}, line 1"),
       RDoc::Parser::Ruby::NEWLINE_TOKEN,
       tk(:SPACE,      1, 1,  nil,   ''),
     ]
@@ -349,7 +349,7 @@ end
     assert_equal klass.current_section, foo.section
 
     stream = [
-      tk(:COMMENT, 1, 1, nil, "# File #{@top_level.file_absolute_name}, line 1"),
+      tk(:COMMENT, 1, 1, nil, "# File #{@top_level.absolute_name}, line 1"),
       RDoc::Parser::Ruby::NEWLINE_TOKEN,
       tk(:SPACE,      1, 1,  nil, ''),
       tk(:IDENTIFIER, 1, 0,  'add_my_method', 'add_my_method'),
@@ -432,6 +432,21 @@ end
     assert_equal comment, foo.comment
   end
 
+  def test_parse_meta_method_unknown
+    klass = RDoc::NormalClass.new 'Foo'
+    comment = "##\n# my method\n"
+
+    util_parser "add_my_method ('foo')"
+
+    tk = @parser.get_tk
+
+    @parser.parse_meta_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    foo = klass.method_list.first
+    assert_equal 'unknown', foo.name
+    assert_equal comment, foo.comment
+  end
+
   def test_parse_method
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
@@ -466,7 +481,7 @@ end
     assert_equal klass.current_section, foo.section
 
     stream = [
-      tk(:COMMENT, 1, 1, nil, "# File #{@top_level.file_absolute_name}, line 1"),
+      tk(:COMMENT, 1, 1, nil, "# File #{@top_level.absolute_name}, line 1"),
       RDoc::Parser::Ruby::NEWLINE_TOKEN,
       tk(:SPACE,      1, 1,  nil,   ''),
       tk(:DEF,        1, 0,  'def', 'def'),
@@ -728,7 +743,7 @@ EOF
                                       second_file_content, @options, @stats
   end
 
-  def util_toplevel
+  def util_top_level
     RDoc::TopLevel.reset
     @top_level = RDoc::TopLevel.new @filename
     @top_level2 = RDoc::TopLevel.new @filename2

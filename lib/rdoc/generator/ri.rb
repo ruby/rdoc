@@ -34,7 +34,7 @@ class RDoc::Generator::RI
   # Build the initial indices and output objects based on an array of
   # TopLevel objects containing the extracted information.
 
-  def generate(toplevels)
+  def generate(top_levels)
     RDoc::TopLevel.all_classes_and_modules.each do |cls|
       process_class cls
     end

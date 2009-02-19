@@ -10,7 +10,7 @@ module RDoc
 
   ##
   # Draw a set of diagrams representing the modules and classes in the
-  # system. We draw one diagram for each file, and one for each toplevel
+  # system. We draw one diagram for each file, and one for each top-level
   # class or module. This means there will be overlap. However, it also
   # means that you'll get better context for objects.
   #
@@ -71,9 +71,9 @@ module RDoc
                                'fontsize' => 8)
 
         i.modules.each do |mod|
-          draw_module(mod, graph, true, i.file_relative_name)
+          draw_module(mod, graph, true, i.relative_name)
         end
-        add_classes(i, graph, i.file_relative_name)
+        add_classes(i, graph, i.relative_name)
 
         i.diagram = convert_to_png("f_#{file_count}", graph)
 
@@ -122,8 +122,8 @@ module RDoc
       return name
     end
 
-    def draw_module(mod, graph, toplevel = false, file = nil)
-      return if  @done_modules[mod.full_name] and not toplevel
+    def draw_module(mod, graph, top_level = false, file = nil)
+      return if  @done_modules[mod.full_name] and not top_level
 
       @counter += 1
       url = mod.http_url("classes")
@@ -133,7 +133,7 @@ module RDoc
                             'color' => 'blue',
                             'style' => 'filled',
                             'URL'   => %{"#{url}"},
-                            'fillcolor' => toplevel ? 'palegreen1' : 'palegreen3')
+                            'fillcolor' => top_level ? 'palegreen1' : 'palegreen3')
 
       @done_modules[mod.full_name] = m
       add_classes(mod, m, file)
@@ -183,7 +183,7 @@ module RDoc
       end
 
       container.classes.each_with_index do |cl, cl_index|
-        last_file = cl.in_files[-1].file_relative_name
+        last_file = cl.in_files[-1].relative_name
 
         if use_fileboxes && !files.include?(last_file)
           @counter += 1
@@ -203,7 +203,7 @@ module RDoc
         if use_fileboxes && cl.in_files.length > 1
           label <<  '\n[' +
                         cl.in_files.collect {|i|
-                             i.file_relative_name
+                             i.relative_name
                         }.sort.join( '\n' ) +
                     ']'
         end

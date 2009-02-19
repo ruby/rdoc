@@ -184,9 +184,9 @@ class RDoc::TopLevel
     url = RDoc::RDoc.current.options.webcvs
 
     if /%s/ =~ url then
-      url % @file_absolute_name
+      url % @absolute_name
     else
-      url + @file_absolute_name
+      url + @absolute_name
     end
   end
 

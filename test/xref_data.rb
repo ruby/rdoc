@@ -39,5 +39,8 @@ class C4
   class C4
   end
 end
+
+module M1
+end
 XREF_DATA
 

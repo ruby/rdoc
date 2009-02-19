@@ -6,7 +6,7 @@
 <head>
 	<meta content="text/html; charset=<%= @options.charset %>" http-equiv="Content-Type" />
 
-	<title>File: <%= file.file_base_name %> [<%= @options.title %>]</title>
+	<title>File: <%= file.base_name %> [<%= @options.title %>]</title>
 
 	<link type="text/css" media="screen" href="<%= rel_prefix %>/rdoc.css" rel="stylesheet" />
 
@@ -30,7 +30,7 @@
 				<h3 class="section-header">Files</h3>
 				<ul>
 				<% simple_files.each do |f| %>
-					<li class="file"><a href="<%= rel_prefix %>/<%= f.file_base_name %>.html"><%= h f.file_base_name %></a></li>
+					<li class="file"><a href="<%= rel_prefix %>/<%= f.base_name %>.html"><%= h f.base_name %></a></li>
 				<% end %>
 				</ul>
 			</div>

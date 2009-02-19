@@ -69,6 +69,11 @@ class RDoc::Context < RDoc::CodeObject
   attr_reader :sections
 
   ##
+  # Aliases that haven't been resolved to a method
+
+  attr_accessor :unmatched_alias_lists
+
+  ##
   # Current visibility of this context
 
   attr_reader :visibility
@@ -204,8 +209,8 @@ class RDoc::Context < RDoc::CodeObject
     @includes    = []
     @constants   = []
 
-    # This Hash maps a method name to a list of unmatched
-    # aliases (aliases of a method not yet encountered).
+    # This Hash maps a method name to a list of unmatched aliases (aliases of
+    # a method not yet encountered).
     @unmatched_alias_lists = {}
   end
 
@@ -223,11 +228,11 @@ class RDoc::Context < RDoc::CodeObject
     meth = find_instance_method_named(an_alias.old_name)
 
     if meth then
-      add_alias_impl(an_alias, meth)
+      add_alias_impl an_alias, meth
     else
-      add_to(@aliases, an_alias)
+      add_to @aliases, an_alias
       unmatched_alias_list = @unmatched_alias_lists[an_alias.old_name] ||= []
-      unmatched_alias_list.push(an_alias)
+      unmatched_alias_list.push an_alias
     end
 
     an_alias
@@ -276,7 +281,7 @@ class RDoc::Context < RDoc::CodeObject
         klass.modules_hash.update mod.modules_hash
         klass.method_list.concat mod.method_list
 
-        @modules.delete klass.full_name
+        @modules.delete klass.name
       end
 
       RDoc::TopLevel.classes_hash[klass.full_name] = klass
@@ -487,14 +492,14 @@ class RDoc::Context < RDoc::CodeObject
   # Finds a file with +name+ in this context
 
   def find_file_named(name)
-    toplevel.class.find_file_named(name)
+    top_level.class.find_file_named(name)
   end
 
   ##
   # Finds an instance method with +name+ in this context
 
   def find_instance_method_named(name)
-    @method_list.find {|meth| meth.name == name && !meth.singleton}
+    @method_list.find { |meth| meth.name == name && !meth.singleton }
   end
 
   ##
@@ -513,7 +518,7 @@ class RDoc::Context < RDoc::CodeObject
   # Finds a instance or module method with +name+ in this context
 
   def find_method_named(name)
-    @method_list.find {|meth| meth.name == name}
+    @method_list.find { |meth| meth.name == name }
   end
 
   ##
@@ -535,7 +540,7 @@ class RDoc::Context < RDoc::CodeObject
 
     case symbol
     when /^::(.*)/ then
-      result = toplevel.find_symbol($1)
+      result = top_level.find_symbol($1)
     when /::/ then
       modules = symbol.split(/::/)
 
@@ -654,10 +659,10 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Record which file +toplevel+ is in
+  # Record which file +top_level+ is in
 
-  def record_location(toplevel)
-    @in_files << toplevel unless @in_files.include?(toplevel)
+  def record_location(top_level)
+    @in_files << top_level unless @in_files.include?(top_level)
   end
 
   ##
@@ -694,13 +699,13 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Return the toplevel that owns us
+  # Return the TopLevel that owns us
 
-  def toplevel
-    return @toplevel if defined? @toplevel
-    @toplevel = self
-    @toplevel = @toplevel.parent until RDoc::TopLevel === @toplevel
-    @toplevel
+  def top_level
+    return @top_level if defined? @top_level
+    @top_level = self
+    @top_level = @top_level.parent until RDoc::TopLevel === @top_level
+    @top_level
   end
 
 end

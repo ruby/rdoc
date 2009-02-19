@@ -504,7 +504,7 @@ class RDoc::Parser::C < RDoc::Parser
       @stats.add_module cm
     end
 
-    cm.record_location enclosure.toplevel
+    cm.record_location enclosure.top_level
 
     find_class_comment cm.full_name, cm
 

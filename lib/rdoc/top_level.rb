@@ -14,12 +14,12 @@ class RDoc::TopLevel < RDoc::Context
   ##
   # Relative name of this file
 
-  attr_accessor :file_relative_name
+  attr_accessor :relative_name
 
   ##
   # Absolute name of this file
 
-  attr_accessor :file_absolute_name
+  attr_accessor :absolute_name
 
   attr_accessor :diagram
 
@@ -36,10 +36,24 @@ class RDoc::TopLevel < RDoc::Context
   end
 
   ##
+  # Returns all classes discovered by RDoc
+
+  def self.classes
+    classes_hash.values
+  end
+
+  ##
   # Hash of all classes known to RDoc
 
   def self.classes_hash
     @all_classes
+  end
+
+  ##
+  # All TopLevels known to RDoc
+
+  def self.files
+    @all_files.values
   end
 
   ##
@@ -54,12 +68,10 @@ class RDoc::TopLevel < RDoc::Context
 
   def self.find_class_named(name)
     @lock.synchronize do
-      classes_hash.each_value do |c|
-        res = c.find_class_named(name)
-        return res if res
+      classes_hash.values.find do |c|
+        c.find_class_named name
       end
     end
-    nil
   end
 
   ##
@@ -76,13 +88,10 @@ class RDoc::TopLevel < RDoc::Context
 
   def self.find_module_named(name)
     @lock.synchronize do
-      modules_hash.each_value do |c|
-        res = c.find_module_named name
-        return res if res
+      modules_hash.values.find do |c|
+        c.find_module_named name
       end
     end
-
-    nil
   end
 
   @lock = Mutex.new
@@ -92,6 +101,13 @@ class RDoc::TopLevel < RDoc::Context
 
   def self.lock
     @lock
+  end
+
+  ##
+  # Returns all modules discovered by RDoc
+
+  def self.modules
+    modules_hash.values
   end
 
   ##
@@ -120,11 +136,11 @@ class RDoc::TopLevel < RDoc::Context
   def initialize(file_name)
     super()
     @name = nil
-    @file_relative_name = file_name
-    @file_absolute_name = file_name
-    @file_stat          = File.stat(file_name) rescue nil # HACK for testing
-    @diagram            = nil
-    @parser             = nil
+    @relative_name = file_name
+    @absolute_name = file_name
+    @file_stat     = File.stat(file_name) rescue nil # HACK for testing
+    @diagram       = nil
+    @parser        = nil
 
     RDoc::TopLevel.lock.synchronize do
       RDoc::TopLevel.files_hash[file_name] = self
@@ -134,8 +150,8 @@ class RDoc::TopLevel < RDoc::Context
   ##
   # Base name of this file
 
-  def file_base_name
-    File.basename @file_absolute_name
+  def base_name
+    File.basename @absolute_name
   end
 
   ##
@@ -172,14 +188,14 @@ class RDoc::TopLevel < RDoc::Context
   # The name of this file
 
   def full_name
-    @file_relative_name
+    @relative_name
   end
 
   ##
   # URL for this with a +prefix+
 
   def http_url(prefix)
-    path = [prefix, @file_relative_name.tr('.', '_')]
+    path = [prefix, @relative_name.tr('.', '_')]
 
     File.join(*path.compact) + '.html'
   end
@@ -187,7 +203,7 @@ class RDoc::TopLevel < RDoc::Context
   def inspect # :nodoc:
     "#<%s:0x%x %p modules: %p classes: %p>" % [
       self.class, object_id,
-      file_base_name,
+      base_name,
       @modules.map { |n,m| m },
       @classes.map { |n,c| c }
     ]
@@ -203,9 +219,7 @@ class RDoc::TopLevel < RDoc::Context
   ##
   # Base name of this file
 
-  def name
-    file_base_name
-  end
+  alias name base_name
 
   ##
   # Path to this file

@@ -23,7 +23,7 @@ class RDoc::Parser::Simple < RDoc::Parser
   end
 
   ##
-  # Extract the file contents and attach them to the toplevel as a comment
+  # Extract the file contents and attach them to the TopLevel as a comment
 
   def scan
     @top_level.comment = remove_private_comments(@content)

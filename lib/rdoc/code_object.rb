@@ -71,11 +71,12 @@ class RDoc::CodeObject
   # Creates a new CodeObject that will document itself and its children
 
   def initialize
-    @document_self = true
-    @document_children = true
-    @force_documentation = false
-    @done_documenting = false
     @comment = nil
+    @document_children = true
+    @document_self = true
+    @done_documenting = false
+    @force_documentation = false
+    @parent = nil
   end
 
   ##
@@ -107,7 +108,7 @@ class RDoc::CodeObject
   # File name of our parent
 
   def parent_file_name
-    @parent ? @parent.file_base_name : '(unknown)'
+    @parent ? @parent.base_name : '(unknown)'
   end
 
   ##
@@ -148,5 +149,4 @@ class RDoc::CodeObject
   end
 
 end
-
 

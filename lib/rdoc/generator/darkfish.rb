@@ -189,20 +189,20 @@ class RDoc::Generator::Darkfish
 	### by name.
 	def get_sorted_module_list( classes )
 		nscounts = classes.inject({}) do |counthash, klass|
-			toplevel = klass.full_name.gsub( /::.*/, '' )
-			counthash[toplevel] ||= 0
-			counthash[toplevel] += 1
+			top_level = klass.full_name.gsub( /::.*/, '' )
+			counthash[top_level] ||= 0
+			counthash[top_level] += 1
 
 			counthash
 		end
 
-		# Sort based on how often the toplevel namespace occurs, and then on the
+		# Sort based on how often the top level namespace occurs, and then on the
 		# name of the module -- this works for projects that put their stuff into
 		# a namespace, of course, but doesn't hurt if they don't.
 		classes.sort_by do |klass|
-			toplevel = klass.full_name.gsub( /::.*/, '' )
+			top_level = klass.full_name.gsub( /::.*/, '' )
 			[
-				nscounts[ toplevel ] * -1,
+				nscounts[ top_level ] * -1,
 				klass.full_name
 			]
 		end.select do |klass|

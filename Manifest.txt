@@ -1,3 +1,4 @@
+.autotest
 .document
 History.txt
 Manifest.txt
@@ -21,10 +22,6 @@ lib/rdoc/diagram.rb
 lib/rdoc/dot.rb
 lib/rdoc/generator.rb
 lib/rdoc/generator/darkfish.rb
-lib/rdoc/generator/html.rb
-lib/rdoc/generator/html/common.rb
-lib/rdoc/generator/html/html.rb
-lib/rdoc/generator/html/one_page_html.rb
 lib/rdoc/generator/markup.rb
 lib/rdoc/generator/ri.rb
 lib/rdoc/generator/template/darkfish/.document
@@ -56,9 +53,6 @@ lib/rdoc/generator/template/darkfish/js/jquery.js
 lib/rdoc/generator/template/darkfish/js/quicksearch.js
 lib/rdoc/generator/template/darkfish/js/thickbox-compressed.js
 lib/rdoc/generator/template/darkfish/rdoc.css
-lib/rdoc/generator/xml.rb
-lib/rdoc/generator/xml/rdf.rb
-lib/rdoc/generator/xml/xml.rb
 lib/rdoc/ghost_method.rb
 lib/rdoc/include.rb
 lib/rdoc/known_classes.rb
@@ -81,7 +75,6 @@ lib/rdoc/normal_module.rb
 lib/rdoc/options.rb
 lib/rdoc/parser.rb
 lib/rdoc/parser/c.rb
-lib/rdoc/parser/f95.rb
 lib/rdoc/parser/perl.rb
 lib/rdoc/parser/ruby.rb
 lib/rdoc/parser/simple.rb
@@ -99,15 +92,14 @@ lib/rdoc/ri/util.rb
 lib/rdoc/ri/writer.rb
 lib/rdoc/single_class.rb
 lib/rdoc/stats.rb
-lib/rdoc/template.rb
 lib/rdoc/tokenstream.rb
 lib/rdoc/top_level.rb
 test/binary.dat
 test/test.ja.rdoc
 test/test.ja.txt
 test/test_attribute_manager.rb
+test/test_rdoc_code_object.rb
 test/test_rdoc_context.rb
-test/test_rdoc_generator_context.rb
 test/test_rdoc_markup.rb
 test/test_rdoc_markup_attribute_manager.rb
 test/test_rdoc_markup_to_html.rb
