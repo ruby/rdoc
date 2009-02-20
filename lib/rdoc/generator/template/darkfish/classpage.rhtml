@@ -9,18 +9,18 @@
 
   <link rel="stylesheet" href="<%= rel_prefix %>/rdoc.css" type="text/css" media="screen" />
 
-  <script src="<%= rel_prefix %>/js/jquery.js" type="text/javascript" 
+  <script src="<%= rel_prefix %>/js/jquery.js" type="text/javascript"
     charset="utf-8"></script>
-  <script src="<%= rel_prefix %>/js/thickbox-compressed.js" type="text/javascript" 
+  <script src="<%= rel_prefix %>/js/thickbox-compressed.js" type="text/javascript"
     charset="utf-8"></script>
-  <script src="<%= rel_prefix %>/js/quicksearch.js" type="text/javascript" 
+  <script src="<%= rel_prefix %>/js/quicksearch.js" type="text/javascript"
     charset="utf-8"></script>
-  <script src="<%= rel_prefix %>/js/darkfish.js" type="text/javascript" 
+  <script src="<%= rel_prefix %>/js/darkfish.js" type="text/javascript"
     charset="utf-8"></script>
 
 </head>
 <body class="<%= klass.type %>">
-  
+
   <div id="metadata">
     <div id="file-metadata">
       <div id="file-list-section" class="section">
@@ -34,7 +34,7 @@
           </ul>
         </div>
       </div>
-      
+
       <% if !svninfo.empty? %>
       <div id="file-svninfo-section" class="section">
         <h3 class="section-header">Subversion Info</h3>
@@ -42,11 +42,11 @@
           <dl class="svninfo">
             <dt>Rev</dt>
             <dd><%= svninfo[:rev] %></dd>
-            
+
             <dt>Last Checked In</dt>
-            <dd><%= svninfo[:commitdate].strftime('%Y-%m-%d %H:%M:%S') %> 
+            <dd><%= svninfo[:commitdate].strftime('%Y-%m-%d %H:%M:%S') %>
               (<%= svninfo[:commitdelta] %> ago)</dd>
-            
+
             <dt>Checked in by</dt>
             <dd><%= svninfo[:committer] %></dd>
           </dl>
@@ -109,7 +109,7 @@
       </div>
       <% end %>
     </div>
-  
+
     <div id="project-metadata">
       <% simple_files = @files.select {|tl| tl.parser == RDoc::Parser::Simple } %>
       <% unless simple_files.empty? then %>
@@ -122,16 +122,16 @@
         </ul>
       </div>
       <% end %>
-      
+
       <div id="classindex-section" class="section project-section">
-        <h3 class="section-header">Class Index 
-          <span class="search-toggle"><img src="<%= rel_prefix %>/images/find.png" 
-            height="16" width="16" alt="[+]" 
+        <h3 class="section-header">Class Index
+          <span class="search-toggle"><img src="<%= rel_prefix %>/images/find.png"
+            height="16" width="16" alt="[+]"
             title="show/hide quicksearch" /></span></h3>
         <form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
         <fieldset>
           <legend>Quicksearch</legend>
-          <input type="text" name="quicksearch" value="" 
+          <input type="text" name="quicksearch" value=""
             class="quicksearch-field" />
         </fieldset>
         </form>
@@ -143,9 +143,9 @@
         </ul>
         <div id="no-class-search-results" style="display: none;">No matching classes.</div>
       </div>
-      
+
       <% if $DEBUG_RDOC %>
-      <div id="debugging-toggle"><img src="<%= rel_prefix %>/images/bug.png" 
+      <div id="debugging-toggle"><img src="<%= rel_prefix %>/images/bug.png"
         alt="toggle debugging" height="16" width="16" /></div>
       <% end %>
     </div>
@@ -187,7 +187,7 @@
         <a name="<%= h attrib.name %>="></a>
         <% end %>
         <div class="method-heading attribute-method-heading">
-          <span class="method-name"><%= h attrib.name %></span><span 
+          <span class="method-name"><%= h attrib.name %></span><span
             class="attribute-access-type">[<%= attrib.rw %>]</span>
         </div>
 
@@ -220,7 +220,7 @@
           <span class="method-callseq"><%= method.call_seq.strip.gsub(/->/, '&rarr;').gsub( /^\w.*?\./m, '') %></span>
           <span class="method-click-advice">click to toggle source</span>
         <% else %>
-          <span class="method-name"><%= h method.name %></span><span 
+          <span class="method-name"><%= h method.name %></span><span
             class="method-args"><%= method.params %></span>
           <span class="method-click-advice">click to toggle source</span>
         <% end %>
@@ -232,9 +232,9 @@
           <% else %>
           <p class="missing-docs">(Not documented)</p>
           <% end %>
-          
+
           <% if method.token_stream %>
-          <div class="method-source-code" 
+          <div class="method-source-code"
             id="<%= method.html_name %>-source">
 <pre>
 <%= method.markup_code %>
@@ -272,7 +272,7 @@
 
   <div id="validator-badges">
     <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
-    <p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish 
+    <p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
       Rdoc Generator</a> <%= RDoc::Generator::Darkfish::VERSION %></small>.</p>
   </div>
 

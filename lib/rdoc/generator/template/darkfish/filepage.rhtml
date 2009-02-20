@@ -10,16 +10,16 @@
 
 	<link type="text/css" media="screen" href="<%= rel_prefix %>/rdoc.css" rel="stylesheet" />
 
-	<script src="<%= rel_prefix %>/js/jquery.js" type="text/javascript" 
+	<script src="<%= rel_prefix %>/js/jquery.js" type="text/javascript"
 		charset="utf-8"></script>
-	<script src="<%= rel_prefix %>/js/thickbox-compressed.js" type="text/javascript" 
+	<script src="<%= rel_prefix %>/js/thickbox-compressed.js" type="text/javascript"
 		charset="utf-8"></script>
-	<script src="<%= rel_prefix %>/js/quicksearch.js" type="text/javascript" 
+	<script src="<%= rel_prefix %>/js/quicksearch.js" type="text/javascript"
 		charset="utf-8"></script>
-	<script src="<%= rel_prefix %>/js/darkfish.js" type="text/javascript" 
+	<script src="<%= rel_prefix %>/js/darkfish.js" type="text/javascript"
 		charset="utf-8"></script>
 </head>
-	
+
 <% if file.parser == RDoc::Parser::Simple %>
 <body class="file">
   <div id="metadata">
@@ -37,14 +37,14 @@
 			<% end %>
 
 			<div id="classindex-section" class="section project-section">
-				<h3 class="section-header">Class Index 
-					<span class="search-toggle"><img src="<%= rel_prefix %>/images/find.png" 
-						height="16" width="16" alt="[+]" 
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="<%= rel_prefix %>/images/find.png"
+						height="16" width="16" alt="[+]"
 						title="show/hide quicksearch" /></span></h3>
 				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
 				<fieldset>
 					<legend>Quicksearch</legend>
-					<input type="text" name="quicksearch" value="" 
+					<input type="text" name="quicksearch" value=""
 						class="quicksearch-field" />
 				</fieldset>
 				</form>
@@ -56,9 +56,9 @@
 				</ul>
 				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
 			</div>
-			
+
 			<% if $DEBUG_RDOC %>
-			<div id="debugging-toggle"><img src="<%= rel_prefix %>/images/bug.png" 
+			<div id="debugging-toggle"><img src="<%= rel_prefix %>/images/bug.png"
 				alt="toggle debugging" height="16" width="16" /></div>
 			<% end %>
 		</div>
@@ -70,7 +70,7 @@
 
 	<div id="validator-badges">
 		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
-		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish 
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
 			Rdoc Generator</a> <%= RDoc::Generator::Darkfish::VERSION %></small>.</p>
 	</div>
 </body>
@@ -80,7 +80,7 @@
 		<dl>
 			<dt class="modified-date">Last Modified</dt>
 			<dd class="modified-date"><%= file.last_modified %></dd>
-			
+
 			<% if file.requires %>
 			<dt class="requires">Requires</dt>
 			<dd class="requires">
@@ -91,10 +91,10 @@
 				</ul>
 			</dd>
 			<% end %>
-			
+
 			<% if @options.webcvs %>
 			<dt class="scs-url">Trac URL</dt>
-			<dd class="scs-url"><a target="_top" 
+			<dd class="scs-url"><a target="_top"
 				href="<%= file.cvs_url %>"><%= file.cvs_url %></a></dd>
 			<% end %>
 		</dl>
