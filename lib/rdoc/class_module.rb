@@ -11,7 +11,7 @@ class RDoc::ClassModule < RDoc::Context
   ##
   # Creates a new ClassModule with +name+ with optional +superclass+
 
-  def initialize(name, superclass = nil)
+  def initialize(name, superclass = 'Object')
     @name       = name
     @diagram    = nil
     @superclass = superclass

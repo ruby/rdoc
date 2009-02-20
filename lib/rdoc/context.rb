@@ -265,7 +265,7 @@ class RDoc::Context < RDoc::CodeObject
   # unless it later sees <tt>class Container</tt>.  add_class automatically
   # upgrades +name+ to a class in this case.
 
-  def add_class(class_type, name, superclass)
+  def add_class(class_type, name, superclass = 'Object')
     klass = add_class_or_module @classes, class_type, name, superclass
 
     # If the parser encounters Container::Item before encountering

@@ -345,7 +345,7 @@ class RDoc::Parser::C < RDoc::Parser
       if raw_name =~ /^rb_m/
         container = @top_level.add_module RDoc::NormalModule, name
       else
-        container = @top_level.add_class RDoc::NormalClass, name, nil
+        container = @top_level.add_class RDoc::NormalClass, name
       end
 
       container.record_location @top_level

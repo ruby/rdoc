@@ -8,8 +8,8 @@
   * Removed F95 parser in favor of the rdoc-f95 gem
   * Moved HTML and XML generators to unmaintained
     * No gem will be provided as it's too difficult to make them work
-		* Removed options --one-file, --style=, --inline-source, --promiscuous,
-		  --op-name
+    * Removed options --one-file, --style=, --inline-source, --promiscuous,
+      --op-name
   * Removed support for --accessor, use regular documentation or
     the method directive instead.  See RDoc::Parser::Ruby
   * Removed --ri-system as it is unused by Ruby's makefiles

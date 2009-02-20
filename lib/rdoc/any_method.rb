@@ -122,6 +122,13 @@ class RDoc::AnyMethod < RDoc::CodeObject
   end
 
   ##
+  # Full method name including namespace
+
+  def full_name
+    "#{@parent.full_name}#{pretty_name}"
+  end
+
+  ##
   # Method name
 
   def name
@@ -159,6 +166,13 @@ class RDoc::AnyMethod < RDoc::CodeObject
 
   def path
     "#{@parent.path}##{@aref}"
+  end
+
+  ##
+  # Method name with class/instance indicator
+
+  def pretty_name
+    "#{singleton ? '::' : '#'}#{@name}"
   end
 
   def to_s # :nodoc:
