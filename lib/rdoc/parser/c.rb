@@ -311,18 +311,21 @@ class RDoc::Parser::C < RDoc::Parser
       meth_obj.start_collecting_tokens
       meth_obj.add_token RDoc::RubyToken::Token.new(1,1).set_text(body_text)
       meth_obj.comment = mangle_comment comment
-    when %r{((?>/\*.*?\*/\s*))^\s*\#\s*define\s+#{meth_name}\s+(\w+)}m
+    when %r{((?>/\*.*?\*/\s*))^\s*(\#\s*define\s+#{meth_name}\s+(\w+))}m
       comment = $1
-      find_body(class_name, $2, meth_obj, body, true)
-      find_modifiers(comment, meth_obj)
-      meth_obj.comment = mangle_comment(comment) + meth_obj.comment
+      body_text = $2
+      find_body class_name, $3, meth_obj, body, true
+      find_modifiers comment, meth_obj
+
+      meth_obj.start_collecting_tokens
+      meth_obj.add_token RDoc::RubyToken::Token.new(1,1).set_text(body_text)
+      meth_obj.comment = mangle_comment(comment) + meth_obj.comment.to_s
     when %r{^\s*\#\s*define\s+#{meth_name}\s+(\w+)}m
       unless find_body(class_name, $1, meth_obj, body, true)
         warn "No definition for #{meth_name}" unless @options.quiet
         return false
       end
     else
-
       # No body, but might still have an override comment
       comment = find_override_comment(class_name, meth_obj.name)
 
