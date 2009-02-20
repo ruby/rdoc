@@ -26,6 +26,10 @@ class RDoc::Alias < RDoc::CodeObject
 
   attr_accessor :text
 
+  ##
+  # Creates a new Alias with a token stream of +text+ that aliases +old_name+
+  # to +new_name+ and has +comment+
+
   def initialize(text, old_name, new_name, comment)
     super()
     @text = text
@@ -42,7 +46,7 @@ class RDoc::Alias < RDoc::CodeObject
   end
 
   def to_s # :nodoc:
-    "alias: #{self.old_name} ->  #{self.new_name}\n#{self.comment}"
+    "alias: #{self.old_name} -> #{self.new_name}\n#{self.comment}"
   end
 
 end

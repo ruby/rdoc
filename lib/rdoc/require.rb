@@ -10,6 +10,9 @@ class RDoc::Require < RDoc::CodeObject
 
   attr_accessor :name
 
+  ##
+  # Creates a new Require that loads +name+ with +comment+
+
   def initialize(name, comment)
     super()
     @name = name.gsub(/'|"/, "") #'

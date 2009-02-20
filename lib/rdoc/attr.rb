@@ -42,6 +42,9 @@ class RDoc::Attr < RDoc::CodeObject
     self.name <=> other.name
   end
 
+  ##
+  # An HTML id-friendly representation of #name
+
   def html_name
     @name.gsub(/[^a-z]+/, '-')
   end
@@ -60,6 +63,9 @@ class RDoc::Attr < RDoc::CodeObject
         parent_name, attr, @name,
       ]
   end
+
+  ##
+  # URL path for this attribute
 
   def path
     "#{@parent.path}##{@name}"

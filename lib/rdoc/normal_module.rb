@@ -5,9 +5,12 @@ require 'rdoc/class_module'
 
 class RDoc::NormalModule < RDoc::ClassModule
 
+  ##
+  # Appends +comment+ to the current comment, but separated by a rule
+
   def comment=(comment)
     return if comment.empty?
-    comment = @comment << "# ---\n" << comment unless @comment.empty?
+    comment = @comment << "\n# ---\n" << comment unless @comment.empty?
 
     super
   end
@@ -18,6 +21,9 @@ class RDoc::NormalModule < RDoc::ClassModule
       full_name, @includes, @attributes, @method_list, @aliases
     ]
   end
+
+  ##
+  # This is a module, returns true
 
   def module?
     true

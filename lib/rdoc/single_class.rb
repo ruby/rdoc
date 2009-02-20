@@ -6,4 +6,3 @@ require 'rdoc/class_module'
 class RDoc::SingleClass < RDoc::ClassModule
 end
 
-

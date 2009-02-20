@@ -10,6 +10,9 @@ class RDoc::Include < RDoc::CodeObject
 
   attr_accessor :name
 
+  ##
+  # Creates a new Include for +name+ with +comment+
+
   def initialize(name, comment)
     super()
     @name = name

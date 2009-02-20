@@ -1,6 +1,13 @@
+# vim: filetype=ruby
+
 Autotest.add_hook :initialize do |at|
-  at.add_mapping %r%^lib/rdoc/(.*).rb$% do |_, m|
-    "test/test_rdoc_#{m[1].tr '/', '_'}.rb"
+  at.test_lib = 'ubygems' # HACK minitest/unit
+  def at.path_to_classname(s)
+    sep = File::SEPARATOR
+    f = s.sub(/^test#{sep}/, '').sub(/\.rb$/, '').split(sep)
+    f = f.map { |path| path.split(/_|(\d+)/).map { |seg| seg.capitalize }.join }
+    f = f.map { |path| path =~ /^Test/ ? path : "Test#{path}"  }
+    f.join('::').sub 'Rdoc', 'RDoc'
   end
 end
 

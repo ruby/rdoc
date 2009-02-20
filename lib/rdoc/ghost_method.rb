@@ -6,4 +6,3 @@ require 'rdoc/any_method'
 class RDoc::GhostMethod < RDoc::AnyMethod
 end
 
-

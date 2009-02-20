@@ -8,22 +8,6 @@ require 'test/xref_test_case'
 class TestRDocMarkupToHtmlCrossref < XrefTestCase
 
   def setup
-    RDoc::AnyMethod.reset
-    rdoc = RDoc::RDoc.new
-    RDoc::RDoc.current = rdoc
-
-    generator = Object.new
-
-    def generator.class_dir
-      nil
-    end
-
-    def generator.file_dir
-      nil
-    end
-
-    rdoc.generator = generator
-
     super
 
     @xref = RDoc::Markup::ToHtmlCrossref.new 'index.html', @c1, true

@@ -10,6 +10,7 @@ class XrefTestCase < MiniTest::Unit::TestCase
 
   def setup
     RDoc::TopLevel.reset
+    RDoc::AnyMethod.reset
 
     @file_name = 'xref_data.rb'
     @xref_data = RDoc::TopLevel.new @file_name
@@ -23,6 +24,13 @@ class XrefTestCase < MiniTest::Unit::TestCase
                                     stats
     @top_levels = []
     @top_levels.push parser.scan
+
+    generator = Object.new
+    def generator.class_dir() nil end
+    def generator.file_dir() nil end
+    rdoc = RDoc::RDoc.new
+    RDoc::RDoc.current = rdoc
+    rdoc.generator = generator
 
     @c1    = @xref_data.find_module_named 'C1'
     @c2    = @xref_data.find_module_named 'C2'
