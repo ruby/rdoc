@@ -12,8 +12,9 @@ class RDoc::ClassModule < RDoc::Context
   # Creates a new ClassModule with +name+ with optional +superclass+
 
   def initialize(name, superclass = 'Object')
-    @name       = name
     @diagram    = nil
+    @full_name  = nil
+    @name       = name
     @superclass = superclass
     super()
   end
@@ -31,11 +32,11 @@ class RDoc::ClassModule < RDoc::Context
   # Return the fully qualified name of this class or module
 
   def full_name
-    if RDoc::ClassModule === @parent then
-      "#{@parent.full_name}::#{@name}"
-    else
-      @name
-    end
+    @full_name ||= if RDoc::ClassModule === @parent then
+                     "#{@parent.full_name}::#{@name}"
+                   else
+                     @name
+                   end
   end
 
   ##
