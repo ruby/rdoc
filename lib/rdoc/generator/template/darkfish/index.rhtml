@@ -10,7 +10,7 @@
 
 	<link type="text/css" media="screen" href="rdoc.css" rel="stylesheet" />
 
-	<script src="js/jquery.js" type="text/javascript"  charset="utf-8"></script>
+	<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/thickbox-compressed.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/quicksearch.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/darkfish.js" type="text/javascript" charset="utf-8"></script>
@@ -48,14 +48,10 @@
 
 	<h2>Methods</h2>
 	<ul>
-		<% @modsort.each do |klass| %>
-		<li class="<%= klass.type %>"><a href="<%= klass.path %>"><%= klass.full_name %></a>
-			<ul>
-			<% klass.method_list.sort.each do |method| %>
-        <li><a href="<%= method.path %>"><%= method.singleton ? '::' : '#' %><%= method.name %></a></li>
-			<% end %>
-			</ul>
-    </li>
+		<% RDoc::TopLevel.all_classes_and_modules.map do |mod|
+				 mod.method_list
+			 end.flatten.sort.each do |method| %>
+			<li><a href="<%= method.path %>"><%= method.pretty_name %> &mdash; <%= method.parent.full_name %></a></li>
 		<% end %>
 	</ul>
 
