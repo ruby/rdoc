@@ -46,6 +46,19 @@
 		<% end %>
 	</ul>
 
+	<h2>Methods</h2>
+	<ul>
+		<% @modsort.each do |klass| %>
+		<li class="<%= klass.type %>"><a href="<%= klass.path %>"><%= klass.full_name %></a>
+			<ul>
+			<% klass.method_list.sort.each do |method| %>
+        <li><a href="<%= method.path %>"><%= method.singleton ? '::' : '#' %><%= method.name %></a></li>
+			<% end %>
+			</ul>
+    </li>
+		<% end %>
+	</ul>
+
 	<div id="validator-badges">
 		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
 		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish 
