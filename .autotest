@@ -1,7 +1,8 @@
 # vim: filetype=ruby
 
 Autotest.add_hook :initialize do |at|
-  at.test_lib = 'ubygems' # HACK minitest/unit
+  at.testlib = 'minitest/unit' if at.respond_to? :testlib=
+
   def at.path_to_classname(s)
     sep = File::SEPARATOR
     f = s.sub(/^test#{sep}/, '').sub(/\.rb$/, '').split(sep)
