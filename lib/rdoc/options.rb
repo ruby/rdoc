@@ -141,7 +141,7 @@ class RDoc::Options
     @image_format = 'png'
     @tab_width = 8
     @include_line_numbers = false
-    @force_update = false
+    @force_update = true
     @verbosity = 1
 
     @webcvs = nil
