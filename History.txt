@@ -1,6 +1,6 @@
-=== 2.3.1 / ??
+=== 2.4.0 / 2009-02-24
 
-* N Minor Enhancements
+* 9 Minor Enhancements
   * `ri -f html` is now XHTML-happy
   * Clarified RDoc::Markup link syntax.  Bug #23517 by Eric Armstrong.
   * Number of threads to parse with is now configurable
@@ -15,7 +15,7 @@
   * Removed --ri-system as it is unused by Ruby's makefiles
   * Added method list to index.html
 
-* N Bug Fixes
+* 6 Bug Fixes
   * nodoc'd classes no longer appear in the index.  Bug #23751 by Clifford
     Heath.
   * Fix 1.9 compatibility issues.  Bug #23815 by paddor.
