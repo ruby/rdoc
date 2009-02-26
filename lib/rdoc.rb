@@ -1,5 +1,7 @@
 $DEBUG_RDOC = nil
 
+# :main: README.txt
+
 ##
 # = \RDoc - Ruby Documentation System
 #
