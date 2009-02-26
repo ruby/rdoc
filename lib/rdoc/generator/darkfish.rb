@@ -147,17 +147,27 @@ class RDoc::Generator::Darkfish
 		@outputdir.mkpath
 	end
 
-	### Copy over the stylesheet into the appropriate place in the
-	### output directory.
+	### Copy over the stylesheet into the appropriate place in the output
+	### directory.
 	def write_style_sheet
-		debug_msg "Copying over static files"
-		staticfiles = %w[rdoc.css js images]
-		staticfiles.each do |path|
-			FileUtils.cp_r( @template_dir + path, '.', :verbose => $DEBUG, :noop => $dryrun )
+		debug_msg "Copying static files"
+		options = { :verbose => $DEBUG_RDOC, :noop => $dryrun }
+
+		FileUtils.cp @template_dir + 'rdoc.css', '.', options
+
+		Dir[@template_dir + "{js,images}/**/*"].each do |path|
+			next if File.directory? path
+			next if path =~ /#{File::SEPARATOR}\./
+
+			dst = Pathname.new(path).relative_path_from @template_dir
+
+			# I suck at glob
+			dst_dir = dst.dirname
+			FileUtils.mkdir_p dst_dir, options unless File.exist? dst_dir
+
+			FileUtils.cp @template_dir + path, dst, options
 		end
 	end
-
-
 
 	### Build the initial indices and output objects
 	### based on an array of TopLevel objects containing
