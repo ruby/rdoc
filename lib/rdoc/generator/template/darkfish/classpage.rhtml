@@ -117,7 +117,7 @@
 				<h3 class="section-header">Files</h3>
 				<ul>
 				<% simple_files.each do |file| %>
-					<li class="file"><a href="<%= rel_prefix %>/<%= file.base_name %>.html"><%= h file.base_name %></a></li>
+					<li class="file"><a href="<%= rel_prefix %>/<%= file.path %>"><%= h file.base_name %></a></li>
 				<% end %>
 				</ul>
 			</div>

@@ -34,7 +34,7 @@
 	<h2>Files</h2>
 	<ul>
 		<% simple_files.sort.each do |file| %>
-			<li class="file"><a href="<%= file.base_name %>.html"><%= h file.base_name %></a></li>
+			<li class="file"><a href="<%= file.path %>"><%= h file.base_name %></a></li>
 		<% end %>
 	</ul>
 	<% end %>
