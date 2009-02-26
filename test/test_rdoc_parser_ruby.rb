@@ -28,6 +28,28 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     @tempfile2.close
   end
 
+  def test_look_for_directives_in_attr
+    util_parser ""
+
+    comment = "# :attr: my_attr\n"
+
+    @parser.look_for_directives_in @top_level, comment
+
+    assert_equal "# :attr: my_attr\n", comment
+
+    comment = "# :attr_reader: my_method\n"
+
+    @parser.look_for_directives_in @top_level, comment
+
+    assert_equal "# :attr_reader: my_method\n", comment
+
+    comment = "# :attr_writer: my_method\n"
+
+    @parser.look_for_directives_in @top_level, comment
+
+    assert_equal "# :attr_writer: my_method\n", comment
+  end
+
   def test_look_for_directives_in_commented
     util_parser ""
 
@@ -134,6 +156,147 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     assert_equal "# :unhandled: \n", comment
 
     assert_equal 'hi', @options.title
+  end
+
+  def test_parse_attr
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# my attr\n"
+
+    util_parser "attr :foo, :bar"
+
+    tk = @parser.get_tk
+
+    @parser.parse_attr klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    assert_equal 1, klass.attributes.length
+
+    foo = klass.attributes.first
+    assert_equal 'foo', foo.name
+    assert_equal "##\n# my attr\n", foo.comment
+  end
+
+  def test_parse_attr_accessor
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# my attr\n"
+
+    util_parser "attr_accessor :foo, :bar"
+
+    tk = @parser.get_tk
+
+    @parser.parse_attr_accessor klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    assert_equal 2, klass.attributes.length
+
+    foo = klass.attributes.first
+    assert_equal 'foo', foo.name
+    assert_equal 'RW', foo.rw
+    assert_equal "##\n# my attr\n", foo.comment
+
+    bar = klass.attributes.last
+    assert_equal 'bar', bar.name
+    assert_equal 'RW', bar.rw
+    assert_equal "##\n# my attr\n", bar.comment
+  end
+
+  def test_parse_attr_accessor_writer
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# my attr\n"
+
+    util_parser "attr_writer :foo, :bar"
+
+    tk = @parser.get_tk
+
+    @parser.parse_attr_accessor klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    assert_equal 2, klass.attributes.length
+
+    foo = klass.attributes.first
+    assert_equal 'foo', foo.name
+    assert_equal 'W', foo.rw
+    assert_equal "##\n# my attr\n", foo.comment
+
+    bar = klass.attributes.last
+    assert_equal 'bar', bar.name
+    assert_equal 'W', bar.rw
+    assert_equal "##\n# my attr\n", bar.comment
+  end
+
+  def test_parse_meta_attr
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# :attr: \n# my method\n"
+
+    util_parser "add_my_method :foo, :bar"
+
+    tk = @parser.get_tk
+
+    @parser.parse_meta_attr klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    foo = klass.attributes.first
+    assert_equal 'foo', foo.name
+    assert_equal 'RW', foo.rw
+    assert_equal "##\n# my method\n", foo.comment
+  end
+
+  def test_parse_meta_attr_accessor
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# :attr_accessor: \n# my method\n"
+
+    util_parser "add_my_method :foo, :bar"
+
+    tk = @parser.get_tk
+
+    @parser.parse_meta_attr klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    foo = klass.attributes.first
+    assert_equal 'foo', foo.name
+    assert_equal 'RW', foo.rw
+    assert_equal "##\n# my method\n", foo.comment
+  end
+
+  def test_parse_meta_attr_reader
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# :attr_reader: \n# my method\n"
+
+    util_parser "add_my_method :foo, :bar"
+
+    tk = @parser.get_tk
+
+    @parser.parse_meta_attr klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    foo = klass.attributes.first
+    assert_equal 'foo', foo.name
+    assert_equal 'R', foo.rw
+    assert_equal "##\n# my method\n", foo.comment
+  end
+
+  def test_parse_meta_attr_writer
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# :attr_writer: \n# my method\n"
+
+    util_parser "add_my_method :foo, :bar"
+
+    tk = @parser.get_tk
+
+    @parser.parse_meta_attr klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    foo = klass.attributes.first
+    assert_equal 'foo', foo.name
+    assert_equal 'W', foo.rw
+    assert_equal "##\n# my method\n", foo.comment
   end
 
   def test_parse_class
@@ -265,15 +428,35 @@ EOF
     assert_equal 'Foo::Helper', helper.full_name
   end
 
-  def test_parse_comment
-    content = <<-EOF
-class Foo
-  ##
-  # :method: my_method
-  # my method comment
+  def test_parse_comment_attr
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
 
-end
-    EOF
+    comment = "##\n# :attr: foo\n# my attr\n"
+
+    util_parser "\n"
+
+    tk = @parser.get_tk
+
+    @parser.parse_comment klass, tk, comment
+
+    foo = klass.attributes.first
+    assert_equal 'foo',     foo.name
+    assert_equal 'RW',      foo.rw
+    assert_equal comment,   foo.comment
+
+    assert_equal nil,       foo.viewer
+    assert_equal true,      foo.document_children
+    assert_equal true,      foo.document_self
+    assert_equal false,     foo.done_documenting
+    assert_equal false,     foo.force_documentation
+    assert_equal klass,     foo.parent
+    assert_equal :public,   foo.visibility
+    assert_equal "\n",      foo.text
+    assert_equal klass.current_section, foo.section
+  end
+
+  def test_parse_comment_method
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
 

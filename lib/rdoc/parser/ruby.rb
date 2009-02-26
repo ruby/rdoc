@@ -1439,11 +1439,22 @@ end
 #   ##
 #   # :singleton-method: woo_hoo!
 #
-# == Hidden methods
+# Additionally you can mark a method as an attribute by using :attr:,
+# :attr_reader:, :attr_writer: or :attr_accessor:.  Just like for :method:,
+# the name is optional.
+#
+#   ##
+#   # :attr_reader: my_attr_name
+#
+# == Hidden methods and attributes
 #
 # You can provide documentation for methods that don't appear using
-# the :method: and :singleton-method: directives:
+# the :method:, :singleton-method: and :attr: directives:
 #
+#   ##
+#   # :attr_writer: ghost_writer
+#   # There is an attribute here, but you can't see it!
+#   
 #   ##
 #   # :method: ghost_method
 #   # There is a method here, but you can't see it!
@@ -1765,8 +1776,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
     return prefix + msg
   end
 
+  ##
+  # Creates an RDoc::Attr for the name following +tk+, setting the comment to
+  # +comment+.
+
   def parse_attr(context, single, tk, comment)
-    args = parse_symbol_arg(1)
+    args = parse_symbol_arg 1
     if args.size > 0
       name = args[0]
       rw = "R"
@@ -1787,12 +1802,16 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
   end
 
+  ##
+  # Creates an RDoc::Attr for each attribute listed after +tk+, setting the
+  # comment for each to +comment+.
+
   def parse_attr_accessor(context, single, tk, comment)
     args = parse_symbol_arg
     read = get_tkread
     rw = "?"
 
-    # If nodoc is given, don't document any of them
+    # TODO If nodoc is given, don't document any of them
 
     tmp = RDoc::CodeObject.new
     read_documentation_modifiers tmp, RDoc::ATTR_MODIFIERS
@@ -1973,37 +1992,51 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
   end
 
+  ##
+  # Generates an RDoc::Method or RDoc::Attr from +comment+ by looking for
+  # :method: or :attr: directives in +comment+.
+
   def parse_comment(container, tk, comment)
     line_no = tk.line_no
     column  = tk.char_no
 
     singleton = !!comment.sub!(/(^# +:?)(singleton-)(method:)/, '\1\3')
 
+    # REFACTOR
     if comment.sub!(/^# +:?method: *(\S*).*?\n/i, '') then
       name = $1 unless $1.empty?
-    else
-      return nil
+
+      meth = RDoc::GhostMethod.new get_tkread, name
+      meth.singleton = singleton
+
+      @stats.add_method meth
+
+      meth.start_collecting_tokens
+      indent = TkSPACE.new 1, 1
+      indent.set_text " " * column
+
+      position_comment = TkCOMMENT.new(line_no, 1, "# File #{@top_level.absolute_name}, line #{line_no}")
+      meth.add_tokens [position_comment, NEWLINE_TOKEN, indent]
+
+      meth.params = ''
+
+      extract_call_seq comment, meth
+
+      container.add_method meth if meth.document_self
+
+      meth.comment = comment
+    elsif comment.sub!(/# +:?(attr(_reader|_writer|_accessor)?:) *(\S*).*?\n/i, '') then
+      rw = case $1
+           when 'attr_reader' then 'R'
+           when 'attr_writer' then 'W'
+           else 'RW'
+           end
+
+      name = $3 unless $3.empty?
+
+      att = RDoc::Attr.new get_tkread, name, rw, comment
+      container.add_attribute att
     end
-
-    meth = RDoc::GhostMethod.new get_tkread, name
-    meth.singleton = singleton
-
-    @stats.add_method meth
-
-    meth.start_collecting_tokens
-    indent = TkSPACE.new 1, 1
-    indent.set_text " " * column
-
-    position_comment = TkCOMMENT.new(line_no, 1, "# File #{@top_level.absolute_name}, line #{line_no}")
-    meth.add_tokens [position_comment, NEWLINE_TOKEN, indent]
-
-    meth.params = ''
-
-    extract_call_seq comment, meth
-
-    container.add_method meth if meth.document_self
-
-    meth.comment = comment
   end
 
   def parse_include(context, comment)
@@ -2015,6 +2048,32 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       return unless TkCOMMA === peek_tk
       get_tk
+    end
+  end
+
+  def parse_meta_attr(context, single, tk, comment)
+    args = parse_symbol_arg
+    read = get_tkread
+    rw = "?"
+
+    # If nodoc is given, don't document any of them
+
+    tmp = RDoc::CodeObject.new
+    read_documentation_modifiers tmp, RDoc::ATTR_MODIFIERS
+    return unless tmp.document_self
+
+    if comment.sub!(/^# +:?(attr(_reader|_writer|_accessor)?): *(\S*).*?\n/i, '') then
+      rw = case $1
+           when 'attr_reader' then 'R'
+           when 'attr_writer' then 'W'
+           else 'RW'
+           end
+      name = $3 unless $3.empty?
+    end
+
+    for name in args
+      att = RDoc::Attr.new get_tkread, name, rw, comment
+      context.add_attribute att
     end
   end
 
