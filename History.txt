@@ -1,3 +1,8 @@
+=== 2.4.1 / ??
+
+* N Bug Fixes
+  * Don't complain when exiting normally.  Bug by Matt Neuburg.
+
 === 2.4.0 / 2009-02-24
 
 * 9 Minor Enhancements

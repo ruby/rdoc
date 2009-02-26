@@ -17,6 +17,8 @@ rescue Interrupt
   $stderr.puts
   $stderr.puts "Interrupted"
   exit 1
+rescue SystemExit
+  raise
 rescue Exception => e
   if $DEBUG_RDOC then
     $stderr.puts e.message
