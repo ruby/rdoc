@@ -2,6 +2,7 @@
 
 * N Bug Fixes
   * Don't complain when exiting normally.  Bug by Matt Neuburg.
+  * Restore --inline-source that warns.
 
 === 2.4.0 / 2009-02-24
 
