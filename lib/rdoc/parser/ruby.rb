@@ -1439,9 +1439,9 @@ end
 #   ##
 #   # :singleton-method: woo_hoo!
 #
-# Additionally you can mark a method as an attribute by using :attr:,
-# :attr_reader:, :attr_writer: or :attr_accessor:.  Just like for :method:,
-# the name is optional.
+# Additionally you can mark a method as an attribute by
+# using :attr:, :attr_reader:, :attr_writer: or :attr_accessor:.  Just like
+# for :method:, the name is optional.
 #
 #   ##
 #   # :attr_reader: my_attr_name
