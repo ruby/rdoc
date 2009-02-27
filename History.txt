@@ -1,10 +1,10 @@
-=== 2.4.1 / ??
+=== 2.4.1 / 2009-02-26
 
-* N Minor Enhancements
+* 1 Minor Enhancements
   * Added :attr:, :attr_reader:, :attr_writer:, :attr_accessor: directives.
-    See RDoc::Parser::Ruby for details.
+    Replaces --accessor.  See RDoc::Parser::Ruby for details.
 
-* N Bug Fixes
+* 3 Bug Fixes
   * Don't complain when exiting normally.  Bug by Matt Neuburg.
   * Restore --inline-source that warns
   * Fixed links to files in Darkfish output
