@@ -14,6 +14,7 @@ Hoe.new "rdoc", RDoc::VERSION do |rdoc|
 
   rdoc.extra_dev_deps << ['minitest', '~> 1.3']
   rdoc.spec_extras['required_rubygems_version'] = '>= 1.3'
+  rdoc.spec_extras['homepage'] = 'http://rdoc.rubyforge.org'
 end
 
 # These tasks expect to have the following directory structure:

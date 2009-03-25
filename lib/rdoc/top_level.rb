@@ -148,6 +148,16 @@ class RDoc::TopLevel < RDoc::Context
   end
 
   ##
+  # Adds +method+ to Object instead of RDoc::TopLevel
+
+  def add_method(method)
+    object = self.class.find_class_named 'Object'
+    object = add_class RDoc::NormalClass, 'Object' unless object
+
+    object.add_method method
+  end
+
+  ##
   # Base name of this file
 
   def base_name

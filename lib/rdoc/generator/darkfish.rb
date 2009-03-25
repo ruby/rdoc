@@ -155,7 +155,7 @@ class RDoc::Generator::Darkfish
 
 		FileUtils.cp @template_dir + 'rdoc.css', '.', options
 
-		Dir[@template_dir + "{js,images}/**/*"].each do |path|
+		Dir[(@template_dir + "{js,images}/**/*").to_s].each do |path|
 			next if File.directory? path
 			next if path =~ /#{File::SEPARATOR}\./
 
