@@ -2299,33 +2299,37 @@ class RDoc::Parser::Ruby < RDoc::Parser
     nest = 0
 
     loop do
-        case tk
-        when TkSEMICOLON
-          break
-        when TkLBRACE
-          nest += 1
-        when TkRBRACE
-          # we might have a.each {|i| yield i }
-          unget_tk(tk) if nest.zero?
+      case tk
+      when TkSEMICOLON then
+        break
+      when TkLBRACE then
+        nest += 1
+      when TkRBRACE then
+        # we might have a.each {|i| yield i }
+        unget_tk(tk) if nest.zero?
+        nest -= 1
+        break if nest <= 0
+      when TkLPAREN, TkfLPAREN then
+        nest += 1
+      when end_token then
+        if end_token == TkRPAREN
           nest -= 1
-          break if nest <= 0
-        when TkLPAREN, TkfLPAREN
-          nest += 1
-        when end_token
-          if end_token == TkRPAREN
-            nest -= 1
-            break if @scanner.lex_state == EXPR_END and nest <= 0
-          else
-            break unless @scanner.continue
-          end
-        when method && method.block_params.nil? && TkCOMMENT
-          unget_tk(tk)
-          read_documentation_modifiers(method, modifiers)
+          break if @scanner.lex_state == EXPR_END and nest <= 0
+        else
+          break unless @scanner.continue
         end
+      when method && method.block_params.nil? && TkCOMMENT then
+        unget_tk tk
+        read_documentation_modifiers method, modifiers
+        @read.pop
+      when TkCOMMENT then
+        @read.pop
+      end
       tk = get_tk
     end
-    res = get_tkread.tr("\n", " ").strip
-    res = "" if res == ";"
+
+    res = get_tkread.gsub(/\s+/, ' ').strip
+    res = '' if res == ';'
     res
   end
 
@@ -2338,10 +2342,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # and add this as the block_params for the method
 
   def parse_method_parameters(method)
-    res = parse_method_or_yield_parameters(method)
-    res = "(" + res + ")" unless res[0] == ?(
+    res = parse_method_or_yield_parameters method
+
+    res = "(#{res})" unless res =~ /\A\(/
     method.params = res unless method.params
-    if method.block_params.nil?
+
+    if method.block_params.nil? then
       skip_tkspace(false)
       read_documentation_modifiers method, RDoc::METHOD_MODIFIERS
     end
@@ -2707,16 +2713,18 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def read_directive(allowed)
     tk = get_tk
     result = nil
-    if TkCOMMENT === tk
-      if tk.text =~ /\s*:?(\w+):\s*(.*)/
+
+    if TkCOMMENT === tk then
+      if tk.text =~ /\s*:?(\w+):\s*(.*)/ then
         directive = $1.downcase
-        if allowed.include?(directive)
+        if allowed.include? directive then
           result = [directive, $2]
         end
       end
     else
-      unget_tk(tk)
+      unget_tk tk
     end
+
     result
   end
 

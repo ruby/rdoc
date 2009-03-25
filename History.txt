@@ -14,6 +14,8 @@
   * Fixed display of markup on RDoc main page.  Bug #24168 by rhubarb.
   * Fixed display of \\ character in documentation proceeding words.
     Bug #22112 by James Gray.  See RDoc for details.
+  * Fixed parsing and display of arg params for some corner cases.  Bug #21113
+    by Csiszár Attila.
 
 === 2.4.1 / 2009-02-26
 

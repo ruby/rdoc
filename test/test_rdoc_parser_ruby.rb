@@ -697,6 +697,54 @@ EOF
     assert klass.method_list.empty?
   end
 
+  def test_parse_method_no_parens
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# my method\n"
+
+    util_parser "def foo arg1, arg2\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    foo = klass.method_list.first
+    assert_equal '(arg1, arg2)', foo.params
+  end
+
+  def test_parse_method_parameters_comment
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# my method\n"
+
+    util_parser "def foo arg1, arg2 # some useful comment\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    foo = klass.method_list.first
+    assert_equal '(arg1, arg2)', foo.params
+  end
+
+  def test_parse_method_parameters_comment
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# my method\n"
+
+    util_parser "def foo arg1, arg2, # some useful comment\narg3\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    foo = klass.method_list.first
+    assert_equal '(arg1, arg2, arg3)', foo.params
+  end
+
   def test_parse_statements_class_if
     comment = "##\n# my method\n"
 
