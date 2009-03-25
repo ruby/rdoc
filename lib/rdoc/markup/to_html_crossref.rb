@@ -121,7 +121,9 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
     ref = @context.find_symbol lookup unless ref
 
-    out = if lookup =~ /^\\/ then
+    out = if lookup == '\\' then
+            lookup
+          elsif lookup =~ /^\\/ then
             $'
           elsif ref and ref.document_self then
             "<a href=\"#{ref.as_href(@from_path)}\">#{name}</a>"

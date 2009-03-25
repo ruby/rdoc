@@ -61,6 +61,7 @@ $DEBUG_RDOC = nil
 # recursively for C and Ruby source files only.
 #
 # == \Options
+#
 # rdoc can be passed a variety of command-line options.  In addition,
 # options can be specified via the +RDOCOPT+ environment variable, which
 # functions similarly to the +RUBYOPT+ environment variable.
@@ -136,6 +137,11 @@ $DEBUG_RDOC = nil
 #
 # +:yields:+ is an example of a documentation directive.  These appear
 # immediately after the start of the document element they are modifying.
+#
+# RDoc automatically cross-references words with underscores or camel-case.
+# To suppress cross-references, prefix the word with a \\ character.  To
+# include special characters like "\\n", you'll need to use two \\
+# characters like "\\\\\\n".
 #
 # == \Markup
 #

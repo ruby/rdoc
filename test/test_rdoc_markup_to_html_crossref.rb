@@ -136,6 +136,7 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
 
     refute_ref 'bogus', 'bogus'
     refute_ref 'bogus', '\bogus'
+    refute_ref '\bogus', '\\\bogus'
 
     refute_ref '#n',    '\#n'
     refute_ref '#n()',  '\#n()'

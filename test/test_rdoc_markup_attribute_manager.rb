@@ -233,6 +233,11 @@ class TestRDocMarkupAttributeManager < MiniTest::Unit::TestCase
     assert_equal(["cats' ", crossref("#fred")].flatten, @am.flow("cats' #fred"))
   end
 
+  def test_tt_html
+    assert_equal [@tt_on, '"\n"', @tt_off],
+                 @am.flow('<tt>"\n"</tt>')
+  end
+
 end
 
 MiniTest::Unit.autorun
