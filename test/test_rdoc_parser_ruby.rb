@@ -729,7 +729,7 @@ EOF
     assert_equal '(arg1, arg2)', foo.params
   end
 
-  def test_parse_method_parameters_comment
+  def test_parse_method_parameters_comment_continue
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
 
@@ -743,6 +743,23 @@ EOF
 
     foo = klass.method_list.first
     assert_equal '(arg1, arg2, arg3)', foo.params
+  end
+
+  def test_parse_method_toplevel
+    klass = @top_level
+
+    comment = "##\n# my method\n"
+
+    util_parser "def foo arg1, arg2\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    object = RDoc::TopLevel.find_class_named 'Object'
+
+    foo = object.method_list.first
+    assert_equal 'Object#foo', foo.full_name
   end
 
   def test_parse_statements_class_if
