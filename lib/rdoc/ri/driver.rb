@@ -673,8 +673,8 @@ Options may also be set in the 'RI' environment variable.
         if system_file then
           method["source_path"] = "Ruby #{RDoc::RI::Paths::VERSION}"
         else
-          gem = Gem.path.any? do |path|
-            pattern = File.join Regexp.escape(path), 'doc', '(.*?)', ''
+          gem = Gem.path.any? do |gem_path|
+            pattern = File.join Regexp.escape(gem_path), 'doc', '(.*?)', ''
 
             f =~ /^#{pattern}/
           end
