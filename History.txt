@@ -16,6 +16,7 @@
     Bug #22112 by James Gray.  See RDoc for details.
   * Fixed parsing and display of arg params for some corner cases.  Bug #21113
     by Csiszár Attila.
+  * Fixed links in Files box.  Patch #24403 by Eric Wong.
 
 === 2.4.1 / 2009-02-26
 
