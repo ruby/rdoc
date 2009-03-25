@@ -1,11 +1,11 @@
-=== 2.4.2 / ?
+=== 2.4.2 / 2009-03-25
 
-* N Minor Enhancements
+* 2 Minor Enhancements
   * Added --pipe for turning RDoc on stdin into HTML
   * Added rdoc/task.rb containing a replacement for rake/rdoctask.rb.  Use
     RDoc::Task now instead of Rake::RDocTask.
 
-* N Bug Fixes
+* 10 Bug Fixes
   * Writing the ri cache file to the proper directory.  Bug #24459 by Lars
     Christensen.
   * Possible fix for Dir::[] and Pathname interaction on 1.9.  Bug #24650 by
