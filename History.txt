@@ -11,6 +11,7 @@
   * Fixed scanning constants for if/end, etc. pairs.  Bug #24609 by Ryan
     Davis.
   * Fixed private methods in the C parser.  Bug #24599 by Aaron Patterson.
+  * Fixed display of markup on RDoc main page.  Bug #24168 by rhubarb.
 
 === 2.4.1 / 2009-02-26
 

@@ -70,28 +70,15 @@ $DEBUG_RDOC = nil
 # will make rdoc default to inline method source code.  Command-line options
 # always will override those in +RDOCOPT+.
 #
-# Run
+# Run:
 # 
-#   % rdoc --help
+#   rdoc --help
 #
 # for full details on rdoc's options.
 #
-# Here are some of the most commonly used options.
-# [-d, --diagram]
-#   Generate diagrams showing modules and
-#   classes. You need dot V1.8.6 or later to
-#   use the --diagram option correctly. Dot is
-#   available from http://graphviz.org
-#
-# [-S, --inline-source]
-#   Show method source code inline, rather than via a popup link.
-#
-# [-T, --template=NAME]
-#   Set the template used when generating output.
-#
 # == Documenting Source Code
 #
-# Comment blocks can be written fairly naturally, either using +#+ on
+# Comment blocks can be written fairly naturally, either using <tt>#</tt> on
 # successive lines of the comment, or by including the comment in
 # a =begin/=end block.  If you use the latter form, the =begin line must be
 # flagged with an RDoc tag:
@@ -216,17 +203,17 @@ $DEBUG_RDOC = nil
 #
 #   Word-based markup uses flag characters around individual words:
 #
-#   [\*word*]  displays word in a *bold* font
-#   [\_word_]  displays word in an _emphasized_ font
-#   [\+word+]  displays word in a +code+ font
+#   [<tt>\*word*</tt>]  displays word in a *bold* font
+#   [<tt>\_word_</tt>]  displays word in an _emphasized_ font
+#   [<tt>\+word+</tt>]  displays word in a +code+ font
 #
 #   General markup affects text between a start delimiter and and end
 #   delimiter.  Not surprisingly, these delimiters look like HTML markup.
 #
-#   [\<b>text...</b>]    displays word in a *bold* font
-#   [\<em>text...</em>]  displays word in an _emphasized_ font
-#   [\<i>text...</i>]    displays word in an <i>italicized</i> font
-#   [\<tt>text...</tt>]  displays word in a +code+ font
+#   [<tt>\<b>text...</b></tt>]    displays word in a *bold* font
+#   [<tt>\<em>text...</em></tt>]  displays word in an _emphasized_ font
+#   [<tt>\<i>text...</i></tt>]    displays word in an <i>italicized</i> font
+#   [<tt>\<tt>text...\</tt></tt>]  displays word in a +code+ font
 #
 #   Unlike conventional Wiki markup, general markup can cross line
 #   boundaries.  You can turn off the interpretation of markup by
