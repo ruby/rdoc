@@ -1,3 +1,8 @@
+=== 2.? / ?
+
+* N Minor Enhancements
+  * Added --pipe for turning RDoc on stdin into HTML
+
 === 2.4.1 / 2009-02-26
 
 * 1 Minor Enhancements

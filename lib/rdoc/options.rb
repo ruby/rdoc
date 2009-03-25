@@ -74,6 +74,11 @@ class RDoc::Options
   attr_accessor :op_dir
 
   ##
+  # Is RDoc in pipe mode?
+
+  attr_accessor :pipe
+
+  ##
   # Array of directories to search for files to satisfy an :include:
 
   attr_reader :rdoc_include
@@ -144,6 +149,7 @@ class RDoc::Options
     @include_line_numbers = false
     @force_update = true
     @verbosity = 1
+    @pipe = false
 
     @webcvs = nil
 
@@ -217,6 +223,13 @@ Usage: #{opt.program_name} [options] [names...]
              "Forces rdoc to scan all sources even if",
              "newer than the flag file.") do |value|
         @force_update = value
+      end
+
+      opt.separator nil
+
+      opt.on("--pipe",
+             "Convert RDoc on stdin to HTML") do
+        @pipe = true
       end
 
       opt.separator nil

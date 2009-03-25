@@ -86,6 +86,17 @@ class RDoc::RDoc
   end
 
   ##
+  # Turns RDoc from stdin into HTML
+
+  def handle_pipe
+    @html = RDoc::Markup::ToHtml.new
+
+    out = @html.convert $stdin.read
+
+    $stdout.write out
+  end
+
+  ##
   # Create an output dir if it doesn't exist. If it does exist, but doesn't
   # contain the flag file <tt>created.rid</tt> then we refuse to use it, as
   # we may clobber some manually generated documentation
@@ -278,6 +289,11 @@ class RDoc::RDoc
     @options = RDoc::Options.new
     @options.parse argv
 
+    if @options.pipe then
+      handle_pipe
+      exit
+    end
+
     @last_created = setup_output_dir @options.op_dir, @options.force_update
 
     start_time = Time.now
@@ -338,6 +354,7 @@ class RDoc::RDoc
 
     content
   end
+
 end
 
 if Gem.respond_to? :find_files then
