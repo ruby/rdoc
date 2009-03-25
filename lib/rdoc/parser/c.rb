@@ -614,6 +614,7 @@ class RDoc::Parser::C < RDoc::Parser
       if find_body(class_name, meth_body, meth_obj, body) and meth_obj.document_self then
         class_obj.add_method meth_obj
         @stats.add_method meth_obj
+        meth_obj.visibility = :private if 'private_method' == type
       end
     end
   end
