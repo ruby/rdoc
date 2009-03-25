@@ -6,6 +6,8 @@
 * N Bug Fixes
   * Writing the ri cache file to the proper directory.  Bug #24459 by Lars
     Christensen.
+  * Possible fix for Dir::[] and Pathname interaction on 1.9.  Bug #24650 by
+    tiburon.
 
 === 2.4.1 / 2009-02-26
 
