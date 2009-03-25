@@ -1,7 +1,7 @@
 require 'stringio'
 require 'tempfile'
 require 'rubygems'
-require 'minitest/unit'
+require 'minitest/autorun'
 
 require 'rdoc/options'
 require 'rdoc/parser/ruby'
@@ -697,6 +697,30 @@ EOF
     assert klass.method_list.empty?
   end
 
+  def test_parse_statements_class_if
+    comment = "##\n# my method\n"
+
+    util_parser <<-CODE
+module Foo
+  X = if TRUE then
+        ''
+      end
+
+  def blah
+  end
+end
+    CODE
+
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
+
+    foo = @top_level.modules.first
+    assert_equal 'Foo', foo.full_name, 'module Foo'
+
+    methods = foo.method_list
+    assert_equal 1, methods.length
+    assert_equal 'Foo#blah', methods.first.full_name
+  end
+
   def test_parse_statements_class_nested
     comment = "##\n# my method\n"
 
@@ -949,4 +973,3 @@ EOF
 
 end
 
-MiniTest::Unit.autorun

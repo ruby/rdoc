@@ -8,6 +8,8 @@
     Christensen.
   * Possible fix for Dir::[] and Pathname interaction on 1.9.  Bug #24650 by
     tiburon.
+  * Fixed scanning constants for if/end, etc. pairs.  Bug #24609 by Ryan
+    Davis.
 
 === 2.4.1 / 2009-02-26
 

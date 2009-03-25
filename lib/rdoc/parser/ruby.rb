@@ -1889,7 +1889,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   def parse_class(container, single, tk, comment)
-    container, name_t = get_class_or_module(container)
+    container, name_t = get_class_or_module container
 
     case name_t
     when TkCONSTANT
@@ -1921,9 +1921,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
       else
         other = RDoc::TopLevel.find_class_named(name)
         unless other
-          #            other = @top_level.add_class(NormalClass, name, nil)
-          #            other.record_location(@top_level)
-          #            other.comment = comment
+#          other = @top_level.add_class(NormalClass, name, nil)
+#          other.record_location(@top_level)
+#          other.comment = comment
           other = RDoc::NormalClass.new "Dummy", nil
         end
 
@@ -1948,7 +1948,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
       return
     end
 
-
     nest = 0
     get_tkread
 
@@ -1960,25 +1959,27 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     loop do
-        case tk
-        when TkSEMICOLON
+      case tk
+      when TkSEMICOLON then
+        break
+      when TkLPAREN, TkfLPAREN, TkLBRACE, TkLBRACK, TkDO, TkIF, TkUNLESS,
+           TkCASE then
+        nest += 1
+      when TkRPAREN, TkRBRACE, TkRBRACK, TkEND then
+        nest -= 1
+      when TkCOMMENT then
+        if nest <= 0 && @scanner.lex_state == EXPR_END
+          unget_tk tk
           break
-        when TkLPAREN, TkfLPAREN, TkLBRACE, TkLBRACK, TkDO
-          nest += 1
-        when TkRPAREN, TkRBRACE, TkRBRACK, TkEND
-          nest -= 1
-        when TkCOMMENT
-          if nest <= 0 && @scanner.lex_state == EXPR_END
-            unget_tk(tk)
-            break
-          end
-        when TkNL
-          if (nest <= 0) && ((@scanner.lex_state == EXPR_END) || (!@scanner.continue))
-            unget_tk(tk)
-            break
-          end
         end
-        tk = get_tk
+      when TkNL then
+        if nest <= 0 &&
+           (@scanner.lex_state == EXPR_END || !@scanner.continue) then
+          unget_tk tk
+          break
+        end
+      end
+      tk = get_tk
     end
 
     res = get_tkread.tr("\n", " ").strip
@@ -1987,9 +1988,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     con = RDoc::Constant.new name, res, comment
     read_documentation_modifiers con, RDoc::CONSTANT_MODIFIERS
 
-    if con.document_self
-      container.add_constant(con)
-    end
+    container.add_constant con if con.document_self
   end
 
   ##
