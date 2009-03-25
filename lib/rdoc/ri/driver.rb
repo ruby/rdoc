@@ -550,8 +550,8 @@ Options may also be set in the 'RI' environment variable.
 
           cache = load_cache_for klass
 
-          methods += cache.keys.select do |name|
-            name =~ /^#{klass}#{method_type}#{method}/
+          methods += cache.keys.select do |method_name|
+            method_name =~ /^#{klass}#{method_type}#{method}/
           end
 
           # TODO ancestor lookup
@@ -609,7 +609,7 @@ Options may also be set in the 'RI' environment variable.
       expanded << '::' unless expanded.empty?
       short = expanded << klass_part
 
-      subset = class_cache.keys.select do |klass|
+      subset = class_cache.keys.select do |klass_name|
         klass =~ /^#{expanded}[^:]*$/
       end
 
