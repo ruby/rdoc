@@ -2,6 +2,8 @@
 
 * N Minor Enhancements
   * Added --pipe for turning RDoc on stdin into HTML
+  * Added rdoc/task.rb containing a replacement for rake/rdoctask.rb.  Use
+    RDoc::Task now instead of Rake::RDocTask.
 
 * N Bug Fixes
   * Writing the ri cache file to the proper directory.  Bug #24459 by Lars
