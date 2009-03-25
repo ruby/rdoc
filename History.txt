@@ -20,6 +20,8 @@
     by Csiszár Attila.
   * Fixed links in Files box.  Patch #24403 by Eric Wong.
   * Toplevel methods now appear in Object.  Bug #22677 by Ryan Davis.
+  * Added back --promiscuous which didn't do anything you cared about.  Why
+    did you enable it?  Nobody looked at that page!  Oh, it warns, too.
 
 === 2.4.1 / 2009-02-26
 
