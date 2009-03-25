@@ -430,7 +430,7 @@ Usage: #{opt.program_name} [options] [names...]
         warn "--inline-source will be removed from RDoc on or after August 2009"
       end
 
-      opt.on("--promiscuous", "-p" do |value|
+      opt.on("--promiscuous", "-p") do |value|
         warn "--promiscuous will be removed from RDoc on or after August 2009"
       end
 
