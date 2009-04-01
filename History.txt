@@ -1,3 +1,9 @@
+=== 2.? / ??
+
+* N Bug Fix
+  * Corrected patch for file links
+  * Corrected display of file popup
+
 === 2.4.2 / 2009-03-25
 
 * 2 Minor Enhancements
