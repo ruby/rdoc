@@ -92,6 +92,7 @@ lib/rdoc/ri/util.rb
 lib/rdoc/ri/writer.rb
 lib/rdoc/single_class.rb
 lib/rdoc/stats.rb
+lib/rdoc/task.rb
 lib/rdoc/tokenstream.rb
 lib/rdoc/top_level.rb
 test/binary.dat
@@ -119,6 +120,7 @@ test/test_rdoc_ri_driver.rb
 test/test_rdoc_ri_formatter.rb
 test/test_rdoc_ri_html_formatter.rb
 test/test_rdoc_ri_overstrike_formatter.rb
+test/test_rdoc_task.rb
 test/test_rdoc_top_level.rb
 test/xref_data.rb
 test/xref_test_case.rb

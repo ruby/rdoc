@@ -48,6 +48,7 @@ class TestRDocMarkupToHtml < MiniTest::Unit::TestCase
   def test_tt_formatting
     assert_equal "<p>\n<tt>--</tt> &#8212; <tt>cats'</tt> cats&#8217;\n</p>\n",
                  util_format("<tt>--</tt> -- <tt>cats'</tt> cats'")
+
     assert_equal "<p>\n<b>&#8212;</b>\n</p>\n", util_format("<b>--</b>")
   end
 

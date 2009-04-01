@@ -124,6 +124,10 @@ class TestRDocMarkupAttributeManager < MiniTest::Unit::TestCase
                  @am.flow("*\\bold*")
   end
 
+  def test_bold_html_escaped
+    assert_equal ['cat <b>dog</b>'], @am.flow('cat \<b>dog</b>')
+  end
+
   def test_combined
     assert_equal(["cat ", @em_on, "and", @em_off, " ", @bold_on, "dog", @bold_off],
                   @am.flow("cat _and_ *dog*"))
@@ -227,6 +231,11 @@ class TestRDocMarkupAttributeManager < MiniTest::Unit::TestCase
                   @am.flow("#fred dogs'"))
 
     assert_equal(["cats' ", crossref("#fred")].flatten, @am.flow("cats' #fred"))
+  end
+
+  def test_tt_html
+    assert_equal [@tt_on, '"\n"', @tt_off],
+                 @am.flow('<tt>"\n"</tt>')
   end
 
 end

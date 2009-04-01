@@ -1,7 +1,7 @@
 require 'stringio'
 require 'tempfile'
 require 'rubygems'
-require 'minitest/unit'
+require 'minitest/autorun'
 
 require 'rdoc/options'
 require 'rdoc/parser/ruby'
@@ -697,6 +697,95 @@ EOF
     assert klass.method_list.empty?
   end
 
+  def test_parse_method_no_parens
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# my method\n"
+
+    util_parser "def foo arg1, arg2\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    foo = klass.method_list.first
+    assert_equal '(arg1, arg2)', foo.params
+  end
+
+  def test_parse_method_parameters_comment
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# my method\n"
+
+    util_parser "def foo arg1, arg2 # some useful comment\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    foo = klass.method_list.first
+    assert_equal '(arg1, arg2)', foo.params
+  end
+
+  def test_parse_method_parameters_comment_continue
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# my method\n"
+
+    util_parser "def foo arg1, arg2, # some useful comment\narg3\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    foo = klass.method_list.first
+    assert_equal '(arg1, arg2, arg3)', foo.params
+  end
+
+  def test_parse_method_toplevel
+    klass = @top_level
+
+    comment = "##\n# my method\n"
+
+    util_parser "def foo arg1, arg2\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    object = RDoc::TopLevel.find_class_named 'Object'
+
+    foo = object.method_list.first
+    assert_equal 'Object#foo', foo.full_name
+  end
+
+  def test_parse_statements_class_if
+    comment = "##\n# my method\n"
+
+    util_parser <<-CODE
+module Foo
+  X = if TRUE then
+        ''
+      end
+
+  def blah
+  end
+end
+    CODE
+
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
+
+    foo = @top_level.modules.first
+    assert_equal 'Foo', foo.full_name, 'module Foo'
+
+    methods = foo.method_list
+    assert_equal 1, methods.length
+    assert_equal 'Foo#blah', methods.first.full_name
+  end
+
   def test_parse_statements_class_nested
     comment = "##\n# my method\n"
 
@@ -949,4 +1038,3 @@ EOF
 
 end
 
-MiniTest::Unit.autorun

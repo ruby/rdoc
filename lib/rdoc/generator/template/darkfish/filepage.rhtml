@@ -22,7 +22,7 @@
 
 <% if file.parser == RDoc::Parser::Simple %>
 <body class="file">
-  <div id="metadata">
+	<div id="metadata">
 		<div id="project-metadata">
 			<% simple_files = @files.select { |f| f.parser == RDoc::Parser::Simple } %>
 			<% unless simple_files.empty? then %>
@@ -98,7 +98,9 @@
 				href="<%= file.cvs_url %>"><%= file.cvs_url %></a></dd>
 			<% end %>
 		</dl>
+	</div>
 
+	<div id="documentation">
 		<% if file.comment %>
 		<div class="description">
 			<h2>Description</h2>

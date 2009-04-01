@@ -1889,7 +1889,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   def parse_class(container, single, tk, comment)
-    container, name_t = get_class_or_module(container)
+    container, name_t = get_class_or_module container
 
     case name_t
     when TkCONSTANT
@@ -1921,9 +1921,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
       else
         other = RDoc::TopLevel.find_class_named(name)
         unless other
-          #            other = @top_level.add_class(NormalClass, name, nil)
-          #            other.record_location(@top_level)
-          #            other.comment = comment
+#          other = @top_level.add_class(NormalClass, name, nil)
+#          other.record_location(@top_level)
+#          other.comment = comment
           other = RDoc::NormalClass.new "Dummy", nil
         end
 
@@ -1948,7 +1948,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
       return
     end
 
-
     nest = 0
     get_tkread
 
@@ -1960,25 +1959,27 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     loop do
-        case tk
-        when TkSEMICOLON
+      case tk
+      when TkSEMICOLON then
+        break
+      when TkLPAREN, TkfLPAREN, TkLBRACE, TkLBRACK, TkDO, TkIF, TkUNLESS,
+           TkCASE then
+        nest += 1
+      when TkRPAREN, TkRBRACE, TkRBRACK, TkEND then
+        nest -= 1
+      when TkCOMMENT then
+        if nest <= 0 && @scanner.lex_state == EXPR_END
+          unget_tk tk
           break
-        when TkLPAREN, TkfLPAREN, TkLBRACE, TkLBRACK, TkDO
-          nest += 1
-        when TkRPAREN, TkRBRACE, TkRBRACK, TkEND
-          nest -= 1
-        when TkCOMMENT
-          if nest <= 0 && @scanner.lex_state == EXPR_END
-            unget_tk(tk)
-            break
-          end
-        when TkNL
-          if (nest <= 0) && ((@scanner.lex_state == EXPR_END) || (!@scanner.continue))
-            unget_tk(tk)
-            break
-          end
         end
-        tk = get_tk
+      when TkNL then
+        if nest <= 0 &&
+           (@scanner.lex_state == EXPR_END || !@scanner.continue) then
+          unget_tk tk
+          break
+        end
+      end
+      tk = get_tk
     end
 
     res = get_tkread.tr("\n", " ").strip
@@ -1987,9 +1988,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     con = RDoc::Constant.new name, res, comment
     read_documentation_modifiers con, RDoc::CONSTANT_MODIFIERS
 
-    if con.document_self
-      container.add_constant(con)
-    end
+    container.add_constant con if con.document_self
   end
 
   ##
@@ -2300,33 +2299,37 @@ class RDoc::Parser::Ruby < RDoc::Parser
     nest = 0
 
     loop do
-        case tk
-        when TkSEMICOLON
-          break
-        when TkLBRACE
-          nest += 1
-        when TkRBRACE
-          # we might have a.each {|i| yield i }
-          unget_tk(tk) if nest.zero?
+      case tk
+      when TkSEMICOLON then
+        break
+      when TkLBRACE then
+        nest += 1
+      when TkRBRACE then
+        # we might have a.each {|i| yield i }
+        unget_tk(tk) if nest.zero?
+        nest -= 1
+        break if nest <= 0
+      when TkLPAREN, TkfLPAREN then
+        nest += 1
+      when end_token then
+        if end_token == TkRPAREN
           nest -= 1
-          break if nest <= 0
-        when TkLPAREN, TkfLPAREN
-          nest += 1
-        when end_token
-          if end_token == TkRPAREN
-            nest -= 1
-            break if @scanner.lex_state == EXPR_END and nest <= 0
-          else
-            break unless @scanner.continue
-          end
-        when method && method.block_params.nil? && TkCOMMENT
-          unget_tk(tk)
-          read_documentation_modifiers(method, modifiers)
+          break if @scanner.lex_state == EXPR_END and nest <= 0
+        else
+          break unless @scanner.continue
         end
+      when method && method.block_params.nil? && TkCOMMENT then
+        unget_tk tk
+        read_documentation_modifiers method, modifiers
+        @read.pop
+      when TkCOMMENT then
+        @read.pop
+      end
       tk = get_tk
     end
-    res = get_tkread.tr("\n", " ").strip
-    res = "" if res == ";"
+
+    res = get_tkread.gsub(/\s+/, ' ').strip
+    res = '' if res == ';'
     res
   end
 
@@ -2339,10 +2342,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # and add this as the block_params for the method
 
   def parse_method_parameters(method)
-    res = parse_method_or_yield_parameters(method)
-    res = "(" + res + ")" unless res[0] == ?(
+    res = parse_method_or_yield_parameters method
+
+    res = "(#{res})" unless res =~ /\A\(/
     method.params = res unless method.params
-    if method.block_params.nil?
+
+    if method.block_params.nil? then
       skip_tkspace(false)
       read_documentation_modifiers method, RDoc::METHOD_MODIFIERS
     end
@@ -2708,16 +2713,18 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def read_directive(allowed)
     tk = get_tk
     result = nil
-    if TkCOMMENT === tk
-      if tk.text =~ /\s*:?(\w+):\s*(.*)/
+
+    if TkCOMMENT === tk then
+      if tk.text =~ /\s*:?(\w+):\s*(.*)/ then
         directive = $1.downcase
-        if allowed.include?(directive)
+        if allowed.include? directive then
           result = [directive, $2]
         end
       end
     else
-      unget_tk(tk)
+      unget_tk tk
     end
+
     result
   end
 

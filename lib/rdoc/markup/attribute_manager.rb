@@ -227,7 +227,7 @@ class RDoc::Markup::AttributeManager
 
     unmask_protected_sequences
 
-    return split_into_flow
+    split_into_flow
   end
 
   ##
@@ -304,7 +304,7 @@ class RDoc::Markup::AttributeManager
     # and reset to all attributes off
     res << change_attribute(current_attr, 0) if current_attr != 0
 
-    return res
+    res
   end
 
 end

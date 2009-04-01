@@ -1,3 +1,34 @@
+=== 2.4.3 / 2009-04-01
+
+* 2 Bug Fixes
+  * Corrected patch for file links
+  * Corrected display of file popup
+
+=== 2.4.2 / 2009-03-25
+
+* 2 Minor Enhancements
+  * Added --pipe for turning RDoc on stdin into HTML
+  * Added rdoc/task.rb containing a replacement for rake/rdoctask.rb.  Use
+    RDoc::Task now instead of Rake::RDocTask.
+
+* 10 Bug Fixes
+  * Writing the ri cache file to the proper directory.  Bug #24459 by Lars
+    Christensen.
+  * Possible fix for Dir::[] and Pathname interaction on 1.9.  Bug #24650 by
+    tiburon.
+  * Fixed scanning constants for if/end, etc. pairs.  Bug #24609 by Ryan
+    Davis.
+  * Fixed private methods in the C parser.  Bug #24599 by Aaron Patterson.
+  * Fixed display of markup on RDoc main page.  Bug #24168 by rhubarb.
+  * Fixed display of \\ character in documentation proceeding words.
+    Bug #22112 by James Gray.  See RDoc for details.
+  * Fixed parsing and display of arg params for some corner cases.  Bug #21113
+    by Csiszár Attila.
+  * Fixed links in Files box.  Patch #24403 by Eric Wong.
+  * Toplevel methods now appear in Object.  Bug #22677 by Ryan Davis.
+  * Added back --promiscuous which didn't do anything you cared about.  Why
+    did you enable it?  Nobody looked at that page!  Oh, it warns, too.
+
 === 2.4.1 / 2009-02-26
 
 * 1 Minor Enhancements

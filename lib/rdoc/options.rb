@@ -74,6 +74,11 @@ class RDoc::Options
   attr_accessor :op_dir
 
   ##
+  # Is RDoc in pipe mode?
+
+  attr_accessor :pipe
+
+  ##
   # Array of directories to search for files to satisfy an :include:
 
   attr_reader :rdoc_include
@@ -127,6 +132,7 @@ class RDoc::Options
     @exclude = []
     @generators = RDoc::RDoc::GENERATORS
     @generator = RDoc::Generator::Darkfish
+    @generator_name = nil
     @rdoc_include = []
     @title = nil
     @template = nil
@@ -143,6 +149,7 @@ class RDoc::Options
     @include_line_numbers = false
     @force_update = true
     @verbosity = 1
+    @pipe = false
 
     @webcvs = nil
 
@@ -176,38 +183,13 @@ Usage: #{opt.program_name} [options] [names...]
       EOF
 
       opt.separator nil
-      opt.separator "Options:"
+      opt.separator "Parsing Options:"
       opt.separator nil
 
       opt.on("--all", "-a",
              "Include all methods (not just public) in",
              "the output.") do |value|
         @show_all = value
-      end
-
-      opt.separator nil
-
-      opt.on("--charset=CHARSET", "-c",
-             "Specifies the output HTML character-set.") do |value|
-        @charset = value
-      end
-
-      opt.separator nil
-
-      opt.on("--debug", "-D",
-             "Displays lots on internal stuff.") do |value|
-        $DEBUG_RDOC = value
-      end
-
-      opt.separator nil
-
-      opt.on("--diagram", "-d",
-             "Generate diagrams showing modules and",
-             "classes. You need dot V1.8.6 or later to",
-             "use the --diagram option correctly. Dot is",
-             "available from http://graphviz.org") do |value|
-        check_diagram
-        @diagram = true
       end
 
       opt.separator nil
@@ -237,22 +219,33 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--fileboxes", "-F",
-             "Classes are put in boxes which represents",
-             "files, where these classes reside. Classes",
-             "shared between more than one file are",
-             "shown with list of files that are sharing",
-             "them. Silently discarded if --diagram is",
-             "not given.") do |value|
-        @fileboxes = value
-      end
-
-      opt.separator nil
-
       opt.on("--force-update", "-U",
              "Forces rdoc to scan all sources even if",
              "newer than the flag file.") do |value|
         @force_update = value
+      end
+
+      opt.separator nil
+
+      opt.on("--pipe",
+             "Convert RDoc on stdin to HTML") do
+        @pipe = true
+      end
+
+      opt.separator nil
+
+      opt.on("--threads=THREADS", Integer,
+             "Number of threads to parse with.") do |threads|
+        @threads = threads
+      end
+
+      opt.separator nil
+      opt.separator "Generator Options:"
+      opt.separator nil
+
+      opt.on("--charset=CHARSET", "-c",
+             "Specifies the output HTML character-set.") do |value|
+        @charset = value
       end
 
       opt.separator nil
@@ -267,19 +260,8 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      image_formats = %w[gif png jpg jpeg]
-      opt.on("--image-format=FORMAT", "-I", image_formats,
-             "Sets output image format for diagrams. Can",
-             "be #{image_formats.join ', '}. If this option",
-             "is omitted, png is used. Requires",
-             "diagrams.") do |value|
-        @image_format = value
-      end
-
-      opt.separator nil
-
       opt.on("--include=DIRECTORIES", "-i", Array,
-             "set (or add to) the list of directories to",
+             "Set (or add to) the list of directories to",
              "be searched when satisfying :include:",
              "requests. Can be used more than once.") do |value|
         @rdoc_include.concat value.map { |dir| dir.strip }
@@ -301,50 +283,9 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--merge", "-M",
-             "When creating ri output, merge previously",
-             "processed classes into previously",
-             "documented classes of the same name.") do |value|
-        @merge = value
-      end
-
-      opt.separator nil
-
       opt.on("--output=DIR", "--op", "-o",
              "Set the output directory.") do |value|
         @op_dir = value
-      end
-
-      opt.separator nil
-
-      opt.on("--quiet", "-q",
-             "Don't show progress as we parse.") do |value|
-        @verbosity = 0
-      end
-
-      opt.separator nil
-
-      opt.on("--ri", "-r",
-             "Generate output for use by `ri`. The files",
-             "are stored in the '.rdoc' directory under",
-             "your home directory unless overridden by a",
-             "subsequent --op parameter, so no special",
-             "privileges are needed.") do |value|
-        @generator_name = "ri"
-        @op_dir = RDoc::RI::Paths::HOMEDIR
-        setup_generator
-      end
-
-      opt.separator nil
-
-      opt.on("--ri-site", "-R",
-             "Generate output for use by `ri`. The files",
-             "are stored in a site-wide directory,",
-             "making them accessible to others, so",
-             "special privileges are needed.") do |value|
-        @generator_name = "ri"
-        @op_dir = RDoc::RI::Paths::SITEDIR
-        setup_generator
       end
 
       opt.separator nil
@@ -374,23 +315,9 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--threads=THREADS", Integer,
-             "Number of threads to parse with.") do |threads|
-        @threads = threads
-      end
-
-      opt.separator nil
-
       opt.on("--title=TITLE", "-t",
              "Set TITLE as the title for HTML output.") do |value|
         @title = value
-      end
-
-      opt.separator nil
-
-      opt.on("--verbose", "-v",
-             "Display extra progress as we parse.") do |value|
-        @verbosity = 2
       end
 
       opt.separator nil
@@ -405,14 +332,109 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.separator nil
+      opt.separator "Diagram Options:"
+      opt.separator nil
 
+      image_formats = %w[gif png jpg jpeg]
+      opt.on("--image-format=FORMAT", "-I", image_formats,
+             "Sets output image format for diagrams. Can",
+             "be #{image_formats.join ', '}. If this option",
+             "is omitted, png is used. Requires",
+             "diagrams.") do |value|
+        @image_format = value
+      end
+
+      opt.separator nil
+
+      opt.on("--diagram", "-d",
+             "Generate diagrams showing modules and",
+             "classes. You need dot V1.8.6 or later to",
+             "use the --diagram option correctly. Dot is",
+             "available from http://graphviz.org") do |value|
+        check_diagram
+        @diagram = true
+      end
+
+      opt.separator nil
+
+      opt.on("--fileboxes", "-F",
+             "Classes are put in boxes which represents",
+             "files, where these classes reside. Classes",
+             "shared between more than one file are",
+             "shown with list of files that are sharing",
+             "them. Silently discarded if --diagram is",
+             "not given.") do |value|
+        @fileboxes = value
+      end
+
+      opt.separator nil
+      opt.separator "ri Generator Options:"
+      opt.separator nil
+
+      opt.on("--ri", "-r",
+             "Generate output for use by `ri`. The files",
+             "are stored in the '.rdoc' directory under",
+             "your home directory unless overridden by a",
+             "subsequent --op parameter, so no special",
+             "privileges are needed.") do |value|
+        @generator_name = "ri"
+        @op_dir = RDoc::RI::Paths::HOMEDIR
+        setup_generator
+      end
+
+      opt.separator nil
+
+      opt.on("--ri-site", "-R",
+             "Generate output for use by `ri`. The files",
+             "are stored in a site-wide directory,",
+             "making them accessible to others, so",
+             "special privileges are needed.") do |value|
+        @generator_name = "ri"
+        @op_dir = RDoc::RI::Paths::SITEDIR
+        setup_generator
+      end
+
+      opt.separator nil
+
+      opt.on("--merge", "-M",
+             "When creating ri output, merge previously",
+             "processed classes into previously",
+             "documented classes of the same name.") do |value|
+        @merge = value
+      end
+
+      opt.separator nil
+      opt.separator "Generic Options:"
+      opt.separator nil
+
+      opt.on("--debug", "-D",
+             "Displays lots on internal stuff.") do |value|
+        $DEBUG_RDOC = value
+      end
+
+      opt.on("--quiet", "-q",
+             "Don't show progress as we parse.") do |value|
+        @verbosity = 0
+      end
+
+      opt.on("--verbose", "-v",
+             "Display extra progress as we parse.") do |value|
+        @verbosity = 2
+      end
+
+      opt.separator nil
       opt.separator 'Deprecated options - these warn when set'
-
       opt.separator nil
 
       opt.on("--inline-source", "-S") do |value|
         warn "--inline-source will be removed from RDoc on or after August 2009"
       end
+
+      opt.on("--promiscuous", "-p") do |value|
+        warn "--promiscuous will be removed from RDoc on or after August 2009"
+      end
+
+      opt.separator nil
     end
 
     argv.insert(0, *ENV['RDOCOPT'].split) if ENV['RDOCOPT']

@@ -11,9 +11,11 @@ Hoe.new "rdoc", RDoc::VERSION do |rdoc|
   rdoc.developer 'Phil Hagelberg', 'technomancy@gmail.com'
   rdoc.developer 'Tony Strauss', 'tony.strauss@designingpatterns.com'
   rdoc.remote_rdoc_dir = ''
+  rdoc.testlib = :minitest
 
   rdoc.extra_dev_deps << ['minitest', '~> 1.3']
   rdoc.spec_extras['required_rubygems_version'] = '>= 1.3'
+  rdoc.spec_extras['homepage'] = 'http://rdoc.rubyforge.org'
 end
 
 # These tasks expect to have the following directory structure:

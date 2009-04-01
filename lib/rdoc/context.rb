@@ -361,7 +361,7 @@ class RDoc::Context < RDoc::CodeObject
 
   def add_method(method)
     method.visibility = @visibility
-    add_to(@method_list, method)
+    add_to @method_list, method
 
     unmatched_alias_list = @unmatched_alias_lists[method.name]
     if unmatched_alias_list then

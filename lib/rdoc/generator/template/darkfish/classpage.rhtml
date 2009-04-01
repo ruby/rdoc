@@ -28,7 +28,7 @@
 				<div class="section-body">
 					<ul>
 					<% klass.in_files.each do |tl| %>
-						<li><a href="<%= rel_prefix %>/<%= h tl.absolute_name %>.html?TB_iframe=true&amp;height=550&amp;width=785"
+						<li><a href="<%= rel_prefix %>/<%= h tl.path %>?TB_iframe=true&amp;height=550&amp;width=785"
 							class="thickbox" title="<%= h tl.absolute_name %>"><%= h tl.absolute_name %></a></li>
 					<% end %>
 					</ul>
