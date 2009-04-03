@@ -128,22 +128,18 @@ class RDoc::Generator::RI
 
   def method_list(cls)
     list = cls.method_list
-    unless @options.show_all
+
+    unless @options.show_all then
       list = list.find_all do |m|
-        m.visibility == :public || m.visibility == :protected || m.force_documentation
+        m.visibility == :public or
+          m.visibility == :protected or
+          m.force_documentation
       end
     end
 
-    c = []
-    i = []
-    list.sort.each do |m|
-      if m.singleton
-        c << m
-      else
-        i << m
-      end
+    list.sort.partition do |m|
+      m.singleton
     end
-    return c,i
   end
 
   def params_of(method)
