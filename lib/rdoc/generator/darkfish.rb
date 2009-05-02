@@ -147,6 +147,8 @@ class RDoc::Generator::Darkfish
 		@outputdir.mkpath
 	end
 
+  $dryrun = false
+
 	### Copy over the stylesheet into the appropriate place in the output
 	### directory.
 	def write_style_sheet
