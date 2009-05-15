@@ -14,6 +14,8 @@ require 'rdoc/rdoc'
 require 'rdoc/generator'
 require 'rdoc/generator/markup'
 
+$DARKFISH_DRYRUN = false # TODO make me non-global
+
 #
 #  Darkfish RDoc HTML Generator
 #  
@@ -147,13 +149,11 @@ class RDoc::Generator::Darkfish
 		@outputdir.mkpath
 	end
 
-  $dryrun = false
-
 	### Copy over the stylesheet into the appropriate place in the output
 	### directory.
 	def write_style_sheet
 		debug_msg "Copying static files"
-		options = { :verbose => $DEBUG_RDOC, :noop => $dryrun }
+		options = { :verbose => $DEBUG_RDOC, :noop => $DARKFISH_DRYRUN }
 
 		FileUtils.cp @template_dir + 'rdoc.css', '.', options
 
@@ -246,7 +246,7 @@ class RDoc::Generator::Darkfish
 		end
 
 		outfile = @basedir + @options.op_dir + 'index.html'
-		unless $dryrun
+		unless $DARKFISH_DRYRUN
 			debug_msg "Outputting to %s" % [outfile.expand_path]
 			outfile.open( 'w', 0644 ) do |fh|
 				fh.print( output )
@@ -356,7 +356,7 @@ class RDoc::Generator::Darkfish
 							 ], err.backtrace
 						 end
 
-		unless $dryrun
+		unless $DARKFISH_DRYRUN
 			outfile.dirname.mkpath
 			outfile.open( 'w', 0644 ) do |ofh|
 				ofh.print( output )
