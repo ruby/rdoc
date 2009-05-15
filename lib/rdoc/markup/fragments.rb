@@ -1,6 +1,3 @@
-require 'rdoc/markup'
-require 'rdoc/markup/lines'
-
 class RDoc::Markup
 
   ##

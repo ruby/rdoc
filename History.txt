@@ -1,3 +1,10 @@
+=== 2.? / 2009-?
+
+* N Bug Fixes
+  * The :attr: directives now use the name given to create an attribute.  See
+    RDoc::Parser::Ruby#parse_meta_attr.
+  * Clean up circular require warnings on 1.9.
+
 === 2.4.3 / 2009-04-01
 
 * 2 Bug Fixes

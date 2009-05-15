@@ -1728,7 +1728,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Look for directives in a normal comment block:
   #
-  #   #-- - don't display comment from this point forward
+  #   # :stopdoc:
+  #   # Don't display comment from this point forward
   #
   # This routine modifies it's parameter
 
@@ -1743,8 +1744,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when 'main' then
         @options.main_page = param
         ''
-      when 'method', 'singleton-method' then
-        false # ignore
+      when 'method', 'singleton-method',
+           'attr', 'attr_accessor', 'attr_reader', 'attr_writer' then
+        false # handled elsewhere
       when 'section' then
         context.set_current_section(param, comment)
         comment.replace ''
@@ -1765,7 +1767,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
     end
 
-    remove_private_comments(comment)
+    remove_private_comments comment
   end
 
   def make_message(msg)
@@ -2050,6 +2052,35 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
   end
 
+  ##
+  # Parses a meta-programmed attribute and creates an RDoc::Attr.
+  #
+  # To create foo and bar attributes on class C with comment "My attributes":
+  #
+  #   class C
+  #   
+  #     ##
+  #     # :attr:
+  #     #
+  #     # My attributes
+  #   
+  #     my_attr :foo, :bar
+  #   
+  #   end
+  #
+  # To create a foo attribute on class C with comment "My attribute":
+  #
+  #   class C
+  #   
+  #     ##
+  #     # :attr: foo
+  #     #
+  #     # My attribute
+  #   
+  #     my_attr :foo, :bar
+  #   
+  #   end
+
   def parse_meta_attr(context, single, tk, comment)
     args = parse_symbol_arg
     read = get_tkread
@@ -2070,9 +2101,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
       name = $3 unless $3.empty?
     end
 
-    for name in args
+    if name then
       att = RDoc::Attr.new get_tkread, name, rw, comment
       context.add_attribute att
+    else
+      args.each do |attr_name|
+        att = RDoc::Attr.new get_tkread, attr_name, rw, comment
+        context.add_attribute att
+      end
     end
   end
 
@@ -2515,7 +2551,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
             end
           else
             if container.document_self and comment =~ /\A#\#$/ then
-              parse_meta_method container, single, tk, comment
+              case comment
+              when /^# +:?attr(_reader|_writer|_accessor)?:/ then
+                parse_meta_attr container, single, tk, comment
+              else
+                parse_meta_method container, single, tk, comment
+              end
             end
           end
         end

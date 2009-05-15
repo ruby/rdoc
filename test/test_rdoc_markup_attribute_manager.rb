@@ -1,5 +1,7 @@
 require "rubygems"
 require "minitest/unit"
+require 'rdoc'
+require 'rdoc/markup'
 require "rdoc/markup/inline"
 require "rdoc/markup/to_html_crossref"
 

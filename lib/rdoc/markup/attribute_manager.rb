@@ -1,5 +1,3 @@
-require 'rdoc/markup/inline'
-
 ##
 # Manages changes of attributes in a block of text
 

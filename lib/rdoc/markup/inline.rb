@@ -1,5 +1,3 @@
-require 'rdoc/markup'
-
 class RDoc::Markup
 
   ##
@@ -123,4 +121,3 @@ class RDoc::Markup
 
 end
 
-require 'rdoc/markup/attribute_manager'

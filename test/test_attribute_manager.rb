@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'minitest/unit'
+require 'rdoc'
+require 'rdoc/markup'
 require 'rdoc/markup/attribute_manager'
 
 class TestAttributeManager < MiniTest::Unit::TestCase

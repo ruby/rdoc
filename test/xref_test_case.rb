@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'minitest/unit'
+require 'rdoc'
 require 'rdoc/stats'
 require 'rdoc/options'
 require 'rdoc/code_objects'

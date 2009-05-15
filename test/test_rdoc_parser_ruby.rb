@@ -239,6 +239,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
 
     @parser.parse_meta_attr klass, RDoc::Parser::Ruby::NORMAL, tk, comment
 
+    assert_equal 2, klass.attributes.length
     foo = klass.attributes.first
     assert_equal 'foo', foo.name
     assert_equal 'RW', foo.rw
@@ -257,6 +258,26 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
 
     @parser.parse_meta_attr klass, RDoc::Parser::Ruby::NORMAL, tk, comment
 
+    assert_equal 2, klass.attributes.length
+    foo = klass.attributes.first
+    assert_equal 'foo', foo.name
+    assert_equal 'RW', foo.rw
+    assert_equal "##\n# my method\n", foo.comment
+  end
+
+  def test_parse_meta_attr_named
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# :attr: foo\n# my method\n"
+
+    util_parser "add_my_method :foo, :bar"
+
+    tk = @parser.get_tk
+
+    @parser.parse_meta_attr klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    assert_equal 1, klass.attributes.length
     foo = klass.attributes.first
     assert_equal 'foo', foo.name
     assert_equal 'RW', foo.rw
