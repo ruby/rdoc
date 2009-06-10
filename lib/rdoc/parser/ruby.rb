@@ -249,7 +249,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       container = @top_level
     end
 
-    skip_tkspace(false)
+    skip_tkspace false
 
     while TkCOLON2 === peek_tk do
       prev_container = container
@@ -261,7 +261,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       get_tk
       name_t = get_tk
     end
-    skip_tkspace(false)
+    skip_tkspace false
     return [container, name_t]
   end
 
@@ -279,7 +279,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     unget_tk(tk)
-    skip_tkspace(false)
+    skip_tkspace false
 
     get_tkread # empty out read buffer
 
@@ -301,7 +301,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def get_constant
     res = ""
-    skip_tkspace(false)
+    skip_tkspace false
     tk = get_tk
 
     while TkCOLON2 === tk or TkCOLON3 === tk or TkCONSTANT === tk do
@@ -320,18 +320,18 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Get a constant that may be surrounded by parens
 
   def get_constant_with_optional_parens
-    skip_tkspace(false)
+    skip_tkspace false
     nest = 0
     while TkLPAREN === (tk = peek_tk) or TkfLPAREN === tk do
       get_tk
-      skip_tkspace(true)
+      skip_tkspace
       nest += 1
     end
 
     name = get_constant
 
     while nest > 0
-      skip_tkspace(true)
+      skip_tkspace
       tk = get_tk
       nest -= 1 if TkRPAREN === tk
     end
@@ -414,7 +414,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     if args.size > 0
       name = args[0]
       rw = "R"
-      skip_tkspace(false)
+      skip_tkspace false
       tk = get_tk
       if TkCOMMA === tk then
         rw = "RW" if get_bool
@@ -527,7 +527,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       if TkLT === peek_tk then
         get_tk
-        skip_tkspace(true)
+        skip_tkspace
         superclass = get_class_specification
         superclass = "<unknown>" if superclass.empty?
       end
@@ -569,7 +569,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def parse_constant(container, single, tk, comment)
     name = tk.name
-    skip_tkspace(false)
+    skip_tkspace false
     eq_tk = get_tk
 
     unless TkASSIGN === eq_tk then
@@ -789,30 +789,28 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.add_tokens [position_comment, NEWLINE_TOKEN, indent]
     meth.add_tokens @token_stream
 
-    add_token_listener meth
+    token_listener meth do
+      meth.params = ''
 
-    meth.params = ''
+      extract_call_seq comment, meth
 
-    extract_call_seq comment, meth
+      container.add_method meth if meth.document_self
 
-    container.add_method meth if meth.document_self
+      last_tk = tk
 
-    last_tk = tk
-
-    while tk = get_tk do
-      case tk
-      when TkSEMICOLON then
-        break
-      when TkNL then
-        break unless last_tk and TkCOMMA === last_tk
-      when TkSPACE then
-        # expression continues
-      else
-        last_tk = tk
+      while tk = get_tk do
+        case tk
+        when TkSEMICOLON then
+          break
+        when TkNL then
+          break unless last_tk and TkCOMMA === last_tk
+        when TkSPACE then
+          # expression continues
+        else
+          last_tk = tk
+        end
       end
     end
-
-    remove_token_listener meth
 
     meth.comment = comment
   end
@@ -821,84 +819,85 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Parses a normal method defined by +def+
 
   def parse_method(container, single, tk, comment)
+    meth = nil
+    name = nil
     line_no = tk.line_no
     column  = tk.char_no
 
     start_collecting_tokens
     add_token(tk)
-    add_token_listener(self)
 
-    @scanner.instance_eval do @lex_state = EXPR_FNAME end
-
-    skip_tkspace(false)
-    name_t = get_tk
-    back_tk = skip_tkspace
-    meth = nil
-    added_container = false
-
-    dot = get_tk
-    if TkDOT === dot or TkCOLON2 === dot then
+    token_listener self do
       @scanner.instance_eval do @lex_state = EXPR_FNAME end
-      skip_tkspace
-      name_t2 = get_tk
 
-      case name_t
-      when TkSELF then
-        name = name_t2.name
-      when TkCONSTANT then
-        name = name_t2.name
-        prev_container = container
-        container = container.find_module_named(name_t.name)
-        unless container then
-          added_container = true
-          obj = name_t.name.split("::").inject(Object) do |state, item|
-            state.const_get(item)
-          end rescue nil
+      skip_tkspace false
+      name_t = get_tk
+      back_tk = skip_tkspace
+      meth = nil
+      added_container = false
 
-          type = obj.class == Class ? RDoc::NormalClass : RDoc::NormalModule
+      dot = get_tk
+      if TkDOT === dot or TkCOLON2 === dot then
+        @scanner.instance_eval do @lex_state = EXPR_FNAME end
+        skip_tkspace
+        name_t2 = get_tk
 
-          unless [Class, Module].include?(obj.class) then
-            warn("Couldn't find #{name_t.name}. Assuming it's a module")
+        case name_t
+        when TkSELF then
+          name = name_t2.name
+        when TkCONSTANT then
+          name = name_t2.name
+          prev_container = container
+          container = container.find_module_named(name_t.name)
+          unless container then
+            added_container = true
+            obj = name_t.name.split("::").inject(Object) do |state, item|
+              state.const_get(item)
+            end rescue nil
+
+            type = obj.class == Class ? RDoc::NormalClass : RDoc::NormalModule
+
+            unless [Class, Module].include?(obj.class) then
+              warn("Couldn't find #{name_t.name}. Assuming it's a module")
+            end
+
+            if type == RDoc::NormalClass then
+              container = prev_container.add_class(type, name_t.name, obj.superclass.name)
+            else
+              container = prev_container.add_module(type, name_t.name)
+            end
+
+            container.record_location @top_level
           end
-
-          if type == RDoc::NormalClass then
-            container = prev_container.add_class(type, name_t.name, obj.superclass.name)
-          else
-            container = prev_container.add_module(type, name_t.name)
-          end
-
-          container.record_location @top_level
+        else
+          warn "unexpected method name token #{name_t2.inspect}"
+          # break
+          skip_method(container)
+          return
         end
+
+        meth = RDoc::AnyMethod.new(get_tkread, name)
+        meth.singleton = true
       else
-        warn "unexpected method name token #{name_t2.inspect}"
-        # break
-        skip_method(container)
-        return
+        unget_tk dot
+        back_tk.reverse_each do |token|
+          unget_tk token
+        end
+
+        unless name_t.respond_to? :name then
+          warn "unexpected method name token #{name_t.inspect}"
+          skip_method container
+          return
+        end
+
+        name = name_t.name
+
+        meth = RDoc::AnyMethod.new get_tkread, name
+        meth.singleton = (single == SINGLE)
       end
 
-      meth = RDoc::AnyMethod.new(get_tkread, name)
-      meth.singleton = true
-    else
-      unget_tk dot
-      back_tk.reverse_each do |token|
-        unget_tk token
-      end
-
-      unless name_t.respond_to? :name then
-        warn "unexpected method name token #{name_t.inspect}"
-        skip_method container
-        return
-      end
-
-      name = name_t.name
-
-      meth = RDoc::AnyMethod.new get_tkread, name
-      meth.singleton = (single == SINGLE)
+      @stats.add_method meth
     end
-
-    @stats.add_method meth
-
-    remove_token_listener self
 
     meth.start_collecting_tokens
     indent = TkSPACE.new 1, 1
@@ -908,33 +907,31 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.add_tokens [token, NEWLINE_TOKEN, indent]
     meth.add_tokens @token_stream
 
-    add_token_listener meth
+    token_listener meth do
+      @scanner.instance_eval do @continue = false end
+      parse_method_parameters meth
 
-    @scanner.instance_eval do @continue = false end
-    parse_method_parameters meth
-
-    if meth.document_self then
-      container.add_method meth
-    elsif added_container then
-      container.document_self = false
-    end
-
-    # Having now read the method parameters and documentation modifiers, we
-    # now know whether we have to rename #initialize to ::new
-
-    if name == "initialize" && !meth.singleton then
-      if meth.dont_rename_initialize then
-        meth.visibility = :protected
-      else
-        meth.singleton = true
-        meth.name = "new"
-        meth.visibility = :public
+      if meth.document_self then
+        container.add_method meth
+      elsif added_container then
+        container.document_self = false
       end
+
+      # Having now read the method parameters and documentation modifiers, we
+      # now know whether we have to rename #initialize to ::new
+
+      if name == "initialize" && !meth.singleton then
+        if meth.dont_rename_initialize then
+          meth.visibility = :protected
+        else
+          meth.singleton = true
+          meth.name = "new"
+          meth.visibility = :public
+        end
+      end
+
+      parse_statements(container, single, meth)
     end
-
-    parse_statements(container, single, meth)
-
-    remove_token_listener(meth)
 
     extract_call_seq comment, meth
 
@@ -943,7 +940,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def parse_method_or_yield_parameters(method = nil,
                                        modifiers = RDoc::METHOD_MODIFIERS)
-    skip_tkspace(false)
+    skip_tkspace false
     tk = get_tk
 
     # Little hack going on here. In the statement
@@ -1011,7 +1008,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     method.params = res unless method.params
 
     if method.block_params.nil? then
-      skip_tkspace(false)
+      skip_tkspace false
       read_documentation_modifiers method, RDoc::METHOD_MODIFIERS
     end
   end
@@ -1071,7 +1068,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       case tk
       when TkNL then
-        skip_tkspace true # Skip blanks and newlines
+        skip_tkspace
         tk = get_tk
 
         if TkCOMMENT === tk then
@@ -1086,7 +1083,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           while TkCOMMENT === tk do
             comment << tk.text << "\n"
             tk = get_tk          # this is the newline
-            skip_tkspace(false)  # leading spaces
+            skip_tkspace false  # leading spaces
             tk = get_tk
           end
 
@@ -1209,7 +1206,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       begin
         get_tkread
-        skip_tkspace(false)
+        skip_tkspace false
       end while peek_tk == TkNL
     end
   end
@@ -1244,7 +1241,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
 
       loop do
-        skip_tkspace(false)
+        skip_tkspace false
 
         tk1 = get_tk
         unless TkCOMMA === tk1 then
@@ -1453,7 +1450,7 @@ The internal error was:
   # while, until, and for have an optional do
 
   def skip_optional_do_after_expression
-    skip_tkspace(false)
+    skip_tkspace false
     tk = get_tk
     case tk
     when TkLPAREN, TkfLPAREN
@@ -1483,7 +1480,7 @@ The internal error was:
       end
       tk = get_tk
     end
-    skip_tkspace(false)
+    skip_tkspace false
 
     get_tk if TkDO === peek_tk
   end
@@ -1492,9 +1489,9 @@ The internal error was:
   # skip the var [in] part of a 'for' statement
 
   def skip_for_variable
-    skip_tkspace(false)
+    skip_tkspace false
     tk = get_tk
-    skip_tkspace(false)
+    skip_tkspace false
     tk = get_tk
     unget_tk(tk) unless TkIN === tk
   end
@@ -1510,7 +1507,7 @@ The internal error was:
 
   def skip_tkspace_comment(skip_nl = true)
     loop do
-      skip_tkspace(skip_nl)
+      skip_tkspace skip_nl
       return unless TkCOMMENT === peek_tk
       get_tk
     end

@@ -77,6 +77,7 @@ lib/rdoc/parser.rb
 lib/rdoc/parser/c.rb
 lib/rdoc/parser/perl.rb
 lib/rdoc/parser/ruby.rb
+lib/rdoc/parser/ruby_tools.rb
 lib/rdoc/parser/simple.rb
 lib/rdoc/rdoc.rb
 lib/rdoc/require.rb
@@ -90,6 +91,8 @@ lib/rdoc/ri/paths.rb
 lib/rdoc/ri/reader.rb
 lib/rdoc/ri/util.rb
 lib/rdoc/ri/writer.rb
+lib/rdoc/ruby_lex.rb
+lib/rdoc/ruby_token.rb
 lib/rdoc/single_class.rb
 lib/rdoc/stats.rb
 lib/rdoc/task.rb
