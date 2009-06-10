@@ -83,16 +83,11 @@ class RDoc::Parser
   def self.can_parse(file_name)
     parser = RDoc::Parser.parsers.find { |regexp,| regexp =~ file_name }.last
 
-    #
-    # The default parser should *NOT* parse binary files.
-    #
-    if parser == RDoc::Parser::Simple && file_name !~ /\.(txt|rdoc)$/ then
-      if binary? file_name then
-        return nil
-      end
-    end
+    # The default parser must not parse binary files
+    return nil if parser == RDoc::Parser::Simple and
+                  file_name !~ /\.(txt|rdoc)$/ and binary? file_name
 
-    return parser
+    parser
   end
 
   ##
@@ -119,6 +114,8 @@ class RDoc::Parser
 
   ##
   # Record which file types this parser can understand.
+  #
+  # It is ok to call this multiple times.
 
   def self.parse_files_matching(regexp)
     RDoc::Parser.parsers.unshift [regexp, self]

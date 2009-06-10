@@ -178,9 +178,21 @@ Usage: #{opt.program_name} [options] [names...]
   the options you give.
 
   - Darkfish creates frameless HTML output by Michael Granger.
-
   - ri creates ri data files
+
+  RDoc understands the following file formats:
+
       EOF
+
+      parsers = Hash.new { |h,parser| h[parser] = [] }
+
+      RDoc::Parser.parsers.each do |regexp, parser|
+        parsers[parser.name.sub('RDoc::Parser::', '')] << regexp.source
+      end
+
+      parsers.sort.each do |parser, regexp|
+        opt.banner << "  - #{parser}: #{regexp.join ', '}\n"
+      end
 
       opt.separator nil
       opt.separator "Parsing Options:"

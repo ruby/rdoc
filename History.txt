@@ -1,5 +1,9 @@
 === 2.? / 2009-?
 
+* N Minor Enhancements
+  * API enhancements for writing parsers like the Ruby parser, see
+    RDoc::Parser::RubyTools
+
 * N Bug Fixes
   * The :attr: directives now use the name given to create an attribute.  See
     RDoc::Parser::Ruby#parse_meta_attr.
