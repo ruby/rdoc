@@ -2,20 +2,18 @@ require 'hoe'
 
 $rdoc_rakefile = true
 
-$:.unshift 'lib'
-require 'rdoc'
+Hoe.spec 'rdoc' do
+  developer 'Eric Hodel', 'drbrain@segment7.net'
+  developer 'Dave Thomas', ''
+  developer 'Phil Hagelberg', 'technomancy@gmail.com'
+  developer 'Tony Strauss', 'tony.strauss@designingpatterns.com'
 
-Hoe.new "rdoc", RDoc::VERSION do |rdoc|
-  rdoc.developer 'Eric Hodel', 'drbrain@segment7.net'
-  rdoc.developer 'Dave Thomas', ''
-  rdoc.developer 'Phil Hagelberg', 'technomancy@gmail.com'
-  rdoc.developer 'Tony Strauss', 'tony.strauss@designingpatterns.com'
-  rdoc.remote_rdoc_dir = ''
-  rdoc.testlib = :minitest
+  self.remote_rdoc_dir = ''
+  self.testlib = :minitest
 
-  rdoc.extra_dev_deps << ['minitest', '~> 1.3']
-  rdoc.spec_extras['required_rubygems_version'] = '>= 1.3'
-  rdoc.spec_extras['homepage'] = 'http://rdoc.rubyforge.org'
+  extra_dev_deps << ['minitest', '~> 1.3']
+  spec_extras['required_rubygems_version'] = '>= 1.3'
+  spec_extras['homepage'] = 'http://rdoc.rubyforge.org'
 end
 
 # These tasks expect to have the following directory structure:

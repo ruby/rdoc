@@ -1,3 +1,5 @@
+ENV['RDOC_TEST'] = 'yes'
+
 require 'rubygems'
 require 'minitest/unit'
 require 'rdoc'
