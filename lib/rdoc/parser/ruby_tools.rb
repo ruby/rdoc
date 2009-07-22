@@ -60,6 +60,18 @@ module RDoc::Parser::RubyTools
     tk
   end
 
+  def get_tk_until(*tokens)
+    read = []
+
+    loop do
+      tk = get_tk
+      case tk when *tokens then unget_tk tk; break end
+      read << tk
+    end
+
+    read
+  end
+
   ##
   # Retrieves a String representation of the read tokens
 

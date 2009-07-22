@@ -286,5 +286,13 @@ module RDoc::RubyToken
   NEWLINE_TOKEN = TkNL.new(0,0)
   NEWLINE_TOKEN.set_text("\n")
 
+  class TkSYMBOL
+
+    def to_sym
+      @sym ||= text[1..-1].intern
+    end
+
+  end
+
 end
 
