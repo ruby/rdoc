@@ -8,7 +8,7 @@ require 'rdoc/ri'
 #
 # To access your class from the command line, you can do
 #
-#    ruby -r <your source file>  ../ri ....
+#   ruby -r <your source file> -S ri ...
 
 module RDoc::RI::Display
 
@@ -26,7 +26,7 @@ end
 
 ##
 # A paging display module. Uses the RDoc::RI::Formatter class to do the actual
-# presentation.
+# presentation.  See #setup_pager to determine which pager is selected.
 
 class RDoc::RI::DefaultDisplay
 
@@ -307,11 +307,12 @@ class RDoc::RI::DefaultDisplay
   end
 
   ##
-  # Sets up a pager program to pass output through.
+  # Sets up a pager program to pass output through.  Tries the PAGER
+  # environment variable, followed by pager, less then more.
 
   def setup_pager
     unless @use_stdout then
-      for pager in [ ENV['PAGER'], "less", "more", 'pager' ].compact.uniq
+      for pager in [ENV['PAGER'], 'pager', 'less', 'more'].compact.uniq
         return IO.popen(pager, "w") rescue nil
       end
       @use_stdout = true
@@ -338,3 +339,4 @@ class RDoc::RI::DefaultDisplay
   end
 
 end
+

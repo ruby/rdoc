@@ -3,6 +3,8 @@
 * N Minor Enhancements
   * API enhancements for writing parsers like the Ruby parser, see
     RDoc::Parser::RubyTools
+  * Uses pager over less and more for Debian.  Ruby Bug #1171 by Lucas
+    Nussbaum.
 
 * N Bug Fixes
   * The :attr: directives now use the name given to create an attribute.  See
