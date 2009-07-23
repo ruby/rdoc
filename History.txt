@@ -2,7 +2,7 @@
 
 * N Major Enhancements
   * Constant display removed from ri output.  There's no easy way to make them
-    presentable.  Use irb or ruby -e instead.
+    presentable.  Use irb or ruby -e instead.  Ruby Bug #549.
 
 * N Minor Enhancements
   * API enhancements for writing parsers like the Ruby parser, see

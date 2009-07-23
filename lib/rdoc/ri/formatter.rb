@@ -439,7 +439,7 @@ class RDoc::RI::AnsiFormatter < RDoc::RI::AttributeFormatter
 end
 
 ##
-# This formatter uses HTML.
+# This formatter uses HTML.  It's pretty terrible, too!
 
 class RDoc::RI::HtmlFormatter < RDoc::RI::AttributeFormatter
 
@@ -609,8 +609,8 @@ class RDoc::RI::HtmlFormatter < RDoc::RI::AttributeFormatter
 end
 
 ##
-# This formatter reduces extra lines for a simpler output.  It improves way
-# output looks for tools like IRC bots.
+# This formatter reduces extra lines for a simpler output.  It improves the
+# way output looks for tools like IRC bots.
 
 class RDoc::RI::SimpleFormatter < RDoc::RI::Formatter
 

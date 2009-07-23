@@ -79,6 +79,8 @@ class RDoc::RI::DefaultDisplay
 
         constants.each do |constant|
           @formatter.wrap constant.name
+          @formatter.break_to_newline
+
           if constant.comment then
             @formatter.indent do
               @formatter.display_flow constant.comment
