@@ -15,11 +15,16 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     FileUtils.mkdir_p @home_ri
     FileUtils.mkdir_p @cache_dir
 
-    @driver = RDoc::RI::Driver.new(RDoc::RI::Driver.process_args([]))
-    @driver.homepath = @home_ri
+    @orig_home = ENV['HOME']
+    ENV['HOME'] = @tmpdir
+
+    options = RDoc::RI::Driver.process_args []
+    options[:home] = @tmpdir
+    @driver = RDoc::RI::Driver.new options
   end
 
   def teardown
+    ENV['HOME'] = @orig_home
     FileUtils.rm_rf @tmpdir
   end
 

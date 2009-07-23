@@ -328,7 +328,11 @@ Options may also be set in the 'RI' environment variable.
                                      options[:extra_doc_dirs])
 
     @homepath = RDoc::RI::Paths.raw_path(false, false, true, false).first
-    @homepath = @homepath.sub(/\.rdoc/, '.ri')
+    @homepath = if options[:home] then
+                  File.join options[:home], '.ri'
+                else
+                  @homepath.sub(/\.rdoc/, '.ri')
+                end
     @sys_dir = RDoc::RI::Paths.raw_path(true, false, false, false).first
     @list_doc_dirs = options[:list_doc_dirs]
 
