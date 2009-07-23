@@ -72,10 +72,10 @@ class TestRDocRiDefaultDisplay < MiniTest::Unit::TestCase
 Constants:
 ----------
 
-     CONSTANT = "value1"
+     CONSTANT
           CONSTANT value
 
-     CONSTANT_NOCOMMENT = "value2"
+     CONSTANT_NOCOMMENT
 
 
 Attributes:

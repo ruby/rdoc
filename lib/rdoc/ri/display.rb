@@ -78,7 +78,7 @@ class RDoc::RI::DefaultDisplay
         constants = klass.constants.sort_by { |constant| constant.name }
 
         constants.each do |constant|
-          @formatter.wrap "#{constant.name} = #{constant.value}"
+          @formatter.wrap constant.name
           if constant.comment then
             @formatter.indent do
               @formatter.display_flow constant.comment
