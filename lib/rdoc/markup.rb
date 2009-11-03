@@ -373,6 +373,7 @@ class RDoc::Markup
 
 end
 
+require 'rdoc/markup/parser'
 require 'rdoc/markup/attribute_manager'
 require 'rdoc/markup/fragments'
 require 'rdoc/markup/inline'
