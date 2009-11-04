@@ -340,6 +340,20 @@ class RDoc::Markup::Parser
     verbatim
   end
 
+  def expand_tabs text
+    expanded = []
+
+    text.each_line do |line|
+      line.gsub!(/^(.{8}*?)([^\t\r\n]{0,7})\t/) do
+        "#{$1}#{$2}#{' ' * (8 - $2.size)}"
+      end until line !~ /\t/
+
+      expanded << line
+    end
+
+    expanded.join
+  end
+
   def get
     @current_token = @tokens.shift
     p :get => @current_token if @debug
@@ -435,6 +449,8 @@ class RDoc::Markup::Parser
   end
 
   def tokenize input
+    input = expand_tabs input
+
     s = StringScanner.new input
 
     @line = 0
@@ -486,15 +502,6 @@ class RDoc::Markup::Parser
   def unget token = @current_token
     p :unget => token if @debug
     @tokens.unshift token if token
-  end
-
-  def stack
-    caller.select do |frame|
-      frame =~ /rdoc\/markup\/parser\.rb/ 
-    end.map do |frame|
-      frame =~ /:(\d+):in `(.*?)'/
-      "#{$2}:#{$1}"
-    end.reverse
   end
 
 end

@@ -648,6 +648,126 @@ for all
     assert_equal expected, @RMP.tokenize(str)
   end
 
+  def test_tokenize_tabs
+    str = "hello\n  dave"
+
+    expected = [
+      [:TEXT, 'hello', 0, 0],
+      [:NEWLINE, "\n", 5, 0],
+      [:INDENT, 2,     0, 1],
+      [:TEXT, 'dave',  2, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str), 'spaces'
+
+    str = "hello\n\tdave"
+
+    expected = [
+      [:TEXT, 'hello', 0, 0],
+      [:NEWLINE, "\n", 5, 0],
+      [:INDENT, 8,     0, 1],
+      [:TEXT, 'dave',  8, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str), 'tab'
+
+    str = "hello\n \tdave"
+
+    expected = [
+      [:TEXT, 'hello', 0, 0],
+      [:NEWLINE, "\n", 5, 0],
+      [:INDENT, 8,     0, 1],
+      [:TEXT, 'dave',  8, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str), '1 space tab'
+
+    str = "hello\n  \tdave"
+
+    expected = [
+      [:TEXT, 'hello', 0, 0],
+      [:NEWLINE, "\n", 5, 0],
+      [:INDENT, 8,     0, 1],
+      [:TEXT, 'dave',  8, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str), '2 space tab'
+
+    str = "hello\n   \tdave"
+
+    expected = [
+      [:TEXT, 'hello', 0, 0],
+      [:NEWLINE, "\n", 5, 0],
+      [:INDENT, 8,     0, 1],
+      [:TEXT, 'dave',  8, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str), '3 space tab'
+
+    str = "hello\n    \tdave"
+
+    expected = [
+      [:TEXT, 'hello', 0, 0],
+      [:NEWLINE, "\n", 5, 0],
+      [:INDENT, 8,     0, 1],
+      [:TEXT, 'dave',  8, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str), '4 space tab'
+
+    str = "hello\n     \tdave"
+
+    expected = [
+      [:TEXT, 'hello', 0, 0],
+      [:NEWLINE, "\n", 5, 0],
+      [:INDENT, 8,     0, 1],
+      [:TEXT, 'dave',  8, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str), '5 space tab'
+
+    str = "hello\n      \tdave"
+
+    expected = [
+      [:TEXT, 'hello', 0, 0],
+      [:NEWLINE, "\n", 5, 0],
+      [:INDENT, 8,     0, 1],
+      [:TEXT, 'dave',  8, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str), '6 space tab'
+
+    str = "hello\n       \tdave"
+
+    expected = [
+      [:TEXT, 'hello', 0, 0],
+      [:NEWLINE, "\n", 5, 0],
+      [:INDENT, 8,     0, 1],
+      [:TEXT, 'dave',  8, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str), '7 space tab'
+
+    str = "hello\n        \tdave"
+
+    expected = [
+      [:TEXT, 'hello',  0, 0],
+      [:NEWLINE, "\n",  5, 0],
+      [:INDENT, 16,     0, 1],
+      [:TEXT, 'dave',  16, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str), '8 space tab'
+
+    str = ".\t\t."
+
+    expected = [
+      [:TEXT, '.               .',      0, 0],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str), 'dot tab tab dot'
+  end
+
   def test_tokenize_ualpha
     str = <<-STR
 A. l1
@@ -686,31 +806,6 @@ Example heading:
     ]
 
     assert_equal expected, @RMP.tokenize(str)
-  end
-
-  def test_tabs
-    str = "hello\n  dave"
-    assert_equal(str, basic_conv(str))
-    str = "hello\n\tdave"
-    assert_equal("hello\n        dave", basic_conv(str))
-    str = "hello\n \tdave"
-    assert_equal("hello\n        dave", basic_conv(str))
-    str = "hello\n  \tdave"
-    assert_equal("hello\n        dave", basic_conv(str))
-    str = "hello\n   \tdave"
-    assert_equal("hello\n        dave", basic_conv(str))
-    str = "hello\n    \tdave"
-    assert_equal("hello\n        dave", basic_conv(str))
-    str = "hello\n     \tdave"
-    assert_equal("hello\n        dave", basic_conv(str))
-    str = "hello\n      \tdave"
-    assert_equal("hello\n        dave", basic_conv(str))
-    str = "hello\n       \tdave"
-    assert_equal("hello\n        dave", basic_conv(str))
-    str = "hello\n        \tdave"
-    assert_equal("hello\n                dave", basic_conv(str))
-    str = ".\t\t."
-    assert_equal(".               .", basic_conv(str))
   end
 
   def test_verbatim_merge
