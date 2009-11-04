@@ -152,6 +152,27 @@ class RDoc::Markup::Parser
   end
 
   class Verbatim < Paragraph
+    def normalize
+      parts = []
+
+      newlines = 0
+
+      @parts.each do |part|
+        case part
+        when /\n/ then
+          newlines += 1
+          parts << part if newlines <= 2
+        else
+          newlines = 0
+          parts << part
+        end
+      end
+
+      parts.slice! -1 if parts[-2..-1] == ["\n", "\n"]
+
+      @parts = parts
+    end
+
     def text
       @parts.join
     end
@@ -312,7 +333,7 @@ class RDoc::Markup::Parser
 
       case type
       when :INDENT then
-        if margin > data then
+        if margin >= data then
           unget
           break
         end
@@ -328,12 +349,14 @@ class RDoc::Markup::Parser
         verbatim << data
       when :NEWLINE then
         verbatim << data
-        break unless peek_token[0] == :INDENT
+        break unless [:INDENT, :NEWLINE].include? peek_token[0]
       else
         unget
         break
       end
     end
+
+    verbatim.normalize
 
     p :verbatim_end => margin if @debug
 

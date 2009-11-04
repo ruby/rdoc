@@ -17,37 +17,6 @@ class TestRDocMarkupParser < MiniTest::Unit::TestCase
     s.chomp
   end
 
-  def basic_conv(str)
-    sm = RDoc::Markup.new
-    mock = RDoc::Markup::ToTest.new
-    sm.convert(str, mock)
-    sm.content
-  end
-
-  def line_groups(str, expected)
-    m = RDoc::Markup.new
-    mock = RDoc::Markup::ToTest.new
-
-    block = m.convert(str, mock)
-
-    unless block == expected then
-      rows = (0...([expected.size, block.size].max)).collect{|i|
-        [expected[i]||"nil", block[i]||"nil"]
-      }
-      printf "\n\n%35s %35s\n", "Expected", "Got"
-      rows.each { |e,g| printf "%35s %35s\n", e.dump, g.dump }
-    end
-
-    assert_equal(expected, block)
-  end
-
-  def line_types(str, expected)
-    m = RDoc::Markup.new
-    mock = RDoc::Markup::ToTest.new
-    m.convert(str, mock)
-    assert_equal(expected, m.get_line_types.map{|type| type.to_s[0,1]}.join(''))
-  end
-
   def test_parse_bullet
     str = <<-STR
 * l1
@@ -146,7 +115,6 @@ the time
               @RMP::Paragraph.new('l1.1', 'text'),
               @RMP::Verbatim.new('  ', 'code', "\n",
                                  '    ', 'code', "\n"),
-              @RMP::BlankLine.new,
               @RMP::Paragraph.new('text'))])),
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l2'))])]
@@ -202,12 +170,6 @@ the time
           @RMP::Paragraph.new('item two'))])]
 
     assert_equal expected, @RMP.parse(str)
-
-    line_groups(str,
-                [ "L1: ListStart\n",
-                  "L1: LABELED ListItem\none: item one",
-                  "L1: LABELED ListItem\ntwo: item two",
-                  "L1: ListEnd\n" ])
   end
 
   def test_parse_label_bullet
@@ -264,12 +226,6 @@ the time
     ])]
 
     assert_equal expected, @RMP.parse(str)
-
-    line_groups(str,
-                [ "L1: ListStart\n",
-                  "L1: LABELED ListItem\none: item one",
-                  "L1: LABELED ListItem\ntwo: item two",
-                  "L1: ListEnd\n" ])
   end
 
   def test_parse_lalpha
@@ -329,13 +285,6 @@ A. l4
           @RMP::Paragraph.new('two'))])]
 
     assert_equal expected, @RMP.parse(str)
-
-    line_groups(str,
-                [ "L1: ListStart\n",
-                  "L1: BULLET ListItem\none",
-                  "L1: Verbatim\n  verb1\n  verb2\n",
-                  "L1: BULLET ListItem\ntwo",
-                  "L1: ListEnd\n" ])
   end
 
   def test_parse_lists
@@ -454,6 +403,44 @@ B. l2
     assert_equal expected, @RMP.parse(str)
   end
 
+  def test_parse_verbatim
+    str = <<-STR
+now is
+   code
+the time
+    STR
+
+    expected = [
+      @RMP::Paragraph.new('now is'),
+      @RMP::Verbatim.new('   ', 'code', "\n"),
+      @RMP::Paragraph.new('the time'),
+    ]
+
+    assert_equal expected, @RMP.parse(str)
+  end
+
+  def test_parse_verbatim_fold
+    str = <<-STR
+now is
+   code
+
+
+   code1
+
+the time
+    STR
+
+    expected = [
+      @RMP::Paragraph.new('now is'),
+      @RMP::Verbatim.new('   ', 'code',  "\n",
+                         "\n",
+                         '   ', 'code1', "\n"),
+      @RMP::Paragraph.new('the time'),
+    ]
+
+    assert_equal expected, @RMP.parse(str)
+  end
+
   def test_parse_verbatim_heading
     str = <<-STR
 text
@@ -493,6 +480,68 @@ text
     assert_equal expected, @RMP.parse(str)
   end
 
+  def test_parse_verbatim_merge
+    str = <<-STR
+now is
+   code
+
+   code1
+the time
+    STR
+
+    expected = [
+      @RMP::Paragraph.new('now is'),
+      @RMP::Verbatim.new('   ', 'code',  "\n",
+                         "\n",
+                         '   ', 'code1', "\n"),
+      @RMP::Paragraph.new('the time'),
+    ]
+
+    assert_equal expected, @RMP.parse(str)
+  end
+
+  def test_parse_verbatim_merge2
+    str = <<-STR
+now is
+   code
+
+   code1
+
+   code2
+the time
+    STR
+
+    expected = [
+      @RMP::Paragraph.new('now is'),
+      @RMP::Verbatim.new('   ', 'code',  "\n",
+                         "\n",
+                         '   ', 'code1', "\n",
+                         "\n",
+                         '   ', 'code2', "\n"),
+      @RMP::Paragraph.new('the time'),
+    ]
+
+    assert_equal expected, @RMP.parse(str)
+  end
+
+  def test_parse_verbatim_multiline
+    str = <<-STR
+now is
+   code
+   code1
+the time
+    STR
+
+    expected = [
+      @RMP::Paragraph.new('now is'),
+      @RMP::Verbatim.new('   ', 'code',  "\n",
+                         '   ', 'code1', "\n"),
+      @RMP::Paragraph.new('the time'),
+    ]
+
+    assert_equal expected, @RMP.parse(str)
+  end
+
   def test_parse_verbatim_multilevel
     str = <<-STR
 now is the time
@@ -509,6 +558,92 @@ for all good men
     ]
 
     assert_equal expected, @RMP.parse(str)
+  end
+
+  def test_parse_verbatim_trim
+    str = <<-STR
+now is
+   code
+
+   code1
+
+the time
+    STR
+
+    expected = [
+      @RMP::Paragraph.new('now is'),
+      @RMP::Verbatim.new('   ', 'code',  "\n",
+                         "\n",
+                         '   ', 'code1', "\n"),
+      @RMP::Paragraph.new('the time'),
+    ]
+
+    assert_equal expected, @RMP.parse(str)
+  end
+
+  def test_parse_whitespace
+    expected = [
+      @RMP::Paragraph.new('hello'),
+    ]
+
+    assert_equal expected, @RMP.parse('hello')
+
+    expected = [
+      @RMP::Verbatim.new(' ', 'hello '),
+    ]
+
+    assert_equal expected, @RMP.parse(' hello ')
+
+    expected = [
+      @RMP::Verbatim.new('                 ', 'hello          '),
+    ]
+
+    assert_equal expected, @RMP.parse(" \t \t hello\t\t")
+
+    expected = [
+      @RMP::Paragraph.new('1'),
+      @RMP::Verbatim.new(' ', '2', "\n",
+                         '  ', '3'),
+    ]
+
+    assert_equal expected, @RMP.parse("1\n 2\n  3")
+
+    expected = [
+      @RMP::Verbatim.new('  ', '1', "\n",
+                         '   ', '2', "\n",
+                         '    ', '3'),
+    ]
+
+    assert_equal expected, @RMP.parse("  1\n   2\n    3")
+
+    expected = [
+      @RMP::Paragraph.new('1'),
+      @RMP::Verbatim.new(' ', '2', "\n",
+                         '  ', '3', "\n"),
+      @RMP::Paragraph.new('1'),
+      @RMP::Verbatim.new(' ', '2'),
+    ]
+
+    assert_equal expected, @RMP.parse("1\n 2\n  3\n1\n 2")
+
+    expected = [
+      @RMP::Verbatim.new('  ', '1', "\n",
+                         '   ', '2', "\n",
+                         '    ', '3', "\n",
+                         '  ', '1', "\n",
+                         '   ', '2'),
+    ]
+
+    assert_equal expected, @RMP.parse("  1\n   2\n    3\n  1\n   2")
+
+    expected = [
+      @RMP::Verbatim.new('  ', '1', "\n",
+                         '   ', '2', "\n",
+                         "\n",
+                         '    ', '3'),
+    ]
+
+    assert_equal expected, @RMP.parse("  1\n   2\n\n    3")
   end
 
   def test_tokenize_bullet
@@ -808,108 +943,19 @@ Example heading:
     assert_equal expected, @RMP.tokenize(str)
   end
 
-  def test_verbatim_merge
-    str = %{\
-       now is
-          code
-       the time}
+  # HACK move to Verbatim test case
+  def test_verbatim_normalize
+    v = @RMP::Verbatim.new '  ', 'foo', "\n", "\n", "\n", '  ', 'bar', "\n"
 
-    line_groups(str,
-                [ "L0: Paragraph\nnow is",
-                  "L0: Verbatim\n   code\n",
-                  "L0: Paragraph\nthe time"
-                ])
+    v.normalize
 
+    assert_equal ['  ', 'foo', "\n", "\n", '  ', 'bar', "\n"], v.parts
 
-    str = %{\
-       now is
-          code
-          code1
-       the time}
+    v = @RMP::Verbatim.new '  ', 'foo', "\n", "\n"
 
-    line_groups(str,
-                [ "L0: Paragraph\nnow is",
-                  "L0: Verbatim\n   code\n   code1\n",
-                  "L0: Paragraph\nthe time"
-                ])
+    v.normalize
 
-
-    str = %{\
-       now is
-          code
-
-          code1
-       the time}
-
-    line_groups(str,
-                [ "L0: Paragraph\nnow is",
-                  "L0: Verbatim\n   code\n\n   code1\n",
-                  "L0: Paragraph\nthe time"
-                ])
-
-
-    str = %{\
-       now is
-          code
-
-          code1
-
-       the time}
-
-    line_groups(str,
-                [ "L0: Paragraph\nnow is",
-                  "L0: Verbatim\n   code\n\n   code1\n",
-                  "L0: Paragraph\nthe time"
-                ])
-
-
-    str = %{\
-       now is
-          code
-
-          code1
-
-          code2
-       the time}
-
-    line_groups(str,
-                [ "L0: Paragraph\nnow is",
-                  "L0: Verbatim\n   code\n\n   code1\n\n   code2\n",
-                  "L0: Paragraph\nthe time"
-                ])
-
-
-    # Folds multiple blank lines
-    str = %{\
-       now is
-          code
-
-
-          code1
-
-       the time}
-
-    line_groups(str,
-                [ "L0: Paragraph\nnow is",
-                  "L0: Verbatim\n   code\n\n   code1\n",
-                  "L0: Paragraph\nthe time"
-                ])
-
-
-  end
-
-  def test_whitespace
-    assert_equal("hello", basic_conv("hello"))
-    assert_equal("hello", basic_conv(" hello "))
-    assert_equal("hello", basic_conv(" \t \t hello\t\t"))
-
-    assert_equal("1\n 2\n  3", basic_conv("1\n 2\n  3"))
-    assert_equal("1\n 2\n  3", basic_conv("  1\n   2\n    3"))
-
-    assert_equal("1\n 2\n  3\n1\n 2", basic_conv("1\n 2\n  3\n1\n 2"))
-    assert_equal("1\n 2\n  3\n1\n 2", basic_conv("  1\n   2\n    3\n  1\n   2"))
-
-    assert_equal("1\n 2\n\n  3", basic_conv("  1\n   2\n\n    3"))
+    assert_equal ['  ', 'foo', "\n"], v.parts
   end
 
 end
