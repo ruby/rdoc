@@ -1,8 +1,7 @@
 require 'stringio'
 require 'rubygems'
-require 'minitest/unit'
+require 'minitest/autorun'
 require 'rdoc/ri/formatter'
-require 'rdoc/markup/fragments'
 require 'rdoc/markup/to_flow'
 
 class TestRDocRIHtmlFormatter < MiniTest::Unit::TestCase

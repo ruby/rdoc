@@ -1,5 +1,4 @@
 require 'yaml'
-require 'rdoc/markup/fragments'
 require 'rdoc/ri'
 
 ##

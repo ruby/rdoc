@@ -30,7 +30,7 @@ class TestRDocMarkupParser < MiniTest::Unit::TestCase
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l2'))])]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_bullet_indent
@@ -50,7 +50,7 @@ class TestRDocMarkupParser < MiniTest::Unit::TestCase
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l2'))])]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_bullet_paragraph
@@ -72,7 +72,7 @@ the time
       @RMP::Paragraph.new('the time'),
     ]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_bullet_multiline
@@ -91,7 +91,7 @@ the time
       ]),
     ]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_bullet_indent_verbatim
@@ -119,7 +119,7 @@ the time
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l2'))])]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_dash
@@ -135,7 +135,7 @@ the time
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('two'))])]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_heading
@@ -144,7 +144,7 @@ the time
     expected = [
       @RMP::Heading.new(1, 'heading one')]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_heading_three
@@ -153,7 +153,7 @@ the time
     expected = [
       @RMP::Heading.new(3, 'heading three')]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_label
@@ -169,7 +169,7 @@ the time
         @RMP::ListItem.new('two',
           @RMP::Paragraph.new('item two'))])]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_label_bullet
@@ -189,7 +189,7 @@ the time
         @RMP::ListItem.new('dog',
           @RMP::Paragraph.new('l2'))])]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_label_multiline
@@ -206,7 +206,7 @@ the time
         @RMP::ListItem.new('dog',
           @RMP::Paragraph.new('l2'))])]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_label_newline
@@ -225,7 +225,7 @@ the time
           @RMP::Paragraph.new('item two')),
     ])]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_lalpha
@@ -241,7 +241,7 @@ b. l2
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l2'))])]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_lalpha_ualpha
@@ -264,7 +264,7 @@ A. l4
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l4'))])]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_list_verbatim
@@ -284,7 +284,7 @@ A. l4
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('two'))])]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_lists
@@ -312,7 +312,7 @@ the time
           @RMP::Paragraph.new('l2'))]),
       @RMP::Paragraph.new('the time')]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_note
@@ -328,7 +328,7 @@ two:: item two
         @RMP::ListItem.new('two',
           @RMP::Paragraph.new('item two'))])]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_number_bullet
@@ -348,7 +348,7 @@ two:: item two
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l2'))])]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_paragraph
@@ -362,14 +362,14 @@ for all good men
       @RMP::Paragraph.new('now is the time'),
       @RMP::BlankLine.new,
       @RMP::Paragraph.new('for all good men')]
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_paragraph_multiline
     str = "now is the time\nfor all good men"
 
     expected = @RMP::Paragraph.new 'now is the time for all good men'
-    assert_equal [expected], @RMP.parse(str)
+    assert_equal [expected], @RMP.parse(str).parts
   end
 
   def test_parse_paragraph_verbatim
@@ -384,7 +384,7 @@ for all good men
       @RMP::Verbatim.new('  ', 'code _line_ here', "\n"),
       @RMP::Paragraph.new('for all good men'),
     ]
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_ualpha
@@ -400,7 +400,7 @@ B. l2
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l2'))])]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_verbatim
@@ -416,7 +416,7 @@ the time
       @RMP::Paragraph.new('the time'),
     ]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_verbatim_fold
@@ -438,7 +438,7 @@ the time
       @RMP::Paragraph.new('the time'),
     ]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_verbatim_heading
@@ -451,7 +451,7 @@ text
       @RMP::Paragraph.new('text'),
       @RMP::Verbatim.new('   ', '===', '   ', 'heading three', "\n")]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_verbatim_heading2
@@ -462,7 +462,7 @@ text
       @RMP::Verbatim.new('   ', 'code', "\n"),
       @RMP::Heading.new(3, 'heading three')]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_verbatim_markup_example
@@ -477,7 +477,7 @@ text
       @RMP::Verbatim.new('   ', 'code', "\n",
                          '   ', '===', ' ', 'heading three', "\n")]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_verbatim_merge
@@ -497,7 +497,7 @@ the time
       @RMP::Paragraph.new('the time'),
     ]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_verbatim_merge2
@@ -521,7 +521,7 @@ the time
       @RMP::Paragraph.new('the time'),
     ]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_verbatim_multiline
@@ -539,7 +539,7 @@ the time
       @RMP::Paragraph.new('the time'),
     ]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_verbatim_multilevel
@@ -557,7 +557,7 @@ for all good men
       @RMP::Paragraph.new('for all good men'),
     ]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_verbatim_trim
@@ -578,7 +578,7 @@ the time
       @RMP::Paragraph.new('the time'),
     ]
 
-    assert_equal expected, @RMP.parse(str)
+    assert_equal expected, @RMP.parse(str).parts
   end
 
   def test_parse_whitespace
@@ -586,19 +586,19 @@ the time
       @RMP::Paragraph.new('hello'),
     ]
 
-    assert_equal expected, @RMP.parse('hello')
+    assert_equal expected, @RMP.parse('hello').parts
 
     expected = [
       @RMP::Verbatim.new(' ', 'hello '),
     ]
 
-    assert_equal expected, @RMP.parse(' hello ')
+    assert_equal expected, @RMP.parse(' hello ').parts
 
     expected = [
       @RMP::Verbatim.new('                 ', 'hello          '),
     ]
 
-    assert_equal expected, @RMP.parse(" \t \t hello\t\t")
+    assert_equal expected, @RMP.parse(" \t \t hello\t\t").parts
 
     expected = [
       @RMP::Paragraph.new('1'),
@@ -606,7 +606,7 @@ the time
                          '  ', '3'),
     ]
 
-    assert_equal expected, @RMP.parse("1\n 2\n  3")
+    assert_equal expected, @RMP.parse("1\n 2\n  3").parts
 
     expected = [
       @RMP::Verbatim.new('  ', '1', "\n",
@@ -614,7 +614,7 @@ the time
                          '    ', '3'),
     ]
 
-    assert_equal expected, @RMP.parse("  1\n   2\n    3")
+    assert_equal expected, @RMP.parse("  1\n   2\n    3").parts
 
     expected = [
       @RMP::Paragraph.new('1'),
@@ -624,7 +624,7 @@ the time
       @RMP::Verbatim.new(' ', '2'),
     ]
 
-    assert_equal expected, @RMP.parse("1\n 2\n  3\n1\n 2")
+    assert_equal expected, @RMP.parse("1\n 2\n  3\n1\n 2").parts
 
     expected = [
       @RMP::Verbatim.new('  ', '1', "\n",
@@ -634,7 +634,7 @@ the time
                          '   ', '2'),
     ]
 
-    assert_equal expected, @RMP.parse("  1\n   2\n    3\n  1\n   2")
+    assert_equal expected, @RMP.parse("  1\n   2\n    3\n  1\n   2").parts
 
     expected = [
       @RMP::Verbatim.new('  ', '1', "\n",
@@ -643,7 +643,7 @@ the time
                          '    ', '3'),
     ]
 
-    assert_equal expected, @RMP.parse("  1\n   2\n\n    3")
+    assert_equal expected, @RMP.parse("  1\n   2\n\n    3").parts
   end
 
   def test_tokenize_bullet

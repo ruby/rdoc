@@ -19,12 +19,47 @@ class RDoc::Markup::Parser
       self.class == other.class
     end
 
+    def accept attribute_manager, visitor
+      visitor.accept_blank_line attribute_manager, self
+    end
+
     def pretty_print q
       q.text 'blankline'
     end
   end
 
+  class Document
+    attr_reader :parts
+
+    def initialize(*parts)
+      @parts = []
+      @parts.push(*parts)
+    end
+
+    def accept(attribute_manager, visitor)
+      visitor.start_accepting
+
+      @parts.each do |item|
+        item.accept attribute_manager, visitor
+      end
+
+      visitor.end_accepting
+    end
+
+    def pretty_print q
+      q.group 2, '[doc: ', ']' do
+        q.seplist @parts do |part|
+          q.pp part
+        end
+      end
+    end
+  end
+
   class Heading < Struct.new :level, :text
+    def accept attribute_manager, visitor
+      visitor.accept_heading attribute_manager, self
+    end
+
     def pretty_print q
       q.group 2, "[head: #{level} ", ']' do
         q.pp text
@@ -47,6 +82,10 @@ class RDoc::Markup::Parser
 
     def == other
       self.class == other.class and text == other.text
+    end
+
+    def accept attribute_manager, visitor
+      visitor.accept_paragraph attribute_manager, self
     end
 
     def merge other
@@ -86,6 +125,16 @@ class RDoc::Markup::Parser
       self.class == other.class and
         @type == other.type and
         @items == other.items
+    end
+
+    def accept attribute_manager, visitor
+      visitor.accept_list_start attribute_manager, self
+
+      @items.each do |item|
+        item.accept attribute_manager, visitor
+      end
+
+      visitor.accept_list_end attribute_manager, self
     end
 
     def empty?
@@ -129,6 +178,16 @@ class RDoc::Markup::Parser
         @parts == other.parts
     end
 
+    def accept attribute_manager, visitor
+      visitor.accept_list_item_start attribute_manager, self
+
+      @parts.each do |part|
+        part.accept attribute_manager, visitor
+      end
+
+      visitor.accept_list_item_end attribute_manager, self
+    end
+
     def empty?
       @parts.empty?
     end
@@ -152,6 +211,10 @@ class RDoc::Markup::Parser
   end
 
   class Verbatim < Paragraph
+    def accept attribute_manager, visitor
+      visitor.accept_verbatim attribute_manager, self
+    end
+
     def normalize
       parts = []
 
@@ -168,7 +231,7 @@ class RDoc::Markup::Parser
         end
       end
 
-      parts.slice! -1 if parts[-2..-1] == ["\n", "\n"]
+      parts.slice!(-1) if parts[-2..-1] == ["\n", "\n"]
 
       @parts = parts
     end
@@ -179,6 +242,10 @@ class RDoc::Markup::Parser
   end
 
   class Rule < Struct.new :weight
+    def accept attribute_manager, visitor
+      visitor.accept_rule attribute_manager, self
+    end
+
     def pretty_print q
       q.group 2, '[rule:', ']' do
         q.pp level
@@ -187,14 +254,13 @@ class RDoc::Markup::Parser
   end
 
   attr_accessor :debug
-  attr_reader :document
   attr_reader :tokens
 
   def self.parse str
     parser = new
     #parser.debug = true
     parser.tokenize str
-    parser.parse
+    Document.new(*parser.parse)
   end
 
   def self.tokenize str
@@ -415,7 +481,8 @@ class RDoc::Markup::Parser
         unget
         document << build_paragraph(indent)
 
-        break if peek_token[0] == :TEXT # indent mismatch
+        # we're done with this paragraph (indent mismatch)
+        break if peek_token[0] == :TEXT
       when *LIST_TOKENS then
         unget
 
@@ -423,7 +490,7 @@ class RDoc::Markup::Parser
 
         document << list if list
 
-        # we determined elsewhere we're done with this list
+        # we're done with this list (indent mismatch)
         break if LIST_TOKENS.include? peek_token.first and indent > 0
       else
         type, data, column, line = @current_token

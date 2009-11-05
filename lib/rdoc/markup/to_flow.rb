@@ -1,5 +1,4 @@
 require 'rdoc/markup/formatter'
-require 'rdoc/markup/fragments'
 require 'rdoc/markup/inline'
 require 'cgi'
 
@@ -27,11 +26,20 @@ class RDoc::Markup
 
     class LIST
       attr_reader :type, :contents
-      def initialize(type)
+
+      def initialize type, *contents
         @type = type
         @contents = []
+        @contents.push(*contents)
       end
-      def <<(stuff)
+
+      def == other
+        other.class == self.class and
+          other.type == @type and
+          other.contents == @contents
+      end
+
+      def << stuff
         @contents << stuff
       end
     end
@@ -39,7 +47,29 @@ class RDoc::Markup
     ##
     # List item
 
-    LI = Struct.new(:label, :body)
+    class LI
+      attr_reader :label, :contents
+
+      def initialize type, *contents
+        @type = type
+        @contents = []
+        @contents.push(*contents)
+      end
+
+      def == other
+        other.class == self.class and
+          other.label == @label and
+          other.contents == @contents
+      end
+
+      def << stuff
+        @contents << stuff
+      end
+
+      def body
+        raise 'no'
+      end
+    end
 
     ##
     # Heading
@@ -50,49 +80,16 @@ class RDoc::Markup
 
   class ToFlow < RDoc::Markup::Formatter
 
-    LIST_TYPE_TO_HTML = {
-      :BULLET     =>  [ "<ul>", "</ul>" ],
-      :NUMBER     =>  [ "<ol>", "</ol>" ],
-      :UPPERALPHA =>  [ "<ol>", "</ol>" ],
-      :LOWERALPHA =>  [ "<ol>", "</ol>" ],
-      :LABELED    =>  [ "<dl>", "</dl>" ],
-      :NOTE       =>  [ "<table>", "</table>" ],
-    }
-
-    InlineTag = Struct.new(:bit, :on, :off)
+    attr_reader :res
+    attr_reader :list_stack
 
     def initialize
       super
 
+      @res = nil
+      @list_stack = nil
+
       init_tags
-    end
-
-    ##
-    # Set up the standard mapping of attributes to HTML tags
-
-    def init_tags
-      @attr_tags = [
-        InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:BOLD), "<b>", "</b>"),
-        InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:TT),   "<tt>", "</tt>"),
-        InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:EM),   "<em>", "</em>"),
-      ]
-    end
-
-    ##
-    # Add a new set of HTML tags for an attribute. We allow separate start and
-    # end tags for flexibility
-
-    def add_tag(name, start, stop)
-      @attr_tags << InlineTag.new(RDoc::Markup::Attribute.bitmap_for(name), start, stop)
-    end
-
-    ##
-    # Given an HTML tag, decorate it with class information and the like if
-    # required. This is a no-op in the base class, but is overridden in HTML
-    # output classes that implement style sheets
-
-    def annotate(tag)
-      tag
     end
 
     ##
@@ -107,102 +104,52 @@ class RDoc::Markup
       @res
     end
 
-    def accept_paragraph(am, fragment)
-      @res << Flow::P.new((convert_flow(am.flow(fragment.txt))))
+    def accept_paragraph(am, paragraph)
+      @res << Flow::P.new((convert_flow(am.flow(paragraph.text))))
     end
 
-    def accept_verbatim(am, fragment)
-      @res << Flow::VERB.new((convert_flow(am.flow(fragment.txt))))
+    def accept_verbatim(am, verbatim)
+      @res << Flow::VERB.new((convert_flow(am.flow(verbatim.text))))
     end
 
-    def accept_rule(am, fragment)
-      size = fragment.param
-      size = 10 if size > 10
+    def accept_rule(am, rule)
+      size = [rule.weight, 10].min
       @res << Flow::RULE.new(size)
     end
 
-    def accept_list_start(am, fragment)
+    def accept_list_start(am, list)
       @list_stack.push(@res)
-      list = Flow::LIST.new(fragment.type)
-      @res << list
-      @res = list
+      flow_list = Flow::LIST.new(list.type)
+      @res << flow_list
+      @res = flow_list
     end
 
-    def accept_list_end(am, fragment)
+    def accept_list_end(am, list)
       @res = @list_stack.pop
     end
 
-    def accept_list_item(am, fragment)
-      @res << Flow::LI.new(fragment.param, convert_flow(am.flow(fragment.txt)))
+    def accept_list_item_start(am, list_item)
+      @list_stack.push @res
+      li = Flow::LI.new(list_item.label)
+      @res << li
+      @res = li
     end
 
-    def accept_blank_line(am, fragment)
-      # @res << annotate("<p />") << "\n"
+    def accept_list_item_end(am, list_item)
+      @res = @list_stack.pop
     end
 
-    def accept_heading(am, fragment)
-      @res << Flow::H.new(fragment.head_level, convert_flow(am.flow(fragment.txt)))
+    def accept_blank_line(am, blank_line)
+    end
+
+    def accept_heading(am, heading)
+      @res << Flow::H.new(heading.level, convert_flow(am.flow(heading.text)))
     end
 
     private
 
-    def on_tags(res, item)
-      attr_mask = item.turn_on
-      return if attr_mask.zero?
-
-      @attr_tags.each do |tag|
-        if attr_mask & tag.bit != 0
-          res << annotate(tag.on)
-        end
-      end
-    end
-
-    def off_tags(res, item)
-      attr_mask = item.turn_off
-      return if attr_mask.zero?
-
-      @attr_tags.reverse_each do |tag|
-        if attr_mask & tag.bit != 0
-          res << annotate(tag.off)
-        end
-      end
-    end
-
-    def convert_flow(flow)
-      res = ""
-      flow.each do |item|
-        case item
-        when String
-          res << convert_string(item)
-        when AttrChanger
-          off_tags(res, item)
-          on_tags(res,  item)
-        when Special
-          res << convert_special(item)
-        else
-          raise "Unknown flow element: #{item.inspect}"
-        end
-      end
-      res
-    end
-
     def convert_string(item)
-      CGI.escapeHTML(item)
-    end
-
-    def convert_special(special)
-      handled = false
-      Attribute.each_name_of(special.type) do |name|
-        method_name = "handle_special_#{name}"
-        if self.respond_to? method_name
-          special.text = send(method_name, special)
-          handled = true
-        end
-      end
-
-      raise "Unhandled special: #{special}" unless handled
-
-      special.text
+      CGI.escapeHTML item
     end
 
   end

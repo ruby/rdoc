@@ -1,5 +1,4 @@
 require 'rdoc/markup/formatter'
-require 'rdoc/markup/fragments'
 require 'rdoc/markup/inline'
 
 require 'cgi'
@@ -7,23 +6,24 @@ require 'cgi'
 class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   LIST_TYPE_TO_HTML = {
-    :BULLET =>     %w[<ul> </ul>],
-    :NUMBER =>     %w[<ol> </ol>],
-    :UPPERALPHA => %w[<ol> </ol>],
-    :LOWERALPHA => %w[<ol> </ol>],
-    :LABELED =>    %w[<dl> </dl>],
-    :NOTE    =>    %w[<table> </table>],
+    '*'     => ['<ul>', '</ul>'],
+    '1'     => ['<ol>', '</ol>'],
+    'A'     => ['<ol style="display: upper-alpha">', '</ol>'],
+    'a'     => ['<ol style="display: lower-alpha">', '</ol>'],
+    'label' => ['<dl>', '</dl>'],
+    'note'  => ['<table>', '</table>'],
   }
 
-  InlineTag = Struct.new(:bit, :on, :off)
+  attr_reader :res # :nodoc:
+  attr_reader :in_list_entry # :nodoc:
+  attr_reader :list # :nodoc:
 
   def initialize
     super
 
-    # @in_tt - tt nested levels count
-    # @tt_bit - cache
-    @in_tt = 0
-    @tt_bit = RDoc::Markup::Attribute.bitmap_for :TT
+    @th = nil
+    @in_list_entry = nil
+    @list = nil
 
     # external hyperlinks
     @markup.add_special(/((link:|https?:|mailto:|ftp:|www\.)\S+\w)/, :HYPERLINK)
@@ -116,39 +116,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   end
 
   ##
-  # are we currently inside tt tags?
-
-  def in_tt?
-    @in_tt > 0
-  end
-
-  ##
-  # is +tag+ a tt tag?
-
-  def tt?(tag)
-    tag.bit == @tt_bit
-  end
-
-  ##
-  # Set up the standard mapping of attributes to HTML tags
-
-  def init_tags
-    @attr_tags = [
-      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:BOLD), "<b>", "</b>"),
-      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:TT),   "<tt>", "</tt>"),
-      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:EM),   "<em>", "</em>"),
-    ]
-  end
-
-  ##
-  # Add a new set of HTML tags for an attribute. We allow separate start and
-  # end tags for flexibility.
-
-  def add_tag(name, start, stop)
-    @attr_tags << InlineTag.new(RDoc::Markup::Attribute.bitmap_for(name), start, stop)
-  end
-
-  ##
   # Given an HTML tag, decorate it with class information and the like if
   # required. This is a no-op in the base class, but is overridden in HTML
   # output classes that implement style sheets.
@@ -161,9 +128,10 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # This is a higher speed (if messier) version of wrap
 
   def wrap(txt, line_len = 76)
-    res = ""
+    res = []
     sp = 0
     ep = txt.length
+
     while sp < ep
       # scan back for a space
       p = sp + line_len - 1
@@ -184,127 +152,94 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
       sp = p
       sp += 1 while sp < ep and txt[sp] == ?\s
     end
-    res
+
+    res.join
   end
 
   ##
   # :section: Visitor
 
   def start_accepting
-    @res = ""
+    @res = []
     @in_list_entry = []
+    @list = []
   end
 
   def end_accepting
-    @res
+    @res.join
   end
 
-  def accept_paragraph(am, fragment)
+  def accept_paragraph(am, paragraph)
     @res << annotate("<p>") + "\n"
-    @res << wrap(convert_flow(am.flow(fragment.txt)))
+    @res << wrap(convert_flow(am.flow(paragraph.text)))
     @res << annotate("</p>") + "\n"
   end
 
-  def accept_verbatim(am, fragment)
-    @res << annotate("<pre>") + "\n"
-    @res << CGI.escapeHTML(fragment.txt)
+  def accept_verbatim(am, verbatim)
+    @res << annotate("<pre>") << "\n"
+    @res << CGI.escapeHTML(verbatim.text)
     @res << annotate("</pre>") << "\n"
   end
 
-  def accept_rule(am, fragment)
-    size = fragment.param
+  def accept_rule(am, rule)
+    size = rule.weight
     size = 10 if size > 10
-    @res << "<hr size=\"#{size}\"></hr>"
+    @res << "<hr style=\"height: #{size}px\"></hr>"
   end
 
-  def accept_list_start(am, fragment)
-    @res << html_list_name(fragment.type, true) << "\n"
+  def accept_list_start(am, list)
+    @list << list.type
+    @res << html_list_name(list.type, true) << "\n"
     @in_list_entry.push false
   end
 
-  def accept_list_end(am, fragment)
+  def accept_list_end(am, list)
+    @list.pop
     if tag = @in_list_entry.pop
       @res << annotate(tag) << "\n"
     end
-    @res << html_list_name(fragment.type, false) << "\n"
+    @res << html_list_name(list.type, false) << "\n"
   end
 
-  def accept_list_item(am, fragment)
+  def accept_list_item_start(am, list_item)
     if tag = @in_list_entry.last
       @res << annotate(tag) << "\n"
     end
 
-    @res << list_item_start(am, fragment)
-
-    @res << wrap(convert_flow(am.flow(fragment.txt))) << "\n"
-
-    @in_list_entry[-1] = list_end_for(fragment.type)
+    @res << list_item_start(am, list_item, @list.last)
   end
 
-  def accept_blank_line(am, fragment)
+  def accept_list_item_end(am, list_item)
+    @in_list_entry[-1] = list_end_for(@list.last)
+  end
+
+  def accept_blank_line(am, blank_line)
     # @res << annotate("<p />") << "\n"
   end
 
-  def accept_heading(am, fragment)
-    @res << convert_heading(fragment.head_level, am.flow(fragment.txt))
+  def accept_heading(am, heading)
+    @res << convert_heading(heading.level, am.flow(heading.text))
   end
 
   private
 
-  def on_tags(res, item)
-    attr_mask = item.turn_on
-    return if attr_mask.zero?
-
-    @attr_tags.each do |tag|
-      if attr_mask & tag.bit != 0
-        res << annotate(tag.on)
-        @in_tt += 1 if tt?(tag)
-      end
-    end
-  end
-
-  def off_tags(res, item)
-    attr_mask = item.turn_off
-    return if attr_mask.zero?
-
-    @attr_tags.reverse_each do |tag|
-      if attr_mask & tag.bit != 0
-        @in_tt -= 1 if tt?(tag)
-        res << annotate(tag.off)
-      end
-    end
-  end
-
-  def convert_flow(flow)
-    res = ""
-
-    flow.each do |item|
-      case item
-      when String
-        res << convert_string(item)
-      when RDoc::Markup::AttrChanger
-        off_tags(res, item)
-        on_tags(res,  item)
-      when RDoc::Markup::Special
-        res << convert_special(item)
-      else
-        raise "Unknown flow element: #{item.inspect}"
-      end
-    end
-
-    res
-  end
+  ##
+  # Converts string +item+
 
   def convert_string(item)
     in_tt? ? convert_string_simple(item) : convert_string_fancy(item)
   end
+
+  ##
+  # Escapes HTML in +item+
 
   def convert_string_simple(item)
     CGI.escapeHTML item
   end
 
   ##
-  # some of these patterns are taken from SmartyPants...
+  # Converts ampersand, dashes, elipsis, quotes, copyright and registered
+  # trademark symbols to HTML escaped Unicode.
 
   def convert_string_fancy(item)
     # convert ampersand before doing anything else
@@ -336,69 +271,62 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
       gsub(/\(r\)/, '&#174;')
   end
 
-  def convert_special(special)
-    handled = false
-    RDoc::Markup::Attribute.each_name_of(special.type) do |name|
-      method_name = "handle_special_#{name}"
-      if self.respond_to? method_name
-        special.text = send(method_name, special)
-        handled = true
-      end
-    end
-    raise "Unhandled special: #{special}" unless handled
-    special.text
-  end
+  ##
+  # Converts headings to hN elements
 
   def convert_heading(level, flow)
-    res =
-      annotate("<h#{level}>") +
-      convert_flow(flow) +
-      annotate("</h#{level}>\n")
+    [annotate("<h#{level}>"),
+     convert_flow(flow),
+     annotate("</h#{level}>\n")].join
   end
 
-  def html_list_name(list_type, is_open_tag)
-    tags = LIST_TYPE_TO_HTML[list_type] || raise("Invalid list type: #{list_type.inspect}")
-    annotate(tags[ is_open_tag ? 0 : 1])
+  ##
+  # Determins the HTML list element for +list_type+ and +open_tag+
+
+  def html_list_name(list_type, open_tag)
+    tags = LIST_TYPE_TO_HTML[list_type] 
+    raise RDoc::Error, "Invalid list type: #{list_type.inspect}" unless tags
+    annotate tags[open_tag ? 0 : 1]
   end
 
-  def list_item_start(am, fragment)
-    case fragment.type
-    when :BULLET, :NUMBER then
+  ##
+  # Starts a list item
+
+  def list_item_start(am, list_item, list_type)
+    case list_type
+    when '*', '1', 'A', 'a' then
       annotate("<li>")
 
-    when :UPPERALPHA then
-      annotate("<li type=\"A\">")
-
-    when :LOWERALPHA then
-      annotate("<li type=\"a\">")
-
-    when :LABELED then
+    when 'label' then
       annotate("<dt>") +
-        convert_flow(am.flow(fragment.param)) +
+        convert_flow(am.flow(list_item.label)) +
         annotate("</dt>") +
         annotate("<dd>")
 
-    when :NOTE then
+    when 'note' then
       annotate("<tr>") +
         annotate("<td valign=\"top\">") +
-        convert_flow(am.flow(fragment.param)) +
+        convert_flow(am.flow(list_item.label)) +
         annotate("</td>") +
         annotate("<td>")
     else
-      raise "Invalid list type"
+      raise RDoc::Error, "Invalid list type: #{list_type.inspect}"
     end
   end
 
-  def list_end_for(fragment_type)
-    case fragment_type
-    when :BULLET, :NUMBER, :UPPERALPHA, :LOWERALPHA then
+  ##
+  # Ends a list item
+
+  def list_end_for(list_type)
+    case list_type
+    when '*', '1', 'A', 'a' then
       "</li>"
-    when :LABELED then
+    when 'label' then
       "</dd>"
-    when :NOTE then
+    when 'note' then
       "</td></tr>"
     else
-      raise "Invalid list type"
+      raise RDoc::Error, "Invalid list type: #{list_type.inspect}"
     end
   end
 

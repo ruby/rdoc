@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'minitest/unit'
+require 'minitest/autorun'
 require 'rdoc/rdoc'
 require 'rdoc/code_objects'
 require 'rdoc/markup/to_html_crossref'
@@ -156,6 +156,4 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
   end
 
 end
-
-MiniTest::Unit.autorun
 

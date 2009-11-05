@@ -1,5 +1,7 @@
 # vim: filetype=ruby
 
+require 'autotest/restart'
+
 Autotest.add_hook :initialize do |at|
   at.testlib = 'minitest/unit' if at.respond_to? :testlib=
 
@@ -8,7 +10,7 @@ Autotest.add_hook :initialize do |at|
     f = s.sub(/^test#{sep}/, '').sub(/\.rb$/, '').split(sep)
     f = f.map { |path| path.split(/_|(\d+)/).map { |seg| seg.capitalize }.join }
     f = f.map { |path| path =~ /^Test/ ? path : "Test#{path}"  }
-    f.join('::').sub 'Rdoc', 'RDoc'
+    f.join('::').sub('Rdoc', 'RDoc').sub('Ri', 'RI')
   end
 end
 
