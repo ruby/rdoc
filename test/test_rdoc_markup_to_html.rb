@@ -125,42 +125,42 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def accept_list_start_bullet
-    assert_equal ['*'], @to.list
+    assert_equal [:BULLET], @to.list
     assert_equal [false], @to.in_list_entry
 
     assert_equal "<ul>\n", @to.res.join
   end
 
   def accept_list_start_label
-    assert_equal ['label'], @to.list
+    assert_equal [:LABEL], @to.list
     assert_equal [false], @to.in_list_entry
 
     assert_equal "<dl>\n", @to.res.join
   end
 
   def accept_list_start_lalpha
-    assert_equal ['a'], @to.list
+    assert_equal [:LALPHA], @to.list
     assert_equal [false], @to.in_list_entry
 
     assert_equal "<ol style=\"display: lower-alpha\">\n", @to.res.join
   end
 
   def accept_list_start_note
-    assert_equal ['note'], @to.list
+    assert_equal [:NOTE], @to.list
     assert_equal [false], @to.in_list_entry
 
     assert_equal "<table>\n", @to.res.join
   end
 
   def accept_list_start_number
-    assert_equal ['1'], @to.list
+    assert_equal [:NUMBER], @to.list
     assert_equal [false], @to.in_list_entry
 
     assert_equal "<ol>\n", @to.res.join
   end
 
   def accept_list_start_ualpha
-    assert_equal ['A'], @to.list
+    assert_equal [:UALPHA], @to.list
     assert_equal [false], @to.in_list_entry
 
     assert_equal "<ol style=\"display: upper-alpha\">\n", @to.res.join

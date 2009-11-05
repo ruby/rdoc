@@ -6,12 +6,12 @@ require 'cgi'
 class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   LIST_TYPE_TO_HTML = {
-    '*'     => ['<ul>', '</ul>'],
-    '1'     => ['<ol>', '</ol>'],
-    'A'     => ['<ol style="display: upper-alpha">', '</ol>'],
-    'a'     => ['<ol style="display: lower-alpha">', '</ol>'],
-    'label' => ['<dl>', '</dl>'],
-    'note'  => ['<table>', '</table>'],
+    :BULLET => ['<ul>', '</ul>'],
+    :LABEL  => ['<dl>', '</dl>'],
+    :LALPHA => ['<ol style="display: lower-alpha">', '</ol>'],
+    :NOTE   => ['<table>', '</table>'],
+    :NUMBER => ['<ol>', '</ol>'],
+    :UALPHA => ['<ol style="display: upper-alpha">', '</ol>'],
   }
 
   attr_reader :res # :nodoc:
@@ -294,16 +294,16 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   def list_item_start(am, list_item, list_type)
     case list_type
-    when '*', '1', 'A', 'a' then
+    when :BULLET, :LALPHA, :NUMBER, :UALPHA then
       annotate("<li>")
 
-    when 'label' then
+    when :LABEL then
       annotate("<dt>") +
         convert_flow(am.flow(list_item.label)) +
         annotate("</dt>") +
         annotate("<dd>")
 
-    when 'note' then
+    when :NOTE then
       annotate("<tr>") +
         annotate("<td valign=\"top\">") +
         convert_flow(am.flow(list_item.label)) +
@@ -319,11 +319,11 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   def list_end_for(list_type)
     case list_type
-    when '*', '1', 'A', 'a' then
+    when :BULLET, :LALPHA, :NUMBER, :UALPHA then
       "</li>"
-    when 'label' then
+    when :LABEL then
       "</dd>"
-    when 'note' then
+    when :NOTE then
       "</td></tr>"
     else
       raise RDoc::Error, "Invalid list type: #{list_type.inspect}"

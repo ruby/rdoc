@@ -24,7 +24,7 @@ class TestRDocMarkupParser < MiniTest::Unit::TestCase
     STR
 
     expected = [
-      @RMP::List.new('*', *[
+      @RMP::List.new(:BULLET, *[
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l1')),
         @RMP::ListItem.new(nil,
@@ -41,10 +41,10 @@ class TestRDocMarkupParser < MiniTest::Unit::TestCase
     STR
 
     expected = [
-      @RMP::List.new('*', *[
+      @RMP::List.new(:BULLET, *[
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l1'),
-          @RMP::List.new('*', *[
+          @RMP::List.new(:BULLET, *[
             @RMP::ListItem.new(nil,
               @RMP::Paragraph.new('l1.1'))])),
         @RMP::ListItem.new(nil,
@@ -63,7 +63,7 @@ the time
 
     expected = [
       @RMP::Paragraph.new('now is'),
-      @RMP::List.new('*', *[
+      @RMP::List.new(:BULLET, *[
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l1')),
         @RMP::ListItem.new(nil,
@@ -83,7 +83,7 @@ the time
     STR
 
     expected = [
-      @RMP::List.new('*', *[
+      @RMP::List.new(:BULLET, *[
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l1', 'l1+')),
         @RMP::ListItem.new(nil,
@@ -107,10 +107,10 @@ the time
     STR
 
     expected = [
-      @RMP::List.new('*', *[
+      @RMP::List.new(:BULLET, *[
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l1'),
-          @RMP::List.new('*', *[
+          @RMP::List.new(:BULLET, *[
             @RMP::ListItem.new(nil,
               @RMP::Paragraph.new('l1.1', 'text'),
               @RMP::Verbatim.new('  ', 'code', "\n",
@@ -129,7 +129,7 @@ the time
     STR
 
     expected = [
-      @RMP::List.new('*', *[
+      @RMP::List.new(:BULLET, *[
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('one')),
         @RMP::ListItem.new(nil,
@@ -163,7 +163,7 @@ the time
     STR
 
     expected = [
-      @RMP::List.new('label', *[
+      @RMP::List.new(:LABEL, *[
         @RMP::ListItem.new('one',
           @RMP::Paragraph.new('item one')),
         @RMP::ListItem.new('two',
@@ -180,10 +180,10 @@ the time
     STR
 
     expected = [
-      @RMP::List.new('label', *[
+      @RMP::List.new(:LABEL, *[
         @RMP::ListItem.new('cat',
           @RMP::Paragraph.new('l1'),
-          @RMP::List.new('*', *[
+          @RMP::List.new(:BULLET, *[
             @RMP::ListItem.new(nil,
               @RMP::Paragraph.new('l1.1'))])),
         @RMP::ListItem.new('dog',
@@ -200,7 +200,7 @@ the time
     STR
 
     expected = [
-      @RMP::List.new('label', *[
+      @RMP::List.new(:LABEL, *[
         @RMP::ListItem.new('cat',
           @RMP::Paragraph.new('l1', 'continuation')),
         @RMP::ListItem.new('dog',
@@ -218,7 +218,7 @@ the time
     STR
 
     expected = [
-      @RMP::List.new('label', *[
+      @RMP::List.new(:LABEL, *[
         @RMP::ListItem.new('one',
           @RMP::Paragraph.new('item one')),
         @RMP::ListItem.new('two',
@@ -235,7 +235,7 @@ b. l2
     STR
 
     expected = [
-      @RMP::List.new('a', *[
+      @RMP::List.new(:LALPHA, *[
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l1')),
         @RMP::ListItem.new(nil,
@@ -253,12 +253,12 @@ A. l4
     STR
 
     expected = [
-      @RMP::List.new('a', *[
+      @RMP::List.new(:LALPHA, *[
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l1')),
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l2'))]),
-      @RMP::List.new('A', *[
+      @RMP::List.new(:UALPHA, *[
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l3')),
         @RMP::ListItem.new(nil,
@@ -276,7 +276,7 @@ A. l4
     STR
 
     expected = [
-      @RMP::List.new('*', *[
+      @RMP::List.new(:BULLET, *[
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('one'),
           @RMP::Verbatim.new('  ', 'verb1', "\n",
@@ -299,15 +299,15 @@ the time
 
     expected = [
       @RMP::Paragraph.new('now is'),
-      @RMP::List.new('*', *[
+      @RMP::List.new(:BULLET, *[
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l1'))]),
-      @RMP::List.new('1', *[
+      @RMP::List.new(:NUMBER, *[
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('n1')),
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('n2'))]),
-      @RMP::List.new('*', *[
+      @RMP::List.new(:BULLET, *[
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l2'))]),
       @RMP::Paragraph.new('the time')]
@@ -322,7 +322,7 @@ two:: item two
     STR
 
     expected = [
-      @RMP::List.new('note', *[
+      @RMP::List.new(:NOTE, *[
         @RMP::ListItem.new('one',
           @RMP::Paragraph.new('item one')),
         @RMP::ListItem.new('two',
@@ -339,10 +339,10 @@ two:: item two
     STR
 
     expected = [
-      @RMP::List.new('1', *[
+      @RMP::List.new(:NUMBER, *[
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l1'),
-          @RMP::List.new('*', *[
+          @RMP::List.new(:BULLET, *[
             @RMP::ListItem.new(nil,
               @RMP::Paragraph.new('l1.1'))])),
         @RMP::ListItem.new(nil,
@@ -394,7 +394,7 @@ B. l2
     STR
 
     expected = [
-      @RMP::List.new('A', *[
+      @RMP::List.new(:UALPHA, *[
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l1')),
         @RMP::ListItem.new(nil,
@@ -652,10 +652,10 @@ the time
     STR
 
     expected = [
-      [:BULLET,  '*',    0, 0],
-      [:SPACE,   2,      0, 0],
-      [:TEXT,    'l1',   2, 0],
-      [:NEWLINE, "\n",   4, 0],
+      [:BULLET,  :BULLET, 0, 0],
+      [:SPACE,   2,       0, 0],
+      [:TEXT,    'l1',    2, 0],
+      [:NEWLINE, "\n",    4, 0],
     ]
 
     assert_equal expected, @RMP.tokenize(str)
@@ -668,15 +668,15 @@ the time
     STR
 
     expected = [
-      [:BULLET,  '*',    0, 0],
-      [:SPACE,   2,      0, 0],
-      [:TEXT,    'l1',   2, 0],
-      [:NEWLINE, "\n",   4, 0],
-      [:INDENT,  2,      0, 1],
-      [:BULLET,  '*',    2, 1],
-      [:SPACE,   2,      2, 1],
-      [:TEXT,    'l1.1', 4, 1],
-      [:NEWLINE, "\n",   8, 1],
+      [:BULLET,  :BULLET, 0, 0],
+      [:SPACE,   2,       0, 0],
+      [:TEXT,    'l1',    2, 0],
+      [:NEWLINE, "\n",    4, 0],
+      [:INDENT,  2,       0, 1],
+      [:BULLET,  :BULLET, 2, 1],
+      [:SPACE,   2,       2, 1],
+      [:TEXT,    'l1.1',  4, 1],
+      [:NEWLINE, "\n",    8, 1],
     ]
 
     assert_equal expected, @RMP.tokenize(str)
@@ -709,14 +709,14 @@ b. l1.1
     STR
 
     expected = [
-      [:LALPHA,  'a',    0, 0],
-      [:SPACE,   3,      0, 0],
-      [:TEXT,    'l1',   3, 0],
-      [:NEWLINE, "\n",   5, 0],
-      [:LALPHA,  'a',    0, 1],
-      [:SPACE,   3,      0, 1],
-      [:TEXT,    'l1.1', 3, 1],
-      [:NEWLINE, "\n",   7, 1],
+      [:LALPHA,  :LALPHA, 0, 0],
+      [:SPACE,   3,       0, 0],
+      [:TEXT,    'l1',    3, 0],
+      [:NEWLINE, "\n",    5, 0],
+      [:LALPHA,  :LALPHA, 0, 1],
+      [:SPACE,   3,       0, 1],
+      [:TEXT,    'l1.1',  3, 1],
+      [:NEWLINE, "\n",    7, 1],
     ]
 
     assert_equal expected, @RMP.tokenize(str)
@@ -749,14 +749,14 @@ dog:: l1.1
     STR
 
     expected = [
-      [:NUMBER,  '1',    0, 0],
-      [:SPACE,   3,      0, 0],
-      [:TEXT,    'l1',   3, 0],
-      [:NEWLINE, "\n",   5, 0],
-      [:NUMBER,  '1',    0, 1],
-      [:SPACE,   3,      0, 1],
-      [:TEXT,    'l1.1', 3, 1],
-      [:NEWLINE, "\n",   7, 1],
+      [:NUMBER,  :NUMBER, 0, 0],
+      [:SPACE,   3,       0, 0],
+      [:TEXT,    'l1',    3, 0],
+      [:NEWLINE, "\n",    5, 0],
+      [:NUMBER,  :NUMBER, 0, 1],
+      [:SPACE,   3,       0, 1],
+      [:TEXT,    'l1.1',  3, 1],
+      [:NEWLINE, "\n",    7, 1],
     ]
 
     assert_equal expected, @RMP.tokenize(str)
@@ -910,14 +910,14 @@ B. l1.1
     STR
 
     expected = [
-      [:UALPHA,  'A',    0, 0],
-      [:SPACE,   3,      0, 0],
-      [:TEXT,    'l1',   3, 0],
-      [:NEWLINE, "\n",   5, 0],
-      [:UALPHA,  'A',    0, 1],
-      [:SPACE,   3,      0, 1],
-      [:TEXT,    'l1.1', 3, 1],
-      [:NEWLINE, "\n",   7, 1],
+      [:UALPHA,  :UALPHA, 0, 0],
+      [:SPACE,   3,       0, 0],
+      [:TEXT,    'l1',    3, 0],
+      [:NEWLINE, "\n",    5, 0],
+      [:UALPHA,  :UALPHA, 0, 1],
+      [:SPACE,   3,       0, 1],
+      [:TEXT,    'l1.1',  3, 1],
+      [:NEWLINE, "\n",    7, 1],
     ]
 
     assert_equal expected, @RMP.tokenize(str)

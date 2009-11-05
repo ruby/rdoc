@@ -289,8 +289,7 @@ class RDoc::Markup::Parser
       case type
       when :BULLET, :LABEL, :LALPHA, :NOTE, :NUMBER, :UALPHA then
         list_type = data
-        list_type = 'note'  if type == :NOTE
-        list_type = 'label' if type == :LABEL
+        list_type = type if type == :NOTE or type == :LABEL
 
         if column < margin then
           unget
@@ -564,16 +563,16 @@ class RDoc::Markup::Parser
                  when s.scan(/-{3,}/) then
                    [:RULE, s.matched_size - 2, *token_pos(pos)]
                  when s.scan(/([*-])\s+/) then
-                   @tokens << [:BULLET, '*', *token_pos(pos)]
+                   @tokens << [:BULLET, :BULLET, *token_pos(pos)]
                    [:SPACE, s.matched_size, *token_pos(pos)]
                  when s.scan(/([a-z]+)\.\s+/) then
-                   @tokens << [:LALPHA, 'a', *token_pos(pos)]
+                   @tokens << [:LALPHA, :LALPHA, *token_pos(pos)]
                    [:SPACE, s.matched_size, *token_pos(pos)]
                  when s.scan(/(\d+)\.\s+/) then
-                   @tokens << [:NUMBER, '1', *token_pos(pos)]
+                   @tokens << [:NUMBER, :NUMBER, *token_pos(pos)]
                    [:SPACE, s.matched_size, *token_pos(pos)]
                  when s.scan(/([A-Z]+)\.\s+/) then
-                   @tokens << [:UALPHA, 'A', *token_pos(pos)]
+                   @tokens << [:UALPHA, :UALPHA, *token_pos(pos)]
                    [:SPACE, s.matched_size, *token_pos(pos)]
                  when s.scan(/\[(.*?)\]\s+/) then
                    @tokens << [:LABEL, s[1], *token_pos(pos)]

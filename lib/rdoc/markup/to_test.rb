@@ -27,7 +27,14 @@ class RDoc::Markup::ToTest < RDoc::Markup::Formatter
   end
 
   def accept_list_start(am, list)
-    @list << list.type
+    @list << case list.type
+             when :BULLET then
+               '*'
+             when :NUMBER then
+               '1'
+             else
+               list.type
+             end
   end
 
   def accept_list_end(am, list)

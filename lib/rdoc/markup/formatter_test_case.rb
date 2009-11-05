@@ -70,7 +70,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_item_start_bullet
         @to.start_accepting
 
-        @to.accept_list_start @am, @RMP::List.new('*')
+        @to.accept_list_start @am, @RMP::List.new(:BULLET)
 
         @to.accept_list_item_start @am, @RMP::ListItem.new(nil)
 
@@ -80,7 +80,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_item_start_label
         @to.start_accepting
 
-        @to.accept_list_start @am, @RMP::List.new('label')
+        @to.accept_list_start @am, @RMP::List.new(:LABEL)
 
         @to.accept_list_item_start @am, @RMP::ListItem.new('cat')
 
@@ -90,7 +90,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_item_start_lalpha
         @to.start_accepting
 
-        @to.accept_list_start @am, @RMP::List.new('a')
+        @to.accept_list_start @am, @RMP::List.new(:LALPHA)
 
         @to.accept_list_item_start @am, @RMP::ListItem.new(nil)
 
@@ -100,7 +100,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_item_start_note
         @to.start_accepting
 
-        @to.accept_list_start @am, @RMP::List.new('note')
+        @to.accept_list_start @am, @RMP::List.new(:NOTE)
 
         @to.accept_list_item_start @am, @RMP::ListItem.new('cat')
 
@@ -110,7 +110,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_item_start_number
         @to.start_accepting
 
-        @to.accept_list_start @am, @RMP::List.new('1')
+        @to.accept_list_start @am, @RMP::List.new(:NUMBER)
 
         @to.accept_list_item_start @am, @RMP::ListItem.new(nil)
 
@@ -120,7 +120,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_item_start_ualpha
         @to.start_accepting
 
-        @to.accept_list_start @am, @RMP::List.new('A')
+        @to.accept_list_start @am, @RMP::List.new(:UALPHA)
 
         @to.accept_list_item_start @am, @RMP::ListItem.new(nil)
 
@@ -130,7 +130,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_item_end_bullet
         @to.start_accepting
 
-        @to.accept_list_start @am, @RMP::List.new('*')
+        @to.accept_list_start @am, @RMP::List.new(:BULLET)
 
         @to.accept_list_item_end @am, @RMP::ListItem.new(nil)
 
@@ -140,7 +140,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_item_end_label
         @to.start_accepting
 
-        @to.accept_list_start @am, @RMP::List.new('label')
+        @to.accept_list_start @am, @RMP::List.new(:LABEL)
 
         @to.accept_list_item_end @am, @RMP::ListItem.new('cat')
 
@@ -150,7 +150,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_item_end_lalpha
         @to.start_accepting
 
-        @to.accept_list_start @am, @RMP::List.new('a')
+        @to.accept_list_start @am, @RMP::List.new(:LALPHA)
 
         @to.accept_list_item_end @am, @RMP::ListItem.new(nil)
 
@@ -160,7 +160,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_item_end_note
         @to.start_accepting
 
-        @to.accept_list_start @am, @RMP::List.new('note')
+        @to.accept_list_start @am, @RMP::List.new(:NOTE)
 
         @to.accept_list_item_end @am, @RMP::ListItem.new('cat')
 
@@ -170,7 +170,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_item_end_number
         @to.start_accepting
 
-        @to.accept_list_start @am, @RMP::List.new('1')
+        @to.accept_list_start @am, @RMP::List.new(:NUMBER)
 
         @to.accept_list_item_end @am, @RMP::ListItem.new(nil)
 
@@ -180,7 +180,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_item_end_ualpha
         @to.start_accepting
 
-        @to.accept_list_start @am, @RMP::List.new('A')
+        @to.accept_list_start @am, @RMP::List.new(:UALPHA)
 
         @to.accept_list_item_end @am, @RMP::ListItem.new(nil)
 
@@ -190,7 +190,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_start_bullet
         @to.start_accepting
 
-        @to.accept_list_start @am, @RMP::List.new('*')
+        @to.accept_list_start @am, @RMP::List.new(:BULLET)
 
         accept_list_start_bullet
       end
@@ -198,7 +198,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_start_label
         @to.start_accepting
 
-        @to.accept_list_start @am, @RMP::List.new('label')
+        @to.accept_list_start @am, @RMP::List.new(:LABEL)
 
         accept_list_start_label
       end
@@ -206,7 +206,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_start_lalpha
         @to.start_accepting
 
-        @to.accept_list_start @am, @RMP::List.new('a')
+        @to.accept_list_start @am, @RMP::List.new(:LALPHA)
 
         accept_list_start_lalpha
       end
@@ -214,7 +214,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_start_note
         @to.start_accepting
 
-        @to.accept_list_start @am, @RMP::List.new('note')
+        @to.accept_list_start @am, @RMP::List.new(:NOTE)
 
         accept_list_start_note
       end
@@ -222,7 +222,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_start_number
         @to.start_accepting
 
-        @to.accept_list_start @am, @RMP::List.new('1')
+        @to.accept_list_start @am, @RMP::List.new(:NUMBER)
 
         accept_list_start_number
       end
@@ -230,7 +230,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_start_ualpha
         @to.start_accepting
 
-        @to.accept_list_start @am, @RMP::List.new('A')
+        @to.accept_list_start @am, @RMP::List.new(:UALPHA)
 
         accept_list_start_ualpha
       end
@@ -238,7 +238,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_end_bullet
         @to.start_accepting
 
-        @to.accept_list_end @am, @RMP::List.new('*')
+        @to.accept_list_end @am, @RMP::List.new(:BULLET)
 
         accept_list_end_bullet
       end
@@ -246,7 +246,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_end_label
         @to.start_accepting
 
-        @to.accept_list_end @am, @RMP::List.new('label')
+        @to.accept_list_end @am, @RMP::List.new(:LABEL)
 
         accept_list_end_label
       end
@@ -254,7 +254,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_end_lalpha
         @to.start_accepting
 
-        @to.accept_list_end @am, @RMP::List.new('a')
+        @to.accept_list_end @am, @RMP::List.new(:LALPHA)
 
         accept_list_end_lalpha
       end
@@ -262,7 +262,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_end_number
         @to.start_accepting
 
-        @to.accept_list_end @am, @RMP::List.new('1')
+        @to.accept_list_end @am, @RMP::List.new(:NUMBER)
 
         accept_list_end_number
       end
@@ -270,7 +270,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_end_note
         @to.start_accepting
 
-        @to.accept_list_end @am, @RMP::List.new('note')
+        @to.accept_list_end @am, @RMP::List.new(:NOTE)
 
         accept_list_end_note
       end
@@ -278,7 +278,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_list_end_ualpha
         @to.start_accepting
 
-        @to.accept_list_end @am, @RMP::List.new('A')
+        @to.accept_list_end @am, @RMP::List.new(:UALPHA)
 
         accept_list_end_ualpha
       end

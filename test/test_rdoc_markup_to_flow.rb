@@ -52,7 +52,7 @@ class TestRDocMarkupToFlow < RDoc::Markup::FormatterTestCase
 
   def accept_list_item_end_bullet
     expected = [
-      @F::LIST.new('*')
+      @F::LIST.new(:BULLET)
     ]
 
     assert_equal expected, @to.res
@@ -60,7 +60,7 @@ class TestRDocMarkupToFlow < RDoc::Markup::FormatterTestCase
 
   def accept_list_item_end_label
     expected = [
-      @F::LIST.new('label')
+      @F::LIST.new(:LABEL)
     ]
 
     assert_equal expected, @to.res
@@ -68,7 +68,7 @@ class TestRDocMarkupToFlow < RDoc::Markup::FormatterTestCase
 
   def accept_list_item_end_lalpha
     expected = [
-      @F::LIST.new('a')
+      @F::LIST.new(:LALPHA)
     ]
 
     assert_equal expected, @to.res
@@ -76,7 +76,7 @@ class TestRDocMarkupToFlow < RDoc::Markup::FormatterTestCase
 
   def accept_list_item_end_note
     expected = [
-      @F::LIST.new('note')
+      @F::LIST.new(:NOTE)
     ]
 
     assert_equal expected, @to.res
@@ -84,7 +84,7 @@ class TestRDocMarkupToFlow < RDoc::Markup::FormatterTestCase
 
   def accept_list_item_end_number
     expected = [
-      @F::LIST.new('1')
+      @F::LIST.new(:NUMBER)
     ]
 
     assert_equal expected, @to.res
@@ -92,7 +92,7 @@ class TestRDocMarkupToFlow < RDoc::Markup::FormatterTestCase
 
   def accept_list_item_end_ualpha
     expected = [
-      @F::LIST.new('A')
+      @F::LIST.new(:UALPHA)
     ]
 
     assert_equal expected, @to.res
@@ -100,9 +100,9 @@ class TestRDocMarkupToFlow < RDoc::Markup::FormatterTestCase
 
   def accept_list_item_start_bullet
     expected = [
-      [@F::LIST.new('*', *[
+      [@F::LIST.new(:BULLET, *[
          @F::LI.new(nil)])],
-      @F::LIST.new('*', *[
+      @F::LIST.new(:BULLET, *[
         @F::LI.new(nil)])
     ]
 
@@ -113,9 +113,9 @@ class TestRDocMarkupToFlow < RDoc::Markup::FormatterTestCase
 
   def accept_list_item_start_label
     expected = [
-      [@F::LIST.new('label', *[
+      [@F::LIST.new(:LABEL, *[
          @F::LI.new('cat')])],
-      @F::LIST.new('label', *[
+      @F::LIST.new(:LABEL, *[
         @F::LI.new('cat')])
     ]
 
@@ -126,9 +126,9 @@ class TestRDocMarkupToFlow < RDoc::Markup::FormatterTestCase
 
   def accept_list_item_start_lalpha
     expected = [
-      [@F::LIST.new('a', *[
+      [@F::LIST.new(:LALPHA, *[
          @F::LI.new(nil)])],
-      @F::LIST.new('a', *[
+      @F::LIST.new(:LALPHA, *[
         @F::LI.new(nil)])
     ]
 
@@ -139,9 +139,9 @@ class TestRDocMarkupToFlow < RDoc::Markup::FormatterTestCase
 
   def accept_list_item_start_note
     expected = [
-      [@F::LIST.new('note', *[
+      [@F::LIST.new(:NOTE, *[
          @F::LI.new('cat')])],
-      @F::LIST.new('note', *[
+      @F::LIST.new(:NOTE, *[
         @F::LI.new('cat')])
     ]
 
@@ -152,9 +152,9 @@ class TestRDocMarkupToFlow < RDoc::Markup::FormatterTestCase
 
   def accept_list_item_start_number
     expected = [
-      [@F::LIST.new('1', *[
+      [@F::LIST.new(:NUMBER, *[
          @F::LI.new(nil)])],
-      @F::LIST.new('1', *[
+      @F::LIST.new(:NUMBER, *[
         @F::LI.new(nil)])
     ]
 
@@ -165,9 +165,9 @@ class TestRDocMarkupToFlow < RDoc::Markup::FormatterTestCase
 
   def accept_list_item_start_ualpha
     expected = [
-      [@F::LIST.new('A', *[
+      [@F::LIST.new(:UALPHA, *[
          @F::LI.new(nil)])],
-      @F::LIST.new('A', *[
+      @F::LIST.new(:UALPHA, *[
         @F::LI.new(nil)])
     ]
 
@@ -178,62 +178,62 @@ class TestRDocMarkupToFlow < RDoc::Markup::FormatterTestCase
 
   def accept_list_start_bullet
     expected = [
-      [@F::LIST.new('*')]
+      [@F::LIST.new(:BULLET)]
     ]
 
     assert_equal expected, @to.list_stack
 
-    assert_equal @F::LIST.new('*'), @to.res
+    assert_equal @F::LIST.new(:BULLET), @to.res
   end
 
   def accept_list_start_label
     expected = [
-      [@F::LIST.new('label')]
+      [@F::LIST.new(:LABEL)]
     ]
 
     assert_equal expected, @to.list_stack
 
-    assert_equal @F::LIST.new('label'), @to.res
+    assert_equal @F::LIST.new(:LABEL), @to.res
   end
 
   def accept_list_start_lalpha
     expected = [
-      [@F::LIST.new('a')]
+      [@F::LIST.new(:LALPHA)]
     ]
 
     assert_equal expected, @to.list_stack
 
-    assert_equal @F::LIST.new('a'), @to.res
+    assert_equal @F::LIST.new(:LALPHA), @to.res
   end
 
   def accept_list_start_note
     expected = [
-      [@F::LIST.new('note')]
+      [@F::LIST.new(:NOTE)]
     ]
 
     assert_equal expected, @to.list_stack
 
-    assert_equal @F::LIST.new('note'), @to.res
+    assert_equal @F::LIST.new(:NOTE), @to.res
   end
 
   def accept_list_start_number
     expected = [
-      [@F::LIST.new('1')]
+      [@F::LIST.new(:NUMBER)]
     ]
 
     assert_equal expected, @to.list_stack
 
-    assert_equal @F::LIST.new('1'), @to.res
+    assert_equal @F::LIST.new(:NUMBER), @to.res
   end
 
   def accept_list_start_ualpha
     expected = [
-      [@F::LIST.new('A')]
+      [@F::LIST.new(:UALPHA)]
     ]
 
     assert_equal expected, @to.list_stack
 
-    assert_equal @F::LIST.new('A'), @to.res
+    assert_equal @F::LIST.new(:UALPHA), @to.res
   end
 
   def accept_paragraph
