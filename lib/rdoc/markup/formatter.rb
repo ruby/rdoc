@@ -19,13 +19,14 @@ class RDoc::Markup::Formatter
     @tt_bit = RDoc::Markup::Attribute.bitmap_for :TT
   end
 
-    ##
-    # Add a new set of HTML tags for an attribute. We allow separate start and
-    # end tags for flexibility
+  ##
+  # Add a new set of HTML tags for an attribute. We allow separate start and
+  # end tags for flexibility
 
-    def add_tag(name, start, stop)
-      @attr_tags << InlineTag.new(RDoc::Markup::Attribute.bitmap_for(name), start, stop)
-    end
+  def add_tag(name, start, stop)
+    attr = RDoc::Markup::Attribute.bitmap_for(name), start, stop
+    @attr_tags << InlineTag.new(attr)
+  end
 
   ##
   # Marks up +content+
@@ -37,25 +38,25 @@ class RDoc::Markup::Formatter
   ##
   # Converts flow items +flow+
 
-    def convert_flow(flow)
-      res = []
+  def convert_flow(flow)
+    res = []
 
-      flow.each do |item|
-        case item
-        when String then
-          res << convert_string(item)
-        when RDoc::Markup::AttrChanger then
-          off_tags res, item
-          on_tags res, item
-        when RDoc::Markup::Special then
-          res << convert_special(item)
-        else
-          raise "Unknown flow element: #{item.inspect}"
-        end
+    flow.each do |item|
+      case item
+      when String then
+        res << convert_string(item)
+      when RDoc::Markup::AttrChanger then
+        off_tags res, item
+        on_tags res, item
+      when RDoc::Markup::Special then
+        res << convert_special(item)
+      else
+        raise "Unknown flow element: #{item.inspect}"
       end
-
-      res.join
     end
+
+    res.join
+  end
 
   ##
   # Converts added specials.  See RDoc::Markup#add_special
