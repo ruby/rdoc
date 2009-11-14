@@ -4,7 +4,7 @@ require 'rdoc/ri'
 class RDoc::RI::Writer
 
   def self.class_desc_path(dir, class_desc)
-    File.join(dir, "cdesc-" + class_desc.name + ".yaml")
+    File.join dir, "cdesc-#{class_desc.name}.yaml"
   end
 
   ##
@@ -31,30 +31,31 @@ class RDoc::RI::Writer
   end
 
   def remove_class(class_desc)
-    FileUtils.rm_rf(path_to_dir(class_desc.full_name))
+    FileUtils.rm_rf path_to_dir(class_desc.full_name)
   end
 
   def add_class(class_desc)
-    dir = path_to_dir(class_desc.full_name)
-    FileUtils.mkdir_p(dir)
-    class_file_name = self.class.class_desc_path(dir, class_desc)
-    File.open(class_file_name, "w") do |f|
-      f.write(class_desc.serialize)
+    dir = path_to_dir class_desc.full_name
+    FileUtils.mkdir_p dir
+    class_file_name = self.class.class_desc_path dir, class_desc
+    open class_file_name, 'wb' do |io|
+      io.write class_desc.serialize
     end
   end
 
   def add_method(class_desc, method_desc)
-    dir = path_to_dir(class_desc.full_name)
-    file_name = self.class.internal_to_external(method_desc.name)
-    meth_file_name = File.join(dir, file_name)
-    if method_desc.is_singleton
-      meth_file_name += "-c.yaml"
+    dir = path_to_dir class_desc.full_name
+    file_name = self.class.internal_to_external method_desc.name
+    meth_file_name = File.join dir, file_name
+
+    if method_desc.is_singleton then
+      meth_file_name << "-c.yaml"
     else
-      meth_file_name += "-i.yaml"
+      meth_file_name << "-i.yaml"
     end
 
-    File.open(meth_file_name, "w") do |f|
-      f.write(method_desc.serialize)
+    open meth_file_name, 'wb' do |io|
+      io.write method_desc.serialize
     end
   end
 

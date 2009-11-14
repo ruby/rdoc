@@ -6,3 +6,5 @@ module RDoc::RI
 
 end
 
+require 'rdoc/ri/store'
+

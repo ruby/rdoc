@@ -50,8 +50,8 @@ class RDoc::Markup
     class LI
       attr_reader :label, :contents
 
-      def initialize type, *contents
-        @type = type
+      def initialize label, *contents
+        @label = label
         @contents = []
         @contents.push(*contents)
       end

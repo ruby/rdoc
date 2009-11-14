@@ -8,6 +8,8 @@ require 'rdoc/code_object'
 
 class RDoc::Context < RDoc::CodeObject
 
+  include Comparable
+
   ##
   # Types of methods
 

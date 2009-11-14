@@ -27,73 +27,73 @@ class TestRDocMarkupToFlow < RDoc::Markup::FormatterTestCase
   end
 
   def accept_list_end_bullet
-    assert_nil @to.res
+    assert_equal [@F::LIST.new(:BULLET)], @to.res
+
+    assert_empty @to.list_stack
   end
 
   def accept_list_end_label
-    assert_nil @to.res
+    assert_equal [@F::LIST.new(:LABEL)], @to.res
+
+    assert_empty @to.list_stack
   end
 
   def accept_list_end_lalpha
-    assert_nil @to.res
+    assert_equal [@F::LIST.new(:LALPHA)], @to.res
+
+    assert_empty @to.list_stack
   end
 
   def accept_list_end_number
-    assert_nil @to.res
+    assert_equal [@F::LIST.new(:NUMBER)], @to.res
+
+    assert_empty @to.list_stack
   end
 
   def accept_list_end_note
-    assert_nil @to.res
+    assert_equal [@F::LIST.new(:NOTE)], @to.res
+
+    assert_empty @to.list_stack
   end
 
   def accept_list_end_ualpha
-    assert_nil @to.res
+    assert_equal [@F::LIST.new(:UALPHA)], @to.res
+
+    assert_empty @to.list_stack
   end
 
   def accept_list_item_end_bullet
-    expected = [
-      @F::LIST.new(:BULLET)
-    ]
+    expected = @F::LIST.new(:BULLET, @F::LI.new(nil))
 
     assert_equal expected, @to.res
   end
 
   def accept_list_item_end_label
-    expected = [
-      @F::LIST.new(:LABEL)
-    ]
+    expected = @F::LIST.new(:LABEL, @F::LI.new('cat'))
 
     assert_equal expected, @to.res
   end
 
   def accept_list_item_end_lalpha
-    expected = [
-      @F::LIST.new(:LALPHA)
-    ]
+    expected = @F::LIST.new(:LALPHA, @F::LI.new(nil))
 
     assert_equal expected, @to.res
   end
 
   def accept_list_item_end_note
-    expected = [
-      @F::LIST.new(:NOTE)
-    ]
+    expected = @F::LIST.new(:NOTE, @F::LI.new('cat'))
 
     assert_equal expected, @to.res
   end
 
   def accept_list_item_end_number
-    expected = [
-      @F::LIST.new(:NUMBER)
-    ]
+    expected = @F::LIST.new(:NUMBER, @F::LI.new(nil))
 
     assert_equal expected, @to.res
   end
 
   def accept_list_item_end_ualpha
-    expected = [
-      @F::LIST.new(:UALPHA)
-    ]
+    expected = @F::LIST.new(:UALPHA, @F::LI.new(nil))
 
     assert_equal expected, @to.res
   end

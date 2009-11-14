@@ -46,6 +46,21 @@ class RDoc::ClassModule < RDoc::Context
     module? ? 'module' : 'class'
   end
 
+  def marshal_dump # :nodoc:
+    [ @name,
+      full_name,
+      @superclass,
+      @comment,
+    ]
+  end
+
+  def marshal_load array # :nodoc:
+    @name       = array[0]
+    @full_name  = array[1]
+    @superclass = array[2]
+    @comment    = array[3]
+  end
+
   ##
   # Does this object represent a module?
 

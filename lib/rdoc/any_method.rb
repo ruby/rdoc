@@ -6,6 +6,8 @@ require 'rdoc/tokenstream'
 
 class RDoc::AnyMethod < RDoc::CodeObject
 
+  include Comparable
+
   ##
   # Method name
 
@@ -82,7 +84,8 @@ class RDoc::AnyMethod < RDoc::CodeObject
     @block_params  = nil
     @aliases       = []
     @is_alias_for  = nil
-    @call_seq = nil
+    @call_seq      = nil
+    @singleton     = nil
 
     @aref  = @@aref
     @@aref = @@aref.succ
@@ -125,7 +128,22 @@ class RDoc::AnyMethod < RDoc::CodeObject
   # Full method name including namespace
 
   def full_name
-    "#{@parent.full_name}#{pretty_name}"
+    @full_name ||= "#{@parent.full_name}#{pretty_name}"
+  end
+
+  def marshal_dump
+    [ @name,
+      full_name,
+      @singleton,
+      @visibility
+    ]
+  end
+
+  def marshal_load(array)
+    @name       = array[0]
+    @full_name  = array[1]
+    @singleton  = array[2]
+    @visibility = array[3]
   end
 
   ##

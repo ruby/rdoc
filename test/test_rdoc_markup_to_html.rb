@@ -38,42 +38,42 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal [], @to.list
     assert_equal [], @to.in_list_entry
 
-    assert_equal "</ul>\n", @to.res.join
+    assert_equal "<ul>\n</ul>\n", @to.res.join
   end
 
   def accept_list_end_label
     assert_equal [], @to.list
     assert_equal [], @to.in_list_entry
 
-    assert_equal "</dl>\n", @to.res.join
+    assert_equal "<dl>\n</dl>\n", @to.res.join
   end
 
   def accept_list_end_lalpha
     assert_equal [], @to.list
     assert_equal [], @to.in_list_entry
 
-    assert_equal "</ol>\n", @to.res.join
+    assert_equal "<ol style=\"display: lower-alpha\">\n</ol>\n", @to.res.join
   end
 
   def accept_list_end_number
     assert_equal [], @to.list
     assert_equal [], @to.in_list_entry
 
-    assert_equal "</ol>\n", @to.res.join
+    assert_equal "<ol>\n</ol>\n", @to.res.join
   end
 
   def accept_list_end_note
     assert_equal [], @to.list
     assert_equal [], @to.in_list_entry
 
-    assert_equal "</table>\n", @to.res.join
+    assert_equal "<table>\n</table>\n", @to.res.join
   end
 
   def accept_list_end_ualpha
     assert_equal [], @to.list
     assert_equal [], @to.in_list_entry
 
-    assert_equal "</ol>\n", @to.res.join
+    assert_equal "<ol style=\"display: upper-alpha\">\n</ol>\n", @to.res.join
   end
 
   def accept_list_item_end_bullet
