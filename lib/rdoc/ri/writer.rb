@@ -39,7 +39,7 @@ class RDoc::RI::Writer
     FileUtils.mkdir_p dir
     class_file_name = self.class.class_desc_path dir, class_desc
     open class_file_name, 'wb' do |io|
-      io.write class_desc.serialize
+      io.write Marshal.dump(class_desc)
     end
   end
 
@@ -55,7 +55,7 @@ class RDoc::RI::Writer
     end
 
     open meth_file_name, 'wb' do |io|
-      io.write method_desc.serialize
+      io.write Marshal.dump(method_desc)
     end
   end
 

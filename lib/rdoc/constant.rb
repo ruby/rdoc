@@ -26,6 +26,28 @@ class RDoc::Constant < RDoc::CodeObject
   end
 
   ##
+  # Constants are ordered by name
+
+  def <=> other
+    return unless self.class === other
+
+    [parent_name, name] <=> [other.parent_name, other.name]
+  end
+
+  def == other
+    self.class == other.class and
+      @parent == other.parent and
+      @name == other.name
+  end
+
+  def inspect # :nodoc:
+      "#<%s:0x%x %s::%s>" % [
+        self.class, object_id,
+        parent_name, @name,
+      ]
+  end
+
+  ##
   # Path to this constant
 
   def path

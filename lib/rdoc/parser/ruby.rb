@@ -477,9 +477,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     al = RDoc::Alias.new get_tkread, old_name, new_name, comment
     read_documentation_modifiers al, RDoc::ATTR_MODIFIERS
-    if al.document_self
-      context.add_alias(al)
-    end
+    context.add_alias al if al.document_self
   end
 
   def parse_call_parameters(tk)
@@ -819,6 +817,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Parses a normal method defined by +def+
 
   def parse_method(container, single, tk, comment)
+    added_container = nil
     meth = nil
     name = nil
     line_no = tk.line_no
@@ -1426,8 +1425,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           $stderr.puts <<-EOF
 
 
-RDoc failure in #{@file_name} at or around line #{@scanner.line_no} column
-#{@scanner.char_no}
+RDoc failure in #{@file_name} at or around line #{@scanner.line_no} column #{@scanner.char_no}
 
 Before reporting this, could you check that the file you're documenting
 compiles cleanly--RDoc is not a full Ruby parser, and gets confused easily if

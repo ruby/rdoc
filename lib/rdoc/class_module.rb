@@ -6,6 +6,8 @@ require 'rdoc/context'
 
 class RDoc::ClassModule < RDoc::Context
 
+  MARSHAL_VERSION = 0
+
   attr_accessor :diagram
 
   ##
@@ -47,18 +49,94 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   def marshal_dump # :nodoc:
-    [ @name,
+    attrs = attributes.sort.map do |attr|
+      [attr.name, attr.rw]
+    end
+
+    methods = methods_by_type.map do |type, visibilities|
+      visibilities = visibilities.map do |visibility, methods|
+        methods = methods.map do |method|
+          method.name
+        end
+
+        [visibility, methods]
+      end
+
+      [type, visibilities]
+    end
+
+    [ MARSHAL_VERSION,
+      @name,
       full_name,
       @superclass,
       @comment,
+      attrs,
+      constants.map { |const| [const.name, const.comment] },
+      includes.map { |incl| [incl.name, incl.comment] },
+      methods,
     ]
   end
 
   def marshal_load array # :nodoc:
-    @name       = array[0]
-    @full_name  = array[1]
-    @superclass = array[2]
-    @comment    = array[3]
+    initialize_methods_etc
+    @document_self = nil
+    @current_section = nil
+
+    @name       = array[1]
+    @full_name  = array[2]
+    @superclass = array[3]
+    @comment    = array[4]
+
+    array[5].each do |name, rw|
+      add_attribute RDoc::Attr.new(nil, name, rw, nil)
+    end
+
+    array[6].each do |name, comment|
+      add_constant RDoc::Constant.new(name, nil, comment)
+    end
+
+    array[7].each do |name, comment|
+      add_include RDoc::Include.new(name, comment)
+    end
+
+    array[8].each do |type, visibilities|
+      visibilities.each do |visibility, methods|
+        @visibility = visibility
+
+        methods.each do |name|
+          add_method RDoc::AnyMethod.new(nil, name)
+        end
+      end
+    end
+  end
+
+  ##
+  # Merges +class_module+ into this ClassModule
+
+  def merge class_module
+    if class_module.comment and not class_module.comment.empty? then
+      self.comment = "#{class_module.comment}\n#{self.comment}"
+    end
+
+    class_module.each_attribute do |attr|
+      if match = attributes.find { |a| a.name == attr.name } then
+        match.rw = [match.rw, attr.rw].compact.join
+      else
+        add_attribute attr
+      end
+    end
+
+    class_module.each_constant do |const|
+      add_constant const
+    end
+
+    class_module.each_include do |incl|
+      add_include incl
+    end
+
+    class_module.each_method do |meth|
+      add_method meth
+    end
   end
 
   ##

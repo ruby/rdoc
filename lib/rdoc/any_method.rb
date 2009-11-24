@@ -6,6 +6,8 @@ require 'rdoc/tokenstream'
 
 class RDoc::AnyMethod < RDoc::CodeObject
 
+  MARSHAL_VERSION = 0
+
   include Comparable
 
   ##
@@ -114,11 +116,9 @@ class RDoc::AnyMethod < RDoc::CodeObject
 
   def inspect # :nodoc:
     alias_for = @is_alias_for ? " (alias for #{@is_alias_for.name})" : nil
-      "#<%s:0x%x %s%s%s (%s)%s>" % [
+      "#<%s:0x%x %s (%s)%s>" % [
         self.class, object_id,
-        parent_name,
-        singleton ? '::' : '#',
-        name,
+        full_name,
         visibility,
         alias_for,
       ]
@@ -132,18 +132,34 @@ class RDoc::AnyMethod < RDoc::CodeObject
   end
 
   def marshal_dump
-    [ @name,
+    aliases = @aliases.map do |a|
+      [a.full_name, a.comment]
+    end
+
+    [ MARSHAL_VERSION,
+      @name,
       full_name,
       @singleton,
-      @visibility
+      @visibility,
+      @comment,
+      @call_seq,
+      @block_params,
+      aliases,
     ]
   end
 
   def marshal_load(array)
-    @name       = array[0]
-    @full_name  = array[1]
-    @singleton  = array[2]
-    @visibility = array[3]
+    @name         = array[1]
+    @full_name    = array[2]
+    @singleton    = array[3]
+    @visibility   = array[4]
+    @comment      = array[5]
+    @call_seq     = array[6]
+    @block_params = array[7]
+
+    array[8].each do |old_name, new_name, comment|
+      add_alias RDoc::Alias.new(nil, old_name, new_name, comment)
+    end
   end
 
   ##

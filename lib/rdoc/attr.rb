@@ -43,6 +43,15 @@ class RDoc::Attr < RDoc::CodeObject
   end
 
   ##
+  # Attributes are equal when their names and rw is identical
+
+  def == other
+    self.class == other.class and
+      self.name == other.name and
+      self.rw == other.rw
+  end
+
+  ##
   # An HTML id-friendly representation of #name
 
   def html_name

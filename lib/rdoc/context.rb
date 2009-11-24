@@ -302,6 +302,7 @@ class RDoc::Context < RDoc::CodeObject
                 else
                   "#{self.full_name}::#{name}"
                 end
+
     mod = collection[name]
 
     if mod then

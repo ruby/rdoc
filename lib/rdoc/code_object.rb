@@ -83,7 +83,7 @@ class RDoc::CodeObject
   # Replaces our comment with +comment+, unless it is empty.
 
   def comment=(comment)
-    @comment = comment unless comment.empty?
+    @comment = comment if comment and not comment.empty?
   end
 
   ##

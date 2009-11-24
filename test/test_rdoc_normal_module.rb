@@ -8,6 +8,16 @@ class TestRDocNormalModule < XrefTestCase
     @mod = RDoc::NormalModule.new 'Mod'
   end
 
+  def test_ancestors_module
+    top_level = RDoc::TopLevel.new 'file.rb'
+    mod = top_level.add_class RDoc::NormalModule, 'Mod'
+    incl = RDoc::Include.new 'Incl', ''
+
+    mod.add_include incl
+
+    assert_equal [incl], mod.ancestors
+  end
+
   def test_comment_equals
     @mod.comment = '# comment 1'
 

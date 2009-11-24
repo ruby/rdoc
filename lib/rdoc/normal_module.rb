@@ -6,6 +6,11 @@ require 'rdoc/class_module'
 class RDoc::NormalModule < RDoc::ClassModule
 
   ##
+  # Included NormalModules
+
+  alias ancestors includes
+
+  ##
   # Appends +comment+ to the current comment, but separated by a rule
 
   def comment=(comment)
@@ -30,5 +35,4 @@ class RDoc::NormalModule < RDoc::ClassModule
   end
 
 end
-
 

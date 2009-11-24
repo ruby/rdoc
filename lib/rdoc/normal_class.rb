@@ -5,6 +5,13 @@ require 'rdoc/class_module'
 
 class RDoc::NormalClass < RDoc::ClassModule
 
+  ##
+  # Ancestor ClassModules
+
+  def ancestors
+    includes + [superclass]
+  end
+
   def inspect # :nodoc:
     superclass = @superclass ? " < #{@superclass}" : nil
     "<%s:0x%x class %s%s includes: %p attributes: %p methods: %p aliases: %p>" % [

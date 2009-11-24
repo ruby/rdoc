@@ -47,29 +47,7 @@ class RDoc::Markup
     ##
     # List item
 
-    class LI
-      attr_reader :label, :contents
-
-      def initialize label, *contents
-        @label = label
-        @contents = []
-        @contents.push(*contents)
-      end
-
-      def == other
-        other.class == self.class and
-          other.label == @label and
-          other.contents == @contents
-      end
-
-      def << stuff
-        @contents << stuff
-      end
-
-      def body
-        raise 'no'
-      end
-    end
+    LI = Struct.new :label, :body
 
     ##
     # Heading

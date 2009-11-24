@@ -19,6 +19,28 @@ class RDoc::Include < RDoc::CodeObject
     self.comment = comment
   end
 
+  ##
+  # Includes are sorted by name
+
+  def <=> other
+    return unless self.class === other
+
+    name <=> other.name
+  end
+
+  def == other # :nodoc:
+    self.class == other.class and
+      self.name == other.name
+  end
+
+  ##
+  # Full name based on #module
+
+  def full_name
+    m = self.module
+    RDoc::ClassModule === m ? m.full_name : @name
+  end
+
   def inspect # :nodoc:
     "#<%s:0x%x %s.include %s>" % [
       self.class,
