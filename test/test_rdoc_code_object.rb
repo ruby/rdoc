@@ -16,13 +16,13 @@ class TestRDocCodeObject < XrefTestCase
     assert @co.document_children, 'document_children'
     refute @co.force_documentation, 'force_documentation'
     refute @co.done_documenting, 'done_documenting'
-    assert_equal nil, @co.comment, 'comment is nil'
+    assert_equal '', @co.comment, 'comment is empty'
   end
 
   def test_comment_equals
     @co.comment = ''
 
-    assert_equal nil, @co.comment
+    assert_equal '', @co.comment
 
     @co.comment = 'I am a comment'
 

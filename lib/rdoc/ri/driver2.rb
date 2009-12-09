@@ -1,8 +1,17 @@
+require 'abbrev'
 require 'optparse'
+
+begin
+  require 'readline'
+rescue LoadError
+end
+
+require 'rdoc/ri'
 require 'rdoc/ri'
 require 'rdoc/ri/paths'
 require 'rdoc/markup'
 require 'rdoc/markup/to_ansi'
+require 'rdoc/text'
 
 class RDoc::RI::Driver2
 
@@ -23,6 +32,7 @@ class RDoc::RI::Driver2
     options[:width] = 72
     options[:interactive] = false
     options[:use_cache] = true
+    options[:profile] = false
 
     # By default all standard paths are used.
     options[:use_system] = true
@@ -201,6 +211,13 @@ Options may also be set in the 'RI' environment variable.
              "Set the width of the output.") do |value|
         options[:width] = value
       end
+
+      opt.separator nil
+
+      opt.on("--[no-]profile",
+             "Run with the ruby profiler") do |value|
+        options[:profile] = value
+      end
     end
 
     argv = ENV['RI'].to_s.split.concat argv
@@ -226,13 +243,23 @@ Options may also be set in the 'RI' environment variable.
   # Runs the ri command line executable using +argv+
 
   def self.run argv = ARGV
+    if argv.first == '--old' then
+      argv.shift
+      require 'rdoc/ri/driver'
+      return RDoc::RI::Driver.run(argv)
+    end
+
     options = process_args argv
     ri = new options
     ri.run
   end
 
   def initialize initial_options = {}
+    @classes = nil
+
     options = self.class.default_options.update(initial_options)
+
+    require 'profile' if options[:profile]
 
     @names = options[:names]
 
@@ -253,6 +280,7 @@ Options may also be set in the 'RI' environment variable.
     @list_doc_dirs = options[:list_doc_dirs]
 
     @interactive = options[:interactive]
+    @use_stdout  = options[:use_stdout]
 
     @stores = @doc_dirs.map do |path|
       store = RDoc::RI::Store.new path
@@ -261,86 +289,232 @@ Options may also be set in the 'RI' environment variable.
     end
   end
 
+  def classes
+    return @classes if @classes
+
+    @classes = Hash.new { |h,k| h[k] = [] }
+
+    @stores.each do |store|
+      store.cache[:modules].each do |mod|
+        @classes[mod] << store
+      end
+    end
+
+    @classes
+  end
+
+  ##
+  # Converts +document+ to text and writes it to the pager
+
+  def display document
+    text = document.accept(RDoc::Markup::AttributeManager.new,
+                           RDoc::Markup::ToAnsi.new)
+
+    page do |io|
+      io.write text
+    end
+  end
+
+  def display_class name
+    return if name =~ /#|\./
+
+    name = expand_class name
+
+    found = @stores.map do |store|
+      begin
+        [store.path, store.load_class(name)]
+      rescue Errno::ENOENT
+      end
+    end.compact
+
+    return if found.empty?
+
+    out = RDoc::Markup::Parser::Document.new
+
+    out.parts << RDoc::Markup::Parser::Heading.new(1, name)
+    out.parts << RDoc::Markup::Parser::BlankLine.new
+
+    found.each do |path, klass|
+      out.parts << RDoc::Markup::Parser::Paragraph.new("(from #{path})")
+      out.parts << RDoc::Markup::Parser::Rule.new(1)
+      out.parts << RDoc::Markup::Parser::BlankLine.new
+      out.parts.push(*klass.comment.parts)
+      out.parts << RDoc::Markup::Parser::BlankLine.new
+    end
+
+    display out
+  end
+
+  def display_method name
+    klass, type, method = parse_name name
+
+    types = if type == '.' then
+              :both
+            elsif type == '#' then
+              :instance
+            else
+              :class
+            end
+
+    found = @stores.map do |store|
+      methods = []
+      case types
+      when :instance then
+        methods << load_method(store, :instance_methods, klass, '#',  method)
+      when :class then
+        methods << load_method(store, :class_methods,    klass, '::', method)
+      else
+        methods << load_method(store, :instance_methods, klass, '#',  method)
+        methods << load_method(store, :class_methods,    klass, '::', method)
+      end
+
+      [store.path, methods.compact]
+    end
+
+    found = found.reject do |path, methods| methods.empty? end
+
+    raise NotFoundError, name if found.empty?
+
+    out = RDoc::Markup::Parser::Document.new
+
+    out.parts << RDoc::Markup::Parser::Heading.new(1, name)
+    out.parts << RDoc::Markup::Parser::BlankLine.new
+
+    found.each do |path, methods|
+      methods.each do |method|
+        out.parts << RDoc::Markup::Parser::Paragraph.new("(from #{path})")
+        out.parts << RDoc::Markup::Parser::Rule.new(1)
+        out.parts << RDoc::Markup::Parser::BlankLine.new
+        out.parts.push(*method.comment.parts)
+        out.parts << RDoc::Markup::Parser::BlankLine.new
+      end
+    end
+
+    display out
+  end
+
   def display_name name
-    if name =~ /::|#|\./ then
-      klass, type, method = parse_name name
+    return if display_class name
 
-      types = if type == '.' then
-                :both
-              elsif type == '#' then
-                :instance
-              else
-                :class
+    display_method name if name =~ /::|#|\./
+  end
+
+  ##
+  # Expands abbreviated klass +klass+ into a fully-qualified klass.  "Zl::Da"
+  # will be expanded to Zlib::DataError.
+
+  def expand_class klass
+    klass.split('::').inject '' do |expanded, klass_part|
+      expanded << '::' unless expanded.empty?
+      short = expanded << klass_part
+
+      subset = classes.keys.select do |klass_name|
+        klass_name =~ /^#{expanded}[^:]*$/
+      end
+
+      abbrevs = Abbrev.abbrev subset
+
+      expanded = abbrevs[short]
+
+      raise NotFoundError, short unless expanded
+
+      expanded.dup
+    end
+  end
+
+  ##
+  # Runs ri interactively using Readline if it is available.
+
+  def interactive
+    if defined? Readline then
+      # prepare abbreviations for tab completion
+      Readline.completion_proc = proc do |name|
+        klasses = classes.keys
+
+        case name
+        when /(#|\.|::)([^A-Z]|$)/ then
+          selector = $1
+          name_prefix = $2
+
+          methods = []
+
+          klass, method = if name_prefix.empty? then
+                            [$`, '']
+                          else
+                            parse_name name
+                          end
+
+          # HACK refactor
+          classes[klass].each do |store|
+            if selector =~ /#|\./ then
+              cache = store.instance_methods[klass]
+
+              if cache then
+                methods += cache.select do |method_name|
+                  method_name =~ /^#{method}/
+                end.map do |method_name|
+                  "#{klass}##{method_name}"
+                end
               end
+            end
 
-      found = @stores.map do |store|
-        methods = []
-        case types
-        when :instance then
-          methods << load_method(store, :instance_methods, klass, '#',  method)
-        when :class then
-          methods << load_method(store, :class_methods,    klass, '::', method)
+            if selector =~ /::|\./ then
+              cache = store.class_methods[klass]
+
+              if cache then
+                methods += cache.select do |method_name|
+                  method_name =~ /^#{method}/
+                end.map do |method_name|
+                  "#{klass}::#{method_name}"
+                end
+              end
+            end
+          end
+
+          # TODO ancestor lookup
+
+          if selector == '::' and methods.empty? then
+            methods += klasses.grep(/^#{klass}::/)
+          end
+
+          methods
+        when /^[A-Z]\w*/ then
+          klasses.grep(/^#{name}/)
         else
-          methods << load_method(store, :instance_methods, klass, '#',  method)
-          methods << load_method(store, :class_methods,    klass, '::', method)
-        end
-
-        [store.path, methods.compact]
-      end
-
-      out = []
-
-      out << "= #{name}\n\n"
-
-      found.each do |path, methods|
-        methods.each do |method|
-          comment = normalize method.comment
-
-          out << <<-OUT
-(from #{path})
----
-
-#{comment}
-          OUT
+          []
         end
       end
-
-      m = RDoc::Markup.new
-      puts m.convert(out.join, RDoc::Markup::ToAnsi.new)
-    end
-  end
-
-  def expand_tabs text
-    expanded = []
-
-    text.each_line do |line|
-      line.gsub!(/^(.{8}*?)([^\t\r\n]{0,7})\t/) do
-        "#{$1}#{$2}#{' ' * (8 - $2.size)}"
-      end until line !~ /\t/
-
-      expanded << line
     end
 
-    expanded.join
-  end
+    puts "\nEnter the method name you want to look up."
 
-  def flush_left text
-    indents = []
-
-    text.each_line do |line|
-      indents << (line =~ /[^\s]/ || 9999)
+    if defined? Readline then
+      puts "You can use tab to autocomplete."
     end
 
-    indent = indents.min
+    puts "Enter a blank line to exit.\n\n"
 
-    flush = []
+    loop do
+      name = if defined? Readline then
+               Readline.readline ">> "
+             else
+               print ">> "
+               $stdin.gets
+             end
 
-    text.each_line do |line|
-      line[0, indent] = ''
-      flush << line
+      return if name.nil? or name.empty?
+
+      name = name.strip
+
+      begin
+        display_name name
+      rescue NotFoundError => e
+        puts e.message
+      end
     end
 
-    flush.join
+  rescue Interrupt
+    exit
   end
 
   def load_method store, cache, klass, type, name
@@ -353,16 +527,20 @@ Options may also be set in the 'RI' environment variable.
     store.load_method klass, "#{type}#{method}"
   end
 
-  def normalize comment
-    comment = if comment =~ /^(?>\s*)[^\#]/ then
-                comment
-              else
-                comment.gsub(/^\s*(#+)/)  { $1.tr '#',' ' }
-              end
+  ##
+  # Paginates output through a pager program.
 
-    comment = expand_tabs comment
-
-    flush_left comment
+  def page
+    if pager = setup_pager then
+      begin
+        yield pager
+      ensure
+        pager.close
+      end
+    else
+      yield $stdout
+    end
+  rescue Errno::EPIPE
   end
 
   ##
@@ -398,6 +576,22 @@ Options may also be set in the 'RI' environment variable.
     end
   rescue NotFoundError => e
     abort e.message
+  end
+
+  ##
+  # Sets up a pager program to pass output through.  Tries the PAGER
+  # environment variable, followed by pager, less then more.
+
+  def setup_pager
+    unless @use_stdout then
+      for pager in [ENV['PAGER'], 'pager', 'less', 'more'].compact.uniq
+        return IO.popen(pager, "w") rescue nil
+      end
+
+      @use_stdout = true
+
+      nil
+    end
   end
 
 end

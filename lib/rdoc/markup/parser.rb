@@ -1,6 +1,9 @@
 require 'strscan'
+require 'rdoc/text'
 
 class RDoc::Markup::Parser
+
+  include RDoc::Text
 
   LIST_TOKENS = [
     :BULLET,
@@ -35,6 +38,11 @@ class RDoc::Markup::Parser
       @parts = []
       @parts.push(*parts)
     end
+
+    def == other
+      self.class == other.class and @parts == other.parts
+    end
+
 
     def accept(attribute_manager, visitor)
       visitor.start_accepting
@@ -288,8 +296,7 @@ class RDoc::Markup::Parser
 
       case type
       when :BULLET, :LABEL, :LALPHA, :NOTE, :NUMBER, :UALPHA then
-        list_type = data
-        list_type = type if type == :NOTE or type == :LABEL
+        list_type = type
 
         if column < margin then
           unget
@@ -345,7 +352,7 @@ class RDoc::Markup::Parser
         unget
         list_item << build_paragraph(indent)
       else
-        raise "Unhandled token #{@current_token.inspect}"
+        raise ParseError, "Unhandled token #{@current_token.inspect}"
       end
     end
 
@@ -412,6 +419,24 @@ class RDoc::Markup::Parser
         verbatim << ' ' * (peek_column - column - data)
       when :TEXT then
         verbatim << data
+      when *LIST_TOKENS then
+        if column <= margin then
+          unget
+          break
+        end
+
+        list_marker = case type
+                      when :BULLET                   then '*'
+                      when :LABEL                    then "[#{data}]"
+                      when :LALPHA, :NUMBER, :UALPHA then "#{data}."
+                      when :NOTE                     then "#{data}::"
+                      end
+
+        verbatim << list_marker
+
+        _, data, = get
+
+        verbatim << ' ' * (data - list_marker.length)
       when :NEWLINE then
         verbatim << data
         break unless [:INDENT, :NEWLINE].include? peek_token[0]
@@ -426,20 +451,6 @@ class RDoc::Markup::Parser
     p :verbatim_end => margin if @debug
 
     verbatim
-  end
-
-  def expand_tabs text
-    expanded = []
-
-    text.each_line do |line|
-      line.gsub!(/^(.{8}*?)([^\t\r\n]{0,7})\t/) do
-        "#{$1}#{$2}#{' ' * (8 - $2.size)}"
-      end until line !~ /\t/
-
-      expanded << line
-    end
-
-    expanded.join
   end
 
   def get
@@ -538,8 +549,6 @@ class RDoc::Markup::Parser
   end
 
   def tokenize input
-    input = expand_tabs input
-
     s = StringScanner.new input
 
     @line = 0
@@ -565,15 +574,22 @@ class RDoc::Markup::Parser
                  when s.scan(/([*-])\s+/) then
                    @tokens << [:BULLET, :BULLET, *token_pos(pos)]
                    [:SPACE, s.matched_size, *token_pos(pos)]
-                 when s.scan(/([a-z]+)\.\s+/) then
-                   @tokens << [:LALPHA, :LALPHA, *token_pos(pos)]
-                   [:SPACE, s.matched_size, *token_pos(pos)]
-                 when s.scan(/(\d+)\.\s+/) then
-                   @tokens << [:NUMBER, :NUMBER, *token_pos(pos)]
-                   [:SPACE, s.matched_size, *token_pos(pos)]
-                 when s.scan(/([A-Z]+)\.\s+/) then
-                   @tokens << [:UALPHA, :UALPHA, *token_pos(pos)]
-                   [:SPACE, s.matched_size, *token_pos(pos)]
+                 when s.scan(/([a-z]|\d+)\.[ \t]+\S/i) then
+                   list_label = s[1]
+                   width      = s.matched_size - 1
+
+                   s.pos = s.pos - 1 # unget \S
+
+                   list_type = case list_label
+                               when /[a-z]/ then :LALPHA
+                               when /[A-Z]/ then :UALPHA
+                               when /\d/    then :NUMBER
+                               else
+                                 raise ParseError, "BUG token #{list_label}"
+                               end
+
+                   @tokens << [list_type, list_label, *token_pos(pos)]
+                   [:SPACE, width, *token_pos(pos)]
                  when s.scan(/\[(.*?)\]\s+/) then
                    @tokens << [:LABEL, s[1], *token_pos(pos)]
                    [:SPACE, s.matched_size, *token_pos(pos)]

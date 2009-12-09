@@ -419,6 +419,17 @@ the time
     assert_equal expected, @RMP.parse(str).parts
   end
 
+  def test_parse_verbatim_bullet
+    str = <<-STR
+  * blah
+    STR
+
+    expected = [
+      @RMP::Verbatim.new('  ', '*', ' ', 'blah', "\n")]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
   def test_parse_verbatim_fold
     str = <<-STR
 now is
@@ -461,6 +472,28 @@ text
       @RMP::Paragraph.new('text'),
       @RMP::Verbatim.new('   ', 'code', "\n"),
       @RMP::Heading.new(3, 'heading three')]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
+  def test_parse_verbatim_label
+    str = <<-STR
+  [blah] blah
+    STR
+
+    expected = [
+      @RMP::Verbatim.new('  ', '[blah]', ' ', 'blah', "\n")]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
+  def test_parse_verbatim_lalpha
+    str = <<-STR
+  b. blah
+    STR
+
+    expected = [
+      @RMP::Verbatim.new('  ', 'b.', ' ', 'blah', "\n")]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -560,6 +593,28 @@ for all good men
     assert_equal expected, @RMP.parse(str).parts
   end
 
+  def test_parse_verbatim_note
+    str = <<-STR
+  blah:: blah
+    STR
+
+    expected = [
+      @RMP::Verbatim.new('  ', 'blah::', ' ', 'blah', "\n")]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
+  def test_parse_verbatim_number
+    str = <<-STR
+  2. blah
+    STR
+
+    expected = [
+      @RMP::Verbatim.new('  ', '2.', ' ', 'blah', "\n")]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
   def test_parse_verbatim_trim
     str = <<-STR
 now is
@@ -581,6 +636,17 @@ the time
     assert_equal expected, @RMP.parse(str).parts
   end
 
+  def test_parse_verbatim_ualpha
+    str = <<-STR
+  B. blah
+    STR
+
+    expected = [
+      @RMP::Verbatim.new('  ', 'B.', ' ', 'blah', "\n")]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
   def test_parse_whitespace
     expected = [
       @RMP::Paragraph.new('hello'),
@@ -598,7 +664,7 @@ the time
       @RMP::Verbatim.new('                 ', 'hello          '),
     ]
 
-    assert_equal expected, @RMP.parse(" \t \t hello\t\t").parts
+    assert_equal expected, @RMP.parse("                 hello          ").parts
 
     expected = [
       @RMP::Paragraph.new('1'),
@@ -709,11 +775,11 @@ b. l1.1
     STR
 
     expected = [
-      [:LALPHA,  :LALPHA, 0, 0],
+      [:LALPHA,  'a',     0, 0],
       [:SPACE,   3,       0, 0],
       [:TEXT,    'l1',    3, 0],
       [:NEWLINE, "\n",    5, 0],
-      [:LALPHA,  :LALPHA, 0, 1],
+      [:LALPHA,  'b',     0, 1],
       [:SPACE,   3,       0, 1],
       [:TEXT,    'l1.1',  3, 1],
       [:NEWLINE, "\n",    7, 1],
@@ -749,14 +815,80 @@ dog:: l1.1
     STR
 
     expected = [
-      [:NUMBER,  :NUMBER, 0, 0],
+      [:NUMBER,  '1',     0, 0],
       [:SPACE,   3,       0, 0],
       [:TEXT,    'l1',    3, 0],
       [:NEWLINE, "\n",    5, 0],
-      [:NUMBER,  :NUMBER, 0, 1],
+      [:NUMBER,  '2',     0, 1],
       [:SPACE,   3,       0, 1],
       [:TEXT,    'l1.1',  3, 1],
       [:NEWLINE, "\n",    7, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str)
+  end
+
+  def test_tokenize_number_period
+    str = <<-STR
+1. blah blah blah
+   l.
+2. blah blah blah blah
+   d.
+    STR
+
+    expected = [
+      [:NUMBER,  "1",                    0, 0],
+      [:SPACE,   3,                      0, 0],
+      [:TEXT,    "blah blah blah",       3, 0],
+      [:NEWLINE, "\n",                  17, 0],
+
+      [:INDENT,  3,                      0, 1],
+      [:TEXT,    "l.",                   3, 1],
+      [:NEWLINE, "\n",                   5, 1],
+
+      [:NUMBER,  "2",                    0, 2],
+      [:SPACE,   3,                      0, 2],
+      [:TEXT,    "blah blah blah blah",  3, 2],
+      [:NEWLINE, "\n",                  22, 2],
+
+      [:INDENT,  3,                      0, 3],
+      [:TEXT,    "d.",                   3, 3],
+      [:NEWLINE, "\n",                   5, 3]
+    ]
+
+    assert_equal expected, @RMP.tokenize(str)
+  end
+
+  def test_tokenize_number_period_continue
+    str = <<-STR
+1. blah blah blah
+   l.  more stuff
+2. blah blah blah blah
+   d. other stuff
+    STR
+
+    expected = [
+      [:NUMBER,  "1",                    0, 0],
+      [:SPACE,   3,                      0, 0],
+      [:TEXT,    "blah blah blah",       3, 0],
+      [:NEWLINE, "\n",                  17, 0],
+
+      [:INDENT,  3,                      0, 1],
+      [:LALPHA,  "l",                    3, 1],
+      [:SPACE,   4,                      3, 1],
+      [:TEXT,    "more stuff",           7, 1],
+      [:NEWLINE, "\n",                  17, 1],
+
+      [:NUMBER,  "2",                    0, 2],
+      [:SPACE,   3,                      0, 2],
+      [:TEXT,    "blah blah blah blah",  3, 2],
+      [:NEWLINE, "\n",                  22, 2],
+
+      [:INDENT,  3,                      0, 3],
+      [:LALPHA,  "d",                    3, 3],
+      [:SPACE,   3,                      3, 3],
+      [:TEXT,    "other stuff",          6, 3],
+      [:NEWLINE, "\n",                  17, 3]
     ]
 
     assert_equal expected, @RMP.tokenize(str)
@@ -783,126 +915,6 @@ for all
     assert_equal expected, @RMP.tokenize(str)
   end
 
-  def test_tokenize_tabs
-    str = "hello\n  dave"
-
-    expected = [
-      [:TEXT, 'hello', 0, 0],
-      [:NEWLINE, "\n", 5, 0],
-      [:INDENT, 2,     0, 1],
-      [:TEXT, 'dave',  2, 1],
-    ]
-
-    assert_equal expected, @RMP.tokenize(str), 'spaces'
-
-    str = "hello\n\tdave"
-
-    expected = [
-      [:TEXT, 'hello', 0, 0],
-      [:NEWLINE, "\n", 5, 0],
-      [:INDENT, 8,     0, 1],
-      [:TEXT, 'dave',  8, 1],
-    ]
-
-    assert_equal expected, @RMP.tokenize(str), 'tab'
-
-    str = "hello\n \tdave"
-
-    expected = [
-      [:TEXT, 'hello', 0, 0],
-      [:NEWLINE, "\n", 5, 0],
-      [:INDENT, 8,     0, 1],
-      [:TEXT, 'dave',  8, 1],
-    ]
-
-    assert_equal expected, @RMP.tokenize(str), '1 space tab'
-
-    str = "hello\n  \tdave"
-
-    expected = [
-      [:TEXT, 'hello', 0, 0],
-      [:NEWLINE, "\n", 5, 0],
-      [:INDENT, 8,     0, 1],
-      [:TEXT, 'dave',  8, 1],
-    ]
-
-    assert_equal expected, @RMP.tokenize(str), '2 space tab'
-
-    str = "hello\n   \tdave"
-
-    expected = [
-      [:TEXT, 'hello', 0, 0],
-      [:NEWLINE, "\n", 5, 0],
-      [:INDENT, 8,     0, 1],
-      [:TEXT, 'dave',  8, 1],
-    ]
-
-    assert_equal expected, @RMP.tokenize(str), '3 space tab'
-
-    str = "hello\n    \tdave"
-
-    expected = [
-      [:TEXT, 'hello', 0, 0],
-      [:NEWLINE, "\n", 5, 0],
-      [:INDENT, 8,     0, 1],
-      [:TEXT, 'dave',  8, 1],
-    ]
-
-    assert_equal expected, @RMP.tokenize(str), '4 space tab'
-
-    str = "hello\n     \tdave"
-
-    expected = [
-      [:TEXT, 'hello', 0, 0],
-      [:NEWLINE, "\n", 5, 0],
-      [:INDENT, 8,     0, 1],
-      [:TEXT, 'dave',  8, 1],
-    ]
-
-    assert_equal expected, @RMP.tokenize(str), '5 space tab'
-
-    str = "hello\n      \tdave"
-
-    expected = [
-      [:TEXT, 'hello', 0, 0],
-      [:NEWLINE, "\n", 5, 0],
-      [:INDENT, 8,     0, 1],
-      [:TEXT, 'dave',  8, 1],
-    ]
-
-    assert_equal expected, @RMP.tokenize(str), '6 space tab'
-
-    str = "hello\n       \tdave"
-
-    expected = [
-      [:TEXT, 'hello', 0, 0],
-      [:NEWLINE, "\n", 5, 0],
-      [:INDENT, 8,     0, 1],
-      [:TEXT, 'dave',  8, 1],
-    ]
-
-    assert_equal expected, @RMP.tokenize(str), '7 space tab'
-
-    str = "hello\n        \tdave"
-
-    expected = [
-      [:TEXT, 'hello',  0, 0],
-      [:NEWLINE, "\n",  5, 0],
-      [:INDENT, 16,     0, 1],
-      [:TEXT, 'dave',  16, 1],
-    ]
-
-    assert_equal expected, @RMP.tokenize(str), '8 space tab'
-
-    str = ".\t\t."
-
-    expected = [
-      [:TEXT, '.               .',      0, 0],
-    ]
-
-    assert_equal expected, @RMP.tokenize(str), 'dot tab tab dot'
-  end
-
   def test_tokenize_ualpha
     str = <<-STR
 A. l1
@@ -910,11 +922,11 @@ B. l1.1
     STR
 
     expected = [
-      [:UALPHA,  :UALPHA, 0, 0],
+      [:UALPHA,  'A',     0, 0],
       [:SPACE,   3,       0, 0],
       [:TEXT,    'l1',    3, 0],
       [:NEWLINE, "\n",    5, 0],
-      [:UALPHA,  :UALPHA, 0, 1],
+      [:UALPHA,  'B',     0, 1],
       [:SPACE,   3,       0, 1],
       [:TEXT,    'l1.1',  3, 1],
       [:NEWLINE, "\n",    7, 1],

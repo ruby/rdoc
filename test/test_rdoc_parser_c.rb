@@ -174,7 +174,7 @@ void Init_foo(){
     assert_equal ['NOSEMI', 'INT2FIX(99)',
                   "\n      Default definition   \n   "],
                  constants.shift
-    assert_equal ['NOCOMMENT', 'rb_str_new2("No comment")', nil],
+    assert_equal ['NOCOMMENT', 'rb_str_new2("No comment")', ''],
                  constants.shift
 
     comment = <<-EOF.chomp

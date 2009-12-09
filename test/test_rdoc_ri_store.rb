@@ -30,6 +30,8 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
 
     @nest_klass.add_method @nest_meth
     @nest_klass.add_include @nest_incl
+
+    @RMP = RDoc::Markup::Parser
   end
 
   def teardown
@@ -190,7 +192,10 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
 
     s = RDoc::RI::Store.new @tmpdir
 
-    assert_equal "original\nnew class", s.load_class('Object').comment
+    document = @RMP::Document.new(
+      @RMP::Paragraph.new('original'),
+      @RMP::Paragraph.new('new class'))
+    assert_equal document, s.load_class('Object').comment
   end
 
   def test_save_class_nested

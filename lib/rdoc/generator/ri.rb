@@ -15,6 +15,7 @@ class RDoc::Generator::RI
   def initialize options #:not-new:
     @options  = options
     @store    = RDoc::RI::Store.new '.'
+    @old_siginfo = nil
   end
 
   ##
@@ -22,32 +23,37 @@ class RDoc::Generator::RI
   # objects containing the extracted information.
 
   def generate top_levels
+    install_siginfo_handler
+
     RDoc::TopLevel.all_classes_and_modules.each do |klass|
+      @current = "#{klass.class}: #{klass.full_name}"
+
       @store.save_class klass
 
       klass.each_method do |method|
+        @current = "#{method.class}: #{method.full_name}"
         @store.save_method klass, method
       end
     end
 
     @store.save_cache
+
+  ensure
+    remove_siginfo_handler
   end
 
-  private
+  def install_siginfo_handler
+    return unless Signal.list.key? 'INFO'
 
-  def markup comment
-    return if comment and not comment.empty?
+    @old_siginfo = trap 'INFO' do
+      puts @current
+    end
+  end
 
-    # Convert leading comment markers to spaces, but only if all non-blank
-    # lines have them
+  def remove_siginfo_handler
+    return unless @old_siginfo
 
-    comment = if comment =~ /^(?>\s*)[^\#]/ then
-                comment
-              else
-                comment.gsub(/^\s*(#+)/)  { $1.tr '#',' ' }
-              end
-
-    RDoc::Markup::Parser.parse comment
+    trap 'INFO', @old_siginfo
   end
 
 end

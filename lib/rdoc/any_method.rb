@@ -133,7 +133,7 @@ class RDoc::AnyMethod < RDoc::CodeObject
 
   def marshal_dump
     aliases = @aliases.map do |a|
-      [a.full_name, a.comment]
+      [a.full_name, parse(a.comment)]
     end
 
     [ MARSHAL_VERSION,
@@ -141,7 +141,7 @@ class RDoc::AnyMethod < RDoc::CodeObject
       full_name,
       @singleton,
       @visibility,
-      @comment,
+      parse(@comment),
       @call_seq,
       @block_params,
       aliases,

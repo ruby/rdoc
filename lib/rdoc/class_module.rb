@@ -69,10 +69,14 @@ class RDoc::ClassModule < RDoc::Context
       @name,
       full_name,
       @superclass,
-      @comment,
+      parse(@comment),
       attrs,
-      constants.map { |const| [const.name, const.comment] },
-      includes.map { |incl| [incl.name, incl.comment] },
+      constants.map do |const|
+        [const.name, parse(const.comment)]
+      end,
+      includes.map do |incl|
+        [incl.name, parse(incl.comment)]
+      end,
       methods,
     ]
   end
@@ -114,8 +118,12 @@ class RDoc::ClassModule < RDoc::Context
   # Merges +class_module+ into this ClassModule
 
   def merge class_module
-    if class_module.comment and not class_module.comment.empty? then
-      self.comment = "#{class_module.comment}\n#{self.comment}"
+    if class_module.comment then
+      document = parse @comment
+
+      class_module.comment.parts.push(*document.parts)
+
+      @comment = class_module.comment
     end
 
     class_module.each_attribute do |attr|

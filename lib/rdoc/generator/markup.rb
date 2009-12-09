@@ -1,3 +1,4 @@
+require 'rdoc/text'
 require 'rdoc/code_objects'
 require 'rdoc/generator'
 require 'rdoc/markup/to_html_crossref'
@@ -29,7 +30,7 @@ module RDoc::Generator::Markup
   end
 
   ##
-  # RDoc::Markup formatter object
+  # Creates an RDoc::Markup::ToHtmlCrossref formatter
 
   def formatter
     return @formatter if defined? @formatter
@@ -40,27 +41,22 @@ module RDoc::Generator::Markup
   end
 
   ##
-  # Convert a string in markup format into HTML.
+  # Convert a string in markup format into HTML.  Removes the first paragraph
+  # tags if +remove_para+ is true
 
-  def markup(str, remove_para = false)
-    return '' unless str
+  def markup(text, remove_para = false)
+    return '' unless text
 
-    # Convert leading comment markers to spaces, but only if all non-blank
-    # lines have them
-    if str =~ /^(?>\s*)[^\#]/ then
-      content = str
-    else
-      content = str.gsub(/^\s*(#+)/) { $1.tr '#', ' ' }
-    end
+    content = strip_hashes text
 
-    res = formatter.convert content
+    result = formatter.convert content
 
     if remove_para then
       res.sub!(/^<p>/, '')
       res.sub!(/<\/p>$/, '')
     end
 
-    res
+    result
   end
 
   ##

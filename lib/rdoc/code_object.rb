@@ -1,10 +1,15 @@
 require 'rdoc'
+require 'rdoc/text'
 
 ##
+# Base class for the RDoc code tree.
+#
 # We contain the common stuff for contexts (which are containers) and other
 # elements (methods, attributes and so on)
 
 class RDoc::CodeObject
+
+  include RDoc::Text
 
   ##
   # Our comment
@@ -71,7 +76,7 @@ class RDoc::CodeObject
   # Creates a new CodeObject that will document itself and its children
 
   def initialize
-    @comment = nil
+    @comment = ''
     @document_children = true
     @document_self = true
     @done_documenting = false

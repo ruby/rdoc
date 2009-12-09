@@ -2,6 +2,10 @@ require 'test/xref_test_case'
 
 class TestRDocClassModule < XrefTestCase
 
+  def setup
+    @RMP = RDoc::Markup::Parser
+  end
+
   def test_merge
     cm1 = RDoc::ClassModule.new 'Klass'
     cm1.comment = 'klass 1'
@@ -12,7 +16,9 @@ class TestRDocClassModule < XrefTestCase
     cm1.add_method RDoc::AnyMethod.new(nil, 'm1')
 
     cm2 = RDoc::ClassModule.new 'Klass'
-    cm2.comment = 'klass 2'
+    cm2.instance_variable_set(:@comment,
+                              @RMP::Document.new(
+                                @RMP::Paragraph.new('klass 2')))
     cm2.add_attribute RDoc::Attr.new(nil, 'a2', 'RW', '')
     cm2.add_attribute RDoc::Attr.new(nil, 'a3', 'W', '')
     cm2.add_constant RDoc::Constant.new('C2', nil, '')
@@ -21,7 +27,11 @@ class TestRDocClassModule < XrefTestCase
 
     cm1.merge cm2
 
-    assert_equal "klass 2\nklass 1", cm1.comment
+    document = @RMP::Document.new(
+      @RMP::Paragraph.new('klass 2'),
+      @RMP::Paragraph.new('klass 1'))
+
+    assert_equal document, cm1.comment
 
     expected = [
       RDoc::Attr.new(nil, 'a1', 'RW', ''),
