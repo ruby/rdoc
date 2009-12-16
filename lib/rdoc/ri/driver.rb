@@ -13,7 +13,7 @@ require 'rdoc/markup'
 require 'rdoc/markup/to_ansi'
 require 'rdoc/text'
 
-class RDoc::RI::Driver2
+class RDoc::RI::Driver
 
   class Error < RDoc::RI::Error; end
 
@@ -231,12 +231,6 @@ Options may also be set in the 'RI' environment variable.
   # Runs the ri command line executable using +argv+
 
   def self.run argv = ARGV
-    if argv.first == '--old' then
-      argv.shift
-      require 'rdoc/ri/driver'
-      return RDoc::RI::Driver.run(argv)
-    end
-
     options = process_args argv
     ri = new options
     ri.run

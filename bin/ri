@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'rdoc/ri/driver2'
+require 'rdoc/ri/driver'
 
-RDoc::RI::Driver2.run ARGV
+RDoc::RI::Driver.run ARGV
