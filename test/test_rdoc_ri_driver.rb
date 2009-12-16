@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'minitest/unit'
+require 'minitest/autorun'
 require 'tmpdir'
 require 'rdoc/ri/driver'
 
@@ -28,72 +28,31 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     FileUtils.rm_rf @tmpdir
   end
 
-  def test_lookup_method
-    def @driver.load_cache_for(klassname)
-      { 'Foo#bar' => :found }
-    end
-
-    assert @driver.lookup_method('Foo#bar',  'Foo')
-  end
-
-  def test_lookup_method_class_method
-    def @driver.load_cache_for(klassname)
-      { 'Foo::Bar' => :found }
-    end
-
-    assert @driver.lookup_method('Foo::Bar', 'Foo::Bar')
-  end
-
-  def test_lookup_method_class_missing
-    def @driver.load_cache_for(klassname) end
-
-    assert_nil @driver.lookup_method('Foo#bar', 'Foo')
-  end
-
-  def test_lookup_method_dot_instance
-    def @driver.load_cache_for(klassname)
-      { 'Foo#bar' => :instance, 'Foo::bar' => :klass }
-    end
-
-    assert_equal :instance, @driver.lookup_method('Foo.bar', 'Foo')
-  end
-
-  def test_lookup_method_dot_class
-    def @driver.load_cache_for(klassname)
-      { 'Foo::bar' => :found }
-    end
-
-    assert @driver.lookup_method('Foo.bar', 'Foo')
-  end
-
-  def test_lookup_method_method_missing
-    def @driver.load_cache_for(klassname) {} end
-
-    assert_nil @driver.lookup_method('Foo#bar', 'Foo')
-  end
-
   def test_parse_name
-    klass, meth = @driver.parse_name 'Foo::Bar'
+    klass, type, meth = @driver.parse_name 'Foo::Bar'
 
     assert_equal 'Foo::Bar', klass, 'Foo::Bar class'
+    assert_equal nil,        type,  'Foo::Bar type'
     assert_equal nil,        meth,  'Foo::Bar method'
 
-    klass, meth = @driver.parse_name 'Foo#Bar'
+    klass, type, meth = @driver.parse_name 'Foo#Bar'
 
     assert_equal 'Foo', klass, 'Foo#Bar class'
+    assert_equal '#',   type,  'Foo#Bar type'
     assert_equal 'Bar', meth,  'Foo#Bar method'
 
-    klass, meth = @driver.parse_name 'Foo.Bar'
+    klass, type, meth = @driver.parse_name 'Foo.Bar'
 
-    assert_equal 'Foo', klass, 'Foo#Bar class'
-    assert_equal 'Bar', meth,  'Foo#Bar method'
+    assert_equal 'Foo', klass, 'Foo.Bar class'
+    assert_equal '.',   type,  'Foo.Bar type'
+    assert_equal 'Bar', meth,  'Foo.Bar method'
 
-    klass, meth = @driver.parse_name 'Foo::bar'
+    klass, type, meth = @driver.parse_name 'Foo::bar'
 
     assert_equal 'Foo', klass, 'Foo::bar class'
+    assert_equal '::',  type,  'Foo::bar type'
     assert_equal 'bar', meth,  'Foo::bar method'
   end
 
 end
 
-MiniTest::Unit.autorun

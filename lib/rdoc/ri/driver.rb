@@ -285,6 +285,63 @@ Options may also be set in the 'RI' environment variable.
     @classes
   end
 
+  def complete name
+    klasses = classes.keys
+
+    case name
+    when /(#|\.|::)([^A-Z]|$)/ then
+      selector = $1
+      name_prefix = $2
+
+      methods = []
+
+      klass, type, method = if name_prefix.empty? then
+                              [$`, '']
+                            else
+                              parse_name name
+                            end
+
+      # HACK refactor
+      classes[klass].each do |store|
+        if selector =~ /#|\./ then
+          cache = store.instance_methods[klass]
+
+          if cache then
+            methods += cache.select do |method_name|
+              method_name =~ /^#{method}/
+            end.map do |method_name|
+              "#{klass}##{method_name}"
+            end
+          end
+        end
+
+        if selector =~ /::|\./ then
+          cache = store.class_methods[klass]
+
+          if cache then
+            methods += cache.select do |method_name|
+              method_name =~ /^#{method}/
+            end.map do |method_name|
+              "#{klass}::#{method_name}"
+            end
+          end
+        end
+      end
+
+      # TODO ancestor lookup
+
+      if selector == '::' and methods.empty? then
+        methods += klasses.grep(/^#{klass}::/)
+      end
+
+      methods
+    when /^[A-Z]\w*/ then
+      klasses.grep(/^#{name}/)
+    else
+      []
+    end
+  end
+
   ##
   # Converts +document+ to text and writes it to the pager
 
@@ -410,62 +467,7 @@ Options may also be set in the 'RI' environment variable.
   def interactive
     if defined? Readline then
       # prepare abbreviations for tab completion
-      Readline.completion_proc = proc do |name|
-        klasses = classes.keys
-
-        case name
-        when /(#|\.|::)([^A-Z]|$)/ then
-          selector = $1
-          name_prefix = $2
-
-          methods = []
-
-          klass, method = if name_prefix.empty? then
-                            [$`, '']
-                          else
-                            parse_name name
-                          end
-
-          # HACK refactor
-          classes[klass].each do |store|
-            if selector =~ /#|\./ then
-              cache = store.instance_methods[klass]
-
-              if cache then
-                methods += cache.select do |method_name|
-                  method_name =~ /^#{method}/
-                end.map do |method_name|
-                  "#{klass}##{method_name}"
-                end
-              end
-            end
-
-            if selector =~ /::|\./ then
-              cache = store.class_methods[klass]
-
-              if cache then
-                methods += cache.select do |method_name|
-                  method_name =~ /^#{method}/
-                end.map do |method_name|
-                  "#{klass}::#{method_name}"
-                end
-              end
-            end
-          end
-
-          # TODO ancestor lookup
-
-          if selector == '::' and methods.empty? then
-            methods += klasses.grep(/^#{klass}::/)
-          end
-
-          methods
-        when /^[A-Z]\w*/ then
-          klasses.grep(/^#{name}/)
-        else
-          []
-        end
-      end
+      Readline.completion_proc = method :complete
     end
 
     puts "\nEnter the method name you want to look up."
