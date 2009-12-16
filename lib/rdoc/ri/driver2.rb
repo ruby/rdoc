@@ -56,18 +56,6 @@ class RDoc::RI::Driver2
       opt.release = nil
       opt.summary_indent = ' ' * 4
 
-      directories = [
-        RDoc::RI::Paths::SYSDIR,
-        RDoc::RI::Paths::SITEDIR,
-        RDoc::RI::Paths::HOMEDIR
-      ]
-
-      if RDoc::RI::Paths::GEMDIRS then
-        Gem.path.each do |dir|
-          directories << "#{dir}/doc/*/ri"
-        end
-      end
-
       opt.banner = <<-EOT
 Usage: #{opt.program_name} [options] [names...]
 
@@ -94,9 +82,9 @@ punctuation:
     #{opt.program_name} 'Array.[]'
     #{opt.program_name} compact\\!
 
-By default ri searches for documentation in the following directories:
+To see the default directories ri will search, run:
 
-    #{directories.join "\n    "}
+    #{opt.program_name} --list-doc-dirs
 
 Specifying the --system, --site, --home, --gems or --doc-dir options will
 limit ri to searching only the specified directories.

@@ -39,7 +39,11 @@ module RDoc::RI::Paths
     HOMEDIR = nil
   end
 
-  begin
+  @gemdirs = nil
+
+  def self.gemdirs
+    return @gemdirs if @gemdirs
+
     require 'rubygems' unless defined?(Gem) and defined?(Gem::Enable) and
                               Gem::Enable
 
@@ -63,9 +67,9 @@ module RDoc::RI::Paths
       end
     end
 
-    GEMDIRS = ri_paths.map { |k,v| v.last }.sort
+    @gemdirs = ri_paths.map { |k,v| v.last }.sort
   rescue LoadError
-    GEMDIRS = []
+    @gemdirs = []
   end
 
   # Returns the selected documentation directories as an Array, or PATH if no
@@ -83,10 +87,10 @@ module RDoc::RI::Paths
   def self.raw_path(use_system, use_site, use_home, use_gems, *extra_dirs)
     path = []
     path << extra_dirs unless extra_dirs.empty?
-    path << SYSDIR if use_system
+    path << SYSDIR  if use_system
     path << SITEDIR if use_site
     path << HOMEDIR if use_home
-    path << GEMDIRS if use_gems
+    path << gemdirs if use_gems
 
     return path.flatten.compact
   end
