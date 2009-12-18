@@ -7,18 +7,39 @@ rescue LoadError
 end
 
 require 'rdoc/ri'
-require 'rdoc/ri'
 require 'rdoc/ri/paths'
 require 'rdoc/markup'
 require 'rdoc/markup/to_ansi'
 require 'rdoc/text'
 
+##
+# The RI driver implements the command-line ri tool.
+#
+# The driver supports:
+# * loading RI data from:
+#   * Ruby's standard library
+#   * RubyGems
+#   * ~/.rdoc
+#   * A user-supplied directory
+# * Paging output (uses PAGER environment variable or the less, more and
+#   pager programs)
+# * Interactive mode with tab-completion
+# * Abbreviated names (ri Zl shows Zlib documentation)
+# * Colorized output
+# * Merging output from multiple RI data sources
+
 class RDoc::RI::Driver
+
+  ##
+  # Base Driver error class
 
   class Error < RDoc::RI::Error; end
 
+  ##
+  # Raised when a name isn't found in the ri data stores
+
   class NotFoundError < Error
-    def message
+    def message # :nodoc:
       "Nothing known about #{super}"
     end
   end
@@ -113,14 +134,6 @@ Options may also be set in the 'RI' environment variable.
 
       opt.separator nil
 
-      opt.on("--[no-]use-cache",
-             "Whether or not to use ri's cache.",
-             "True by default.") do |value|
-        options[:use_cache] = value
-      end
-
-      opt.separator nil
-
       opt.on("--no-standard-docs",
              "Do not include documentation from",
              "the Ruby standard library, site_lib,",
@@ -183,6 +196,8 @@ Options may also be set in the 'RI' environment variable.
         options[:use_stdout] = true
       end
 
+      opt.separator nil
+
       opt.on("--interactive", "-i",
              "This makes ri go into interactive mode.",
              "When ri is in interactive mode it will",
@@ -237,6 +252,9 @@ Options may also be set in the 'RI' environment variable.
     ri = new options
     ri.run
   end
+
+  ##
+  # Creates a new driver using +initial_options+ from ::process_args
 
   def initialize initial_options = {}
     @classes = nil
@@ -365,6 +383,9 @@ Options may also be set in the 'RI' environment variable.
     end
   end
 
+  ##
+  # Outputs formatted RI data for class +name+
+
   def display_class name
     return if name =~ /#|\./
 
@@ -395,6 +416,9 @@ Options may also be set in the 'RI' environment variable.
     display out
   end
 
+  ##
+  # Outputs formatted RI data for method +name+
+
   def display_method name
     found = load_methods_matching name
 
@@ -417,6 +441,9 @@ Options may also be set in the 'RI' environment variable.
 
     display out
   end
+
+  ##
+  # Outputs formatted RI data for the class or method +name+
 
   def display_name name
     return if display_class name
@@ -511,6 +538,10 @@ Options may also be set in the 'RI' environment variable.
     exit
   end
 
+  ##
+  # Loads RI data for method +name+ on +klass+ from +store+.  +type+ and
+  # +cache+ indicate if it is a class or instance method.
+
   def load_method store, cache, klass, type, name
     methods = store.send(cache)[klass]
 
@@ -524,6 +555,9 @@ Options may also be set in the 'RI' environment variable.
 
     store.load_method klass, "#{type}#{method}"
   end
+
+  ##
+  # Returns an Array of methods matching +name+
 
   def list_methods_matching name
     found = []
@@ -560,6 +594,9 @@ Options may also be set in the 'RI' environment variable.
     found.uniq
   end
 
+  ##
+  # Returns an Array of RI data for methods matching +name+
+
   def load_methods_matching name
     found = []
 
@@ -577,6 +614,9 @@ Options may also be set in the 'RI' environment variable.
 
     found.reject do |path, methods| methods.empty? end
   end
+
+  ##
+  # Returns the type of method (:both, :instance, :class) for +selector+
 
   def method_type selector
     case selector
