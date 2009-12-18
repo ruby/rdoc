@@ -85,6 +85,7 @@ lib/rdoc/require.rb
 lib/rdoc/ri.rb
 lib/rdoc/ri/display.rb
 lib/rdoc/ri/driver.rb
+lib/rdoc/ri/formatter.rb
 lib/rdoc/ri/paths.rb
 lib/rdoc/ri/store.rb
 lib/rdoc/ri/util.rb
