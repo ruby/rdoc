@@ -336,7 +336,7 @@ Options may also be set in the 'RI' environment variable.
     end
 
     if completions.include? klass and name =~ /#|\.|::/ then
-      methods = methods_matching name
+      methods = list_methods_matching name
 
       if not methods.empty? then
         # remove Foo if given Foo:: and a method was found
@@ -488,7 +488,11 @@ Options may also be set in the 'RI' environment variable.
   end
 
   def load_method store, cache, klass, type, name
-    method = store.send(cache)[klass].find do |method_name|
+    methods = store.send(cache)[klass]
+
+    return unless methods
+
+    method = methods.find do |method_name|
       method_name == name
     end
 
@@ -497,21 +501,51 @@ Options may also be set in the 'RI' environment variable.
     store.load_method klass, "#{type}#{method}"
   end
 
+  def list_methods_matching name
+    found = []
+
+    find_methods name do |store, klass, ancestor, types, method|
+      if types == :instance or types == :both then
+        methods = store.instance_methods[ancestor]
+        next unless methods
+        matches = methods.grep(/^#{method}/)
+
+        matches = matches.map do |match|
+          "#{klass}##{match}"
+        end
+
+        found.push(*matches)
+      end
+
+      if types == :class or types == :both then
+        methods = store.class_methods[ancestor]
+        next unless methods
+        matches = methods.grep(/^#{method}/)
+
+        matches = matches.map do |match|
+          "#{klass}::#{match}"
+        end
+
+        found.push(*matches)
+      end
+    end
+
+    found
+  end
+
   def load_methods_matching name
-    klass, selector, method = parse_name name
+    found = []
 
-    types = method_type selector
-
-    found = @stores.map do |store|
+    find_methods name do |store, klass, ancestor, types, method|
       methods = []
 
-      methods << load_method(store, :class_methods, klass, '#',  method) if
+      methods << load_method(store, :class_methods, ancestor, '::',  method) if
         types == :class or types == :both
 
-      methods << load_method(store, :instance_methods, klass, '#',  method) if
+      methods << load_method(store, :instance_methods, ancestor, '#',  method) if
         types == :instance or types == :both
 
-      [store.path, methods.compact]
+      found << [store.path, methods.compact]
     end
 
     found.reject do |path, methods| methods.empty? end
@@ -525,46 +559,22 @@ Options may also be set in the 'RI' environment variable.
     end
   end
 
-  def methods_matching name
-    found = []
-
+  def find_methods name
     klass, selector, method = parse_name name
 
     types = method_type selector
-    
+
     klasses = ancestors_of klass
 
     klasses.unshift klass
 
     klasses.each do |ancestor|
       classes[ancestor].each do |store|
-        if types == :instance or types == :both then
-          methods = store.instance_methods[ancestor]
-          next unless methods
-          matches = methods.grep(/^#{method}/)
-
-          matches = matches.map do |match|
-            "#{klass}##{match}"
-          end
-
-          found.push(*matches)
-        end
-
-        if types == :class or types == :both then
-          methods = store.class_methods[klass]
-          next unless methods
-          matches = methods.grep(/^#{method}/)
-
-          matches = matches.map do |match|
-            "#{klass}::#{match}"
-          end
-
-          found.push(*matches)
-        end
+        yield store, klass, ancestor, types, method
       end
     end
 
-    found
+    self
   end
 
   ##
