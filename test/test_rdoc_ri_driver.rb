@@ -95,15 +95,55 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     assert_equal %w[Foo   Foo::Bar], @driver.complete('F')
   end
 
+  def test_display_name_not_found_class
+    util_store
+
+    out, err = capture_io do
+      assert_equal false, @driver.display_name('Foo::B')
+    end
+
+    expected = <<-EXPECTED
+Foo::B not found, maybe you meant:
+
+Foo::Bar
+Foo::Baz
+    EXPECTED
+
+    assert_equal expected, out
+  end
+
+  def test_display_name_not_found_method
+    util_store
+
+    out, err = capture_io do
+      assert_equal false, @driver.display_name('Foo::Bar#b')
+    end
+
+    expected = <<-EXPECTED
+Foo::Bar#b not found, maybe you meant:
+
+Foo::Bar#blah
+    EXPECTED
+
+    assert_equal expected, out
+  end
+
   def test_expand_class
     util_store
 
-    assert_equal 'Foo',   @driver.expand_class('F')
-    assert_equal 'Foo::Bar',   @driver.expand_class('F::Bar')
+    assert_equal 'Foo',       @driver.expand_class('F')
+    assert_equal 'Foo::Bar',  @driver.expand_class('F::Bar')
 
     assert_raises RDoc::RI::Driver::NotFoundError do
       @driver.expand_class 'F::B'
     end
+  end
+
+  def test_expand_name
+    util_store
+
+    assert_equal 'Foo',       @driver.expand_name('F')
+    assert_equal 'Foo::Bar#', @driver.expand_name('F::Bar#')
   end
 
   def test_find_methods

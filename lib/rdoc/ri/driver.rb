@@ -39,9 +39,16 @@ class RDoc::RI::Driver
   # Raised when a name isn't found in the ri data stores
 
   class NotFoundError < Error
+
+    ##
+    # Name that wasn't found
+
+    alias name message
+
     def message # :nodoc:
       "Nothing known about #{super}"
     end
+
   end
 
   attr_accessor :stores
@@ -305,7 +312,7 @@ Options may also be set in the 'RI' environment variable.
 
       stores = classes[current]
 
-      break if stores.empty?
+      break unless stores and not stores.empty?
 
       klasses = stores.map { |store| store.ancestors[current] }.flatten
 
@@ -322,10 +329,12 @@ Options may also be set in the 'RI' environment variable.
   def classes
     return @classes if @classes
 
-    @classes = Hash.new { |h,k| h[k] = [] }
+    @classes = {}
 
     @stores.each do |store|
       store.cache[:modules].each do |mod|
+        # using default block causes searched-for modules to be added
+        @classes[mod] ||= []
         @classes[mod] << store
       end
     end
@@ -389,8 +398,6 @@ Options may also be set in the 'RI' environment variable.
   def display_class name
     return if name =~ /#|\./
 
-    name = expand_class name
-
     found = @stores.map do |store|
       begin
         [store.path, store.load_class(name)]
@@ -443,16 +450,34 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
-  # Outputs formatted RI data for the class or method +name+
+  # Outputs formatted RI data for the class or method +name+.
+  #
+  # Returns true if +name+ was found, false if it was not an alternative could
+  # be guessed, raises an error if +name+ couldn't be guessed.
 
   def display_name name
-    return if display_class name
+    return true if display_class name
 
     display_method name if name =~ /::|#|\./
+
+    true
+  rescue NotFoundError
+    matches = list_methods_matching name if name =~ /::|#|\./
+    matches = classes.keys.grep(/^#{name}/) if matches.empty?
+
+    raise if matches.empty?
+
+    page do |io|
+      io.puts "#{name} not found, maybe you meant:"
+      io.puts
+      io.puts matches.join("\n")
+    end
+
+    false
   end
 
   ##
-  # Expands abbreviated klass +klass+ into a fully-qualified klass.  "Zl::Da"
+  # Expands abbreviated klass +klass+ into a fully-qualified class.  "Zl::Da"
   # will be expanded to Zlib::DataError.
 
   def expand_class klass
@@ -475,6 +500,16 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
+  # Expands the class portion of +name+ into a fully-qualified class.  See
+  # #expand_class.
+
+  def expand_name name
+    klass, selector, method = parse_name name
+
+    "#{expand_class klass}#{selector}#{method}"
+  end
+
+  ##
   # Yields items matching +name+ including the store they were found in, the
   # class being searched for, the class they were found in (an ancestor) the
   # types of methods to look up (from #method_type), and the method name being
@@ -490,7 +525,11 @@ Options may also be set in the 'RI' environment variable.
     klasses.unshift klass
 
     klasses.each do |ancestor|
-      classes[ancestor].each do |store|
+      ancestors = classes[ancestor]
+
+      next unless ancestors
+
+      ancestors.each do |store|
         yield store, klass, ancestor, types, method
       end
     end
@@ -525,7 +564,7 @@ Options may also be set in the 'RI' environment variable.
 
       return if name.nil? or name.empty?
 
-      name = name.strip
+      name = expand_name name.strip
 
       begin
         display_name name
@@ -680,6 +719,8 @@ Options may also be set in the 'RI' environment variable.
       @display.list_known_classes class_cache.keys.sort
     else
       @names.each do |name|
+        name = expand_name name
+
         display_name name
       end
     end
