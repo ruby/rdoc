@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'minitest/autorun'
 require 'rdoc/ri'
+require 'rdoc/markup'
 require 'tmpdir'
 require 'fileutils'
 
