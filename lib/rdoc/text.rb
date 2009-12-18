@@ -68,6 +68,8 @@ module RDoc::Text
 While parsing markup, RDoc encountered a #{e.class}:
   #{e}
 
+\tfrom #{e.backtrace.join "\n\tfrom "}
+
 ---8<---
 #{text}
 ---8<---
