@@ -19,6 +19,7 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
 
     options = RDoc::RI::Driver.process_args []
     options[:home] = @tmpdir
+    options[:use_stdout] = true
     @driver = RDoc::RI::Driver.new options
   end
 
