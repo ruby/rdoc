@@ -426,7 +426,11 @@ Options may also be set in the 'RI' environment variable.
       out.parts << RDoc::Markup::Parser::Paragraph.new("(from #{path})")
       out.parts << RDoc::Markup::Parser::Rule.new(1)
       out.parts << RDoc::Markup::Parser::BlankLine.new
-      out.parts.push(*klass.comment.parts)
+      if klass.comment then
+        out.parts.push(*klass.comment.parts)
+      else
+        out.parts << RDoc::Markup::Parser::Paragraph.new("[Not documented]")
+      end
       out.parts << RDoc::Markup::Parser::BlankLine.new
     end
 
