@@ -66,8 +66,8 @@ module RDoc::Text
   rescue RDoc::Markup::Parser::Error => e
     $stderr.puts <<-EOF
 While parsing markup, RDoc encountered a #{e.class}:
-  #{e}
 
+#{e}
 \tfrom #{e.backtrace.join "\n\tfrom "}
 
 ---8<---
