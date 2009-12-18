@@ -324,6 +324,12 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
+  # For RubyGems backwards compatibility.
+
+  def class_cache # :nodoc:
+  end
+
+  ##
   # Hash mapping a known class or module to the stores it can be loaded from
 
   def classes
@@ -716,7 +722,7 @@ Options may also be set in the 'RI' environment variable.
     elsif @interactive then
       interactive
     elsif @names.empty? then
-      @display.list_known_classes class_cache.keys.sort
+      @display.list_known_classes classes.keys.sort
     else
       @names.each do |name|
         name = expand_name name
