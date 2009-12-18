@@ -357,16 +357,21 @@ class RDoc::RDoc
 
 end
 
-if Gem.respond_to? :find_files then
-  rdoc_extensions = Gem.find_files 'rdoc/discover'
+begin
+  require 'rubygems'
 
-  rdoc_extensions.each do |extension|
-    begin
-      load extension
-    rescue => e
-      warn "error loading #{extension.inspect}: #{e.message} (#{e.class})"
+  if Gem.respond_to? :find_files then
+    rdoc_extensions = Gem.find_files 'rdoc/discover'
+
+    rdoc_extensions.each do |extension|
+      begin
+        load extension
+      rescue => e
+        warn "error loading #{extension.inspect}: #{e.message} (#{e.class})"
+      end
     end
   end
+rescue LoadError
 end
 
 # require built-in generators after discovery in case they've been replaced
