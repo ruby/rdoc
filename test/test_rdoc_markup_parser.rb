@@ -615,6 +615,23 @@ for all good men
     assert_equal expected, @RMP.parse(str).parts
   end
 
+  def test_parse_verbatim_rule
+    str = <<-STR
+text
+
+  --- lib/blah.rb.orig
+  +++ lib/blah.rb
+    STR
+
+    expected = [
+      @RMP::Paragraph.new('text'),
+      @RMP::BlankLine.new,
+      @RMP::Verbatim.new('  ', '---', ' ', 'lib/blah.rb.orig', "\n",
+                         '  ', '+++', ' ', 'lib/blah.rb',      "\n")]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
   def test_parse_verbatim_trim
     str = <<-STR
 now is

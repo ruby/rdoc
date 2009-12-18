@@ -415,8 +415,15 @@ class RDoc::Markup::Parser
         verbatim << ' ' * indent
       when :HEADER then
         verbatim << '=' * data
+
         _, _, peek_column, = peek_token
         verbatim << ' ' * (peek_column - column - data)
+      when :RULE then
+        width = 2 + data
+        verbatim << '-' * width
+
+        _, _, peek_column, = peek_token
+        verbatim << ' ' * (peek_column - column - width)
       when :TEXT then
         verbatim << data
       when *LIST_TOKENS then
