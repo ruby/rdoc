@@ -64,7 +64,10 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
   def test_complete_ancestor
     util_ancestors_store
 
-    assert_equal %w[Foo::Bar#some_method], @driver.complete('Foo::Bar#')
+    assert_equal %w[Foo::Bar#i_method], @driver.complete('Foo::Bar#')
+
+    assert_equal %w[Foo::Bar#i_method Foo::Bar::c_method Foo::Bar::new],
+                 @driver.complete('Foo::Bar.')
   end
 
   def test_complete_classes
@@ -111,6 +114,13 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     @driver.stores = [store1, store2]
 
     assert_equal %w[Foo   Foo::Bar], @driver.complete('F')
+  end
+
+  def test_method_type
+    assert_equal :both,     @driver.method_type(nil)
+    assert_equal :both,     @driver.method_type('.')
+    assert_equal :instance, @driver.method_type('#')
+    assert_equal :class,    @driver.method_type('::')
   end
 
   def test_parse_name_single_class
@@ -184,10 +194,11 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
       'Foo::Bar' => %w[Foo],
     }
     store.cache[:class_methods] = {
-      'Foo' => %w[]
+      'Foo'      => %w[c_method new],
+      'Foo::Bar' => %w[new],
     }
     store.cache[:instance_methods] = {
-      'Foo' => %w[some_method]
+      'Foo' => %w[i_method],
     }
     store.cache[:modules] = %w[
       Foo

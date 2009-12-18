@@ -507,18 +507,21 @@ Options may also be set in the 'RI' environment variable.
     find_methods name do |store, klass, ancestor, types, method|
       if types == :instance or types == :both then
         methods = store.instance_methods[ancestor]
-        next unless methods
-        matches = methods.grep(/^#{method}/)
 
-        matches = matches.map do |match|
-          "#{klass}##{match}"
+        if methods then
+          matches = methods.grep(/^#{method}/)
+
+          matches = matches.map do |match|
+            "#{klass}##{match}"
+          end
+
+          found.push(*matches)
         end
-
-        found.push(*matches)
       end
 
       if types == :class or types == :both then
         methods = store.class_methods[ancestor]
+
         next unless methods
         matches = methods.grep(/^#{method}/)
 
@@ -530,7 +533,7 @@ Options may also be set in the 'RI' environment variable.
       end
     end
 
-    found
+    found.uniq
   end
 
   def load_methods_matching name
@@ -553,9 +556,9 @@ Options may also be set in the 'RI' environment variable.
 
   def method_type selector
     case selector
-    when '.' then :both
-    when '#' then :instance
-    else          :class
+    when '.', nil then :both
+    when '#'      then :instance
+    else               :class
     end
   end
 
