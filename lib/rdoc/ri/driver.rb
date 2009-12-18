@@ -23,6 +23,8 @@ class RDoc::RI::Driver
     end
   end
 
+  attr_accessor :stores
+
   ##
   # Default options for ri
 
@@ -271,6 +273,34 @@ Options may also be set in the 'RI' environment variable.
     end
   end
 
+  ##
+  # Returns ancestor classes of +klass+
+
+  def ancestors_of klass
+    ancestors = []
+
+    unexamined = [klass]
+
+    loop do
+      break if unexamined.empty?
+      current = unexamined.shift
+
+      stores = classes[current]
+
+      break if stores.empty?
+
+      klasses = stores.map { |store| store.ancestors[current] }.flatten
+
+      ancestors.push(*klasses)
+      unexamined.push(*klasses)
+    end
+
+    ancestors.reverse
+  end
+
+  ##
+  # Hash mapping a known class or module to the stores it can be loaded from
+
   def classes
     return @classes if @classes
 
@@ -285,61 +315,42 @@ Options may also be set in the 'RI' environment variable.
     @classes
   end
 
+  ##
+  # Completes +name+ based on the caches.  For Readline
+
   def complete name
     klasses = classes.keys
+    completions = []
 
-    case name
-    when /(#|\.|::)([^A-Z]|$)/ then
-      selector = $1
-      name_prefix = $2
+    klass, selector, method = parse_name name
 
-      methods = []
+    # may need to include Foo when given Foo::
+    klass_name = method ? name : klass
 
-      klass, type, method = if name_prefix.empty? then
-                              [$`, '']
-                            else
-                              parse_name name
-                            end
-
-      # HACK refactor
-      classes[klass].each do |store|
-        if selector =~ /#|\./ then
-          cache = store.instance_methods[klass]
-
-          if cache then
-            methods += cache.select do |method_name|
-              method_name =~ /^#{method}/
-            end.map do |method_name|
-              "#{klass}##{method_name}"
-            end
-          end
-        end
-
-        if selector =~ /::|\./ then
-          cache = store.class_methods[klass]
-
-          if cache then
-            methods += cache.select do |method_name|
-              method_name =~ /^#{method}/
-            end.map do |method_name|
-              "#{klass}::#{method_name}"
-            end
-          end
-        end
-      end
-
-      # TODO ancestor lookup
-
-      if selector == '::' and methods.empty? then
-        methods += klasses.grep(/^#{klass}::/)
-      end
-
-      methods
-    when /^[A-Z]\w*/ then
-      klasses.grep(/^#{name}/)
-    else
-      []
+    if name !~ /#|\./ then
+      completions.push(*klasses.grep(/^#{klass_name}/))
+    elsif selector then
+      completions << klass if classes.key? klass
+    elsif classes.key? klass_name then
+      completions << klass_name
     end
+
+    if completions.include? klass and name =~ /#|\.|::/ then
+      methods = methods_matching name
+
+      if not methods.empty? then
+        # remove Foo if given Foo:: and a method was found
+        completions.delete klass
+      elsif selector then
+        # replace Foo with Foo:: as given
+        completions.delete klass
+        completions << "#{klass}#{selector}" 
+      end
+
+      completions.push(*methods)
+    end
+
+    completions.sort
   end
 
   ##
@@ -385,32 +396,7 @@ Options may also be set in the 'RI' environment variable.
   end
 
   def display_method name
-    klass, type, method = parse_name name
-
-    types = if type == '.' then
-              :both
-            elsif type == '#' then
-              :instance
-            else
-              :class
-            end
-
-    found = @stores.map do |store|
-      methods = []
-      case types
-      when :instance then
-        methods << load_method(store, :instance_methods, klass, '#',  method)
-      when :class then
-        methods << load_method(store, :class_methods,    klass, '::', method)
-      else
-        methods << load_method(store, :instance_methods, klass, '#',  method)
-        methods << load_method(store, :class_methods,    klass, '::', method)
-      end
-
-      [store.path, methods.compact]
-    end
-
-    found = found.reject do |path, methods| methods.empty? end
+    found = load_methods_matching name
 
     raise NotFoundError, name if found.empty?
 
@@ -511,6 +497,76 @@ Options may also be set in the 'RI' environment variable.
     store.load_method klass, "#{type}#{method}"
   end
 
+  def load_methods_matching name
+    klass, selector, method = parse_name name
+
+    types = method_type selector
+
+    found = @stores.map do |store|
+      methods = []
+
+      methods << load_method(store, :class_methods, klass, '#',  method) if
+        types == :class or types == :both
+
+      methods << load_method(store, :instance_methods, klass, '#',  method) if
+        types == :instance or types == :both
+
+      [store.path, methods.compact]
+    end
+
+    found.reject do |path, methods| methods.empty? end
+  end
+
+  def method_type selector
+    case selector
+    when '.' then :both
+    when '#' then :instance
+    else          :class
+    end
+  end
+
+  def methods_matching name
+    found = []
+
+    klass, selector, method = parse_name name
+
+    types = method_type selector
+    
+    klasses = ancestors_of klass
+
+    klasses.unshift klass
+
+    klasses.each do |ancestor|
+      classes[ancestor].each do |store|
+        if types == :instance or types == :both then
+          methods = store.instance_methods[ancestor]
+          next unless methods
+          matches = methods.grep(/^#{method}/)
+
+          matches = matches.map do |match|
+            "#{klass}##{match}"
+          end
+
+          found.push(*matches)
+        end
+
+        if types == :class or types == :both then
+          methods = store.class_methods[klass]
+          next unless methods
+          matches = methods.grep(/^#{method}/)
+
+          matches = matches.map do |match|
+            "#{klass}::#{match}"
+          end
+
+          found.push(*matches)
+        end
+      end
+    end
+
+    found
+  end
+
   ##
   # Paginates output through a pager program.
 
@@ -528,12 +584,22 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
-  # Extract the class and method name parts from +name+ like Foo::Bar#baz
+  # Extract the class, selector and method name parts from +name+ like
+  # Foo::Bar#baz.
+  #
+  # NOTE: Given Foo::Bar, Bar is considered a class even though it may be a
+  #       method
 
   def parse_name(name)
-    parts = name.split(/(::|\#|\.)/)
+    parts = name.split(/(::|#|\.)/)
 
-    if parts[-2] != '::' or parts.last !~ /^[A-Z]/ then
+    if parts.length == 1 then
+      type = nil
+      meth = nil
+    elsif parts.length == 2 or parts.last =~ /::|#|\./ then
+      type = parts.pop
+      meth = nil
+    elsif parts[-2] != '::' or parts.last !~ /^[A-Z]/ then
       meth = parts.pop
       type = parts.pop
     end
