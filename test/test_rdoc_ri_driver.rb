@@ -34,6 +34,17 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     assert_equal %w[Object Foo], @driver.ancestors_of('Foo::Bar')
   end
 
+  def test_classes
+    util_multi_store
+
+    expected = {
+      'Foo'      => [@store2],
+      'Foo::Bar' => [@store1],
+    }
+
+    assert_equal expected, @driver.classes
+  end
+
   def test_complete
     store = RDoc::RI::Store.new @home_ri
     store.cache[:ancestors] = {
@@ -71,25 +82,7 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
   end
 
   def test_complete_classes
-    store = RDoc::RI::Store.new @home_ri
-    store.cache[:ancestors] = {
-      'Foo'      => %w[Object],
-      'Foo::Bar' => %w[Object],
-      'Foo::Baz' => %w[Object],
-    }
-    store.cache[:class_methods] = {
-      'Foo' => %w[]
-    }
-    store.cache[:instance_methods] = {
-      'Foo' => %w[]
-    }
-    store.cache[:modules] = %w[
-      Foo
-      Foo::Bar
-      Foo::Baz
-    ]
-
-    @driver.stores = [store]
+    util_store
 
     assert_equal %w[Foo   Foo::Bar Foo::Baz], @driver.complete('F')
     assert_equal %w[Foo:: Foo::Bar Foo::Baz], @driver.complete('Foo::')
@@ -97,23 +90,36 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
   end
 
   def test_complete_multistore
-    store1 = RDoc::RI::Store.new @home_ri
-    store1.cache[:ancestors]        = { 'Foo::Bar' => %w[Foo] }
-    store1.cache[:class_methods]    = {}
-    store1.cache[:instance_methods] = {}
-    store1.cache[:modules]          = %w[Foo::Bar]
-
-    store2 = RDoc::RI::Store.new @home_ri
-    store2.cache[:ancestors]        = { 'Foo' => %w[Object] }
-    store2.cache[:class_methods]    = {}
-    store2.cache[:instance_methods] = {
-      'Foo' => %w[baz]
-    }
-    store2.cache[:modules]          = %w[Foo]
-
-    @driver.stores = [store1, store2]
+    util_multi_store
 
     assert_equal %w[Foo   Foo::Bar], @driver.complete('F')
+  end
+
+  def test_expand_class
+    util_store
+
+    assert_equal 'Foo',   @driver.expand_class('F')
+    assert_equal 'Foo::Bar',   @driver.expand_class('F::Bar')
+
+    assert_raises RDoc::RI::Driver::NotFoundError do
+      @driver.expand_class 'F::B'
+    end
+  end
+
+  def test_find_methods
+    util_store
+
+    items = []
+
+    @driver.find_methods 'Foo::Bar.' do |store, klass, ancestor, types, method|
+      items << [store, klass, ancestor, types, method]
+    end
+
+    expected = [
+      [@store, 'Foo::Bar', 'Foo::Bar', :both, nil],
+    ]
+
+    assert_equal expected, items
   end
 
   def test_method_type
@@ -121,6 +127,13 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     assert_equal :both,     @driver.method_type('.')
     assert_equal :instance, @driver.method_type('#')
     assert_equal :class,    @driver.method_type('::')
+  end
+
+  def test_list_methods_matching
+    util_store
+
+    assert_equal %w[Foo::Bar#blah Foo::Bar::new],
+                 @driver.list_methods_matching('Foo::Bar.')
   end
 
   def test_parse_name_single_class
@@ -206,6 +219,48 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     ]
 
     @driver.stores = [store]
+  end
+
+  def util_multi_store
+    @store1 = RDoc::RI::Store.new @home_ri
+    @store1.cache[:ancestors]        = { 'Foo::Bar' => %w[Foo] }
+    @store1.cache[:class_methods]    = {}
+    @store1.cache[:instance_methods] = {}
+    @store1.cache[:modules]          = %w[Foo::Bar]
+
+    @store2 = RDoc::RI::Store.new @home_ri
+    @store2.cache[:ancestors]        = { 'Foo' => %w[Object] }
+    @store2.cache[:class_methods]    = {}
+    @store2.cache[:instance_methods] = {
+      'Foo' => %w[baz]
+    }
+    @store2.cache[:modules]          = %w[Foo]
+
+    @driver.stores = [@store1, @store2]
+  end
+
+  def util_store
+    @store = RDoc::RI::Store.new @home_ri
+    @store.cache[:ancestors] = {
+      'Foo'      => %w[Object],
+      'Foo::Bar' => %w[Object],
+      'Foo::Baz' => %w[Object],
+    }
+    @store.cache[:class_methods] = {
+      'Foo'      => %w[],
+      'Foo::Bar' => %w[new],
+    }
+    @store.cache[:instance_methods] = {
+      'Foo'      => %w[],
+      'Foo::Bar' => %w[blah],
+    }
+    @store.cache[:modules] = %w[
+      Foo
+      Foo::Bar
+      Foo::Baz
+    ]
+
+    @driver.stores = [@store]
   end
 
 end

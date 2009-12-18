@@ -448,6 +448,30 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
+  # Yields items matching +name+ including the store they were found in, the
+  # class being searched for, the class they were found in (an ancestor) the
+  # types of methods to look up (from #method_type), and the method name being
+  # searched for
+
+  def find_methods name
+    klass, selector, method = parse_name name
+
+    types = method_type selector
+
+    klasses = ancestors_of klass
+
+    klasses.unshift klass
+
+    klasses.each do |ancestor|
+      classes[ancestor].each do |store|
+        yield store, klass, ancestor, types, method
+      end
+    end
+
+    self
+  end
+
+  ##
   # Runs ri interactively using Readline if it is available.
 
   def interactive
@@ -560,24 +584,6 @@ Options may also be set in the 'RI' environment variable.
     when '#'      then :instance
     else               :class
     end
-  end
-
-  def find_methods name
-    klass, selector, method = parse_name name
-
-    types = method_type selector
-
-    klasses = ancestors_of klass
-
-    klasses.unshift klass
-
-    klasses.each do |ancestor|
-      classes[ancestor].each do |store|
-        yield store, klass, ancestor, types, method
-      end
-    end
-
-    self
   end
 
   ##
