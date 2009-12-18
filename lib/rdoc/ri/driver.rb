@@ -13,6 +13,10 @@ require 'rdoc/markup/to_ansi'
 require 'rdoc/text'
 
 ##
+# For RubyGems backwards compatibility
+require 'rdoc/ri/formatter'
+
+##
 # The RI driver implements the command-line ri tool.
 #
 # The driver supports:
@@ -324,7 +328,7 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
-  # For RubyGems backwards compatibility.
+  # For RubyGems backwards compatibility
 
   def class_cache # :nodoc:
   end
