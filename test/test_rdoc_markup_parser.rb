@@ -1037,6 +1037,24 @@ for all
     assert_equal expected, @RMP.tokenize(str)
   end
 
+  def test_tokenize_rule
+    str = <<-STR
+--- 
+
+--- blah ---
+    STR
+
+    expected = [
+      [:RULE,    1,            0, 0],
+      [:NEWLINE, "\n",         4, 0],
+      [:NEWLINE, "\n",         0, 1],
+      [:TEXT, "--- blah ---",  0, 2],
+      [:NEWLINE, "\n",        12, 2],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str)
+  end
+
   def test_tokenize_ualpha
     str = <<-STR
 A. l1

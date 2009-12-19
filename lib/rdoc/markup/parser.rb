@@ -607,8 +607,8 @@ class RDoc::Markup::Parser
                    level = s[1].length
                    level = 6 if level > 6
                    [:HEADER, level, *token_pos(pos)]
-                 when s.scan(/-{3,}/) then
-                   [:RULE, s.matched_size - 2, *token_pos(pos)]
+                 when s.scan(/^(-{3,}) *$/) then
+                   [:RULE, s[1].length - 2, *token_pos(pos)]
                  when s.scan(/([*-])\s+/) then
                    @tokens << [:BULLET, :BULLET, *token_pos(pos)]
                    [:SPACE, s.matched_size, *token_pos(pos)]
