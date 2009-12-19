@@ -371,6 +371,21 @@ two::
     assert_equal expected, @RMP.parse(str).parts
   end
 
+  def test_parse_note_note
+    str = <<-STR
+one:: two::
+    STR
+
+    expected = [
+      @RMP::List.new(:NOTE, *[
+        @RMP::ListItem.new('one',
+          @RMP::List.new(:NOTE, *[
+            @RMP::ListItem.new('two',
+              @RMP::BlankLine.new)]))])]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
   def test_parse_number_bullet
     str = <<-STR
 1. l1

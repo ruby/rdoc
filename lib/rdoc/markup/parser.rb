@@ -377,6 +377,9 @@ class RDoc::Markup::Parser
         list_item << build_heading(data)
       when :NEWLINE then
         list_item << BlankLine.new
+      when *LIST_TOKENS then
+        unget
+        list_item << build_list(column)
       else
         raise ParseError, "Unhandled token #{@current_token.inspect}"
       end
