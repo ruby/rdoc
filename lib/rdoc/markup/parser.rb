@@ -291,6 +291,7 @@ class RDoc::Markup::Parser
   end
 
   def build_heading level
+
     heading = Heading.new level, text
     skip :NEWLINE
 
@@ -573,13 +574,41 @@ class RDoc::Markup::Parser
     @current_token
   end
 
+  ##
+  # Consumes tokens until NEWLINE and turns them back into text
+
   def text
-    type, data, = get
+    text = ''
 
-    raise ParseError, "expected TEXT got #{@current_token.inspect}" unless
-      type == :TEXT
+    loop do
+      type, data, = get
 
-    data
+      text << case type
+              when :BULLET then
+                _, space, = get # SPACE
+                "*#{' ' * (space - 1)}"
+              when :LABEL then
+                _, space, = get # SPACE
+                "[#{data}]#{' ' * (space - data.length - 2)}"
+              when :LALPHA, :NUMBER, :UALPHA then
+                _, space, = get # SPACE
+                "#{data}.#{' ' * (space - 2)}"
+              when :NOTE then
+                _, space = get # SPACE
+                "#{data}::#{' ' * (space - data.length - 2)}"
+              when :TEXT then
+                data
+              when :NEWLINE then
+                unget
+                break
+              when nil then
+                break
+              else
+                raise ParseError, "unhandled token #{@current_token.inspect}"
+              end
+    end
+
+    text
   end
 
   def token_pos offset

@@ -180,6 +180,60 @@ the time
     assert_equal expected, @RMP.parse(str).parts
   end
 
+  def test_parse_heading_bullet
+    str = '= * heading one'
+
+    expected = [
+      @RMP::Heading.new(1, '* heading one')]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
+  def test_parse_heading_lalpha
+    str = '= b. heading one'
+
+    expected = [
+      @RMP::Heading.new(1, 'b. heading one')]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
+  def test_parse_heading_label
+    str = '= [heading one]'
+
+    expected = [
+      @RMP::Heading.new(1, '[heading one]')]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
+  def test_parse_heading_note
+    str = '= heading one::'
+
+    expected = [
+      @RMP::Heading.new(1, 'heading one::')]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
+  def test_parse_heading_number
+    str = '= 5. heading one'
+
+    expected = [
+      @RMP::Heading.new(1, '5. heading one')]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
+  def test_parse_heading_ualpha
+    str = '= B. heading one'
+
+    expected = [
+      @RMP::Heading.new(1, 'B. heading one')]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
   def test_parse_label
     str = <<-STR
 [one] item one
