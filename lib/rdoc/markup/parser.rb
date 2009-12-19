@@ -200,6 +200,10 @@ class RDoc::Markup::Parser
       @parts.empty?
     end
 
+    def length
+      @parts.length
+    end
+
     def pretty_print q
       q.group 2, '[item: ', ']' do
         if @label then
@@ -286,6 +290,13 @@ class RDoc::Markup::Parser
     @line_pos = 0
   end
 
+  def build_heading level
+    heading = Heading.new level, text
+    skip :NEWLINE
+
+    heading
+  end
+
   def build_list margin
     p :list_start => margin if @debug
 
@@ -310,9 +321,20 @@ class RDoc::Markup::Parser
 
         list.type = list_type
 
-        data = nil unless type == :NOTE or type == :LABEL
-
-        _, indent, = get
+        case type
+        when :NOTE, :LABEL then
+          _, indent, = get # SPACE
+          if :NEWLINE == peek_token.first then
+            get
+            peek_type, new_indent, peek_column, = peek_token
+            indent = new_indent if
+              peek_type == :INDENT and peek_column >= column
+            unget
+          end
+        else
+          data = nil
+          _, indent, = get
+        end
 
         list_item = build_list_item(margin + indent, data)
 
@@ -351,6 +373,10 @@ class RDoc::Markup::Parser
       when :TEXT then
         unget
         list_item << build_paragraph(indent)
+      when :HEADER then
+        list_item << build_heading(data)
+      when :NEWLINE then
+        list_item << BlankLine.new
       else
         raise ParseError, "Unhandled token #{@current_token.inspect}"
       end
@@ -359,6 +385,9 @@ class RDoc::Markup::Parser
     p :list_item_end => [indent, item_type] if @debug
 
     return nil if list_item.empty?
+
+    list_item.parts.shift if BlankLine === list_item.parts.first and
+                             list_item.length > 1
 
     list_item
   end
@@ -476,8 +505,7 @@ class RDoc::Markup::Parser
 
       case type
       when :HEADER then
-        document << Heading.new(data, text)
-        skip :NEWLINE
+        document << build_heading(data)
       when :INDENT then
         if indent > data then
           unget
@@ -585,7 +613,7 @@ class RDoc::Markup::Parser
                    list_label = s[1]
                    width      = s.matched_size - 1
 
-                   s.pos = s.pos - 1 # unget \S
+                   s.pos -= 1 # unget \S
 
                    list_type = case list_label
                                when /[a-z]/ then :LALPHA
@@ -597,10 +625,10 @@ class RDoc::Markup::Parser
 
                    @tokens << [list_type, list_label, *token_pos(pos)]
                    [:SPACE, width, *token_pos(pos)]
-                 when s.scan(/\[(.*?)\]\s+/) then
+                 when s.scan(/\[(.*?)\]( +|$)/) then
                    @tokens << [:LABEL, s[1], *token_pos(pos)]
                    [:SPACE, s.matched_size, *token_pos(pos)]
-                 when s.scan(/(.*?)::\s+/) then
+                 when s.scan(/(.*?)::( +|$)/) then
                    @tokens << [:NOTE, s[1], *token_pos(pos)]
                    [:SPACE, s.matched_size, *token_pos(pos)]
                  else s.scan(/.*/)

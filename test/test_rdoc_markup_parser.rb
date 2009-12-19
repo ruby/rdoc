@@ -17,6 +17,17 @@ class TestRDocMarkupParser < MiniTest::Unit::TestCase
     s.chomp
   end
 
+  def test_build_heading
+    parser = @RMP.new
+
+    parser.tokens.replace [
+      [:TEXT,    'heading three',  4, 0],
+      [:NEWLINE, "\n",            17, 0],
+    ]
+
+    assert_equal @RMP::Heading.new(3, 'heading three'), parser.build_heading(3)
+  end
+
   def test_parse_bullet
     str = <<-STR
 * l1
@@ -29,6 +40,19 @@ class TestRDocMarkupParser < MiniTest::Unit::TestCase
           @RMP::Paragraph.new('l1')),
         @RMP::ListItem.new(nil,
           @RMP::Paragraph.new('l2'))])]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
+  def test_parse_bullet_heading
+    str = <<-STR
+* = l1
+    STR
+
+    expected = [
+      @RMP::List.new(:BULLET, *[
+        @RMP::ListItem.new(nil,
+          @RMP::Heading.new(1, 'l1'))])]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -327,6 +351,22 @@ two:: item two
           @RMP::Paragraph.new('item one')),
         @RMP::ListItem.new('two',
           @RMP::Paragraph.new('item two'))])]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
+  def test_parse_note_empty
+    str = <<-STR
+one::
+two::
+    STR
+
+    expected = [
+      @RMP::List.new(:NOTE, *[
+        @RMP::ListItem.new('one',
+          @RMP::BlankLine.new),
+        @RMP::ListItem.new('two',
+          @RMP::BlankLine.new)])]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -785,6 +825,25 @@ the time
     assert_equal expected, @RMP.tokenize(str)
   end
 
+  def test_tokenize_label_note
+    str = <<-STR
+[label]
+  note::
+    STR
+
+    expected = [
+      [:LABEL,   'label', 0, 0],
+      [:SPACE,   7,       0, 0],
+      [:NEWLINE, "\n",    7, 0],
+      [:INDENT,  2,       0, 1],
+      [:NOTE,    'note',  2, 1],
+      [:SPACE,   6,       2, 1],
+      [:NEWLINE, "\n",    8, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str)
+  end
+
   def test_tokenize_lalpha
     str = <<-STR
 a. l1
@@ -820,6 +879,37 @@ dog:: l1.1
       [:SPACE,   6,       0, 1],
       [:TEXT,    'l1.1',  6, 1],
       [:NEWLINE, "\n",   10, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str)
+  end
+
+  def test_tokenize_note_empty
+    str = <<-STR
+cat::
+dog::
+    STR
+
+    expected = [
+      [:NOTE,    'cat', 0, 0],
+      [:SPACE,   5,     0, 0],
+      [:NEWLINE, "\n",  5, 0],
+      [:NOTE,    'dog', 0, 1],
+      [:SPACE,   5,     0, 1],
+      [:NEWLINE, "\n",  5, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str)
+  end
+
+  def test_tokenize_note_not
+    str = <<-STR
+Cat::Dog
+    STR
+
+    expected = [
+      [:TEXT,    'Cat::Dog', 0, 0],
+      [:NEWLINE, "\n",       8, 0],
     ]
 
     assert_equal expected, @RMP.tokenize(str)
