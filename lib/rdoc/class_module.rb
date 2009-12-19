@@ -22,6 +22,13 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
+  # Ancestors list for this ClassModule (abstract)
+
+  def ancestors
+    raise NotImplementedError
+  end
+
+  ##
   # Finds a class or module with +name+ in this namespace or its descendents
 
   def find_class_named(name)
