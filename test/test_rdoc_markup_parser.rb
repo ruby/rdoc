@@ -189,6 +189,15 @@ the time
     assert_equal expected, @RMP.parse(str).parts
   end
 
+  def test_parse_heading_heading
+    str = '= ='
+
+    expected = [
+      @RMP::Heading.new(1, '=')]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
   def test_parse_heading_lalpha
     str = '= b. heading one'
 
@@ -869,6 +878,38 @@ the time
       [:SPACE,   2,       2, 1],
       [:TEXT,    'l1.1',  4, 1],
       [:NEWLINE, "\n",    8, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str)
+  end
+
+  def test_tokenize_heading
+    str = <<-STR
+= Heading
+== Heading 2
+    STR
+
+    expected = [
+      [:HEADER,  1,            0, 0],
+      [:TEXT,    'Heading',    2, 0],
+      [:NEWLINE, "\n",         9, 0],
+      [:HEADER,  2,            0, 1],
+      [:TEXT,    'Heading 2',  3, 1],
+      [:NEWLINE, "\n",        12, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str)
+  end
+
+  def test_tokenize_heading_heading
+    str = <<-STR
+= =
+    STR
+
+    expected = [
+      [:HEADER,  1,    0, 0],
+      [:TEXT,    '=',  2, 0],
+      [:NEWLINE, "\n", 3, 0],
     ]
 
     assert_equal expected, @RMP.tokenize(str)

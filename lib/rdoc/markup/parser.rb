@@ -635,7 +635,11 @@ class RDoc::Markup::Parser
                  when s.scan(/(=+)\s+/) then
                    level = s[1].length
                    level = 6 if level > 6
-                   [:HEADER, level, *token_pos(pos)]
+                   @tokens << [:HEADER, level, *token_pos(pos)]
+
+                   pos = s.pos
+                   s.scan(/.*$/)
+                   [:TEXT, s.matched, *token_pos(pos)]
                  when s.scan(/^(-{3,}) *$/) then
                    [:RULE, s[1].length - 2, *token_pos(pos)]
                  when s.scan(/([*-])\s+/) then
