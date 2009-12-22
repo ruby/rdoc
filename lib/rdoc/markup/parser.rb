@@ -638,7 +638,7 @@ class RDoc::Markup::Parser
                    @tokens << [:HEADER, level, *token_pos(pos)]
 
                    pos = s.pos
-                   s.scan(/.*$/)
+                   s.scan(/.*/)
                    [:TEXT, s.matched, *token_pos(pos)]
                  when s.scan(/^(-{3,}) *$/) then
                    [:RULE, s[1].length - 2, *token_pos(pos)]
