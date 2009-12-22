@@ -1,6 +1,20 @@
 require 'strscan'
 require 'rdoc/text'
 
+##
+# A recursive-descent parser for RDoc markup.
+#
+# The parser tokenizes an input string then parses the tokens into a Document.
+# Documents can be converted into output formats by writing a visitor like
+# RDoc::Markup::ToHTML.
+#
+# The parser only handles the block-level constructs Paragraph, List,
+# ListItem, Heading, Verbatim, BlankLine and Rule.  Inline markup such as
+# <tt>+blah+</tt> is handled separately.
+#
+# To see what markup the Parser implements read RDoc.  To see how to use
+# RDoc markup to format text in your program read RDoc::Markup.
+
 class RDoc::Markup::Parser
 
   include RDoc::Text
@@ -14,11 +28,21 @@ class RDoc::Markup::Parser
     :UALPHA,
   ]
 
+  ##
+  # Parser error subclass
+
   class Error < RuntimeError; end
+
+  ##
+  # Raised when the parser is unable to handle the given markup
+
   class ParseError < Error; end
 
+  ##
+  # An empty line
+
   class BlankLine
-    def == other
+    def == other # :nodoc:
       self.class == other.class
     end
 
@@ -26,20 +50,30 @@ class RDoc::Markup::Parser
       visitor.accept_blank_line attribute_manager, self
     end
 
-    def pretty_print q
+    def pretty_print q # :nodoc:
       q.text 'blankline'
     end
   end
 
+  ##
+  # A Document containing lists, headings, paragraphs, etc.
+
   class Document
+
+    ##
+    # The parts of the Document
+
     attr_reader :parts
+
+    ##
+    # Creates a new Document with +parts+
 
     def initialize(*parts)
       @parts = []
       @parts.push(*parts)
     end
 
-    def == other
+    def == other # :nodoc:
       self.class == other.class and @parts == other.parts
     end
 
@@ -54,7 +88,7 @@ class RDoc::Markup::Parser
       visitor.end_accepting
     end
 
-    def pretty_print q
+    def pretty_print q # :nodoc:
       q.group 2, '[doc: ', ']' do
         q.seplist @parts do |part|
           q.pp part
@@ -63,32 +97,47 @@ class RDoc::Markup::Parser
     end
   end
 
+  ##
+  # A heading with a level (1-6) and text
+
   class Heading < Struct.new :level, :text
     def accept attribute_manager, visitor
       visitor.accept_heading attribute_manager, self
     end
 
-    def pretty_print q
+    def pretty_print q # :nodoc:
       q.group 2, "[head: #{level} ", ']' do
         q.pp text
       end
     end
   end
 
+  ##
+  # A Paragraph of text
+
   class Paragraph
 
+    ##
+    # The component parts of the list
+
     attr_reader :parts
+
+    ##
+    # Creates a new Paragraph containing +parts+
 
     def initialize *parts
       @parts = []
       @parts.push(*parts)
     end
 
+    ##
+    # Appends +text+ to the Paragraph
+
     def << text
       @parts << text
     end
 
-    def == other
+    def == other # :nodoc:
       self.class == other.class and text == other.text
     end
 
@@ -96,11 +145,14 @@ class RDoc::Markup::Parser
       visitor.accept_paragraph attribute_manager, self
     end
 
+    ##
+    # Appends +other+'s parts into this Paragraph
+
     def merge other
       @parts.push(*other.parts)
     end
 
-    def pretty_print q
+    def pretty_print q # :nodoc:
       self.class.name =~ /.*::(\w{4})/i
 
       q.group 2, "[#{$1.downcase}: ", ']' do
@@ -110,14 +162,31 @@ class RDoc::Markup::Parser
       end
     end
 
+    ##
+    # The text of this paragraph
+
     def text
       @parts.join ' '
     end
   end
 
+  ##
+  # A List of ListItems
+
   class List
+
+    ##
+    # The list's type
+
     attr_accessor :type
+
+    ##
+    # Items in the list
+
     attr_reader :items
+
+    ##
+    # Creates a new list of +type+ with +items+
 
     def initialize type = nil, *items
       @type = type
@@ -125,11 +194,14 @@ class RDoc::Markup::Parser
       @items.push(*items)
     end
 
+    ##
+    # Appends +item+ to the list
+
     def << item
       @items << item
     end
 
-    def == other
+    def == other # :nodoc:
       self.class == other.class and
         @type == other.type and
         @items == other.items
@@ -145,15 +217,21 @@ class RDoc::Markup::Parser
       visitor.accept_list_end attribute_manager, self
     end
 
+    ##
+    # Is the list empty?
+
     def empty?
       @items.empty?
     end
+
+    ##
+    # Returns the last item in the list
 
     def last
       @items.last
     end
 
-    def pretty_print q
+    def pretty_print q # :nodoc:
       q.group 2, "[list: #{@type} ", ']' do
         q.seplist @items do |item|
           q.pp item
@@ -161,14 +239,31 @@ class RDoc::Markup::Parser
       end
     end
 
+    ##
+    # Appends +items+ to the list
+
     def push *items
       @items.push(*items)
     end
   end
 
+  ##
+  # An item within a List that contains paragraphs, headings, etc.
+
   class ListItem
+
+    ##
+    # The label for the ListItem
+
     attr_accessor :label
+
+    ##
+    # Parts of the ListItem
+
     attr_reader :parts
+
+    ##
+    # Creates a new ListItem with an optional +label+ containing +parts+
 
     def initialize label = nil, *parts
       @label = label
@@ -176,12 +271,15 @@ class RDoc::Markup::Parser
       @parts.push(*parts)
     end
 
+    ##
+    # Appends +part+ to the ListItem
+
     def << part
       @parts << part
     end
 
-    def == other
-      self.class == other.class and 
+    def == other # :nodoc:
+      self.class == other.class and
         @label == other.label and
         @parts == other.parts
     end
@@ -196,15 +294,21 @@ class RDoc::Markup::Parser
       visitor.accept_list_item_end attribute_manager, self
     end
 
+    ##
+    # Is the ListItem empty?
+
     def empty?
       @parts.empty?
     end
+
+    ##
+    # Length of parts in the ListItem
 
     def length
       @parts.length
     end
 
-    def pretty_print q
+    def pretty_print q # :nodoc:
       q.group 2, '[item: ', ']' do
         if @label then
           q.text @label
@@ -217,15 +321,24 @@ class RDoc::Markup::Parser
       end
     end
 
+    ##
+    # Adds +parts+ to the ListItem
+
     def push *parts
       @parts.push(*parts)
     end
   end
 
+  ##
+  # A section of verbatim text
+
   class Verbatim < Paragraph
     def accept attribute_manager, visitor
       visitor.accept_verbatim attribute_manager, self
     end
+
+    ##
+    # Collapses 3+ newlines into two newlines
 
     def normalize
       parts = []
@@ -248,25 +361,41 @@ class RDoc::Markup::Parser
       @parts = parts
     end
 
+    ##
+    # The text of the section
+
     def text
       @parts.join
     end
   end
+
+  ##
+  # A horizontal rule with a weight
 
   class Rule < Struct.new :weight
     def accept attribute_manager, visitor
       visitor.accept_rule attribute_manager, self
     end
 
-    def pretty_print q
+    def pretty_print q # :nodoc:
       q.group 2, '[rule:', ']' do
         q.pp level
       end
     end
   end
 
+  ##
+  # Enables display of debugging information
+
   attr_accessor :debug
+
+  ##
+  # Token accessor
+
   attr_reader :tokens
+
+  ##
+  # Parsers +str+ into a Document
 
   def self.parse str
     parser = new
@@ -275,11 +404,17 @@ class RDoc::Markup::Parser
     Document.new(*parser.parse)
   end
 
+  ##
+  # Returns a token stream for +str+, for testing
+
   def self.tokenize str
     parser = new
     parser.tokenize str
     parser.tokens
   end
+
+  ##
+  # Creates a new Parser.  See also ::parse
 
   def initialize
     @tokens = []
@@ -290,6 +425,9 @@ class RDoc::Markup::Parser
     @line_pos = 0
   end
 
+  ##
+  # Builds a Heading of +level+
+
   def build_heading level
 
     heading = Heading.new level, text
@@ -297,6 +435,9 @@ class RDoc::Markup::Parser
 
     heading
   end
+
+  ##
+  # Builds a List flush to +margin+
 
   def build_list margin
     p :list_start => margin if @debug
@@ -353,6 +494,9 @@ class RDoc::Markup::Parser
     list
   end
 
+  ##
+  # Builds a ListItem that is flush to +indent+ with type +item_type+
+
   def build_list_item indent, item_type = nil
     p :list_item_start => [indent, item_type] if @debug
 
@@ -396,6 +540,9 @@ class RDoc::Markup::Parser
     list_item
   end
 
+  ##
+  # Builds a Paragraph that is flush to +margin+
+
   def build_paragraph margin
     p :paragraph_start => margin if @debug
 
@@ -428,6 +575,9 @@ class RDoc::Markup::Parser
 
     paragraph
   end
+
+  ##
+  # Builds a Verbatim that is flush to +margin+
 
   def build_verbatim margin
     p :verbatim_begin => margin if @debug
@@ -493,11 +643,17 @@ class RDoc::Markup::Parser
     verbatim
   end
 
+  ##
+  # Pulls the next token from the stream.
+
   def get
     @current_token = @tokens.shift
     p :get => @current_token if @debug
     @current_token
   end
+
+  ##
+  # Parses the tokens into a Document
 
   def parse indent = 0
     p :parse_start => indent if @debug
@@ -553,25 +709,29 @@ class RDoc::Markup::Parser
     document
   end
 
+  ##
+  # Returns the next token on the stream without modifying the stream
+
   def peek_token
     token = @tokens.first || []
     p :peek => token if @debug
     token
   end
 
+  ##
+  # Skips a token of +token_type+, optionally raising an error.
+
   def skip token_type, error = true
     type, data, = get
 
-    return unless type
+    return unless type # end of stream
 
-    if type != token_type then
-      raise ParseError, "expected #{token_type} got #{@current_token.inspect}" if error
+    return @current_token if token_type == type
 
-      unget
-      return nil
-    end
+    unget
 
-    @current_token
+    raise ParseError, "expected #{token_type} got #{@current_token.inspect}" if
+      error
   end
 
   ##
@@ -611,9 +771,15 @@ class RDoc::Markup::Parser
     text
   end
 
+  ##
+  # Calculates the column and line of the current token based on +offset+.
+
   def token_pos offset
     [offset - @line_pos, @line]
   end
+
+  ##
+  # Turns text +input+ into a stream of tokens
 
   def tokenize input
     s = StringScanner.new input
@@ -675,8 +841,12 @@ class RDoc::Markup::Parser
     self
   end
 
+  ##
+  # Returns the current token or +token+ to the token stream
+
   def unget token = @current_token
     p :unget => token if @debug
+    raise Error, 'too many #ungets' if token == @tokens.first
     @tokens.unshift token if token
   end
 

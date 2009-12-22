@@ -28,6 +28,14 @@ class TestRDocMarkupParser < MiniTest::Unit::TestCase
     assert_equal @RMP::Heading.new(3, 'heading three'), parser.build_heading(3)
   end
 
+  def test_get
+    parser = util_parser
+
+    assert_equal [:HEADER, 1, 0, 0], parser.get
+
+    assert_equal 7, parser.tokens.length
+  end
+
   def test_parse_bullet
     str = <<-STR
 * l1
@@ -847,6 +855,34 @@ the time
     assert_equal expected, @RMP.parse("  1\n   2\n\n    3").parts
   end
 
+  def test_peek_token
+    parser = util_parser
+
+    assert_equal [:HEADER, 1, 0, 0], parser.peek_token
+
+    assert_equal 8, parser.tokens.length
+  end
+
+  def test_skip
+    parser = util_parser
+
+    assert_equal [:HEADER, 1, 0, 0], parser.skip(:HEADER)
+
+    assert_equal [:TEXT, 'Heading', 2, 0], parser.get
+
+    assert_equal [:NEWLINE, "\n", 9, 0], parser.peek_token
+
+    assert_raises RDoc::Markup::Parser::ParseError do
+      parser.skip :NONE
+    end
+
+    assert_equal [:NEWLINE, "\n", 9, 0], parser.peek_token
+
+    assert_equal nil, parser.skip(:NONE, false)
+
+    assert_equal [:NEWLINE, "\n", 9, 0], parser.peek_token
+  end
+
   def test_tokenize_bullet
     str = <<-STR
 * l1
@@ -1203,6 +1239,35 @@ Example heading:
     v.normalize
 
     assert_equal ['  ', 'foo', "\n"], v.parts
+  end
+
+  def test_unget
+    parser = util_parser
+
+    parser.get
+
+    parser.unget
+
+    assert_equal [:HEADER, 1, 0, 0], parser.peek_token
+
+    assert_raises @RMP::Error do
+      parser.unget
+    end
+
+    assert_equal 8, parser.tokens.length
+  end
+
+  def util_parser
+    str = <<-STR
+= Heading
+
+Some text here
+some more text over here
+    STR
+
+    @parser = @RMP.new
+    @parser.tokenize str
+    @parser
   end
 
 end
