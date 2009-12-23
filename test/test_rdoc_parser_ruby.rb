@@ -158,6 +158,22 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     assert_equal 'hi', @options.title
   end
 
+  def test_parse_alias
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    util_parser "alias :next= :bar"
+
+    tk = @parser.get_tk
+
+    alas = @parser.parse_alias klass, RDoc::Parser::Ruby::NORMAL, tk, 'comment'
+
+    assert_equal 'bar',     alas.old_name
+    assert_equal 'next=',   alas.new_name
+    assert_equal klass,     alas.parent
+    assert_equal 'comment', alas.comment
+  end
+
   def test_parse_attr
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level

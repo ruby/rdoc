@@ -341,8 +341,17 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def get_symbol_or_name
     tk = get_tk
     case tk
-    when  TkSYMBOL
-      tk.text.sub(/^:/, '')
+    when TkASSIGN
+      raise 'no'
+    when TkSYMBOL
+      text = tk.text.sub(/^:/, '')
+
+      if TkASSIGN === peek_tk then
+        get_tk
+        text << '='
+      end
+
+      text
     when TkId, TkOp
       tk.name
     when TkSTRING
@@ -1169,9 +1178,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
           when /^attr_(reader|writer|accessor)$/ then
             parse_attr_accessor container, single, tk, comment
           when 'alias_method' then
-            if container.document_self then
-              parse_alias container, single, tk, comment
-            end
+            parse_alias container, single, tk, comment if
+              container.document_self
           else
             if container.document_self and comment =~ /\A#\#$/ then
               case comment

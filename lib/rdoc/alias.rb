@@ -51,4 +51,3 @@ class RDoc::Alias < RDoc::CodeObject
 
 end
 
-
