@@ -635,8 +635,9 @@ class RDoc::Parser::C < RDoc::Parser
   # Remove the /*'s and leading asterisks from C comments
 
   def mangle_comment(comment)
-    comment.sub!(%r{/\*+}) { " " * $&.length }
-    comment.sub!(%r{\*+/}) { " " * $&.length }
+    comment.gsub! %r{Document-method:\s+[\w:.#]+}, ''
+    comment.sub!(%r%/\*+%) { " " * $&.length }
+    comment.sub!(%r%\*+/%) { " " * $&.length }
     comment.gsub!(/^[ \t]*\*/m) { " " * $&.length }
     comment
   end

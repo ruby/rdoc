@@ -331,6 +331,41 @@ Init_Foo(void) {
     assert_equal "#define other_function rb_other_function", code
   end
 
+  def test_find_body_document_method
+    content = <<-EOF
+/*
+ * Document-method: bar
+ * Document-method: baz
+ *
+ * a comment for bar
+ */
+VALUE
+bar() {
+}
+
+void
+Init_Foo(void) {
+    VALUE foo = rb_define_class("Foo", rb_cObject);
+
+    rb_define_method(foo, "bar", bar, 0);
+    rb_define_method(foo, "baz", bar, 0);
+}
+    EOF
+
+    klass = util_get_class content, 'foo'
+    assert_equal 2, klass.method_list.length
+
+    methods = klass.method_list.sort
+
+    bar = methods.first
+    assert_equal 'Foo#bar', bar.full_name
+    assert_equal "   \n  \n   a comment for bar\n   ", bar.comment
+
+    baz = methods.last
+    assert_equal 'Foo#baz', baz.full_name
+    assert_equal "   \n  \n   a comment for bar\n   ", bar.comment
+  end
+
   def test_define_method
     content = <<-EOF
 /*Method Comment! */
@@ -384,6 +419,29 @@ Init_IO(void) {
     assert_equal 'IO#read', read_method.full_name
     assert_equal :private, read_method.visibility
     assert_equal "  Method Comment!   \n", read_method.comment
+  end
+
+  def test_mangle_comment
+    @parser = util_parser ''
+    comment = <<-COMMENT
+/*
+ * Document-method: foo
+ * Document-method: bar
+ *
+ * blah comment here
+ */
+    COMMENT
+
+    expected = <<-EXPECTED
+  
+   
+   
+  
+   blah comment here
+   
+    EXPECTED
+
+    assert_equal expected, @parser.mangle_comment(comment)
   end
 
   def util_get_class(content, name)

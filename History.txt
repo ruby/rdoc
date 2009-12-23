@@ -12,6 +12,7 @@
   * Uses pager over less and more for Debian.  Ruby Bug #1171.
   * When rdoc is in debug mode, ^C now prints a backtrace
   * The ri data generator now supports ^T
+  * C parser now handles Document-method better.  Bug #27329.
 
 * N Bug Fixes
   * The :attr: directives now use the name given to create an attribute.  See
