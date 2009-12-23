@@ -20,6 +20,9 @@
   * Clean up circular require warnings on 1.9.
   * Fix crossrefs on paths with '-'.  Ruby Bug #883.
   * Fix ruby parser for alias with = in the name.  Bug #27522.
+  * Images are no longer executable.  Bug #27156.
+  * --op is no longer overridden by --ri.  Bug #27054.
+  * :method: now works when at the end of a class.  Bug #26910.
 
 === 2.4.3 / 2009-04-01
 

@@ -350,6 +350,26 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     assert_equal comment, foo.comment
   end
 
+  def test_parse_class_ghost_method
+    util_parser <<-CLASS
+class Foo
+  ##
+  # :method: blah
+  # my method
+end
+    CLASS
+
+    tk = @parser.get_tk
+
+    @parser.parse_class @top_level, RDoc::Parser::Ruby::NORMAL, tk, ''
+
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+
+    blah = foo.method_list.first
+    assert_equal 'Foo#blah', blah.full_name
+  end
+
   def test_parse_class_nested_superclass
     foo = RDoc::NormalModule.new 'Foo'
     foo.parent = @top_level

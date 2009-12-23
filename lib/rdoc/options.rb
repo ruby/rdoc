@@ -125,7 +125,7 @@ class RDoc::Options
 
   def initialize # :nodoc:
     require 'rdoc/rdoc'
-    @op_dir = 'doc'
+    @op_dir = nil
     @show_all = false
     @main_page = nil
     @merge = false
@@ -390,7 +390,7 @@ Usage: #{opt.program_name} [options] [names...]
              "subsequent --op parameter, so no special",
              "privileges are needed.") do |value|
         @generator_name = "ri"
-        @op_dir = RDoc::RI::Paths::HOMEDIR
+        @op_dir ||= RDoc::RI::Paths::HOMEDIR
         setup_generator
       end
 
@@ -453,6 +453,7 @@ Usage: #{opt.program_name} [options] [names...]
 
     opts.parse! argv
 
+    @op_dir ||= 'doc'
     @files = argv.dup
 
     @rdoc_include << "." if @rdoc_include.empty?

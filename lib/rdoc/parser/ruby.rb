@@ -1204,6 +1204,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
         if nest == 0 then
           read_documentation_modifiers container, RDoc::CLASS_MODIFIERS
           container.ongoing_visibility = save_visibility
+
+          parse_comment container, tk, comment unless comment.empty?
+
           return
         end
 
