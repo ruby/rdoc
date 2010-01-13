@@ -26,6 +26,19 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
 
     @width = 78
     @prefix = ''
+
+    init_tags
+  end
+
+  ##
+  # Maps attributes to ANSI sequences
+
+  def init_tags
+    @attr_tags = [
+      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:BOLD), "\e[1m", "\e[m"),
+      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:TT),   "\e[7m", "\e[m"),
+      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:EM),   "\e[3m", "\e[m"),
+    ]
   end
 
   def accept_blank_line am, blank_line
@@ -35,7 +48,7 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
   def accept_heading am, heading
     use_prefix or @res << ' ' * @indent
     @res << HEADINGS[heading.level][0]
-    @res << heading.text
+    @res << attributes(heading.text)
     @res << HEADINGS[heading.level][1]
     @res << "\n"
   end
@@ -51,7 +64,7 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
             when :BULLET then
               1
             when :NOTE, :LABEL then
-              list_item.label.length + 1
+              attributes(list_item.label).length + 1
             else
               bullet = @list_index.last.to_s
               @list_index[-1] = @list_index.last.succ
@@ -66,14 +79,14 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
              when :BULLET then
                '*'
              when :NOTE, :LABEL then
-               list_item.label + ':'
+               attributes(list_item.label) + ':'
              else
                @list_index.last.to_s + '.'
              end
 
-    width = bullet.length + 1
+    @prefix = (' ' * @indent) + bullet.ljust(bullet.length + 1)
 
-    @prefix = (' ' * indent) + bullet.ljust(width)
+    width = bullet.gsub(/\e\[[\d;]*m/, '').length + 1
 
     @indent += width
   end
@@ -103,7 +116,7 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
   end
 
   def accept_paragraph am, paragraph
-    wrap paragraph.text
+    wrap attributes(paragraph.text)
   end
 
   def accept_rule am, rule
@@ -139,6 +152,11 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
     @res << "\n"
   end
 
+  def attributes text
+    flow = @am.flow text
+    convert_flow flow
+  end
+
   def end_accepting
     @res.join
   end
@@ -161,7 +179,7 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
     prefix
   end
 
-  def wrap(text)
+  def wrap text
     return unless text && !text.empty?
 
     text_len = @width - @indent

@@ -18,22 +18,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   attr_reader :in_list_entry # :nodoc:
   attr_reader :list # :nodoc:
 
-  def initialize
-    super
-
-    @th = nil
-    @in_list_entry = nil
-    @list = nil
-
-    # external hyperlinks
-    @markup.add_special(/((link:|https?:|mailto:|ftp:|www\.)\S+\w)/, :HYPERLINK)
-
-    # and links of the form  <text>[<url>]
-    @markup.add_special(/(((\{.*?\})|\b\S+?)\[\S+?\.\S+?\])/, :TIDYLINK)
-
-    init_tags
-  end
-
   ##
   # Converts a target url to one that is relative to a given path
 
@@ -56,6 +40,33 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     from.concat to
     from << to_file
     File.join(*from)
+  end
+
+  def initialize
+    super
+
+    @th = nil
+    @in_list_entry = nil
+    @list = nil
+
+    # external hyperlinks
+    @markup.add_special(/((link:|https?:|mailto:|ftp:|www\.)\S+\w)/, :HYPERLINK)
+
+    # and links of the form  <text>[<url>]
+    @markup.add_special(/(((\{.*?\})|\b\S+?)\[\S+?\.\S+?\])/, :TIDYLINK)
+
+    init_tags
+  end
+
+  ##
+  # Maps attributes to HTML tags
+
+  def init_tags
+    @attr_tags = [
+      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:BOLD), "<b>", "</b>"),
+      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:TT),   "<tt>", "</tt>"),
+      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:EM),   "<em>", "</em>"),
+    ]
   end
 
   ##
@@ -113,15 +124,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     label = $1
     url   = $2
     gen_url url, label
-  end
-
-  ##
-  # Given an HTML tag, decorate it with class information and the like if
-  # required. This is a no-op in the base class, but is overridden in HTML
-  # output classes that implement style sheets.
-
-  def annotate(tag)
-    tag
   end
 
   ##

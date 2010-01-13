@@ -14,18 +14,26 @@ class RDoc::Markup::Formatter
 
   def initialize
     @markup = RDoc::Markup.new
+    @am = RDoc::Markup::AttributeManager.new
 
     @in_tt = 0
     @tt_bit = RDoc::Markup::Attribute.bitmap_for :TT
   end
 
   ##
-  # Add a new set of HTML tags for an attribute. We allow separate start and
-  # end tags for flexibility
+  # Add a new set of tags for an attribute. We allow separate start and end
+  # tags for flexibility
 
   def add_tag(name, start, stop)
     attr = RDoc::Markup::Attribute.bitmap_for(name), start, stop
     @attr_tags << InlineTag.new(attr)
+  end
+
+  ##
+  # Allows +tag+ to be decorated with additional information.
+
+  def annotate(tag)
+    tag
   end
 
   ##
@@ -79,21 +87,17 @@ class RDoc::Markup::Formatter
   end
 
   ##
+  # Converts a string to be fancier if desired
+
+  def convert_string string
+    string
+  end
+
+  ##
   # Are we currently inside tt tags?
 
   def in_tt?
     @in_tt > 0
-  end
-
-  ##
-  # Set up the standard mapping of attributes to HTML tags
-
-  def init_tags
-    @attr_tags = [
-      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:BOLD), "<b>", "</b>"),
-      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:TT),   "<tt>", "</tt>"),
-      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:EM),   "<em>", "</em>"),
-    ]
   end
 
   def on_tags res, item

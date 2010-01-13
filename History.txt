@@ -1,10 +1,11 @@
 === 2.? / 2009-?
 
 * N Major Enhancements
-  * Constant display removed from ri output.  There's no easy way to make them
-    presentable.  Use irb or ruby -e instead.  Ruby Bug #549.
+  * ri no longer displays the value of a constant.  There's no easy way to
+    make them presentable.  Use irb or ruby -e instead.  Ruby Bug #549.
   * New recursive-descent parser for RDoc::Markup.  See RDoc::Markup::Parser
   * New ri data format using Marshal, prebuilt caches, improved merging
+  * No support for old ri data format, too hard to maintain
 
 * N Minor Enhancements
   * API enhancements for writing parsers like the Ruby parser, see
@@ -13,6 +14,7 @@
   * When rdoc is in debug mode, ^C now prints a backtrace
   * The ri data generator now supports ^T
   * C parser now handles Document-method better.  Bug #27329.
+  * RDoc::Markup::AttributeManager no longer uses global state.
 
 * N Bug Fixes
   * The :attr: directives now use the name given to create an attribute.  See

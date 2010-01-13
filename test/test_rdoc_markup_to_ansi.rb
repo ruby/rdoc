@@ -229,6 +229,47 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
     assert_equal "\e[0m   \e[1;32mHello\e[m\n", @to.end_accepting
   end
 
+  def test_accept_heading_b
+    @to.start_accepting
+    @to.indent = 3
+    @to.accept_heading @am, @RMP::Heading.new(1, '*Hello*')
+
+    assert_equal "\e[0m   \e[1;32m\e[1mHello\e[m\e[m\n", @to.end_accepting
+  end
+
+  def test_accept_list_item_start_note
+    list = @RMP::List.new(:NOTE,
+             @RMP::ListItem.new('<tt>teletype</tt>',
+                                @RMP::Paragraph.new('teletype description')))
+
+    @to.start_accepting
+
+    list.accept @am, @to
+
+    expected = "\e[0m\e[7mteletype\e[m: teletype description\n"
+
+    assert_equal expected, @to.end_accepting
+  end
+
+  def test_accept_paragraph_b
+    @to.start_accepting
+    @to.accept_paragraph @am, @RMP::Paragraph.new('reg <b>bold words</b> reg')
+
+    expected = "\e[0mreg \e[1mbold words\e[m reg\n"
+
+    assert_equal expected, @to.end_accepting
+  end
+
+  def test_accept_paragraph_i
+    @to.start_accepting
+    @to.accept_paragraph(@am,
+                         @RMP::Paragraph.new('reg <em>italic words</em> reg'))
+
+    expected = "\e[0mreg \e[3mitalic words\e[m reg\n"
+
+    assert_equal expected, @to.end_accepting
+  end
+
   def test_accept_paragraph_indent
     @to.start_accepting
     @to.indent = 3
@@ -239,6 +280,33 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
    words words words words words words words words words words words words
    words words words words words words 
     EXPECTED
+
+    assert_equal expected, @to.end_accepting
+  end
+
+  def test_accept_paragraph_plus
+    @to.start_accepting
+    @to.accept_paragraph @am, @RMP::Paragraph.new('regular +teletype+ regular')
+
+    expected = "\e[0mregular \e[7mteletype\e[m regular\n"
+
+    assert_equal expected, @to.end_accepting
+  end
+
+  def test_accept_paragraph_star
+    @to.start_accepting
+    @to.accept_paragraph @am, @RMP::Paragraph.new('regular *bold* regular')
+
+    expected = "\e[0mregular \e[1mbold\e[m regular\n"
+
+    assert_equal expected, @to.end_accepting
+  end
+
+  def test_accept_paragraph_underscore
+    @to.start_accepting
+    @to.accept_paragraph @am, @RMP::Paragraph.new('regular _italic_ regular')
+
+    expected = "\e[0mregular \e[3mitalic\e[m regular\n"
 
     assert_equal expected, @to.end_accepting
   end
