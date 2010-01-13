@@ -96,6 +96,19 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     assert_equal %w[Foo   Foo::Bar], @driver.complete('F')
   end
 
+  def test_display
+    rmp = RDoc::Markup::Parser
+
+    doc = rmp::Document.new(
+            rmp::Paragraph.new('hi'))
+
+    out, err = capture_io do
+      @driver.display doc
+    end
+
+    assert_equal "\e[0mhi\n", out
+  end
+
   def test_display_name_not_found_class
     util_store
 

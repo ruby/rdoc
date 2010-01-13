@@ -407,8 +407,7 @@ Options may also be set in the 'RI' environment variable.
   # Converts +document+ to text and writes it to the pager
 
   def display document
-    text = document.accept(RDoc::Markup::AttributeManager.new,
-                           RDoc::Markup::ToAnsi.new)
+    text = document.accept RDoc::Markup::ToAnsi.new
 
     page do |io|
       io.write text
