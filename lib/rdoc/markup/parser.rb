@@ -77,7 +77,6 @@ class RDoc::Markup::Parser
       self.class == other.class and @parts == other.parts
     end
 
-
     def accept(attribute_manager, visitor)
       visitor.start_accepting
 
@@ -86,6 +85,10 @@ class RDoc::Markup::Parser
       end
 
       visitor.end_accepting
+    end
+
+    def empty?
+      @parts.empty?
     end
 
     def pretty_print q # :nodoc:
