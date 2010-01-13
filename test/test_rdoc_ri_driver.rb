@@ -170,11 +170,43 @@ Foo::Bar#blah
     assert_equal :class,    @driver.method_type('::')
   end
 
+  def test_list_known_classes
+    util_store
+
+    out, err = capture_io do
+      @driver.list_known_classes 
+    end
+
+    assert_equal "Foo\nFoo::Bar\nFoo::Baz\n", out
+  end
+
   def test_list_methods_matching
     util_store
 
     assert_equal %w[Foo::Bar#blah Foo::Bar::new],
                  @driver.list_methods_matching('Foo::Bar.')
+  end
+
+  def test_page
+    @driver.use_stdout = false
+
+    @driver.page do |io|
+      skip "couldn't find a standard pager" if io == $stdout
+
+      assert @driver.paging?
+    end
+
+    refute @driver.paging?
+  end
+
+  def test_page_stdout
+    @driver.use_stdout = true
+
+    @driver.page do |io|
+      assert_equal $stdout, io
+    end
+
+    refute @driver.paging?
   end
 
   def test_parse_name_single_class
@@ -239,6 +271,18 @@ Foo::Bar#blah
     assert_equal 'Foo::Bar', klass, 'Foo::Bar#baz class'
     assert_equal '#',        type,  'Foo::Bar#baz type'
     assert_equal 'baz',      meth,  'Foo::Bar#baz method'
+  end
+
+  def test_setup_pager
+    @driver.use_stdout = false
+
+    pager = @driver.setup_pager
+
+    skip "couldn't find a standard pager" unless pager
+
+    assert @driver.paging?
+  ensure
+    pager.close if pager
   end
 
   def util_ancestors_store

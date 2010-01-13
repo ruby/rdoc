@@ -58,6 +58,11 @@ class RDoc::RI::Driver
   attr_accessor :stores
 
   ##
+  # Controls the user of the pager vs $stdout
+
+  attr_accessor :use_stdout
+
+  ##
   # Default options for ri
 
   def self.default_options
@@ -275,6 +280,7 @@ Options may also be set in the 'RI' environment variable.
   # Creates a new driver using +initial_options+ from ::process_args
 
   def initialize initial_options = {}
+    @paging = false
     @classes = nil
 
     options = self.class.default_options.update(initial_options)
@@ -617,6 +623,28 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
+  # Lists classes known to ri
+
+  def list_known_classes
+    classes = []
+
+    stores.each do |store|
+      classes << store.modules
+    end
+
+    classes = classes.flatten.uniq.sort
+
+    page do |io|
+      if paging? or io.tty? then
+        io.puts "Classes and Modules known to ri:"
+        io.puts
+      end
+
+      io.puts classes.join("\n")
+    end
+  end
+
+  ##
   # Returns an Array of methods matching +name+
 
   def list_methods_matching name
@@ -700,6 +728,15 @@ Options may also be set in the 'RI' environment variable.
       yield $stdout
     end
   rescue Errno::EPIPE
+  ensure
+    @paging = false
+  end
+
+  ##
+  # Are we using a pager?
+
+  def paging?
+    @paging
   end
 
   ##
@@ -741,7 +778,7 @@ Options may also be set in the 'RI' environment variable.
     elsif @interactive then
       interactive
     elsif @names.empty? then
-      @display.list_known_classes classes.keys.sort
+      list_known_classes
     else
       @names.each do |name|
         name = expand_name name
@@ -758,15 +795,19 @@ Options may also be set in the 'RI' environment variable.
   # environment variable, followed by pager, less then more.
 
   def setup_pager
-    unless @use_stdout then
-      for pager in [ENV['PAGER'], 'pager', 'less', 'more'].compact.uniq
-        return IO.popen(pager, "w") rescue nil
-      end
+    return if @use_stdout
 
-      @use_stdout = true
+    [ENV['PAGER'], 'pager', 'less', 'more'].compact.uniq.each do |pager|
+      io = IO.popen(pager, "w") rescue next
 
-      nil
+      @paging = true
+
+      return io
     end
+
+    @use_stdout = true
+
+    nil
   end
 
 end
