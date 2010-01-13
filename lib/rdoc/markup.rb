@@ -65,13 +65,15 @@ require 'rdoc'
 
 class RDoc::Markup
 
+  attr_reader :attribute_manager
+
   ##
   # Take a block of text and use various heuristics to determine it's
   # structure (paragraphs, lists, and so on).  Invoke an event handler as we
   # identify significant chunks.
 
   def initialize
-    @am = RDoc::Markup::AttributeManager.new
+    @attribute_manager = RDoc::Markup::AttributeManager.new
     @output = nil
   end
 
@@ -81,14 +83,14 @@ class RDoc::Markup
   # formatters can recognize by their +name+.
 
   def add_word_pair(start, stop, name)
-    @am.add_word_pair(start, stop, name)
+    @attribute_manager.add_word_pair(start, stop, name)
   end
 
   ##
   # Add to the sequences recognized as general markup.
 
   def add_html(tag, name)
-    @am.add_html(tag, name)
+    @attribute_manager.add_html(tag, name)
   end
 
   ##
@@ -101,7 +103,7 @@ class RDoc::Markup
   # accept_special method.
 
   def add_special(pattern, name)
-    @am.add_special(pattern, name)
+    @attribute_manager.add_special(pattern, name)
   end
 
   ##
@@ -113,7 +115,7 @@ class RDoc::Markup
   def convert(str, op)
     document = RDoc::Markup::Parser.parse str
 
-    document.accept @am, op
+    document.accept op
   end
 
 end

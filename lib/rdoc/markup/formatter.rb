@@ -14,7 +14,7 @@ class RDoc::Markup::Formatter
 
   def initialize
     @markup = RDoc::Markup.new
-    @am = RDoc::Markup::AttributeManager.new
+    @am = @markup.attribute_manager
 
     @in_tt = 0
     @tt_bit = RDoc::Markup::Attribute.bitmap_for :TT

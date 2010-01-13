@@ -238,7 +238,7 @@ two
     paragraph = util_paragraph text
 
     @to.start_accepting
-    @to.accept_paragraph @am, paragraph
+    @to.accept_paragraph paragraph
     @to.end_accepting
   end
 

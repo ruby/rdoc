@@ -41,11 +41,11 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
     ]
   end
 
-  def accept_blank_line am, blank_line
+  def accept_blank_line blank_line
     @res << "\n"
   end
 
-  def accept_heading am, heading
+  def accept_heading heading
     use_prefix or @res << ' ' * @indent
     @res << HEADINGS[heading.level][0]
     @res << attributes(heading.text)
@@ -53,13 +53,13 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
     @res << "\n"
   end
 
-  def accept_list_end am, list
+  def accept_list_end list
     @list_index.pop
     @list_type.pop
     @list_width.pop
   end
 
-  def accept_list_item_end am, list_item
+  def accept_list_item_end list_item
     width = case @list_type.last
             when :BULLET then
               1
@@ -74,7 +74,7 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
     @indent -= width + 1
   end
 
-  def accept_list_item_start am, list_item
+  def accept_list_item_start list_item
     bullet = case @list_type.last
              when :BULLET then
                '*'
@@ -91,7 +91,7 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
     @indent += width
   end
 
-  def accept_list_start am, list
+  def accept_list_start list
     case list.type
     when :BULLET then
       @list_index << nil
@@ -115,11 +115,11 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
     @list_type << list.type
   end
 
-  def accept_paragraph am, paragraph
+  def accept_paragraph paragraph
     wrap attributes(paragraph.text)
   end
 
-  def accept_rule am, rule
+  def accept_rule rule
     use_prefix or @res << ' ' * @indent
     @res << '-' * (@width - @indent)
   end
@@ -130,7 +130,7 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
   #    foo
   #   bar
 
-  def accept_verbatim am, verbatim
+  def accept_verbatim verbatim
     indent = ' ' * @indent
 
     bol = true

@@ -171,31 +171,31 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res.join
   end
 
-  def accept_paragraph(am, paragraph)
+  def accept_paragraph(paragraph)
     @res << annotate("<p>") + "\n"
-    @res << wrap(convert_flow(am.flow(paragraph.text)))
+    @res << wrap(convert_flow(@am.flow(paragraph.text)))
     @res << annotate("</p>") + "\n"
   end
 
-  def accept_verbatim(am, verbatim)
+  def accept_verbatim(verbatim)
     @res << annotate("<pre>") << "\n"
     @res << CGI.escapeHTML(verbatim.text)
     @res << annotate("</pre>") << "\n"
   end
 
-  def accept_rule(am, rule)
+  def accept_rule(rule)
     size = rule.weight
     size = 10 if size > 10
     @res << "<hr style=\"height: #{size}px\"></hr>"
   end
 
-  def accept_list_start(am, list)
+  def accept_list_start(list)
     @list << list.type
     @res << html_list_name(list.type, true) << "\n"
     @in_list_entry.push false
   end
 
-  def accept_list_end(am, list)
+  def accept_list_end(list)
     @list.pop
     if tag = @in_list_entry.pop
       @res << annotate(tag) << "\n"
@@ -203,24 +203,24 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << html_list_name(list.type, false) << "\n"
   end
 
-  def accept_list_item_start(am, list_item)
+  def accept_list_item_start(list_item)
     if tag = @in_list_entry.last
       @res << annotate(tag) << "\n"
     end
 
-    @res << list_item_start(am, list_item, @list.last)
+    @res << list_item_start(list_item, @list.last)
   end
 
-  def accept_list_item_end(am, list_item)
+  def accept_list_item_end(list_item)
     @in_list_entry[-1] = list_end_for(@list.last)
   end
 
-  def accept_blank_line(am, blank_line)
+  def accept_blank_line(blank_line)
     # @res << annotate("<p />") << "\n"
   end
 
-  def accept_heading(am, heading)
-    @res << convert_heading(heading.level, am.flow(heading.text))
+  def accept_heading(heading)
+    @res << convert_heading(heading.level, @am.flow(heading.text))
   end
 
   private
@@ -294,21 +294,21 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   ##
   # Starts a list item
 
-  def list_item_start(am, list_item, list_type)
+  def list_item_start(list_item, list_type)
     case list_type
     when :BULLET, :LALPHA, :NUMBER, :UALPHA then
       annotate("<li>")
 
     when :LABEL then
       annotate("<dt>") +
-        convert_flow(am.flow(list_item.label)) +
+        convert_flow(@am.flow(list_item.label)) +
         annotate("</dt>") +
         annotate("<dd>")
 
     when :NOTE then
       annotate("<tr>") +
         annotate("<td valign=\"top\">") +
-        convert_flow(am.flow(list_item.label)) +
+        convert_flow(@am.flow(list_item.label)) +
         annotate("</td>") +
         annotate("<td>")
     else

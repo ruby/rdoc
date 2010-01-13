@@ -18,15 +18,15 @@ class RDoc::Markup::ToTest < RDoc::Markup::Formatter
     @res
   end
 
-  def accept_paragraph(am, paragraph)
+  def accept_paragraph(paragraph)
     @res << paragraph.text
   end
 
-  def accept_verbatim(am, verbatim)
+  def accept_verbatim(verbatim)
     @res << verbatim.text
   end
 
-  def accept_list_start(am, list)
+  def accept_list_start(list)
     @list << case list.type
              when :BULLET then
                '*'
@@ -37,26 +37,26 @@ class RDoc::Markup::ToTest < RDoc::Markup::Formatter
              end
   end
 
-  def accept_list_end(am, list)
+  def accept_list_end(list)
     @list.pop
   end
 
-  def accept_list_item_start(am, list_item)
+  def accept_list_item_start(list_item)
     @res << "#{' ' * (@list.size - 1)}#{@list.last}: "
   end
 
-  def accept_list_item_end(am, list_item)
+  def accept_list_item_end(list_item)
   end
 
-  def accept_blank_line(am, blank_line)
+  def accept_blank_line(blank_line)
     @res << "\n"
   end
 
-  def accept_heading(am, heading)
+  def accept_heading(heading)
     @res << "#{'=' * heading.level} #{heading.text}"
   end
 
-  def accept_rule(am, rule)
+  def accept_rule(rule)
     @res << '-' * rule.weight
   end
 

@@ -195,28 +195,28 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
 
   def test_accept_heading_1
     @to.start_accepting
-    @to.accept_heading @am, @RMP::Heading.new(1, 'Hello')
+    @to.accept_heading @RMP::Heading.new(1, 'Hello')
 
     assert_equal "\e[0m\e[1;32mHello\e[m\n", @to.end_accepting
   end
 
   def test_accept_heading_2
     @to.start_accepting
-    @to.accept_heading @am, @RMP::Heading.new(2, 'Hello')
+    @to.accept_heading @RMP::Heading.new(2, 'Hello')
 
     assert_equal "\e[0m\e[4;32mHello\e[m\n", @to.end_accepting
   end
 
   def test_accept_heading_3
     @to.start_accepting
-    @to.accept_heading @am, @RMP::Heading.new(3, 'Hello')
+    @to.accept_heading @RMP::Heading.new(3, 'Hello')
 
     assert_equal "\e[0m\e[32mHello\e[m\n", @to.end_accepting
   end
 
   def test_accept_heading_4
     @to.start_accepting
-    @to.accept_heading @am, @RMP::Heading.new(4, 'Hello')
+    @to.accept_heading @RMP::Heading.new(4, 'Hello')
 
     assert_equal "\e[0mHello\n", @to.end_accepting
   end
@@ -224,7 +224,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
   def test_accept_heading_indent
     @to.start_accepting
     @to.indent = 3
-    @to.accept_heading @am, @RMP::Heading.new(1, 'Hello')
+    @to.accept_heading @RMP::Heading.new(1, 'Hello')
 
     assert_equal "\e[0m   \e[1;32mHello\e[m\n", @to.end_accepting
   end
@@ -232,7 +232,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
   def test_accept_heading_b
     @to.start_accepting
     @to.indent = 3
-    @to.accept_heading @am, @RMP::Heading.new(1, '*Hello*')
+    @to.accept_heading @RMP::Heading.new(1, '*Hello*')
 
     assert_equal "\e[0m   \e[1;32m\e[1mHello\e[m\e[m\n", @to.end_accepting
   end
@@ -244,7 +244,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
 
     @to.start_accepting
 
-    list.accept @am, @to
+    list.accept @to
 
     expected = "\e[0m\e[7mteletype\e[m: teletype description\n"
 
@@ -253,7 +253,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
 
   def test_accept_paragraph_b
     @to.start_accepting
-    @to.accept_paragraph @am, @RMP::Paragraph.new('reg <b>bold words</b> reg')
+    @to.accept_paragraph @RMP::Paragraph.new('reg <b>bold words</b> reg')
 
     expected = "\e[0mreg \e[1mbold words\e[m reg\n"
 
@@ -262,8 +262,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
 
   def test_accept_paragraph_i
     @to.start_accepting
-    @to.accept_paragraph(@am,
-                         @RMP::Paragraph.new('reg <em>italic words</em> reg'))
+    @to.accept_paragraph @RMP::Paragraph.new('reg <em>italic words</em> reg')
 
     expected = "\e[0mreg \e[3mitalic words\e[m reg\n"
 
@@ -273,7 +272,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
   def test_accept_paragraph_indent
     @to.start_accepting
     @to.indent = 3
-    @to.accept_paragraph @am, @RMP::Paragraph.new('words ' * 30)
+    @to.accept_paragraph @RMP::Paragraph.new('words ' * 30)
 
     expected = <<-EXPECTED
 \e[0m   words words words words words words words words words words words words
@@ -286,7 +285,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
 
   def test_accept_paragraph_plus
     @to.start_accepting
-    @to.accept_paragraph @am, @RMP::Paragraph.new('regular +teletype+ regular')
+    @to.accept_paragraph @RMP::Paragraph.new('regular +teletype+ regular')
 
     expected = "\e[0mregular \e[7mteletype\e[m regular\n"
 
@@ -295,7 +294,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
 
   def test_accept_paragraph_star
     @to.start_accepting
-    @to.accept_paragraph @am, @RMP::Paragraph.new('regular *bold* regular')
+    @to.accept_paragraph @RMP::Paragraph.new('regular *bold* regular')
 
     expected = "\e[0mregular \e[1mbold\e[m regular\n"
 
@@ -304,7 +303,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
 
   def test_accept_paragraph_underscore
     @to.start_accepting
-    @to.accept_paragraph @am, @RMP::Paragraph.new('regular _italic_ regular')
+    @to.accept_paragraph @RMP::Paragraph.new('regular _italic_ regular')
 
     expected = "\e[0mregular \e[3mitalic\e[m regular\n"
 
@@ -313,7 +312,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
 
   def test_accept_paragraph_wrap
     @to.start_accepting
-    @to.accept_paragraph @am, @RMP::Paragraph.new('words ' * 30)
+    @to.accept_paragraph @RMP::Paragraph.new('words ' * 30)
 
     expected = <<-EXPECTED
 \e[0mwords words words words words words words words words words words words words
@@ -328,7 +327,7 @@ words words words words
     @to.start_accepting
     @to.indent = 3
 
-    @to.accept_rule @am, @RMP::Rule.new(1)
+    @to.accept_rule @RMP::Rule.new(1)
 
     assert_equal "\e[0m   " + '-' * 75, @to.end_accepting
   end
@@ -338,8 +337,8 @@ words words words words
 
     @to.indent = 3
 
-    @to.accept_verbatim @am, @RMP::Verbatim.new('    ', 'hi', "\n",
-                                                '    ', 'world', "\n")
+    @to.accept_verbatim @RMP::Verbatim.new('    ', 'hi', "\n",
+                                           '    ', 'world', "\n")
 
     assert_equal "\e[0m     hi\n     world\n\n", @to.end_accepting
   end
@@ -347,8 +346,8 @@ words words words words
   def test_accept_verbatim_big_indent
     @to.start_accepting
 
-    @to.accept_verbatim @am, @RMP::Verbatim.new('    ', 'hi', "\n",
-                                                '    ', 'world', "\n")
+    @to.accept_verbatim @RMP::Verbatim.new('    ', 'hi', "\n",
+                                           '    ', 'world', "\n")
 
     assert_equal "\e[0m  hi\n  world\n\n", @to.end_accepting
   end
@@ -364,7 +363,7 @@ words words words words
               @RMP::ListItem.new(nil,
                 @RMP::Paragraph.new('l2'))))
 
-    output = doc.accept @am, @to
+    output = doc.accept @to
 
     expected = <<-EXPECTED
 \e[0m* l1

@@ -46,8 +46,8 @@ class RDoc::Markup::Parser
       self.class == other.class
     end
 
-    def accept attribute_manager, visitor
-      visitor.accept_blank_line attribute_manager, self
+    def accept visitor
+      visitor.accept_blank_line self
     end
 
     def pretty_print q # :nodoc:
@@ -68,7 +68,7 @@ class RDoc::Markup::Parser
     ##
     # Creates a new Document with +parts+
 
-    def initialize(*parts)
+    def initialize *parts
       @parts = []
       @parts.push(*parts)
     end
@@ -77,11 +77,11 @@ class RDoc::Markup::Parser
       self.class == other.class and @parts == other.parts
     end
 
-    def accept(attribute_manager, visitor)
+    def accept visitor
       visitor.start_accepting
 
       @parts.each do |item|
-        item.accept attribute_manager, visitor
+        item.accept visitor
       end
 
       visitor.end_accepting
@@ -104,8 +104,8 @@ class RDoc::Markup::Parser
   # A heading with a level (1-6) and text
 
   class Heading < Struct.new :level, :text
-    def accept attribute_manager, visitor
-      visitor.accept_heading attribute_manager, self
+    def accept visitor
+      visitor.accept_heading self
     end
 
     def pretty_print q # :nodoc:
@@ -144,8 +144,8 @@ class RDoc::Markup::Parser
       self.class == other.class and text == other.text
     end
 
-    def accept attribute_manager, visitor
-      visitor.accept_paragraph attribute_manager, self
+    def accept visitor
+      visitor.accept_paragraph self
     end
 
     ##
@@ -210,14 +210,14 @@ class RDoc::Markup::Parser
         @items == other.items
     end
 
-    def accept attribute_manager, visitor
-      visitor.accept_list_start attribute_manager, self
+    def accept visitor
+      visitor.accept_list_start self
 
       @items.each do |item|
-        item.accept attribute_manager, visitor
+        item.accept visitor
       end
 
-      visitor.accept_list_end attribute_manager, self
+      visitor.accept_list_end self
     end
 
     ##
@@ -287,14 +287,14 @@ class RDoc::Markup::Parser
         @parts == other.parts
     end
 
-    def accept attribute_manager, visitor
-      visitor.accept_list_item_start attribute_manager, self
+    def accept visitor
+      visitor.accept_list_item_start self
 
       @parts.each do |part|
-        part.accept attribute_manager, visitor
+        part.accept visitor
       end
 
-      visitor.accept_list_item_end attribute_manager, self
+      visitor.accept_list_item_end self
     end
 
     ##
@@ -336,8 +336,8 @@ class RDoc::Markup::Parser
   # A section of verbatim text
 
   class Verbatim < Paragraph
-    def accept attribute_manager, visitor
-      visitor.accept_verbatim attribute_manager, self
+    def accept visitor
+      visitor.accept_verbatim self
     end
 
     ##
@@ -376,8 +376,8 @@ class RDoc::Markup::Parser
   # A horizontal rule with a weight
 
   class Rule < Struct.new :weight
-    def accept attribute_manager, visitor
-      visitor.accept_rule attribute_manager, self
+    def accept visitor
+      visitor.accept_rule self
     end
 
     def pretty_print q # :nodoc:
