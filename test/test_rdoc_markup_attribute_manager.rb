@@ -8,9 +8,6 @@ require "rdoc/markup/to_html_crossref"
 class TestRDocMarkupAttributeManager < MiniTest::Unit::TestCase
 
   def setup
-    @orig_special = RDoc::Markup::AttributeManager::SPECIAL
-    RDoc::Markup::AttributeManager::SPECIAL.replace Hash.new
-
     @am = RDoc::Markup::AttributeManager.new
 
     @bold_on  = @am.changed_attribute_by_name([], [:BOLD])
@@ -34,10 +31,6 @@ class TestRDocMarkupAttributeManager < MiniTest::Unit::TestCase
     @wombat_off   = @am.changed_attribute_by_name([:WOMBAT], [])
   end
 
-  def teardown
-    RDoc::Markup::AttributeManager::SPECIAL.replace @orig_special
-  end
-
   def crossref(text)
     crossref_bitmap = RDoc::Markup::Attribute.bitmap_for(:_SPECIAL_) |
                       RDoc::Markup::Attribute.bitmap_for(:CROSSREF)
@@ -57,9 +50,9 @@ class TestRDocMarkupAttributeManager < MiniTest::Unit::TestCase
   def test_add_word_pair
     @am.add_word_pair '%', '&', 'percent and'
 
-    assert RDoc::Markup::AttributeManager::WORD_PAIR_MAP.include?(/(%)(\S+)(&)/)
-    assert RDoc::Markup::AttributeManager::PROTECTABLE.include?('%')
-    assert !RDoc::Markup::AttributeManager::PROTECTABLE.include?('&')
+    assert @am.word_pair_map.include?(/(%)(\S+)(&)/)
+    assert @am.protectable.include?('%')
+    assert !@am.protectable.include?('&')
   end
 
   def test_add_word_pair_angle
@@ -73,8 +66,8 @@ class TestRDocMarkupAttributeManager < MiniTest::Unit::TestCase
   def test_add_word_pair_matching
     @am.add_word_pair '^', '^', 'caret'
 
-    assert RDoc::Markup::AttributeManager::MATCHING_WORD_PAIRS.include?('^')
-    assert RDoc::Markup::AttributeManager::PROTECTABLE.include?('^')
+    assert @am.matching_word_pairs.include?('^')
+    assert @am.protectable.include?('^')
   end
 
   def test_basic
