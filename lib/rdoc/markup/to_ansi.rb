@@ -1,12 +1,15 @@
 require 'rdoc/markup/formatter'
 require 'rdoc/markup/inline'
 
+##
+# Outputs RDoc markup with vibrant ANSI color!
+
 class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
 
   HEADINGS = {
-    1 => ["\033[1;32m", "\033[m"],
-    2 => ["\033[4;32m", "\033[m"],
-    3 => ["\033[32m",   "\033[m"],
+    1 => ["\e[1;32m", "\e[m"],
+    2 => ["\e[4;32m", "\e[m"],
+    3 => ["\e[32m",   "\e[m"],
   }
 
   HEADINGS.default = []
@@ -32,7 +35,7 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
   def accept_heading am, heading
     use_prefix or @res << ' ' * @indent
     @res << HEADINGS[heading.level][0]
-    @res << heading.text 
+    @res << heading.text
     @res << HEADINGS[heading.level][1]
     @res << "\n"
   end
@@ -132,6 +135,8 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
         @res << part
       end
     end
+
+    @res << "\n"
   end
 
   def end_accepting
@@ -139,7 +144,7 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
   end
 
   def start_accepting
-    @res = []
+    @res = ["\e[0m"]
     @indent = 0
     @prefix = nil
 

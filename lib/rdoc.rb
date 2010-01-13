@@ -33,6 +33,7 @@ $DEBUG_RDOC = nil
 #   % rdoc [options] [names...]
 #
 # For an up-to-date option summary, type
+#
 #   % rdoc --help
 #
 # A typical use might be to generate documentation for a package of Ruby
@@ -72,7 +73,7 @@ $DEBUG_RDOC = nil
 # always will override those in +RDOCOPT+.
 #
 # Run:
-# 
+#
 #   rdoc --help
 #
 # for full details on rdoc's options.
