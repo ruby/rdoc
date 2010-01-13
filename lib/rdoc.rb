@@ -220,7 +220,7 @@ $DEBUG_RDOC = nil
 #   [<tt>\<b>text...</b></tt>]    displays word in a *bold* font
 #   [<tt>\<em>text...</em></tt>]  displays word in an _emphasized_ font
 #   [<tt>\<i>text...</i></tt>]    displays word in an <i>italicized</i> font
-#   [<tt>\<tt>text...\</tt></tt>]  displays word in a +code+ font
+#   [<tt>\<tt>text...\</tt></tt>] displays word in a +code+ font
 #
 #   Unlike conventional Wiki markup, general markup can cross line
 #   boundaries.  You can turn off the interpretation of markup by
