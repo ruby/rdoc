@@ -234,6 +234,13 @@ Options may also be set in the 'RI' environment variable.
              "Run with the ruby profiler") do |value|
         options[:profile] = value
       end
+
+      opt.separator "Deprecated Options: (these warn)"
+      opt.separator nil
+
+      opt.on("--format=NAME", "-f") do
+        warn "-f (--format) is deprecated"
+      end
     end
 
     argv = ENV['RI'].to_s.split.concat argv
@@ -725,6 +732,10 @@ Options may also be set in the 'RI' environment variable.
   # Looks up and displays ri data according to the options given.
 
   def run
+    trap 'INFO' do
+      puts caller[1]
+    end
+
     if @list_doc_dirs then
       puts @doc_dirs
     elsif @interactive then
