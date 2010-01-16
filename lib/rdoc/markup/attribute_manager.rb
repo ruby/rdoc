@@ -162,8 +162,8 @@ class RDoc::Markup::AttributeManager
   # Escapes special sequences of text to prevent conversion to RDoc
 
   def mask_protected_sequences
-    protect_pattern = Regexp.new("\\\\([#{Regexp.escape(@protectable.join(''))}])")
-    @str.gsub!(protect_pattern, "\\1#{PROTECT_ATTR}")
+    @str.gsub!(/\\([#{Regexp.escape @protectable.join('')}])/,
+               "\\1#{PROTECT_ATTR}")
   end
 
   ##
