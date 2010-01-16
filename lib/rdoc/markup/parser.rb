@@ -509,6 +509,7 @@ class RDoc::Markup::Parser
       type, data, column = get
 
       if column < indent and
+         not type == :NEWLINE and
          not (type == :INDENT and data >= indent) then
         unget
         break

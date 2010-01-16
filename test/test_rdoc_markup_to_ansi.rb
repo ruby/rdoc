@@ -177,7 +177,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
     assert_equal "\e[0m" + '-' * 78, @to.res.join
   end
 
-  def accept_verbatim
+  def accept_verbatim # FormatterTestCase doesn't set indent for ToAnsi
     assert_equal "\e[0m  hi\n  world\n\n", @to.res.join
   end
 
@@ -335,21 +335,23 @@ words words words words
   def test_accept_verbatim_indent
     @to.start_accepting
 
-    @to.indent = 3
+    @to.indent = 2
 
     @to.accept_verbatim @RMP::Verbatim.new('    ', 'hi', "\n",
-                                           '    ', 'world', "\n")
+                                           '     ', 'world', "\n")
 
-    assert_equal "\e[0m     hi\n     world\n\n", @to.end_accepting
+    assert_equal "\e[0m    hi\n     world\n\n", @to.end_accepting
   end
 
   def test_accept_verbatim_big_indent
     @to.start_accepting
 
+    @to.indent = 2
+
     @to.accept_verbatim @RMP::Verbatim.new('    ', 'hi', "\n",
                                            '    ', 'world', "\n")
 
-    assert_equal "\e[0m  hi\n  world\n\n", @to.end_accepting
+    assert_equal "\e[0m    hi\n    world\n\n", @to.end_accepting
   end
 
   def test_list_nested
@@ -369,6 +371,46 @@ words words words words
 \e[0m* l1
   * l1.1
 * l2
+    EXPECTED
+
+    assert_equal expected, output
+  end
+
+  def test_list_verbatim # HACK overblown
+    doc = @RMP::Document.new(
+            @RMP::List.new(:BULLET,
+              @RMP::ListItem.new(nil,
+                @RMP::Paragraph.new('list', 'stuff'),
+                @RMP::BlankLine.new(),
+                @RMP::Verbatim.new('   ', '*', ' ', 'list', "\n",
+                                   '     ', 'with', "\n",
+                                   "\n",
+                                   '     ', 'second', "\n",
+                                   "\n",
+                                   '     ', '1.', ' ', 'indented', "\n",
+                                   '     ', '2.', ' ', 'numbered', "\n",
+                                   "\n",
+                                   '     ', 'third', "\n",
+                                   "\n",
+                                   '   ', '*', ' ', 'second', "\n"))))
+
+    output = doc.accept @to
+
+    expected = <<-EXPECTED
+\e[0m* list stuff
+
+    * list
+      with
+
+      second
+
+      1. indented
+      2. numbered
+
+      third
+
+    * second
+
     EXPECTED
 
     assert_equal expected, output

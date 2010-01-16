@@ -126,6 +126,25 @@ the time
     assert_equal expected, @RMP.parse(str).parts
   end
 
+  def test_parse_bullet_multiparagraph
+    str = <<-STR
+* l1
+
+  l1+
+    STR
+
+    expected = [
+      @RMP::List.new(:BULLET, *[
+        @RMP::ListItem.new(nil,
+          @RMP::Paragraph.new('l1'),
+          @RMP::BlankLine.new,
+          @RMP::Paragraph.new('l1+')),
+      ]),
+    ]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
   def test_parse_bullet_indent_verbatim
     str = <<-STR
 * l1

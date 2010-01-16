@@ -125,28 +125,38 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
   end
 
   ##
-  # HACK doesn't support verbatim sections like:
-  #
-  #    foo
-  #   bar
+  # Outputs +verbatim+ flush left and indented 2 columns
 
   def accept_verbatim verbatim
-    indent = ' ' * @indent
+    indent = ' ' * (@indent + 2)
 
-    bol = true
+    lines = []
+    current_line = []
 
+    # split into lines
     verbatim.parts.each do |part|
-      if bol and part =~ /^\s*$/ then
-        bol = false
-        use_prefix or @res << indent
-        @res << '  '
-      elsif part == "\n" then
-        @res << "\n"
-        bol = true
-      else
-        bol = false
-        @res << part
+      current_line << part
+
+      if part == "\n" then
+        lines << current_line
+        current_line = []
       end
+    end
+
+    # calculate margin
+    indented = lines.select { |line| line != ["\n"] }
+    margin = indented.map { |line| line.first.length }.min
+
+    # flush left
+    indented.each { |line| line[0][0...margin] = '' }
+
+    # output
+    use_prefix or @res << indent # verbatim is unlikely to have prefix
+    @res << lines.shift.join
+
+    lines.each do |line|
+      @res << indent unless line == ["\n"]
+      @res << line.join
     end
 
     @res << "\n"
