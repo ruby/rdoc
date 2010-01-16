@@ -354,6 +354,10 @@ words words words words
     assert_equal "\e[0m    hi\n    world\n\n", @to.end_accepting
   end
 
+  def test_attributes
+    assert_equal 'Dog', @to.attributes("\\Dog")
+  end
+
   def test_list_nested
     doc = @RMP::Document.new(
             @RMP::List.new(:BULLET,

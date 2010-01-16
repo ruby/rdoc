@@ -24,6 +24,8 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
   def initialize
     super
 
+    @markup.add_special /\\[^\s]/, :SUPPRESSED_CROSSREF
+
     @width = 78
     @prefix = ''
 
@@ -169,6 +171,10 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::Formatter
 
   def end_accepting
     @res.join
+  end
+
+  def handle_special_SUPPRESSED_CROSSREF special
+    special.text.sub /\\/, ''
   end
 
   def start_accepting

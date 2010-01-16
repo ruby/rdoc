@@ -1,5 +1,5 @@
 require "rubygems"
-require "minitest/unit"
+require "minitest/autorun"
 require 'rdoc'
 require 'rdoc/markup'
 require "rdoc/markup/inline"
@@ -195,14 +195,17 @@ class TestRDocMarkupAttributeManager < MiniTest::Unit::TestCase
   end
 
   def test_protect
-    assert_equal(['cat \\ dog'], @am.flow('cat \\ dog'))
+    assert_equal(['cat \\ dog'],
+                 @am.flow('cat \\ dog'))
 
-    assert_equal(["cat <tt>dog</Tt>"], @am.flow("cat \\<tt>dog</Tt>"))
+    assert_equal(["cat <tt>dog</Tt>"],
+                 @am.flow("cat \\<tt>dog</Tt>"))
 
     assert_equal(["cat ", @em_on, "and", @em_off, " <B>dog</b>"],
                   @am.flow("cat <i>and</i> \\<B>dog</b>"))
 
-    assert_equal(["*word* or <b>text</b>"], @am.flow("\\*word* or \\<b>text</b>"))
+    assert_equal(["*word* or <b>text</b>"],
+                 @am.flow("\\*word* or \\<b>text</b>"))
 
     assert_equal(["_cat_", @em_on, "dog", @em_off],
                   @am.flow("\\_cat_<i>dog</i>"))
@@ -235,4 +238,3 @@ class TestRDocMarkupAttributeManager < MiniTest::Unit::TestCase
 
 end
 
-MiniTest::Unit.autorun

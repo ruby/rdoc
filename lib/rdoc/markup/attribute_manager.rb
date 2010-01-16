@@ -226,9 +226,9 @@ class RDoc::Markup::AttributeManager
 
     @attrs = RDoc::Markup::AttrSpan.new @str.length
 
-    convert_attrs(@str, @attrs)
-    convert_html(@str, @attrs)
-    convert_specials(str, @attrs)
+    convert_attrs    @str, @attrs
+    convert_html     @str, @attrs
+    convert_specials @str, @attrs
 
     unmask_protected_sequences
 
