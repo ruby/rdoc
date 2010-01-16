@@ -66,7 +66,6 @@ lib/rdoc/markup/lines.rb
 lib/rdoc/markup/parser.rb
 lib/rdoc/markup/preprocess.rb
 lib/rdoc/markup/to_ansi.rb
-lib/rdoc/markup/to_flow.rb
 lib/rdoc/markup/to_html.rb
 lib/rdoc/markup/to_html_crossref.rb
 lib/rdoc/markup/to_test.rb
@@ -112,7 +111,6 @@ test/test_rdoc_markup.rb
 test/test_rdoc_markup_attribute_manager.rb
 test/test_rdoc_markup_parser.rb
 test/test_rdoc_markup_to_ansi.rb
-test/test_rdoc_markup_to_flow.rb
 test/test_rdoc_markup_to_html.rb
 test/test_rdoc_markup_to_html_crossref.rb
 test/test_rdoc_normal_class.rb
