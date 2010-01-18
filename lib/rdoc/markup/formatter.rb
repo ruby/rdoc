@@ -133,3 +133,8 @@ class RDoc::Markup::Formatter
 
 end
 
+class RDoc::Markup
+  autoload :ToAnsi,         'rdoc/markup/to_ansi'
+  autoload :ToHtml,         'rdoc/markup/to_html'
+  autoload :ToHtmlCrossref, 'rdoc/markup/to_html_crossref'
+end

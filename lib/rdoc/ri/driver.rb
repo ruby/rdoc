@@ -9,7 +9,7 @@ end
 require 'rdoc/ri'
 require 'rdoc/ri/paths'
 require 'rdoc/markup'
-require 'rdoc/markup/to_ansi'
+require 'rdoc/markup/formatter'
 require 'rdoc/text'
 
 ##
@@ -72,6 +72,7 @@ class RDoc::RI::Driver
     options[:interactive] = false
     options[:use_cache] = true
     options[:profile] = false
+    options[:formatter] = RDoc::Markup::ToAnsi
 
     # By default all standard paths are used.
     options[:use_system] = true
@@ -240,11 +241,8 @@ Options may also be set in the 'RI' environment variable.
         options[:profile] = value
       end
 
-      opt.separator "Deprecated Options: (these warn)"
-      opt.separator nil
-
-      opt.on("--format=NAME", "-f") do
-        warn "-f (--format) is deprecated"
+      opt.on("--format=NAME", "-f") do |value|
+        options[:formatter] = RDoc::Markup.const_get "To#{value.capitalize}"
       end
     end
 
@@ -284,6 +282,8 @@ Options may also be set in the 'RI' environment variable.
     @classes = nil
 
     options = self.class.default_options.update(initial_options)
+
+    @formatter = options[:formatter]
 
     require 'profile' if options[:profile]
 
@@ -407,7 +407,7 @@ Options may also be set in the 'RI' environment variable.
   # Converts +document+ to text and writes it to the pager
 
   def display document
-    text = document.accept RDoc::Markup::ToAnsi.new
+    text = document.accept @formatter.new
 
     page do |io|
       io.write text
