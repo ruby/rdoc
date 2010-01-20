@@ -68,6 +68,7 @@ lib/rdoc/markup/preprocess.rb
 lib/rdoc/markup/to_ansi.rb
 lib/rdoc/markup/to_html.rb
 lib/rdoc/markup/to_html_crossref.rb
+lib/rdoc/markup/to_rdoc.rb
 lib/rdoc/markup/to_test.rb
 lib/rdoc/meta_method.rb
 lib/rdoc/normal_class.rb
@@ -113,6 +114,7 @@ test/test_rdoc_markup_parser.rb
 test/test_rdoc_markup_to_ansi.rb
 test/test_rdoc_markup_to_html.rb
 test/test_rdoc_markup_to_html_crossref.rb
+test/test_rdoc_markup_to_rdoc.rb
 test/test_rdoc_normal_class.rb
 test/test_rdoc_normal_module.rb
 test/test_rdoc_parser.rb
