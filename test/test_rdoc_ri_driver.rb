@@ -32,7 +32,7 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
   def test_ancestors_of
     util_ancestors_store
 
-    assert_equal %w[Object Foo], @driver.ancestors_of('Foo::Bar')
+    assert_equal %w[X Mixin Object Foo], @driver.ancestors_of('Foo::Bar')
   end
 
   def test_classes
@@ -299,24 +299,48 @@ Foo::Bar#blah
   end
 
   def util_ancestors_store
-    store = RDoc::RI::Store.new @home_ri
-    store.cache[:ancestors] = {
+    store1 = RDoc::RI::Store.new @home_ri
+    store1.cache[:ancestors] = {
       'Foo'      => %w[Object],
       'Foo::Bar' => %w[Foo],
     }
-    store.cache[:class_methods] = {
+    store1.cache[:class_methods] = {
       'Foo'      => %w[c_method new],
       'Foo::Bar' => %w[new],
     }
-    store.cache[:instance_methods] = {
+    store1.cache[:instance_methods] = {
       'Foo' => %w[i_method],
     }
-    store.cache[:modules] = %w[
+    store1.cache[:modules] = %w[
       Foo
       Foo::Bar
     ]
 
-    @driver.stores = [store]
+    store2 = RDoc::RI::Store.new @home_ri
+    store2.cache[:ancestors] = {
+      'Foo'    => %w[Mixin Object],
+      'Mixin'  => %w[],
+      'Object' => %w[X Object],
+      'X'      => %w[Object],
+    }
+    store2.cache[:class_methods] = {
+      'Foo'    => %w[c_method new],
+      'Mixin'  => %w[],
+      'X'      => %w[],
+      'Object' => %w[],
+    }
+    store2.cache[:instance_methods] = {
+      'Foo'   => %w[i_method],
+      'Mixin' => %w[],
+    }
+    store2.cache[:modules] = %w[
+      Foo
+      Mixin
+      Object
+      X
+    ]
+
+    @driver.stores = store1, store2
   end
 
   def util_multi_store

@@ -322,16 +322,22 @@ Options may also be set in the 'RI' environment variable.
     ancestors = []
 
     unexamined = [klass]
+    seen = []
 
     loop do
       break if unexamined.empty?
       current = unexamined.shift
+      seen << current
 
       stores = classes[current]
 
       break unless stores and not stores.empty?
 
-      klasses = stores.map { |store| store.ancestors[current] }.flatten
+      klasses = stores.map do |store|
+        store.ancestors[current]
+      end.flatten.uniq
+
+      klasses = klasses - seen
 
       ancestors.push(*klasses)
       unexamined.push(*klasses)
