@@ -237,7 +237,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
     assert_equal "\e[0m   \e[1;32m\e[1mHello\e[m\e[m\n", @to.end_accepting
   end
 
-  def test_accept_list_item_start_note
+  def test_accept_list_item_start_note_2
     list = @RMP::List.new(:NOTE,
              @RMP::ListItem.new('<tt>teletype</tt>',
                                 @RMP::Paragraph.new('teletype description')))
