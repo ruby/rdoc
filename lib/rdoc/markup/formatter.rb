@@ -26,7 +26,7 @@ class RDoc::Markup::Formatter
   # tags for flexibility
 
   def add_tag(name, start, stop)
-    attr = RDoc::Markup::Attribute.bitmap_for(name)
+    attr = RDoc::Markup::Attribute.bitmap_for name
     @attr_tags << InlineTag.new(attr, start, stop)
   end
 
@@ -106,7 +106,7 @@ class RDoc::Markup::Formatter
     return if attr_mask.zero?
 
     @attr_tags.each do |tag|
-      if attr_mask & tag.bit != 0
+      if attr_mask & tag.bit != 0 then
         res << annotate(tag.on)
         @in_tt += 1 if tt? tag
       end
@@ -136,6 +136,7 @@ end
 
 class RDoc::Markup
   autoload :ToAnsi,         'rdoc/markup/to_ansi'
+  autoload :ToBs,           'rdoc/markup/to_bs'
   autoload :ToHtml,         'rdoc/markup/to_html'
   autoload :ToHtmlCrossref, 'rdoc/markup/to_html_crossref'
   autoload :ToRdoc,         'rdoc/markup/to_rdoc'

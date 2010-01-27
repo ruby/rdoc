@@ -1,0 +1,53 @@
+require 'rdoc/markup/inline'
+
+##
+# Outputs RDoc markup with hot backspace action!
+
+class RDoc::Markup::ToBs < RDoc::Markup::ToRdoc
+
+  def initialize
+    super
+
+    @in_b  = false
+    @in_em = false
+  end
+
+  ##
+  # Sets a flag that is picked up by #annotate to do the right thing in
+  # #convert_string
+
+  def init_tags
+    add_tag :BOLD, '+b', '-b'
+    add_tag :EM,   '+_', '-_'
+  end
+
+  ##
+  # Turns on or off special handling for +convert_string+
+
+  def annotate tag
+    case tag
+    when '+b' then @in_b = true
+    when '-b' then @in_b = false
+    when '+_' then @in_em = true
+    when '-_' then @in_em = false
+    end
+
+    ''
+  end
+
+  ##
+  # Adds bold or underline mixed with backspaces
+
+  def convert_string string
+    return string unless @in_b or @in_em
+    chars = if @in_b then
+              string.chars.map do |char| "#{char}\b#{char}" end
+            elsif @in_em then
+              string.chars.map do |char| "#{char}\b_" end
+            end
+
+    chars.join
+  end
+
+end
+
