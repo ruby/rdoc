@@ -5,16 +5,9 @@ require 'rdoc/markup/inline'
 
 class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
 
-  attr_accessor :indent
-  attr_reader :list_index
-  attr_reader :list_type
-  attr_reader :list_width
-  attr_reader :prefix
-  attr_reader :res
-
   def initialize
     super
-    
+
     @headings.clear
     @headings[1] = ["\e[1;32m", "\e[m"]
     @headings[2] = ["\e[4;32m", "\e[m"]
@@ -25,11 +18,9 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
   # Maps attributes to ANSI sequences
 
   def init_tags
-    @attr_tags = [
-      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:BOLD), "\e[1m", "\e[m"),
-      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:TT),   "\e[7m", "\e[m"),
-      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:EM),   "\e[3m", "\e[m"),
-    ]
+    add_tag :BOLD, "\e[1m", "\e[m"
+    add_tag :TT,   "\e[7m", "\e[m"
+    add_tag :EM,   "\e[3m", "\e[m"
   end
 
   def accept_list_item_end list_item

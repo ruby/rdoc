@@ -37,11 +37,9 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   # Maps attributes to ANSI sequences
 
   def init_tags
-    @attr_tags = [
-      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:BOLD), "<b>", "</b>"),
-      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:TT),   "<tt>", "</tt>"),
-      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:EM),   "<em>", "</em>"),
-    ]
+    add_tag :BOLD, "<b>", "</b>"
+    add_tag :TT,   "<tt>", "</tt>"
+    add_tag :EM,   "<em>", "</em>"
   end
 
   def accept_blank_line blank_line

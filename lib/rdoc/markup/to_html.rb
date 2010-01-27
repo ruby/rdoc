@@ -62,11 +62,9 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # Maps attributes to HTML tags
 
   def init_tags
-    @attr_tags = [
-      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:BOLD), "<b>", "</b>"),
-      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:TT),   "<tt>", "</tt>"),
-      InlineTag.new(RDoc::Markup::Attribute.bitmap_for(:EM),   "<em>", "</em>"),
-    ]
+    add_tag :BOLD, "<b>",  "</b>"
+    add_tag :TT,   "<tt>", "</tt>"
+    add_tag :EM,   "<em>", "</em>"
   end
 
   ##

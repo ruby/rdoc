@@ -15,6 +15,7 @@ class RDoc::Markup::Formatter
   def initialize
     @markup = RDoc::Markup.new
     @am = @markup.attribute_manager
+    @attr_tags = []
 
     @in_tt = 0
     @tt_bit = RDoc::Markup::Attribute.bitmap_for :TT
@@ -25,8 +26,8 @@ class RDoc::Markup::Formatter
   # tags for flexibility
 
   def add_tag(name, start, stop)
-    attr = RDoc::Markup::Attribute.bitmap_for(name), start, stop
-    @attr_tags << InlineTag.new(attr)
+    attr = RDoc::Markup::Attribute.bitmap_for(name)
+    @attr_tags << InlineTag.new(attr, start, stop)
   end
 
   ##
