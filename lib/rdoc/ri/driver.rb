@@ -134,6 +134,61 @@ Options may also be set in the 'RI' environment variable.
 
       opt.separator nil
       opt.separator "Options:"
+
+      opt.separator nil
+
+      formatters = RDoc::Markup.constants.grep(/^To[A-Z][a-z]+$/).sort
+      formatters = formatters.sort.map do |formatter|
+        formatter.sub('To', '').downcase
+      end
+
+      opt.on("--format=NAME", "-f",
+             "Uses the selected formatter. Valid",
+             "formatters are:",
+             formatters.join(' '), formatters) do |value|
+        options[:formatter] = RDoc::Markup.const_get "To#{value.capitalize}"
+      end
+
+      opt.separator nil
+
+      opt.on("--no-pager", "-T",
+             "Send output directly to stdout,",
+             "rather than to a pager.") do
+        options[:use_stdout] = true
+      end
+
+      opt.separator nil
+
+      opt.on("--width=WIDTH", "-w", OptionParser::DecimalInteger,
+             "Set the width of the output.") do |value|
+        options[:width] = value
+      end
+
+      opt.separator nil
+
+      opt.on("--interactive", "-i",
+             "In interactive mode you can repeatedly",
+             "look up methods with autocomplete.") do
+        options[:interactive] = true
+      end
+
+      opt.separator nil
+
+      opt.on("--[no-]profile",
+             "Run with the ruby profiler") do |value|
+        options[:profile] = value
+      end
+
+      opt.separator nil
+      opt.separator "Data source options:"
+      opt.separator nil
+
+      opt.on("--list-doc-dirs",
+             "List the directories from which ri will",
+             "source documentation on stdout and exit.") do
+        options[:list_doc_dirs] = true
+      end
+
       opt.separator nil
 
       opt.on("--doc-dir=DIRNAME", "-d", Array,
@@ -155,9 +210,7 @@ Options may also be set in the 'RI' environment variable.
              "Do not include documentation from",
              "the Ruby standard library, site_lib,",
              "installed gems, or ~/.rdoc.",
-             "Equivalent to specifying",
-             "the options --no-system, --no-site, --no-gems,",
-             "and --no-home") do
+             "Use with --doc-dir") do
         options[:use_system] = false
         options[:use_site] = false
         options[:use_gems] = false
@@ -195,54 +248,6 @@ Options may also be set in the 'RI' environment variable.
              "Include documentation stored in ~/.rdoc.",
              "Defaults to true.") do |value|
         options[:use_home] = value
-      end
-
-      opt.separator nil
-
-      opt.on("--list-doc-dirs",
-             "List the directories from which ri will",
-             "source documentation on stdout and exit.") do
-        options[:list_doc_dirs] = true
-      end
-
-      opt.separator nil
-
-      opt.on("--no-pager", "-T",
-             "Send output directly to stdout,",
-             "rather than to a pager.") do
-        options[:use_stdout] = true
-      end
-
-      opt.separator nil
-
-      opt.on("--interactive", "-i",
-             "This makes ri go into interactive mode.",
-             "When ri is in interactive mode it will",
-             "allow the user to disambiguate lists of",
-             "methods in case multiple methods match",
-             "against a method search string.  It also",
-             "will allow the user to enter in a method",
-             "name (with auto-completion, if readline",
-             "is supported) when viewing a class.") do
-        options[:interactive] = true
-      end
-
-      opt.separator nil
-
-      opt.on("--width=WIDTH", "-w", OptionParser::DecimalInteger,
-             "Set the width of the output.") do |value|
-        options[:width] = value
-      end
-
-      opt.separator nil
-
-      opt.on("--[no-]profile",
-             "Run with the ruby profiler") do |value|
-        options[:profile] = value
-      end
-
-      opt.on("--format=NAME", "-f") do |value|
-        options[:formatter] = RDoc::Markup.const_get "To#{value.capitalize}"
       end
     end
 
