@@ -72,7 +72,6 @@ class RDoc::RI::Driver
     options[:interactive] = false
     options[:use_cache] = true
     options[:profile] = false
-    options[:formatter] = RDoc::Markup::ToAnsi
 
     # By default all standard paths are used.
     options[:use_system] = true
@@ -143,8 +142,9 @@ Options may also be set in the 'RI' environment variable.
       end
 
       opt.on("--format=NAME", "-f",
-             "Uses the selected formatter. Valid",
-             "formatters are:",
+             "Uses the selected formatter. The default",
+             "formatter is bs for paged output and ansi",
+             "otherwise. Valid formatters are:",
              formatters.join(' '), formatters) do |value|
         options[:formatter] = RDoc::Markup.const_get "To#{value.capitalize}"
       end
@@ -288,7 +288,7 @@ Options may also be set in the 'RI' environment variable.
 
     options = self.class.default_options.update(initial_options)
 
-    @formatter = options[:formatter]
+    @formatter_klass = options[:formatter]
 
     require 'profile' if options[:profile]
 
@@ -418,7 +418,7 @@ Options may also be set in the 'RI' environment variable.
   # Converts +document+ to text and writes it to the pager
 
   def display document
-    text = document.accept @formatter.new
+    text = document.accept formatter
 
     page do |io|
       io.write text
@@ -575,17 +575,27 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
+  # Creates a new RDoc::Markup::Formatter.  If a formatter is given with -f,
+  # use it.  If we're outputting to a pager, use bs, otherwise ansi.
+
+  def formatter
+    if @formatter_klass then
+      @formatter_klass.new
+    elsif paging? then
+      RDoc::Markup::ToBs.new
+    else
+      RDoc::Markup::ToAnsi.new
+    end
+  end
+
+  ##
   # Runs ri interactively using Readline if it is available.
 
   def interactive
-    if defined? Readline then
-      # prepare abbreviations for tab completion
-      Readline.completion_proc = method :complete
-    end
-
     puts "\nEnter the method name you want to look up."
 
     if defined? Readline then
+      Readline.completion_proc = method :complete
       puts "You can use tab to autocomplete."
     end
 

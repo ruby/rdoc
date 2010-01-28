@@ -176,6 +176,18 @@ Foo::Bar#blah
     assert_equal expected, items
   end
 
+  def test_formatter
+    assert_instance_of RDoc::Markup::ToAnsi, @driver.formatter
+
+    @driver.instance_variable_set :@paging, true
+
+    assert_instance_of RDoc::Markup::ToBs, @driver.formatter
+
+    @driver.instance_variable_set :@formatter_klass, RDoc::Markup::ToHtml
+
+    assert_instance_of RDoc::Markup::ToHtml, @driver.formatter
+  end
+
   def test_method_type
     assert_equal :both,     @driver.method_type(nil)
     assert_equal :both,     @driver.method_type('.')
