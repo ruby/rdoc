@@ -1,7 +1,8 @@
 require 'rdoc/markup/inline'
 
 ##
-# Outputs RDoc markup with hot backspace action!
+# Outputs RDoc markup with hot backspace action!  You will probably need a
+# pager to use this output format.
 
 class RDoc::Markup::ToBs < RDoc::Markup::ToRdoc
 
@@ -19,6 +20,17 @@ class RDoc::Markup::ToBs < RDoc::Markup::ToRdoc
   def init_tags
     add_tag :BOLD, '+b', '-b'
     add_tag :EM,   '+_', '-_'
+  end
+
+  def accept_heading heading
+    use_prefix or @res << ' ' * @indent
+    @res << @headings[heading.level][0]
+    @in_b = true
+    p heading.text
+    @res << attributes(heading.text)
+    @in_b = false
+    @res << @headings[heading.level][1]
+    @res << "\n"
   end
 
   ##
@@ -43,7 +55,7 @@ class RDoc::Markup::ToBs < RDoc::Markup::ToRdoc
     chars = if @in_b then
               string.chars.map do |char| "#{char}\b#{char}" end
             elsif @in_em then
-              string.chars.map do |char| "#{char}\b_" end
+              string.chars.map do |char| "_\b#{char}" end
             end
 
     chars.join

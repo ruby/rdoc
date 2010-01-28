@@ -18,7 +18,7 @@ class TestRDocMarkupToBs < RDoc::Markup::FormatterTestCase
   end
 
   def accept_heading
-    assert_equal "===== Hello\n", @to.res.join
+    assert_equal "===== H\bHe\bel\bll\blo\bo\n", @to.res.join
   end
 
   def accept_list_end_bullet
@@ -197,28 +197,28 @@ class TestRDocMarkupToBs < RDoc::Markup::FormatterTestCase
     @to.start_accepting
     @to.accept_heading @RMP::Heading.new(1, 'Hello')
 
-    assert_equal "= Hello\n", @to.end_accepting
+    assert_equal "= H\bHe\bel\bll\blo\bo\n", @to.end_accepting
   end
 
   def test_accept_heading_2
     @to.start_accepting
     @to.accept_heading @RMP::Heading.new(2, 'Hello')
 
-    assert_equal "== Hello\n", @to.end_accepting
+    assert_equal "== H\bHe\bel\bll\blo\bo\n", @to.end_accepting
   end
 
   def test_accept_heading_3
     @to.start_accepting
     @to.accept_heading @RMP::Heading.new(3, 'Hello')
 
-    assert_equal "=== Hello\n", @to.end_accepting
+    assert_equal "=== H\bHe\bel\bll\blo\bo\n", @to.end_accepting
   end
 
   def test_accept_heading_4
     @to.start_accepting
     @to.accept_heading @RMP::Heading.new(4, 'Hello')
 
-    assert_equal "==== Hello\n", @to.end_accepting
+    assert_equal "==== H\bHe\bel\bll\blo\bo\n", @to.end_accepting
   end
 
   def test_accept_heading_indent
@@ -226,7 +226,7 @@ class TestRDocMarkupToBs < RDoc::Markup::FormatterTestCase
     @to.indent = 3
     @to.accept_heading @RMP::Heading.new(1, 'Hello')
 
-    assert_equal "   = Hello\n", @to.end_accepting
+    assert_equal "   = H\bHe\bel\bll\blo\bo\n", @to.end_accepting
   end
 
   def test_accept_heading_b
@@ -235,6 +235,13 @@ class TestRDocMarkupToBs < RDoc::Markup::FormatterTestCase
     @to.accept_heading @RMP::Heading.new(1, '*Hello*')
 
     assert_equal "   = H\bHe\bel\bll\blo\bo\n", @to.end_accepting
+  end
+
+  def test_accept_heading_suppressed_crossref
+    @to.start_accepting
+    @to.accept_heading @RMP::Heading.new(1, '\\Hello')
+
+    assert_equal "= H\bHe\bel\bll\blo\bo\n", @to.end_accepting
   end
 
   def test_accept_list_item_start_note_2
@@ -264,7 +271,7 @@ class TestRDocMarkupToBs < RDoc::Markup::FormatterTestCase
     @to.start_accepting
     @to.accept_paragraph @RMP::Paragraph.new('reg <em>italic words</em> reg')
 
-    expected = "reg i\b_t\b_a\b_l\b_i\b_c\b_ \b_w\b_o\b_r\b_d\b_s\b_ reg\n"
+    expected = "reg _\bi_\bt_\ba_\bl_\bi_\bc_\b _\bw_\bo_\br_\bd_\bs reg\n"
 
     assert_equal expected, @to.end_accepting
   end
@@ -305,7 +312,7 @@ class TestRDocMarkupToBs < RDoc::Markup::FormatterTestCase
     @to.start_accepting
     @to.accept_paragraph @RMP::Paragraph.new('regular _italic_ regular')
 
-    expected = "regular i\b_t\b_a\b_l\b_i\b_c\b_ regular\n"
+    expected = "regular _\bi_\bt_\ba_\bl_\bi_\bc regular\n"
 
     assert_equal expected, @to.end_accepting
   end

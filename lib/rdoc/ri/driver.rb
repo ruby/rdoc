@@ -418,9 +418,9 @@ Options may also be set in the 'RI' environment variable.
   # Converts +document+ to text and writes it to the pager
 
   def display document
-    text = document.accept formatter
-
     page do |io|
+      text = document.accept formatter
+
       io.write text
     end
   end
