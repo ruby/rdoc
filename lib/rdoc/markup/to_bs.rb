@@ -26,7 +26,6 @@ class RDoc::Markup::ToBs < RDoc::Markup::ToRdoc
     use_prefix or @res << ' ' * @indent
     @res << @headings[heading.level][0]
     @in_b = true
-    p heading.text
     @res << attributes(heading.text)
     @in_b = false
     @res << @headings[heading.level][1]
