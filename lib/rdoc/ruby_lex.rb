@@ -693,7 +693,7 @@ class RDoc::RubyLex
 
     # HACK to avoid a warning the regexp is hidden behind an eval
     # HACK need a better way to detect oniguruma
-    @identifier_re ||= if defined? Encoding then
+    @identifier_re ||= if defined? ::Encoding then
                          eval '/[\p{Alnum}_]/u'
                        else
                          eval '/[\w\x80-\xff]/'
