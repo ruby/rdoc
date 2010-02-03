@@ -1,3 +1,5 @@
+# coding: utf-8
+
 require 'stringio'
 require 'tempfile'
 require 'rubygems'
@@ -737,6 +739,26 @@ EOF
     ]
 
     assert_equal stream, foo.token_stream
+  end
+
+  def test_parse_method_utf8
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# my method\n"
+
+    method = "def ω() end"
+
+    assert_equal Encoding::UTF_8, method.encoding if defined? ::Encoding
+
+    util_parser method
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    omega = klass.method_list.first
+    assert_equal "def \317\211", omega.text
   end
 
   def test_parse_method_funky

@@ -10,30 +10,22 @@ class RDoc::RubyLex
   # Read an input stream character by character. We allow for unlimited
   # ungetting of characters just read.
   #
-  # We simplify the implementation greatly by reading the entire input
-  # into a buffer initially, and then simply traversing it using
-  # pointers.
+  # We simplify the implementation greatly by reading the entire input into a
+  # buffer initially, and then simply traversing it using pointers.
   #
-  # We also have to allow for the <i>here document diversion</i>. This
-  # little gem comes about when the lexer encounters a here
-  # document. At this point we effectively need to split the input
-  # stream into two parts: one to read the body of the here document,
-  # the other to read the rest of the input line where the here
-  # document was initially encountered. For example, we might have
+  # We also have to allow for the <i>here document diversion</i>. This little
+  # gem comes about when the lexer encounters a here document. At this point
+  # we effectively need to split the input stream into two parts: one to read
+  # the body of the here document, the other to read the rest of the input
+  # line where the here document was initially encountered. For example, we
+  # might have
   #
-  #   do_something(<<-A, <<-B)
-  #     stuff
-  #     for
-  #   A
-  #     stuff
-  #     for
-  #   B
+  #   do_something(<<-A, <<-B) stuff for A stuff for B
   #
-  # When the lexer encounters the <<A, it reads until the end of the
-  # line, and keeps it around for later. It then reads the body of the
-  # here document.  Once complete, it needs to read the rest of the
-  # original line, but then skip the here document body.
-  #
+  # When the lexer encounters the <<A, it reads until the end of the line, and
+  # keeps it around for later. It then reads the body of the here document.
+  # Once complete, it needs to read the rest of the original line, but then
+  # skip the here document body.
 
   class BufferedReader
 
@@ -47,7 +39,7 @@ class RDoc::RubyLex
         content = content.split(/\n/).map do |line|
           1 while line.gsub!(/\t+/) { ' ' * (tab_width*$&.length - $`.length % tab_width)}  && $~ #`
           line
-        end .join("\n")
+        end.join("\n")
       end
       @content   = content
       @content << "\n" unless @content[-1,1] == "\n"
@@ -87,6 +79,12 @@ class RDoc::RubyLex
       getc
     end
 
+    def inspect
+      "#<%s:0x%x %p>" % [
+        self.class.name, object_id, @content[@offset, 10]
+      ]
+    end
+
     def ungetc(ch)
       raise "unget past beginning of file" if @offset <= 0
       @offset -= 1
@@ -120,9 +118,8 @@ class RDoc::RubyLex
     end
   end
 
-  # end of nested class BufferedReader
-
   extend Exception2MessageMapper
+
   def_exception(:AlreadyDefinedToken, "Already defined token(%s)")
   def_exception(:TkReading2TokenNoKey, "key nothing(key='%s')")
   def_exception(:TkSymbol2TokenNoKey, "key nothing(key='%s')")
@@ -137,8 +134,14 @@ class RDoc::RubyLex
   attr_reader :lex_state
 
   def self.debug?
-    false
+    @debug
   end
+
+  def self.debug= debug
+    @debug = debug
+  end
+
+  self.debug = false
 
   def initialize(content, options)
     lex_init
@@ -162,6 +165,14 @@ class RDoc::RubyLex
     @skip_space = false
     @read_auto_clean_up = false
     @exception_on_syntax_error = true
+  end
+
+  def inspect # :nodoc:
+    "#<%s:0x%x lex_state %p space_seen %p buffer %p>" % [
+      self.class, object_id,
+      @lex_state, @space_seen,
+      @reader,
+    ]
   end
 
   attr_accessor :skip_space
@@ -243,7 +254,7 @@ class RDoc::RubyLex
     if @read_auto_clean_up
       get_read
     end
-#   throw :eof unless tk
+
     tk
   end
 
@@ -361,9 +372,7 @@ class RDoc::RubyLex
       if @lex_state != EXPR_END && @lex_state != EXPR_CLASS &&
         (@lex_state != EXPR_ARG || @space_seen)
         c = peek(0)
-        if /[-\w_\"\'\`]/ =~ c
-          tk = identify_here_document
-        end
+        tk = identify_here_document if /[\w"'`-]/ =~ c
       end
       if !tk
         @lex_state = EXPR_BEG
@@ -616,7 +625,7 @@ class RDoc::RubyLex
     end
 
     @OP.def_rule('@') do
-      if peek(0) =~ /[@\w_]/
+      if peek(0) =~ /[\w@]/
         ungetc
         identify_identifier
       else
@@ -628,15 +637,16 @@ class RDoc::RubyLex
       throw :eof
     end
 
-    @OP.def_rule("") do
-      |op, io|
-      printf "MATCH: start %s: %s\n", op, io.inspect if RDoc::RubyLex.debug?
-      if peek(0) =~ /[0-9]/
-        t = identify_number("")
-      elsif peek(0) =~ /[\w_]/
-        t = identify_identifier
-      end
-      printf "MATCH: end %s: %s\n", op, io.inspect if RDoc::RubyLex.debug?
+    @OP.def_rule("") do |op, io|
+      printf "MATCH: start %p: %p\n", op, io if RDoc::RubyLex.debug?
+
+      t = case peek 0
+          when /\d/ then identify_number ""
+          else           identify_identifier
+          end
+
+      printf "MATCH: end %p: %p\n", op, io if RDoc::RubyLex.debug?
+
       t
     end
   end
@@ -681,10 +691,19 @@ class RDoc::RubyLex
     token.concat getc if peek(0) =~ /[$@]/
     token.concat getc if peek(0) == "@"
 
-    while (ch = getc) =~ /\w|_/
-      print ":", ch, ":" if RDoc::RubyLex.debug?
+    # HACK to avoid a warning the regexp is hidden behind an eval
+    # HACK need a better way to detect oniguruma
+    @identifier_re ||= if defined? Encoding then
+                         eval '/[\p{Alnum}_]/u'
+                       else
+                         eval '/[\w\x80-\xff]/'
+                       end
+
+    while (ch = getc) =~ @identifier_re
+      print " :#{ch}: " if RDoc::RubyLex.debug?
       token.concat ch
     end
+
     ungetc
 
     if ch == "!" or ch == "?"
@@ -697,7 +716,7 @@ class RDoc::RubyLex
     case token
     when /^\$/
       return Token(TkGVAR, token).set_text(token)
-    when /^\@/
+    when /^@/
       @lex_state = EXPR_END
       return Token(TkIVAR, token).set_text(token)
     end
@@ -1033,4 +1052,6 @@ class RDoc::RubyLex
     res
   end
 end
+
+#RDoc::RubyLex.debug = true
 
