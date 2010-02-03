@@ -14,32 +14,32 @@ require 'rdoc/known_classes'
 # method, that is to say the method whose name is given in the
 # <tt>rb_define_method</tt> call. For example, you might write:
 #
-#  /*
-#   * Returns a new array that is a one-dimensional flattening of this
-#   * array (recursively). That is, for every element that is an array,
-#   * extract its elements into the new array.
-#   *
-#   *    s = [ 1, 2, 3 ]           #=> [1, 2, 3]
-#   *    t = [ 4, 5, 6, [7, 8] ]   #=> [4, 5, 6, [7, 8]]
-#   *    a = [ s, t, 9, 10 ]       #=> [[1, 2, 3], [4, 5, 6, [7, 8]], 9, 10]
-#   *    a.flatten                 #=> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-#   */
-#   static VALUE
-#   rb_ary_flatten(ary)
-#       VALUE ary;
-#   {
-#       ary = rb_obj_dup(ary);
-#       rb_ary_flatten_bang(ary);
-#       return ary;
-#   }
+#   /*
+#    * Returns a new array that is a one-dimensional flattening of this
+#    * array (recursively). That is, for every element that is an array,
+#    * extract its elements into the new array.
+#    *
+#    *    s = [ 1, 2, 3 ]           #=> [1, 2, 3]
+#    *    t = [ 4, 5, 6, [7, 8] ]   #=> [4, 5, 6, [7, 8]]
+#    *    a = [ s, t, 9, 10 ]       #=> [[1, 2, 3], [4, 5, 6, [7, 8]], 9, 10]
+#    *    a.flatten                 #=> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+#    */
+#    static VALUE
+#    rb_ary_flatten(ary)
+#        VALUE ary;
+#    {
+#        ary = rb_obj_dup(ary);
+#        rb_ary_flatten_bang(ary);
+#        return ary;
+#    }
 #
-#   ...
+#    ...
 #
-#   void
-#   Init_Array()
-#   {
-#     ...
-#     rb_define_method(rb_cArray, "flatten", rb_ary_flatten, 0);
+#    void
+#    Init_Array()
+#    {
+#      ...
+#      rb_define_method(rb_cArray, "flatten", rb_ary_flatten, 0);
 #
 # Here RDoc will determine from the rb_define_method line that there's a
 # method called "flatten" in class Array, and will look for the implementation
@@ -68,7 +68,7 @@ require 'rdoc/known_classes'
 # Ruby function is in the same source file as the rb_define_method call.
 # If this isn't the case, add the comment:
 #
-#    rb_define_method(....);  // in: filename
+#   rb_define_method(....);  // in: filename
 #
 # As an example, we might have an extension that defines multiple classes
 # in its Init_xxx method. We could document them using

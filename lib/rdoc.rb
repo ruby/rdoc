@@ -19,7 +19,8 @@ $DEBUG_RDOC = nil
 #
 # * If you want to use RDoc to create documentation for your Ruby source files,
 #   read on.
-# * If you want to include extensions written in C, see RDoc::Parser::C
+# * If you want to generate documentation for extensions written in C, see
+#   RDoc::Parser::C
 # * If you want to drive RDoc programmatically, see RDoc::RDoc.
 # * If you want to use the library to format text blocks into HTML, have a look
 #   at RDoc::Markup.

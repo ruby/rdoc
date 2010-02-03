@@ -17,6 +17,7 @@
   * RDoc::Markup::AttributeManager no longer uses global state.
   * ri will use the RI_PAGER environment variable to find a pager.
   * RDoc::RDoc no longer passes around options.  Patch #27167.
+  * Improved some wording for the RDoc main page.  Patch #27264.
 
 * N Bug Fixes
   * The :attr: directives now use the name given to create an attribute.  See
