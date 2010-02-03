@@ -223,12 +223,14 @@ class RDoc::Generator::Darkfish
 	### Generate an index page which lists all the classes which
 	### are documented.
 	def generate_index
+		template_file = @template_dir + 'index.rhtml'
+		return unless template_file.exist?
+
 		debug_msg "Rendering the index page..."
 
-		templatefile = @template_dir + 'index.rhtml'
-		template_src = templatefile.read
+		template_src = template_file.read
 		template = ERB.new( template_src, nil, '<>' )
-		template.filename = templatefile.to_s
+		template.filename = template_file.to_s
 		context = binding()
 
 		output = nil
@@ -237,7 +239,7 @@ class RDoc::Generator::Darkfish
 			output = template.result( context )
 		rescue NoMethodError => err
 			raise RDoc::Error, "Error while evaluating %s: %s (at %p)" % [
-				templatefile,
+				template_file,
 				err.message,
 				eval( "_erbout[-50,50]", context )
 			], err.backtrace
@@ -256,8 +258,9 @@ class RDoc::Generator::Darkfish
 
 	### Generate a documentation file for each class
 	def generate_class_files
+		template_file = @template_dir + 'classpage.rhtml'
+		return unless template_file.exist?
 		debug_msg "Generating class documentation in #@outputdir"
-		templatefile = @template_dir + 'classpage.rhtml'
 
 		@classes.each do |klass|
 			debug_msg "  working on %s (%s)" % [ klass.full_name, klass.path ]
@@ -266,14 +269,15 @@ class RDoc::Generator::Darkfish
 			svninfo    = self.get_svninfo( klass )
 
 			debug_msg "  rendering #{outfile}"
-			self.render_template( templatefile, binding(), outfile )
+			self.render_template( template_file, binding(), outfile )
 		end
 	end
 
 	### Generate a documentation file for each file
 	def generate_file_files
+		template_file = @template_dir + 'filepage.rhtml'
+		return unless template_file.exist?
 		debug_msg "Generating file documentation in #@outputdir"
-		templatefile = @template_dir + 'filepage.rhtml'
 
 		@files.each do |file|
 			outfile     = @outputdir + file.path
@@ -282,7 +286,7 @@ class RDoc::Generator::Darkfish
 			context     = binding()
 
 			debug_msg "  rendering #{outfile}"
-			self.render_template( templatefile, binding(), outfile )
+			self.render_template( template_file, binding(), outfile )
 		end
 	end
 
@@ -335,20 +339,20 @@ class RDoc::Generator::Darkfish
 	end
 
 
-	### Load and render the erb template in the given +templatefile+ within the
+	### Load and render the erb template in the given +template_file+ within the
 	### specified +context+ (a Binding object) and write it out to +outfile+.
-	### Both +templatefile+ and +outfile+ should be Pathname-like objects.
+	### Both +template_file+ and +outfile+ should be Pathname-like objects.
 
-	def render_template( templatefile, context, outfile )
-		template_src = templatefile.read
+	def render_template( template_file, context, outfile )
+		template_src = template_file.read
 		template = ERB.new( template_src, nil, '<>' )
-		template.filename = templatefile.to_s
+		template.filename = template_file.to_s
 
 		output = begin
 							 template.result( context )
 						 rescue NoMethodError => err
 							 raise RDoc::Error, "Error while evaluating %s: %s (at %p)" % [
-								 templatefile.to_s,
+								 template_file.to_s,
 								 err.message,
 								 eval( "_erbout[-50,50]", context )
 							 ], err.backtrace

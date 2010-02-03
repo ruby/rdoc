@@ -18,6 +18,7 @@
   * ri will use the RI_PAGER environment variable to find a pager.
   * RDoc::RDoc no longer passes around options.  Patch #27167.
   * Improved some wording for the RDoc main page.  Patch #27264, #27268.
+  * Darkfish won't generate a file if its template is missing.  Patch #25857.
 
 * N Bug Fixes
   * The :attr: directives now use the name given to create an attribute.  See
