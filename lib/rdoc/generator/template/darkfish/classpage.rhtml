@@ -217,7 +217,7 @@
 
 				<div class="method-heading">
 				<% if method.call_seq %>
-					<span class="method-callseq"><%= method.call_seq.strip.gsub(/->/, '&rarr;').gsub( /^\w.*?\./m, '') %></span>
+					<span class="method-callseq"><%= method.call_seq.strip.gsub(/->/, '&rarr;').gsub( /^\w.+\./m, '') %></span>
 					<span class="method-click-advice">click to toggle source</span>
 				<% else %>
 					<span class="method-name"><%= h method.name %></span><span
