@@ -60,13 +60,13 @@ class RDoc::ClassModule < RDoc::Context
       [attr.name, attr.rw]
     end
 
-    methods = methods_by_type.map do |type, visibilities|
+    method_types = methods_by_type.map do |type, visibilities|
       visibilities = visibilities.map do |visibility, methods|
-        methods = methods.map do |method|
+        method_names = methods.map do |method|
           method.name
         end
 
-        [visibility, methods]
+        [visibility, method_names]
       end
 
       [type, visibilities]
@@ -84,7 +84,7 @@ class RDoc::ClassModule < RDoc::Context
       includes.map do |incl|
         [incl.name, parse(incl.comment)]
       end,
-      methods,
+      method_types,
     ]
   end
 

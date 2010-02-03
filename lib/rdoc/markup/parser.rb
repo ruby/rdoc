@@ -162,7 +162,7 @@ class RDoc::Markup::Parser
 
       if column < indent and
          not type == :NEWLINE and
-         not (type == :INDENT and data >= indent) then
+         (type != :INDENT or data < indent) then
         unget
         break
       end
@@ -520,7 +520,6 @@ require 'rdoc/markup/heading'
 require 'rdoc/markup/list'
 require 'rdoc/markup/list_item'
 require 'rdoc/markup/paragraph'
-require 'rdoc/markup/parser'
 require 'rdoc/markup/rule'
 require 'rdoc/markup/verbatim'
 

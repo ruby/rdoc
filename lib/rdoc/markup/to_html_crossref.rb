@@ -15,7 +15,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # 3) The method can be followed by parenthesis which may
 
   CLASS_REGEXP_STR = '\\\\?((?:\:{2})?[A-Z]\w*(?:\:\:\w+)*)'
-  METHOD_REGEXP_STR = '(\w+[!?=]?)(?:\([\.\w+\*\/\+\-\=\<\>]*\))?'
+  METHOD_REGEXP_STR = '(\w+[!?=]?)(?:\([\w.+*/=<>-]*\))?'
 
   ##
   # Regular expressions matching text that should potentially have
