@@ -335,8 +335,6 @@ class RDoc::RDoc
     end
   end
 
-  private
-
   def read_file_contents(filename)
     content = if RUBY_VERSION >= '1.9' then
                 File.open(filename, "r:ascii-8bit") { |f| f.read }
@@ -345,7 +343,7 @@ class RDoc::RDoc
               end
 
     if defined? Encoding then
-      if /coding:\s*(\S+)/ =~ content[/\A(?:.*\n){0,2}/]
+      if /coding:\s*([\w-]+)/i =~ content[/\A(?:.*\n){0,2}/]
         if enc = ::Encoding.find($1)
           content.force_encoding(enc)
         end
