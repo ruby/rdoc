@@ -18,6 +18,7 @@ class TestRDocMarkupToBs < RDoc::Markup::FormatterTestCase
   end
 
   def accept_heading
+    skip "No String#chars, upgrade your ruby" unless ''.respond_to? :chars
     assert_equal "===== H\bHe\bel\bll\blo\bo\n", @to.res.join
   end
 
@@ -194,6 +195,7 @@ class TestRDocMarkupToBs < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_heading_1
+    skip "No String#chars, upgrade your ruby" unless ''.respond_to? :chars
     @to.start_accepting
     @to.accept_heading @RM::Heading.new(1, 'Hello')
 
@@ -201,6 +203,7 @@ class TestRDocMarkupToBs < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_heading_2
+    skip "No String#chars, upgrade your ruby" unless ''.respond_to? :chars
     @to.start_accepting
     @to.accept_heading @RM::Heading.new(2, 'Hello')
 
@@ -208,6 +211,7 @@ class TestRDocMarkupToBs < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_heading_3
+    skip "No String#chars, upgrade your ruby" unless ''.respond_to? :chars
     @to.start_accepting
     @to.accept_heading @RM::Heading.new(3, 'Hello')
 
@@ -215,6 +219,7 @@ class TestRDocMarkupToBs < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_heading_4
+    skip "No String#chars, upgrade your ruby" unless ''.respond_to? :chars
     @to.start_accepting
     @to.accept_heading @RM::Heading.new(4, 'Hello')
 
@@ -222,6 +227,7 @@ class TestRDocMarkupToBs < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_heading_indent
+    skip "No String#chars, upgrade your ruby" unless ''.respond_to? :chars
     @to.start_accepting
     @to.indent = 3
     @to.accept_heading @RM::Heading.new(1, 'Hello')
@@ -230,6 +236,7 @@ class TestRDocMarkupToBs < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_heading_b
+    skip "No String#chars, upgrade your ruby" unless ''.respond_to? :chars
     @to.start_accepting
     @to.indent = 3
     @to.accept_heading @RM::Heading.new(1, '*Hello*')
@@ -238,6 +245,7 @@ class TestRDocMarkupToBs < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_heading_suppressed_crossref
+    skip "No String#chars, upgrade your ruby" unless ''.respond_to? :chars
     @to.start_accepting
     @to.accept_heading @RM::Heading.new(1, '\\Hello')
 
@@ -259,6 +267,7 @@ class TestRDocMarkupToBs < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_paragraph_b
+    skip "No String#chars, upgrade your ruby" unless ''.respond_to? :chars
     @to.start_accepting
     @to.accept_paragraph @RM::Paragraph.new('reg <b>bold words</b> reg')
 
@@ -268,6 +277,7 @@ class TestRDocMarkupToBs < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_paragraph_i
+    skip "No String#chars, upgrade your ruby" unless ''.respond_to? :chars
     @to.start_accepting
     @to.accept_paragraph @RM::Paragraph.new('reg <em>italic words</em> reg')
 
@@ -300,6 +310,7 @@ class TestRDocMarkupToBs < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_paragraph_star
+    skip "No String#chars, upgrade your ruby" unless ''.respond_to? :chars
     @to.start_accepting
     @to.accept_paragraph @RM::Paragraph.new('regular *bold* regular')
 
@@ -309,6 +320,7 @@ class TestRDocMarkupToBs < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_paragraph_underscore
+    skip "No String#chars, upgrade your ruby" unless ''.respond_to? :chars
     @to.start_accepting
     @to.accept_paragraph @RM::Paragraph.new('regular _italic_ regular')
 
