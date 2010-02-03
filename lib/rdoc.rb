@@ -332,6 +332,8 @@ $DEBUG_RDOC = nil
 #   last.  If you don't specify a +:startdoc:+ by the end of the container,
 #   disables documentation for the entire class or module.
 #
+# Further directives can be found in RDoc::Parser::Ruby and RDoc::Parser::C
+#
 # == Other stuff
 #
 # RDoc is currently being maintained by Eric Hodel <drbrain@segment7.net>
