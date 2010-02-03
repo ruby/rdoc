@@ -31,7 +31,7 @@
   * :method: now works when at the end of a class.  Bug #26910.
   * Preserve elipsis from call-seq in Darkfish.  Patch #26974.
   * Emacs-style <tt>coding:</tt> is handled properly.  Patch #27388.
-  * RubyLex now parses UTF-8 identifiers.  Bug #26946.
+  * RubyLex now parses UTF-8 identifiers.  Bug #26946, #26947.
 
 === 2.4.3 / 2009-04-01
 
