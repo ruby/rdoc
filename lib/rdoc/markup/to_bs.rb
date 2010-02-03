@@ -47,6 +47,13 @@ class RDoc::Markup::ToBs < RDoc::Markup::ToRdoc
   end
 
   ##
+  # Calls convert_string on the result of convert_special
+
+  def convert_special special
+    convert_string super
+  end
+
+  ##
   # Adds bold or underline mixed with backspaces
 
   def convert_string string
