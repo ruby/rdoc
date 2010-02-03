@@ -195,28 +195,28 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
 
   def test_accept_heading_1
     @to.start_accepting
-    @to.accept_heading @RMP::Heading.new(1, 'Hello')
+    @to.accept_heading @RM::Heading.new(1, 'Hello')
 
     assert_equal "\e[0m\e[1;32mHello\e[m\n", @to.end_accepting
   end
 
   def test_accept_heading_2
     @to.start_accepting
-    @to.accept_heading @RMP::Heading.new(2, 'Hello')
+    @to.accept_heading @RM::Heading.new(2, 'Hello')
 
     assert_equal "\e[0m\e[4;32mHello\e[m\n", @to.end_accepting
   end
 
   def test_accept_heading_3
     @to.start_accepting
-    @to.accept_heading @RMP::Heading.new(3, 'Hello')
+    @to.accept_heading @RM::Heading.new(3, 'Hello')
 
     assert_equal "\e[0m\e[32mHello\e[m\n", @to.end_accepting
   end
 
   def test_accept_heading_4
     @to.start_accepting
-    @to.accept_heading @RMP::Heading.new(4, 'Hello')
+    @to.accept_heading @RM::Heading.new(4, 'Hello')
 
     assert_equal "\e[0mHello\n", @to.end_accepting
   end
@@ -224,7 +224,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
   def test_accept_heading_indent
     @to.start_accepting
     @to.indent = 3
-    @to.accept_heading @RMP::Heading.new(1, 'Hello')
+    @to.accept_heading @RM::Heading.new(1, 'Hello')
 
     assert_equal "\e[0m   \e[1;32mHello\e[m\n", @to.end_accepting
   end
@@ -232,15 +232,15 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
   def test_accept_heading_b
     @to.start_accepting
     @to.indent = 3
-    @to.accept_heading @RMP::Heading.new(1, '*Hello*')
+    @to.accept_heading @RM::Heading.new(1, '*Hello*')
 
     assert_equal "\e[0m   \e[1;32m\e[1mHello\e[m\e[m\n", @to.end_accepting
   end
 
   def test_accept_list_item_start_note_2
-    list = @RMP::List.new(:NOTE,
-             @RMP::ListItem.new('<tt>teletype</tt>',
-                                @RMP::Paragraph.new('teletype description')))
+    list = @RM::List.new(:NOTE,
+             @RM::ListItem.new('<tt>teletype</tt>',
+                               @RM::Paragraph.new('teletype description')))
 
     @to.start_accepting
 
@@ -253,7 +253,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
 
   def test_accept_paragraph_b
     @to.start_accepting
-    @to.accept_paragraph @RMP::Paragraph.new('reg <b>bold words</b> reg')
+    @to.accept_paragraph @RM::Paragraph.new('reg <b>bold words</b> reg')
 
     expected = "\e[0mreg \e[1mbold words\e[m reg\n"
 
@@ -262,7 +262,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
 
   def test_accept_paragraph_i
     @to.start_accepting
-    @to.accept_paragraph @RMP::Paragraph.new('reg <em>italic words</em> reg')
+    @to.accept_paragraph @RM::Paragraph.new('reg <em>italic words</em> reg')
 
     expected = "\e[0mreg \e[4mitalic words\e[m reg\n"
 
@@ -272,7 +272,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
   def test_accept_paragraph_indent
     @to.start_accepting
     @to.indent = 3
-    @to.accept_paragraph @RMP::Paragraph.new('words ' * 30)
+    @to.accept_paragraph @RM::Paragraph.new('words ' * 30)
 
     expected = <<-EXPECTED
 \e[0m   words words words words words words words words words words words words
@@ -285,7 +285,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
 
   def test_accept_paragraph_plus
     @to.start_accepting
-    @to.accept_paragraph @RMP::Paragraph.new('regular +teletype+ regular')
+    @to.accept_paragraph @RM::Paragraph.new('regular +teletype+ regular')
 
     expected = "\e[0mregular \e[7mteletype\e[m regular\n"
 
@@ -294,7 +294,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
 
   def test_accept_paragraph_star
     @to.start_accepting
-    @to.accept_paragraph @RMP::Paragraph.new('regular *bold* regular')
+    @to.accept_paragraph @RM::Paragraph.new('regular *bold* regular')
 
     expected = "\e[0mregular \e[1mbold\e[m regular\n"
 
@@ -303,7 +303,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
 
   def test_accept_paragraph_underscore
     @to.start_accepting
-    @to.accept_paragraph @RMP::Paragraph.new('regular _italic_ regular')
+    @to.accept_paragraph @RM::Paragraph.new('regular _italic_ regular')
 
     expected = "\e[0mregular \e[4mitalic\e[m regular\n"
 
@@ -312,7 +312,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
 
   def test_accept_paragraph_wrap
     @to.start_accepting
-    @to.accept_paragraph @RMP::Paragraph.new('words ' * 30)
+    @to.accept_paragraph @RM::Paragraph.new('words ' * 30)
 
     expected = <<-EXPECTED
 \e[0mwords words words words words words words words words words words words words
@@ -327,7 +327,7 @@ words words words words
     @to.start_accepting
     @to.indent = 3
 
-    @to.accept_rule @RMP::Rule.new(1)
+    @to.accept_rule @RM::Rule.new(1)
 
     assert_equal "\e[0m   " + '-' * 75, @to.end_accepting
   end
@@ -337,8 +337,8 @@ words words words words
 
     @to.indent = 2
 
-    @to.accept_verbatim @RMP::Verbatim.new('    ', 'hi', "\n",
-                                           '     ', 'world', "\n")
+    @to.accept_verbatim @RM::Verbatim.new('    ', 'hi', "\n",
+                                          '     ', 'world', "\n")
 
     assert_equal "\e[0m    hi\n     world\n\n", @to.end_accepting
   end
@@ -348,8 +348,8 @@ words words words words
 
     @to.indent = 2
 
-    @to.accept_verbatim @RMP::Verbatim.new('    ', 'hi', "\n",
-                                           '    ', 'world', "\n")
+    @to.accept_verbatim @RM::Verbatim.new('    ', 'hi', "\n",
+                                          '    ', 'world', "\n")
 
     assert_equal "\e[0m    hi\n    world\n\n", @to.end_accepting
   end
@@ -359,15 +359,15 @@ words words words words
   end
 
   def test_list_nested
-    doc = @RMP::Document.new(
-            @RMP::List.new(:BULLET,
-              @RMP::ListItem.new(nil,
-                @RMP::Paragraph.new('l1'),
-                @RMP::List.new(:BULLET,
-                  @RMP::ListItem.new(nil,
-                    @RMP::Paragraph.new('l1.1')))),
-              @RMP::ListItem.new(nil,
-                @RMP::Paragraph.new('l2'))))
+    doc = @RM::Document.new(
+            @RM::List.new(:BULLET,
+              @RM::ListItem.new(nil,
+                @RM::Paragraph.new('l1'),
+                @RM::List.new(:BULLET,
+                  @RM::ListItem.new(nil,
+                    @RM::Paragraph.new('l1.1')))),
+              @RM::ListItem.new(nil,
+                @RM::Paragraph.new('l2'))))
 
     output = doc.accept @to
 
@@ -381,22 +381,22 @@ words words words words
   end
 
   def test_list_verbatim # HACK overblown
-    doc = @RMP::Document.new(
-            @RMP::List.new(:BULLET,
-              @RMP::ListItem.new(nil,
-                @RMP::Paragraph.new('list', 'stuff'),
-                @RMP::BlankLine.new(),
-                @RMP::Verbatim.new('   ', '*', ' ', 'list', "\n",
-                                   '     ', 'with', "\n",
-                                   "\n",
-                                   '     ', 'second', "\n",
-                                   "\n",
-                                   '     ', '1.', ' ', 'indented', "\n",
-                                   '     ', '2.', ' ', 'numbered', "\n",
-                                   "\n",
-                                   '     ', 'third', "\n",
-                                   "\n",
-                                   '   ', '*', ' ', 'second', "\n"))))
+    doc = @RM::Document.new(
+            @RM::List.new(:BULLET,
+              @RM::ListItem.new(nil,
+                @RM::Paragraph.new('list', 'stuff'),
+                @RM::BlankLine.new(),
+                @RM::Verbatim.new('   ', '*', ' ', 'list', "\n",
+                                  '     ', 'with', "\n",
+                                  "\n",
+                                  '     ', 'second', "\n",
+                                  "\n",
+                                  '     ', '1.', ' ', 'indented', "\n",
+                                  '     ', '2.', ' ', 'numbered', "\n",
+                                  "\n",
+                                  '     ', 'third', "\n",
+                                  "\n",
+                                  '   ', '*', ' ', 'second', "\n"))))
 
     output = doc.accept @to
 

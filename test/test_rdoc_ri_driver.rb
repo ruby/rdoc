@@ -97,10 +97,10 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
   end
 
   def test_display
-    rmp = RDoc::Markup::Parser
+    rm = RDoc::Markup
 
-    doc = rmp::Document.new(
-            rmp::Paragraph.new('hi'))
+    doc = rm::Document.new(
+            rm::Paragraph.new('hi'))
 
     out, err = capture_io do
       @driver.display doc

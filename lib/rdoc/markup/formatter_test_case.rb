@@ -8,31 +8,31 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
 
     @m = RDoc::Markup.new
     @am = RDoc::Markup::AttributeManager.new
-    @RMP = RDoc::Markup::Parser
+    @RM = RDoc::Markup
 
-    @bullet_list = @RMP::List.new(:BULLET,
-      @RMP::ListItem.new(nil, @RMP::Paragraph.new('l1')),
-      @RMP::ListItem.new(nil, @RMP::Paragraph.new('l2')))
+    @bullet_list = @RM::List.new(:BULLET,
+      @RM::ListItem.new(nil, @RM::Paragraph.new('l1')),
+      @RM::ListItem.new(nil, @RM::Paragraph.new('l2')))
 
-    @label_list = @RMP::List.new(:LABEL,
-      @RMP::ListItem.new('cat', @RMP::Paragraph.new('cats are cool')),
-      @RMP::ListItem.new('dog', @RMP::Paragraph.new('dogs are cool too')))
+    @label_list = @RM::List.new(:LABEL,
+      @RM::ListItem.new('cat', @RM::Paragraph.new('cats are cool')),
+      @RM::ListItem.new('dog', @RM::Paragraph.new('dogs are cool too')))
 
-    @lalpha_list = @RMP::List.new(:LALPHA,
-      @RMP::ListItem.new(nil, @RMP::Paragraph.new('l1')),
-      @RMP::ListItem.new(nil, @RMP::Paragraph.new('l2')))
+    @lalpha_list = @RM::List.new(:LALPHA,
+      @RM::ListItem.new(nil, @RM::Paragraph.new('l1')),
+      @RM::ListItem.new(nil, @RM::Paragraph.new('l2')))
 
-    @note_list = @RMP::List.new(:NOTE,
-      @RMP::ListItem.new('cat', @RMP::Paragraph.new('cats are cool')),
-      @RMP::ListItem.new('dog', @RMP::Paragraph.new('dogs are cool too')))
+    @note_list = @RM::List.new(:NOTE,
+      @RM::ListItem.new('cat', @RM::Paragraph.new('cats are cool')),
+      @RM::ListItem.new('dog', @RM::Paragraph.new('dogs are cool too')))
 
-    @number_list = @RMP::List.new(:NUMBER,
-      @RMP::ListItem.new(nil, @RMP::Paragraph.new('l1')),
-      @RMP::ListItem.new(nil, @RMP::Paragraph.new('l2')))
+    @number_list = @RM::List.new(:NUMBER,
+      @RM::ListItem.new(nil, @RM::Paragraph.new('l1')),
+      @RM::ListItem.new(nil, @RM::Paragraph.new('l2')))
 
-    @ualpha_list = @RMP::List.new(:UALPHA,
-      @RMP::ListItem.new(nil, @RMP::Paragraph.new('l1')),
-      @RMP::ListItem.new(nil, @RMP::Paragraph.new('l2')))
+    @ualpha_list = @RM::List.new(:UALPHA,
+      @RM::ListItem.new(nil, @RM::Paragraph.new('l1')),
+      @RM::ListItem.new(nil, @RM::Paragraph.new('l2')))
   end
 
   def self.add_visitor_tests
@@ -53,7 +53,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_blank_line
         @to.start_accepting
 
-        @to.accept_blank_line @RMP::BlankLine.new
+        @to.accept_blank_line @RM::BlankLine.new
 
         accept_blank_line
       end
@@ -61,7 +61,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_heading
         @to.start_accepting
 
-        @to.accept_heading @RMP::Heading.new(5, 'Hello')
+        @to.accept_heading @RM::Heading.new(5, 'Hello')
 
         accept_heading
       end
@@ -69,7 +69,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_paragraph
         @to.start_accepting
 
-        @to.accept_paragraph @RMP::Paragraph.new('hi')
+        @to.accept_paragraph @RM::Paragraph.new('hi')
 
         accept_paragraph
       end
@@ -77,8 +77,8 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_verbatim
         @to.start_accepting
 
-        @to.accept_verbatim @RMP::Verbatim.new('  ', 'hi', "\n",
-                                               '  ', 'world', "\n")
+        @to.accept_verbatim @RM::Verbatim.new('  ', 'hi', "\n",
+                                              '  ', 'world', "\n")
 
         accept_verbatim
       end
@@ -86,7 +86,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       def test_accept_rule
         @to.start_accepting
 
-        @to.accept_rule @RMP::Rule.new(4)
+        @to.accept_rule @RM::Rule.new(4)
 
         accept_rule
       end

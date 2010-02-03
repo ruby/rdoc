@@ -38,354 +38,6 @@ class RDoc::Markup::Parser
 
   class ParseError < Error; end
 
-  ##
-  # An empty line
-
-  class BlankLine
-    def == other # :nodoc:
-      self.class == other.class
-    end
-
-    def accept visitor
-      visitor.accept_blank_line self
-    end
-
-    def pretty_print q # :nodoc:
-      q.text 'blankline'
-    end
-  end
-
-  ##
-  # A Document containing lists, headings, paragraphs, etc.
-
-  class Document
-
-    ##
-    # The parts of the Document
-
-    attr_reader :parts
-
-    ##
-    # Creates a new Document with +parts+
-
-    def initialize *parts
-      @parts = []
-      @parts.push(*parts)
-    end
-
-    def == other # :nodoc:
-      self.class == other.class and @parts == other.parts
-    end
-
-    def accept visitor
-      visitor.start_accepting
-
-      @parts.each do |item|
-        item.accept visitor
-      end
-
-      visitor.end_accepting
-    end
-
-    def empty?
-      @parts.empty?
-    end
-
-    def pretty_print q # :nodoc:
-      q.group 2, '[doc: ', ']' do
-        q.seplist @parts do |part|
-          q.pp part
-        end
-      end
-    end
-  end
-
-  ##
-  # A heading with a level (1-6) and text
-
-  class Heading < Struct.new :level, :text
-    def accept visitor
-      visitor.accept_heading self
-    end
-
-    def pretty_print q # :nodoc:
-      q.group 2, "[head: #{level} ", ']' do
-        q.pp text
-      end
-    end
-  end
-
-  ##
-  # A Paragraph of text
-
-  class Paragraph
-
-    ##
-    # The component parts of the list
-
-    attr_reader :parts
-
-    ##
-    # Creates a new Paragraph containing +parts+
-
-    def initialize *parts
-      @parts = []
-      @parts.push(*parts)
-    end
-
-    ##
-    # Appends +text+ to the Paragraph
-
-    def << text
-      @parts << text
-    end
-
-    def == other # :nodoc:
-      self.class == other.class and text == other.text
-    end
-
-    def accept visitor
-      visitor.accept_paragraph self
-    end
-
-    ##
-    # Appends +other+'s parts into this Paragraph
-
-    def merge other
-      @parts.push(*other.parts)
-    end
-
-    def pretty_print q # :nodoc:
-      self.class.name =~ /.*::(\w{4})/i
-
-      q.group 2, "[#{$1.downcase}: ", ']' do
-        q.seplist @parts do |part|
-          q.pp part
-        end
-      end
-    end
-
-    ##
-    # The text of this paragraph
-
-    def text
-      @parts.join ' '
-    end
-  end
-
-  ##
-  # A List of ListItems
-
-  class List
-
-    ##
-    # The list's type
-
-    attr_accessor :type
-
-    ##
-    # Items in the list
-
-    attr_reader :items
-
-    ##
-    # Creates a new list of +type+ with +items+
-
-    def initialize type = nil, *items
-      @type = type
-      @items = []
-      @items.push(*items)
-    end
-
-    ##
-    # Appends +item+ to the list
-
-    def << item
-      @items << item
-    end
-
-    def == other # :nodoc:
-      self.class == other.class and
-        @type == other.type and
-        @items == other.items
-    end
-
-    def accept visitor
-      visitor.accept_list_start self
-
-      @items.each do |item|
-        item.accept visitor
-      end
-
-      visitor.accept_list_end self
-    end
-
-    ##
-    # Is the list empty?
-
-    def empty?
-      @items.empty?
-    end
-
-    ##
-    # Returns the last item in the list
-
-    def last
-      @items.last
-    end
-
-    def pretty_print q # :nodoc:
-      q.group 2, "[list: #{@type} ", ']' do
-        q.seplist @items do |item|
-          q.pp item
-        end
-      end
-    end
-
-    ##
-    # Appends +items+ to the list
-
-    def push *items
-      @items.push(*items)
-    end
-  end
-
-  ##
-  # An item within a List that contains paragraphs, headings, etc.
-
-  class ListItem
-
-    ##
-    # The label for the ListItem
-
-    attr_accessor :label
-
-    ##
-    # Parts of the ListItem
-
-    attr_reader :parts
-
-    ##
-    # Creates a new ListItem with an optional +label+ containing +parts+
-
-    def initialize label = nil, *parts
-      @label = label
-      @parts = []
-      @parts.push(*parts)
-    end
-
-    ##
-    # Appends +part+ to the ListItem
-
-    def << part
-      @parts << part
-    end
-
-    def == other # :nodoc:
-      self.class == other.class and
-        @label == other.label and
-        @parts == other.parts
-    end
-
-    def accept visitor
-      visitor.accept_list_item_start self
-
-      @parts.each do |part|
-        part.accept visitor
-      end
-
-      visitor.accept_list_item_end self
-    end
-
-    ##
-    # Is the ListItem empty?
-
-    def empty?
-      @parts.empty?
-    end
-
-    ##
-    # Length of parts in the ListItem
-
-    def length
-      @parts.length
-    end
-
-    def pretty_print q # :nodoc:
-      q.group 2, '[item: ', ']' do
-        if @label then
-          q.text @label
-          q.breakable
-        end
-
-        q.seplist @parts do |part|
-          q.pp part
-        end
-      end
-    end
-
-    ##
-    # Adds +parts+ to the ListItem
-
-    def push *parts
-      @parts.push(*parts)
-    end
-  end
-
-  ##
-  # A section of verbatim text
-
-  class Verbatim < Paragraph
-    def accept visitor
-      visitor.accept_verbatim self
-    end
-
-    ##
-    # Collapses 3+ newlines into two newlines
-
-    def normalize
-      parts = []
-
-      newlines = 0
-
-      @parts.each do |part|
-        case part
-        when /\n/ then
-          newlines += 1
-          parts << part if newlines <= 2
-        else
-          newlines = 0
-          parts << part
-        end
-      end
-
-      parts.slice!(-1) if parts[-2..-1] == ["\n", "\n"]
-
-      @parts = parts
-    end
-
-    ##
-    # The text of the section
-
-    def text
-      @parts.join
-    end
-  end
-
-  ##
-  # A horizontal rule with a weight
-
-  class Rule < Struct.new :weight
-    def accept visitor
-      visitor.accept_rule self
-    end
-
-    def pretty_print q # :nodoc:
-      q.group 2, '[rule:', ']' do
-        q.pp level
-      end
-    end
-  end
 
   ##
   # Enables display of debugging information
@@ -404,7 +56,7 @@ class RDoc::Markup::Parser
     parser = new
     #parser.debug = true
     parser.tokenize str
-    Document.new(*parser.parse)
+    RDoc::Markup::Document.new(*parser.parse)
   end
 
   ##
@@ -433,7 +85,7 @@ class RDoc::Markup::Parser
 
   def build_heading level
 
-    heading = Heading.new level, text
+    heading = RDoc::Markup::Heading.new level, text
     skip :NEWLINE
 
     heading
@@ -445,7 +97,7 @@ class RDoc::Markup::Parser
   def build_list margin
     p :list_start => margin if @debug
 
-    list = List.new
+    list = RDoc::Markup::List.new
 
     until @tokens.empty? do
       type, data, column, = get
@@ -503,7 +155,7 @@ class RDoc::Markup::Parser
   def build_list_item indent, item_type = nil
     p :list_item_start => [indent, item_type] if @debug
 
-    list_item = ListItem.new item_type
+    list_item = RDoc::Markup::ListItem.new item_type
 
     until @tokens.empty? do
       type, data, column = get
@@ -525,7 +177,7 @@ class RDoc::Markup::Parser
       when :HEADER then
         list_item << build_heading(data)
       when :NEWLINE then
-        list_item << BlankLine.new
+        list_item << RDoc::Markup::BlankLine.new
       when *LIST_TOKENS then
         unget
         list_item << build_list(column)
@@ -538,8 +190,9 @@ class RDoc::Markup::Parser
 
     return nil if list_item.empty?
 
-    list_item.parts.shift if BlankLine === list_item.parts.first and
-                             list_item.length > 1
+    list_item.parts.shift if
+      RDoc::Markup::BlankLine === list_item.parts.first and
+      list_item.length > 1
 
     list_item
   end
@@ -550,7 +203,7 @@ class RDoc::Markup::Parser
   def build_paragraph margin
     p :paragraph_start => margin if @debug
 
-    paragraph = Paragraph.new
+    paragraph = RDoc::Markup::Paragraph.new
 
     until @tokens.empty? do
       type, data, column, = get
@@ -585,7 +238,7 @@ class RDoc::Markup::Parser
 
   def build_verbatim margin
     p :verbatim_begin => margin if @debug
-    verbatim = Verbatim.new
+    verbatim = RDoc::Markup::Verbatim.new
 
     until @tokens.empty? do
       type, data, column, = get
@@ -681,10 +334,10 @@ class RDoc::Markup::Parser
         unget
         document << build_verbatim(indent)
       when :NEWLINE then
-        document << BlankLine.new
+        document << RDoc::Markup::BlankLine.new
         skip :NEWLINE, false
       when :RULE then
-        document << Rule.new(data)
+        document << RDoc::Markup::Rule.new(data)
         skip :NEWLINE
       when :TEXT then
         unget
@@ -855,4 +508,14 @@ class RDoc::Markup::Parser
   end
 
 end
+
+require 'rdoc/markup/blank_line'
+require 'rdoc/markup/document'
+require 'rdoc/markup/heading'
+require 'rdoc/markup/list'
+require 'rdoc/markup/list_item'
+require 'rdoc/markup/paragraph'
+require 'rdoc/markup/parser'
+require 'rdoc/markup/rule'
+require 'rdoc/markup/verbatim'
 

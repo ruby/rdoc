@@ -231,7 +231,7 @@ two
   end
 
   def util_paragraph(text)
-    RDoc::Markup::Parser::Paragraph.new text
+    RDoc::Markup::Paragraph.new text
   end
 
   def util_format(text)

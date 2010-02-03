@@ -54,10 +54,10 @@ module RDoc::Text
   end
 
   ##
-  # Normalizes +text+ then builds a RDoc::Markup::Parser::Document from it
+  # Normalizes +text+ then builds a RDoc::Markup::Document from it
 
   def parse text
-    return text if RDoc::Markup::Parser::Document === text
+    return text if RDoc::Markup::Document === text
     return if text.empty?
 
     text = normalize_comment text
