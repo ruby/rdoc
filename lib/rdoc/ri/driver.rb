@@ -138,7 +138,7 @@ Options may also be set in the 'RI' environment variable.
 
       formatters = RDoc::Markup.constants.grep(/^To[A-Z][a-z]+$/).sort
       formatters = formatters.sort.map do |formatter|
-        formatter.sub('To', '').downcase
+        formatter.to_s.sub('To', '').downcase
       end
 
       opt.on("--format=NAME", "-f",
