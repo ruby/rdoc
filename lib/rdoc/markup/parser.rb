@@ -318,7 +318,12 @@ class RDoc::Markup::Parser
     document = []
 
     until @tokens.empty? do
-      type, data, = get
+      type, data, column, = get
+
+      if type != :INDENT and column < indent then
+        unget
+        break
+      end
 
       case type
       when :HEADER then

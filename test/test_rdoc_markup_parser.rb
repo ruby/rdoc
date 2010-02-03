@@ -53,6 +53,24 @@ class TestRDocMarkupParser < MiniTest::Unit::TestCase
     assert_equal expected, @RMP.parse(str).parts
   end
 
+  def test_parse_bullet_verbatim_heading
+    str = <<-STR
+* l1
+    v
+
+= H
+    STR
+
+    expected = [
+      @RM::List.new(:BULLET, *[
+        @RM::ListItem.new(nil,
+          @RM::Paragraph.new('l1'),
+          @RM::Verbatim.new('  ', 'v', "\n"))]),
+      @RM::Heading.new(1, 'H')]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
   def test_parse_bullet_heading
     str = <<-STR
 * = l1
