@@ -264,7 +264,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
     @to.start_accepting
     @to.accept_paragraph @RMP::Paragraph.new('reg <em>italic words</em> reg')
 
-    expected = "\e[0mreg \e[3mitalic words\e[m reg\n"
+    expected = "\e[0mreg \e[4mitalic words\e[m reg\n"
 
     assert_equal expected, @to.end_accepting
   end
@@ -305,7 +305,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
     @to.start_accepting
     @to.accept_paragraph @RMP::Paragraph.new('regular _italic_ regular')
 
-    expected = "\e[0mregular \e[3mitalic\e[m regular\n"
+    expected = "\e[0mregular \e[4mitalic\e[m regular\n"
 
     assert_equal expected, @to.end_accepting
   end

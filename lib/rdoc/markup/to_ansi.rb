@@ -20,7 +20,7 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
   def init_tags
     add_tag :BOLD, "\e[1m", "\e[m"
     add_tag :TT,   "\e[7m", "\e[m"
-    add_tag :EM,   "\e[3m", "\e[m"
+    add_tag :EM,   "\e[4m", "\e[m"
   end
 
   def accept_list_item_end list_item
