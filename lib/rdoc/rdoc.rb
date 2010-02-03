@@ -38,7 +38,7 @@ class RDoc::RDoc
   ##
   # RDoc options
 
-  attr_reader :options
+  attr_accessor :options
 
   ##
   # Accessor for statistics.  Available after each call to parse_files
@@ -144,7 +144,7 @@ class RDoc::RDoc
   # representing candidates for documentation. It may also contain comments
   # (starting with '#')
 
-  def parse_dot_doc_file(in_dir, filename, options)
+  def parse_dot_doc_file in_dir, filename
     # read and strip comments
     patterns = File.read(filename).gsub(/#.*/, '')
 
@@ -152,7 +152,7 @@ class RDoc::RDoc
 
     patterns.split.each do |patt|
       candidates = Dir.glob(File.join(in_dir, patt))
-      result.concat(normalized_file_list(options,  candidates))
+      result.concat normalized_file_list(candidates)
     end
 
     result
@@ -170,7 +170,7 @@ class RDoc::RDoc
   # The effect of this is that if you want a file with a non-standard
   # extension parsed, you must name it explicitly.
 
-  def normalized_file_list(options, relative_files, force_doc = false,
+  def normalized_file_list(relative_files, force_doc = false,
                            exclude_pattern = nil)
     file_list = []
 
@@ -189,9 +189,9 @@ class RDoc::RDoc
         next if rel_file_name == "CVS" || rel_file_name == ".svn"
         dot_doc = File.join(rel_file_name, RDoc::DOT_DOC_FILENAME)
         if File.file?(dot_doc)
-          file_list.concat(parse_dot_doc_file(rel_file_name, dot_doc, options))
+          file_list.concat parse_dot_doc_file(rel_file_name, dot_doc)
         else
-          file_list.concat(list_files_in_directory(rel_file_name, options))
+          file_list.concat list_files_in_directory(rel_file_name)
         end
       else
         raise RDoc::Error, "I can't deal with a #{type} #{rel_file_name}"
@@ -207,30 +207,30 @@ class RDoc::RDoc
   # files. However we may well contain subdirectories which must be tested
   # for .document files.
 
-  def list_files_in_directory(dir, options)
+  def list_files_in_directory dir
     files = Dir.glob File.join(dir, "*")
 
-    normalized_file_list options, files, false, options.exclude
+    normalized_file_list files, false, @options.exclude
   end
 
   ##
   # Parse each file on the command line, recursively entering directories.
 
-  def parse_files(options)
-    files = options.files
+  def parse_files
+    files = @options.files
     files = ["."] if files.empty?
 
-    file_list = normalized_file_list(options, files, true, options.exclude)
+    file_list = normalized_file_list files, true, @options.exclude
 
     return [] if file_list.empty?
 
-    jobs = SizedQueue.new(@options.threads * 3)
+    jobs = SizedQueue.new @options.threads * 3
     workers = []
     file_info = []
     file_info_lock = Mutex.new
 
     Thread.abort_on_exception = true
-    @stats = RDoc::Stats.new(file_list.size, options.verbosity)
+    @stats = RDoc::Stats.new file_list.size, @options.verbosity
     @stats.begin_adding @options.threads
 
     # Create worker threads.
@@ -241,7 +241,7 @@ class RDoc::RDoc
           content = read_file_contents(filename)
           top_level = RDoc::TopLevel.new filename
 
-          parser = RDoc::Parser.for(top_level, filename, content, options,
+          parser = RDoc::Parser.for(top_level, filename, content, @options,
                                     @stats)
           result = parser.scan
 
@@ -298,7 +298,7 @@ class RDoc::RDoc
 
     start_time = Time.now
 
-    file_info = parse_files @options
+    file_info = parse_files
 
     @options.title = "RDoc Documentation"
 
