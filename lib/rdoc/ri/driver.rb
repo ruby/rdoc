@@ -25,8 +25,8 @@ require 'rdoc/ri/formatter'
 #   * RubyGems
 #   * ~/.rdoc
 #   * A user-supplied directory
-# * Paging output (uses PAGER environment variable or the less, more and
-#   pager programs)
+# * Paging output (uses RI_PAGER environment variable, PAGER environment
+#   variable or the less, more and pager programs)
 # * Interactive mode with tab-completion
 # * Abbreviated names (ri Zl shows Zlib documentation)
 # * Colorized output
@@ -811,13 +811,15 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
-  # Sets up a pager program to pass output through.  Tries the PAGER
-  # environment variable, followed by pager, less then more.
+  # Sets up a pager program to pass output through.  Tries the RI_PAGER and
+  # PAGER environment variables followed by pager, less then more.
 
   def setup_pager
     return if @use_stdout
 
-    [ENV['PAGER'], 'pager', 'less', 'more'].compact.uniq.each do |pager|
+    pagers = [ENV['RI_PAGER'], ENV['PAGER'], 'pager', 'less', 'more']
+
+    pagers.compact.uniq.each do |pager|
       io = IO.popen(pager, "w") rescue next
 
       @paging = true
