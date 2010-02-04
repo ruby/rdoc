@@ -440,21 +440,21 @@ Options may also be set in the 'RI' environment variable.
 
     return if found.empty?
 
-    out = RDoc::Markup::Parser::Document.new
+    out = RDoc::Markup::Document.new
 
-    out.parts << RDoc::Markup::Parser::Heading.new(1, name)
-    out.parts << RDoc::Markup::Parser::BlankLine.new
+    out.parts << RDoc::Markup::Heading.new(1, name)
+    out.parts << RDoc::Markup::BlankLine.new
 
     found.each do |path, klass|
-      out.parts << RDoc::Markup::Parser::Paragraph.new("(from #{path})")
-      out.parts << RDoc::Markup::Parser::Rule.new(1)
-      out.parts << RDoc::Markup::Parser::BlankLine.new
+      out.parts << RDoc::Markup::Paragraph.new("(from #{path})")
+      out.parts << RDoc::Markup::Rule.new(1)
+      out.parts << RDoc::Markup::BlankLine.new
       if klass.comment then
         out.parts.push(*klass.comment.parts)
       else
-        out.parts << RDoc::Markup::Parser::Paragraph.new("[Not documented]")
+        out.parts << RDoc::Markup::Paragraph.new("[Not documented]")
       end
-      out.parts << RDoc::Markup::Parser::BlankLine.new
+      out.parts << RDoc::Markup::BlankLine.new
     end
 
     display out
@@ -468,18 +468,18 @@ Options may also be set in the 'RI' environment variable.
 
     raise NotFoundError, name if found.empty?
 
-    out = RDoc::Markup::Parser::Document.new
+    out = RDoc::Markup::Document.new
 
-    out.parts << RDoc::Markup::Parser::Heading.new(1, name)
-    out.parts << RDoc::Markup::Parser::BlankLine.new
+    out.parts << RDoc::Markup::Heading.new(1, name)
+    out.parts << RDoc::Markup::BlankLine.new
 
     found.each do |path, methods|
       methods.each do |method|
-        out.parts << RDoc::Markup::Parser::Paragraph.new("(from #{path})")
-        out.parts << RDoc::Markup::Parser::Rule.new(1)
-        out.parts << RDoc::Markup::Parser::BlankLine.new
+        out.parts << RDoc::Markup::Paragraph.new("(from #{path})")
+        out.parts << RDoc::Markup::Rule.new(1)
+        out.parts << RDoc::Markup::BlankLine.new
         out.parts.push(*method.comment.parts)
-        out.parts << RDoc::Markup::Parser::BlankLine.new
+        out.parts << RDoc::Markup::BlankLine.new
       end
     end
 

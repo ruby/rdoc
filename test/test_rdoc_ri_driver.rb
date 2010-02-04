@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'minitest/autorun'
 require 'tmpdir'
+require 'fileutils'
 require 'rdoc/ri/driver'
 
 class TestRDocRIDriver < MiniTest::Unit::TestCase
@@ -107,6 +108,30 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     end
 
     assert_equal "\e[0mhi\n", out
+  end
+
+  def test_display_class
+    util_store
+
+    FileUtils.mkdir_p @store.class_path 'Foo'
+
+    out, err = capture_io do
+      @driver.display_class 'Foo'
+    end
+
+    assert_match %r%Foo%, out
+  end
+
+  def test_display_method
+    util_store
+
+    FileUtils.mkdir_p @store.class_path 'Foo'
+
+    out, err = capture_io do
+      @driver.display_method 'Foo::Bar#blah'
+    end
+
+    assert_match %r%Foo::Bar#blah%, out
   end
 
   def test_display_name_not_found_class
@@ -375,6 +400,28 @@ Foo::Bar#blah
 
   def util_store
     @store = RDoc::RI::Store.new @home_ri
+
+    cFoo     = RDoc::NormalClass.new 'Foo'
+
+    cFoo_Bar = RDoc::NormalClass.new 'Bar'
+    cFoo_Bar.parent = cFoo
+
+    blah = RDoc::AnyMethod.new nil, 'blah'
+    new  = RDoc::AnyMethod.new nil, 'new'
+    new.singleton = true
+
+    cFoo_Bar.add_method blah
+    cFoo_Bar.add_method new
+
+    cFoo_Baz = RDoc::NormalClass.new 'Baz'
+    cFoo_Baz.parent = cFoo
+
+    @store.save_class cFoo
+    @store.save_class cFoo_Bar
+    @store.save_class cFoo_Baz
+    @store.save_method cFoo_Bar, blah
+    @store.save_method cFoo_Bar, new
+
     @store.cache[:ancestors] = {
       'Foo'      => %w[Object],
       'Foo::Bar' => %w[Object],
