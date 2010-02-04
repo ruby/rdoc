@@ -40,6 +40,11 @@ class C4
   end
 end
 
+class C5
+  class C1
+  end
+end
+
 module M1
 end
 XREF_DATA

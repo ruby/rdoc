@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'minitest/unit'
+require 'minitest/autorun'
 require 'test/xref_test_case'
 
 class TestRDocTopLevel < XrefTestCase
@@ -11,13 +11,20 @@ class TestRDocTopLevel < XrefTestCase
   end
 
   def test_class_all_classes_and_modules
-    assert_equal %w[C1 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 M1],
+    expected = %w[
+      C1 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1 M1
+    ]
+
+    assert_equal expected,
                  RDoc::TopLevel.all_classes_and_modules.map { |m| m.full_name }.sort
   end
 
   def test_class_classes
-    assert_equal %w[C1 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4],
-                 RDoc::TopLevel.classes.map { |m| m.full_name }.sort
+    expected = %w[
+      C1 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1
+    ]
+
+    assert_equal expected, RDoc::TopLevel.classes.map { |m| m.full_name }.sort
   end
 
   def test_class_files
@@ -27,6 +34,12 @@ class TestRDocTopLevel < XrefTestCase
 
   def test_class_find_class_named
     assert_equal @c1, RDoc::TopLevel.find_class_named('C1')
+  end
+
+  def test_class_find_class_named_from
+    assert_equal @c5_c1, RDoc::TopLevel.find_class_named_from('C1', 'C5')
+
+    assert_equal @c1,    RDoc::TopLevel.find_class_named_from('C1', 'C4')
   end
 
   def test_class_find_file_named

@@ -68,10 +68,26 @@ class RDoc::TopLevel < RDoc::Context
 
   def self.find_class_named(name)
     @lock.synchronize do
-      classes_hash.values.find do |c|
+      # The sort makes C1 show up before C4::C1
+      classes_hash.values.sort.find do |c|
         c.find_class_named name
       end
     end
+  end
+
+  ##
+  # Finds the class with +name+ starting in namespace +from_name+
+
+  def self.find_class_named_from name, from_name
+    from = find_class_named from_name
+
+    until RDoc::TopLevel === from do
+      klass = from.find_class_named name
+      return klass if klass
+      from = from.parent
+    end
+
+    find_class_named name
   end
 
   ##

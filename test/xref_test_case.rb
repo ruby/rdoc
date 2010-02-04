@@ -1,7 +1,7 @@
 ENV['RDOC_TEST'] = 'yes'
 
 require 'rubygems'
-require 'minitest/unit'
+require 'minitest/autorun'
 require 'rdoc'
 require 'rdoc/stats'
 require 'rdoc/options'
@@ -41,11 +41,10 @@ class XrefTestCase < MiniTest::Unit::TestCase
     @c3    = @xref_data.find_module_named 'C3'
     @c4    = @xref_data.find_module_named 'C4'
     @c4_c4 = @xref_data.find_module_named 'C4::C4'
+    @c5_c1 = @xref_data.find_module_named 'C5::C1'
 
     @m1    = @xref_data.find_module_named 'M1'
   end
 
 end
-
-MiniTest::Unit.autorun
 
