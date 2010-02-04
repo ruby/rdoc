@@ -41,25 +41,6 @@ module RDoc::Generator::Markup
   end
 
   ##
-  # Convert a string in markup format into HTML.  Removes the first paragraph
-  # tags if +remove_para+ is true
-
-  def markup(text, remove_para = false)
-    return '' unless text
-
-    content = strip_hashes text
-
-    result = formatter.convert content
-
-    if remove_para then
-      res.sub!(/^<p>/, '')
-      res.sub!(/<\/p>$/, '')
-    end
-
-    result
-  end
-
-  ##
   # Build a webcvs URL starting for the given +url+ with +full_path+ appended
   # as the destination path.  If +url+ contains '%s' +full_path+ will be
   # sprintf'd into +url+ instead.

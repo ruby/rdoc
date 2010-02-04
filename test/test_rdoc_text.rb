@@ -3,6 +3,7 @@ require 'minitest/autorun'
 require 'rdoc'
 require 'rdoc/text'
 require 'rdoc/markup'
+require 'rdoc/markup/formatter'
 
 class TestRDocText < MiniTest::Unit::TestCase
 
@@ -59,6 +60,12 @@ The comments associated with
     EXPECTED
 
     assert_equal expected, flush_left(text)
+  end
+
+  def test_markup
+    def formatter() RDoc::Markup::ToHtml.new end
+
+    assert_equal "<p>\nhi\n</p>\n", markup('hi')
   end
 
   def test_normalize_comment

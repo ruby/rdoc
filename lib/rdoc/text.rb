@@ -43,6 +43,18 @@ module RDoc::Text
   end
 
   ##
+  # Convert a string in markup format into HTML.  Removes the first paragraph
+  # tags if +remove_para+ is true.
+  #
+  # Requires the including class to implement #formatter
+
+  def markup text
+    document = parse text
+
+    document.accept formatter
+  end
+
+  ##
   # Strips hashes, expands tabs then flushes +text+ to the left
 
   def normalize_comment text
