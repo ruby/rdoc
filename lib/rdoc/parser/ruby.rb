@@ -406,12 +406,15 @@ class RDoc::Parser::Ruby < RDoc::Parser
     remove_private_comments comment
   end
 
-  def make_message(msg)
-    prefix = "\n" + @file_name + ":"
-    if @scanner
-      prefix << "#{@scanner.line_no}:#{@scanner.char_no}: "
-    end
-    return prefix + msg
+  ##
+  # Adds useful info about the parser to +message+
+
+  def make_message message
+    prefix = "\n#{@file_name}:"
+
+    prefix << "#{@scanner.line_no}:#{@scanner.char_no}:" if @scanner
+
+    "#{prefix} #{message}"
   end
 
   ##
