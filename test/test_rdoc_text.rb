@@ -79,6 +79,14 @@ The comments associated with
     assert_equal expected, normalize_comment(text)
   end
 
+  def test_parse
+    assert_kind_of RDoc::Markup::Document, parse('hi')
+  end
+
+  def test_parse_document
+    assert_equal RDoc::Markup::Document.new, parse(RDoc::Markup::Document.new)
+  end
+
   def test_parse_empty
     assert_equal RDoc::Markup::Document.new, parse('')
   end
