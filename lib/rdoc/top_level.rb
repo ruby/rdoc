@@ -238,5 +238,16 @@ class RDoc::TopLevel < RDoc::Context
     http_url RDoc::RDoc.current.generator.file_dir
   end
 
+  def pretty_print q # :nodoc:
+    q.group 2, "[#{self.class}: ", "]" do
+      q.text "base name: #{base_name.inspect}"
+      q.breakable
+
+      items = @modules.map { |n,m| m }
+      items.push(*@modules.map { |n,c| c })
+      q.seplist items do |mod| q.pp mod end
+    end
+  end
+
 end
 

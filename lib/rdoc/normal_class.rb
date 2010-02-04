@@ -20,6 +20,27 @@ class RDoc::NormalClass < RDoc::ClassModule
     ]
   end
 
-end
+  def pretty_print q # :nodoc:
+    superclass = @superclass ? " < #{@superclass}" : nil
 
+    q.group 2, "[class #{full_name} < #{superclass}: ", "]" do
+      q.text "includes:"
+      q.breakable
+      q.seplist @includes do |inc| q.pp inc end
+
+      q.text "attributes:"
+      q.breakable
+      q.seplist @attributes do |inc| q.pp inc end
+
+      q.text "methods:"
+      q.breakable
+      q.seplist @method_list do |inc| q.pp inc end
+
+      q.text "aliases:"
+      q.breakable
+      q.seplist @aliases do |inc| q.pp inc end
+    end
+  end
+
+end
 
