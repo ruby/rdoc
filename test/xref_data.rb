@@ -31,7 +31,7 @@ class C3
   class H1
   end
 
-  class H2
+  class H2 < H1
   end
 end
 

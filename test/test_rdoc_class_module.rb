@@ -3,6 +3,8 @@ require 'test/xref_test_case'
 class TestRDocClassModule < XrefTestCase
 
   def setup
+    super
+
     @RM = RDoc::Markup
   end
 
@@ -65,6 +67,10 @@ class TestRDocClassModule < XrefTestCase
 
     expected.each do |m| m.parent = cm1 end
     assert_equal expected, cm1.method_list.sort
+  end
+
+  def test_superclass
+    assert_equal @c3_h1, @c3_h2.superclass
   end
 
 end

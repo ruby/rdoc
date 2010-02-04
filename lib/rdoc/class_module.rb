@@ -176,7 +176,7 @@ class RDoc::ClassModule < RDoc::Context
   def superclass
     raise NoMethodError, "#{full_name} is a module" if module?
 
-    RDoc::TopLevel.find_class_named(@superclass) || @superclass
+    RDoc::TopLevel.find_class_named_from(@superclass, parent) || @superclass
   end
 
   ##

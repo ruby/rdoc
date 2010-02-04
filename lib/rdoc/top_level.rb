@@ -76,14 +76,17 @@ class RDoc::TopLevel < RDoc::Context
   end
 
   ##
-  # Finds the class with +name+ starting in namespace +from_name+
+  # Finds the class with +name+ starting in namespace +from+
 
-  def self.find_class_named_from name, from_name
-    from = find_class_named from_name
+  def self.find_class_named_from name, from
+    from = find_class_named from unless RDoc::Context === from
 
     until RDoc::TopLevel === from do
+      return nil unless from
+
       klass = from.find_class_named name
       return klass if klass
+
       from = from.parent
     end
 
