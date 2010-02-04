@@ -58,7 +58,7 @@ module RDoc::Text
 
   def parse text
     return text if RDoc::Markup::Document === text
-    return if text.empty?
+    return RDoc::Markup::Document.new if text.empty?
 
     text = normalize_comment text
 

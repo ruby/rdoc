@@ -2,6 +2,7 @@ require 'rubygems'
 require 'minitest/autorun'
 require 'rdoc'
 require 'rdoc/text'
+require 'rdoc/markup'
 
 class TestRDocText < MiniTest::Unit::TestCase
 
@@ -76,6 +77,10 @@ The comments associated with
     EXPECTED
 
     assert_equal expected, normalize_comment(text)
+  end
+
+  def test_parse_empty
+    assert_equal RDoc::Markup::Document.new, parse('')
   end
 
   def test_strip_hashes
