@@ -160,6 +160,8 @@ class RDoc::Options
   # Parse command line options.
 
   def parse(argv)
+    ignore_invalid = false
+
     opts = OptionParser.new do |opt|
       opt.program_name = File.basename $0
       opt.version = RDoc::VERSION
@@ -424,6 +426,11 @@ Usage: #{opt.program_name} [options] [names...]
         $DEBUG_RDOC = value
       end
 
+      opt.on("--ignore-invalid",
+             "Ignore invalid options and continue.") do |value|
+        ignore_invalid = true
+      end
+
       opt.on("--quiet", "-q",
              "Don't show progress as we parse.") do |value|
         @verbosity = 0
@@ -451,7 +458,18 @@ Usage: #{opt.program_name} [options] [names...]
 
     argv.insert(0, *ENV['RDOCOPT'].split) if ENV['RDOCOPT']
 
-    opts.parse! argv
+    begin
+      opts.parse! argv
+    rescue OptionParser::InvalidArgument, OptionParser::InvalidOption => e
+      if ignore_invalid then
+        $stderr.puts e
+      else
+        $stderr.puts opts
+        $stderr.puts
+        $stderr.puts e
+        exit 1
+      end
+    end
 
     @op_dir ||= 'doc'
     @files = argv.dup
@@ -470,12 +488,6 @@ Usage: #{opt.program_name} [options] [names...]
     # formatter
 
     @template ||= @generator_name
-
-  rescue OptionParser::InvalidArgument, OptionParser::InvalidOption => e
-    puts opts
-    puts
-    puts e
-    exit 1
   end
 
   ##
