@@ -103,7 +103,7 @@ class RDoc::Generator::Darkfish
 		template = @options.template || 'darkfish'
 
 		template_dir = $LOAD_PATH.map do |path|
-			File.join path, GENERATOR_DIR, 'template', template
+			File.join File.expand_path(path), GENERATOR_DIR, 'template', template
 		end.find do |dir|
 			File.directory? dir
 		end
