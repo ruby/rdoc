@@ -248,9 +248,17 @@ class RDoc::Context < RDoc::CodeObject
     new_meth.is_alias_for = meth
     new_meth.singleton    = meth.singleton
     new_meth.params       = meth.params
+
     new_meth.comment      = an_alias.comment
+
     meth.add_alias new_meth
+
     add_method new_meth
+
+    # aliases don't use ongoing visibility
+    new_meth.visibility = meth.visibility
+
+    new_meth
   end
 
   ##

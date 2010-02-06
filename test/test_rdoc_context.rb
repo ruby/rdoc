@@ -53,19 +53,22 @@ class TestRDocContext < XrefTestCase
 
   def test_add_alias_impl
     meth = RDoc::AnyMethod.new nil, 'old_name'
-    meth.comment = 'old comment'
-    meth.singleton = false
-    alas = RDoc::Alias.new     nil, 'old_name', 'new_name', 'new comment'
+    meth.comment    = 'old comment'
+    meth.singleton  = false
+    meth.visibility = :private
+
+    alas = RDoc::Alias.new nil, 'old_name', 'new_name', 'new comment'
 
     @context.add_alias_impl alas, meth
 
     assert_equal 1, @context.method_list.length
 
     alas_meth = @context.method_list.first
+    assert_equal 'new_name',    alas_meth.name
     assert_equal 'new comment', alas_meth.comment
     assert_equal false,         alas_meth.singleton
     assert_equal meth,          alas_meth.is_alias_for
-    assert_equal :public,       alas_meth.visibility
+    assert_equal :private,      alas_meth.visibility
 
     assert_equal [alas_meth], meth.aliases
   end
