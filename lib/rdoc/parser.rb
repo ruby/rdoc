@@ -78,14 +78,29 @@ class RDoc::Parser
   private_class_method :binary?
 
   ##
+  # Checks if +file+ is a zip file in disguise.  Signatures from
+  # http://www.garykessler.net/library/file_sigs.html
+
+  def self.zip? file
+    zip_signature = File.read file, 4
+    
+    zip_signature == "PK\x03\x04" or
+      zip_signature == "PK\x05\x06" or
+      zip_signature == "PK\x07\x08"
+  end
+
+  ##
   # Return a parser that can handle a particular extension
 
   def self.can_parse(file_name)
     parser = RDoc::Parser.parsers.find { |regexp,| regexp =~ file_name }.last
 
+    # HACK Selenium hides a jar file using a .txt extension
+    return if parser == RDoc::Parser::Simple and zip? file_name
+
     # The default parser must not parse binary files
-    return nil if parser == RDoc::Parser::Simple and
-                  file_name !~ /\.(txt|rdoc)$/ and binary? file_name
+    return if parser == RDoc::Parser::Simple and
+              file_name !~ /\.(txt|rdoc)$/ and binary? file_name
 
     parser
   end
@@ -106,8 +121,7 @@ class RDoc::Parser
 
     parser = can_parse file_name
 
-    # This method must return a parser.
-    parser ||= RDoc::Parser::Simple
+    return unless parser
 
     parser.new top_level, file_name, body, options, stats
   end

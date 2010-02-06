@@ -33,6 +33,8 @@
   * Emacs-style <tt>coding:</tt> is handled properly.  Patch #27388.
   * RubyLex now parses UTF-8 identifiers.  Bug #26946, #26947.
   * Fixed namespace lookup rules.  Bug #26161.
+  * Worked around bug in Selenium where they hide a .jar in a .txt file.
+    Filed Selenium bug #27789.
 
 === 2.4.3 / 2009-04-01
 
