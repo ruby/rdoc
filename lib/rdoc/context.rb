@@ -241,7 +241,7 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Adds +an_alias+ pointing to +meth+
+  # Turns +an_alias+ into an AnyMethod that points to +meth+
 
   def add_alias_impl(an_alias, meth)
     new_meth = RDoc::AnyMethod.new an_alias.text, an_alias.new_name
@@ -583,6 +583,13 @@ class RDoc::Context < RDoc::CodeObject
     end
 
     result
+  end
+
+  ##
+  # The full name for this context.  This method is overridden by subclasses.
+
+  def full_name
+    '(unknown)'
   end
 
   ##

@@ -128,7 +128,7 @@ class RDoc::AnyMethod < RDoc::CodeObject
   # Full method name including namespace
 
   def full_name
-    @full_name ||= "#{@parent.full_name}#{pretty_name}"
+    @full_name ||= "#{@parent ? @parent.full_name : '(unknown)'}#{pretty_name}"
   end
 
   def marshal_dump

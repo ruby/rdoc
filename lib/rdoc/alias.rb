@@ -39,9 +39,10 @@ class RDoc::Alias < RDoc::CodeObject
   end
 
   def inspect # :nodoc:
+    parent_name = parent ? parent.name : '(unknown)'
     "#<%s:0x%x %s.alias_method %s, %s>" % [
       self.class, object_id,
-      parent.name, @old_name, @new_name,
+      parent_name, @old_name, @new_name,
     ]
   end
 
