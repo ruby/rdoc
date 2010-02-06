@@ -340,9 +340,6 @@ ul.link-list .type {
 #documentation .method-detail:hover {
 	background-color: #f1edba;
 }
-#documentation .method-alias {
-	font-style: oblique;
-}
 #documentation .method-heading {
 	position: relative;
 	padding: 2px 4px 0 20px;

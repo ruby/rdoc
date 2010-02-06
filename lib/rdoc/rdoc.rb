@@ -274,7 +274,7 @@ class RDoc::RDoc
   ##
   # Format up one or more files according to the given arguments.
   #
-  # For simplicity, _argv_ is an array of strings, equivalent to the strings
+  # For simplicity, +argv+ is an array of strings, equivalent to the strings
   # that would be passed on the command line. (This isn't a coincidence, as
   # we _do_ pass in ARGV when running interactively). For a list of options,
   # see rdoc/rdoc.rb. By default, output will be stored in a directory

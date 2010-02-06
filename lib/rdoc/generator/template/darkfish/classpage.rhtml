@@ -250,6 +250,12 @@
 					end.join(", ") %>
 				</div>
 				<% end %>
+
+				<% if method.is_alias_for then %>
+				<div class="aliases">
+          Alias for: <a href="<%= klass.aref_to method.is_alias_for.path %>"><%= h method.is_alias_for.name %></a>
+				</div>
+				<% end %>
 			</div>
 
 		<% end %>

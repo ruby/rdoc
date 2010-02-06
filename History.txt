@@ -35,6 +35,7 @@
   * Fixed namespace lookup rules.  Bug #26161.
   * Worked around bug in Selenium where they hide a .jar in a .txt file.
     Filed Selenium bug #27789.
+  * Alias comments are no longer hidden.  Reported by Adam Avilla.
 
 === 2.4.3 / 2009-04-01
 
