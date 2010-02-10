@@ -298,7 +298,7 @@ Options may also be set in the 'RI' environment variable.
                                      options[:use_site],
                                      options[:use_home],
                                      options[:use_gems],
-                                     options[:extra_doc_dirs])
+                                     *options[:extra_doc_dirs])
 
     @homepath = RDoc::RI::Paths.raw_path(false, false, true, false).first
     @homepath = if options[:home] then

@@ -92,7 +92,6 @@ lib/rdoc/parser/simple.rb
 lib/rdoc/rdoc.rb
 lib/rdoc/require.rb
 lib/rdoc/ri.rb
-lib/rdoc/ri/display.rb
 lib/rdoc/ri/driver.rb
 lib/rdoc/ri/formatter.rb
 lib/rdoc/ri/paths.rb
@@ -107,6 +106,7 @@ lib/rdoc/text.rb
 lib/rdoc/tokenstream.rb
 lib/rdoc/top_level.rb
 test/binary.dat
+test/hidden.zip.txt
 test/test.ja.rdoc
 test/test.ja.txt
 test/test_attribute_manager.rb
@@ -135,6 +135,7 @@ test/test_rdoc_parser_ruby.rb
 test/test_rdoc_rdoc.rb
 test/test_rdoc_require.rb
 test/test_rdoc_ri_driver.rb
+test/test_rdoc_ri_paths.rb
 test/test_rdoc_ri_store.rb
 test/test_rdoc_task.rb
 test/test_rdoc_text.rb
