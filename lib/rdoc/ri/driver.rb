@@ -627,9 +627,9 @@ Options may also be set in the 'RI' environment variable.
     out << RDoc::Markup::Heading.new(1, name)
     out << RDoc::Markup::BlankLine.new
 
-    found.each do |path, methods|
+    found.each do |store, methods|
       methods.each do |method|
-        out << RDoc::Markup::Paragraph.new("(from #{path})")
+        out << RDoc::Markup::Paragraph.new("(from #{store.friendly_path})")
         out << RDoc::Markup::Rule.new(1)
         out << RDoc::Markup::BlankLine.new
         out << method.comment
@@ -871,7 +871,7 @@ Options may also be set in the 'RI' environment variable.
       methods << load_method(store, :instance_methods, ancestor, '#',  method) if
         types == :instance or types == :both
 
-      found << [store.path, methods.compact]
+      found << [store, methods.compact]
     end
 
     found.reject do |path, methods| methods.empty? end
