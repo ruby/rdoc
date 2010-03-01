@@ -77,10 +77,12 @@ class RDoc::CodeObject
 
   def initialize
     @comment = ''
-    @document_children = true
-    @document_self = true
-    @done_documenting = false
+
+    @document_children   = true
+    @document_self       = true
+    @done_documenting    = false
     @force_documentation = false
+
     @parent = nil
   end
 

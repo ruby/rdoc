@@ -84,12 +84,27 @@ class RDoc::RI::Driver
   end
 
   ##
+  # Dump +cache_file+ using pp
+
+  def self.dump_cache cache_file
+    require 'pp'
+
+    open cache_file, 'rb' do |io|
+      pp Marshal.load(io.read)
+    end
+  end
+
+  ##
   # Parses +argv+ and returns a Hash of options
 
   def self.process_args argv
     options = default_options
 
     opts = OptionParser.new do |opt|
+      opt.accept File do |file,|
+        File.readable?(file) && file
+      end
+
       opt.program_name = File.basename $0
       opt.version = RDoc::VERSION
       opt.release = nil
@@ -249,6 +264,15 @@ Options may also be set in the 'RI' environment variable.
              "Defaults to true.") do |value|
         options[:use_home] = value
       end
+
+      opt.separator nil
+      opt.separator "Debug options:"
+      opt.separator nil
+
+      opt.on("--dump-cache=CACHE", File,
+             "Dumps data from an ri cache file") do |value|
+        options[:dump_cache] = value
+      end
     end
 
     argv = ENV['RI'].to_s.split.concat argv
@@ -275,6 +299,12 @@ Options may also be set in the 'RI' environment variable.
 
   def self.run argv = ARGV
     options = process_args argv
+
+    if options[:dump_cache] then
+      dump_cache options[:dump_cache]
+      return
+    end
+
     ri = new options
     ri.run
   end
@@ -294,30 +324,127 @@ Options may also be set in the 'RI' environment variable.
 
     @names = options[:names]
 
-    @doc_dirs = RDoc::RI::Paths.path(options[:use_system],
-                                     options[:use_site],
-                                     options[:use_home],
-                                     options[:use_gems],
-                                     *options[:extra_doc_dirs])
+    @doc_dirs = []
+    @stores   = []
 
-    @homepath = RDoc::RI::Paths.raw_path(false, false, true, false).first
-    @homepath = if options[:home] then
-                  File.join options[:home], '.ri'
-                else
-                  @homepath.sub(/\.rdoc/, '.ri')
-                end
+    RDoc::RI::Paths.each(options[:use_system], options[:use_site],
+                                   options[:use_home], options[:use_gems],
+                                   *options[:extra_doc_dirs]) do |path, type|
+      @doc_dirs << path
 
-    @sys_dir = RDoc::RI::Paths.raw_path(true, false, false, false).first
+      store = RDoc::RI::Store.new path, type
+      store.load_cache
+      @stores << store
+    end
+
     @list_doc_dirs = options[:list_doc_dirs]
 
     @interactive = options[:interactive]
     @use_stdout  = options[:use_stdout]
+  end
 
-    @stores = @doc_dirs.map do |path|
-      store = RDoc::RI::Store.new path
-      store.load_cache
-      store
+  ##
+  # Adds paths for undocumented classes +also_in+ to +out+
+
+  def add_also_in out, also_in
+    return if also_in.empty?
+
+    if also_in.length == 1 then
+      add_from out, also_in.shift
+      out << RDoc::Markup::Paragraph.new("[Not documented]")
+    else
+      out << RDoc::Markup::Rule.new(1)
+      out << RDoc::Markup::Paragraph.new("Not documented in:")
+
+      paths = RDoc::Markup::Verbatim.new
+      also_in.each do |store|
+        paths.parts.push '  ', store.friendly_path, "\n"
+      end
+      out << paths
     end
+  end
+
+  ##
+  # Adds a class header to +out+ for class +name+ which is described in
+  # +classes+.
+
+  def add_class out, name, classes
+    superclass = classes.map do |klass|
+      klass.superclass
+    end.shift || 'Object'
+
+    out << RDoc::Markup::Heading.new(1, "#{name} < #{superclass}")
+    out << RDoc::Markup::BlankLine.new
+  end
+
+  ##
+  # Adds "(from ...)" to +out+ for +store+
+
+  def add_from out, store
+    out << RDoc::Markup::Paragraph.new("(from #{store.friendly_path})")
+    out << RDoc::Markup::Rule.new(1)
+  end
+
+  ##
+  # Adds +includes+ to +out+
+
+  def add_includes out, includes
+    return if includes.empty?
+
+    out << RDoc::Markup::Rule.new(1)
+    out << RDoc::Markup::Heading.new(1, "Includes:")
+
+    includes.each do |modules, store|
+      if modules.length == 1 then
+        include = modules.first
+        name = include.name
+        path = store.friendly_path
+        out << RDoc::Markup::Paragraph.new("#{name} (from #{path})")
+
+        if include.comment then
+          out << RDoc::Markup::BlankLine.new
+          out << include.comment
+        end
+      else
+        out << RDoc::Markup::Paragraph.new("(from #{store.friendly_path})")
+
+        wout, with = modules.partition { |include| include.comment.empty? }
+
+        out << RDoc::Markup::BlankLine.new unless with.empty?
+
+        with.each do |include|
+          out << RDoc::Markup::Paragraph.new(include.name)
+          out << RDoc::Markup::BlankLine.new
+          out << include.comment
+        end
+
+        unless wout.empty? then
+          verb = RDoc::Markup::Verbatim.new
+
+          wout.each do |include|
+            verb.push '  ', include.name, "\n"
+          end
+
+          out << verb
+        end
+      end
+    end
+  end
+
+  ##
+  # Adds a list of +methods+ to +out+ of +type+
+
+  def add_method_list out, methods, type
+    return unless methods
+
+    out << RDoc::Markup::Heading.new(1, "#{type} methods:")
+    out << RDoc::Markup::BlankLine.new
+
+    out.push(*methods.sort.map do |method|
+      RDoc::Markup::Verbatim.new '  ', method
+    end)
+
+    out << RDoc::Markup::BlankLine.new
   end
 
   ##
@@ -426,36 +553,63 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
-  # Outputs formatted RI data for class +name+
+  # Outputs formatted RI data for class +name+.  Groups undocumented classes 
 
   def display_class name
     return if name =~ /#|\./
 
+    klasses = []
+    includes = []
+
     found = @stores.map do |store|
       begin
-        [store.path, store.load_class(name)]
+        klass = store.load_class name
+        klasses  << klass
+        includes << [klass.includes, store] if klass.includes
+        [store, klass]
       rescue Errno::ENOENT
       end
     end.compact
 
     return if found.empty?
 
+    also_in = []
+
+    includes.reject! do |modules,| modules.empty? end
+
     out = RDoc::Markup::Document.new
 
-    out.parts << RDoc::Markup::Heading.new(1, name)
-    out.parts << RDoc::Markup::BlankLine.new
+    add_class out, name, klasses
 
-    found.each do |path, klass|
-      out.parts << RDoc::Markup::Paragraph.new("(from #{path})")
-      out.parts << RDoc::Markup::Rule.new(1)
-      out.parts << RDoc::Markup::BlankLine.new
-      if klass.comment then
-        out.parts.push(*klass.comment.parts)
-      else
-        out.parts << RDoc::Markup::Paragraph.new("[Not documented]")
+    add_includes out, includes
+
+    found.each do |store, klass|
+      comment = klass.comment
+      class_methods    = store.class_methods[klass.full_name]
+      instance_methods = store.instance_methods[klass.full_name]
+
+      if comment.empty? and not (instance_methods or class_methods) then
+        also_in << store
+        next
       end
-      out.parts << RDoc::Markup::BlankLine.new
+
+      add_from out, store
+
+      unless comment.empty? then
+        out << comment
+      else
+        out << RDoc::Markup::Paragraph.new("[Not documented]")
+      end
+
+      out << RDoc::Markup::Rule.new if class_methods || instance_methods
+
+      add_method_list out, class_methods,    'Class'
+      add_method_list out, instance_methods, 'Instance'
+
+      out << RDoc::Markup::BlankLine.new
     end
+
+    add_also_in out, also_in
 
     display out
   end
@@ -470,16 +624,16 @@ Options may also be set in the 'RI' environment variable.
 
     out = RDoc::Markup::Document.new
 
-    out.parts << RDoc::Markup::Heading.new(1, name)
-    out.parts << RDoc::Markup::BlankLine.new
+    out << RDoc::Markup::Heading.new(1, name)
+    out << RDoc::Markup::BlankLine.new
 
     found.each do |path, methods|
       methods.each do |method|
-        out.parts << RDoc::Markup::Paragraph.new("(from #{path})")
-        out.parts << RDoc::Markup::Rule.new(1)
-        out.parts << RDoc::Markup::BlankLine.new
-        out.parts.push(*method.comment.parts)
-        out.parts << RDoc::Markup::BlankLine.new
+        out << RDoc::Markup::Paragraph.new("(from #{path})")
+        out << RDoc::Markup::Rule.new(1)
+        out << RDoc::Markup::BlankLine.new
+        out << method.comment
+        out << RDoc::Markup::BlankLine.new
       end
     end
 

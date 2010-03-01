@@ -1,3 +1,4 @@
+require 'pp'
 require 'rubygems'
 require 'minitest/autorun'
 require 'tmpdir'
@@ -7,6 +8,8 @@ require 'rdoc/ri/driver'
 class TestRDocRIDriver < MiniTest::Unit::TestCase
 
   def setup
+    @RM = RDoc::Markup
+
     @tmpdir = File.join Dir.tmpdir, "test_rdoc_ri_driver_#{$$}"
     @home_ri = File.join @tmpdir, 'dot_ri'
 
@@ -21,6 +24,7 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     options = RDoc::RI::Driver.process_args []
     options[:home] = @tmpdir
     options[:use_stdout] = true
+    options[:formatter] = @RM::ToRdoc
     @driver = RDoc::RI::Driver.new options
   end
 
@@ -28,6 +32,177 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     ENV['HOME'] = @orig_home
     ENV['RI'] = @orig_ri
     FileUtils.rm_rf @tmpdir
+  end
+
+  def mu_pp(obj)
+    s = ''
+    s = PP.pp obj, s
+    s = s.force_encoding(Encoding.default_external) if defined? Encoding
+    s.chomp
+  end
+
+  def test_add_also_in_empty
+    out = @RM::Document.new
+
+    @driver.add_also_in out, []
+
+    assert_empty out
+  end
+
+  def test_add_also_in_one
+    util_store
+    @store.type = :system
+
+    out = @RM::Document.new
+
+    @driver.add_also_in out, [@store]
+
+    expected = @RM::Document.new(
+      @RM::Paragraph.new('(from ruby core)'),
+      @RM::Rule.new(1),
+      @RM::Paragraph.new('[Not documented]'))
+
+    assert_equal expected, out
+  end
+
+  def test_add_also_in_many
+    util_multi_store
+    @store1.type = :system
+    @store2.type = :home
+
+    out = @RM::Document.new
+
+    @driver.add_also_in out, [@store1, @store2]
+
+    expected = @RM::Document.new(
+      @RM::Rule.new(1),
+      @RM::Paragraph.new('Not documented in:'),
+      @RM::Verbatim.new('  ', 'ruby core', "\n",
+                        '  ', '~/.ri', "\n"))
+
+    assert_equal expected, out
+  end
+
+  def test_add_class
+    util_multi_store
+
+    out = @RM::Document.new
+
+    @driver.add_class out, 'Bar', [@cBar]
+
+    expected = @RM::Document.new(
+      @RM::Heading.new(1, 'Bar < Foo'),
+      @RM::BlankLine.new)
+
+    assert_equal expected, out
+  end
+
+  def test_add_from
+    util_store
+    @store.type = :system
+
+    out = @RM::Document.new
+
+    @driver.add_from out, @store
+
+    expected = @RM::Document.new(
+      @RM::Paragraph.new("(from ruby core)"),
+      @RM::Rule.new(1))
+
+    assert_equal expected, out
+  end
+
+  def test_add_includes_empty
+    out = @RM::Document.new
+
+    @driver.add_includes out, []
+
+    assert_empty out
+  end
+
+  def test_add_includes_many
+    util_store
+
+    out = @RM::Document.new
+
+    enum = RDoc::Include.new 'Enumerable', nil
+    @cFoo.add_include enum
+
+    @driver.add_includes out, [[[@cFooInc, enum], @store]]
+
+    expected = @RM::Document.new(
+      @RM::Rule.new(1),
+      @RM::Heading.new(1, "Includes:"),
+      @RM::Paragraph.new("(from #{@store.friendly_path})"),
+      @RM::BlankLine.new,
+      @RM::Paragraph.new("Inc"),
+      @RM::BlankLine.new,
+      @RM::Paragraph.new("Include thingy"),
+      @RM::BlankLine.new,
+      @RM::Verbatim.new('  ', 'Enumerable', "\n"))
+
+    assert_equal expected, out
+  end
+
+  def test_add_includes_many_no_doc
+    util_store
+
+    out = @RM::Document.new
+
+    enum = RDoc::Include.new 'Enumerable', nil
+    @cFoo.add_include enum
+    @cFooInc.instance_variable_set :@comment, ''
+
+    @driver.add_includes out, [[[@cFooInc, enum], @store]]
+
+    expected = @RM::Document.new(
+      @RM::Rule.new(1),
+      @RM::Heading.new(1, "Includes:"),
+      @RM::Paragraph.new("(from #{@store.friendly_path})"),
+      @RM::Verbatim.new('  ', 'Inc', "\n",
+                        '  ', 'Enumerable', "\n"))
+
+    assert_equal expected, out
+  end
+
+  def test_add_includes_one
+    util_store
+
+    out = @RM::Document.new
+
+    @driver.add_includes out, [[[@cFooInc], @store]]
+
+    expected = @RM::Document.new(
+      @RM::Rule.new(1),
+      @RM::Heading.new(1, "Includes:"),
+      @RM::Paragraph.new("Inc (from #{@store.friendly_path})"),
+      @RM::BlankLine.new,
+      @RM::Paragraph.new("Include thingy"),
+      @RM::BlankLine.new)
+
+    assert_equal expected, out
+  end
+
+  def test_add_method_list
+    out = @RM::Document.new
+
+    @driver.add_method_list out, %w[new], 'Class'
+
+    expected = @RM::Document.new(
+      @RM::Heading.new(1, 'Class methods:'),
+      @RM::BlankLine.new,
+      @RM::Verbatim.new('  ', 'new'),
+      @RM::BlankLine.new)
+
+    assert_equal expected, out
+  end
+
+  def test_add_method_list_none
+    out = @RM::Document.new
+
+    @driver.add_method_list out, nil, 'Class'
+
+    assert_equal @RM::Document.new, out
   end
 
   def test_ancestors_of
@@ -40,8 +215,11 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     util_multi_store
 
     expected = {
-      'Foo'      => [@store2],
+      'Bar'      => [@store2],
+      'Foo'      => [@store1],
       'Foo::Bar' => [@store1],
+      'Foo::Baz' => [@store1, @store2],
+      'Inc'      => [@store1],
     }
 
     assert_equal expected, @driver.classes
@@ -94,32 +272,62 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
   def test_complete_multistore
     util_multi_store
 
-    assert_equal %w[Foo   Foo::Bar], @driver.complete('F')
+    assert_equal %w[Bar], @driver.complete('B')
+    assert_equal %w[Foo Foo::Bar Foo::Baz], @driver.complete('F')
   end
 
   def test_display
-    rm = RDoc::Markup
-
-    doc = rm::Document.new(
-            rm::Paragraph.new('hi'))
+    doc = @RM::Document.new(
+            @RM::Paragraph.new('hi'))
 
     out, err = capture_io do
       @driver.display doc
     end
 
-    assert_equal "\e[0mhi\n", out
+    assert_equal "hi\n", out
   end
 
   def test_display_class
     util_store
 
-    FileUtils.mkdir_p @store.class_path 'Foo'
-
     out, err = capture_io do
-      @driver.display_class 'Foo'
+      @driver.display_class 'Foo::Bar'
     end
 
-    assert_match %r%Foo%, out
+    assert_match %r%^= Foo::Bar%, out
+    assert_match %r%^\(from%, out # )
+    assert_match %r%^\[Not documented\]%, out
+
+    assert_match %r%^= Class methods:%, out
+    assert_match %r%^  new%, out
+    assert_match %r%^= Instance methods:%, out
+    assert_match %r%^  blah%, out
+
+    assert_equal 2, out.scan(/-\n/).length
+  end
+
+  def test_display_class_multi_no_doc
+    util_multi_store
+
+    out, err = capture_io do
+      @driver.display_class 'Foo::Baz'
+    end
+
+    assert_match %r%^= Foo::Baz%, out
+    assert_match %r%-\n%, out
+    assert_match %r%Not documented in:%, out
+    assert_match %r%#{Regexp.escape @home_ri}%, out
+    assert_match %r%#{Regexp.escape @home_ri2}%, out
+  end
+
+  def test_display_class_superclass
+    util_multi_store
+
+    out, err = capture_io do
+      @driver.display_class 'Bar'
+    end
+
+    assert_match %r%^= Bar < Foo%, out
   end
 
   def test_display_method
@@ -202,15 +410,17 @@ Foo::Bar#blah
   end
 
   def test_formatter
-    assert_instance_of RDoc::Markup::ToAnsi, @driver.formatter
+    driver = RDoc::RI::Driver.new
 
-    @driver.instance_variable_set :@paging, true
+    assert_instance_of @RM::ToAnsi, driver.formatter
 
-    assert_instance_of RDoc::Markup::ToBs, @driver.formatter
+    driver.instance_variable_set :@paging, true
 
-    @driver.instance_variable_set :@formatter_klass, RDoc::Markup::ToHtml
+    assert_instance_of @RM::ToBs, driver.formatter
 
-    assert_instance_of RDoc::Markup::ToHtml, @driver.formatter
+    driver.instance_variable_set :@formatter_klass, @RM::ToHtml
+
+    assert_instance_of @RM::ToHtml, driver.formatter
   end
 
   def test_method_type
@@ -227,7 +437,7 @@ Foo::Bar#blah
       @driver.list_known_classes 
     end
 
-    assert_equal "Foo\nFoo::Bar\nFoo::Baz\n", out
+    assert_equal "Foo\nFoo::Bar\nFoo::Baz\nInc\n", out
   end
 
   def test_list_methods_matching
@@ -381,19 +591,27 @@ Foo::Bar#blah
   end
 
   def util_multi_store
-    @store1 = RDoc::RI::Store.new @home_ri
-    @store1.cache[:ancestors]        = { 'Foo::Bar' => %w[Foo] }
-    @store1.cache[:class_methods]    = {}
-    @store1.cache[:instance_methods] = {}
-    @store1.cache[:modules]          = %w[Foo::Bar]
+    util_store
+    @store1 = @store
 
-    @store2 = RDoc::RI::Store.new @home_ri
-    @store2.cache[:ancestors]        = { 'Foo' => %w[Object] }
-    @store2.cache[:class_methods]    = {}
-    @store2.cache[:instance_methods] = {
-      'Foo' => %w[baz]
-    }
-    @store2.cache[:modules]          = %w[Foo]
+    @home_ri2 = "#{@home_ri}2"
+    @store2 = RDoc::RI::Store.new @home_ri2
+
+    @cFoo = RDoc::NormalClass.new 'Foo'
+    @cBar = RDoc::NormalClass.new 'Bar'
+    @cBar.superclass = 'Foo'
+    @cFoo_Baz = RDoc::NormalClass.new 'Baz'
+    @cFoo_Baz.parent = @cFoo
+
+    @baz = RDoc::AnyMethod.new nil, 'baz'
+    @cBar.add_method @baz
+
+    @store2.save_class @cBar
+    @store2.save_class @cFoo_Baz
+
+    @store2.save_method @cBar, @baz
+
+    @store2.save_cache
 
     @driver.stores = [@store1, @store2]
   end
@@ -401,45 +619,36 @@ Foo::Bar#blah
   def util_store
     @store = RDoc::RI::Store.new @home_ri
 
-    cFoo     = RDoc::NormalClass.new 'Foo'
+    @cFoo     = RDoc::NormalClass.new 'Foo'
+    @mInc     = RDoc::NormalModule.new 'Inc'
 
-    cFoo_Bar = RDoc::NormalClass.new 'Bar'
-    cFoo_Bar.parent = cFoo
+    doc = @RM::Document.new @RM::Paragraph.new('Include thingy')
 
-    blah = RDoc::AnyMethod.new nil, 'blah'
-    new  = RDoc::AnyMethod.new nil, 'new'
-    new.singleton = true
+    @cFooInc = RDoc::Include.new 'Inc', doc
+    @cFoo.add_include @cFooInc
 
-    cFoo_Bar.add_method blah
-    cFoo_Bar.add_method new
+    @cFoo_Bar = RDoc::NormalClass.new 'Bar'
+    @cFoo_Bar.parent = @cFoo
 
-    cFoo_Baz = RDoc::NormalClass.new 'Baz'
-    cFoo_Baz.parent = cFoo
+    @blah = RDoc::AnyMethod.new nil, 'blah'
+    @new  = RDoc::AnyMethod.new nil, 'new'
+    @new.singleton = true
 
-    @store.save_class cFoo
-    @store.save_class cFoo_Bar
-    @store.save_class cFoo_Baz
-    @store.save_method cFoo_Bar, blah
-    @store.save_method cFoo_Bar, new
+    @cFoo_Bar.add_method @blah
+    @cFoo_Bar.add_method @new
 
-    @store.cache[:ancestors] = {
-      'Foo'      => %w[Object],
-      'Foo::Bar' => %w[Object],
-      'Foo::Baz' => %w[Object],
-    }
-    @store.cache[:class_methods] = {
-      'Foo'      => %w[],
-      'Foo::Bar' => %w[new],
-    }
-    @store.cache[:instance_methods] = {
-      'Foo'      => %w[],
-      'Foo::Bar' => %w[blah],
-    }
-    @store.cache[:modules] = %w[
-      Foo
-      Foo::Bar
-      Foo::Baz
-    ]
+    @cFoo_Baz = RDoc::NormalClass.new 'Baz'
+    @cFoo_Baz.parent = @cFoo
+
+    @store.save_class @cFoo
+    @store.save_class @cFoo_Bar
+    @store.save_class @cFoo_Baz
+    @store.save_class @mInc
+
+    @store.save_method @cFoo_Bar, @blah
+    @store.save_method @cFoo_Bar, @new
+
+    @store.save_cache
 
     @driver.stores = [@store]
   end

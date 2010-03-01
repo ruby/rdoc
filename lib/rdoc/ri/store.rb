@@ -10,13 +10,24 @@ require 'fileutils'
 
 class RDoc::RI::Store
 
-  attr_reader :cache
-  attr_reader :path
+  ##
+  # Path this store reads or writes
+
+  attr_accessor :path
 
   ##
-  # Creates a new Store that will load or save to +path+
+  # Type of ri datastore this was loaded from.  See RDoc::RI::Driver,
+  # RDoc::RI::Paths.
 
-  def initialize path
+  attr_accessor :type
+
+  attr_reader :cache
+
+  ##
+  # Creates a new Store of +type+ that will load or save to +path+
+
+  def initialize path, type = nil
+    @type = type
     @path = path
 
     @cache = {
@@ -52,7 +63,7 @@ class RDoc::RI::Store
   end
 
   ##
-  # Class methods cache accessor.  Maps a class to an Array of it's class
+  # Class methods cache accessor.  Maps a class to an Array of its class
   # methods (not full name).
 
   def class_methods
@@ -67,7 +78,27 @@ class RDoc::RI::Store
   end
 
   ##
-  # Instance methods cache accessor.  Maps a class to an Array of it's
+  # Friendly rendition of #path
+
+  def friendly_path
+    case type
+    when :gem    then
+      sep = Regexp.union(*['/', File::ALT_SEPARATOR].compact)
+      @path =~ /#{sep}doc#{sep}(.*?)#{sep}ri$/
+      "gem #{$1}"
+    when :home   then '~/.ri'
+    when :site   then 'ruby site'
+    when :system then 'ruby core'
+    else @path
+    end
+  end
+
+  def inspect # :nodoc:
+    "#<%s:0x%x %s %p>" % [self.class, object_id, @path, modules.sort]
+  end
+
+  ##
+  # Instance methods cache accessor.  Maps a class to an Array of its
   # instance methods (not full name).
 
   def instance_methods

@@ -16,6 +16,25 @@ class RDoc::Markup::Document
     @parts.push(*parts)
   end
 
+  ##
+  # Appends +part+ to the document
+
+  def << part
+    case part
+    when RDoc::Markup::Document then
+      unless part.empty? then
+        parts.push(*part.parts)
+        parts << RDoc::Markup::BlankLine.new
+      end
+    when String then
+      raise ArgumentError,
+            "expected RDoc::Markup::Document and friends, got String" unless
+        part.empty?
+    else
+      parts << part
+    end
+  end
+
   def == other # :nodoc:
     self.class == other.class and @parts == other.parts
   end
@@ -40,6 +59,13 @@ class RDoc::Markup::Document
         q.pp part
       end
     end
+  end
+
+  ##
+  # Appends +parts+ to the document
+
+  def push *parts
+    self.parts.push(*parts)
   end
 
 end

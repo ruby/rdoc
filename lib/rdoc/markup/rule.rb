@@ -9,7 +9,7 @@ class RDoc::Markup::Rule < Struct.new :weight
 
   def pretty_print q # :nodoc:
     q.group 2, '[rule:', ']' do
-      q.pp level
+      q.pp weight
     end
   end
 

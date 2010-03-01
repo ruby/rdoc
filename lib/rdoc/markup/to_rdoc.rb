@@ -123,6 +123,7 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   def accept_rule rule
     use_prefix or @res << ' ' * @indent
     @res << '-' * (@width - @indent)
+    @res << "\n"
   end
 
   ##
@@ -143,6 +144,8 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
         current_line = []
       end
     end
+
+    lines << current_line unless current_line.empty?
 
     # calculate margin
     indented = lines.select { |line| line != ["\n"] }

@@ -174,7 +174,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::FormatterTestCase
   end
 
   def accept_rule
-    assert_equal "\e[0m" + '-' * 78, @to.res.join
+    assert_equal "\e[0m#{'-' * 78}\n", @to.res.join
   end
 
   def accept_verbatim # FormatterTestCase doesn't set indent for ToAnsi
@@ -329,7 +329,7 @@ words words words words
 
     @to.accept_rule @RM::Rule.new(1)
 
-    assert_equal "\e[0m   " + '-' * 75, @to.end_accepting
+    assert_equal "\e[0m   #{'-' * 75}\n", @to.end_accepting
   end
 
   def test_accept_verbatim_indent

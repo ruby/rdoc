@@ -79,6 +79,28 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
                  @s.class_path('Object::SubClass')
   end
 
+  def test_friendly_path
+    @s.path = @tmpdir
+    @s.type = nil
+    assert_equal @s.path, @s.friendly_path
+
+    @s.type = :extra
+    assert_equal @s.path, @s.friendly_path
+
+    @s.type = :system
+    assert_equal "ruby core", @s.friendly_path
+
+    @s.type = :site
+    assert_equal "ruby site", @s.friendly_path
+
+    @s.type = :home
+    assert_equal "~/.ri", @s.friendly_path
+
+    @s.type = :gem
+    @s.path = "#{@tmpdir}/gem_repository/doc/gem_name-1.0/ri"
+    assert_equal "gem gem_name-1.0", @s.friendly_path
+  end
+
   def test_instance_methods
     @s.cache[:instance_methods]['Object'] = 'method'
 

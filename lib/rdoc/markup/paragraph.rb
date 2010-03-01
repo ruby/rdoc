@@ -49,6 +49,13 @@ class RDoc::Markup::Paragraph
   end
 
   ##
+  # Appends +texts+ onto this Paragraph
+
+  def push *texts
+    self.parts.push(*texts)
+  end
+
+  ##
   # The text of this paragraph
 
   def text
