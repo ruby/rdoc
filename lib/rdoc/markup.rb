@@ -123,5 +123,4 @@ end
 require 'rdoc/markup/parser'
 require 'rdoc/markup/attribute_manager'
 require 'rdoc/markup/inline'
-require 'rdoc/markup/lines'
 

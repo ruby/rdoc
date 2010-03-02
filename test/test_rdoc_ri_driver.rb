@@ -215,6 +215,7 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     util_multi_store
 
     expected = {
+      'Ambigous' => [@store1, @store2],
       'Bar'      => [@store2],
       'Foo'      => [@store1],
       'Foo::Bar' => [@store1],
@@ -306,6 +307,16 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     assert_equal 2, out.scan(/-\n/).length
   end
 
+  def test_display_class_ambiguous
+    util_multi_store
+
+    out, err = capture_io do
+      @driver.display_class 'Ambigous'
+    end
+
+    assert_match %r%^= Ambigous < Object$%, out
+  end
+
   def test_display_class_multi_no_doc
     util_multi_store
 
@@ -328,6 +339,16 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     end
 
     assert_match %r%^= Bar < Foo%, out
+  end
+
+  def test_display_class_module
+    util_store
+
+    out, err = capture_io do
+      @driver.display_class 'Inc'
+    end
+
+    assert_match %r%^= Inc$%, out
   end
 
   def test_display_method
@@ -437,7 +458,7 @@ Foo::Bar#blah
       @driver.list_known_classes 
     end
 
-    assert_equal "Foo\nFoo::Bar\nFoo::Baz\nInc\n", out
+    assert_equal "Ambigous\nFoo\nFoo::Bar\nFoo::Baz\nInc\n", out
   end
 
   def test_list_methods_matching
@@ -597,6 +618,8 @@ Foo::Bar#blah
     @home_ri2 = "#{@home_ri}2"
     @store2 = RDoc::RI::Store.new @home_ri2
 
+    @mAmbigous = RDoc::NormalModule.new 'Ambigous'
+
     @cFoo = RDoc::NormalClass.new 'Foo'
     @cBar = RDoc::NormalClass.new 'Bar'
     @cBar.superclass = 'Foo'
@@ -606,6 +629,7 @@ Foo::Bar#blah
     @baz = RDoc::AnyMethod.new nil, 'baz'
     @cBar.add_method @baz
 
+    @store2.save_class @mAmbigous
     @store2.save_class @cBar
     @store2.save_class @cFoo_Baz
 
@@ -619,8 +643,9 @@ Foo::Bar#blah
   def util_store
     @store = RDoc::RI::Store.new @home_ri
 
-    @cFoo     = RDoc::NormalClass.new 'Foo'
-    @mInc     = RDoc::NormalModule.new 'Inc'
+    @cFoo      = RDoc::NormalClass.new 'Foo'
+    @mInc      = RDoc::NormalModule.new 'Inc'
+    @cAmbigous = RDoc::NormalClass.new 'Ambigous'
 
     doc = @RM::Document.new @RM::Paragraph.new('Include thingy')
 
@@ -644,6 +669,7 @@ Foo::Bar#blah
     @store.save_class @cFoo_Bar
     @store.save_class @cFoo_Baz
     @store.save_class @mInc
+    @store.save_class @cAmbigous
 
     @store.save_method @cFoo_Bar, @blah
     @store.save_method @cFoo_Bar, @new

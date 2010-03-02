@@ -369,11 +369,17 @@ Options may also be set in the 'RI' environment variable.
   # +classes+.
 
   def add_class out, name, classes
-    superclass = classes.map do |klass|
-      klass.superclass
-    end.shift || 'Object'
+    heading = if classes.all? { |klass| klass.module? } then
+                name
+              else
+                superclass = classes.map do |klass|
+                  klass.superclass unless klass.module?
+                end.compact.shift || 'Object'
 
-    out << RDoc::Markup::Heading.new(1, "#{name} < #{superclass}")
+                "#{name} < #{superclass}"
+              end
+
+    out << RDoc::Markup::Heading.new(1, heading)
     out << RDoc::Markup::BlankLine.new
   end
 

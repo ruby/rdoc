@@ -62,10 +62,8 @@ lib/rdoc/markup/blank_line.rb
 lib/rdoc/markup/document.rb
 lib/rdoc/markup/formatter.rb
 lib/rdoc/markup/formatter_test_case.rb
-lib/rdoc/markup/fragments.rb
 lib/rdoc/markup/heading.rb
 lib/rdoc/markup/inline.rb
-lib/rdoc/markup/lines.rb
 lib/rdoc/markup/list.rb
 lib/rdoc/markup/list_item.rb
 lib/rdoc/markup/paragraph.rb
@@ -119,6 +117,8 @@ test/test_rdoc_generator_ri.rb
 test/test_rdoc_include.rb
 test/test_rdoc_markup.rb
 test/test_rdoc_markup_attribute_manager.rb
+test/test_rdoc_markup_document.rb
+test/test_rdoc_markup_paragraph.rb
 test/test_rdoc_markup_parser.rb
 test/test_rdoc_markup_to_ansi.rb
 test/test_rdoc_markup_to_bs.rb

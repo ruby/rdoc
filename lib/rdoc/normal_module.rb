@@ -54,5 +54,12 @@ class RDoc::NormalModule < RDoc::ClassModule
     end
   end
 
+  ##
+  # Modules don't have one, raises NoMethodError
+
+  def superclass
+    raise NoMethodError, "#{full_name} is a module"
+  end
+
 end
 

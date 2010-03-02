@@ -10,7 +10,7 @@ require 'rdoc/text'
 #
 # The parser only handles the block-level constructs Paragraph, List,
 # ListItem, Heading, Verbatim, BlankLine and Rule.  Inline markup such as
-# <tt>+blah+</tt> is handled separately.
+# <tt>\+blah\+</tt> is handled separately by RDoc::Markup::AttributeManager.
 #
 # To see what markup the Parser implements read RDoc.  To see how to use
 # RDoc markup to format text in your program read RDoc::Markup.
