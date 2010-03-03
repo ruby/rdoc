@@ -116,12 +116,12 @@ class RDoc::AnyMethod < RDoc::CodeObject
 
   def inspect # :nodoc:
     alias_for = @is_alias_for ? " (alias for #{@is_alias_for.name})" : nil
-      "#<%s:0x%x %s (%s)%s>" % [
-        self.class, object_id,
-        full_name,
-        visibility,
-        alias_for,
-      ]
+    "#<%s:0x%x %s (%s)%s>" % [
+      self.class, object_id,
+      full_name,
+      visibility,
+      alias_for,
+    ]
   end
 
   ##
@@ -207,6 +207,26 @@ class RDoc::AnyMethod < RDoc::CodeObject
 
   def pretty_name
     "#{singleton ? '::' : '#'}#{@name}"
+  end
+
+  def pretty_print q # :nodoc:
+    alias_for = @is_alias_for ? "alias for #{@is_alias_for.name}" : nil
+
+    q.group 2, "[#{self.class.name} #{full_name}", "]" do
+      q.text alias_for if alias_for
+
+      if text then
+        q.text "text:"
+        q.breakable
+        q.pp @text
+      end
+
+      unless comment.empty? then
+        q.text "comment:"
+        q.breakable
+        q.pp @comment
+      end
+    end
   end
 
   def to_s # :nodoc:

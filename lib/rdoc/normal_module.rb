@@ -36,21 +36,30 @@ class RDoc::NormalModule < RDoc::ClassModule
 
   def pretty_print q # :nodoc:
     q.group 2, "[module #{full_name}: ", "]" do
+      q.breakable
       q.text "includes:"
       q.breakable
       q.seplist @includes do |inc| q.pp inc end
+      q.breakable
 
       q.text "attributes:"
       q.breakable
       q.seplist @attributes do |inc| q.pp inc end
+      q.breakable
 
       q.text "methods:"
       q.breakable
       q.seplist @method_list do |inc| q.pp inc end
+      q.breakable
 
       q.text "aliases:"
       q.breakable
       q.seplist @aliases do |inc| q.pp inc end
+      q.breakable
+
+      q.text "comment:"
+      q.breakable
+      q.pp comment
     end
   end
 

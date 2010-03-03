@@ -39,6 +39,10 @@ class RDoc::NormalClass < RDoc::ClassModule
       q.text "aliases:"
       q.breakable
       q.seplist @aliases do |inc| q.pp inc end
+
+      q.text "comment:"
+      q.breakable
+      q.pp comment
     end
   end
 

@@ -84,12 +84,12 @@ class RDoc::RI::Driver
   end
 
   ##
-  # Dump +cache_file+ using pp
+  # Dump +data_path+ using pp
 
-  def self.dump_cache cache_file
+  def self.dump data_path
     require 'pp'
 
-    open cache_file, 'rb' do |io|
+    open data_path, 'rb' do |io|
       pp Marshal.load(io.read)
     end
   end
@@ -102,7 +102,7 @@ class RDoc::RI::Driver
 
     opts = OptionParser.new do |opt|
       opt.accept File do |file,|
-        File.readable?(file) && file
+        File.readable?(file) and not File.directory?(file) and file
       end
 
       opt.program_name = File.basename $0
@@ -269,9 +269,9 @@ Options may also be set in the 'RI' environment variable.
       opt.separator "Debug options:"
       opt.separator nil
 
-      opt.on("--dump-cache=CACHE", File,
-             "Dumps data from an ri cache file") do |value|
-        options[:dump_cache] = value
+      opt.on("--dump=CACHE", File,
+             "Dumps data from an ri cache or data file") do |value|
+        options[:dump_path] = value
       end
     end
 
@@ -300,8 +300,8 @@ Options may also be set in the 'RI' environment variable.
   def self.run argv = ARGV
     options = process_args argv
 
-    if options[:dump_cache] then
-      dump_cache options[:dump_cache]
+    if options[:dump_path] then
+      dump options[:dump_path]
       return
     end
 

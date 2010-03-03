@@ -41,6 +41,19 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     s.chomp
   end
 
+  def test_self_dump
+    util_store
+
+    out, err = capture_io do
+      RDoc::RI::Driver.dump @store.cache_path
+    end
+
+    assert_match %r%:class_methods%,    out
+    assert_match %r%:modules%,          out
+    assert_match %r%:instance_methods%, out
+    assert_match %r%:ancestors%,        out
+  end
+
   def test_add_also_in_empty
     out = @RM::Document.new
 
