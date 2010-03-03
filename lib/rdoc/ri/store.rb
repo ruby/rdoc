@@ -163,6 +163,10 @@ class RDoc::RI::Store
   # Writes the cache file for this store
 
   def save_cache
+    # HACK mongrel-1.1.5 documents its files twice
+    @cache[:class_methods].   each do |klass, methods| methods.uniq! end
+    @cache[:instance_methods].each do |klass, methods| methods.uniq! end
+
     open cache_path, 'wb' do |io|
       Marshal.dump @cache, io
     end

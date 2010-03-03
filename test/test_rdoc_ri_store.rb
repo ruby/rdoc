@@ -193,6 +193,15 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     end
   end
 
+  def test_save_cache_duplicate_methods
+    @s.save_method @klass, @meth
+    @s.save_method @klass, @meth
+
+    @s.save_cache
+
+    assert_cache({ 'Object' => %w[method] }, {}, [])
+  end
+
   def test_save_class
     @s.save_class @klass
 
@@ -218,6 +227,7 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     document = @RM::Document.new(
       @RM::Paragraph.new('original'),
       @RM::Paragraph.new('new class'))
+
     assert_equal document, s.load_class('Object').comment
   end
 

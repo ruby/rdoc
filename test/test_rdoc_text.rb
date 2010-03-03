@@ -76,8 +76,7 @@ The comments associated with
 # The comments associated with
     TEXT
 
-    expected = <<-EXPECTED
-
+    expected = <<-EXPECTED.rstrip
 we don't worry too much.
 
 The comments associated with
@@ -122,6 +121,16 @@ The comments associated with
     EXPECTED
 
     assert_equal expected, strip_hashes(text)
+  end
+
+  def test_strip_newlines
+    assert_equal ' ',  strip_newlines("\n \n")
+
+    assert_equal 'hi', strip_newlines("\n\nhi")
+
+    assert_equal 'hi', strip_newlines(    "hi\n\n")
+
+    assert_equal 'hi', strip_newlines("\n\nhi\n\n")
   end
 
 end

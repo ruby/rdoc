@@ -635,7 +635,12 @@ Options may also be set in the 'RI' environment variable.
     found.each do |store, methods|
       methods.each do |method|
         out << RDoc::Markup::Paragraph.new("(from #{store.friendly_path})")
+
+        unless name =~ /^#{Regexp.escape method.parent_name}/ then
+          out << RDoc::Markup::Paragraph.new("Implementation from #{method.parent_name}")
+        end
         out << RDoc::Markup::Rule.new(1)
+
         out << RDoc::Markup::BlankLine.new
         out << method.comment
         out << RDoc::Markup::BlankLine.new
@@ -784,24 +789,6 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
-  # Loads RI data for method +name+ on +klass+ from +store+.  +type+ and
-  # +cache+ indicate if it is a class or instance method.
-
-  def load_method store, cache, klass, type, name
-    methods = store.send(cache)[klass]
-
-    return unless methods
-
-    method = methods.find do |method_name|
-      method_name == name
-    end
-
-    return unless method
-
-    store.load_method klass, "#{type}#{method}"
-  end
-
-  ##
   # Lists classes known to ri
 
   def list_known_classes
@@ -859,6 +846,24 @@ Options may also be set in the 'RI' environment variable.
     end
 
     found.uniq
+  end
+
+  ##
+  # Loads RI data for method +name+ on +klass+ from +store+.  +type+ and
+  # +cache+ indicate if it is a class or instance method.
+
+  def load_method store, cache, klass, type, name
+    methods = store.send(cache)[klass]
+
+    return unless methods
+
+    method = methods.find do |method_name|
+      method_name == name
+    end
+
+    return unless method
+
+    store.load_method klass, "#{type}#{method}"
   end
 
   ##

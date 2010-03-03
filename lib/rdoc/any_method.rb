@@ -78,16 +78,19 @@ class RDoc::AnyMethod < RDoc::CodeObject
 
   def initialize(text, name)
     super()
+
     @text = text
     @name = name
-    @token_stream  = nil
-    @visibility    = :public
+
+    @aliases                = []
+    @block_params           = nil
+    @call_seq               = nil
     @dont_rename_initialize = false
-    @block_params  = nil
-    @aliases       = []
-    @is_alias_for  = nil
-    @call_seq      = nil
-    @singleton     = nil
+    @is_alias_for           = nil
+    @parent_name            = nil
+    @singleton              = nil
+    @token_stream           = nil
+    @visibility             = :public
 
     @aref  = @@aref
     @@aref = @@aref.succ
@@ -131,6 +134,9 @@ class RDoc::AnyMethod < RDoc::CodeObject
     @full_name ||= "#{@parent ? @parent.full_name : '(unknown)'}#{pretty_name}"
   end
 
+  ##
+  # Dumps this AnyMethod for use by ri.  See also #marshal_load
+
   def marshal_dump
     aliases = @aliases.map do |a|
       [a.full_name, parse(a.comment)]
@@ -148,6 +154,13 @@ class RDoc::AnyMethod < RDoc::CodeObject
     ]
   end
 
+  ##
+  # Loads this AnyMethod from +array+.  For a loaded AnyMethod the following
+  # methods will return cached values:
+  #
+  # * #full_name
+  # * #parent_name
+
   def marshal_load(array)
     @name         = array[1]
     @full_name    = array[2]
@@ -156,6 +169,14 @@ class RDoc::AnyMethod < RDoc::CodeObject
     @comment      = array[5]
     @call_seq     = array[6]
     @block_params = array[7]
+
+    @parent_name = if @full_name =~ /#/ then
+                     $`
+                   else
+                     name = @full_name.split('::')
+                     name.pop
+                     name.join '::'
+                   end
 
     array[8].each do |old_name, new_name, comment|
       add_alias RDoc::Alias.new(nil, old_name, new_name, comment)
@@ -196,6 +217,13 @@ class RDoc::AnyMethod < RDoc::CodeObject
   end
 
   ##
+  # Name of our parent with special handling for un-marshaled methods
+
+  def parent_name
+    @parent_name || super
+  end
+
+  ##
   # Path to this method
 
   def path
@@ -213,15 +241,20 @@ class RDoc::AnyMethod < RDoc::CodeObject
     alias_for = @is_alias_for ? "alias for #{@is_alias_for.name}" : nil
 
     q.group 2, "[#{self.class.name} #{full_name}", "]" do
-      q.text alias_for if alias_for
+      if alias_for then
+        q.breakable
+        q.text alias_for
+      end
 
       if text then
+        q.breakable
         q.text "text:"
         q.breakable
         q.pp @text
       end
 
       unless comment.empty? then
+        q.breakable
         q.text "comment:"
         q.breakable
         q.pp @comment

@@ -62,7 +62,8 @@ module RDoc::Text
 
     text = strip_hashes text
     text = expand_tabs text
-    flush_left text
+    text = flush_left text
+    strip_newlines text
   end
 
   ##
@@ -105,6 +106,13 @@ http://rubyforge.org/tracker/?atid=2472&group_id=627&func=browse
   def strip_hashes text
     return text if text =~ /^(?>\s*)[^\#]/
     text.gsub(/^\s*(#+)/) { $1.tr '#',' ' }
+  end
+
+  ##
+  # Strips leading and trailing \n characters from +text+
+
+  def strip_newlines text
+    text.gsub(/\A\n*(.*?)\n*\z/m, '\1')
   end
 
 end

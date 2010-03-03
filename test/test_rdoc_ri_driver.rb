@@ -364,13 +364,22 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
   def test_display_method
     util_store
 
-    FileUtils.mkdir_p @store.class_path 'Foo'
-
     out, err = capture_io do
       @driver.display_method 'Foo::Bar#blah'
     end
 
     assert_match %r%Foo::Bar#blah%, out
+  end
+
+  def test_display_method_inherited
+    util_multi_store
+
+    out, err = capture_io do
+      @driver.display_method 'Bar#inherit'
+    end
+
+    assert_match %r%^= Bar#inherit%, out
+    assert_match %r%^Implementation from Foo%, out
   end
 
   def test_display_name_not_found_class
@@ -476,6 +485,40 @@ Foo::Bar#blah
 
     assert_equal %w[Foo::Bar#blah Foo::Bar::new],
                  @driver.list_methods_matching('Foo::Bar.')
+  end
+
+  def test_load_method
+    util_store
+
+    method = @driver.load_method(@store, :instance_methods, 'Foo', '#',
+                                 'inherit')
+
+    assert_equal @inherit, method
+  end
+
+  def test_load_method_inherited
+    util_multi_store
+
+    method = @driver.load_method(@store2, :instance_methods, 'Bar', '#',
+                                 'inherit')
+
+    assert_equal nil, method
+  end
+
+  def test_load_methods_matching
+    util_store
+
+    expected = [[@store, [@inherit]]]
+
+    assert_equal expected, @driver.load_methods_matching('Foo#inherit')
+  end
+
+  def test_load_methods_matching_inherited
+    util_multi_store
+
+    expected = [[@store1, [@inherit]]]
+
+    assert_equal expected, @driver.load_methods_matching('Bar#inherit')
   end
 
   def test_page
@@ -628,6 +671,7 @@ Foo::Bar#blah
     @home_ri2 = "#{@home_ri}2"
     @store2 = RDoc::RI::Store.new @home_ri2
 
+    # as if seen in a namespace like class Ambigous::Other
     @mAmbigous = RDoc::NormalModule.new 'Ambigous'
 
     @cFoo = RDoc::NormalClass.new 'Foo'
@@ -675,6 +719,9 @@ Foo::Bar#blah
     @cFoo_Baz = RDoc::NormalClass.new 'Baz'
     @cFoo_Baz.parent = @cFoo
 
+    @inherit = RDoc::AnyMethod.new nil, 'inherit'
+    @cFoo.add_method @inherit
+
     @store.save_class @cFoo
     @store.save_class @cFoo_Bar
     @store.save_class @cFoo_Baz
@@ -683,6 +730,8 @@ Foo::Bar#blah
 
     @store.save_method @cFoo_Bar, @blah
     @store.save_method @cFoo_Bar, @new
+
+    @store.save_method @cFoo, @inherit
 
     @store.save_cache
 
