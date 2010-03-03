@@ -351,6 +351,7 @@ Options may also be set in the 'RI' environment variable.
 
     if also_in.length == 1 then
       add_from out, also_in.shift
+      out << RDoc::Markup::Rule.new(1)
       out << RDoc::Markup::Paragraph.new("[Not documented]")
     else
       out << RDoc::Markup::Rule.new(1)
@@ -388,7 +389,6 @@ Options may also be set in the 'RI' environment variable.
 
   def add_from out, store
     out << RDoc::Markup::Paragraph.new("(from #{store.friendly_path})")
-    out << RDoc::Markup::Rule.new(1)
   end
 
   ##
@@ -602,9 +602,8 @@ Options may also be set in the 'RI' environment variable.
       add_from out, store
 
       unless comment.empty? then
+        out << RDoc::Markup::Rule.new(1)
         out << comment
-      else
-        out << RDoc::Markup::Paragraph.new("[Not documented]")
       end
 
       out << RDoc::Markup::Rule.new if class_methods || instance_methods

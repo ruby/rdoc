@@ -118,9 +118,7 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
 
     @driver.add_from out, @store
 
-    expected = @RM::Document.new(
-      @RM::Paragraph.new("(from ruby core)"),
-      @RM::Rule.new(1))
+    expected = @RM::Document.new @RM::Paragraph.new("(from ruby core)")
 
     assert_equal expected, out
   end
@@ -310,14 +308,13 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
 
     assert_match %r%^= Foo::Bar%, out
     assert_match %r%^\(from%, out # )
-    assert_match %r%^\[Not documented\]%, out
 
     assert_match %r%^= Class methods:%, out
     assert_match %r%^  new%, out
     assert_match %r%^= Instance methods:%, out
     assert_match %r%^  blah%, out
 
-    assert_equal 2, out.scan(/-\n/).length
+    assert_equal 1, out.scan(/-\n/).length
   end
 
   def test_display_class_ambiguous
