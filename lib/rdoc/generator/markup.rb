@@ -4,7 +4,7 @@ require 'rdoc/generator'
 require 'rdoc/markup/to_html_crossref'
 
 ##
-# Handle common HTML markup tasks for various CodeObjects
+# Handle common RDoc::Markup tasks for various CodeObjects
 
 module RDoc::Generator::Markup
 

@@ -98,6 +98,14 @@ The comments associated with
     assert_equal RDoc::Markup::Document.new, parse('')
   end
 
+  def test_parse_empty_newline
+    assert_equal RDoc::Markup::Document.new, parse("#\n")
+  end
+
+  def test_parse_newline
+    assert_equal RDoc::Markup::Document.new, parse("\n")
+  end
+
   def test_strip_hashes
     text = <<-TEXT
 ##

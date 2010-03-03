@@ -58,7 +58,7 @@ module RDoc::Text
   # Strips hashes, expands tabs then flushes +text+ to the left
 
   def normalize_comment text
-    return if text.empty?
+    return text if text.empty?
 
     text = strip_hashes text
     text = expand_tabs text
@@ -70,9 +70,10 @@ module RDoc::Text
 
   def parse text
     return text if RDoc::Markup::Document === text
-    return RDoc::Markup::Document.new if text.empty?
 
     text = normalize_comment text
+
+    return RDoc::Markup::Document.new if text =~ /\A\n*\z/
 
     RDoc::Markup::Parser.parse text
   rescue RDoc::Markup::Parser::Error => e
