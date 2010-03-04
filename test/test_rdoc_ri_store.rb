@@ -213,6 +213,19 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     assert_equal @klass, @s.load_class('Object')
   end
 
+  def test_save_class_basic_object
+    @klass.instance_variable_set :@superclass, nil
+
+    @s.save_class @klass
+
+    assert_directory File.join(@tmpdir, 'Object')
+    assert_file File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
+
+    assert_cache({}, {}, %w[Object], 'Object' => %w[])
+
+    assert_equal @klass, @s.load_class('Object')
+  end
+
   def test_save_class_merge
     @s.save_class @klass
 

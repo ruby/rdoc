@@ -193,7 +193,8 @@ class RDoc::RI::Store
     rescue Errno::ENOENT
     end
 
-    ancestors = klass.ancestors.map do |ancestor|
+    # BasicObject has no ancestors
+    ancestors = klass.ancestors.compact.map do |ancestor|
       # HACK for classes we don't know about (class X < RuntimeError)
       String === ancestor ? ancestor : ancestor.full_name
     end
@@ -208,7 +209,7 @@ class RDoc::RI::Store
 
   ##
   # Writes the ri data for +method+ on +klass+
-   
+
   def save_method klass, method
     FileUtils.mkdir_p class_path(klass.full_name)
 
