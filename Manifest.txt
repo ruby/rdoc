@@ -94,7 +94,6 @@ lib/rdoc/ri/driver.rb
 lib/rdoc/ri/formatter.rb
 lib/rdoc/ri/paths.rb
 lib/rdoc/ri/store.rb
-lib/rdoc/ri/util.rb
 lib/rdoc/ruby_lex.rb
 lib/rdoc/ruby_token.rb
 lib/rdoc/single_class.rb
