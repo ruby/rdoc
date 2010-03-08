@@ -236,9 +236,9 @@ class RDoc::RDoc
     # Create worker threads.
     @options.threads.times do
       thread = Thread.new do
-        while (filename = jobs.pop)
-          @stats.add_file(filename)
-          content = read_file_contents(filename)
+        while filename = jobs.pop do
+          @stats.add_file filename
+          content = read_file_contents filename
           top_level = RDoc::TopLevel.new filename
 
           parser = RDoc::Parser.for(top_level, filename, content, @options,
@@ -250,18 +250,18 @@ class RDoc::RDoc
           end
         end
       end
+
       workers << thread
     end
 
-    # Feed filenames to the parser worker threads...
     file_list.each do |filename|
       jobs << filename
     end
+
     workers.size.times do
       jobs << nil
     end
 
-    # ...and wait until they're done.
     workers.each do |thread|
       thread.join
     end

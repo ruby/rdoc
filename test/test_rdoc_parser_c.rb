@@ -35,11 +35,25 @@ class TestRDocParserC < MiniTest::Unit::TestCase
 /* Document-class: Foo
  * this is the Foo boot class
  */
+VALUE cFoo = boot_defclass("Foo", rb_cObject);
+    EOF
+
+    klass = util_get_class content, 'cFoo'
+    assert_equal "   this is the Foo boot class\n   ", klass.comment
+    assert_equal 'Object', klass.superclass
+  end
+
+  def test_do_classes_boot_class_nil
+    content = <<-EOF
+/* Document-class: Foo
+ * this is the Foo boot class
+ */
 VALUE cFoo = boot_defclass("Foo", 0);
     EOF
 
     klass = util_get_class content, 'cFoo'
     assert_equal "   this is the Foo boot class\n   ", klass.comment
+    assert_equal nil, klass.superclass
   end
 
   def test_do_classes_class

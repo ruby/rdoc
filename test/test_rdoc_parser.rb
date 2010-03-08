@@ -43,7 +43,7 @@ class TestRDocParser < MiniTest::Unit::TestCase
 
     def rp.can_parse(*args) nil end
 
-    assert_nil @RP.for nil, @binary_dat, nil, nil, nil
+    assert_nil @RP.for(nil, @binary_dat, nil, nil, nil)
   end
 
 end

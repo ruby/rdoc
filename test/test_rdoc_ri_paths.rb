@@ -9,7 +9,7 @@ class TestRDocRIPaths < MiniTest::Unit::TestCase
   def test_class_path_nonexistent
     path = RDoc::RI::Paths.path true, true, true, true, '/nonexistent'
 
-    assert_equal RDoc::RI::Paths::SYSDIR, path.shift
+    refute_includes path, '/nonexistent'
   end
 
   def test_class_raw_path

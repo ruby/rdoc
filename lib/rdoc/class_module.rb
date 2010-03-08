@@ -91,8 +91,9 @@ class RDoc::ClassModule < RDoc::Context
 
   def marshal_load array # :nodoc:
     initialize_methods_etc
-    @document_self = true
-    @current_section = nil
+    @document_self    = true
+    @done_documenting = false
+    @current_section  = nil
 
     @name       = array[1]
     @full_name  = array[2]

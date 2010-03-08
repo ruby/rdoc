@@ -11,14 +11,18 @@
   * API enhancements for writing parsers like the Ruby parser, see
     RDoc::Parser::RubyTools
   * Uses pager over less and more for Debian.  Ruby Bug #1171.
+  * ri will use the RI_PAGER environment variable to find a pager.
   * When rdoc is in debug mode, ^C now prints a backtrace
   * The ri data generator now supports ^T
   * C parser now handles Document-method better.  Bug #27329.
   * RDoc::Markup::AttributeManager no longer uses global state.
-  * ri will use the RI_PAGER environment variable to find a pager.
   * RDoc::RDoc no longer passes around options.  Patch #27167.
   * Improved some wording for the RDoc main page.  Patch #27264, #27268.
   * Darkfish won't generate a file if its template is missing.  Patch #25857.
+  * RDoc now supports module aliasing via constant assignment.
+  * RDoc now tracks superclasses correctly.  Fixes File < IO for core docs.
+  * RDoc now ignores methods inside methods.
+  * Removed "Skipping require of dynamic string" warning.
 
 * N Bug Fixes
   * The :attr: directives now use the name given to create an attribute.  See
@@ -36,6 +40,9 @@
   * Worked around bug in Selenium where they hide a .jar in a .txt file.
     Filed Selenium bug #27789.
   * Alias comments are no longer hidden.  Reported by Adam Avilla.
+
+* N Bug Workarounds
+  * Default --threads to 1 since nodoc is not thread-safe.
 
 === 2.4.3 / 2009-04-01
 

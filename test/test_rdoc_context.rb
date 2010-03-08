@@ -80,6 +80,15 @@ class TestRDocContext < XrefTestCase
     assert_includes RDoc::TopLevel.classes.map { |k| k.full_name }, 'C1::Klass'
   end
 
+  def test_add_class_superclass
+    @c1.add_class RDoc::NormalClass, 'Klass', 'Object'
+    @c1.add_class RDoc::NormalClass, 'Klass', 'Other'
+    @c1.add_class RDoc::NormalClass, 'Klass', 'Object'
+
+    klass = @c1.find_module_named 'Klass'
+    assert_equal 'Other', klass.superclass
+  end
+
   def test_add_class_upgrade
     @c1.add_module RDoc::NormalModule, 'Klass'
     @c1.add_class RDoc::NormalClass, 'Klass', nil
@@ -139,6 +148,12 @@ class TestRDocContext < XrefTestCase
     assert_includes @c1.modules.map { |m| m.full_name }, 'C1::Mod'
   end
 
+  def test_add_module_alias
+    c3_c4 = @c2.add_module_alias @c2_c3, 'C4'
+
+    assert_equal @c2.find_module_named('C4'), c3_c4
+  end
+
   def test_add_module_class
     k = @c1.add_class RDoc::NormalClass, 'Klass', nil
     m = @c1.add_module RDoc::NormalModule, 'Klass'
@@ -181,6 +196,10 @@ class TestRDocContext < XrefTestCase
     @context.add_to arr, incl
 
     refute_includes arr, incl
+  end
+
+  def test_child_name
+    assert_equal 'C1::C1', @c1.child_name('C1')
   end
 
   def test_classes

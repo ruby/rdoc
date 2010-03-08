@@ -414,21 +414,21 @@ Options may also be set in the 'RI' environment variable.
       else
         out << RDoc::Markup::Paragraph.new("(from #{store.friendly_path})")
 
-        wout, with = modules.partition { |include| include.comment.empty? }
+        wout, with = modules.partition { |incl| incl.comment.empty? }
 
         out << RDoc::Markup::BlankLine.new unless with.empty?
 
-        with.each do |include|
-          out << RDoc::Markup::Paragraph.new(include.name)
+        with.each do |incl|
+          out << RDoc::Markup::Paragraph.new(incl.name)
           out << RDoc::Markup::BlankLine.new
-          out << include.comment
+          out << incl.comment
         end
 
         unless wout.empty? then
           verb = RDoc::Markup::Verbatim.new
 
-          wout.each do |include|
-            verb.push '  ', include.name, "\n"
+          wout.each do |incl|
+            verb.push '  ', incl.name, "\n"
           end
 
           out << verb
@@ -594,7 +594,7 @@ Options may also be set in the 'RI' environment variable.
       class_methods    = store.class_methods[klass.full_name]
       instance_methods = store.instance_methods[klass.full_name]
 
-      if comment.empty? and not (instance_methods or class_methods) then
+      if comment.empty? and !(instance_methods or class_methods) then
         also_in << store
         next
       end

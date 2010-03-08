@@ -577,13 +577,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
   end
 
-  def parse_constant(container, single, tk, comment)
+  def parse_constant(container, tk, comment)
     name = tk.name
     skip_tkspace false
     eq_tk = get_tk
 
     unless TkASSIGN === eq_tk then
-      unget_tk(eq_tk)
+      unget_tk eq_tk
       return
     end
 
@@ -592,8 +592,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     tk = get_tk
     if TkGT === tk then
-      unget_tk(tk)
-      unget_tk(eq_tk)
+      unget_tk tk
+      unget_tk eq_tk
       return
     end
 
@@ -609,6 +609,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when TkCOMMENT then
         if nest <= 0 && @scanner.lex_state == EXPR_END
           unget_tk tk
+          break
+        end
+      when TkCONSTANT then
+        if nest <= 0 and TkNL === peek_tk then
+          mod = container.find_module_named tk.text
+
+          container.add_module_alias mod, name if mod
+          get_tk # TkNL
           break
         end
       when TkNL then
@@ -854,7 +862,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         name_t2 = get_tk
 
         case name_t
-        when TkSELF then
+        when TkSELF, TkMOD then
           name = name_t2.name
         when TkCONSTANT then
           name = name_t2.name
@@ -880,10 +888,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
             container.record_location @top_level
           end
+        when TkIDENTIFIER, TkIVAR then
+          skip_method RDoc::Context.new
+          return
         else
-          warn "unexpected method name token #{name_t2.inspect}"
+          warn "unexpected method name token #{name_t.inspect}"
           # break
-          skip_method(container)
+          skip_method container
           return
         end
 
@@ -896,7 +907,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         end
 
         unless name_t.respond_to? :name then
-          warn "unexpected method name token #{name_t.inspect}"
+          warn "expected . or ::, got method name token #{name_t.inspect}"
           skip_method container
           return
         end
@@ -941,7 +952,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         end
       end
 
-      parse_statements(container, single, meth)
+      parse_statements container, single, meth
     end
 
     extract_call_seq comment, meth
@@ -1054,7 +1065,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
       #    when TkCONSTANT, TkIDENTIFIER, TkIVAR, TkGVAR
       #      name = tk.name
     when TkDSTRING
-      warn "Skipping require of dynamic string: #{tk.text}"
       #   else
       #     warn "'require' used as variable"
     end
@@ -1137,7 +1147,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       when TkCONSTANT then
         if container.document_self then
-          parse_constant container, single, tk, comment
+          parse_constant container, tk, comment
         end
 
       when TkALIAS then
@@ -1212,7 +1222,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
           return
         end
-
       end
 
       comment = '' unless keep_comment
@@ -1510,8 +1519,8 @@ The internal error was:
 
   def skip_method(container)
     meth = RDoc::AnyMethod.new "", "anon"
-    parse_method_parameters(meth)
-    parse_statements(container, false, meth)
+    parse_method_parameters meth
+    parse_statements container, false, meth
   end
 
   ##

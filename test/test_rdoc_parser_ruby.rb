@@ -557,6 +557,20 @@ EOF
     assert_equal stream, foo.token_stream
   end
 
+  def test_parse_constant_alias
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+    cB = klass.add_class RDoc::NormalClass, 'B'
+
+    util_parser "A = B"
+
+    tk = @parser.get_tk
+
+    @parser.parse_constant klass, tk, ''
+
+    assert_equal cB, klass.find_module_named('A')
+  end
+
   def test_parse_meta_method
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
@@ -774,6 +788,32 @@ EOF
     @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
 
     assert klass.method_list.empty?
+  end
+
+  def test_parse_method_internal_ivar
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    util_parser "def foo() def @blah.bar() end end"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, ''
+
+    assert_equal 1, klass.method_list.length
+  end
+
+  def test_parse_method_internal_lvar
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    util_parser "def foo() def blah.bar() end end"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, ''
+
+    assert_equal 1, klass.method_list.length
   end
 
   def test_parse_method_no_parens

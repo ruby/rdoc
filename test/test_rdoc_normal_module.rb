@@ -10,7 +10,7 @@ class TestRDocNormalModule < XrefTestCase
 
   def test_ancestors_module
     top_level = RDoc::TopLevel.new 'file.rb'
-    mod = top_level.add_class RDoc::NormalModule, 'Mod'
+    mod = top_level.add_module RDoc::NormalModule, 'Mod'
     incl = RDoc::Include.new 'Incl', ''
 
     mod.add_include incl

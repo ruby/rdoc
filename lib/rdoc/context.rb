@@ -278,6 +278,13 @@ class RDoc::Context < RDoc::CodeObject
   def add_class(class_type, name, superclass = 'Object')
     klass = add_class_or_module @classes, class_type, name, superclass
 
+    existing = klass.superclass
+    existing = existing.name if existing and not String === existing
+
+    if superclass != existing and superclass != 'Object' then
+      klass.superclass = superclass
+    end
+
     # If the parser encounters Container::Item before encountering
     # Container, then it assumes that Container is a module.  This may not
     # be the case, so remove Container from the module list if present and
@@ -305,11 +312,7 @@ class RDoc::Context < RDoc::CodeObject
   # classes Hash +collection+.
 
   def add_class_or_module(collection, class_type, name, superclass = nil)
-    full_name = if RDoc::TopLevel === self then # HACK
-                  name
-                else
-                  "#{self.full_name}::#{name}"
-                end
+    full_name = child_name name
 
     mod = collection[name]
 
@@ -396,6 +399,31 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
+  # Adds an alias from +module+ to +name+
+
+  def add_module_alias from, name
+    to_name = child_name name
+
+    unless @done_documenting then
+      RDoc::TopLevel.lock.synchronize do
+        if from.module? then
+          RDoc::TopLevel.modules_hash
+        else
+          RDoc::TopLevel.classes_hash
+        end[to_name] = from
+      end
+
+      if from.module? then
+        @modules
+      else
+        @classes
+      end[name] = from
+    end
+
+    from
+  end
+
+  ##
   # Adds +require+ to this context's top level
 
   def add_require(require)
@@ -413,6 +441,17 @@ class RDoc::Context < RDoc::CodeObject
     array << thing if @document_self and not @done_documenting
     thing.parent = self
     thing.section = @current_section
+  end
+
+  ##
+  # Creates the full name for a child with +name+
+
+  def child_name name
+    if RDoc::TopLevel === self then
+      name
+    else
+      "#{self.full_name}::#{name}"
+    end
   end
 
   ##

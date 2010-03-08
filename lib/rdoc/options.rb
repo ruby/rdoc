@@ -136,11 +136,7 @@ class RDoc::Options
     @rdoc_include = []
     @title = nil
     @template = nil
-    @threads = if RUBY_PLATFORM == 'java' then
-                 Java::java::lang::Runtime.getRuntime.availableProcessors * 2
-               else
-                 2
-               end
+    @threads = 1
     @diagram = false
     @fileboxes = false
     @show_hash = false
@@ -249,7 +245,8 @@ Usage: #{opt.program_name} [options] [names...]
       opt.separator nil
 
       opt.on("--threads=THREADS", Integer,
-             "Number of threads to parse with.") do |threads|
+             "Number of threads to parse with.",
+             "WARNING > 1 thread is buggy") do |threads|
         @threads = threads
       end
 
