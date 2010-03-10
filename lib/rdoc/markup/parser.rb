@@ -38,7 +38,6 @@ class RDoc::Markup::Parser
 
   class ParseError < Error; end
 
-
   ##
   # Enables display of debugging information
 
@@ -84,7 +83,6 @@ class RDoc::Markup::Parser
   # Builds a Heading of +level+
 
   def build_heading level
-
     heading = RDoc::Markup::Heading.new level, text
     skip :NEWLINE
 

@@ -486,7 +486,7 @@ class RDoc::Context < RDoc::CodeObject
   # Iterator for attributes
 
   def each_attribute # :yields: attribute
-    @attributes.each {|a| yield a}
+    @attributes.each { |a| yield a }
   end
 
   ##
