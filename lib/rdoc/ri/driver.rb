@@ -349,20 +349,14 @@ Options may also be set in the 'RI' environment variable.
   def add_also_in out, also_in
     return if also_in.empty?
 
-    if also_in.length == 1 then
-      add_from out, also_in.shift
-      out << RDoc::Markup::Rule.new(1)
-      out << RDoc::Markup::Paragraph.new("[Not documented]")
-    else
-      out << RDoc::Markup::Rule.new(1)
-      out << RDoc::Markup::Paragraph.new("Not documented in:")
+    out << RDoc::Markup::Rule.new(1)
+    out << RDoc::Markup::Paragraph.new("Also found in:")
 
-      paths = RDoc::Markup::Verbatim.new
-      also_in.each do |store|
-        paths.parts.push '  ', store.friendly_path, "\n"
-      end
-      out << paths
+    paths = RDoc::Markup::Verbatim.new
+    also_in.each do |store|
+      paths.parts.push '  ', store.friendly_path, "\n"
     end
+    out << paths
   end
 
   ##
