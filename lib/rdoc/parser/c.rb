@@ -96,6 +96,8 @@ class RDoc::Parser::C < RDoc::Parser
 
   parse_files_matching(/\.(?:([CcHh])\1?|c([+xp])\2|y)\z/)
 
+  include RDoc::Text
+
   ##
   # C file the parser is parsing
 
@@ -310,7 +312,7 @@ class RDoc::Parser::C < RDoc::Parser
 #        meth_obj.params = params
       meth_obj.start_collecting_tokens
       meth_obj.add_token RDoc::RubyToken::Token.new(1,1).set_text(body_text)
-      meth_obj.comment = mangle_comment comment
+      meth_obj.comment = comment
     when %r{((?>/\*.*?\*/\s*))^\s*(\#\s*define\s+#{meth_name}\s+(\w+))}m
       comment = $1
       body_text = $2
@@ -319,7 +321,7 @@ class RDoc::Parser::C < RDoc::Parser
 
       meth_obj.start_collecting_tokens
       meth_obj.add_token RDoc::RubyToken::Token.new(1,1).set_text(body_text)
-      meth_obj.comment = mangle_comment(comment) + meth_obj.comment.to_s
+      meth_obj.comment = comment + meth_obj.comment.to_s
     when %r{^\s*\#\s*define\s+#{meth_name}\s+(\w+)}m
       unless find_body(class_name, $1, meth_obj, body, true)
         warn "No definition for #{meth_name}" unless @options.quiet
@@ -331,7 +333,7 @@ class RDoc::Parser::C < RDoc::Parser
 
       if comment
         find_modifiers(comment, meth_obj)
-        meth_obj.comment = mangle_comment(comment)
+        meth_obj.comment = comment
       else
         warn "No definition for #{meth_name}" unless @options.quiet
         return false
@@ -380,11 +382,14 @@ class RDoc::Parser::C < RDoc::Parser
   #    */
   #   VALUE cFoo = rb_define_class("Foo", rb_cObject);
 
-  def find_class_comment(class_name, class_meth)
+  def find_class_comment(class_name, class_mod)
     comment = nil
 
-    if @content =~ %r{((?>/\*.*?\*/\s+))
-                   (static\s+)?void\s+Init_#{class_name}\s*(?:_\(\s*)?\(\s*(?:void\s*)\)}xmi then
+    if @content =~ %r{
+        ((?>/\*.*?\*/\s+))
+        (static\s+)?
+        void\s+
+        Init_#{class_name}\s*(?:_\(\s*)?\(\s*(?:void\s*)?\)}xmi then # )
       comment = $1
     elsif @content =~ %r{Document-(?:class|module):\s+#{class_name}\s*?(?:<\s+[:,\w]+)?\n((?>.*?\*/))}m then
       comment = $1
@@ -393,7 +398,7 @@ class RDoc::Parser::C < RDoc::Parser
       comment = $1
     end
 
-    class_meth.comment = mangle_comment comment if comment
+    class_mod.comment = comment if comment
   end
 
   ##
@@ -445,11 +450,12 @@ class RDoc::Parser::C < RDoc::Parser
   def handle_attr(var_name, attr_name, reader, writer)
     rw = ''
     if reader
-      #@stats.num_methods += 1
+      @stats.num_methods += 1
       rw << 'R'
     end
+
     if writer
-      #@stats.num_methods += 1
+      @stats.num_methods += 1
       rw << 'W'
     end
 
@@ -461,36 +467,33 @@ class RDoc::Parser::C < RDoc::Parser
 
     if class_obj
       comment = find_attr_comment(attr_name)
-      unless comment.empty?
-        comment = mangle_comment(comment)
-      end
       att = RDoc::Attr.new '', attr_name, rw, comment
       class_obj.add_attribute(att)
     end
   end
 
-  def handle_class_module(var_name, class_mod, class_name, parent, in_module)
+  def handle_class_module(var_name, type, class_name, parent, in_module)
     parent_name = @known_classes[parent] || parent
 
-    if in_module
+    if in_module then
       enclosure = @classes[in_module] || @@enclosure_classes[in_module]
-      unless enclosure
-        if enclosure = @known_classes[in_module]
-          handle_class_module(in_module, (/^rb_m/ =~ in_module ? "module" : "class"),
-                              enclosure, nil, nil)
-          enclosure = @classes[in_module]
-        end
+
+      if enclosure.nil? and enclosure = @known_classes[in_module] then
+        type = /^rb_m/ =~ in_module ? "module" : "class"
+        handle_class_module in_module, type, enclosure, nil, nil
+        enclosure = @classes[in_module]
       end
-      unless enclosure
+
+      unless enclosure then
         warn("Enclosing class/module '#{in_module}' for " +
-              "#{class_mod} #{class_name} not known")
+              "#{type} #{class_name} not known")
         return
       end
     else
       enclosure = @top_level
     end
 
-    if class_mod == "class" then
+    if type == "class" then
       full_name = if RDoc::ClassModule === enclosure then
                     enclosure.full_name + "::#{class_name}"
                   else
@@ -500,7 +503,9 @@ class RDoc::Parser::C < RDoc::Parser
       if @content =~ %r{Document-class:\s+#{full_name}\s*<\s+([:,\w]+)} then
         parent_name = $1
       end
+
       cm = enclosure.add_class RDoc::NormalClass, class_name, parent_name
+
       @stats.add_class cm
     else
       cm = enclosure.add_module RDoc::NormalModule, class_name
@@ -528,43 +533,50 @@ class RDoc::Parser::C < RDoc::Parser
   # Values may include quotes and escaped colons (\:).
 
   def handle_constants(type, var_name, const_name, definition)
-    #@stats.num_constants += 1
     class_name = @known_classes[var_name]
 
     return unless class_name
 
-    class_obj  = find_class(var_name, class_name)
+    class_obj = find_class var_name, class_name
 
-    unless class_obj
-      warn("Enclosing class/module '#{const_name}' for not known")
+    unless class_obj then
+      warn "Enclosing class/module #{const_name.inspect} not known"
       return
     end
 
-    comment = find_const_comment(type, const_name)
+    comment = find_const_comment type, const_name
+    comment = normalize_comment comment
 
     # In the case of rb_define_const, the definition and comment are in
     # "/* definition: comment */" form.  The literal ':' and '\' characters
     # can be escaped with a backslash.
     if type.downcase == 'const' then
-       elements = mangle_comment(comment).split(':')
-       if elements.nil? or elements.empty? then
-          con = RDoc::Constant.new(const_name, definition,
-                                   mangle_comment(comment))
-       else
-          new_definition = elements[0..-2].join(':')
-          if new_definition.empty? then # Default to literal C definition
-             new_definition = definition
-          else
-             new_definition.gsub!("\:", ":")
-             new_definition.gsub!("\\", '\\')
-          end
-          new_definition.sub!(/\A(\s+)/, '')
-          new_comment = $1.nil? ? elements.last : "#{$1}#{elements.last.lstrip}"
-          con = RDoc::Constant.new(const_name, new_definition,
-                                   mangle_comment(new_comment))
-       end
+      elements = comment.split ':'
+
+      if elements.nil? or elements.empty? then
+        con = RDoc::Constant.new const_name, definition, comment
+      else
+        new_definition = elements[0..-2].join(':')
+
+        if new_definition.empty? then # Default to literal C definition
+          new_definition = definition
+        else
+          new_definition.gsub!("\:", ":")
+          new_definition.gsub!("\\", '\\')
+        end
+
+        new_definition.sub!(/\A(\s+)/, '')
+
+        new_comment = if $1.nil? then
+                        elements.last.lstrip
+                      else
+                        "#{$1}#{elements.last.lstrip}"
+                      end
+
+        con = RDoc::Constant.new const_name, new_definition, new_comment
+      end
     else
-       con = RDoc::Constant.new const_name, definition, mangle_comment(comment)
+      con = RDoc::Constant.new const_name, definition, comment
     end
 
     class_obj.add_constant(con)
@@ -629,17 +641,6 @@ class RDoc::Parser::C < RDoc::Parser
     else
       body
     end
-  end
-
-  ##
-  # Remove the /*'s and leading asterisks from C comments
-
-  def mangle_comment(comment)
-    comment.gsub! %r{Document-method:\s+[\w:.#]+}, ''
-    comment.sub!(%r%/\*+%) { " " * $&.length }
-    comment.sub!(%r%\*+/%) { " " * $&.length }
-    comment.gsub!(/^[ \t]*\*/m) { " " * $&.length }
-    comment
   end
 
   ##

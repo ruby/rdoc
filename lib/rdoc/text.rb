@@ -60,6 +60,7 @@ module RDoc::Text
   def normalize_comment text
     return text if text.empty?
 
+    text = strip_stars text
     text = strip_hashes text
     text = expand_tabs text
     text = flush_left text
@@ -113,6 +114,17 @@ http://rubyforge.org/tracker/?atid=2472&group_id=627&func=browse
 
   def strip_newlines text
     text.gsub(/\A\n*(.*?)\n*\z/m, '\1')
+  end
+
+  ##
+  # Strips /* */ style comments
+
+  def strip_stars text
+    text = text.gsub %r{Document-method:\s+[\w:.#]+}, ''
+    text.sub!(%r%/\*+%)      { " " * $&.length }
+    text.sub!(%r%\*+/%)      { " " * $&.length }
+    text.gsub!(/^[ \t]*\*/m) { " " * $&.length }
+    text
   end
 
 end

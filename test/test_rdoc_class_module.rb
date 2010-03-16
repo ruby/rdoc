@@ -8,6 +8,21 @@ class TestRDocClassModule < XrefTestCase
     @RM = RDoc::Markup
   end
 
+  def test_comment_equals
+    cm = RDoc::ClassModule.new 'Klass'
+    cm.comment = '# comment 1'
+
+    assert_equal 'comment 1', cm.comment
+
+    cm.comment = '# comment 2'
+
+    assert_equal "comment 1\n---\ncomment 2", cm.comment
+
+    cm.comment = "/*\n * comment 3\n */"
+
+    assert_equal "comment 1\n---\ncomment 2\n---\ncomment 3", cm.comment
+  end
+
   def test_merge
     cm1 = RDoc::ClassModule.new 'Klass'
     cm1.comment = 'klass 1'

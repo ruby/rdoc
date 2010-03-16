@@ -171,7 +171,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def collect_first_comment
     skip_tkspace
-    res = ''
+    comment = ''
     first_line = true
 
     tk = get_tk
@@ -186,7 +186,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         tk = get_tk
       else
         first_line = false
-        res << tk.text << "\n"
+        comment << tk.text << "\n"
         tk = get_tk
 
         if TkNL === tk then
@@ -198,7 +198,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     unget_tk tk
 
-    res
+    comment
   end
 
   def error(msg)
@@ -335,6 +335,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       tk = get_tk
       nest -= 1 if TkRPAREN === tk
     end
+
     name
   end
 
@@ -1075,6 +1076,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
   end
 
+  ##
+  # The core of the ruby parser.
+
   def parse_statements(container, single = NORMAL, current_method = nil,
                        comment = '')
     nest = 1
@@ -1103,8 +1107,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
           while TkCOMMENT === tk do
             comment << tk.text << "\n"
-            tk = get_tk          # this is the newline
-            skip_tkspace false  # leading spaces
+            tk = get_tk        # this is the newline
+            skip_tkspace false # leading spaces
             tk = get_tk
           end
 

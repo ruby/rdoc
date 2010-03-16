@@ -29,6 +29,19 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
+  # Appends +comment+ to the current comment, but separated by a rule.  Works
+  # more like <tt>+=</tt>.
+
+  def comment=(comment)
+    return if comment.empty?
+
+    comment = "#{@comment}\n---\n#{normalize_comment comment}" unless
+      @comment.empty?
+
+    super
+  end
+
+  ##
   # Finds a class or module with +name+ in this namespace or its descendents
 
   def find_class_named(name)

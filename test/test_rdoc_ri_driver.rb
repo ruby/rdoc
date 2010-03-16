@@ -62,23 +62,7 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     assert_empty out
   end
 
-  def test_add_also_in_one
-    util_store
-    @store.type = :system
-
-    out = @RM::Document.new
-
-    @driver.add_also_in out, [@store]
-
-    expected = @RM::Document.new(
-      @RM::Paragraph.new('(from ruby core)'),
-      @RM::Rule.new(1),
-      @RM::Paragraph.new('[Not documented]'))
-
-    assert_equal expected, out
-  end
-
-  def test_add_also_in_many
+  def test_add_also_in
     util_multi_store
     @store1.type = :system
     @store2.type = :home
@@ -89,7 +73,7 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
 
     expected = @RM::Document.new(
       @RM::Rule.new(1),
-      @RM::Paragraph.new('Not documented in:'),
+      @RM::Paragraph.new('Also found in:'),
       @RM::Verbatim.new('  ', 'ruby core', "\n",
                         '  ', '~/.ri', "\n"))
 
@@ -336,7 +320,7 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
 
     assert_match %r%^= Foo::Baz%, out
     assert_match %r%-\n%, out
-    assert_match %r%Not documented in:%, out
+    assert_match %r%Also found in:%, out
     assert_match %r%#{Regexp.escape @home_ri}%, out
     assert_match %r%#{Regexp.escape @home_ri2}%, out
   end

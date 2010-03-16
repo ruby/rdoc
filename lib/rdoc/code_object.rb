@@ -90,7 +90,16 @@ class RDoc::CodeObject
   # Replaces our comment with +comment+, unless it is empty.
 
   def comment=(comment)
-    @comment = comment if comment and not comment.empty?
+    @comment = case comment
+               when NilClass               then ''
+               when RDoc::Markup::Document then comment
+               else
+                 if comment and not comment.empty? then
+                   normalize_comment comment
+                 else
+                   @comment
+                 end
+               end
   end
 
   ##

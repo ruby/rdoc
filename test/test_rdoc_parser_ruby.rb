@@ -192,7 +192,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
 
     foo = klass.attributes.first
     assert_equal 'foo', foo.name
-    assert_equal "##\n# my attr\n", foo.comment
+    assert_equal 'my attr', foo.comment
   end
 
   def test_parse_attr_accessor
@@ -212,12 +212,12 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     foo = klass.attributes.first
     assert_equal 'foo', foo.name
     assert_equal 'RW', foo.rw
-    assert_equal "##\n# my attr\n", foo.comment
+    assert_equal 'my attr', foo.comment
 
     bar = klass.attributes.last
     assert_equal 'bar', bar.name
     assert_equal 'RW', bar.rw
-    assert_equal "##\n# my attr\n", bar.comment
+    assert_equal 'my attr', bar.comment
   end
 
   def test_parse_attr_accessor_writer
@@ -237,12 +237,12 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     foo = klass.attributes.first
     assert_equal 'foo', foo.name
     assert_equal 'W', foo.rw
-    assert_equal "##\n# my attr\n", foo.comment
+    assert_equal "my attr", foo.comment
 
     bar = klass.attributes.last
     assert_equal 'bar', bar.name
     assert_equal 'W', bar.rw
-    assert_equal "##\n# my attr\n", bar.comment
+    assert_equal "my attr", bar.comment
   end
 
   def test_parse_meta_attr
@@ -261,7 +261,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     foo = klass.attributes.first
     assert_equal 'foo', foo.name
     assert_equal 'RW', foo.rw
-    assert_equal "##\n# my method\n", foo.comment
+    assert_equal "my method", foo.comment
   end
 
   def test_parse_meta_attr_accessor
@@ -280,7 +280,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     foo = klass.attributes.first
     assert_equal 'foo', foo.name
     assert_equal 'RW', foo.rw
-    assert_equal "##\n# my method\n", foo.comment
+    assert_equal 'my method', foo.comment
   end
 
   def test_parse_meta_attr_named
@@ -299,7 +299,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     foo = klass.attributes.first
     assert_equal 'foo', foo.name
     assert_equal 'RW', foo.rw
-    assert_equal "##\n# my method\n", foo.comment
+    assert_equal 'my method', foo.comment
   end
 
   def test_parse_meta_attr_reader
@@ -317,7 +317,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     foo = klass.attributes.first
     assert_equal 'foo', foo.name
     assert_equal 'R', foo.rw
-    assert_equal "##\n# my method\n", foo.comment
+    assert_equal 'my method', foo.comment
   end
 
   def test_parse_meta_attr_writer
@@ -335,7 +335,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     foo = klass.attributes.first
     assert_equal 'foo', foo.name
     assert_equal 'W', foo.rw
-    assert_equal "##\n# my method\n", foo.comment
+    assert_equal "my method", foo.comment
   end
 
   def test_parse_class
@@ -349,7 +349,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
 
     foo = @top_level.classes.first
     assert_equal 'Foo', foo.full_name
-    assert_equal comment, foo.comment
+    assert_equal 'my method', foo.comment
   end
 
   def test_parse_class_ghost_method
@@ -397,7 +397,7 @@ end
 
     foo = @top_level.modules.first
     assert_equal 'Foo', foo.full_name
-    assert_equal comment, foo.comment
+    assert_equal 'my module', foo.comment
   end
 
   def test_parse_class_mistaken_for_module
@@ -481,7 +481,7 @@ EOF
 
     foo = @top_level.modules.first
     assert_equal 'Foo', foo.full_name
-    assert_equal comment, foo.comment
+    assert_equal 'Weirdly named module', foo.comment
 
     helper = foo.classes.first
     assert_equal 'Foo::Helper', helper.full_name
@@ -502,7 +502,7 @@ EOF
     foo = klass.attributes.first
     assert_equal 'foo',     foo.name
     assert_equal 'RW',      foo.rw
-    assert_equal comment,   foo.comment
+    assert_equal 'my attr',   foo.comment
 
     assert_equal nil,       foo.viewer
     assert_equal true,      foo.document_children
@@ -529,7 +529,7 @@ EOF
 
     foo = klass.method_list.first
     assert_equal 'foo',     foo.name
-    assert_equal comment,   foo.comment
+    assert_equal 'my method',   foo.comment
 
     assert_equal [],        foo.aliases
     assert_equal nil,       foo.block_params
@@ -585,7 +585,7 @@ EOF
 
     foo = klass.method_list.first
     assert_equal 'foo', foo.name
-    assert_equal comment, foo.comment
+    assert_equal 'my method', foo.comment
 
     assert_equal [],      foo.aliases
     assert_equal nil,     foo.block_params
@@ -634,7 +634,7 @@ EOF
 
     foo = klass.method_list.first
     assert_equal 'woo_hoo!', foo.name
-    assert_equal "##\n# my method\n", foo.comment
+    assert_equal 'my method', foo.comment
   end
 
   def test_parse_meta_method_singleton
@@ -652,7 +652,7 @@ EOF
     foo = klass.method_list.first
     assert_equal 'foo', foo.name
     assert_equal true, foo.singleton, 'singleton method'
-    assert_equal "##\n# my method\n", foo.comment
+    assert_equal 'my method', foo.comment
   end
 
   def test_parse_meta_method_singleton_name
@@ -670,7 +670,7 @@ EOF
     foo = klass.method_list.first
     assert_equal 'woo_hoo!', foo.name
     assert_equal true, foo.singleton, 'singleton method'
-    assert_equal "##\n# my method\n", foo.comment
+    assert_equal 'my method', foo.comment
   end
 
   def test_parse_meta_method_string_name
@@ -685,7 +685,7 @@ EOF
 
     foo = klass.method_list.first
     assert_equal 'foo', foo.name
-    assert_equal comment, foo.comment
+    assert_equal 'my method', foo.comment
   end
 
   def test_parse_meta_method_unknown
@@ -700,7 +700,7 @@ EOF
 
     foo = klass.method_list.first
     assert_equal 'unknown', foo.name
-    assert_equal comment, foo.comment
+    assert_equal 'my method', foo.comment
   end
 
   def test_parse_method
@@ -717,7 +717,7 @@ EOF
 
     foo = klass.method_list.first
     assert_equal 'foo',     foo.name
-    assert_equal comment,   foo.comment
+    assert_equal 'my method',   foo.comment
 
     assert_equal [],        foo.aliases
     assert_equal nil,       foo.block_params
@@ -917,7 +917,7 @@ end
 
     bar = foo.classes.first
     assert_equal 'Foo::Bar', bar.full_name, 'class Foo::Bar'
-    assert_equal comment, bar.comment
+    assert_equal 'my method', bar.comment
   end
 
   def test_parse_statements_identifier_meta_method
