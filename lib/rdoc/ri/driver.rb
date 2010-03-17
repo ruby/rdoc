@@ -432,15 +432,15 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
-  # Adds a list of +methods+ to +out+ of +type+
+  # Adds a list of +methods+ to +out+ with a heading of +name+
 
-  def add_method_list out, methods, type
+  def add_method_list out, methods, name
     return unless methods
 
-    out << RDoc::Markup::Heading.new(1, "#{type} methods:")
+    out << RDoc::Markup::Heading.new(1, "#{name}:")
     out << RDoc::Markup::BlankLine.new
 
-    out.push(*methods.sort.map do |method|
+    out.push(*methods.map do |method|
       RDoc::Markup::Verbatim.new '  ', method
     end)
 
@@ -588,6 +588,10 @@ Options may also be set in the 'RI' environment variable.
       class_methods    = store.class_methods[klass.full_name]
       instance_methods = store.instance_methods[klass.full_name]
 
+      attributes = klass.attributes.map do |attr|
+        "#{attr.type} #{attr.name}"
+      end
+
       if comment.empty? and !(instance_methods or class_methods) then
         also_in << store
         next
@@ -602,8 +606,9 @@ Options may also be set in the 'RI' environment variable.
 
       out << RDoc::Markup::Rule.new if class_methods || instance_methods
 
-      add_method_list out, class_methods,    'Class'
-      add_method_list out, instance_methods, 'Instance'
+      add_method_list out, class_methods,    'Class methods'
+      add_method_list out, instance_methods, 'Instance methods'
+      add_method_list out, attributes,       'Attributes'
 
       out << RDoc::Markup::BlankLine.new
     end

@@ -81,7 +81,18 @@ class RDoc::Attr < RDoc::CodeObject
   end
 
   def to_s # :nodoc:
-    "attr: #{self.name} #{self.rw}\n#{self.comment}"
+    "#{type} #{name}\n#{comment}"
+  end
+
+  ##
+  # Returns attr_reader, attr_writer or attr_accessor as appropriate
+
+  def type
+    case rw
+    when 'RW' then 'attr_accessor'
+    when 'R'  then 'attr_reader'
+    when 'W'  then 'attr_writer'
+    end
   end
 
 end

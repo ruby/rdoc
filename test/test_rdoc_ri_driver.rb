@@ -181,7 +181,7 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
   def test_add_method_list
     out = @RM::Document.new
 
-    @driver.add_method_list out, %w[new], 'Class'
+    @driver.add_method_list out, %w[new], 'Class methods'
 
     expected = @RM::Document.new(
       @RM::Heading.new(1, 'Class methods:'),
@@ -297,6 +297,8 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     assert_match %r%^  new%, out
     assert_match %r%^= Instance methods:%, out
     assert_match %r%^  blah%, out
+    assert_match %r%^= Attributes:%, out
+    assert_match %r%^  attr_accessor attr%, out
 
     assert_equal 1, out.scan(/-\n/).length
   end
@@ -699,6 +701,10 @@ Foo::Bar#blah
 
     @cFoo_Bar.add_method @blah
     @cFoo_Bar.add_method @new
+
+    @attr = RDoc::Attr.new nil, 'attr', 'RW', ''
+
+    @cFoo_Bar.add_attribute @attr
 
     @cFoo_Baz = RDoc::NormalClass.new 'Baz'
     @cFoo_Baz.parent = @cFoo
