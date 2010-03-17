@@ -16,6 +16,7 @@ class RDoc::Generator::RI
     @options  = options
     @store    = RDoc::RI::Store.new '.'
     @old_siginfo = nil
+    @current = nil
   end
 
   ##
@@ -36,9 +37,13 @@ class RDoc::Generator::RI
       end
     end
 
+    @current = 'saving cache'
+
     @store.save_cache
 
   ensure
+    @current = nil
+
     remove_siginfo_handler
   end
 
@@ -46,7 +51,7 @@ class RDoc::Generator::RI
     return unless Signal.list.key? 'INFO'
 
     @old_siginfo = trap 'INFO' do
-      puts @current
+      puts @current if @current
     end
   end
 
