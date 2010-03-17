@@ -80,7 +80,7 @@ class RDoc::ClassModule < RDoc::Context
           method.name
         end
 
-        [visibility, method_names]
+        [visibility, method_names.uniq]
       end
 
       [type, visibilities]
@@ -130,7 +130,9 @@ class RDoc::ClassModule < RDoc::Context
         @visibility = visibility
 
         methods.each do |name|
-          add_method RDoc::AnyMethod.new(nil, name)
+          method = RDoc::AnyMethod.new nil, name
+          method.singleton = true if type == 'class'
+          add_method method
         end
       end
     end

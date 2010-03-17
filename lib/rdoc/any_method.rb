@@ -240,7 +240,7 @@ class RDoc::AnyMethod < RDoc::CodeObject
   def pretty_print q # :nodoc:
     alias_for = @is_alias_for ? "alias for #{@is_alias_for.name}" : nil
 
-    q.group 2, "[#{self.class.name} #{full_name}", "]" do
+    q.group 2, "[#{self.class.name} #{full_name} #{visibility}", "]" do
       if alias_for then
         q.breakable
         q.text alias_for
