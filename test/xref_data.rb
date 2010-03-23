@@ -47,5 +47,8 @@ end
 
 module M1
 end
+
+module M1::M2
+end
 XREF_DATA
 

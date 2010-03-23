@@ -6,6 +6,14 @@ require 'irb/slex'
 
 class RDoc::RubyLex
 
+  # HACK to avoid a warning the regexp is hidden behind an eval
+  # HACK need a better way to detect oniguruma
+  IDENTIFIER_RE = if defined? ::Encoding then
+                    eval '/[\p{Alnum}_]/u'
+                  else
+                    eval '/[\w\x80-\xff]/'
+                  end
+
   ##
   # Read an input stream character by character. We allow for unlimited
   # ungetting of characters just read.
@@ -29,7 +37,9 @@ class RDoc::RubyLex
 
   class BufferedReader
 
+    attr_reader :content
     attr_reader :line_num
+    attr_reader :offset
 
     def initialize(content, options)
       @options = options
@@ -132,6 +142,7 @@ class RDoc::RubyLex
 
   attr_reader :continue
   attr_reader :lex_state
+  attr_reader :reader
 
   def self.debug?
     @debug
@@ -691,15 +702,7 @@ class RDoc::RubyLex
     token.concat getc if peek(0) =~ /[$@]/
     token.concat getc if peek(0) == "@"
 
-    # HACK to avoid a warning the regexp is hidden behind an eval
-    # HACK need a better way to detect oniguruma
-    @identifier_re ||= if defined? ::Encoding then
-                         eval '/[\p{Alnum}_]/u'
-                       else
-                         eval '/[\w\x80-\xff]/'
-                       end
-
-    while (ch = getc) =~ @identifier_re
+    while (ch = getc) =~ IDENTIFIER_RE
       print " :#{ch}: " if RDoc::RubyLex.debug?
       token.concat ch
     end

@@ -1455,15 +1455,20 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def scan
     reset
 
-    catch(:eof) do
-      catch(:enddoc) do
+    catch :eof do
+      catch :enddoc do
         begin
-          parse_top_level_statements(@top_level)
+          parse_top_level_statements @top_level
         rescue Exception => e
+          input = @scanner.reader.content
+          offset = @scanner.reader.offset
+
           $stderr.puts <<-EOF
 
 
-RDoc failure in #{@file_name} at or around line #{@scanner.line_no} column #{@scanner.char_no}
+RDoc failure in #{@file_name} at or around line #{@scanner.line_no} column #{@scanner.char_no}:
+
+#{input[offset, 60].inspect}
 
 Before reporting this, could you check that the file you're documenting
 compiles cleanly--RDoc is not a full Ruby parser, and gets confused easily if
@@ -1471,9 +1476,12 @@ fed invalid programs.
 
 The internal error was:
 
+\t(#{e.class}) #{e.message}
+
           EOF
 
-          e.set_backtrace(e.backtrace[0,4])
+          puts e.backtrace.join("\n\t")
+
           raise
         end
       end

@@ -69,10 +69,13 @@ class RDoc::TopLevel < RDoc::Context
   def self.find_class_named(name)
     @lock.synchronize do
       # The sort makes C1 show up before C4::C1
-      classes_hash.values.sort.find do |c|
-        c.find_class_named name
+      classes_hash.values.sort.each do |c|
+        found = c.find_class_named name
+        return found if found
       end
     end
+
+    nil
   end
 
   ##
@@ -117,10 +120,13 @@ class RDoc::TopLevel < RDoc::Context
 
   def self.find_module_named(name)
     @lock.synchronize do
-      modules_hash.values.find do |c|
-        c.find_module_named name
+      modules_hash.values.sort.each do |c|
+        found = c.find_module_named name
+        return found if found
       end
     end
+
+    nil
   end
 
   @lock = Mutex.new
