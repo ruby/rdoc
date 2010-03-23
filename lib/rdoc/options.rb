@@ -156,7 +156,7 @@ class RDoc::Options
   # Parse command line options.
 
   def parse(argv)
-    ignore_invalid = false
+    ignore_invalid = true
 
     opts = OptionParser.new do |opt|
       opt.program_name = File.basename $0
@@ -423,9 +423,9 @@ Usage: #{opt.program_name} [options] [names...]
         $DEBUG_RDOC = value
       end
 
-      opt.on("--ignore-invalid",
+      opt.on("--[no-]ignore-invalid",
              "Ignore invalid options and continue.") do |value|
-        ignore_invalid = true
+        ignore_invalid = value
       end
 
       opt.on("--quiet", "-q",
