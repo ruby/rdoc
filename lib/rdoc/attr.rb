@@ -6,6 +6,8 @@ require 'rdoc/code_object'
 
 class RDoc::Attr < RDoc::CodeObject
 
+  MARSHAL_VERSION = 0
+
   ##
   # Name of the attribute
 
@@ -52,6 +54,14 @@ class RDoc::Attr < RDoc::CodeObject
   end
 
   ##
+  # Partially bogus as Attr has no parent.  For duck typing with
+  # RDoc::AnyMethod.
+
+  def full_name
+    @full_name ||= "#{@parent ? @parent.full_name : '(unknown)'}##{name}"
+  end
+
+  ##
   # An HTML id-friendly representation of #name
 
   def html_name
@@ -74,10 +84,54 @@ class RDoc::Attr < RDoc::CodeObject
   end
 
   ##
+  # Dumps this Attr for use by ri.  See also #marshal_load
+
+  def marshal_dump
+    [ MARSHAL_VERSION,
+      @name,
+      full_name,
+      @rw,
+      @visibility,
+      parse(@comment),
+    ]
+  end
+
+  ##
+  # Loads this AnyMethod from +array+.  For a loaded AnyMethod the following
+  # methods will return cached values:
+  #
+  # * #full_name
+  # * #parent_name
+
+  def marshal_load array
+    @name       = array[1]
+    @full_name  = array[2]
+    @rw         = array[3]
+    @visibility = array[4]
+    @comment    = array[5]
+
+    @parent_name = @full_name
+  end
+
+  ##
+  # Name of our parent with special handling for un-marshaled methods
+
+  def parent_name
+    @parent_name || super
+  end
+
+  ##
   # URL path for this attribute
 
   def path
     "#{@parent.path}##{@name}"
+  end
+
+  ##
+  # For duck typing with RDoc::AnyMethod
+
+  def singleton
+    false
   end
 
   def to_s # :nodoc:
@@ -88,7 +142,7 @@ class RDoc::Attr < RDoc::CodeObject
   # Returns attr_reader, attr_writer or attr_accessor as appropriate
 
   def type
-    case rw
+    case @rw
     when 'RW' then 'attr_accessor'
     when 'R'  then 'attr_reader'
     when 'W'  then 'attr_writer'

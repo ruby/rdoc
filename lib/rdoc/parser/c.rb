@@ -449,25 +449,19 @@ class RDoc::Parser::C < RDoc::Parser
 
   def handle_attr(var_name, attr_name, reader, writer)
     rw = ''
-    if reader
-      @stats.num_methods += 1
-      rw << 'R'
-    end
-
-    if writer
-      @stats.num_methods += 1
-      rw << 'W'
-    end
+    rw << 'R' if reader
+    rw << 'W' if writer
 
     class_name = @known_classes[var_name]
 
     return unless class_name
 
-    class_obj  = find_class(var_name, class_name)
+    class_obj = find_class(var_name, class_name)
 
     if class_obj
       comment = find_attr_comment(attr_name)
       att = RDoc::Attr.new '', attr_name, rw, comment
+      @stats.add_method att
       class_obj.add_attribute(att)
     end
   end

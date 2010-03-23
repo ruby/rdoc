@@ -571,6 +571,22 @@ EOF
     assert_equal cB, klass.find_module_named('A')
   end
 
+  def test_parse_constant_alias_same_name
+    foo = @top_level.add_class RDoc::NormalClass, 'Foo'
+    top_bar = @top_level.add_class RDoc::NormalClass, 'Bar'
+    bar = foo.add_class RDoc::NormalClass, 'Bar'
+
+    assert RDoc::TopLevel.find_class_or_module('::Bar')
+
+    util_parser "A = ::Bar"
+
+    tk = @parser.get_tk
+
+    @parser.parse_constant foo, tk, ''
+
+    assert_equal top_bar, bar.find_module_named('A')
+  end
+
   def test_parse_meta_method
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level

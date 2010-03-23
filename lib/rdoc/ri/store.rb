@@ -31,10 +31,11 @@ class RDoc::RI::Store
     @path = path
 
     @cache = {
-      :class_methods => {},
+      :class_methods    => {},
       :instance_methods => {},
-      :modules => [],
-      :ancestors => {},
+      :attributes       => {},
+      :modules          => [],
+      :ancestors        => {},
     }
   end
 
@@ -45,6 +46,13 @@ class RDoc::RI::Store
 
   def ancestors
     @cache[:ancestors]
+  end
+
+  ##
+  # Attributes cache accessor.  Maps a class to an Array of its attributes.
+
+  def attributes
+    @cache[:attributes]
   end
 
   ##
@@ -164,8 +172,9 @@ class RDoc::RI::Store
 
   def save_cache
     # HACK mongrel-1.1.5 documents its files twice
-    @cache[:class_methods].   each do |klass, methods| methods.uniq! end
-    @cache[:instance_methods].each do |klass, methods| methods.uniq! end
+    @cache[:attributes].      each do |_, m| m.uniq!; m.sort! end
+    @cache[:class_methods].   each do |_, m| m.uniq!; m.sort! end
+    @cache[:instance_methods].each do |_, m| m.uniq!; m.sort! end
 
     open cache_path, 'wb' do |io|
       Marshal.dump @cache, io
@@ -201,6 +210,15 @@ class RDoc::RI::Store
 
     @cache[:ancestors][klass.full_name] ||= []
     @cache[:ancestors][klass.full_name].push(*ancestors)
+
+    attributes = klass.attributes.map do |attribute|
+      "#{attribute.type} #{attribute.name}"
+    end
+
+    unless attributes.empty? then
+      @cache[:attributes][klass.full_name] ||= []
+      @cache[:attributes][klass.full_name].push(*attributes)
+    end
 
     open path, 'wb' do |io|
       Marshal.dump klass, io

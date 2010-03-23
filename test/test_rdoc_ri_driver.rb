@@ -357,6 +357,17 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     assert_match %r%Foo::Bar#blah%, out
   end
 
+  def test_display_method_attribute
+    util_store
+
+    out, err = capture_io do
+      @driver.display_method 'Foo::Bar#attr'
+    end
+
+    assert_match %r%Foo::Bar#attr%, out
+    refute_match %r%Implementation from%, out
+  end
+
   def test_display_method_inherited
     util_multi_store
 
@@ -469,7 +480,7 @@ Foo::Bar#blah
   def test_list_methods_matching
     util_store
 
-    assert_equal %w[Foo::Bar#blah Foo::Bar::new],
+    assert_equal %w[Foo::Bar#attr Foo::Bar#blah Foo::Bar::new],
                  @driver.list_methods_matching('Foo::Bar.')
   end
 
@@ -720,6 +731,7 @@ Foo::Bar#blah
 
     @store.save_method @cFoo_Bar, @blah
     @store.save_method @cFoo_Bar, @new
+    @store.save_method @cFoo_Bar, @attr
 
     @store.save_method @cFoo, @inherit
 

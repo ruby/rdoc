@@ -4,18 +4,28 @@ require 'rdoc/rdoc'
 
 class TestRDocAttr < MiniTest::Unit::TestCase
 
+  def setup
+    @a = RDoc::Attr.new nil, 'attr', 'RW', ''
+  end
+
+  def test_full_name
+    assert_equal '(unknown)#attr', @a.full_name
+  end
+
+  def test_singleton
+    refute @a.singleton
+  end
+
   def test_type
-    attr = RDoc::Attr.new nil, 'attr', 'RW', ''
+    assert_equal 'attr_accessor', @a.type
 
-    assert_equal 'attr_accessor', attr.type
+    @a.rw = 'R'
 
-    attr.rw = 'R'
+    assert_equal 'attr_reader', @a.type
 
-    assert_equal 'attr_reader', attr.type
+    @a.rw = 'W'
 
-    attr.rw = 'W'
-
-    assert_equal 'attr_writer', attr.type
+    assert_equal 'attr_writer', @a.type
   end
 
 end

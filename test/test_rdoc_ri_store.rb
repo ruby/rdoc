@@ -14,16 +14,22 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     @s = RDoc::RI::Store.new @tmpdir
 
     @top_level = RDoc::TopLevel.new 'file.rb'
+
     @klass = @top_level.add_class RDoc::NormalClass, 'Object'
     @klass.comment = 'original'
+
     @cmeth = RDoc::AnyMethod.new nil, 'cmethod'
     @cmeth.singleton = true
+
     @meth = RDoc::AnyMethod.new nil, 'method'
     @meth_bang = RDoc::AnyMethod.new nil, 'method!'
+
+    @attr = RDoc::Attr.new nil, 'attr', 'RW', ''
 
     @klass.add_method @cmeth
     @klass.add_method @meth
     @klass.add_method @meth_bang
+    @klass.add_attribute @attr
 
     @nest_klass = @klass.add_class RDoc::NormalClass, 'SubClass'
     @nest_meth = RDoc::AnyMethod.new nil, 'method'
@@ -39,10 +45,11 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     FileUtils.rm_rf @tmpdir
   end
 
-  def assert_cache imethods, cmethods, modules, ancestors = {}
+  def assert_cache imethods, cmethods, attrs, modules, ancestors = {}
     expected = {
       :class_methods    => cmethods,
       :instance_methods => imethods,
+      :attributes       => attrs,
       :modules          => modules,
       :ancestors        => ancestors
     }
@@ -58,6 +65,14 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     assert File.file?(path), "#{path} is not a file"
   end
 
+  def test_attributes
+    @s.cache[:attributes]['Object'] = %w[attr]
+
+    expected = { 'Object' => %w[attr] }
+
+    assert_equal expected, @s.attributes
+  end
+
   def test_class_file
     assert_equal File.join(@tmpdir, 'Object', 'cdesc-Object.ri'),
                  @s.class_file('Object')
@@ -66,9 +81,9 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
   end
 
   def test_class_methods
-    @s.cache[:class_methods]['Object'] = 'method'
+    @s.cache[:class_methods]['Object'] = %w[method]
 
-    expected = { 'Object' => 'method' }
+    expected = { 'Object' => %w[method] }
 
     assert_equal expected, @s.class_methods
   end
@@ -102,9 +117,9 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
   end
 
   def test_instance_methods
-    @s.cache[:instance_methods]['Object'] = 'method'
+    @s.cache[:instance_methods]['Object'] = %w[method]
 
-    expected = { 'Object' => 'method' }
+    expected = { 'Object' => %w[method] }
 
     assert_equal expected, @s.instance_methods
   end
@@ -128,10 +143,11 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
 
   def test_load_cache_no_cache
     cache = {
+      :ancestors        => {},
+      :attributes       => {},
       :class_methods    => {},
       :instance_methods => {},
       :modules          => [],
-      :ancestors        => {},
     }
 
     @s.load_cache
@@ -177,6 +193,7 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     assert_file File.join(@tmpdir, 'cache.ri')
 
     expected = {
+      :attributes => { 'Object' => ['attr_accessor attr'] },
       :class_methods => { 'Object' => %w[cmethod] },
       :instance_methods => { 'Object' => %w[method] },
       :modules => %w[Object Object::SubClass],
@@ -199,7 +216,7 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
 
     @s.save_cache
 
-    assert_cache({ 'Object' => %w[method] }, {}, [])
+    assert_cache({ 'Object' => %w[method] }, {}, {}, [])
   end
 
   def test_save_class
@@ -208,7 +225,8 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     assert_directory File.join(@tmpdir, 'Object')
     assert_file File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
 
-    assert_cache({}, {}, %w[Object], 'Object' => %w[Object])
+    assert_cache({}, {}, { 'Object' => ['attr_accessor attr'] }, %w[Object],
+                 'Object' => %w[Object])
 
     assert_equal @klass, @s.load_class('Object')
   end
@@ -221,7 +239,8 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     assert_directory File.join(@tmpdir, 'Object')
     assert_file File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
 
-    assert_cache({}, {}, %w[Object], 'Object' => %w[])
+    assert_cache({}, {}, { 'Object' => ['attr_accessor attr'] }, %w[Object],
+                 'Object' => %w[])
 
     assert_equal @klass, @s.load_class('Object')
   end
@@ -244,13 +263,25 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     assert_equal document, s.load_class('Object').comment
   end
 
+  def test_save_class_methods
+    @s.save_class @klass
+
+    assert_directory File.join(@tmpdir, 'Object')
+    assert_file File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
+
+    assert_cache({}, {}, { 'Object' => ['attr_accessor attr'] }, %w[Object],
+                 'Object' => %w[Object])
+
+    assert_equal @klass, @s.load_class('Object')
+  end
+
   def test_save_class_nested
     @s.save_class @nest_klass
 
     assert_directory File.join(@tmpdir, 'Object', 'SubClass')
     assert_file File.join(@tmpdir, 'Object', 'SubClass', 'cdesc-SubClass.ri')
 
-    assert_cache({}, {}, %w[Object::SubClass],
+    assert_cache({}, {}, {}, %w[Object::SubClass],
                  'Object::SubClass' => %w[Incl Object])
   end
 
@@ -260,7 +291,7 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     assert_directory File.join(@tmpdir, 'Object')
     assert_file File.join(@tmpdir, 'Object', 'method-i.ri')
 
-    assert_cache({ 'Object' => %w[method] }, {}, [])
+    assert_cache({ 'Object' => %w[method] }, {}, {}, [])
 
     assert_equal @meth, @s.load_method('Object', '#method')
   end
@@ -271,7 +302,7 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     assert_directory File.join(@tmpdir, 'Object', 'SubClass')
     assert_file File.join(@tmpdir, 'Object', 'SubClass', 'method-i.ri')
 
-    assert_cache({ 'Object::SubClass' => %w[method] }, {}, [])
+    assert_cache({ 'Object::SubClass' => %w[method] }, {}, {}, [])
   end
 
 end

@@ -592,11 +592,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
     get_tkread
 
     tk = get_tk
+
     if TkGT === tk then
       unget_tk tk
       unget_tk eq_tk
       return
     end
+
+    rhs_name = ''
 
     loop do
       case tk
@@ -613,8 +616,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
           break
         end
       when TkCONSTANT then
+        rhs_name << tk.text
+
         if nest <= 0 and TkNL === peek_tk then
-          mod = container.find_module_named tk.text
+          mod = if rhs_name =~ /^::/ then
+                  RDoc::TopLevel.find_class_or_module rhs_name
+                else
+                  container.find_module_named rhs_name
+                end
 
           container.add_module_alias mod, name if mod
           get_tk # TkNL
@@ -626,6 +635,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
           unget_tk tk
           break
         end
+      when TkCOLON2, TkCOLON3 then
+        rhs_name << '::'
       end
       tk = get_tk
     end

@@ -35,6 +35,10 @@ class RDoc::Generator::RI
         @current = "#{method.class}: #{method.full_name}"
         @store.save_method klass, method
       end
+
+      klass.each_attribute do |attribute|
+        @store.save_method klass, attribute
+      end
     end
 
     @current = 'saving cache'

@@ -553,7 +553,7 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
-  # Outputs formatted RI data for class +name+.  Groups undocumented classes 
+  # Outputs formatted RI data for class +name+.  Groups undocumented classes
 
   def display_class name
     return if name =~ /#|\./
@@ -587,10 +587,7 @@ Options may also be set in the 'RI' environment variable.
       comment = klass.comment
       class_methods    = store.class_methods[klass.full_name]
       instance_methods = store.instance_methods[klass.full_name]
-
-      attributes = klass.attributes.map do |attr|
-        "#{attr.type} #{attr.name}"
-      end
+      attributes       = store.attributes[klass.full_name]
 
       if comment.empty? and !(instance_methods or class_methods) then
         also_in << store

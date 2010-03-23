@@ -94,6 +94,16 @@ class RDoc::TopLevel < RDoc::Context
   end
 
   ##
+  # Finds the class or module with +name+
+
+  def self.find_class_or_module(name)
+    name =~ /^::/
+    name = $' || name
+
+    find_class_named(name) || find_module_named(name)
+  end
+
+  ##
   # Finds the file with +name+ in all discovered files
 
   def self.find_file_named(name)

@@ -21,9 +21,11 @@ class TestRDocGeneratorRI < MiniTest::Unit::TestCase
     @klass = @top_level.add_class RDoc::NormalClass, 'Object'
     @meth = RDoc::AnyMethod.new nil, 'method'
     @meth_bang = RDoc::AnyMethod.new nil, 'method!'
+    @attr = RDoc::Attr.new nil, 'attr', 'RW', ''
 
     @klass.add_method @meth
     @klass.add_method @meth_bang
+    @klass.add_attribute @attr
   end
 
   def teardown
@@ -44,6 +46,8 @@ class TestRDocGeneratorRI < MiniTest::Unit::TestCase
     assert_file File.join(@tmpdir, 'cache.ri')
 
     assert_file File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
+
+    assert_file File.join(@tmpdir, 'Object', 'attr-i.ri')
     assert_file File.join(@tmpdir, 'Object', 'method-i.ri')
     assert_file File.join(@tmpdir, 'Object', 'method%21-i.ri')
   end

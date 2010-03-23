@@ -42,6 +42,14 @@ class TestRDocTopLevel < XrefTestCase
     assert_equal @c1,    RDoc::TopLevel.find_class_named_from('C1', 'C4')
   end
 
+  def test_class_find_class_or_module
+    assert_equal @m1, RDoc::TopLevel.find_class_or_module('M1')
+    assert_equal @c1, RDoc::TopLevel.find_class_or_module('C1')
+
+    assert_equal @m1, RDoc::TopLevel.find_class_or_module('::M1')
+    assert_equal @c1, RDoc::TopLevel.find_class_or_module('::C1')
+  end
+
   def test_class_find_file_named
     assert_equal @xref_data, RDoc::TopLevel.find_file_named(@file_name)
   end
