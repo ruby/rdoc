@@ -78,9 +78,11 @@ class TestRDocTopLevel < XrefTestCase
     assert_equal 'top_level.rb', @top_level.base_name
   end
 
-  def test_find_class_or_module_named
-    assert_equal @c1, @xref_data.find_class_or_module_named('C1')
-    assert_equal @c4, @xref_data.find_class_or_module_named('C4')
+  def test_find_class_or_module
+    assert_equal @c1,    @xref_data.find_class_or_module('C1')
+    assert_equal @c1_c3, @xref_data.find_class_or_module('C1::C3')
+    assert_equal @c4,    @xref_data.find_class_or_module('C4')
+    assert_equal @m1_m2, @xref_data.find_class_or_module('M1::M2')
   end
 
   def test_full_name

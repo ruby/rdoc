@@ -103,7 +103,7 @@ class RDoc::TopLevel < RDoc::Context
     name =~ /^::/
     name = $' || name
 
-    find_class_named(name) || find_module_named(name)
+    RDoc::TopLevel.classes_hash[name] || RDoc::TopLevel.modules_hash[name]
   end
 
   ##
@@ -200,33 +200,24 @@ class RDoc::TopLevel < RDoc::Context
   end
 
   ##
-  # Find class or module named +symbol+ in all discovered classes and
-  # modules
+  # See RDoc::TopLevel.find_class_or_module
 
-  def find_class_or_module_named(symbol)
-    RDoc::TopLevel.classes_hash.each_value do |c|
-      return c if c.full_name == symbol
-    end
-
-    RDoc::TopLevel.modules_hash.each_value do |m|
-      return m if m.full_name == symbol
-    end
-
-    nil
+  def find_class_or_module name
+    RDoc::TopLevel.find_class_or_module name
   end
 
   ##
   # Finds a class or module named +symbol+
 
   def find_local_symbol(symbol)
-    find_class_or_module_named(symbol) || super
+    find_class_or_module(symbol) || super
   end
 
   ##
   # Finds a module or class with +name+
 
   def find_module_named(name)
-    find_class_or_module_named(name) || find_enclosing_module_named(name)
+    find_class_or_module(name) || find_enclosing_module_named(name)
   end
 
   ##
