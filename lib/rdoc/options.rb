@@ -460,6 +460,7 @@ Usage: #{opt.program_name} [options] [names...]
     rescue OptionParser::InvalidArgument, OptionParser::InvalidOption => e
       if ignore_invalid then
         $stderr.puts e
+        $stderr.puts '(invalid options are ignored)'
       else
         $stderr.puts opts
         $stderr.puts
