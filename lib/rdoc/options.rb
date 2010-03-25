@@ -439,18 +439,6 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.separator nil
-      opt.separator 'Deprecated options - these warn when set'
-      opt.separator nil
-
-      opt.on("--inline-source", "-S") do |value|
-        warn "--inline-source will be removed from RDoc on or after August 2009"
-      end
-
-      opt.on("--promiscuous", "-p") do |value|
-        warn "--promiscuous will be removed from RDoc on or after August 2009"
-      end
-
-      opt.separator nil
     end
 
     argv.insert(0, *ENV['RDOCOPT'].split) if ENV['RDOCOPT']
