@@ -24,6 +24,7 @@
   * RDoc now supports module aliasing via constant assignment.
   * RDoc now tracks superclasses correctly.  Fixes File < IO for core docs.
   * RDoc now ignores methods inside methods.
+  * RDoc now detects Marshal files as binray.
   * Removed "Skipping require of dynamic string" warning.
 
 * N Bug Fixes

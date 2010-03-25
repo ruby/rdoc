@@ -2,12 +2,25 @@ require 'rubygems'
 require 'minitest/autorun'
 require 'rdoc/parser'
 require 'rdoc/parser/ruby'
+require 'tmpdir'
 
 class TestRDocParser < MiniTest::Unit::TestCase
 
   def setup
     @RP = RDoc::Parser
     @binary_dat = File.expand_path '../binary.dat', __FILE__
+  end
+
+  def test_class_binary_eh
+    marshal = File.join Dir.tmpdir, "test_rdoc_parser_#{$PID}.marshal"
+    open marshal, 'wb' do |io|
+      io.write Marshal.dump('')
+      io.write 'lots of text ' * 500
+    end
+
+    assert @RP.binary?(marshal)
+  ensure
+    File.unlink marshal
   end
 
   def test_class_can_parse

@@ -69,13 +69,14 @@ class RDoc::Parser
   def self.binary?(file)
     s = (File.read(file, File.stat(file).blksize) || "").split(//)
 
-    if s.size > 0 then
+    if s[0, 2].join == Marshal.dump('')[0, 2] then
+      true
+    elsif s.size > 0 then
       ((s.size - s.grep(" ".."~").size) / s.size.to_f) > 0.30
     else
       false
     end
   end
-  private_class_method :binary?
 
   ##
   # Checks if +file+ is a zip file in disguise.  Signatures from
