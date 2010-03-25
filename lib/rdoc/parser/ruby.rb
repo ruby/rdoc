@@ -1469,16 +1469,25 @@ class RDoc::Parser::Ruby < RDoc::Parser
         begin
           parse_top_level_statements @top_level
         rescue Exception => e
-          raise e
-          input = @scanner.reader.content
-          offset = @scanner.reader.offset
+          bytes = ''
+
+          20.times do @scanner.ungetc end
+          count = 0
+          60.times do |i|
+            count = i
+            byte = @scanner.getc
+            break unless byte
+            bytes << byte
+          end
+          count -= 20
+          count.times do @scanner.ungetc end
 
           $stderr.puts <<-EOF
 
 
 RDoc failure in #{@file_name} at or around line #{@scanner.line_no} column #{@scanner.char_no}:
 
-#{input[offset, 60].inspect}
+#{bytes.inspect}
 
 Before reporting this, could you check that the file you're documenting
 compiles cleanly--RDoc is not a full Ruby parser, and gets confused easily if
