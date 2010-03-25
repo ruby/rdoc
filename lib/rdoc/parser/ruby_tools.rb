@@ -22,7 +22,7 @@ module RDoc::Parser::RubyTools
 
     if @tokens.empty? then
       tk = @scanner.token
-      @read.push @scanner.get_read
+      @read.push @scanner.get_readed
       puts "get_tk1 => #{tk.inspect}" if $TOKEN_DEBUG
     else
       @read.push @unget_read.shift

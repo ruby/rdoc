@@ -162,6 +162,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     @token_listeners = nil
     @scanner = RDoc::RubyLex.new content, @options
     @scanner.exception_on_syntax_error = false
+    @prev_seek = nil
 
     reset
   end
@@ -244,7 +245,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     name_t = get_tk
 
     # class ::A -> A is in the top level
-    if TkCOLON2 === name_t then
+    if TkCOLON3 === name_t then
       name_t = get_tk
       container = @top_level
     end
@@ -274,7 +275,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     res = ""
     while TkCOLON2 === tk or TkCOLON3 === tk or TkCONSTANT === tk do
-      res += tk.text
+      res += tk.name
       tk = get_tk
     end
 
@@ -305,7 +306,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     tk = get_tk
 
     while TkCOLON2 === tk or TkCOLON3 === tk or TkCONSTANT === tk do
-      res += tk.text
+      res += tk.name
       tk = get_tk
     end
 
@@ -342,8 +343,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def get_symbol_or_name
     tk = get_tk
     case tk
-    when TkASSIGN
-      raise 'no'
     when TkSYMBOL
       text = tk.text.sub(/^:/, '')
 
@@ -358,7 +357,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     when TkSTRING
       tk.text
     else
-      raise "Name or symbol expected (got #{tk})"
+      raise RDoc::Error, "Name or symbol expected (got #{tk})"
     end
   end
 
@@ -480,13 +479,20 @@ class RDoc::Parser::Ruby < RDoc::Parser
       skip_tkspace
     end
     new_name = get_symbol_or_name
-    @scanner.instance_eval{@lex_state = EXPR_FNAME}
+
+    @scanner.instance_eval { @lex_state = EXPR_FNAME }
+
     skip_tkspace
     if TkCOMMA === peek_tk then
       get_tk
       skip_tkspace
     end
-    old_name = get_symbol_or_name
+
+    begin
+      old_name = get_symbol_or_name
+    rescue RDoc::Error
+      return
+    end
 
     al = RDoc::Alias.new get_tkread, old_name, new_name, comment
     read_documentation_modifiers al, RDoc::ATTR_MODIFIERS
@@ -616,7 +622,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           break
         end
       when TkCONSTANT then
-        rhs_name << tk.text
+        rhs_name << tk.name
 
         if nest <= 0 and TkNL === peek_tk then
           mod = if rhs_name =~ /^::/ then
@@ -670,10 +676,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
       @stats.add_method meth
 
       meth.start_collecting_tokens
-      indent = TkSPACE.new 1, 1
+      indent = TkSPACE.new nil, 1, 1
       indent.set_text " " * column
 
-      position_comment = TkCOMMENT.new(line_no, 1, "# File #{@top_level.absolute_name}, line #{line_no}")
+      position_comment = TkCOMMENT.new nil, line_no, 1
+      position_comment.set_text "# File #{@top_level.absolute_name}, line #{line_no}"
       meth.add_tokens [position_comment, NEWLINE_TOKEN, indent]
 
       meth.params = ''
@@ -794,7 +801,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when TkSYMBOL then
         name = name_t.text[1..-1]
       when TkSTRING then
-        name = name_t.text[1..-2]
+        name = name_t.value[1..-2]
       when TkASSIGN then # ignore
         remove_token_listener self
         return
@@ -812,10 +819,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
     remove_token_listener self
 
     meth.start_collecting_tokens
-    indent = TkSPACE.new 1, 1
-    indent.set_text " " * column
+    indent = TkSPACE.new nil, 1, 1
 
-    position_comment = TkCOMMENT.new(line_no, 1, "# File #{@top_level.absolute_name}, line #{line_no}")
+    position_comment = TkCOMMENT.new nil, line_no, 1
+    position_comment.value = "# File #{@top_level.absolute_name}, line #{line_no}"
     meth.add_tokens [position_comment, NEWLINE_TOKEN, indent]
     meth.add_tokens @token_stream
 
@@ -934,10 +941,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     meth.start_collecting_tokens
-    indent = TkSPACE.new 1, 1
+    indent = TkSPACE.new nil, 1, 1
     indent.set_text " " * column
 
-    token = TkCOMMENT.new(line_no, 1, "# File #{@top_level.absolute_name}, line #{line_no}")
+    token = TkCOMMENT.new nil, line_no, 1
+    token.set_text "# File #{@top_level.absolute_name}, line #{line_no}"
     meth.add_tokens [token, NEWLINE_TOKEN, indent]
     meth.add_tokens @token_stream
 
@@ -1048,7 +1056,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   def parse_module(container, single, tk, comment)
-    container, name_t = get_class_or_module(container)
+    container, name_t = get_class_or_module container
 
     name = name_t.name
 
@@ -1118,6 +1126,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
           while TkCOMMENT === tk do
             comment << tk.text << "\n"
+
             tk = get_tk        # this is the newline
             skip_tkspace false # leading spaces
             tk = get_tk
@@ -1334,7 +1343,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
             singleton = true
             :public
           else
-            raise "Invalid visibility: #{tk.name}"
+            raise RDoc::Error, "Invalid visibility: #{tk.name}"
           end
 
     skip_tkspace_comment false
@@ -1460,6 +1469,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         begin
           parse_top_level_statements @top_level
         rescue Exception => e
+          raise e
           input = @scanner.reader.content
           offset = @scanner.reader.offset
 
@@ -1482,7 +1492,7 @@ The internal error was:
 
           puts e.backtrace.join("\n\t")
 
-          raise
+          raise e
         end
       end
     end

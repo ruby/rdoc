@@ -243,6 +243,9 @@ class RDoc::RDoc
 
           parser = RDoc::Parser.for(top_level, filename, content, @options,
                                     @stats)
+
+          next unless parser
+
           result = parser.scan
 
           file_info_lock.synchronize do
@@ -315,17 +318,16 @@ class RDoc::RDoc
 
       pwd = Dir.pwd
 
-      Dir.chdir @options.op_dir
+      Dir.chdir @options.op_dir do
+        begin
+          self.class.current = self
 
-      begin
-        self.class.current = self
-
-        RDoc::Diagram.new(file_info, @options).draw if @options.diagram
-        @generator.generate file_info
-        update_output_dir ".", start_time
-      ensure
-        self.class.current = nil
-        Dir.chdir pwd
+          RDoc::Diagram.new(file_info, @options).draw if @options.diagram
+          @generator.generate file_info
+          update_output_dir ".", start_time
+        ensure
+          self.class.current = nil
+        end
       end
     end
 

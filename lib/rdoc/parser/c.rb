@@ -311,7 +311,9 @@ class RDoc::Parser::C < RDoc::Parser
 
 #        meth_obj.params = params
       meth_obj.start_collecting_tokens
-      meth_obj.add_token RDoc::RubyToken::Token.new(1,1).set_text(body_text)
+      tk = RDoc::RubyToken::Token.new nil, 1, 1
+      tk.set_text body_text
+      meth_obj.add_token tk
       meth_obj.comment = comment
     when %r{((?>/\*.*?\*/\s*))^\s*(\#\s*define\s+#{meth_name}\s+(\w+))}m
       comment = $1
@@ -320,7 +322,9 @@ class RDoc::Parser::C < RDoc::Parser
       find_modifiers comment, meth_obj
 
       meth_obj.start_collecting_tokens
-      meth_obj.add_token RDoc::RubyToken::Token.new(1,1).set_text(body_text)
+      tk = RDoc::RubyToken::Token.new nil, 1, 1
+      tk.set_text body_text
+      meth_obj.add_token tk
       meth_obj.comment = comment + meth_obj.comment.to_s
     when %r{^\s*\#\s*define\s+#{meth_name}\s+(\w+)}m
       unless find_body(class_name, $1, meth_obj, body, true)

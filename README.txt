@@ -43,5 +43,5 @@ RDoc is Copyright (c) 2001-2003 Dave Thomas, The Pragmatic Programmers.
 Portions (c) 2007-2009 Eric Hodel.  Portions copyright others, see individual
 files for details.
 
-It is free software, and may be redistributed under the terms specified in the
-README file of the Ruby distribution.
+It is free software, and may be redistributed under the terms specified in
+LICENSE.txt.

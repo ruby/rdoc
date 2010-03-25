@@ -399,7 +399,7 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Adds an alias from +module+ to +name+
+  # Adds an alias from +from+ to +name+
 
   def add_module_alias from, name
     to_name = child_name name

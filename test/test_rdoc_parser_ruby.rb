@@ -176,6 +176,19 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     assert_equal 'comment', alas.comment
   end
 
+  def test_parse_alias_meta
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    util_parser "alias m.chop m"
+
+    tk = @parser.get_tk
+
+    alas = @parser.parse_alias klass, RDoc::Parser::Ruby::NORMAL, tk, 'comment'
+
+    assert_nil alas
+  end
+
   def test_parse_attr
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
@@ -551,7 +564,7 @@ EOF
     stream = [
       tk(:COMMENT, 1, 1, nil, "# File #{@top_level.absolute_name}, line 1"),
       RDoc::Parser::Ruby::NEWLINE_TOKEN,
-      tk(:SPACE,      1, 1,  nil,   ''),
+      tk(:SPACE,   1, 1, nil, ''),
     ]
 
     assert_equal stream, foo.token_stream
@@ -621,9 +634,9 @@ EOF
     assert_equal klass.current_section, foo.section
 
     stream = [
-      tk(:COMMENT, 1, 1, nil, "# File #{@top_level.absolute_name}, line 1"),
+      tk(:COMMENT,    1, 1,  nil, "# File #{@top_level.absolute_name}, line 1"),
       RDoc::Parser::Ruby::NEWLINE_TOKEN,
-      tk(:SPACE,      1, 1,  nil, ''),
+      tk(:SPACE,      1, 1,  nil, nil),
       tk(:IDENTIFIER, 1, 0,  'add_my_method', 'add_my_method'),
       tk(:SPACE,      1, 13, nil, ' '),
       tk(:SYMBOL,     1, 14, nil, ':foo'),
@@ -753,7 +766,7 @@ EOF
     assert_equal klass.current_section, foo.section
 
     stream = [
-      tk(:COMMENT, 1, 1, nil, "# File #{@top_level.absolute_name}, line 1"),
+      tk(:COMMENT,    1, 1,  nil, "# File #{@top_level.absolute_name}, line 1"),
       RDoc::Parser::Ruby::NEWLINE_TOKEN,
       tk(:SPACE,      1, 1,  nil,   ''),
       tk(:DEF,        1, 0,  'def', 'def'),
@@ -1138,14 +1151,31 @@ EOF
     assert_equal 1, @top_level.requires.length
   end
 
+  def test_parse_top_level_statements_alias_method
+    content = <<-CONTENT
+class A
+  alias_method :a, :[] unless c
+end
+
+B = A
+
+class C
+end
+    CONTENT
+
+    util_parser content
+
+    @parser.parse_statements @top_level
+  end
+
   def tk(klass, line, char, name, text)
     klass = RDoc::RubyToken.const_get "Tk#{klass.to_s.upcase}"
 
-    token = if klass.instance_method(:initialize).arity == 2 then
+    token = if klass.instance_method(:initialize).arity == 3 then
               raise ArgumentError, "name not used for #{klass}" unless name.nil?
-              klass.new line, char
+              klass.new nil, line, char
             else
-              klass.new line, char, name
+              klass.new nil, line, char, name
             end
 
     token.set_text text
