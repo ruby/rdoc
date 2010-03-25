@@ -973,7 +973,7 @@ class RDoc::RubyLex
     elsif ch =~ /\W/
       lt = "\""
     else
-      raise RDoc::Error, "unknown type of %string"
+      raise RDoc::Error, "unknown type of %string #{ch.inspect}"
     end
     #     if ch !~ /\W/
     #       ungetc
