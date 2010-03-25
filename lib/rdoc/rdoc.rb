@@ -11,12 +11,9 @@ require 'rdoc/parser/perl'
 require 'rdoc/stats'
 require 'rdoc/options'
 
-require 'rdoc/diagram'
-
 require 'find'
 require 'fileutils'
 require 'time'
-require 'thread'
 
 ##
 # Encapsulate the production of rdoc documentation. Basically you can use this
@@ -122,6 +119,7 @@ class RDoc::RDoc
     else
       FileUtils.mkdir_p(op_dir)
     end
+
     last
   end
 
@@ -247,7 +245,7 @@ class RDoc::RDoc
     @stats = RDoc::Stats.new file_list.size, @options.verbosity
     @stats.begin_adding @options.threads
 
-    file_info = files.map do |filename|
+    file_info = file_list.map do |filename|
       parse_file filename
     end.compact
 

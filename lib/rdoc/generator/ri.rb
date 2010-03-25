@@ -13,10 +13,10 @@ class RDoc::Generator::RI
   # Set up a new ri generator
 
   def initialize options #:not-new:
-    @options  = options
-    @store    = RDoc::RI::Store.new '.'
+    @options     = options
+    @store       = RDoc::RI::Store.new '.'
     @old_siginfo = nil
-    @current = nil
+    @current     = nil
   end
 
   ##
