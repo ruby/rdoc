@@ -1091,7 +1091,9 @@ class RDoc::RubyLex
       nest = 0
       while ch = getc
         str << ch
-        if @quoted == ch and nest == 0
+        if subtype and ch == "{" then
+          break
+        elsif @quoted == ch and nest == 0
           break
         elsif @ltype != "'" && @ltype != "]" && @ltype != ":" and ch == "#"
           subtype = true

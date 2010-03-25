@@ -1168,6 +1168,16 @@ end
     @parser.parse_statements @top_level
   end
 
+  def test_sanity
+    util_parser '"#{stftime("%m-%d")}"'
+
+    while tk = @parser.get_tk do end # p tk
+
+    util_parser ':"#{bar}="'
+
+    while tk = @parser.get_tk do end # p tk
+  end
+
   def tk(klass, line, char, name, text)
     klass = RDoc::RubyToken.const_get "Tk#{klass.to_s.upcase}"
 

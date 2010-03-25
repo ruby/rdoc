@@ -229,7 +229,9 @@ module RDoc::RubyToken
       return Token(tk[0], value) 
     else 
       if token.instance_method(:initialize).arity == 3 then
-        token.new(@prev_seek, @prev_line_no, @prev_char_no)
+        tk = token.new(@prev_seek, @prev_line_no, @prev_char_no)
+        tk.set_text value
+        tk
       else
         token.new(@prev_seek, @prev_line_no, @prev_char_no, value)
       end

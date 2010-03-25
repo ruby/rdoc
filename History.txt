@@ -6,6 +6,8 @@
   * New recursive-descent parser for RDoc::Markup.  See RDoc::Markup::Parser
   * New ri data format using Marshal, prebuilt caches, improved merging
   * No support for old ri data format, too hard to maintain
+  * Updated ruby_lex and ruby_token
+  * Removed threading support, RDoc is not thread-safe.
 
 * N Minor Enhancements
   * API enhancements for writing parsers like the Ruby parser, see
@@ -40,9 +42,6 @@
   * Worked around bug in Selenium where they hide a .jar in a .txt file.
     Filed Selenium bug #27789.
   * Alias comments are no longer hidden.  Reported by Adam Avilla.
-
-* N Bug Workarounds
-  * Default --threads to 1 since nodoc is not thread-safe.
 
 === 2.4.3 / 2009-04-01
 
