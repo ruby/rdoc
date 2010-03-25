@@ -25,7 +25,7 @@ class RDoc::Gauntlet < Gauntlet
       r.document args
       self.data[name] = [args]
       puts 'passed'
-    rescue RDoc::Error => e
+    rescue StandardError, RDoc::Error => e
       puts "failed - (#{e.class}) #{e.message}"
       self.data[name] = [args, e.class, e.message, e.backtrace]
     end
