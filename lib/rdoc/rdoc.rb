@@ -214,6 +214,24 @@ class RDoc::RDoc
   end
 
   ##
+  # Parses +filename+ and returns an RDoc::TopLevel
+
+  def parse_file filename
+    @stats.add_file filename
+    content = read_file_contents filename
+
+    return unless content
+
+    top_level = RDoc::TopLevel.new filename
+
+    parser = RDoc::Parser.for top_level, filename, content, @options, @stats
+
+    return unless parser
+
+    parser.scan
+  end
+
+  ##
   # Parse each file on the command line, recursively entering directories.
 
   def parse_files
@@ -224,50 +242,14 @@ class RDoc::RDoc
 
     return [] if file_list.empty?
 
-    jobs = SizedQueue.new @options.threads * 3
-    workers = []
     file_info = []
-    file_info_lock = Mutex.new
 
-    Thread.abort_on_exception = true
     @stats = RDoc::Stats.new file_list.size, @options.verbosity
     @stats.begin_adding @options.threads
 
-    # Create worker threads.
-    @options.threads.times do
-      thread = Thread.new do
-        while filename = jobs.pop do
-          @stats.add_file filename
-          content = read_file_contents filename
-          top_level = RDoc::TopLevel.new filename
-
-          parser = RDoc::Parser.for(top_level, filename, content, @options,
-                                    @stats)
-
-          next unless parser
-
-          result = parser.scan
-
-          file_info_lock.synchronize do
-            file_info << result
-          end
-        end
-      end
-
-      workers << thread
-    end
-
-    file_list.each do |filename|
-      jobs << filename
-    end
-
-    workers.size.times do
-      jobs << nil
-    end
-
-    workers.each do |thread|
-      thread.join
-    end
+    file_info = files.map do |filename|
+      parse_file filename
+    end.compact
 
     @stats.done_adding
 
@@ -353,6 +335,8 @@ class RDoc::RDoc
     end
 
     content
+  rescue Errno::EISDIR, Errno::ENOENT
+    nil
   end
 
 end
