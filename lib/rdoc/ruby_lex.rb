@@ -1088,12 +1088,15 @@ class RDoc::RubyLex
 
     subtype = nil
     begin
+      dstr = false
+      dstr_nest = 0
+      last_ch = nil
       nest = 0
+
       while ch = getc
         str << ch
-        if subtype and ch == "{" then
-          break
-        elsif @quoted == ch and nest == 0
+
+        if @quoted == ch and nest == 0 and not dstr
           break
         elsif @ltype != "'" && @ltype != "]" && @ltype != ":" and ch == "#"
           subtype = true
@@ -1106,6 +1109,18 @@ class RDoc::RubyLex
         elsif ch == '\\' #'
           read_escape
         end
+
+        if subtype then
+          if last_ch == "#" and ch == "{" then
+            dstr = true
+          elsif dstr and ch == "{" then
+            dstr_nest += 1
+          elsif dstr and ch == "}" then
+            dstr_nest -= 1
+            dstr = dstr_nest == 0
+          end
+        end
+
         if PERCENT_PAREN.values.include?(@quoted) 
           if PERCENT_PAREN[ch] == @quoted
             nest += 1
@@ -1113,7 +1128,10 @@ class RDoc::RubyLex
             nest -= 1
           end
         end
+
+        last_ch = ch
       end
+
       if @ltype == "/"
         if peek(0) =~ /i|m|x|o|e|s|u|n/
           getc

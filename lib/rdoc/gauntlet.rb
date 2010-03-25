@@ -27,7 +27,7 @@ class RDoc::Gauntlet < Gauntlet
       puts 'passed'
     rescue StandardError, RDoc::Error => e
       puts "failed - (#{e.class}) #{e.message}"
-      self.data[name] = [args, e.class, e.message, e.backtrace]
+      self.data[name] = [e.class, e.message, e.backtrace]
     end
   rescue Gem::Exception
     puts "bad gem #{name}"

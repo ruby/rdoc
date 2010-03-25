@@ -1169,13 +1169,20 @@ end
   end
 
   def test_sanity
+    last_tk = nil
+    util_parser 'class A; B = "#{c}"; end'
+
+    while tk = @parser.get_tk do last_tk = tk end
+    
+    assert_equal "\n", last_tk.text
+
     util_parser '"#{stftime("%m-%d")}"'
 
-    while tk = @parser.get_tk do end # p tk
+    while tk = @parser.get_tk do end
 
     util_parser ':"#{bar}="'
 
-    while tk = @parser.get_tk do end # p tk
+    while tk = @parser.get_tk do end
   end
 
   def tk(klass, line, char, name, text)
