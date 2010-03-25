@@ -47,9 +47,6 @@ require 'rdoc/known_classes'
 # method in the HTML output. This method must be in the same source file
 # as the rb_define_method.
 #
-# C classes can be diagrammed (see /tc/dl/ruby/ruby/error.c), and RDoc
-# integrates C and Ruby source into one tree
-#
 # The comment blocks may include special directives:
 #
 # [Document-class: <i>name</i>]

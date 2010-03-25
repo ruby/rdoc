@@ -1,6 +1,7 @@
 .autotest
 .document
 History.txt
+LICENSE.txt
 Manifest.txt
 README.txt
 RI.txt
@@ -18,8 +19,7 @@ lib/rdoc/code_object.rb
 lib/rdoc/code_objects.rb
 lib/rdoc/constant.rb
 lib/rdoc/context.rb
-lib/rdoc/diagram.rb
-lib/rdoc/dot.rb
+lib/rdoc/gauntlet.rb
 lib/rdoc/generator.rb
 lib/rdoc/generator/darkfish.rb
 lib/rdoc/generator/markup.rb
@@ -95,7 +95,9 @@ lib/rdoc/ri/formatter.rb
 lib/rdoc/ri/paths.rb
 lib/rdoc/ri/store.rb
 lib/rdoc/ruby_lex.rb
+lib/rdoc/ruby_lex.rb.orig
 lib/rdoc/ruby_token.rb
+lib/rdoc/ruby_token.rb.orig
 lib/rdoc/single_class.rb
 lib/rdoc/stats.rb
 lib/rdoc/task.rb
@@ -108,6 +110,7 @@ test/test.ja.rdoc
 test/test.ja.txt
 test/test_attribute_manager.rb
 test/test_rdoc_any_method.rb
+test/test_rdoc_attr.rb
 test/test_rdoc_class_module.rb
 test/test_rdoc_code_object.rb
 test/test_rdoc_constant.rb

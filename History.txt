@@ -26,6 +26,7 @@
   * RDoc now ignores methods inside methods.
   * RDoc now detects Marshal files as binray.
   * Removed "Skipping require of dynamic string" warning.
+  * Removed dot generation support (to return in the future).
 
 * N Bug Fixes
   * The :attr: directives now use the name given to create an attribute.  See
