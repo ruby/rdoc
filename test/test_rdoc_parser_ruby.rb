@@ -413,6 +413,22 @@ end
     assert_equal 'my module', foo.comment
   end
 
+  def test_class_single
+    code = <<-CODE
+class A
+  class << B
+  end
+end
+    CODE
+
+    util_parser code
+
+    @parser.parse_class @top_level, false, @parser.get_tk, ''
+
+    assert_equal %w[A],    RDoc::TopLevel.classes.map { |c| c.full_name }
+    assert_equal %w[A::B], RDoc::TopLevel.modules.map { |c| c.full_name }
+  end
+
   def test_parse_class_mistaken_for_module
     # The code below is not strictly legal Ruby (Foo must have been defined
     # before Foo::Bar is encountered), but RDoc might encounter Foo::Bar

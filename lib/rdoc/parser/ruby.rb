@@ -342,7 +342,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def get_symbol_or_name
     tk = get_tk
     case tk
-    when TkSYMBOL
+    when TkSYMBOL then
       text = tk.text.sub(/^:/, '')
 
       if TkASSIGN === peek_tk then
@@ -351,9 +351,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
 
       text
-    when TkId, TkOp
+    when TkId, TkOp then
       tk.name
-    when TkSTRING
+    when TkSTRING, TkDSTRING then
       tk.text
     else
       raise RDoc::Error, "Name or symbol expected (got #{tk})"
@@ -564,14 +564,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
     when TkLSHFT
       case name = get_class_specification
       when "self", container.name
-        parse_statements(container, SINGLE)
+        parse_statements container, SINGLE
       else
-        other = RDoc::TopLevel.find_class_named(name)
-        unless other
-#          other = @top_level.add_class(NormalClass, name, nil)
-#          other.record_location(@top_level)
-#          other.comment = comment
-          other = RDoc::NormalClass.new "Dummy", nil
+        other = RDoc::TopLevel.find_class_named name
+
+        unless other then
+          other = container.add_module RDoc::NormalModule, name
+          other.record_location @top_level
+          other.comment = comment
         end
 
         @stats.add_class other
