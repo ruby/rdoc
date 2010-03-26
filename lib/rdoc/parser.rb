@@ -99,8 +99,6 @@ class RDoc::Parser
   # Return a parser that can handle a particular extension
 
   def self.can_parse(file_name)
-    return if binary? file_name
-
     parser = RDoc::Parser.parsers.find { |regexp,| regexp =~ file_name }.last
 
     # HACK Selenium hides a jar file using a .txt extension
@@ -117,6 +115,8 @@ class RDoc::Parser
   # for ones that we don't know
 
   def self.for(top_level, file_name, body, options, stats)
+    return if binary? file_name
+
     # If no extension, look for shebang
     if file_name !~ /\.\w+$/ && body =~ %r{\A#!(.+)} then
       shebang = $1
