@@ -98,14 +98,15 @@ class RDoc::Parser
   # Return a parser that can handle a particular extension
 
   def self.can_parse(file_name)
+    return if binary? file_name
+
     parser = RDoc::Parser.parsers.find { |regexp,| regexp =~ file_name }.last
 
     # HACK Selenium hides a jar file using a .txt extension
     return if parser == RDoc::Parser::Simple and zip? file_name
 
     # The default parser must not parse binary files
-    return if parser == RDoc::Parser::Simple and
-              file_name !~ /\.(txt|rdoc)$/ and binary? file_name
+    return if parser == RDoc::Parser::Simple and file_name !~ /\.(txt|rdoc)$/
 
     parser
   end
