@@ -757,6 +757,15 @@ class RDoc::RubyLex
     # #	end
     #       end
 
+    @OP.def_rule("_") do
+      if peek_match?(/_END__/) and @lex_state == EXPR_BEG then
+        Token(TkEND_OF_SCRIPT)
+      else
+        ungetc
+        identify_identifier
+      end
+    end
+
     @OP.def_rule("") do
       |op, io|
       printf "MATCH: start %s: %s\n", op, io.inspect if RDoc::RubyLex.debug?

@@ -30,6 +30,8 @@ module RDoc::Parser::RubyTools
       puts "get_tk2 => #{tk.inspect}" if $TOKEN_DEBUG
     end
 
+    tk = nil if TkEND_OF_SCRIPT === tk
+
     if TkSYMBEG === tk then
       set_token_position tk.line_no, tk.char_no
 
