@@ -1181,7 +1181,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         end
 
       when TkALIAS then
-        if container.document_self then
+        if container.document_self and not current_method then
           parse_alias container, single, tk, comment
         end
 

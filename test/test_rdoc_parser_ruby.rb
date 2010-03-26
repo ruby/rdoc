@@ -815,6 +815,19 @@ EOF
     assert_equal stream, foo.token_stream
   end
 
+  def test_parse_method_alias
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    util_parser "def m() alias a b; end"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, ''
+
+    assert klass.aliases.empty?
+  end
+
   def test_parse_method_utf8
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
