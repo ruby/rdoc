@@ -63,8 +63,8 @@ class RDoc::Parser
   end
 
   ##
-  # Shamelessly stolen from the ptools gem (since RDoc cannot depend on
-  # the gem).
+  # Determines if the file is a "binary" file which basically means it has
+  # content that an RDoc parser shouldn't try to consume.
 
   def self.binary?(file)
     s = File.read(file, File.stat(file).blksize) || ""
@@ -76,6 +76,7 @@ class RDoc::Parser
     elsif s.scan(/<%|%>/).length >= 4 then
       true
     else
+      # From ptools under the Artistic License 2.0, (c) Daniel Berger.
       s = s.split(//)
 
       ((s.size - s.grep(" ".."~").size) / s.size.to_f) > 0.30
