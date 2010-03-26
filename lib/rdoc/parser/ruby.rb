@@ -254,9 +254,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     while TkCOLON2 === peek_tk do
       prev_container = container
-      container = container.find_module_named(name_t.name)
-      if !container
-#          warn("Couldn't find module #{name_t.name}")
+      container = container.find_module_named name_t.name
+      unless container then
         container = prev_container.add_module RDoc::NormalModule, name_t.name
       end
       get_tk

@@ -1,5 +1,4 @@
 require 'rdoc'
-require 'thread'
 
 ##
 # Simple stats collector
@@ -13,8 +12,6 @@ class RDoc::Stats
   attr_reader :total_files
 
   def initialize(total_files, verbosity = 1)
-    @lock = Mutex.new
-    
     @num_classes = 0
     @num_files   = 0
     @num_methods = 0
@@ -24,55 +21,43 @@ class RDoc::Stats
     @start = Time.now
 
     @display = case verbosity
-               when 0 then Quiet.new
-               when 1 then Normal.new(total_files)
-               else        Verbose.new
+               when 0 then Quiet.new   total_files
+               when 1 then Normal.new  total_files
+               else        Verbose.new total_files
                end
   end
-  
-  def begin_adding(number_of_workers)
-    @display.begin_adding(number_of_workers)
+
+  def begin_adding
+    @display.begin_adding
   end
 
   def add_alias(as)
-    @lock.synchronize do
-      @display.print_alias as
-      @num_methods += 1
-    end
+    @display.print_alias as
+    @num_methods += 1
   end
 
   def add_class(klass)
-    @lock.synchronize do
-      @display.print_class klass
-      @num_classes += 1
-    end
+    @display.print_class klass
+    @num_classes += 1
   end
 
   def add_file(file)
-    @lock.synchronize do
-      @display.print_file @num_files, file
-      @num_files += 1
-    end
+    @display.print_file @num_files, file
+    @num_files += 1
   end
 
   def add_method(method)
-    @lock.synchronize do
-      @display.print_method method
-      @num_methods += 1
-    end
+    @display.print_method method
+    @num_methods += 1
   end
 
   def add_module(mod)
-    @lock.synchronize do
-      @display.print_module mod
-      @num_modules += 1
-    end
+    @display.print_module mod
+    @num_modules += 1
   end
-  
+
   def done_adding
-    @lock.synchronize do
-      @display.done_adding
-    end
+    @display.done_adding
   end
 
   def print
@@ -84,6 +69,11 @@ class RDoc::Stats
   end
 
   class Quiet
+
+    def initialize total_files
+      @total_files = total_files
+    end
+
     def begin_adding(*) end
     def print_alias(*) end
     def print_class(*) end
@@ -92,22 +82,19 @@ class RDoc::Stats
     def print_module(*) end
     def done_adding(*) end
   end
-  
-  class Normal
-    def initialize(total_files)
-      @total_files = total_files
+
+  class Normal < Quiet
+
+    def begin_adding
+      puts "Parsing sources..."
     end
-    
-    def begin_adding(number_of_workers)
-      puts "Parsing sources with #{number_of_workers} thread(s)..."
-    end
-    
+
     def print_file(files_so_far, filename)
       progress_bar = sprintf("%3d%% [%2d/%2d]  ",
                              100 * (files_so_far + 1) / @total_files,
                              files_so_far + 1,
                              @total_files)
-      
+
       if $stdout.tty?
         # Print a progress bar, but make sure it fits on a single line. Filename
         # will be truncated if necessary.
@@ -118,37 +105,28 @@ class RDoc::Stats
           filename = filename[(filename.size - max_filename_size) .. -1]
           filename[0..2] = "..."
         end
-        
+
         # Pad the line with whitespaces so that leftover output from the
         # previous line doesn't show up.
         line = "#{progress_bar}#{filename}"
         padding = terminal_width - line.size
-        if padding > 0
-          line << (" " * padding)
-        end
-        
+        line << (" " * padding) if padding > 0
+
         $stdout.print("#{line}\r")
         $stdout.flush
       else
         puts "#{progress_bar} #{filename}"
       end
     end
-    
+
     def done_adding
-      puts "\n"
+      puts
     end
 
-    def print_alias(*) end
-    def print_class(*) end
-    def print_method(*) end
-    def print_module(*) end
   end
 
-  class Verbose
-    def begin_adding(number_of_workers)
-      puts "Parsing sources with #{number_of_workers} thread(s)..."
-    end
-    
+  class Verbose < Normal
+
     def print_alias(as)
       puts "\t\talias #{as.new_name} #{as.old_name}"
     end
@@ -168,9 +146,7 @@ class RDoc::Stats
     def print_module(mod)
       puts "\tmodule #{mod.full_name}"
     end
-    
-    def done_adding
-    end
+
   end
 
 end

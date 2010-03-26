@@ -1,4 +1,3 @@
-require 'thread'
 require 'rdoc/code_object'
 
 ##
@@ -109,7 +108,6 @@ class RDoc::Context < RDoc::CodeObject
     attr_reader :title
 
     @@sequence = "SEC00000"
-    @@sequence_lock = Mutex.new
 
     ##
     # Creates a new section with +title+ and +comment+
@@ -118,10 +116,8 @@ class RDoc::Context < RDoc::CodeObject
       @parent = parent
       @title = title
 
-      @@sequence_lock.synchronize do
-        @@sequence.succ!
-        @sequence = @@sequence.dup
-      end
+      @@sequence.succ!
+      @sequence = @@sequence.dup
 
       set_comment comment
     end
@@ -290,19 +286,17 @@ class RDoc::Context < RDoc::CodeObject
     # be the case, so remove Container from the module list if present and
     # transfer any contained classes and modules to the new class.
 
-    RDoc::TopLevel.lock.synchronize do
-      mod = RDoc::TopLevel.modules_hash.delete klass.full_name
+    mod = RDoc::TopLevel.modules_hash.delete klass.full_name
 
-      if mod then
-        klass.classes_hash.update mod.classes_hash
-        klass.modules_hash.update mod.modules_hash
-        klass.method_list.concat mod.method_list
+    if mod then
+      klass.classes_hash.update mod.classes_hash
+      klass.modules_hash.update mod.modules_hash
+      klass.method_list.concat mod.method_list
 
-        @modules.delete klass.name
-      end
-
-      RDoc::TopLevel.classes_hash[klass.full_name] = klass
+      @modules.delete klass.name
     end
+
+    RDoc::TopLevel.classes_hash[klass.full_name] = klass
 
     klass
   end
@@ -319,17 +313,13 @@ class RDoc::Context < RDoc::CodeObject
     if mod then
       mod.superclass = superclass unless mod.module?
     else
-      all = nil
+      all = if class_type == RDoc::NormalModule then
+              RDoc::TopLevel.modules_hash
+            else
+              RDoc::TopLevel.classes_hash
+            end
 
-      RDoc::TopLevel.lock.synchronize do
-        all = if class_type == RDoc::NormalModule then
-                RDoc::TopLevel.modules_hash
-              else
-                RDoc::TopLevel.classes_hash
-              end
-
-        mod = all[full_name]
-      end
+      mod = all[full_name]
 
       unless mod then
         mod = class_type.new name, superclass
@@ -343,9 +333,7 @@ class RDoc::Context < RDoc::CodeObject
       end
 
       unless @done_documenting then
-        RDoc::TopLevel.lock.synchronize do
-          all[full_name] = mod
-        end
+        all[full_name] = mod
         collection[name] = mod
       end
 
@@ -405,13 +393,11 @@ class RDoc::Context < RDoc::CodeObject
     to_name = child_name name
 
     unless @done_documenting then
-      RDoc::TopLevel.lock.synchronize do
-        if from.module? then
-          RDoc::TopLevel.modules_hash
-        else
-          RDoc::TopLevel.classes_hash
-        end[to_name] = from
-      end
+      if from.module? then
+        RDoc::TopLevel.modules_hash
+      else
+        RDoc::TopLevel.classes_hash
+      end[to_name] = from
 
       if from.module? then
         @modules

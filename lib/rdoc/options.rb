@@ -104,11 +104,6 @@ class RDoc::Options
   attr_reader :template
 
   ##
-  # Number of threads to parse with
-
-  attr_accessor :threads
-
-  ##
   # Documentation title
 
   attr_reader :title
@@ -136,7 +131,6 @@ class RDoc::Options
     @rdoc_include = []
     @title = nil
     @template = nil
-    @threads = 1
     @diagram = false
     @fileboxes = false
     @show_hash = false
@@ -240,14 +234,6 @@ Usage: #{opt.program_name} [options] [names...]
       opt.on("--pipe",
              "Convert RDoc on stdin to HTML") do
         @pipe = true
-      end
-
-      opt.separator nil
-
-      opt.on("--threads=THREADS", Integer,
-             "Number of threads to parse with.",
-             "WARNING > 1 thread is buggy") do |threads|
-        @threads = threads
       end
 
       opt.separator nil

@@ -1,4 +1,3 @@
-require 'thread'
 require 'rdoc/context'
 
 ##
@@ -67,9 +66,7 @@ class RDoc::TopLevel < RDoc::Context
   # Finds the class with +name+ in all discovered classes
 
   def self.find_class_named(name)
-    @lock.synchronize do
-      classes_hash[name]
-    end
+    classes_hash[name]
   end
 
   ##
@@ -104,27 +101,14 @@ class RDoc::TopLevel < RDoc::Context
   # Finds the file with +name+ in all discovered files
 
   def self.find_file_named(name)
-    @lock.synchronize do
-      @all_files[name]
-    end
+    @all_files[name]
   end
 
   ##
   # Finds the module with +name+ in all discovered modules
 
   def self.find_module_named(name)
-    @lock.synchronize do
-      modules_hash[name]
-    end
-  end
-
-  @lock = Mutex.new
-
-  ##
-  # Lock for global class, module and file stores
-
-  def self.lock
-    @lock
+    modules_hash[name]
   end
 
   ##
@@ -145,11 +129,9 @@ class RDoc::TopLevel < RDoc::Context
   # Empties RDoc of stored class, module and file information
 
   def self.reset
-    @lock.synchronize do
-      @all_classes = {}
-      @all_modules = {}
-      @all_files   = {}
-    end
+    @all_classes = {}
+    @all_modules = {}
+    @all_files   = {}
   end
 
   reset
@@ -166,9 +148,7 @@ class RDoc::TopLevel < RDoc::Context
     @diagram       = nil
     @parser        = nil
 
-    RDoc::TopLevel.lock.synchronize do
-      RDoc::TopLevel.files_hash[file_name] = self
-    end
+    RDoc::TopLevel.files_hash[file_name] = self
   end
 
   ##

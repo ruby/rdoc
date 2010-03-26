@@ -258,7 +258,7 @@ class RDoc::RDoc
     file_info = []
 
     @stats = RDoc::Stats.new file_list.size, @options.verbosity
-    @stats.begin_adding @options.threads
+    @stats.begin_adding
 
     file_info = file_list.map do |filename|
       @current = filename
