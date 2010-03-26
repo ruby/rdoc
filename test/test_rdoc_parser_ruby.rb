@@ -413,7 +413,22 @@ end
     assert_equal 'my module', foo.comment
   end
 
-  def test_class_single
+  def test_parse_class_colon3
+    code = <<-CODE
+class A
+  class ::B
+  end
+end
+    CODE
+
+    util_parser code
+
+    @parser.parse_class @top_level, false, @parser.get_tk, ''
+
+    assert_equal %w[A B],    RDoc::TopLevel.classes.map { |c| c.full_name }
+  end
+
+  def test_parse_class_single
     code = <<-CODE
 class A
   class << B

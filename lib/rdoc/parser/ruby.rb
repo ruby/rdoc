@@ -245,7 +245,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
     name_t = get_tk
 
     # class ::A -> A is in the top level
-    if TkCOLON3 === name_t then
+    case name_t
+    when TkCOLON2, TkCOLON3 then # bug
       name_t = get_tk
       container = @top_level
     end
