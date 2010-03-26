@@ -70,9 +70,11 @@ class RDoc::RDoc
   end
 
   def initialize
-    @generator = nil
-    @options = nil
-    @stats = nil
+    @current     = nil
+    @generator   = nil
+    @old_siginfo = nil
+    @options     = nil
+    @stats       = nil
   end
 
   ##
@@ -91,6 +93,17 @@ class RDoc::RDoc
     out = @html.convert $stdin.read
 
     $stdout.write out
+  end
+
+  ##
+  # Installs a siginfo handler that prints the current filename.
+
+  def install_siginfo_handler
+    return unless Signal.list.include? 'INFO'
+
+    @old_siginfo = trap 'INFO' do
+      puts @current if @current
+    end
   end
 
   ##
@@ -238,6 +251,8 @@ class RDoc::RDoc
 
     file_list = normalized_file_list files, true, @options.exclude
 
+    file_list = remove_unparseable file_list
+
     return [] if file_list.empty?
 
     file_info = []
@@ -246,12 +261,22 @@ class RDoc::RDoc
     @stats.begin_adding @options.threads
 
     file_info = file_list.map do |filename|
+      @current = filename
       parse_file filename
     end.compact
 
     @stats.done_adding
 
     file_info
+  end
+
+  ##
+  # Removes file extensions known to be unparseable from +files+
+
+  def remove_unparseable files
+    files.reject do |file|
+      file =~ /\.(?:class|eps|erb|scpt\.txt|ttf|yml)$/i
+    end
   end
 
   ##
@@ -302,7 +327,6 @@ class RDoc::RDoc
         begin
           self.class.current = self
 
-          RDoc::Diagram.new(file_info, @options).draw if @options.diagram
           @generator.generate file_info
           update_output_dir ".", start_time
         ensure
@@ -335,6 +359,17 @@ class RDoc::RDoc
     content
   rescue Errno::EISDIR, Errno::ENOENT
     nil
+  end
+
+  ##
+  # Removes a siginfo handler and replaces the previous
+
+  def remove_siginfo_handler
+    return unless Signal.list.key? 'INFO'
+
+    handler = @old_siginfo || 'DEFAULT'
+
+    trap 'INFO', handler
   end
 
 end

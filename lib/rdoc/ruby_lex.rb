@@ -783,14 +783,16 @@ class RDoc::RubyLex
     when "&", "`", "'", "+"
       Token(TkBACK_REF, "$"+ch)
     when /[1-9]/
-      while getc =~ /[0-9]/; end
-    ungetc
-    Token(TkNTH_REF)
+      ref = ''
+      while (ch = getc) =~ /[0-9]/ do ref << ch end
+      ungetc
+      ref[-1, 1] = '' unless ref.empty?
+      Token(TkNTH_REF, ref)
     when /\w/
       ungetc
       ungetc
       identify_identifier
-    else 
+    else
       ungetc
       Token("$")
     end
@@ -987,8 +989,11 @@ class RDoc::RubyLex
   def identify_number
     @lex_state = EXPR_END
 
+    num = ''
+
     if peek(0) == "0" && peek(1) !~ /[.eE]/
-      getc
+      num << getc
+
       case peek(0)
       when /[xX]/
         ch = getc
@@ -1006,13 +1011,16 @@ class RDoc::RubyLex
         match = /[0-7_]/
       when /[89]/
         raise RDoc::Error, "Illegal octal digit"
-      else 
-        return Token(TkINTEGER)
+      else
+        return Token(TkINTEGER, num)
       end
+
+      num << ch if ch
 
       len0 = true
       non_digit = false
       while ch = getc
+        num << ch
         if match =~ ch
           if ch == "_"
             if non_digit
@@ -1026,6 +1034,7 @@ class RDoc::RubyLex
           end
         else
           ungetc
+          num[-1, 1] = ''
           if len0
             raise RDoc::Error, "numeric literal without digits"
           end
@@ -1035,7 +1044,7 @@ class RDoc::RubyLex
           break
         end
       end
-      return Token(TkINTEGER)
+      return Token(TkINTEGER, num)
     end
 
     type = TkINTEGER
@@ -1043,6 +1052,7 @@ class RDoc::RubyLex
     allow_e = true
     non_digit = false
     while ch = getc
+      num << ch
       case ch
       when /[0-9]/
         non_digit = false
@@ -1056,6 +1066,7 @@ class RDoc::RubyLex
         if peek(0) !~ /[0-9]/
           type = TkINTEGER
           ungetc
+          num[-1, 1] = ''
           break
         end
         allow_point = false
@@ -1065,7 +1076,7 @@ class RDoc::RubyLex
         end
         type = TkFLOAT
         if peek(0) =~ /[+-]/
-          getc
+          num << getc
         end
         allow_e = false
         allow_point = false
@@ -1075,10 +1086,12 @@ class RDoc::RubyLex
           raise RDoc::Error, "trailing `#{non_digit}' in number"
         end
         ungetc
+        num[-1, 1] = ''
         break
       end
     end
-    Token(type)
+
+    Token(type, num)
   end
 
   def identify_string(ltype, quoted = ltype)

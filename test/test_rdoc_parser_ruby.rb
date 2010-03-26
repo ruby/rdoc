@@ -1183,6 +1183,12 @@ end
     util_parser ':"#{bar}="'
 
     while tk = @parser.get_tk do end
+
+    util_parser '1'
+    assert_equal '1', @parser.get_tk.text
+
+    util_parser '1.0'
+    assert_equal '1.0', @parser.get_tk.text
   end
 
   def tk(klass, line, char, name, text)

@@ -51,6 +51,9 @@ class RDoc::Generator::RI
     remove_siginfo_handler
   end
 
+  ##
+  # Installs a siginfo handler that prints the current filename.
+
   def install_siginfo_handler
     return unless Signal.list.key? 'INFO'
 
@@ -59,10 +62,15 @@ class RDoc::Generator::RI
     end
   end
 
-  def remove_siginfo_handler
-    return unless @old_siginfo
+  ##
+  # Removes a siginfo handler and replaces the previous
 
-    trap 'INFO', @old_siginfo
+  def remove_siginfo_handler
+    return unless Signal.list.key? 'INFO'
+
+    handler = @old_siginfo || 'DEFAULT'
+
+    trap 'INFO', handler
   end
 
 end

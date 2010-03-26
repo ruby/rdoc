@@ -511,23 +511,25 @@ class RDoc::Parser::Ruby < RDoc::Parser
     nest = 0
 
     loop do
-        case tk
-        when TkSEMICOLON
-          break
-        when TkLPAREN, TkfLPAREN
-          nest += 1
-        when end_token
-          if end_token == TkRPAREN
-            nest -= 1
-            break if @scanner.lex_state == EXPR_END and nest <= 0
-          else
-            break unless @scanner.continue
-          end
-        when TkCOMMENT
-          unget_tk(tk)
-          break
+      case tk
+      when TkSEMICOLON
+        break
+      when TkLPAREN, TkfLPAREN
+        nest += 1
+      when end_token
+        if end_token == TkRPAREN
+          nest -= 1
+          break if @scanner.lex_state == EXPR_END and nest <= 0
+        else
+          break unless @scanner.continue
         end
-        tk = get_tk
+      when TkCOMMENT
+        unget_tk(tk)
+        break
+      when nil then
+        break
+      end
+      tk = get_tk
     end
     res = get_tkread.tr("\n", " ").strip
     res = "" if res == ";"
@@ -643,6 +645,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
         end
       when TkCOLON2, TkCOLON3 then
         rhs_name << '::'
+      when nil then
+        break
       end
       tk = get_tk
     end
@@ -1026,6 +1030,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
         @read.pop
       when TkCOMMENT then
         @read.pop
+      when nil then
+        break
       end
       tk = get_tk
     end
@@ -1540,6 +1546,8 @@ The internal error was:
         else
           break unless @scanner.continue
         end
+      when nil then
+        break
       end
       tk = get_tk
     end

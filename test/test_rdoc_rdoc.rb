@@ -44,5 +44,18 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
     assert_equal Encoding::UTF_8, contents.encoding
   end
 
+  def test_remove_unparsable
+    file_list = %w[
+      blah.class
+      blah.eps
+      blah.erb
+      blah.scpt.txt
+      blah.ttf
+      blah.yml
+    ]
+
+    assert_empty @rdoc.remove_unparseable file_list
+  end
+
 end
 

@@ -222,7 +222,7 @@ Usage: #{opt.program_name} [options] [names...]
           raise OptionParser::InvalidArgument, "Invalid parameter to '-E'"
         end
 
-        unless RDoc::ParserFactory.alias_extension old, new then
+        unless RDoc::Parser.alias_extension old, new then
           raise OptionParser::InvalidArgument, "Unknown extension .#{old} to -E"
         end
       end
@@ -446,7 +446,7 @@ Usage: #{opt.program_name} [options] [names...]
     begin
       opts.parse! argv
     rescue OptionParser::InvalidArgument, OptionParser::InvalidOption => e
-      if ignore_invalid then
+      if ignore_invalid and not quiet then
         $stderr.puts e
         $stderr.puts '(invalid options are ignored)'
       else

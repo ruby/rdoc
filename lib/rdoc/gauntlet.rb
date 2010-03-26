@@ -1,20 +1,24 @@
 require 'rdoc/rdoc'
 require 'gauntlet'
-require 'tmpdir'
 require 'fileutils'
 
 class RDoc::Gauntlet < Gauntlet
 
   def run name
-    tmpdir = Dir.mktmpdir name
+    next if self.data[name]
+
+    ri_dir = File.expand_path "~/.gauntlet/data/ri/#{name}"
+    FileUtils.rm_rf ri_dir if File.exist? ri_dir
+
     yaml = File.read 'gemspec'
     spec = Gem::Specification.from_yaml yaml
 
-    args = %W[--ri --quiet --op #{tmpdir}/ri]
+    args = %W[--ri --op #{ri_dir}]
     args.push(*spec.rdoc_options)
     args << spec.require_paths
     args << spec.extra_rdoc_files
     args = args.flatten.map { |a| a.to_s }
+    args.delete '--quiet'
 
     puts "#{name} - rdoc #{args.join ' '}"
 
@@ -23,18 +27,16 @@ class RDoc::Gauntlet < Gauntlet
 
     begin
       r.document args
-      self.data[name] = [args]
+      self.data[name] = true
       puts 'passed'
     rescue StandardError, RDoc::Error => e
       puts "failed - (#{e.class}) #{e.message}"
-      self.data[name] = [e.class, e.message, e.backtrace]
+      self.data[name] = false
     end
   rescue Gem::Exception
     puts "bad gem #{name}"
-    FileUtils.rm_rf File.expand_path "~/.gauntlet/#{name}.tgz"
   ensure
     puts
-    FileUtils.rm_rf tmpdir
   end
 
 end

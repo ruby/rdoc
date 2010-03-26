@@ -67,14 +67,18 @@ class RDoc::Parser
   # the gem).
 
   def self.binary?(file)
-    s = (File.read(file, File.stat(file).blksize) || "").split(//)
+    s = File.read(file, File.stat(file).blksize) || ""
 
-    if s[0, 2].join == Marshal.dump('')[0, 2] then
+    if s[0, 2] == Marshal.dump('')[0, 2] then
       true
-    elsif s.size > 0 then
-      ((s.size - s.grep(" ".."~").size) / s.size.to_f) > 0.30
-    else
+    elsif file =~ /erb\.rb$/ then
       false
+    elsif s.scan(/<%|%>/).length >= 4 then
+      true
+    else
+      s = s.split(//)
+
+      ((s.size - s.grep(" ".."~").size) / s.size.to_f) > 0.30
     end
   end
 
