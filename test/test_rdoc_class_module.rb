@@ -23,6 +23,14 @@ class TestRDocClassModule < XrefTestCase
     assert_equal "comment 1\n---\ncomment 2\n---\ncomment 3", cm.comment
   end
 
+  # handle making a short module alias of yourself
+
+  def test_find_class_named
+    @c2.classes_hash['C2'] = @c2
+
+    assert_equal @c1, @c2.find_class_named('C1')
+  end
+
   def test_merge
     cm1 = RDoc::ClassModule.new 'Klass'
     cm1.comment = 'klass 1'

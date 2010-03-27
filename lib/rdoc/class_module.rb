@@ -49,6 +49,7 @@ class RDoc::ClassModule < RDoc::Context
     return self if @name == name
 
     @classes.values.find do |klass|
+      next if klass == self
       klass.find_class_named name
     end
   end
