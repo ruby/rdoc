@@ -255,12 +255,14 @@ class RDoc::Markup::Parser
         verbatim << '=' * data
 
         _, _, peek_column, = peek_token
+        peek_column ||= column + data
         verbatim << ' ' * (peek_column - column - data)
       when :RULE then
         width = 2 + data
         verbatim << '-' * width
 
         _, _, peek_column, = peek_token
+        peek_column ||= column + data + 2
         verbatim << ' ' * (peek_column - column - width)
       when :TEXT then
         verbatim << data

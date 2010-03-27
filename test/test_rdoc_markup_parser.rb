@@ -796,6 +796,21 @@ text
     assert_equal expected, @RMP.parse(str).parts
   end
 
+  def test_parse_verbatim_rule2
+    str = <<-STR.chomp
+text
+
+  ---
+    STR
+
+    expected = [
+      @RM::Paragraph.new('text'),
+      @RM::BlankLine.new,
+      @RM::Verbatim.new('  ', '---', '')]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
   def test_parse_verbatim_trim
     str = <<-STR
 now is
