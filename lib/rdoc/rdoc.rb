@@ -240,6 +240,21 @@ class RDoc::RDoc
     return unless parser
 
     parser.scan
+  rescue => e
+    $stderr.puts <<-EOF
+Before reporting this, could you check that the file you're documenting
+compiles cleanly--RDoc is not a full Ruby parser, and gets confused easily if
+fed invalid programs.
+
+The internal error was:
+
+\t(#{e.class}) #{e.message}
+
+    EOF
+
+    $stderr.puts e.backtrace.join("\n\t") if @options.debug
+
+    nil
   end
 
   ##

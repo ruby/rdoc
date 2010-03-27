@@ -954,6 +954,21 @@ EOF
     assert_equal 'Object#foo', foo.full_name
   end
 
+  def test_parse_method_toplevel_class
+    klass = @top_level
+
+    util_parser "def Object.foo arg1, arg2\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, ''
+
+    object = RDoc::TopLevel.find_class_named 'Object'
+
+    foo = object.method_list.first
+    assert_equal 'Object::foo', foo.full_name
+  end
+
   def test_parse_statements_class_if
     comment = "##\n# my method\n"
 
@@ -1212,27 +1227,43 @@ end
     @parser.parse_statements @top_level
   end
 
-  def test_sanity
+  def test_sanity_integer
+    util_parser '1'
+    assert_equal '1', @parser.get_tk.text
+
+    util_parser '1.0'
+    assert_equal '1.0', @parser.get_tk.text
+  end
+
+  def test_sanity_interpolation
     last_tk = nil
     util_parser 'class A; B = "#{c}"; end'
 
     while tk = @parser.get_tk do last_tk = tk end
     
     assert_equal "\n", last_tk.text
+  end
 
+  # If you're writing code like this you're doing it wrong
+
+  def x_test_sanity_interpolation_crazy
+    last_tk = nil
+    util_parser '"#{"#{"a")}" if b}"'
+
+    assert_equal RDoc::RubyToken::TkDSTRING, tk.class
+    assert_equal RDoc::RubyToken::TkNL, @parser.get_tk.class
+  end
+
+  def test_sanity_interpolation_format
     util_parser '"#{stftime("%m-%d")}"'
 
     while tk = @parser.get_tk do end
+  end
 
+  def test_sanity_symbol_interpolation
     util_parser ':"#{bar}="'
 
     while tk = @parser.get_tk do end
-
-    util_parser '1'
-    assert_equal '1', @parser.get_tk.text
-
-    util_parser '1.0'
-    assert_equal '1.0', @parser.get_tk.text
   end
 
   def tk(klass, line, char, name, text)

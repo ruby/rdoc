@@ -904,9 +904,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
             end
 
             if type == RDoc::NormalClass then
-              container = prev_container.add_class(type, name_t.name, obj.superclass.name)
+              sclass = obj.superclass ? obj.superclass.name : nil
+              container = prev_container.add_class type, name_t.name, sclass
             else
-              container = prev_container.add_module(type, name_t.name)
+              container = prev_container.add_module type, name_t.name
             end
 
             container.record_location @top_level
@@ -1094,10 +1095,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
       #   else
       #     warn "'require' used as variable"
     end
-    if name
+    if name then
       context.add_require RDoc::Require.new(name, comment)
     else
-      unget_tk(tk)
+      unget_tk tk
     end
   end
 
@@ -1490,22 +1491,15 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
           $stderr.puts <<-EOF
 
-
-RDoc failure in #{@file_name} at or around line #{@scanner.line_no} column #{@scanner.char_no}:
-
-#{bytes.inspect}
-
-Before reporting this, could you check that the file you're documenting
-compiles cleanly--RDoc is not a full Ruby parser, and gets confused easily if
-fed invalid programs.
-
-The internal error was:
-
-\t(#{e.class}) #{e.message}
+#{self.class} failure around line #{@scanner.line_no} of
+#{@file_name}
 
           EOF
 
-          puts e.backtrace.join("\n\t")
+          unless bytes.empty? then
+            $stderr.puts
+            $stderr.puts bytes.inspect
+          end
 
           raise e
         end
@@ -1567,7 +1561,7 @@ The internal error was:
     unget_tk(tk) unless TkIN === tk
   end
 
-  def skip_method(container)
+  def skip_method container
     meth = RDoc::AnyMethod.new "", "anon"
     parse_method_parameters meth
     parse_statements container, false, meth
