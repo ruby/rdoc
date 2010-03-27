@@ -23,5 +23,11 @@ class RDocAnyMethodTest < XrefTestCase
     assert_equal 'C1',    class_method.parent_name
   end
 
+  def test_name
+    m = RDoc::AnyMethod.new nil, nil
+
+    assert_nil m.name
+  end
+
 end
 

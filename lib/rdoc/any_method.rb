@@ -189,7 +189,7 @@ class RDoc::AnyMethod < RDoc::CodeObject
   def name
     return @name if @name
 
-    @name = @call_seq[/^.*?\.(\w+)/, 1] || @call_seq
+    @name = @call_seq[/^.*?\.(\w+)/, 1] || @call_seq if @call_seq
   end
 
   ##
