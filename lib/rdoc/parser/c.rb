@@ -480,8 +480,7 @@ class RDoc::Parser::C < RDoc::Parser
       end
 
       unless enclosure then
-        warn("Enclosing class/module '#{in_module}' for " +
-              "#{type} #{class_name} not known")
+        warn("Enclosing class/module '#{in_module}' for #{type} #{class_name} not known")
         return
       end
     else
@@ -611,9 +610,11 @@ class RDoc::Parser::C < RDoc::Parser
         meth_obj.params = "(" + (1..p_count).map{|i| "p#{i}"}.join(", ") + ")"
       end
 
-      if source_file then
+      if source_file and File.exist? source_file then
         file_name = File.join(@file_dir, source_file)
         body = (@@known_bodies[source_file] ||= File.read(file_name))
+      elsif source_file then
+        warn "unknown source file #{source_file}"
       else
         body = @content
       end
@@ -663,12 +664,6 @@ class RDoc::Parser::C < RDoc::Parser
     do_includes
     do_aliases
     @top_level
-  end
-
-  def warn(msg)
-    $stderr.puts
-    $stderr.puts msg
-    $stderr.flush
   end
 
 end
