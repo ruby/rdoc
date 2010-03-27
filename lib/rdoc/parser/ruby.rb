@@ -915,7 +915,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
             container.record_location @top_level
           end
         when TkIDENTIFIER, TkIVAR then
-          skip_method RDoc::Context.new
+          dummy = RDoc::Context.new
+          dummy.parent = container
+          skip_method dummy
           return
         else
           warn "unexpected method name token #{name_t.inspect}"
