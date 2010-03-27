@@ -13,19 +13,9 @@ class RDoc::Options
   attr_reader :charset
 
   ##
-  # Should diagrams be drawn?
-
-  attr_accessor :diagram
-
-  ##
   # Files matching this pattern will be excluded
 
   attr_accessor :exclude
-
-  ##
-  # Should we draw fileboxes in diagrams?
-
-  attr_reader :fileboxes
 
   ##
   # The list of files to be processed
@@ -46,16 +36,6 @@ class RDoc::Options
   # Formatter to mark up text with
 
   attr_accessor :formatter
-
-  ##
-  # Image format for diagrams
-
-  attr_reader :image_format
-
-  ##
-  # Include line numbers in the source listings?
-
-  attr_reader :include_line_numbers
 
   ##
   # Name of the file, class or module to display in the initial index page (if
@@ -131,12 +111,8 @@ class RDoc::Options
     @rdoc_include = []
     @title = nil
     @template = nil
-    @diagram = false
-    @fileboxes = false
     @show_hash = false
-    @image_format = 'png'
     @tab_width = 8
-    @include_line_numbers = false
     @force_update = true
     @verbosity = 1
     @pipe = false
@@ -266,13 +242,6 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--line-numbers", "-N",
-             "Include line numbers in the source code.") do |value|
-        @include_line_numbers = value
-      end
-
-      opt.separator nil
-
       opt.on("--main=NAME", "-m",
              "NAME will be the initial page displayed.") do |value|
         @main_page = value
@@ -326,42 +295,6 @@ Usage: #{opt.program_name} [options] [names...]
              "substituted; if the URL doesn't contain a",
              "'\%s', the filename will be appended to it.") do |value|
         @webcvs = value
-      end
-
-      opt.separator nil
-      opt.separator "Diagram Options:"
-      opt.separator nil
-
-      image_formats = %w[gif png jpg jpeg]
-      opt.on("--image-format=FORMAT", "-I", image_formats,
-             "Sets output image format for diagrams. Can",
-             "be #{image_formats.join ', '}. If this option",
-             "is omitted, png is used. Requires",
-             "diagrams.") do |value|
-        @image_format = value
-      end
-
-      opt.separator nil
-
-      opt.on("--diagram", "-d",
-             "Generate diagrams showing modules and",
-             "classes. You need dot V1.8.6 or later to",
-             "use the --diagram option correctly. Dot is",
-             "available from http://graphviz.org") do |value|
-        check_diagram
-        @diagram = true
-      end
-
-      opt.separator nil
-
-      opt.on("--fileboxes", "-F",
-             "Classes are put in boxes which represents",
-             "files, where these classes reside. Classes",
-             "shared between more than one file are",
-             "shown with list of files that are sharing",
-             "them. Silently discarded if --diagram is",
-             "not given.") do |value|
-        @fileboxes = value
       end
 
       opt.separator nil
@@ -491,37 +424,6 @@ Usage: #{opt.program_name} [options] [names...]
 
     unless @generator then
       raise OptionParser::InvalidArgument, "Invalid output formatter"
-    end
-  end
-
-  # Check that the right version of 'dot' is available.  Unfortunately this
-  # doesn't work correctly under Windows NT, so we'll bypass the test under
-  # Windows.
-
-  def check_diagram
-    return if RUBY_PLATFORM =~ /mswin|cygwin|mingw|bccwin/
-
-    ok = false
-    ver = nil
-
-    IO.popen "dot -V 2>&1" do |io|
-      ver = io.read
-      if ver =~ /dot.+version(?:\s+gviz)?\s+(\d+)\.(\d+)/ then
-        ok = ($1.to_i > 1) || ($1.to_i == 1 && $2.to_i >= 8)
-      end
-    end
-
-    unless ok then
-      if ver =~ /^dot.+version/ then
-        $stderr.puts "Warning: You may need dot V1.8.6 or later to use\n",
-          "the --diagram option correctly. You have:\n\n   ",
-          ver,
-          "\nDiagrams might have strange background colors.\n\n"
-      else
-        $stderr.puts "You need the 'dot' program to produce diagrams.",
-          "(see http://www.research.att.com/sw/tools/graphviz/)\n\n"
-        exit
-      end
     end
   end
 

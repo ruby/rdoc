@@ -346,9 +346,6 @@ $DEBUG_RDOC = nil
 #   work of Keiju ISHITSUKA of Nippon Rational Inc, who produced the Ruby
 #   parser for irb and the rtags package.
 #
-# * Code to diagram classes and modules was written by Sergey A Yanovitsky
-#   (Jah) of Enticla.
-#
 # * Charset patch from MoonWolf.
 #
 # * Rich Kilmer wrote the kilmer.rb output template.

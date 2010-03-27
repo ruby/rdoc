@@ -76,7 +76,7 @@ class RDoc::AnyMethod
         res = if line == first then
                 " " * (size + 2)
               else
-                "%#{size}d: " % line
+                "%2$*1$d: " % [size, line]
               end
 
         line += 1
@@ -120,7 +120,7 @@ class RDoc::AnyMethod
       end
     end
 
-    add_line_numbers src if RDoc::RDoc.current.options.include_line_numbers
+    add_line_numbers src
 
     src
   end

@@ -252,8 +252,9 @@ The internal error was:
 
     EOF
 
-    $stderr.puts e.backtrace.join("\n\t") if @options.debug
+    $stderr.puts e.backtrace.join("\n\t") if $RDOC_DEBUG
 
+    raise e
     nil
   end
 
@@ -308,6 +309,7 @@ The internal error was:
 
   def document(argv)
     RDoc::TopLevel.reset
+    RDoc::Parser::C.reset
 
     @options = RDoc::Options.new
     @options.parse argv
