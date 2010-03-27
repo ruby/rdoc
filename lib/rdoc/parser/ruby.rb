@@ -677,8 +677,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
       meth = RDoc::GhostMethod.new get_tkread, name
       meth.singleton = singleton
 
-      @stats.add_method meth
-
       meth.start_collecting_tokens
       indent = TkSPACE.new nil, 1, 1
       indent.set_text " " * column
@@ -690,6 +688,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
       meth.params = ''
 
       extract_call_seq comment, meth
+
+      return unless meth.name
+
+      @stats.add_method meth
 
       container.add_method meth if meth.document_self
 
