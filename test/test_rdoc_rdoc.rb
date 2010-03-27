@@ -14,6 +14,11 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
     @tempfile.close
   end
 
+  def test_gather_files
+    assert_equal(%w[lib/rdoc.rb],
+                 @rdoc.gather_files(%w[lib/rdoc.rb lib/rdoc.rb]))
+  end
+
   def test_read_file_contents
     @tempfile.write "hi everybody"
     @tempfile.flush

@@ -28,6 +28,11 @@ require 'time'
 class RDoc::RDoc
 
   ##
+  # File pattern to exclude
+
+  attr_accessor :exclude
+
+  ##
   # Generator instance used for creating output
 
   attr_accessor :generator
@@ -75,6 +80,7 @@ class RDoc::RDoc
     @old_siginfo = nil
     @options     = nil
     @stats       = nil
+    @exclude     = nil
   end
 
   ##
@@ -82,6 +88,20 @@ class RDoc::RDoc
 
   def error(msg)
     raise RDoc::Error, msg
+  end
+
+  ##
+  # Gathers a set of parseable files from the files and directories listed in
+  # +files+.
+
+  def gather_files files
+    files = ["."] if files.empty?
+
+    file_list = normalized_file_list files, true, @exclude
+
+    file_list = file_list.uniq
+
+    file_list = remove_unparseable file_list
   end
 
   ##
@@ -198,18 +218,20 @@ class RDoc::RDoc
         end
       when "directory"
         next if rel_file_name == "CVS" || rel_file_name == ".svn"
-        dot_doc = File.join(rel_file_name, RDoc::DOT_DOC_FILENAME)
-        if File.file?(dot_doc)
-          file_list.concat parse_dot_doc_file(rel_file_name, dot_doc)
+
+        dot_doc = File.join rel_file_name, RDoc::DOT_DOC_FILENAME
+
+        if File.file?(dot_doc) then
+          file_list << parse_dot_doc_file(rel_file_name, dot_doc)
         else
-          file_list.concat list_files_in_directory(rel_file_name)
+          file_list << list_files_in_directory(rel_file_name)
         end
       else
         raise RDoc::Error, "I can't deal with a #{type} #{rel_file_name}"
       end
     end
 
-    file_list
+    file_list.flatten
   end
 
   ##
@@ -261,13 +283,8 @@ The internal error was:
   ##
   # Parse each file on the command line, recursively entering directories.
 
-  def parse_files
-    files = @options.files
-    files = ["."] if files.empty?
-
-    file_list = normalized_file_list files, true, @options.exclude
-
-    file_list = remove_unparseable file_list
+  def parse_files files
+    file_list = gather_files files
 
     return [] if file_list.empty?
 
@@ -319,11 +336,13 @@ The internal error was:
       exit
     end
 
+    @exclude = @options.exclude
+
     @last_created = setup_output_dir @options.op_dir, @options.force_update
 
     start_time = Time.now
 
-    file_info = parse_files
+    file_info = parse_files @options.files
 
     @options.title = "RDoc Documentation"
 
