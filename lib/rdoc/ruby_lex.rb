@@ -373,9 +373,12 @@ class RDoc::RubyLex
 
     @OP.def_rules(" ", "\t", "\f", "\r", "\13") do |op, io|
       @space_seen = true
-      while getc =~ /[ \t\f\r\13]/; end
+      str = op
+      while (ch = getc) =~ /[ \t\f\r\13]/ do
+        str << ch
+      end
       ungetc
-      Token(TkSPACE)
+      Token TkSPACE, str
     end
 
     @OP.def_rule("#") do |op, io|
@@ -1110,18 +1113,21 @@ class RDoc::RubyLex
 
     subtype = nil
     begin
-      dstr = false
-      dstr_nest = 0
-      last_ch = nil
       nest = 0
 
       while ch = getc
         str << ch
 
-        if @quoted == ch and nest == 0 and not dstr
+        if @quoted == ch and nest == 0
           break
         elsif @ltype != "'" && @ltype != "]" && @ltype != ":" and ch == "#"
+          ch = getc
           subtype = true
+          if ch == "{" then
+            str << ch << skip_inner_expression
+          else
+            ungetc
+          end
         elsif ch == '\\' and @ltype == "'" #'
           case ch = getc
           when "\\", "\n", "'"
@@ -1132,17 +1138,6 @@ class RDoc::RubyLex
           read_escape
         end
 
-        if subtype then
-          if last_ch == "#" and ch == "{" then
-            dstr = true
-          elsif dstr and ch == "{" then
-            dstr_nest += 1
-          elsif dstr and ch == "}" then
-            dstr_nest -= 1
-            dstr = dstr_nest == 0
-          end
-        end
-
         if PERCENT_PAREN.values.include?(@quoted) 
           if PERCENT_PAREN[ch] == @quoted
             nest += 1
@@ -1150,8 +1145,6 @@ class RDoc::RubyLex
             nest -= 1
           end
         end
-
-        last_ch = ch
       end
 
       if @ltype == "/"
@@ -1159,6 +1152,7 @@ class RDoc::RubyLex
           getc
         end
       end
+
       if subtype
         Token(DLtype2Token[ltype], str)
       else
@@ -1169,6 +1163,21 @@ class RDoc::RubyLex
       @quoted = nil
       @lex_state = EXPR_END
     end
+  end
+
+  def skip_inner_expression
+    res = ""
+    nest = 0
+    while (ch = getc)
+      res << ch
+      if ch == '}'
+        break if nest.zero?
+        nest -= 1
+      elsif ch == '{'
+        nest += 1
+      end
+    end
+    res
   end
 
   def identify_comment
