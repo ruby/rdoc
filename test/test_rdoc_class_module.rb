@@ -28,7 +28,7 @@ class TestRDocClassModule < XrefTestCase
   def test_find_class_named
     @c2.classes_hash['C2'] = @c2
 
-    assert_equal @c1, @c2.find_class_named('C1')
+    assert_nil @c2.find_class_named('C1')
   end
 
   def test_merge

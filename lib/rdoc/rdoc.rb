@@ -75,12 +75,13 @@ class RDoc::RDoc
   end
 
   def initialize
-    @current     = nil
-    @generator   = nil
-    @old_siginfo = nil
-    @options     = nil
-    @stats       = nil
-    @exclude     = nil
+    @current      = nil
+    @exclude      = nil
+    @generator    = nil
+    @last_created = nil
+    @old_siginfo  = nil
+    @options      = nil
+    @stats        = nil
   end
 
   ##
