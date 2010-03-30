@@ -18,9 +18,9 @@ class TestRDocClassModule < XrefTestCase
 
     assert_equal "comment 1\n---\ncomment 2", cm.comment
 
-    cm.comment = "/*\n * comment 3\n */"
+    cm.comment = "# * comment 3"
 
-    assert_equal "comment 1\n---\ncomment 2\n---\ncomment 3", cm.comment
+    assert_equal "comment 1\n---\ncomment 2\n---\n* comment 3", cm.comment
   end
 
   # handle making a short module alias of yourself

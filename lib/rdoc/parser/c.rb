@@ -176,19 +176,17 @@ class RDoc::Parser::C < RDoc::Parser
 
   def do_constants
     @content.scan(%r{\Wrb_define_
-                   (
-                      variable |
-                      readonly_variable |
-                      const |
-                      global_const |
-                    )
+                   ( variable          |
+                     readonly_variable |
+                     const             |
+                     global_const      | )
                \s*\(
                  (?:\s*(\w+),)?
                  \s*"(\w+)",
                  \s*(.*?)\s*\)\s*;
                  }xm) do |type, var_name, const_name, definition|
       var_name = "rb_cObject" if !var_name or var_name == "rb_mKernel"
-      handle_constants(type, var_name, const_name, definition)
+      handle_constants type, var_name, const_name, definition
     end
   end
 
@@ -311,7 +309,7 @@ class RDoc::Parser::C < RDoc::Parser
       tk = RDoc::RubyToken::Token.new nil, 1, 1
       tk.set_text body_text
       meth_obj.add_token tk
-      meth_obj.comment = comment
+      meth_obj.comment = strip_stars comment
     when %r{((?>/\*.*?\*/\s*))^\s*(\#\s*define\s+#{meth_name}\s+(\w+))}m
       comment = $1
       body_text = $2
@@ -322,7 +320,7 @@ class RDoc::Parser::C < RDoc::Parser
       tk = RDoc::RubyToken::Token.new nil, 1, 1
       tk.set_text body_text
       meth_obj.add_token tk
-      meth_obj.comment = comment + meth_obj.comment.to_s
+      meth_obj.comment = strip_stars(comment) + meth_obj.comment.to_s
     when %r{^\s*\#\s*define\s+#{meth_name}\s+(\w+)}m
       unless find_body(class_name, $1, meth_obj, body, true)
         warn "No definition for #{meth_name}" unless @options.quiet
@@ -334,7 +332,7 @@ class RDoc::Parser::C < RDoc::Parser
 
       if comment
         find_modifiers(comment, meth_obj)
-        meth_obj.comment = comment
+        meth_obj.comment = strip_stars comment
       else
         warn "No definition for #{meth_name}" unless @options.quiet
         return false
@@ -399,7 +397,7 @@ class RDoc::Parser::C < RDoc::Parser
       comment = $1
     end
 
-    class_mod.comment = comment if comment
+    class_mod.comment = strip_stars comment if comment
   end
 
   ##
@@ -461,6 +459,7 @@ class RDoc::Parser::C < RDoc::Parser
 
     if class_obj
       comment = find_attr_comment(attr_name)
+      comment = strip_stars comment
       att = RDoc::Attr.new '', attr_name, rw, comment
       @stats.add_method att
       class_obj.add_attribute(att)
@@ -539,6 +538,7 @@ class RDoc::Parser::C < RDoc::Parser
     end
 
     comment = find_const_comment type, const_name
+    comment = strip_stars comment
     comment = normalize_comment comment
 
     # In the case of rb_define_const, the definition and comment are in

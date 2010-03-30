@@ -133,5 +133,25 @@ The comments associated with
     assert_equal 'hi', strip_newlines("\n\nhi\n\n")
   end
 
+  def test_strip_stars
+    text = <<-TEXT
+/*
+ * * we don't worry too much.
+ *
+ * The comments associated with
+ */
+    TEXT
+
+    expected = <<-EXPECTED
+  
+   * we don't worry too much.
+  
+   The comments associated with
+   
+    EXPECTED
+
+    assert_equal expected, strip_stars(text)
+  end
+
 end
 
