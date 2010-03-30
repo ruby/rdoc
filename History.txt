@@ -1,6 +1,7 @@
 === 2.? / 2009-?
 
 * N Major Enhancements
+  * Added "Home" button for class and file pages.
   * ri no longer displays the value of a constant.  There's no easy way to
     make them presentable.  Use irb or ruby -e instead.  Ruby Bug #549.
   * New recursive-descent parser for RDoc::Markup.  See RDoc::Markup::Parser

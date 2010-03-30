@@ -11,7 +11,7 @@
 *{ padding: 0; margin: 0; }
 
 body {
-    background: #efefef;
+  background: #efefef;
 	font: 14px "Helvetica Neue", Helvetica, Tahoma, sans-serif;
 }
 body.class, body.module, body.file {
@@ -29,11 +29,13 @@ h1 {
 }
 h2,h3,h4 { margin-top: 1.5em; }
 
-a {
+:link,
+:visited {
 	color: #6C8C22;
 	text-decoration: none;
 }
-a:hover {
+:link:hover,
+:visited:hover {
  	border-bottom: 1px dotted #6C8C22;
 }
 
@@ -100,8 +102,10 @@ body.file p {
 	line-height: 160%;
 	list-style: none;
 }
-.indexpage ul a,
-.file #documentation ul a {
+.indexpage ul :link,
+.indexpage ul :visited,
+.file #documentation ul :link,
+.file #documentation ul :visited {
 	font-size: 16px;
 }
 
@@ -174,6 +178,10 @@ body.file p {
 	-webkit-border-top-right-radius: 4px;
 	border-bottom: 1px solid #aaa;
 }
+#metadata #home-section h3.section-header {
+  border-bottom: 0;
+}
+
 #metadata ul,
 #metadata dl,
 #metadata p {
@@ -352,7 +360,8 @@ ul.link-list .type {
 	color: #333;
 	background: url(images/brick.png) no-repeat left bottom;
 }
-#documentation .method-heading a {
+#documentation .method-heading :link,
+#documentation .method-heading :visited {
 	color: inherit;
 }
 #documentation .method-click-advice {
@@ -413,13 +422,6 @@ ul.link-list .type {
 
 
 /* @group Source Code */
-
-a.source-toggle {
-	font-size: 90%;
-}
-a.source-toggle img {
-	
-}
 
 div.method-source-code {
     background: #262626;
@@ -525,11 +527,14 @@ div.method-source-code pre {
 	color:#666666;
 }
 
-#TB_window a:link {color: #666666;}
-#TB_window a:visited {color: #666666;}
-#TB_window a:hover {color: #000;}
-#TB_window a:active {color: #666666;}
-#TB_window a:focus{color: #666666;}
+#TB_window :link,
+#TB_window :visited        { color: #666666; }
+#TB_window :link:hover,
+#TB_window :visited:hover  { color: #000;    }
+#TB_window :link:active,
+#TB_window :visited:active { color: #666666; }
+#TB_window :link:focus,
+#TB_window :visited:focus  { color: #666666; }
 
 #TB_overlay {
 	position: fixed;
@@ -610,7 +615,8 @@ margin-top: expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = d
 	color: #dedede;
 	height:40px;
 }
-#TB_title a {
+#TB_title :link,
+#TB_title :visited {
 	color: white !important;
 	border-bottom: 1px dotted #dedede;
 }

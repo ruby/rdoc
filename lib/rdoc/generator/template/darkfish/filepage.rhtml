@@ -23,6 +23,12 @@
 <% if file.parser == RDoc::Parser::Simple %>
 <body class="file">
 	<div id="metadata">
+		<div id="home-metadata">
+			<div id="home-section" class="section">
+				<h3 class="section-header"><a href="<%= rel_prefix %>/index.html">Home</a></h3>
+			</div>
+		</div>
+
 		<div id="project-metadata">
 			<% simple_files = @files.select { |f| f.parser == RDoc::Parser::Simple } %>
 			<% unless simple_files.empty? then %>
