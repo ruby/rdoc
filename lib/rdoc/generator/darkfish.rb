@@ -98,7 +98,6 @@ class RDoc::Generator::Darkfish
 	### Initialize a few instance variables before we start
 	def initialize( options )
 		@options = options
-		@options.diagram = false
 
 		template = @options.template || 'darkfish'
 
