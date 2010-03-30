@@ -119,6 +119,10 @@ body.file p {
 .indexpage li.file {
 	background: url(images/page_white_text.png) no-repeat left 4px;
 }
+.file li p,
+.indexpage li p {
+  margin: 0 0;
+}
 
 /* @end */
 
