@@ -491,7 +491,8 @@ class RDoc::RubyLex
             read_escape
           end
           @lex_state = EXPR_END
-          Token(TkINTEGER)
+          ch = ch.respond_to?(:ord) ? ch.ord : ch[0]
+          Token(TkINTEGER, ch.to_s)
         end
       end
     end
@@ -502,13 +503,13 @@ class RDoc::RubyLex
       Token(op)
     end
 
-    @OP.def_rules("+=", "-=", "*=", "**=", 
+    @OP.def_rules("+=", "-=", "*=", "**=",
                   "&=", "|=", "^=", "<<=", ">>=", "||=", "&&=") do
       |op, io|
       @lex_state = EXPR_BEG
       op =~ /^(.*)=$/
-        Token(TkOPASGN, $1)
-                  end
+      Token(TkOPASGN, $1)
+    end
 
     @OP.def_rule("+@", proc{|op, io| @lex_state == EXPR_FNAME}) do
       |op, io|
@@ -962,11 +963,13 @@ class RDoc::RubyLex
     end
 
     @here_header = false
+    doc = ''
     while l = gets
       l = l.sub(/(:?\r)?\n\z/, '')
       if (indent ? l.strip : l) == quoted
         break
       end
+      doc << l
     end
 
     @here_header = true
@@ -977,7 +980,7 @@ class RDoc::RubyLex
 
     @ltype = ltback
     @lex_state = EXPR_END
-    Token(Ltype2Token[lt])
+    Token(Ltype2Token[lt], doc)
   end
 
   def identify_quotation

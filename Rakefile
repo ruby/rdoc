@@ -1,4 +1,6 @@
 require 'hoe'
+$:.unshift 'lib'
+require 'rdoc/rdoc'
 
 $rdoc_rakefile = true
 

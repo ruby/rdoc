@@ -33,6 +33,7 @@ module RDoc::RubyToken
       @char_no = char_no
       @text = text
     end
+
     attr :seek
     attr :line_no
     attr :char_no
@@ -51,16 +52,18 @@ module RDoc::RubyToken
     # text string and then return ourselves
 
     def set_text(text)
-      self.text = text
+      @text = text
       self
     end
 
   end
 
   class TkNode < Token
-    def initialize(seek, line_no, char_no)
-      super
+    def initialize(seek, line_no, char_no, node = nil)
+      super seek, line_no, char_no
+      @node = node
     end
+
     attr :node
 
     def ==(other)
@@ -75,9 +78,7 @@ module RDoc::RubyToken
       self
     end
 
-    def text
-      @node
-    end
+    alias text node
   end
 
   class TkId < Token
@@ -99,9 +100,10 @@ module RDoc::RubyToken
       self
     end
 
-    def text
-      @name
-    end
+    alias text name
+  end
+
+  class TkKW < TkId
   end
 
   class TkVal < Token
@@ -123,9 +125,7 @@ module RDoc::RubyToken
       self
     end
 
-    def text
-      @value
-    end
+    alias text value
   end
 
   class TkOp < Token
@@ -148,9 +148,7 @@ module RDoc::RubyToken
       self
     end
 
-    def text
-      @name
-    end
+    alias text name
   end
 
   class TkOPASGN < TkOp
@@ -158,7 +156,9 @@ module RDoc::RubyToken
       super(seek, line_no, char_no)
       op = TkReading2Token[op][0] unless op.kind_of?(Symbol)
       @op = op
+      @text = nil
     end
+
     attr :op
 
     def ==(other)
@@ -168,13 +168,8 @@ module RDoc::RubyToken
       other.op == @op
     end
 
-    def set_text text
-      @op = text
-      self
-    end
-
     def text
-      @op
+      @text ||= "#{TkToken2Reading[op]}="
     end
   end
 
@@ -197,9 +192,7 @@ module RDoc::RubyToken
       self
     end
 
-    def text
-      @name
-    end
+    alias text name
   end
 
   class TkError < Token
@@ -239,56 +232,56 @@ module RDoc::RubyToken
   end
 
   TokenDefinitions = [
-    [:TkCLASS,      TkId,  "class",  EXPR_CLASS],
-    [:TkMODULE,     TkId,  "module", EXPR_BEG],
-    [:TkDEF,	    TkId,  "def",    EXPR_FNAME],
-    [:TkUNDEF,      TkId,  "undef",  EXPR_FNAME],
-    [:TkBEGIN,      TkId,  "begin",  EXPR_BEG],
-    [:TkRESCUE,     TkId,  "rescue", EXPR_MID],
-    [:TkENSURE,     TkId,  "ensure", EXPR_BEG],
-    [:TkEND,	    TkId,  "end",    EXPR_END],
-    [:TkIF,         TkId,  "if",     EXPR_BEG, :TkIF_MOD],
-    [:TkUNLESS,     TkId,  "unless", EXPR_BEG, :TkUNLESS_MOD],
-    [:TkTHEN,	    TkId,  "then",   EXPR_BEG],
-    [:TkELSIF,      TkId,  "elsif",  EXPR_BEG],
-    [:TkELSE,	    TkId,  "else",   EXPR_BEG],
-    [:TkCASE,	    TkId,  "case",   EXPR_BEG],
-    [:TkWHEN,	    TkId,  "when",   EXPR_BEG],
-    [:TkWHILE,      TkId,  "while",  EXPR_BEG, :TkWHILE_MOD],
-    [:TkUNTIL,      TkId,  "until",  EXPR_BEG, :TkUNTIL_MOD],
-    [:TkFOR,	    TkId,  "for",    EXPR_BEG],
-    [:TkBREAK,      TkId,  "break",  EXPR_END],
-    [:TkNEXT,	    TkId,  "next",   EXPR_END],
-    [:TkREDO,	    TkId,  "redo",   EXPR_END],
-    [:TkRETRY,      TkId,  "retry",  EXPR_END],
-    [:TkIN,	    TkId,  "in",     EXPR_BEG],
-    [:TkDO,	    TkId,  "do",     EXPR_BEG],
-    [:TkRETURN,     TkId,  "return", EXPR_MID],
-    [:TkYIELD,      TkId,  "yield",  EXPR_END],
-    [:TkSUPER,      TkId,  "super",  EXPR_END],
-    [:TkSELF,	    TkId,  "self",   EXPR_END],
-    [:TkNIL, 	    TkId,  "nil",    EXPR_END],
-    [:TkTRUE,	    TkId,  "true",   EXPR_END],
-    [:TkFALSE,      TkId,  "false",  EXPR_END],
-    [:TkAND,	    TkId,  "and",    EXPR_BEG],
-    [:TkOR, 	    TkId,  "or",     EXPR_BEG],
-    [:TkNOT,	    TkId,  "not",    EXPR_BEG],
-    [:TkIF_MOD,     TkId],
-    [:TkUNLESS_MOD, TkId],
-    [:TkWHILE_MOD,  TkId],
-    [:TkUNTIL_MOD,  TkId],
-    [:TkALIAS,      TkId,  "alias",    EXPR_FNAME],
-    [:TkDEFINED,    TkId,  "defined?", EXPR_END],
-    [:TklBEGIN,     TkId,  "BEGIN",    EXPR_END],
-    [:TklEND,	    TkId,  "END",      EXPR_END],
-    [:Tk__LINE__,   TkId,  "__LINE__", EXPR_END],
-    [:Tk__FILE__,   TkId,  "__FILE__", EXPR_END],
+    [:TkCLASS,      TkKW,  "class",  EXPR_CLASS],
+    [:TkMODULE,     TkKW,  "module", EXPR_BEG],
+    [:TkDEF,        TkKW,  "def",    EXPR_FNAME],
+    [:TkUNDEF,      TkKW,  "undef",  EXPR_FNAME],
+    [:TkBEGIN,      TkKW,  "begin",  EXPR_BEG],
+    [:TkRESCUE,     TkKW,  "rescue", EXPR_MID],
+    [:TkENSURE,     TkKW,  "ensure", EXPR_BEG],
+    [:TkEND,        TkKW,  "end",    EXPR_END],
+    [:TkIF,         TkKW,  "if",     EXPR_BEG, :TkIF_MOD],
+    [:TkUNLESS,     TkKW,  "unless", EXPR_BEG, :TkUNLESS_MOD],
+    [:TkTHEN,       TkKW,  "then",   EXPR_BEG],
+    [:TkELSIF,      TkKW,  "elsif",  EXPR_BEG],
+    [:TkELSE,       TkKW,  "else",   EXPR_BEG],
+    [:TkCASE,       TkKW,  "case",   EXPR_BEG],
+    [:TkWHEN,       TkKW,  "when",   EXPR_BEG],
+    [:TkWHILE,      TkKW,  "while",  EXPR_BEG, :TkWHILE_MOD],
+    [:TkUNTIL,      TkKW,  "until",  EXPR_BEG, :TkUNTIL_MOD],
+    [:TkFOR,        TkKW,  "for",    EXPR_BEG],
+    [:TkBREAK,      TkKW,  "break",  EXPR_END],
+    [:TkNEXT,       TkKW,  "next",   EXPR_END],
+    [:TkREDO,       TkKW,  "redo",   EXPR_END],
+    [:TkRETRY,      TkKW,  "retry",  EXPR_END],
+    [:TkIN,         TkKW,  "in",     EXPR_BEG],
+    [:TkDO,         TkKW,  "do",     EXPR_BEG],
+    [:TkRETURN,     TkKW,  "return", EXPR_MID],
+    [:TkYIELD,      TkKW,  "yield",  EXPR_END],
+    [:TkSUPER,      TkKW,  "super",  EXPR_END],
+    [:TkSELF,       TkKW,  "self",   EXPR_END],
+    [:TkNIL,        TkKW,  "nil",    EXPR_END],
+    [:TkTRUE,       TkKW,  "true",   EXPR_END],
+    [:TkFALSE,      TkKW,  "false",  EXPR_END],
+    [:TkAND,        TkKW,  "and",    EXPR_BEG],
+    [:TkOR,         TkKW,  "or",     EXPR_BEG],
+    [:TkNOT,        TkKW,  "not",    EXPR_BEG],
+    [:TkIF_MOD,     TkKW],
+    [:TkUNLESS_MOD, TkKW],
+    [:TkWHILE_MOD,  TkKW],
+    [:TkUNTIL_MOD,  TkKW],
+    [:TkALIAS,      TkKW,  "alias",    EXPR_FNAME],
+    [:TkDEFINED,    TkKW,  "defined?", EXPR_END],
+    [:TklBEGIN,     TkKW,  "BEGIN",    EXPR_END],
+    [:TklEND,       TkKW,  "END",      EXPR_END],
+    [:Tk__LINE__,   TkKW,  "__LINE__", EXPR_END],
+    [:Tk__FILE__,   TkKW,  "__FILE__", EXPR_END],
 
     [:TkIDENTIFIER, TkId],
-    [:TkFID,	    TkId],
-    [:TkGVAR,	    TkId],
-    [:TkCVAR,	    TkId],
-    [:TkIVAR,	    TkId],
+    [:TkFID,        TkId],
+    [:TkGVAR,       TkId],
+    [:TkCVAR,       TkId],
+    [:TkIVAR,       TkId],
     [:TkCONSTANT,   TkId],
 
     [:TkINTEGER,    TkVal],
@@ -306,44 +299,44 @@ module RDoc::RubyToken
 
     [:TkUPLUS,      TkOp,   "+@"],
     [:TkUMINUS,     TkOp,   "-@"],
-    [:TkPOW,	    TkOp,   "**"],
-    [:TkCMP,	    TkOp,   "<=>"],
-    [:TkEQ,	    TkOp,   "=="],
-    [:TkEQQ,	    TkOp,   "==="],
-    [:TkNEQ,	    TkOp,   "!="],
-    [:TkGEQ,	    TkOp,   ">="],
-    [:TkLEQ,	    TkOp,   "<="],
+    [:TkPOW,        TkOp,   "**"],
+    [:TkCMP,        TkOp,   "<=>"],
+    [:TkEQ,         TkOp,   "=="],
+    [:TkEQQ,        TkOp,   "==="],
+    [:TkNEQ,        TkOp,   "!="],
+    [:TkGEQ,        TkOp,   ">="],
+    [:TkLEQ,        TkOp,   "<="],
     [:TkANDOP,      TkOp,   "&&"],
-    [:TkOROP,	    TkOp,   "||"],
+    [:TkOROP,       TkOp,   "||"],
     [:TkMATCH,      TkOp,   "=~"],
     [:TkNMATCH,     TkOp,   "!~"],
-    [:TkDOT2,	    TkOp,   ".."],
-    [:TkDOT3,	    TkOp,   "..."],
-    [:TkAREF,	    TkOp,   "[]"],
-    [:TkASET,	    TkOp,   "[]="],
+    [:TkDOT2,       TkOp,   ".."],
+    [:TkDOT3,       TkOp,   "..."],
+    [:TkAREF,       TkOp,   "[]"],
+    [:TkASET,       TkOp,   "[]="],
     [:TkLSHFT,      TkOp,   "<<"],
     [:TkRSHFT,      TkOp,   ">>"],
     [:TkCOLON2,     TkOp,   '::'],
     [:TkCOLON3,     TkOp,   '::'],
-    #   [:OPASGN,	    TkOp],               # +=, -=  etc. #
+    #[:OPASGN,       TkOp],               # +=, -=  etc. #
     [:TkASSOC,      TkOp,   "=>"],
-    [:TkQUESTION,   TkOp,   "?"],	 #?
+    [:TkQUESTION,   TkOp,   "?"], #?
     [:TkCOLON,      TkOp,   ":"],        #:
 
-    [:TkfLPAREN],         # func( #
-    [:TkfLBRACK],         # func[ #
-    [:TkfLBRACE],         # func{ #
-    [:TkSTAR],            # *arg
-    [:TkAMPER],           # &arg #
-    [:TkSYMBEG],          # :SYMBOL
+    [:TkfLPAREN,    Token,  "("], # func( #
+    [:TkfLBRACK,    Token,  "["], # func[ #
+    [:TkfLBRACE,    Token,  "{"], # func{ #
+    [:TkSTAR,       Token,  "*"], # *arg
+    [:TkAMPER,      Token,  "&"], # &arg #
+    [:TkSYMBEG,     Token,  ":"], # :SYMBOL
 
-    [:TkGT,	    TkOp,   ">"],
-    [:TkLT,	    TkOp,   "<"],
-    [:TkPLUS,	    TkOp,   "+"],
+    [:TkGT,         TkOp,   ">"],
+    [:TkLT,         TkOp,   "<"],
+    [:TkPLUS,       TkOp,   "+"],
     [:TkMINUS,      TkOp,   "-"],
-    [:TkMULT,	    TkOp,   "*"],
-    [:TkDIV,	    TkOp,   "/"],
-    [:TkMOD,	    TkOp,   "%"],
+    [:TkMULT,       TkOp,   "*"],
+    [:TkDIV,        TkOp,   "/"],
+    [:TkMOD,        TkOp,   "%"],
     [:TkBITOR,      TkOp,   "|"],
     [:TkBITXOR,     TkOp,   "^"],
     [:TkBITAND,     TkOp,   "&"],
@@ -353,7 +346,7 @@ module RDoc::RubyToken
     [:TkBACKQUOTE,  TkOp,   "`"],
 
     [:TkASSIGN,     Token,  "="],
-    [:TkDOT,	    Token,  "."],
+    [:TkDOT,        Token,  "."],
     [:TkLPAREN,     Token,  "("],  #(exp)
     [:TkLBRACK,     Token,  "["],  #[arry]
     [:TkLBRACE,     Token,  "{"],  #{hash}
@@ -370,7 +363,7 @@ module RDoc::RubyToken
     [:TkEND_OF_SCRIPT],
 
     [:TkBACKSLASH,  TkUnknownChar,  "\\"],
-    [:TkAT,	    TkUnknownChar,  "@"],
+    [:TkAT,         TkUnknownChar,  "@"],
     [:TkDOLLAR,     TkUnknownChar,  "$"],
   ]
 

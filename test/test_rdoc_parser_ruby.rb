@@ -667,7 +667,7 @@ EOF
     stream = [
       tk(:COMMENT,    1, 1,  nil, "# File #{@top_level.absolute_name}, line 1"),
       RDoc::Parser::Ruby::NEWLINE_TOKEN,
-      tk(:SPACE,      1, 1,  nil, nil),
+      tk(:SPACE,      1, 1,  nil, ''),
       tk(:IDENTIFIER, 1, 0,  'add_my_method', 'add_my_method'),
       tk(:SPACE,      1, 13, nil, ' '),
       tk(:SYMBOL,     1, 14, nil, ':foo'),

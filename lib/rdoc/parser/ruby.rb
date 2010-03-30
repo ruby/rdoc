@@ -826,6 +826,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     meth.start_collecting_tokens
     indent = TkSPACE.new nil, 1, 1
+    indent.set_text " " * column
 
     position_comment = TkCOMMENT.new nil, line_no, 1
     position_comment.value = "# File #{@top_level.absolute_name}, line #{line_no}"

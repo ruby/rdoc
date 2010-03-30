@@ -111,7 +111,7 @@ class RDoc::AnyMethod
                 nil
               end
 
-      text = CGI.escapeHTML(t.text)
+      text = CGI.escapeHTML t.text
 
       if style
         src << "<span class=\"#{style}\">#{text}</span>"

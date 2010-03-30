@@ -328,6 +328,7 @@ The internal error was:
   def document(argv)
     RDoc::TopLevel.reset
     RDoc::Parser::C.reset
+    RDoc::AnyMethod.reset
 
     @options = RDoc::Options.new
     @options.parse argv
