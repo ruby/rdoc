@@ -212,23 +212,22 @@ module RDoc::RubyToken
       if tk.kind_of?(TkOp) then
         tk.name = token
       end
-
-      return tk
     when Symbol
       if (tk = TkSymbol2Token[token]).nil?
         IRB.fail TkSymbol2TokenNoKey, token
       end
 
-      return Token(tk[0], value) 
+      tk = Token(tk[0], value) 
     else 
       if token.instance_method(:initialize).arity == 3 then
         tk = token.new(@prev_seek, @prev_line_no, @prev_char_no)
         tk.set_text value
-        tk
       else
-        token.new(@prev_seek, @prev_line_no, @prev_char_no, value)
+        tk = token.new(@prev_seek, @prev_line_no, @prev_char_no, value)
       end
     end
+
+    tk
   end
 
   TokenDefinitions = [

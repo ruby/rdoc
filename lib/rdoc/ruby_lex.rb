@@ -389,14 +389,15 @@ class RDoc::RubyLex
                  proc{|op, io| @prev_char_no == 0 && peek(0) =~ /\s/}) do 
       |op, io|
       @ltype = "="
-      until getc == "\n"; end
-      until peek_equal?("=end") && peek(4) =~ /\s/
-        until getc == "\n"; end
+      res = ''
+      until (ch = getc) == "\n" do res << ch end
+      until peek_equal?("=end") && peek(4) =~ /\s/ do
+        until (ch = getc) == "\n" do res << ch end
       end
-      gets
+      res << gets
       @ltype = nil
-      Token(TkRD_COMMENT)
-                 end
+      Token(TkRD_COMMENT, res)
+    end
 
     @OP.def_rule("\n") do |op, io|
       print "\\n\n" if RDoc::RubyLex.debug?
@@ -417,9 +418,9 @@ class RDoc::RubyLex
       Token(TkNL)
     end
 
-    @OP.def_rules("*", "**",	
+    @OP.def_rules("*", "**",
                   "=", "==", "===", 
-                  "=~", "<=>",	
+                  "=~", "<=>",
                   "<", "<=",
                   ">", ">=", ">>") do
       |op, io|
@@ -430,7 +431,7 @@ class RDoc::RubyLex
         @lex_state = EXPR_BEG
       end
       Token(op)
-                  end
+    end
 
     @OP.def_rules("!", "!=", "!~") do
       |op, io|
@@ -487,12 +488,13 @@ class RDoc::RubyLex
           @lex_state = EXPR_BEG;
           Token(TkQUESTION)
         else
-          if (ch == '\\') 
-            read_escape
+          str = ch
+          if ch == '\\'
+            str << read_escape
           end
           @lex_state = EXPR_END
-          ch = ch.respond_to?(:ord) ? ch.ord : ch[0]
-          Token(TkINTEGER, ch.to_s)
+          str << (ch.respond_to?(:ord) ? ch.ord : ch[0])
+          Token(TkINTEGER, str)
         end
       end
     end
@@ -605,7 +607,7 @@ class RDoc::RubyLex
         Token(TkOPASGN, "/") #/)
       elsif @lex_state == EXPR_ARG and @space_seen and peek(0) !~ /\s/
         identify_string(op)
-      else 
+      else
         @lex_state = EXPR_BEG
         Token("/") #/)
       end
@@ -743,7 +745,7 @@ class RDoc::RubyLex
 
     @OP.def_rule('@') do
       |op, io|
-      if peek(0) =~ /[\w_@]/
+      if peek(0) =~ /[\w@]/
         ungetc
         identify_identifier
       else
@@ -796,11 +798,10 @@ class RDoc::RubyLex
     when "&", "`", "'", "+"
       Token(TkBACK_REF, "$"+ch)
     when /[1-9]/
-      ref = ''
+      ref = ch
       while (ch = getc) =~ /[0-9]/ do ref << ch end
       ungetc
-      ref[-1, 1] = '' unless ref.empty?
-      Token(TkNTH_REF, ref)
+      Token(TkNTH_REF, "$#{ref}")
     when /\w/
       ungetc
       ungetc
@@ -893,7 +894,6 @@ class RDoc::RubyLex
                   @indent += 1
                   @indent_stack.push token_c
                 end
-                #		p @indent_stack
               end
 
             elsif DEINDENT_CLAUSE.include?(token)
@@ -1138,7 +1138,7 @@ class RDoc::RubyLex
             ungetc
           end
         elsif ch == '\\' #'
-          read_escape
+          str << read_escape
         end
 
         if PERCENT_PAREN.values.include?(@quoted) 
@@ -1189,9 +1189,9 @@ class RDoc::RubyLex
     comment = '#'
 
     while ch = getc
-      #      if ch == "\\" #"
-      #	read_escape
-      #      end
+      # if ch == "\\" #"
+      #   read_escape
+      # end
       if ch == "\n"
         @ltype = nil
         ungetc
@@ -1205,13 +1205,19 @@ class RDoc::RubyLex
   end
 
   def read_escape
-    case ch = getc
+    escape = ''
+    ch = getc
+    escape << ch
+
+    case ch
     when "\n", "\r", "\f"
     when "\\", "n", "t", "r", "f", "v", "a", "e", "b", "s" #"
     when /[0-7]/
       ungetc ch
       3.times do
-        case ch = getc
+        ch = getc
+        escape << ch
+        case ch
         when /[0-7]/
         when nil
           break
@@ -1223,7 +1229,9 @@ class RDoc::RubyLex
 
     when "x"
       2.times do
-        case ch = getc
+        ch = getc
+        escape << ch
+        case ch
         when /[0-9a-fA-F]/
         when nil
           break
@@ -1234,23 +1242,30 @@ class RDoc::RubyLex
       end
 
     when "M"
-      if (ch = getc) != '-'
+      ch = getc
+      escape << ch
+      if ch != '-'
         ungetc
       else
-        if (ch = getc) == "\\" #"
-          read_escape
+        ch = getc
+        escape << ch
+        if ch == "\\" #"
+          escape << read_escape
         end
       end
 
     when "C", "c" #, "^"
       if ch == "C" and (ch = getc) != "-"
+        escape << ch
         ungetc
       elsif (ch = getc) == "\\" #"
-        read_escape
+        escape << ch << read_escape
       end
     else
       # other characters 
     end
+
+    escape
   end
 end
 

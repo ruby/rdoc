@@ -436,22 +436,20 @@ div.method-source-code pre {
 	background: inherit;
 	padding: 0;
 	color: white;
-	overflow: hidden;
+	overflow: auto;
 }
 
 /* @group Ruby keyword styles */
 
-.standalone-code { background: #221111; color: #ffdead; overflow: hidden; }
-
-.ruby-constant  { color: #7fffd4; background: transparent; }
-.ruby-keyword { color: #00ffff; background: transparent; }
-.ruby-ivar    { color: #eedd82; background: transparent; }
-.ruby-operator  { color: #00ffee; background: transparent; }
+.ruby-constant   { color: #7fffd4; background: transparent; }
+.ruby-keyword    { color: #00ffff; background: transparent; }
+.ruby-ivar       { color: #eedd82; background: transparent; }
+.ruby-operator   { color: #00ffee; background: transparent; }
 .ruby-identifier { color: #ffdead; background: transparent; }
-.ruby-node    { color: #ffa07a; background: transparent; }
-.ruby-comment { color: #b22222; font-weight: bold; background: transparent; }
-.ruby-regexp  { color: #ffa07a; background: transparent; }
-.ruby-value   { color: #7fffd4; background: transparent; }
+.ruby-node       { color: #ffa07a; background: transparent; }
+.ruby-comment    { color: #b22222; font-weight: bold; background: transparent; }
+.ruby-regexp     { color: #ffa07a; background: transparent; }
+.ruby-value      { color: #7fffd4; background: transparent; }
 
 /* @end */
 /* @end */
