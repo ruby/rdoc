@@ -355,6 +355,8 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     end
 
     assert_match %r%Foo::Bar#blah%, out
+    assert_match %r%blah\(5\)%,     out
+    assert_match %r%blah\(6\)%,     out
   end
 
   def test_display_method_attribute
@@ -707,6 +709,8 @@ Foo::Bar#blah
     @cFoo_Bar.parent = @cFoo
 
     @blah = RDoc::AnyMethod.new nil, 'blah'
+    @blah.call_seq = "blah(5) => 5\nblah(6) => 6\n"
+
     @new  = RDoc::AnyMethod.new nil, 'new'
     @new.singleton = true
 

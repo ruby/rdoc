@@ -637,6 +637,21 @@ Options may also be set in the 'RI' environment variable.
         end
         out << RDoc::Markup::Rule.new(1)
 
+        if method.call_seq then
+          call_seq = method.call_seq.chomp.split "\n"
+          call_seq = call_seq.map { |line| ['  ', line, "\n"] }
+          out << RDoc::Markup::Verbatim.new(*call_seq.flatten)
+        end
+
+        if method.block_params then
+          out << RDoc::Markup::BlankLine.new if method.call_seq
+          params = "yields: #{method.block_params}"
+          out << RDoc::Markup::Verbatim.new('  ', params, "\n")
+        end
+
+        out << RDoc::Markup::Rule.new(1) if
+          method.call_seq or method.block_params
+
         out << RDoc::Markup::BlankLine.new
         out << method.comment
         out << RDoc::Markup::BlankLine.new

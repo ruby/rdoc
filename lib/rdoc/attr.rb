@@ -54,6 +54,18 @@ class RDoc::Attr < RDoc::CodeObject
   end
 
   ##
+  # Returns nil, for duck typing with RDoc::AnyMethod
+
+  def block_params
+  end
+
+  ##
+  # Returns nil, for duck typing with RDoc::AnyMethod
+
+  def call_seq
+  end
+
+  ##
   # Partially bogus as Attr has no parent.  For duck typing with
   # RDoc::AnyMethod.
 
