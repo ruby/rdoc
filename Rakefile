@@ -69,8 +69,3 @@ task :diff_rubinius do
   sh "diff #{diff_options} test #{rubinius_dir}/test/rdoc; true"
 end
 
-desc "Builds ri data for RDoc in ./ri"
-file 'ri' do
-  sh "#{Gem.ruby} -Ilib bin/rdoc --ri --op ri ."
-end
-

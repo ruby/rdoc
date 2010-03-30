@@ -44,11 +44,6 @@ class RDoc::Options
   attr_accessor :main_page
 
   ##
-  # Merge into classes of the same name when generating ri
-
-  attr_reader :merge
-
-  ##
   # The name of the output directory
 
   attr_accessor :op_dir
@@ -103,7 +98,6 @@ class RDoc::Options
     @op_dir = nil
     @show_all = false
     @main_page = nil
-    @merge = false
     @exclude = []
     @generators = RDoc::RDoc::GENERATORS
     @generator = RDoc::Generator::Darkfish
@@ -298,6 +292,10 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.separator nil
+
+      opt.on("-d", "--diagram", "Prevents -d from tripping --debug")
+
+      opt.separator nil
       opt.separator "ri Generator Options:"
       opt.separator nil
 
@@ -325,19 +323,10 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.separator nil
-
-      opt.on("--merge", "-M",
-             "When creating ri output, merge previously",
-             "processed classes into previously",
-             "documented classes of the same name.") do |value|
-        @merge = value
-      end
-
-      opt.separator nil
       opt.separator "Generic Options:"
       opt.separator nil
 
-      opt.on("--debug", "-D",
+      opt.on("-D", "--[no-]debug",
              "Displays lots on internal stuff.") do |value|
         $DEBUG_RDOC = value
       end

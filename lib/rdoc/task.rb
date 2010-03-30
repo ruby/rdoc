@@ -1,3 +1,4 @@
+#--
 # Copyright (c) 2003, 2004 Jim Weirich, 2009 Eric Hodel
 #
 # Permission is hereby granted, free of charge, to any person obtaining
@@ -18,6 +19,7 @@
 # LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#++
 
 require 'rubygems'
 begin
@@ -39,14 +41,14 @@ require 'rake/tasklib'
 #
 # The RDoc::Task will create the following targets:
 #
-# [<b><em>rdoc</em></b>]
+# [rdoc]
 #   Main task for this RDoc task.
 #
-# [<b>:clobber_<em>rdoc</em></b>]
+# [clobber_rdoc]
 #   Delete all the rdoc files.  This target is automatically added to the main
 #   clobber target.
 #
-# [<b>:re<em>rdoc</em></b>]
+# [rerdoc]
 #   Rebuild the rdoc files from scratch, even if they are not out of date.
 #
 # Simple Example:
@@ -83,7 +85,7 @@ require 'rake/tasklib'
 #   RDoc::Task.new(:rdoc => "rdoc", :clobber_rdoc => "rdoc:clean",
 #                  :rerdoc => "rdoc:force")
 #
-# This will create the tasks <tt>:rdoc</tt>, <tt>:rdoc_clean</tt> and
+# This will create the tasks <tt>:rdoc</tt>, <tt>:rdoc:clean</tt> and
 # <tt>:rdoc:force</tt>.
 
 class RDoc::Task < Rake::TaskLib
@@ -149,7 +151,6 @@ class RDoc::Task < Rake::TaskLib
     @main = nil
     @title = nil
     @template = nil
-    @external = false
     @options = []
     yield self if block_given?
     define
@@ -159,17 +160,13 @@ class RDoc::Task < Rake::TaskLib
   # Create the tasks defined by this task lib.
 
   def define
-    if rdoc_task_name != "rdoc" then
-      desc "Build the RDoc HTML Files"
-    else
-      desc "Build the #{rdoc_task_name} HTML Files"
-    end
+    desc "Build the RDoc HTML files"
     task rdoc_task_name
 
-    desc "Force a rebuild of the RDoc files"
+    desc "Force rebuild RDoc HTML files"
     task rerdoc_task_name => [clobber_task_name, rdoc_task_name]
 
-    desc "Remove RDoc products"
+    desc "Remove RDoc HTML files"
     task clobber_task_name do
       rm_r rdoc_dir rescue nil
     end
@@ -177,46 +174,33 @@ class RDoc::Task < Rake::TaskLib
     task :clobber => [clobber_task_name]
 
     directory @rdoc_dir
+
     task rdoc_task_name => [rdoc_target]
     file rdoc_target => @rdoc_files + [Rake.application.rakefile] do
       rm_r @rdoc_dir rescue nil
       @before_running_rdoc.call if @before_running_rdoc
       args = option_list + @rdoc_files
 
-      if @external then
-        argstring = args.join(' ')
-        sh %{ruby -Ivendor vendor/rd #{argstring}}
-      else
-        if Rake.application.options.trace then
-          $stderr.puts "rdoc #{args.join ' '}"
-        end
-        require 'rdoc/rdoc'
-        RDoc::RDoc.new.document(args)
+      if Rake.application.options.trace then
+        $stderr.puts "rdoc #{args.join ' '}"
       end
+      require 'rdoc/rdoc'
+      RDoc::RDoc.new.document(args)
     end
 
     self
   end
 
+  ##
+  # List of options that will be supplied to RDoc
+
   def option_list
     result = @options.dup
-    result << "-o" << @rdoc_dir
-    result << "--main" << quote(main) if main
-    result << "--title" << quote(title) if title
-    result << "-T" << quote(template) if template
+    result << "-o"      << @rdoc_dir
+    result << "--main"  << main     if main
+    result << "--title" << title    if title
+    result << "-T"      << template if template
     result
-  end
-
-  def quote(str)
-    if @external
-      "'#{str}'"
-    else
-      str
-    end
-  end
-
-  def option_string
-    option_list.join(' ')
   end
 
   ##
@@ -236,28 +220,22 @@ class RDoc::Task < Rake::TaskLib
 
   def rdoc_task_name
     case name
-    when Hash
-      (name[:rdoc] || "rdoc").to_s
-    else
-      name.to_s
+    when Hash then (name[:rdoc] || "rdoc").to_s
+    else           name.to_s
     end
   end
 
   def clobber_task_name
     case name
-    when Hash
-      (name[:clobber_rdoc] || "clobber_rdoc").to_s
-    else
-      "clobber_#{name}"
+    when Hash then (name[:clobber_rdoc] || "clobber_rdoc").to_s
+    else           "clobber_#{name}"
     end
   end
 
   def rerdoc_task_name
     case name
-    when Hash
-      (name[:rerdoc] || "rerdoc").to_s
-    else
-      "re#{name}"
+    when Hash then (name[:rerdoc] || "rerdoc").to_s
+    else           "re#{name}"
     end
   end
 
