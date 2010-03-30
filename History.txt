@@ -15,7 +15,7 @@
   * Uses pager over less and more for Debian.  Ruby Bug #1171.
   * ri will use the RI_PAGER environment variable to find a pager.
   * When rdoc is in debug mode, ^C now prints a backtrace
-  * The ri data generator now supports ^T
+  * The ri data generator now supports SIGINFO (^T)
   * C parser now handles Document-method better.  Bug #27329.
   * RDoc::Markup::AttributeManager no longer uses global state.
   * RDoc::RDoc no longer passes around options.  Patch #27167.
@@ -26,7 +26,8 @@
   * RDoc now ignores methods inside methods.
   * RDoc now detects Marshal files as binray.
   * Removed "Skipping require of dynamic string" warning.
-  * Removed dot generation support (to return in the future).
+  * Removed diagram generation support (to return in the future).
+  * Removed external support for RDoc::Task.
 
 * N Bug Fixes
   * The :attr: directives now use the name given to create an attribute.  See
