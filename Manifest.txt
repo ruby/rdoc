@@ -13,7 +13,6 @@ lib/rdoc/alias.rb
 lib/rdoc/anon_class.rb
 lib/rdoc/any_method.rb
 lib/rdoc/attr.rb
-lib/rdoc/cache.rb
 lib/rdoc/class_module.rb
 lib/rdoc/code_object.rb
 lib/rdoc/code_objects.rb
@@ -95,9 +94,7 @@ lib/rdoc/ri/formatter.rb
 lib/rdoc/ri/paths.rb
 lib/rdoc/ri/store.rb
 lib/rdoc/ruby_lex.rb
-lib/rdoc/ruby_lex.rb.orig
 lib/rdoc/ruby_token.rb
-lib/rdoc/ruby_token.rb.orig
 lib/rdoc/single_class.rb
 lib/rdoc/stats.rb
 lib/rdoc/task.rb
