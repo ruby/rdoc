@@ -8,7 +8,6 @@ require 'pp'
 require 'pathname'
 require 'fileutils'
 require 'erb'
-require 'yaml'
 
 require 'rdoc/generator/markup'
 
