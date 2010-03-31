@@ -1087,21 +1087,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def parse_require(context, comment)
     skip_tkspace_comment
     tk = get_tk
+
     if TkLPAREN === tk then
       skip_tkspace_comment
       tk = get_tk
     end
 
-    name = nil
-    case tk
-    when TkSTRING
-      name = tk.text
-      #    when TkCONSTANT, TkIDENTIFIER, TkIVAR, TkGVAR
-      #      name = tk.name
-    when TkDSTRING
-      #   else
-      #     warn "'require' used as variable"
-    end
+    name = tk.text if TkSTRING === tk
+
     if name then
       context.add_require RDoc::Require.new(name, comment)
     else
@@ -1231,6 +1224,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
           when 'alias_method' then
             parse_alias container, single, tk, comment if
               container.document_self
+          when 'require', 'include' then
+            # ignore
           else
             if container.document_self and comment =~ /\A#\#$/ then
               case comment

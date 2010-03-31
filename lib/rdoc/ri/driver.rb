@@ -14,6 +14,7 @@ require 'rdoc/text'
 
 ##
 # For RubyGems backwards compatibility
+
 require 'rdoc/ri/formatter'
 
 ##
