@@ -371,7 +371,14 @@ module RDoc
 
   class Error < RuntimeError; end
 
-  RDocError = Error # :nodoc:
+  def self.const_missing const_name # :nodoc:
+    if const_name.to_s == 'RDocError' then
+      warn "RDoc::RDocError is deprecated"
+      return Error
+    end
+
+    super
+  end
 
   ##
   # RDoc version you are using
@@ -384,13 +391,28 @@ module RDoc
 
   DOT_DOC_FILENAME = ".document"
 
+  ##
+  # General RDoc modifiers
+
   GENERAL_MODIFIERS = %w[nodoc].freeze
+
+  ##
+  # RDoc modifiers for classes
 
   CLASS_MODIFIERS = GENERAL_MODIFIERS
 
-  ATTR_MODIFIERS  = GENERAL_MODIFIERS
+  ##
+  # RDoc modifiers for attributes
+
+  ATTR_MODIFIERS = GENERAL_MODIFIERS
+
+  ##
+  # RDoc modifiers for constants
 
   CONSTANT_MODIFIERS = GENERAL_MODIFIERS
+
+  ##
+  # RDoc modifiers for methods
 
   METHOD_MODIFIERS = GENERAL_MODIFIERS +
     %w[arg args yield yields notnew not-new not_new doc]

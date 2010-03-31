@@ -9,6 +9,7 @@
   * No support for old ri data format, too hard to maintain
   * Updated ruby_lex and ruby_token
   * Removed threading support, RDoc is not thread-safe.
+  * RDoc now displays percent documented
 
 * N Minor Enhancements
   * API enhancements for writing parsers like the Ruby parser, see

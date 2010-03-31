@@ -573,7 +573,8 @@ class RDoc::Parser::C < RDoc::Parser
       con = RDoc::Constant.new const_name, definition, comment
     end
 
-    class_obj.add_constant(con)
+    @stats.add_constant con
+    class_obj.add_constant con
   end
 
   ##

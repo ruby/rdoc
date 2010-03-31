@@ -554,14 +554,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
       cls_type = single == SINGLE ? RDoc::SingleClass : RDoc::NormalClass
       cls = container.add_class cls_type, name, superclass
 
-      @stats.add_class cls
-
       read_documentation_modifiers cls, RDoc::CLASS_MODIFIERS
       cls.record_location @top_level
-
-      parse_statements cls
       cls.comment = comment
 
+      @stats.add_class cls
+
+      parse_statements cls
     when TkLSHFT
       case name = get_class_specification
       when "self", container.name
@@ -657,6 +656,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     con = RDoc::Constant.new name, res, comment
     read_documentation_modifiers con, RDoc::CONSTANT_MODIFIERS
 
+    @stats.add_constant con
     container.add_constant con if con.document_self
   end
 
@@ -691,11 +691,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       return unless meth.name
 
-      @stats.add_method meth
-
       container.add_method meth if meth.document_self
 
       meth.comment = comment
+
+      @stats.add_method meth
     elsif comment.sub!(/# +:?(attr(_reader|_writer|_accessor)?:) *(\S*).*?\n/i, '') then
       rw = case $1
            when 'attr_reader' then 'R'
@@ -707,6 +707,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       att = RDoc::Attr.new get_tkread, name, rw, comment
       container.add_attribute att
+
+      @stats.add_method att
     end
   end
 
@@ -820,8 +822,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth = RDoc::MetaMethod.new get_tkread, name
     meth.singleton = singleton
 
-    @stats.add_method meth
-
     remove_token_listener self
 
     meth.start_collecting_tokens
@@ -857,6 +857,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     meth.comment = comment
+
+    @stats.add_method meth
   end
 
   ##
@@ -946,8 +948,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
         meth = RDoc::AnyMethod.new get_tkread, name
         meth.singleton = (single == SINGLE)
       end
-
-      @stats.add_method meth
     end
 
     meth.start_collecting_tokens
@@ -988,6 +988,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
     extract_call_seq comment, meth
 
     meth.comment = comment
+
+    @stats.add_method meth
   end
 
   def parse_method_or_yield_parameters(method = nil,
@@ -1075,11 +1077,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
     mod = container.add_module RDoc::NormalModule, name
     mod.record_location @top_level
 
-    @stats.add_module mod
-
     read_documentation_modifiers mod, RDoc::CLASS_MODIFIERS
     parse_statements(mod)
     mod.comment = comment
+
+    @stats.add_module mod
   end
 
   def parse_require(context, comment)
@@ -1480,7 +1482,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       catch :enddoc do
         begin
           parse_top_level_statements @top_level
-        rescue Exception => e
+        rescue StandardError => e
           bytes = ''
 
           20.times do @scanner.ungetc end
