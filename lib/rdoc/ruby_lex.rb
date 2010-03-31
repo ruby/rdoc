@@ -11,7 +11,14 @@ require "e2mmap"
 require "irb/slex"
 require "rdoc/ruby_token"
 
+##
+# Ruby lexer adapted from irb.
+#
+# The internals are not documented because they are scary.
+
 class RDoc::RubyLex
+
+  # :stopdoc:
 
   extend Exception2MessageMapper
 
@@ -1267,6 +1274,9 @@ class RDoc::RubyLex
 
     escape
   end
+
+  # :startdoc:
+
 end
 
 #RDoc::RubyLex.debug_level = 1

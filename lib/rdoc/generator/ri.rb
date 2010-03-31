@@ -1,6 +1,9 @@
 require 'rdoc/generator'
 require 'rdoc/ri'
 
+##
+# Generates ri data files
+
 class RDoc::Generator::RI
 
   RDoc::RDoc.add_generator self

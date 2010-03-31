@@ -2,6 +2,9 @@ require 'rdoc/rdoc'
 require 'gauntlet'
 require 'fileutils'
 
+##
+# Allows for testing of RDoc against every gem
+
 class RDoc::Gauntlet < Gauntlet
 
   def run name

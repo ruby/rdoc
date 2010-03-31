@@ -1,7 +1,7 @@
 require 'rdoc'
 
 ##
-# Simple stats collector
+# RDoc stats collector
 
 class RDoc::Stats
 
@@ -102,6 +102,9 @@ class RDoc::Stats
     puts "Elapsed: %0.1fs" % (Time.now - @start)
   end
 
+  ##
+  # Stats printer that prints nothing
+
   class Quiet
 
     def initialize total_files
@@ -117,6 +120,10 @@ class RDoc::Stats
     def print_module(*)   end
     def done_adding(*)    end
   end
+
+  ##
+  # Stats printer that prints just the files being documented with a progress
+  # bar
 
   class Normal < Quiet
 
@@ -159,6 +166,10 @@ class RDoc::Stats
     end
 
   end
+
+  ##
+  # Stats printer that prints everything documented, including the documented
+  # status
 
   class Verbose < Normal
 

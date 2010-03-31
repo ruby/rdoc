@@ -1,6 +1,10 @@
 require 'minitest/unit'
 require 'rdoc/markup/formatter'
 
+##
+# Test case for creating new RDoc::Markup formatters.  See
+# test/test_rdoc_markup_to_*.rb for examples.
+
 class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
 
   def setup

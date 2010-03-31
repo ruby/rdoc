@@ -5,9 +5,13 @@
 #   	$Date: 2007-02-12 15:01:19 -0800 (Mon, 12 Feb 2007) $
 #   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
 #++
-# Definitions of all tokens involved in the lexical analysis
+# Definitions of all tokens involved in the lexical analysis.
+#
+# This class is not documented because it is so deep in the internals.
 
 module RDoc::RubyToken
+  # :stopdoc:
+
   EXPR_BEG = :EXPR_BEG
   EXPR_MID = :EXPR_MID
   EXPR_END = :EXPR_END
@@ -407,4 +411,6 @@ module RDoc::RubyToken
 
   end
 
+  # :startdoc:
 end
+

@@ -3,6 +3,9 @@ require 'rdoc/markup/inline'
 
 require 'cgi'
 
+##
+# Outputs RDoc markup as HTML
+
 class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   LIST_TYPE_TO_HTML = {
