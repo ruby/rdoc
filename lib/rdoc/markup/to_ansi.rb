@@ -28,7 +28,8 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
             when :BULLET then
               2
             when :NOTE, :LABEL then
-              attributes(list_item.label).gsub(/\e\[[\d;]*m/, '').length + 2
+              @res << "\n"
+              2
             else
               bullet = @list_index.last.to_s
               @list_index[-1] = @list_index.last.succ
@@ -43,16 +44,22 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
              when :BULLET then
                '*'
              when :NOTE, :LABEL then
-               attributes(list_item.label) + ':'
+               attributes(list_item.label) + ":\n"
              else
                @list_index.last.to_s + '.'
              end
 
-    @prefix = (' ' * @indent) + bullet.ljust(bullet.length + 1)
+    case @list_type.last
+    when :NOTE, :LABEL then
+      @indent += 2
+      @prefix = bullet + (' ' * @indent)
+    else
+      @prefix = (' ' * @indent) + bullet.ljust(bullet.length + 1)
 
-    width = bullet.gsub(/\e\[[\d;]*m/, '').length + 1
+      width = bullet.gsub(/\e\[[\d;]*m/, '').length + 1
 
-    @indent += width
+      @indent += width
+    end
   end
 
   def start_accepting

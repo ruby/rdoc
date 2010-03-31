@@ -62,6 +62,7 @@ class TestRDocMarkupToRdoc < RDoc::Markup::FormatterTestCase
   end
 
   def accept_list_item_end_label
+    assert_equal "\n", @to.res.join
     assert_equal 0, @to.indent, 'indent'
   end
 
@@ -71,6 +72,7 @@ class TestRDocMarkupToRdoc < RDoc::Markup::FormatterTestCase
   end
 
   def accept_list_item_end_note
+    assert_equal "\n", @to.res.join
     assert_equal 0, @to.indent, 'indent'
   end
 
@@ -91,9 +93,9 @@ class TestRDocMarkupToRdoc < RDoc::Markup::FormatterTestCase
 
   def accept_list_item_start_label
     assert_equal [""], @to.res
-    assert_equal 'cat: ', @to.prefix
+    assert_equal "cat:\n  ", @to.prefix
 
-    assert_equal 5, @to.indent
+    assert_equal 2, @to.indent
   end
 
   def accept_list_item_start_lalpha
@@ -106,9 +108,9 @@ class TestRDocMarkupToRdoc < RDoc::Markup::FormatterTestCase
 
   def accept_list_item_start_note
     assert_equal [""], @to.res
-    assert_equal 'cat: ', @to.prefix
+    assert_equal "cat:\n  ", @to.prefix
 
-    assert_equal 5, @to.indent
+    assert_equal 2, @to.indent
   end
 
   def accept_list_item_start_number
@@ -138,7 +140,7 @@ class TestRDocMarkupToRdoc < RDoc::Markup::FormatterTestCase
     assert_equal "",  @to.res.join
     assert_equal [nil],    @to.list_index
     assert_equal [:LABEL], @to.list_type
-    assert_equal [4],      @to.list_width
+    assert_equal [2],      @to.list_width
   end
 
   def accept_list_start_lalpha
@@ -152,7 +154,7 @@ class TestRDocMarkupToRdoc < RDoc::Markup::FormatterTestCase
     assert_equal "", @to.res.join
     assert_equal [nil],   @to.list_index
     assert_equal [:NOTE], @to.list_type
-    assert_equal [4],     @to.list_width
+    assert_equal [2],     @to.list_width
   end
 
   def accept_list_start_number
@@ -246,7 +248,7 @@ class TestRDocMarkupToRdoc < RDoc::Markup::FormatterTestCase
 
     list.accept @to
 
-    expected = "<tt>teletype</tt>: teletype description\n"
+    expected = "<tt>teletype</tt>:\n  teletype description\n\n"
 
     assert_equal expected, @to.end_accepting
   end

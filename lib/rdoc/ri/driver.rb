@@ -601,7 +601,27 @@ Options may also be set in the 'RI' environment variable.
         out << comment
       end
 
-      out << RDoc::Markup::Rule.new if class_methods || instance_methods
+      if class_methods or instance_methods or not klass.constants.empty? then
+        out << RDoc::Markup::Rule.new
+      end
+
+      unless klass.constants.empty? then
+        out << RDoc::Markup::Heading.new(1, "Constants:")
+        out << RDoc::Markup::BlankLine.new
+        list = RDoc::Markup::List.new :NOTE
+
+        constants = klass.constants.sort_by { |constant| constant.name }
+
+        list.push(*constants.map do |constant|
+          parts = constant.comment.parts if constant.comment
+          parts << RDoc::Markup::Paragraph.new('[not documented]') if
+            parts.empty?
+
+          RDoc::Markup::ListItem.new(constant.name, *parts)
+        end)
+
+        out << list
+      end
 
       add_method_list out, class_methods,    'Class methods'
       add_method_list out, instance_methods, 'Instance methods'
