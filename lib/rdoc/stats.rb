@@ -5,30 +5,22 @@ require 'rdoc'
 
 class RDoc::Stats
 
-  attr_reader :nodoc_classes
   attr_reader :nodoc_constants
   attr_reader :nodoc_methods
-  attr_reader :nodoc_modules
 
-  attr_reader :num_classes
   attr_reader :num_constants
   attr_reader :num_files
   attr_reader :num_methods
-  attr_reader :num_modules
 
   attr_reader :total_files
 
   def initialize(total_files, verbosity = 1)
     @nodoc_constants = 0
-    @nodoc_classes   = 0
     @nodoc_methods   = 0
-    @nodoc_modules   = 0
 
     @num_constants = 0
-    @num_classes   = 0
     @num_files     = 0
     @num_methods   = 0
-    @num_modules   = 0
 
     @total_files = total_files
 
@@ -53,8 +45,6 @@ class RDoc::Stats
 
   def add_class(klass)
     @display.print_class klass
-    @num_classes += 1
-    @nodoc_classes += 1 if klass.document_self and klass.comment.empty?
   end
 
   def add_constant(constant)
@@ -76,8 +66,6 @@ class RDoc::Stats
 
   def add_module(mod)
     @display.print_module mod
-    @num_modules += 1
-    @nodoc_modules += 1 if mod.document_self and mod.comment.empty?
   end
 
   def done_adding
@@ -85,17 +73,29 @@ class RDoc::Stats
   end
 
   def print
-    items = @num_classes + @num_constants + @num_modules + @num_methods
+    classes = RDoc::TopLevel.classes
+    num_classes   = classes.length
+    nodoc_classes = classes.select do |klass|
+      klass.document_self and klass.comment.empty?
+    end.length
+
+    modules = RDoc::TopLevel.modules
+    num_modules = modules.length
+    nodoc_modules = modules.select do |mod|
+      mod.document_self and mod.comment.empty?
+    end.length
+
+    items = num_classes + @num_constants + num_modules + @num_methods
     doc_items = items -
-      @nodoc_classes - @nodoc_constants - @nodoc_modules - @nodoc_methods
+      nodoc_classes - @nodoc_constants - nodoc_modules - @nodoc_methods
 
     percent_doc = doc_items.to_f / items * 100
 
     puts "Files:     %5d" % @num_files
-    puts "Classes:   %5d (%5d undocumented)" % [@num_classes, @nodoc_classes]
+    puts "Classes:   %5d (%5d undocumented)" % [num_classes, nodoc_classes]
     puts "Constants: %5d (%5d undocumented)" %
       [@num_constants, @nodoc_constants]
-    puts "Modules:   %5d (%5d undocumented)" % [@num_modules, @nodoc_modules]
+    puts "Modules:   %5d (%5d undocumented)" % [num_modules, nodoc_modules]
     puts "Methods:   %5d (%5d undocumented)" % [@num_methods, @nodoc_methods]
     puts "%6.2f%% documented" % percent_doc
     puts
@@ -111,14 +111,46 @@ class RDoc::Stats
       @total_files = total_files
     end
 
-    def begin_adding(*)   end
-    def print_alias(*)    end
-    def print_class(*)    end
+    ##
+    # Prints a message at the beginning of parsing
+
+    def begin_adding(*) end
+
+    ##
+    # Prints when an alias is added
+
+    def print_alias(*) end
+
+    ##
+    # Prints when a class is added
+
+    def print_class(*) end
+
+    ##
+    # Prints when a constant is added
+
     def print_constant(*) end
-    def print_file(*)     end
-    def print_method(*)   end
-    def print_module(*)   end
-    def done_adding(*)    end
+
+    ##
+    # Prints when a file is added
+
+    def print_file(*) end
+
+    ##
+    # Prints when a method is added
+
+    def print_method(*) end
+
+    ##
+    # Prints when a module is added
+
+    def print_module(*) end
+
+    ##
+    # Prints when RDoc is done
+
+    def done_adding(*) end
+
   end
 
   ##
@@ -127,9 +159,12 @@ class RDoc::Stats
 
   class Normal < Quiet
 
-    def begin_adding
+    def begin_adding # :nodoc:
       puts "Parsing sources..."
     end
+
+    ##
+    # Prints a file with a progress bar
 
     def print_file(files_so_far, filename)
       progress_bar = sprintf("%3d%% [%2d/%2d]  ",
@@ -161,7 +196,7 @@ class RDoc::Stats
       end
     end
 
-    def done_adding
+    def done_adding # :nodoc:
       puts
     end
 
@@ -177,31 +212,31 @@ class RDoc::Stats
     # Returns a marker for RDoc::CodeObject +co+ being undocumented
 
     def nodoc co
-      " (undocumented)" if co.document_self and co.comment.empty?
+      " (undocumented)" unless co.documented?
     end
 
-    def print_alias as
+    def print_alias as # :nodoc:
       puts "\t\talias #{as.new_name} #{as.old_name}#{nodoc as}"
     end
 
-    def print_class(klass)
+    def print_class(klass) # :nodoc:
       puts "\tclass #{klass.full_name}#{nodoc klass}"
     end
 
-    def print_constant(constant)
+    def print_constant(constant) # :nodoc:
       puts "\t\t#{constant.name}#{nodoc constant}"
     end
 
-    def print_file(files_so_far, file)
+    def print_file(files_so_far, file) # :nodoc:
       super
       puts
     end
 
-    def print_method(method)
+    def print_method(method) # :nodoc:
       puts "\t\t#{method.singleton ? '::' : '#'}#{method.name}#{nodoc method}"
     end
 
-    def print_module(mod)
+    def print_module(mod) # :nodoc:
       puts "\tmodule #{mod.full_name}#{nodoc mod}"
     end
 
