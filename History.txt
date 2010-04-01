@@ -1,6 +1,6 @@
 === 2.5 / 2010-03-31
 
-NOTE:
+*NOTE*:
 
 You'll need to:
 

@@ -39,14 +39,14 @@
 	</ul>
 	<% end %>
 
-	<h2>Classes/Modules</h2>
+	<h2 id="classes">Classes/Modules</h2>
 	<ul>
 		<% @modsort.each do |klass| %>
 		<li class="<%= klass.type %>"><a href="<%= klass.path %>"><%= klass.full_name %></a></li>
 		<% end %>
 	</ul>
 
-	<h2>Methods</h2>
+	<h2 id="methods">Methods</h2>
 	<ul>
 		<% RDoc::TopLevel.all_classes_and_modules.map do |mod|
 				 mod.method_list
