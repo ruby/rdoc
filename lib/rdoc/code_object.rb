@@ -124,7 +124,7 @@ class RDoc::CodeObject
   # Does this class have a comment with content or is document_self false.
 
   def documented?
-    not (@document_self and @comment.empty?)
+    !(@document_self and @comment.empty?)
   end
 
   ##

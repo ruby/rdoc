@@ -788,8 +788,8 @@ Options may also be set in the 'RI' environment variable.
       end
     end
 
-    methods = methods.sort_by do |store, klass, ancestor, types, method|
-      [klass, ancestor, method].compact
+    methods = methods.sort_by do |_, k, a, _, m|
+      [k, a, m].compact
     end
 
     methods.each do |item|
