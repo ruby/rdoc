@@ -1,6 +1,18 @@
 === 2.5 / 2010-03-31
 
-* N Major Enhancements
+NOTE:
+
+You'll need to:
+
+  gem install rdoc-data
+
+then run:
+
+  rdoc-data
+
+to have ri data for core and stdlib like Array or Kernel or Date.
+
+* 8 Major Enhancements
   * Darkfish now has a "Home" button
   * ri no longer displays the value of a constant.  There's no easy way to
     make them presentable.  Use irb or ruby -e instead.  Ruby Bug #549.
@@ -15,7 +27,7 @@
   * Future versions of RDoc will not support Ruby 1.8.6.  Bugs filed for
     1.8.6-only issues will be (largely) rejected.
 
-* N Minor Enhancements
+* 17 Minor Enhancements
   * Source Parsing
    * RDoc now supports module aliasing via constant assignment.
    * RDoc now tracks superclasses correctly.  Fixes File < IO for core docs.
@@ -37,7 +49,7 @@
   * Removed diagram generation support (to return in the future).
   * Removed external support for RDoc::Task.
 
-* N Bug Fixes
+* 12 Bug Fixes
   * The :attr: directives now use the name given to create an attribute.  See
     RDoc::Parser::Ruby#parse_meta_attr.
   * Fix crossrefs on paths with '-'.  Ruby Bug #883.
