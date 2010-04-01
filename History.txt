@@ -1,40 +1,45 @@
-=== 2.? / 2009-?
+=== 2.5 / 2010-03-31
 
 * N Major Enhancements
-  * Added "Home" button for class and file pages.
+  * Darkfish now has a "Home" button
   * ri no longer displays the value of a constant.  There's no easy way to
     make them presentable.  Use irb or ruby -e instead.  Ruby Bug #549.
+  * New ri data format now uses Marshal and pre-builds caches
+    * No support for old ri data format, too hard to maintain
+    * To upgrade your core ri documentation, install the rdoc-data gem and run
+      rdoc-data
+  * RDoc now displays how well you've documented your library
   * New recursive-descent parser for RDoc::Markup.  See RDoc::Markup::Parser
-  * New ri data format using Marshal, prebuilt caches, improved merging
-  * No support for old ri data format, too hard to maintain
   * Updated ruby_lex and ruby_token
-  * Removed threading support, RDoc is not thread-safe.
-  * RDoc now displays percent documented
+  * Removed threading support, RDoc is not thread-safe
+  * Future versions of RDoc will not support Ruby 1.8.6.  Bugs filed for
+    1.8.6-only issues will be (largely) rejected.
 
 * N Minor Enhancements
-  * API enhancements for writing parsers like the Ruby parser, see
-    RDoc::Parser::RubyTools
-  * Uses pager over less and more for Debian.  Ruby Bug #1171.
-  * ri will use the RI_PAGER environment variable to find a pager.
+  * Source Parsing
+   * RDoc now supports module aliasing via constant assignment.
+   * RDoc now tracks superclasses correctly.  Fixes File < IO for core docs.
+   * RDoc now ignores methods inside methods.
+   * RDoc now ignores Marshal and other binray files.
+   * Removed "Skipping require of dynamic string" warning.
+   * C parser now handles Document-method better.  Bug #27329.
+   * API enhancements for writing parsers like the Ruby parser, see
+     RDoc::Parser::RubyTools
+  * ri
+    * Uses pager over less and more for Debian.  Ruby Bug #1171.
+    * ri will use the RI_PAGER environment variable to find a pager.
+    * ri data generator now supports SIGINFO (^T)
   * When rdoc is in debug mode, ^C now prints a backtrace
-  * The ri data generator now supports SIGINFO (^T)
-  * C parser now handles Document-method better.  Bug #27329.
   * RDoc::Markup::AttributeManager no longer uses global state.
   * RDoc::RDoc no longer passes around options.  Patch #27167.
-  * Improved some wording for the RDoc main page.  Patch #27264, #27268.
   * Darkfish won't generate a file if its template is missing.  Patch #25857.
-  * RDoc now supports module aliasing via constant assignment.
-  * RDoc now tracks superclasses correctly.  Fixes File < IO for core docs.
-  * RDoc now ignores methods inside methods.
-  * RDoc now detects Marshal files as binray.
-  * Removed "Skipping require of dynamic string" warning.
+  * Improved some wording for the RDoc main page.  Patch #27264, #27268.
   * Removed diagram generation support (to return in the future).
   * Removed external support for RDoc::Task.
 
 * N Bug Fixes
   * The :attr: directives now use the name given to create an attribute.  See
     RDoc::Parser::Ruby#parse_meta_attr.
-  * Clean up circular require warnings on 1.9.
   * Fix crossrefs on paths with '-'.  Ruby Bug #883.
   * Fix ruby parser for alias with = in the name.  Bug #27522.
   * Images are no longer executable.  Bug #27156.
@@ -42,7 +47,7 @@
   * :method: now works when at the end of a class.  Bug #26910.
   * Preserve elipsis from call-seq in Darkfish.  Patch #26974.
   * Emacs-style <tt>coding:</tt> is handled properly.  Patch #27388.
-  * RubyLex now parses UTF-8 identifiers.  Bug #26946, #26947.
+  * RDoc::RubyLex now parses UTF-8 identifiers.  Bug #26946, #26947.
   * Fixed namespace lookup rules.  Bug #26161.
   * Worked around bug in Selenium where they hide a .jar in a .txt file.
     Filed Selenium bug #27789.
