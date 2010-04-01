@@ -1,6 +1,6 @@
 require 'rubygems'
-require 'minitest/unit'
-require 'test/xref_test_case'
+require 'minitest/autorun'
+require File.expand_path '../xref_test_case', __FILE__
 require 'rdoc/code_object'
 
 class TestRDocCodeObject < XrefTestCase

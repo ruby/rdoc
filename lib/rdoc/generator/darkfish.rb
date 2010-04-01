@@ -1,8 +1,10 @@
 #!ruby
 # vim: noet ts=2 sts=8 sw=2
 
-require 'rubygems'
-gem 'rdoc', '>= 2.4' unless ENV['RDOC_TEST'] or defined?($rdoc_rakefile)
+unless File.exist? File.expand_path('../.svn', __FILE__) then
+  require 'rubygems'
+  gem 'rdoc', '>= 2.4'
+end
 
 require 'pp'
 require 'pathname'

@@ -89,7 +89,7 @@ class RDoc::Parser
 
   def self.zip? file
     zip_signature = File.read file, 4
-    
+
     zip_signature == "PK\x03\x04" or
       zip_signature == "PK\x05\x06" or
       zip_signature == "PK\x07\x08"

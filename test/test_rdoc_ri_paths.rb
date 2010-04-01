@@ -6,6 +6,14 @@ require 'rdoc/ri/paths'
 
 class TestRDocRIPaths < MiniTest::Unit::TestCase
 
+  def setup
+    RDoc::RI::Paths.instance_variable_set :@gemdirs, %w[/nonexistent/gemdir]
+  end
+
+  def teardown
+    RDoc::RI::Paths.instance_variable_set :@gemdirs, nil
+  end
+
   def test_class_path_nonexistent
     path = RDoc::RI::Paths.path true, true, true, true, '/nonexistent'
 
@@ -18,9 +26,7 @@ class TestRDocRIPaths < MiniTest::Unit::TestCase
     assert_equal RDoc::RI::Paths::SYSDIR,  path.shift
     assert_equal RDoc::RI::Paths::SITEDIR, path.shift
     assert_equal RDoc::RI::Paths::HOMEDIR, path.shift
-
-    refute_empty path
-    assert_kind_of String, path.first
+    assert_equal '/nonexistent/gemdir',    path.shift
   end
 
   def test_class_raw_path_extra_dirs
@@ -30,9 +36,7 @@ class TestRDocRIPaths < MiniTest::Unit::TestCase
     assert_equal RDoc::RI::Paths::SYSDIR,  path.shift
     assert_equal RDoc::RI::Paths::SITEDIR, path.shift
     assert_equal RDoc::RI::Paths::HOMEDIR, path.shift
-
-    refute_empty path
-    assert_kind_of String, path.first
+    assert_equal '/nonexistent/gemdir',    path.shift
   end
 
 end

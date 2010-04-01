@@ -3,7 +3,7 @@ require 'minitest/autorun'
 require 'rdoc/rdoc'
 require 'rdoc/code_objects'
 require 'rdoc/markup/to_html_crossref'
-require 'test/xref_test_case'
+require File.expand_path '../xref_test_case', __FILE__
 
 class TestRDocMarkupToHtmlCrossref < XrefTestCase
 

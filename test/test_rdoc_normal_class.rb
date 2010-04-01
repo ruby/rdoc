@@ -1,4 +1,4 @@
-require 'test/xref_test_case'
+require File.expand_path '../xref_test_case', __FILE__
 
 class TestRDocNormalClass < XrefTestCase
 

@@ -45,13 +45,9 @@ class TestRDocParser < MiniTest::Unit::TestCase
   def test_class_can_parse
     assert_equal @RP.can_parse(__FILE__), @RP::Ruby
 
-    readme_file_name = File.expand_path '../README.txt', __FILE__
+    readme_file_name = File.expand_path '../test.txt', __FILE__
 
-    unless File.exist? readme_file_name then # HACK for tests in trunk :/
-      readme_file_name = File.expand_path '../../README.txt', __FILE__
-    end
-
-    assert_equal @RP.can_parse(readme_file_name), @RP::Simple
+    assert_equal @RP::Simple, @RP.can_parse(readme_file_name)
 
     assert_nil @RP.can_parse(@binary_dat)
 

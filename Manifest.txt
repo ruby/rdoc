@@ -105,6 +105,7 @@ test/binary.dat
 test/hidden.zip.txt
 test/test.ja.rdoc
 test/test.ja.txt
+test/test.txt
 test/test_attribute_manager.rb
 test/test_rdoc_any_method.rb
 test/test_rdoc_attr.rb
