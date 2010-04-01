@@ -210,12 +210,12 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     util_multi_store
 
     expected = {
-      'Ambigous' => [@store1, @store2],
-      'Bar'      => [@store2],
-      'Foo'      => [@store1],
-      'Foo::Bar' => [@store1],
-      'Foo::Baz' => [@store1, @store2],
-      'Inc'      => [@store1],
+      'Ambiguous' => [@store1, @store2],
+      'Bar'       => [@store2],
+      'Foo'       => [@store1],
+      'Foo::Bar'  => [@store1],
+      'Foo::Baz'  => [@store1, @store2],
+      'Inc'       => [@store1],
     }
 
     assert_equal expected, @driver.classes
@@ -307,10 +307,10 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     util_multi_store
 
     out, err = capture_io do
-      @driver.display_class 'Ambigous'
+      @driver.display_class 'Ambiguous'
     end
 
-    assert_match %r%^= Ambigous < Object$%, out
+    assert_match %r%^= Ambiguous < Object$%, out
   end
 
   def test_display_class_multi_no_doc
@@ -355,8 +355,8 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     end
 
     assert_match %r%Foo::Bar#blah%, out
-    assert_match %r%blah\(5\)%,     out
-    assert_match %r%blah\(6\)%,     out
+    assert_match %r%blah.5%,        out
+    assert_match %r%blah.6%,        out
     assert_match %r%yields: stuff%, out
   end
 
@@ -379,7 +379,7 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     end
 
     assert_match %r%^= Bar#inherit%, out
-    assert_match %r%^Implementation from Foo%, out
+    assert_match %r%^=== Implementation from Foo%, out
   end
 
   def test_display_name_not_found_class
@@ -410,6 +410,7 @@ Foo::Baz
 Foo::Bar#b not found, maybe you meant:
 
 Foo::Bar#blah
+Foo::Bar#bother
     EXPECTED
 
     assert_equal expected, out
@@ -429,8 +430,15 @@ Foo::Bar#blah
   def test_expand_name
     util_store
 
+    assert_equal '.b',        @driver.expand_name('b')
     assert_equal 'Foo',       @driver.expand_name('F')
     assert_equal 'Foo::Bar#', @driver.expand_name('F::Bar#')
+
+    e = assert_raises RDoc::RI::Driver::NotFoundError do
+      @driver.expand_name 'Z'
+    end
+
+    assert_equal 'Z', e.name
   end
 
   def test_find_methods
@@ -444,6 +452,26 @@ Foo::Bar#blah
 
     expected = [
       [@store, 'Foo::Bar', 'Foo::Bar', :both, nil],
+    ]
+
+    assert_equal expected, items
+  end
+
+  def test_find_methods_method
+    util_store
+
+    items = []
+
+    @driver.find_methods '.blah' do |store, klass, ancestor, types, method|
+      items << [store, klass, ancestor, types, method]
+    end
+
+    expected = [
+      [@store, 'Ambiguous', 'Ambiguous', :both, 'blah'],
+      [@store, 'Foo',       'Foo',       :both, 'blah'],
+      [@store, 'Foo::Bar',  'Foo::Bar',  :both, 'blah'],
+      [@store, 'Foo::Baz',  'Foo::Baz',  :both, 'blah'],
+      [@store, 'Inc',       'Inc',       :both, 'blah'],
     ]
 
     assert_equal expected, items
@@ -477,13 +505,13 @@ Foo::Bar#blah
       @driver.list_known_classes 
     end
 
-    assert_equal "Ambigous\nFoo\nFoo::Bar\nFoo::Baz\nInc\n", out
+    assert_equal "Ambiguous\nFoo\nFoo::Bar\nFoo::Baz\nInc\n", out
   end
 
   def test_list_methods_matching
     util_store
 
-    assert_equal %w[Foo::Bar#attr Foo::Bar#blah Foo::Bar::new],
+    assert_equal %w[Foo::Bar#attr Foo::Bar#blah Foo::Bar#bother Foo::Bar::new],
                  @driver.list_methods_matching('Foo::Bar.')
   end
 
@@ -511,6 +539,12 @@ Foo::Bar#blah
     expected = [[@store, [@inherit]]]
 
     assert_equal expected, @driver.load_methods_matching('Foo#inherit')
+
+    expected = [[@store, [@blah]]]
+
+    assert_equal expected, @driver.load_methods_matching('.blah')
+
+    assert_empty @driver.load_methods_matching('.b')
   end
 
   def test_load_methods_matching_inherited
@@ -541,6 +575,26 @@ Foo::Bar#blah
     end
 
     refute @driver.paging?
+  end
+
+  def test_parse_name_method
+    klass, type, meth = @driver.parse_name 'foo'
+
+    assert_equal '',    klass, 'foo class'
+    assert_equal '.',   type,  'foo type'
+    assert_equal 'foo', meth,  'foo method'
+
+    klass, type, meth = @driver.parse_name '#foo'
+
+    assert_equal '',    klass, '#foo class'
+    assert_equal '#',   type,  '#foo type'
+    assert_equal 'foo', meth,  '#foo method'
+
+    klass, type, meth = @driver.parse_name '::foo'
+
+    assert_equal '',    klass, '::foo class'
+    assert_equal '::',  type,  '::foo type'
+    assert_equal 'foo', meth,  '::foo method'
   end
 
   def test_parse_name_single_class
@@ -671,8 +725,8 @@ Foo::Bar#blah
     @home_ri2 = "#{@home_ri}2"
     @store2 = RDoc::RI::Store.new @home_ri2
 
-    # as if seen in a namespace like class Ambigous::Other
-    @mAmbigous = RDoc::NormalModule.new 'Ambigous'
+    # as if seen in a namespace like class Ambiguous::Other
+    @mAmbiguous = RDoc::NormalModule.new 'Ambiguous'
 
     @cFoo = RDoc::NormalClass.new 'Foo'
     @cBar = RDoc::NormalClass.new 'Bar'
@@ -683,7 +737,7 @@ Foo::Bar#blah
     @baz = RDoc::AnyMethod.new nil, 'baz'
     @cBar.add_method @baz
 
-    @store2.save_class @mAmbigous
+    @store2.save_class @mAmbiguous
     @store2.save_class @cBar
     @store2.save_class @cFoo_Baz
 
@@ -697,9 +751,9 @@ Foo::Bar#blah
   def util_store
     @store = RDoc::RI::Store.new @home_ri
 
-    @cFoo      = RDoc::NormalClass.new 'Foo'
-    @mInc      = RDoc::NormalModule.new 'Inc'
-    @cAmbigous = RDoc::NormalClass.new 'Ambigous'
+    @cFoo       = RDoc::NormalClass.new 'Foo'
+    @mInc       = RDoc::NormalModule.new 'Inc'
+    @cAmbiguous = RDoc::NormalClass.new 'Ambiguous'
 
     doc = @RM::Document.new @RM::Paragraph.new('Include thingy')
 
@@ -713,10 +767,13 @@ Foo::Bar#blah
     @blah.call_seq = "blah(5) => 5\nblah(6) => 6\n"
     @blah.block_params = "stuff"
 
+    @bother = RDoc::AnyMethod.new nil, 'bother'
+
     @new  = RDoc::AnyMethod.new nil, 'new'
     @new.singleton = true
 
     @cFoo_Bar.add_method @blah
+    @cFoo_Bar.add_method @bother
     @cFoo_Bar.add_method @new
 
     @attr = RDoc::Attr.new nil, 'attr', 'RW', ''
@@ -733,9 +790,10 @@ Foo::Bar#blah
     @store.save_class @cFoo_Bar
     @store.save_class @cFoo_Baz
     @store.save_class @mInc
-    @store.save_class @cAmbigous
+    @store.save_class @cAmbiguous
 
     @store.save_method @cFoo_Bar, @blah
+    @store.save_method @cFoo_Bar, @bother
     @store.save_method @cFoo_Bar, @new
     @store.save_method @cFoo_Bar, @attr
 

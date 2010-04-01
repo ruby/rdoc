@@ -53,7 +53,6 @@ class RDoc::RI::Driver
     def message # :nodoc:
       "Nothing known about #{super}"
     end
-
   end
 
   attr_accessor :stores
@@ -654,7 +653,7 @@ Options may also be set in the 'RI' environment variable.
         out << RDoc::Markup::Paragraph.new("(from #{store.friendly_path})")
 
         unless name =~ /^#{Regexp.escape method.parent_name}/ then
-          out << RDoc::Markup::Paragraph.new("Implementation from #{method.parent_name}")
+          out << RDoc::Markup::Heading.new(3, "Implementation from #{method.parent_name}")
         end
         out << RDoc::Markup::Rule.new(1)
 
@@ -710,6 +709,16 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
+  # Displays each name in +name+
+
+  def display_names names
+    names.each do |name|
+      name = expand_name name
+
+      display_name name
+    end
+  end
+  ##
   # Expands abbreviated klass +klass+ into a fully-qualified class.  "Zl::Da"
   # will be expanded to Zlib::DataError.
 
@@ -739,6 +748,8 @@ Options may also be set in the 'RI' environment variable.
   def expand_name name
     klass, selector, method = parse_name name
 
+    return [selector, method].join if klass.empty?
+
     "#{expand_class klass}#{selector}#{method}"
   end
 
@@ -753,18 +764,36 @@ Options may also be set in the 'RI' environment variable.
 
     types = method_type selector
 
-    klasses = ancestors_of klass
+    klasses = nil
+    ambiguous = klass.empty?
 
-    klasses.unshift klass
+    if ambiguous then
+      klasses = classes.keys
+    else
+      klasses = ancestors_of klass
+      klasses.unshift klass
+    end
+
+    methods = []
 
     klasses.each do |ancestor|
       ancestors = classes[ancestor]
 
       next unless ancestors
 
+      klass = ancestor if ambiguous
+
       ancestors.each do |store|
-        yield store, klass, ancestor, types, method
+        methods << [store, klass, ancestor, types, method]
       end
+    end
+
+    methods = methods.sort_by do |store, klass, ancestor, types, method|
+      [klass, ancestor, method].compact
+    end
+
+    methods.each do |item|
+      yield(*item)
     end
 
     self
@@ -966,8 +995,13 @@ Options may also be set in the 'RI' environment variable.
     parts = name.split(/(::|#|\.)/)
 
     if parts.length == 1 then
-      type = nil
-      meth = nil
+      if parts.first =~ /^[a-z]/ then
+        type = '.'
+        meth = parts.pop
+      else
+        type = nil
+        meth = nil
+      end
     elsif parts.length == 2 or parts.last =~ /::|#|\./ then
       type = parts.pop
       meth = nil
@@ -985,10 +1019,6 @@ Options may also be set in the 'RI' environment variable.
   # Looks up and displays ri data according to the options given.
 
   def run
-    trap 'INFO' do
-      puts caller[1]
-    end
-
     if @list_doc_dirs then
       puts @doc_dirs
     elsif @interactive then
@@ -996,11 +1026,7 @@ Options may also be set in the 'RI' environment variable.
     elsif @names.empty? then
       list_known_classes
     else
-      @names.each do |name|
-        name = expand_name name
-
-        display_name name
-      end
+      display_names @names
     end
   rescue NotFoundError => e
     abort e.message
