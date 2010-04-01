@@ -19,6 +19,9 @@ class RDoc::Markup::Parser
 
   include RDoc::Text
 
+  ##
+  # List token types
+
   LIST_TOKENS = [
     :BULLET,
     :LABEL,

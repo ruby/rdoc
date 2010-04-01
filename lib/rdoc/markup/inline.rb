@@ -5,6 +5,10 @@ class RDoc::Markup
   # value.
 
   class Attribute
+
+    ##
+    # Special attribute type.  See RDoc::Markup#add_special
+
     SPECIAL = 1
 
     @@name_to_bitmap = { :_SPECIAL_ => SPECIAL }
@@ -38,7 +42,7 @@ class RDoc::Markup
 
   end
 
-  AttrChanger = Struct.new :turn_on, :turn_off
+  AttrChanger = Struct.new :turn_on, :turn_off # :nodoc:
 
   ##
   # An AttrChanger records a change in attributes. It contains a bitmap of the
@@ -46,7 +50,7 @@ class RDoc::Markup
 
   class AttrChanger
     def to_s # :nodoc:
-      "Attr: +#{Attribute.as_string(turn_on)}/-#{Attribute.as_string(turn_on)}"
+      "Attr: +#{Attribute.as_string turn_on}/-#{Attribute.as_string turn_on}"
     end
   end
 

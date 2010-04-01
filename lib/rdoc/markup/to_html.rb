@@ -8,6 +8,9 @@ require 'cgi'
 
 class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
+  ##
+  # Maps RDoc::Markup::Parser::LIST_TOKENS types to HTML tags
+
   LIST_TYPE_TO_HTML = {
     :BULLET => ['<ul>', '</ul>'],
     :LABEL  => ['<dl>', '</dl>'],

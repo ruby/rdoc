@@ -152,7 +152,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
   include RDoc::TokenStream
   include RDoc::Parser::RubyTools
 
+  ##
+  # RDoc::NormalClass type
+
   NORMAL = "::"
+
+  ##
+  # RDoc::SingleClass type
+
   SINGLE = "<<"
 
   def initialize(top_level, file_name, content, options, stats)

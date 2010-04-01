@@ -7,14 +7,20 @@ require 'rdoc/markup/to_html'
 class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
   ##
-  # Regular expressions to match class and method references.
+  # Regular expression to match class references
   #
   # 1) There can be a '\' in front of text to suppress any cross-references
   # 2) There can be a '::' in front of class names to reference from the
   #    top-level namespace.
-  # 3) The method can be followed by parenthesis which may
+  # 3) The method can be followed by parenthesis
 
   CLASS_REGEXP_STR = '\\\\?((?:\:{2})?[A-Z]\w*(?:\:\:\w+)*)'
+
+  ##
+  # Regular expression to match method references.
+  #
+  # See CLASS_REGEXP_STR
+
   METHOD_REGEXP_STR = '(\w+[!?=]?)(?:\([\w.+*/=<>-]*\))?'
 
   ##

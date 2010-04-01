@@ -1,5 +1,10 @@
 require 'rdoc'
 
+##
+# Namespace for the ri command line tool's implementation.
+#
+# See <tt>ri --help</tt> for details.
+
 module RDoc::RI
 
   ##

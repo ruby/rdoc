@@ -8,14 +8,16 @@ class RDoc::Markup::AttributeManager
 
   NULL = "\000".freeze
 
-  ##
+  #--
   # We work by substituting non-printing characters in to the text. For now
   # I'm assuming that I can substitute a character in the range 0..8 for a 7
   # bit character without damaging the encoded string, but this might be
   # optimistic
+  #++
 
-  A_PROTECT  = 004
-  PROTECT_ATTR  = A_PROTECT.chr
+  A_PROTECT  = 004 # :nodoc:
+
+  PROTECT_ATTR  = A_PROTECT.chr # :nodoc:
 
   ##
   # This maps delimiters that occur around words (such as *bold* or +tt+)

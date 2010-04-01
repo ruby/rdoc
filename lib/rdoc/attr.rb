@@ -6,7 +6,7 @@ require 'rdoc/code_object'
 
 class RDoc::Attr < RDoc::CodeObject
 
-  MARSHAL_VERSION = 0
+  MARSHAL_VERSION = 0 # :nodoc:
 
   ##
   # Name of the attribute

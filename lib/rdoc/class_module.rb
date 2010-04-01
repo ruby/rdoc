@@ -6,7 +6,7 @@ require 'rdoc/context'
 
 class RDoc::ClassModule < RDoc::Context
 
-  MARSHAL_VERSION = 0
+  MARSHAL_VERSION = 0 # :nodoc:
 
   attr_accessor :diagram
 
