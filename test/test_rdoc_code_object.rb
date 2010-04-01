@@ -45,6 +45,22 @@ class TestRDocCodeObject < XrefTestCase
     assert_empty @c1.method_list
   end
 
+  def test_documented_eh
+    refute @co.documented?
+
+    @co.comment = 'hi'
+
+    assert @co.documented?
+
+    @co.comment.replace ''
+
+    refute @co.documented?
+
+    @co.document_self = false
+
+    assert @co.documented?
+  end
+
   def test_parent_file_name
     assert_equal '(unknown)', @co.parent_file_name
     assert_equal 'xref_data.rb', @c1.parent_file_name

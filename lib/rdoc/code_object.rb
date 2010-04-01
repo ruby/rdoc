@@ -121,6 +121,13 @@ class RDoc::CodeObject
   end
 
   ##
+  # Does this class have a comment with content or is document_self false.
+
+  def documented?
+    not (@document_self and @comment.empty?)
+  end
+
+  ##
   # File name of our parent
 
   def parent_file_name
