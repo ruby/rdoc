@@ -6,7 +6,7 @@ require 'rdoc/tokenstream'
 
 class RDoc::AnyMethod < RDoc::CodeObject
 
-  MARSHAL_VERSION = 0
+  MARSHAL_VERSION = 0 # :nodoc:
 
   include Comparable
 
@@ -162,6 +162,11 @@ class RDoc::AnyMethod < RDoc::CodeObject
   # * #parent_name
 
   def marshal_load(array)
+    @aliases                = []
+    @dont_rename_initialize = nil
+    @is_alias_for           = nil
+    @token_stream           = nil
+
     @name         = array[1]
     @full_name    = array[2]
     @singleton    = array[3]
