@@ -30,14 +30,14 @@ to have ri data for core and stdlib like Array or Kernel or Date.
 
 * 17 Minor Enhancements
   * Source Parsing
-   * RDoc now supports module aliasing via constant assignment.
-   * RDoc now tracks superclasses correctly.  Fixes File < IO for core docs.
-   * RDoc now ignores methods inside methods.
-   * RDoc now ignores Marshal and other binray files.
-   * Removed "Skipping require of dynamic string" warning.
-   * C parser now handles Document-method better.  Bug #27329.
-   * API enhancements for writing parsers like the Ruby parser, see
-     RDoc::Parser::RubyTools
+    * RDoc now supports module aliasing via constant assignment.
+    * RDoc now tracks superclasses correctly.  Fixes File < IO for core docs.
+    * RDoc now ignores methods inside methods.
+    * RDoc now ignores Marshal and other binray files.
+    * Removed "Skipping require of dynamic string" warning.
+    * C parser now handles Document-method better.  Bug #27329.
+    * API enhancements for writing parsers like the Ruby parser, see
+      RDoc::Parser::RubyTools
   * ri
     * Uses pager over less and more for Debian.  Ruby Bug #1171.
     * ri will use the RI_PAGER environment variable to find a pager.
