@@ -36,7 +36,7 @@ module RDoc::Parser::RubyTools
       set_token_position tk.line_no, tk.char_no
 
       case tk1 = get_tk
-      when TkId, TkOp, TkSTRING, TkDSTRING then
+      when TkId, TkOp, TkSTRING, TkDSTRING, TkSTAR, TkAMPER then
         if tk1.respond_to?(:name) then
           tk = Token(TkSYMBOL).set_text(":" + tk1.name)
         else

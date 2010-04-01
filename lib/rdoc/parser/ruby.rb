@@ -879,7 +879,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     column  = tk.char_no
 
     start_collecting_tokens
-    add_token(tk)
+    add_token tk
 
     token_listener self do
       @scanner.instance_eval do @lex_state = EXPR_FNAME end
@@ -944,13 +944,17 @@ class RDoc::Parser::Ruby < RDoc::Parser
           unget_tk token
         end
 
-        unless name_t.respond_to? :name then
-          warn "expected . or ::, got method name token #{name_t.inspect}"
-          skip_method container
-          return
-        end
-
-        name = name_t.name
+        name = case name_t
+               when TkSTAR, TkAMPER then
+                 name_t.text
+               else
+                 unless name_t.respond_to? :name then
+                   warn "expected method name token, . or ::, got #{name_t.inspect}"
+                   skip_method container
+                   return
+                 end
+                 name_t.name
+               end
 
         meth = RDoc::AnyMethod.new get_tkread, name
         meth.singleton = (single == SINGLE)
