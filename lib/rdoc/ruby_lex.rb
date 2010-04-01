@@ -10,6 +10,7 @@
 require "e2mmap"
 require "irb/slex"
 require "rdoc/ruby_token"
+require "stringio"
 
 ##
 # Ruby lexer adapted from irb.
