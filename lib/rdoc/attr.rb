@@ -133,6 +133,13 @@ class RDoc::Attr < RDoc::CodeObject
   end
 
   ##
+  # For duck typing with RDoc::AnyMethod, returns nil
+
+  def params
+    nil
+  end
+
+  ##
   # URL path for this attribute
 
   def path

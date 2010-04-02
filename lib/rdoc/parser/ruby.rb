@@ -1405,16 +1405,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
   end
 
-  def parse_yield_parameters
-    parse_method_or_yield_parameters
-  end
-
   def parse_yield(context, single, tk, method)
-    if method.block_params.nil?
-      get_tkread
-      @scanner.instance_eval{@continue = false}
-      method.block_params = parse_yield_parameters
-    end
+    return if method.block_params
+
+    get_tkread
+    @scanner.instance_eval { @continue = false }
+    method.block_params = parse_method_or_yield_parameters
   end
 
   ##

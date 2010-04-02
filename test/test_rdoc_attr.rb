@@ -20,6 +20,10 @@ class TestRDocAttr < MiniTest::Unit::TestCase
     assert_equal '(unknown)#attr', @a.full_name
   end
 
+  def test_params
+    assert_nil @a.params
+  end
+
   def test_singleton
     refute @a.singleton
   end

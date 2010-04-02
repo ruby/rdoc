@@ -6,27 +6,49 @@ class RDocAnyMethodTest < XrefTestCase
     assert_equal 'C1::m', @c1.method_list.first.full_name
   end
 
-  def test_parent_name
-    assert_equal 'C1', @c1.method_list.first.parent_name
-    assert_equal 'C1', @c1.method_list.last.parent_name
-  end
-
   def test_marshal_load
     instance_method = Marshal.load Marshal.dump(@c1.method_list.last)
 
-    assert_equal 'C1#m', instance_method.full_name
-    assert_equal 'C1',   instance_method.parent_name
+    assert_equal 'C1#m',  instance_method.full_name
+    assert_equal 'C1',    instance_method.parent_name
+    assert_equal '(foo)', instance_method.params
 
     class_method = Marshal.load Marshal.dump(@c1.method_list.first)
 
     assert_equal 'C1::m', class_method.full_name
     assert_equal 'C1',    class_method.parent_name
+    assert_equal '()',    class_method.params
   end
 
   def test_name
     m = RDoc::AnyMethod.new nil, nil
 
     assert_nil m.name
+  end
+
+  def test_param_seq
+    m = RDoc::AnyMethod.new nil, 'method'
+    m.parent = @c1
+    m.params = 'a'
+
+    assert_equal '(a)', m.param_seq
+
+    m.params = '(a)'
+
+    assert_equal '(a)', m.param_seq
+
+    m.params = "(a,\n  b)"
+
+    assert_equal '(a, b)', m.param_seq
+
+    m.block_params = "c,\n  d"
+
+    assert_equal '(a, b) { |c, d| ... }', m.param_seq
+  end
+
+  def test_parent_name
+    assert_equal 'C1', @c1.method_list.first.parent_name
+    assert_equal 'C1', @c1.method_list.last.parent_name
   end
 
 end

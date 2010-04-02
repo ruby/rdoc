@@ -416,6 +416,16 @@ Foo::Bar#bother
     assert_equal expected, out
   end
 
+  def test_display_method_params
+    util_store
+
+    out, err = capture_io do
+      @driver.display_method 'Foo::Bar#bother'
+    end
+
+    assert_match %r%\(things\)%, out
+  end
+
   def test_expand_class
     util_store
 
@@ -768,6 +778,7 @@ Foo::Bar#bother
     @blah.block_params = "stuff"
 
     @bother = RDoc::AnyMethod.new nil, 'bother'
+    @bother.params = "(things)"
 
     @new  = RDoc::AnyMethod.new nil, 'new'
     @new.singleton = true

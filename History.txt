@@ -1,3 +1,27 @@
+=== 2.5.1 / 2010-04-?
+
+*NOTE*:
+
+RDoc 2.5 did not save method parameters, so you should upgrade your rdoc-data
+gem to a version > 2.5.1.
+
+To have ri data for core and stdlib you'll need to:
+
+  gem install rdoc-data
+
+then run:
+
+  rdoc-data --install
+
+To have ri data for you gems you'll also need to run:
+
+  gem rdoc --all --overwrite
+
+If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
+
+* N Bug Fixes
+  * RDoc::AnyMethod params now get saved in ri data.
+
 === 2.5 / 2010-03-31
 
 *NOTE*:
