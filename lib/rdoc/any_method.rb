@@ -112,6 +112,19 @@ class RDoc::AnyMethod < RDoc::CodeObject
   end
 
   ##
+  # The call_seq or the param_seq with method name, if there is no call_seq.
+  #
+  # Use this for displaying a method's argument lists.
+
+  def arglists
+    if @call_seq then
+      @call_seq
+    elsif @params then
+      "#{name}#{param_seq}"
+    end
+  end
+
+  ##
   # HTML id-friendly method name
 
   def html_name

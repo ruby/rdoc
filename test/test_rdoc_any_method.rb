@@ -2,6 +2,26 @@ require File.expand_path '../xref_test_case', __FILE__
 
 class RDocAnyMethodTest < XrefTestCase
 
+  def test_arglists
+    m = RDoc::AnyMethod.new nil, 'method'
+
+    assert_nil m.arglists
+
+    m.params = "(a, b)"
+    m.block_params = "c, d"
+
+    assert_equal "method(a, b) { |c, d| ... }", m.arglists
+
+    call_seq = <<-SEQ
+method(a) { |c| ... }
+method(a, b) { |c, d| ... }
+    SEQ
+
+    m.call_seq = call_seq.dup
+
+    assert_equal call_seq, m.arglists
+  end
+
   def test_full_name
     assert_equal 'C1::m', @c1.method_list.first.full_name
   end

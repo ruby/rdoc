@@ -8,6 +8,10 @@ class TestRDocAttr < MiniTest::Unit::TestCase
     @a = RDoc::Attr.new nil, 'attr', 'RW', ''
   end
 
+  def test_arglists
+    assert_nil @a.arglists
+  end
+
   def test_block_params
     assert_nil @a.block_params
   end

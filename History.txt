@@ -21,6 +21,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
 
 * N Bug Fixes
   * RDoc::AnyMethod params now get saved in ri data.
+  * ri now displays method arguments correctly.
 
 === 2.5 / 2010-03-31
 

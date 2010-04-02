@@ -56,6 +56,12 @@ class RDoc::Attr < RDoc::CodeObject
   ##
   # Returns nil, for duck typing with RDoc::AnyMethod
 
+  def arglists
+  end
+
+  ##
+  # Returns nil, for duck typing with RDoc::AnyMethod
+
   def block_params
   end
 
