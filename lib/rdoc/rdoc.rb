@@ -380,14 +380,10 @@ The internal error was:
   end
 
   def read_file_contents(filename)
-    content = if RUBY_VERSION >= '1.9' then
-                File.open(filename, "r:ascii-8bit") { |f| f.read }
-              else
-                File.read filename
-              end
+    content = File.open filename, "rb" { |io| io.read }
 
     if defined? Encoding then
-      if /coding:\s*([\w-]+)/i =~ content[/\A(?:.*\n){0,2}/]
+      if /coding[=:]\s*([^\s;]+)/i =~ content[%r"\A(?:#!.*\n)?.*\n"]
         if enc = ::Encoding.find($1)
           content.force_encoding(enc)
         end
