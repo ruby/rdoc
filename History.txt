@@ -23,8 +23,9 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
   * RDoc::AnyMethod params now get saved in ri data.
   * ri now displays method arguments correctly.
   * RDoc::Markup::Parser allows no space between = and header text like rdoc
-    2.4 and earlier
-  * Fixed use of "in" when parsing C files in subdirectories.
+    2.4 and earlier.
+  * RDoc::Parser::C's "in" directive now looks in the current directory.
+  * RDoc::Task's rerdoc task no longer deletes the doc directory twice.
 
 === 2.5 / 2010-03-31
 
