@@ -227,8 +227,8 @@ class RDoc::Parser::C < RDoc::Parser
       next if var_name == "argf"   # it'd be nice to handle this one
 
       var_name = "rb_cObject" if var_name == "rb_mKernel"
-      handle_method(type, var_name, meth_name,
-                    meth_body, param_count, source_file)
+      handle_method(type, var_name, meth_name, meth_body, param_count,
+                    source_file)
     end
 
     @content.scan(%r{rb_define_attr\(
@@ -601,9 +601,9 @@ class RDoc::Parser::C < RDoc::Parser
       meth_obj = RDoc::AnyMethod.new '', meth_name
       meth_obj.singleton = %w[singleton_method module_function].include? type
 
-      p_count = (Integer(param_count) rescue -1)
+      p_count = Integer(param_count) rescue -1
 
-      if p_count < 0
+      if p_count < 0 then
         meth_obj.params = "(...)"
       elsif p_count == 0
         meth_obj.params = "()"
@@ -611,11 +611,14 @@ class RDoc::Parser::C < RDoc::Parser
         meth_obj.params = "(" + (1..p_count).map{|i| "p#{i}"}.join(", ") + ")"
       end
 
-      if source_file and File.exist? source_file then
-        file_name = File.join(@file_dir, source_file)
-        body = (@@known_bodies[source_file] ||= File.read(file_name))
-      elsif source_file then
-        warn "unknown source file #{source_file}"
+      if source_file then
+        file_name = File.join @file_dir, source_file
+
+        if File.exist? file_name then
+          body = (@@known_bodies[file_name] ||= File.read(file_name))
+        else
+          warn "unknown source #{source_file} for #{meth_name} in #{@file_name}"
+        end
       else
         body = @content
       end
