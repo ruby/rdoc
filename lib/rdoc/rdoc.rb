@@ -380,7 +380,7 @@ The internal error was:
   end
 
   def read_file_contents(filename)
-    content = File.open filename, "rb" { |io| io.read }
+    content = File.open filename, "rb" do |io| io.read end
 
     if defined? Encoding then
       if /coding[=:]\s*([^\s;]+)/i =~ content[%r"\A(?:#!.*\n)?.*\n"]
