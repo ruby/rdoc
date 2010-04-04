@@ -26,6 +26,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
     2.4 and earlier.
   * RDoc::Parser::C's "in" directive now looks in the current directory.
   * RDoc::Task's rerdoc task no longer deletes the doc directory twice.
+  * rdoc --force-update now works correctly.  Patch by Nobu Nokada
 
 === 2.5 / 2010-03-31
 

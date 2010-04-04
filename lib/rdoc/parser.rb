@@ -22,14 +22,14 @@ require 'rdoc/stats'
 # following incantation
 #
 #   require "rdoc/parser"
-#   
+#
 #   class RDoc::Parser::Xyz < RDoc::Parser
 #     parse_files_matching /\.xyz$/ # <<<<
-#   
+#
 #     def initialize(file_name, body, options)
 #       ...
 #     end
-#   
+#
 #     def scan
 #       ...
 #     end
@@ -67,7 +67,7 @@ class RDoc::Parser
   # content that an RDoc parser shouldn't try to consume.
 
   def self.binary?(file)
-    s = File.read(file, File.stat(file).blksize) || ""
+    s = File.read(file, 1024) or return false
 
     if s[0, 2] == Marshal.dump('')[0, 2] then
       true
