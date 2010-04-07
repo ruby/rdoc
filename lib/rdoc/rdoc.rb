@@ -78,7 +78,7 @@ class RDoc::RDoc
     @current      = nil
     @exclude      = nil
     @generator    = nil
-    @last_created = nil
+    @last_created = {}
     @old_siginfo  = nil
     @options      = nil
     @stats        = nil
@@ -225,19 +225,20 @@ class RDoc::RDoc
       stat = File.stat rel_file_name rescue next
 
       case type = stat.ftype
-      when "file"
-        next if last_created = @last_created[rel_file_name] and stat.mtime <= last_created
+      when "file" then
+        next if last_created = @last_created[rel_file_name] and
+                stat.mtime <= last_created
 
         if force_doc or RDoc::Parser.can_parse(rel_file_name) then
           file_list << rel_file_name.sub(/^\.\//, '')
           @last_created[rel_file_name] = stat.mtime
         end
-      when "directory"
+      when "directory" then
         next if rel_file_name == "CVS" || rel_file_name == ".svn"
 
         dot_doc = File.join rel_file_name, RDoc::DOT_DOC_FILENAME
 
-        if File.file?(dot_doc) then
+        if File.file? dot_doc then
           file_list << parse_dot_doc_file(rel_file_name, dot_doc)
         else
           file_list << list_files_in_directory(rel_file_name)
