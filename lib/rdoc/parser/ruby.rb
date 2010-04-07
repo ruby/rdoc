@@ -377,10 +377,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # This routine modifies it's parameter
 
   def look_for_directives_in(context, comment)
-    preprocess = RDoc::Markup::PreProcess.new(@file_name,
-                                              @options.rdoc_include)
+    preprocess = RDoc::Markup::PreProcess.new @file_name, @options.rdoc_include
 
-    preprocess.handle(comment) do |directive, param|
+    preprocess.handle comment do |directive, param|
       case directive
       when 'enddoc' then
         throw :enddoc
@@ -391,7 +390,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
            'attr', 'attr_accessor', 'attr_reader', 'attr_writer' then
         false # handled elsewhere
       when 'section' then
-        context.set_current_section(param, comment)
+        context.set_current_section param, comment
         comment.replace ''
         break
       when 'startdoc' then
@@ -405,7 +404,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         @options.title = param
         ''
       else
-        warn "Unrecognized directive '#{directive}'"
+        warn "Unrecognized directive :#{directive}:"
         false
       end
     end

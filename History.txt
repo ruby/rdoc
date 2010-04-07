@@ -19,6 +19,9 @@ To have ri data for you gems you'll also need to run:
 
 If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
 
+* 1 Minor Enhancement
+  * RDoc::Parser::C now supports the include directive for classes and
+    modules.
 * N Bug Fixes
   * RDoc::AnyMethod params now get saved in ri data.
   * ri now displays method arguments correctly.

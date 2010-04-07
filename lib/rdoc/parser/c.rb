@@ -304,7 +304,7 @@ class RDoc::Parser::C < RDoc::Parser
 
       find_modifiers comment, meth_obj if comment
 
-#        meth_obj.params = params
+      #meth_obj.params = params
       meth_obj.start_collecting_tokens
       tk = RDoc::RubyToken::Token.new nil, 1, 1
       tk.set_text body_text
@@ -397,7 +397,13 @@ class RDoc::Parser::C < RDoc::Parser
       comment = $1
     end
 
-    class_mod.comment = strip_stars comment if comment
+    return unless comment
+
+    comment = strip_stars comment
+
+    comment = look_for_directives_in class_mod, comment
+
+    class_mod.comment = comment
   end
 
   ##
@@ -479,7 +485,7 @@ class RDoc::Parser::C < RDoc::Parser
       end
 
       unless enclosure then
-        warn("Enclosing class/module '#{in_module}' for #{type} #{class_name} not known")
+        warn "Enclosing class/module '#{in_module}' for #{type} #{class_name} not known"
         return
       end
     else
@@ -644,6 +650,34 @@ class RDoc::Parser::C < RDoc::Parser
   end
 
   ##
+  # Look for directives in a normal comment block:
+  #
+  #   /*
+  #    * :title: My Awesome Project
+  #    */
+  #
+  # This routine modifies it's parameter
+
+  def look_for_directives_in(context, comment)
+    preprocess = RDoc::Markup::PreProcess.new @file_name, @options.rdoc_include
+
+    preprocess.handle comment do |directive, param|
+      case directive
+      when 'main' then
+        @options.main_page = param
+        ''
+      when 'title' then
+        @options.title = param
+        ''
+      else
+        warn "Unrecognized directive :#{directive}:"
+        false
+      end
+    end
+
+    comment
+  end
+  ##
   # Removes lines that are commented out that might otherwise get picked up
   # when scanning for classes and methods
 
@@ -652,8 +686,8 @@ class RDoc::Parser::C < RDoc::Parser
   end
 
   def remove_private_comments(comment)
-     comment.gsub!(/\/?\*--\n(.*?)\/?\*\+\+/m, '')
-     comment.sub!(/\/?\*--\n.*/m, '')
+    comment.gsub!(/\/?\*--\n(.*?)\/?\*\+\+/m, '')
+    comment.sub!(/\/?\*--\n.*/m, '')
   end
 
   ##

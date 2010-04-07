@@ -150,7 +150,7 @@ class RDoc::ClassModule < RDoc::Context
     if comment then
       document = parse @comment
 
-      comment.parts.concat(document.parts)
+      comment.parts.concat document.parts
 
       @comment = comment
     end
