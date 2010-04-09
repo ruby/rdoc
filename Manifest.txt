@@ -101,6 +101,7 @@ lib/rdoc/task.rb
 lib/rdoc/text.rb
 lib/rdoc/tokenstream.rb
 lib/rdoc/top_level.rb
+test/README
 test/binary.dat
 test/hidden.zip.txt
 test/test.ja.rdoc
