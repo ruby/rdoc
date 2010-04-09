@@ -1,4 +1,4 @@
-=== 2.5.1 / 2010-04-?
+=== 2.5.2 / 2010
 
 *NOTE*:
 
@@ -19,10 +19,16 @@ To have ri data for you gems you'll also need to run:
 
 If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
 
+* N bug fixes
+  * RDoc parses files without extensions as text files again.
+  * RDoc::Parser::Ruby parses %{ strings correctly again.
+
+=== 2.5.1 / 2010-04-06
+
 * 1 Minor Enhancement
   * RDoc::Parser::C now supports the include directive for classes and
     modules.
-* N Bug Fixes
+* 6 Bug Fixes
   * RDoc::AnyMethod params now get saved in ri data.
   * ri now displays method arguments correctly.
   * RDoc::Markup::Parser allows no space between = and header text like rdoc
@@ -30,21 +36,8 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
   * RDoc::Parser::C's "in" directive now looks in the current directory.
   * RDoc::Task's rerdoc task no longer deletes the doc directory twice.
   * rdoc --force-update now works correctly.  Patch by Nobu Nokada
-  * RDoc parser files without extensions as text files again.
 
 === 2.5 / 2010-03-31
-
-*NOTE*:
-
-You'll need to:
-
-  gem install rdoc-data
-
-then run:
-
-  rdoc-data
-
-to have ri data for core and stdlib like Array or Kernel or Date.
 
 * 9 Major Enhancements
   * Darkfish now has a "Home" button
