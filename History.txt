@@ -1,4 +1,4 @@
-=== 2.5.2 / 2010-04
+=== 2.5.2 / 2010-04-09
 
 *NOTE*:
 
@@ -19,9 +19,9 @@ To have ri data for you gems you'll also need to run:
 
 If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
 
-* N Minor Enhancements
+* 1 Minor Enhancements
   * Imported various changes by Nobu from ruby trunk.
-* N Bug Fixes
+* 2 Bug Fixes
   * RDoc parses files without extensions as text files again.
   * RDoc::Parser::Ruby parses %{ strings correctly again.
 
