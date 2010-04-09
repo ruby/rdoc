@@ -19,7 +19,9 @@ To have ri data for you gems you'll also need to run:
 
 If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
 
-* N bug fixes
+* N Minor Enhancements
+  * Imported various changes by Nobu from ruby trunk.
+* N Bug Fixes
   * RDoc parses files without extensions as text files again.
   * RDoc::Parser::Ruby parses %{ strings correctly again.
 

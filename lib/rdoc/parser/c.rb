@@ -390,10 +390,10 @@ class RDoc::Parser::C < RDoc::Parser
         void\s+
         Init_#{class_name}\s*(?:_\(\s*)?\(\s*(?:void\s*)?\)}xmi then # )
       comment = $1
-    elsif @content =~ %r{Document-(?:class|module):\s+#{class_name}\s*?(?:<\s+[:,\w]+)?\n((?>.*?\*/))}m then # "
+    elsif @content =~ %r{Document-(?:class|module):\s+#{class_name}\s*?(?:<\s+[:,\w]+)?\n((?>.*?\*/))}m then
       comment = $1
     elsif @content =~ %r{((?>/\*.*?\*/\s+))
-                         ([\w\.\s]+\s* = \s+)?rb_define_(class|module).*?"(#{class_name})"}xm then
+                         ([\w\.\s]+\s* = \s+)?rb_define_(class|module).*?"(#{class_name})"}xm then # "
       comment = $1
     end
 

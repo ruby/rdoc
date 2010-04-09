@@ -76,10 +76,7 @@ class RDoc::Parser
     elsif s.scan(/<%|%>/).length >= 4 then
       true
     else
-      # From ptools under the Artistic License 2.0, (c) Daniel Berger.
-      s = s.split(//)
-
-      ((s.size - s.grep(" ".."~").size) / s.size.to_f) > 0.30
+      s.count("^ -~\t\r\n").fdiv(s.size) > 0.3 || s.index("\x00")
     end
   end
 
