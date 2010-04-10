@@ -20,7 +20,8 @@ To have ri data for you gems you'll also need to run:
 If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
 
 * N Minor Enhancements
-  * RDoc::Parser::Simple removes coding: comment from first line
+  * RDoc::Parser::Simple and the include directive remove coding: comment from
+    first line
 
 === 2.5.2 / 2010-04-09
 
