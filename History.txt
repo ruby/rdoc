@@ -25,6 +25,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
 * 1 Bug Fixe
   * Fixed loading of created.rid when regenerating documentation.  Ruby bug
     #3121 by Yusuke Endoh.
+  * Compare times as Integers as created.rid doesn't store fractional times.
 
 === 2.5.2 / 2010-04-09
 

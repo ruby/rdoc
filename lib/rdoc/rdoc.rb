@@ -38,6 +38,11 @@ class RDoc::RDoc
   attr_accessor :generator
 
   ##
+  # Hash of files and their last modified times.
+
+  attr_reader :last_modified
+
+  ##
   # RDoc options
 
   attr_accessor :options
@@ -75,13 +80,13 @@ class RDoc::RDoc
   end
 
   def initialize
-    @current      = nil
-    @exclude      = nil
-    @generator    = nil
-    @last_created = {}
-    @old_siginfo  = nil
-    @options      = nil
-    @stats        = nil
+    @current       = nil
+    @exclude       = nil
+    @generator     = nil
+    @last_modified = {}
+    @old_siginfo   = nil
+    @options       = nil
+    @stats         = nil
   end
 
   ##
@@ -230,12 +235,12 @@ option)
 
       case type = stat.ftype
       when "file" then
-        next if last_created = @last_created[rel_file_name] and
-                stat.mtime <= last_created
+        next if last_modified = @last_modified[rel_file_name] and
+                stat.mtime.to_i <= last_modified.to_i
 
         if force_doc or RDoc::Parser.can_parse(rel_file_name) then
           file_list << rel_file_name.sub(/^\.\//, '')
-          @last_created[rel_file_name] = stat.mtime
+          @last_modified[rel_file_name] = stat.mtime
         end
       when "directory" then
         next if rel_file_name == "CVS" || rel_file_name == ".svn"
@@ -360,7 +365,7 @@ The internal error was:
 
     @exclude = @options.exclude
 
-    @last_created = setup_output_dir @options.op_dir, @options.force_update
+    @last_modified = setup_output_dir @options.op_dir, @options.force_update
 
     start_time = Time.now
 
@@ -386,7 +391,7 @@ The internal error was:
           self.class.current = self
 
           @generator.generate file_info
-          update_output_dir ".", start_time, @last_created
+          update_output_dir ".", start_time, @last_modified
         ensure
           self.class.current = nil
         end

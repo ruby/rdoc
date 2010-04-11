@@ -12,12 +12,30 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
   end
 
   def teardown
-    @tempfile.close
+    @tempfile.close rescue nil # HACK for 1.8.6
   end
 
   def test_gather_files
     file = File.expand_path __FILE__
     assert_equal [file], @rdoc.gather_files([file, file])
+  end
+
+  def test_normalized_file_list
+    files = @rdoc.normalized_file_list [__FILE__]
+
+    files = files.map { |file| File.expand_path file }
+
+    assert_equal [File.expand_path(__FILE__)], files
+  end
+
+  def test_normalized_file_list_not_modified
+    files = [__FILE__]
+
+    @rdoc.last_modified[__FILE__] = File.stat(__FILE__).mtime
+
+    files = @rdoc.normalized_file_list [__FILE__]
+
+    assert_empty files
   end
 
   def test_read_file_contents
