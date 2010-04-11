@@ -132,35 +132,39 @@ class RDoc::RDoc
   # contain the flag file <tt>created.rid</tt> then we refuse to use it, as
   # we may clobber some manually generated documentation
 
-  def setup_output_dir(op_dir, force)
-    flag_file = output_flag_file op_dir
+  def setup_output_dir(dir, force)
+    flag_file = output_flag_file dir
 
     last = {}
 
-    if File.exist? op_dir then
-      unless File.directory? op_dir then
-        error "'#{op_dir}' exists, and is not a directory"
-      end
+    if File.exist? dir then
+      error "#{dir} exists and is not a directory" unless File.directory? dir
+
       begin
         open flag_file do |io|
-          unless force
-            Time.parse f.gets
+          unless force then
+            Time.parse io.gets
+
             io.each do |line|
-              file, time = line.split(/\t/, 2)
+              file, time = line.split "\t", 2
               time = Time.parse(time) rescue next
               last[file] = time
             end
           end
         end
-      rescue
-        error "\nDirectory #{op_dir} already exists, but it looks like it\n" +
-          "isn't an RDoc directory. Because RDoc doesn't want to risk\n" +
-          "destroying any of your existing files, you'll need to\n" +
-          "specify a different output directory name (using the\n" +
-          "--op <dir> option).\n\n"
+      rescue SystemCallError, TypeError
+        error <<-ERROR
+
+Directory #{dir} already exists, but it looks like it isn't an RDoc directory.
+
+Because RDoc doesn't want to risk destroying any of your existing files,
+you'll need to specify a different output directory name (using the --op <dir>
+option)
+
+        ERROR
       end
     else
-      FileUtils.mkdir_p(op_dir)
+      FileUtils.mkdir_p dir
     end
 
     last
@@ -170,7 +174,7 @@ class RDoc::RDoc
   # Update the flag file in an output directory.
 
   def update_output_dir(op_dir, time, last = {})
-    File.open(output_flag_file(op_dir), "w") do |f|
+    open output_flag_file(op_dir), "w" do |f|
       f.puts time.rfc2822
       last.each do |n, t|
         f.puts "#{n}\t#{t.rfc2822}"
@@ -396,7 +400,7 @@ The internal error was:
   end
 
   def read_file_contents(filename)
-    content = File.open(filename, "rb") { |f| f.read }
+    content = open filename, "rb" do |f| f.read end
 
     if defined? Encoding then
       if /coding[=:]\s*([^\s;]+)/i =~ content[%r"\A(?:#!.*\n)?.*\n"]

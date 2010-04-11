@@ -19,9 +19,12 @@ To have ri data for you gems you'll also need to run:
 
 If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
 
-* N Minor Enhancements
+* 1 Minor Enhancement
   * RDoc::Parser::Simple and the include directive remove coding: comment from
     first line
+* 1 Bug Fixe
+  * Fixed loading of created.rid when regenerating documentation.  Ruby bug
+    #3121 by Yusuke Endoh.
 
 === 2.5.2 / 2010-04-09
 
