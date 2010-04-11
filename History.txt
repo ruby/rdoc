@@ -22,7 +22,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
 * 1 Minor Enhancement
   * RDoc::Parser::Simple and the include directive remove coding: comment from
     first line
-* 1 Bug Fixe
+* 2 Bug Fixe
   * Fixed loading of created.rid when regenerating documentation.  Ruby bug
     #3121 by Yusuke Endoh.
   * Compare times as Integers as created.rid doesn't store fractional times.
