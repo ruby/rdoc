@@ -24,6 +24,9 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
     #3169 by Marc-Andre Lafortune.
   * Methods now have human readable fragment identifiers for HTML output.
     (#method-i-gsub vs #M000005).  Ruby Bug #3023 by Marc-Andre Lafortune.
+* N Bug Fixes
+  * RDoc::Parser::Ruby now handles <code>while begin a; b end # ...</code>.
+    Ruby Bug #3160 by Yusuke Endoh.
 
 === 2.5.3 / 2010-04-10
 
