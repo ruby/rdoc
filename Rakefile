@@ -13,7 +13,8 @@ Hoe.spec 'rdoc' do
   self.remote_rdoc_dir = ''
   self.testlib = :minitest
 
-  extra_dev_deps << ['minitest', '~> 1.3']
+  extra_dev_deps   << ['minitest', '~> 1.3']
+  extra_rdoc_files << 'Rakefile'
   spec_extras['required_rubygems_version'] = '>= 1.3'
   spec_extras['homepage'] = 'http://rdoc.rubyforge.org'
 end

@@ -22,6 +22,9 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
 * N Minor Enhancements
   * Use #binread when we're determining content coding.  Patch from ruby
     trunk.
+* N Bug Fixes
+  * Fixed indentation of method-description lists in Darkfish.  Bug #28081 by
+    Theresa Dwinnell.
 
 === 2.5.4 / 2010-04-18
 
