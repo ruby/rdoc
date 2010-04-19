@@ -25,6 +25,8 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
 * N Bug Fixes
   * Fixed indentation of method-description lists in Darkfish.  Bug #28081 by
     Theresa Dwinnell.
+  * Fixed loading RDoc::AnyMethod aliases to no longer infinitely loop.  Bug
+    #28107 by Sven Riedel
 
 === 2.5.4 / 2010-04-18
 
