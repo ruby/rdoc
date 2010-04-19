@@ -36,6 +36,9 @@ class XrefTestCase < MiniTest::Unit::TestCase
     rdoc.generator = generator
 
     @c1    = @xref_data.find_module_named 'C1'
+    @c1_m  = @c1.method_list.last  # C1#m
+    @c1__m = @c1.method_list.first # C1::m
+
     @c2    = @xref_data.find_module_named 'C2'
     @c2_c3 = @xref_data.find_module_named 'C2::C3'
     @c3    = @xref_data.find_module_named 'C3'

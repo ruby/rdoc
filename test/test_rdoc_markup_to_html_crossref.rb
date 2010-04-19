@@ -27,14 +27,13 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
 
     refute_ref '#m', '#m'
 
+    assert_ref '../C1.html#M000000', 'C1::m'
     assert_ref '../C2/C3.html', 'C2::C3'
     assert_ref '../C2/C3.html#M000002', 'C2::C3#m'
     assert_ref '../C2/C3/H1.html', 'C3::H1'
     assert_ref '../C4.html', 'C4'
 
-    # TODO there is a C3::H2 in the top-level namespace and RDoc should follow
-    # constant scoping rules
-    refute_ref 'C3::H2', 'C3::H2'
+    assert_ref '../C3/H2.html', 'C3::H2'
     refute_ref 'H1', 'H1'
   end
 
@@ -51,7 +50,7 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
 
     assert_ref '../../C4.html', 'C4'
 
-    refute_ref 'C3::H2', 'C3::H2'
+    assert_ref '../../C3/H2.html', 'C3::H2'
   end
 
   def test_handle_special_CROSSREF_C3
@@ -105,20 +104,24 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
 
   def test_handle_special_CROSSREF_method
     refute_ref 'm', 'm'
-    assert_ref 'C1.html#M000000', '#m'
+    assert_ref 'C1.html#M000001', '#m'
+    assert_ref 'C1.html#M000000', '::m'
 
-    assert_ref 'C1.html#M000000', 'C1#m'
-    assert_ref 'C1.html#M000000', 'C1#m()'
-    assert_ref 'C1.html#M000000', 'C1#m(*)'
+    assert_ref 'C1.html#M000001', 'C1#m'
+    assert_ref 'C1.html#M000001', 'C1.m'
+    assert_ref 'C1.html#M000000', 'C1::m'
 
-    assert_ref 'C1.html#M000000', 'C1.m'
-    assert_ref 'C1.html#M000000', 'C1.m()'
-    assert_ref 'C1.html#M000000', 'C1.m(*)'
+    assert_ref 'C1.html#M000001', 'C1#m'
+    assert_ref 'C1.html#M000001', 'C1#m()'
+    assert_ref 'C1.html#M000001', 'C1#m(*)'
 
-    # HACK should this work
-    #assert_ref 'classes/C1.html#M000001', 'C1::m'
-    #assert_ref 'classes/C1.html#M000001', 'C1::m()'
-    #assert_ref 'classes/C1.html#M000001', 'C1::m(*)'
+    assert_ref 'C1.html#M000001', 'C1.m'
+    assert_ref 'C1.html#M000001', 'C1.m()'
+    assert_ref 'C1.html#M000001', 'C1.m(*)'
+
+    assert_ref 'C1.html#M000000', 'C1::m'
+    assert_ref 'C1.html#M000000', 'C1::m()'
+    assert_ref 'C1.html#M000000', 'C1::m(*)'
 
     assert_ref 'C2/C3.html#M000002', 'C2::C3#m'
 
