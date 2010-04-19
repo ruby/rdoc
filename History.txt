@@ -1,4 +1,4 @@
-=== 2.5.4 / 2010-04-??
+=== 2.5.4 / 2010-04-18
 
 *NOTE*:
 
@@ -19,12 +19,12 @@ To have ri data for you gems you'll also need to run:
 
 If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
 
-* N Minor Enhancements
+* 2 Minor Enhancements
   * Methods will now be cross-referenced when preceeded with ::.  Ruby Bug
     #3169 by Marc-Andre Lafortune.
   * Methods now have human readable fragment identifiers for HTML output.
     (#method-i-gsub vs #M000005).  Ruby Bug #3023 by Marc-Andre Lafortune.
-* N Bug Fixes
+* 1 Bug Fixes
   * RDoc::Parser::Ruby now handles <code>while begin a; b end # ...</code>.
     Ruby Bug #3160 by Yusuke Endoh.
 
