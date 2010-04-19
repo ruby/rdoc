@@ -1,4 +1,4 @@
-=== 2.5.4 / 2010-04-18
+=== 2.5.5 / 2010-??
 
 *NOTE*:
 
@@ -18,6 +18,12 @@ To have ri data for you gems you'll also need to run:
   gem rdoc --all --overwrite
 
 If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
+
+* N Minor Enhancements
+  * Use #binread when we're determining content coding.  Patch from ruby
+    trunk.
+
+=== 2.5.4 / 2010-04-18
 
 * 2 Minor Enhancements
   * Methods will now be cross-referenced when preceeded with ::.  Ruby Bug
