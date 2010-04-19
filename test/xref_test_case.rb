@@ -13,7 +13,6 @@ class XrefTestCase < MiniTest::Unit::TestCase
 
   def setup
     RDoc::TopLevel.reset
-    RDoc::AnyMethod.reset
 
     @file_name = 'xref_data.rb'
     @xref_data = RDoc::TopLevel.new @file_name
