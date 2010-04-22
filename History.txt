@@ -19,7 +19,16 @@ To have ri data for you gems you'll also need to run:
 
 If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
 
-* N Bug Fixes
+* Minor Enhancements
+  * Unrecognized RDoc directives are added as metadata to the object they get
+    attached to.
+
+      ##
+      # :my_new_directive: my cool value
+
+    Results in a 'my_new_directive' metadata key with value 'my cool value' on
+    the RDoc::CodeObject it is for
+* Bug Fixes
   * RDoc no longer prints out "invalid options:" when there were no invalid
     options.
 
