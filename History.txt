@@ -31,6 +31,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
 * Bug Fixes
   * RDoc no longer prints out "invalid options:" when there were no invalid
     options.
+  * Fixed link size on Darkfish file pages
 
 === 2.5.5 / 2010-04-19
 
