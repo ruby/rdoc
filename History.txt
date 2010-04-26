@@ -22,6 +22,8 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
 * Minor Enhancements
   * Unrecognized RDoc directives can now be registered by a plugin for
     handling.  See RDoc::Markup::PreProcess.
+  * Added RDoc::Markup::Raw to allow other markup engines to dump raw content
+    into RDoc.
 
 === 2.5.6 / 2010-04-22
 

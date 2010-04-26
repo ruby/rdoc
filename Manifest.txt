@@ -68,6 +68,7 @@ lib/rdoc/markup/list_item.rb
 lib/rdoc/markup/paragraph.rb
 lib/rdoc/markup/parser.rb
 lib/rdoc/markup/preprocess.rb
+lib/rdoc/markup/raw.rb
 lib/rdoc/markup/rule.rb
 lib/rdoc/markup/to_ansi.rb
 lib/rdoc/markup/to_bs.rb
@@ -122,6 +123,7 @@ test/test_rdoc_markup_document.rb
 test/test_rdoc_markup_paragraph.rb
 test/test_rdoc_markup_parser.rb
 test/test_rdoc_markup_pre_process.rb
+test/test_rdoc_markup_raw.rb
 test/test_rdoc_markup_to_ansi.rb
 test/test_rdoc_markup_to_bs.rb
 test/test_rdoc_markup_to_html.rb
