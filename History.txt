@@ -24,6 +24,8 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
     handling.  See RDoc::Markup::PreProcess.
   * Added RDoc::Markup::Raw to allow other markup engines to dump raw content
     into RDoc.
+* Bug Fixes
+  * rdoc -p no longer means --pipe if files are also given.
 
 === 2.5.6 / 2010-04-22
 
