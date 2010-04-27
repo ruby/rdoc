@@ -153,7 +153,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
 
     @parser.look_for_directives_in @top_level, "# :unhandled: blah\n"
 
-    assert_equal 'blah', @top_level.method['unhandled']
+    assert_equal 'blah', @top_level.metadata['unhandled']
   end
 
   def test_parse_alias
