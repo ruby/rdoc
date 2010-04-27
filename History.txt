@@ -26,6 +26,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
     into RDoc.
 * Bug Fixes
   * rdoc -p no longer means --pipe if files are also given.
+  * RDoc now knows about BasicObject by default.  Ruby Bug #1318 by Ambrus Zsbán
 
 === 2.5.6 / 2010-04-22
 
