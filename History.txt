@@ -1,4 +1,4 @@
-=== 2.5.7 / 2010-04-22
+=== 2.5.8 / 2010-04-27
 
 *NOTE*:
 
@@ -18,6 +18,12 @@ To have ri data for you gems you'll also need to run:
   gem rdoc --all --overwrite
 
 If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
+
+* Bug Fixes
+  * ri no longer complains about nonexistent pagers.
+  * Fixed failing test
+
+=== 2.5.7 / 2010-04-22
 
 * Minor Enhancements
   * Unrecognized RDoc directives can now be registered by a plugin for
