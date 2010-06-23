@@ -509,6 +509,18 @@ Foo::Bar#bother
     assert_instance_of @RM::ToHtml, driver.formatter
   end
 
+  def test_in_path_eh
+    path = ENV['PATH']
+
+    refute @driver.in_path?('/nonexistent')
+
+    ENV['PATH'] = File.expand_path '..', __FILE__
+
+    assert @driver.in_path?(File.basename(__FILE__))
+  ensure
+    ENV['PATH'] = path
+  end
+
   def test_method_type
     assert_equal :both,     @driver.method_type(nil)
     assert_equal :both,     @driver.method_type('.')
@@ -520,7 +532,7 @@ Foo::Bar#bother
     util_store
 
     out, err = capture_io do
-      @driver.list_known_classes 
+      @driver.list_known_classes
     end
 
     assert_equal "Ambiguous\nFoo\nFoo::Bar\nFoo::Baz\nInc\n", out

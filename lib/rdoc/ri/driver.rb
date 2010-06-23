@@ -842,6 +842,17 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
+  # Is +file+ in ENV['PATH']?
+
+  def in_path? file
+    return true if file =~ %r%\A/% and File.exist? file
+
+    ENV['PATH'].split(File::PATH_SEPARATOR).any? do |path|
+      File.exist? File.join(path, file)
+    end
+  end
+
+  ##
   # Lists classes known to ri
 
   def list_known_classes
@@ -1034,9 +1045,11 @@ Options may also be set in the 'RI' environment variable.
     pagers = [ENV['RI_PAGER'], ENV['PAGER'], 'pager', 'less', 'more']
 
     pagers.compact.uniq.each do |pager|
-      next unless File.exist? pager
+      pager_cmd = pager.split.first
 
-      io = IO.popen pager, "w" rescue next
+      next unless in_path? pager_cmd
+
+      io = IO.popen(pager, 'w') rescue next
 
       next if $? and $?.exited? # pager didn't work
 
