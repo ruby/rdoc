@@ -594,6 +594,17 @@ the time
     assert_equal expected, @RMP.parse(str).parts
   end
 
+  def test_parse_verbatim_dash
+    str = <<-STR
+  - blah
+    STR
+
+    expected = [
+      @RM::Verbatim.new('  ', '-', ' ', 'blah', "\n")]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
   def test_parse_verbatim_fold
     str = <<-STR
 now is
@@ -942,7 +953,7 @@ the time
     STR
 
     expected = [
-      [:BULLET,  :BULLET, 0, 0],
+      [:BULLET,  '*',     0, 0],
       [:SPACE,   2,       0, 0],
       [:TEXT,    'l1',    2, 0],
       [:NEWLINE, "\n",    4, 0],
@@ -958,12 +969,12 @@ the time
     STR
 
     expected = [
-      [:BULLET,  :BULLET, 0, 0],
+      [:BULLET,  '*',     0, 0],
       [:SPACE,   2,       0, 0],
       [:TEXT,    'l1',    2, 0],
       [:NEWLINE, "\n",    4, 0],
       [:INDENT,  2,       0, 1],
-      [:BULLET,  :BULLET, 2, 1],
+      [:BULLET,  '*',     2, 1],
       [:SPACE,   2,       2, 1],
       [:TEXT,    'l1.1',  4, 1],
       [:NEWLINE, "\n",    8, 1],

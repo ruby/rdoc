@@ -276,7 +276,7 @@ class RDoc::Markup::Parser
         end
 
         list_marker = case type
-                      when :BULLET                   then '*'
+                      when :BULLET                   then data
                       when :LABEL                    then "[#{data}]"
                       when :LALPHA, :NUMBER, :UALPHA then "#{data}."
                       when :NOTE                     then "#{data}::"
@@ -474,7 +474,7 @@ class RDoc::Markup::Parser
                  when s.scan(/^(-{3,}) *$/) then
                    [:RULE, s[1].length - 2, *token_pos(pos)]
                  when s.scan(/([*-])\s+/) then
-                   @tokens << [:BULLET, :BULLET, *token_pos(pos)]
+                   @tokens << [:BULLET, s[1], *token_pos(pos)]
                    [:SPACE, s.matched_size, *token_pos(pos)]
                  when s.scan(/([a-z]|\d+)\.[ \t]+\S/i) then
                    list_label = s[1]

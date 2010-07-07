@@ -1,7 +1,9 @@
-=== 2.5.? / 2010-?
+=== 2.5.9 / 2010-07-06
 
 * Bug Fixes
   * Look up pager correctly.
+  * Fixed handling of bullets in verbatim sections.  Partial patch by
+    Juha-Jarmo Heinonen.
 
 === 2.5.8 / 2010-04-27
 
