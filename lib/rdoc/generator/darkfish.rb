@@ -151,7 +151,7 @@ class RDoc::Generator::Darkfish
 
 		Dir[(@template_dir + "{js,images}/**/*").to_s].each do |path|
 			next if File.directory? path
-			next if path =~ /#{File::SEPARATOR}\./
+			next if File.basename(path) =~ /^\./
 
 			dst = Pathname.new(path).relative_path_from @template_dir
 
