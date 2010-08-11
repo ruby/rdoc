@@ -4,7 +4,9 @@
   * Support rb_singleton_class().  Reported by Jeremy Evans.
 
 * Bug Fixes
-  * Tread non-ASCII RDoc files as text.  Bug #28391 by Kouhei Sutou.
+  * Treat non-ASCII RDoc files as text.  Bug #28391 by Kouhei Sutou.
+  * Fix potential test failures due to ivar collision.  Bug #28390 by Kouhei
+    Sutou.
 
 === 2.5.9 / 2010-07-06
 

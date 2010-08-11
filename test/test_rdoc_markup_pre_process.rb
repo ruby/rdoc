@@ -10,7 +10,7 @@ class TestRDocMarkupPreProcess < MiniTest::Unit::TestCase
     RDoc::Markup::PreProcess.registered.clear
 
     @tempfile = Tempfile.new 'test_rdoc_markup_pre_process'
-    @name = File.basename @tempfile.path
+    @file_name = File.basename @tempfile.path
     @dir  = File.dirname @tempfile.path
 
     @pp = RDoc::Markup::PreProcess.new __FILE__, [@dir]
@@ -31,7 +31,7 @@ contents of a string.
     @tempfile.flush
     @tempfile.rewind
 
-    content = @pp.include_file @name, ''
+    content = @pp.include_file @file_name, ''
 
     expected = <<-EXPECTED
 Regular expressions (<i>regexp</i>s) are patterns which describe the
