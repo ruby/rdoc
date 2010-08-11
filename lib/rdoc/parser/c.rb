@@ -120,6 +120,7 @@ class RDoc::Parser::C < RDoc::Parser
     @known_classes = RDoc::KNOWN_CLASSES.dup
     @content = handle_tab_width handle_ifdefs_in(@content)
     @classes = Hash.new
+    @singleton_classes = Hash.new
     @file_dir = File.dirname(@file_name)
   end
 
@@ -165,12 +166,19 @@ class RDoc::Parser::C < RDoc::Parser
     end
 
     @content.scan(/([\w\.]+)\s* = \s*rb_define_class_under\s*
-              \(
-                 \s*(\w+),
-                 \s*"(\w+)",
-                 \s*([\w\*\s\(\)\.\->]+)\s*  # for SWIG
-              \s*\)/mx) do |var_name, in_module, class_name, parent|
+                  \(
+                     \s*(\w+),
+                     \s*"(\w+)",
+                     \s*([\w\*\s\(\)\.\->]+)\s*  # for SWIG
+                  \s*\)/mx) do |var_name, in_module, class_name, parent|
       handle_class_module(var_name, "class", class_name, parent, in_module)
+    end
+
+    @content.scan(/([\w\.]+)\s* = \s*rb_singleton_class\s*
+                  \(
+                    \s*(\w+)
+                  \s*\)/mx) do |sclass_var, class_var|
+      handle_singleton sclass_var, class_var
     end
   end
 
@@ -594,6 +602,11 @@ class RDoc::Parser::C < RDoc::Parser
                     source_file = nil)
     class_name = @known_classes[var_name]
 
+    unless class_name then
+      class_name = @singleton_classes[var_name]
+      type = "singleton_method" if class_name and type == "method"
+    end
+
     return unless class_name
 
     class_obj = find_class var_name, class_name
@@ -635,6 +648,12 @@ class RDoc::Parser::C < RDoc::Parser
         meth_obj.visibility = :private if 'private_method' == type
       end
     end
+  end
+
+  def handle_singleton sclass_var, class_var
+    class_name = @known_classes[class_var]
+
+    @singleton_classes[sclass_var] = class_name
   end
 
   def handle_tab_width(body)

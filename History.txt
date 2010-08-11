@@ -1,3 +1,8 @@
+=== 2.5.10 / 2010-08-??
+
+* Minor Enhancements
+  * Support rb_singleton_class().  Reported by Jeremy Evans.
+
 === 2.5.9 / 2010-07-06
 
 * Bug Fixes

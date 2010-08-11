@@ -1,12 +1,12 @@
 require 'stringio'
 require 'tempfile'
 require 'rubygems'
-require 'minitest/unit'
+require 'minitest/autorun'
 require 'rdoc/options'
 require 'rdoc/parser/c'
 
 class RDoc::Parser::C
-  attr_accessor :classes
+  attr_accessor :classes, :singleton_classes
 
   public :do_classes, :do_constants
 end
@@ -66,6 +66,17 @@ VALUE cFoo = rb_define_class("Foo", rb_cObject);
 
     klass = util_get_class content, 'cFoo'
     assert_equal "this is the Foo class", klass.comment
+  end
+
+  def test_do_classes_singleton
+    content = <<-EOF
+VALUE cFoo = rb_define_class("Foo", rb_cObject);
+VALUE cFooS = rb_singleton_class(cFoo);
+    EOF
+
+    util_get_class content, 'cFooS'
+
+    assert_equal 'Foo', @parser.singleton_classes['cFooS']
   end
 
   def test_do_classes_class_under
@@ -442,6 +453,7 @@ Init_IO(void) {
     read_method = klass.method_list.first
     assert_equal "read", read_method.name
     assert_equal "Method Comment!   ", read_method.comment
+    assert read_method.singleton
   end
 
   def test_define_method_private
@@ -472,6 +484,35 @@ Init_IO(void) {
     assert_equal "Method Comment!   ", read_method.comment
   end
 
+  def test_define_method_singleton
+    content = <<-EOF
+/*Method Comment! */
+static VALUE
+rb_io_s_read(argc, argv, io)
+    int argc;
+    VALUE *argv;
+    VALUE io;
+{
+}
+
+void
+Init_IO(void) {
+    /*
+     * a comment for class Foo on rb_define_class
+     */
+    VALUE rb_cIO = rb_define_class("IO", rb_cObject);
+    VALUE rb_cIO_s = rb_singleton_class(rb_cIO);
+    rb_define_singleton_method(rb_cIO_s, "read", rb_io_s_read, -1);
+}
+    EOF
+
+    klass = util_get_class content, 'rb_cIO'
+    read_method = klass.method_list.first
+    assert_equal "read", read_method.name
+    assert_equal "Method Comment!   ", read_method.comment
+    assert read_method.singleton
+  end
+
   def util_get_class(content, name)
     @parser = util_parser content
     @parser.scan
@@ -484,4 +525,3 @@ Init_IO(void) {
 
 end
 
-MiniTest::Unit.autorun
