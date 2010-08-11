@@ -62,12 +62,23 @@ class RDoc::Parser
     true
   end
 
+  def self.set_encoding(string)
+    if defined? Encoding then
+      if /coding[=:]\s*([^\s;]+)/i =~ string[%r"\A(?:#!.*\n)?.*\n"]
+        if enc = ::Encoding.find($1)
+          string.force_encoding(enc)
+        end
+      end
+    end
+  end
+
   ##
   # Determines if the file is a "binary" file which basically means it has
   # content that an RDoc parser shouldn't try to consume.
 
   def self.binary?(file)
     s = File.read(file, 1024) or return false
+    set_encoding(s)
 
     if s[0, 2] == Marshal.dump('')[0, 2] then
       true

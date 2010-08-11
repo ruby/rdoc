@@ -3,6 +3,9 @@
 * Minor Enhancements
   * Support rb_singleton_class().  Reported by Jeremy Evans.
 
+* Bug Fixes
+  * Tread non-ASCII RDoc files as text.  Bug #28391 by Kouhei Sutou.
+
 === 2.5.9 / 2010-07-06
 
 * Bug Fixes

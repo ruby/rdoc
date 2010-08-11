@@ -42,6 +42,18 @@ class TestRDocParser < MiniTest::Unit::TestCase
     File.unlink marshal
   end
 
+  def test_class_binary_japanese_text
+    file_name = File.expand_path '../test.ja.txt', __FILE__
+    assert @RP.binary?(file_name)
+  end
+
+  def test_class_binary_japanese_rdoc
+    skip "Encoding not implemented" unless defined? ::Encoding
+
+    file_name = File.expand_path '../test.ja.rdoc', __FILE__
+    assert !@RP.binary?(file_name)
+  end
+
   def test_class_can_parse
     assert_equal @RP.can_parse(__FILE__), @RP::Ruby
 
