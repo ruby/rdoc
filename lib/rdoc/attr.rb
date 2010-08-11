@@ -54,6 +54,15 @@ class RDoc::Attr < RDoc::CodeObject
   end
 
   ##
+  # HTML fragment reference for this attr
+
+  def aref
+    type = singleton ? 'c' : 'i'
+
+    "attribute-#{type}-#{CGI.escape name}"
+  end
+
+  ##
   # Returns nil, for duck typing with RDoc::AnyMethod
 
   def arglists

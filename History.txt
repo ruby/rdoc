@@ -7,6 +7,8 @@
   * Treat non-ASCII RDoc files as text.  Bug #28391 by Kouhei Sutou.
   * Fix potential test failures due to ivar collision.  Bug #28390 by Kouhei
     Sutou.
+  * Added duck-typed #aref for RDoc::Attr to RDoc::AnyMethod.  Bug #28375 by
+    Erik Hollensbe
 
 === 2.5.9 / 2010-07-06
 
