@@ -2,6 +2,8 @@
 
 * Minor Enhancements
   * Support rb_singleton_class().  Reported by Jeremy Evans.
+  * Support rb_define_private_method() on rb_singleton_class().  Reported by
+    Jeremy Evans.
 
 * Bug Fixes
   * Treat non-ASCII RDoc files as text.  Bug #28391 by Kouhei Sutou.

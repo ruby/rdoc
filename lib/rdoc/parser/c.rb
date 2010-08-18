@@ -600,11 +600,12 @@ class RDoc::Parser::C < RDoc::Parser
 
   def handle_method(type, var_name, meth_name, meth_body, param_count,
                     source_file = nil)
+    singleton = false
     class_name = @known_classes[var_name]
 
     unless class_name then
       class_name = @singleton_classes[var_name]
-      type = "singleton_method" if class_name and type == "method"
+      singleton = true if class_name
     end
 
     return unless class_name
@@ -614,11 +615,12 @@ class RDoc::Parser::C < RDoc::Parser
     if class_obj then
       if meth_name == "initialize" then
         meth_name = "new"
-        type = "singleton_method"
+        singleton = true
       end
 
       meth_obj = RDoc::AnyMethod.new '', meth_name
-      meth_obj.singleton = %w[singleton_method module_function].include? type
+      meth_obj.singleton =
+        singleton || %w[singleton_method module_function].include?(type)
 
       p_count = Integer(param_count) rescue -1
 
