@@ -30,6 +30,31 @@ class TestRDocParserC < MiniTest::Unit::TestCase
     @tempfile.close
   end
 
+  def test_do_aliases
+    content = <<-EOF
+/*
+ * This should show up as an alias with documentation
+ */
+VALUE rhrd_s_blah(VALUE klass, VALUE year) {
+}
+
+void Init_Blah(void) {
+  cDate = rb_define_class("Date", rb_cObject);
+  sDate = rb_singleton_class(cDate);
+
+  rb_define_method(sDate, "blah", rhrd_s_blah, 1);
+
+  rb_define_alias(sDate, "bleh", "blah");
+}
+    EOF
+
+    klass = util_get_class content, 'cDate'
+
+    aliases = klass.aliases
+
+    assert_equal 'bleh', aliases.first.new_name
+  end
+
   def test_do_classes_boot_class
     content = <<-EOF
 /* Document-class: Foo

@@ -3,6 +3,8 @@ require 'rdoc/code_object'
 ##
 # Represent an alias, which is an old_name/new_name pair associated with a
 # particular context
+#
+# TODO: RDoc::Alias needs to know if it's a singleton alias or not
 
 class RDoc::Alias < RDoc::CodeObject
 
