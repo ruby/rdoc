@@ -84,6 +84,10 @@ class TestRDocParser < MiniTest::Unit::TestCase
   def test_class_for_binary
     rp = @RP.dup
 
+    class << rp
+      alias old_can_parse can_parse
+    end
+
     def rp.can_parse(*args) nil end
 
     assert_nil @RP.for(nil, @binary_dat, nil, nil, nil)
