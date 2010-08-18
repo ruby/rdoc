@@ -12,6 +12,8 @@
   * Added duck-typed #aref for RDoc::Attr to RDoc::AnyMethod.  Bug #28375 by
     Erik Hollensbe
   * Fixed method references in HTML output when show_hash is false.
+  * Fixed comments with '.' in call-seq in C sources.  Reported by Jeremy
+    Evans.
 
 === 2.5.9 / 2010-07-06
 

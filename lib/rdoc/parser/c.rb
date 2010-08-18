@@ -440,11 +440,12 @@ class RDoc::Parser::C < RDoc::Parser
 
   def find_modifiers(comment, meth_obj)
     if comment.sub!(/:nodoc:\s*^\s*\*?\s*$/m, '') or
-       comment.sub!(/\A\/\*\s*:nodoc:\s*\*\/\Z/, '')
+       comment.sub!(/\A\/\*\s*:nodoc:\s*\*\/\Z/, '') then
       meth_obj.document_self = false
     end
+
     if comment.sub!(/call-seq:(.*?)^\s*\*?\s*$/m, '') or
-       comment.sub!(/\A\/\*\s*call-seq:(.*?)\*\/\Z/, '')
+       comment.sub!(/\A\/\*\s*call-seq:(.*?)\*\/\Z/, '') then
       seq = $1
       seq.gsub!(/^\s*\*\s*/, '')
       meth_obj.call_seq = seq

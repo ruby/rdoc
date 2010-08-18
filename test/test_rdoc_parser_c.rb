@@ -442,6 +442,38 @@ Init_Foo(void) {
     assert_equal "a comment for bar", bar.comment
   end
 
+  def test_find_modifiers
+    comment = <<-COMMENT
+/* call-seq:
+ *   commercial() -> Date <br />
+ *   commercial(cwyear, cweek=41, cwday=5, sg=nil) -> Date [ruby 1.8] <br />
+ *   commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
+ *
+ * If no arguments are given:
+ * * ruby 1.8: returns a +Date+ for 1582-10-15 (the Day of Calendar Reform in
+ *   Italy)
+ * * ruby 1.9: returns a +Date+ for julian day 0
+ *
+ * Otherwise, returns a +Date+ for the commercial week year, commercial week,
+ * and commercial week day given. Ignores the 4th argument.
+ */
+
+    COMMENT
+
+    parser = util_parser ''
+    method_obj = RDoc::AnyMethod.new nil, 'blah'
+
+    parser.find_modifiers comment, method_obj
+
+    expected = <<-CALL_SEQ
+commercial() -> Date <br />
+commercial(cwyear, cweek=41, cwday=5, sg=nil) -> Date [ruby 1.8] <br />
+commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
+    CALL_SEQ
+
+    assert_equal expected, method_obj.call_seq
+  end
+
   def test_look_for_directives_in
     parser = util_parser ''
 
