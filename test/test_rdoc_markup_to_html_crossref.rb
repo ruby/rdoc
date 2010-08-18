@@ -153,6 +153,13 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
     refute_ref '::C3::H1#n',    '\::C3::H1#n'
   end
 
+  def test_handle_special_CROSSREF_show_hash_false
+    @xref.show_hash = false
+
+    assert_equal "<p>\n<a href=\"C1.html#method-i-m\">m</a>\n</p>\n",
+                 @xref.convert('#m')
+  end
+
   def test_handle_special_CROSSREF_special
     assert_equal "<p>\n<a href=\"C2/C3.html\">C2::C3</a>;method(*)\n</p>\n",
                  @xref.convert('C2::C3;method(*)')

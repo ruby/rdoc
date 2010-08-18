@@ -71,6 +71,11 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   attr_accessor :context
 
   ##
+  # Should we show '#' characters on method references?
+
+  attr_accessor :show_hash
+
+  ##
   # Creates a new crossref resolver that generates links relative to +context+
   # which lives at +from_path+ in the generated files.  '#' characters on
   # references are removed unless +show_hash+ is true.
@@ -98,16 +103,15 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   def handle_special_CROSSREF(special)
     name = special.text
 
-    # This ensures that words entirely consisting of lowercase letters will
-    # not have cross-references generated (to suppress lots of erroneous
+    # This ensures that words consisting of only lowercase letters will not
+    # have cross-references generated (to suppress lots of erroneous
     # cross-references to "new" in text, for instance)
     return name if name =~ /\A[a-z]*\z/
 
     return @seen[name] if @seen.include? name
-
     lookup = name
 
-    name = name[0, 1] unless @show_hash if name[0, 1] == '#'
+    name = name[1..-1] unless @show_hash if name[0, 1] == '#'
 
     # Find class, module, or method in class or module.
     #

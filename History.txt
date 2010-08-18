@@ -1,4 +1,4 @@
-=== 2.5.10 / 2010-08-??
+=== 2.5.10 / 2010-08-17
 
 * Minor Enhancements
   * Support rb_singleton_class().  Reported by Jeremy Evans.
@@ -9,6 +9,7 @@
     Sutou.
   * Added duck-typed #aref for RDoc::Attr to RDoc::AnyMethod.  Bug #28375 by
     Erik Hollensbe
+  * Fixed method references in HTML output when show_hash is false.
 
 === 2.5.9 / 2010-07-06
 
