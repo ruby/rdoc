@@ -498,8 +498,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     al = RDoc::Alias.new get_tkread, old_name, new_name, comment
+    al.singleton = SINGLE == single
     read_documentation_modifiers al, RDoc::ATTR_MODIFIERS
+
     context.add_alias al if al.document_self
+    @stats.add_alias al
+
+    al
   end
 
   def parse_call_parameters(tk)

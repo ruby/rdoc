@@ -220,16 +220,23 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Adds +an_alias+ that is automatically resolved
+  # Adds +an_alias+ that is automatically resolved to it's corresponding
+  # RDoc::AnyMethod object.
 
-  def add_alias(an_alias)
-    meth = find_instance_method_named(an_alias.old_name)
+  def add_alias an_alias
+    old_name = an_alias.old_name
+
+    meth = if an_alias.singleton then
+             find_class_method_named old_name
+           else
+             find_instance_method_named old_name
+           end
 
     if meth then
       add_alias_impl an_alias, meth
     else
       add_to @aliases, an_alias
-      unmatched_alias_list = @unmatched_alias_lists[an_alias.old_name] ||= []
+      unmatched_alias_list = @unmatched_alias_lists[old_name] ||= []
       unmatched_alias_list.push an_alias
     end
 

@@ -51,6 +51,25 @@ class TestRDocContext < XrefTestCase
     assert_equal %w[old_name new_name], @context.method_list.map { |m| m.name }
   end
 
+  def test_add_alias_method_singleton
+    meth = RDoc::AnyMethod.new nil, 'old_name'
+    meth.singleton = true
+
+    as = RDoc::Alias.new nil, 'old_name', 'new_name', 'comment'
+    as.singleton = true
+
+    as.parent = @context
+
+    @context.add_method meth
+    @context.add_alias as
+
+    assert_empty @context.aliases
+    assert_empty @context.unmatched_alias_lists
+    assert_equal %w[old_name new_name], @context.method_list.map { |m| m.name }
+
+    assert @context.method_list.last.singleton
+  end
+
   def test_add_alias_impl
     meth = RDoc::AnyMethod.new nil, 'old_name'
     meth.comment    = 'old comment'

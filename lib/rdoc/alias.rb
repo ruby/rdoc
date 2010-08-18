@@ -24,6 +24,11 @@ class RDoc::Alias < RDoc::CodeObject
   attr_accessor :old_name
 
   ##
+  # Is this a singeton alias?
+
+  attr_accessor :singleton
+
+  ##
   # Source file token stream
 
   attr_accessor :text
@@ -34,10 +39,13 @@ class RDoc::Alias < RDoc::CodeObject
 
   def initialize(text, old_name, new_name, comment)
     super()
+
     @text = text
     @old_name = old_name
     @new_name = new_name
     self.comment = comment
+
+    @singleton = false
   end
 
   def inspect # :nodoc:

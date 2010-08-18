@@ -125,14 +125,19 @@ class RDoc::Parser::C < RDoc::Parser
   end
 
   def do_aliases
-    @content.scan(%r{rb_define_alias\s*\(\s*(\w+),\s*"([^"]+)",\s*"([^"]+)"\s*\)}m) do
-      |var_name, new_name, old_name|
+    @content.scan(/rb_define_alias\s*\(
+                   \s*(\w+),
+                   \s*"(.+?)",
+                   \s*"(.+?)"
+                   \s*\)/xm) do |var_name, new_name, old_name|
       class_name = @known_classes[var_name] || var_name
-      class_obj  = find_class(var_name, class_name)
+      class_obj  = find_class var_name, class_name
 
-      as = class_obj.add_alias RDoc::Alias.new("", old_name, new_name, "")
+      al = RDoc::Alias.new '', old_name, new_name, ''
+      al.singleton = @singleton_classes.key?(var_name)
 
-      @stats.add_alias as
+      class_obj.add_alias al
+      @stats.add_alias al
     end
   end
 

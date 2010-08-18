@@ -14,6 +14,7 @@
   * Fixed method references in HTML output when show_hash is false.
   * Fixed comments with '.' in call-seq in C sources.  Reported by Jeremy
     Evans.
+  * RDoc now understands singleton aliases.  Reported by Jeremy Evans.
 
 === 2.5.9 / 2010-07-06
 

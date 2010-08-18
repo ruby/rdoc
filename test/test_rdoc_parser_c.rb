@@ -35,14 +35,39 @@ class TestRDocParserC < MiniTest::Unit::TestCase
 /*
  * This should show up as an alias with documentation
  */
-VALUE rhrd_s_blah(VALUE klass, VALUE year) {
+VALUE blah(VALUE klass, VALUE year) {
+}
+
+void Init_Blah(void) {
+  cDate = rb_define_class("Date", rb_cObject);
+
+  rb_define_method(cDate, "blah", blah, 1);
+
+  rb_define_alias(cDate, "bleh", "blah");
+}
+    EOF
+
+    klass = util_get_class content, 'cDate'
+
+    methods = klass.method_list
+    assert_equal 2,      methods.length
+    assert_equal 'bleh', methods.last.name
+    assert_equal 'blah', methods.last.is_alias_for.name
+  end
+
+  def test_do_aliases_singleton
+    content = <<-EOF
+/*
+ * This should show up as an alias with documentation
+ */
+VALUE blah(VALUE klass, VALUE year) {
 }
 
 void Init_Blah(void) {
   cDate = rb_define_class("Date", rb_cObject);
   sDate = rb_singleton_class(cDate);
 
-  rb_define_method(sDate, "blah", rhrd_s_blah, 1);
+  rb_define_method(sDate, "blah", blah, 1);
 
   rb_define_alias(sDate, "bleh", "blah");
 }
@@ -50,9 +75,12 @@ void Init_Blah(void) {
 
     klass = util_get_class content, 'cDate'
 
-    aliases = klass.aliases
+    methods = klass.method_list
 
-    assert_equal 'bleh', aliases.first.new_name
+    assert_equal 2,      methods.length
+    assert_equal 'bleh', methods.last.name
+    assert               methods.last.singleton
+    assert_equal 'blah', methods.last.is_alias_for.name
   end
 
   def test_do_classes_boot_class
