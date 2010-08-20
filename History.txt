@@ -1,3 +1,9 @@
+=== 2.5.11 / 2010-08-20
+
+* Minor Enhancements
+  * Alias comments are now discovered by the C parser.  Reported by Jeremy
+    Evans.
+
 === 2.5.10 / 2010-08-17
 
 * Minor Enhancements

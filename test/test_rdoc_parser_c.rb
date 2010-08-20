@@ -58,7 +58,7 @@ void Init_Blah(void) {
   def test_do_aliases_singleton
     content = <<-EOF
 /*
- * This should show up as an alias with documentation
+ * This should show up as a method with documentation
  */
 VALUE blah(VALUE klass, VALUE year) {
 }
@@ -69,6 +69,9 @@ void Init_Blah(void) {
 
   rb_define_method(sDate, "blah", blah, 1);
 
+  /*
+   * This should show up as an alias
+   */
   rb_define_alias(sDate, "bleh", "blah");
 }
     EOF
@@ -81,6 +84,7 @@ void Init_Blah(void) {
     assert_equal 'bleh', methods.last.name
     assert               methods.last.singleton
     assert_equal 'blah', methods.last.is_alias_for.name
+    assert_equal 'This should show up as an alias', methods.last.comment
   end
 
   def test_do_classes_boot_class

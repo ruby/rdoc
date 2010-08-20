@@ -136,6 +136,10 @@ class RDoc::Parser::C < RDoc::Parser
       al = RDoc::Alias.new '', old_name, new_name, ''
       al.singleton = @singleton_classes.key?(var_name)
 
+      comment = find_alias_comment var_name, new_name, old_name
+      comment = strip_stars comment
+      al.comment = comment
+
       class_obj.add_alias al
       @stats.add_alias al
     end
@@ -277,11 +281,23 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  def find_attr_comment(attr_name)
-    if @content =~ %r{((?>/\*.*?\*/\s+))
-                   rb_define_attr\((?:\s*(\w+),)?\s*"#{attr_name}"\s*,.*?\)\s*;}xmi
+  def find_alias_comment(class_name, new_name, old_name)
+    if content =~ %r%((?>/\*.*?\*/\s+))
+                     rb_define_alias\(\s*#{class_name}\s*,
+                                      \s*"#{new_name}"\s*,
+                                      \s*"#{old_name}"\s*\);%xm then
       $1
-    elsif @content =~ %r{Document-attr:\s#{attr_name}\s*?\n((?>.*?\*/))}m
+    else
+      ''
+    end
+  end
+
+  def find_attr_comment(attr_name)
+    if @content =~ %r%((?>/\*.*?\*/\s+))
+                      rb_define_attr\((?:\s*(\w+),)?\s*
+                                      "#{attr_name}"\s*,.*?\)\s*;%xmi
+      $1
+    elsif @content =~ %r%Document-attr:\s#{attr_name}\s*?\n((?>.*?\*/))%m
       $1
     else
       ''
@@ -293,8 +309,10 @@ class RDoc::Parser::C < RDoc::Parser
 
   def find_body(class_name, meth_name, meth_obj, body, quiet = false)
     case body
-    when %r"((?>/\*.*?\*/\s*))((?:(?:static|SWIGINTERN)\s+)?(?:intern\s+)?VALUE\s+#{meth_name}
-            \s*(\([^)]*\))([^;]|$))"xm
+    when %r%((?>/\*.*?\*/\s*))
+            ((?:(?:static|SWIGINTERN)\s+)?
+             (?:intern\s+)?VALUE\s+#{meth_name}
+             \s*(\([^)]*\))([^;]|$))%xm then
       comment = $1
       body_text = $2
       params = $3
@@ -323,7 +341,7 @@ class RDoc::Parser::C < RDoc::Parser
       tk.set_text body_text
       meth_obj.add_token tk
       meth_obj.comment = strip_stars comment
-    when %r{((?>/\*.*?\*/\s*))^\s*(\#\s*define\s+#{meth_name}\s+(\w+))}m
+    when %r%((?>/\*.*?\*/\s*))^\s*(\#\s*define\s+#{meth_name}\s+(\w+))%m
       comment = $1
       body_text = $2
       find_body class_name, $3, meth_obj, body, true
@@ -334,7 +352,7 @@ class RDoc::Parser::C < RDoc::Parser
       tk.set_text body_text
       meth_obj.add_token tk
       meth_obj.comment = strip_stars(comment) + meth_obj.comment.to_s
-    when %r{^\s*\#\s*define\s+#{meth_name}\s+(\w+)}m
+    when %r%^\s*\#\s*define\s+#{meth_name}\s+(\w+)%m
       unless find_body(class_name, $1, meth_obj, body, true)
         warn "No definition for #{meth_name}" unless @options.quiet
         return false
