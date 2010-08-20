@@ -192,7 +192,7 @@ class RDoc::Parser::C < RDoc::Parser
   end
 
   def do_constants
-    @content.scan(%r{\Wrb_define_
+    @content.scan(%r%\Wrb_define_
                    ( variable          |
                      readonly_variable |
                      const             |
@@ -201,7 +201,7 @@ class RDoc::Parser::C < RDoc::Parser
                  (?:\s*(\w+),)?
                  \s*"(\w+)",
                  \s*(.*?)\s*\)\s*;
-                 }xm) do |type, var_name, const_name, definition|
+                 %xm) do |type, var_name, const_name, definition|
       var_name = "rb_cObject" if !var_name or var_name == "rb_mKernel"
       handle_constants type, var_name, const_name, definition
     end
@@ -222,7 +222,7 @@ class RDoc::Parser::C < RDoc::Parser
   end
 
   def do_methods
-    @content.scan(%r{rb_define_
+    @content.scan(%r%rb_define_
                    (
                       singleton_method |
                       method           |
@@ -234,7 +234,7 @@ class RDoc::Parser::C < RDoc::Parser
                      \s*(?:RUBY_METHOD_FUNC\(|VALUEFUNC\()?(\w+)\)?,
                      \s*(-?\w+)\s*\)
                    (?:;\s*/[*/]\s+in\s+(\w+?\.[cy]))?
-                 }xm) do
+                 %xm) do
       |type, var_name, meth_name, meth_body, param_count, source_file|
 
       # Ignore top-object and weird struct.c dynamic stuff
@@ -248,33 +248,32 @@ class RDoc::Parser::C < RDoc::Parser
                     source_file)
     end
 
-    @content.scan(%r{rb_define_attr\(
+    @content.scan(%r%rb_define_attr\(
                              \s*([\w\.]+),
                              \s*"([^"]+)",
                              \s*(\d+),
                              \s*(\d+)\s*\);
-                }xm) do |var_name, attr_name, attr_reader, attr_writer|
+                %xm) do |var_name, attr_name, attr_reader, attr_writer|
       #var_name = "rb_cObject" if var_name == "rb_mKernel"
       handle_attr(var_name, attr_name,
                   attr_reader.to_i != 0,
                   attr_writer.to_i != 0)
     end
 
-    @content.scan(%r{rb_define_global_function\s*\(
+    @content.scan(%r%rb_define_global_function\s*\(
                              \s*"([^"]+)",
                              \s*(?:RUBY_METHOD_FUNC\(|VALUEFUNC\()?(\w+)\)?,
                              \s*(-?\w+)\s*\)
                 (?:;\s*/[*/]\s+in\s+(\w+?\.[cy]))?
-                }xm) do |meth_name, meth_body, param_count, source_file|
+                %xm) do |meth_name, meth_body, param_count, source_file|
       handle_method("method", "rb_mKernel", meth_name,
                     meth_body, param_count, source_file)
     end
 
     @content.scan(/define_filetest_function\s*\(
-                             \s*"([^"]+)",
-                             \s*(?:RUBY_METHOD_FUNC\(|VALUEFUNC\()?(\w+)\)?,
-                             \s*(-?\w+)\s*\)/xm) do
-      |meth_name, meth_body, param_count|
+                     \s*"([^"]+)",
+                     \s*(?:RUBY_METHOD_FUNC\(|VALUEFUNC\()?(\w+)\)?,
+                     \s*(-?\w+)\s*\)/xm) do |meth_name, meth_body, param_count|
 
       handle_method("method", "rb_mFileTest", meth_name, meth_body, param_count)
       handle_method("singleton_method", "rb_cFile", meth_name, meth_body, param_count)
@@ -415,16 +414,17 @@ class RDoc::Parser::C < RDoc::Parser
   def find_class_comment(class_name, class_mod)
     comment = nil
 
-    if @content =~ %r{
+    if @content =~ %r%
         ((?>/\*.*?\*/\s+))
         (static\s+)?
         void\s+
-        Init_#{class_name}\s*(?:_\(\s*)?\(\s*(?:void\s*)?\)}xmi then # )
+        Init_#{class_name}\s*(?:_\(\s*)?\(\s*(?:void\s*)?\)%xmi then
       comment = $1
-    elsif @content =~ %r{Document-(?:class|module):\s+#{class_name}\s*?(?:<\s+[:,\w]+)?\n((?>.*?\*/))}m then
+    elsif @content =~ %r%Document-(?:class|module):\s+#{class_name}\s*?
+                         (?:<\s+[:,\w]+)?\n((?>.*?\*/))%xm then
       comment = $1
-    elsif @content =~ %r{((?>/\*.*?\*/\s+))
-                         ([\w\.\s]+\s* = \s+)?rb_define_(class|module).*?"(#{class_name})"}xm then # "
+    elsif @content =~ %r%((?>/\*.*?\*/\s+))
+                         ([\w\.\s]+\s* = \s+)?rb_define_(class|module).*?"(#{class_name})"%xm then
       comment = $1
     end
 
@@ -442,10 +442,13 @@ class RDoc::Parser::C < RDoc::Parser
   # comment or in the matching Document- section.
 
   def find_const_comment(type, const_name)
-    if @content =~ %r{((?>^\s*/\*.*?\*/\s+))
-                   rb_define_#{type}\((?:\s*(\w+),)?\s*"#{const_name}"\s*,.*?\)\s*;}xmi
+    if @content =~ %r%((?>^\s*/\*.*?\*/\s+))
+                   rb_define_#{type}\((?:\s*(\w+),)?\s*
+                                      "#{const_name}"\s*,
+                                      .*?\)\s*;%xmi then
       $1
-    elsif @content =~ %r{Document-(?:const|global|variable):\s#{const_name}\s*?\n((?>.*?\*/))}m
+    elsif @content =~ %r%Document-(?:const|global|variable):\s#{const_name}
+                         \s*?\n((?>.*?\*/))%xm
       $1
     else
       ''
@@ -477,9 +480,9 @@ class RDoc::Parser::C < RDoc::Parser
 
   def find_override_comment(class_name, meth_name)
     name = Regexp.escape(meth_name)
-    if @content =~ %r{Document-method:\s+#{class_name}(?:\.|::|#)#{name}\s*?\n((?>.*?\*/))}m then
+    if @content =~ %r%Document-method:\s+#{class_name}(?:\.|::|#)#{name}\s*?\n((?>.*?\*/))%m then
       $1
-    elsif @content =~ %r{Document-method:\s#{name}\s*?\n((?>.*?\*/))}m then
+    elsif @content =~ %r%Document-method:\s#{name}\s*?\n((?>.*?\*/))%m then
       $1
     end
   end
@@ -531,7 +534,7 @@ class RDoc::Parser::C < RDoc::Parser
                     class_name
                   end
 
-      if @content =~ %r{Document-class:\s+#{full_name}\s*<\s+([:,\w]+)} then
+      if @content =~ %r%Document-class:\s+#{full_name}\s*<\s+([:,\w]+)% then
         parent_name = $1
       end
 
@@ -724,7 +727,7 @@ class RDoc::Parser::C < RDoc::Parser
   # when scanning for classes and methods
 
   def remove_commented_out_lines
-    @content.gsub!(%r{//.*rb_define_}, '//')
+    @content.gsub!(%r%//.*rb_define_%, '//')
   end
 
   def remove_private_comments(comment)
