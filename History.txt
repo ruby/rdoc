@@ -3,6 +3,8 @@
 * Minor Enhancements
   * Alias comments are now discovered by the C parser.  Reported by Jeremy
     Evans.
+  * Removed --all option which is unused in RDoc.  Use the nodoc or
+    stopdoc/startdoc directives to suppress documentation instead.
 
 === 2.5.10 / 2010-08-17
 

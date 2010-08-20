@@ -59,11 +59,6 @@ class RDoc::Options
   attr_reader :rdoc_include
 
   ##
-  # Include private and protected methods in the output?
-
-  attr_accessor :show_all
-
-  ##
   # Include the '#' at the front of hyperlinked instance method names
 
   attr_reader :show_hash
@@ -96,7 +91,6 @@ class RDoc::Options
   def initialize # :nodoc:
     require 'rdoc/rdoc'
     @op_dir = nil
-    @show_all = false
     @main_page = nil
     @exclude = []
     @generators = RDoc::RDoc::GENERATORS
@@ -158,14 +152,6 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
       opt.separator "Parsing Options:"
-      opt.separator nil
-
-      opt.on("--all", "-a",
-             "Include all methods (not just public) in",
-             "the output.") do |value|
-        @show_all = value
-      end
-
       opt.separator nil
 
       opt.on("--exclude=PATTERN", "-x", Regexp,
