@@ -148,7 +148,9 @@ class RDoc::RDoc
 
     last = {}
 
-    if File.exist? dir then
+    if @options.dry_run then
+      # do nothing
+    elsif File.exist? dir then
       error "#{dir} exists and is not a directory" unless File.directory? dir
 
       begin
@@ -185,6 +187,8 @@ option)
   # Update the flag file in an output directory.
 
   def update_output_dir(op_dir, time, last = {})
+    return if @options.dry_run
+
     open output_flag_file(op_dir), "w" do |f|
       f.puts time.rfc2822
       last.each do |n, t|

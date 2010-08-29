@@ -13,6 +13,11 @@ class RDoc::Options
   attr_reader :charset
 
   ##
+  # If true, RDoc will not write any files.
+
+  attr_accessor :dry_run
+
+  ##
   # Encoding of output where.  This is set via --encoding.
 
   attr_accessor :encoding if Object.const_defined? :Encoding
@@ -95,6 +100,7 @@ class RDoc::Options
 
   def initialize # :nodoc:
     require 'rdoc/rdoc'
+    @dry_run = false
     @op_dir = nil
     @main_page = nil
     @exclude = []
@@ -334,6 +340,11 @@ Usage: #{opt.program_name} [options] [names...]
       opt.separator nil
       opt.separator "Generic Options:"
       opt.separator nil
+
+      opt.on("--[no-]dry-run",
+             "Don't write any files") do |value|
+        @dry_run = value
+      end
 
       opt.on("-D", "--[no-]debug",
              "Displays lots on internal stuff.") do |value|

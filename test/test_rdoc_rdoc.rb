@@ -114,6 +114,20 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
     }
   end
 
+  def test_setup_output_dir_dry_run
+    skip "No Dir::mktmpdir, upgrade your ruby" unless Dir.respond_to? :mktmpdir
+
+    @rdoc.options.dry_run = true
+
+    Dir.mktmpdir do |d|
+      path = File.join d, 'testdir'
+
+      @rdoc.setup_output_dir path, false
+
+      refute File.exist? path
+    end
+  end
+
   def test_setup_output_dir_exists
     skip "No Dir::mktmpdir, upgrade your ruby" unless Dir.respond_to? :mktmpdir
 
@@ -164,6 +178,27 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
       end
 
       assert_match %r%Directory #{Regexp.escape dir} already exists%, e.message
+    end
+  end
+
+  def test_update_output_dir
+    skip "No Dir::mktmpdir, upgrade your ruby" unless Dir.respond_to? :mktmpdir
+
+    Dir.mktmpdir do |d|
+      @rdoc.update_output_dir d, Time.now, {}
+
+      assert File.exist? "#{d}/created.rid"
+    end
+  end
+
+  def test_update_output_dir_dry_run
+    skip "No Dir::mktmpdir, upgrade your ruby" unless Dir.respond_to? :mktmpdir
+
+    Dir.mktmpdir do |d|
+      @rdoc.options.dry_run = true
+      @rdoc.update_output_dir d, Time.now, {}
+
+      refute File.exist? "#{d}/created.rid"
     end
   end
 

@@ -20,6 +20,8 @@ class RDoc::Generator::RI
     @store       = RDoc::RI::Store.new '.'
     @old_siginfo = nil
     @current     = nil
+
+    @store.dry_run = @options.dry_run
   end
 
   ##

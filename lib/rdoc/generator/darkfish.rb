@@ -6,8 +6,6 @@ require 'erb'
 
 require 'rdoc/generator/markup'
 
-$DARKFISH_DRYRUN = false # TODO make me non-global
-
 ##
 # Darkfish RDoc HTML Generator
 #
@@ -148,7 +146,7 @@ class RDoc::Generator::Darkfish
 
   def write_style_sheet
     debug_msg "Copying static files"
-    options = { :verbose => $DEBUG_RDOC, :noop => $DARKFISH_DRYRUN }
+    options = { :verbose => $DEBUG_RDOC, :noop => @options.dry_run }
 
     FileUtils.cp @template_dir + 'rdoc.css', '.', options
 
@@ -246,7 +244,7 @@ class RDoc::Generator::Darkfish
 
     outfile = @basedir + @options.op_dir + 'index.html'
 
-    unless $DARKFISH_DRYRUN then
+    unless @options.dry_run then
       debug_msg "Outputting to %s" % [outfile.expand_path]
       outfile.open 'w', 0644 do |io|
         io.set_encoding @options.encoding if Object.const_defined? :Encoding
@@ -366,7 +364,7 @@ class RDoc::Generator::Darkfish
                ], err.backtrace
              end
 
-    unless $DARKFISH_DRYRUN then
+    unless @options.dry_run then
       outfile.dirname.mkpath
       outfile.open 'w', 0644 do |io|
         io.set_encoding @options.encoding if Object.const_defined? :Encoding

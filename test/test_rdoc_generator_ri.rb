@@ -13,9 +13,9 @@ class TestRDocGeneratorRI < MiniTest::Unit::TestCase
     @tmpdir = File.join Dir.tmpdir, "test_rdoc_generator_ri_#{$$}"
     FileUtils.mkdir_p @tmpdir
     Dir.chdir @tmpdir
-    options = RDoc::Options.new
+    @options = RDoc::Options.new
 
-    @g = RDoc::Generator::RI.new options
+    @g = RDoc::Generator::RI.new @options
 
     @top_level = RDoc::TopLevel.new 'file.rb'
     @klass = @top_level.add_class RDoc::NormalClass, 'Object'
@@ -37,6 +37,10 @@ class TestRDocGeneratorRI < MiniTest::Unit::TestCase
     assert File.file?(path), "#{path} is not a file"
   end
 
+  def refute_file path
+    refute File.exist?(path), "#{path} exists"
+  end
+
   def test_generate
     top_level = RDoc::TopLevel.new 'file.rb'
     top_level.add_class @klass.class, @klass.name
@@ -50,6 +54,20 @@ class TestRDocGeneratorRI < MiniTest::Unit::TestCase
     assert_file File.join(@tmpdir, 'Object', 'attr-i.ri')
     assert_file File.join(@tmpdir, 'Object', 'method-i.ri')
     assert_file File.join(@tmpdir, 'Object', 'method%21-i.ri')
+  end
+
+  def test_generate_dry_run
+    @options.dry_run = true
+    @g = RDoc::Generator::RI.new @options
+
+    top_level = RDoc::TopLevel.new 'file.rb'
+    top_level.add_class @klass.class, @klass.name
+
+    @g.generate nil
+
+    refute_file File.join(@tmpdir, 'cache.ri')
+
+    refute_file File.join(@tmpdir, 'Object')
   end
 
 end

@@ -12,10 +12,20 @@ class TestRDocOptions < MiniTest::Unit::TestCase
     assert_equal 'UTF-8', @options.charset
   end
 
+  def test_dry_run_default
+    refute @options.dry_run
+  end
+
   def test_encoding_default
     skip "Encoding not implemented" unless Object.const_defined? :Encoding
 
     assert_equal Encoding.default_external, @options.encoding
+  end
+
+  def test_parse_dry_run
+    @options.parse %w[--dry-run]
+
+    assert @options.dry_run
   end
 
   def test_parse_encoding
