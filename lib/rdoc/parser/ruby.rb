@@ -455,8 +455,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     read = get_tkread
     rw = "?"
 
-    # TODO If nodoc is given, don't document any of them
-
     tmp = RDoc::CodeObject.new
     read_documentation_modifiers tmp, RDoc::ATTR_MODIFIERS
     return unless tmp.document_self

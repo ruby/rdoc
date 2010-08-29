@@ -246,6 +246,21 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     assert_equal 'my attr', bar.comment
   end
 
+  def test_parse_attr_accessor_nodoc
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# my attr\n"
+
+    util_parser "attr_accessor :foo, :bar # :nodoc:"
+
+    tk = @parser.get_tk
+
+    @parser.parse_attr_accessor klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    assert_equal 0, klass.attributes.length
+  end
+
   def test_parse_attr_accessor_writer
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
