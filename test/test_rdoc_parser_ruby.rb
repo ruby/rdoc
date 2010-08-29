@@ -849,7 +849,8 @@ EOF
 
     method = "def ω() end"
 
-    assert_equal Encoding::UTF_8, method.encoding if defined? ::Encoding
+    assert_equal Encoding::UTF_8, method.encoding if
+      Object.const_defined? :Encoding
 
     util_parser method
 

@@ -48,7 +48,7 @@ class TestRDocParser < MiniTest::Unit::TestCase
   end
 
   def test_class_binary_japanese_rdoc
-    skip "Encoding not implemented" unless defined? ::Encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
 
     file_name = File.expand_path '../test.ja.rdoc', __FILE__
     assert !@RP.binary?(file_name)

@@ -1,3 +1,11 @@
+=== 2.6
+
+* Major Enhancements
+  * Removed TimeConstantMethods
+  * RDoc now converts input files to a single encoding specified by
+    --encoding.  See RDoc::RDoc and RDoc::Options#encoding.
+  * Added --encoding which is preferred over --charset
+
 === 2.5.11 / 2010-08-20
 
 * Minor Enhancements

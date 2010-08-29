@@ -8,9 +8,14 @@ require 'rdoc/ri/paths'
 class RDoc::Options
 
   ##
-  # Character-set
+  # Character-set for HTML output.  #encoding is peferred over #charset
 
   attr_reader :charset
+
+  ##
+  # Encoding of output where.  This is set via --encoding.
+
+  attr_accessor :encoding if Object.const_defined? :Encoding
 
   ##
   # Files matching this pattern will be excluded
@@ -107,7 +112,12 @@ class RDoc::Options
 
     @webcvs = nil
 
-    @charset = 'utf-8'
+    if Object.const_defined? :Encoding then
+      @encoding = Encoding.default_external
+      @charset = @encoding.to_s
+    else
+      @charset = 'UTF-8'
+    end
   end
 
   ##
@@ -154,6 +164,18 @@ Usage: #{opt.program_name} [options] [names...]
       opt.separator "Parsing Options:"
       opt.separator nil
 
+      if Object.const_defined? :Encoding then
+        opt.on("--encoding=ENCODING", "-e", Encoding.list.map { |e| e.name },
+               "Specifies the output encoding.  All files",
+               "read will be converted to this encoding.",
+               "Preferred over --charset") do |value|
+                 @encoding = Encoding.find value
+                 @charset = @encoding.to_s # may not be valid value
+               end
+
+        opt.separator nil
+      end
+
       opt.on("--exclude=PATTERN", "-x", Regexp,
              "Do not process files or directories",
              "matching PATTERN.") do |value|
@@ -197,7 +219,8 @@ Usage: #{opt.program_name} [options] [names...]
       opt.separator nil
 
       opt.on("--charset=CHARSET", "-c",
-             "Specifies the output HTML character-set.") do |value|
+             "Specifies the output HTML character set.",
+             "Use --encoding instead of --charset.") do |value|
         @charset = value
       end
 

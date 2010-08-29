@@ -25,7 +25,7 @@ $DEBUG_RDOC = nil
 # * If you want to use the library to format text blocks into HTML, have a look
 #   at RDoc::Markup.
 # * If you want to try writing your own HTML output template, see
-#   RDoc::Generator::HTML
+#   RDoc::Generator::Darkfish
 #
 # == Summary
 #
@@ -383,7 +383,7 @@ module RDoc
   ##
   # RDoc version you are using
 
-  VERSION = '2.5.11'
+  VERSION = '2.6'
 
   ##
   # Name of the dotfile that contains the description of files to be processed

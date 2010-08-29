@@ -24,6 +24,12 @@ require 'time'
 #
 # Where +args+ is an array of strings, each corresponding to an argument you'd
 # give rdoc on the command line. See rdoc/rdoc.rb for details.
+#
+# == Encoding
+#
+# Where Encoding support is available RDoc will automatically convert all
+# documents to the same output encoding.  The output encoding can be set via
+# RDoc::Options#encoding and defaults to Encoding.default_external.
 
 class RDoc::RDoc
 
@@ -403,9 +409,17 @@ The internal error was:
     end
   end
 
+  ##
+  # Reads the contents of +filename+ and handles any encoding directives in
+  # the file.
+  #
+  # The content will be converted to the encoding specified at
+  # RDoc::Options#encoding.
+
   def read_file_contents(filename)
     content = open filename, "rb" do |f| f.read end
-    RDoc::Parser.set_encoding(content)
+    RDoc::Parser.set_encoding content
+    content.encode! @options.encoding if Object.const_defined? :Encoding
     content
   rescue Errno::EISDIR, Errno::ENOENT
     nil

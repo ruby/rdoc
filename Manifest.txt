@@ -115,6 +115,7 @@ test/test_rdoc_class_module.rb
 test/test_rdoc_code_object.rb
 test/test_rdoc_constant.rb
 test/test_rdoc_context.rb
+test/test_rdoc_generator_darkfish.rb
 test/test_rdoc_generator_ri.rb
 test/test_rdoc_include.rb
 test/test_rdoc_markup.rb

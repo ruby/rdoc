@@ -8,6 +8,35 @@ class TestRDocOptions < MiniTest::Unit::TestCase
     @options = RDoc::Options.new
   end
 
+  def test_charset_default
+    assert_equal 'UTF-8', @options.charset
+  end
+
+  def test_encoding_default
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    assert_equal Encoding.default_external, @options.encoding
+  end
+
+  def test_parse_encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    @options.parse %w[--encoding Big5]
+
+    assert_equal Encoding::Big5, @options.encoding
+    assert_equal 'Big5',         @options.charset
+  end
+
+  def test_parse_encoding_invalid
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    out, err = capture_io do
+      @options.parse %w[--encoding invalid]
+    end
+
+    assert_match %r%^invalid options: --encoding invalid%, err
+  end
+
   def test_parse_ignore_invalid
     out, err = capture_io do
       @options.parse %w[--ignore-invalid --bogus]

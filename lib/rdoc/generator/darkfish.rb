@@ -248,8 +248,9 @@ class RDoc::Generator::Darkfish
 
     unless $DARKFISH_DRYRUN then
       debug_msg "Outputting to %s" % [outfile.expand_path]
-      outfile.open 'w', 0644 do |fh|
-        fh.print output
+      outfile.open 'w', 0644 do |io|
+        io.set_encoding @options.encoding if Object.const_defined? :Encoding
+        io.write output
       end
     else
       debug_msg "Would have output to %s" % [outfile.expand_path]
@@ -365,10 +366,11 @@ class RDoc::Generator::Darkfish
                ], err.backtrace
              end
 
-    unless $DARKFISH_DRYRUN
+    unless $DARKFISH_DRYRUN then
       outfile.dirname.mkpath
-      outfile.open 'w', 0644 do |ofh|
-        ofh.print output
+      outfile.open 'w', 0644 do |io|
+        io.set_encoding @options.encoding if Object.const_defined? :Encoding
+        io.write output
       end
     else
       debug_msg "  would have written %d bytes to %s" % [

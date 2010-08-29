@@ -8,6 +8,7 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
 
   def setup
     @rdoc = RDoc::RDoc.new
+    @rdoc.options = RDoc::Options.new
     @tempfile = Tempfile.new 'test_rdoc_rdoc'
   end
 
@@ -46,7 +47,7 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
   end
 
   def test_read_file_contents_encoding
-    skip "Encoding not implemented" unless defined? ::Encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
 
     @tempfile.write "# coding: utf-8\nhi everybody"
     @tempfile.flush
@@ -56,8 +57,26 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
     assert_equal Encoding::UTF_8, contents.encoding
   end
 
+  def test_read_file_contents_encoding_convert
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    @rdoc.options = RDoc::Options.new
+    @rdoc.options.encoding = Encoding::UTF_8
+
+    content = ""
+    content.encode 'ISO-8859-1'
+    content << "# coding: ISO-8859-1\nhi \xE9verybody"
+
+    @tempfile.write content
+    @tempfile.flush
+
+    contents = @rdoc.read_file_contents @tempfile.path
+    assert_equal Encoding::UTF_8, contents.encoding
+    assert_equal "# coding: ISO-8859-1\nhi \u00e9verybody", contents
+  end
+
   def test_read_file_contents_encoding_fancy
-    skip "Encoding not implemented" unless defined? ::Encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
 
     @tempfile.write "# -*- coding: utf-8; fill-column: 74 -*-\nhi everybody"
     @tempfile.flush

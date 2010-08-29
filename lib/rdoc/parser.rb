@@ -63,12 +63,12 @@ class RDoc::Parser
   end
 
   def self.set_encoding(string)
-    if defined? Encoding then
-      if /coding[=:]\s*([^\s;]+)/i =~ string[%r"\A(?:#!.*\n)?.*\n"]
-        if enc = ::Encoding.find($1)
-          string.force_encoding(enc)
-        end
-      end
+    return unless Object.const_defined? :Encoding
+
+    return unless /coding[=:]\s*([^\s;]+)/i =~ string[%r"\A(?:#!.*\n)?.*\n"]
+
+    if enc = Encoding.find($1) then
+      string.force_encoding enc
     end
   end
 
