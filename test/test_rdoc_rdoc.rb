@@ -64,7 +64,7 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
     @rdoc.options.encoding = Encoding::UTF_8
 
     content = ""
-    content.encode 'ISO-8859-1'
+    content.encode! 'ISO-8859-1'
     content << "# coding: ISO-8859-1\nhi \xE9verybody"
 
     @tempfile.write content
