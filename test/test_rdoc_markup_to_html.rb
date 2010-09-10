@@ -271,7 +271,29 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal expected, @to.res.join
   end
 
-  def test_list_verbatim
+  def list_verbatim
+    expected = <<-EXPECTED
+<ul><li>
+<p>list stuff</p>
+
+<pre>* list
+  with
+
+  second
+
+  1. indented
+  2. numbered
+
+  third
+
+* second</pre>
+</li></ul>
+    EXPECTED
+
+    assert_equal expected, @to.end_accepting
+  end
+
+  def test_list_verbatim_2
     str = "* one\n    verb1\n    verb2\n* two\n"
 
     expected = <<-EXPECTED
