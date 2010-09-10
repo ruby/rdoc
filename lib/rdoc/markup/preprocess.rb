@@ -3,7 +3,9 @@ require 'rdoc/markup'
 ##
 # Handle common directives that can occur in a block of text:
 #
-# : include : filename
+#   \:include: filename
+#
+# Directives can be escaped by preceding them with a backslash.
 #
 # RDoc plugin authors can register additional directives to be handled through
 # RDoc::Markup::PreProcess::register
@@ -52,12 +54,20 @@ class RDoc::Markup::PreProcess
   # +code_object+.  See RDoc::CodeObject#metadata
 
   def handle text, code_object = nil
-    text.gsub!(/^([ \t]*#?[ \t]*):(\w+):([ \t]*)(.+)?\n/) do
-      next $& if $3.empty? and $4 and $4[0, 1] == ':'
+    # regexp helper (square brackets for optional)
+    # $1      $2  $3        $4      $5
+    # [prefix][\]:directive:[spaces][param]newline
+    text.gsub!(/^([ \t]*#?[ \t]*)(\\?):(\w+):([ \t]*)(.+)?\n/) do
+
+      # skip something like ':toto::'
+      next $& if $4.empty? and $5 and $5[0, 1] == ':'
+
+      # skip if escaped
+      next "#$1:#$3:#$4#$5\n" unless $2.empty?
 
       prefix    = $1
-      directive = $2.downcase
-      param     = $4
+      directive = $3.downcase
+      param     = $5
 
       case directive
       when 'include' then
@@ -88,7 +98,20 @@ class RDoc::Markup::PreProcess
   end
 
   ##
-  # Include a file, indenting it correctly.
+  # Handles the <tt>:include: _filename_</tt> directive.
+  #
+  # If the first line of the included file starts with '#', and contains
+  # an encoding information in the form 'coding:' or 'coding=', it is
+  # removed.
+  #
+  # If all lines in the included file start with a '#', this leading '#'
+  # is removed before inclusion. The included content is indented like
+  # the <tt>:include:</tt> directive.
+  #--
+  # so all content will be verbatim because of the likely space after '#'?
+  # TODO shift left the whole file content in that case
+  # TODO comment stop/start #-- and #++ in included file must be processed here
+  # TODO handle encoding properly
 
   def include_file(name, indent)
     if full_name = find_include_file(name) then

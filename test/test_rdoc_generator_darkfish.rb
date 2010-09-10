@@ -1,5 +1,6 @@
 require 'minitest/autorun'
 require 'rdoc/rdoc'
+require 'rdoc/generator/darkfish'
 require 'tmpdir'
 require 'fileutils'
 
@@ -7,12 +8,14 @@ class TestRDocGeneratorDarkfish < MiniTest::Unit::TestCase
 
   def setup
     @pwd = Dir.pwd
+    @lib_dir = "#{@pwd}/lib"
+    $LOAD_PATH.unshift @lib_dir # ensure we load from this RDoc
     RDoc::TopLevel.reset
+    @options = RDoc::Options.new
 
     @tmpdir = File.join Dir.tmpdir, "test_rdoc_generator_darkfish_#{$$}"
     FileUtils.mkdir_p @tmpdir
     Dir.chdir @tmpdir
-    @options = RDoc::Options.new
     @options.op_dir = @tmpdir
     @options.generator = RDoc::Generator::Darkfish
 
@@ -36,6 +39,7 @@ class TestRDocGeneratorDarkfish < MiniTest::Unit::TestCase
   end
 
   def teardown
+    $LOAD_PATH.shift
     Dir.chdir @pwd
     FileUtils.rm_rf @tmpdir
   end

@@ -8,31 +8,102 @@ class RDoc::ClassModule < RDoc::Context
 
   MARSHAL_VERSION = 0 # :nodoc:
 
-  attr_accessor :diagram
+  ##
+  # Constants that are aliases for this class or module
+
+  attr_accessor :constant_aliases
+
+  attr_accessor :diagram # :nodoc:
+
+  ##
+  # Class or module this constant is an alias for
+
+  attr_accessor :is_alias_for
+
+  ##
+  # Return a RDoc::ClassModule of class +class_type+ that is a copy
+  # of module +module+. Used to promote modules to classes.
+
+  def self.from_module(class_type, mod)
+    klass = class_type.new(mod.name)
+    klass.comment = mod.comment
+    klass.parent = mod.parent
+    klass.section = mod.section
+    klass.viewer = mod.viewer
+
+    klass.attributes.concat mod.attributes
+    klass.method_list.concat mod.method_list
+    klass.aliases.concat mod.aliases
+    klass.external_aliases.concat mod.external_aliases
+    klass.constants.concat mod.constants
+    klass.includes.concat mod.includes
+
+    klass.methods_hash.update mod.methods_hash
+    klass.constants_hash.update mod.constants_hash
+
+    klass.current_section = mod.current_section
+    klass.in_files.concat mod.in_files
+    klass.sections.concat mod.sections
+    klass.unmatched_alias_lists = mod.unmatched_alias_lists
+    klass.current_section = mod.current_section
+    klass.visibility = mod.visibility
+
+    klass.classes_hash.update mod.classes_hash
+    klass.modules_hash.update mod.modules_hash
+    klass.metadata.update mod.metadata
+
+    klass.document_self = mod.received_nodoc ? nil : mod.document_self
+    klass.document_children = mod.document_children
+    klass.force_documentation = mod.force_documentation
+    klass.done_documenting = mod.done_documenting
+
+    # update the parent of all children
+
+    (klass.attributes
+    klass.method_list +
+    klass.aliases +
+    klass.external_aliases +
+    klass.constants +
+    klass.includes +
+    klass.classes +
+    klass.modules).each do |obj|
+      obj.parent = klass
+    end
+
+    klass
+  end
 
   ##
   # Creates a new ClassModule with +name+ with optional +superclass+
+  #
+  # This is a constructor for subclasses, and must never be called directly.
 
-  def initialize(name, superclass = 'Object')
-    @diagram    = nil
-    @full_name  = nil
-    @name       = name
-    @superclass = superclass
+  def initialize(name, superclass = nil)
+    @constant_aliases = []
+    @diagram          = nil
+    @full_name        = nil
+    @is_alias_for     = nil
+    @name             = name
+    @superclass       = superclass
     super()
   end
 
   ##
-  # Ancestors list for this ClassModule (abstract)
+  # Ancestors list for this ClassModule: the list of included modules
+  # (classes will add their superclass if any).
+  #
+  # Returns the included classes or modules, not the includes
+  # themselves. If the include is just a String, though, it is returned as is.
 
   def ancestors
-    raise NotImplementedError
+    includes.map { |i| i.is_a?(String) ? i : i.module }
   end
 
   ##
   # Appends +comment+ to the current comment, but separated by a rule.  Works
   # more like <tt>+=</tt>.
 
-  def comment=(comment)
+  def comment= comment
     return if comment.empty?
 
     comment = "#{@comment}\n---\n#{normalize_comment comment}" unless
@@ -42,9 +113,22 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
+  # Looks for a symbol in the #ancestors. See Context#find_local_symbol.
+
+  def find_ancestor_local_symbol symbol
+    ancestors.each do |m|
+      next if m.is_a?(String)
+      res = m.find_local_symbol(symbol)
+      return res if res
+    end
+
+    nil
+  end
+
+  ##
   # Finds a class or module with +name+ in this namespace or its descendents
 
-  def find_class_named(name)
+  def find_class_named name
     return self if full_name == name
     return self if @name == name
 
@@ -66,13 +150,16 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
-  # 'module' or 'class'
+  # Sets the full_name overriding any computed full name.
+  #
+  # Used for modules and classes that are constant aliases.
 
-  def type
-    module? ? 'module' : 'class'
+  def full_name= full_name
+    @full_name = full_name
   end
 
   def marshal_dump # :nodoc:
+    # TODO must store the singleton attribute
     attrs = attributes.sort.map do |attr|
       [attr.name, attr.rw]
     end
@@ -106,10 +193,13 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   def marshal_load array # :nodoc:
+    # TODO must restore the singleton attribute
     initialize_methods_etc
     @document_self    = true
     @done_documenting = false
     @current_section  = nil
+    @parent           = nil
+    @visibility       = nil
 
     @name       = array[1]
     @full_name  = array[2]
@@ -184,6 +274,15 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
+  # Allows overriding the initial name.
+  #
+  # Used for modules and classes that are constant aliases.
+
+  def name= new_name
+    @name = new_name
+  end
+
+  ##
   # Path to this class or module
 
   def path
@@ -191,11 +290,20 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
+  # Name to use to generate the url:
+  # modules and classes that are aliases for another
+  # module or classe return the name of the latter.
+
+  def name_for_path
+    is_alias_for ? is_alias_for.full_name : full_name
+  end
+
+  ##
   # Get the superclass of this class.  Attempts to retrieve the superclass
   # object, returns the name if it is not known.
 
   def superclass
-    RDoc::TopLevel.find_class_named_from(@superclass, parent) || @superclass
+    RDoc::TopLevel.find_class_named(@superclass) || @superclass
   end
 
   ##
@@ -203,12 +311,22 @@ class RDoc::ClassModule < RDoc::Context
 
   def superclass=(superclass)
     raise NoMethodError, "#{full_name} is a module" if module?
-
-    @superclass = superclass if @superclass.nil? or @superclass == 'Object'
+    @superclass = superclass
   end
 
   def to_s # :nodoc:
-    "#{self.class}: #{full_name} #{@comment} #{super}"
+    if is_alias_for then
+      "#{self.class.name} #{self.full_name} -> #{is_alias_for}"
+    else
+      super
+    end
+  end
+
+  ##
+  # 'module' or 'class'
+
+  def type
+    module? ? 'module' : 'class'
   end
 
 end

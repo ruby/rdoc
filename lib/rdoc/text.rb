@@ -43,8 +43,7 @@ module RDoc::Text
   end
 
   ##
-  # Convert a string in markup format into HTML.  Removes the first paragraph
-  # tags if +remove_para+ is true.
+  # Convert a string in markup format into HTML.
   #
   # Requires the including class to implement #formatter
 
@@ -105,7 +104,7 @@ http://rubyforge.org/tracker/?atid=2472&group_id=627&func=browse
 
   def strip_hashes text
     return text if text =~ /^(?>\s*)[^\#]/
-    text.gsub(/^\s*(#+)/) { $1.tr '#',' ' }
+    text.gsub(/^\s*(#+)/) { $1.tr '#',' ' }.gsub(/^\s+$/, '')
   end
 
   ##
@@ -123,7 +122,7 @@ http://rubyforge.org/tracker/?atid=2472&group_id=627&func=browse
     text.sub!  %r%/\*+%       do " " * $&.length end
     text.sub!  %r%\*+/%       do " " * $&.length end
     text.gsub! %r%^[ \t]*\*%m do " " * $&.length end
-    text
+    text.gsub(/^\s+$/, '')
   end
 
 end

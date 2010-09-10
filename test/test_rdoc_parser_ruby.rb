@@ -52,6 +52,61 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     assert_equal "# :attr_writer: my_method\n", comment
   end
 
+  def test_remove_private_comments
+    util_parser ''
+
+    comment = <<-EOS
+# This is text
+#--
+# this is private
+    EOS
+
+    expected = <<-EOS
+# This is text
+    EOS
+
+    @parser.remove_private_comments(comment)
+
+    assert_equal expected, comment
+  end
+
+  def test_remove_private_comments_rule
+    util_parser ''
+
+    comment = <<-EOS
+# This is text with a rule:
+# ---
+# this is also text
+    EOS
+
+    expected = comment.dup
+
+    @parser.remove_private_comments(comment)
+
+    assert_equal expected, comment
+  end
+
+  def test_remove_private_comments_toggle
+    util_parser ''
+
+    comment = <<-EOS
+# This is text
+#--
+# this is private
+#++
+# This is text again.
+    EOS
+
+    expected = <<-EOS
+# This is text
+# This is text again.
+    EOS
+
+    @parser.remove_private_comments(comment)
+
+    assert_equal expected, comment
+  end
+
   def test_look_for_directives_in_commented
     util_parser ""
 
@@ -70,9 +125,9 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
   def test_look_for_directives_in_enddoc
     util_parser ""
 
-    assert_throws :enddoc do
-      @parser.look_for_directives_in @top_level, "# :enddoc:\n"
-    end
+    @parser.look_for_directives_in @top_level, "# :enddoc:\n"
+
+    assert @top_level.done_documenting
   end
 
   def test_look_for_directives_in_main
@@ -105,13 +160,11 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     @top_level.stop_doc
     assert !@top_level.document_self
     assert !@top_level.document_children
-    assert !@top_level.force_documentation
 
     @parser.look_for_directives_in @top_level, "# :startdoc:\n"
 
     assert @top_level.document_self
     assert @top_level.document_children
-    assert @top_level.force_documentation
   end
 
   def test_look_for_directives_in_stopdoc
@@ -414,8 +467,8 @@ end
   end
 
   def test_parse_class_nested_superclass
-    foo = RDoc::NormalModule.new 'Foo'
-    foo.parent = @top_level
+    util_top_level
+    foo = @top_level.add_module RDoc::NormalModule, 'Foo'
 
     util_parser "class Bar < Super\nend"
 
@@ -470,6 +523,30 @@ end
 
     assert_equal %w[A],    RDoc::TopLevel.classes.map { |c| c.full_name }
     assert_equal %w[A::B], RDoc::TopLevel.modules.map { |c| c.full_name }
+  end
+
+  # TODO this is really a Context#add_class test
+  def test_parse_class_object
+    code = <<-CODE
+module A
+  class B
+  end
+  class Object
+  end
+  class C < Object
+  end
+end
+    CODE
+
+    util_parser code
+
+    @parser.parse_module @top_level, false, @parser.get_tk, ''
+
+    assert_equal %w[A],    RDoc::TopLevel.modules.map { |c| c.full_name }
+    assert_equal %w[A::B A::C A::Object], RDoc::TopLevel.classes.map { |c| c.full_name }.sort
+    assert_equal 'Object', RDoc::TopLevel.classes_hash['A::B'].superclass
+    assert_equal 'Object', RDoc::TopLevel.classes_hash['A::Object'].superclass
+    assert_equal 'A::Object', RDoc::TopLevel.classes_hash['A::C'].superclass.full_name
   end
 
   def test_parse_class_mistaken_for_module
@@ -630,8 +707,8 @@ EOF
   end
 
   def test_parse_constant_alias
-    klass = RDoc::NormalClass.new 'Foo'
-    klass.parent = @top_level
+    util_top_level
+    klass = @top_level.add_class RDoc::NormalClass, 'Foo'
     cB = klass.add_class RDoc::NormalClass, 'B'
 
     util_parser "A = B"
@@ -999,8 +1076,6 @@ EOF
   end
 
   def test_parse_statements_class_if
-    comment = "##\n# my method\n"
-
     util_parser <<-CODE
 module Foo
   X = if TRUE then
@@ -1109,7 +1184,7 @@ EOF
     assert_equal 'foo4', foo4.name
     assert_equal 'foo', foo4.is_alias_for.name
 
-    assert_equal 'unknown', @top_level.classes.first.aliases[0].old_name
+    assert_equal 'unknown', @top_level.classes.first.external_aliases[0].old_name
   end
 
   def test_parse_statements_identifier_constant
@@ -1149,15 +1224,15 @@ EOF
 
     constant = constants[1]
     assert_equal 'SECOND_CONSTANT', constant.name
-    assert_equal '[      1,      2,      3   ]', constant.value
+    assert_equal "[\n1,\n2,\n3\n]", constant.value
 
     constant = constants[2]
     assert_equal 'THIRD_CONSTANT', constant.name
-    assert_equal "{      :foo => 'bar',      :x => 'y'   }", constant.value
+    assert_equal "{\n:foo => 'bar',\n:x => 'y'\n}", constant.value
 
     constant = constants[3]
     assert_equal 'FOURTH_CONSTANT', constant.name
-    assert_equal 'SECOND_CONSTANT.map do |element|     element + 1     element + 2   end', constant.value
+    assert_equal "SECOND_CONSTANT.map do |element|\nelement + 1\nelement + 2\nend", constant.value
 
     constant = constants.last
     assert_equal 'FIFTH_CONSTANT', constant.name
@@ -1303,7 +1378,6 @@ end
   # If you're writing code like this you're doing it wrong
 
   def test_sanity_interpolation_crazy
-    last_tk = nil
     util_parser '"#{"#{"a")}" if b}"'
 
     assert_equal '"#{"#{"a")}" if b}"', @parser.get_tk.text
@@ -1311,7 +1385,6 @@ end
   end
 
   def test_sanity_interpolation_curly
-    last_tk = nil
     util_parser '%{ #{} }'
 
     assert_equal '%{ #{} }', @parser.get_tk.text
@@ -1321,13 +1394,13 @@ end
   def test_sanity_interpolation_format
     util_parser '"#{stftime("%m-%d")}"'
 
-    while tk = @parser.get_tk do end
+    while @parser.get_tk do end
   end
 
   def test_sanity_symbol_interpolation
     util_parser ':"#{bar}="'
 
-    while tk = @parser.get_tk do end
+    while @parser.get_tk do end
   end
 
   def tk(klass, line, char, name, text)

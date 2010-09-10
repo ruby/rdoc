@@ -1,19 +1,21 @@
 require 'rubygems'
 require 'minitest/autorun'
 require 'rdoc/rdoc'
+require 'rdoc/generator/ri'
 require 'tmpdir'
 require 'fileutils'
 
 class TestRDocGeneratorRI < MiniTest::Unit::TestCase
 
   def setup
+    @options = RDoc::Options.new
+
     @pwd = Dir.pwd
     RDoc::TopLevel.reset
 
     @tmpdir = File.join Dir.tmpdir, "test_rdoc_generator_ri_#{$$}"
     FileUtils.mkdir_p @tmpdir
     Dir.chdir @tmpdir
-    @options = RDoc::Options.new
 
     @g = RDoc::Generator::RI.new @options
 

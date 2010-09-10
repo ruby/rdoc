@@ -210,7 +210,7 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
       :instance_methods => { 'Object' => %w[method] },
       :modules => %w[Object Object::SubClass],
       :ancestors => {
-        'Object'           => %w[Object],
+        'Object'           => %w[],
         'Object::SubClass' => %w[Incl Object],
       },
     }
@@ -251,7 +251,7 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     assert_file File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
 
     assert_cache({}, {}, { 'Object' => ['attr_accessor attr'] }, %w[Object],
-                 'Object' => %w[Object])
+                 'Object' => %w[])
 
     assert_equal @klass, @s.load_class('Object')
   end
@@ -304,7 +304,7 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     assert_file File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
 
     assert_cache({}, {}, { 'Object' => ['attr_accessor attr'] }, %w[Object],
-                 'Object' => %w[Object])
+                 'Object' => %w[])
 
     assert_equal @klass, @s.load_class('Object')
   end

@@ -23,13 +23,7 @@ require 'time'
 #   rdoc.document(args)
 #
 # Where +args+ is an array of strings, each corresponding to an argument you'd
-# give rdoc on the command line. See rdoc/rdoc.rb for details.
-#
-# == Encoding
-#
-# Where Encoding support is available RDoc will automatically convert all
-# documents to the same output encoding.  The output encoding can be set via
-# RDoc::Options#encoding and defaults to Encoding.default_external.
+# give rdoc on the command line.  See <tt>rdoc --help<tt> for details.
 
 class RDoc::RDoc
 
@@ -175,7 +169,7 @@ you'll need to specify a different output directory name (using the --op <dir>
 option)
 
         ERROR
-      end
+      end unless @options.force_output
     else
       FileUtils.mkdir_p dir
     end
@@ -298,6 +292,14 @@ option)
     return unless parser
 
     parser.scan
+
+    # restart documentation for the classes & modules found
+    top_level.classes_or_modules.each do |cm|
+      cm.done_documenting = false
+    end
+
+    top_level
+
   rescue => e
     $stderr.puts <<-EOF
 Before reporting this, could you check that the file you're documenting
@@ -310,7 +312,7 @@ The internal error was:
 
     EOF
 
-    $stderr.puts e.backtrace.join("\n\t") if $RDOC_DEBUG
+    $stderr.puts e.backtrace.join("\n\t") if $DEBUG_RDOC
 
     raise e
     nil
@@ -354,11 +356,9 @@ The internal error was:
   # For simplicity, +argv+ is an array of strings, equivalent to the strings
   # that would be passed on the command line. (This isn't a coincidence, as
   # we _do_ pass in ARGV when running interactively). For a list of options,
-  # see rdoc/rdoc.rb. By default, output will be stored in a directory
+  # see <tt>rdoc --help</tt>. By default, output will be stored in a directory
   # called +doc+ below the current directory, so make sure you're somewhere
   # writable before invoking.
-  #
-  # Throws: RDoc::Error on error
 
   def document(argv)
     RDoc::TopLevel.reset
@@ -387,17 +387,16 @@ The internal error was:
     else
       gen_klass = @options.generator
 
-      unless @options.quiet then
-        $stderr.puts "\nGenerating #{gen_klass.name.sub(/^.*::/, '')}..."
-      end
-
       @generator = gen_klass.for @options
-
-      pwd = Dir.pwd
 
       Dir.chdir @options.op_dir do
         begin
           self.class.current = self
+          RDoc::TopLevel.complete @options.visibility
+
+          unless @options.quiet then
+            $stderr.puts "\nGenerating #{gen_klass.name.sub(/^.*::/, '')} format into #{Dir.pwd}..."
+          end
 
           @generator.generate file_info
           update_output_dir ".", start_time, @last_modified

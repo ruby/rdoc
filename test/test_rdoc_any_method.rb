@@ -5,11 +5,11 @@ class RDocAnyMethodTest < XrefTestCase
   def test_aref
     m = RDoc::AnyMethod.new nil, 'method?'
 
-    assert_equal 'method-i-method%3F', m.aref
+    assert_equal 'method-i-method-3F', m.aref
 
     m.singleton = true
 
-    assert_equal 'method-c-method%3F', m.aref
+    assert_equal 'method-c-method-3F', m.aref
   end
 
   def test_arglists

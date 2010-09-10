@@ -55,7 +55,7 @@ require 'rdoc/known_classes'
 #
 # [Document-method: <i>name</i>]
 #   This comment documents the named method. Use when RDoc cannot
-#   automatically find the method from it's declaration
+#   automatically find the method from its declaration
 #
 # [call-seq:  <i>text up to an empty line</i>]
 #   Because C source doesn't give descripive names to Ruby-level parameters,
@@ -314,7 +314,6 @@ class RDoc::Parser::C < RDoc::Parser
              \s*(\([^)]*\))([^;]|$))%xm then
       comment = $1
       body_text = $2
-      params = $3
 
       remove_private_comments comment if comment
 
@@ -353,7 +352,7 @@ class RDoc::Parser::C < RDoc::Parser
       meth_obj.comment = strip_stars(comment) + meth_obj.comment.to_s
     when %r%^\s*\#\s*define\s+#{meth_name}\s+(\w+)%m
       unless find_body(class_name, $1, meth_obj, body, true)
-        warn "No definition for #{meth_name}" unless @options.quiet
+        warn "No definition for #{meth_name}" if @options.verbosity > 1
         return false
       end
     else
@@ -364,7 +363,7 @@ class RDoc::Parser::C < RDoc::Parser
         find_modifiers(comment, meth_obj)
         meth_obj.comment = strip_stars comment
       else
-        warn "No definition for #{meth_name}" unless @options.quiet
+        warn "No definition for #{meth_name}" if @options.verbosity > 1
         return false
       end
     end
@@ -419,7 +418,7 @@ class RDoc::Parser::C < RDoc::Parser
         (static\s+)?
         void\s+
         Init_#{class_name}\s*(?:_\(\s*)?\(\s*(?:void\s*)?\)%xmi then
-      comment = $1
+      comment = $1.sub(%r%Document-(?:class|module):\s+#{class_name}%, '')
     elsif @content =~ %r%Document-(?:class|module):\s+#{class_name}\s*?
                          (?:<\s+[:,\w]+)?\n((?>.*?\*/))%xm then
       comment = $1
@@ -467,14 +466,58 @@ class RDoc::Parser::C < RDoc::Parser
   def find_modifiers(comment, meth_obj)
     if comment.sub!(/:nodoc:\s*^\s*\*?\s*$/m, '') or
        comment.sub!(/\A\/\*\s*:nodoc:\s*\*\/\Z/, '') then
-      meth_obj.document_self = false
+      meth_obj.document_self = nil # notify nodoc
     end
 
-    if comment.sub!(/call-seq:(.*?)^\s*\*?\s*$/m, '') or
-       comment.sub!(/\A\/\*\s*call-seq:(.*?)\*\/\Z/, '') then
-      seq = $1
-      seq.gsub!(/^\s*\*\s*/, '')
+    # we must handle situations like this:
+    #   /*
+    #    *  call-seq:
+    #    *     ARGF.readlines(sep=$/)     -> array
+    #    *     ARGF.readlines(limit)      -> array
+    #    *     ARGF.readlines(sep, limit) -> array
+    #    *
+    #    *     ARGF.to_a(sep=$/)     -> array
+    #    *     ARGF.to_a(limit)      -> array
+    #    *     ARGF.to_a(sep, limit) -> array
+    #    *
+    #    *  Reads +ARGF+'s current file in its entirety, returning an +Array+
+    #    *  of its lines, one line per element. Lines are assumed to be
+    #    *  separated by _sep_.
+    #    *
+    #    *     lines = ARGF.readlines
+    #    *     lines[0]                #=> "This is line one\n"
+    #    */
+    #
+    # the difficulty is to make sure not to match lines starting with ARGF at
+    # the same indent, but that are after the first description paragraph.
+
+    if comment =~ /call-seq:(.*?[^\s\*].*?)^\s*\*?\s*$/m then
+      all_start, all_stop = $~.offset(0)
+      seq_start, seq_stop = $~.offset(1)
+
+      # we get the following lines that start with the leading word at the
+      # same indent, even if they have blank lines before
+      if $1 =~ /(^\s*\*?\s*\n)+^(\s*\*?\s*\w+)/m then
+        leading = $2 # ' *    ARGF' in the example above
+        re = %r%
+          \A(
+             (^\s*\*?\s*\n)+
+             (^#{Regexp.escape leading}.*?\n)+
+            )+
+          ^\s*\*?\s*$
+        %xm
+        if comment[seq_stop..-1] =~ re then
+          all_stop = seq_stop + $~.offset(0).last
+          seq_stop = seq_stop + $~.offset(1).last
+        end
+      end
+
+      seq = comment[seq_start..seq_stop]
+      seq.gsub!(/^(\s*\*?\s*?)(\S|\n)/m, '\2')
+      comment.slice! all_start...all_stop
       meth_obj.call_seq = seq
+    elsif comment.sub!(/\A\/\*\s*call-seq:(.*?)\*\/\Z/, '') then
+      meth_obj.call_seq = $1.strip
     end
   end
 
@@ -704,7 +747,7 @@ class RDoc::Parser::C < RDoc::Parser
   #    * :title: My Awesome Project
   #    */
   #
-  # This routine modifies it's parameter
+  # This routine modifies its parameter
 
   def look_for_directives_in(context, comment)
     preprocess = RDoc::Markup::PreProcess.new @file_name, @options.rdoc_include

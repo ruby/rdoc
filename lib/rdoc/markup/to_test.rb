@@ -22,8 +22,12 @@ class RDoc::Markup::ToTest < RDoc::Markup::Formatter
     @res << paragraph.text
   end
 
+  def accept_raw raw
+    @res << raw.parts.join
+  end
+
   def accept_verbatim(verbatim)
-    @res << verbatim.text
+    @res << verbatim.text.gsub(/^(\S)/, '  \1')
   end
 
   def accept_list_start(list)

@@ -26,6 +26,18 @@ class TestRDocAttr < MiniTest::Unit::TestCase
     assert_nil @a.call_seq
   end
 
+  def test_definition
+    assert_equal 'attr_accessor', @a.definition
+
+    @a.rw = 'R'
+
+    assert_equal 'attr_reader', @a.definition
+
+    @a.rw = 'W'
+
+    assert_equal 'attr_writer', @a.definition
+  end
+
   def test_full_name
     assert_equal '(unknown)#attr', @a.full_name
   end
@@ -39,15 +51,10 @@ class TestRDocAttr < MiniTest::Unit::TestCase
   end
 
   def test_type
-    assert_equal 'attr_accessor', @a.type
+    assert_equal 'instance', @a.type
 
-    @a.rw = 'R'
-
-    assert_equal 'attr_reader', @a.type
-
-    @a.rw = 'W'
-
-    assert_equal 'attr_writer', @a.type
+    @a.singleton = true
+    assert_equal 'class', @a.type
   end
 
 end

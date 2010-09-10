@@ -1,4 +1,4 @@
-require 'rdoc/markup/inline'
+require 'rdoc/markup/to_rdoc'
 
 ##
 # Outputs RDoc markup with vibrant ANSI color!
@@ -28,7 +28,7 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
             when :BULLET then
               2
             when :NOTE, :LABEL then
-              @res << "\n"
+              @res << "\n" unless res.length == 1
               2
             else
               bullet = @list_index.last.to_s

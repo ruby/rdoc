@@ -11,7 +11,6 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
     super
 
     @m = RDoc::Markup.new
-    @am = RDoc::Markup::AttributeManager.new
     @RM = RDoc::Markup
 
     @bullet_list = @RM::List.new(:BULLET,
@@ -70,6 +69,56 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
         accept_heading
       end
 
+      def test_accept_heading_1
+        @to.start_accepting
+
+        @to.accept_heading @RM::Heading.new(1, 'Hello')
+
+        accept_heading_1
+      end
+
+      def test_accept_heading_2
+        @to.start_accepting
+
+        @to.accept_heading @RM::Heading.new(2, 'Hello')
+
+        accept_heading_2
+      end
+
+      def test_accept_heading_3
+        skip "No String#chars, upgrade your ruby" unless ''.respond_to? :chars
+
+        @to.start_accepting
+
+        @to.accept_heading @RM::Heading.new(3, 'Hello')
+
+        accept_heading_3
+      end
+
+      def test_accept_heading_4
+        @to.start_accepting
+
+        @to.accept_heading @RM::Heading.new(4, 'Hello')
+
+        accept_heading_4
+      end
+
+      def test_accept_heading_b
+        @to.start_accepting
+
+        @to.accept_heading @RM::Heading.new(1, '*Hello*')
+
+        accept_heading_b
+      end
+
+      def test_accept_heading_suppressed_crossref # HACK to_html_crossref test
+        @to.start_accepting
+
+        @to.accept_heading @RM::Heading.new(1, '\\Hello')
+        
+        accept_heading_suppressed_crossref
+      end
+
       def test_accept_paragraph
         @to.start_accepting
 
@@ -78,11 +127,50 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
         accept_paragraph
       end
 
+      def test_accept_paragraph_b
+        @to.start_accepting
+
+        @to.accept_paragraph @RM::Paragraph.new('reg <b>bold words</b> reg')
+
+        accept_paragraph_b
+      end
+
+      def test_accept_paragraph_i
+        @to.start_accepting
+
+        @to.accept_paragraph @RM::Paragraph.new('reg <em>italic words</em> reg')
+
+        accept_paragraph_i
+      end
+
+      def test_accept_paragraph_plus
+        @to.start_accepting
+
+        @to.accept_paragraph @RM::Paragraph.new('reg +teletype+ reg')
+
+        accept_paragraph_plus
+      end
+
+      def test_accept_paragraph_star
+        @to.start_accepting
+
+        @to.accept_paragraph @RM::Paragraph.new('reg *bold* reg')
+
+        accept_paragraph_star
+      end
+
+      def test_accept_paragraph_underscore
+        @to.start_accepting
+
+        @to.accept_paragraph @RM::Paragraph.new('reg _italic_ reg')
+
+        accept_paragraph_underscore
+      end
+
       def test_accept_verbatim
         @to.start_accepting
 
-        @to.accept_verbatim @RM::Verbatim.new('  ', 'hi', "\n",
-                                              '  ', 'world', "\n")
+        @to.accept_verbatim @RM::Verbatim.new("hi\n", "  world\n")
 
         accept_verbatim
       end
@@ -145,6 +233,20 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
         @to.accept_list_item_start @note_list.items.first
 
         accept_list_item_start_note
+      end
+
+      def test_accept_list_item_start_note_2
+        list = @RM::List.new(:NOTE,
+                 @RM::ListItem.new('<tt>teletype</tt>',
+                   @RM::Paragraph.new('teletype description')))
+
+        @to.start_accepting
+
+        list.accept @to
+
+        @to.end_accepting
+
+        accept_list_item_start_note_2
       end
 
       def test_accept_list_item_start_number
@@ -345,6 +447,45 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
         @to.accept_list_end @ualpha_list
 
         accept_list_end_ualpha
+      end
+
+      def test_list_nested
+        doc = @RM::Document.new(
+                @RM::List.new(:BULLET,
+                  @RM::ListItem.new(nil,
+                    @RM::Paragraph.new('l1'),
+                    @RM::List.new(:BULLET,
+                      @RM::ListItem.new(nil,
+                        @RM::Paragraph.new('l1.1')))),
+                  @RM::ListItem.new(nil,
+                    @RM::Paragraph.new('l2'))))
+
+        doc.accept @to
+
+        list_nested
+      end
+
+      def test_list_verbatim # HACK overblown
+        doc = @RM::Document.new(
+                @RM::List.new(:BULLET,
+                  @RM::ListItem.new(nil,
+                    @RM::Paragraph.new('list', 'stuff'),
+                    @RM::BlankLine.new,
+                    @RM::Verbatim.new("* list\n",
+                                      "  with\n",
+                                      "\n",
+                                      "  second\n",
+                                      "\n",
+                                      "  1. indented\n",
+                                      "  2. numbered\n",
+                                      "\n",
+                                      "  third\n",
+                                      "\n",
+                                      "* second\n"))))
+
+        doc.accept @to
+
+        list_verbatim
       end
     end
   end

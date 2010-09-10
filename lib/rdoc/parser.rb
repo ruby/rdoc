@@ -65,11 +65,10 @@ class RDoc::Parser
   def self.set_encoding(string)
     return unless Object.const_defined? :Encoding
 
-    return unless /coding[=:]\s*([^\s;]+)/i =~ string[%r"\A(?:#!.*\n)?.*\n"]
+    return unless /coding[=:]\s*([^\s;]+)/i =~ string[/\A(?:#!.*\n)?.*\n/]
 
-    if enc = Encoding.find($1) then
-      string.force_encoding enc
-    end
+    enc = Encoding.find $1
+    string.force_encoding enc if enc
   end
 
   ##
@@ -77,19 +76,31 @@ class RDoc::Parser
   # content that an RDoc parser shouldn't try to consume.
 
   def self.binary?(file)
-    s = File.read(file, 1024) or return false
-    set_encoding(s)
+    return false if file =~ /erb\.rb$/
+    return false if file =~ /\.(rdoc|txt)$/
 
-    if s[0, 2] == Marshal.dump('')[0, 2] then
-      true
-    elsif file =~ /erb\.rb$/ then
-      false
-    elsif s.scan(/<%|%>/).length >= 4 || s.index("\x00") then
-      true
-    elsif 0.respond_to? :fdiv then
-      s.count("^ -~\t\r\n").fdiv(s.size) > 0.3
-    else # HACK 1.8.6
-      (s.count("^ -~\t\r\n").to_f / s.size) > 0.3
+    s = File.read(file, 1024) or return false
+
+    have_encoding = s.respond_to? :encoding
+
+    if have_encoding then
+      return false if s.encoding != Encoding::ASCII_8BIT and s.valid_encoding?
+    end
+
+    return true if s[0, 2] == Marshal.dump('')[0, 2] or
+                   s.scan(/<%|%>/).length >= 4 or
+                   s.index("\x00")
+
+    if have_encoding then
+      s.force_encoding Encoding.default_external
+
+      not s.valid_encoding?
+    else
+      if 0.respond_to? :fdiv then
+        s.count("^ -~\t\r\n").fdiv(s.size) > 0.3
+      else # HACK 1.8.6
+        (s.count("^ -~\t\r\n").to_f / s.size) > 0.3
+      end
     end
   end
 

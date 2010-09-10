@@ -6,6 +6,11 @@ begin
 rescue LoadError
 end
 
+begin
+  require 'win32console'
+rescue LoadError
+end
+
 require 'rdoc/ri'
 require 'rdoc/ri/paths'
 require 'rdoc/markup'
@@ -120,7 +125,7 @@ Where name can be:
 All class names may be abbreviated to their minimum unambiguous form. If a name
 is ambiguous, all valid options will be listed.
 
-The form '.' method matches either class or instance methods, while #method
+A '.' matches either class or instance methods, while #method
 matches only instance and ::method matches only class methods.
 
 For example:
@@ -130,7 +135,7 @@ For example:
     #{opt.program_name} File.new
     #{opt.program_name} zip
 
-Note that shell quoting may be required for method names containing
+Note that shell quoting or escaping may be required for method names containing
 punctuation:
 
     #{opt.program_name} 'Array.[]'
@@ -354,7 +359,7 @@ Options may also be set in the 'RI' environment variable.
 
     paths = RDoc::Markup::Verbatim.new
     also_in.each do |store|
-      paths.parts.push '  ', store.friendly_path, "\n"
+      paths.parts.push store.friendly_path, "\n"
     end
     out << paths
   end
@@ -422,7 +427,7 @@ Options may also be set in the 'RI' environment variable.
           verb = RDoc::Markup::Verbatim.new
 
           wout.each do |incl|
-            verb.push '  ', incl.name, "\n"
+            verb.push incl.name, "\n"
           end
 
           out << verb
@@ -441,7 +446,7 @@ Options may also be set in the 'RI' environment variable.
     out << RDoc::Markup::BlankLine.new
 
     out.push(*methods.map do |method|
-      RDoc::Markup::Verbatim.new '  ', method
+      RDoc::Markup::Verbatim.new method
     end)
 
     out << RDoc::Markup::BlankLine.new
@@ -589,6 +594,8 @@ Options may also be set in the 'RI' environment variable.
       instance_methods = store.instance_methods[klass.full_name]
       attributes       = store.attributes[klass.full_name]
 
+      p klass.full_name => store.class_methods
+
       if comment.empty? and !(instance_methods or class_methods) then
         also_in << store
         next
@@ -659,8 +666,8 @@ Options may also be set in the 'RI' environment variable.
 
         if method.arglists then
           arglists = method.arglists.chomp.split "\n"
-          arglists = arglists.map { |line| ['  ', line, "\n"] }
-          out << RDoc::Markup::Verbatim.new(*arglists.flatten)
+          arglists = arglists.map { |line| line + "\n" }
+          out << RDoc::Markup::Verbatim.new(*arglists)
           out << RDoc::Markup::Rule.new(1)
         end
 

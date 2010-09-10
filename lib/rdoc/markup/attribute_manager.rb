@@ -56,7 +56,7 @@ class RDoc::Markup::AttributeManager
   def initialize
     @html_tags = {}
     @matching_word_pairs = {}
-    @protectable = %w[<\\]
+    @protectable = %w[<]
     @special = {}
     @word_pair_map = {}
 
@@ -265,7 +265,6 @@ class RDoc::Markup::AttributeManager
   def split_into_flow
     res = []
     current_attr = 0
-    str = ""
 
     str_len = @str.length
 

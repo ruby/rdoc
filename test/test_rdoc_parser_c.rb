@@ -5,6 +5,46 @@ require 'minitest/autorun'
 require 'rdoc/options'
 require 'rdoc/parser/c'
 
+=begin
+  TODO: test call-seq parsing
+
+/*
+ *  call-seq:
+ *     ARGF.readlines(sep=$/)     -> array
+ *     ARGF.readlines(limit)      -> array
+ *     ARGF.readlines(sep, limit) -> array
+ *
+ *     ARGF.to_a(sep=$/)     -> array
+ *     ARGF.to_a(limit)      -> array
+ *     ARGF.to_a(sep, limit) -> array
+ *
+ *  Reads +ARGF+'s current file in its entirety, returning an +Array+ of its
+ *  lines, one line per element. Lines are assumed to be separated by _sep_.
+ *
+ *     lines = ARGF.readlines
+ *     lines[0]                #=> "This is line one\n"
+ */
+
+assert call-seq did not stop at first empty line
+
+/*
+ * call-seq:
+ *
+ *  flt ** other  ->  float
+ *
+ * Raises <code>float</code> the <code>other</code> power.
+ *
+ *    2.0**3      #=> 8.0
+ */
+
+assert call-seq correct (bug: was empty)
+
+/* call-seq: flt ** other  ->  float */
+
+assert call-seq correct
+
+=end
+
 class RDoc::Parser::C
   attr_accessor :classes, :singleton_classes
 
@@ -497,10 +537,11 @@ Init_Foo(void) {
 
     parser.find_modifiers comment, method_obj
 
-    expected = <<-CALL_SEQ
+    expected = <<-CALL_SEQ.chomp
 commercial() -> Date <br />
 commercial(cwyear, cweek=41, cwday=5, sg=nil) -> Date [ruby 1.8] <br />
 commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
+ 
     CALL_SEQ
 
     assert_equal expected, method_obj.call_seq

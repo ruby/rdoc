@@ -2,13 +2,18 @@ require 'rubygems'
 require 'minitest/autorun'
 require 'rdoc'
 require 'rdoc/markup'
+require 'rdoc/markup/formatter'
 require 'rdoc/markup/attribute_manager'
 
-class TestAttributeManager < MiniTest::Unit::TestCase
+class TestAttributeManager < MiniTest::Unit::TestCase # HACK fix test name
 
   def setup
     @am = RDoc::Markup::AttributeManager.new
     @klass = RDoc::Markup::AttributeManager
+    @formatter = RDoc::Markup::Formatter.new
+    @formatter.add_tag :BOLD, '<B>', '</B>'
+    @formatter.add_tag :EM, '<EM>', '</EM>'
+    @formatter.add_tag :TT, '<TT>', '</TT>'
   end
 
   def test_initial_word_pairs
@@ -57,12 +62,41 @@ class TestAttributeManager < MiniTest::Unit::TestCase
     assert(specials.has_key?("WikiWord"))
   end
 
-  def silently(&block)
-    warn_level = $VERBOSE
-    $VERBOSE = nil
-    result = block.call
-    $VERBOSE = warn_level
-    result
+  def test_escapes
+    assert_equal '<TT>text</TT>',   output('<tt>text</tt>')
+    assert_equal '<tt>text</tt>',   output('\\<tt>text</tt>')
+    assert_equal '<tt>',            output('\\<tt>')
+    assert_equal '<TT><tt></TT>',   output('<tt>\\<tt></tt>')
+    assert_equal '<TT>\\<tt></TT>', output('<tt>\\\\<tt></tt>')
+    assert_equal '<B>text</B>',     output('*text*')
+    assert_equal '*text*',          output('\\*text*')
+    assert_equal '\\',              output('\\')
+    assert_equal '\\text',          output('\\text')
+    assert_equal '\\\\text',        output('\\\\text')
+    assert_equal 'text \\ text',    output('text \\ text')
+
+    assert_equal 'and <TT>\\s</TT> matches space',
+                 output('and <tt>\\s</tt> matches space')
+    assert_equal 'use <TT><tt>text</TT></tt> for code',
+                 output('use <tt>\\<tt>text</tt></tt> for code')
+    assert_equal 'use <TT><tt>text</tt></TT> for code',
+                 output('use <tt>\\<tt>text\\</tt></tt> for code')
+    assert_equal 'use <tt><tt>text</tt></tt> for code',
+                 output('use \\<tt>\\<tt>text</tt></tt> for code')
+    assert_equal 'use <tt><TT>text</TT></tt> for code',
+                 output('use \\<tt><tt>text</tt></tt> for code')
+    assert_equal 'use <TT>+text+</TT> for code',
+                 output('use <tt>\\+text+</tt> for code')
+    assert_equal 'use <tt><TT>text</TT></tt> for code',
+                 output('use \\<tt>+text+</tt> for code')
+    assert_equal 'illegal <tag>not</tag> changed',
+                 output('illegal <tag>not</tag> changed')
+    assert_equal 'unhandled <p>tag</p> unchanged',
+                 output('unhandled <p>tag</p> unchanged')
+  end
+
+  def output str
+    @formatter.convert_flow @am.flow str
   end
 
 end

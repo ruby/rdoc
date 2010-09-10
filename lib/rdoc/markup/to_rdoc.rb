@@ -1,3 +1,4 @@
+require 'rdoc/markup/formatter'
 require 'rdoc/markup/inline'
 
 ##
@@ -6,6 +7,7 @@ require 'rdoc/markup/inline'
 class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
 
   attr_accessor :indent
+  attr_accessor :width
   attr_reader :list_index
   attr_reader :list_type
   attr_reader :list_width
@@ -15,11 +17,8 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   def initialize
     super
 
-    @markup.add_special(/\\[^\s]/, :SUPPRESSED_CROSSREF)
-
+    @markup.add_special(/\\\S/, :SUPPRESSED_CROSSREF)
     @width = 78
-    @prefix = ''
-
     init_tags
 
     @headings = {}
@@ -77,24 +76,18 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   end
 
   def accept_list_item_start list_item
-    bullet = case @list_type.last
-             when :BULLET then
-               '*'
-             when :NOTE, :LABEL then
-               attributes(list_item.label) + ":\n"
-             else
-               @list_index.last.to_s + '.'
-             end
+    type = @list_type.last
 
-    case @list_type.last
+    case type
     when :NOTE, :LABEL then
+      bullet = attributes(list_item.label) + ":\n"
+      @prefix = ' ' * @indent
       @indent += 2
-      @prefix = bullet + (' ' * @indent)
+      @prefix << bullet + (' ' * @indent)
     else
+      bullet = type == :BULLET ? '*' :  @list_index.last.to_s + '.'
       @prefix = (' ' * @indent) + bullet.ljust(bullet.length + 1)
-
       width = bullet.length + 1
-
       @indent += width
     end
   end
@@ -138,43 +131,17 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   end
 
   ##
-  # Outputs +verbatim+ flush left and indented 2 columns
+  # Outputs +verbatim+ indented 2 columns
 
   def accept_verbatim verbatim
     indent = ' ' * (@indent + 2)
 
-    lines = []
-    current_line = []
-
-    # split into lines
     verbatim.parts.each do |part|
-      current_line << part
-
-      if part == "\n" then
-        lines << current_line
-        current_line = []
-      end
+      @res << indent unless part == "\n"
+      @res << part
     end
 
-    lines << current_line unless current_line.empty?
-
-    # calculate margin
-    indented = lines.select { |line| line != ["\n"] }
-    margin = indented.map { |line| line.first.length }.min
-
-    # flush left
-    indented.each { |line| line[0][0...margin] = '' }
-
-    # output
-    use_prefix or @res << indent # verbatim is unlikely to have prefix
-    @res << lines.shift.join
-
-    lines.each do |line|
-      @res << indent unless line == ["\n"]
-      @res << line.join
-    end
-
-    @res << "\n"
+    @res << "\n" unless @res =~ /\n\z/
   end
 
   def attributes text
@@ -187,7 +154,9 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   end
 
   def handle_special_SUPPRESSED_CROSSREF special
-    special.text.sub(/\\/, '')
+    text = special.text
+    text = text.sub('\\', '') unless in_tt?
+    text
   end
 
   def start_accepting

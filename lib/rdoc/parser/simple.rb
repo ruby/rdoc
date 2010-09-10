@@ -1,7 +1,6 @@
 ##
 # Parse a non-source file. We basically take the whole thing as one big
-# comment. If the first character in the file is '#', we strip leading pound
-# signs.
+# comment.
 
 class RDoc::Parser::Simple < RDoc::Parser
 

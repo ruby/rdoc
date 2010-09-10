@@ -49,11 +49,16 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
   def test_read_file_contents_encoding
     skip "Encoding not implemented" unless Object.const_defined? :Encoding
 
-    @tempfile.write "# coding: utf-8\nhi everybody"
+    expected = "# coding: utf-8\nhi everybody"
+
+    @tempfile.write expected
     @tempfile.flush
 
+    # FIXME 1.9 fix on windoze
+    expected.gsub!("\n", "\r\n") if RUBY_VERSION =~ /^1.9/ && RUBY_PLATFORM =~ /mswin|mingw/
+
     contents = @rdoc.read_file_contents @tempfile.path
-    assert_equal "# coding: utf-8\nhi everybody", contents
+    assert_equal expected, contents
     assert_equal Encoding::UTF_8, contents.encoding
   end
 
@@ -78,12 +83,17 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
   def test_read_file_contents_encoding_fancy
     skip "Encoding not implemented" unless Object.const_defined? :Encoding
 
-    @tempfile.write "# -*- coding: utf-8; fill-column: 74 -*-\nhi everybody"
+    expected = "# -*- coding: utf-8; fill-column: 74 -*-\nhi everybody"
+    expected.encode! Encoding::UTF_8
+
+    @tempfile.write expected
     @tempfile.flush
 
+    # FIXME 1.9 fix on windoze
+    expected.gsub!("\n", "\r\n") if RUBY_VERSION =~ /^1.9/ && RUBY_PLATFORM =~ /win32|mingw32/
+
     contents = @rdoc.read_file_contents @tempfile.path
-    assert_equal("# -*- coding: utf-8; fill-column: 74 -*-\nhi everybody",
-                 contents)
+    assert_equal expected, contents
     assert_equal Encoding::UTF_8, contents.encoding
   end
 

@@ -5,31 +5,19 @@ require 'rdoc'
 
 class RDoc::Stats
 
-  attr_reader :nodoc_constants
-  attr_reader :nodoc_methods
-
-  attr_reader :num_constants
+  attr_reader :files_so_far
   attr_reader :num_files
-  attr_reader :num_methods
 
-  attr_reader :total_files
-
-  def initialize(total_files, verbosity = 1)
-    @nodoc_constants = 0
-    @nodoc_methods   = 0
-
-    @num_constants = 0
-    @num_files     = 0
-    @num_methods   = 0
-
-    @total_files = total_files
+  def initialize(num_files, verbosity = 1)
+    @files_so_far = 0
+    @num_files = num_files
 
     @start = Time.now
 
     @display = case verbosity
-               when 0 then Quiet.new   total_files
-               when 1 then Normal.new  total_files
-               else        Verbose.new total_files
+               when 0 then Quiet.new   num_files
+               when 1 then Normal.new  num_files
+               else        Verbose.new num_files
                end
   end
 
@@ -39,8 +27,6 @@ class RDoc::Stats
 
   def add_alias(as)
     @display.print_alias as
-    @num_methods += 1
-    @nodoc_methods += 1 if as.document_self and as.comment.empty?
   end
 
   def add_class(klass)
@@ -49,19 +35,15 @@ class RDoc::Stats
 
   def add_constant(constant)
     @display.print_constant constant
-    @num_constants += 1
-    @nodoc_constants += 1 if constant.document_self and constant.comment.empty?
   end
 
   def add_file(file)
-    @display.print_file @num_files, file
-    @num_files += 1
+    @files_so_far += 1
+    @display.print_file @files_so_far, file
   end
 
   def add_method(method)
     @display.print_method method
-    @num_methods += 1
-    @nodoc_methods += 1 if method.document_self and method.comment.empty?
   end
 
   def add_module(mod)
@@ -72,34 +54,37 @@ class RDoc::Stats
     @display.done_adding
   end
 
+  ##
+  # Prints a summary of the collected statistics.
+
   def print
-    classes = RDoc::TopLevel.classes
-    num_classes   = classes.length
-    nodoc_classes = classes.select do |klass|
-      klass.document_self and klass.comment.empty?
-    end.length
 
-    modules = RDoc::TopLevel.modules
-    num_modules = modules.length
-    nodoc_modules = modules.select do |mod|
-      mod.document_self and mod.comment.empty?
-    end.length
+    ucm = RDoc::TopLevel.unique_classes_and_modules
+    constants = ucm.inject([]) { |array, cm| array.concat cm.constants }
+    methods = ucm.inject([]) { |array, cm| array.concat cm.method_list }
 
-    items = num_classes + @num_constants + num_modules + @num_methods
-    doc_items = items -
-      nodoc_classes - @nodoc_constants - nodoc_modules - @nodoc_methods
+    num_classes, undoc_classes = doc_stats(RDoc::TopLevel.unique_classes)
+    num_modules, undoc_modules = doc_stats(RDoc::TopLevel.unique_modules)
+    num_constants, undoc_constants = doc_stats(constants)
+    num_methods, undoc_methods = doc_stats(methods)
 
+    items = num_classes + num_modules + num_constants + num_methods
+    doc_items = items - undoc_classes - undoc_modules - undoc_constants -
+                undoc_methods
     percent_doc = doc_items.to_f / items * 100
 
     puts "Files:     %5d" % @num_files
-    puts "Classes:   %5d (%5d undocumented)" % [num_classes, nodoc_classes]
-    puts "Constants: %5d (%5d undocumented)" %
-      [@num_constants, @nodoc_constants]
-    puts "Modules:   %5d (%5d undocumented)" % [num_modules, nodoc_modules]
-    puts "Methods:   %5d (%5d undocumented)" % [@num_methods, @nodoc_methods]
-    puts "%6.2f%% documented" % percent_doc
+    puts "Classes:   %5d (%5d undocumented)" % [num_classes, undoc_classes]
+    puts "Modules:   %5d (%5d undocumented)" % [num_modules, undoc_modules]
+    puts "Constants: %5d (%5d undocumented)" % [num_constants, undoc_constants]
+    puts "Methods:   %5d (%5d undocumented)" % [num_methods, undoc_methods]
+    puts "%6.2f%% documented" % percent_doc unless percent_doc.nan?
     puts
     puts "Elapsed: %0.1fs" % (Time.now - @start)
+  end
+
+  def doc_stats(collection) # :nodoc:
+    [collection.length, collection.select { |e| !e.documented? }.length]
   end
 
   ##
@@ -107,8 +92,8 @@ class RDoc::Stats
 
   class Quiet
 
-    def initialize total_files
-      @total_files = total_files
+    def initialize num_files
+      @num_files = num_files
     end
 
     ##
@@ -168,9 +153,9 @@ class RDoc::Stats
 
     def print_file(files_so_far, filename)
       progress_bar = sprintf("%3d%% [%2d/%2d]  ",
-                             100 * (files_so_far + 1) / @total_files,
-                             files_so_far + 1,
-                             @total_files)
+                             100 * files_so_far / @num_files,
+                             files_so_far,
+                             @num_files)
 
       if $stdout.tty?
         # Print a progress bar, but make sure it fits on a single line. Filename
@@ -216,15 +201,15 @@ class RDoc::Stats
     end
 
     def print_alias as # :nodoc:
-      puts "\t\talias #{as.new_name} #{as.old_name}#{nodoc as}"
+      puts "    alias #{as.new_name} #{as.old_name}#{nodoc as}"
     end
 
     def print_class(klass) # :nodoc:
-      puts "\tclass #{klass.full_name}#{nodoc klass}"
+      puts "  class #{klass.full_name}#{nodoc klass}"
     end
 
     def print_constant(constant) # :nodoc:
-      puts "\t\t#{constant.name}#{nodoc constant}"
+      puts "    #{constant.name}#{nodoc constant}"
     end
 
     def print_file(files_so_far, file) # :nodoc:
@@ -233,15 +218,14 @@ class RDoc::Stats
     end
 
     def print_method(method) # :nodoc:
-      puts "\t\t#{method.singleton ? '::' : '#'}#{method.name}#{nodoc method}"
+      puts "    #{method.singleton ? '::' : '#'}#{method.name}#{nodoc method}"
     end
 
     def print_module(mod) # :nodoc:
-      puts "\tmodule #{mod.full_name}#{nodoc mod}"
+      puts "  module #{mod.full_name}#{nodoc mod}"
     end
 
   end
 
 end
-
 

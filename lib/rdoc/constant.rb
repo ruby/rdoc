@@ -6,6 +6,13 @@ require 'rdoc/code_object'
 class RDoc::Constant < RDoc::CodeObject
 
   ##
+  # If this constant is an alias for a module or class,
+  # this is the RDoc::ClassModule it is an alias for.
+  # +nil+ otherwise.
+
+  attr_accessor :is_alias_for
+
+  ##
   # The constant's name
 
   attr_accessor :name
@@ -22,6 +29,7 @@ class RDoc::Constant < RDoc::CodeObject
     super()
     @name = name
     @value = value
+    @is_alias_for = nil
     self.comment = comment
   end
 
@@ -40,11 +48,19 @@ class RDoc::Constant < RDoc::CodeObject
       @name == other.name
   end
 
+  ##
+  # A constant is documented if it has a comment, or is an alias
+  # for a documented class or module.
+
+  def documented?
+    super or is_alias_for && is_alias_for.documented?
+  end
+
   def inspect # :nodoc:
-      "#<%s:0x%x %s::%s>" % [
-        self.class, object_id,
-        parent_name, @name,
-      ]
+    "#<%s:0x%x %s::%s>" % [
+      self.class, object_id,
+      parent_name, @name,
+    ]
   end
 
   ##
@@ -52,6 +68,15 @@ class RDoc::Constant < RDoc::CodeObject
 
   def path
     "#{@parent.path}##{@name}"
+  end
+
+  def to_s # :nodoc:
+    parent_name = parent ? parent.full_name : '(unknown)'
+    if is_alias_for
+      "constant #{parent_name}::#@name -> #{is_alias_for}"
+    else
+      "constant #{parent_name}::#@name"
+    end
   end
 
 end

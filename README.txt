@@ -1,4 +1,4 @@
-= \RDoc
+= \RDoc - Ruby Documentation System
 
 * {RDoc Project Page}[http://rubyforge.org/projects/rdoc/]
 * {RDoc Documentation}[http://rdoc.rubyforge.org/]
@@ -25,13 +25,19 @@ See RDoc for a description of RDoc's markup and basic use.
 == BUGS:
 
 If you find a bug, please report it at the RDoc project's
-tracker[http://rubyforge.org/tracker/?group_id=627] on RubyForge:
+tracker[http://rubyforge.org/tracker/?group_id=627] on RubyForge
 
 == LICENSE:
 
 RDoc is Copyright (c) 2001-2003 Dave Thomas, The Pragmatic Programmers.
-Portions (c) 2007-2009 Eric Hodel.  Portions copyright others, see individual
+Portions (c) 2007-2010 Eric Hodel.  Portions copyright others, see individual
 files for details.
 
 It is free software, and may be redistributed under the terms specified in
 LICENSE.txt.
+
+== WARRANTY:
+
+This software is provided "as is" and without any express or implied
+warranties, including, without limitation, the implied warranties of
+merchantibility and fitness for a particular purpose.

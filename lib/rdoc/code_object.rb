@@ -12,15 +12,16 @@ require 'rdoc/text'
 # * RDoc::Context
 #   * RDoc::TopLevel
 #   * RDoc::ClassModule
-#     * RDoc::AnonClass
+#     * RDoc::AnonClass (never used so far)
 #     * RDoc::NormalClass
 #     * RDoc::NormalModule
 #     * RDoc::SingleClass
-# * RDoc::AnyMethod
-#   * RDoc::GhostMethod
-#   * RDoc::MetaMethod
+# * RDoc::MethodAttr
+#   * RDoc::Attr
+#   * RDoc::AnyMethod
+#     * RDoc::GhostMethod
+#     * RDoc::MetaMethod
 # * RDoc::Alias
-# * RDoc::Attr
 # * RDoc::Constant
 # * RDoc::Require
 # * RDoc::Include
@@ -47,12 +48,12 @@ class RDoc::CodeObject
   ##
   # Are we done documenting (ie, did we come across a :enddoc:)?
 
-  attr_accessor :done_documenting
+  attr_reader :done_documenting
 
   ##
   # Force documentation of this CodeObject
 
-  attr_accessor :force_documentation
+  attr_reader :force_documentation
 
   ##
   # Hash of arbitrary metadata for this CodeObject
@@ -63,6 +64,11 @@ class RDoc::CodeObject
   # Our parent CodeObject
 
   attr_accessor :parent
+
+  ##
+  # Did we ever receive a +:nodoc:+ directive?
+
+  attr_reader :received_nodoc
 
   ##
   # Which section are we in
@@ -87,6 +93,7 @@ class RDoc::CodeObject
     @document_self       = true
     @done_documenting    = false
     @force_documentation = false
+    @received_nodoc      = false
 
     @parent = nil
   end
@@ -108,28 +115,55 @@ class RDoc::CodeObject
   end
 
   ##
-  # Enables or disables documentation of this CodeObject's children.  Calls
-  # remove_classes_and_modules when disabling.
+  # Enables or disables documentation of this CodeObject's children unless it
+  # has been turned off by :enddoc:
 
   def document_children=(document_children)
-    @document_children = document_children
-    remove_classes_and_modules unless document_children
+    @document_children = document_children unless @done_documenting
   end
 
   ##
-  # Enables or disables documentation of this CodeObject.  Calls
-  # remove_methods_etc when disabling.
+  # Enables or disables documentation of this CodeObject unless it has been
+  # turned off by :enddoc:.  If the argument is +nil+ it means the
+  # documentation is turned off by +:nodoc:+.
 
   def document_self=(document_self)
+    return if @done_documenting
+
     @document_self = document_self
-    remove_methods_etc unless document_self
+    @received_nodoc = true if document_self.nil?
   end
 
   ##
-  # Does this class have a comment with content or is document_self false.
+  # Does this object have a comment with content or is #received_nodoc true?
 
   def documented?
-    !(@document_self and @comment.empty?)
+    @received_nodoc or !@comment.empty?
+  end
+
+  ##
+  # Turns documentation on/off, and turns on/off #document_self
+  # and #document_children.
+  #
+  # Once documentation has been turned off (by +:enddoc:+),
+  # the object will refuse to turn #document_self or
+  # #document_children on, so +:doc:+ and +:start_doc:+ directives
+  # will have no effect in the current file.
+
+  def done_documenting=(value)
+    @done_documenting = value
+    @document_self = !value
+    @document_children = @document_self
+  end
+
+  ##
+  # Force the documentation of this object unless documentation
+  # has been turned off by :endoc:
+  #--
+  # HACK untested, was assigning to an ivar
+
+  def force_documentation=(value)
+    @force_documentation = value unless @done_documenting
   end
 
   ##
@@ -147,23 +181,12 @@ class RDoc::CodeObject
   end
 
   ##
-  # Callback called upon disabling documentation of children.  See
-  # #document_children=
-
-  def remove_classes_and_modules
-  end
-
-  ##
-  # Callback called upon disabling documentation of ourself.  See
-  # #document_self=
-
-  def remove_methods_etc
-  end
-
-  ##
-  # Enable capture of documentation
+  # Enable capture of documentation unless documentation has been
+  # turned off by :endoc:
 
   def start_doc
+    return if @done_documenting
+
     @document_self = true
     @document_children = true
   end

@@ -223,7 +223,7 @@ class RDoc::RI::Store
     @cache[:ancestors][klass.full_name].push(*ancestors)
 
     attributes = klass.attributes.map do |attribute|
-      "#{attribute.type} #{attribute.name}"
+      "#{attribute.definition} #{attribute.name}"
     end
 
     unless attributes.empty? then

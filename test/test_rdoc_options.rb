@@ -45,6 +45,8 @@ class TestRDocOptions < MiniTest::Unit::TestCase
     end
 
     assert_match %r%^invalid options: --encoding invalid%, err
+
+    assert_empty out
   end
 
   def test_parse_ignore_invalid
@@ -54,6 +56,8 @@ class TestRDocOptions < MiniTest::Unit::TestCase
 
     refute_match %r%^Usage: %, err
     assert_match %r%^invalid options: --bogus%, err
+
+    assert_empty out
   end
 
   def test_parse_ignore_invalid_default
@@ -65,17 +69,36 @@ class TestRDocOptions < MiniTest::Unit::TestCase
     assert_match %r%^invalid options: --bogus%, err
 
     assert_equal 'BLAH', @options.main_page
+
+    assert_empty out
   end
 
   def test_parse_ignore_invalid_no
     out, err = capture_io do
       assert_raises SystemExit do
-        @options.parse %w[--no-ignore-invalid --bogus]
+        @options.parse %w[--no-ignore-invalid --bogus=arg --bobogus --visibility=extended]
       end
     end
 
     assert_match %r%^Usage: %, err
-    assert_match %r%^invalid option: --bogus%, err
+    assert_match %r%^invalid options: --bogus=arg, --bobogus, --visibility=extended%, err
+
+    assert_empty out
+  end
+
+  def test_parse_deprecated
+    dep_hash = RDoc::Options::DEPRECATED
+    options = dep_hash.keys.sort
+
+    out, err = capture_io do
+      @options.parse options
+    end
+
+    dep_hash.each_pair do |opt, message|
+      assert_match %r%.*#{opt}.+#{message}%, err
+    end
+
+    assert_empty out
   end
 
   def test_parse_main
@@ -97,16 +120,20 @@ class TestRDocOptions < MiniTest::Unit::TestCase
     assert @options.pipe
     refute_match %r%^Usage: %, err
     refute_match %r%^invalid options%, err
+
+    assert_empty out
   end
 
   def test_parse_dash_p_files
     out, err = capture_io do
-      @options.parse %w[-p README]
+      @options.parse ['-p', File.expand_path(__FILE__)]
     end
 
     refute @options.pipe
     refute_match %r%^Usage: %, err
     assert_match %r%^invalid options: -p .with files.%, err
+
+    assert_empty out
   end
 
 end

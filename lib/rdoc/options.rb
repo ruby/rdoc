@@ -8,6 +8,23 @@ require 'rdoc/ri/paths'
 class RDoc::Options
 
   ##
+  # The deprecated options.
+
+  DEPRECATED = {
+    '--accessor'      => 'support discontinued',
+    '--diagram'       => 'support discontinued',
+    '--help-output'   => 'support discontinued',
+    '--image-format'  => 'was an option for --diagram',
+    '--inline-source' => 'source code is now always inlined',
+    '--merge'         => 'ri now always merges class information',
+    '--one-file'      => 'support discontinued',
+    '--op-name'       => 'support discontinued',
+    '--opname'        => 'support discontinued',
+    '--promiscuous'   => 'files always only document their content',
+    '--ri-system'     =>  'Ruby installers use other techniques',
+  }
+
+  ##
   # Character-set for HTML output.  #encoding is peferred over #charset
 
   attr_reader :charset
@@ -33,9 +50,20 @@ class RDoc::Options
   attr_accessor :files
 
   ##
+  # Create the output even if the output directory does not look
+  # like an rdoc output directory
+
+  attr_reader :force_output
+
+  ##
   # Scan newer sources than the flag file if true.
 
   attr_reader :force_update
+
+  ##
+  # Formatter to mark up text with
+
+  attr_accessor :formatter
 
   ##
   # Description of the output generator (set with the <tt>-fmt</tt> option)
@@ -43,9 +71,15 @@ class RDoc::Options
   attr_accessor :generator
 
   ##
-  # Formatter to mark up text with
+  # Include line numbers in the source code
 
-  attr_accessor :formatter
+  attr_reader :hyperlink_all
+
+  ##
+  # Old rdoc behavior: hyperlink all words that match a method name,
+  # even if not preceded by '#' or '::'
+
+  attr_reader :line_numbers
 
   ##
   # Name of the file, class or module to display in the initial index page (if
@@ -74,6 +108,11 @@ class RDoc::Options
   attr_reader :show_hash
 
   ##
+  # URL of the stylesheet to use. +nil+ by default.
+
+  attr_reader :stylesheet_url
+
+  ##
   # The number of columns in a tab
 
   attr_reader :tab_width
@@ -94,6 +133,13 @@ class RDoc::Options
   attr_accessor :verbosity
 
   ##
+  # Minimum visibility of a documented method. One of +:public+,
+  # +:protected+, +:private+. May be overridden on a per-method
+  # basis with the :doc: directive.
+
+  attr_accessor :visibility
+
+  ##
   # URL of web cvs frontend
 
   attr_reader :webcvs
@@ -101,21 +147,25 @@ class RDoc::Options
   def initialize # :nodoc:
     require 'rdoc/rdoc'
     @dry_run = false
-    @op_dir = nil
-    @main_page = nil
     @exclude = []
-    @generators = RDoc::RDoc::GENERATORS
+    @force_output = false
+    @force_update = true
     @generator = RDoc::Generator::Darkfish
     @generator_name = nil
-    @rdoc_include = []
-    @title = nil
-    @template = nil
-    @show_hash = false
-    @tab_width = 8
-    @force_update = true
-    @verbosity = 1
+    @generators = RDoc::RDoc::GENERATORS
+    @hyperlink_all = false
+    @line_numbers = false
+    @main_page = nil
+    @op_dir = nil
     @pipe = false
-
+    @rdoc_include = []
+    @show_hash = false
+    @stylesheet_url = nil
+    @tab_width = 8
+    @template = nil
+    @title = nil
+    @verbosity = 1
+    @visibility = :protected
     @webcvs = nil
 
     if Object.const_defined? :Encoding then
@@ -149,6 +199,14 @@ Usage: #{opt.program_name} [options] [names...]
   How RDoc generates output depends on the output formatter being used, and on
   the options you give.
 
+  Options can be specified via the RDOCOPT environment variable, which
+  functions similar to the RUBYOPT environment variable for ruby.
+  
+    $ export RDOCOPT="--show-hash"
+  
+  will make rdoc show hashes in method links by default.  Command-line options
+  always will override those in RDOCOPT.
+
   - Darkfish creates frameless HTML output by Michael Granger.
   - ri creates ri data files
 
@@ -166,6 +224,14 @@ Usage: #{opt.program_name} [options] [names...]
         opt.banner << "  - #{parser}: #{regexp.join ', '}\n"
       end
 
+      opt.banner << "\n  The following options are deprecated:\n\n"
+
+      name_length = DEPRECATED.keys.sort_by { |k| k.length }.last.length
+
+      DEPRECATED.sort_by { |k,| k }.each do |name, reason|
+        opt.banner << "    %*1$2$s  %3$s\n" % [-name_length, name, reason]
+      end
+
       opt.separator nil
       opt.separator "Parsing Options:"
       opt.separator nil
@@ -181,6 +247,13 @@ Usage: #{opt.program_name} [options] [names...]
 
         opt.separator nil
       end
+
+      opt.on("--all", "-a",
+             "Synonym for --visibility=private.") do |value|
+        @visibility = :private
+      end
+
+      opt.separator nil
 
       opt.on("--exclude=PATTERN", "-x", Regexp,
              "Do not process files or directories",
@@ -221,13 +294,33 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.separator nil
+
+      opt.on("--visibility=VISIBILITY", "-V", RDoc::VISIBILITIES,
+             "Minimum visibility to document a method.",
+             "One of 'public', 'protected' (the default) or",
+             "'private'. Can be abbreviated.") do |value|
+        @visibility = value
+      end
+
+      opt.separator nil
       opt.separator "Generator Options:"
       opt.separator nil
 
       opt.on("--charset=CHARSET", "-c",
-             "Specifies the output HTML character set.",
-             "Use --encoding instead of --charset.") do |value|
+             "Specifies the output HTML character-set.",
+             "Use --encoding instead of --charset if",
+             "available.") do |value|
         @charset = value
+      end
+
+      opt.separator nil
+
+      opt.on("--force-output", "-O",
+             "Forces rdoc to write the output files,",
+             "even if the output directory exists",
+             "and does not seem to have been created",
+             "by rdoc.") do |value|
+        @force_output = value
       end
 
       opt.separator nil
@@ -242,11 +335,30 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
+      opt.on("--hyperlink-all", "-A",
+             "Generate hyperlinks for all words that",
+             "correspond to known methods, even if they",
+             "do not start with '#' or '::' (legacy",
+             "behavior).") do |value|
+        @hyperlink_all = value
+      end
+
+      opt.separator nil
+
       opt.on("--include=DIRECTORIES", "-i", Array,
              "Set (or add to) the list of directories to",
              "be searched when satisfying :include:",
              "requests. Can be used more than once.") do |value|
         @rdoc_include.concat value.map { |dir| dir.strip }
+      end
+
+      opt.separator nil
+
+      opt.on("--line-numbers", "-N",
+             "Include line numbers in the source code.",
+             "By default, only the number of the first",
+             "line is displayed, in a leading comment.") do |value|
+        @line_numbers = value
       end
 
       opt.separator nil
@@ -275,6 +387,15 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
+      opt.on("--style=URL", "-s",
+             "Specifies the URL of a stylesheet to use",
+             "in lieu of the default stylesheet of the",
+             "template.") do |value|
+        @stylesheet_url = value
+      end
+
+      opt.separator nil
+
       opt.on("--tab-width=WIDTH", "-w", OptionParser::DecimalInteger,
              "Set the width of tab characters.") do |value|
         @tab_width = value
@@ -284,7 +405,7 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.on("--template=NAME", "-T",
              "Set the template used when generating",
-             "output.") do |value|
+             "output. The default is 'TODO'.") do |value|
         @template = value
       end
 
@@ -308,7 +429,11 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("-d", "--diagram", "Prevents -d from tripping --debug")
+      opt.on("-d",
+             "Deprecated --diagram option.",
+             "Prevents firing debug mode",
+             "with legacy invocation.") do |value|
+      end
 
       opt.separator nil
       opt.separator "ri Generator Options:"
@@ -352,7 +477,8 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.on("--[no-]ignore-invalid",
-             "Ignore invalid options and continue.") do |value|
+             "Ignore invalid options and continue",
+             "(default true).") do |value|
         ignore_invalid = value
       end
 
@@ -367,33 +493,44 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.separator nil
+
     end
 
     argv.insert(0, *ENV['RDOCOPT'].split) if ENV['RDOCOPT']
-    ignored = []
+    deprecated = []
+    invalid = []
 
     begin
       opts.parse! argv
     rescue OptionParser::InvalidArgument, OptionParser::InvalidOption => e
-      if ignore_invalid then
-        ignored << e.args.join(' ')
-        retry
+      if DEPRECATED[e.args.first]
+        deprecated << e.args.first
       else
-        $stderr.puts opts
-        $stderr.puts
-        $stderr.puts e
-        exit 1
+        invalid << e.args.join(' ')
       end
+      retry
     end
 
     if @pipe and not argv.empty? then
       @pipe = false
-      ignored << '-p (with files)'
+      invalid << '-p (with files)'
     end
 
-    unless ignored.empty? or quiet then
-      $stderr.puts "invalid options: #{ignored.join ', '}"
-      $stderr.puts '(invalid options are ignored)'
+    unless quiet
+      deprecated.each do |opt|
+        $stderr.puts 'option ' << opt << ' is deprecated: ' << DEPRECATED[opt]
+      end
+      unless invalid.empty?
+        invalid = "invalid options: #{invalid.join ', '}"
+        if ignore_invalid
+          $stderr.puts invalid
+          $stderr.puts '(invalid options are ignored)'
+        else
+          $stderr.puts opts
+          $stderr.puts invalid
+          exit 1
+        end
+      end
     end
 
     @op_dir ||= 'doc'
@@ -452,7 +589,8 @@ Usage: #{opt.program_name} [options] [names...]
 
   def check_files
     @files.each do |f|
-      stat = File.stat f rescue next
+      raise RDoc::Error, "file '#{f}' not found" unless File.exist?(f)
+      stat = File.stat f
       raise RDoc::Error, "file '#{f}' not readable" unless stat.readable?
     end
   end

@@ -34,12 +34,14 @@ class TestRDocContext < XrefTestCase
 
     @context.add_alias as
 
-    assert_equal [as], @context.aliases
-    assert_equal [as], @context.unmatched_alias_lists['old_name']
+    assert_equal [as], @context.external_aliases
+    assert_equal [as], @context.unmatched_alias_lists['#old_name']
   end
 
   def test_add_alias_method
     meth = RDoc::AnyMethod.new nil, 'old_name'
+    meth.singleton = false
+
     as = RDoc::Alias.new nil, 'old_name', 'new_name', 'comment'
     as.parent = @context
 
@@ -68,28 +70,6 @@ class TestRDocContext < XrefTestCase
     assert_equal %w[old_name new_name], @context.method_list.map { |m| m.name }
 
     assert @context.method_list.last.singleton
-  end
-
-  def test_add_alias_impl
-    meth = RDoc::AnyMethod.new nil, 'old_name'
-    meth.comment    = 'old comment'
-    meth.singleton  = false
-    meth.visibility = :private
-
-    alas = RDoc::Alias.new nil, 'old_name', 'new_name', 'new comment'
-
-    @context.add_alias_impl alas, meth
-
-    assert_equal 1, @context.method_list.length
-
-    alas_meth = @context.method_list.first
-    assert_equal 'new_name',    alas_meth.name
-    assert_equal 'new comment', alas_meth.comment
-    assert_equal false,         alas_meth.singleton
-    assert_equal meth,          alas_meth.is_alias_for
-    assert_equal :private,      alas_meth.visibility
-
-    assert_equal [alas_meth], meth.aliases
   end
 
   def test_add_class
@@ -152,11 +132,11 @@ class TestRDocContext < XrefTestCase
     meth = RDoc::AnyMethod.new nil, 'old_name'
 
     @context.add_alias as
-    refute_empty @context.aliases
+    refute_empty @context.external_aliases
 
     @context.add_method meth
 
-    assert_empty @context.aliases
+    assert_empty @context.external_aliases
     assert_empty @context.unmatched_alias_lists
     assert_equal %w[old_name new_name], @context.method_list.map { |m| m.name }
   end

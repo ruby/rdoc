@@ -2,7 +2,6 @@ require 'pp'
 require 'rubygems'
 require 'minitest/autorun'
 require 'rdoc/markup'
-require 'rdoc/markup/to_test'
 
 class TestRDocMarkupParser < MiniTest::Unit::TestCase
 
@@ -65,7 +64,7 @@ class TestRDocMarkupParser < MiniTest::Unit::TestCase
       @RM::List.new(:BULLET, *[
         @RM::ListItem.new(nil,
           @RM::Paragraph.new('l1'),
-          @RM::Verbatim.new('  ', 'v', "\n"))]),
+          @RM::Verbatim.new("v\n"))]),
       @RM::Heading.new(1, 'H')]
 
     assert_equal expected, @RMP.parse(str).parts
@@ -183,8 +182,7 @@ the time
           @RM::List.new(:BULLET, *[
             @RM::ListItem.new(nil,
               @RM::Paragraph.new('l1.1', 'text'),
-              @RM::Verbatim.new('  ', 'code', "\n",
-                                 '    ', 'code', "\n"),
+              @RM::Verbatim.new("code\n", "  code\n"),
               @RM::Paragraph.new('text'))])),
         @RM::ListItem.new(nil,
           @RM::Paragraph.new('l2'))])]
@@ -400,6 +398,55 @@ A. l4
     assert_equal expected, @RMP.parse(str).parts
   end
 
+  def test_parse_list_list_1
+    str = <<-STR
+10. para 1
+
+    [label 1]
+      para 1.1
+
+        code
+
+      para 1.2
+    STR
+
+    expected = [
+      @RM::List.new(:NUMBER, *[
+        @RM::ListItem.new(nil, *[
+          @RM::Paragraph.new('para 1'),
+          @RM::BlankLine.new,
+          @RM::List.new(:LABEL, *[
+            @RM::ListItem.new('label 1', *[
+              @RM::Paragraph.new('para 1.1'),
+              @RM::BlankLine.new,
+              @RM::Verbatim.new("code\n"),
+              @RM::Paragraph.new('para 1.2')])])])])]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
+  def test_parse_list_list_2
+    str = <<-STR
+6. para
+
+   label 1::  text 1
+   label 2::  text 2
+    STR
+
+    expected = [
+      @RM::List.new(:NUMBER, *[
+        @RM::ListItem.new(nil, *[
+          @RM::Paragraph.new('para'),
+          @RM::BlankLine.new,
+          @RM::List.new(:NOTE, *[
+            @RM::ListItem.new('label 1',
+              @RM::Paragraph.new('text 1')),
+            @RM::ListItem.new('label 2',
+              @RM::Paragraph.new('text 2'))])])])]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
   def test_parse_list_verbatim
     str = <<-STR
 * one
@@ -412,8 +459,7 @@ A. l4
       @RM::List.new(:BULLET, *[
         @RM::ListItem.new(nil,
           @RM::Paragraph.new('one'),
-          @RM::Verbatim.new('  ', 'verb1', "\n",
-                             '  ', 'verb2', "\n")),
+          @RM::Verbatim.new("verb1\n", "verb2\n")),
         @RM::ListItem.new(nil,
           @RM::Paragraph.new('two'))])]
 
@@ -545,7 +591,7 @@ for all good men
 
     expected = [
       @RM::Paragraph.new('now is the time'),
-      @RM::Verbatim.new('  ', 'code _line_ here', "\n"),
+      @RM::Verbatim.new("code _line_ here\n"),
       @RM::Paragraph.new('for all good men'),
     ]
     assert_equal expected, @RMP.parse(str).parts
@@ -567,6 +613,12 @@ B. l2
     assert_equal expected, @RMP.parse(str).parts
   end
 
+  def test_parse_trailing_cr
+    expected = [ @RM::Paragraph.new('Text') ]
+    # FIXME hangs the parser:
+    assert_equal expected, @RMP.parse("Text\r").parts
+  end
+
   def test_parse_verbatim
     str = <<-STR
 now is
@@ -576,7 +628,7 @@ the time
 
     expected = [
       @RM::Paragraph.new('now is'),
-      @RM::Verbatim.new('   ', 'code', "\n"),
+      @RM::Verbatim.new("code\n"),
       @RM::Paragraph.new('the time'),
     ]
 
@@ -589,7 +641,7 @@ the time
     STR
 
     expected = [
-      @RM::Verbatim.new('  ', '*', ' ', 'blah', "\n")]
+      @RM::Verbatim.new("* blah\n")]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -600,7 +652,7 @@ the time
     STR
 
     expected = [
-      @RM::Verbatim.new('  ', '-', ' ', 'blah', "\n")]
+      @RM::Verbatim.new("- blah\n")]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -618,9 +670,7 @@ the time
 
     expected = [
       @RM::Paragraph.new('now is'),
-      @RM::Verbatim.new('   ', 'code',  "\n",
-                        "\n",
-                        '   ', 'code1', "\n"),
+      @RM::Verbatim.new("code\n", "\n", "code1\n"),
       @RM::Paragraph.new('the time'),
     ]
 
@@ -635,7 +685,7 @@ text
 
     expected = [
       @RM::Paragraph.new('text'),
-      @RM::Verbatim.new('   ', '===', '   ', 'heading three', "\n")]
+      @RM::Verbatim.new("===   heading three\n")]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -645,7 +695,7 @@ text
 
     expected = [
       @RM::Paragraph.new('text'),
-      @RM::Verbatim.new('   ', 'code', "\n"),
+      @RM::Verbatim.new("code\n"),
       @RM::Heading.new(3, 'heading three')]
 
     assert_equal expected, @RMP.parse(str).parts
@@ -657,7 +707,7 @@ text
     STR
 
     expected = [
-      @RM::Verbatim.new('  ', '[blah]', ' ', 'blah', "\n")]
+      @RM::Verbatim.new("[blah] blah\n")]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -668,7 +718,7 @@ text
     STR
 
     expected = [
-      @RM::Verbatim.new('  ', 'b.', ' ', 'blah', "\n")]
+      @RM::Verbatim.new("b. blah\n")]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -682,8 +732,7 @@ text
 
     expected = [
       @RM::Paragraph.new('text'),
-      @RM::Verbatim.new('   ', 'code', "\n",
-                        '   ', '===', ' ', 'heading three', "\n")]
+      @RM::Verbatim.new("code\n", "=== heading three\n")]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -699,9 +748,7 @@ the time
 
     expected = [
       @RM::Paragraph.new('now is'),
-      @RM::Verbatim.new('   ', 'code',  "\n",
-                        "\n",
-                        '   ', 'code1', "\n"),
+      @RM::Verbatim.new("code\n", "\n", "code1\n"),
       @RM::Paragraph.new('the time'),
     ]
 
@@ -721,11 +768,7 @@ the time
 
     expected = [
       @RM::Paragraph.new('now is'),
-      @RM::Verbatim.new('   ', 'code',  "\n",
-                        "\n",
-                        '   ', 'code1', "\n",
-                        "\n",
-                        '   ', 'code2', "\n"),
+      @RM::Verbatim.new("code\n", "\n", "code1\n", "\n", "code2\n"),
       @RM::Paragraph.new('the time'),
     ]
 
@@ -742,8 +785,7 @@ the time
 
     expected = [
       @RM::Paragraph.new('now is'),
-      @RM::Verbatim.new('   ', 'code',  "\n",
-                        '   ', 'code1', "\n"),
+      @RM::Verbatim.new("code\n", "code1\n"),
       @RM::Paragraph.new('the time'),
     ]
 
@@ -760,8 +802,8 @@ for all good men
 
     expected = [
       @RM::Paragraph.new('now is the time'),
-      @RM::Verbatim.new('  ', 'code', "\n",
-                        ' ', 'more code', "\n"),
+      @RM::Verbatim.new(" code\n",
+                        "more code\n"),
       @RM::Paragraph.new('for all good men'),
     ]
 
@@ -774,7 +816,7 @@ for all good men
     STR
 
     expected = [
-      @RM::Verbatim.new('  ', 'blah::', ' ', 'blah', "\n")]
+      @RM::Verbatim.new("blah:: blah\n")]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -785,7 +827,7 @@ for all good men
     STR
 
     expected = [
-      @RM::Verbatim.new('  ', '2.', ' ', 'blah', "\n")]
+      @RM::Verbatim.new("2. blah\n")]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -801,8 +843,8 @@ text
     expected = [
       @RM::Paragraph.new('text'),
       @RM::BlankLine.new,
-      @RM::Verbatim.new('  ', '---', ' ', 'lib/blah.rb.orig', "\n",
-                        '  ', '+++', ' ', 'lib/blah.rb',      "\n")]
+      @RM::Verbatim.new("--- lib/blah.rb.orig\n",
+                        "+++ lib/blah.rb\n")]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -817,7 +859,7 @@ text
     expected = [
       @RM::Paragraph.new('text'),
       @RM::BlankLine.new,
-      @RM::Verbatim.new('  ', '---', '')]
+      @RM::Verbatim.new("---")]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -834,9 +876,9 @@ the time
 
     expected = [
       @RM::Paragraph.new('now is'),
-      @RM::Verbatim.new('   ', 'code',  "\n",
+      @RM::Verbatim.new("code\n",
                         "\n",
-                        '   ', 'code1', "\n"),
+                        "code1\n"),
       @RM::Paragraph.new('the time'),
     ]
 
@@ -849,7 +891,7 @@ the time
     STR
 
     expected = [
-      @RM::Verbatim.new('  ', 'B.', ' ', 'blah', "\n")]
+      @RM::Verbatim.new("B. blah\n")]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -862,58 +904,57 @@ the time
     assert_equal expected, @RMP.parse('hello').parts
 
     expected = [
-      @RM::Verbatim.new(' ', 'hello '),
+      @RM::Verbatim.new('hello '),
     ]
 
-    assert_equal expected, @RMP.parse(' hello ').parts
+    assert_equal expected, @RMP.parse('  hello ').parts
 
     expected = [
-      @RM::Verbatim.new('                 ', 'hello          '),
+      @RM::Verbatim.new('hello          '),
     ]
 
-    assert_equal expected, @RMP.parse("                 hello          ").parts
+    assert_equal expected, @RMP.parse('                 hello          ').parts
 
     expected = [
       @RM::Paragraph.new('1'),
-      @RM::Verbatim.new(' ', '2', "\n",
-                        '  ', '3'),
+      @RM::Verbatim.new("2\n", ' 3'),
     ]
 
     assert_equal expected, @RMP.parse("1\n 2\n  3").parts
 
     expected = [
-      @RM::Verbatim.new('  ', '1', "\n",
-                        '   ', '2', "\n",
-                        '    ', '3'),
+      @RM::Verbatim.new("1\n",
+                        " 2\n",
+                        "  3"),
     ]
 
     assert_equal expected, @RMP.parse("  1\n   2\n    3").parts
 
     expected = [
       @RM::Paragraph.new('1'),
-      @RM::Verbatim.new(' ', '2', "\n",
-                        '  ', '3', "\n"),
+      @RM::Verbatim.new("2\n",
+                        " 3\n"),
       @RM::Paragraph.new('1'),
-      @RM::Verbatim.new(' ', '2'),
+      @RM::Verbatim.new('2'),
     ]
 
     assert_equal expected, @RMP.parse("1\n 2\n  3\n1\n 2").parts
 
     expected = [
-      @RM::Verbatim.new('  ', '1', "\n",
-                        '   ', '2', "\n",
-                        '    ', '3', "\n",
-                        '  ', '1', "\n",
-                        '   ', '2'),
+      @RM::Verbatim.new("1\n",
+                        " 2\n",
+                        "  3\n",
+                        "1\n",
+                        ' 2'),
     ]
 
     assert_equal expected, @RMP.parse("  1\n   2\n    3\n  1\n   2").parts
 
     expected = [
-      @RM::Verbatim.new('  ', '1', "\n",
-                        '   ', '2', "\n",
+      @RM::Verbatim.new("1\n",
+                        " 2\n",
                         "\n",
-                        '    ', '3'),
+                        '  3'),
     ]
 
     assert_equal expected, @RMP.parse("  1\n   2\n\n    3").parts
@@ -954,7 +995,6 @@ the time
 
     expected = [
       [:BULLET,  '*',     0, 0],
-      [:SPACE,   2,       0, 0],
       [:TEXT,    'l1',    2, 0],
       [:NEWLINE, "\n",    4, 0],
     ]
@@ -970,12 +1010,9 @@ the time
 
     expected = [
       [:BULLET,  '*',     0, 0],
-      [:SPACE,   2,       0, 0],
       [:TEXT,    'l1',    2, 0],
       [:NEWLINE, "\n",    4, 0],
-      [:INDENT,  2,       0, 1],
       [:BULLET,  '*',     2, 1],
-      [:SPACE,   2,       2, 1],
       [:TEXT,    'l1.1',  4, 1],
       [:NEWLINE, "\n",    8, 1],
     ]
@@ -1041,11 +1078,9 @@ the time
 
     expected = [
       [:LABEL,   'cat',   0, 0],
-      [:SPACE,   6,       0, 0],
       [:TEXT,    'l1',    6, 0],
       [:NEWLINE, "\n",    8, 0],
       [:LABEL,   'dog',   0, 1],
-      [:SPACE,   6,       0, 1],
       [:TEXT,    'l1.1',  6, 1],
       [:NEWLINE, "\n",   10, 1],
     ]
@@ -1061,11 +1096,8 @@ the time
 
     expected = [
       [:LABEL,   'label', 0, 0],
-      [:SPACE,   7,       0, 0],
       [:NEWLINE, "\n",    7, 0],
-      [:INDENT,  2,       0, 1],
       [:NOTE,    'note',  2, 1],
-      [:SPACE,   6,       2, 1],
       [:NEWLINE, "\n",    8, 1],
     ]
 
@@ -1080,11 +1112,9 @@ b. l1.1
 
     expected = [
       [:LALPHA,  'a',     0, 0],
-      [:SPACE,   3,       0, 0],
       [:TEXT,    'l1',    3, 0],
       [:NEWLINE, "\n",    5, 0],
       [:LALPHA,  'b',     0, 1],
-      [:SPACE,   3,       0, 1],
       [:TEXT,    'l1.1',  3, 1],
       [:NEWLINE, "\n",    7, 1],
     ]
@@ -1100,11 +1130,9 @@ dog:: l1.1
 
     expected = [
       [:NOTE,    'cat',   0, 0],
-      [:SPACE,   6,       0, 0],
       [:TEXT,    'l1',    6, 0],
       [:NEWLINE, "\n",    8, 0],
       [:NOTE,    'dog',   0, 1],
-      [:SPACE,   6,       0, 1],
       [:TEXT,    'l1.1',  6, 1],
       [:NEWLINE, "\n",   10, 1],
     ]
@@ -1120,10 +1148,8 @@ dog::
 
     expected = [
       [:NOTE,    'cat', 0, 0],
-      [:SPACE,   5,     0, 0],
       [:NEWLINE, "\n",  5, 0],
       [:NOTE,    'dog', 0, 1],
-      [:SPACE,   5,     0, 1],
       [:NEWLINE, "\n",  5, 1],
     ]
 
@@ -1151,11 +1177,9 @@ Cat::Dog
 
     expected = [
       [:NUMBER,  '1',     0, 0],
-      [:SPACE,   3,       0, 0],
       [:TEXT,    'l1',    3, 0],
       [:NEWLINE, "\n",    5, 0],
       [:NUMBER,  '2',     0, 1],
-      [:SPACE,   3,       0, 1],
       [:TEXT,    'l1.1',  3, 1],
       [:NEWLINE, "\n",    7, 1],
     ]
@@ -1173,20 +1197,16 @@ Cat::Dog
 
     expected = [
       [:NUMBER,  "1",                    0, 0],
-      [:SPACE,   3,                      0, 0],
       [:TEXT,    "blah blah blah",       3, 0],
       [:NEWLINE, "\n",                  17, 0],
 
-      [:INDENT,  3,                      0, 1],
       [:TEXT,    "l.",                   3, 1],
       [:NEWLINE, "\n",                   5, 1],
 
       [:NUMBER,  "2",                    0, 2],
-      [:SPACE,   3,                      0, 2],
       [:TEXT,    "blah blah blah blah",  3, 2],
       [:NEWLINE, "\n",                  22, 2],
 
-      [:INDENT,  3,                      0, 3],
       [:TEXT,    "d.",                   3, 3],
       [:NEWLINE, "\n",                   5, 3]
     ]
@@ -1204,24 +1224,18 @@ Cat::Dog
 
     expected = [
       [:NUMBER,  "1",                    0, 0],
-      [:SPACE,   3,                      0, 0],
       [:TEXT,    "blah blah blah",       3, 0],
       [:NEWLINE, "\n",                  17, 0],
 
-      [:INDENT,  3,                      0, 1],
       [:LALPHA,  "l",                    3, 1],
-      [:SPACE,   4,                      3, 1],
       [:TEXT,    "more stuff",           7, 1],
       [:NEWLINE, "\n",                  17, 1],
 
       [:NUMBER,  "2",                    0, 2],
-      [:SPACE,   3,                      0, 2],
       [:TEXT,    "blah blah blah blah",  3, 2],
       [:NEWLINE, "\n",                  22, 2],
 
-      [:INDENT,  3,                      0, 3],
       [:LALPHA,  "d",                    3, 3],
-      [:SPACE,   3,                      3, 3],
       [:TEXT,    "other stuff",          6, 3],
       [:NEWLINE, "\n",                  17, 3]
     ]
@@ -1252,14 +1266,14 @@ for all
 
   def test_tokenize_rule
     str = <<-STR
---- 
+---
 
 --- blah ---
     STR
 
     expected = [
       [:RULE,    1,            0, 0],
-      [:NEWLINE, "\n",         4, 0],
+      [:NEWLINE, "\n",         3, 0],
       [:NEWLINE, "\n",         0, 1],
       [:TEXT, "--- blah ---",  0, 2],
       [:NEWLINE, "\n",        12, 2],
@@ -1276,11 +1290,9 @@ B. l1.1
 
     expected = [
       [:UALPHA,  'A',     0, 0],
-      [:SPACE,   3,       0, 0],
       [:TEXT,    'l1',    3, 0],
       [:NEWLINE, "\n",    5, 0],
       [:UALPHA,  'B',     0, 1],
-      [:SPACE,   3,       0, 1],
       [:TEXT,    'l1.1',  3, 1],
       [:NEWLINE, "\n",    7, 1],
     ]
@@ -1299,7 +1311,6 @@ Example heading:
       [:TEXT,    'Example heading:',  0, 0],
       [:NEWLINE, "\n",               16, 0],
       [:NEWLINE, "\n",                0, 1],
-      [:INDENT,  3,                   0, 2],
       [:HEADER,  3,                   3, 2],
       [:TEXT,    'heading three',     7, 2],
       [:NEWLINE, "\n",               20, 2],
@@ -1310,17 +1321,17 @@ Example heading:
 
   # HACK move to Verbatim test case
   def test_verbatim_normalize
-    v = @RM::Verbatim.new '  ', 'foo', "\n", "\n", "\n", '  ', 'bar', "\n"
+    v = @RM::Verbatim.new "foo\n", "\n", "\n", "bar\n"
 
     v.normalize
 
-    assert_equal ['  ', 'foo', "\n", "\n", '  ', 'bar', "\n"], v.parts
+    assert_equal ["foo\n", "\n", "bar\n"], v.parts
 
-    v = @RM::Verbatim.new '  ', 'foo', "\n", "\n"
+    v = @RM::Verbatim.new "foo\n", "\n"
 
     v.normalize
 
-    assert_equal ['  ', 'foo', "\n"], v.parts
+    assert_equal ["foo\n"], v.parts
   end
 
   def test_unget

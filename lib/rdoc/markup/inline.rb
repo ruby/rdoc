@@ -1,3 +1,4 @@
+require 'rdoc'
 class RDoc::Markup
 
   ##
@@ -75,7 +76,7 @@ class RDoc::Markup
     end
 
     ##
-    # Acccesses flags for character +n+
+    # Accesses flags for character +n+
 
     def [](n)
       @attrs[n]

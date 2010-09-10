@@ -54,7 +54,11 @@ class RDoc::Include < RDoc::CodeObject
   # known.
 
   def module
-    RDoc::TopLevel.find_module_named(@name) || @name
+    parent && parent.find_module_named(@name) || @name
+  end
+
+  def to_s # :nodoc:
+    "include #@name in: #{parent}"
   end
 
 end

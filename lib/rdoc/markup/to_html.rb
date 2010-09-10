@@ -2,6 +2,7 @@ require 'rdoc/markup/formatter'
 require 'rdoc/markup/inline'
 
 require 'cgi'
+require 'strscan'
 
 ##
 # Outputs RDoc markup as HTML
@@ -15,7 +16,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     :BULLET => ['<ul>', '</ul>'],
     :LABEL  => ['<dl>', '</dl>'],
     :LALPHA => ['<ol style="display: lower-alpha">', '</ol>'],
-    :NOTE   => ['<table>', '</table>'],
+    :NOTE   => ['<table class="rdoc-list">', '</table>'],
     :NUMBER => ['<ol>', '</ol>'],
     :UALPHA => ['<ol style="display: upper-alpha">', '</ol>'],
   }
@@ -103,13 +104,15 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     end
   end
 
+  # :section: Special handling
+
   ##
-  # And we're invoked with a potential external hyperlink mailto:
-  # just gets inserted. http: links are checked to see if they
+  # And we're invoked with a potential external hyperlink. <tt>mailto:</tt>
+  # just gets inserted. <tt>http:</tt> links are checked to see if they
   # reference an image. If so, that image gets inserted using an
-  # <img> tag. Otherwise a conventional <a href> is used.  We also
-  # support a special type of hyperlink, link:, which is a reference
-  # to a local file whose path is relative to the --op directory.
+  # <tt><img></tt> tag. Otherwise a conventional <tt><a href></tt> is used.
+  # We also support a special type of hyperlink, <tt>link:</tt>, which is a
+  # reference to a local file whose path is relative to the --op directory.
 
   def handle_special_HYPERLINK(special)
     url = special.text
@@ -129,6 +132,8 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     url   = $2
     gen_url url, label
   end
+
+  # :section: Utilities
 
   ##
   # This is a higher speed (if messier) version of wrap
@@ -159,10 +164,9 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
       sp += 1 while sp < ep and txt[sp] == ?\s
     end
 
-    res.join
+    res.join.strip
   end
 
-  ##
   # :section: Visitor
 
   def start_accepting
@@ -176,40 +180,40 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   end
 
   def accept_paragraph(paragraph)
-    @res << annotate("<p>") + "\n"
-    @res << wrap(convert_flow(@am.flow(paragraph.text)))
-    @res << annotate("</p>") + "\n"
+    @res << "\n<p>"
+    @res << wrap(to_html(paragraph.text))
+    @res << "</p>\n"
   end
 
   def accept_verbatim(verbatim)
-    @res << annotate("<pre>") << "\n"
-    @res << CGI.escapeHTML(verbatim.text)
-    @res << annotate("</pre>") << "\n"
+    @res << "\n<pre>"
+    @res << CGI.escapeHTML(verbatim.text.rstrip)
+    @res << "</pre>\n"
   end
 
   def accept_rule(rule)
     size = rule.weight
     size = 10 if size > 10
-    @res << "<hr style=\"height: #{size}px\"></hr>"
+    @res << "<hr style=\"height: #{size}px\">\n"
   end
 
   def accept_list_start(list)
     @list << list.type
-    @res << html_list_name(list.type, true) << "\n"
+    @res << html_list_name(list.type, true)
     @in_list_entry.push false
   end
 
   def accept_list_end(list)
     @list.pop
     if tag = @in_list_entry.pop
-      @res << annotate(tag) << "\n"
+      @res << tag
     end
     @res << html_list_name(list.type, false) << "\n"
   end
 
   def accept_list_item_start(list_item)
     if tag = @in_list_entry.last
-      @res << annotate(tag) << "\n"
+      @res << tag
     end
 
     @res << list_item_start(list_item, @list.last)
@@ -224,7 +228,9 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   end
 
   def accept_heading(heading)
-    @res << convert_heading(heading.level, @am.flow(heading.text))
+    @res << "\n<h#{heading.level}>"
+    @res << to_html(heading.text)
+    @res << "</h#{heading.level}>\n"
   end
 
   def accept_raw raw
@@ -237,57 +243,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # Converts string +item+
 
   def convert_string(item)
-    in_tt? ? convert_string_simple(item) : convert_string_fancy(item)
-  end
-
-  ##
-  # Escapes HTML in +item+
-
-  def convert_string_simple(item)
     CGI.escapeHTML item
-  end
-
-  ##
-  # Converts ampersand, dashes, elipsis, quotes, copyright and registered
-  # trademark symbols to HTML escaped Unicode.
-
-  def convert_string_fancy(item)
-    # convert ampersand before doing anything else
-    item.gsub(/&/, '&amp;').
-
-    # convert -- to em-dash, (-- to en-dash)
-      gsub(/---?/, '&#8212;'). #gsub(/--/, '&#8211;').
-
-    # convert ... to elipsis (and make sure .... becomes .<elipsis>)
-      gsub(/\.\.\.\./, '.&#8230;').gsub(/\.\.\./, '&#8230;').
-
-    # convert single closing quote
-      gsub(%r{([^ \t\r\n\[\{\(])\'}, '\1&#8217;'). # }
-      gsub(%r{\'(?=\W|s\b)}, '&#8217;').
-
-    # convert single opening quote
-      gsub(/'/, '&#8216;').
-
-    # convert double closing quote
-      gsub(%r{([^ \t\r\n\[\{\(])\"(?=\W)}, '\1&#8221;'). # }
-
-    # convert double opening quote
-      gsub(/"/, '&#8220;').
-
-    # convert copyright
-      gsub(/\(c\)/, '&#169;').
-
-    # convert registered trademark
-      gsub(/\(r\)/, '&#174;')
-  end
-
-  ##
-  # Converts headings to hN elements
-
-  def convert_heading(level, flow)
-    [annotate("<h#{level}>"),
-     convert_flow(flow),
-     annotate("</h#{level}>\n")].join
   end
 
   ##
@@ -296,7 +252,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   def html_list_name(list_type, open_tag)
     tags = LIST_TYPE_TO_HTML[list_type]
     raise RDoc::Error, "Invalid list type: #{list_type.inspect}" unless tags
-    annotate tags[open_tag ? 0 : 1]
+    tags[open_tag ? 0 : 1]
   end
 
   ##
@@ -305,20 +261,11 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   def list_item_start(list_item, list_type)
     case list_type
     when :BULLET, :LALPHA, :NUMBER, :UALPHA then
-      annotate("<li>")
-
+      "<li>"
     when :LABEL then
-      annotate("<dt>") +
-        convert_flow(@am.flow(list_item.label)) +
-        annotate("</dt>") +
-        annotate("<dd>")
-
+      "<dt>" << to_html(list_item.label) << "</dt>\n<dd>"
     when :NOTE then
-      annotate("<tr>") +
-        annotate("<td valign=\"top\">") +
-        convert_flow(@am.flow(list_item.label)) +
-        annotate("</td>") +
-        annotate("<td>")
+        '<tr><td class="rdoc-term"><p>' + to_html(list_item.label) + "</p></td>\n<td>"
     else
       raise RDoc::Error, "Invalid list type: #{list_type.inspect}"
     end
@@ -338,6 +285,112 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     else
       raise RDoc::Error, "Invalid list type: #{list_type.inspect}"
     end
+  end
+
+  ##
+  # Converts ampersand, dashes, ellipsis, quotes, copyright and registered
+  # trademark symbols to HTML escaped Unicode.
+  #--
+  # TODO transcode when the output encoding is not UTF-8
+
+  def to_html(text)
+    html = ''
+    s = StringScanner.new convert_flow @am.flow text
+    insquotes = false
+    indquotes = false
+    after_word = nil
+
+#p :start => s
+
+    until s.eos? do
+      case
+      # skip HTML tags
+      when s.scan(/<[^>]+\/?s*>/)
+#p "tag: #{s.matched}"
+        html << s.matched
+        # skip <tt>...</tt> sections
+        if s.matched == '<tt>'
+          if s.scan(/.*?<\/tt>/)
+            html << s.matched.gsub('\\\\', '\\')
+          else
+            # TODO signal non-paired tags
+            html << s.rest
+            break
+          end
+        end
+      # escape of \ not handled by RDoc::Markup::ToHtmlCrossref
+      # \<non space> => <non space> (markup spec)
+      when s.scan(/\\(\S)/)
+#p "backslashes: #{s.matched}"
+        html << s[1]
+        after_word = nil
+      # ... => ellipses (.... => . + ellipses)
+      when s.scan(/\.\.\.(\.?)/)
+#p "ellipses: #{s.matched}"
+        html << s[1] << '&#8230;'
+        after_word = nil
+      # (c) => copyright
+      when s.scan(/\(c\)/)
+#p "copyright: #{s.matched}"
+        html << '&#169;'
+        after_word = nil
+      # (r) => registered trademark
+      when s.scan(/\(r\)/)
+#p "trademark: #{s.matched}"
+        html << '&#174;'
+        after_word = nil
+      # --- or -- => em-dash
+      when s.scan(/---?/)
+#p "em-dash: #{s.matched}"
+        html << '&#8212;'
+        after_word = nil
+      # double quotes
+      when s.scan(/&quot;/)  #"
+#p "dquotes: #{s.matched}"
+        html << (indquotes ? '&#8221;' : '&#8220;')
+        indquotes = !indquotes
+        after_word = nil
+      # faked double quotes
+      when s.scan(/``/)
+#p "dquotes: #{s.matched}"
+        html << '&#8220;' # opening
+        after_word = nil
+      when s.scan(/''/)
+#p "dquotes: #{s.matched}"
+        html << '&#8221;' # closing
+        after_word = nil
+      # single quotes
+      when s.scan(/'/) #'
+#p "squotes: #{s.matched}"
+        if insquotes
+          html << '&#8217;' # closing
+          insquotes = false
+        else
+          # Mary's dog, my parents' house: do not start paired quotes
+          if after_word
+            html << '&#8217;' # closing
+          else
+            html << '&#8216;' # opening
+            insquotes = true
+          end
+        end
+        after_word = nil
+      # none of the above: advance to the next potentially significant character
+      else
+        match = s.scan(/.+?(?=[-<\\\.\("'`&])/) #"
+        if match
+#p "next: #{match}"
+          html << match
+          after_word = match =~ /\w$/
+        else
+#p "rest: #{s.rest}"
+          html << s.rest
+          break
+        end
+      end
+    end
+
+    html
   end
 
 end

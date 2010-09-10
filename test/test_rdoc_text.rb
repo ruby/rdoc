@@ -46,9 +46,9 @@ class TestRDocText < MiniTest::Unit::TestCase
 
   def test_flush_left
     text = <<-TEXT
-  
+
   we don't worry too much.
- 
+
   The comments associated with
     TEXT
 
@@ -65,7 +65,7 @@ The comments associated with
   def test_markup
     def formatter() RDoc::Markup::ToHtml.new end
 
-    assert_equal "<p>\nhi\n</p>\n", markup('hi')
+    assert_equal "<p>hi</p>", markup('hi').gsub("\n", '')
   end
 
   def test_normalize_comment
@@ -114,9 +114,9 @@ The comments associated with
     TEXT
 
     expected = <<-EXPECTED
-  
+
   we don't worry too much.
- 
+
   The comments associated with
     EXPECTED
 
@@ -143,11 +143,10 @@ The comments associated with
     TEXT
 
     expected = <<-EXPECTED
-  
+
    * we don't worry too much.
-  
+
    The comments associated with
-   
     EXPECTED
 
     assert_equal expected, strip_stars(text)
