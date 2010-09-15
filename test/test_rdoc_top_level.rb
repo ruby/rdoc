@@ -74,6 +74,19 @@ class TestRDocTopLevel < XrefTestCase
     assert_empty RDoc::TopLevel.files
   end
 
+  def test_class_update_aliases
+    a1_c = @c2.add_module_alias @c2_c3, 'A1'
+
+    assert_empty a1_c.aliases
+
+    RDoc::TopLevel.update_aliases @c2
+
+    a1 = @xref_data.find_class_or_module 'C2::A1'
+
+    assert_equal 'C2::C3', a1.full_name
+    refute_empty a1.aliases
+  end
+
   def test_base_name
     assert_equal 'top_level.rb', @top_level.base_name
   end
