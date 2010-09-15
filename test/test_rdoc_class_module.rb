@@ -96,5 +96,31 @@ class TestRDocClassModule < XrefTestCase
     assert_equal @c3_h1, @c3_h2.superclass
   end
 
+  def test_update_aliases_class
+    a1_c = @m1.add_module_alias @m1_m2, 'A1'
+
+    assert_empty a1_c.aliases
+
+    @m1.update_aliases
+
+    a1 = @xref_data.find_class_or_module 'M1::A1'
+
+    assert_equal 'M1::M2', a1.full_name
+    refute_empty a1.aliases
+  end
+
+  def test_update_aliases_module
+    a1_c = @c2.add_module_alias @c2_c3, 'A1'
+
+    assert_empty a1_c.aliases
+
+    @c2.update_aliases
+
+    a1 = @xref_data.find_class_or_module 'C2::A1'
+
+    assert_equal 'C2::C3', a1.full_name
+    refute_empty a1.aliases
+  end
+
 end
 

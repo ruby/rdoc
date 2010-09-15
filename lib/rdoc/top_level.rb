@@ -108,7 +108,7 @@ class RDoc::TopLevel < RDoc::Context
     @unique_modules = find_unique @all_modules_hash
 
     unique_classes_and_modules.each do |cm|
-      update_aliases cm
+      cm.update_aliases
       remove_nodoc_children cm, cm.modules_hash, all_modules_hash
       remove_nodoc_children cm, cm.classes_hash, all_classes_hash
       update_includes cm.includes
@@ -277,34 +277,6 @@ class RDoc::TopLevel < RDoc::Context
 
   def self.unique_modules
     @unique_modules
-  end
-
-  ##
-  # Updates the child modules & classes of class/module +parent+ by
-  # deleting the ones that are aliases through a constant.
-  #
-  # The aliased module/class is replaced in ::all_modules_hash
-  # or ::all_classes_hash by a copy that has
-  # <tt>RDoc::ClassModule#is_alias_for</tt> set to the aliased module/class,
-  # and this copy is added to <tt>#aliases</tt> of the aliased module/class.
-
-  def self.update_aliases(parent)
-    parent.constants.each do |const|
-      next unless (cm = const.is_alias_for)
-      cm_alias = cm.dup
-      cm_alias.name = const.name
-      cm_alias.parent = parent
-      cm_alias.aliases.clear
-      cm_alias.is_alias_for = cm
-      if cm.module?
-        @all_modules_hash[cm_alias.full_name] = cm_alias
-        parent.modules_hash.delete const.name
-      else
-        @all_classes_hash[cm_alias.full_name] = cm_alias
-        parent.classes_hash.delete const.name
-      end
-      cm.aliases << cm_alias
-    end
   end
 
   ##

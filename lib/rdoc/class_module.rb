@@ -329,5 +329,35 @@ class RDoc::ClassModule < RDoc::Context
     module? ? 'module' : 'class'
   end
 
+  ##
+  # Updates the child modules & classes by deleting the ones that are aliases
+  # through a constant.
+  #
+  # The aliased module/class is replaced in RDoc::TopLevel::all_modules_hash
+  # or RDoc::TopLevel::all_classes_hash by a copy that has
+  # <tt>RDoc::ClassModule#is_alias_for</tt> set to the aliased module/class,
+  # and this copy is added to <tt>#aliases</tt> of the aliased module/class.
+
+  def update_aliases
+    constants.each do |const|
+      next unless cm = const.is_alias_for
+      cm_alias = cm.dup
+      cm_alias.name = const.name
+      cm_alias.parent = parent
+      cm_alias.aliases.clear
+      cm_alias.is_alias_for = cm
+
+      if cm.module? then
+        RDoc::TopLevel.all_modules_hash[cm_alias.full_name] = cm_alias
+        parent.modules_hash.delete const.name
+      else
+        RDoc::TopLevel.all_classes_hash[cm_alias.full_name] = cm_alias
+        parent.classes_hash.delete const.name
+      end
+
+      cm.aliases << cm_alias
+    end
+  end
+
 end
 
