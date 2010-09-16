@@ -343,10 +343,10 @@ class RDoc::ClassModule < RDoc::Context
       next unless cm = const.is_alias_for
       cm_alias = cm.dup
       cm_alias.name = const.name
-      cm_alias.parent = parent
+      cm_alias.parent = self
+      cm_alias.full_name = nil  # force update for new parent
       cm_alias.aliases.clear
       cm_alias.is_alias_for = cm
-      #cm_alias.full_name = nil
 
       if cm.module? then
         RDoc::TopLevel.all_modules_hash[cm_alias.full_name] = cm_alias

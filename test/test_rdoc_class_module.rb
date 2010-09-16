@@ -96,45 +96,101 @@ class TestRDocClassModule < XrefTestCase
     assert_equal @c3_h1, @c3_h2.superclass
   end
 
-  def test_update_aliases_class
-    a1_a = @m1.add_module_alias @m1_m2, 'A1'
+  def test_update_aliases_module
 
-    assert_empty a1_a.aliases
+    # we must create modules for this test,
+    # to avoid conflicts with other tests
+    n1 = @xref_data.add_module RDoc::NormalModule, 'N1'
+    n1_n2 = n1.add_module RDoc::NormalModule, 'N2'
 
-    @m1.update_aliases
+    # add constant N1::A1 -> N1::N2
+    n1.add_module_alias n1_n2, 'A1'
 
-    a1 = @xref_data.find_class_or_module 'M1::A1'
+    # make sure the constant is there,
+    # and points to the aliased module
+    n1_a1_c = n1.constants.find { |c| c.name == 'A1' }
+    refute_nil n1_a1_c
+    assert_equal n1_n2, n1_a1_c.is_alias_for
 
-    assert_equal 'M1::M2', a1.full_name
-    assert_equal 'M1::M2', a1_a.full_name
-    refute_empty a1.aliases
+    n1.update_aliases
+
+    # make sure the alias module was created
+    n1_a1_m = @xref_data.find_class_or_module 'N1::A1'
+    refute_nil n1_a1_m
+    assert_equal n1_n2, n1_a1_m.is_alias_for
+    refute_equal n1_n2, n1_a1_m
+
+    assert_equal 1, n1_n2.aliases.length
+    assert_equal n1_a1_m, n1_n2.aliases[0]
+
+    assert_equal 'N1::N2', n1_n2.full_name
+    assert_equal 'N1::A1', n1_a1_m.full_name
+
   end
 
-  def test_update_aliases_module
-    a1_a = @c2.add_module_alias @c2_c3, 'A1'
+  def test_update_aliases_class
 
-    assert_empty a1_a.aliases
+    # we must create classes for this test,
+    # to avoid conflicts with other tests
+    k1 = @xref_data.add_module RDoc::NormalClass, 'K1'
+    k1_k2 = k1.add_module RDoc::NormalClass, 'K2'
 
-    @c2.update_aliases
+    # add constant K1::A1 -> K1::K2
+    k1.add_module_alias k1_k2, 'A1'
 
-    a1 = @xref_data.find_class_or_module 'C2::A1'
+    # make sure the constant is there,
+    # and points to the aliased class
+    k1_a1_c = k1.constants.find { |c| c.name == 'A1' }
+    refute_nil k1_a1_c
+    assert_equal k1_k2, k1_a1_c.is_alias_for
 
-    assert_equal 'C2::C3', a1.full_name
-    refute_empty a1.aliases
+    k1.update_aliases
+
+    # make sure the alias class was created
+    k1_a1_k = @xref_data.find_class_or_module 'K1::A1'
+    refute_nil k1_a1_k
+    assert_equal k1_k2, k1_a1_k.is_alias_for
+    refute_equal k1_k2, k1_a1_k
+
+    assert_equal 1, k1_k2.aliases.length
+    assert_equal k1_a1_k, k1_k2.aliases[0]
+
+    assert_equal 'K1::K2', k1_k2.full_name
+    assert_equal 'K1::A1', k1_a1_k.full_name
+
   end
 
   def test_update_aliases_reparent
-    a1_a = @c1.add_module_alias @m1_m2, 'A1'
 
-    assert_equal 'M1::M2', a1_a.full_name
+    # we must create modules for this test,
+    # to avoid conflicts with other tests
+    l1 = @xref_data.add_module RDoc::NormalModule, 'L1'
+    l1_l2 = l1.add_module RDoc::NormalModule, 'L2'
+    o1 = @xref_data.add_module RDoc::NormalModule, 'O1'
 
-    @c1.update_aliases
+    # add constant O1::A1 -> L1::L2
+    o1.add_module_alias l1_l2, 'A1'
 
-    c1_a1 = @xref_data.find_class_or_module 'C1::A1'
-    m1_m2 = @xref_data.find_class_or_module 'M1::M2'
+    # make sure the constant is there,
+    # and points to the aliased module
+    o1_a1_c = o1.constants.find { |c| c.name == 'A1' }
+    refute_nil o1_a1_c
+    assert_equal l1_l2, o1_a1_c.is_alias_for
+    refute_equal l1_l2, o1_a1_c
 
-    assert_equal 'M1::M2', c1_a1.full_name
-    assert_equal 'M1::M2', m1_m2.full_name
+    o1.update_aliases
+
+    # make sure the alias module was created
+    o1_a1_m = @xref_data.find_class_or_module 'O1::A1'
+    refute_nil o1_a1_m
+    assert_equal l1_l2, o1_a1_m.is_alias_for
+
+    assert_equal 1, l1_l2.aliases.length
+    assert_equal o1_a1_m, l1_l2.aliases[0]
+
+    assert_equal 'L1::L2', l1_l2.full_name
+    assert_equal 'O1::A1', o1_a1_m.full_name
+
   end
 
 end

@@ -34,7 +34,7 @@ class TestRDocTopLevel < XrefTestCase
 
     a1 = @xref_data.find_class_or_module 'C2::A1'
 
-    assert_equal 'C2::C3', a1.full_name
+    assert_equal 'C2::A1', a1.full_name
     refute_empty a1.aliases
   end
 
