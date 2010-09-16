@@ -346,6 +346,7 @@ class RDoc::ClassModule < RDoc::Context
       cm_alias.parent = parent
       cm_alias.aliases.clear
       cm_alias.is_alias_for = cm
+      #cm_alias.full_name = nil
 
       if cm.module? then
         RDoc::TopLevel.all_modules_hash[cm_alias.full_name] = cm_alias

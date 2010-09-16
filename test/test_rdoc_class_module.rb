@@ -97,22 +97,23 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_update_aliases_class
-    a1_c = @m1.add_module_alias @m1_m2, 'A1'
+    a1_a = @m1.add_module_alias @m1_m2, 'A1'
 
-    assert_empty a1_c.aliases
+    assert_empty a1_a.aliases
 
     @m1.update_aliases
 
     a1 = @xref_data.find_class_or_module 'M1::A1'
 
     assert_equal 'M1::M2', a1.full_name
+    assert_equal 'M1::M2', a1_a.full_name
     refute_empty a1.aliases
   end
 
   def test_update_aliases_module
-    a1_c = @c2.add_module_alias @c2_c3, 'A1'
+    a1_a = @c2.add_module_alias @c2_c3, 'A1'
 
-    assert_empty a1_c.aliases
+    assert_empty a1_a.aliases
 
     @c2.update_aliases
 
@@ -120,6 +121,20 @@ class TestRDocClassModule < XrefTestCase
 
     assert_equal 'C2::C3', a1.full_name
     refute_empty a1.aliases
+  end
+
+  def test_update_aliases_reparent
+    a1_a = @c1.add_module_alias @m1_m2, 'A1'
+
+    assert_equal 'M1::M2', a1_a.full_name
+
+    @c1.update_aliases
+
+    c1_a1 = @xref_data.find_class_or_module 'C1::A1'
+    m1_m2 = @xref_data.find_class_or_module 'M1::M2'
+
+    assert_equal 'M1::M2', c1_a1.full_name
+    assert_equal 'M1::M2', m1_m2.full_name
   end
 
 end
