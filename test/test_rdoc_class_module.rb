@@ -110,81 +110,61 @@ class TestRDocClassModule < XrefTestCase
     assert_equal @c3_h1, @c3_h2.superclass
   end
 
-  def test_update_aliases_module
+  def test_update_aliases_class
+    n1 = @xref_data.add_module RDoc::NormalClass, 'N1'
+    n1_k2 = n1.add_module RDoc::NormalClass, 'N2'
 
-    # we must create modules for this test,
-    # to avoid conflicts with other tests
-    n1 = @xref_data.add_module RDoc::NormalModule, 'N1'
-    n1_n2 = n1.add_module RDoc::NormalModule, 'N2'
+    n1.add_module_alias n1_k2, 'A1'
 
-    # add constant N1::A1 -> N1::N2
-    n1.add_module_alias n1_n2, 'A1'
-
-    # make sure the constant is there,
-    # and points to the aliased module
     n1_a1_c = n1.constants.find { |c| c.name == 'A1' }
     refute_nil n1_a1_c
-    assert_equal n1_n2, n1_a1_c.is_alias_for
+    assert_equal n1_k2, n1_a1_c.is_alias_for, 'sanity check'
 
     n1.update_aliases
 
-    # make sure the alias module was created
+    n1_a1_k = @xref_data.find_class_or_module 'N1::A1'
+    refute_nil n1_a1_k
+    assert_equal n1_k2, n1_a1_k.is_alias_for
+    refute_equal n1_k2, n1_a1_k
+
+    assert_equal 1, n1_k2.aliases.length
+    assert_equal n1_a1_k, n1_k2.aliases.first
+
+    assert_equal 'N1::N2', n1_k2.full_name
+    assert_equal 'N1::A1', n1_a1_k.full_name
+  end
+
+  def test_update_aliases_module
+    n1 = @xref_data.add_module RDoc::NormalModule, 'N1'
+    n1_n2 = n1.add_module RDoc::NormalModule, 'N2'
+
+    n1.add_module_alias n1_n2, 'A1'
+
+    n1_a1_c = n1.constants.find { |c| c.name == 'A1' }
+    refute_nil n1_a1_c
+    assert_equal n1_n2, n1_a1_c.is_alias_for, 'sanity check'
+
+    n1.update_aliases
+
     n1_a1_m = @xref_data.find_class_or_module 'N1::A1'
     refute_nil n1_a1_m
     assert_equal n1_n2, n1_a1_m.is_alias_for
     refute_equal n1_n2, n1_a1_m
 
     assert_equal 1, n1_n2.aliases.length
-    assert_equal n1_a1_m, n1_n2.aliases[0]
+    assert_equal n1_a1_m, n1_n2.aliases.first
 
     assert_equal 'N1::N2', n1_n2.full_name
     assert_equal 'N1::A1', n1_a1_m.full_name
-
-  end
-
-  def test_update_aliases_class
-    # we must create classes for this test,
-    # to avoid conflicts with other tests
-    k1 = @xref_data.add_module RDoc::NormalClass, 'K1'
-    k1_k2 = k1.add_module RDoc::NormalClass, 'K2'
-
-    # add constant K1::A1 -> K1::K2
-    k1.add_module_alias k1_k2, 'A1'
-
-    # make sure the constant is there,
-    # and points to the aliased class
-    k1_a1_c = k1.constants.find { |c| c.name == 'A1' }
-    refute_nil k1_a1_c
-    assert_equal k1_k2, k1_a1_c.is_alias_for
-
-    k1.update_aliases
-
-    # make sure the alias class was created
-    k1_a1_k = @xref_data.find_class_or_module 'K1::A1'
-    refute_nil k1_a1_k
-    assert_equal k1_k2, k1_a1_k.is_alias_for
-    refute_equal k1_k2, k1_a1_k
-
-    assert_equal 1, k1_k2.aliases.length
-    assert_equal k1_a1_k, k1_k2.aliases[0]
-
-    assert_equal 'K1::K2', k1_k2.full_name
-    assert_equal 'K1::A1', k1_a1_k.full_name
-
   end
 
   def test_update_aliases_reparent
-    # we must create modules for this test,
-    # to avoid conflicts with other tests
     l1 = @xref_data.add_module RDoc::NormalModule, 'L1'
     l1_l2 = l1.add_module RDoc::NormalModule, 'L2'
     o1 = @xref_data.add_module RDoc::NormalModule, 'O1'
 
-    # add constant O1::A1 -> L1::L2
     o1.add_module_alias l1_l2, 'A1'
 
-    # make sure the constant is there,
-    # and points to the aliased module
     o1_a1_c = o1.constants.find { |c| c.name == 'A1' }
     refute_nil o1_a1_c
     assert_equal l1_l2, o1_a1_c.is_alias_for
@@ -192,7 +172,6 @@ class TestRDocClassModule < XrefTestCase
 
     o1.update_aliases
 
-    # make sure the alias module was created
     o1_a1_m = @xref_data.find_class_or_module 'O1::A1'
     refute_nil o1_a1_m
     assert_equal l1_l2, o1_a1_m.is_alias_for
@@ -202,7 +181,6 @@ class TestRDocClassModule < XrefTestCase
 
     assert_equal 'L1::L2', l1_l2.full_name
     assert_equal 'O1::A1', o1_a1_m.full_name
-
   end
 
   def test_update_includes
