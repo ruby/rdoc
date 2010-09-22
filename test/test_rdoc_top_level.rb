@@ -77,17 +77,6 @@ class TestRDocTopLevel < XrefTestCase
                  RDoc::TopLevel.modules.map { |m| m.full_name }.sort
   end
 
-  def test_class_remove_nodoc_children
-    all_hash     = { 'A::B' => true }
-    parent_hash  = { 'B' => true, 'C' => true }
-
-    parent = RDoc::ClassModule.new 'A'
-
-    RDoc::TopLevel.remove_nodoc_children parent, parent_hash, all_hash
-
-    assert_equal %w[B], parent_hash.keys
-  end
-
   def test_class_reset
     RDoc::TopLevel.reset
 

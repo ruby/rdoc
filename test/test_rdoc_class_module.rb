@@ -92,6 +92,20 @@ class TestRDocClassModule < XrefTestCase
     assert_equal expected, cm1.method_list.sort
   end
 
+  def test_remove_nodoc_children
+    parent = RDoc::ClassModule.new 'A'
+    parent.modules_hash.replace 'B' => true, 'C' => true
+    RDoc::TopLevel.all_modules_hash.replace 'A::B' => true
+
+    parent.classes_hash.replace 'D' => true, 'E' => true
+    RDoc::TopLevel.all_classes_hash.replace 'A::D' => true
+
+    parent.remove_nodoc_children
+
+    assert_equal %w[B], parent.modules_hash.keys
+    assert_equal %w[D], parent.classes_hash.keys
+  end
+
   def test_superclass
     assert_equal @c3_h1, @c3_h2.superclass
   end

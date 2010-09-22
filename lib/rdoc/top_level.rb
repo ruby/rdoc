@@ -109,8 +109,7 @@ class RDoc::TopLevel < RDoc::Context
 
     unique_classes_and_modules.each do |cm|
       cm.update_aliases
-      remove_nodoc_children cm, cm.modules_hash, all_modules_hash
-      remove_nodoc_children cm, cm.classes_hash, all_classes_hash
+      cm.remove_nodoc_children
       update_includes cm.includes
       cm.remove_invisible min_visibility
     end
@@ -227,21 +226,6 @@ class RDoc::TopLevel < RDoc::Context
     all_hash.keys.each do |name|
       context = all_hash[name]
       all_hash.delete(name) if context.remove_from_documentation?
-    end
-  end
-
-  ##
-  # Updates the child modules or classes of class/module +parent+ by
-  # deleting the ones that have been removed from the documentation.
-  #
-  # +parent_hash+ is either <tt>parent.modules_hash</tt> or
-  # <tt>parent.classes_hash</tt> and +all_hash+ is ::all_modules_hash or
-  # ::all_classes_hash.
-
-  def self.remove_nodoc_children(parent, parent_hash, all_hash)
-    parent_hash.keys.each do |name|
-      full_name = parent.full_name + '::' + name
-      parent_hash.delete(name) unless all_hash[full_name]
     end
   end
 

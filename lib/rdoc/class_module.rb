@@ -299,6 +299,28 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
+  # Updates the child modules or classes of class/module +parent+ by
+  # deleting the ones that have been removed from the documentation.
+  #
+  # +parent_hash+ is either <tt>parent.modules_hash</tt> or
+  # <tt>parent.classes_hash</tt> and +all_hash+ is ::all_modules_hash or
+  # ::all_classes_hash.
+
+  def remove_nodoc_children
+    prefix = self.full_name + '::'
+
+    modules_hash.each_key do |name|
+      full_name = prefix + name
+      modules_hash.delete name unless RDoc::TopLevel.all_modules_hash[full_name]
+    end
+
+    classes_hash.each_key do |name|
+      full_name = prefix + name
+      classes_hash.delete name unless RDoc::TopLevel.all_classes_hash[full_name]
+    end
+  end
+
+  ##
   # Get the superclass of this class.  Attempts to retrieve the superclass
   # object, returns the name if it is not known.
 
