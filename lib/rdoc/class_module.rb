@@ -389,7 +389,7 @@ class RDoc::ClassModule < RDoc::Context
   # FIXME: includes are not reliably removed, see _possible_bug test case
 
   def update_includes
-    self.includes.reject! do |include|
+    includes.delete_if do |include|
       mod = include.module
 
       next false if String === mod
