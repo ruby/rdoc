@@ -99,7 +99,7 @@ class RDoc::TopLevel < RDoc::Context
   #
   # See also RDoc::Context#remove_from_documentation?
 
-  def self.complete(min_visibility)
+  def self.complete min_visibility
     fix_basic_object_inheritance
 
     remove_nodoc @all_classes_hash
@@ -109,10 +109,7 @@ class RDoc::TopLevel < RDoc::Context
     @unique_modules = find_unique @all_modules_hash
 
     unique_classes_and_modules.each do |cm|
-      cm.update_aliases
-      cm.remove_nodoc_children
-      cm.update_includes
-      cm.remove_invisible min_visibility
+      cm.complete min_visibility
     end
 
     @all_files_hash.each_key do |file_name|

@@ -113,6 +113,18 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
+  # Prepares this ClassModule for use by a generator.
+  #
+  # See RDoc::TopLevel::complete
+
+  def complete min_visibility
+    update_aliases
+    remove_nodoc_children
+    update_includes
+    remove_invisible min_visibility
+  end
+
+  ##
   # Looks for a symbol in the #ancestors. See Context#find_local_symbol.
 
   def find_ancestor_local_symbol symbol
