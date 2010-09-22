@@ -84,19 +84,20 @@ class RDoc::TopLevel < RDoc::Context
   end
 
   ##
-  # Prepares for use by a generator.
+  # Prepares the RDoc code object tree for use by a generator.
   #
-  # It finds unique classes/modules defined, and
-  # replaces classes/modules that are aliases for another one by a copy
-  # with the <tt>RDoc::ClassModule#is_alias_for</tt> attribute set.
-  # It updates the <tt>RDoc::ClassModule#constant_aliases</tt> attribute
-  # of "real" classes or modules.
+  # It finds unique classes/modules defined, and replaces classes/modules that
+  # are aliases for another one by a copy with RDoc::ClassModule#is_alias_for
+  # set.
   #
-  # It also completely removes the classes and modules that
-  # should be removed from the documentation
-  # (see <tt>RDoc::Context#remove_from_documentation?</tt>),
-  # and the methods that have a visibility below +min_visibility+,
-  # which is the <tt>--visibility</tt> option.
+  # It updates the RDoc::ClassModule#constant_aliases attribute of "real"
+  # classes or modules.
+  #
+  # It also completely removes the classes and modules that should be removed
+  # from the documentation and the methods that have a visibility below
+  # +min_visibility+, which is the <tt>--visibility</tt> option.
+  #
+  # See also RDoc::Context#remove_from_documentation?
 
   def self.complete(min_visibility)
     fix_basic_object_inheritance
@@ -110,7 +111,7 @@ class RDoc::TopLevel < RDoc::Context
     unique_classes_and_modules.each do |cm|
       cm.update_aliases
       cm.remove_nodoc_children
-      update_includes cm.includes
+      cm.update_includes
       cm.remove_invisible min_visibility
     end
 
@@ -219,8 +220,9 @@ class RDoc::TopLevel < RDoc::Context
   end
 
   ##
-  # Removes from +all_hash+ the contexts that verify
-  # <tt>RDoc::Context#remove_from_documentation? == true</tt>.
+  # Removes from +all_hash+ the contexts that are nodoc or have no content.
+  #
+  # See RDoc::Context#remove_from_documentation?
 
   def self.remove_nodoc(all_hash)
     all_hash.keys.each do |name|
@@ -261,14 +263,6 @@ class RDoc::TopLevel < RDoc::Context
 
   def self.unique_modules
     @unique_modules
-  end
-
-  ##
-  # Deletes from +includes+ those whose module has been removed from the
-  # documentation.
-
-  def self.update_includes(includes)
-    includes.reject! { |i| !i.module.is_a?(String) && all_modules_hash[i.module.full_name].nil? }
   end
 
   class << self

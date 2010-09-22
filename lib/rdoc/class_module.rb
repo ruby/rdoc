@@ -382,5 +382,21 @@ class RDoc::ClassModule < RDoc::Context
     end
   end
 
+  ##
+  # Deletes from #includes those whose module has been removed from the
+  # documentation.
+  #--
+  # FIXME: includes are not reliably removed, see _possible_bug test case
+
+  def update_includes
+    self.includes.reject! do |include|
+      mod = include.module
+
+      next false if String === mod
+
+      not RDoc::TopLevel.all_modules_hash[mod.full_name]
+    end
+  end
+
 end
 

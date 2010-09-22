@@ -143,7 +143,6 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_update_aliases_class
-
     # we must create classes for this test,
     # to avoid conflicts with other tests
     k1 = @xref_data.add_module RDoc::NormalClass, 'K1'
@@ -175,7 +174,6 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_update_aliases_reparent
-
     # we must create modules for this test,
     # to avoid conflicts with other tests
     l1 = @xref_data.add_module RDoc::NormalModule, 'L1'
@@ -205,6 +203,43 @@ class TestRDocClassModule < XrefTestCase
     assert_equal 'L1::L2', l1_l2.full_name
     assert_equal 'O1::A1', o1_a1_m.full_name
 
+  end
+
+  def test_update_includes
+    a = RDoc::Include.new 'M1', nil
+    b = RDoc::Include.new 'M2', nil
+    c = RDoc::Include.new 'C', nil
+
+    @m1.add_include a
+    @m1.add_include b
+    @m1.add_include c
+
+    @m1_m2.document_self = nil
+
+    RDoc::TopLevel.remove_nodoc RDoc::TopLevel.all_modules_hash
+
+    @m1.update_includes
+
+    assert_equal [a, c], @m1.includes
+  end
+
+  def test_update_includes_possible_bug
+    a = RDoc::Include.new 'M1', nil
+    b = RDoc::Include.new 'M1::M2', nil
+    c = RDoc::Include.new 'C', nil
+
+    @m1.add_include a
+    @m1.add_include b
+    @m1.add_include c
+
+    @m1_m2.document_self = nil
+
+    RDoc::TopLevel.remove_nodoc RDoc::TopLevel.all_modules_hash
+
+    @m1.update_includes
+
+    assert_equal [a, b, c], @m1.includes,
+                 "b is not removed because @m1.find_module_named returns nil"
   end
 
 end
