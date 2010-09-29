@@ -124,6 +124,13 @@ class TestRDocCodeObject < XrefTestCase
     @co.document_self = true
   end
 
+  def test_record_location
+    c = RDoc::CodeObject.new
+    c.record_location @xref_data
+
+    assert_equal 'xref_data.rb', c.file.relative_name
+  end
+
   def test_start_doc
     @co.document_self = false
     @co.document_children = false

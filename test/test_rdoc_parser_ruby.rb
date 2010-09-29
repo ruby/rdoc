@@ -219,10 +219,11 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
 
     alas = @parser.parse_alias klass, RDoc::Parser::Ruby::NORMAL, tk, 'comment'
 
-    assert_equal 'bar',     alas.old_name
-    assert_equal 'next=',   alas.new_name
-    assert_equal klass,     alas.parent
-    assert_equal 'comment', alas.comment
+    assert_equal 'bar',      alas.old_name
+    assert_equal 'next=',    alas.new_name
+    assert_equal klass,      alas.parent
+    assert_equal 'comment',  alas.comment
+    assert_equal @top_level, alas.file
   end
 
   def test_parse_alias_singleton
@@ -235,11 +236,12 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
 
     alas = @parser.parse_alias klass, RDoc::Parser::Ruby::SINGLE, tk, 'comment'
 
-    assert_equal 'bar',     alas.old_name
-    assert_equal 'next=',   alas.new_name
-    assert_equal klass,     alas.parent
-    assert_equal 'comment', alas.comment
-    assert                  alas.singleton
+    assert_equal 'bar',      alas.old_name
+    assert_equal 'next=',    alas.new_name
+    assert_equal klass,      alas.parent
+    assert_equal 'comment',  alas.comment
+    assert_equal @top_level, alas.file
+    assert                   alas.singleton
   end
 
   def test_parse_alias_meta
@@ -272,7 +274,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     foo = klass.attributes.first
     assert_equal 'foo', foo.name
     assert_equal 'my attr', foo.comment
-    assert_equal @top_level, foo.top_level
+    assert_equal @top_level, foo.file
   end
 
   def test_parse_attr_accessor
@@ -293,7 +295,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     assert_equal 'foo', foo.name
     assert_equal 'RW', foo.rw
     assert_equal 'my attr', foo.comment
-    assert_equal @top_level, foo.top_level
+    assert_equal @top_level, foo.file
 
     bar = klass.attributes.last
     assert_equal 'bar', bar.name
@@ -334,7 +336,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     assert_equal 'foo', foo.name
     assert_equal 'W', foo.rw
     assert_equal "my attr", foo.comment
-    assert_equal @top_level, foo.top_level
+    assert_equal @top_level, foo.file
 
     bar = klass.attributes.last
     assert_equal 'bar', bar.name
@@ -359,7 +361,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     assert_equal 'foo', foo.name
     assert_equal 'RW', foo.rw
     assert_equal "my method", foo.comment
-    assert_equal @top_level, foo.top_level
+    assert_equal @top_level, foo.file
   end
 
   def test_parse_meta_attr_accessor
@@ -379,7 +381,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     assert_equal 'foo', foo.name
     assert_equal 'RW', foo.rw
     assert_equal 'my method', foo.comment
-    assert_equal @top_level, foo.top_level
+    assert_equal @top_level, foo.file
   end
 
   def test_parse_meta_attr_named
@@ -399,7 +401,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     assert_equal 'foo', foo.name
     assert_equal 'RW', foo.rw
     assert_equal 'my method', foo.comment
-    assert_equal @top_level, foo.top_level
+    assert_equal @top_level, foo.file
   end
 
   def test_parse_meta_attr_reader
@@ -418,7 +420,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     assert_equal 'foo', foo.name
     assert_equal 'R', foo.rw
     assert_equal 'my method', foo.comment
-    assert_equal @top_level, foo.top_level
+    assert_equal @top_level, foo.file
   end
 
   def test_parse_meta_attr_writer
@@ -437,7 +439,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     assert_equal 'foo', foo.name
     assert_equal 'W', foo.rw
     assert_equal "my method", foo.comment
-    assert_equal @top_level, foo.top_level
+    assert_equal @top_level, foo.file
   end
 
   def test_parse_class
@@ -472,7 +474,7 @@ end
 
     blah = foo.method_list.first
     assert_equal 'Foo#blah', blah.full_name
-    assert_equal @top_level, blah.top_level
+    assert_equal @top_level, blah.file
   end
 
   def test_parse_class_nested_superclass
@@ -661,7 +663,7 @@ EOF
     assert_equal 'foo',      foo.name
     assert_equal 'RW',       foo.rw
     assert_equal 'my attr',  foo.comment
-    assert_equal @top_level, foo.top_level
+    assert_equal @top_level, foo.file
 
     assert_equal nil,        foo.viewer
     assert_equal true,       foo.document_children
@@ -690,7 +692,7 @@ EOF
     foo = klass.method_list.first
     assert_equal 'foo',       foo.name
     assert_equal 'my method', foo.comment
-    assert_equal @top_level,  foo.top_level
+    assert_equal @top_level,  foo.file
 
     assert_equal [],        foo.aliases
     assert_equal nil,       foo.block_params
@@ -763,7 +765,7 @@ EOF
     foo = klass.method_list.first
     assert_equal 'foo',       foo.name
     assert_equal 'my method', foo.comment
-    assert_equal @top_level,  foo.top_level
+    assert_equal @top_level,  foo.file
 
     assert_equal [],      foo.aliases
     assert_equal nil,     foo.block_params
@@ -813,7 +815,7 @@ EOF
     foo = klass.method_list.first
     assert_equal 'woo_hoo!',  foo.name
     assert_equal 'my method', foo.comment
-    assert_equal @top_level,  foo.top_level
+    assert_equal @top_level,  foo.file
   end
 
   def test_parse_meta_method_singleton
@@ -832,7 +834,7 @@ EOF
     assert_equal 'foo', foo.name
     assert_equal true, foo.singleton, 'singleton method'
     assert_equal 'my method', foo.comment
-    assert_equal @top_level,  foo.top_level
+    assert_equal @top_level,  foo.file
   end
 
   def test_parse_meta_method_singleton_name
@@ -851,7 +853,7 @@ EOF
     assert_equal 'woo_hoo!', foo.name
     assert_equal true, foo.singleton, 'singleton method'
     assert_equal 'my method', foo.comment
-    assert_equal @top_level,  foo.top_level
+    assert_equal @top_level,  foo.file
   end
 
   def test_parse_meta_method_string_name
@@ -867,7 +869,7 @@ EOF
     foo = klass.method_list.first
     assert_equal 'foo', foo.name
     assert_equal 'my method', foo.comment
-    assert_equal @top_level,  foo.top_level
+    assert_equal @top_level,  foo.file
   end
 
   def test_parse_meta_method_unknown
@@ -883,7 +885,7 @@ EOF
     foo = klass.method_list.first
     assert_equal 'unknown', foo.name
     assert_equal 'my method', foo.comment
-    assert_equal @top_level,  foo.top_level
+    assert_equal @top_level,  foo.file
   end
 
   def test_parse_method
@@ -901,7 +903,7 @@ EOF
     foo = klass.method_list.first
     assert_equal 'foo',       foo.name
     assert_equal 'my method', foo.comment
-    assert_equal @top_level,  foo.top_level
+    assert_equal @top_level,  foo.file
 
     assert_equal [],        foo.aliases
     assert_equal nil,       foo.block_params
@@ -1028,7 +1030,7 @@ EOF
 
     foo = klass.method_list.first
     assert_equal '(arg1, arg2)', foo.params
-    assert_equal @top_level, foo.top_level
+    assert_equal @top_level, foo.file
   end
 
   def test_parse_method_parameters_comment
@@ -1078,7 +1080,7 @@ EOF
 
     foo = object.method_list.first
     assert_equal 'Object#foo', foo.full_name
-    assert_equal @top_level, foo.top_level
+    assert_equal @top_level, foo.file
   end
 
   def test_parse_method_toplevel_class

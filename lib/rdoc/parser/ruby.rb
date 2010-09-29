@@ -505,7 +505,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
       return
     end
 
-    al = RDoc::Alias.new get_tkread, old_name, new_name, comment, single == SINGLE
+    al = RDoc::Alias.new(get_tkread, old_name, new_name, comment,
+                         single == SINGLE)
+    al.record_location @top_level
+
     read_documentation_modifiers al, RDoc::ATTR_MODIFIERS
     context.add_alias al if al.document_self
     @stats.add_alias al

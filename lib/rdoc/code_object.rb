@@ -51,6 +51,11 @@ class RDoc::CodeObject
   attr_reader :done_documenting
 
   ##
+  # Which file this code object was defined in
+
+  attr_reader :file
+
+  ##
   # Force documentation of this CodeObject
 
   attr_reader :force_documentation
@@ -88,14 +93,14 @@ class RDoc::CodeObject
   def initialize
     @metadata = {}
     @comment = ''
+    @parent = nil
+    @file = nil
 
     @document_children   = true
     @document_self       = true
     @done_documenting    = false
     @force_documentation = false
     @received_nodoc      = false
-
-    @parent = nil
   end
 
   ##
@@ -178,6 +183,13 @@ class RDoc::CodeObject
 
   def parent_name
     @parent ? @parent.full_name : '(unknown)'
+  end
+
+  ##
+  # Records the RDoc::TopLevel (file) where this code object was defined
+
+  def record_location top_level
+    @file = top_level
   end
 
   ##

@@ -28,11 +28,6 @@ class RDoc::MethodAttr < RDoc::CodeObject
   attr_reader :text
 
   ##
-  # Which file this method or attr was defined in
-
-  attr_reader :top_level
-
-  ##
   # Array of other names for this method/attribute
 
   attr_reader :aliases
@@ -204,13 +199,6 @@ class RDoc::MethodAttr < RDoc::CodeObject
 
   def pretty_name
     "#{name_prefix}#{@name}"
-  end
-
-  ##
-  # Records the RDoc::TopLevel (file) where this method or attr was defined
-
-  def record_location top_level
-    @top_level = top_level
   end
 
   ##

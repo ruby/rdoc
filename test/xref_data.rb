@@ -13,9 +13,15 @@ class C1
 
   def m foo
   end
+
 end
 
 class C2
+  def b
+  end
+
+  alias a b
+
   class C3
     def m
     end
