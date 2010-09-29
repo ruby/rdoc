@@ -38,6 +38,8 @@
   * An RDoc::Require is now always listed at the file level.  Patch by Thierry
     Lambert.
   * RDoc::CodeObjects now know which file they were defined in.
+  * RDoc::Options calls ::setup_options on the generator class specified by
+    <tt>--format</tt>.  See RDoc::Options::setup_generator.
 * Bug fixes
   * RDoc::Generator tests no longer require any installed RDoc on Ruby 1.9
 

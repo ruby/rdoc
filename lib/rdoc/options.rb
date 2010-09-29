@@ -27,7 +27,7 @@ class RDoc::Options
   ##
   # Character-set for HTML output.  #encoding is peferred over #charset
 
-  attr_reader :charset
+  attr_accessor :charset
 
   ##
   # If true, RDoc will not write any files.
@@ -53,12 +53,12 @@ class RDoc::Options
   # Create the output even if the output directory does not look
   # like an rdoc output directory
 
-  attr_reader :force_output
+  attr_accessor :force_output
 
   ##
   # Scan newer sources than the flag file if true.
 
-  attr_reader :force_update
+  attr_accessor :force_update
 
   ##
   # Formatter to mark up text with
@@ -73,13 +73,13 @@ class RDoc::Options
   ##
   # Include line numbers in the source code
 
-  attr_reader :hyperlink_all
+  attr_accessor :hyperlink_all
 
   ##
   # Old rdoc behavior: hyperlink all words that match a method name,
   # even if not preceded by '#' or '::'
 
-  attr_reader :line_numbers
+  attr_accessor :line_numbers
 
   ##
   # Name of the file, class or module to display in the initial index page (if
@@ -93,6 +93,11 @@ class RDoc::Options
   attr_accessor :op_dir
 
   ##
+  # The OptionParser for this instance
+
+  attr_reader :opts
+
+  ##
   # Is RDoc in pipe mode?
 
   attr_accessor :pipe
@@ -100,32 +105,32 @@ class RDoc::Options
   ##
   # Array of directories to search for files to satisfy an :include:
 
-  attr_reader :rdoc_include
+  attr_accessor :rdoc_include
 
   ##
   # Include the '#' at the front of hyperlinked instance method names
 
-  attr_reader :show_hash
+  attr_accessor :show_hash
 
   ##
   # URL of the stylesheet to use. +nil+ by default.
 
-  attr_reader :stylesheet_url
+  attr_accessor :stylesheet_url
 
   ##
   # The number of columns in a tab
 
-  attr_reader :tab_width
+  attr_accessor :tab_width
 
   ##
   # Template to be used when generating output
 
-  attr_reader :template
+  attr_accessor :template
 
   ##
   # Documentation title
 
-  attr_reader :title
+  attr_accessor :title
 
   ##
   # Verbosity, zero means quiet
@@ -142,7 +147,7 @@ class RDoc::Options
   ##
   # URL of web cvs frontend
 
-  attr_reader :webcvs
+  attr_accessor :webcvs
 
   def initialize # :nodoc:
     require 'rdoc/rdoc'
@@ -182,7 +187,7 @@ class RDoc::Options
   def parse(argv)
     ignore_invalid = true
 
-    opts = OptionParser.new do |opt|
+    @opts = OptionParser.new do |opt|
       opt.program_name = File.basename $0
       opt.version = RDoc::VERSION
       opt.release = nil
@@ -501,7 +506,7 @@ Usage: #{opt.program_name} [options] [names...]
     invalid = []
 
     begin
-      opts.parse! argv
+      @opts.parse! argv
     rescue OptionParser::InvalidArgument, OptionParser::InvalidOption => e
       if DEPRECATED[e.args.first]
         deprecated << e.args.first
@@ -526,7 +531,7 @@ Usage: #{opt.program_name} [options] [names...]
           $stderr.puts invalid
           $stderr.puts '(invalid options are ignored)'
         else
-          $stderr.puts opts
+          $stderr.puts @opts
           $stderr.puts invalid
           exit 1
         end
@@ -575,6 +580,10 @@ Usage: #{opt.program_name} [options] [names...]
 
   ##
   # Set up an output generator for the format in @generator_name
+  #
+  # If the found generator responds to :setup_options it will be called with
+  # the options instance.  This allows generators to add custom options or set
+  # default options.
 
   def setup_generator
     @generator = @generators[@generator_name]
@@ -582,6 +591,8 @@ Usage: #{opt.program_name} [options] [names...]
     unless @generator then
       raise OptionParser::InvalidArgument, "Invalid output formatter"
     end
+
+    @generator.setup_options self if @generator.respond_to? :setup_options
   end
 
   ##
