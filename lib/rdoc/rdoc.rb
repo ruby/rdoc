@@ -419,11 +419,26 @@ The internal error was:
   # The content will be converted to the encoding specified at
   # RDoc::Options#encoding.
 
-  def read_file_contents(filename)
+  def read_file_contents filename
     content = open filename, "rb" do |f| f.read end
+
     RDoc::Parser.set_encoding content
-    content.encode! @options.encoding if Object.const_defined? :Encoding
+
+    if Object.const_defined? :Encoding then
+      orig_encoding = content.encoding
+
+      # assume the content is in our output encoding
+      content.force_encoding @options.encoding
+
+      unless content.valid_encoding? then
+        # revert and try to transcode
+        content.force_encoding orig_encoding
+        content.encode! @options.encoding
+      end
+    end
     content
+  rescue Encoding::UndefinedConversionError => e
+    warn "unable to convert #{e.message} for #{filename}, skipping"
   rescue Errno::EISDIR, Errno::ENOENT
     nil
   end

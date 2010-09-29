@@ -97,6 +97,15 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
     assert_equal Encoding::UTF_8, contents.encoding
   end
 
+  def test_read_file_contents_encoding_guess
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    path = File.expand_path '../test.ja.txt', __FILE__
+    content = @rdoc.read_file_contents path
+
+    assert_equal Encoding::UTF_8, content.encoding
+  end
+
   def test_remove_unparsable
     file_list = %w[
       blah.class
