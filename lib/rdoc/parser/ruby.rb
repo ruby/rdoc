@@ -432,23 +432,26 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def parse_attr(context, single, tk, comment)
     args = parse_symbol_arg 1
-    if args.size > 0
+    if args.size > 0 then
       name = args[0]
       rw = "R"
       skip_tkspace false
       tk = get_tk
+
       if TkCOMMA === tk then
         rw = "RW" if get_bool
       else
         unget_tk tk
       end
+
       att = RDoc::Attr.new get_tkread, name, rw, comment, single == SINGLE
+      att.record_location @top_level
+
       read_documentation_modifiers att, RDoc::ATTR_MODIFIERS
-      if att.document_self
-        context.add_attribute(att)
-      end
+
+      context.add_attribute att if att.document_self
     else
-      warn("'attr' ignored - looks like a variable")
+      warn "'attr' ignored - looks like a variable"
     end
   end
 
@@ -474,6 +477,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     for name in args
       att = RDoc::Attr.new get_tkread, name, rw, comment, single == SINGLE
+      att.record_location @top_level
+
       context.add_attribute att
     end
   end
@@ -687,6 +692,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       name = $1 unless $1.empty?
 
       meth = RDoc::GhostMethod.new get_tkread, name
+      meth.record_location @top_level
       meth.singleton = singleton
 
       meth.start_collecting_tokens
@@ -719,6 +725,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       # TODO authorize 'singleton-attr...'?
       att = RDoc::Attr.new get_tkread, name, rw, comment
+      att.record_location @top_level
+
       container.add_attribute att
 
       @stats.add_method att
@@ -787,11 +795,15 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     if name then
       att = RDoc::Attr.new get_tkread, name, rw, comment, single == SINGLE
+      att.record_location @top_level
+
       context.add_attribute att
     else
       args.each do |attr_name|
         att = RDoc::Attr.new(get_tkread, attr_name, rw, comment,
                              single == SINGLE)
+        att.record_location @top_level
+
         context.add_attribute att
       end
     end
@@ -833,6 +845,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     meth = RDoc::MetaMethod.new get_tkread, name
+    meth.record_location @top_level
     meth.singleton = singleton
 
     remove_token_listener self
@@ -966,6 +979,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
         meth.singleton = (single == SINGLE)
       end
     end
+
+    meth.record_location @top_level
 
     meth.start_collecting_tokens
     indent = TkSPACE.new nil, 1, 1
@@ -1392,6 +1407,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
         container.methods_matching args do |m|
           s_m = m.dup
+          s_m.record_location @top_level
           s_m.singleton = true
           s_m.visibility = :public
           module_functions << s_m

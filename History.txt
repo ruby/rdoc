@@ -37,6 +37,7 @@
     on how to document source code.
   * An RDoc::Require is now always listed at the file level.  Patch by Thierry
     Lambert.
+  * RDoc::MethodAttrs know which file they were defined in.
 * Bug fixes
   * RDoc::Generator tests no longer require installed RDoc on Ruby 1.9
 
