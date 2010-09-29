@@ -241,7 +241,8 @@ class RDoc::Context < RDoc::CodeObject
       method_attr.add_alias an_alias, self
     else
       add_to @external_aliases, an_alias
-      unmatched_alias_list = @unmatched_alias_lists[an_alias.pretty_old_name] ||= []
+      unmatched_alias_list =
+        @unmatched_alias_lists[an_alias.pretty_old_name] ||= []
       unmatched_alias_list.push an_alias
     end
 

@@ -38,11 +38,34 @@ class TestRDocContext < XrefTestCase
     assert_equal [as], @context.unmatched_alias_lists['#old_name']
   end
 
+  def test_add_alias_method_attr
+    top_level = RDoc::TopLevel.new 'file.rb'
+
+    attr = RDoc::Attr.new nil, 'old_name', 'R', ''
+
+    as = RDoc::Alias.new nil, 'old_name', 'new_name', 'comment'
+    as.record_location top_level
+    as.parent = @context
+
+    @context.add_attribute attr
+    @context.add_alias as
+
+    assert_empty @context.aliases
+    assert_empty @context.unmatched_alias_lists
+    assert_equal %w[old_name new_name], @context.attributes.map { |m| m.name }
+
+    new = @context.attributes.last
+    assert_equal top_level, new.file
+  end
+
   def test_add_alias_method
+    top_level = RDoc::TopLevel.new 'file.rb'
+
     meth = RDoc::AnyMethod.new nil, 'old_name'
     meth.singleton = false
 
     as = RDoc::Alias.new nil, 'old_name', 'new_name', 'comment'
+    as.record_location top_level
     as.parent = @context
 
     @context.add_method meth
@@ -51,6 +74,9 @@ class TestRDocContext < XrefTestCase
     assert_empty @context.aliases
     assert_empty @context.unmatched_alias_lists
     assert_equal %w[old_name new_name], @context.method_list.map { |m| m.name }
+
+    new = @context.method_list.last
+    assert_equal top_level, new.file
   end
 
   def test_add_alias_method_singleton
