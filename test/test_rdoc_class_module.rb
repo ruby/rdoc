@@ -188,36 +188,45 @@ class TestRDocClassModule < XrefTestCase
     b = RDoc::Include.new 'M2', nil
     c = RDoc::Include.new 'C', nil
 
-    @m1.add_include a
-    @m1.add_include b
-    @m1.add_include c
+    @c1.add_include a
+    @c1.add_include b
+    @c1.add_include c
+    @c1.ancestors # cache included modules
 
     @m1_m2.document_self = nil
+    assert @m1_m2.remove_from_documentation?
 
+    assert RDoc::TopLevel.all_modules_hash.key? @m1_m2.full_name
+    refute RDoc::TopLevel.all_modules_hash[@m1_m2.full_name].nil?
     RDoc::TopLevel.remove_nodoc RDoc::TopLevel.all_modules_hash
+    refute RDoc::TopLevel.all_modules_hash.key? @m1_m2.full_name
 
-    @m1.update_includes
+    @c1.update_includes
 
-    assert_equal [a, c], @m1.includes
+    assert_equal [a, c], @c1.includes
   end
 
-  def test_update_includes_possible_bug
+  def test_update_includes_with_colons
     a = RDoc::Include.new 'M1', nil
     b = RDoc::Include.new 'M1::M2', nil
     c = RDoc::Include.new 'C', nil
 
-    @m1.add_include a
-    @m1.add_include b
-    @m1.add_include c
+    @c1.add_include a
+    @c1.add_include b
+    @c1.add_include c
+    @c1.ancestors # cache included modules
 
     @m1_m2.document_self = nil
+    assert @m1_m2.remove_from_documentation?
 
+    assert RDoc::TopLevel.all_modules_hash.key? @m1_m2.full_name
+    refute RDoc::TopLevel.all_modules_hash[@m1_m2.full_name].nil?
     RDoc::TopLevel.remove_nodoc RDoc::TopLevel.all_modules_hash
+    refute RDoc::TopLevel.all_modules_hash.key? @m1_m2.full_name
 
-    @m1.update_includes
+    @c1.update_includes
 
-    assert_equal [a, b, c], @m1.includes,
-                 "b is not removed because @m1.find_module_named returns nil"
+    assert_equal [a, c], @c1.includes
   end
 
 end

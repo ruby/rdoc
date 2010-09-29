@@ -102,6 +102,9 @@ class RDoc::TopLevel < RDoc::Context
   def self.complete min_visibility
     fix_basic_object_inheritance
 
+    # cache included modules before they are removed from the documentation
+    all_classes_and_modules.each { |cm| cm.ancestors }
+
     remove_nodoc @all_classes_hash
     remove_nodoc @all_modules_hash
 

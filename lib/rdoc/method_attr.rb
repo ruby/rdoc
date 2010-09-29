@@ -113,8 +113,11 @@ class RDoc::MethodAttr < RDoc::CodeObject
   # A method/attribute to look at,
   # in particular if this method/attribute has no documentation.
   #
-  # It can be a method/attribute of the superclass or of an included module.
-  # +nil+ if no such method/attribute.
+  # It can be a method/attribute of the superclass or of an included module,
+  # including the Kernel module, which is always appended to the included
+  # modules.
+  #
+  # Returns +nil+ if there is no such method/attribute.
   # The +#is_alias_for+ method/attribute, if any, is not included.
   #
   # Templates may generate a "see also ..." if this method/attribute
@@ -136,7 +139,10 @@ class RDoc::MethodAttr < RDoc::CodeObject
   end
 
   def find_method_or_attribute(name) # :nodoc:
-    parent.ancestors.each do |ancestor|
+    searched = parent.ancestors
+    kernel = RDoc::TopLevel.all_modules_hash['Kernel']
+    searched << kernel if kernel && parent != kernel && !searched.include?(kernel)
+    searched.each do |ancestor|
       next if ancestor.is_a?(String)
       other = ancestor.find_method_named('#' << name) || ancestor.find_attribute_named(name)
       return other if other

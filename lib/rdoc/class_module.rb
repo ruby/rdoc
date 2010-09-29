@@ -93,10 +93,15 @@ class RDoc::ClassModule < RDoc::Context
   # (classes will add their superclass if any).
   #
   # Returns the included classes or modules, not the includes
-  # themselves. If the include is just a String, though, it is returned as is.
+  # themselves. The returned values are either String or
+  # RDoc::NormalModule instances (see RDoc::Include#module).
+  #
+  # The values are returned in reverse order of their inclusion,
+  # which is the order suitable for searching methods/attributes
+  # in the ancestors. The superclass, if any, comes last.
 
   def ancestors
-    includes.map { |i| i.is_a?(String) ? i : i.module }
+    includes.map { |i| i.module }.reverse
   end
 
   ##
@@ -401,12 +406,9 @@ class RDoc::ClassModule < RDoc::Context
   # FIXME: includes are not reliably removed, see _possible_bug test case
 
   def update_includes
-    includes.delete_if do |include|
+    includes.reject! do |include|
       mod = include.module
-
-      next false if String === mod
-
-      not RDoc::TopLevel.all_modules_hash[mod.full_name]
+      !(String === mod) && RDoc::TopLevel.all_modules_hash[mod.full_name].nil?
     end
   end
 

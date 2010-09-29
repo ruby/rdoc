@@ -6,7 +6,7 @@ require 'rdoc/class_module'
 class RDoc::NormalClass < RDoc::ClassModule
 
   ##
-  # Adds the superclass, if any, to the included modules.
+  # Appends the superclass, if any, to the included modules.
 
   def ancestors
     superclass ? super + [superclass] : super

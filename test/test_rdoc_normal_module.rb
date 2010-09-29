@@ -20,7 +20,7 @@ class TestRDocNormalModule < XrefTestCase
     mod2 = top_level.add_module RDoc::NormalModule, 'Inc2'
     inc2 = RDoc::Include.new 'Inc2', ''
     mod.add_include inc2
-    assert_equal [incl.name, mod2], mod.ancestors
+    assert_equal [mod2, incl.name], mod.ancestors
   end
 
   def test_module_eh
