@@ -1244,22 +1244,27 @@ EOF
     constant = constants[0]
     assert_equal 'FIRST_CONSTANT', constant.name
     assert_equal '5', constant.value
+    assert_equal @top_level, constant.file
 
     constant = constants[1]
     assert_equal 'SECOND_CONSTANT', constant.name
     assert_equal "[\n1,\n2,\n3\n]", constant.value
+    assert_equal @top_level, constant.file
 
     constant = constants[2]
     assert_equal 'THIRD_CONSTANT', constant.name
     assert_equal "{\n:foo => 'bar',\n:x => 'y'\n}", constant.value
+    assert_equal @top_level, constant.file
 
     constant = constants[3]
     assert_equal 'FOURTH_CONSTANT', constant.name
     assert_equal "SECOND_CONSTANT.map do |element|\nelement + 1\nelement + 2\nend", constant.value
+    assert_equal @top_level, constant.file
 
     constant = constants.last
     assert_equal 'FIFTH_CONSTANT', constant.name
     assert_equal 'SECOND_CONSTANT.map { |element| element + 1 }', constant.value
+    assert_equal @top_level, constant.file
   end
 
   def test_parse_statements_identifier_attr

@@ -674,6 +674,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     res = "" if res == ";"
 
     con = RDoc::Constant.new name, res, comment
+    con.record_location @top_level
     read_documentation_modifiers con, RDoc::CONSTANT_MODIFIERS
 
     @stats.add_constant con
