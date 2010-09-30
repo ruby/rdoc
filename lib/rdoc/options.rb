@@ -95,7 +95,7 @@ class RDoc::Options
   ##
   # The OptionParser for this instance
 
-  attr_reader :opts
+  attr_reader :option_parser
 
   ##
   # Is RDoc in pipe mode?
@@ -187,7 +187,8 @@ class RDoc::Options
   def parse(argv)
     ignore_invalid = true
 
-    @opts = OptionParser.new do |opt|
+    opts = OptionParser.new do |opt|
+      @option_parser = opt
       opt.program_name = File.basename $0
       opt.version = RDoc::VERSION
       opt.release = nil
@@ -498,7 +499,6 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.separator nil
-
     end
 
     argv.insert(0, *ENV['RDOCOPT'].split) if ENV['RDOCOPT']
@@ -506,7 +506,7 @@ Usage: #{opt.program_name} [options] [names...]
     invalid = []
 
     begin
-      @opts.parse! argv
+      opts.parse! argv
     rescue OptionParser::InvalidArgument, OptionParser::InvalidOption => e
       if DEPRECATED[e.args.first]
         deprecated << e.args.first
@@ -531,7 +531,7 @@ Usage: #{opt.program_name} [options] [names...]
           $stderr.puts invalid
           $stderr.puts '(invalid options are ignored)'
         else
-          $stderr.puts @opts
+          $stderr.puts opts
           $stderr.puts invalid
           exit 1
         end

@@ -525,6 +525,8 @@ end
 class A
   class << B
   end
+  class << d = Object.new
+  end
 end
     CODE
 

@@ -1052,6 +1052,8 @@ Options may also be set in the 'RI' environment variable.
     pagers = [ENV['RI_PAGER'], ENV['PAGER'], 'pager', 'less', 'more']
 
     pagers.compact.uniq.each do |pager|
+      next unless pager
+
       pager_cmd = pager.split.first
 
       next unless in_path? pager_cmd

@@ -42,6 +42,22 @@
     <tt>--format</tt>.  See RDoc::Options::setup_generator.
 * Bug fixes
   * RDoc::Generator tests no longer require any installed RDoc on Ruby 1.9
+  * Load existing cache before generating ri.  Ruby r27749 by NAKAMURA Usaku.
+  * RDoc now handles BOM.  Ruby r28062 by Nobuyoshi Nakada.
+  * Use proper XML encoding for darkfish classpage.  Ruby r28083 by NARUSE,
+    Yui.
+  * Fix ri output when special characters are inside html tags.  Patch by Tomo
+    Kazahaya, Ruby Bug #3512.
+  * Don't bother checking if the pager exists, it's already done.  Ruby r28842
+    by NAKAMURA Usaku.
+  * RDoc::Parser::Ruby now ignores non-constant-named singleton classes.  Ruby
+    r29140 by Nobuyoshi Nakada.  Ruby Bug #3759.
+  * RDoc::Parser::Ruby call args no longer include assignment.  Ruby r29141 by
+    Nobuyoshi Nakada.  Ruby Bug #3759
+  * Handle $HOME being unset in ri.  Ruby r29272 by Nobuyoshi Nakada.
+  * uniq ancestors and modules too.  Ruby r29312 by Nobuyoshi Nakada.
+  * RDoc now knows about Encoding by default.  Ruby r29356 by Nobuyoshi
+    Nakada.
 
 === 2.5.11 / 2010-08-20
 

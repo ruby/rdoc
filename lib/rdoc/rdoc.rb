@@ -422,13 +422,19 @@ The internal error was:
   def read_file_contents filename
     content = open filename, "rb" do |f| f.read end
 
+    utf8 = content.sub!(/\A\xef\xbb\xbf/, '')
     RDoc::Parser.set_encoding content
 
     if Object.const_defined? :Encoding then
       orig_encoding = content.encoding
 
-      # assume the content is in our output encoding
-      content.force_encoding @options.encoding
+      if utf8 then
+        content.force_encoding Encoding::UTF_8
+        content.encode! @options.encoding
+      else
+        # assume the content is in our output encoding
+        content.force_encoding @options.encoding
+      end
 
       unless content.valid_encoding? then
         # revert and try to transcode

@@ -97,9 +97,9 @@ class RDoc::Parser
       not s.valid_encoding?
     else
       if 0.respond_to? :fdiv then
-        s.count("^ -~\t\r\n").fdiv(s.size) > 0.3
+        s.count("\x00-\x7F", "^ -~\t\r\n").fdiv(s.size) > 0.3
       else # HACK 1.8.6
-        (s.count("^ -~\t\r\n").to_f / s.size) > 0.3
+        (s.count("\x00-\x7F", "^ -~\t\r\n").to_f / s.size) > 0.3
       end
     end
   end
