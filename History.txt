@@ -1,6 +1,7 @@
 === 2.6
 
 * Major enhancements
+  * Ruby 1.8.6 is no longer supported by RDoc.
   * Improved merging of classes and modules across multiple files including
     more accurate documentation statistics.  Patch by Thierry Lambert.
   * Improved handling of method aliases.  Patch by Thierry Lambert.
@@ -58,6 +59,8 @@
   * uniq ancestors and modules too.  Ruby r29312 by Nobuyoshi Nakada.
   * RDoc now knows about Encoding by default.  Ruby r29356 by Nobuyoshi
     Nakada.
+  * ri now defaults to the backspace formatter when piped.  Ruby r28455 by
+    Yusuke Endoh.
 
 === 2.5.11 / 2010-08-20
 

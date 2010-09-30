@@ -496,17 +496,22 @@ Foo::Bar#bother
   end
 
   def test_formatter
+    tty = Object.new
+    def tty.tty?() true; end
+
     driver = RDoc::RI::Driver.new
 
-    assert_instance_of @RM::ToAnsi, driver.formatter
+    assert_instance_of @RM::ToAnsi, driver.formatter(tty)
+
+    assert_instance_of @RM::ToBs, driver.formatter(StringIO.new)
 
     driver.instance_variable_set :@paging, true
 
-    assert_instance_of @RM::ToBs, driver.formatter
+    assert_instance_of @RM::ToBs, driver.formatter(StringIO.new)
 
     driver.instance_variable_set :@formatter_klass, @RM::ToHtml
 
-    assert_instance_of @RM::ToHtml, driver.formatter
+    assert_instance_of @RM::ToHtml, driver.formatter(tty)
   end
 
   def test_in_path_eh
