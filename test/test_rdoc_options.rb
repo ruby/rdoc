@@ -8,10 +8,6 @@ class TestRDocOptions < MiniTest::Unit::TestCase
     @options = RDoc::Options.new
   end
 
-  def test_charset_default
-    assert_equal 'UTF-8', @options.charset
-  end
-
   def test_dry_run_default
     refute @options.dry_run
   end
@@ -26,6 +22,24 @@ class TestRDocOptions < MiniTest::Unit::TestCase
     @options.parse %w[--dry-run]
 
     assert @options.dry_run
+  end
+
+  def test_parse_default_darkfish
+    @options.parse []
+
+    assert_equal RDoc::Generator::Darkfish, @options.generator
+
+    op = @options.option_parser
+
+    assert_includes op.top.long.keys, 'charset'
+    assert_includes op.top.long.keys, 'hyperlink-all'
+    assert_includes op.top.long.keys, 'line-numbers'
+    assert_includes op.top.long.keys, 'main'
+    assert_includes op.top.long.keys, 'show-hash'
+    assert_includes op.top.long.keys, 'tab-width'
+    assert_includes op.top.long.keys, 'template'
+    assert_includes op.top.long.keys, 'title'
+    assert_includes op.top.long.keys, 'webcvs'
   end
 
   def test_parse_encoding
@@ -47,6 +61,63 @@ class TestRDocOptions < MiniTest::Unit::TestCase
     assert_match %r%^invalid options: --encoding invalid%, err
 
     assert_empty out
+  end
+
+  def test_parse_formatter
+    e = assert_raises OptionParser::InvalidOption do
+      @options.parse %w[--format darkfish --format ri]
+    end
+
+    assert_equal 'invalid option: --format generator already set to darkfish',
+                 e.message
+  end
+
+  def test_parse_formatter_ri
+    e = assert_raises OptionParser::InvalidOption do
+      @options.parse %w[--format darkfish --ri]
+    end
+
+    assert_equal 'invalid option: --ri generator already set to darkfish',
+                 e.message
+
+    @options = RDoc::Options.new
+
+    e = assert_raises OptionParser::InvalidOption do
+      @options.parse %w[--format darkfish -r]
+    end
+
+    assert_equal 'invalid option: -r generator already set to darkfish',
+                 e.message
+  end
+
+  def test_parse_formatter_ri_site
+    e = assert_raises OptionParser::InvalidOption do
+      @options.parse %w[--format darkfish --ri-site]
+    end
+
+    assert_equal 'invalid option: --ri-site generator already set to darkfish',
+                 e.message
+
+    @options = RDoc::Options.new
+
+    e = assert_raises OptionParser::InvalidOption do
+      @options.parse %w[--format darkfish -R]
+    end
+
+    assert_equal 'invalid option: -R generator already set to darkfish',
+                 e.message
+  end
+
+  def test_parse_help
+    out, err = capture_io do
+      begin
+        @options.parse %w[--help]
+      rescue SystemExit
+      end
+    end
+
+    assert_equal 1, out.scan(/Darkfish generator options:/).length
+    assert_equal 1, out.scan(/ri generator options:/).      length
   end
 
   def test_parse_ignore_invalid

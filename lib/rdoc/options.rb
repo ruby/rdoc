@@ -25,11 +25,6 @@ class RDoc::Options
   }
 
   ##
-  # Character-set for HTML output.  #encoding is peferred over #charset
-
-  attr_accessor :charset
-
-  ##
   # If true, RDoc will not write any files.
 
   attr_accessor :dry_run
@@ -71,23 +66,6 @@ class RDoc::Options
   attr_accessor :generator
 
   ##
-  # Include line numbers in the source code
-
-  attr_accessor :hyperlink_all
-
-  ##
-  # Old rdoc behavior: hyperlink all words that match a method name,
-  # even if not preceded by '#' or '::'
-
-  attr_accessor :line_numbers
-
-  ##
-  # Name of the file, class or module to display in the initial index page (if
-  # not specified the first file we encounter is used)
-
-  attr_accessor :main_page
-
-  ##
   # The name of the output directory
 
   attr_accessor :op_dir
@@ -95,7 +73,7 @@ class RDoc::Options
   ##
   # The OptionParser for this instance
 
-  attr_reader :option_parser
+  attr_accessor :option_parser
 
   ##
   # Is RDoc in pipe mode?
@@ -106,31 +84,6 @@ class RDoc::Options
   # Array of directories to search for files to satisfy an :include:
 
   attr_accessor :rdoc_include
-
-  ##
-  # Include the '#' at the front of hyperlinked instance method names
-
-  attr_accessor :show_hash
-
-  ##
-  # URL of the stylesheet to use. +nil+ by default.
-
-  attr_accessor :stylesheet_url
-
-  ##
-  # The number of columns in a tab
-
-  attr_accessor :tab_width
-
-  ##
-  # Template to be used when generating output
-
-  attr_accessor :template
-
-  ##
-  # Documentation title
-
-  attr_accessor :title
 
   ##
   # Verbosity, zero means quiet
@@ -144,19 +97,15 @@ class RDoc::Options
 
   attr_accessor :visibility
 
-  ##
-  # URL of web cvs frontend
-
-  attr_accessor :webcvs
-
   def initialize # :nodoc:
     require 'rdoc/rdoc'
     @dry_run = false
     @exclude = []
     @force_output = false
     @force_update = true
-    @generator = RDoc::Generator::Darkfish
+    @generator = nil
     @generator_name = nil
+    @generator_options = []
     @generators = RDoc::RDoc::GENERATORS
     @hyperlink_all = false
     @line_numbers = false
@@ -186,6 +135,8 @@ class RDoc::Options
 
   def parse(argv)
     ignore_invalid = true
+
+    argv.insert(0, *ENV['RDOCOPT'].split) if ENV['RDOCOPT']
 
     opts = OptionParser.new do |opt|
       @option_parser = opt
@@ -239,7 +190,7 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.separator nil
-      opt.separator "Parsing Options:"
+      opt.separator "Parsing options:"
       opt.separator nil
 
       if Object.const_defined? :Encoding then
@@ -303,22 +254,13 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.on("--visibility=VISIBILITY", "-V", RDoc::VISIBILITIES,
              "Minimum visibility to document a method.",
-             "One of 'public', 'protected' (the default) or",
-             "'private'. Can be abbreviated.") do |value|
+             "One of 'public', 'protected' (the default)",
+             "or 'private'. Can be abbreviated.") do |value|
         @visibility = value
       end
 
       opt.separator nil
-      opt.separator "Generator Options:"
-      opt.separator nil
-
-      opt.on("--charset=CHARSET", "-c",
-             "Specifies the output HTML character-set.",
-             "Use --encoding instead of --charset if",
-             "available.") do |value|
-        @charset = value
-      end
-
+      opt.separator "Common generator options:"
       opt.separator nil
 
       opt.on("--force-output", "-O",
@@ -333,20 +275,15 @@ Usage: #{opt.program_name} [options] [names...]
 
       generator_text = @generators.keys.map { |name| "  #{name}" }.sort
 
-      opt.on("--fmt=FORMAT", "--format=FORMAT", "-f", @generators.keys,
+      opt.on("-f", "--fmt=FORMAT", "--format=FORMAT", @generators.keys,
              "Set the output formatter.  One of:", *generator_text) do |value|
+        if @generator then
+          raise OptionParser::InvalidOption,
+                "generator already set to #{@generator_name}"
+        end
+
         @generator_name = value.downcase
         setup_generator
-      end
-
-      opt.separator nil
-
-      opt.on("--hyperlink-all", "-A",
-             "Generate hyperlinks for all words that",
-             "correspond to known methods, even if they",
-             "do not start with '#' or '::' (legacy",
-             "behavior).") do |value|
-        @hyperlink_all = value
       end
 
       opt.separator nil
@@ -360,77 +297,9 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--line-numbers", "-N",
-             "Include line numbers in the source code.",
-             "By default, only the number of the first",
-             "line is displayed, in a leading comment.") do |value|
-        @line_numbers = value
-      end
-
-      opt.separator nil
-
-      opt.on("--main=NAME", "-m",
-             "NAME will be the initial page displayed.") do |value|
-        @main_page = value
-      end
-
-      opt.separator nil
-
       opt.on("--output=DIR", "--op", "-o",
              "Set the output directory.") do |value|
         @op_dir = value
-      end
-
-      opt.separator nil
-
-      opt.on("--show-hash", "-H",
-             "A name of the form #name in a comment is a",
-             "possible hyperlink to an instance method",
-             "name. When displayed, the '#' is removed",
-             "unless this option is specified.") do |value|
-        @show_hash = value
-      end
-
-      opt.separator nil
-
-      opt.on("--style=URL", "-s",
-             "Specifies the URL of a stylesheet to use",
-             "in lieu of the default stylesheet of the",
-             "template.") do |value|
-        @stylesheet_url = value
-      end
-
-      opt.separator nil
-
-      opt.on("--tab-width=WIDTH", "-w", OptionParser::DecimalInteger,
-             "Set the width of tab characters.") do |value|
-        @tab_width = value
-      end
-
-      opt.separator nil
-
-      opt.on("--template=NAME", "-T",
-             "Set the template used when generating",
-             "output. The default is 'TODO'.") do |value|
-        @template = value
-      end
-
-      opt.separator nil
-
-      opt.on("--title=TITLE", "-t",
-             "Set TITLE as the title for HTML output.") do |value|
-        @title = value
-      end
-
-      opt.separator nil
-
-      opt.on("--webcvs=URL", "-W",
-             "Specify a URL for linking to a web frontend",
-             "to CVS. If the URL contains a '\%s', the",
-             "name of the current file will be",
-             "substituted; if the URL doesn't contain a",
-             "'\%s', the filename will be appended to it.") do |value|
-        @webcvs = value
       end
 
       opt.separator nil
@@ -442,7 +311,7 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.separator nil
-      opt.separator "ri Generator Options:"
+      opt.separator "ri generator options:"
       opt.separator nil
 
       opt.on("--ri", "-r",
@@ -451,6 +320,11 @@ Usage: #{opt.program_name} [options] [names...]
              "your home directory unless overridden by a",
              "subsequent --op parameter, so no special",
              "privileges are needed.") do |value|
+        if @generator then
+          raise OptionParser::InvalidOption,
+                "generator already set to #{@generator_name}"
+        end
+
         @generator_name = "ri"
         @op_dir ||= RDoc::RI::Paths::HOMEDIR
         setup_generator
@@ -463,13 +337,18 @@ Usage: #{opt.program_name} [options] [names...]
              "are stored in a site-wide directory,",
              "making them accessible to others, so",
              "special privileges are needed.") do |value|
+        if @generator then
+          raise OptionParser::InvalidOption,
+                "generator already set to #{@generator_name}"
+        end
+
         @generator_name = "ri"
         @op_dir = RDoc::RI::Paths::SITEDIR
         setup_generator
       end
 
       opt.separator nil
-      opt.separator "Generic Options:"
+      opt.separator "Generic options:"
       opt.separator nil
 
       opt.on("--[no-]dry-run",
@@ -494,40 +373,57 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.on("--verbose", "-v",
-             "Display extra progress as we parse.") do |value|
+             "Display extra progress as RDoc parses") do |value|
         @verbosity = 2
+      end
+
+      opt.on("--help",
+             "Display this help") do
+        RDoc::RDoc::GENERATORS.each_key do |generator|
+          setup_generator generator
+        end
+
+        puts opt.help
+        exit
       end
 
       opt.separator nil
     end
 
-    argv.insert(0, *ENV['RDOCOPT'].split) if ENV['RDOCOPT']
+    setup_generator 'darkfish' if argv.grep(/\A(-f|--fmt|--format)\b/).empty?
+
     deprecated = []
     invalid = []
 
     begin
       opts.parse! argv
     rescue OptionParser::InvalidArgument, OptionParser::InvalidOption => e
-      if DEPRECATED[e.args.first]
+      if DEPRECATED[e.args.first] then
         deprecated << e.args.first
+      elsif %w[--format --ri -r --ri-site -R].include? e.args.first then
+        raise
       else
         invalid << e.args.join(' ')
       end
       retry
     end
 
+    @generator ||= RDoc::Generator::Darkfish
+
     if @pipe and not argv.empty? then
       @pipe = false
       invalid << '-p (with files)'
     end
 
-    unless quiet
+    unless quiet then
       deprecated.each do |opt|
         $stderr.puts 'option ' << opt << ' is deprecated: ' << DEPRECATED[opt]
       end
-      unless invalid.empty?
+
+      unless invalid.empty? then
         invalid = "invalid options: #{invalid.join ', '}"
-        if ignore_invalid
+
+        if ignore_invalid then
           $stderr.puts invalid
           $stderr.puts '(invalid options are ignored)'
         else
@@ -579,18 +475,23 @@ Usage: #{opt.program_name} [options] [names...]
   private
 
   ##
-  # Set up an output generator for the format in @generator_name
+  # Set up an output generator for the named +generator_name+.
   #
   # If the found generator responds to :setup_options it will be called with
   # the options instance.  This allows generators to add custom options or set
   # default options.
 
-  def setup_generator
-    @generator = @generators[@generator_name]
+  def setup_generator generator_name = @generator_name
+    @generator = @generators[generator_name]
 
     unless @generator then
-      raise OptionParser::InvalidArgument, "Invalid output formatter"
+      raise OptionParser::InvalidArgument,
+            "Invalid output formatter #{generator_name}"
     end
+
+    return if @generator_options.include? @generator
+
+    @generator_options << @generator
 
     @generator.setup_options self if @generator.respond_to? :setup_options
   end

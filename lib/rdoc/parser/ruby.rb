@@ -390,7 +390,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         context.done_documenting = true
         ''
       when 'main' then
-        @options.main_page = param
+        @options.main_page = param if @options.respond_to? :main_page
         ''
       when 'method', 'singleton-method',
            'attr', 'attr_accessor', 'attr_reader', 'attr_writer' then
@@ -407,7 +407,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         context.stop_doc
         ''
       when 'title' then
-        @options.title = param
+        @options.title = param if @options.respond_to? :title
         ''
       end
     end

@@ -22,6 +22,8 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     util_top_level
     @options = RDoc::Options.new
     @options.quiet = true
+    @options.option_parser = OptionParser.new
+
     @stats = RDoc::Stats.new 0
   end
 
@@ -131,11 +133,21 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
   end
 
   def test_look_for_directives_in_main
+    RDoc::Generator::Darkfish.setup_options @options
+
     util_parser ""
 
     @parser.look_for_directives_in @top_level, "# :main: new main page\n"
 
     assert_equal 'new main page', @options.main_page
+  end
+
+  def test_look_for_directives_in_main_not_html
+    util_parser ""
+
+    @parser.look_for_directives_in @top_level, "# :main: new main page\n"
+
+    refute_respond_to @options, :main_page
   end
 
   def test_look_for_directives_in_method
@@ -194,11 +206,21 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
   end
 
   def test_look_for_directives_in_title
+    RDoc::Generator::Darkfish.setup_options @options
+
     util_parser ""
 
     @parser.look_for_directives_in @top_level, "# :title: new title\n"
 
     assert_equal 'new title', @options.title
+  end
+
+  def test_look_for_directives_in_title_no_html
+    util_parser ""
+
+    @parser.look_for_directives_in @top_level, "# :title: new title\n"
+
+    refute_respond_to @options, :title
   end
 
   def test_look_for_directives_in_unhandled
