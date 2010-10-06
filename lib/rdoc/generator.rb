@@ -45,11 +45,6 @@ module RDoc::Generator
     attr_accessor :stylesheet_url
 
     ##
-    # The number of columns in a tab
-
-    attr_accessor :tab_width
-
-    ##
     # Template to be used when generating output
 
     attr_accessor :template
@@ -104,13 +99,6 @@ module RDoc::Generator
            "name. When displayed, the '#' is removed",
            "unless this option is specified.") do |value|
       options.show_hash = value
-    end
-
-    opt.separator nil
-
-    opt.on("--tab-width=WIDTH", "-w", OptionParser::DecimalInteger,
-           "Set the width of tab characters.") do |value|
-      options.tab_width = value
     end
 
     opt.separator nil

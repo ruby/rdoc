@@ -86,6 +86,11 @@ class RDoc::Options
   attr_accessor :rdoc_include
 
   ##
+  # The number of columns in a tab
+
+  attr_accessor :tab_width
+
+  ##
   # Verbosity, zero means quiet
 
   attr_accessor :verbosity
@@ -252,6 +257,13 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
+      opt.on("--tab-width=WIDTH", "-w", OptionParser::DecimalInteger,
+             "Set the width of tab characters.") do |value|
+        @tab_width = value
+      end
+
+      opt.separator nil
+
       opt.on("--visibility=VISIBILITY", "-V", RDoc::VISIBILITIES,
              "Minimum visibility to document a method.",
              "One of 'public', 'protected' (the default)",
@@ -390,7 +402,8 @@ Usage: #{opt.program_name} [options] [names...]
       opt.separator nil
     end
 
-    setup_generator 'darkfish' if argv.grep(/\A(-f|--fmt|--format)\b/).empty?
+    setup_generator 'darkfish' if
+    argv.grep(/\A(-f|--fmt|--format|-r|-R|--ri|--ri-site)\b/).empty?
 
     deprecated = []
     invalid = []
