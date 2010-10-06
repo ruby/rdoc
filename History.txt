@@ -32,7 +32,7 @@
   * RDoc directives may now be escaped with a leading '\\'.  Patch by Thierry
     Lambert.
   * RDoc note lists (<tt>label::</tt>) now generate a table with class
-    rdoc-list.  Patch by Thierry Lambert.
+    "rdoc-list".  Patch by Thierry Lambert.
   * RDoc markup documentation has been moved to RDoc::Markup including notes
     on how to document source code.
   * An RDoc::Require is now always listed at the file level.  Patch by Thierry

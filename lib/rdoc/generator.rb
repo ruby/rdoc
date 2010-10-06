@@ -5,6 +5,11 @@ require 'rdoc'
 
 module RDoc::Generator
 
+  ##
+  # Generic options for HTML-type generators.
+  #
+  # Included automatically by ::html_options
+
   module HtmlOptions
 
     ##
@@ -61,6 +66,13 @@ module RDoc::Generator
 
   end
 
+  ##
+  # Adds options for HTML-type generators to +options+.
+  #
+  # This includes <tt>--charset</tt>, <tt>--main</tt>, <tt>--show-hash</tt>,
+  # <tt>--tab-width</tt>, <tt>--template</tt>, <tt>--title</tt>,
+  # <tt>--webcvs</tt>.
+
   def self.html_options options
     options.extend HtmlOptions # HACK make this automatic
 
@@ -92,15 +104,6 @@ module RDoc::Generator
            "name. When displayed, the '#' is removed",
            "unless this option is specified.") do |value|
       options.show_hash = value
-    end
-
-    opt.separator nil
-
-    opt.on("--style=URL", "-s",
-           "Specifies the URL of a stylesheet to use",
-           "in lieu of the default stylesheet of the",
-           "template.") do |value|
-      options.stylesheet_url = value
     end
 
     opt.separator nil
