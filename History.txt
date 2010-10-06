@@ -14,10 +14,9 @@
   * RDoc::Attr#type is now RDoc::Attr#definition.  Patch by Thierry Lambert.
   * Removed TimeConstantMethods
 * Minor enhancements
-  * Added rdoc argument <tt>--dry-run</tt>
-  * Added rdoc arguments <tt>--all</tt>, <tt>--visibility</tt>,
-    <tt>--force-output</tt>, <tt>--hyperlink-all</tt>,
-    <tt>--line-numbers</tt>, <tt>--style</tt>.  Patch by Thierry Lambert.
+  * Added rdoc arguments <tt>--dry-run</tt>, <tt>--all</tt>,
+    <tt>--visibility</tt>, <tt>--force-output</tt>, <tt>--hyperlink-all</tt>.
+    Patch by Thierry Lambert.
   * RDoc::Markup::FormatterTestCase has been expanded.  Patch by Thierry
     Lambert.
   * RDoc::Markup::TextFormatterTestCase has been extracted from RDoc tests.
