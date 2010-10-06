@@ -256,8 +256,12 @@
 				<% unless method.aliases.empty? %>
 				<div class="aliases">
 					Also aliased as: <%= method.aliases.map do |aka|
-						%{<a href="#{ klass.aref_to aka.path}">#{h aka.name}</a>}
-					end.join(", ") %>
+            if aka.parent then # HACK lib/rexml/encodings
+              %{<a href="#{klass.aref_to aka.path}">#{h aka.name}</a>}
+            else
+              h aka.name
+            end
+					end.join ", " %>
 				</div>
 				<% end %>
 
