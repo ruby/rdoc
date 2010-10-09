@@ -73,10 +73,6 @@ module RDoc::Generator
 
     opt = options.option_parser
 
-    opt.separator nil
-    opt.separator 'Darkfish generator options:'
-    opt.separator nil
-
     opt.on("--charset=CHARSET", "-c",
            "Specifies the output HTML character-set.",
            "Use --encoding instead of --charset if",

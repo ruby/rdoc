@@ -416,17 +416,18 @@ class RDoc::Markup::Parser
                  when s.scan(/(-{3,}) *$/) then
                    [:RULE, s[1].length - 2, *token_pos(pos)]
                  # * or - followed by white space and text => :BULLET
-                 when s.scan(/([*-]) +\S/) then
-                   s.pos -= 1 # unget \S
+                 when s.scan(/([*-]) +(\S)/) then
+                   s.pos -= s[2].bytesize # unget \S
                    [:BULLET, s[1], *token_pos(pos)]
                  # A. text, a. text, 12. text => :UALPHA, :LALPHA, :NUMBER
-                 when s.scan(/([a-z]|\d+)\. +\S/i) then
+                 when s.scan(/([a-z]|\d+)\. +(\S)/i) then
                    # FIXME if tab(s), the column will be wrong
-                   # either support tabs everywhere by first expanding them to spaces,
-                   # or assume that they will have been replaced before
-                   # (and provide a check for that at least in debug mode)
+                   # either support tabs everywhere by first expanding them to
+                   # spaces, or assume that they will have been replaced
+                   # before (and provide a check for that at least in debug
+                   # mode)
                    list_label = s[1]
-                   s.pos -= 1 # unget \S
+                   s.pos -= s[2].bytesize # unget \S
                    list_type =
                      case list_label
                      when /[a-z]/ then :LALPHA

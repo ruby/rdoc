@@ -32,8 +32,6 @@ class TestRDocOptions < MiniTest::Unit::TestCase
     op = @options.option_parser
 
     assert_includes op.top.long.keys, 'charset'
-    assert_includes op.top.long.keys, 'hyperlink-all'
-    assert_includes op.top.long.keys, 'line-numbers'
     assert_includes op.top.long.keys, 'main'
     assert_includes op.top.long.keys, 'show-hash'
     assert_includes op.top.long.keys, 'tab-width'

@@ -1,3 +1,5 @@
+# coding: utf-8
+
 require 'pp'
 require 'rubygems'
 require 'minitest/autorun'
@@ -48,6 +50,19 @@ class TestRDocMarkupParser < MiniTest::Unit::TestCase
           @RM::Paragraph.new('l1')),
         @RM::ListItem.new(nil,
           @RM::Paragraph.new('l2'))])]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
+  def test_parse_bullet_utf_8
+    str = <<-STR
+* 新しい機能
+    STR
+
+    expected = [
+      @RM::List.new(:BULLET, *[
+        @RM::ListItem.new(nil,
+          @RM::Paragraph.new('新しい機能'))])]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -394,6 +409,19 @@ A. l4
           @RM::Paragraph.new('l3')),
         @RM::ListItem.new(nil,
           @RM::Paragraph.new('l4'))])]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
+  def test_parse_lalpha_utf_8
+    str = <<-STR
+a. 新しい機能
+    STR
+
+    expected = [
+      @RM::List.new(:LALPHA, *[
+        @RM::ListItem.new(nil,
+          @RM::Paragraph.new('新しい機能'))])]
 
     assert_equal expected, @RMP.parse(str).parts
   end

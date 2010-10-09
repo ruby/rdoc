@@ -418,6 +418,7 @@ Usage: #{opt.program_name} [options] [names...]
       else
         invalid << e.args.join(' ')
       end
+
       retry
     end
 
