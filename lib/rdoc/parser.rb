@@ -76,7 +76,6 @@ class RDoc::Parser
   # content that an RDoc parser shouldn't try to consume.
 
   def self.binary?(file)
-    return false if file =~ /erb\.rb$/
     return false if file =~ /\.(rdoc|txt)$/
 
     s = File.read(file, 1024) or return false
@@ -87,9 +86,7 @@ class RDoc::Parser
       return false if s.encoding != Encoding::ASCII_8BIT and s.valid_encoding?
     end
 
-    return true if s[0, 2] == Marshal.dump('')[0, 2] or
-                   s.scan(/<%|%>/).length >= 4 or
-                   s.index("\x00")
+    return true if s[0, 2] == Marshal.dump('')[0, 2] or s.index("\x00")
 
     if have_encoding then
       s.force_encoding Encoding.default_external

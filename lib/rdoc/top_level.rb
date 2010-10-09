@@ -190,11 +190,11 @@ class RDoc::TopLevel < RDoc::Context
 
   def self.find_unique(all_hash)
     unique = []
+
     all_hash.each_pair do |full_name, cm|
-      if (full_name == cm.full_name)
-        unique << cm
-      end
+      unique << cm if full_name == cm.full_name
     end
+
     unique
   end
 

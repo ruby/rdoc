@@ -382,6 +382,8 @@ The internal error was:
 
     @options.title = "RDoc Documentation"
 
+    RDoc::TopLevel.complete @options.visibility
+
     if file_info.empty?
       $stderr.puts "\nNo newer files." unless @options.quiet
     else
@@ -392,7 +394,6 @@ The internal error was:
       Dir.chdir @options.op_dir do
         begin
           self.class.current = self
-          RDoc::TopLevel.complete @options.visibility
 
           unless @options.quiet then
             $stderr.puts "\nGenerating #{gen_klass.name.sub(/^.*::/, '')} format into #{Dir.pwd}..."

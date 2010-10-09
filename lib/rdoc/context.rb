@@ -309,36 +309,40 @@ class RDoc::Context < RDoc::CodeObject
   # upgrades +given_name+ to a class in this case.
 
   def add_class class_type, given_name, superclass = '::Object'
-
     # superclass +nil+ is passed by the C parser in the following cases:
     # - registering Object in 1.8 (correct)
     # - registering BasicObject in 1.9 (correct)
     # - registering RubyVM in 1.9 in iseq.c (incorrect: < Object in vm.c)
-    # => if we later find a superclass for a registered class with a nil superclass,
-    #    we must honor it.
+    #
+    # If we later find a superclass for a registered class with a nil
+    # superclass, we must honor it.
 
     # find the name & enclosing context
-    if given_name =~ /^:+(\w+)$/
+    if given_name =~ /^:+(\w+)$/ then
       full_name = $1
       enclosing = top_level
       name = full_name.split(/:+/).last
     else
-      full_name = child_name(given_name)
-      if full_name =~ /^(.+)::(\w+)$/
+      full_name = child_name given_name
+
+      if full_name =~ /^(.+)::(\w+)$/ then
         name = $2
-        enclosing = RDoc::TopLevel.classes_hash[$1] || RDoc::TopLevel.modules_hash[$1]
+        enclosing = RDoc::TopLevel.classes_hash[$1] ||
+                    RDoc::TopLevel.modules_hash[$1]
       else
         name = full_name
         enclosing = self
       end
     end
 
+    enclosing = self unless enclosing # ActiveSupport::on_load
+
     # find the superclass full name
-    if superclass
-      if superclass =~ /^:+/
+    if superclass then
+      if superclass =~ /^:+/ then
         superclass = $' #'
       else
-        if superclass =~ /^(\w+):+(.+)$/
+        if superclass =~ /^(\w+):+(.+)$/ then
           suffix = $2
           mod = find_module_named($1)
           superclass = mod.full_name + '::' + suffix if mod
@@ -347,38 +351,42 @@ class RDoc::Context < RDoc::CodeObject
           superclass = mod.full_name if mod
         end
       end
+
       # did we believed it was a module?
       mod = RDoc::TopLevel.modules_hash.delete(superclass)
-      if mod
+
+      if mod then
         super_context = mod.parent
         super_context.modules_hash.delete mod.name
-        sklass = RDoc::ClassModule.from_module(RDoc::NormalClass, mod)   # TODO check: could it be RDoc::AnyClass?
+        # TODO check: could it be RDoc::AnyClass?
+        sklass = RDoc::ClassModule.from_module(RDoc::NormalClass, mod)
         # if it was there, then we keep it even if mod.parent.done_documenting
         RDoc::TopLevel.classes_hash[sklass.full_name] = sklass
         super_context.classes_hash[sklass.name] = sklass
       end
-      if superclass == full_name
-        # e.g., Object < Object
-        superclass = nil
-      end
+
+      # e.g., Object < Object
+      superclass = nil if superclass == full_name
     end
 
     klass = RDoc::TopLevel.classes_hash[full_name]
-    if klass
+
+    if klass then
       # if TopLevel, it may not be registered in the classes:
       enclosing.classes_hash[name] = klass
       # update the superclass if needed
-      if superclass
+      if superclass then
         existing = klass.superclass
         existing = existing.full_name unless existing.is_a?(String) if existing
-        if existing.nil? || (existing == 'Object' && superclass != 'Object')
+        if existing.nil? ||
+           (existing == 'Object' && superclass != 'Object') then
           klass.superclass = superclass
         end
       end
     else
       # this is a new class
       mod = RDoc::TopLevel.modules_hash.delete(full_name)
-      if mod
+      if mod then
         # it was registered as a module, so transform it to a class
         enclosing.modules_hash.delete name
         klass = RDoc::ClassModule.from_module(class_type, mod)
@@ -388,7 +396,8 @@ class RDoc::Context < RDoc::CodeObject
         enclosing.classes_hash[name] = klass
       else
         klass = class_type.new(name, superclass)
-        enclosing.add_class_or_module(klass, enclosing.classes_hash, RDoc::TopLevel.classes_hash)
+        enclosing.add_class_or_module(klass, enclosing.classes_hash,
+                                      RDoc::TopLevel.classes_hash)
       end
     end
 

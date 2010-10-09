@@ -41,6 +41,7 @@
   * RDoc::Options calls ::setup_options on the generator class specified by
     <tt>--format</tt>.  See RDoc::Options::setup_generator.
   * rdoc gives an error when multiple formats are given.
+  * Files with erb inside will no longer trip RDoc::Parser::binary?
 * Bug fixes
   * RDoc::Generator tests no longer require any installed RDoc on Ruby 1.9
   * Load existing cache before generating ri.  Ruby r27749 by NAKAMURA Usaku.

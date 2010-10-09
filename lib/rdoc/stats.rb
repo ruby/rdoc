@@ -58,7 +58,6 @@ class RDoc::Stats
   # Prints a summary of the collected statistics.
 
   def print
-
     ucm = RDoc::TopLevel.unique_classes_and_modules
     constants = ucm.inject([]) { |array, cm| array.concat cm.constants }
     methods = ucm.inject([]) { |array, cm| array.concat cm.method_list }
