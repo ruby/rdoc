@@ -13,7 +13,7 @@ module RDoc::Generator
   module HtmlOptions
 
     ##
-    # Character-set for HTML output.  #encoding is peferred over #charset
+    # Character-set for HTML output.  #encoding is preferred over #charset
 
     attr_accessor :charset
 
@@ -40,11 +40,6 @@ module RDoc::Generator
     attr_accessor :show_hash
 
     ##
-    # URL of the stylesheet to use. +nil+ by default.
-
-    attr_accessor :stylesheet_url
-
-    ##
     # Template to be used when generating output
 
     attr_accessor :template
@@ -58,6 +53,15 @@ module RDoc::Generator
     # URL of web cvs frontend
 
     attr_accessor :webcvs
+
+    ##
+    # Set the title, but only if not already set. Used to set the title
+    # from a source file, so that a title set from the command line
+    # will have the priority.
+
+    def default_title=(string)
+      @title ||= string
+    end
 
   end
 
@@ -73,6 +77,9 @@ module RDoc::Generator
 
     opt = options.option_parser
 
+    opt.separator 'HTML generators options:'
+    opt.separator nil
+
     opt.on("--charset=CHARSET", "-c",
            "Specifies the output HTML character-set.",
            "Use --encoding instead of --charset if",
@@ -82,9 +89,28 @@ module RDoc::Generator
 
     opt.separator nil
 
+    opt.on("--hyperlink-all", "-A",
+           "Generate hyperlinks for all words that",
+           "correspond to known methods, even if they",
+           "do not start with '#' or '::' (legacy",
+           "behavior).") do |value|
+      options.hyperlink_all = value
+    end
+
+    opt.separator nil
+
     opt.on("--main=NAME", "-m",
            "NAME will be the initial page displayed.") do |value|
       options.main_page = value
+    end
+
+    opt.separator nil
+
+    opt.on("--[no-]line-numbers", "-N",
+           "Include line numbers in the source code.",
+           "By default, only the number of the first",
+           "line is displayed, in a leading comment.") do |value|
+      options.line_numbers = value
     end
 
     opt.separator nil
@@ -100,8 +126,8 @@ module RDoc::Generator
     opt.separator nil
 
     opt.on("--template=NAME", "-T",
-           "Set the template used when generating",
-           "output. The default is 'TODO'.") do |value|
+           "Set the template used when generating output.",
+           "The default depends on the formatter used.") do |value|
       options.template = value
     end
 

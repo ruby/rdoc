@@ -407,7 +407,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         context.stop_doc
         ''
       when 'title' then
-        @options.title = param if @options.respond_to? :title
+        @options.default_title = param if @options.respond_to? :default_title=
         ''
       end
     end
@@ -574,7 +574,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       read_documentation_modifiers cls, RDoc::CLASS_MODIFIERS
       cls.record_location @top_level
-      cls.comment = comment
+      cls.comment = comment if cls.document_self
 
       @top_level.add_to_classes_or_modules cls
       @stats.add_class cls
@@ -584,13 +584,21 @@ class RDoc::Parser::Ruby < RDoc::Parser
       case name = get_class_specification
       when "self", container.name
         parse_statements container, SINGLE
-      when /\A[A-Z]/
+      else
         other = RDoc::TopLevel.find_class_named name
 
         unless other then
           other = container.add_module RDoc::NormalModule, name
           other.record_location @top_level
           other.comment = comment
+        end
+
+        # notify :nodoc: all if not a constant-named class/module
+        # (and remove any comment)
+        unless name =~ /\A(::)?[A-Z]/
+          other.document_self = nil
+          other.document_children = false
+          other.clear_comment
         end
 
         @top_level.add_to_classes_or_modules other
@@ -631,9 +639,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     loop do
       case tk
       when TkSEMICOLON then
-        break
-      when TkLPAREN, TkfLPAREN, TkLBRACE, TkLBRACK, TkDO, TkIF, TkUNLESS,
-           TkCASE then
+        break if nest <= 0
+      when TkLPAREN, TkfLPAREN, TkLBRACE, TkfLBRACE, TkLBRACK, TkfLBRACK,
+           TkDO, TkIF, TkUNLESS, TkCASE, TkDEF, TkBEGIN then
         nest += 1
       when TkRPAREN, TkRBRACE, TkRBRACK, TkEND then
         nest -= 1
@@ -1051,14 +1059,16 @@ class RDoc::Parser::Ruby < RDoc::Parser
     loop do
       case tk
       when TkSEMICOLON then
-        break
-      when TkLBRACE then
+        break if nest == 0
+      when TkLBRACE, TkfLBRACE then
         nest += 1
       when TkRBRACE then
-        # we might have a.each {|i| yield i }
-        unget_tk(tk) if nest.zero?
         nest -= 1
-        break if nest <= 0
+        if nest <= 0
+          # we might have a.each { |i| yield i }
+          unget_tk(tk) if nest < 0
+          break
+        end
       when TkLPAREN, TkfLPAREN then
         nest += 1
       when end_token then
@@ -1068,6 +1078,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
         else
           break unless @scanner.continue
         end
+      when TkRPAREN then
+        nest -= 1
       when method && method.block_params.nil? && TkCOMMENT then
         unget_tk tk
         read_documentation_modifiers method, modifiers
@@ -1114,8 +1126,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
     mod.record_location @top_level
 
     read_documentation_modifiers mod, RDoc::CLASS_MODIFIERS
+    mod.comment = comment if mod.document_self
     parse_statements(mod)
-    mod.comment = comment
 
     @top_level.add_to_classes_or_modules mod
     @stats.add_module mod
@@ -1366,7 +1378,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def parse_top_level_statements(container)
     comment = collect_first_comment
     look_for_directives_in(container, comment)
-    container.comment = comment unless comment.empty?
+    container.comment = comment if container.document_self unless comment.empty?
     parse_statements container, NORMAL, nil, comment
   end
 

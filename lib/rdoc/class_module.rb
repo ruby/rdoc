@@ -105,6 +105,13 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
+  # Clears the comment. Used by the ruby parser.
+
+  def clear_comment
+    @comment = ''
+  end
+
+  ##
   # Appends +comment+ to the current comment, but separated by a rule.  Works
   # more like <tt>+=</tt>.
 
@@ -316,6 +323,15 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
+  # Returns the classes and modules that are not constants
+  # aliasing another class or module. For use by formatters
+  # only (caches its result).
+
+  def non_aliases
+    @non_aliases ||= classes_and_modules.reject { |cm| cm.is_alias_for }
+  end
+
+  ##
   # Updates the child modules or classes of class/module +parent+ by
   # deleting the ones that have been removed from the documentation.
   #
@@ -369,13 +385,19 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
-  # Updates the child modules & classes by deleting the ones that are aliases
-  # through a constant.
+  # Updates the child modules & classes by replacing the ones that are
+  # aliases through a constant.
   #
-  # The aliased module/class is replaced in RDoc::TopLevel::all_modules_hash
-  # or RDoc::TopLevel::all_classes_hash by a copy that has
-  # <tt>RDoc::ClassModule#is_alias_for</tt> set to the aliased module/class,
-  # and this copy is added to <tt>#aliases</tt> of the aliased module/class.
+  # The aliased module/class is replaced in the children and in
+  # RDoc::TopLevel::all_modules_hash or RDoc::TopLevel::all_classes_hash
+  # by a copy that has <tt>RDoc::ClassModule#is_alias_for</tt> set to
+  # the aliased module/class, and this copy is added to <tt>#aliases</tt>
+  # of the aliased module/class.
+  #
+  # Formatters can use the #non_aliases method to retrieve children that
+  # are not aliases, for instance to list the namespace content, since
+  # the aliased modules are included in the constants of the class/module,
+  # that are listed separately.
 
   def update_aliases
     constants.each do |const|
@@ -389,10 +411,10 @@ class RDoc::ClassModule < RDoc::Context
 
       if cm.module? then
         RDoc::TopLevel.all_modules_hash[cm_alias.full_name] = cm_alias
-        parent.modules_hash.delete const.name
+        modules_hash[const.name] = cm_alias
       else
         RDoc::TopLevel.all_classes_hash[cm_alias.full_name] = cm_alias
-        parent.classes_hash.delete const.name
+        classes_hash[const.name] = cm_alias
       end
 
       cm.aliases << cm_alias

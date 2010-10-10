@@ -21,6 +21,7 @@
     Lambert.
   * RDoc::Markup::TextFormatterTestCase has been extracted from RDoc tests.
     Patch by Thierry Lambert.
+  * Various RDoc::Parser::Ruby enhancements.  Patch by Thierry Lambert.
   * Various RDoc::Markup::Parser enhancements.  Patch by Thierry Lambert.
   * RDoc::Parser::binary? is more robust now that it uses Encoding.
   * Deprecated rdoc arguments are now explicitly mentioned in rdoc command
@@ -42,6 +43,8 @@
     <tt>--format</tt>.  See RDoc::Options::setup_generator.
   * rdoc gives an error when multiple formats are given.
   * Files with erb inside will no longer trip RDoc::Parser::binary?
+  * Last <tt>--title</tt> wins.  Patch by Thierry Lambert.
+  * Better block params handling.  Patch by Thierry Lambert.
 * Bug fixes
   * RDoc::Generator tests no longer require any installed RDoc on Ruby 1.9
   * Load existing cache before generating ri.  Ruby r27749 by NAKAMURA Usaku.
@@ -62,6 +65,8 @@
     Nakada.
   * ri now defaults to the backspace formatter when piped.  Use RI environment
     variable or options to override. Ruby r28455 by Yusuke Endoh.
+  * __send__ and friends no longer get their underscores removed.  Patch by
+    Thierry Lambert.
 
 === 2.5.11 / 2010-08-20
 

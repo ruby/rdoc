@@ -21,7 +21,7 @@ class RDoc::Options
     '--op-name'       => 'support discontinued',
     '--opname'        => 'support discontinued',
     '--promiscuous'   => 'files always only document their content',
-    '--ri-system'     =>  'Ruby installers use other techniques',
+    '--ri-system'     => 'Ruby installers use other techniques',
   }
 
   ##
@@ -402,8 +402,8 @@ Usage: #{opt.program_name} [options] [names...]
       opt.separator nil
     end
 
-    setup_generator 'darkfish' if
-    argv.grep(/\A(-f|--fmt|--format|-r|-R|--ri|--ri-site)\b/).empty?
+    RDoc::Generator.html_options self if
+      argv.grep(/\A(-r|-R|--ri|--ri-site)\b/).empty?
 
     deprecated = []
     invalid = []
@@ -465,14 +465,6 @@ Usage: #{opt.program_name} [options] [names...]
     # formatter
 
     @template ||= @generator_name
-  end
-
-  ##
-  # Set the title, but only if not already set. This means that a title set
-  # from the command line trumps one set in a source file
-
-  def title=(string)
-    @title ||= string
   end
 
   ##

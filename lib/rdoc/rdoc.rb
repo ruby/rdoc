@@ -380,7 +380,7 @@ The internal error was:
 
     file_info = parse_files @options.files
 
-    @options.title = "RDoc Documentation"
+    @options.default_title = "RDoc Documentation" if @options.respond_to? :default_title=
 
     RDoc::TopLevel.complete @options.visibility
 

@@ -758,7 +758,7 @@ class RDoc::Parser::C < RDoc::Parser
         @options.main_page = param
         ''
       when 'title' then
-        @options.title = param
+        @options.default_title = param if @options.respond_to? :default_title=
         ''
       end
     end

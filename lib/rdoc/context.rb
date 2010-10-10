@@ -324,18 +324,28 @@ class RDoc::Context < RDoc::CodeObject
       name = full_name.split(/:+/).last
     else
       full_name = child_name given_name
-
       if full_name =~ /^(.+)::(\w+)$/ then
         name = $2
-        enclosing = RDoc::TopLevel.classes_hash[$1] ||
-                    RDoc::TopLevel.modules_hash[$1]
+        ename = $1
+        enclosing = RDoc::TopLevel.classes_hash[ename] || RDoc::TopLevel.modules_hash[ename]
+        # HACK: crashes in actionpack/lib/action_view/helpers/form_helper.rb (metaprogramming)
+        unless enclosing then
+          # try the given name at top level (will work for the above example)
+          enclosing = RDoc::TopLevel.classes_hash[given_name] || RDoc::TopLevel.modules_hash[given_name]
+          return enclosing if enclosing
+          # not found: create the parent(s)
+          names = ename.split('::')
+          enclosing = self
+          names.each do |n|
+            enclosing = enclosing.classes_hash[n] || enclosing.modules_hash[n] ||
+                        enclosing.add_module(RDoc::NormalModule, n)
+          end
+        end
       else
         name = full_name
         enclosing = self
       end
     end
-
-    enclosing = self unless enclosing # ActiveSupport::on_load
 
     # find the superclass full name
     if superclass then

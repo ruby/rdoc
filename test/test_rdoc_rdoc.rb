@@ -77,7 +77,7 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
 
     contents = @rdoc.read_file_contents @tempfile.path
     assert_equal Encoding::UTF_8, contents.encoding
-    assert_equal "# coding: ISO-8859-1\nhi \u00e9verybody", contents
+    assert_equal "# coding: ISO-8859-1\nhi \u00e9verybody", contents.sub("\r", '')
   end
 
   def test_read_file_contents_encoding_fancy

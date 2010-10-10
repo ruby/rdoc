@@ -17,19 +17,20 @@ class TestAttributeManager < MiniTest::Unit::TestCase # HACK fix test name
   end
 
   def test_convert_attrs_ignores_code
-    collector = RDoc::Markup::AttrSpan.new 10
-    str = 'foo <code>__send__</code> bar'
-    @am.convert_html str, collector
-    @am.convert_attrs str, collector
-    assert_match(/__send__/, str)
+    assert_equal 'foo <TT>__send__</TT> bar', output('foo <code>__send__</code> bar')
   end
 
   def test_convert_attrs_ignores_tt
-    collector = RDoc::Markup::AttrSpan.new 10
-    str = 'foo <tt>__send__</tt> bar'
-    @am.convert_html str, collector
-    @am.convert_attrs str, collector
-    assert_match(/__send__/, str)
+    assert_equal 'foo <TT>__send__</TT> bar', output('foo <tt>__send__</tt> bar')
+  end
+
+  def test_convert_attrs_preserves_double
+    assert_equal 'foo.__send__ :bar', output('foo.__send__ :bar')
+    assert_equal 'use __FILE__ to', output('use __FILE__ to')
+  end
+
+  def test_convert_attrs_does_not_ignore_after_tt
+    assert_equal 'the <TT>IF:</TT><EM>key</EM> directive', output('the <tt>IF:</tt>_key_ directive')
   end
 
   def test_initial_word_pairs

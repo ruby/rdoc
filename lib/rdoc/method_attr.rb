@@ -47,7 +47,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
   ##
   # Parameters yielded by the called block
 
-  attr_accessor :block_params
+  attr_reader :block_params
 
   ##
   # Parameters for this method
@@ -177,6 +177,65 @@ class RDoc::MethodAttr < RDoc::CodeObject
 
   def aref_prefix
     raise NotImplementedError
+  end
+
+  ##
+  # Attempts to sanitize the content passed by the ruby parser:
+  # remove outer parentheses, etc.
+
+  def block_params=(value)
+
+    # thinks like 'yield.to_s' or 'assert yield, msg'
+    return @block_params = '' if value =~ /^[\.,]/
+
+    # remove trailing 'if/unless ...'
+    if value =~ /^(if|unless)\s/
+      return @block_params = ''
+    end
+    value = $1.strip if value =~ /^(.+)\s(if|unless)\s/
+
+    # outer parentheses
+    value = $1 if value =~ /^\s*\((.*)\)\s*$/
+    value = value.strip
+
+    # proc/lambda
+    return @block_params = $1 if value =~ /^(proc|lambda)(\s*\{|\sdo)/
+
+    # surrounding +...+ or [...]
+    value = $1.strip if value =~ /^\+(.*)\+$/
+    value = $1.strip if value =~ /^\[(.*)\]$/
+
+    return @block_params = '' if value.empty?
+
+    # global variable
+    return @block_params = 'str' if value =~ /^\$[&0-9]$/
+
+    # wipe out array/hash indices
+    value.gsub!(/(\w)\[[^\[]+\]/, '\1')
+
+    # remove @ from class/instance variables
+    value.gsub!(/@@?([a-z0-9_]+)/, '\1')
+
+    # method calls => method name
+    value.gsub!(/([A-Z:a-z0-9_]+)\.([a-z0-9_]+)(\s*\(\s*[a-z0-9_.,\s]*\s*\)\s*)?/) do |m|
+      case $2
+      when 'to_s';      $1
+      when 'const_get'; 'const'
+      when 'new';       $1.split('::').last.  # ClassName => class_name
+                          gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+                          gsub(/([a-z\d])([A-Z])/,'\1_\2').
+                          downcase
+      else;             $2
+      end
+    end
+
+    # class prefixes
+    value.gsub!(/[A-Za-z0-9_:]+::/, '')
+
+    # simple expressions
+    value = $1 if value =~ /^([a-z0-9_]+)\s*[-*+\/]/
+
+    @block_params = value.strip
   end
 
   ##

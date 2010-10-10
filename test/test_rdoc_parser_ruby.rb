@@ -133,7 +133,8 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
   end
 
   def test_look_for_directives_in_main
-    RDoc::Generator::Darkfish.setup_options @options
+    RDoc::Generator.html_options @options
+
 
     util_parser ""
 
@@ -206,7 +207,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
   end
 
   def test_look_for_directives_in_title
-    RDoc::Generator::Darkfish.setup_options @options
+    RDoc::Generator.html_options @options
 
     util_parser ""
 
@@ -548,6 +549,8 @@ class A
   class << B
   end
   class << d = Object.new
+    def foo; end
+    alias bar foo
   end
 end
     CODE
@@ -557,7 +560,16 @@ end
     @parser.parse_class @top_level, false, @parser.get_tk, ''
 
     assert_equal %w[A],    RDoc::TopLevel.classes.map { |c| c.full_name }
-    assert_equal %w[A::B], RDoc::TopLevel.modules.map { |c| c.full_name }
+    assert_equal %w[A::B A::d], RDoc::TopLevel.modules.map { |c| c.full_name }
+
+    # make sure method/alias was not added to enclosing class/module
+    a = RDoc::TopLevel.all_classes_hash['A']
+    assert_empty a.method_list
+
+    # make sure non-constant-named module will be removed from documentation
+    d = RDoc::TopLevel.all_modules_hash['A::d']
+    assert d.remove_from_documentation?
+
   end
 
   # TODO this is really a Context#add_class test
@@ -1046,14 +1058,14 @@ EOF
 
     comment = "##\n# my method\n"
 
-    util_parser "def foo arg1, arg2\nend"
+    util_parser "def foo arg1, arg2 = {}\nend"
 
     tk = @parser.get_tk
 
     @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
 
     foo = klass.method_list.first
-    assert_equal '(arg1, arg2)', foo.params
+    assert_equal '(arg1, arg2 = {})', foo.params
     assert_equal @top_level, foo.file
   end
 
@@ -1235,6 +1247,21 @@ EOF
   end
 
   def test_parse_statements_identifier_constant
+
+    sixth_constant = <<-EOF
+Class.new do
+  rule :file do
+    all(x, y, z) {
+      def value
+        find(:require).each {|r| require r.value }
+        find(:grammar).map {|g| g.value }
+      end
+      def min; end
+    }
+  end
+end
+    EOF
+
     content = <<-EOF
 class Foo
   FIRST_CONSTANT = 5
@@ -1256,6 +1283,10 @@ class Foo
   end
 
   FIFTH_CONSTANT = SECOND_CONSTANT.map { |element| element + 1 }
+
+  SIXTH_CONSTANT = #{sixth_constant}
+
+  SEVENTH_CONSTANT = proc { |i| begin i end }
 end
 EOF
 
@@ -1285,10 +1316,23 @@ EOF
     assert_equal "SECOND_CONSTANT.map do |element|\nelement + 1\nelement + 2\nend", constant.value
     assert_equal @top_level, constant.file
 
-    constant = constants.last
+    constant = constants[4]
     assert_equal 'FIFTH_CONSTANT', constant.name
     assert_equal 'SECOND_CONSTANT.map { |element| element + 1 }', constant.value
     assert_equal @top_level, constant.file
+
+    # TODO: parse as class
+    constant = constants[5]
+    assert_equal 'SIXTH_CONSTANT', constant.name
+    assert_equal sixth_constant.lines.map(&:strip).join("\n"), constant.value
+    assert_equal @top_level, constant.file
+
+    # TODO: parse as method
+    constant = constants[6]
+    assert_equal 'SEVENTH_CONSTANT', constant.name
+    assert_equal "proc { |i| begin i end }", constant.value
+    assert_equal @top_level, constant.file
+
   end
 
   def test_parse_statements_identifier_attr
@@ -1410,6 +1454,20 @@ end
     @parser.parse_statements @top_level
   end
 
+  def test_parse_yield_in_braces_with_parens
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    util_parser "def foo\nn.times { |i| yield nth(i) }\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, ''
+
+    foo = klass.method_list.first
+    assert_equal 'nth(i)', foo.block_params
+  end
+
   def test_sanity_integer
     util_parser '1'
     assert_equal '1', @parser.get_tk.text
@@ -1453,6 +1511,32 @@ end
     util_parser ':"#{bar}="'
 
     while @parser.get_tk do end
+  end
+
+  def test_stopdoc_after_comment
+
+    util_parser <<-EOS
+      module Bar
+        # hello
+        module Foo
+          # :stopdoc:
+        end
+        # there
+        class Baz
+          # :stopdoc:
+        end
+      end
+    EOS
+
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
+
+    foo = @top_level.modules.first.modules.first
+    assert_equal 'Foo', foo.name
+    assert_equal 'hello', foo.comment
+
+    baz = @top_level.modules.first.classes.first
+    assert_equal 'Baz', baz.name
+    assert_equal 'there', baz.comment
   end
 
   def tk(klass, line, char, name, text)

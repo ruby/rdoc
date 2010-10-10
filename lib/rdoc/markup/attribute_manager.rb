@@ -112,7 +112,7 @@ class RDoc::Markup::AttributeManager
     # first do matching ones
     tags = @matching_word_pairs.keys.join("")
 
-    re = /(^|[^\w#{NULL}])([#{tags}])([#:\\]?[\w.\/-]+?\S?)\2(\W|$)/
+    re = /(^|\W)([#{tags}])([#:\\]?[\w.\/-]+?\S?)\2(\W|$)/
 
     1 while str.gsub!(re) do
       attr = @matching_word_pairs[$2]
@@ -164,6 +164,9 @@ class RDoc::Markup::AttributeManager
   # Escapes special sequences of text to prevent conversion to RDoc
 
   def mask_protected_sequences
+    # protect __send__, __FILE__, etc.
+    @str.gsub!(/__([a-z]+)__/i,
+      "_#{PROTECT_ATTR}_#{PROTECT_ATTR}\\1_#{PROTECT_ATTR}_#{PROTECT_ATTR}")
     @str.gsub!(/\\([#{Regexp.escape @protectable.join('')}])/,
                "\\1#{PROTECT_ATTR}")
   end
@@ -228,8 +231,8 @@ class RDoc::Markup::AttributeManager
 
     @attrs = RDoc::Markup::AttrSpan.new @str.length
 
-    convert_html     @str, @attrs
     convert_attrs    @str, @attrs
+    convert_html     @str, @attrs
     convert_specials @str, @attrs
 
     unmask_protected_sequences

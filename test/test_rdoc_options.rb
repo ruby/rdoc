@@ -114,7 +114,7 @@ class TestRDocOptions < MiniTest::Unit::TestCase
       end
     end
 
-    assert_equal 1, out.scan(/Darkfish generator options:/).length
+    assert_equal 1, out.scan(/HTML generators options:/).length
     assert_equal 1, out.scan(/ri generator options:/).      length
   end
 
