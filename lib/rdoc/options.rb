@@ -66,6 +66,11 @@ class RDoc::Options
   attr_accessor :generator
 
   ##
+  # Has RDoc::Generator::HtmlOptions been included?
+
+  attr_accessor :html_options_included
+
+  ##
   # The name of the output directory
 
   attr_accessor :op_dir
@@ -112,6 +117,7 @@ class RDoc::Options
     @generator_name = nil
     @generator_options = []
     @generators = RDoc::RDoc::GENERATORS
+    @html_options_included = false
     @hyperlink_all = false
     @line_numbers = false
     @main_page = nil
@@ -289,10 +295,7 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.on("-f", "--fmt=FORMAT", "--format=FORMAT", @generators.keys,
              "Set the output formatter.  One of:", *generator_text) do |value|
-        if @generator then
-          raise OptionParser::InvalidOption,
-                "generator already set to #{@generator_name}"
-        end
+        check_generator
 
         @generator_name = value.downcase
         setup_generator
@@ -332,10 +335,7 @@ Usage: #{opt.program_name} [options] [names...]
              "your home directory unless overridden by a",
              "subsequent --op parameter, so no special",
              "privileges are needed.") do |value|
-        if @generator then
-          raise OptionParser::InvalidOption,
-                "generator already set to #{@generator_name}"
-        end
+        check_generator
 
         @generator_name = "ri"
         @op_dir ||= RDoc::RI::Paths::HOMEDIR
@@ -349,10 +349,7 @@ Usage: #{opt.program_name} [options] [names...]
              "are stored in a site-wide directory,",
              "making them accessible to others, so",
              "special privileges are needed.") do |value|
-        if @generator then
-          raise OptionParser::InvalidOption,
-                "generator already set to #{@generator_name}"
-        end
+        check_generator
 
         @generator_name = "ri"
         @op_dir = RDoc::RI::Paths::SITEDIR
@@ -402,8 +399,8 @@ Usage: #{opt.program_name} [options] [names...]
       opt.separator nil
     end
 
-    RDoc::Generator.html_options self if
-      argv.grep(/\A(-r|-R|--ri|--ri-site)\b/).empty?
+    setup_generator 'darkfish' if
+      argv.grep(/\A(-f|--fmt|--format|-r|-R|--ri|--ri-site)\b/).empty?
 
     deprecated = []
     invalid = []
@@ -510,6 +507,16 @@ Usage: #{opt.program_name} [options] [names...]
       raise RDoc::Error, "file '#{f}' not found" unless File.exist?(f)
       stat = File.stat f
       raise RDoc::Error, "file '#{f}' not readable" unless stat.readable?
+    end
+  end
+
+  ##
+  # Ensure only one generator is loaded
+
+  def check_generator
+    if @generator then
+      raise OptionParser::InvalidOption,
+        "generator already set to #{@generator_name}"
     end
   end
 

@@ -73,11 +73,16 @@ module RDoc::Generator
   # <tt>--webcvs</tt>.
 
   def self.html_options options
-    options.extend HtmlOptions # HACK make this automatic
+    return if options.html_options_included
+
+    options.html_options_included = true
+
+    options.extend HtmlOptions
 
     opt = options.option_parser
 
-    opt.separator 'HTML generators options:'
+    opt.separator nil
+    opt.separator 'HTML generator options:'
     opt.separator nil
 
     opt.on("--charset=CHARSET", "-c",
@@ -126,8 +131,9 @@ module RDoc::Generator
     opt.separator nil
 
     opt.on("--template=NAME", "-T",
-           "Set the template used when generating output.",
-           "The default depends on the formatter used.") do |value|
+           "Set the template used when generating",
+           "output. The default depends on the",
+           "formatter used.") do |value|
       options.template = value
     end
 

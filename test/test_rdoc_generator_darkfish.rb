@@ -14,7 +14,7 @@ class TestRDocGeneratorDarkfish < MiniTest::Unit::TestCase
 
     @options = RDoc::Options.new
     @options.option_parser = OptionParser.new
-    RDoc::Generator.html_options @options
+    RDoc::Generator::Darkfish.setup_options @options
 
     @tmpdir = File.join Dir.tmpdir, "test_rdoc_generator_darkfish_#{$$}"
     FileUtils.mkdir_p @tmpdir
@@ -59,7 +59,7 @@ class TestRDocGeneratorDarkfish < MiniTest::Unit::TestCase
     options = RDoc::Options.new
     options.option_parser = OptionParser.new
 
-    RDoc::Generator.html_options options
+    RDoc::Generator::Darkfish.setup_options options
 
     assert_equal 'UTF-8', options.charset
   end

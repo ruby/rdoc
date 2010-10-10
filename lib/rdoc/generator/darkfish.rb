@@ -87,6 +87,16 @@ class RDoc::Generator::Darkfish
   end
 
   def self.setup_options options
+    opt = options.option_parser
+
+    opt.separator nil
+    opt.separator 'Darkfish generator options:'
+    opt.separator nil
+
+    opt.separator '    Darkfish uses the HTML options'
+    opt.separator nil
+
+    RDoc::Generator.html_options options
   end
 
   ##
