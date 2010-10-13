@@ -547,6 +547,36 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
     assert_equal expected, method_obj.call_seq
   end
 
+  def test_handle_method
+    parser = util_parser "Document-method: BasicObject#==\n blah */"
+
+    parser.handle_method 'method', 'rb_cBasicObject', '==', 'rb_obj_equal', 1
+
+    bo = @top_level.find_module_named 'BasicObject'
+
+    assert_equal 1, bo.method_list.length
+
+    equals2 = bo.method_list.first
+
+    assert_equal '==', equals2.name
+  end
+
+  def test_handle_method_initialize
+    parser = util_parser "Document-method: BasicObject::new\n blah */"
+
+    parser.handle_method('private_method', 'rb_cBasicObject',
+                         'initialize', 'rb_obj_dummy', -1)
+
+    bo = @top_level.find_module_named 'BasicObject'
+
+    assert_equal 1, bo.method_list.length
+
+    new = bo.method_list.first
+
+    assert_equal 'new',   new.name
+    assert_equal :public, new.visibility
+  end
+
   def test_look_for_directives_in
     parser = util_parser ''
 

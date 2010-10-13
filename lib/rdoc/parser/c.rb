@@ -234,8 +234,7 @@ class RDoc::Parser::C < RDoc::Parser
                      \s*(?:RUBY_METHOD_FUNC\(|VALUEFUNC\()?(\w+)\)?,
                      \s*(-?\w+)\s*\)
                    (?:;\s*/[*/]\s+in\s+(\w+?\.[cy]))?
-                 %xm) do
-      |type, var_name, meth_name, meth_body, param_count, source_file|
+                 %xm) do |type, var_name, meth_name, meth_body, param_count, source_file|
 
       # Ignore top-object and weird struct.c dynamic stuff
       next if var_name == "ruby_top_self"
@@ -355,18 +354,18 @@ class RDoc::Parser::C < RDoc::Parser
         warn "No definition for #{meth_name}" if @options.verbosity > 1
         return false
       end
-    else
-      # No body, but might still have an override comment
-      comment = find_override_comment(class_name, meth_obj.name)
+    else # No body, but might still have an override comment
+      comment = find_override_comment class_name, meth_obj.name
 
       if comment
-        find_modifiers(comment, meth_obj)
+        find_modifiers comment, meth_obj
         meth_obj.comment = strip_stars comment
       else
         warn "No definition for #{meth_name}" if @options.verbosity > 1
         return false
       end
     end
+
     true
   end
 
@@ -523,6 +522,7 @@ class RDoc::Parser::C < RDoc::Parser
 
   def find_override_comment(class_name, meth_name)
     name = Regexp.escape(meth_name)
+
     if @content =~ %r%Document-method:\s+#{class_name}(?:\.|::|#)#{name}\s*?\n((?>.*?\*/))%m then
       $1
     elsif @content =~ %r%Document-method:\s#{name}\s*?\n((?>.*?\*/))%m then
@@ -683,9 +683,10 @@ class RDoc::Parser::C < RDoc::Parser
     class_obj = find_class var_name, class_name
 
     if class_obj then
-      if meth_name == "initialize" then
-        meth_name = "new"
+      if meth_name == 'initialize' then
+        meth_name = 'new'
         singleton = true
+        type = 'method' # force public
       end
 
       meth_obj = RDoc::AnyMethod.new '', meth_name
@@ -714,7 +715,8 @@ class RDoc::Parser::C < RDoc::Parser
         body = @content
       end
 
-      if find_body(class_name, meth_body, meth_obj, body) and meth_obj.document_self then
+      if find_body(class_name, meth_body, meth_obj, body) and
+         meth_obj.document_self then
         class_obj.add_method meth_obj
         @stats.add_method meth_obj
         meth_obj.visibility = :private if 'private_method' == type

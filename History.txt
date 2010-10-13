@@ -67,6 +67,7 @@
     variable or options to override. Ruby r28455 by Yusuke Endoh.
   * __send__ and friends no longer get their underscores removed.  Patch by
     Thierry Lambert.
+  * The C parser now makes new public when promoting initialize.
 
 === 2.5.11 / 2010-08-20
 
