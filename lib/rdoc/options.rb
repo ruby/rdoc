@@ -25,6 +25,11 @@ class RDoc::Options
   }
 
   ##
+  # Character-set for HTML output.  #encoding is preferred over #charset
+
+  attr_accessor :charset
+
+  ##
   # If true, RDoc will not write any files.
 
   attr_accessor :dry_run
@@ -66,9 +71,27 @@ class RDoc::Options
   attr_accessor :generator
 
   ##
-  # Has RDoc::Generator::HtmlOptions been included?
+  # Loaded generator options.  Used to prevent --help from loading the same
+  # options multiple times.
 
-  attr_accessor :html_options_included
+  attr_accessor :generator_options
+
+  ##
+  # Old rdoc behavior: hyperlink all words that match a method name,
+  # even if not preceded by '#' or '::'
+
+  attr_accessor :hyperlink_all
+
+  ##
+  # Include line numbers in the source code
+
+  attr_accessor :line_numbers
+
+  ##
+  # Name of the file, class or module to display in the initial index page (if
+  # not specified the first file we encounter is used)
+
+  attr_accessor :main_page
 
   ##
   # The name of the output directory
@@ -91,14 +114,34 @@ class RDoc::Options
   attr_accessor :rdoc_include
 
   ##
+  # Include the '#' at the front of hyperlinked instance method names
+
+  attr_accessor :show_hash
+
+  ##
   # The number of columns in a tab
 
   attr_accessor :tab_width
 
   ##
+  # Template to be used when generating output
+
+  attr_accessor :template
+
+  ##
+  # Documentation title
+
+  attr_accessor :title
+
+  ##
   # Verbosity, zero means quiet
 
   attr_accessor :verbosity
+
+  ##
+  # URL of web cvs frontend
+
+  attr_accessor :webcvs
 
   ##
   # Minimum visibility of a documented method. One of +:public+,
@@ -117,7 +160,6 @@ class RDoc::Options
     @generator_name = nil
     @generator_options = []
     @generators = RDoc::RDoc::GENERATORS
-    @html_options_included = false
     @hyperlink_all = false
     @line_numbers = false
     @main_page = nil
@@ -139,6 +181,15 @@ class RDoc::Options
     else
       @charset = 'UTF-8'
     end
+  end
+
+  ##
+  # Set the title, but only if not already set. Used to set the title
+  # from a source file, so that a title set from the command line
+  # will have the priority.
+
+  def default_title=(string)
+    @title ||= string
   end
 
   ##
@@ -169,9 +220,9 @@ Usage: #{opt.program_name} [options] [names...]
 
   Options can be specified via the RDOCOPT environment variable, which
   functions similar to the RUBYOPT environment variable for ruby.
-  
+
     $ export RDOCOPT="--show-hash"
-  
+
   will make rdoc show hashes in method links by default.  Command-line options
   always will override those in RDOCOPT.
 
@@ -326,6 +377,80 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.separator nil
+      opt.separator 'HTML generator options:'
+      opt.separator nil
+
+      opt.on("--charset=CHARSET", "-c",
+             "Specifies the output HTML character-set.",
+             "Use --encoding instead of --charset if",
+             "available.") do |value|
+        @charset = value
+      end
+
+      opt.separator nil
+
+      opt.on("--hyperlink-all", "-A",
+             "Generate hyperlinks for all words that",
+             "correspond to known methods, even if they",
+             "do not start with '#' or '::' (legacy",
+             "behavior).") do |value|
+        @hyperlink_all = value
+      end
+
+      opt.separator nil
+
+      opt.on("--main=NAME", "-m",
+             "NAME will be the initial page displayed.") do |value|
+        @main_page = value
+      end
+
+      opt.separator nil
+
+      opt.on("--[no-]line-numbers", "-N",
+             "Include line numbers in the source code.",
+             "By default, only the number of the first",
+             "line is displayed, in a leading comment.") do |value|
+        @line_numbers = value
+      end
+
+      opt.separator nil
+
+      opt.on("--show-hash", "-H",
+             "A name of the form #name in a comment is a",
+             "possible hyperlink to an instance method",
+             "name. When displayed, the '#' is removed",
+             "unless this option is specified.") do |value|
+        @show_hash = value
+      end
+
+      opt.separator nil
+
+      opt.on("--template=NAME", "-T",
+             "Set the template used when generating",
+             "output. The default depends on the",
+             "formatter used.") do |value|
+        @template = value
+      end
+
+      opt.separator nil
+
+      opt.on("--title=TITLE", "-t",
+             "Set TITLE as the title for HTML output.") do |value|
+        @title = value
+      end
+
+      opt.separator nil
+
+      opt.on("--webcvs=URL", "-W",
+             "Specify a URL for linking to a web frontend",
+             "to CVS. If the URL contains a '\%s', the",
+             "name of the current file will be",
+             "substituted; if the URL doesn't contain a",
+             "'\%s', the filename will be appended to it.") do |value|
+        @webcvs = value
+      end
+
+      opt.separator nil
       opt.separator "ri generator options:"
       opt.separator nil
 
@@ -475,8 +600,6 @@ Usage: #{opt.program_name} [options] [names...]
     @verbosity = bool ? 0 : 1
   end
 
-  private
-
   ##
   # Set up an output generator for the named +generator_name+.
   #
@@ -498,6 +621,8 @@ Usage: #{opt.program_name} [options] [names...]
 
     @generator.setup_options self if @generator.respond_to? :setup_options
   end
+
+  private
 
   ##
   # Check that the files on the command line exist

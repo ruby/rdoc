@@ -114,9 +114,8 @@ class TestRDocOptions < MiniTest::Unit::TestCase
       end
     end
 
-    assert_equal 1, out.scan(/Darkfish generator options:/).length
-    assert_equal 1, out.scan(/HTML generator options:/).    length
-    assert_equal 1, out.scan(/ri generator options:/).      length
+    assert_equal 1, out.scan(/HTML generator options:/).length
+    assert_equal 1, out.scan(/ri generator options:/).  length
   end
 
   def test_parse_ignore_invalid
@@ -204,6 +203,24 @@ class TestRDocOptions < MiniTest::Unit::TestCase
     assert_match %r%^invalid options: -p .with files.%, err
 
     assert_empty out
+  end
+
+  def test_setup_generator
+    test_generator = Object.new
+    def test_generator.setup_options(op)
+      @op = op
+    end
+
+    def test_generator.op() @op end
+
+    RDoc::RDoc::GENERATORS['TestGenerator'] = test_generator
+
+    @options.setup_generator 'TestGenerator'
+
+    assert_equal test_generator, @options.generator
+    assert_equal [test_generator], @options.generator_options
+
+    assert_equal @options, test_generator.op
   end
 
 end
