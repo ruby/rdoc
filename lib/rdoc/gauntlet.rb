@@ -8,7 +8,7 @@ require 'fileutils'
 class RDoc::Gauntlet < Gauntlet
 
   def run name
-    next if self.data[name]
+    return if self.data[name]
 
     ri_dir = File.expand_path "~/.gauntlet/data/ri/#{name}"
     FileUtils.rm_rf ri_dir if File.exist? ri_dir
@@ -16,7 +16,7 @@ class RDoc::Gauntlet < Gauntlet
     yaml = File.read 'gemspec'
     spec = Gem::Specification.from_yaml yaml
 
-    args = %W[--ri --op #{ri_dir}]
+    args = %W[--op #{ri_dir}]
     args.push(*spec.rdoc_options)
     args << spec.require_paths
     args << spec.extra_rdoc_files
@@ -32,7 +32,7 @@ class RDoc::Gauntlet < Gauntlet
       r.document args
       self.data[name] = true
       puts 'passed'
-    rescue StandardError, RDoc::Error => e
+    rescue StandardError, RDoc::Error, SystemStackError => e
       puts "failed - (#{e.class}) #{e.message}"
       self.data[name] = false
     end
