@@ -596,7 +596,10 @@ Usage: #{opt.program_name} [options] [names...]
     @verbosity.zero?
   end
 
-  def quiet=(bool)
+  ##
+  # Set quietness to +bool+
+
+  def quiet= bool
     @verbosity = bool ? 0 : 1
   end
 
