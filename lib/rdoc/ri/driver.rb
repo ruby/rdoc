@@ -594,8 +594,6 @@ Options may also be set in the 'RI' environment variable.
       instance_methods = store.instance_methods[klass.full_name]
       attributes       = store.attributes[klass.full_name]
 
-      p klass.full_name => store.class_methods
-
       if comment.empty? and !(instance_methods or class_methods) then
         also_in << store
         next
