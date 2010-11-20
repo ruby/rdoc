@@ -101,7 +101,7 @@ class RDoc::Generator::Darkfish
     end
 
     raise RDoc::Error, "could not find template #{template.inspect}" unless
-    template_dir
+      template_dir
 
     @template_dir = Pathname.new File.expand_path(template_dir)
 
