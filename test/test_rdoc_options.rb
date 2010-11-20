@@ -2,10 +2,39 @@ require 'rubygems'
 require 'minitest/autorun'
 require 'rdoc/options'
 
+require 'fileutils'
+require 'tmpdir'
+
 class TestRDocOptions < MiniTest::Unit::TestCase
 
   def setup
     @options = RDoc::Options.new
+  end
+
+  def test_check_files
+    out, err = capture_io do
+      Dir.mktmpdir do |dir|
+        Dir.chdir dir do
+          FileUtils.touch 'unreadable'
+          FileUtils.chmod 0, 'unreadable'
+
+          @options.files = %w[nonexistent unreadable]
+
+          @options.check_files
+        end
+      end
+    end
+
+    assert_empty @options.files
+
+    assert_equal '', out
+
+    expected = <<-EXPECTED
+file 'nonexistent' not found
+file 'unreadable' not readable
+    EXPECTED
+
+    assert_equal expected, err
   end
 
   def test_dry_run_default

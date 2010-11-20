@@ -184,6 +184,37 @@ class RDoc::Options
   end
 
   ##
+  # Check that the files on the command line exist
+
+  def check_files
+    @files.delete_if do |file|
+      if File.exist? file then
+        if File.readable? file then
+          false
+        else
+          warn "file '#{file}' not readable"
+
+          true
+        end
+      else
+        warn "file '#{file}' not found"
+
+        true
+      end
+    end
+  end
+
+  ##
+  # Ensure only one generator is loaded
+
+  def check_generator
+    if @generator then
+      raise OptionParser::InvalidOption,
+        "generator already set to #{@generator_name}"
+    end
+  end
+
+  ##
   # Set the title, but only if not already set. Used to set the title
   # from a source file, so that a title set from the command line
   # will have the priority.
@@ -623,29 +654,6 @@ Usage: #{opt.program_name} [options] [names...]
     @generator_options << @generator
 
     @generator.setup_options self if @generator.respond_to? :setup_options
-  end
-
-  private
-
-  ##
-  # Check that the files on the command line exist
-
-  def check_files
-    @files.each do |f|
-      raise RDoc::Error, "file '#{f}' not found" unless File.exist?(f)
-      stat = File.stat f
-      raise RDoc::Error, "file '#{f}' not readable" unless stat.readable?
-    end
-  end
-
-  ##
-  # Ensure only one generator is loaded
-
-  def check_generator
-    if @generator then
-      raise OptionParser::InvalidOption,
-        "generator already set to #{@generator_name}"
-    end
   end
 
 end
