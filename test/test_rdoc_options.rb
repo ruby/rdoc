@@ -71,20 +71,12 @@ file 'unreadable' not readable
     assert_empty out
   end
 
-  def test_parse_default_darkfish
+  def test_parse_default
     @options.parse []
 
-    assert_equal RDoc::Generator::Darkfish, @options.generator
-
-    op = @options.option_parser
-
-    assert_includes op.top.long.keys, 'charset'
-    assert_includes op.top.long.keys, 'main'
-    assert_includes op.top.long.keys, 'show-hash'
-    assert_includes op.top.long.keys, 'tab-width'
-    assert_includes op.top.long.keys, 'template'
-    assert_includes op.top.long.keys, 'title'
-    assert_includes op.top.long.keys, 'webcvs'
+    assert_equal RDoc::Generator::Darkfish,             @options.generator
+    assert_equal 'darkfish',                            @options.template
+    assert_match %r%rdoc/generator/template/darkfish$%, @options.template_dir
   end
 
   def test_parse_deprecated
@@ -255,8 +247,8 @@ file 'unreadable' not readable
     assert_empty out
     assert_equal "could not find template NONEXISTENT\n", err
 
-    assert_equal nil, @options.template
-    assert_equal nil, @options.template_dir
+    assert_equal 'darkfish', @options.template
+    assert_match %r%rdoc/generator/template/darkfish$%, @options.template_dir
   end
 
   def test_parse_template_load_path

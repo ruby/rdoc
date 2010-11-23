@@ -294,19 +294,13 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.accept Template do |template|
-        template_path = File.join 'rdoc', 'generator', 'template', template
+        template_dir = template_dir_for template
 
-        template_dir = $LOAD_PATH.map do |path|
-          File.join File.expand_path(path), template_path
-        end.find do |dir|
-          File.directory? dir
-        end
-
-        if template_dir then
-          [template, template_dir]
-        else
+        unless template_dir then
           warn "could not find template #{template}"
           nil
+        else
+          [template, template_dir]
         end
       end
 
@@ -604,7 +598,10 @@ Usage: #{opt.program_name} [options] [names...]
       retry
     end
 
-    @generator ||= RDoc::Generator::Darkfish
+    unless @generator then
+      @generator = RDoc::Generator::Darkfish
+      @generator_name = 'darkfish'
+    end
 
     if @pipe and not argv.empty? then
       @pipe = false
@@ -646,7 +643,10 @@ Usage: #{opt.program_name} [options] [names...]
     # If no template was specified, use the default template for the output
     # formatter
 
-    @template ||= @generator_name
+    unless @template then
+      @template     = @generator_name
+      @template_dir = template_dir_for @template
+    end
   end
 
   ##
@@ -680,9 +680,23 @@ Usage: #{opt.program_name} [options] [names...]
 
     return if @generator_options.include? @generator
 
+    @generator_name = generator_name
     @generator_options << @generator
 
     @generator.setup_options self if @generator.respond_to? :setup_options
+  end
+
+  ##
+  # Finds the template dir for +template+
+
+  def template_dir_for template
+    template_path = File.join 'rdoc', 'generator', 'template', template
+
+    $LOAD_PATH.map do |path|
+      File.join File.expand_path(path), template_path
+    end.find do |dir|
+      File.directory? dir
+    end
   end
 
 end
