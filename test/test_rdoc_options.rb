@@ -47,10 +47,28 @@ file 'unreadable' not readable
     assert_equal Encoding.default_external, @options.encoding
   end
 
-  def test_parse_dry_run
-    @options.parse %w[--dry-run]
+  def test_parse_dash_p
+    out, err = capture_io do
+      @options.parse %w[-p]
+    end
 
-    assert @options.dry_run
+    assert @options.pipe
+    refute_match %r%^Usage: %, err
+    refute_match %r%^invalid options%, err
+
+    assert_empty out
+  end
+
+  def test_parse_dash_p_files
+    out, err = capture_io do
+      @options.parse ['-p', File.expand_path(__FILE__)]
+    end
+
+    refute @options.pipe
+    refute_match %r%^Usage: %, err
+    assert_match %r%^invalid options: -p .with files.%, err
+
+    assert_empty out
   end
 
   def test_parse_default_darkfish
@@ -67,6 +85,27 @@ file 'unreadable' not readable
     assert_includes op.top.long.keys, 'template'
     assert_includes op.top.long.keys, 'title'
     assert_includes op.top.long.keys, 'webcvs'
+  end
+
+  def test_parse_deprecated
+    dep_hash = RDoc::Options::DEPRECATED
+    options = dep_hash.keys.sort
+
+    out, err = capture_io do
+      @options.parse options
+    end
+
+    dep_hash.each_pair do |opt, message|
+      assert_match %r%.*#{opt}.+#{message}%, err
+    end
+
+    assert_empty out
+  end
+
+  def test_parse_dry_run
+    @options.parse %w[--dry-run]
+
+    assert @options.dry_run
   end
 
   def test_parse_encoding
@@ -184,21 +223,6 @@ file 'unreadable' not readable
     assert_empty out
   end
 
-  def test_parse_deprecated
-    dep_hash = RDoc::Options::DEPRECATED
-    options = dep_hash.keys.sort
-
-    out, err = capture_io do
-      @options.parse options
-    end
-
-    dep_hash.each_pair do |opt, message|
-      assert_match %r%.*#{opt}.+#{message}%, err
-    end
-
-    assert_empty out
-  end
-
   def test_parse_main
     out, err = capture_io do
       @options.parse %w[--main MAIN]
@@ -208,30 +232,6 @@ file 'unreadable' not readable
     assert_empty err
 
     assert_equal 'MAIN', @options.main_page
-  end
-
-  def test_parse_dash_p
-    out, err = capture_io do
-      @options.parse %w[-p]
-    end
-
-    assert @options.pipe
-    refute_match %r%^Usage: %, err
-    refute_match %r%^invalid options%, err
-
-    assert_empty out
-  end
-
-  def test_parse_dash_p_files
-    out, err = capture_io do
-      @options.parse ['-p', File.expand_path(__FILE__)]
-    end
-
-    refute @options.pipe
-    refute_match %r%^Usage: %, err
-    assert_match %r%^invalid options: -p .with files.%, err
-
-    assert_empty out
   end
 
   def test_setup_generator
