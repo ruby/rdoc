@@ -309,6 +309,26 @@ Multiline comment goes here because this comment spans multiple lines.
     assert constants.empty?, constants.inspect
   end
 
+  def test_find_alias_comment
+    parser = util_parser ''
+
+    comment = parser.find_alias_comment 'C', '[]', 'index'
+
+    assert_equal '', comment
+
+    parser = util_parser <<-C
+/*
+ * comment
+ */
+
+rb_define_alias(C, "[]", "index");
+    C
+
+    comment = parser.find_alias_comment 'C', '[]', 'index'
+
+    assert_equal "/*\n * comment\n */\n\n", comment
+  end
+
   def test_find_class_comment_include
     @options.rdoc_include << File.dirname(__FILE__)
 

@@ -279,15 +279,13 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  def find_alias_comment(class_name, new_name, old_name)
-    if content =~ %r%((?>/\*.*?\*/\s+))
-                     rb_define_alias\(\s*#{class_name}\s*,
-                                      \s*"#{new_name}"\s*,
-                                      \s*"#{old_name}"\s*\);%xm then
-      $1
-    else
-      ''
-    end
+  def find_alias_comment class_name, new_name, old_name
+    content =~ %r%((?>/\*.*?\*/\s+))
+                  rb_define_alias\(\s*#{Regexp.escape class_name}\s*,
+                                   \s*"#{Regexp.escape new_name}"\s*,
+                                   \s*"#{Regexp.escape old_name}"\s*\);%xm
+
+    $1 || ''
   end
 
   def find_attr_comment(attr_name)
