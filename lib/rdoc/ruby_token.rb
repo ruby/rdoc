@@ -178,7 +178,7 @@ module RDoc::RubyToken
   end
 
   class TkUnknownChar < Token
-    def initialize(seek, line_no, char_no, id)
+    def initialize(seek, line_no, char_no, name)
       super(seek, line_no, char_no)
       @name = name
     end
