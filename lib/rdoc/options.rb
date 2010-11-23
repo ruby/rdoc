@@ -25,6 +25,11 @@ class RDoc::Options
   }
 
   ##
+  # Template option validator for OptionParser
+
+  Template = nil
+
+  ##
   # Character-set for HTML output.  #encoding is preferred over #charset
 
   attr_accessor :charset
@@ -129,6 +134,11 @@ class RDoc::Options
   attr_accessor :template
 
   ##
+  # Directory the template lives in
+
+  attr_accessor :template_dir
+
+  ##
   # Documentation title
 
   attr_accessor :title
@@ -170,6 +180,7 @@ class RDoc::Options
     @stylesheet_url = nil
     @tab_width = 8
     @template = nil
+    @template_dir = nil
     @title = nil
     @verbosity = 1
     @visibility = :protected
@@ -280,6 +291,23 @@ Usage: #{opt.program_name} [options] [names...]
 
       DEPRECATED.sort_by { |k,| k }.each do |name, reason|
         opt.banner << "    %*1$2$s  %3$s\n" % [-name_length, name, reason]
+      end
+
+      opt.accept Template do |template|
+        template_path = File.join 'rdoc', 'generator', 'template', template
+
+        template_dir = $LOAD_PATH.map do |path|
+          File.join File.expand_path(path), template_path
+        end.find do |dir|
+          File.directory? dir
+        end
+
+        if template_dir then
+          [template, template_dir]
+        else
+          warn "could not find template #{template}"
+          nil
+        end
       end
 
       opt.separator nil
@@ -456,11 +484,12 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--template=NAME", "-T",
+      opt.on("--template=NAME", "-T", Template,
              "Set the template used when generating",
              "output. The default depends on the",
-             "formatter used.") do |value|
-        @template = value
+             "formatter used.") do |(template, template_dir)|
+        @template     = template
+        @template_dir = template_dir
       end
 
       opt.separator nil

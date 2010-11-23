@@ -234,6 +234,57 @@ file 'unreadable' not readable
     assert_equal 'MAIN', @options.main_page
   end
 
+  def test_parse_template
+    out, err = capture_io do
+      @options.parse %w[--template darkfish]
+    end
+
+    assert_empty out
+    assert_empty err
+
+    assert_equal 'darkfish', @options.template
+
+    assert_match %r%rdoc/generator/template/darkfish$%, @options.template_dir
+  end
+
+  def test_parse_template_nonexistent
+    out, err = capture_io do
+      @options.parse %w[--template NONEXISTENT]
+    end
+
+    assert_empty out
+    assert_equal "could not find template NONEXISTENT\n", err
+
+    assert_equal nil, @options.template
+    assert_equal nil, @options.template_dir
+  end
+
+  def test_parse_template_load_path
+    orig_LOAD_PATH = $LOAD_PATH.dup
+
+    template_dir = nil
+
+    Dir.mktmpdir do |dir|
+      $LOAD_PATH << dir
+
+      template_dir = File.join dir, 'rdoc', 'generator', 'template', 'load_path'
+
+      FileUtils.mkdir_p template_dir
+
+      out, err = capture_io do
+        @options.parse %w[--template load_path]
+      end
+
+      assert_empty out
+      assert_empty err
+    end
+
+    assert_equal 'load_path',  @options.template
+    assert_equal template_dir, @options.template_dir
+  ensure
+    $LOAD_PATH.replace orig_LOAD_PATH
+  end
+
   def test_setup_generator
     test_generator = Object.new
     def test_generator.setup_options(op)

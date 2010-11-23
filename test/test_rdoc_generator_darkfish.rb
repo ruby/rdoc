@@ -21,6 +21,13 @@ class TestRDocGeneratorDarkfish < MiniTest::Unit::TestCase
     @options.op_dir = @tmpdir
     @options.generator = RDoc::Generator::Darkfish
 
+    $LOAD_PATH.each do |path|
+      darkfish_dir = File.join path, 'rdoc/generator/template/darkfish'
+      next unless File.directory? darkfish_dir
+      @options.template_dir = darkfish_dir
+      break
+    end
+
     rd = RDoc::RDoc.new
     rd.options = @options
     RDoc::RDoc.current = rd

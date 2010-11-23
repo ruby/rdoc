@@ -1,4 +1,4 @@
-=== 2.6
+=== 3.0
 
 * Major enhancements
   * Ruby 1.8.6 is no longer supported by RDoc.
@@ -13,6 +13,9 @@
     <tt>--encoding</tt> is now preferred over <tt>--charset</tt>
   * RDoc::Attr#type is now RDoc::Attr#definition.  Patch by Thierry Lambert.
   * Removed TimeConstantMethods
+  * Templates (<tt>rdoc -T</tt>) are now checked for existence in
+    RDoc::Options.  Generator authors can now use RDoc::Options#template_dir
+    which is the full path to the template directory.
 * Minor enhancements
   * Added rdoc arguments <tt>--dry-run</tt>, <tt>--all</tt>,
     <tt>--visibility</tt>, <tt>--force-output</tt>, <tt>--hyperlink-all</tt>.
@@ -69,6 +72,8 @@
     Thierry Lambert.
   * The C parser now makes new public when promoting initialize.
   * Fix crash in #markup_code for TkUnknownChar.
+  * Fix crash in RDoc::Parser::C when aliasing methods with Regexp special
+    characters.
 
 === 2.5.11 / 2010-08-20
 

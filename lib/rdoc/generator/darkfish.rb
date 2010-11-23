@@ -92,18 +92,7 @@ class RDoc::Generator::Darkfish
   def initialize options
     @options = options
 
-    template = @options.template || 'darkfish'
-
-    template_dir = $LOAD_PATH.map do |path|
-      File.join File.expand_path(path), GENERATOR_DIR, 'template', template
-    end.find do |dir|
-      File.directory? dir
-    end
-
-    raise RDoc::Error, "could not find template #{template.inspect}" unless
-      template_dir
-
-    @template_dir = Pathname.new File.expand_path(template_dir)
+    @template_dir = Pathname.new options.template_dir
 
     @files      = nil
     @classes    = nil
