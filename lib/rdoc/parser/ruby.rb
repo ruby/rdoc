@@ -366,7 +366,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       text
     when TkId, TkOp then
       tk.name
-    when TkSTRING, TkDSTRING then
+    when TkSTRING, TkDSTRING, TkSTAR then
       tk.text
     else
       raise RDoc::Error, "Name or symbol expected (got #{tk})"
@@ -485,10 +485,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def parse_alias(context, single, tk, comment)
     skip_tkspace
+
     if TkLPAREN === peek_tk then
       get_tk
       skip_tkspace
     end
+
     new_name = get_symbol_or_name
 
     @scanner.instance_eval { @lex_state = EXPR_FNAME }

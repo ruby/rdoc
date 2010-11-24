@@ -74,5 +74,57 @@ class TestRDocParser < MiniTest::Unit::TestCase
     assert_nil @RP.for(nil, @binary_dat, nil, nil, nil)
   end
 
+  def test_class_set_encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    s = "# coding: UTF-8\n"
+    RDoc::Parser.set_encoding s
+
+    assert_equal Encoding::UTF_8, s.encoding
+
+    s = "#!/bin/ruby\n# coding: UTF-8\n"
+    RDoc::Parser.set_encoding s
+
+    assert_equal Encoding::UTF_8, s.encoding
+
+    s = "<?xml version='1.0' encoding='UTF-8'?>\n"
+    expected = s.encoding
+    RDoc::Parser.set_encoding s
+
+    assert_equal Encoding::UTF_8, s.encoding
+
+    s = "<?xml version='1.0' encoding=\"UTF-8\"?>\n"
+    expected = s.encoding
+    RDoc::Parser.set_encoding s
+
+    assert_equal Encoding::UTF_8, s.encoding
+  end
+
+  def test_class_set_encoding_bad
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    s = ""
+    expected = s.encoding
+    RDoc::Parser.set_encoding s
+
+    assert_equal expected, s.encoding
+
+    s = "# vim:set fileencoding=utf-8:\n"
+    expected = s.encoding
+    RDoc::Parser.set_encoding s
+
+    assert_equal expected, s.encoding
+
+    s = "# vim:set fileencoding=utf-8:\n"
+    expected = s.encoding
+    RDoc::Parser.set_encoding s
+
+    assert_equal expected, s.encoding
+
+    assert_raises ArgumentError do
+      RDoc::Parser.set_encoding "# -*- encoding: undecided -*-\n"
+    end
+  end
+
 end
 

@@ -74,6 +74,8 @@
   * Fix crash in #markup_code for TkUnknownChar.
   * Fix crash in RDoc::Parser::C when aliasing methods with Regexp special
     characters.
+  * RDoc no longer crashes when "*" is used as a name as in <tt>alias *
+    compose</tt>.
 
 === 2.5.11 / 2010-08-20
 

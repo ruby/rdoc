@@ -32,6 +32,12 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     @tempfile2.close
   end
 
+  def test_get_symbol_or_name
+    util_parser "*"
+
+    assert_equal '*', @parser.get_symbol_or_name
+  end
+
   def test_look_for_directives_in_attr
     util_parser ""
 
