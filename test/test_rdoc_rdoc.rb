@@ -1,14 +1,20 @@
-require 'tempfile'
-require 'tmpdir'
 require 'rubygems'
 require 'minitest/autorun'
 require 'rdoc/rdoc'
+
+require 'fileutils'
+require 'tempfile'
+require 'tmpdir'
 
 class TestRDocRDoc < MiniTest::Unit::TestCase
 
   def setup
     @rdoc = RDoc::RDoc.new
     @rdoc.options = RDoc::Options.new
+
+    @stats = RDoc::Stats.new 0, 0
+    @rdoc.instance_variable_set :@stats, @stats
+
     @tempfile = Tempfile.new 'test_rdoc_rdoc'
   end
 

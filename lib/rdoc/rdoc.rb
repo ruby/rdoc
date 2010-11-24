@@ -303,8 +303,11 @@ option)
   rescue => e
     $stderr.puts <<-EOF
 Before reporting this, could you check that the file you're documenting
-compiles cleanly--RDoc is not a full Ruby parser, and gets confused easily if
-fed invalid programs.
+has proper syntax:
+
+  #{Gem.ruby} -c #{filename}
+
+RDoc is not a full Ruby parser and will fail when fed invalid ruby programs.
 
 The internal error was:
 
