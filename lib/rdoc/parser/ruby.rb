@@ -366,7 +366,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
       text
     when TkId, TkOp then
       tk.name
-    when TkSTRING, TkDSTRING, TkSTAR then
+    when TkAMPER,
+         TkDSTRING,
+         TkSTAR,
+         TkSTRING then
       tk.text
     else
       raise RDoc::Error, "Name or symbol expected (got #{tk})"

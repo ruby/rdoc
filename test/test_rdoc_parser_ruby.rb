@@ -33,9 +33,27 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
   end
 
   def test_get_symbol_or_name
-    util_parser "*"
+    util_parser "* & | + 5 / 4"
 
     assert_equal '*', @parser.get_symbol_or_name
+
+    @parser.skip_tkspace
+
+    assert_equal '&', @parser.get_symbol_or_name
+
+    @parser.skip_tkspace
+
+    assert_equal '|', @parser.get_symbol_or_name
+
+    @parser.skip_tkspace
+
+    assert_equal '+', @parser.get_symbol_or_name
+
+    @parser.skip_tkspace
+    @parser.get_tk
+    @parser.skip_tkspace
+
+    assert_equal '/', @parser.get_symbol_or_name
   end
 
   def test_look_for_directives_in_attr
