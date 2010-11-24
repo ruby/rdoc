@@ -1251,7 +1251,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       # We can't solve the general case, but we can handle most occurrences by
       # ignoring a do at the end of a line.
 
-      when  TkUNTIL, TkWHILE then
+      when TkUNTIL, TkWHILE then
         nest += 1
         skip_optional_do_after_expression
 

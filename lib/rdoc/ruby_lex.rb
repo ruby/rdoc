@@ -92,9 +92,9 @@ class RDoc::RubyLex
   end
 
   def inspect # :nodoc:
-    "#<%s:0x%x lex_state %p space_seen %p>" % [
+    "#<%s:0x%x pos %d lex_state %p space_seen %p>" % [
       self.class, object_id,
-      @lex_state, @space_seen,
+      @io.pos, @lex_state, @space_seen,
     ]
   end
 
