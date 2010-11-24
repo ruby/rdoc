@@ -1440,6 +1440,24 @@ end
     assert_equal 'A#b', m_b.full_name
   end
 
+  def test_parse_symbol_in_arg
+    util_parser ':blah "blah" "#{blah}" blah'
+
+    assert_equal 'blah', @parser.parse_symbol_in_arg
+
+    @parser.skip_tkspace
+
+    assert_equal 'blah', @parser.parse_symbol_in_arg
+
+    @parser.skip_tkspace
+
+    assert_equal nil, @parser.parse_symbol_in_arg
+
+    @parser.skip_tkspace
+
+    assert_equal nil, @parser.parse_symbol_in_arg
+  end
+
   def test_parse_top_level_statements_alias_method
     content = <<-CONTENT
 class A

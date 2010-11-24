@@ -1374,6 +1374,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
       tk.text.sub(/^:/, '')
     when TkSTRING
       eval @read[-1]
+    when TkDSTRING, TkIDENTIFIER then
+      nil # ignore
     else
       warn("Expected symbol or string, got #{tk.inspect}") if $DEBUG_RDOC
       nil
