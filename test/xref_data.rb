@@ -52,6 +52,8 @@ class C5
 end
 
 module M1
+  def m
+  end
 end
 
 module M1::M2

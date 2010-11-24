@@ -106,7 +106,9 @@ class RDoc::MethodAttr < RDoc::CodeObject
   # - it has a +#see+ method that is documented.
 
   def documented?
-    super || (is_alias_for && is_alias_for.documented?) || (see && see.documented?)
+    super or
+      (is_alias_for and is_alias_for.documented?) or
+      (see and see.documented?)
   end
 
   ##
@@ -130,23 +132,33 @@ class RDoc::MethodAttr < RDoc::CodeObject
 
   def find_see # :nodoc:
     return nil if singleton || is_alias_for
+
     # look for the method
     other = find_method_or_attribute name
     return other if other
+
     # if it is a setter, look for a getter
     return nil unless name =~ /[a-z_]=$/i   # avoid == or ===
     return find_method_or_attribute name[0..-2]
   end
 
-  def find_method_or_attribute(name) # :nodoc:
+  def find_method_or_attribute name # :nodoc:
     searched = parent.ancestors
     kernel = RDoc::TopLevel.all_modules_hash['Kernel']
-    searched << kernel if kernel && parent != kernel && !searched.include?(kernel)
+
+    searched << kernel if kernel &&
+      parent != kernel && !searched.include?(kernel)
+
     searched.each do |ancestor|
-      next if ancestor.is_a?(String)
-      other = ancestor.find_method_named('#' << name) || ancestor.find_attribute_named(name)
+      next if parent == ancestor
+      next if String === ancestor
+
+      other = ancestor.find_method_named('#' << name) ||
+              ancestor.find_attribute_named(name)
+
       return other if other
     end
+
     nil
   end
 
@@ -184,14 +196,12 @@ class RDoc::MethodAttr < RDoc::CodeObject
   # remove outer parentheses, etc.
 
   def block_params=(value)
-
-    # thinks like 'yield.to_s' or 'assert yield, msg'
+    # 'yield.to_s' or 'assert yield, msg'
     return @block_params = '' if value =~ /^[\.,]/
 
     # remove trailing 'if/unless ...'
-    if value =~ /^(if|unless)\s/
-      return @block_params = ''
-    end
+    return @block_params = '' if value =~ /^(if|unless)\s/
+
     value = $1.strip if value =~ /^(.+)\s(if|unless)\s/
 
     # outer parentheses
@@ -217,15 +227,17 @@ class RDoc::MethodAttr < RDoc::CodeObject
     value.gsub!(/@@?([a-z0-9_]+)/, '\1')
 
     # method calls => method name
-    value.gsub!(/([A-Z:a-z0-9_]+)\.([a-z0-9_]+)(\s*\(\s*[a-z0-9_.,\s]*\s*\)\s*)?/) do |m|
+    value.gsub!(/([A-Z:a-z0-9_]+)\.([a-z0-9_]+)(\s*\(\s*[a-z0-9_.,\s]*\s*\)\s*)?/) do
       case $2
-      when 'to_s';      $1
-      when 'const_get'; 'const'
-      when 'new';       $1.split('::').last.  # ClassName => class_name
-                          gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-                          gsub(/([a-z\d])([A-Z])/,'\1_\2').
-                          downcase
-      else;             $2
+      when 'to_s'      then $1
+      when 'const_get' then 'const'
+      when 'new' then
+        $1.split('::').last.  # ClassName => class_name
+          gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+          gsub(/([a-z\d])([A-Z])/,'\1_\2').
+          downcase
+      else
+        $2
       end
     end
 

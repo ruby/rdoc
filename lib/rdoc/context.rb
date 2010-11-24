@@ -455,7 +455,7 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Adds included module +include+
+  # Adds included module +include+ which should be an RDoc::Include
 
   def add_include(include)
     add_to @includes, include

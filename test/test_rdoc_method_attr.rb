@@ -2,12 +2,6 @@ require File.expand_path '../xref_test_case', __FILE__
 
 class TestRDocMethodAttr < XrefTestCase
 
-  def test_to_s
-    assert_equal 'RDoc::AnyMethod: C1#m',  @c1_m.to_s
-    assert_equal 'RDoc::AnyMethod: C2#b',  @c2_b.to_s
-    assert_equal 'RDoc::AnyMethod: C1::m', @c1__m.to_s
-  end
-
   def test_block_params_equal
 
     m = RDoc::MethodAttr.new(nil, 'foo')
@@ -109,6 +103,20 @@ class TestRDocMethodAttr < XrefTestCase
     assert_equal 'y_path', m.block_params
 
   end
+
+  def test_find_method_or_attribute_recursive
+    inc = RDoc::Include.new 'M1', nil
+    @m1.add_include inc # M1 now includes itself
+
+    assert_nil @m1_m.find_method_or_attribute 'm'
+  end
+
+  def test_to_s
+    assert_equal 'RDoc::AnyMethod: C1#m',  @c1_m.to_s
+    assert_equal 'RDoc::AnyMethod: C2#b',  @c2_b.to_s
+    assert_equal 'RDoc::AnyMethod: C1::m', @c1__m.to_s
+  end
+
 
 end
 

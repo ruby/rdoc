@@ -52,6 +52,8 @@ class XrefTestCase < MiniTest::Unit::TestCase
     @c3_h2 = @xref_data.find_module_named 'C3::H2'
 
     @m1    = @xref_data.find_module_named 'M1'
+    @m1_m  = @m1.method_list.first
+
     @m1_m2 = @xref_data.find_module_named 'M1::M2'
   end
 
