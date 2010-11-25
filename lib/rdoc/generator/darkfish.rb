@@ -2,7 +2,7 @@
 
 require 'pathname'
 require 'fileutils'
-require 'erb'
+require 'rdoc/erbio'
 
 require 'rdoc/generator/markup'
 
@@ -214,34 +214,9 @@ class RDoc::Generator::Darkfish
 
     debug_msg "Rendering the index page..."
 
-    template_src = template_file.read
-    template = ERB.new template_src, nil, '<>'
-    template.filename = template_file.to_s
-    context = binding
+    out_file = @basedir + @options.op_dir + 'index.html'
 
-    output = nil
-
-    begin
-      output = template.result context
-    rescue NoMethodError => err
-      raise RDoc::Error, "Error while evaluating %s: %s (at %p)" % [
-        template_file,
-        err.message,
-        eval("_erbout[-50,50]", context)
-      ], err.backtrace
-    end
-
-    outfile = @basedir + @options.op_dir + 'index.html'
-
-    unless @options.dry_run then
-      debug_msg "Outputting to %s" % [outfile.expand_path]
-      outfile.open 'w', 0644 do |io|
-        io.set_encoding @options.encoding if Object.const_defined? :Encoding
-        io.write output
-      end
-    else
-      debug_msg "Would have output to %s" % [outfile.expand_path]
-    end
+    render_template template_file, out_file do |io| binding end
   end
 
   ##
@@ -254,12 +229,12 @@ class RDoc::Generator::Darkfish
 
     @classes.each do |klass|
       debug_msg "  working on %s (%s)" % [klass.full_name, klass.path]
-      outfile    = @outputdir + klass.path
-      rel_prefix = @outputdir.relative_path_from outfile.dirname
+      out_file    = @outputdir + klass.path
+      rel_prefix = @outputdir.relative_path_from out_file.dirname
       svninfo    = self.get_svninfo klass
 
-      debug_msg "  rendering #{outfile}"
-      self.render_template template_file, binding, outfile
+      debug_msg "  rendering #{out_file}"
+      render_template template_file, out_file do |io| binding end
     end
   end
 
@@ -272,12 +247,12 @@ class RDoc::Generator::Darkfish
     debug_msg "Generating file documentation in #@outputdir"
 
     @files.each do |file|
-      outfile     = @outputdir + file.path
-      debug_msg "  working on %s (%s)" % [ file.full_name, outfile ]
-      rel_prefix  = @outputdir.relative_path_from outfile.dirname
+      out_file     = @outputdir + file.path
+      debug_msg "  working on %s (%s)" % [ file.full_name, out_file ]
+      rel_prefix  = @outputdir.relative_path_from out_file.dirname
 
-      debug_msg "  rendering #{outfile}"
-      self.render_template template_file, binding, outfile
+      debug_msg "  rendering #{out_file}"
+      render_template template_file, out_file do |io| binding end
     end
   end
 
@@ -333,36 +308,55 @@ class RDoc::Generator::Darkfish
     }
   end
 
-  # Load and render the erb template in the given +template_file+ within the
-  # specified +context+ (a Binding object) and write it out to +outfile+.
-  # Both +template_file+ and +outfile+ should be Pathname-like objects.
+  ##
+  # Load and render the erb template in the given +template_file+ and write
+  # it out to +out_file+.
+  #
+  # Both +template_file+ and +out_file+ should be Pathname-like objects.
+  #
+  # An io will be yielded which must be captured by binding in the caller.
 
-  def render_template template_file, context, outfile
+  def render_template template_file, out_file # :yield: io
     template_src = template_file.read
-    template = ERB.new template_src, nil, '<>'
-    template.filename = template_file.to_s
-
-    output = begin
-               template.result context
-             rescue NoMethodError => err
-               raise RDoc::Error, "Error while evaluating %s: %s (at %p)" % [
-                 template_file.to_s,
-                 err.message,
-                 eval("_erbout[-50,50]", context)
-               ], err.backtrace
-             end
 
     unless @options.dry_run then
-      outfile.dirname.mkpath
-      outfile.open 'w', 0644 do |io|
+      debug_msg "Outputting to %s" % [out_file.expand_path]
+
+      out_file.dirname.mkpath
+      out_file.open 'w', 0644 do |io|
         io.set_encoding @options.encoding if Object.const_defined? :Encoding
-        io.write output
+
+        template = RDoc::ERBIO.new template_src, nil, '<>', 'io'
+
+        context = yield io
+
+        template_result template, context, template_file
       end
     else
-      debug_msg "  would have written %d bytes to %s" % [
-        output.length, outfile
+      template = ERB.new template_src, nil, '<>'
+
+      context = yield nil
+
+      output = template_result template, context, template_file
+
+      debug_msg "  would have written %d characters to %s" % [
+        output.length, out_file.expand_path
       ]
     end
+  end
+
+  ##
+  # Creates the result for +template+ with +context+.  If an error is raised a
+  # Pathname +template_file+ will indicate the file where the error occurred.
+
+  def template_result template, context, template_file
+    template.filename = template_file.to_s
+    template.result context
+  rescue NoMethodError => e
+    raise RDoc::Error, "Error while evaluating %s: %s" % [
+      template_file.expand_path,
+      e.message,
+    ], e.backtrace
   end
 
 end

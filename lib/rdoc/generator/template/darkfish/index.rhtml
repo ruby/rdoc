@@ -21,7 +21,7 @@
   <% $stderr.sync = true %>
   <h1><%= h @options.title %></h1>
 
-  <% if @options.main_page && main_page = @files.find { |f| f.full_name == @options.main_page } %>
+  <% if @options.main_page && main_page = @files.find { |f| f.full_name == @options.main_page } then %>
   <div id="main">
     <%= main_page.description.sub(%r{^\s*<h1.*?/h1>}i, '') %>
   </div>
