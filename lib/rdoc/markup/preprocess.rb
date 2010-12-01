@@ -7,8 +7,8 @@ require 'rdoc/markup'
 #
 # Directives can be escaped by preceding them with a backslash.
 #
-# RDoc plugin authors can register additional directives to be handled through
-# RDoc::Markup::PreProcess::register
+# RDoc plugin authors can register additional directives to be handled by
+# using RDoc::Markup::PreProcess::register
 
 class RDoc::Markup::PreProcess
 
@@ -58,7 +58,6 @@ class RDoc::Markup::PreProcess
     # $1      $2  $3        $4      $5
     # [prefix][\]:directive:[spaces][param]newline
     text.gsub!(/^([ \t]*#?[ \t]*)(\\?):(\w+):([ \t]*)(.+)?\n/) do
-
       # skip something like ':toto::'
       next $& if $4.empty? and $5 and $5[0, 1] == ':'
 

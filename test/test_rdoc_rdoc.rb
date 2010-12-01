@@ -22,6 +22,82 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
     @tempfile.close rescue nil # HACK for 1.8.6
   end
 
+  def test_class_read_file
+    @tempfile.write "hi everybody"
+    @tempfile.flush
+
+    assert_equal "hi everybody", RDoc::RDoc.read_file(@tempfile.path, nil)
+  end
+
+  def test_class_read_file_encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    expected = "# coding: utf-8\nhi everybody"
+
+    @tempfile.write expected
+    @tempfile.flush
+
+    # FIXME 1.9 fix on windoze
+    expected.gsub!("\n", "\r\n") if RUBY_VERSION =~ /^1.9/ && RUBY_PLATFORM =~ /mswin|mingw/
+
+    contents = RDoc::RDoc.read_file @tempfile.path, Encoding::UTF_8
+    assert_equal expected, contents
+    assert_equal Encoding::UTF_8, contents.encoding
+  end
+
+  def test_class_read_file_encoding_convert
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    content = ""
+    content.encode! 'ISO-8859-1'
+    content << "# coding: ISO-8859-1\nhi \xE9verybody"
+
+    @tempfile.write content
+    @tempfile.flush
+
+    contents = RDoc::RDoc.read_file @tempfile.path, Encoding::UTF_8
+    assert_equal Encoding::UTF_8, contents.encoding
+    assert_equal "# coding: ISO-8859-1\nhi \u00e9verybody", contents.sub("\r", '')
+  end
+
+  def test_class_read_file_encoding_fancy
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    expected = "# -*- coding: utf-8; fill-column: 74 -*-\nhi everybody"
+    expected.encode! Encoding::UTF_8
+
+    @tempfile.write expected
+    @tempfile.flush
+
+    # FIXME 1.9 fix on windoze
+    expected.gsub!("\n", "\r\n") if RUBY_VERSION =~ /^1.9/ && RUBY_PLATFORM =~ /win32|mingw32/
+
+    contents = RDoc::RDoc.read_file @tempfile.path, Encoding::UTF_8
+    assert_equal expected, contents
+    assert_equal Encoding::UTF_8, contents.encoding
+  end
+
+  def test_class_read_file_encoding_guess
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    path = File.expand_path '../test.ja.txt', __FILE__
+    content = RDoc::RDoc.read_file path, Encoding::UTF_8
+
+    assert_equal Encoding::UTF_8, content.encoding
+  end
+
+  def test_class_read_file_encoding_with_signature
+    skip "Encoding not implemented" unless defined? ::Encoding
+
+    @tempfile.write "\xEF\xBB\xBFhi everybody"
+    @tempfile.flush
+
+    bug3360 = '[ruby-dev:41452]'
+    content = RDoc::RDoc.read_file @tempfile.path, Encoding::UTF_8
+    assert_equal Encoding::UTF_8, content.encoding, bug3360
+    assert_equal "hi everybody", content, bug3360
+  end
+
   def test_gather_files
     file = File.expand_path __FILE__
     assert_equal [file], @rdoc.gather_files([file, file])
@@ -43,85 +119,6 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
     files = @rdoc.normalized_file_list [__FILE__]
 
     assert_empty files
-  end
-
-  def test_read_file_contents
-    @tempfile.write "hi everybody"
-    @tempfile.flush
-
-    assert_equal "hi everybody", @rdoc.read_file_contents(@tempfile.path)
-  end
-
-  def test_read_file_contents_encoding
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
-    expected = "# coding: utf-8\nhi everybody"
-
-    @tempfile.write expected
-    @tempfile.flush
-
-    # FIXME 1.9 fix on windoze
-    expected.gsub!("\n", "\r\n") if RUBY_VERSION =~ /^1.9/ && RUBY_PLATFORM =~ /mswin|mingw/
-
-    contents = @rdoc.read_file_contents @tempfile.path
-    assert_equal expected, contents
-    assert_equal Encoding::UTF_8, contents.encoding
-  end
-
-  def test_read_file_contents_encoding_convert
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
-    @rdoc.options = RDoc::Options.new
-    @rdoc.options.encoding = Encoding::UTF_8
-
-    content = ""
-    content.encode! 'ISO-8859-1'
-    content << "# coding: ISO-8859-1\nhi \xE9verybody"
-
-    @tempfile.write content
-    @tempfile.flush
-
-    contents = @rdoc.read_file_contents @tempfile.path
-    assert_equal Encoding::UTF_8, contents.encoding
-    assert_equal "# coding: ISO-8859-1\nhi \u00e9verybody", contents.sub("\r", '')
-  end
-
-  def test_read_file_contents_encoding_fancy
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
-    expected = "# -*- coding: utf-8; fill-column: 74 -*-\nhi everybody"
-    expected.encode! Encoding::UTF_8
-
-    @tempfile.write expected
-    @tempfile.flush
-
-    # FIXME 1.9 fix on windoze
-    expected.gsub!("\n", "\r\n") if RUBY_VERSION =~ /^1.9/ && RUBY_PLATFORM =~ /win32|mingw32/
-
-    contents = @rdoc.read_file_contents @tempfile.path
-    assert_equal expected, contents
-    assert_equal Encoding::UTF_8, contents.encoding
-  end
-
-  def test_read_file_contents_encoding_guess
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
-    path = File.expand_path '../test.ja.txt', __FILE__
-    content = @rdoc.read_file_contents path
-
-    assert_equal Encoding::UTF_8, content.encoding
-  end
-
-  def test_read_file_contents_encoding_with_signature
-    skip "Encoding not implemented" unless defined? ::Encoding
-
-    @tempfile.write "\xEF\xBB\xBFhi everybody"
-    @tempfile.flush
-
-    bug3360 = '[ruby-dev:41452]'
-    content = @rdoc.read_file_contents @tempfile.path
-    assert_equal Encoding::UTF_8, content.encoding, bug3360
-    assert_equal "hi everybody", content, bug3360
   end
 
   def test_remove_unparsable
