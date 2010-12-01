@@ -91,7 +91,7 @@ class RDoc::RDoc
 
     utf8 = content.sub!(/\A\xef\xbb\xbf/, '')
 
-    RDoc::Parser.set_encoding content
+    RDoc::RDoc.set_encoding content
 
     if Object.const_defined? :Encoding then
       encoding ||= Encoding.default_external
@@ -127,6 +127,24 @@ class RDoc::RDoc
     nil
   rescue Errno::EISDIR, Errno::ENOENT
     nil
+  end
+
+  ##
+  # Sets the encoding of +string+ based on the magic comment
+
+  def self.set_encoding string
+    return unless Object.const_defined? :Encoding
+
+    first_line = string[/\A(?:#!.*\n)?.*\n/]
+
+    name = case first_line
+           when /^<\?xml[^?]*encoding=(["'])(.*?)\1/ then $2
+           when /\b(?:en)?coding[=:]\s*([^\s;]+)/i   then $1
+           else                                           return
+           end
+
+    enc = Encoding.find name
+    string.force_encoding enc if enc
   end
 
   def initialize

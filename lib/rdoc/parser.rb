@@ -62,21 +62,6 @@ class RDoc::Parser
     true
   end
 
-  def self.set_encoding(string)
-    return unless Object.const_defined? :Encoding
-
-    first_line = string[/\A(?:#!.*\n)?.*\n/]
-
-    name = case first_line
-           when /^<\?xml[^?]*encoding=(["'])(.*?)\1/ then $2
-           when /\b(?:en)?coding[=:]\s*([^\s;]+)/i   then $1
-           else                                           return
-           end
-
-    enc = Encoding.find name
-    string.force_encoding enc if enc
-  end
-
   ##
   # Determines if the file is a "binary" file which basically means it has
   # content that an RDoc parser shouldn't try to consume.

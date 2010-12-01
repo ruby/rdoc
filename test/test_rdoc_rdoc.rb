@@ -98,6 +98,58 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
     assert_equal "hi everybody", content, bug3360
   end
 
+  def test_class_set_encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    s = "# coding: UTF-8\n"
+    RDoc::RDoc.set_encoding s
+
+    assert_equal Encoding::UTF_8, s.encoding
+
+    s = "#!/bin/ruby\n# coding: UTF-8\n"
+    RDoc::RDoc.set_encoding s
+
+    assert_equal Encoding::UTF_8, s.encoding
+
+    s = "<?xml version='1.0' encoding='UTF-8'?>\n"
+    expected = s.encoding
+    RDoc::RDoc.set_encoding s
+
+    assert_equal Encoding::UTF_8, s.encoding
+
+    s = "<?xml version='1.0' encoding=\"UTF-8\"?>\n"
+    expected = s.encoding
+    RDoc::RDoc.set_encoding s
+
+    assert_equal Encoding::UTF_8, s.encoding
+  end
+
+  def test_class_set_encoding_bad
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    s = ""
+    expected = s.encoding
+    RDoc::RDoc.set_encoding s
+
+    assert_equal expected, s.encoding
+
+    s = "# vim:set fileencoding=utf-8:\n"
+    expected = s.encoding
+    RDoc::RDoc.set_encoding s
+
+    assert_equal expected, s.encoding
+
+    s = "# vim:set fileencoding=utf-8:\n"
+    expected = s.encoding
+    RDoc::RDoc.set_encoding s
+
+    assert_equal expected, s.encoding
+
+    assert_raises ArgumentError do
+      RDoc::RDoc.set_encoding "# -*- encoding: undecided -*-\n"
+    end
+  end
+
   def test_gather_files
     file = File.expand_path __FILE__
     assert_equal [file], @rdoc.gather_files([file, file])
