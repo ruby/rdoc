@@ -126,6 +126,9 @@ class RDoc::RDoc
     warn "unable to convert #{e.message} for #{filename}, skipping"
     nil
   rescue Errno::EISDIR, Errno::ENOENT
+    puts 'arg!'
+    puts
+    $stdout.flush
     nil
   end
 
@@ -349,7 +352,7 @@ option)
 
   def parse_file filename
     @stats.add_file filename
-    content = read_file filename
+    content = RDoc::RDoc.read_file filename, @options.encoding
 
     return unless content
 

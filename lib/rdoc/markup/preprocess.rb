@@ -71,8 +71,8 @@ class RDoc::Markup::PreProcess
       case directive
       when 'include' then
         filename = param.split[0]
-        include_file filename, prefix
-
+        encoding = if defined?(Encoding) then text.encoding else nil end
+        include_file filename, prefix, encoding
       else
         result = yield directive, param if block_given?
 
@@ -110,27 +110,25 @@ class RDoc::Markup::PreProcess
   # so all content will be verbatim because of the likely space after '#'?
   # TODO shift left the whole file content in that case
   # TODO comment stop/start #-- and #++ in included file must be processed here
-  # TODO handle encoding properly
 
-  def include_file(name, indent)
-    if full_name = find_include_file(name) then
-      content = if defined?(Encoding) then
-                  File.binread full_name
-                else
-                  File.read full_name
-                end
-      # HACK determine content type and force encoding
-      content = content.sub(/\A# .*coding[=:].*$/, '').lstrip
+  def include_file name, indent, encoding
+    full_name = find_include_file name
 
-      # strip leading '#'s, but only if all lines start with them
-      if content =~ /^[^#]/ then
-        content.gsub(/^/, indent)
-      else
-        content.gsub(/^#?/, indent)
-      end
-    else
+    unless full_name then
       warn "Couldn't find file to include '#{name}' from #{@input_file_name}"
-      ''
+      return ''
+    end
+
+    content = RDoc::RDoc.read_file full_name, encoding
+
+    # strip magic comment
+    content = content.sub(/\A# .*coding[=:].*$/, '').lstrip
+
+    # strip leading '#'s, but only if all lines start with them
+    if content =~ /^[^#]/ then
+      content.gsub(/^/, indent)
+    else
+      content.gsub(/^#?/, indent)
     end
   end
 
