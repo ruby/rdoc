@@ -832,15 +832,7 @@ class RDoc::RubyLex
       end
     end
 
-    # HACK to avoid a warning the regexp is hidden behind an eval
-    # HACK need a better way to detect oniguruma
-    @identifier_re ||= if defined? Encoding then
-                         eval '/[\w\u0080-\u7FFFFFFF]/u'
-                       else
-                         eval '/[\w\x80-\xff]/'
-                       end
-
-    while (ch = getc) =~ @identifier_re
+    while (ch = getc) =~ /[\w\u0080-\uFFFF]/u do
       print " :#{ch}: " if RDoc::RubyLex.debug?
       token.concat ch
     end

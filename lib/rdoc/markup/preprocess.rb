@@ -1,4 +1,5 @@
 require 'rdoc/markup'
+require 'rdoc/encoding'
 
 ##
 # Handle common directives that can occur in a block of text:
@@ -119,7 +120,7 @@ class RDoc::Markup::PreProcess
       return ''
     end
 
-    content = RDoc::RDoc.read_file full_name, encoding
+    content = RDoc::Encoding.read_file full_name, encoding
 
     # strip magic comment
     content = content.sub(/\A# .*coding[=:].*$/, '').lstrip
