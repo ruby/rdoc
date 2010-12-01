@@ -280,16 +280,6 @@
   </div>
 
 
-  <div id="rdoc-debugging-section-dump" class="debugging-section">
-  <% if $DEBUG_RDOC
-       require 'pp' %>
-<pre><%= h PP.pp(klass, _erbout) %></pre>
-    </div>
-  <% else %>
-    <p>Disabled; run with --debug to generate this.</p>
-  <% end %>
-  </div>
-
   <div id="validator-badges">
     <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
     <p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
