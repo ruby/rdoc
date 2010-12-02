@@ -994,13 +994,11 @@ EOF
   end
 
   def test_parse_method_false
-    comment = ''
-
     util_parser "def false.foo() :bar end"
 
     tk = @parser.get_tk
 
-    @parser.parse_method @top_level, RDoc::Parser::Ruby::NORMAL, tk, comment
+    @parser.parse_method @top_level, RDoc::Parser::Ruby::NORMAL, tk, ''
 
     klass = RDoc::TopLevel.find_class_named 'FalseClass'
 
@@ -1012,15 +1010,36 @@ EOF
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
 
-    comment = "##\n# my method\n"
-
     util_parser "def (blah).foo() :bar end"
 
     tk = @parser.get_tk
 
-    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, ''
 
     assert klass.method_list.empty?
+  end
+
+  def test_parse_method_gvar
+    util_parser "def $stdout.foo() :bar end"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method @top_level, RDoc::Parser::Ruby::NORMAL, tk, ''
+
+    assert @top_level.method_list.empty?
+  end
+
+  def test_parse_method_internal_gvar
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    util_parser "def foo() def $blah.bar() end end"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, ''
+
+    assert_equal 1, klass.method_list.length
   end
 
   def test_parse_method_internal_ivar
@@ -1050,13 +1069,11 @@ EOF
   end
 
   def test_parse_method_nil
-    comment = ''
-
     util_parser "def nil.foo() :bar end"
 
     tk = @parser.get_tk
 
-    @parser.parse_method @top_level, RDoc::Parser::Ruby::NORMAL, tk, comment
+    @parser.parse_method @top_level, RDoc::Parser::Ruby::NORMAL, tk, ''
 
     klass = RDoc::TopLevel.find_class_named 'NilClass'
 
@@ -1068,13 +1085,11 @@ EOF
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
 
-    comment = "##\n# my method\n"
-
     util_parser "def foo arg1, arg2 = {}\nend"
 
     tk = @parser.get_tk
 
-    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, ''
 
     foo = klass.method_list.first
     assert_equal '(arg1, arg2 = {})', foo.params
@@ -1085,13 +1100,11 @@ EOF
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
 
-    comment = "##\n# my method\n"
-
     util_parser "def foo arg1, arg2 # some useful comment\nend"
 
     tk = @parser.get_tk
 
-    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, ''
 
     foo = klass.method_list.first
     assert_equal '(arg1, arg2)', foo.params
@@ -1101,13 +1114,11 @@ EOF
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
 
-    comment = "##\n# my method\n"
-
     util_parser "def foo arg1, arg2, # some useful comment\narg3\nend"
 
     tk = @parser.get_tk
 
-    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, ''
 
     foo = klass.method_list.first
     assert_equal '(arg1, arg2, arg3)', foo.params
@@ -1116,13 +1127,11 @@ EOF
   def test_parse_method_toplevel
     klass = @top_level
 
-    comment = "##\n# my method\n"
-
     util_parser "def foo arg1, arg2\nend"
 
     tk = @parser.get_tk
 
-    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, ''
 
     object = RDoc::TopLevel.find_class_named 'Object'
 
@@ -1147,13 +1156,11 @@ EOF
   end
 
   def test_parse_method_true
-    comment = ''
-
     util_parser "def true.foo() :bar end"
 
     tk = @parser.get_tk
 
-    @parser.parse_method @top_level, RDoc::Parser::Ruby::NORMAL, tk, comment
+    @parser.parse_method @top_level, RDoc::Parser::Ruby::NORMAL, tk, ''
 
     klass = RDoc::TopLevel.find_class_named 'TrueClass'
 
@@ -1165,8 +1172,6 @@ EOF
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
 
-    comment = "##\n# my method\n"
-
     method = "def ω() end"
 
     assert_equal Encoding::UTF_8, method.encoding if
@@ -1176,7 +1181,7 @@ EOF
 
     tk = @parser.get_tk
 
-    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, ''
 
     omega = klass.method_list.first
     assert_equal "def \317\211", omega.text

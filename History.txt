@@ -82,6 +82,7 @@
     <tt>alias * compose</tt>.
   * Fix warning with some dynamic use of <tt>attr_*</tt>
   * Methods added to true, false and nil are now documented.
+  * Remove warning for methods defined on globals.
 
 === 2.5.11 / 2010-08-20
 

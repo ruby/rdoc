@@ -960,7 +960,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
             container.record_location @top_level
           end
-        when TkIDENTIFIER, TkIVAR then
+        when TkIDENTIFIER, TkIVAR, TkGVAR then
           dummy = RDoc::Context.new
           dummy.parent = container
           skip_method dummy
