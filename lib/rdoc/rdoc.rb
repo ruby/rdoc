@@ -282,7 +282,9 @@ option)
 
   def parse_file filename
     @stats.add_file filename
-    content = RDoc::Encoding.read_file filename, @options.encoding
+    encoding = @options.encoding if defined?(Encoding)
+
+    content = RDoc::Encoding.read_file filename, encoding
 
     return unless content
 
