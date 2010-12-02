@@ -993,25 +993,19 @@ EOF
     assert klass.aliases.empty?
   end
 
-  def test_parse_method_utf8
-    klass = RDoc::NormalClass.new 'Foo'
-    klass.parent = @top_level
+  def test_parse_method_false
+    comment = ''
 
-    comment = "##\n# my method\n"
-
-    method = "def ω() end"
-
-    assert_equal Encoding::UTF_8, method.encoding if
-      Object.const_defined? :Encoding
-
-    util_parser method
+    util_parser "def false.foo() :bar end"
 
     tk = @parser.get_tk
 
-    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+    @parser.parse_method @top_level, RDoc::Parser::Ruby::NORMAL, tk, comment
 
-    omega = klass.method_list.first
-    assert_equal "def \317\211", omega.text
+    klass = RDoc::TopLevel.find_class_named 'FalseClass'
+
+    foo = klass.method_list.first
+    assert_equal 'foo', foo.name
   end
 
   def test_parse_method_funky
@@ -1053,6 +1047,21 @@ EOF
     @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, ''
 
     assert_equal 1, klass.method_list.length
+  end
+
+  def test_parse_method_nil
+    comment = ''
+
+    util_parser "def nil.foo() :bar end"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method @top_level, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    klass = RDoc::TopLevel.find_class_named 'NilClass'
+
+    foo = klass.method_list.first
+    assert_equal 'foo', foo.name
   end
 
   def test_parse_method_no_parens
@@ -1135,6 +1144,42 @@ EOF
 
     foo = object.method_list.first
     assert_equal 'Object::foo', foo.full_name
+  end
+
+  def test_parse_method_true
+    comment = ''
+
+    util_parser "def true.foo() :bar end"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method @top_level, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    klass = RDoc::TopLevel.find_class_named 'TrueClass'
+
+    foo = klass.method_list.first
+    assert_equal 'foo', foo.name
+  end
+
+  def test_parse_method_utf8
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# my method\n"
+
+    method = "def ω() end"
+
+    assert_equal Encoding::UTF_8, method.encoding if
+      Object.const_defined? :Encoding
+
+    util_parser method
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    omega = klass.method_list.first
+    assert_equal "def \317\211", omega.text
   end
 
   def test_parse_statements_class_if

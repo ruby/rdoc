@@ -965,6 +965,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
           dummy.parent = container
           skip_method dummy
           return
+        when TkTRUE, TkFALSE, TkNIL then
+          klass_name = "#{name_t.name.capitalize}Class"
+          container = RDoc::TopLevel.find_class_named klass_name
+          container ||= @top_level.add_class RDoc::NormalClass, klass_name
+
+          name = name_t2.name
         else
           warn "unexpected method name token #{name_t.inspect}"
           # break

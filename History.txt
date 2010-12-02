@@ -50,6 +50,8 @@
   * Better block params handling.  Patch by Thierry Lambert.
   * Moved rdoc/tokenstream.rb to rdoc/token_stream.rb.
   * Moved rdoc/markup/preprocess.rb to rdoc/markup/pre_process.rb.
+  * Removed "':' not followed by operator or identifier" warning for new Hash
+    syntax.
 * Bug fixes
   * RDoc::Generator tests no longer require any installed RDoc on Ruby 1.9
   * Load existing cache before generating ri.  Ruby r27749 by NAKAMURA Usaku.
@@ -79,6 +81,7 @@
   * Fix crash when various operators are used as a name as in
     <tt>alias * compose</tt>.
   * Fix warning with some dynamic use of <tt>attr_*</tt>
+  * Methods added to true, false and nil are now documented.
 
 === 2.5.11 / 2010-08-20
 
