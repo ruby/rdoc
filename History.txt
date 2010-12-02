@@ -48,6 +48,8 @@
   * Files with erb inside will no longer trip RDoc::Parser::binary?
   * Last <tt>--title</tt> wins.  Patch by Thierry Lambert.
   * Better block params handling.  Patch by Thierry Lambert.
+  * Moved rdoc/tokenstream.rb to rdoc/token_stream.rb.
+  * Moved rdoc/markup/preprocess.rb to rdoc/markup/pre_process.rb.
 * Bug fixes
   * RDoc::Generator tests no longer require any installed RDoc on Ruby 1.9
   * Load existing cache before generating ri.  Ruby r27749 by NAKAMURA Usaku.

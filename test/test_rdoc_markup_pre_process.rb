@@ -1,7 +1,7 @@
 require 'tempfile'
 require 'rubygems'
 require 'minitest/autorun'
-require 'rdoc/markup/preprocess'
+require 'rdoc/markup/pre_process'
 require 'rdoc/code_objects'
 
 class TestRDocMarkupPreProcess < MiniTest::Unit::TestCase

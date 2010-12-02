@@ -11,8 +11,8 @@ require 'rdoc/ruby_token'
 require 'rdoc/ruby_lex'
 
 require 'rdoc/code_objects'
-require 'rdoc/tokenstream'
-require 'rdoc/markup/preprocess'
+require 'rdoc/token_stream'
+require 'rdoc/markup/pre_process'
 require 'rdoc/parser'
 require 'rdoc/parser/ruby_tools'
 

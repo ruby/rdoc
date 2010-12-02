@@ -8,7 +8,7 @@ require 'fileutils'
 class RDoc::Gauntlet < Gauntlet
 
   def run name
-    return unless self.data.key? name
+    return if self.data.key? name
 
     dir = File.expand_path "~/.gauntlet/data/rdoc/#{name}"
     FileUtils.rm_rf dir if File.exist? dir

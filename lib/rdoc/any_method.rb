@@ -1,5 +1,5 @@
 require 'rdoc/method_attr'
-require 'rdoc/tokenstream'
+require 'rdoc/token_stream'
 
 ##
 # AnyMethod is the base class for objects representing methods

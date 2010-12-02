@@ -18,6 +18,8 @@ lib/rdoc/code_object.rb
 lib/rdoc/code_objects.rb
 lib/rdoc/constant.rb
 lib/rdoc/context.rb
+lib/rdoc/encoding.rb
+lib/rdoc/erbio.rb
 lib/rdoc/gauntlet.rb
 lib/rdoc/generator.rb
 lib/rdoc/generator/darkfish.rb
@@ -67,7 +69,7 @@ lib/rdoc/markup/list.rb
 lib/rdoc/markup/list_item.rb
 lib/rdoc/markup/paragraph.rb
 lib/rdoc/markup/parser.rb
-lib/rdoc/markup/preprocess.rb
+lib/rdoc/markup/pre_process.rb
 lib/rdoc/markup/raw.rb
 lib/rdoc/markup/rule.rb
 lib/rdoc/markup/text_formatter_test_case.rb
@@ -102,7 +104,7 @@ lib/rdoc/single_class.rb
 lib/rdoc/stats.rb
 lib/rdoc/task.rb
 lib/rdoc/text.rb
-lib/rdoc/tokenstream.rb
+lib/rdoc/token_stream.rb
 lib/rdoc/top_level.rb
 test/README
 test/binary.dat
@@ -111,12 +113,14 @@ test/test.ja.rdoc
 test/test.ja.txt
 test/test.txt
 test/test_attribute_manager.rb
+test/test_rdoc_alias.rb
 test/test_rdoc_any_method.rb
 test/test_rdoc_attr.rb
 test/test_rdoc_class_module.rb
 test/test_rdoc_code_object.rb
 test/test_rdoc_constant.rb
 test/test_rdoc_context.rb
+test/test_rdoc_encoding.rb
 test/test_rdoc_generator_darkfish.rb
 test/test_rdoc_generator_ri.rb
 test/test_rdoc_include.rb
@@ -132,6 +136,7 @@ test/test_rdoc_markup_to_bs.rb
 test/test_rdoc_markup_to_html.rb
 test/test_rdoc_markup_to_html_crossref.rb
 test/test_rdoc_markup_to_rdoc.rb
+test/test_rdoc_method_attr.rb
 test/test_rdoc_normal_class.rb
 test/test_rdoc_normal_module.rb
 test/test_rdoc_options.rb

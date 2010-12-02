@@ -1,6 +1,6 @@
 require 'rdoc'
 require 'rdoc/code_objects'
-require 'rdoc/markup/preprocess'
+require 'rdoc/markup/pre_process'
 require 'rdoc/stats'
 
 ##
