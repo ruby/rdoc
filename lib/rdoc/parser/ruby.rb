@@ -920,7 +920,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     token_listener self do
       @scanner.instance_eval do @lex_state = EXPR_FNAME end
 
-      skip_tkspace false
+      skip_tkspace
       name_t = get_tk
       back_tk = skip_tkspace
       meth = nil
