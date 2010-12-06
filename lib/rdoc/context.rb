@@ -264,29 +264,30 @@ class RDoc::Context < RDoc::CodeObject
     # mainly to check for redefinition of an attribute as a method
     # TODO find a policy for 'attr_reader :foo' + 'def foo=()'
     register = false
-    if attribute.rw.index('R')
+
+    if attribute.rw.index('R') then
       key = attribute.pretty_name
       known = @methods_hash[key]
-      if known
-        #$stderr.puts "\n#{display(attribute)} already registered as #{display(known)}"
+      if known then
         known.comment = attribute.comment if known.comment.empty?
       else
         @methods_hash[key] = attribute
         register = true
       end
     end
+
     if attribute.rw.index('W')
       key = attribute.pretty_name << '='
       known = @methods_hash[key]
-      if known
-        #$stderr.puts "\n#{display(attribute)} already registered as #{display(known)}"
+      if known then
         known.comment = attribute.comment if known.comment.empty?
       else
         @methods_hash[key] = attribute
         register = true
       end
     end
-    if register
+
+    if register then
       attribute.visibility = @visibility
       add_to @attributes, attribute
       resolve_aliases attribute

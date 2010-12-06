@@ -145,6 +145,32 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
+  def do_attrs
+    @content.scan(/rb_attr\s*\(
+                   \s*(\w+),
+                   \s*([\w"()]+),
+                   \s*([01]),
+                   \s*([01]),
+                   \s*\w+\);/xm) do |var_name, attr_name, read, write|
+      class_name = @known_classes[var_name] || var_name
+      class_obj  = find_class var_name, class_name
+
+      rw = ''
+      rw << 'R' if '1' == read
+      rw << 'W' if '1' == write
+
+      comment = find_attr_comment var_name, attr_name, read, write
+      comment = strip_stars comment
+
+      name = attr_name.sub(/rb_intern\("([^"]+)"\)/, '\1')
+
+      attr = RDoc::Attr.new '', name, rw, comment
+
+      class_obj.add_attribute attr
+      @stats.add_method attr
+    end
+  end
+
   def do_classes
     @content.scan(/(\w+)\s* = \s*rb_define_module\s*\(\s*"(\w+)"\s*\)/mx) do
       |var_name, class_name|
@@ -288,12 +314,36 @@ class RDoc::Parser::C < RDoc::Parser
     $1 || ''
   end
 
-  def find_attr_comment(attr_name)
+  ##
+  # Finds a comment for rb_define_attr, rb_attr or Document-attr.
+  #
+  # +var_name+ is the C class variable the attribute is defined on.
+  # +attr_name+ is the attribute's name.
+  #
+  # +read+ and +write+ are the read/write flags ('1' or '0').  Either both or
+  # neither must be provided.
+
+  def find_attr_comment var_name, attr_name, read = nil, write = nil
+    attr_name = Regexp.escape attr_name
+
+    rw = if read and write then
+           /\s*#{read}\s*,\s*#{write}\s*/xm
+         else
+           /.*?/m
+         end
+
     if @content =~ %r%((?>/\*.*?\*/\s+))
-                      rb_define_attr\((?:\s*(\w+),)?\s*
-                                      "#{attr_name}"\s*,.*?\)\s*;%xmi
+                      rb_define_attr\((?:\s*#{var_name},)?\s*
+                                      "#{attr_name}"\s*,
+                                      #{rw}\)\s*;%xm then
       $1
-    elsif @content =~ %r%Document-attr:\s#{attr_name}\s*?\n((?>.*?\*/))%m
+    elsif @content =~ %r%((?>/\*.*?\*/\s+))
+                         rb_attr\(\s*#{var_name}\s*,
+                                  \s*#{attr_name}\s*,
+                                  #{rw},.*?\)\s*;%xm then
+      $1
+    elsif @content =~ %r%Document-attr:\s#{attr_name}\s*?\n
+                         ((?>.*?\*/))%xm then
       $1
     else
       ''
@@ -539,8 +589,8 @@ class RDoc::Parser::C < RDoc::Parser
 
     class_obj = find_class(var_name, class_name)
 
-    if class_obj
-      comment = find_attr_comment(attr_name)
+    if class_obj then
+      comment = find_attr_comment var_name, attr_name
       comment = strip_stars comment
       att = RDoc::Attr.new '', attr_name, rw, comment
       @stats.add_method att
@@ -789,6 +839,7 @@ class RDoc::Parser::C < RDoc::Parser
     do_methods
     do_includes
     do_aliases
+    do_attrs
     @top_level
   end
 

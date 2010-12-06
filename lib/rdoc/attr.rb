@@ -9,9 +9,13 @@ class RDoc::Attr < RDoc::MethodAttr
   MARSHAL_VERSION = 1 # :nodoc:
 
   ##
-  # Is the attribute readable, writable or both?
+  # Is the attribute readable ('R'), writable ('W') or both ('RW')?
 
   attr_accessor :rw
+
+  ##
+  # Creates a new Attr with body +text+, +name+, read/write status +rw+ and
+  # +comment+.  +singleton+ marks this as a class attribute.
 
   def initialize(text, name, rw, comment, singleton = false)
     super text, name

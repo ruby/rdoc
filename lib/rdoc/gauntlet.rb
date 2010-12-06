@@ -16,7 +16,7 @@ class RDoc::Gauntlet < Gauntlet
     yaml = File.read 'gemspec'
     spec = Gem::Specification.from_yaml yaml
 
-    args = %W[--op #{dir}]
+    args = %W[--ri --op #{dir}]
     args.push(*spec.rdoc_options)
     args << spec.require_paths
     args << spec.extra_rdoc_files

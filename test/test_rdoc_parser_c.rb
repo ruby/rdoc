@@ -70,6 +70,49 @@ class TestRDocParserC < MiniTest::Unit::TestCase
     @tempfile.close
   end
 
+  def test_do_attr
+    content = <<-EOF
+void Init_Blah(void) {
+  cBlah = rb_define_class("Blah", rb_cObject);
+
+  /*
+   * This is an accessor
+   */
+  rb_attr(cBlah, rb_intern("accessor"), 1, 1, Qfalse);
+
+  /*
+   * This is a reader
+   */
+  rb_attr(cBlah, rb_intern("reader"), 1, 0, Qfalse);
+
+  /*
+   * This is a writer
+   */
+  rb_attr(cBlah, rb_intern("writer"), 0, 1, Qfalse);
+}
+    EOF
+
+    klass = util_get_class content, 'cBlah'
+
+    attrs = klass.attributes
+    assert_equal 3, attrs.length, attrs.inspect
+
+    accessor = attrs.shift
+    assert_equal 'accessor',            accessor.name
+    assert_equal 'RW',                  accessor.rw
+    assert_equal 'This is an accessor', accessor.comment
+
+    reader = attrs.shift
+    assert_equal 'reader',           reader.name
+    assert_equal 'R',                reader.rw
+    assert_equal 'This is a reader', reader.comment
+
+    writer = attrs.shift
+    assert_equal 'writer',           writer.name
+    assert_equal 'W',                writer.rw
+    assert_equal 'This is a writer', writer.comment
+  end
+
   def test_do_aliases
     content = <<-EOF
 /*
