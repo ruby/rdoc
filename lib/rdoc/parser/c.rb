@@ -3,9 +3,9 @@ require 'rdoc/parser/ruby'
 require 'rdoc/known_classes'
 
 ##
-# We attempt to parse C extension files. Basically we look for
+# RDoc::Parser::C attempts to parse C extension files.  It looks for
 # the standard patterns that you find in extensions: <tt>rb_define_class,
-# rb_define_method</tt> and so on. We also try to find the corresponding
+# rb_define_method</tt> and so on.  It tries to find the corresponding
 # C source for the methods and extract comments, but if we fail
 # we don't worry too much.
 #
@@ -49,13 +49,26 @@ require 'rdoc/known_classes'
 #
 # The comment blocks may include special directives:
 #
-# [Document-class: <i>name</i>]
-#   This comment block is documentation for the given class. Use this
-#   when the <tt>Init_xxx</tt> method is not named after the class.
+# [Document-class: +name+]
+#   Documentation for the named class.
 #
-# [Document-method: <i>name</i>]
-#   This comment documents the named method. Use when RDoc cannot
-#   automatically find the method from its declaration
+# [Document-module: +name+]
+#   Documentation for the named module.
+#
+# [Document-const: +name+]
+#   Documentation for the named +rb_define_const+.
+#
+# [Document-global: +name+]
+#   Documentation for the named +rb_define_global_const+
+#
+# [Document-variable: +name+]
+#   Documentation for the named +rb_define_variable+
+#
+# [Document-method: +name+]
+#   Documentation for the named method.
+#
+# [Document-attr: +name+]
+#   Documentation for the named attribute.
 #
 # [call-seq:  <i>text up to an empty line</i>]
 #   Because C source doesn't give descripive names to Ruby-level parameters,
@@ -152,22 +165,16 @@ class RDoc::Parser::C < RDoc::Parser
                    \s*([01]),
                    \s*([01]),
                    \s*\w+\);/xm) do |var_name, attr_name, read, write|
-      class_name = @known_classes[var_name] || var_name
-      class_obj  = find_class var_name, class_name
+      handle_attr var_name, attr_name, read, write
+    end
 
-      rw = ''
-      rw << 'R' if '1' == read
-      rw << 'W' if '1' == write
-
-      comment = find_attr_comment var_name, attr_name, read, write
-      comment = strip_stars comment
-
-      name = attr_name.sub(/rb_intern\("([^"]+)"\)/, '\1')
-
-      attr = RDoc::Attr.new '', name, rw, comment
-
-      class_obj.add_attribute attr
-      @stats.add_method attr
+    @content.scan(%r%rb_define_attr\(
+                             \s*([\w\.]+),
+                             \s*"([^"]+)",
+                             \s*(\d+),
+                             \s*(\d+)\s*\);
+                %xm) do |var_name, attr_name, read, write|
+      handle_attr var_name, attr_name, read, write
     end
   end
 
@@ -222,7 +229,7 @@ class RDoc::Parser::C < RDoc::Parser
                    ( variable          |
                      readonly_variable |
                      const             |
-                     global_const      | )
+                     global_const        )
                \s*\(
                  (?:\s*(\w+),)?
                  \s*"(\w+)",
@@ -271,18 +278,6 @@ class RDoc::Parser::C < RDoc::Parser
       var_name = "rb_cObject" if var_name == "rb_mKernel"
       handle_method(type, var_name, meth_name, meth_body, param_count,
                     source_file)
-    end
-
-    @content.scan(%r%rb_define_attr\(
-                             \s*([\w\.]+),
-                             \s*"([^"]+)",
-                             \s*(\d+),
-                             \s*(\d+)\s*\);
-                %xm) do |var_name, attr_name, attr_reader, attr_writer|
-      #var_name = "rb_cObject" if var_name == "rb_mKernel"
-      handle_attr(var_name, attr_name,
-                  attr_reader.to_i != 0,
-                  attr_writer.to_i != 0)
     end
 
     @content.scan(%r%rb_define_global_function\s*\(
@@ -578,24 +573,28 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  def handle_attr(var_name, attr_name, reader, writer)
+  def handle_attr(var_name, attr_name, read, write)
     rw = ''
-    rw << 'R' if reader
-    rw << 'W' if writer
+    rw << 'R' if '1' == read
+    rw << 'W' if '1' == write
 
     class_name = @known_classes[var_name]
 
     return unless class_name
 
-    class_obj = find_class(var_name, class_name)
+    class_obj = find_class var_name, class_name
 
-    if class_obj then
-      comment = find_attr_comment var_name, attr_name
-      comment = strip_stars comment
-      att = RDoc::Attr.new '', attr_name, rw, comment
-      @stats.add_method att
-      class_obj.add_attribute(att)
-    end
+    return unless class_obj
+
+    comment = find_attr_comment var_name, attr_name
+    comment = strip_stars comment
+
+    name = attr_name.gsub(/rb_intern\("([^"]+)"\)/, '\1')
+
+    attr = RDoc::Attr.new '', name, rw, comment
+
+    class_obj.add_attribute attr
+    @stats.add_method attr
   end
 
   def handle_class_module(var_name, type, class_name, parent, in_module)
