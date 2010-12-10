@@ -25,8 +25,9 @@ $DEBUG_RDOC = nil
 # * If you want to drive RDoc programmatically, see RDoc::RDoc.
 # * If you want to use the library to format text blocks into HTML, look at
 #   RDoc::Markup.
-# * If you want to try writing your own HTML output template, see
-#   RDoc::Generator::Darkfish.
+# * If you want to make an RDoc plugin such as a generator or directive
+#   handler see RDoc::RDoc.
+# * If you want to try writing your own output generator see RDoc::Generator.
 #
 # == Summary
 #

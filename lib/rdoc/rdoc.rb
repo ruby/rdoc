@@ -25,6 +25,27 @@ require 'time'
 #
 # Where +args+ is an array of strings, each corresponding to an argument you'd
 # give rdoc on the command line.  See <tt>rdoc --help<tt> for details.
+#
+# = Plugins
+#
+# When you <tt>require 'rdoc/rdoc'</tt> RDoc looks for 'rdoc/discover' files
+# in your installed gems.  This can be used to load alternate generators or
+# add additional preprocessor directives.
+#
+# You will want to wrap your plugin loading in an RDoc version check.
+# Something like:
+#
+#   begin
+#     gem 'rdoc', '~> 3'
+#     require 'path/to/my/awesome/rdoc/plugin'
+#   rescue Gem::LoadError
+#   end
+#
+# The most obvious plugin type is a new output generator.  See RDoc::Generator
+# for details.
+#
+# You can also hook into RDoc::Markup to add new directives (:nodoc: is a
+# directive).  See RDoc::Markup::PreProcess::register for details.
 
 class RDoc::RDoc
 
