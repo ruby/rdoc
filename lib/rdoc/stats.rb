@@ -83,8 +83,11 @@ class RDoc::Stats
     @display.begin_adding
   end
 
-  def doc_stats collection  # :nodoc:
-    [collection.length, collection.select { |e| !e.documented? }.length]
+  ##
+  # Returns the length and number of undocumented items in +collection+.
+
+  def doc_stats collection
+    [collection.length, collection.count { |item| not item.documented? }]
   end
 
   ##
