@@ -99,6 +99,11 @@ class RDoc::Options
   attr_accessor :main_page
 
   ##
+  # If true, only report on undocumented files
+
+  attr_accessor :only_undocumented
+
+  ##
   # The name of the output directory
 
   attr_accessor :op_dir
@@ -173,6 +178,7 @@ class RDoc::Options
     @hyperlink_all = false
     @line_numbers = false
     @main_page = nil
+    @only_undocumented = false
     @op_dir = nil
     @pipe = false
     @rdoc_include = []
@@ -412,6 +418,16 @@ Usage: #{opt.program_name} [options] [names...]
              "be searched when satisfying :include:",
              "requests. Can be used more than once.") do |value|
         @rdoc_include.concat value.map { |dir| dir.strip }
+      end
+
+      opt.separator nil
+
+      opt.on("--[no-]only-undocumented", "-u",
+             "Prints a report on undocumented items.",
+             "Does not generate files.",
+             "THIS FEATURE IS EXPERIMENTAL") do |value|
+        @only_undocumented = value
+        @force_update = true if value
       end
 
       opt.separator nil

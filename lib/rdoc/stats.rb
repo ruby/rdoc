@@ -98,9 +98,11 @@ class RDoc::Stats
   end
 
   ##
-  # Returns a summary of the collected statistics.
+  # Calculates documentation totals and percentages
 
-  def summary
+  def calculate
+    return if @percent_doc
+
     ucm = RDoc::TopLevel.unique_classes_and_modules
     constants = []
     ucm.each { |cm| constants.concat cm.constants }
@@ -108,24 +110,99 @@ class RDoc::Stats
     methods = []
     ucm.each { |cm| methods.concat cm.method_list }
 
-    num_classes,   undoc_classes   = doc_stats RDoc::TopLevel.unique_classes
-    num_modules,   undoc_modules   = doc_stats RDoc::TopLevel.unique_modules
-    num_constants, undoc_constants = doc_stats constants
-    num_methods,   undoc_methods   = doc_stats methods
+    @num_classes,   @undoc_classes   = doc_stats RDoc::TopLevel.unique_classes
+    @num_modules,   @undoc_modules   = doc_stats RDoc::TopLevel.unique_modules
+    @num_constants, @undoc_constants = doc_stats constants
+    @num_methods,   @undoc_methods   = doc_stats methods
 
-    items = num_classes + num_modules + num_constants + num_methods
-    doc_items = items - undoc_classes - undoc_modules - undoc_constants -
-                undoc_methods
-    percent_doc = doc_items.to_f / items * 100
+    @num_items = @num_classes + @num_modules + @num_constants + @num_methods
+    @doc_items = @num_items - @undoc_classes - @undoc_modules -
+                 @undoc_constants - @undoc_methods
+
+    @percent_doc = @doc_items.to_f / @num_items * 100
+  end
+
+  ##
+  # Returns a report on which items are not documented
+
+  def report
+    report = []
+
+    calculate
+
+    if @num_items == @doc_items then
+      report << '100% documentation!'
+      report << nil
+      report << 'Great Job!'
+
+      return report.join "\n"
+    end
+
+    report << 'The following items are not documented:'
+    report << nil
+
+    ucm = RDoc::TopLevel.unique_classes_and_modules
+
+    ucm.each do |cm|
+      report << "# in files:"
+      cm.in_files.each do |file|
+        report << "#   #{file.full_name}"
+      end
+
+      report << nil
+
+      report << case cm
+                when RDoc::NormalClass then
+                  "class #{cm.full_name}"
+                when RDoc::SingleClass then
+                  "class << #{cm.full_name}"
+                when RDoc::NormalModule then
+                  "module #{cm.full_name}"
+                end
+
+      unless cm.constants.empty? then
+        report << nil
+
+        cm.each_constant do |constant|
+          report << "  # in file #{constant.file.full_name}"
+          report << "  #{constant.name} = nil"
+        end
+      end
+
+      unless cm.method_list.empty? then
+        report << nil
+
+        cm.each_method do |method|
+          report << "  # in file #{method.file.full_name}"
+          report << "  def #{method.name}(*); end"
+          report << nil
+        end
+      end
+
+      report << '  end'
+      report << nil
+    end
+
+    report.join "\n"
+  end
+
+  ##
+  # Returns a summary of the collected statistics.
+
+  def summary
+    calculate
 
     report = []
     report << 'Files:     %5d' % @num_files
-    report << 'Classes:   %5d (%5d undocumented)' % [num_classes, undoc_classes]
-    report << 'Modules:   %5d (%5d undocumented)' % [num_modules, undoc_modules]
-    report << 'Constants: %5d (%5d undocumented)' % [num_constants,
-                                                     undoc_constants]
-    report << 'Methods:   %5d (%5d undocumented)' % [num_methods, undoc_methods]
-    report << '%6.2f%% documented' % percent_doc unless percent_doc.nan?
+    report << 'Classes:   %5d (%5d undocumented)' % [@num_classes,
+                                                     @undoc_classes]
+    report << 'Modules:   %5d (%5d undocumented)' % [@num_modules,
+                                                     @undoc_modules]
+    report << 'Constants: %5d (%5d undocumented)' % [@num_constants,
+                                                     @undoc_constants]
+    report << 'Methods:   %5d (%5d undocumented)' % [@num_methods,
+                                                     @undoc_methods]
+    report << '%6.2f%% documented' % @percent_doc unless @percent_doc.nan?
     report << nil
     report << 'Elapsed: %0.1fs' % (Time.now - @start)
 

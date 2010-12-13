@@ -411,7 +411,10 @@ The internal error was:
 
     RDoc::TopLevel.complete @options.visibility
 
-    if file_info.empty?
+    if @options.only_undocumented then
+      puts
+      puts @stats.report
+    elsif file_info.empty?
       $stderr.puts "\nNo newer files." unless @options.quiet
     else
       gen_klass = @options.generator
