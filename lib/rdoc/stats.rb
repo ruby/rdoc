@@ -150,17 +150,16 @@ class RDoc::Stats
              when RDoc::NormalModule then 'module'
              end
 
-      # TODO RDoc::Context#empty?
-      if cm.in_files.empty? or
+      if cm.fully_documented? then
+        next
+      elsif cm.in_files.empty? or
          (cm.constants.empty? and cm.method_list.empty?) then
-        report << "# #{type} #{cm.full_name} is referenced but not defined."
+        report << "# #{type} #{cm.full_name} is referenced but empty."
         report << '#'
         report << '# It probably came from another project.  ' \
-                  'I\'m sorry I\'m holding it against you'
+                  'I\'m sorry I\'m holding it against you.'
         report << nil
 
-        next
-      elsif cm.fully_documented? then
         next
       elsif cm.documented? then
         report << "#{type} #{cm.full_name} # is documented"
