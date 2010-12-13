@@ -759,6 +759,20 @@ EOF
     assert_equal stream, foo.token_stream
   end
 
+  def test_parse_constant_attrasgn
+    util_top_level
+
+    klass = @top_level.add_class RDoc::NormalClass, 'Foo'
+
+    util_parser "A[k] = v"
+
+    tk = @parser.get_tk
+
+    @parser.parse_constant klass, tk, ''
+
+    assert klass.constants.empty?
+  end
+
   def test_parse_constant_alias
     util_top_level
     klass = @top_level.add_class RDoc::NormalClass, 'Foo'

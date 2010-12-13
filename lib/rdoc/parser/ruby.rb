@@ -621,6 +621,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def parse_constant(container, tk, comment)
     name = tk.name
     skip_tkspace false
+
+    return unless name =~ /^\w+$/
+
     eq_tk = get_tk
 
     unless TkASSIGN === eq_tk then
