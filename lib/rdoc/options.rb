@@ -424,8 +424,7 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.on("--[no-]only-undocumented", "-u",
              "Prints a report on undocumented items.",
-             "Does not generate files.",
-             "THIS FEATURE IS EXPERIMENTAL") do |value|
+             "Does not generate files.") do |value|
         @only_undocumented = value
         @force_update = true if value
       end
