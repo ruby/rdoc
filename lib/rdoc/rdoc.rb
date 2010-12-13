@@ -401,7 +401,9 @@ The internal error was:
 
     @exclude = @options.exclude
 
-    @last_modified = setup_output_dir @options.op_dir, @options.force_update
+    unless @options.only_undocumented then
+      @last_modified = setup_output_dir @options.op_dir, @options.force_update
+    end
 
     start_time = Time.now
 
