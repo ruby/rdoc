@@ -144,26 +144,43 @@ class RDoc::Stats
     ucm = RDoc::TopLevel.unique_classes_and_modules
 
     ucm.each do |cm|
-      report << "# in files:"
-      cm.in_files.each do |file|
-        report << "#   #{file.full_name}"
+      type = case cm
+             when RDoc::NormalClass  then 'class'
+             when RDoc::SingleClass  then 'class <<'
+             when RDoc::NormalModule then 'module'
+             end
+
+      # TODO RDoc::Context#empty?
+      if cm.in_files.empty? or
+         (cm.constants.empty? and cm.method_list.empty?) then
+        report << "# #{type} #{cm.full_name} is referenced but not defined."
+        report << '#'
+        report << '# It probably came from another project.  ' \
+                  'I\'m sorry I\'m holding it against you'
+        report << nil
+
+        next
+      elsif cm.fully_documented? then
+        next
+      elsif cm.documented? then
+        report << "#{type} #{cm.full_name} # is documented"
+      else
+        report << '# in files:'
+
+        cm.in_files.each do |file|
+          report << "#   #{file.full_name}"
+        end
+
+        report << nil
+
+        report << "#{type} #{cm.full_name}"
       end
-
-      report << nil
-
-      report << case cm
-                when RDoc::NormalClass then
-                  "class #{cm.full_name}"
-                when RDoc::SingleClass then
-                  "class << #{cm.full_name}"
-                when RDoc::NormalModule then
-                  "module #{cm.full_name}"
-                end
 
       unless cm.constants.empty? then
         report << nil
 
         cm.each_constant do |constant|
+          next if constant.documented?
           report << "  # in file #{constant.file.full_name}"
           report << "  #{constant.name} = nil"
         end
@@ -173,13 +190,14 @@ class RDoc::Stats
         report << nil
 
         cm.each_method do |method|
+          next if method.documented?
           report << "  # in file #{method.file.full_name}"
           report << "  def #{method.name}(*); end"
           report << nil
         end
       end
 
-      report << '  end'
+      report << 'end'
       report << nil
     end
 

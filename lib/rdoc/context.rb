@@ -837,6 +837,17 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
+  # Does this context and its methods and constants all have documentation?
+  #
+  # (Yes, fully documented doesn't mean everything.)
+
+  def fully_documented?
+    documented? and
+      method_list.all? { |m| m.documented? } and
+      constants.all? { |c| c.documented? }
+  end
+
+  ##
   # URL for this with a +prefix+
 
   def http_url(prefix)

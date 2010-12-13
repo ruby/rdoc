@@ -143,6 +143,8 @@ class RDoc::MethodAttr < RDoc::CodeObject
   end
 
   def find_method_or_attribute name # :nodoc:
+    return nil unless parent.respond_to? :ancestors
+
     searched = parent.ancestors
     kernel = RDoc::TopLevel.all_modules_hash['Kernel']
 
