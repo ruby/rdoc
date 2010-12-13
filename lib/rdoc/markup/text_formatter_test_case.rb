@@ -1,9 +1,8 @@
 require 'rdoc/markup/formatter_test_case'
 
 ##
-# Test case for creating new RDoc::Markup formatters.  See also
+# Test case for creating new plain-text RDoc::Markup formatters.  See also
 # RDoc::Markup::FormatterTestCase
-#
 #
 # See test_rdoc_markup_to_rdoc.rb for a complete example.
 #

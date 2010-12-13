@@ -27,6 +27,9 @@ class RDoc::Markup::Raw
     self.class == other.class and text == other.text
   end
 
+  ##
+  # Calls #accept_raw+ on +visitor+
+
   def accept visitor
     visitor.accept_raw self
   end

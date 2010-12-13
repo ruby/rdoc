@@ -3,6 +3,9 @@
 
 class RDoc::Markup::Verbatim < RDoc::Markup::Raw
 
+  ##
+  # Calls #accept_verbatim on +visitor+
+
   def accept visitor
     visitor.accept_verbatim self
   end

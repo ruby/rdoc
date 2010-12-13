@@ -79,12 +79,19 @@ class RDoc::Markup::AttributeManager
     RDoc::Markup::AttrChanger.new turn_on, turn_off
   end
 
-  def change_attribute(current, new)
+  ##
+  # Changes the current attribute from +current+ to +new+
+
+  def change_attribute current, new
     diff = current ^ new
     attribute(new & diff, current & diff)
   end
 
-  def changed_attribute_by_name(current_set, new_set)
+  ##
+  # Used by the tests to change attributes by name from +current_set+ to
+  # +new_set+
+
+  def changed_attribute_by_name current_set, new_set
     current = new = 0
     current_set.each do |name|
       current |= RDoc::Markup::Attribute.bitmap_for(name)
@@ -96,6 +103,9 @@ class RDoc::Markup::AttributeManager
 
     change_attribute(current, new)
   end
+
+  ##
+  # Copies +start_pos+ to +end_pos+ from the current string
 
   def copy_string(start_pos, end_pos)
     res = @str[start_pos...end_pos]
@@ -264,6 +274,9 @@ class RDoc::Markup::AttributeManager
       bit <<= 1
     end
   end
+
+  ##
+  # Splits the string into chunks by attribute change
 
   def split_into_flow
     res = []

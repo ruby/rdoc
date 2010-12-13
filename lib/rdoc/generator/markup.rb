@@ -58,17 +58,20 @@ end
 
 class RDoc::AnyMethod
 
+  ##
+  # Maps RDoc::RubyToken classes to CSS class names
+
   STYLE_MAP = {
-    RDoc::RubyToken::TkCONSTANT => "ruby-constant",
-    RDoc::RubyToken::TkKW       => "ruby-keyword",
-    RDoc::RubyToken::TkIVAR     => "ruby-ivar",
-    RDoc::RubyToken::TkOp       => "ruby-operator",
-    RDoc::RubyToken::TkId       => "ruby-identifier",
-    RDoc::RubyToken::TkNode     => "ruby-node",
-    RDoc::RubyToken::TkCOMMENT  => "ruby-comment",
-    RDoc::RubyToken::TkREGEXP   => "ruby-regexp",
-    RDoc::RubyToken::TkSTRING   => "ruby-string",
-    RDoc::RubyToken::TkVal      => "ruby-value",
+    RDoc::RubyToken::TkCONSTANT => 'ruby-constant',
+    RDoc::RubyToken::TkKW       => 'ruby-keyword',
+    RDoc::RubyToken::TkIVAR     => 'ruby-ivar',
+    RDoc::RubyToken::TkOp       => 'ruby-operator',
+    RDoc::RubyToken::TkId       => 'ruby-identifier',
+    RDoc::RubyToken::TkNode     => 'ruby-node',
+    RDoc::RubyToken::TkCOMMENT  => 'ruby-comment',
+    RDoc::RubyToken::TkREGEXP   => 'ruby-regexp',
+    RDoc::RubyToken::TkSTRING   => 'ruby-string',
+    RDoc::RubyToken::TkVal      => 'ruby-value',
   }
 
   include RDoc::Generator::Markup

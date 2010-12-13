@@ -6,6 +6,8 @@ require 'rdoc/markup/formatter'
 
 class RDoc::Markup::ToTest < RDoc::Markup::Formatter
 
+  # :stopdoc:
+
   ##
   # :section: Visitor
 
@@ -63,6 +65,8 @@ class RDoc::Markup::ToTest < RDoc::Markup::Formatter
   def accept_rule(rule)
     @res << '-' * rule.weight
   end
+
+  # :startdoc:
 
 end
 

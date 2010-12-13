@@ -143,7 +143,7 @@ class RDoc::Stats
 
     ucm = RDoc::TopLevel.unique_classes_and_modules
 
-    ucm.each do |cm|
+    ucm.sort.each do |cm|
       type = case cm
              when RDoc::NormalClass  then 'class'
              when RDoc::SingleClass  then 'class <<'

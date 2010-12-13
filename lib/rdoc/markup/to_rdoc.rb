@@ -14,6 +14,9 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   attr_reader :prefix
   attr_reader :res
 
+  ##
+  # Creates a new formatter that will output (mostly) \RDoc markup
+
   def initialize
     super
 

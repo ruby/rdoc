@@ -153,6 +153,12 @@ class RDoc::Parser
     RDoc::Parser.parsers.unshift [regexp, self]
   end
 
+  ##
+  # Creates a new Parser storing +top_level+, +file_name+, +content+, 
+  # +options+ and +stats+ in instance variables.
+  #
+  # Usually invoked by +super+
+
   def initialize(top_level, file_name, content, options, stats)
     @top_level = top_level
     @file_name = file_name

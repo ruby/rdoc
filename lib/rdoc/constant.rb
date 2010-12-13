@@ -42,6 +42,9 @@ class RDoc::Constant < RDoc::CodeObject
     [parent_name, name] <=> [other.parent_name, other.name]
   end
 
+  ##
+  # Constants are equal when their #parent and #name is the same
+
   def == other
     self.class == other.class and
       @parent == other.parent and

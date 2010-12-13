@@ -25,8 +25,12 @@ class RDoc::AnyMethod < RDoc::MethodAttr
 
   include RDoc::TokenStream
 
-  def initialize(text, name)
-    super text, name
+  ##
+  # Creates a new AnyMethod with a token stream +text+ and +name+
+
+  def initialize text, name
+    super
+
     @dont_rename_initialize = false
     @token_stream           = nil
   end

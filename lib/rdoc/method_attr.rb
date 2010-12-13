@@ -70,7 +70,13 @@ class RDoc::MethodAttr < RDoc::CodeObject
   attr_reader :param_seq
 
 
-  def initialize(text, name)
+  ##
+  # Creates a new MethodAttr from token stream +text+ and method or attribute
+  # name +name+.
+  #
+  # Usually this is called by super from a subclass.
+
+  def initialize text, name
     super()
 
     @text = text

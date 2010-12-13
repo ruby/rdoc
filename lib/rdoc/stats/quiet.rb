@@ -3,6 +3,9 @@
 
 class RDoc::Stats::Quiet
 
+  ##
+  # Creates a new Quiet that will print nothing
+
   def initialize num_files
     @num_files = num_files
   end

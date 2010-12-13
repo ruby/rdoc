@@ -49,6 +49,9 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     File.join(*from)
   end
 
+  ##
+  # Creates a new formatter that will output HTML
+
   def initialize
     super
 

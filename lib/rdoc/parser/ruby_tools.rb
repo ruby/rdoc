@@ -61,6 +61,10 @@ module RDoc::Parser::RubyTools
     tk
   end
 
+  ##
+  # Reads and returns all tokens up to one of +tokens+.  Leaves the matched
+  # token in the token list.
+
   def get_tk_until(*tokens)
     read = []
 

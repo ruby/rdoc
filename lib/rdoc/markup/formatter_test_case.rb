@@ -4,8 +4,42 @@ require 'rdoc/markup/formatter'
 ##
 # Test case for creating new RDoc::Markup formatters.  See
 # test/test_rdoc_markup_to_*.rb for examples.
+#
+# Example:
+#
+#  class TestRDocMarkupToNewFormat < RDoc::Markup::FormatterTestCase
+#
+#    add_visitor_tests
+#
+#    def setup
+#      super
+#
+#      @to = RDoc::Markup::ToNewFormat.new
+#    end
+#
+#    def accept_blank_line
+#      assert_equal :junk, @to.res.join
+#    end
+#
+#    # ...
+#
+#  end
 
 class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
+
+  ##
+  # Call #setup when inheriting from this test case.
+  #
+  # Provides the following instance variables:
+  #
+  # +@m+::           RDoc::Markup.new
+  # +@RM+::          RDoc::Markup # to reduce typing
+  # +@bullet_list+:: @RM::List.new :BULLET, # ...
+  # +@label_list+::  @RM::List.new :LABEL, # ...
+  # +@lalpha_list+:: @RM::List.new :LALPHA, # ...
+  # +@note_list+::   @RM::List.new :NOTE, # ...
+  # +@number_list+:: @RM::List.new :NUMBER, # ...
+  # +@ualpha_list+:: @RM::List.new :UALPHA, # ...
 
   def setup
     super
@@ -38,7 +72,11 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       @RM::ListItem.new(nil, @RM::Paragraph.new('l2')))
   end
 
+  ##
+  # Call to add the visitor tests to your test case
+
   def self.add_visitor_tests
+    # :stopdoc:
     self.class_eval do
       def test_start_accepting
         @to.start_accepting
@@ -487,6 +525,7 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
 
         list_verbatim
       end
+    # :stopdoc:
     end
   end
 
