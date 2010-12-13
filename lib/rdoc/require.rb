@@ -39,10 +39,12 @@ class RDoc::Require < RDoc::CodeObject
   def top_level
     @top_level ||= begin
       tl = RDoc::TopLevel.all_files_hash[name + '.rb']
-      if tl.nil? && RDoc::TopLevel.all_files.first.full_name =~ %r(^lib/)
+
+      if tl.nil? and RDoc::TopLevel.all_files.first.full_name =~ %r(^lib/) then
         # second chance
         tl = RDoc::TopLevel.all_files_hash['lib/' + name + '.rb']
       end
+
       tl
     end
   end
