@@ -1,14 +1,26 @@
 require 'rdoc'
 
 ##
-# RDoc stats collector
+# RDoc statistics collector which prints a summary and report of a project's
+# documentation totals.
 
 class RDoc::Stats
 
+  ##
+  # Count of files parsed during parsing
+
   attr_reader :files_so_far
+
+  ##
+  # Total number of files found
+
   attr_reader :num_files
 
-  def initialize(num_files, verbosity = 1)
+  ##
+  # Creates a new Stats that will have +num_files+.  +verbosity+ defaults to 1
+  # which will create an RDoc::Stats::Normal outputter.
+
+  def initialize num_files, verbosity = 1
     @files_so_far = 0
     @num_files = num_files
 
@@ -21,41 +33,69 @@ class RDoc::Stats
                end
   end
 
-  def begin_adding
-    @display.begin_adding
-  end
+  ##
+  # Records the parsing of an alias +as+.
 
-  def add_alias(as)
+  def add_alias as
     @display.print_alias as
   end
 
-  def add_class(klass)
+  ##
+  # Records the parsing of a class +klass+
+
+  def add_class klass
     @display.print_class klass
   end
 
-  def add_constant(constant)
+  ##
+  # Records the parsing of +constant+
+
+  def add_constant constant
     @display.print_constant constant
   end
+
+  ##
+  # Records the parsing of +file+
 
   def add_file(file)
     @files_so_far += 1
     @display.print_file @files_so_far, file
   end
 
+  ##
+  # Records the parsing of +method+
+
   def add_method(method)
     @display.print_method method
   end
 
+  ##
+  # Records the parsing of a module +mod+
+
   def add_module(mod)
     @display.print_module mod
   end
+
+  ##
+  # Call this to mark the beginning of parsing for display purposes
+
+  def begin_adding
+    @display.begin_adding
+  end
+
+  def doc_stats collection  # :nodoc:
+    [collection.length, collection.select { |e| !e.documented? }.length]
+  end
+
+  ##
+  # Call this to mark the end of parsing for display purposes
 
   def done_adding
     @display.done_adding
   end
 
   ##
-  # Prints a summary of the collected statistics.
+  # Returns a summary of the collected statistics.
 
   def summary
     ucm = RDoc::TopLevel.unique_classes_and_modules
@@ -87,10 +127,6 @@ class RDoc::Stats
     report << 'Elapsed: %0.1fs' % (Time.now - @start)
 
     report.join "\n"
-  end
-
-  def doc_stats collection  # :nodoc:
-    [collection.length, collection.select { |e| !e.documented? }.length]
   end
 
   autoload :Quiet,   'rdoc/stats/quiet'
