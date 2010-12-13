@@ -75,9 +75,6 @@ $DEBUG_RDOC = nil
 # * The Ruby parser in rdoc/parse.rb is based heavily on the outstanding
 #   work of Keiju ISHITSUKA of Nippon Rational Inc, who produced the Ruby
 #   parser for irb and the rtags package.
-# * Charset patch from MoonWolf.
-# * Rich Kilmer wrote the kilmer.rb output template.
-# * Dan Brickley led the design of the RDF format.
 
 module RDoc
 
