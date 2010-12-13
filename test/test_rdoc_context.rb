@@ -317,6 +317,36 @@ class TestRDocContext < XrefTestCase
     assert_equal @c1__m, @c1.find_symbol('::m')
   end
 
+  def test_fully_documented_eh
+    context = RDoc::Context.new
+
+    refute context.fully_documented?
+
+    context.comment = 'hi'
+
+    assert context.fully_documented?
+
+    m = @c1_m
+
+    context.add_method m
+
+    refute context.fully_documented?
+
+    m.comment = 'hi'
+
+    assert context.fully_documented?
+
+    c = RDoc::Constant.new 'C', '0', nil
+
+    context.add_constant c
+
+    refute context.fully_documented?
+
+    c.comment = 'hi'
+
+    assert context.fully_documented?
+  end
+
   def test_spaceship
     assert_equal(-1, @c2.<=>(@c3))
     assert_equal 0,  @c2.<=>(@c2)
