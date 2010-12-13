@@ -11,18 +11,19 @@ class RDoc::Stats::Normal < RDoc::Stats::Quiet
   ##
   # Prints a file with a progress bar
 
-  def print_file(files_so_far, filename)
+  def print_file files_so_far, filename
     progress_bar = sprintf("%3d%% [%2d/%2d]  ",
                            100 * files_so_far / @num_files,
                            files_so_far,
                            @num_files)
 
-    if $stdout.tty?
+    if $stdout.tty? then
       # Print a progress bar, but make sure it fits on a single line. Filename
       # will be truncated if necessary.
       terminal_width = (ENV['COLUMNS'] || 80).to_i
       max_filename_size = terminal_width - progress_bar.size
-      if filename.size > max_filename_size
+
+      if filename.size > max_filename_size then
         # Turn "some_long_filename.rb" to "...ong_filename.rb"
         filename = filename[(filename.size - max_filename_size) .. -1]
         filename[0..2] = "..."
@@ -38,6 +39,7 @@ class RDoc::Stats::Normal < RDoc::Stats::Quiet
     else
       $stdout.puts "#{progress_bar} #{filename}"
     end
+
     $stdout.flush
   end
 
