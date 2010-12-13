@@ -57,32 +57,39 @@ class RDoc::Stats
   ##
   # Prints a summary of the collected statistics.
 
-  def print
+  def summary
     ucm = RDoc::TopLevel.unique_classes_and_modules
-    constants = ucm.inject([]) { |array, cm| array.concat cm.constants }
-    methods = ucm.inject([]) { |array, cm| array.concat cm.method_list }
+    constants = []
+    ucm.each { |cm| constants.concat cm.constants }
 
-    num_classes, undoc_classes = doc_stats(RDoc::TopLevel.unique_classes)
-    num_modules, undoc_modules = doc_stats(RDoc::TopLevel.unique_modules)
-    num_constants, undoc_constants = doc_stats(constants)
-    num_methods, undoc_methods = doc_stats(methods)
+    methods = []
+    ucm.each { |cm| methods.concat cm.method_list }
+
+    num_classes,   undoc_classes   = doc_stats RDoc::TopLevel.unique_classes
+    num_modules,   undoc_modules   = doc_stats RDoc::TopLevel.unique_modules
+    num_constants, undoc_constants = doc_stats constants
+    num_methods,   undoc_methods   = doc_stats methods
 
     items = num_classes + num_modules + num_constants + num_methods
     doc_items = items - undoc_classes - undoc_modules - undoc_constants -
                 undoc_methods
     percent_doc = doc_items.to_f / items * 100
 
-    puts "Files:     %5d" % @num_files
-    puts "Classes:   %5d (%5d undocumented)" % [num_classes, undoc_classes]
-    puts "Modules:   %5d (%5d undocumented)" % [num_modules, undoc_modules]
-    puts "Constants: %5d (%5d undocumented)" % [num_constants, undoc_constants]
-    puts "Methods:   %5d (%5d undocumented)" % [num_methods, undoc_methods]
-    puts "%6.2f%% documented" % percent_doc unless percent_doc.nan?
-    puts
-    puts "Elapsed: %0.1fs" % (Time.now - @start)
+    report = []
+    report << 'Files:     %5d' % @num_files
+    report << 'Classes:   %5d (%5d undocumented)' % [num_classes, undoc_classes]
+    report << 'Modules:   %5d (%5d undocumented)' % [num_modules, undoc_modules]
+    report << 'Constants: %5d (%5d undocumented)' % [num_constants,
+                                                     undoc_constants]
+    report << 'Methods:   %5d (%5d undocumented)' % [num_methods, undoc_methods]
+    report << '%6.2f%% documented' % percent_doc unless percent_doc.nan?
+    report << nil
+    report << 'Elapsed: %0.1fs' % (Time.now - @start)
+
+    report.join "\n"
   end
 
-  def doc_stats(collection) # :nodoc:
+  def doc_stats collection  # :nodoc:
     [collection.length, collection.select { |e| !e.documented? }.length]
   end
 

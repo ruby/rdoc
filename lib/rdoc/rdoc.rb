@@ -436,7 +436,7 @@ The internal error was:
 
     unless @options.quiet or not @stats then
       puts
-      @stats.print
+      puts @stats.summary
     end
   end
 
