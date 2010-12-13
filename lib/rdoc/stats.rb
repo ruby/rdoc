@@ -153,7 +153,7 @@ class RDoc::Stats
       if cm.fully_documented? then
         next
       elsif cm.in_files.empty? or
-         (cm.constants.empty? and cm.method_list.empty?) then
+            (cm.constants.empty? and cm.method_list.empty?) then
         report << "# #{type} #{cm.full_name} is referenced but empty."
         report << '#'
         report << '# It probably came from another project.  ' \
