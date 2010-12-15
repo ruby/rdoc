@@ -97,5 +97,23 @@ class TestRDocGeneratorDarkfish < MiniTest::Unit::TestCase
     refute_file 'file_rb.html'
   end
 
+  def test_template_for
+    classpage = Pathname.new @options.template_dir + '/classpage.rhtml'
+
+    template = @g.send(:template_for, classpage)
+    assert_kind_of RDoc::ERBIO, template
+
+    assert_same template, @g.send(:template_for, classpage)
+  end
+
+  def test_template_for_dry_run
+    classpage = Pathname.new @options.template_dir + '/classpage.rhtml'
+
+    template = @g.send(:template_for, classpage)
+    assert_kind_of ERB, template
+
+    assert_same template, @g.send(:template_for, classpage)
+  end
+
 end
 
