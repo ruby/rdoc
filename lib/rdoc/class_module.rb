@@ -59,15 +59,16 @@ class RDoc::ClassModule < RDoc::Context
 
     # update the parent of all children
 
-    (klass.attributes
-    klass.method_list +
-    klass.aliases +
-    klass.external_aliases +
-    klass.constants +
-    klass.includes +
-    klass.classes +
-    klass.modules).each do |obj|
+    (klass.attributes +
+     klass.method_list +
+     klass.aliases +
+     klass.external_aliases +
+     klass.constants +
+     klass.includes +
+     klass.classes +
+     klass.modules).each do |obj|
       obj.parent = klass
+      obj.full_name = nil
     end
 
     klass
@@ -81,7 +82,6 @@ class RDoc::ClassModule < RDoc::Context
   def initialize(name, superclass = nil)
     @constant_aliases = []
     @diagram          = nil
-    @full_name        = nil
     @is_alias_for     = nil
     @name             = name
     @superclass       = superclass
@@ -171,15 +171,6 @@ class RDoc::ClassModule < RDoc::Context
                    else
                      @name
                    end
-  end
-
-  ##
-  # Sets the full_name overriding any computed full name.
-  #
-  # Used for modules and classes that are constant aliases.
-
-  def full_name= full_name
-    @full_name = full_name
   end
 
   def marshal_dump # :nodoc:

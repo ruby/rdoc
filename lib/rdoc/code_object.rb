@@ -91,10 +91,11 @@ class RDoc::CodeObject
   # Creates a new CodeObject that will document itself and its children
 
   def initialize
-    @metadata = {}
-    @comment = ''
-    @parent = nil
-    @file = nil
+    @metadata  = {}
+    @comment   = ''
+    @parent    = nil
+    @file      = nil
+    @full_name = nil
 
     @document_children   = true
     @document_self       = true
@@ -169,6 +170,15 @@ class RDoc::CodeObject
 
   def force_documentation=(value)
     @force_documentation = value unless @done_documenting
+  end
+
+  ##
+  # Sets the full_name overriding any computed full name.
+  #
+  # Set to +nil+ to clear RDoc's cached value
+
+  def full_name= full_name
+    @full_name = full_name
   end
 
   ##

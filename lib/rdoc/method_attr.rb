@@ -92,7 +92,6 @@ class RDoc::MethodAttr < RDoc::CodeObject
     @arglists     = nil
     @block_params = nil
     @call_seq     = nil
-    @full_name    = nil
     @param_seq    = nil
     @params       = nil
   end

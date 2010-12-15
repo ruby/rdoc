@@ -54,7 +54,7 @@ method(a, b) { |c, d| ... }
     ]
 
     @c2_a.collect_tokens
-    @c2_a.add_tokens *tokens
+    @c2_a.add_tokens(*tokens)
 
     expected = [
       '<span class="ruby-constant">CONSTANT</span>',

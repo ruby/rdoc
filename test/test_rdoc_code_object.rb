@@ -91,6 +91,16 @@ class TestRDocCodeObject < XrefTestCase
     assert @co.document_children
   end
 
+  def test_full_name_equals
+    @co.full_name = 'hi'
+
+    assert_equal 'hi', @co.instance_variable_get(:@full_name)
+
+    @co.full_name = nil
+
+    assert_nil @co.instance_variable_get(:@full_name)
+  end
+
   def test_metadata
     assert_empty @co.metadata
 

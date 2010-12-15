@@ -823,6 +823,12 @@ class RDoc::RubyLex
     end
   end
 
+  IDENT_RE = if defined? Encoding then
+               /[\w\u0080-\uFFFF]/u
+             else
+               /[\w\x80-\xFF]/
+             end
+
   def identify_identifier
     token = ""
     if peek(0) =~ /[$@]/
@@ -832,7 +838,7 @@ class RDoc::RubyLex
       end
     end
 
-    while (ch = getc) =~ /[\w\u0080-\uFFFF]/u do
+    while (ch = getc) =~ IDENT_RE do
       print " :#{ch}: " if RDoc::RubyLex.debug?
       token.concat ch
     end

@@ -416,14 +416,17 @@ class RDoc::Context < RDoc::CodeObject
   # to +self+, and its #section to #current_section. Returns +mod+.
 
   def add_class_or_module mod, self_hash, all_hash
-    mod.section = @current_section    # TODO declaring context? something is wrong here...
+    mod.section = @current_section # TODO declaring context? something is
+                                   # wrong here...
     mod.parent = self
+
     unless @done_documenting then
       self_hash[mod.name] = mod
-      # this must be done AFTER adding mod to its parent,
-      # so that the full name is correct:
+      # this must be done AFTER adding mod to its parent, so that the full
+      # name is correct:
       all_hash[mod.full_name] = mod
     end
+
     mod
   end
 
@@ -484,8 +487,10 @@ class RDoc::Context < RDoc::CodeObject
   def add_module(class_type, name)
     mod = @classes[name] || @modules[name]
     return mod if mod
-    full_name = child_name(name)
+
+    full_name = child_name name
     mod = RDoc::TopLevel.modules_hash[full_name] || class_type.new(name)
+
     add_class_or_module(mod, @modules, RDoc::TopLevel.modules_hash)
   end
 
@@ -1011,7 +1016,8 @@ class RDoc::Context < RDoc::CodeObject
   ##
   # Return the TopLevel that owns us
   #--
-  # FIXME we can be 'owned' by several TopLevel (see #record_location & #in_files)
+  # FIXME we can be 'owned' by several TopLevel (see #record_location &
+  # #in_files)
 
   def top_level
     return @top_level if defined? @top_level
@@ -1029,8 +1035,8 @@ class RDoc::Context < RDoc::CodeObject
     klass = RDoc::ClassModule.from_module class_type, mod
 
     # if it was there, then we keep it even if done_documenting
-    RDoc::TopLevel.classes_hash[full_name] = klass
-    enclosing.classes_hash[name] = klass
+    RDoc::TopLevel.classes_hash[mod.full_name] = klass
+    enclosing.classes_hash[mod.name]           = klass
 
     klass
   end
