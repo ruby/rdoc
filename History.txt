@@ -7,7 +7,7 @@ Special thanks to Thierry Lambert for massive improvements to RDoc.
   * RDoc now converts input files to a single encoding specified by
     <tt>--encoding</tt>.  See RDoc::RDoc and RDoc::Options#encoding.
     <tt>--encoding</tt> is now preferred over <tt>--charset</tt>
-  * RDoc now supports a <tt>--only-undocumented</tt> flag (also <tt>-u</tt>)
+  * RDoc now supports a <tt>--coverage-report</tt> flag (also <tt>-C</tt>)
     that outputs a report on items lacking documentation.
   * Templates (<tt>rdoc -T</tt>) are now checked for existence in
     RDoc::Options.  Generator authors can now use RDoc::Options#template_dir

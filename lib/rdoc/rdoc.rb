@@ -405,7 +405,7 @@ The internal error was:
 
     @exclude = @options.exclude
 
-    unless @options.only_undocumented then
+    unless @options.coverage_report then
       @last_modified = setup_output_dir @options.op_dir, @options.force_update
     end
 
@@ -417,7 +417,7 @@ The internal error was:
 
     RDoc::TopLevel.complete @options.visibility
 
-    if @options.only_undocumented then
+    if @options.coverage_report then
       puts
       puts @stats.report
     elsif file_info.empty?
@@ -448,7 +448,7 @@ The internal error was:
       puts @stats.summary
     end
 
-    exit @stats.fully_documented? if @options.only_undocumented
+    exit @stats.fully_documented? if @options.coverage_report
   end
 
   ##

@@ -101,7 +101,7 @@ class RDoc::Options
   ##
   # If true, only report on undocumented files
 
-  attr_accessor :only_undocumented
+  attr_accessor :coverage_report
 
   ##
   # The name of the output directory
@@ -178,7 +178,7 @@ class RDoc::Options
     @hyperlink_all = false
     @line_numbers = false
     @main_page = nil
-    @only_undocumented = false
+    @coverage_report = false
     @op_dir = nil
     @pipe = false
     @rdoc_include = []
@@ -422,10 +422,10 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--[no-]only-undocumented", "-u",
+      opt.on("--[no-]coverage-report", "--[no-]dcov", "-C",
              "Prints a report on undocumented items.",
              "Does not generate files.") do |value|
-        @only_undocumented = value
+        @coverage_report = value
         @force_update = true if value
       end
 
