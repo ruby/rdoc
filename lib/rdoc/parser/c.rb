@@ -497,41 +497,36 @@ class RDoc::Parser::C < RDoc::Parser
   end
 
   ##
-  # If the comment block contains a section that looks like:
+  # Handles modifiers in +comment+ and updates +meth_obj+ as appropriate.
   #
-  #    call-seq:
-  #        Array.new
-  #        Array.new(10)
+  # If <tt>:nodoc:</tt> is found, documentation on +meth_obj+ is suppressed.
   #
-  # use it for the parameters.
+  # If <tt>:yields:</tt> is followed by an argument list it is used for the
+  # #block_params of +meth_obj+.
+  #
+  # If the comment block contains a <tt>call-seq:</tt> section like:
+  #
+  #   call-seq:
+  #      ARGF.readlines(sep=$/)     -> array
+  #      ARGF.readlines(limit)      -> array
+  #      ARGF.readlines(sep, limit) -> array
+  #   
+  #      ARGF.to_a(sep=$/)     -> array
+  #      ARGF.to_a(limit)      -> array
+  #      ARGF.to_a(sep, limit) -> array
+  #
+  # it is used for the parameters of +meth_obj+.
 
-  def find_modifiers(comment, meth_obj)
+  def find_modifiers comment, meth_obj
     if comment.sub!(/:nodoc:\s*^\s*\*?\s*$/m, '') or
        comment.sub!(/\A\/\*\s*:nodoc:\s*\*\/\Z/, '') then
       meth_obj.document_self = nil # notify nodoc
     end
 
-    # we must handle situations like this:
-    #   /*
-    #    *  call-seq:
-    #    *     ARGF.readlines(sep=$/)     -> array
-    #    *     ARGF.readlines(limit)      -> array
-    #    *     ARGF.readlines(sep, limit) -> array
-    #    *
-    #    *     ARGF.to_a(sep=$/)     -> array
-    #    *     ARGF.to_a(limit)      -> array
-    #    *     ARGF.to_a(sep, limit) -> array
-    #    *
-    #    *  Reads +ARGF+'s current file in its entirety, returning an +Array+
-    #    *  of its lines, one line per element. Lines are assumed to be
-    #    *  separated by _sep_.
-    #    *
-    #    *     lines = ARGF.readlines
-    #    *     lines[0]                #=> "This is line one\n"
-    #    */
-    #
-    # the difficulty is to make sure not to match lines starting with ARGF at
-    # the same indent, but that are after the first description paragraph.
+    # we must handle situations like the above followed by an unindented first
+    # comment.  The difficulty is to make sure not to match lines starting
+    # with ARGF at the same indent, but that are after the first description
+    # paragraph.
 
     if comment =~ /call-seq:(.*?[^\s\*].*?)^\s*\*?\s*$/m then
       all_start, all_stop = $~.offset(0)
@@ -560,6 +555,10 @@ class RDoc::Parser::C < RDoc::Parser
       meth_obj.call_seq = seq
     elsif comment.sub!(/\A\/\*\s*call-seq:(.*?)\*\/\Z/, '') then
       meth_obj.call_seq = $1.strip
+    end
+
+    if comment.sub!(/\s*:?yields?:\s*(.*)/i, '') then
+      meth_obj.block_params = $1.strip
     end
   end
 

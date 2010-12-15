@@ -600,7 +600,7 @@ Init_Foo(void) {
     assert_equal "a comment for bar", bar.comment
   end
 
-  def test_find_modifiers
+  def test_find_modifiers_call_seq
     comment = <<-COMMENT
 /* call-seq:
  *   commercial() -> Date <br />
@@ -631,6 +631,50 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
     CALL_SEQ
 
     assert_equal expected, method_obj.call_seq
+  end
+
+  def test_find_modifiers_nodoc
+    comment = <<-COMMENT
+/* :nodoc:
+ *
+ * Blah
+ */
+
+    COMMENT
+
+    parser = util_parser ''
+    method_obj = RDoc::AnyMethod.new nil, 'blah'
+
+    parser.find_modifiers comment, method_obj
+
+    assert_equal nil, method_obj.document_self
+  end
+
+  def test_find_modifiers_yields
+    comment = <<-COMMENT
+/* :yields: a, b
+ *
+ * Blah
+ */
+
+    COMMENT
+
+    parser = util_parser ''
+    method_obj = RDoc::AnyMethod.new nil, 'blah'
+
+    parser.find_modifiers comment, method_obj
+
+    assert_equal 'a, b', method_obj.block_params
+
+    expected = <<-EXPECTED
+/*
+ *
+ * Blah
+ */
+
+    EXPECTED
+
+    assert_equal expected, comment
   end
 
   def test_handle_method
