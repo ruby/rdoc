@@ -101,6 +101,10 @@ class RDoc::RDoc
     @current = rdoc
   end
 
+  ##
+  # Creates a new RDoc::RDoc instance.  Call #document to parse files and
+  # generate documentation.
+
   def initialize
     @current       = nil
     @exclude       = nil

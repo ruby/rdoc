@@ -6,7 +6,7 @@ require 'erb'
 #
 # To use:
 #
-#   erbio = RDoc::ERBIO.new '<%= "hello world" %>', nil, nil, 'io'
+#   erbio = RDoc::ERBIO.new '<%= "hello world" %>', nil, nil
 #
 #   open 'hello.txt', 'w' do |io|
 #     erbio.result binding
@@ -15,6 +15,9 @@ require 'erb'
 # Note that binding must enclose the io you wish to output on.
 
 class RDoc::ERBIO < ERB
+
+  ##
+  # Defaults +eoutvar+ to 'io', otherwise is identical to ERB's initialize
 
   def initialize str, safe_level = nil, trim_mode = nil, eoutvar = 'io'
     super

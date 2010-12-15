@@ -124,7 +124,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   ##
   # Here's a hypedlink where the label is different to the URL
-  #  <label>[url] or {long label}[url]
+  # <label>[url] or {long label}[url]
 
   def handle_special_TIDYLINK(special)
     text = special.text
@@ -139,7 +139,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # :section: Utilities
 
   ##
-  # This is a higher speed (if messier) version of wrap
+  # Wraps +txt+ to +line_len+
 
   def wrap(txt, line_len = 76)
     res = []
@@ -172,15 +172,24 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   # :section: Visitor
 
+  ##
+  # Prepares the visitor for HTML generation
+
   def start_accepting
     @res = []
     @in_list_entry = []
     @list = []
   end
 
+  ##
+  # Returns the generated output
+
   def end_accepting
     @res.join
   end
+
+  ##
+  # Adds +paragraph+ to the output
 
   def accept_paragraph(paragraph)
     @res << "\n<p>"
@@ -188,11 +197,17 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << "</p>\n"
   end
 
+  ##
+  # Adds +verbatim+ to the output
+
   def accept_verbatim(verbatim)
     @res << "\n<pre>"
     @res << CGI.escapeHTML(verbatim.text.rstrip)
     @res << "</pre>\n"
   end
+
+  ##
+  # Adds +rule+ to the output
 
   def accept_rule(rule)
     size = rule.weight
@@ -200,11 +215,17 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << "<hr style=\"height: #{size}px\">\n"
   end
 
+  ##
+  # Prepares the visitor for consuming +list+
+
   def accept_list_start(list)
     @list << list.type
     @res << html_list_name(list.type, true)
     @in_list_entry.push false
   end
+
+  ##
+  # Finishes consumption of +list+
 
   def accept_list_end(list)
     @list.pop
@@ -214,6 +235,9 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << html_list_name(list.type, false) << "\n"
   end
 
+  ##
+  # Prepares the visitor for consuming +list_item+
+
   def accept_list_item_start(list_item)
     if tag = @in_list_entry.last
       @res << tag
@@ -222,19 +246,31 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << list_item_start(list_item, @list.last)
   end
 
+  ##
+  # Finishes consumption of +list_item+
+
   def accept_list_item_end(list_item)
     @in_list_entry[-1] = list_end_for(@list.last)
   end
 
+  ##
+  # Adds +blank_line+ to the output
+
   def accept_blank_line(blank_line)
     # @res << annotate("<p />") << "\n"
   end
+
+  ##
+  # Adds +heading+ to the output
 
   def accept_heading(heading)
     @res << "\n<h#{heading.level}>"
     @res << to_html(heading.text)
     @res << "</h#{heading.level}>\n"
   end
+
+  ##
+  # Adds +raw+ to the output
 
   def accept_raw raw
     @res << raw.parts.join("\n")
@@ -243,14 +279,14 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   private
 
   ##
-  # Converts string +item+
+  # CGI escapes +text+
 
-  def convert_string(item)
+  def convert_string(text)
     CGI.escapeHTML item
   end
 
   ##
-  # Determins the HTML list element for +list_type+ and +open_tag+
+  # Determines the HTML list element for +list_type+ and +open_tag+
 
   def html_list_name(list_type, open_tag)
     tags = LIST_TYPE_TO_HTML[list_type]
@@ -259,23 +295,24 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   end
 
   ##
-  # Starts a list item
+  # Returns the HTML tag for +list_type+, possible using a label from
+  # +list_item+
 
   def list_item_start(list_item, list_type)
     case list_type
     when :BULLET, :LALPHA, :NUMBER, :UALPHA then
       "<li>"
     when :LABEL then
-      "<dt>" << to_html(list_item.label) << "</dt>\n<dd>"
+      "<dt>#{to_html list_item.label}</dt>\n<dd>"
     when :NOTE then
-        '<tr><td class="rdoc-term"><p>' + to_html(list_item.label) + "</p></td>\n<td>"
+      "<tr><td class=\"rdoc-term\"><p>#{to_html list_item.label}</p></td>\n<td>"
     else
       raise RDoc::Error, "Invalid list type: #{list_type.inspect}"
     end
   end
 
   ##
-  # Ends a list item
+  # Returns the HTML end-tag for +list_type+
 
   def list_end_for(list_type)
     case list_type
@@ -292,7 +329,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   ##
   # Converts ampersand, dashes, ellipsis, quotes, copyright and registered
-  # trademark symbols to HTML escaped Unicode.
+  # trademark symbols in +text+ to HTML escaped Unicode.
   #--
   # TODO transcode when the output encoding is not UTF-8
 
