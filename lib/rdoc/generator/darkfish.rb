@@ -53,32 +53,15 @@ class RDoc::Generator::Darkfish
 
   include ERB::Util
 
-  ##
-  # Subversion rev
-
-  SVNRev = %$Rev: 52 $
-
-  ##
-  # Subversion ID
-
-  SVNId = %$Id: darkfish.rb 52 2009-01-07 02:08:11Z deveiant $
-
   # Path to this file's parent directory. Used to find templates and other
   # resources.
 
   GENERATOR_DIR = File.join 'rdoc', 'generator'
 
+  ##
   # Release Version
 
-  VERSION = '1.1.6'
-
-  # Directory where generated classes live relative to the root
-
-  CLASS_DIR = nil
-
-  # Directory where generated files live relative to the root
-
-  FILE_DIR = nil
+  VERSION = '2'
 
   # Standard generator factory method
 
@@ -114,12 +97,20 @@ class RDoc::Generator::Darkfish
     $stderr.puts(*msg)
   end
 
+  ##
+  # Directory where generated class HTML files live relative to the output
+  # dir.
+
   def class_dir
-    CLASS_DIR
+    nil
   end
 
+  ##
+  # Directory where generated class HTML files live relative to the output
+  # dir.
+
   def file_dir
-    FILE_DIR
+    nil
   end
 
   ##
