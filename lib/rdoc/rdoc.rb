@@ -447,6 +447,8 @@ The internal error was:
       puts
       puts @stats.summary
     end
+
+    exit @stats.fully_documented? if @options.only_undocumented
   end
 
   ##

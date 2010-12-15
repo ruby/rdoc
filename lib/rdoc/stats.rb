@@ -23,6 +23,7 @@ class RDoc::Stats
   def initialize num_files, verbosity = 1
     @files_so_far = 0
     @num_files = num_files
+    @fully_documented = nil
 
     @start = Time.now
 
@@ -119,7 +120,19 @@ class RDoc::Stats
     @doc_items = @num_items - @undoc_classes - @undoc_modules -
                  @undoc_constants - @undoc_methods
 
+    @fully_documented = (@num_items - @doc_items) == 0
+
     @percent_doc = @doc_items.to_f / @num_items * 100
+  end
+
+  ##
+  # The documentation status of this project.  +true+ when 100%, +false+ when
+  # less than 100% and +nil+ when unknown.
+  #
+  # Set by calling #calculate
+
+  def fully_documented?
+    @fully_documented
   end
 
   ##
