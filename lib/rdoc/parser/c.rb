@@ -518,11 +518,6 @@ class RDoc::Parser::C < RDoc::Parser
   # it is used for the parameters of +meth_obj+.
 
   def find_modifiers comment, meth_obj
-    if comment.sub!(/:nodoc:\s*^\s*\*?\s*$/m, '') or
-       comment.sub!(/\A\/\*\s*:nodoc:\s*\*\/\Z/, '') then
-      meth_obj.document_self = nil # notify nodoc
-    end
-
     # we must handle situations like the above followed by an unindented first
     # comment.  The difficulty is to make sure not to match lines starting
     # with ARGF at the same indent, but that are after the first description
@@ -557,8 +552,8 @@ class RDoc::Parser::C < RDoc::Parser
       meth_obj.call_seq = $1.strip
     end
 
-    if comment.sub!(/\s*:?yields?:\s*(.*)/i, '') then
-      meth_obj.block_params = $1.strip
+    if comment.sub!(/\s*:(nodoc|doc|yields?|args?):\s*(.*)/, '') then
+      RDoc::Parser.process_directive meth_obj, $1, $2
     end
   end
 

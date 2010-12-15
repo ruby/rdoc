@@ -57,7 +57,8 @@ Special thanks to Thierry Lambert for massive improvements to RDoc.
   * Removed "':' not followed by operator or identifier" warning for new Hash
     syntax.
   * rb_attr() is now supported for attributes.
-  * RDoc::Parser::C now supports :yields:
+  * RDoc::Parser::C now supports yields, doc, and args directives like
+    RDoc::Parser::Ruby.
 * Bug fixes
   * RDoc::Generator tests no longer require any installed RDoc on Ruby 1.9
   * Load existing cache before generating ri.  Ruby r27749 by NAKAMURA Usaku.

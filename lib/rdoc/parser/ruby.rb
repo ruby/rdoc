@@ -1480,51 +1480,31 @@ class RDoc::Parser::Ruby < RDoc::Parser
   #
   # We return the directive name and any parameters as a two element array
 
-  def read_directive(allowed)
+  def read_directive allowed
     tk = get_tk
-    result = nil
 
     if TkCOMMENT === tk then
-      if tk.text =~ /\s*:?(\w+):\s*(.*)/ then
-        directive = $1.downcase
-        if allowed.include? directive then
-          result = [directive, $2]
-        end
-      end
+      return unless tk.text =~ /\s*:?(\w+):\s*(.*)/
+
+      directive = $1.downcase
+
+      return [directive, $2] if allowed.include? directive
     else
       unget_tk tk
     end
-
-    result
   end
 
   def read_documentation_modifiers(context, allow)
-    dir = read_directive(allow)
+    directive, value = read_directive allow
 
-    case dir[0]
-    when "notnew", "not_new", "not-new" then
+    return unless directive
+
+    case directive
+    when 'notnew', 'not_new', 'not-new' then
       context.dont_rename_initialize = true
-
-    when "nodoc" then
-      context.document_self = nil # notify nodoc
-      if dir[1].downcase == "all"
-        context.document_children = false
-      end
-
-    when "doc" then
-      context.document_self = true
-      context.force_documentation = true
-
-    when "yield", "yields" then
-      unless context.params.nil?
-        context.params.sub!(/(,|)\s*&\w+/,'') # remove parameter &proc
-      end
-
-      context.block_params = dir[1]
-
-    when "arg", "args" then
-      context.params = dir[1]
-    end if dir
+    else
+      RDoc::Parser.process_directive context, directive, value
+    end
   end
 
   def remove_private_comments(comment)
