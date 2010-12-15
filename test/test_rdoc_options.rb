@@ -167,7 +167,7 @@ file 'unreadable' not readable
   end
 
   def test_parse_help
-    out, err = capture_io do
+    out, = capture_io do
       begin
         @options.parse %w[--help]
       rescue SystemExit
