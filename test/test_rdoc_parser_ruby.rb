@@ -471,7 +471,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
   def test_parse_class
     comment = "##\n# my method\n"
 
-    util_parser 'class Foo; end'
+    util_parser "class Foo\nend"
 
     tk = @parser.get_tk
 
@@ -520,7 +520,7 @@ end
   def test_parse_module
     comment = "##\n# my module\n"
 
-    util_parser 'module Foo; end'
+    util_parser "module Foo\nend"
 
     tk = @parser.get_tk
 
@@ -604,7 +604,7 @@ end
     # before Foo::Bar is encountered), but RDoc might encounter Foo::Bar
     # before Foo if they live in different files.
 
-    code = <<-EOF
+    code = <<-RUBY
 class Foo::Bar
 end
 
@@ -613,7 +613,7 @@ end
 
 class Foo
 end
-    EOF
+    RUBY
 
     util_parser code
 
@@ -1183,6 +1183,8 @@ EOF
   end
 
   def test_parse_method_utf8
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
 
@@ -1256,7 +1258,12 @@ end
   end
 
   def test_parse_statements_identifier_alias_method
-    content = "class Foo def foo() end; alias_method :foo2, :foo end"
+    content = <<-RUBY
+class Foo
+  def foo() end
+  alias_method :foo2, :foo
+end
+    RUBY
 
     util_parser content
 
@@ -1399,11 +1406,10 @@ EOF
     assert_equal 'SEVENTH_CONSTANT', constant.name
     assert_equal "proc { |i| begin i end }", constant.value
     assert_equal @top_level, constant.file
-
   end
 
   def test_parse_statements_identifier_attr
-    content = "class Foo; attr :foo; end"
+    content = "class Foo\nattr :foo\nend"
 
     util_parser content
 
@@ -1415,7 +1421,7 @@ EOF
   end
 
   def test_parse_statements_identifier_attr_accessor
-    content = "class Foo; attr_accessor :foo; end"
+    content = "class Foo\nattr_accessor :foo\nend"
 
     util_parser content
 
@@ -1427,7 +1433,7 @@ EOF
   end
 
   def test_parse_statements_identifier_include
-    content = "class Foo; include Bar; end"
+    content = "class Foo\ninclude Bar\nend"
 
     util_parser content
 
@@ -1439,24 +1445,24 @@ EOF
   end
 
   def test_parse_statements_identifier_module_function
-    content = "module Foo def foo() end; module_function :foo; end"
+    content = "module Foo\ndef foo() end\nmodule_function :foo\nend"
 
     util_parser content
 
     @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
 
     foo, s_foo = @top_level.modules.first.method_list
-    assert_equal 'foo', foo.name, 'instance method name'
+    assert_equal 'foo',    foo.name,       'instance method name'
     assert_equal :private, foo.visibility, 'instance method visibility'
-    assert_equal false, foo.singleton, 'instance method singleton'
+    assert_equal false,    foo.singleton,  'instance method singleton'
 
-    assert_equal 'foo', s_foo.name, 'module function name'
+    assert_equal 'foo',   s_foo.name,       'module function name'
     assert_equal :public, s_foo.visibility, 'module function visibility'
-    assert_equal true, s_foo.singleton, 'module function singleton'
+    assert_equal true,    s_foo.singleton,  'module function singleton'
   end
 
   def test_parse_statements_identifier_private
-    content = "class Foo private; def foo() end end"
+    content = "class Foo\nprivate\ndef foo() end\nend"
 
     util_parser content
 
