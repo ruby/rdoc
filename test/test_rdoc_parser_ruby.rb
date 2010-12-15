@@ -1183,8 +1183,6 @@ EOF
   end
 
   def test_parse_method_utf8
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
 
