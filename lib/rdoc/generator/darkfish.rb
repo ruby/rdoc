@@ -231,8 +231,8 @@ class RDoc::Generator::Darkfish
       debug_msg "  working on %s (%s)" % [klass.full_name, klass.path]
       out_file   = @outputdir + klass.path
       # suppress 1.9.3 warning
-      rel_prefix = rel_prefix = @outputdir.relative_path_from out_file.dirname
-      svninfo    = svninfo    = self.get_svninfo klass
+      rel_prefix = rel_prefix = @outputdir.relative_path_from(out_file.dirname)
+      svninfo    = svninfo    = self.get_svninfo(klass)
 
       debug_msg "  rendering #{out_file}"
       render_template template_file, out_file do |io| binding end
@@ -251,7 +251,7 @@ class RDoc::Generator::Darkfish
       out_file     = @outputdir + file.path
       debug_msg "  working on %s (%s)" % [ file.full_name, out_file ]
       # suppress 1.9.3 warning
-      rel_prefix = rel_prefix  = @outputdir.relative_path_from out_file.dirname
+      rel_prefix = rel_prefix  = @outputdir.relative_path_from(out_file.dirname)
 
       debug_msg "  rendering #{out_file}"
       render_template template_file, out_file do |io| binding end
@@ -328,7 +328,7 @@ class RDoc::Generator::Darkfish
       out_file.open 'w', 0644 do |io|
         io.set_encoding @options.encoding if Object.const_defined? :Encoding
 
-        template = RDoc::ERBIO.new template_src, nil, '<>', 'io'
+        template = RDoc::ERBIO.new template_src, nil, '<>'
 
         context = yield io
 

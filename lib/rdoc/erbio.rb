@@ -16,6 +16,10 @@ require 'erb'
 
 class RDoc::ERBIO < ERB
 
+  def initialize str, safe_level = nil, trim_mode = nil, eoutvar = 'io'
+    super
+  end
+
   ##
   # Instructs +compiler+ how to write to +io_variable+
 
