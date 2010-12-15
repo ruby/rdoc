@@ -229,9 +229,10 @@ class RDoc::Generator::Darkfish
 
     @classes.each do |klass|
       debug_msg "  working on %s (%s)" % [klass.full_name, klass.path]
-      out_file    = @outputdir + klass.path
-      rel_prefix = @outputdir.relative_path_from out_file.dirname
-      svninfo    = self.get_svninfo klass
+      out_file   = @outputdir + klass.path
+      # suppress 1.9.3 warning
+      rel_prefix = rel_prefix = @outputdir.relative_path_from out_file.dirname
+      svninfo    = svninfo    = self.get_svninfo klass
 
       debug_msg "  rendering #{out_file}"
       render_template template_file, out_file do |io| binding end
@@ -249,7 +250,8 @@ class RDoc::Generator::Darkfish
     @files.each do |file|
       out_file     = @outputdir + file.path
       debug_msg "  working on %s (%s)" % [ file.full_name, out_file ]
-      rel_prefix  = @outputdir.relative_path_from out_file.dirname
+      # suppress 1.9.3 warning
+      rel_prefix = rel_prefix  = @outputdir.relative_path_from out_file.dirname
 
       debug_msg "  rendering #{out_file}"
       render_template template_file, out_file do |io| binding end
