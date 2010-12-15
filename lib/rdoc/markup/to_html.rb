@@ -282,7 +282,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # CGI escapes +text+
 
   def convert_string(text)
-    CGI.escapeHTML item
+    CGI.escapeHTML text
   end
 
   ##
