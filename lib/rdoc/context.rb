@@ -325,10 +325,12 @@ class RDoc::Context < RDoc::CodeObject
       name = full_name.split(/:+/).last
     else
       full_name = child_name given_name
+
       if full_name =~ /^(.+)::(\w+)$/ then
         name = $2
         ename = $1
-        enclosing = RDoc::TopLevel.classes_hash[ename] || RDoc::TopLevel.modules_hash[ename]
+        enclosing = RDoc::TopLevel.classes_hash[ename] ||
+                    RDoc::TopLevel.modules_hash[ename]
         # HACK: crashes in actionpack/lib/action_view/helpers/form_helper.rb (metaprogramming)
         unless enclosing then
           # try the given name at top level (will work for the above example)
@@ -338,7 +340,8 @@ class RDoc::Context < RDoc::CodeObject
           names = ename.split('::')
           enclosing = self
           names.each do |n|
-            enclosing = enclosing.classes_hash[n] || enclosing.modules_hash[n] ||
+            enclosing = enclosing.classes_hash[n] ||
+                        enclosing.modules_hash[n] ||
                         enclosing.add_module(RDoc::NormalModule, n)
           end
         end
@@ -363,18 +366,10 @@ class RDoc::Context < RDoc::CodeObject
         end
       end
 
-      # did we believed it was a module?
-      mod = RDoc::TopLevel.modules_hash.delete(superclass)
+      # did we believe it was a module?
+      mod = RDoc::TopLevel.modules_hash.delete superclass
 
-      if mod then
-        super_context = mod.parent
-        super_context.modules_hash.delete mod.name
-        # TODO check: could it be RDoc::AnyClass?
-        sklass = RDoc::ClassModule.from_module(RDoc::NormalClass, mod)
-        # if it was there, then we keep it even if mod.parent.done_documenting
-        RDoc::TopLevel.classes_hash[sklass.full_name] = sklass
-        super_context.classes_hash[sklass.name] = sklass
-      end
+      upgrade_to_class mod, RDoc::NormalClass, mod.parent if mod
 
       # e.g., Object < Object
       superclass = nil if superclass == full_name
@@ -396,17 +391,15 @@ class RDoc::Context < RDoc::CodeObject
       end
     else
       # this is a new class
-      mod = RDoc::TopLevel.modules_hash.delete(full_name)
+      mod = RDoc::TopLevel.modules_hash.delete full_name
+
       if mod then
-        # it was registered as a module, so transform it to a class
-        enclosing.modules_hash.delete name
-        klass = RDoc::ClassModule.from_module(class_type, mod)
+        klass = upgrade_to_class mod, RDoc::NormalClass, enclosing
+
         klass.superclass = superclass unless superclass.nil?
-        # if it was there, then we keep it even if done_documenting
-        RDoc::TopLevel.classes_hash[full_name] = klass
-        enclosing.classes_hash[name] = klass
       else
-        klass = class_type.new(name, superclass)
+        klass = class_type.new name, superclass
+
         enclosing.add_class_or_module(klass, enclosing.classes_hash,
                                       RDoc::TopLevel.classes_hash)
       end
@@ -1025,6 +1018,21 @@ class RDoc::Context < RDoc::CodeObject
     @top_level = self
     @top_level = @top_level.parent until RDoc::TopLevel === @top_level
     @top_level
+  end
+
+  ##
+  # Upgrades NormalModule +mod+ in +enclosing+ to a +class_type+
+
+  def upgrade_to_class mod, class_type, enclosing
+    enclosing.modules_hash.delete mod.name
+
+    klass = RDoc::ClassModule.from_module class_type, mod
+
+    # if it was there, then we keep it even if done_documenting
+    RDoc::TopLevel.classes_hash[full_name] = klass
+    enclosing.classes_hash[name] = klass
+
+    klass
   end
 
 end
