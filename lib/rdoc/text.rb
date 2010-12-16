@@ -140,8 +140,6 @@ http://rubyforge.org/tracker/?atid=2472&group_id=627&func=browse
     indquotes = false
     after_word = nil
 
-#p :start => s
-
     until s.eos? do
       case
       when s.scan(/<tt>.*?<\/tt>/) then # skip contents of tt
@@ -150,47 +148,36 @@ http://rubyforge.org/tracker/?atid=2472&group_id=627&func=browse
         warn 'mismatched <tt> tag' # TODO signal file/line
         html << s.matched
       when s.scan(/<[^>]+\/?s*>/) then # skip HTML tags
-#p "tag: #{s.matched}"
         html << s.matched
       when s.scan(/\\(\S)/) then # unhandled suppressed crossref
-#p "backslashes: #{s.matched}"
         html << s[1]
         after_word = nil
       when s.scan(/\.\.\.(\.?)/) then # ellipsis
-#p "ellipses: #{s.matched}"
         html << s[1] << '&#8230;'
         after_word = nil
       when s.scan(/\(c\)/) then # copyright
-#p "copyright: #{s.matched}"
         html << '&#169;'
         after_word = nil
       when s.scan(/\(r\)/) then # registered trademark
-#p "trademark: #{s.matched}"
         html << '&#174;'
         after_word = nil
       when s.scan(/---/) then # em-dash
-#p "em-dash: #{s.matched}"
         html << '&#8212;'
         after_word = nil
       when s.scan(/--/) then # en-dash
-#p "en-dash: #{s.matched}"
         html << '&#8211;'
         after_word = nil
       when s.scan(/&quot;|"/) then # double quote
-#p "dquotes: #{s.matched}"
         html << (indquotes ? '&#8221;' : '&#8220;')
         indquotes = !indquotes
         after_word = nil
       when s.scan(/``/) then # backtick double quote
-#p "dquotes: #{s.matched}"
         html << '&#8220;' # opening
         after_word = nil
       when s.scan(/''/) then # tick double quote
-#p "dquotes: #{s.matched}"
         html << '&#8221;' # closing
         after_word = nil
       when s.scan(/'/) then # single quote
-#p "squotes: #{s.matched}"
         if insquotes
           html << '&#8217;' # closing
           insquotes = false

@@ -314,16 +314,12 @@ verb2</pre>
     assert_equal expected, @m.convert(str, @to)
   end
 
-  def test_tt_formatting
+  def test_to_html
     assert_equal "\n<p><tt>--</tt></p>\n", util_format("<tt>--</tt>")
   end
 
-  def util_paragraph(text)
-    RDoc::Markup::Paragraph.new text
-  end
-
-  def util_format(text)
-    paragraph = util_paragraph text
+  def util_format text
+    paragraph = RDoc::Markup::Paragraph.new text
 
     @to.start_accepting
     @to.accept_paragraph paragraph
