@@ -2,12 +2,13 @@ require 'rdoc/markup/formatter'
 require 'rdoc/markup/inline'
 
 require 'cgi'
-require 'strscan'
 
 ##
 # Outputs RDoc markup as HTML
 
 class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
+
+  include RDoc::Text
 
   ##
   # Maps RDoc::Markup::Parser::LIST_TOKENS types to HTML tags
@@ -276,8 +277,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << raw.parts.join("\n")
   end
 
-  private
-
   ##
   # CGI escapes +text+
 
@@ -328,109 +327,10 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   end
 
   ##
-  # Converts ampersand, dashes, ellipsis, quotes, copyright and registered
-  # trademark symbols in +text+ to HTML escaped Unicode.
-  #--
-  # TODO transcode when the output encoding is not UTF-8
+  # Converts +item+ to HTML using RDoc::Text#to_html
 
-  def to_html(text)
-    html = ''
-    s = StringScanner.new convert_flow @am.flow text
-    insquotes = false
-    indquotes = false
-    after_word = nil
-
-#p :start => s
-
-    until s.eos? do
-      case
-      # skip HTML tags
-      when s.scan(/<[^>]+\/?s*>/)
-#p "tag: #{s.matched}"
-        html << s.matched
-        # skip <tt>...</tt> sections
-        if s.matched == '<tt>'
-          if s.scan(/.*?<\/tt>/)
-            html << s.matched.gsub('\\\\', '\\')
-          else
-            # TODO signal non-paired tags
-            html << s.rest
-            break
-          end
-        end
-      # escape of \ not handled by RDoc::Markup::ToHtmlCrossref
-      # \<non space> => <non space> (markup spec)
-      when s.scan(/\\(\S)/)
-#p "backslashes: #{s.matched}"
-        html << s[1]
-        after_word = nil
-      # ... => ellipses (.... => . + ellipses)
-      when s.scan(/\.\.\.(\.?)/)
-#p "ellipses: #{s.matched}"
-        html << s[1] << '&#8230;'
-        after_word = nil
-      # (c) => copyright
-      when s.scan(/\(c\)/)
-#p "copyright: #{s.matched}"
-        html << '&#169;'
-        after_word = nil
-      # (r) => registered trademark
-      when s.scan(/\(r\)/)
-#p "trademark: #{s.matched}"
-        html << '&#174;'
-        after_word = nil
-      # --- or -- => em-dash
-      when s.scan(/---?/)
-#p "em-dash: #{s.matched}"
-        html << '&#8212;'
-        after_word = nil
-      # double quotes
-      when s.scan(/&quot;/)  #"
-#p "dquotes: #{s.matched}"
-        html << (indquotes ? '&#8221;' : '&#8220;')
-        indquotes = !indquotes
-        after_word = nil
-      # faked double quotes
-      when s.scan(/``/)
-#p "dquotes: #{s.matched}"
-        html << '&#8220;' # opening
-        after_word = nil
-      when s.scan(/''/)
-#p "dquotes: #{s.matched}"
-        html << '&#8221;' # closing
-        after_word = nil
-      # single quotes
-      when s.scan(/'/) #'
-#p "squotes: #{s.matched}"
-        if insquotes
-          html << '&#8217;' # closing
-          insquotes = false
-        else
-          # Mary's dog, my parents' house: do not start paired quotes
-          if after_word
-            html << '&#8217;' # closing
-          else
-            html << '&#8216;' # opening
-            insquotes = true
-          end
-        end
-        after_word = nil
-      # none of the above: advance to the next potentially significant character
-      else
-        match = s.scan(/.+?(?=[-<\\\.\("'`&])/) #"
-        if match
-#p "next: #{match}"
-          html << match
-          after_word = match =~ /\w$/
-        else
-#p "rest: #{s.rest}"
-          html << s.rest
-          break
-        end
-      end
-    end
-
-    html
+  def to_html item
+    super convert_flow @am.flow item
   end
 
 end

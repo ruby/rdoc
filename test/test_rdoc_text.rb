@@ -152,5 +152,66 @@ The comments associated with
     assert_equal expected, strip_stars(text)
   end
 
+  def test_to_html_apostrophe
+    assert_equal '&#8216;a', to_html("'a")
+    assert_equal 'a&#8217;', to_html("a'")
+
+    assert_equal '&#8216;a&#8217; &#8216;', to_html("'a' '")
+  end
+
+  def test_to_html_backslash
+    assert_equal 'S', to_html('\\S')
+  end
+
+  def test_to_html_copyright
+    assert_equal '&#169;', to_html('(c)')
+  end
+
+  def test_to_html_double_backtick
+    assert_equal '&#8220;a',        to_html('``a')
+    assert_equal '&#8220;a&#8220;', to_html('``a``')
+  end
+
+  def test_to_html_double_quote
+    assert_equal '&#8220;a',        to_html('"a')
+    assert_equal '&#8220;a&#8221;', to_html('"a"')
+  end
+
+  def test_to_html_double_quote_quot
+    assert_equal '&#8220;a',        to_html('&quot;a')
+    assert_equal '&#8220;a&#8221;', to_html('&quot;a&quot;')
+  end
+
+  def test_to_html_double_tick
+    assert_equal '&#8221;a',        to_html("''a")
+    assert_equal '&#8221;a&#8221;', to_html("''a''")
+  end
+
+  def test_to_html_elipsis
+    assert_equal '..',       to_html('..')
+    assert_equal '&#8230;',  to_html('...')
+    assert_equal '.&#8230;', to_html('....')
+  end
+
+  def test_to_html_em_dash
+    assert_equal '-',        to_html('-')
+    assert_equal '&#8212;',  to_html('--')
+    assert_equal '&#8212;',  to_html('---')
+    assert_equal '&#8212;-', to_html('----')
+  end
+
+  def test_to_html_html_tag
+    assert_equal '<a href="http://example">hi&#8217;s</a>',
+                 to_html('<a href="http://example">hi\'s</a>')
+  end
+
+  def test_to_html_registered_trademark
+    assert_equal '&#174;', to_html('(r)')
+  end
+
+  def test_to_html_tt_tag
+    assert_equal '<tt>hi\'s</tt>', to_html('<tt>hi\'s</tt>')
+  end
+
 end
 
