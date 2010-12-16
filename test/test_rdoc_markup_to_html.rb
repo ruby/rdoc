@@ -315,10 +315,7 @@ verb2</pre>
   end
 
   def test_tt_formatting
-    assert_equal "\n<p><tt>--</tt> &#8212; <tt>cats'</tt> cats&#8217;</p>\n",
-                 util_format("<tt>--</tt> -- <tt>cats'</tt> cats'")
-
-    assert_equal "\n<p><b>&#8212;</b></p>\n", util_format("<b>--</b>")
+    assert_equal "\n<p><tt>--</tt></p>\n", util_format("<tt>--</tt>")
   end
 
   def util_paragraph(text)

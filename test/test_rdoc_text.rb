@@ -167,6 +167,13 @@ The comments associated with
     assert_equal '&#169;', to_html('(c)')
   end
 
+  def test_to_html_dash
+    assert_equal '-',        to_html('-')
+    assert_equal '&#8211;',  to_html('--')
+    assert_equal '&#8212;',  to_html('---')
+    assert_equal '&#8212;-', to_html('----')
+  end
+
   def test_to_html_double_backtick
     assert_equal '&#8220;a',        to_html('``a')
     assert_equal '&#8220;a&#8220;', to_html('``a``')
@@ -187,17 +194,10 @@ The comments associated with
     assert_equal '&#8221;a&#8221;', to_html("''a''")
   end
 
-  def test_to_html_elipsis
+  def test_to_html_ellipsis
     assert_equal '..',       to_html('..')
     assert_equal '&#8230;',  to_html('...')
     assert_equal '.&#8230;', to_html('....')
-  end
-
-  def test_to_html_em_dash
-    assert_equal '-',        to_html('-')
-    assert_equal '&#8212;',  to_html('--')
-    assert_equal '&#8212;',  to_html('---')
-    assert_equal '&#8212;-', to_html('----')
   end
 
   def test_to_html_html_tag
@@ -210,7 +210,14 @@ The comments associated with
   end
 
   def test_to_html_tt_tag
-    assert_equal '<tt>hi\'s</tt>', to_html('<tt>hi\'s</tt>')
+    assert_equal '<tt>hi\'s</tt>',   to_html('<tt>hi\'s</tt>')
+    assert_equal '<tt>hi\\\'s</tt>', to_html('<tt>hi\\\\\'s</tt>')
+  end
+
+  def test_to_html_tt_tag_mismatch
+    assert_output nil, "mismatched <tt> tag\n" do
+      assert_equal '<tt>hi', to_html('<tt>hi')
+    end
   end
 
 end
