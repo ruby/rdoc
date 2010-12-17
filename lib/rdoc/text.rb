@@ -162,7 +162,7 @@ http://rubyforge.org/tracker/?atid=2472&group_id=627&func=browse
 
   ##
   # Converts ampersand, dashes, ellipsis, quotes, copyright and registered
-  # trademark symbols in +text+ to HTML escaped Unicode.
+  # trademark symbols in +text+ to properly encoded characters.
 
   def to_html text
     if Object.const_defined? :Encoding then
