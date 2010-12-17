@@ -1,3 +1,5 @@
+# coding: utf-8
+
 require 'rubygems'
 require 'minitest/autorun'
 require 'rdoc'
@@ -8,6 +10,15 @@ require 'rdoc/markup/formatter'
 class TestRDocText < MiniTest::Unit::TestCase
 
   include RDoc::Text
+
+  def test_self_encode_fallback
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    assert_equal '…',
+                 RDoc::Text::encode_fallback('…', Encoding::UTF_8,    '...')
+    assert_equal '...',
+                 RDoc::Text::encode_fallback('…', Encoding::US_ASCII, '...')
+  end
 
   def test_expand_tabs
     assert_equal("hello\n  dave",
@@ -153,10 +164,10 @@ The comments associated with
   end
 
   def test_to_html_apostrophe
-    assert_equal '&#8216;a', to_html("'a")
-    assert_equal 'a&#8217;', to_html("a'")
+    assert_equal '‘a', to_html("'a")
+    assert_equal 'a’', to_html("a'")
 
-    assert_equal '&#8216;a&#8217; &#8216;', to_html("'a' '")
+    assert_equal '‘a’ ‘', to_html("'a' '")
   end
 
   def test_to_html_backslash
@@ -164,49 +175,63 @@ The comments associated with
   end
 
   def test_to_html_copyright
-    assert_equal '&#169;', to_html('(c)')
+    assert_equal '©', to_html('(c)')
   end
 
   def test_to_html_dash
-    assert_equal '-',        to_html('-')
-    assert_equal '&#8211;',  to_html('--')
-    assert_equal '&#8212;',  to_html('---')
-    assert_equal '&#8212;-', to_html('----')
+    assert_equal '-',  to_html('-')
+    assert_equal '–',  to_html('--')
+    assert_equal '—',  to_html('---')
+    assert_equal '—-', to_html('----')
   end
 
   def test_to_html_double_backtick
-    assert_equal '&#8220;a',        to_html('``a')
-    assert_equal '&#8220;a&#8220;', to_html('``a``')
+    assert_equal '“a',  to_html('``a')
+    assert_equal '“a“', to_html('``a``')
   end
 
   def test_to_html_double_quote
-    assert_equal '&#8220;a',        to_html('"a')
-    assert_equal '&#8220;a&#8221;', to_html('"a"')
+    assert_equal '“a',  to_html('"a')
+    assert_equal '“a”', to_html('"a"')
   end
 
   def test_to_html_double_quote_quot
-    assert_equal '&#8220;a',        to_html('&quot;a')
-    assert_equal '&#8220;a&#8221;', to_html('&quot;a&quot;')
+    assert_equal '“a',  to_html('&quot;a')
+    assert_equal '“a”', to_html('&quot;a&quot;')
   end
 
   def test_to_html_double_tick
-    assert_equal '&#8221;a',        to_html("''a")
-    assert_equal '&#8221;a&#8221;', to_html("''a''")
+    assert_equal '”a',        to_html("''a")
+    assert_equal '”a”', to_html("''a''")
   end
 
   def test_to_html_ellipsis
-    assert_equal '..',       to_html('..')
-    assert_equal '&#8230;',  to_html('...')
-    assert_equal '.&#8230;', to_html('....')
+    assert_equal '..', to_html('..')
+    assert_equal '…',  to_html('...')
+    assert_equal '.…', to_html('....')
+  end
+
+  def test_to_html_encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    s = '...(c)'.encode Encoding::Shift_JIS
+
+    html = to_html s
+
+    assert_equal Encoding::Shift_JIS, html.encoding
+
+    expected = '…(c)'.encode Encoding::Shift_JIS
+
+    assert_equal expected, html
   end
 
   def test_to_html_html_tag
-    assert_equal '<a href="http://example">hi&#8217;s</a>',
+    assert_equal '<a href="http://example">hi’s</a>',
                  to_html('<a href="http://example">hi\'s</a>')
   end
 
   def test_to_html_registered_trademark
-    assert_equal '&#174;', to_html('(r)')
+    assert_equal '®', to_html('(r)')
   end
 
   def test_to_html_tt_tag
@@ -215,9 +240,11 @@ The comments associated with
   end
 
   def test_to_html_tt_tag_mismatch
-    assert_output nil, "mismatched <tt> tag\n" do
+    _, err = capture_io do
       assert_equal '<tt>hi', to_html('<tt>hi')
     end
+
+    assert_equal "mismatched <tt> tag\n", err
   end
 
 end

@@ -1,9 +1,42 @@
+# coding: utf-8
+
+##
+# For RDoc::Text#to_html
+
 require 'strscan'
 
 ##
 # Methods for manipulating comment text
 
 module RDoc::Text
+
+  ##
+  # Maps an encoding to a Hash of characters properly transcoded for that
+  # encoding.
+  #
+  # See also encode_fallback.
+
+  TO_HTML_CHARACTERS = Hash.new do |h, encoding|
+    h[encoding] = {
+      :close_dquote => encode_fallback('”', encoding, '"'),
+      :close_squote => encode_fallback('’', encoding, '\''),
+      :copyright    => encode_fallback('©', encoding, '(c)'),
+      :ellipsis     => encode_fallback('…', encoding, '...'),
+      :em_dash      => encode_fallback('—', encoding, '---'),
+      :en_dash      => encode_fallback('–', encoding, '--'),
+      :open_dquote  => encode_fallback('“', encoding, '"'),
+      :open_squote  => encode_fallback('‘', encoding, '\''),
+      :trademark    => encode_fallback('®', encoding, '(r)'),
+    }
+  end if Object.const_defined? :Encoding
+
+  ##
+  # Transcodes +character+ to +encoding+ with a +fallback+ character.
+
+  def self.encode_fallback character, encoding, fallback
+    character.encode(encoding, :fallback => { character => fallback },
+                     :undef => :replace, :replace => fallback)
+  end
 
   ##
   # Expands tab characters in +text+ to eight spaces
@@ -130,11 +163,27 @@ http://rubyforge.org/tracker/?atid=2472&group_id=627&func=browse
   ##
   # Converts ampersand, dashes, ellipsis, quotes, copyright and registered
   # trademark symbols in +text+ to HTML escaped Unicode.
-  #--
-  # TODO transcode when the output encoding is not UTF-8
 
   def to_html text
-    html = ''
+    if Object.const_defined? :Encoding then
+      html = ''.encode text.encoding
+
+      encoded = RDoc::Text::TO_HTML_CHARACTERS[text.encoding]
+    else
+      html = ''
+      encoded = {
+        :close_dquote => '”',
+        :close_squote => '’',
+        :copyright    => '©',
+        :ellipsis     => '…',
+        :em_dash      => '—',
+        :en_dash      => '–',
+        :open_dquote  => '“',
+        :open_squote  => '‘',
+        :trademark    => '®',
+      }
+    end
+
     s = StringScanner.new text
     insquotes = false
     indquotes = false
@@ -152,40 +201,40 @@ http://rubyforge.org/tracker/?atid=2472&group_id=627&func=browse
       when s.scan(/\\(\S)/) then # unhandled suppressed crossref
         html << s[1]
         after_word = nil
-      when s.scan(/\.\.\.(\.?)/) then # ellipsis
-        html << s[1] << '&#8230;'
+      when s.scan(/\.\.\.(\.?)/) then
+        html << s[1] << encoded[:ellipsis]
         after_word = nil
-      when s.scan(/\(c\)/) then # copyright
-        html << '&#169;'
+      when s.scan(/\(c\)/) then
+        html << encoded[:copyright]
         after_word = nil
-      when s.scan(/\(r\)/) then # registered trademark
-        html << '&#174;'
+      when s.scan(/\(r\)/) then
+        html << encoded[:trademark]
         after_word = nil
-      when s.scan(/---/) then # em-dash
-        html << '&#8212;'
+      when s.scan(/---/) then
+        html << encoded[:em_dash]
         after_word = nil
-      when s.scan(/--/) then # en-dash
-        html << '&#8211;'
+      when s.scan(/--/) then
+        html << encoded[:en_dash]
         after_word = nil
-      when s.scan(/&quot;|"/) then # double quote
-        html << (indquotes ? '&#8221;' : '&#8220;')
+      when s.scan(/&quot;|"/) then
+        html << encoded[indquotes ? :close_dquote : :open_dquote]
         indquotes = !indquotes
         after_word = nil
       when s.scan(/``/) then # backtick double quote
-        html << '&#8220;' # opening
+        html << encoded[:open_dquote]
         after_word = nil
       when s.scan(/''/) then # tick double quote
-        html << '&#8221;' # closing
+        html << encoded[:close_dquote]
         after_word = nil
       when s.scan(/'/) then # single quote
         if insquotes
-          html << '&#8217;' # closing
+          html << encoded[:close_squote]
           insquotes = false
         elsif after_word
           # Mary's dog, my parents' house: do not start paired quotes
-          html << '&#8217;' # closing
+          html << encoded[:close_squote]
         else
-          html << '&#8216;' # opening
+          html << encoded[:open_squote]
           insquotes = true
         end
 
