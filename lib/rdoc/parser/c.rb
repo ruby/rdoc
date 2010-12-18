@@ -137,6 +137,9 @@ class RDoc::Parser::C < RDoc::Parser
     @file_dir = File.dirname(@file_name)
   end
 
+  ##
+  # Scans #content for rb_define_alias
+
   def do_aliases
     @content.scan(/rb_define_alias\s*\(
                    \s*(\w+),
@@ -158,6 +161,9 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
+  ##
+  # Scans #content for rb_attr and rb_define_attr
+
   def do_attrs
     @content.scan(/rb_attr\s*\(
                    \s*(\w+),
@@ -177,6 +183,10 @@ class RDoc::Parser::C < RDoc::Parser
       handle_attr var_name, attr_name, read, write
     end
   end
+
+  ##
+  # Scans #content for rb_define_module, rb_define_class, boot_defclass,
+  # rb_define_module_under, rb_define_class_under and rb_singleton_class
 
   def do_classes
     @content.scan(/(\w+)\s* = \s*rb_define_module\s*\(\s*"(\w+)"\s*\)/mx) do
@@ -224,6 +234,10 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
+  ##
+  # Scans #content for rb_define_variable, rb_define_readonly_variable,
+  # rb_define_const and rb_define_global_const
+
   def do_constants
     @content.scan(%r%\Wrb_define_
                    ( variable          |
@@ -241,9 +255,7 @@ class RDoc::Parser::C < RDoc::Parser
   end
 
   ##
-  # Look for includes of the form:
-  #
-  #   rb_include_module(rb_cArray, rb_mEnumerable);
+  # Scans #content for rb_include_module
 
   def do_includes
     @content.scan(/rb_include_module\s*\(\s*(\w+?),\s*(\w+?)\s*\)/) do |c,m|
@@ -253,6 +265,11 @@ class RDoc::Parser::C < RDoc::Parser
       end
     end
   end
+
+  ##
+  # Scans #content for rb_define_method, rb_define_singleton_method,
+  # rb_define_module_function, rb_define_private_method,
+  # rb_define_global_function and define_filetest_function
 
   def do_methods
     @content.scan(%r%rb_define_
@@ -299,6 +316,10 @@ class RDoc::Parser::C < RDoc::Parser
       handle_method("singleton_method", "rb_cFile", meth_name, meth_body, param_count)
     end
   end
+
+  ##
+  # Finds the comment for an alias on +class_name+ from +new_name+ to
+  # +old_name+
 
   def find_alias_comment class_name, new_name, old_name
     content =~ %r%((?>/\*.*?\*/\s+))
@@ -412,6 +433,9 @@ class RDoc::Parser::C < RDoc::Parser
     true
   end
 
+  ##
+  # Finds a RDoc::NormalClass or RDoc::NormalModule for +raw_name+
+
   def find_class(raw_name, name)
     unless @classes[raw_name]
       if raw_name =~ /^rb_m/
@@ -510,7 +534,7 @@ class RDoc::Parser::C < RDoc::Parser
   #      ARGF.readlines(sep=$/)     -> array
   #      ARGF.readlines(limit)      -> array
   #      ARGF.readlines(sep, limit) -> array
-  #   
+  #
   #      ARGF.to_a(sep=$/)     -> array
   #      ARGF.to_a(limit)      -> array
   #      ARGF.to_a(sep, limit) -> array
@@ -557,6 +581,9 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
+  ##
+  # Finds a <tt>Document-method</tt> override for +meth_name+ in +class_name+
+
   def find_override_comment(class_name, meth_name)
     name = Regexp.escape(meth_name)
 
@@ -566,6 +593,10 @@ class RDoc::Parser::C < RDoc::Parser
       $1
     end
   end
+
+  ##
+  # Creates a new RDoc::Attr +attr_name+ on class +var_name+ that is either
+  # +read+, +write+ or both
 
   def handle_attr(var_name, attr_name, read, write)
     rw = ''
@@ -588,8 +619,12 @@ class RDoc::Parser::C < RDoc::Parser
     attr = RDoc::Attr.new '', name, rw, comment
 
     class_obj.add_attribute attr
-    @stats.add_method attr
+    @stats.add_attribute attr
   end
+
+  ##
+  # Creates a new RDoc::NormalClass or RDoc::NormalModule based on +type+
+  # named +class_name+ in +parent+ which was assigned to the C +var_name+.
 
   def handle_class_module(var_name, type, class_name, parent, in_module)
     parent_name = @known_classes[parent] || parent
@@ -640,15 +675,14 @@ class RDoc::Parser::C < RDoc::Parser
   end
 
   ##
-  # Adds constant comments.  By providing some_value: at the start ofthe
-  # comment you can override the C value of the comment to give a friendly
-  # definition.
+  # Adds constants.  By providing some_value: at the start of the comment you
+  # can override the C value of the comment to give a friendly definition.
   #
   #   /* 300: The perfect score in bowling */
   #   rb_define_const(cFoo, "PERFECT", INT2FIX(300);
   #
-  # Will override +INT2FIX(300)+ with the value +300+ in the output RDoc.
-  # Values may include quotes and escaped colons (\:).
+  # Will override <tt>INT2FIX(300)</tt> with the value +300+ in the output
+  # RDoc.  Values may include quotes and escaped colons (\:).
 
   def handle_constants(type, var_name, const_name, definition)
     class_name = @known_classes[var_name]
@@ -709,6 +743,11 @@ class RDoc::Parser::C < RDoc::Parser
     body.gsub(/^#ifdef HAVE_PROTOTYPES.*?#else.*?\n(.*?)#endif.*?\n/m, '\1')
   end
 
+  ##
+  # Adds an RDoc::AnyMethod +meth_name+ defined on a class or module assigned
+  # to +var_name+.  +type+ is the type of method definition function used.
+  # +singleton_method+ and +module_function+ create a singleton method.
+
   def handle_method(type, var_name, meth_name, meth_body, param_count,
                     source_file = nil)
     singleton = false
@@ -765,19 +804,27 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
+  ##
+  # Registers a singleton class +sclass_var+ as a singleton of +class_var+
+
   def handle_singleton sclass_var, class_var
     class_name = @known_classes[class_var]
 
     @singleton_classes[sclass_var] = class_name
   end
 
+  ##
+  # Normalizes tabs in +body+
+
   def handle_tab_width(body)
     if /\t/ =~ body
       tab_width = @options.tab_width
       body.split(/\n/).map do |line|
-        1 while line.gsub!(/\t+/) { ' ' * (tab_width*$&.length - $`.length % tab_width)}  && $~ #`
+        1 while line.gsub!(/\t+/) do
+          ' ' * (tab_width * $&.length - $`.length % tab_width)
+        end && $~
         line
-      end .join("\n")
+      end.join "\n"
     else
       body
     end
@@ -808,6 +855,7 @@ class RDoc::Parser::C < RDoc::Parser
 
     comment
   end
+
   ##
   # Removes lines that are commented out that might otherwise get picked up
   # when scanning for classes and methods
@@ -816,14 +864,17 @@ class RDoc::Parser::C < RDoc::Parser
     @content.gsub!(%r%//.*rb_define_%, '//')
   end
 
+  ##
+  # Removes private comments from +comment+
+
   def remove_private_comments(comment)
     comment.gsub!(/\/?\*--\n(.*?)\/?\*\+\+/m, '')
     comment.sub!(/\/?\*--\n.*/m, '')
   end
 
   ##
-  # Extract the classes/modules and methods from a C file and return the
-  # corresponding top-level object
+  # Extracts the classes, modules, methods, attributes, constants and aliases
+  # from a C file and returns an RDoc::TopLevel for this file
 
   def scan
     remove_commented_out_lines

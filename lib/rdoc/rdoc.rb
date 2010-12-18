@@ -425,7 +425,7 @@ The internal error was:
     else
       gen_klass = @options.generator
 
-      @generator = gen_klass.for @options
+      @generator = gen_klass.new @options
 
       Dir.chdir @options.op_dir do
         begin

@@ -43,7 +43,15 @@ class RDoc::Parser
   @parsers = []
 
   class << self
+
+    ##
+    # A Hash that maps file exetensions regular expressions to parsers that
+    # will consume them.
+    #
+    # Use parse_files_matching to register a parser's file extensions.
+
     attr_reader :parsers
+
   end
 
   ##

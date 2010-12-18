@@ -345,6 +345,16 @@ class TestRDocContext < XrefTestCase
     c.comment = 'hi'
 
     assert context.fully_documented?
+
+    a = RDoc::Attr.new '', 'a', 'RW', nil
+
+    context.add_attribute a
+
+    refute context.fully_documented?
+
+    a.comment = 'hi'
+
+    assert context.fully_documented?
   end
 
   def test_spaceship

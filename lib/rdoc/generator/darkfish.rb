@@ -63,12 +63,6 @@ class RDoc::Generator::Darkfish
 
   VERSION = '2'
 
-  # Standard generator factory method
-
-  def self.for options
-    new options
-  end
-
   ##
   # Initialize a few instance variables before we start
 

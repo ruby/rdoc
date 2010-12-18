@@ -162,6 +162,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   SINGLE = "<<"
 
+  ##
+  # Creates a new Ruby parser.
+
   def initialize(top_level, file_name, content, options, stats)
     super
 
@@ -209,10 +212,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
     comment
   end
 
+  ##
+  # Aborts with +msg+
+
   def error(msg)
     msg = make_message msg
-    $stderr.puts msg
-    exit false
+
+    abort msg
   end
 
   ##
@@ -228,6 +234,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     meth
   end
+
+  ##
+  # Looks for a true or false token.  Returns false if TkFALSE or TkNIL are
+  # found.
 
   def get_bool
     skip_tkspace
@@ -352,6 +362,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     name
   end
 
+  ##
+  # Extracts a name or symbol from the token stream.
+
   def get_symbol_or_name
     tk = get_tk
     case tk
@@ -453,6 +466,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
       read_documentation_modifiers att, RDoc::ATTR_MODIFIERS
 
       context.add_attribute att if att.document_self
+
+      @stats.add_attribute att
     else
       warn "'attr' ignored - looks like a variable"
     end
@@ -483,8 +498,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
       att.record_location @top_level
 
       context.add_attribute att
+      @stats.add_attribute att
     end
   end
+
+  ##
+  # Parses an +alias+ in +context+ with +comment+
 
   def parse_alias(context, single, tk, comment)
     skip_tkspace
@@ -520,6 +539,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     al
   end
+
+  ##
+  # Extracts call parameters from the token stream.
 
   def parse_call_parameters(tk)
     end_token = case tk
@@ -557,6 +579,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     res = "" if res == ";"
     res
   end
+
+  ##
+  # Parses a class in +context+ with +comment+
 
   def parse_class(container, single, tk, comment)
     declaration_context = container
@@ -617,6 +642,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
       warn("Expected class name or '<<'. Got #{name_t.class}: #{name_t.text.inspect}")
     end
   end
+
+  ##
+  # Parses a constant in +context+ with +comment+
 
   def parse_constant(container, tk, comment)
     name = tk.name
@@ -749,9 +777,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       container.add_attribute att
 
-      @stats.add_method att
+      @stats.add_attribute att
     end
   end
+
+  ##
+  # Parses an +include+ in +context+ with +comment+
 
   def parse_include(context, comment)
     loop do
@@ -818,6 +849,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       att.record_location @top_level
 
       context.add_attribute att
+      @stats.add_attribute att
     else
       args.each do |attr_name|
         att = RDoc::Attr.new(get_tkread, attr_name, rw, comment,
@@ -825,6 +857,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         att.record_location @top_level
 
         context.add_attribute att
+        @stats.add_attribute att
       end
     end
   end
@@ -1050,6 +1083,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     @stats.add_method meth
   end
 
+  ##
+  # Extracts +yield+ parameters from +method+
+
   def parse_method_or_yield_parameters(method = nil,
                                        modifiers = RDoc::METHOD_MODIFIERS)
     skip_tkspace false
@@ -1131,6 +1167,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
   end
 
+  ##
+  # Parses an RDoc::NormalModule in +container+ with +comment+
+
   def parse_module(container, single, tk, comment)
     container, name_t, = get_class_or_module container
 
@@ -1146,6 +1185,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     @top_level.add_to_classes_or_modules mod
     @stats.add_module mod
   end
+
+  ##
+  # Parses an RDoc::Require in +context+ containing +comment+
 
   def parse_require(context, comment)
     skip_tkspace_comment
@@ -1329,9 +1371,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
   end
 
+  ##
+  # Parse up to +no+ symbol arguments
+
   def parse_symbol_arg(no = nil)
     args = []
+
     skip_tkspace_comment
+
     case tk = get_tk
     when TkLPAREN
       loop do
@@ -1374,8 +1421,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
         end
       end
     end
+
     args
   end
+
+  ##
+  # Returns symbol text from the next token
 
   def parse_symbol_in_arg
     case tk = get_tk
@@ -1391,12 +1442,18 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
   end
 
+  ##
+  # Parses statements at the toplevel in +container+
+
   def parse_top_level_statements(container)
     comment = collect_first_comment
     look_for_directives_in(container, comment)
     container.comment = comment if container.document_self unless comment.empty?
     parse_statements container, NORMAL, nil, comment
   end
+
+  ##
+  # Determines the visibility in +container+ from +tk+
 
   def parse_visibility(container, single, tk)
     singleton = (single == SINGLE)
@@ -1460,6 +1517,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
   end
 
+  ##
+  # Determines the block parameter for +context+
+
   def parse_yield(context, single, tk, method)
     return if method.block_params
 
@@ -1494,6 +1554,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
   end
 
+  ##
+  # Handles the directive for +context+ if the directive is listed in +allow+.
+  # This method is called for directives following a definition.
+
   def read_documentation_modifiers(context, allow)
     directive, value = read_directive allow
 
@@ -1507,10 +1571,16 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
   end
 
+  ##
+  # Removes private comments from +comment+
+
   def remove_private_comments(comment)
     comment.gsub!(/^#--\n.*?^#\+\+\n?/m, '')
     comment.sub!(/^#--\n.*\n?/m, '')
   end
+
+  ##
+  # Scans this ruby file for ruby constructs
 
   def scan
     reset
@@ -1609,6 +1679,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     unget_tk(tk) unless TkIN === tk
   end
 
+  ##
+  # Skips the next method in +container+
+
   def skip_method container
     meth = RDoc::AnyMethod.new "", "anon"
     parse_method_parameters meth
@@ -1625,6 +1698,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
       get_tk
     end
   end
+
+  ##
+  # Prints +msg+ to +$stderr+ unless we're being quiet
 
   def warn(msg)
     return if @options.quiet

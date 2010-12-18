@@ -15,6 +15,10 @@ class RDoc::Stats::Verbose < RDoc::Stats::Normal
     puts "    alias #{as.new_name} #{as.old_name}#{nodoc as}"
   end
 
+  def print_attribute attribute # :nodoc:
+    puts "    #{attribute.definition} #{attribute.name}#{nodoc attribute}"
+  end
+
   def print_class(klass) # :nodoc:
     puts "  class #{klass.full_name}#{nodoc klass}"
   end

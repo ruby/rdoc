@@ -6,12 +6,39 @@ require 'rdoc/markup/inline'
 
 class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
 
+  ##
+  # Current indent amount for output in characters
+
   attr_accessor :indent
+
+  ##
+  # Output width in characters
+
   attr_accessor :width
+
+  ##
+  # Stack of current list indexes for alphabetic and numeric lists
+
   attr_reader :list_index
+
+  ##
+  # Stack of list types
+
   attr_reader :list_type
+
+  ##
+  # Stack of list widths for indentation
+
   attr_reader :list_width
+
+  ##
+  # Prefix for the next list item.  See #use_prefix
+
   attr_reader :prefix
+
+  ##
+  # Output accumulator
+
   attr_reader :res
 
   ##

@@ -21,6 +21,11 @@ class RDoc::Stats::Quiet
   def print_alias(*) end
 
   ##
+  # Prints when an attribute is added
+
+  def print_attribute(*) end
+
+  ##
   # Prints when a class is added
 
   def print_class(*) end
