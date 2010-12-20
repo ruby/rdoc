@@ -633,6 +633,31 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
     assert_equal expected, method_obj.call_seq
   end
 
+  def test_find_modifiers_call_seq_no_blank
+    comment = <<-COMMENT
+/* call-seq:
+ *   commercial() -> Date <br />
+ *   commercial(cwyear, cweek=41, cwday=5, sg=nil) -> Date [ruby 1.8] <br />
+ *   commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
+ */
+
+    COMMENT
+
+    parser = util_parser ''
+    method_obj = RDoc::AnyMethod.new nil, 'blah'
+
+    parser.find_modifiers comment, method_obj
+
+    expected = <<-CALL_SEQ.chomp
+commercial() -> Date <br />
+commercial(cwyear, cweek=41, cwday=5, sg=nil) -> Date [ruby 1.8] <br />
+commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
+ 
+    CALL_SEQ
+
+    assert_equal expected, method_obj.call_seq
+  end
+
   def test_find_modifiers_nodoc
     comment = <<-COMMENT
 /* :nodoc:

@@ -224,9 +224,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Look for a 'call-seq' in the comment, and override the normal parameter
   # stuff
+  #--
+  # TODO handle undent
 
   def extract_call_seq(comment, meth)
-    if comment.sub!(/:?call-seq:(.*?)^\s*\#?\s*$/m, '') then
+    if comment.sub!(/:?call-seq:(.*?)(^\s*#?\s*$|\z)/m, '') then
       seq = $1
       seq.gsub!(/^\s*\#\s*/, '')
       meth.call_seq = seq

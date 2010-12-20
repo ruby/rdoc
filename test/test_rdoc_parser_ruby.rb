@@ -32,6 +32,66 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     @tempfile2.close
   end
 
+  def test_extract_call_seq
+    m = RDoc::AnyMethod.new nil, 'm'
+    p = util_parser ''
+
+    comment = <<-COMMENT
+  # call-seq:
+  #   bla => true or false
+  #
+  # moar comment
+    COMMENT
+
+    p.extract_call_seq comment, m
+
+    assert_equal "bla => true or false\n", m.call_seq
+  end
+
+  def test_extract_call_seq_blank
+    m = RDoc::AnyMethod.new nil, 'm'
+    p = util_parser ''
+
+    comment = <<-COMMENT
+  # call-seq:
+  #   bla => true or false
+  #
+    COMMENT
+
+    p.extract_call_seq comment, m
+
+    assert_equal "bla => true or false\n", m.call_seq
+  end
+
+  def test_extract_call_seq_no_blank
+    m = RDoc::AnyMethod.new nil, 'm'
+    p = util_parser ''
+
+    comment = <<-COMMENT
+  # call-seq:
+  #   bla => true or false
+    COMMENT
+
+    p.extract_call_seq comment, m
+
+    assert_equal "bla => true or false\n", m.call_seq
+  end
+
+  def test_extract_call_seq_undent
+    m = RDoc::AnyMethod.new nil, 'm'
+    p = util_parser ''
+
+    comment = <<-COMMENT
+  # call-seq:
+  #   bla => true or false
+  # moar comment
+    COMMENT
+
+    p.extract_call_seq comment, m
+
+    assert_equal "bla => true or false\n", m.call_seq
+  end
+
   def test_get_symbol_or_name
     util_parser "* & | + 5 / 4"
 
