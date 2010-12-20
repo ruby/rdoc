@@ -1,4 +1,4 @@
-=== 3.0
+=== 3.0 / 2010-12-19
 
 Special thanks to Thierry Lambert for massive improvements to RDoc.
 
