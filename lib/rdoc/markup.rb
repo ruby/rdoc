@@ -527,6 +527,9 @@ require 'rdoc'
 
 class RDoc::Markup
 
+  ##
+  # An AttributeManager which handles inline markup.
+
   attr_reader :attribute_manager
 
   ##

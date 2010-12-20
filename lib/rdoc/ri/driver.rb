@@ -60,6 +60,9 @@ class RDoc::RI::Driver
     end
   end
 
+  ##
+  # An RDoc::RI::Store for each entry in the RI path
+
   attr_accessor :stores
 
   ##

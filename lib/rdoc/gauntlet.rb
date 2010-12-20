@@ -7,6 +7,9 @@ require 'fileutils'
 
 class RDoc::Gauntlet < Gauntlet
 
+  ##
+  # Runs an RDoc generator for gem +name+
+
   def run name
     return if self.data.key? name
 

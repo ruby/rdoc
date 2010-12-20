@@ -53,38 +53,15 @@ class RDoc::Generator::Darkfish
 
   include ERB::Util
 
-  ##
-  # Subversion rev
-
-  SVNRev = %$Rev: 52 $
-
-  ##
-  # Subversion ID
-
-  SVNId = %$Id: darkfish.rb 52 2009-01-07 02:08:11Z deveiant $
-
   # Path to this file's parent directory. Used to find templates and other
   # resources.
 
   GENERATOR_DIR = File.join 'rdoc', 'generator'
 
+  ##
   # Release Version
 
-  VERSION = '1.1.6'
-
-  # Directory where generated classes live relative to the root
-
-  CLASS_DIR = nil
-
-  # Directory where generated files live relative to the root
-
-  FILE_DIR = nil
-
-  # Standard generator factory method
-
-  def self.for options
-    new options
-  end
+  VERSION = '2'
 
   ##
   # Initialize a few instance variables before we start
@@ -93,6 +70,7 @@ class RDoc::Generator::Darkfish
     @options = options
 
     @template_dir = Pathname.new options.template_dir
+    @template_cache = {}
 
     @files      = nil
     @classes    = nil
@@ -113,12 +91,20 @@ class RDoc::Generator::Darkfish
     $stderr.puts(*msg)
   end
 
+  ##
+  # Directory where generated class HTML files live relative to the output
+  # dir.
+
   def class_dir
-    CLASS_DIR
+    nil
   end
 
+  ##
+  # Directory where generated class HTML files live relative to the output
+  # dir.
+
   def file_dir
-    FILE_DIR
+    nil
   end
 
   ##
@@ -229,9 +215,10 @@ class RDoc::Generator::Darkfish
 
     @classes.each do |klass|
       debug_msg "  working on %s (%s)" % [klass.full_name, klass.path]
-      out_file    = @outputdir + klass.path
-      rel_prefix = @outputdir.relative_path_from out_file.dirname
-      svninfo    = self.get_svninfo klass
+      out_file   = @outputdir + klass.path
+      # suppress 1.9.3 warning
+      rel_prefix = rel_prefix = @outputdir.relative_path_from(out_file.dirname)
+      svninfo    = svninfo    = self.get_svninfo(klass)
 
       debug_msg "  rendering #{out_file}"
       render_template template_file, out_file do |io| binding end
@@ -249,7 +236,8 @@ class RDoc::Generator::Darkfish
     @files.each do |file|
       out_file     = @outputdir + file.path
       debug_msg "  working on %s (%s)" % [ file.full_name, out_file ]
-      rel_prefix  = @outputdir.relative_path_from out_file.dirname
+      # suppress 1.9.3 warning
+      rel_prefix = rel_prefix  = @outputdir.relative_path_from(out_file.dirname)
 
       debug_msg "  rendering #{out_file}"
       render_template template_file, out_file do |io| binding end
@@ -317,7 +305,7 @@ class RDoc::Generator::Darkfish
   # An io will be yielded which must be captured by binding in the caller.
 
   def render_template template_file, out_file # :yield: io
-    template_src = template_file.read
+    template = template_for template_file
 
     unless @options.dry_run then
       debug_msg "Outputting to %s" % [out_file.expand_path]
@@ -326,15 +314,11 @@ class RDoc::Generator::Darkfish
       out_file.open 'w', 0644 do |io|
         io.set_encoding @options.encoding if Object.const_defined? :Encoding
 
-        template = RDoc::ERBIO.new template_src, nil, '<>', 'io'
-
         context = yield io
 
         template_result template, context, template_file
       end
     else
-      template = ERB.new template_src, nil, '<>'
-
       context = yield nil
 
       output = template_result template, context, template_file
@@ -357,6 +341,21 @@ class RDoc::Generator::Darkfish
       template_file.expand_path,
       e.message,
     ], e.backtrace
+  end
+
+  ##
+  # Retrieves a cache template for +file+, if present, or fills the cache.
+
+  def template_for file
+    template = @template_cache[file]
+
+    return template if template
+
+    klass = @options.dry_run ? ERB : RDoc::ERBIO
+
+    template = klass.new file.read, nil, '<>'
+    @template_cache[file] = template
+    template
   end
 
 end

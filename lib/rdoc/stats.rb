@@ -23,6 +23,7 @@ class RDoc::Stats
   def initialize num_files, verbosity = 1
     @files_so_far = 0
     @num_files = num_files
+    @fully_documented = nil
 
     @start = Time.now
 
@@ -38,6 +39,13 @@ class RDoc::Stats
 
   def add_alias as
     @display.print_alias as
+  end
+
+  ##
+  # Records the parsing of an attribute +attribute+
+
+  def add_attribute attribute
+    @display.print_attribute attribute
   end
 
   ##
@@ -84,6 +92,49 @@ class RDoc::Stats
   end
 
   ##
+  # Calculates documentation totals and percentages
+
+  def calculate
+    return if @percent_doc
+
+    ucm = RDoc::TopLevel.unique_classes_and_modules
+    constants = []
+    ucm.each { |cm| constants.concat cm.constants }
+
+    methods = []
+    ucm.each { |cm| methods.concat cm.method_list }
+
+    attributes = []
+    ucm.each { |cm| attributes.concat cm.attributes }
+
+    @num_attributes, @undoc_attributes = doc_stats attributes
+    @num_classes,    @undoc_classes    = doc_stats RDoc::TopLevel.unique_classes
+    @num_constants,  @undoc_constants  = doc_stats constants
+    @num_methods,    @undoc_methods    = doc_stats methods
+    @num_modules,    @undoc_modules    = doc_stats RDoc::TopLevel.unique_modules
+
+    @num_items =
+      @num_attributes +
+      @num_classes +
+      @num_constants +
+      @num_methods +
+      @num_modules
+
+    @undoc_items =
+      @undoc_attributes +
+      @undoc_classes +
+      @undoc_constants +
+      @undoc_methods +
+      @undoc_modules
+
+    @doc_items = @num_items - @undoc_items
+
+    @fully_documented = (@num_items - @doc_items) == 0
+
+    @percent_doc = @doc_items.to_f / @num_items * 100 if @num_items.nonzero?
+  end
+
+  ##
   # Returns the length and number of undocumented items in +collection+.
 
   def doc_stats collection
@@ -98,28 +149,13 @@ class RDoc::Stats
   end
 
   ##
-  # Calculates documentation totals and percentages
+  # The documentation status of this project.  +true+ when 100%, +false+ when
+  # less than 100% and +nil+ when unknown.
+  #
+  # Set by calling #calculate
 
-  def calculate
-    return if @percent_doc
-
-    ucm = RDoc::TopLevel.unique_classes_and_modules
-    constants = []
-    ucm.each { |cm| constants.concat cm.constants }
-
-    methods = []
-    ucm.each { |cm| methods.concat cm.method_list }
-
-    @num_classes,   @undoc_classes   = doc_stats RDoc::TopLevel.unique_classes
-    @num_modules,   @undoc_modules   = doc_stats RDoc::TopLevel.unique_modules
-    @num_constants, @undoc_constants = doc_stats constants
-    @num_methods,   @undoc_methods   = doc_stats methods
-
-    @num_items = @num_classes + @num_modules + @num_constants + @num_methods
-    @doc_items = @num_items - @undoc_classes - @undoc_modules -
-                 @undoc_constants - @undoc_methods
-
-    @percent_doc = @doc_items.to_f / @num_items * 100
+  def fully_documented?
+    @fully_documented
   end
 
   ##
@@ -144,7 +180,7 @@ class RDoc::Stats
     ucm = RDoc::TopLevel.unique_classes_and_modules
 
     ucm.sort.each do |cm|
-      type = case cm
+      type = case cm # TODO #definition
              when RDoc::NormalClass  then 'class'
              when RDoc::SingleClass  then 'class <<'
              when RDoc::NormalModule then 'module'
@@ -185,13 +221,23 @@ class RDoc::Stats
         end
       end
 
+      unless cm.attributes.empty? then
+        report << nil
+
+        cm.each_attribute do |attr|
+          next if attr.documented?
+          report << "  #{attr.definition} #{attr.name} " \
+                    "# in file #{attr.file.full_name}"
+        end
+      end
+
       unless cm.method_list.empty? then
         report << nil
 
         cm.each_method do |method|
           next if method.documented?
           report << "  # in file #{method.file.full_name}"
-          report << "  def #{method.name}(*); end"
+          report << "  def #{method.name}#{method.params}; end"
           report << nil
         end
       end
@@ -210,16 +256,23 @@ class RDoc::Stats
     calculate
 
     report = []
-    report << 'Files:     %5d' % @num_files
-    report << 'Classes:   %5d (%5d undocumented)' % [@num_classes,
-                                                     @undoc_classes]
-    report << 'Modules:   %5d (%5d undocumented)' % [@num_modules,
-                                                     @undoc_modules]
-    report << 'Constants: %5d (%5d undocumented)' % [@num_constants,
+    report << 'Files:      %5d' % @num_files
+    report << nil
+    report << 'Classes:    %5d (%5d undocumented)' % [@num_classes,
+                                                      @undoc_classes]
+    report << 'Modules:    %5d (%5d undocumented)' % [@num_modules,
+                                                      @undoc_modules]
+    report << 'Constants:  %5d (%5d undocumented)' % [@num_constants,
                                                      @undoc_constants]
-    report << 'Methods:   %5d (%5d undocumented)' % [@num_methods,
-                                                     @undoc_methods]
-    report << '%6.2f%% documented' % @percent_doc unless @percent_doc.nan?
+    report << 'Attributes: %5d (%5d undocumented)' % [@num_attributes,
+                                                      @undoc_attributes]
+    report << 'Methods:    %5d (%5d undocumented)' % [@num_methods,
+                                                      @undoc_methods]
+    report << nil
+    report << 'Total:      %5d (%5d undocumented)' % [@num_items,
+                                                      @undoc_items]
+
+    report << '%6.2f%% documented' % @percent_doc if @percent_doc
     report << nil
     report << 'Elapsed: %0.1fs' % (Time.now - @start)
 

@@ -15,9 +15,12 @@ class RDoc::Markup::AttributeManager
   # optimistic
   #++
 
-  A_PROTECT  = 004 # :nodoc:
+  A_PROTECT = 004 # :nodoc:
 
-  PROTECT_ATTR  = A_PROTECT.chr # :nodoc:
+  ##
+  # Special mask character to prevent inline markup handling
+
+  PROTECT_ATTR = A_PROTECT.chr # :nodoc:
 
   ##
   # This maps delimiters that occur around words (such as *bold* or +tt+)

@@ -293,6 +293,10 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal expected, @to.end_accepting
   end
 
+  def test_convert_string
+    assert_equal '&lt;&gt;', @to.convert_string('<>')
+  end
+
   def test_list_verbatim_2
     str = "* one\n    verb1\n    verb2\n* two\n"
 
@@ -310,31 +314,12 @@ verb2</pre>
     assert_equal expected, @m.convert(str, @to)
   end
 
-  def test_tt_formatting
-    assert_equal "\n<p><tt>--</tt> &#8212; <tt>cats'</tt> cats&#8217;</p>\n",
-                 util_format("<tt>--</tt> -- <tt>cats'</tt> cats'")
-
-    assert_equal "\n<p><b>&#8212;</b></p>\n", util_format("<b>--</b>")
+  def test_to_html
+    assert_equal "\n<p><tt>--</tt></p>\n", util_format("<tt>--</tt>")
   end
 
-  def test_convert_string_fancy
-    #
-    # The HTML typesetting is broken in a number of ways, but I have fixed
-    # the most glaring issues for single and double quotes.  Note that
-    # "strange" symbols (periods or dashes) need to be at the end of the
-    # test case strings in order to suppress cross-references.
-    #
-    assert_equal "\n<p>&#8220;cats&#8221;.</p>\n", util_format("\"cats\".")
-    assert_equal "\n<p>&#8216;cats&#8217;.</p>\n", util_format("\'cats\'.")
-    assert_equal "\n<p>cat&#8217;s-</p>\n", util_format("cat\'s-")
-  end
-
-  def util_paragraph(text)
-    RDoc::Markup::Paragraph.new text
-  end
-
-  def util_format(text)
-    paragraph = util_paragraph text
+  def util_format text
+    paragraph = RDoc::Markup::Paragraph.new text
 
     @to.start_accepting
     @to.accept_paragraph paragraph
