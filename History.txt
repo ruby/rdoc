@@ -60,6 +60,7 @@ Special thanks to Thierry Lambert for massive improvements to RDoc.
   * rb_attr() is now supported for attributes.
   * RDoc::Parser::C now supports yields, doc, and args directives like
     RDoc::Parser::Ruby.
+  * Moved RDoc::Parser::PerlPOD to the rdoc-perl_pod gem.
 * Bug fixes
   * RDoc::Generator tests no longer require any installed RDoc on Ruby 1.9
   * Load existing cache before generating ri.  Ruby r27749 by NAKAMURA Usaku.
