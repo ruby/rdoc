@@ -131,7 +131,7 @@ class RDoc::Stats
 
     @fully_documented = (@num_items - @doc_items) == 0
 
-    @percent_doc = @doc_items.to_f / @num_items * 100
+    @percent_doc = @doc_items.to_f / @num_items * 100 if @num_items.nonzero?
   end
 
   ##
@@ -272,7 +272,7 @@ class RDoc::Stats
     report << 'Total:      %5d (%5d undocumented)' % [@num_items,
                                                       @undoc_items]
 
-    report << '%6.2f%% documented' % @percent_doc unless @percent_doc.nan?
+    report << '%6.2f%% documented' % @percent_doc if @percent_doc
     report << nil
     report << 'Elapsed: %0.1fs' % (Time.now - @start)
 
