@@ -1,3 +1,8 @@
+=== 3.0.1 / 2010-12-19
+
+* Bug fix
+  * RDoc no longer has a Perl parser.
+
 === 3.0 / 2010-12-19
 
 Special thanks to Thierry Lambert for massive improvements to RDoc.
