@@ -23,7 +23,7 @@ class TestRDocInclude < XrefTestCase
     m1_m2_m4 = m1_m2.add_module RDoc::NormalModule, 'Mod4'
     m1_m2_k0 = m1_m2.add_class RDoc::NormalClass, 'Klass0'
     m1_m2_k0_m4 = m1_m2_k0.add_module RDoc::NormalModule, 'Mod4'
-    m1_m2_k0_m4_m5 = m1_m2_k0_m4.add_module RDoc::NormalModule, 'Mod5'
+    #m1_m2_k0_m4_m5 = m1_m2_k0_m4.add_module RDoc::NormalModule, 'Mod5'
     m1_m2_k0_m4_m6 = m1_m2_k0_m4.add_module RDoc::NormalModule, 'Mod6'
     m1_m2_k0_m5 = m1_m2_k0.add_module RDoc::NormalModule, 'Mod5'
 

@@ -2,12 +2,13 @@ require 'rdoc/markup/formatter'
 require 'rdoc/markup/inline'
 
 require 'cgi'
-require 'strscan'
 
 ##
 # Outputs RDoc markup as HTML
 
 class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
+
+  include RDoc::Text
 
   ##
   # Maps RDoc::Markup::Parser::LIST_TOKENS types to HTML tags
@@ -124,7 +125,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   ##
   # Here's a hypedlink where the label is different to the URL
-  #  <label>[url] or {long label}[url]
+  # <label>[url] or {long label}[url]
 
   def handle_special_TIDYLINK(special)
     text = special.text
@@ -139,7 +140,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # :section: Utilities
 
   ##
-  # This is a higher speed (if messier) version of wrap
+  # Wraps +txt+ to +line_len+
 
   def wrap(txt, line_len = 76)
     res = []
@@ -172,15 +173,24 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   # :section: Visitor
 
+  ##
+  # Prepares the visitor for HTML generation
+
   def start_accepting
     @res = []
     @in_list_entry = []
     @list = []
   end
 
+  ##
+  # Returns the generated output
+
   def end_accepting
     @res.join
   end
+
+  ##
+  # Adds +paragraph+ to the output
 
   def accept_paragraph(paragraph)
     @res << "\n<p>"
@@ -188,11 +198,17 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << "</p>\n"
   end
 
+  ##
+  # Adds +verbatim+ to the output
+
   def accept_verbatim(verbatim)
     @res << "\n<pre>"
     @res << CGI.escapeHTML(verbatim.text.rstrip)
     @res << "</pre>\n"
   end
+
+  ##
+  # Adds +rule+ to the output
 
   def accept_rule(rule)
     size = rule.weight
@@ -200,11 +216,17 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << "<hr style=\"height: #{size}px\">\n"
   end
 
+  ##
+  # Prepares the visitor for consuming +list+
+
   def accept_list_start(list)
     @list << list.type
     @res << html_list_name(list.type, true)
     @in_list_entry.push false
   end
+
+  ##
+  # Finishes consumption of +list+
 
   def accept_list_end(list)
     @list.pop
@@ -214,6 +236,9 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << html_list_name(list.type, false) << "\n"
   end
 
+  ##
+  # Prepares the visitor for consuming +list_item+
+
   def accept_list_item_start(list_item)
     if tag = @in_list_entry.last
       @res << tag
@@ -222,13 +247,22 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << list_item_start(list_item, @list.last)
   end
 
+  ##
+  # Finishes consumption of +list_item+
+
   def accept_list_item_end(list_item)
     @in_list_entry[-1] = list_end_for(@list.last)
   end
 
+  ##
+  # Adds +blank_line+ to the output
+
   def accept_blank_line(blank_line)
     # @res << annotate("<p />") << "\n"
   end
+
+  ##
+  # Adds +heading+ to the output
 
   def accept_heading(heading)
     @res << "\n<h#{heading.level}>"
@@ -236,21 +270,22 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << "</h#{heading.level}>\n"
   end
 
+  ##
+  # Adds +raw+ to the output
+
   def accept_raw raw
     @res << raw.parts.join("\n")
   end
 
-  private
-
   ##
-  # Converts string +item+
+  # CGI escapes +text+
 
-  def convert_string(item)
-    CGI.escapeHTML item
+  def convert_string(text)
+    CGI.escapeHTML text
   end
 
   ##
-  # Determins the HTML list element for +list_type+ and +open_tag+
+  # Determines the HTML list element for +list_type+ and +open_tag+
 
   def html_list_name(list_type, open_tag)
     tags = LIST_TYPE_TO_HTML[list_type]
@@ -259,23 +294,24 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   end
 
   ##
-  # Starts a list item
+  # Returns the HTML tag for +list_type+, possible using a label from
+  # +list_item+
 
   def list_item_start(list_item, list_type)
     case list_type
     when :BULLET, :LALPHA, :NUMBER, :UALPHA then
       "<li>"
     when :LABEL then
-      "<dt>" << to_html(list_item.label) << "</dt>\n<dd>"
+      "<dt>#{to_html list_item.label}</dt>\n<dd>"
     when :NOTE then
-        '<tr><td class="rdoc-term"><p>' + to_html(list_item.label) + "</p></td>\n<td>"
+      "<tr><td class=\"rdoc-term\"><p>#{to_html list_item.label}</p></td>\n<td>"
     else
       raise RDoc::Error, "Invalid list type: #{list_type.inspect}"
     end
   end
 
   ##
-  # Ends a list item
+  # Returns the HTML end-tag for +list_type+
 
   def list_end_for(list_type)
     case list_type
@@ -291,109 +327,10 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   end
 
   ##
-  # Converts ampersand, dashes, ellipsis, quotes, copyright and registered
-  # trademark symbols to HTML escaped Unicode.
-  #--
-  # TODO transcode when the output encoding is not UTF-8
+  # Converts +item+ to HTML using RDoc::Text#to_html
 
-  def to_html(text)
-    html = ''
-    s = StringScanner.new convert_flow @am.flow text
-    insquotes = false
-    indquotes = false
-    after_word = nil
-
-#p :start => s
-
-    until s.eos? do
-      case
-      # skip HTML tags
-      when s.scan(/<[^>]+\/?s*>/)
-#p "tag: #{s.matched}"
-        html << s.matched
-        # skip <tt>...</tt> sections
-        if s.matched == '<tt>'
-          if s.scan(/.*?<\/tt>/)
-            html << s.matched.gsub('\\\\', '\\')
-          else
-            # TODO signal non-paired tags
-            html << s.rest
-            break
-          end
-        end
-      # escape of \ not handled by RDoc::Markup::ToHtmlCrossref
-      # \<non space> => <non space> (markup spec)
-      when s.scan(/\\(\S)/)
-#p "backslashes: #{s.matched}"
-        html << s[1]
-        after_word = nil
-      # ... => ellipses (.... => . + ellipses)
-      when s.scan(/\.\.\.(\.?)/)
-#p "ellipses: #{s.matched}"
-        html << s[1] << '&#8230;'
-        after_word = nil
-      # (c) => copyright
-      when s.scan(/\(c\)/)
-#p "copyright: #{s.matched}"
-        html << '&#169;'
-        after_word = nil
-      # (r) => registered trademark
-      when s.scan(/\(r\)/)
-#p "trademark: #{s.matched}"
-        html << '&#174;'
-        after_word = nil
-      # --- or -- => em-dash
-      when s.scan(/---?/)
-#p "em-dash: #{s.matched}"
-        html << '&#8212;'
-        after_word = nil
-      # double quotes
-      when s.scan(/&quot;/)  #"
-#p "dquotes: #{s.matched}"
-        html << (indquotes ? '&#8221;' : '&#8220;')
-        indquotes = !indquotes
-        after_word = nil
-      # faked double quotes
-      when s.scan(/``/)
-#p "dquotes: #{s.matched}"
-        html << '&#8220;' # opening
-        after_word = nil
-      when s.scan(/''/)
-#p "dquotes: #{s.matched}"
-        html << '&#8221;' # closing
-        after_word = nil
-      # single quotes
-      when s.scan(/'/) #'
-#p "squotes: #{s.matched}"
-        if insquotes
-          html << '&#8217;' # closing
-          insquotes = false
-        else
-          # Mary's dog, my parents' house: do not start paired quotes
-          if after_word
-            html << '&#8217;' # closing
-          else
-            html << '&#8216;' # opening
-            insquotes = true
-          end
-        end
-        after_word = nil
-      # none of the above: advance to the next potentially significant character
-      else
-        match = s.scan(/.+?(?=[-<\\\.\("'`&])/) #"
-        if match
-#p "next: #{match}"
-          html << match
-          after_word = match =~ /\w$/
-        else
-#p "rest: #{s.rest}"
-          html << s.rest
-          break
-        end
-      end
-    end
-
-    html
+  def to_html item
+    super convert_flow @am.flow item
   end
 
 end

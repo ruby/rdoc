@@ -43,7 +43,15 @@ class RDoc::Parser
   @parsers = []
 
   class << self
+
+    ##
+    # A Hash that maps file exetensions regular expressions to parsers that
+    # will consume them.
+    #
+    # Use parse_files_matching to register a parser's file extensions.
+
     attr_reader :parsers
+
   end
 
   ##
@@ -89,6 +97,29 @@ class RDoc::Parser
       else # HACK 1.8.6
         (s.count("\x00-\x7F", "^ -~\t\r\n").to_f / s.size) > 0.3
       end
+    end
+  end
+
+  ##
+  # Processes common directives for CodeObjects for the C and Ruby parsers.
+  #
+  # Applies +directive+'s +value+ to +code_object+, if appropriate
+
+  def self.process_directive code_object, directive, value
+    case directive
+    when 'nodoc' then
+      code_object.document_self = nil # notify nodoc
+      code_object.document_children = value.downcase != 'all'
+    when 'doc' then
+      code_object.document_self = true
+      code_object.force_documentation = true
+    when 'yield', 'yields' then
+      # remove parameter &block
+      code_object.params.sub!(/,?\s*&\w+/, '') if code_object.params
+
+      code_object.block_params = value
+    when 'arg', 'args' then
+      code_object.params = value
     end
   end
 

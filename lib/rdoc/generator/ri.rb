@@ -8,10 +8,6 @@ class RDoc::Generator::RI
 
   RDoc::RDoc.add_generator self
 
-  def self.for options
-    new options
-  end
-
   ##
   # Set up a new ri generator
 

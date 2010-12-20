@@ -7,7 +7,6 @@ require 'rdoc/parser'
 require 'rdoc/parser/simple'
 require 'rdoc/parser/ruby'
 require 'rdoc/parser/c'
-require 'rdoc/parser/perl'
 
 require 'rdoc/stats'
 require 'rdoc/options'
@@ -100,6 +99,10 @@ class RDoc::RDoc
   def self.current=(rdoc)
     @current = rdoc
   end
+
+  ##
+  # Creates a new RDoc::RDoc instance.  Call #document to parse files and
+  # generate documentation.
 
   def initialize
     @current       = nil
@@ -401,7 +404,7 @@ The internal error was:
 
     @exclude = @options.exclude
 
-    unless @options.only_undocumented then
+    unless @options.coverage_report then
       @last_modified = setup_output_dir @options.op_dir, @options.force_update
     end
 
@@ -413,7 +416,7 @@ The internal error was:
 
     RDoc::TopLevel.complete @options.visibility
 
-    if @options.only_undocumented then
+    if @options.coverage_report then
       puts
       puts @stats.report
     elsif file_info.empty?
@@ -421,7 +424,7 @@ The internal error was:
     else
       gen_klass = @options.generator
 
-      @generator = gen_klass.for @options
+      @generator = gen_klass.new @options
 
       Dir.chdir @options.op_dir do
         begin
@@ -443,6 +446,8 @@ The internal error was:
       puts
       puts @stats.summary
     end
+
+    exit @stats.fully_documented? if @options.coverage_report
   end
 
   ##

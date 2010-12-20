@@ -6,12 +6,39 @@ require 'rdoc/markup/inline'
 
 class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
 
+  ##
+  # Current indent amount for output in characters
+
   attr_accessor :indent
+
+  ##
+  # Output width in characters
+
   attr_accessor :width
+
+  ##
+  # Stack of current list indexes for alphabetic and numeric lists
+
   attr_reader :list_index
+
+  ##
+  # Stack of list types
+
   attr_reader :list_type
+
+  ##
+  # Stack of list widths for indentation
+
   attr_reader :list_width
+
+  ##
+  # Prefix for the next list item.  See #use_prefix
+
   attr_reader :prefix
+
+  ##
+  # Output accumulator
+
   attr_reader :res
 
   ##
@@ -36,7 +63,7 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   end
 
   ##
-  # Maps attributes to ANSI sequences
+  # Maps attributes to HTML sequences
 
   def init_tags
     add_tag :BOLD, "<b>", "</b>"
@@ -44,9 +71,15 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
     add_tag :EM,   "<em>", "</em>"
   end
 
+  ##
+  # Adds +blank_line+ to the output
+
   def accept_blank_line blank_line
     @res << "\n"
   end
+
+  ##
+  # Adds +heading+ to the output
 
   def accept_heading heading
     use_prefix or @res << ' ' * @indent
@@ -56,11 +89,17 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
     @res << "\n"
   end
 
+  ##
+  # Finishes consumption of +list+
+
   def accept_list_end list
     @list_index.pop
     @list_type.pop
     @list_width.pop
   end
+
+  ##
+  # Finishes consumption of +list_item+
 
   def accept_list_item_end list_item
     width = case @list_type.last
@@ -78,6 +117,9 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
     @indent -= width
   end
 
+  ##
+  # Prepares the visitor for consuming +list_item+
+
   def accept_list_item_start list_item
     type = @list_type.last
 
@@ -94,6 +136,9 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
       @indent += width
     end
   end
+
+  ##
+  # Prepares the visitor for consuming +list+
 
   def accept_list_start list
     case list.type
@@ -119,13 +164,22 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
     @list_type << list.type
   end
 
+  ##
+  # Adds +paragraph+ to the output
+
   def accept_paragraph paragraph
     wrap attributes(paragraph.text)
   end
 
+  ##
+  # Adds +raw+ to the output
+
   def accept_raw raw
     @res << raw.parts.join("\n")
   end
+
+  ##
+  # Adds +rule+ to the output
 
   def accept_rule rule
     use_prefix or @res << ' ' * @indent
@@ -147,20 +201,32 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
     @res << "\n" unless @res =~ /\n\z/
   end
 
+  ##
+  # Applies attribute-specific markup to +text+ using RDoc::AttributeManager
+
   def attributes text
     flow = @am.flow text.dup
     convert_flow flow
   end
 
+  ##
+  # Returns the generated output
+
   def end_accepting
     @res.join
   end
+
+  ##
+  # Removes preceeding \\ from the suppressed crossref +special+
 
   def handle_special_SUPPRESSED_CROSSREF special
     text = special.text
     text = text.sub('\\', '') unless in_tt?
     text
   end
+
+  ##
+  # Prepares the visitor for text generation
 
   def start_accepting
     @res = [""]
@@ -172,6 +238,10 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
     @list_width = []
   end
 
+  ##
+  # Adds the stored #prefix to the output and clears it.  Lists generate a
+  # prefix for later consumption.
+
   def use_prefix
     prefix = @prefix
     @prefix = nil
@@ -179,6 +249,9 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
 
     prefix
   end
+
+  ##
+  # Wraps +text+ to #width
 
   def wrap text
     return unless text && !text.empty?

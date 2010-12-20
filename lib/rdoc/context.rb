@@ -841,6 +841,7 @@ class RDoc::Context < RDoc::CodeObject
 
   def fully_documented?
     documented? and
+      attributes.all? { |a| a.documented? } and
       method_list.all? { |m| m.documented? } and
       constants.all? { |c| c.documented? }
   end
