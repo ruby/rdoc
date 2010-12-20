@@ -1,3 +1,9 @@
+=== 3.0.2 / 
+
+* Bug fix
+  * Strip encoding comment from input to avoid overriding file comment.  Bug
+    #22113 by James Gray.
+
 === 3.0.1 / 2010-12-19
 
 * Bug fix
