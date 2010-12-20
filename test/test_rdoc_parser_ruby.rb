@@ -89,7 +89,7 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
 
     p.extract_call_seq comment, m
 
-    assert_equal "bla => true or false\n", m.call_seq
+    assert_equal "bla => true or false\nmoar comment\n", m.call_seq
   end
 
   def test_get_symbol_or_name
