@@ -6,13 +6,19 @@
 
 == DESCRIPTION:
 
-RDoc is an application that produces documentation for one or more Ruby source
-files.  RDoc includes the +rdoc+ and +ri+ tools for generating and displaying
-online documentation.
+RDoc produces HTML and command-line documentation for Ruby projects.  RDoc
+includes the +rdoc+ and +ri+ tools for generating and displaying online
+documentation.
 
 See RDoc for a description of RDoc's markup and basic use.
 
 == SYNOPSIS:
+
+To generate HTML documentation:
+
+  rdoc .
+
+To generate documentation programmatically:
 
   gem 'rdoc'
   require 'rdoc/rdoc'
