@@ -2,6 +2,10 @@ require 'hoe'
 $:.unshift 'lib'
 require 'rdoc/rdoc'
 
+Hoe.plugin :git
+Hoe.plugin :isolate
+Hoe.plugin :minitest
+
 $rdoc_rakefile = true
 
 Hoe.spec 'rdoc' do
@@ -11,9 +15,12 @@ Hoe.spec 'rdoc' do
   developer 'Tony Strauss', 'tony.strauss@designingpatterns.com'
 
   self.remote_rdoc_dir = ''
+  self.rsync_args = '-avz'
   self.testlib = :minitest
+  self.isolate_dir = 'tmp/isolated'
 
   extra_dev_deps   << ['minitest', '~> 2']
+  extra_dev_deps   << ['isolate',  '~> 3']
   extra_rdoc_files << 'Rakefile'
   spec_extras['required_rubygems_version'] = '>= 1.3'
   spec_extras['homepage'] = 'http://rdoc.rubyforge.org'
