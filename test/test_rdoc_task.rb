@@ -43,6 +43,17 @@ class TestRDocTask < MiniTest::Unit::TestCase
     assert_equal :rdoc_dev, rd.name
   end
 
+  def test_generator_option
+    rdoc_task = RDoc::Task.new do |rd|
+      rd.generator = "ri"
+    end
+
+    opts = RDoc::Options.new
+    opts.parse(rdoc_task.option_list)
+
+    assert_equal RDoc::Generator::RI, opts.generator
+  end
+
   def test_tasks_creation_with_custom_name_string
     rd = RDoc::Task.new("rdoc_dev")
     assert Rake::Task[:rdoc_dev]
