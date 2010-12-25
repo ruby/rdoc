@@ -29,7 +29,9 @@ class TestRDocStats < MiniTest::Unit::TestCase
 
     report = @s.report
 
-    flunk
+    # TODO change this to refute match, aliases should be ignored as they are
+    # programmer convenience constructs
+    assert_match(/class Object/, report)
   end
 
 end

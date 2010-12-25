@@ -1,10 +1,15 @@
 === 3.0.2 / 
 
+RDoc has moved to github.  Releases after 3.0.2 reference github unless
+otherwise noted.
+
 * Bug fix
-  * Strip encoding comment from input to avoid overriding file comment.  Bug
-    #22113 by James Gray.
+  * Strip encoding comment from input to avoid overriding file comment.
+    RubyForge Bug #22113 by James Gray.
   * Restore call-seq parsing behavior when the call-seq is the only comment.
-    Bug #26290 by Sylvain Joyeux.
+    RubyForge Bug #26290 by Sylvain Joyeux.
+  * Coverage report no longer crashes for constant aliases.  Pull Request #1
+    by Andy Lindeman.
 
 === 3.0.1 / 2010-12-19
 

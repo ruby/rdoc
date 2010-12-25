@@ -215,6 +215,8 @@ class RDoc::Stats
         report << nil
 
         cm.each_constant do |constant|
+          # TODO constant aliases are listed in the summary but not reported
+          # figure out what to do here
           next if constant.documented? || constant.is_alias_for
           report << "  # in file #{constant.file.full_name}"
           report << "  #{constant.name} = nil"
