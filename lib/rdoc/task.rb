@@ -117,6 +117,11 @@ class RDoc::Task < Rake::TaskLib
   attr_accessor :template
 
   ##
+  # Name of format generator (--fmt) used by rdoc. (defaults to rdoc's default)
+  
+  attr_accessor :generator
+
+  ##
   # List of files to be included in the rdoc generation. (default is [])
 
   attr_accessor :rdoc_files
@@ -151,6 +156,7 @@ class RDoc::Task < Rake::TaskLib
     @main = nil
     @title = nil
     @template = nil
+    @generator = nil
     @options = []
     yield self if block_given?
     define
@@ -204,6 +210,7 @@ class RDoc::Task < Rake::TaskLib
     result << "--main"  << main     if main
     result << "--title" << title    if title
     result << "-T"      << template if template
+    result << '-f'      << generator if generator 
     result
   end
 
