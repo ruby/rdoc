@@ -53,6 +53,9 @@ require 'rake/tasklib'
 #
 # Simple Example:
 #
+#   gem 'rdoc'
+#   require 'rdoc/task'
+#
 #   RDoc::Task.new do |rd|
 #     rd.main = "README.rdoc"
 #     rd.rdoc_files.include("README.rdoc", "lib/**/*.rb")
@@ -66,6 +69,9 @@ require 'rake/tasklib'
 # You may wish to give the task a different name, such as if you are
 # generating two sets of documentation.  For instance, if you want to have a
 # development set of documentation including private methods:
+#
+#   gem 'rdoc'
+#   require 'rdoc/task'
 #
 #   RDoc::Task.new :rdoc_dev do |rd|
 #     rd.main = "README.doc"
@@ -81,6 +87,9 @@ require 'rake/tasklib'
 # <tt>:rerdoc</tt> options, you can customize the task names to your liking.
 #
 # For example:
+#
+#   gem 'rdoc'
+#   require 'rdoc/task'
 #
 #   RDoc::Task.new(:rdoc => "rdoc", :clobber_rdoc => "rdoc:clean",
 #                  :rerdoc => "rdoc:force")
