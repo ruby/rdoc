@@ -215,7 +215,7 @@ class RDoc::Stats
         report << nil
 
         cm.each_constant do |constant|
-          next if constant.documented?
+          next if constant.documented? || constant.is_alias_for
           report << "  # in file #{constant.file.full_name}"
           report << "  #{constant.name} = nil"
         end
