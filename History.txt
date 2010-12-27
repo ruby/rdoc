@@ -17,6 +17,8 @@ otherwise noted.
     RubyForge bug #27793 by Aaron Patterson.
   * RDoc no longer crashes in ri if HOME is not set.  Ruby Bug #4202 by
     Shyouhei Urabe.
+  * ri no longer crashes with HTML format output.  RubyForge bug #28675 by
+    7rans.
 
 === 3.0.1 / 2010-12-19
 
