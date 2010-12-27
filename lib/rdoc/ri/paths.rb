@@ -24,7 +24,8 @@ module RDoc::RI::Paths
             rescue ArgumentError
             end
 
-  homedir ||= ENV['HOME'] || ENV['USERPROFILE'] || ENV['HOMEPATH']
+  homedir ||= ENV['HOME'] ||
+              ENV['USERPROFILE'] || ENV['HOMEPATH'] # for 1.8 compatibility
 
   HOMEDIR = if homedir then
               File.join homedir, ".rdoc"
