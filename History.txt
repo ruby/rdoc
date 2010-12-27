@@ -12,6 +12,8 @@ otherwise noted.
     by Andy Lindeman.
   * RDoc no longer looses ghost methods when followed by certain tokens.
     RubyForge bug #27793 by Aaron Patterson.
+  * RDoc no longer crashes in ri if HOME is not set.  Ruby Bug #4202 by
+    Shyouhei Urabe.
 
 === 3.0.1 / 2010-12-19
 
