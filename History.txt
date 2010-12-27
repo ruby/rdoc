@@ -3,13 +3,15 @@
 RDoc has moved to github.  Releases after 3.0.2 reference github unless
 otherwise noted.
 
-* Bug fix
+* Bug fixes
   * Strip encoding comment from input to avoid overriding file comment.
     RubyForge Bug #22113 by James Gray.
   * Restore call-seq parsing behavior when the call-seq is the only comment.
     RubyForge Bug #26290 by Sylvain Joyeux.
   * Coverage report no longer crashes for constant aliases.  Pull Request #1
     by Andy Lindeman.
+  * RDoc no longer looses ghost methods when followed by certain tokens.
+    RubyForge bug #27793 by Aaron Patterson.
 
 === 3.0.1 / 2010-12-19
 

@@ -563,6 +563,35 @@ end
     assert_equal @top_level, blah.file
   end
 
+  def test_parse_class_multi_ghost_methods
+    util_parser <<-'CLASS'
+class Foo
+  ##
+  # :method: one
+  #
+  # my method
+
+  ##
+  # :method: two
+  #
+  # my method
+
+  [:one, :two].each do |t|
+    eval("def #{t}; \"#{t}\"; end")
+  end
+end
+    CLASS
+
+    tk = @parser.get_tk
+
+    @parser.parse_class @top_level, RDoc::Parser::Ruby::NORMAL, tk, ''
+
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+
+    assert_equal 2, foo.method_list.length
+  end
+
   def test_parse_class_nested_superclass
     util_top_level
     foo = @top_level.add_module RDoc::NormalModule, 'Foo'

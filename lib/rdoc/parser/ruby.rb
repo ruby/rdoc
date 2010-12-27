@@ -781,6 +781,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       @stats.add_attribute att
     end
+
+    true
   end
 
   ##
@@ -1232,10 +1234,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
         if TkCOMMENT === tk then
           if non_comment_seen then
             # Look for RDoc in a comment about to be thrown away
-            parse_comment container, tk, comment unless comment.empty?
+            non_comment_seen = parse_comment container, tk, comment unless
+              comment.empty?
 
             comment = ''
-            non_comment_seen = false
           end
 
           while TkCOMMENT === tk do
@@ -1362,6 +1364,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
           return
         end
+      else
+        non_comment_seen = parse_comment container, tk, comment unless
+          comment.empty?
+
+        comment = ''
       end
 
       comment = '' unless keep_comment
