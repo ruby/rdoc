@@ -127,7 +127,7 @@ class RDoc::Task < Rake::TaskLib
 
   ##
   # Name of format generator (--fmt) used by rdoc. (defaults to rdoc's default)
-  
+
   attr_accessor :generator
 
   ##
@@ -228,10 +228,10 @@ class RDoc::Task < Rake::TaskLib
   def option_list
     result = @options.dup
     result << "-o"      << @rdoc_dir
-    result << "--main"  << main     if main
-    result << "--title" << title    if title
-    result << "-T"      << template if template
-    result << '-f'      << generator if generator 
+    result << "--main"  << main      if main
+    result << "--title" << title     if title
+    result << "-T"      << template  if template
+    result << '-f'      << generator if generator
     result
   end
 
