@@ -24,6 +24,7 @@ class RDoc::Stats
     @files_so_far = 0
     @num_files = num_files
     @fully_documented = nil
+    @percent_doc = nil
 
     @start = Time.now
 
