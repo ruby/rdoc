@@ -3,6 +3,9 @@
 RDoc has moved to github.  Releases after 3.0.2 reference github unless
 otherwise noted.
 
+* Minor enhancements
+  * RDoc::Task now features a #generator option to choose an alternate
+    generator.  Pull Request #2 by Erik Hollensbe.
 * Bug fixes
   * Strip encoding comment from input to avoid overriding file comment.
     RubyForge Bug #22113 by James Gray.

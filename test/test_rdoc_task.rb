@@ -48,10 +48,7 @@ class TestRDocTask < MiniTest::Unit::TestCase
       rd.generator = "ri"
     end
 
-    opts = RDoc::Options.new
-    opts.parse(rdoc_task.option_list)
-
-    assert_equal RDoc::Generator::RI, opts.generator
+    assert_equal %w[-o html -f ri], rdoc_task.option_list
   end
 
   def test_tasks_creation_with_custom_name_string
