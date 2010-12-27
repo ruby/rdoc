@@ -8,6 +8,26 @@ class TestRDocTask < MiniTest::Unit::TestCase
     Rake::Task.clear
   end
 
+  def test_inline_source
+    t = RDoc::Task.new
+
+    _, err = capture_io do
+      assert t.inline_source
+    end
+
+    assert_equal "RDoc::Task#inline_source is deprecated\n", err
+
+    _, err = capture_io do
+      t.inline_source = false
+    end
+
+    assert_equal "RDoc::Task#inline_source is deprecated\n", err
+
+    capture_io do
+      assert t.inline_source
+    end
+  end
+
   def test_tasks_creation
     RDoc::Task.new
     assert Rake::Task[:rdoc]
