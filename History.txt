@@ -27,7 +27,7 @@ otherwise noted.
   * RDoc::Markup::ToHtml#gen_url now initializes #from_path to ''.
     Additionally, #from_path is now settable.  RubyForge bug #27838 by Claus
     Folke Brobak.
-  * Comments in the C parser ar enow normalized before being combined.
+  * Comments in the C parser are now normalized before being combined.
     RubyForge patch #28646 by Sven Herzberg.
   * RDoc::Parser::C no longer requires a comment and finds more method bodies.
     RubyForge patch #28643 by Sven Herzberg.
