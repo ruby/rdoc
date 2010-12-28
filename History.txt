@@ -1,6 +1,6 @@
 === 3.1 / 
 
-RDoc has moved to github.  Releases after 3.0.2 reference github unless
+RDoc has moved to github.  Releases after 3.1 reference github unless
 otherwise noted.
 
 * Minor enhancements
