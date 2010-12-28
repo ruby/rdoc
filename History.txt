@@ -6,6 +6,7 @@ otherwise noted.
 * Minor enhancements
   * RDoc::Task now features a #generator option to choose an alternate
     generator.  Pull Request #2 by Erik Hollensbe.
+  * Enhanced test for RDoc::Parser::binary?  RubyForge patch #28538.
 * Bug fixes
   * Strip encoding comment from input to avoid overriding file comment.
     RubyForge Bug #22113 by James Gray.
