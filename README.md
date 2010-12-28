@@ -1,8 +1,8 @@
-# \RDoc - Ruby Documentation System
+# RDoc - Ruby Documentation System
 
-* (RDoc Project Page)[https://github.com/rdoc/rdoc/]
-* (RDoc Documentation)[http://rdoc.rubyforge.org/]
-* (RDoc Bug Tracker)[https://github.com/rdoc/rdoc/issues]
+* [RDoc Project Page](https://github.com/rdoc/rdoc/)
+* [RDoc Documentation](http://rdoc.rubyforge.org/)
+* [RDoc Bug Tracker](https://github.com/rdoc/rdoc/issues/)
 
 ## DESCRIPTION
 
@@ -16,18 +16,18 @@ See RDoc for a description of RDoc's markup and basic use.
 
 To generate HTML documentation:
 
-  rdoc .
+    rdoc .
 
 To generate documentation programmatically:
 
-  gem 'rdoc'
-  require 'rdoc/rdoc'
-  # ... see RDoc
+    gem 'rdoc'
+    require 'rdoc/rdoc'
+    # ... see RDoc
 
 ## BUGS
 
 If you find a bug, please report it at the RDoc project's
-tracker[http://rubyforge.org/tracker/?group_id=627] on RubyForge
+[tracker][http://rubyforge.org/tracker/?group_id=627) on RubyForge
 
 # LICENSE
 
