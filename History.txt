@@ -19,6 +19,9 @@ otherwise noted.
     Shyouhei Urabe.
   * ri no longer crashes with HTML format output.  RubyForge bug #28675 by
     7rans.
+  * RDoc::Markup::ToHtml#gen_url now initializes #from_path to ''.
+    Additionally, #from_path is now settable.  RubyForge bug #27838 by Claus
+    Folke Brobak.
 
 === 3.0.1 / 2010-12-19
 
