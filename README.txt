@@ -1,8 +1,8 @@
 = \RDoc - Ruby Documentation System
 
-* {RDoc Project Page}[http://rubyforge.org/projects/rdoc/]
+* {RDoc Project Page}[https://github.com/rdoc/rdoc/]
 * {RDoc Documentation}[http://rdoc.rubyforge.org/]
-* {RDoc Bug Tracker}[http://rubyforge.org/tracker/?atid=2472&group_id=627&func=browse]
+* {RDoc Bug Tracker}[https://github.com/rdoc/rdoc/issues]
 
 == DESCRIPTION:
 
