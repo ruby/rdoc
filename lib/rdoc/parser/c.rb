@@ -371,7 +371,7 @@ class RDoc::Parser::C < RDoc::Parser
 
   def find_body(class_name, meth_name, meth_obj, body, quiet = false)
     case body
-    when %r%((?>/\*.*?\*/\s*))
+    when %r%((?>/\*.*?\*/\s*)?)
             ((?:(?:static|SWIGINTERN)\s+)?
              (?:intern\s+)?VALUE\s+#{meth_name}
              \s*(\([^)]*\))([^;]|$))%xm then

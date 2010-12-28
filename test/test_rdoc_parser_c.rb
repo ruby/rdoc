@@ -532,6 +532,46 @@ Init_Foo(void) {
     assert_equal "VALUE\nother_function() ", code
   end
 
+  def test_find_body_2
+    content = <<-CONTENT
+/* Copyright (C) 2010  Sven Herzberg
+ *
+ * This file is free software; the author(s) gives unlimited
+ * permission to copy and/or distribute it, with or without
+ * modifications, as long as this notice is preserved.
+ */
+
+#include <ruby.h>
+
+static VALUE
+wrap_initialize (VALUE  self)
+{
+  return self;
+}
+
+/* */
+static VALUE
+wrap_shift (VALUE self,
+            VALUE arg)
+{
+  return self;
+}
+
+void
+init_gi_repository (void)
+{
+  VALUE mTest = rb_define_module ("Test");
+  VALUE cTest = rb_define_class_under (mTest, "Test", rb_cObject);
+
+  rb_define_method (cTest, "initialize", wrap_initialize, 0);
+  rb_define_method (cTest, "shift", wrap_shift, 0);
+}
+    CONTENT
+
+    klass = util_get_class content, 'cTest'
+    assert_equal 2, klass.method_list.length
+  end
+
   def test_find_body_define
     content = <<-EOF
 /*
