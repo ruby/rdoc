@@ -26,6 +26,8 @@ otherwise noted.
     RubyForge patch #28646 by Sven Herzberg.
   * RDoc::Parser::C no longer requires a comment and finds more method bodies.
     RubyForge patch #28643 by Sven Herzberg.
+  * Darkfish now has a "Class/Module Index" instead of a "Class Index".
+    RubyForge patch #28364 by James Tucker.
 
 === 3.0.1 / 2010-12-19
 
