@@ -1,4 +1,4 @@
-=== 3.0.2 / 
+=== 3.1 / 
 
 RDoc has moved to github.  Releases after 3.0.2 reference github unless
 otherwise noted.
@@ -22,6 +22,8 @@ otherwise noted.
   * RDoc::Markup::ToHtml#gen_url now initializes #from_path to ''.
     Additionally, #from_path is now settable.  RubyForge bug #27838 by Claus
     Folke Brobak.
+  * Comments in the C parser ar enow normalized before being combined.
+    RubyForge patch #28646 by Sven Herzberg.
 
 === 3.0.1 / 2010-12-19
 
