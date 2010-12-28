@@ -111,6 +111,7 @@ lib/rdoc/top_level.rb
 test/README
 test/binary.dat
 test/hidden.zip.txt
+test/test.ja.large.rdoc
 test/test.ja.rdoc
 test/test.ja.txt
 test/test.txt
@@ -151,6 +152,8 @@ test/test_rdoc_require.rb
 test/test_rdoc_ri_driver.rb
 test/test_rdoc_ri_paths.rb
 test/test_rdoc_ri_store.rb
+test/test_rdoc_ruby_lex.rb
+test/test_rdoc_stats.rb
 test/test_rdoc_task.rb
 test/test_rdoc_text.rb
 test/test_rdoc_top_level.rb
