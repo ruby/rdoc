@@ -27,7 +27,7 @@ To generate documentation programmatically:
 ## BUGS
 
 If you find a bug, please report it at the RDoc project's
-[tracker][http://rubyforge.org/tracker/?group_id=627) on RubyForge
+[tracker](http://rubyforge.org/tracker/?group_id=627) on RubyForge
 
 # LICENSE
 
