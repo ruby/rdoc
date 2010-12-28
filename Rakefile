@@ -58,7 +58,7 @@ diff_options = "-urpN --exclude '*svn*' --exclude '*swp' --exclude '*rbc'"
 rsync_options = "-avP --exclude '*svn*' --exclude '*swp' --exclude '*rbc' --exclude '*.rej' --exclude '*.orig'"
 
 rubinius_dir = ENV['RUBINIUS_PATH'] || '../../../git/git.rubini.us/code'
-ruby_dir = ENV['RUBY_PATH'] || '../../ruby/trunk'
+ruby_dir = ENV['RUBY_PATH'] || '../../svn/ruby/trunk'
 
 desc "Updates Ruby HEAD with the currently checked-out copy of RDoc."
 task :update_ruby do
