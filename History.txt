@@ -6,7 +6,8 @@ otherwise noted.
 * Minor enhancements
   * RDoc::Task now features a #generator option to choose an alternate
     generator.  Pull Request #2 by Erik Hollensbe.
-  * Enhanced test for RDoc::Parser::binary?  RubyForge patch #28538.
+  * Enhanced test for RDoc::Parser::binary?  RubyForge patch #28538 by Eito
+    Katagiri.
 * Bug fixes
   * Strip encoding comment from input to avoid overriding file comment.
     RubyForge Bug #22113 by James Gray.
@@ -29,6 +30,8 @@ otherwise noted.
     RubyForge patch #28643 by Sven Herzberg.
   * Darkfish now has a "Class/Module Index" instead of a "Class Index".
     RubyForge patch #28364 by James Tucker.
+  * RDoc::Parser::Ruby now parses negative numbers correctly.  RubyForge patch
+    #28544 by Eito Katagiri.
 
 === 3.0.1 / 2010-12-19
 
