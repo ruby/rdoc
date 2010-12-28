@@ -17,10 +17,12 @@ Hoe.spec 'rdoc' do
   self.remote_rdoc_dir = ''
   self.rsync_args = '-avz'
   self.testlib = :minitest
-  self.isolate_dir = 'tmp/isolated'
+  self.isolate_dir = 'tmp/isolate'
 
   extra_dev_deps   << ['minitest', '~> 2']
   extra_dev_deps   << ['isolate',  '~> 3']
+  extra_dev_deps   << ['ZenTest',  '~> 4'] # for autotest/isolate
+
   extra_rdoc_files << 'Rakefile'
   spec_extras['required_rubygems_version'] = '>= 1.3'
   spec_extras['homepage'] = 'http://rdoc.rubyforge.org'
