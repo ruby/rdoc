@@ -10,6 +10,7 @@ otherwise noted.
     Katagiri.
   * Generator list in --help is no longer static.  Generator description comes
     from the generator's DESCRIPTION constant.
+  * Documentation summary is now displayed with dynamic width.
 * Bug fixes
   * Strip encoding comment from input to avoid overriding file comment.
     RubyForge Bug #22113 by James Gray.
