@@ -3,6 +3,9 @@
 * Minor enhancements
   * RDoc generator authors may now suppress updating the output dir (creating
     a created.rid file) by setting RDoc::Options#update_output_dir to false.
+* Bug fixes
+  * RDoc's gitignore now ignores .DS_Store files.  Pull Request #3 by Shane
+    Becker.
 
 === 3.1 / 2010-12-28
 
