@@ -1,4 +1,4 @@
-=== 3.2 / ??
+=== 3.2 / 2010-12-29
 
 * Minor enhancements
   * RDoc generator authors may now suppress updating the output dir (creating
