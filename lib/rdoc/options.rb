@@ -149,6 +149,11 @@ class RDoc::Options
   attr_accessor :title
 
   ##
+  # Should RDoc update the timestamps in the output dir?
+
+  attr_accessor :update_output_dir
+
+  ##
   # Verbosity, zero means quiet
 
   attr_accessor :verbosity
@@ -188,6 +193,7 @@ class RDoc::Options
     @template = nil
     @template_dir = nil
     @title = nil
+    @update_output_dir = true
     @verbosity = 1
     @visibility = :protected
     @webcvs = nil

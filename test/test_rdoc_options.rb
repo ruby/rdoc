@@ -338,5 +338,13 @@ file 'unreadable' not readable
     RDoc::RDoc::GENERATORS.delete 'TestGenerator'
   end
 
+  def test_update_output_dir
+    assert @options.update_output_dir
+
+    @options.update_output_dir = false
+
+    refute @options.update_output_dir
+  end
+
 end
 

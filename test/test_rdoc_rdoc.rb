@@ -149,6 +149,17 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
     end
   end
 
+  def test_update_output_dir_dont
+    skip "No Dir::mktmpdir, upgrade your ruby" unless Dir.respond_to? :mktmpdir
+
+    Dir.mktmpdir do |d|
+      @rdoc.options.update_output_dir = false
+      @rdoc.update_output_dir d, Time.now, {}
+
+      refute File.exist? "#{d}/created.rid"
+    end
+  end
+
   def test_update_output_dir_dry_run
     skip "No Dir::mktmpdir, upgrade your ruby" unless Dir.respond_to? :mktmpdir
 
