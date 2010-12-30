@@ -455,9 +455,11 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--[no-]coverage-report", "--[no-]dcov", "-C",
+      opt.on("--[no-]coverage-report=[LEVEL]", "--[no-]dcov", "-C", Integer,
              "Prints a report on undocumented items.",
              "Does not generate files.") do |value|
+        value = 0 if value.nil? # Integer converts -C to nil
+
         @coverage_report = value
         @force_update = true if value
       end

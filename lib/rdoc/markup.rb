@@ -537,8 +537,8 @@ class RDoc::Markup
   # structure (paragraphs, lists, and so on).  Invoke an event handler as we
   # identify significant chunks.
 
-  def initialize
-    @attribute_manager = RDoc::Markup::AttributeManager.new
+  def initialize attribute_manager = nil
+    @attribute_manager = attribute_manager || RDoc::Markup::AttributeManager.new
     @output = nil
   end
 

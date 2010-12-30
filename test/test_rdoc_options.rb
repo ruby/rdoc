@@ -66,6 +66,25 @@ file 'unreadable' not readable
     assert_equal expected, @options.generator_descriptions
   end
 
+  def test_parse_coverage
+    @options.parse %w[--dcov]
+
+    assert @options.coverage_report
+    assert @options.force_update
+  end
+
+  def test_parse_coverage_no
+    @options.parse %w[--no-dcov]
+
+    refute @options.coverage_report
+  end
+
+  def test_parse_coverage_level_1
+    @options.parse %w[--dcov=1]
+
+    assert_equal 1, @options.coverage_report
+  end
+
   def test_parse_dash_p
     out, err = capture_io do
       @options.parse %w[-p]

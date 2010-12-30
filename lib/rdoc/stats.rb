@@ -290,6 +290,64 @@ class RDoc::Stats
     report.join "\n"
   end
 
+  ##
+  # Reports which method parameters do not have matching documentation.
+  #
+  # TODO merge with #report
+
+  def parameter_report
+    require 'rdoc/markup/to_tt_only'
+    require 'rdoc/generator/markup'
+    require 'rdoc/text'
+    extend RDoc::Text
+
+    ucm = RDoc::TopLevel.unique_classes_and_modules
+    
+    param_count = 0
+    undoc_count = 0
+    report = []
+
+    formatter = RDoc::Markup::ToTtOnly.new
+
+    ucm.each do |cm|
+      cm.each_method do |method|
+        params = method.params.sub(/\((.*)\)/m, '\1').split(/,\s+/)
+        params = params.map do |param|
+          param.sub(/ .*/, '')
+        end
+
+        next if params.empty?
+
+        param_count += params.length
+
+        document = parse method.comment
+
+        tts = document.accept formatter
+
+        undoc = params - tts
+
+        next if undoc.empty?
+
+        undoc_count += undoc.length
+
+        doc = params - undoc
+
+        report << "#{method.full_name} in #{method.file.full_name}"
+        report << "#{undoc.length} parameters are undocumented:"
+        report << "  #{undoc.join ', '}"
+        report << nil
+      end
+    end
+
+    percent_doc = (param_count - undoc_count) / param_count.to_f * 100 if
+      param_count.nonzero?
+
+    report << "#{undoc_count} out of #{param_count} parameters are missing documentation"
+    report << "%6.2f%% of parameters documented" % percent_doc if percent_doc
+
+    report.join "\n"
+  end
+
   autoload :Quiet,   'rdoc/stats/quiet'
   autoload :Normal,  'rdoc/stats/normal'
   autoload :Verbose, 'rdoc/stats/verbose'

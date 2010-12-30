@@ -418,8 +418,15 @@ The internal error was:
 
     if @options.coverage_report then
       puts
-      puts @stats.report
-    elsif file_info.empty?
+
+      # TODO RDoc::Stats needs to handle this
+      case @options.coverage_report
+      when 0 then
+        puts @stats.report
+      else
+        puts @stats.parameter_report
+      end
+    elsif file_info.empty? then
       $stderr.puts "\nNo newer files." unless @options.quiet
     else
       gen_klass = @options.generator
