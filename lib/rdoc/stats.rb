@@ -181,17 +181,11 @@ class RDoc::Stats
     ucm = RDoc::TopLevel.unique_classes_and_modules
 
     ucm.sort.each do |cm|
-      type = case cm # TODO #definition
-             when RDoc::NormalClass  then 'class'
-             when RDoc::SingleClass  then 'class <<'
-             when RDoc::NormalModule then 'module'
-             end
-
       if cm.fully_documented? then
         next
       elsif cm.in_files.empty? or
             (cm.constants.empty? and cm.method_list.empty?) then
-        report << "# #{type} #{cm.full_name} is referenced but empty."
+        report << "# #{cm.definition} is referenced but empty."
         report << '#'
         report << '# It probably came from another project.  ' \
                   'I\'m sorry I\'m holding it against you.'
@@ -199,7 +193,7 @@ class RDoc::Stats
 
         next
       elsif cm.documented? then
-        report << "#{type} #{cm.full_name} # is documented"
+        report << "#{cm.definition} # is documented"
       else
         report << '# in files:'
 
@@ -209,7 +203,7 @@ class RDoc::Stats
 
         report << nil
 
-        report << "#{type} #{cm.full_name}"
+        report << "#{cm.definition}"
       end
 
       unless cm.constants.empty? then
