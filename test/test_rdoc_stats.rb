@@ -309,11 +309,16 @@ Great Job!
     c.record_location tl
     c.comment = 'C'
 
-    m = RDoc::AnyMethod.new nil, 'm'
-    m.record_location tl
-    m.params = '(p1, p2)'
-    m.comment = 'Stuff with +p1+'
-    c.add_method m
+    m1 = RDoc::AnyMethod.new nil, 'm1'
+    m1.record_location tl
+    m1.params = '(p1, p2)'
+    m1.comment = 'Stuff with +p1+'
+    c.add_method m1
+
+    m2 = RDoc::AnyMethod.new nil, 'm2'
+    m2.record_location tl
+    c.add_method m2
+    m2.comment = 'm2'
 
     RDoc::TopLevel.complete :public
 
@@ -327,7 +332,7 @@ class C # is documented
 
   # in file file.rb
   # +p2+ is not documented
-  def m(p1, p2); end
+  def m1(p1, p2); end
 
 end
     EXPECTED

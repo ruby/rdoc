@@ -271,19 +271,23 @@ class RDoc::Stats
 
         cm.each_method do |method|
           next if method.documented? and @coverage_level.zero?
-          report << "  # in file #{method.file.full_name}"
 
           if @coverage_level.nonzero? then
             params, undoc = undoc_params method
 
-            @num_params   += params
-            @undoc_params += undoc.length
+            @num_params += params
 
-            undoc = undoc.map do |param| "+#{param}+" end
-            report << "  # #{undoc.join ', '} is not documented" unless
-              undoc.empty?
+            unless undoc.empty? then
+              @undoc_params += undoc.length
+
+              undoc = undoc.map do |param| "+#{param}+" end
+              param_report = "  # #{undoc.join ', '} is not documented"
+            end
           end
 
+          next if method.documented? and not param_report
+          report << "  # in file #{method.file.full_name}"
+          report << param_report if param_report
           report << "  def #{method.name}#{method.params}; end"
           report << nil
         end
@@ -292,7 +296,6 @@ class RDoc::Stats
       report << 'end'
       report << nil
     end
-
 
     if @coverage_level.nonzero? then
       calculate
@@ -360,6 +363,8 @@ class RDoc::Stats
 
   def undoc_params method
     @formatter ||= RDoc::Markup::ToTtOnly.new
+
+    return 0, [] if method.params.nil?
 
     params = method.params.sub(/\((.*)\)/m, '\1').split(/,\s+/)
     params = params.map do |param|
