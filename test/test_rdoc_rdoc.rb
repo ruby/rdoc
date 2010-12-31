@@ -9,6 +9,8 @@ require 'tmpdir'
 class TestRDocRDoc < MiniTest::Unit::TestCase
 
   def setup
+    RDoc::TopLevel.reset
+
     @rdoc = RDoc::RDoc.new
     @rdoc.options = RDoc::Options.new
 

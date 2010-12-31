@@ -7,6 +7,14 @@ require 'rdoc'
 class RDoc::Stats
 
   ##
+  # Output level for the coverage report.  Accepted values are:
+  #
+  # 0:: Classes, modules, constants, attributes, methods
+  # 1:: Level 0 + method parameters
+
+  attr_accessor :coverage_level
+
+  ##
   # Count of files parsed during parsing
 
   attr_reader :files_so_far
@@ -23,12 +31,13 @@ class RDoc::Stats
   def initialize num_files, verbosity = 1
     @files_so_far = 0
     @num_files = num_files
-    @fully_documented = nil
-    @percent_doc = nil
-    @num_params = 0
-    @undoc_params = 0
 
+    @coverage_level = 0
+    @fully_documented = nil
+    @num_params = 0
+    @percent_doc = nil
     @start = Time.now
+    @undoc_params = 0
 
     @display = case verbosity
                when 0 then Quiet.new   num_files
@@ -189,8 +198,8 @@ class RDoc::Stats
   ##
   # Returns a report on which items are not documented
 
-  def report level = 0
-    if level.nonzero? then
+  def report
+    if @coverage_level.nonzero? then
       require 'rdoc/markup/to_tt_only'
       require 'rdoc/generator/markup'
       require 'rdoc/text'
@@ -199,7 +208,7 @@ class RDoc::Stats
 
     report = []
 
-    if level.zero? then
+    if @coverage_level.zero? then
       calculate
 
       return great_job if @num_items == @doc_items
@@ -208,7 +217,7 @@ class RDoc::Stats
     ucm = RDoc::TopLevel.unique_classes_and_modules
 
     ucm.sort.each do |cm|
-      if cm.fully_documented? and level.zero? then
+      if cm.fully_documented? and @coverage_level.zero? then
         next
       elsif cm.in_files.empty? or
             (cm.constants.empty? and
@@ -261,10 +270,10 @@ class RDoc::Stats
         report << nil
 
         cm.each_method do |method|
-          next if method.documented? and level.zero?
+          next if method.documented? and @coverage_level.zero?
           report << "  # in file #{method.file.full_name}"
 
-          if level.nonzero? then
+          if @coverage_level.nonzero? then
             params, undoc = undoc_params method
 
             @num_params   += params
@@ -285,7 +294,7 @@ class RDoc::Stats
     end
 
 
-    if level.nonzero? then
+    if @coverage_level.nonzero? then
       calculate
 
       return great_job if @num_items == @doc_items
@@ -300,7 +309,7 @@ class RDoc::Stats
   ##
   # Returns a summary of the collected statistics.
 
-  def summary level = 0
+  def summary
     calculate
 
     num_width = [@num_files, @num_items].max.to_s.length
@@ -330,7 +339,8 @@ class RDoc::Stats
     report << 'Methods:    %*d (%*d undocumented)' % [
       num_width, @num_methods, undoc_width, @undoc_methods]
     report << 'Parameters: %*d (%*d undocumented)' % [
-      num_width, @num_params, undoc_width, @undoc_params] if level.nonzero?
+      num_width, @num_params, undoc_width, @undoc_params] if
+        @coverage_level.nonzero?
 
     report << nil
 

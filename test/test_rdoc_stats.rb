@@ -317,7 +317,8 @@ Great Job!
 
     RDoc::TopLevel.complete :public
 
-    report = @s.report 1
+    @s.coverage_level = 1
+    report = @s.report
 
     expected = <<-EXPECTED
 The following items are not documented:
@@ -348,7 +349,8 @@ end
 
     RDoc::TopLevel.complete :public
 
-    report = @s.report 1
+    @s.coverage_level = 1
+    report = @s.report
 
     expected = <<-EXPECTED.chomp
 100% documentation!
@@ -415,9 +417,10 @@ Elapsed: 0.0s
 
     RDoc::TopLevel.complete :public
 
-    @s.report 1
+    @s.coverage_level = 1
+    @s.report
 
-    summary = @s.summary 1
+    summary = @s.summary
 
     expected = <<-EXPECTED.chomp
 Files:      0

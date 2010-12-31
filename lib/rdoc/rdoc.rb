@@ -416,10 +416,12 @@ The internal error was:
 
     RDoc::TopLevel.complete @options.visibility
 
+    @stats.coverage_level = @options.coverage_report
+
     if @options.coverage_report then
       puts
 
-      puts @stats.report @options.coverage_report
+      puts @stats.report
     elsif file_info.empty? then
       $stderr.puts "\nNo newer files." unless @options.quiet
     else
@@ -445,7 +447,7 @@ The internal error was:
 
     unless @options.quiet or not @stats then
       puts
-      puts @stats.summary @options.coverage_report
+      puts @stats.summary
     end
 
     exit @stats.fully_documented? if @options.coverage_report
