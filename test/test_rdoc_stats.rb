@@ -224,6 +224,34 @@ The following items are not documented:
     assert_equal expected, report
   end
 
+  def test_report_class_empty_2
+    tl = RDoc::TopLevel.new 'file.rb'
+    c1 = tl.add_class RDoc::NormalClass, 'C1'
+    c1.record_location tl
+
+    c2 = tl.add_class RDoc::NormalClass, 'C2'
+    c2.record_location tl
+    c2.comment = 'C2'
+
+    RDoc::TopLevel.complete :public
+
+    @s.coverage_level = 1
+    report = @s.report
+
+    expected = <<-EXPECTED
+The following items are not documented:
+
+# in files:
+#   file.rb
+
+class C1
+end
+
+    EXPECTED
+
+    assert_equal expected, report
+  end
+
   def test_report_class_method_documented
     tl = RDoc::TopLevel.new 'file.rb'
     c = tl.add_class RDoc::NormalClass, 'C'

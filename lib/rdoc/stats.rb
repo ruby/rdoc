@@ -263,14 +263,11 @@ class RDoc::Stats
 
     report = []
 
-    if cm.in_files.empty? or
-       (cm.constants.empty? and
-        cm.method_list.empty? and
-        cm.attributes.empty?) then
+    if cm.in_files.empty? then
       report << "# #{cm.definition} is referenced but empty."
       report << '#'
       report << '# It probably came from another project.  ' \
-                'I\'m sorry I\'m holding it against you.'
+        "I'm sorry I'm holding it against you."
       report << nil
 
       return report
