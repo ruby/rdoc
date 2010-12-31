@@ -53,13 +53,7 @@ end
 
     report = @s.report
 
-    expected = <<-EXPECTED.chomp
-100% documentation!
-
-Great Job!
-    EXPECTED
-
-    assert_equal expected, report
+    assert_equal @s.great_job, report
   end
 
   def test_report_constant
@@ -124,13 +118,7 @@ end
 
     report = @s.report
 
-    expected = <<-EXPECTED.chomp
-100% documentation!
-
-Great Job!
-    EXPECTED
-
-    assert_equal expected, report
+    assert_equal @s.great_job, report
   end
 
   def test_report_class
@@ -175,13 +163,7 @@ end
 
     report = @s.report
 
-    expected = <<-EXPECTED.chomp
-100% documentation!
-
-Great Job!
-    EXPECTED
-
-    assert_equal expected, report
+    assert_equal @s.great_job, report
   end
 
   def test_report_class_documented_level_1
@@ -274,13 +256,7 @@ end
 
     report = @s.report
 
-    expected = <<-EXPECTED.chomp
-100% documentation!
-
-Great Job!
-    EXPECTED
-
-    assert_equal expected, report
+    assert_equal @s.great_job, report
   end
 
   def test_report_method
@@ -331,13 +307,7 @@ end
 
     report = @s.report
 
-    expected = <<-EXPECTED.chomp
-100% documentation!
-
-Great Job!
-    EXPECTED
-
-    assert_equal expected, report
+    assert_equal @s.great_job, report
   end
 
   def test_report_method_parameters
@@ -394,13 +364,7 @@ end
     @s.coverage_level = 1
     report = @s.report
 
-    expected = <<-EXPECTED.chomp
-100% documentation!
-
-Great Job!
-    EXPECTED
-
-    assert_equal expected, report
+    assert_equal @s.great_job, report
   end
 
   def test_summary
