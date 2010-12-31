@@ -64,7 +64,7 @@ Great Job!
 
   def test_report_constant
     tl = RDoc::TopLevel.new 'file.rb'
-    m = tl.add_class RDoc::NormalModule, 'M'
+    m = tl.add_module RDoc::NormalModule, 'M'
     m.record_location tl
     m.comment = 'M'
 
@@ -112,7 +112,7 @@ end
 
   def test_report_constant_documented
     tl = RDoc::TopLevel.new 'file.rb'
-    m = tl.add_class RDoc::NormalModule, 'M'
+    m = tl.add_module RDoc::NormalModule, 'M'
     m.record_location tl
     m.comment = 'M'
 
@@ -301,6 +301,141 @@ Great Job!
     EXPECTED
 
     assert_equal expected, report
+  end
+
+  def test_report_method_parameters
+    tl = RDoc::TopLevel.new 'file.rb'
+    c = tl.add_class RDoc::NormalClass, 'C'
+    c.record_location tl
+    c.comment = 'C'
+
+    m = RDoc::AnyMethod.new nil, 'm'
+    m.record_location tl
+    m.params = '(p1, p2)'
+    m.comment = 'Stuff with +p1+'
+    c.add_method m
+
+    RDoc::TopLevel.complete :public
+
+    report = @s.report 1
+
+    expected = <<-EXPECTED
+The following items are not documented:
+
+class C # is documented
+
+  # in file file.rb
+  # +p2+ is not documented
+  def m(p1, p2); end
+
+end
+    EXPECTED
+
+    assert_equal expected, report
+  end
+
+  def test_report_method_parameters_documented
+    tl = RDoc::TopLevel.new 'file.rb'
+    c = tl.add_class RDoc::NormalClass, 'C'
+    c.record_location tl
+    c.comment = 'C'
+
+    m = RDoc::AnyMethod.new nil, 'm'
+    m.record_location tl
+    m.params = '(p1)'
+    m.comment = 'Stuff with +p1+'
+    c.add_method m
+
+    RDoc::TopLevel.complete :public
+
+    report = @s.report 1
+
+    expected = <<-EXPECTED.chomp
+100% documentation!
+
+Great Job!
+    EXPECTED
+
+    assert_equal expected, report
+  end
+
+  def test_summary
+    tl = RDoc::TopLevel.new 'file.rb'
+    c = tl.add_class RDoc::NormalClass, 'C'
+    c.record_location tl
+
+    m = tl.add_module RDoc::NormalModule, 'M'
+    m.record_location tl
+
+    a = RDoc::Attr.new nil, 'a', 'RW', nil
+    a.record_location tl
+    c.add_attribute a
+
+    c_c = RDoc::Constant.new 'C', nil, nil
+    c_c.record_location tl
+    c.add_constant c_c
+
+    m = RDoc::AnyMethod.new nil, 'm'
+    m.record_location tl
+    c.add_method m
+
+    RDoc::TopLevel.complete :public
+
+    summary = @s.summary
+
+    expected = <<-EXPECTED.chomp
+Files:      0
+
+Classes:    1 (1 undocumented)
+Modules:    1 (1 undocumented)
+Constants:  1 (1 undocumented)
+Attributes: 1 (1 undocumented)
+Methods:    1 (1 undocumented)
+
+Total:      5 (5 undocumented)
+  0.00% documented
+
+Elapsed: 0.0s
+    EXPECTED
+
+    assert_equal summary, expected
+  end
+
+  def test_summary_level_1
+    tl = RDoc::TopLevel.new 'file.rb'
+    c = tl.add_class RDoc::NormalClass, 'C'
+    c.record_location tl
+    c.comment = 'C'
+
+    m = RDoc::AnyMethod.new nil, 'm'
+    m.record_location tl
+    m.params = '(p1, p2)'
+    m.comment = 'Stuff with +p1+'
+    c.add_method m
+
+    RDoc::TopLevel.complete :public
+
+    @s.report 1
+
+    summary = @s.summary 1
+
+    expected = <<-EXPECTED.chomp
+Files:      0
+
+Classes:    1 (0 undocumented)
+Modules:    0 (0 undocumented)
+Constants:  0 (0 undocumented)
+Attributes: 0 (0 undocumented)
+Methods:    1 (0 undocumented)
+Parameters: 2 (1 undocumented)
+
+Total:      4 (1 undocumented)
+ 75.00% documented
+
+Elapsed: 0.0s
+    EXPECTED
+
+    assert_equal summary, expected
   end
 
 end

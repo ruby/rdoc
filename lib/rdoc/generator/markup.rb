@@ -2,6 +2,8 @@ require 'rdoc/text'
 require 'rdoc/code_objects'
 require 'rdoc/generator'
 require 'rdoc/markup/to_html_crossref'
+require 'rdoc/ruby_token'
+
 
 ##
 # Handle common RDoc::Markup tasks for various CodeObjects

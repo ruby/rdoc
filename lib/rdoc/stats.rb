@@ -25,6 +25,8 @@ class RDoc::Stats
     @num_files = num_files
     @fully_documented = nil
     @percent_doc = nil
+    @num_params = 0
+    @undoc_params = 0
 
     @start = Time.now
 
@@ -93,10 +95,11 @@ class RDoc::Stats
   end
 
   ##
-  # Calculates documentation totals and percentages
+  # Calculates documentation totals and percentages for classes, modules,
+  # constants, attributes and methods.
 
   def calculate
-    return if @percent_doc
+    return if @doc_items
 
     ucm = RDoc::TopLevel.unique_classes_and_modules
     constants = []
@@ -119,20 +122,18 @@ class RDoc::Stats
       @num_classes +
       @num_constants +
       @num_methods +
-      @num_modules
+      @num_modules +
+      @num_params
 
     @undoc_items =
       @undoc_attributes +
       @undoc_classes +
       @undoc_constants +
       @undoc_methods +
-      @undoc_modules
+      @undoc_modules +
+      @undoc_params
 
     @doc_items = @num_items - @undoc_items
-
-    @fully_documented = (@num_items - @doc_items) == 0
-
-    @percent_doc = @doc_items.to_f / @num_items * 100 if @num_items.nonzero?
   end
 
   ##
@@ -160,28 +161,54 @@ class RDoc::Stats
   end
 
   ##
+  # A report that says you did a great job!
+
+  def great_job
+    report = []
+    report << '100% documentation!'
+    report << nil
+    report << 'Great Job!'
+
+    report.join "\n"
+  end
+
+  ##
+  # Calculates the percentage of items documented.
+
+  def percent_doc
+    return @percent_doc if @percent_doc
+
+    @fully_documented = (@num_items - @doc_items) == 0
+
+    @percent_doc = @doc_items.to_f / @num_items * 100 if @num_items.nonzero?
+    @percent_doc ||= 0
+
+    @percent_doc
+  end
+
+  ##
   # Returns a report on which items are not documented
 
-  def report
-    report = []
-
-    calculate
-
-    if @num_items == @doc_items then
-      report << '100% documentation!'
-      report << nil
-      report << 'Great Job!'
-
-      return report.join "\n"
+  def report level = 0
+    if level.nonzero? then
+      require 'rdoc/markup/to_tt_only'
+      require 'rdoc/generator/markup'
+      require 'rdoc/text'
+      extend RDoc::Text
     end
 
-    report << 'The following items are not documented:'
-    report << nil
+    report = []
+
+    if level.zero? then
+      calculate
+
+      return great_job if @num_items == @doc_items
+    end
 
     ucm = RDoc::TopLevel.unique_classes_and_modules
 
     ucm.sort.each do |cm|
-      if cm.fully_documented? then
+      if cm.fully_documented? and level.zero? then
         next
       elsif cm.in_files.empty? or
             (cm.constants.empty? and
@@ -234,8 +261,20 @@ class RDoc::Stats
         report << nil
 
         cm.each_method do |method|
-          next if method.documented?
+          next if method.documented? and level.zero?
           report << "  # in file #{method.file.full_name}"
+
+          if level.nonzero? then
+            params, undoc = undoc_params method
+
+            @num_params   += params
+            @undoc_params += undoc.length
+
+            undoc = undoc.map do |param| "+#{param}+" end
+            report << "  # #{undoc.join ', '} is not documented" unless
+              undoc.empty?
+          end
+
           report << "  def #{method.name}#{method.params}; end"
           report << nil
         end
@@ -245,23 +284,34 @@ class RDoc::Stats
       report << nil
     end
 
+
+    if level.nonzero? then
+      calculate
+
+      return great_job if @num_items == @doc_items
+    end
+
+    report.unshift nil
+    report.unshift 'The following items are not documented:'
+
     report.join "\n"
   end
 
   ##
   # Returns a summary of the collected statistics.
 
-  def summary
+  def summary level = 0
     calculate
 
     num_width = [@num_files, @num_items].max.to_s.length
-    nodoc_width = [
+    undoc_width = [
       @undoc_attributes,
       @undoc_classes,
       @undoc_constants,
       @undoc_items,
       @undoc_methods,
       @undoc_modules,
+      @undoc_params,
     ].max.to_s.length
 
     report = []
@@ -270,22 +320,24 @@ class RDoc::Stats
     report << nil
 
     report << 'Classes:    %*d (%*d undocumented)' % [
-      num_width, @num_classes, nodoc_width, @undoc_classes]
+      num_width, @num_classes, undoc_width, @undoc_classes]
     report << 'Modules:    %*d (%*d undocumented)' % [
-      num_width, @num_modules, nodoc_width, @undoc_modules]
+      num_width, @num_modules, undoc_width, @undoc_modules]
     report << 'Constants:  %*d (%*d undocumented)' % [
-      num_width, @num_constants, nodoc_width, @undoc_constants]
+      num_width, @num_constants, undoc_width, @undoc_constants]
     report << 'Attributes: %*d (%*d undocumented)' % [
-      num_width, @num_attributes, nodoc_width, @undoc_attributes]
+      num_width, @num_attributes, undoc_width, @undoc_attributes]
     report << 'Methods:    %*d (%*d undocumented)' % [
-      num_width, @num_methods, nodoc_width, @undoc_methods]
+      num_width, @num_methods, undoc_width, @undoc_methods]
+    report << 'Parameters: %*d (%*d undocumented)' % [
+      num_width, @num_params, undoc_width, @undoc_params] if level.nonzero?
 
     report << nil
 
     report << 'Total:      %*d (%*d undocumented)' % [
-      num_width, @num_items, nodoc_width, @undoc_items]
+      num_width, @num_items, undoc_width, @undoc_items]
 
-    report << '%6.2f%% documented' % @percent_doc if @percent_doc
+    report << '%6.2f%% documented' % percent_doc
     report << nil
     report << 'Elapsed: %0.1fs' % (Time.now - @start)
 
@@ -293,61 +345,26 @@ class RDoc::Stats
   end
 
   ##
-  # Reports which method parameters do not have matching documentation.
-  #
-  # TODO merge with #report
+  # Determines which parametecs in +method+ were not documented.  Returns a
+  # total parameter count and an Array of undocumented methods.
 
-  def parameter_report
-    require 'rdoc/markup/to_tt_only'
-    require 'rdoc/generator/markup'
-    require 'rdoc/text'
-    extend RDoc::Text
+  def undoc_params method
+    @formatter ||= RDoc::Markup::ToTtOnly.new
 
-    ucm = RDoc::TopLevel.unique_classes_and_modules
-
-    param_count = 0
-    undoc_count = 0
-    report = []
-
-    formatter = RDoc::Markup::ToTtOnly.new
-
-    ucm.each do |cm|
-      cm.each_method do |method|
-        params = method.params.sub(/\((.*)\)/m, '\1').split(/,\s+/)
-        params = params.map do |param|
-          param.sub(/ .*/, '')
-        end
-
-        next if params.empty?
-
-        param_count += params.length
-
-        document = parse method.comment
-
-        tts = document.accept formatter
-
-        undoc = params - tts
-
-        next if undoc.empty?
-
-        undoc_count += undoc.length
-
-        doc = params - undoc
-
-        report << "#{method.full_name} in #{method.file.full_name}"
-        report << "#{undoc.length} parameters are undocumented:"
-        report << "  #{undoc.join ', '}"
-        report << nil
-      end
+    params = method.params.sub(/\((.*)\)/m, '\1').split(/,\s+/)
+    params = params.map do |param|
+      param.sub(/ .*/, '') # remove defaults
     end
 
-    percent_doc = (param_count - undoc_count) / param_count.to_f * 100 if
-      param_count.nonzero?
+    return 0, [] if params.empty?
 
-    report << "#{undoc_count} out of #{param_count} parameters are missing documentation"
-    report << "%6.2f%% of parameters documented" % percent_doc if percent_doc
+    document = parse method.comment
 
-    report.join "\n"
+    tts = document.accept @formatter
+
+    undoc = params - tts
+
+    [params.length, undoc]
   end
 
   autoload :Quiet,   'rdoc/stats/quiet'

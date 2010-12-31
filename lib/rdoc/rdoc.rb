@@ -419,13 +419,7 @@ The internal error was:
     if @options.coverage_report then
       puts
 
-      # TODO RDoc::Stats needs to handle this
-      case @options.coverage_report
-      when 0 then
-        puts @stats.report
-      else
-        puts @stats.parameter_report
-      end
+      puts @stats.report @options.coverage_report
     elsif file_info.empty? then
       $stderr.puts "\nNo newer files." unless @options.quiet
     else
@@ -451,7 +445,7 @@ The internal error was:
 
     unless @options.quiet or not @stats then
       puts
-      puts @stats.summary
+      puts @stats.summary @options.coverage_report
     end
 
     exit @stats.fully_documented? if @options.coverage_report
