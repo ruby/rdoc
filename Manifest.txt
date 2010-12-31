@@ -79,6 +79,7 @@ lib/rdoc/markup/to_html.rb
 lib/rdoc/markup/to_html_crossref.rb
 lib/rdoc/markup/to_rdoc.rb
 lib/rdoc/markup/to_test.rb
+lib/rdoc/markup/to_tt_only.rb
 lib/rdoc/markup/verbatim.rb
 lib/rdoc/meta_method.rb
 lib/rdoc/method_attr.rb
@@ -139,6 +140,7 @@ test/test_rdoc_markup_to_bs.rb
 test/test_rdoc_markup_to_html.rb
 test/test_rdoc_markup_to_html_crossref.rb
 test/test_rdoc_markup_to_rdoc.rb
+test/test_rdoc_markup_to_tt_only.rb
 test/test_rdoc_method_attr.rb
 test/test_rdoc_normal_class.rb
 test/test_rdoc_normal_module.rb
@@ -153,6 +155,7 @@ test/test_rdoc_ri_driver.rb
 test/test_rdoc_ri_paths.rb
 test/test_rdoc_ri_store.rb
 test/test_rdoc_ruby_lex.rb
+test/test_rdoc_single_class.rb
 test/test_rdoc_stats.rb
 test/test_rdoc_task.rb
 test/test_rdoc_text.rb
