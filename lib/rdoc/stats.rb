@@ -184,7 +184,9 @@ class RDoc::Stats
       if cm.fully_documented? then
         next
       elsif cm.in_files.empty? or
-            (cm.constants.empty? and cm.method_list.empty?) then
+            (cm.constants.empty? and
+             cm.method_list.empty? and
+             cm.attributes.empty?) then
         report << "# #{cm.definition} is referenced but empty."
         report << '#'
         report << '# It probably came from another project.  ' \
@@ -223,7 +225,7 @@ class RDoc::Stats
 
         cm.each_attribute do |attr|
           next if attr.documented?
-          report << "  #{attr.definition} #{attr.name} " \
+          report << "  #{attr.definition} :#{attr.name} " \
                     "# in file #{attr.file.full_name}"
         end
       end
@@ -302,7 +304,7 @@ class RDoc::Stats
     extend RDoc::Text
 
     ucm = RDoc::TopLevel.unique_classes_and_modules
-    
+
     param_count = 0
     undoc_count = 0
     report = []
