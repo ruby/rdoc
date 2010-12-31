@@ -217,84 +217,13 @@ class RDoc::Stats
     ucm = RDoc::TopLevel.unique_classes_and_modules
 
     ucm.sort.each do |cm|
-      if cm.fully_documented? and @coverage_level.zero? then
-        next
-      elsif cm.in_files.empty? or
-            (cm.constants.empty? and
-             cm.method_list.empty? and
-             cm.attributes.empty?) then
-        report << "# #{cm.definition} is referenced but empty."
-        report << '#'
-        report << '# It probably came from another project.  ' \
-                  'I\'m sorry I\'m holding it against you.'
-        report << nil
-
-        next
-      elsif cm.documented? then
-        report << "#{cm.definition} # is documented"
-      else
-        report << '# in files:'
-
-        cm.in_files.each do |file|
-          report << "#   #{file.full_name}"
-        end
-
-        report << nil
-
-        report << "#{cm.definition}"
-      end
-
-      unless cm.constants.empty? then
-        report << nil
-
-        cm.each_constant do |constant|
-          # TODO constant aliases are listed in the summary but not reported
-          # figure out what to do here
-          next if constant.documented? || constant.is_alias_for
-          report << "  # in file #{constant.file.full_name}"
-          report << "  #{constant.name} = nil"
-        end
-      end
-
-      unless cm.attributes.empty? then
-        report << nil
-
-        cm.each_attribute do |attr|
-          next if attr.documented?
-          report << "  #{attr.definition} :#{attr.name} " \
-                    "# in file #{attr.file.full_name}"
-        end
-      end
-
-      unless cm.method_list.empty? then
-        report << nil
-
-        cm.each_method do |method|
-          next if method.documented? and @coverage_level.zero?
-
-          if @coverage_level.nonzero? then
-            params, undoc = undoc_params method
-
-            @num_params += params
-
-            unless undoc.empty? then
-              @undoc_params += undoc.length
-
-              undoc = undoc.map do |param| "+#{param}+" end
-              param_report = "  # #{undoc.join ', '} is not documented"
-            end
-          end
-
-          next if method.documented? and not param_report
-          report << "  # in file #{method.file.full_name}"
-          report << param_report if param_report
-          report << "  def #{method.name}#{method.params}; end"
-          report << nil
-        end
-      end
-
-      report << 'end'
-      report << nil
+      report << report_class_module(cm) {
+        [
+          report_constants(cm),
+          report_attributes(cm),
+          report_methods(cm),
+        ].compact
+      }
     end
 
     if @coverage_level.nonzero? then
@@ -307,6 +236,119 @@ class RDoc::Stats
     report.unshift 'The following items are not documented:'
 
     report.join "\n"
+  end
+
+  ##
+  # Returns a report on undocumented attributes in ClassModule +cm+
+
+  def report_attributes cm
+    return if cm.attributes.empty?
+
+    report = []
+
+    cm.each_attribute do |attr|
+      next if attr.documented?
+      report << "  #{attr.definition} :#{attr.name} " \
+        "# in file #{attr.file.full_name}"
+    end
+
+    report
+  end
+
+  ##
+  # Returns a report on undocumented items in ClassModule +cm+
+
+  def report_class_module cm
+    return if cm.fully_documented? and @coverage_level.zero?
+
+    report = []
+
+    if cm.in_files.empty? or
+       (cm.constants.empty? and
+        cm.method_list.empty? and
+        cm.attributes.empty?) then
+      report << "# #{cm.definition} is referenced but empty."
+      report << '#'
+      report << '# It probably came from another project.  ' \
+                'I\'m sorry I\'m holding it against you.'
+      report << nil
+
+      return report
+    elsif cm.documented? then
+      report << "#{cm.definition} # is documented"
+    else
+      report << '# in files:'
+
+      cm.in_files.each do |file|
+        report << "#   #{file.full_name}"
+      end
+
+      report << nil
+
+      report << "#{cm.definition}"
+    end
+
+    body = yield
+
+    report << nil << body unless body.flatten.empty?
+
+    report << 'end'
+    report << nil
+
+    report
+  end
+
+  ##
+  # Returns a report on undocumented constants in ClassModule +cm+
+
+  def report_constants cm
+    return if cm.constants.empty?
+
+    report = []
+
+    cm.each_constant do |constant|
+      # TODO constant aliases are listed in the summary but not reported
+      # figure out what to do here
+      next if constant.documented? || constant.is_alias_for
+      report << "  # in file #{constant.file.full_name}"
+      report << "  #{constant.name} = nil"
+    end
+
+    report
+  end
+
+  ##
+  # Returns a report on undocumented methods in ClassModule +cm+
+
+  def report_methods cm
+    return if cm.method_list.empty?
+
+    report = []
+
+    cm.each_method do |method|
+      next if method.documented? and @coverage_level.zero?
+
+      if @coverage_level.nonzero? then
+        params, undoc = undoc_params method
+
+        @num_params += params
+
+        unless undoc.empty? then
+          @undoc_params += undoc.length
+
+          undoc = undoc.map do |param| "+#{param}+" end
+          param_report = "  # #{undoc.join ', '} is not documented"
+        end
+      end
+
+      next if method.documented? and not param_report
+      report << "  # in file #{method.file.full_name}"
+      report << param_report if param_report
+      report << "  def #{method.name}#{method.params}; end"
+      report << nil
+    end
+
+    report
   end
 
   ##

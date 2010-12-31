@@ -154,7 +154,6 @@ The following items are not documented:
 #   file.rb
 
 class C
-
 end
     EXPECTED
 
@@ -225,7 +224,6 @@ The following items are not documented:
 #   file.rb
 
 class C
-
 end
     EXPECTED
 
