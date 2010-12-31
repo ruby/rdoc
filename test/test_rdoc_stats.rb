@@ -184,6 +184,45 @@ Great Job!
     assert_equal expected, report
   end
 
+  def test_report_class_documented_level_1
+    tl = RDoc::TopLevel.new 'file.rb'
+    c1 = tl.add_class RDoc::NormalClass, 'C1'
+    c1.record_location tl
+    c1.comment = 'C1'
+
+    m1 = RDoc::AnyMethod.new nil, 'm1'
+    m1.record_location tl
+    c1.add_method m1
+    m1.comment = 'm1'
+
+    c2 = tl.add_class RDoc::NormalClass, 'C2'
+    c2.record_location tl
+
+    m2 = RDoc::AnyMethod.new nil, 'm2'
+    m2.record_location tl
+    c2.add_method m2
+    m2.comment = 'm2'
+
+    RDoc::TopLevel.complete :public
+
+    @s.coverage_level = 1
+
+    report = @s.report
+
+    expected = <<-EXPECTED
+The following items are not documented:
+
+
+# in files:
+#   file.rb
+
+class C2
+end
+    EXPECTED
+
+    assert_equal expected, report
+  end
+
   def test_report_class_empty
     tl = RDoc::TopLevel.new 'file.rb'
     tl.add_class RDoc::NormalClass, 'C'
@@ -387,8 +426,9 @@ Great Job!
     RDoc::TopLevel.complete :public
 
     summary = @s.summary
+    summary.sub!(/Elapsed:.*/, '')
 
-    expected = <<-EXPECTED.chomp
+    expected = <<-EXPECTED
 Files:      0
 
 Classes:    1 (1 undocumented)
@@ -400,7 +440,6 @@ Methods:    1 (1 undocumented)
 Total:      5 (5 undocumented)
   0.00% documented
 
-Elapsed: 0.0s
     EXPECTED
 
     assert_equal summary, expected
@@ -424,8 +463,9 @@ Elapsed: 0.0s
     @s.report
 
     summary = @s.summary
+    summary.sub!(/Elapsed:.*/, '')
 
-    expected = <<-EXPECTED.chomp
+    expected = <<-EXPECTED
 Files:      0
 
 Classes:    1 (0 undocumented)
@@ -438,7 +478,6 @@ Parameters: 2 (1 undocumented)
 Total:      4 (1 undocumented)
  75.00% documented
 
-Elapsed: 0.0s
     EXPECTED
 
     assert_equal summary, expected

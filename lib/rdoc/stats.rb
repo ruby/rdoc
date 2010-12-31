@@ -275,6 +275,7 @@ class RDoc::Stats
 
       return report
     elsif cm.documented? then
+      documented = true
       report << "#{cm.definition} # is documented"
     else
       report << '# in files:'
@@ -288,9 +289,11 @@ class RDoc::Stats
       report << "#{cm.definition}"
     end
 
-    body = yield
+    body = yield.flatten # HACK remove #flatten
 
-    report << nil << body unless body.flatten.empty?
+    return if body.empty? and documented
+
+    report << nil << body unless body.empty?
 
     report << 'end'
     report << nil
