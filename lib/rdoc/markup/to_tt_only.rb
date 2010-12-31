@@ -8,6 +8,11 @@ require 'rdoc/markup/inline'
 class RDoc::Markup::ToTtOnly < RDoc::Markup::Formatter
 
   ##
+  # Stack of list types
+
+  attr_reader :list_type
+
+  ##
   # Output accumulator
 
   attr_reader :res
@@ -22,10 +27,24 @@ class RDoc::Markup::ToTtOnly < RDoc::Markup::Formatter
   end
 
   ##
+  # Pops the list type for +list+ from #list_type
+
+  def accept_list_end list
+    @list_type.pop
+  end
+
+  ##
+  # Pushes the list type for +list+ onto #list_type
+
+  def accept_list_start list
+    @list_type << list.type
+  end
+
+  ##
   # Prepares the visitor for consuming +list_item+
 
   def accept_list_item_start list_item
-    case type
+    case @list_type.last
     when :NOTE, :LABEL then
       tt_sections(list_item.label)
     end
@@ -47,8 +66,6 @@ class RDoc::Markup::ToTtOnly < RDoc::Markup::Formatter
 
   alias accept_blank_line    do_nothing # :nodoc:
   alias accept_heading       do_nothing # :nodoc:
-  alias accept_list_end      do_nothing # :nodoc:
-  alias accept_list_start    do_nothing # :nodoc:
   alias accept_list_item_end do_nothing # :nodoc:
   alias accept_raw           do_nothing # :nodoc:
   alias accept_rule          do_nothing # :nodoc:
@@ -89,6 +106,8 @@ class RDoc::Markup::ToTtOnly < RDoc::Markup::Formatter
 
   def start_accepting
     @res = []
+
+    @list_type = []
   end
 
 end
