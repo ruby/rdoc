@@ -658,7 +658,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     unless TkASSIGN === eq_tk then
       unget_tk eq_tk
-      return
+      return false
     end
 
     nest = 0
@@ -669,7 +669,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     if TkGT === tk then
       unget_tk tk
       unget_tk eq_tk
-      return
+      return false
     end
 
     rhs_name = ''
@@ -725,6 +725,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     @stats.add_constant con
     container.add_constant con if con.document_self
+    true
   end
 
   ##
@@ -764,7 +765,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       meth.comment = comment
 
       @stats.add_method meth
-    elsif comment.sub!(/# +:?(attr(_reader|_writer|_accessor)?:) *(\S*).*?\n/i, '') then
+    elsif comment.sub!(/# +:?(attr(_reader|_writer|_accessor)?): *(\S*).*?\n/i, '') then
       rw = case $1
            when 'attr_reader' then 'R'
            when 'attr_writer' then 'W'
@@ -1223,6 +1224,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     while tk = get_tk do
       keep_comment = false
+      try_parse_comment = false
 
       non_comment_seen = true unless TkCOMMENT === tk
 
@@ -1287,7 +1289,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       when TkCONSTANT then
         if container.document_self then
-          parse_constant container, tk, comment
+          if not parse_constant container, tk, comment then
+            try_parse_comment = true
+          end
         end
 
       when TkALIAS then
@@ -1365,10 +1369,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
           return
         end
       else
+        try_parse_comment = nest == 1
+      end
+
+      if try_parse_comment then
         non_comment_seen = parse_comment container, tk, comment unless
           comment.empty?
 
-        comment = ''
+        keep_comment = false
       end
 
       comment = '' unless keep_comment

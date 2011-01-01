@@ -8,6 +8,8 @@
 * Bug fixes
   * Darkfish no longer dots from call-seq allowing <tt>ary.insert(index,
     obj...)</tt> to display correctly.  Patch #6 by KUBO Takehiro.
+  * Improved processing of meta-programmed methods when followed by unparseable
+    syntax.  RubyForge patch #28653 by Aidan Cully.
 
 === 3.2 / 2010-12-29
 

@@ -592,6 +592,71 @@ end
     assert_equal 2, foo.method_list.length
   end
 
+  def test_parse_multi_ghost_methods
+    util_parser <<-'CLASS'
+class Foo
+  ##
+  # :method: one
+  #
+  # my method
+
+  ##
+  # :method: two
+  #
+  # my method
+
+  [:one, :two].each do |t|
+    eval("def #{t}; \"#{t}\"; end")
+  end
+end
+    CLASS
+
+    tk = @parser.get_tk
+
+    @parser.parse_class @top_level, RDoc::Parser::Ruby::NORMAL, tk, ''
+
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+
+    assert_equal 2, foo.method_list.length
+  end
+
+  def test_parse_const_fail_w_meta
+    util_parser <<-CLASS
+class ConstFailMeta
+  ##
+  # :attr: one
+  #
+  # an attribute
+
+  OtherModule.define_attr(self, :one)
+end
+    CLASS
+
+    tk = @parser.get_tk
+
+    @parser.parse_class @top_level, RDoc::Parser::Ruby::NORMAL, tk, ''
+
+    const_fail_meta = @top_level.classes.first
+    assert_equal 'ConstFailMeta', const_fail_meta.full_name
+
+    assert_equal 1, const_fail_meta.attributes.length
+  end
+
+  def test_parse_class_nested_superclass
+    foo = RDoc::NormalModule.new 'Foo'
+    foo.parent = @top_level
+
+    util_parser "class Bar < Super\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_class foo, RDoc::Parser::Ruby::NORMAL, tk, ''
+
+    bar = foo.classes.first
+    assert_equal 'Super', bar.superclass
+  end
+
   def test_parse_class_nested_superclass
     util_top_level
     foo = @top_level.add_module RDoc::NormalModule, 'Foo'
