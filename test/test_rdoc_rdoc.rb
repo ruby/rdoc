@@ -64,13 +64,14 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
     skip "No Dir::mktmpdir, upgrade your ruby" unless Dir.respond_to? :mktmpdir
 
     Dir.mktmpdir {|d|
-      path = File.join(d, 'testdir')
+      path = File.join d, 'testdir'
 
       last = @rdoc.setup_output_dir path, false
 
       assert_empty last
 
       assert File.directory? path
+      assert File.exist? @rdoc.output_flag_file path
     }
   end
 

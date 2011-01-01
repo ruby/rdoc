@@ -10,6 +10,8 @@
     obj...)</tt> to display correctly.  Patch #6 by KUBO Takehiro.
   * Improved processing of meta-programmed methods when followed by unparseable
     syntax.  RubyForge patch #28653 by Aidan Cully.
+  * rdoc now touches the flag file when it create the output directory.
+    Prevents the "isn't an RDoc directory" error if rdoc crashes.
 
 === 3.2 / 2010-12-29
 
