@@ -5,6 +5,9 @@
     <kbd>rdoc -C</kbd> gives a standard report, <kbd>rdoc -C1</kbd> includes
     method parameters.  Method parameters are considered documented if they're
     marked-up with <tt>+</tt>, <tt><code></tt> or <code><tt></code>.
+* Bug fixes
+  * Darkfish no longer dots from call-seq allowing <tt>ary.insert(index,
+    obj...)</tt> to display correctly.  Patch #6 by KUBO Takehiro.
 
 === 3.2 / 2010-12-29
 
