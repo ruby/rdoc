@@ -30,6 +30,30 @@ class TestRDocCodeObject < XrefTestCase
     assert_equal 'I am a comment', @co.comment
   end
 
+  def test_comment_equals_encoding
+    refute_equal Encoding::UTF_8, ''.encoding, 'Encoding sanity check'
+
+    input = 'text'
+    input.force_encoding Encoding::UTF_8
+
+    @co.comment = input
+
+    assert_equal 'text', @co.comment
+    assert_equal Encoding::UTF_8, @co.comment.encoding
+  end
+
+  def test_comment_equals_encoding_blank
+    refute_equal Encoding::UTF_8, ''.encoding, 'Encoding sanity check'
+
+    input = ''
+    input.force_encoding Encoding::UTF_8
+
+    @co.comment = input
+
+    assert_equal '', @co.comment
+    assert_equal Encoding::UTF_8, @co.comment.encoding
+  end
+
   def test_document_children_equals
     @co.document_children = false
     refute @co.document_children
