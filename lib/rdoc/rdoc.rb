@@ -315,7 +315,7 @@ option)
 
     top_level = RDoc::TopLevel.new filename
 
-    parser = RDoc::Parser.for top_level, filename, content, @options, @stats
+    parser = RDoc::Parser.new top_level, filename, content, @options, @stats
 
     return unless parser
 
