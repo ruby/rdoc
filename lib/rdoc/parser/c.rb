@@ -156,6 +156,7 @@ class RDoc::Parser::C < RDoc::Parser
       comment = strip_stars comment
       al.comment = comment
 
+      al.record_location @top_level
       class_obj.add_alias al
       @stats.add_alias al
     end
@@ -618,6 +619,7 @@ class RDoc::Parser::C < RDoc::Parser
 
     attr = RDoc::Attr.new '', name, rw, comment
 
+    attr.record_location @top_level
     class_obj.add_attribute attr
     @stats.add_attribute attr
   end
@@ -732,6 +734,7 @@ class RDoc::Parser::C < RDoc::Parser
       con = RDoc::Constant.new const_name, definition, comment
     end
 
+    con.record_location @top_level
     @stats.add_constant con
     class_obj.add_constant con
   end
@@ -797,6 +800,7 @@ class RDoc::Parser::C < RDoc::Parser
 
       if find_body(class_name, meth_body, meth_obj, body) and
          meth_obj.document_self then
+        meth_obj.record_location @top_level
         class_obj.add_method meth_obj
         @stats.add_method meth_obj
         meth_obj.visibility = :private if 'private_method' == type

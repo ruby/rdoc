@@ -101,6 +101,7 @@ void Init_Blah(void) {
     assert_equal 'accessor',            accessor.name
     assert_equal 'RW',                  accessor.rw
     assert_equal 'This is an accessor', accessor.comment
+    assert_equal @top_level,            accessor.file
 
     reader = attrs.shift
     assert_equal 'reader',           reader.name
@@ -134,6 +135,7 @@ void Init_Blah(void) {
     assert_equal 'accessor',            accessor.name
     assert_equal 'RW',                  accessor.rw
     assert_equal 'This is an accessor', accessor.comment
+    assert_equal @top_level,            accessor.file
   end
 
   def test_do_aliases
@@ -159,6 +161,9 @@ void Init_Blah(void) {
     assert_equal 2,      methods.length
     assert_equal 'bleh', methods.last.name
     assert_equal 'blah', methods.last.is_alias_for.name
+
+    assert_equal @top_level, methods.last.is_alias_for.file
+    assert_equal @top_level, methods.last.file
   end
 
   def test_do_aliases_singleton
@@ -338,6 +343,8 @@ void Init_foo(){
 
     constants = klass.constants
     assert !klass.constants.empty?
+
+    assert_equal @top_level, constants.first.file
 
     constants = constants.map { |c| [c.name, c.value, c.comment] }
 
@@ -754,6 +761,7 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
     equals2 = bo.method_list.first
 
     assert_equal '==', equals2.name
+    assert_equal @top_level, equals2.file
   end
 
   def test_handle_method_initialize

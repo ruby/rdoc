@@ -7,6 +7,8 @@
     <kbd>rdoc -C</kbd> gives a standard report, <kbd>rdoc -C1</kbd> includes
     method parameters.  Method parameters are considered documented if they're
     marked-up with <tt>+</tt>, <tt><code></tt> or <code><tt></code>.
+  * The C parser now records the file location of aliases, attributes,
+    constants and methods.
 * Bug fixes
   * Darkfish now handles dots in call-seq allowing <tt>ary.insert(index,
     obj...)</tt> to display correctly.  Patch #6 by KUBO Takehiro.
