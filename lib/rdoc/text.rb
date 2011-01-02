@@ -146,7 +146,7 @@ http://rubyforge.org/tracker/?atid=2472&group_id=627&func=browse
   # Strips leading and trailing \n characters from +text+
 
   def strip_newlines text
-    text.gsub(/\A\n*(.*?)\n*\z/m, '\1')
+    text.gsub(/\A\n*(.*?)\n*\z/m) do $1 end # block preserves String encoding
   end
 
   ##

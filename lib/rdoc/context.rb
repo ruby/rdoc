@@ -188,7 +188,6 @@ class RDoc::Context < RDoc::CodeObject
     @in_files = []
 
     @name    ||= "unknown"
-    @comment ||= ""
     @parent  = nil
     @visibility = :public
 

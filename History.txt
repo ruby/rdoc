@@ -12,6 +12,8 @@
     syntax.  RubyForge patch #28653 by Aidan Cully.
   * rdoc now touches the flag file when it create the output directory.
     Prevents the "isn't an RDoc directory" error if rdoc crashes.
+  * RDoc now properly converts to the expected output encoding.  RubyForge bug
+    #28791 by Dzmitry Prakapenka.
 
 === 3.2 / 2010-12-29
 

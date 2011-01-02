@@ -144,6 +144,19 @@ The comments associated with
     assert_equal 'hi', strip_newlines("\n\nhi\n\n")
   end
 
+  def test_strip_newlines_encoding
+    assert_equal Encoding::UTF_8, ''.encoding, 'Encoding sanity check'
+
+    text = " \n"
+    text.force_encoding Encoding::US_ASCII
+
+    stripped = strip_newlines text
+
+    assert_equal ' ', stripped
+
+    assert_equal Encoding::US_ASCII, stripped.encoding
+  end
+
   def test_strip_stars
     text = <<-TEXT
 /*
