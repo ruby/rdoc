@@ -7,12 +7,9 @@ require 'rdoc'
 class RDoc::Stats
 
   ##
-  # Output level for the coverage report.  Accepted values are:
-  #
-  # 0:: Classes, modules, constants, attributes, methods
-  # 1:: Level 0 + method parameters
+  # Output level for the coverage report
 
-  attr_accessor :coverage_level
+  attr_reader :coverage_level
 
   ##
   # Count of files parsed during parsing
@@ -146,6 +143,19 @@ class RDoc::Stats
   end
 
   ##
+  # Sets coverage report level.  Accepted values are:
+  #
+  # false or nil:: No report
+  # 0:: Classes, modules, constants, attributes, methods
+  # 1:: Level 0 + method parameters
+
+  def coverage_level= level
+    level = -1 unless level
+
+    @coverage_level = level
+  end
+
+  ##
   # Returns the length and number of undocumented items in +collection+.
 
   def doc_stats collection
@@ -199,7 +209,7 @@ class RDoc::Stats
   # Returns a report on which items are not documented
 
   def report
-    if @coverage_level.nonzero? then
+    if @coverage_level > 0 then
       require 'rdoc/markup/to_tt_only'
       require 'rdoc/generator/markup'
       require 'rdoc/text'
@@ -226,7 +236,7 @@ class RDoc::Stats
       }
     end
 
-    if @coverage_level.nonzero? then
+    if @coverage_level > 0 then
       calculate
 
       return great_job if @num_items == @doc_items
@@ -328,7 +338,7 @@ class RDoc::Stats
     cm.each_method do |method|
       next if method.documented? and @coverage_level.zero?
 
-      if @coverage_level.nonzero? then
+      if @coverage_level > 0 then
         params, undoc = undoc_params method
 
         @num_params += params
@@ -385,7 +395,7 @@ class RDoc::Stats
       num_width, @num_methods, undoc_width, @undoc_methods]
     report << 'Parameters: %*d (%*d undocumented)' % [
       num_width, @num_params, undoc_width, @undoc_params] if
-        @coverage_level.nonzero?
+        @coverage_level > 0
 
     report << nil
 

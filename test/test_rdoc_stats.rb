@@ -437,6 +437,35 @@ Total:      5 (5 undocumented)
     assert_equal summary, expected
   end
 
+  def test_summary_level_false
+    tl = RDoc::TopLevel.new 'file.rb'
+    c = tl.add_class RDoc::NormalClass, 'C'
+    c.record_location tl
+
+    RDoc::TopLevel.complete :public
+
+    @s.coverage_level = false
+
+    summary = @s.summary
+    summary.sub!(/Elapsed:.*/, '')
+
+    expected = <<-EXPECTED
+Files:      0
+
+Classes:    1 (1 undocumented)
+Modules:    0 (0 undocumented)
+Constants:  0 (0 undocumented)
+Attributes: 0 (0 undocumented)
+Methods:    0 (0 undocumented)
+
+Total:      1 (1 undocumented)
+  0.00% documented
+
+    EXPECTED
+
+    assert_equal summary, expected
+  end
+
   def test_summary_level_1
     tl = RDoc::TopLevel.new 'file.rb'
     c = tl.add_class RDoc::NormalClass, 'C'
