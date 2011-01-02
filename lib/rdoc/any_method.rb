@@ -143,9 +143,15 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   # Pretty parameter list for this method
 
   def param_seq
-    params = @params.gsub(/\s*\#.*/, '')
-    params = params.tr("\n", " ").squeeze(" ")
-    params = "(#{params})" unless params[0] == ?(
+    if @call_seq then
+      params = @call_seq.split("\n").last
+      params = params.sub(/[^( ]+/, '')
+      params = params.sub(/(\|[^|]+\|)\s*\.\.\.\s*(end|})/, '\1 \2')
+    else
+      params = @params.gsub(/\s*\#.*/, '')
+      params = params.tr("\n", " ").squeeze(" ")
+      params = "(#{params})" unless params[0] == ?(
+    end
 
     if @block_params then
       # If this method has explicit block parameters, remove any explicit

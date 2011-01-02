@@ -117,6 +117,21 @@ method(a, b) { |c, d| ... }
     assert_equal '(a, b) { |c, d| ... }', m.param_seq
   end
 
+  def test_param_seq_call_seq
+    m = RDoc::AnyMethod.new nil, 'method'
+    m.parent = @c1
+
+    call_seq = <<-SEQ
+method(a) { |c| ... }
+method(a, b) { |c, d| ... }
+    SEQ
+
+    m.call_seq = call_seq
+
+    assert_equal '(a, b) { |c, d| }', m.param_seq
+
+  end
+
   def test_parent_name
     assert_equal 'C1', @c1.method_list.first.parent_name
     assert_equal 'C1', @c1.method_list.last.parent_name
