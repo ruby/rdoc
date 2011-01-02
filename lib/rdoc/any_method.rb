@@ -140,6 +140,28 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   end
 
   ##
+  # A list of this method's method and yield parameters.  +call-seq+ params
+  # are preferred over parsed method and block params.
+
+  def param_list
+    if @call_seq then
+      params = @call_seq.split("\n").last
+      params = params.sub(/.*?\((.*)\)/, '\1')
+      params = params.sub(/({|do)\s*\|([^|]*)\|.*/, ',\2')
+    elsif @params then
+      params = @params.sub(/\((.*)\)/, '\1')
+
+      params << ",#{@block_params}" if @block_params
+    elsif @block_params then
+      params = @block_params
+    else
+      return []
+    end
+
+    params.gsub(/\s+/, '').split ','
+  end
+
+  ##
   # Pretty parameter list for this method.  If the method's parameters were
   # given by +call-seq+ it is preferred over the parsed values.
 

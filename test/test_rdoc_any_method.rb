@@ -97,6 +97,48 @@ method(a, b) { |c, d| ... }
     assert_nil m.name
   end
 
+  def test_param_list_block_params
+    m = RDoc::AnyMethod.new nil, 'method'
+    m.parent = @c1
+
+    m.block_params = 'c, d'
+
+    assert_equal %w[c d], m.param_list
+  end
+
+  def test_param_list_call_seq
+    m = RDoc::AnyMethod.new nil, 'method'
+    m.parent = @c1
+
+    call_seq = <<-SEQ
+method(a) { |c| ... }
+method(a, b) { |c, d| ... }
+    SEQ
+
+    m.call_seq = call_seq
+
+    assert_equal %w[a b c d], m.param_list
+  end
+
+  def test_param_list_params
+    m = RDoc::AnyMethod.new nil, 'method'
+    m.parent = @c1
+
+    m.params = '(a, b)'
+
+    assert_equal %w[a b], m.param_list
+  end
+
+  def test_param_list_params_block_params
+    m = RDoc::AnyMethod.new nil, 'method'
+    m.parent = @c1
+
+    m.params = '(a, b)'
+    m.block_params = 'c, d'
+
+    assert_equal %w[a b c d], m.param_list
+  end
+
   def test_param_seq
     m = RDoc::AnyMethod.new nil, 'method'
     m.parent = @c1

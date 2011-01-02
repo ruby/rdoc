@@ -395,6 +395,41 @@ end
     assert_equal @s.great_job, report
   end
 
+  def test_report_method_parameters_yield
+    tl = RDoc::TopLevel.new 'file.rb'
+    c = tl.add_class RDoc::NormalClass, 'C'
+    c.record_location tl
+    c.comment = 'C'
+
+    m = RDoc::AnyMethod.new nil, 'm'
+    m.record_location tl
+    m.call_seq = <<-SEQ
+m(a) { |c| ... }
+m(a, b) { |c, d| ... }
+    SEQ
+    m.comment = 'Stuff with +a+, yields +c+ for you to do stuff with'
+    c.add_method m
+
+    RDoc::TopLevel.complete :public
+
+    @s.coverage_level = 1
+    report = @s.report
+
+    expected = <<-EXPECTED
+The following items are not documented:
+
+class C # is documented
+
+  # in file file.rb
+  # +b+, +d+ is not documented
+  def m; end
+
+end
+    EXPECTED
+
+    assert_equal expected, report
+  end
+
   def test_summary
     tl = RDoc::TopLevel.new 'file.rb'
     c = tl.add_class RDoc::NormalClass, 'C'

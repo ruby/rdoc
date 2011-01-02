@@ -416,12 +416,7 @@ class RDoc::Stats
   def undoc_params method
     @formatter ||= RDoc::Markup::ToTtOnly.new
 
-    return 0, [] if method.params.nil?
-
-    params = method.params.sub(/\((.*)\)/m, '\1').split(/,\s+/)
-    params = params.map do |param|
-      param.sub(/ .*/, '') # remove defaults
-    end
+    params = method.param_list
 
     return 0, [] if params.empty?
 
