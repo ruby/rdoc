@@ -1777,6 +1777,25 @@ end
     while @parser.get_tk do end
   end
 
+  def test_scan_cr
+    content = <<-CONTENT
+class C\r
+  def m\r
+    a=\\\r
+      123\r
+  end\r
+end\r
+    CONTENT
+
+    util_parser content
+
+    @parser.scan
+
+    c = @top_level.classes.first
+
+    assert_equal 1, c.method_list.length
+  end
+
   def test_scan_block_comment
     content = <<-CONTENT
 =begin rdoc
