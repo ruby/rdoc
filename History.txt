@@ -14,6 +14,7 @@
     Prevents the "isn't an RDoc directory" error if rdoc crashes.
   * RDoc now properly converts to the expected output encoding.  RubyForge bug
     #28791 by Dzmitry Prakapenka.
+  * Restored parsing of block comments.  RubyForge bug #28668 by Stefano Crocco.
 
 === 3.2 / 2010-12-29
 

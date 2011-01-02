@@ -1756,6 +1756,35 @@ end
     while @parser.get_tk do end
   end
 
+  def test_scan_block_comment
+    content = <<-CONTENT
+=begin rdoc
+Foo comment
+=end
+
+class Foo
+
+=begin
+m comment
+=end
+
+  def m() end
+end
+    CONTENT
+
+    util_parser content
+
+    @parser.scan
+
+    foo = @top_level.classes.first
+
+    assert_equal 'Foo comment', foo.comment
+
+    m = foo.method_list.first
+
+    assert_equal 'm comment', m.comment
+  end
+
   def test_stopdoc_after_comment
 
     util_parser <<-EOS
