@@ -147,7 +147,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     if @call_seq then
       params = @call_seq.split("\n").last
       params = params.sub(/.*?\((.*)\)/, '\1')
-      params = params.sub(/({|do)\s*\|([^|]*)\|.*/, ',\2')
+      params = params.sub(/(\{|do)\s*\|([^|]*)\|.*/, ',\2')
     elsif @params then
       params = @params.sub(/\((.*)\)/, '\1')
 
@@ -169,7 +169,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     if @call_seq then
       params = @call_seq.split("\n").last
       params = params.sub(/[^( ]+/, '')
-      params = params.sub(/(\|[^|]+\|)\s*\.\.\.\s*(end|})/, '\1 \2')
+      params = params.sub(/(\|[^|]+\|)\s*\.\.\.\s*(end|\})/, '\1 \2')
     else
       params = @params.gsub(/\s*\#.*/, '')
       params = params.tr("\n", " ").squeeze(" ")
