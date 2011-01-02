@@ -6,7 +6,7 @@
     method parameters.  Method parameters are considered documented if they're
     marked-up with <tt>+</tt>, <tt><code></tt> or <code><tt></code>.
 * Bug fixes
-  * Darkfish no longer dots from call-seq allowing <tt>ary.insert(index,
+  * Darkfish now handles dots in call-seq allowing <tt>ary.insert(index,
     obj...)</tt> to display correctly.  Patch #6 by KUBO Takehiro.
   * Improved processing of meta-programmed methods when followed by unparseable
     syntax.  RubyForge patch #28653 by Aidan Cully.
@@ -48,7 +48,7 @@ otherwise noted.
     RubyForge Bug #26290 by Sylvain Joyeux.
   * Coverage report no longer crashes for constant aliases.  Pull Request #1
     by Andy Lindeman.
-  * RDoc no longer looses ghost methods when followed by certain tokens.
+  * RDoc no longer loses ghost methods when followed by certain tokens.
     RubyForge bug #27793 by Aaron Patterson.
   * RDoc no longer crashes in ri if HOME is not set.  Ruby Bug #4202 by
     Shyouhei Urabe.
