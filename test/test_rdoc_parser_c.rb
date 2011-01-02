@@ -750,9 +750,21 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
   end
 
   def test_handle_method
+    parser = util_parser "Document-method: Object#m\n blah */"
+
+    parser.handle_method 'method', 'rb_cObject', 'm', 'rb_m', 2
+
+    m = @top_level.find_module_named('Object').method_list.first
+
+    assert_equal 'm', m.name
+    assert_equal '(p1, p2)', m.params
+    assert_equal @top_level, m.file
+  end
+
+  def test_handle_method_args
     parser = util_parser "Document-method: BasicObject#==\n blah */"
 
-    parser.handle_method 'method', 'rb_cBasicObject', '==', 'rb_obj_equal', 1
+    parser.handle_method 'method', 'rb_cBasicObject', '==', 'rb_obj_equal', 2
 
     bo = @top_level.find_module_named 'BasicObject'
 
@@ -760,8 +772,7 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
 
     equals2 = bo.method_list.first
 
-    assert_equal '==', equals2.name
-    assert_equal @top_level, equals2.file
+    assert_equal '(p1, p2)', equals2.params
   end
 
   def test_handle_method_initialize
@@ -778,6 +789,16 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
 
     assert_equal 'new',   new.name
     assert_equal :public, new.visibility
+  end
+
+  def test_handle_method_star_args
+    parser = util_parser "Document-method: Object#m\n blah */"
+
+    parser.handle_method 'method', 'rb_cObject', 'm', 'rb_m', -1
+
+    m = @top_level.find_module_named('Object').method_list.first
+
+    assert_equal '(*args)', m.params
   end
 
   def test_look_for_directives_in

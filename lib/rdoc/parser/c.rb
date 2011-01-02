@@ -779,11 +779,12 @@ class RDoc::Parser::C < RDoc::Parser
       p_count = Integer(param_count) rescue -1
 
       if p_count < 0 then
-        meth_obj.params = "(...)"
+        meth_obj.params = "(*args)"
       elsif p_count == 0
         meth_obj.params = "()"
       else
-        meth_obj.params = "(" + (1..p_count).map{|i| "p#{i}"}.join(", ") + ")"
+        params = (1..p_count).map { |i| "p#{i}" }.join(', ')
+        meth_obj.params = "(#{params})"
       end
 
       if source_file then
