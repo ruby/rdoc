@@ -1007,6 +1007,27 @@ EOF
     assert_equal stream, foo.token_stream
   end
 
+  def test_parse_meta_method_block
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = "##\n# my method\n"
+
+    content = <<-CONTENT
+inline(:my_method) do |*args|
+  "this method is causes z to disapear"
+end
+    CONTENT
+
+    util_parser content
+
+    tk = @parser.get_tk
+
+    @parser.parse_meta_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    assert_nil @parser.get_tk
+  end
+
   def test_parse_meta_method_name
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
@@ -1785,8 +1806,29 @@ end
     assert_equal 'm comment', m.comment
   end
 
-  def test_stopdoc_after_comment
+  def test_scan_meta_method_block
+    content = <<-CONTENT
+class C
 
+  ##
+  #  my method
+
+  inline(:my_method) do |*args|
+    "this method used to cause z to disapear"
+  end
+
+  def z
+  end
+    CONTENT
+
+    util_parser content
+
+    @parser.scan
+
+    assert_equal 2, @top_level.classes.first.method_list.length
+  end
+
+  def test_stopdoc_after_comment
     util_parser <<-EOS
       module Bar
         # hello

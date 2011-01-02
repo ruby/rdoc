@@ -934,6 +934,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
           break unless last_tk and TkCOMMA === last_tk
         when TkSPACE then
           # expression continues
+        when TkDO then
+          unget_tk tk
+          parse_statements container, single, meth
+          break
         else
           last_tk = tk
         end
