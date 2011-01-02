@@ -140,7 +140,8 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   end
 
   ##
-  # Pretty parameter list for this method
+  # Pretty parameter list for this method.  If the method's parameters were
+  # given by +call-seq+ it is preferred over the parsed values.
 
   def param_seq
     if @call_seq then
