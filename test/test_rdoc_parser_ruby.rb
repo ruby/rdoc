@@ -644,20 +644,6 @@ end
   end
 
   def test_parse_class_nested_superclass
-    foo = RDoc::NormalModule.new 'Foo'
-    foo.parent = @top_level
-
-    util_parser "class Bar < Super\nend"
-
-    tk = @parser.get_tk
-
-    @parser.parse_class foo, RDoc::Parser::Ruby::NORMAL, tk, ''
-
-    bar = foo.classes.first
-    assert_equal 'Super', bar.superclass
-  end
-
-  def test_parse_class_nested_superclass
     util_top_level
     foo = @top_level.add_module RDoc::NormalModule, 'Foo'
 

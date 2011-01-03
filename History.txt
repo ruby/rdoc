@@ -1,4 +1,10 @@
-=== 3.3 / ??
+=== 3.3.1
+
+* Bug fixes
+  * Added skips to Encoding tests running on 1.8.
+  * Fixed warnings
+
+=== 3.3 / 2010-01-03
 
 * Minor enhancements
   * The coverage report can now report undocumented method parameters

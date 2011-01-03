@@ -570,12 +570,12 @@ Foo::Bar#bother
   end
 
   def test_name_regexp
-    assert_equal /^RDoc::AnyMethod#new$/,
+    assert_equal %r%^RDoc::AnyMethod#new$%,
                  @driver.name_regexp('RDoc::AnyMethod#new')
-    assert_equal /^RDoc::AnyMethod::new$/,
+    assert_equal %r%^RDoc::AnyMethod::new$%,
                  @driver.name_regexp('RDoc::AnyMethod::new')
 
-    assert_equal /^RDoc::AnyMethod(#|::)new$/,
+    assert_equal %r%^RDoc::AnyMethod(#|::)new$%,
                  @driver.name_regexp('RDoc::AnyMethod.new')
   end
 

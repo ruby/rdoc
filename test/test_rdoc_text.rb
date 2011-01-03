@@ -145,6 +145,8 @@ The comments associated with
   end
 
   def test_strip_newlines_encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
     assert_equal Encoding::UTF_8, ''.encoding, 'Encoding sanity check'
 
     text = " \n"

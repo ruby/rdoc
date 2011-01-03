@@ -30,6 +30,7 @@ class RDoc::Stats
     @num_files = num_files
 
     @coverage_level = 0
+    @doc_items = nil
     @fully_documented = nil
     @num_params = 0
     @percent_doc = nil
