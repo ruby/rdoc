@@ -382,12 +382,13 @@ The internal error was:
   end
 
   ##
-  # Format up one or more files according to the given arguments.
+  # Generates documentation or a coverage report depending upon the settings
+  # in +options+.
   #
   # +options+ can be either an RDoc::Options instance or an array of strings
   # equivalent to the strings that would be passed on the command line like
-  # <tt>%w[-q -o doc -t My\ Doc\ Title]</tt>.
-  # #document will automatically call #finish on an RDoc::Options instance.
+  # <tt>%w[-q -o doc -t My\ Doc\ Title]</tt>.  #document will automatically
+  # call RDoc::Options#finish if an options instance was given.
   #
   # For a list of options, see either RDoc::Options or <tt>rdoc --help</tt>.
   #
