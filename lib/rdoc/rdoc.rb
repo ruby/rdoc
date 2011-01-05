@@ -384,19 +384,27 @@ The internal error was:
   ##
   # Format up one or more files according to the given arguments.
   #
-  # For simplicity, +argv+ is an array of strings, equivalent to the strings
-  # that would be passed on the command line. (This isn't a coincidence, as
-  # we _do_ pass in ARGV when running interactively). For a list of options,
-  # see <tt>rdoc --help</tt>. By default, output will be stored in a directory
-  # called +doc+ below the current directory, so make sure you're somewhere
-  # writable before invoking.
+  # +options+ can be either an RDoc::Options instance or an array of strings
+  # equivalent to the strings that would be passed on the command line like
+  # <tt>%w[-q -o doc -t My\ Doc\ Title]</tt>.
+  # #document will automatically call #finish on an RDoc::Options instance.
+  #
+  # For a list of options, see either RDoc::Options or <tt>rdoc --help</tt>.
+  #
+  # By default, output will be stored in a directory called "doc" below the
+  # current directory, so make sure you're somewhere writable before invoking.
 
-  def document(argv)
+  def document options
     RDoc::TopLevel.reset
     RDoc::Parser::C.reset
 
-    @options = RDoc::Options.new
-    @options.parse argv
+    if RDoc::Options === options then
+      @options = options
+      @options.finish
+    else
+      @options = RDoc::Options.new
+      @options.parse options
+    end
 
     if @options.pipe then
       handle_pipe
@@ -478,6 +486,7 @@ begin
         load extension
       rescue => e
         warn "error loading #{extension.inspect}: #{e.message} (#{e.class})"
+        warn "\t#{e.backtrace.join "\n\t"}" if $DEBUG
       end
     end
   end

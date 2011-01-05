@@ -71,7 +71,7 @@ class RDoc::Options
   attr_accessor :formatter
 
   ##
-  # Description of the output generator (set with the <tt>-fmt</tt> option)
+  # Description of the output generator (set with the <tt>--fmt</tt> option)
 
   attr_accessor :generator
 
@@ -247,6 +247,35 @@ class RDoc::Options
   end
 
   ##
+  # Completes any unfinished option setup business such as filtering for
+  # existent files, creating a regexp for #exclude and setting a default
+  # #template.
+
+  def finish
+    @op_dir ||= 'doc'
+
+    @rdoc_include << "." if @rdoc_include.empty?
+
+    if @exclude.empty? then
+      @exclude = nil
+    else
+      @exclude = Regexp.new(@exclude.join("|"))
+    end
+
+    check_files
+
+    # If no template was specified, use the default template for the output
+    # formatter
+
+    unless @template then
+      @template     = @generator_name
+      @template_dir = template_dir_for @template
+    end
+
+    self
+  end
+
+  ##
   # Returns a properly-space list of generators and their descriptions.
 
   def generator_descriptions
@@ -273,7 +302,7 @@ class RDoc::Options
   end
 
   ##
-  # Parse command line options.
+  # Parses command line options.
 
   def parse(argv)
     ignore_invalid = true
@@ -677,26 +706,9 @@ Usage: #{opt.program_name} [options] [names...]
       end
     end
 
-    @op_dir ||= 'doc'
     @files = argv.dup
 
-    @rdoc_include << "." if @rdoc_include.empty?
-
-    if @exclude.empty? then
-      @exclude = nil
-    else
-      @exclude = Regexp.new(@exclude.join("|"))
-    end
-
-    check_files
-
-    # If no template was specified, use the default template for the output
-    # formatter
-
-    unless @template then
-      @template     = @generator_name
-      @template_dir = template_dir_for @template
-    end
+    finish
   end
 
   ##

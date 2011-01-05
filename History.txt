@@ -1,5 +1,7 @@
-=== 3.3.1
+=== 3.4
 
+* Minor enhancements
+  * RDoc::RDoc#document may now be called with an RDoc::Options instance.
 * Bug fixes
   * Added skips to Encoding tests running on 1.8.
   * Fixed warnings
