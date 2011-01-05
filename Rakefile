@@ -5,6 +5,7 @@ require 'rdoc/rdoc'
 Hoe.plugin :git
 Hoe.plugin :isolate
 Hoe.plugin :minitest
+Hoe.plugin :rdoc_tags
 
 $rdoc_rakefile = true
 
