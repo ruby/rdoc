@@ -745,7 +745,10 @@ Usage: #{opt.program_name} [options] [names...]
     @generator_name = generator_name
     @generator_options << @generator
 
-    @generator.setup_options self if @generator.respond_to? :setup_options
+    if @generator.respond_to? :setup_options then
+      @option_parser ||= OptionParser.new
+      @generator.setup_options self 
+    end
   end
 
   ##
