@@ -1,3 +1,8 @@
+=== 3.4.1
+
+* Bug fixes
+  * Locations of module aliases are now recorded.
+
 === 3.4
 
 * Minor enhancements

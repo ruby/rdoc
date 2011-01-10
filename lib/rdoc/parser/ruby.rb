@@ -698,7 +698,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
                   container.find_module_named rhs_name
                 end
 
-          container.add_module_alias mod, name if mod
+          container.add_module_alias mod, name, @top_level if mod
           get_tk # TkNL
           break
         end
