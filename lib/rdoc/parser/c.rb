@@ -285,7 +285,7 @@ class RDoc::Parser::C < RDoc::Parser
                      \s*(?:RUBY_METHOD_FUNC\(|VALUEFUNC\()?(\w+)\)?,
                      \s*(-?\w+)\s*\)
                    (?:;\s*/[*/]\s+in\s+(\w+?\.[cy]))?
-                 %xm) do |type, var_name, meth_name, meth_body, param_count, source_file|
+                 %xm) do |type, var_name, meth_name, function, param_count, source_file|
 
       # Ignore top-object and weird struct.c dynamic stuff
       next if var_name == "ruby_top_self"
@@ -294,7 +294,7 @@ class RDoc::Parser::C < RDoc::Parser
       next if var_name == "argf"   # it'd be nice to handle this one
 
       var_name = "rb_cObject" if var_name == "rb_mKernel"
-      handle_method(type, var_name, meth_name, meth_body, param_count,
+      handle_method(type, var_name, meth_name, function, param_count,
                     source_file)
     end
 
@@ -303,18 +303,19 @@ class RDoc::Parser::C < RDoc::Parser
                              \s*(?:RUBY_METHOD_FUNC\(|VALUEFUNC\()?(\w+)\)?,
                              \s*(-?\w+)\s*\)
                 (?:;\s*/[*/]\s+in\s+(\w+?\.[cy]))?
-                %xm) do |meth_name, meth_body, param_count, source_file|
-      handle_method("method", "rb_mKernel", meth_name,
-                    meth_body, param_count, source_file)
+                %xm) do |meth_name, function, param_count, source_file|
+      handle_method("method", "rb_mKernel", meth_name, function, param_count,
+                    source_file)
     end
 
     @content.scan(/define_filetest_function\s*\(
                      \s*"([^"]+)",
                      \s*(?:RUBY_METHOD_FUNC\(|VALUEFUNC\()?(\w+)\)?,
-                     \s*(-?\w+)\s*\)/xm) do |meth_name, meth_body, param_count|
+                     \s*(-?\w+)\s*\)/xm) do |meth_name, function, param_count|
 
-      handle_method("method", "rb_mFileTest", meth_name, meth_body, param_count)
-      handle_method("singleton_method", "rb_cFile", meth_name, meth_body, param_count)
+      handle_method("method", "rb_mFileTest", meth_name, function, param_count)
+      handle_method("singleton_method", "rb_cFile", meth_name, function,
+                    param_count)
     end
   end
 
@@ -370,21 +371,20 @@ class RDoc::Parser::C < RDoc::Parser
   ##
   # Find the C code corresponding to a Ruby method
 
-  def find_body(class_name, meth_name, meth_obj, body, quiet = false)
-    case body
+  def find_body class_name, meth_name, meth_obj, file_content, quiet = false
+    case file_content
     when %r%((?>/\*.*?\*/\s*)?)
             ((?:(?:static|SWIGINTERN)\s+)?
              (?:intern\s+)?VALUE\s+#{meth_name}
              \s*(\([^)]*\))([^;]|$))%xm then
       comment = $1
-      body_text = $2
+      body = $2
 
       remove_private_comments comment if comment
 
       # see if we can find the whole body
 
-      re = Regexp.escape(body_text) + '[^(]*^\{.*?^\}'
-      body_text = $& if /#{re}/m =~ body
+      body = $& if /#{Regexp.escape body}[^(]*?\{.*?^\}/m =~ file_content
 
       # The comment block may have been overridden with a 'Document-method'
       # block. This happens in the interpreter when multiple methods are
@@ -400,38 +400,44 @@ class RDoc::Parser::C < RDoc::Parser
       #meth_obj.params = params
       meth_obj.start_collecting_tokens
       tk = RDoc::RubyToken::Token.new nil, 1, 1
-      tk.set_text body_text
+      tk.set_text body
       meth_obj.add_token tk
       meth_obj.comment = strip_stars comment
-    when %r%((?>/\*.*?\*/\s*))^\s*(\#\s*define\s+#{meth_name}\s+(\w+))%m
+
+      body
+    when %r%((?>/\*.*?\*/\s*))^\s*(\#\s*define\s+#{meth_name}\s+(\w+))%m then
       comment = $1
-      body_text = $2
-      find_body class_name, $3, meth_obj, body, true
+      body = $2
+      find_body class_name, $3, meth_obj, file_content, true
       find_modifiers comment, meth_obj
 
       meth_obj.start_collecting_tokens
       tk = RDoc::RubyToken::Token.new nil, 1, 1
-      tk.set_text body_text
+      tk.set_text body
       meth_obj.add_token tk
       meth_obj.comment = strip_stars(comment) + meth_obj.comment.to_s
-    when %r%^\s*\#\s*define\s+#{meth_name}\s+(\w+)%m
-      unless find_body(class_name, $1, meth_obj, body, true)
-        warn "No definition for #{meth_name}" if @options.verbosity > 1
-        return false
-      end
+
+      body
+    when %r%^\s*\#\s*define\s+#{meth_name}\s+(\w+)%m then
+      body = find_body(class_name, $1, meth_obj, file_content, true)
+
+      return body if body
+
+      warn "No definition for #{meth_name}" if @options.verbosity > 1
+      false
     else # No body, but might still have an override comment
       comment = find_override_comment class_name, meth_obj.name
 
-      if comment
+      if comment then
         find_modifiers comment, meth_obj
         meth_obj.comment = strip_stars comment
+
+        ''
       else
         warn "No definition for #{meth_name}" if @options.verbosity > 1
-        return false
+        false
       end
     end
-
-    true
   end
 
   ##
@@ -751,7 +757,7 @@ class RDoc::Parser::C < RDoc::Parser
   # to +var_name+.  +type+ is the type of method definition function used.
   # +singleton_method+ and +module_function+ create a singleton method.
 
-  def handle_method(type, var_name, meth_name, meth_body, param_count,
+  def handle_method(type, var_name, meth_name, function, param_count,
                     source_file = nil)
     singleton = false
     class_name = @known_classes[var_name]
@@ -773,33 +779,36 @@ class RDoc::Parser::C < RDoc::Parser
       end
 
       meth_obj = RDoc::AnyMethod.new '', meth_name
+      meth_obj.c_function = function
       meth_obj.singleton =
         singleton || %w[singleton_method module_function].include?(type)
 
       p_count = Integer(param_count) rescue -1
 
-      meth_obj.params = if p_count < -1 then # -2 is Array
-                          '(*args)'
-                        elsif p_count == -1 then # argc, argv
-                          rb_scan_args meth_body
-                        else
-                          "(#{(1..p_count).map { |i| "p#{i}" }.join ', '})"
-                        end
-
       if source_file then
         file_name = File.join @file_dir, source_file
 
         if File.exist? file_name then
-          body = (@@known_bodies[file_name] ||= File.read(file_name))
+          file_content = (@@known_bodies[file_name] ||= File.read(file_name))
         else
           warn "unknown source #{source_file} for #{meth_name} in #{@file_name}"
         end
       else
-        body = @content
+        file_content = @content
       end
 
-      if find_body(class_name, meth_body, meth_obj, body) and
-         meth_obj.document_self then
+      body = find_body class_name, function, meth_obj, file_content
+
+      if body and meth_obj.document_self then
+        meth_obj.params = if p_count < -1 then # -2 is Array
+                            '(*args)'
+                          elsif p_count == -1 then # argc, argv
+                            rb_scan_args body
+                          else
+                            "(#{(1..p_count).map { |i| "p#{i}" }.join ', '})"
+                          end
+
+
         meth_obj.record_location @top_level
         class_obj.add_method meth_obj
         @stats.add_method meth_obj

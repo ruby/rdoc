@@ -14,6 +14,11 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   attr_accessor :dont_rename_initialize
 
   ##
+  # The C function that implements this method (if it was defined in a C file)
+
+  attr_accessor :c_function
+
+  ##
   # Different ways to call this method
 
   attr_accessor :call_seq
@@ -31,8 +36,9 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   def initialize text, name
     super
 
+    @c_function = nil
     @dont_rename_initialize = false
-    @token_stream           = nil
+    @token_stream = nil
   end
 
   ##

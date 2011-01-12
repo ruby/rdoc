@@ -4,8 +4,11 @@
   * RDoc::Parser::C looks for rb_scan_args and fills in RDoc::AnyMethod#params
     appropriately.  This may provide useful information if the author did not
     provide a call-seq.
+  * RDoc::Parser::C now records the function name for methods implemented in
+    C.
 * Bug fixes
   * Locations of module aliases are now recorded.
+  * RDoc::Parser::C finds method bodies better now.
 
 === 3.4
 

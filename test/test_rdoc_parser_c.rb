@@ -536,7 +536,7 @@ Init_Foo(void) {
 
     code = other_function.token_stream.first.text
 
-    assert_equal "VALUE\nother_function() ", code
+    assert_equal "VALUE\nother_function() {\n}", code
   end
 
   def test_find_body_2
@@ -806,15 +806,15 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
   def test_handle_method_args_minus_1
     parser = util_parser "Document-method: Object#m\n blah */"
 
-    body = <<-BODY
+    parser.content = <<-BODY
 VALUE
-m(int argc, VALUE *argv, VALUE obj) {
+rb_m(int argc, VALUE *argv, VALUE obj) {
   VALUE o1, o2;
   rb_scan_args(argc, argv, "1", &o1, &o2);
 }
     BODY
 
-    parser.handle_method 'method', 'rb_cObject', 'm', body, -1
+    parser.handle_method 'method', 'rb_cObject', 'm', 'rb_m', -1
 
     m = @top_level.find_module_named('Object').method_list.first
 
@@ -887,6 +887,7 @@ Init_IO(void) {
     read_method = klass.method_list.first
     assert_equal "read", read_method.name
     assert_equal "Method Comment!   ", read_method.comment
+    assert_equal "rb_io_s_read", read_method.c_function
     assert read_method.singleton
   end
 
