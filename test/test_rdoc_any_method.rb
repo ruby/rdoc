@@ -34,6 +34,12 @@ method(a, b) { |c, d| ... }
     assert_equal call_seq, m.arglists
   end
 
+  def test_c_function
+    @c1_m.c_function = 'my_c1_m'
+
+    assert_equal 'my_c1_m', @c1_m.c_function
+  end
+
   def test_full_name
     assert_equal 'C1::m', @c1.method_list.first.full_name
   end
