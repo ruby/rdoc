@@ -761,6 +761,20 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
     assert_equal @top_level, m.file
   end
 
+  def test_handle_method_args_minus_2
+    parser = util_parser "Document-method: BasicObject#==\n blah */"
+
+    parser.handle_method 'method', 'rb_cBasicObject', '==', 'rb_obj_equal', -2
+
+    bo = @top_level.find_module_named 'BasicObject'
+
+    assert_equal 1, bo.method_list.length
+
+    equals2 = bo.method_list.first
+
+    assert_equal '(*args)', equals2.params
+  end
+
   def test_handle_method_args_0
     parser = util_parser "Document-method: BasicObject#==\n blah */"
 
