@@ -761,20 +761,6 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
     assert_equal @top_level, m.file
   end
 
-  def test_handle_method_args_minus_2
-    parser = util_parser "Document-method: BasicObject#==\n blah */"
-
-    parser.handle_method 'method', 'rb_cBasicObject', '==', 'rb_obj_equal', -2
-
-    bo = @top_level.find_module_named 'BasicObject'
-
-    assert_equal 1, bo.method_list.length
-
-    equals2 = bo.method_list.first
-
-    assert_equal '(*args)', equals2.params
-  end
-
   def test_handle_method_args_0
     parser = util_parser "Document-method: BasicObject#==\n blah */"
 
@@ -787,6 +773,20 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
     equals2 = bo.method_list.first
 
     assert_equal '()', equals2.params
+  end
+
+  def test_handle_method_args_1
+    parser = util_parser "Document-method: BasicObject#==\n blah */"
+
+    parser.handle_method 'method', 'rb_cBasicObject', '==', 'rb_obj_equal', 1
+
+    bo = @top_level.find_module_named 'BasicObject'
+
+    assert_equal 1, bo.method_list.length
+
+    equals2 = bo.method_list.first
+
+    assert_equal '(p1)', equals2.params
   end
 
   def test_handle_method_args_2
@@ -803,33 +803,7 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
     assert_equal '(p1, p2)', equals2.params
   end
 
-  def test_handle_method_initialize
-    parser = util_parser "Document-method: BasicObject::new\n blah */"
-
-    parser.handle_method('private_method', 'rb_cBasicObject',
-                         'initialize', 'rb_obj_dummy', -1)
-
-    bo = @top_level.find_module_named 'BasicObject'
-
-    assert_equal 1, bo.method_list.length
-
-    new = bo.method_list.first
-
-    assert_equal 'new',   new.name
-    assert_equal :public, new.visibility
-  end
-
-  def test_handle_method_star_args
-    parser = util_parser "Document-method: Object#m\n blah */"
-
-    parser.handle_method 'method', 'rb_cObject', 'm', 'rb_m', -1
-
-    m = @top_level.find_module_named('Object').method_list.first
-
-    assert_equal '(*args)', m.params
-  end
-
-  def test_handle_method_rb_scan_args
+  def test_handle_method_args_minus_1
     parser = util_parser "Document-method: Object#m\n blah */"
 
     body = <<-BODY
@@ -845,6 +819,36 @@ m(int argc, VALUE *argv, VALUE obj) {
     m = @top_level.find_module_named('Object').method_list.first
 
     assert_equal '(p1)', m.params
+  end
+
+  def test_handle_method_args_minus_2
+    parser = util_parser "Document-method: BasicObject#==\n blah */"
+
+    parser.handle_method 'method', 'rb_cBasicObject', '==', 'rb_obj_equal', -2
+
+    bo = @top_level.find_module_named 'BasicObject'
+
+    assert_equal 1, bo.method_list.length
+
+    equals2 = bo.method_list.first
+
+    assert_equal '(*args)', equals2.params
+  end
+
+  def test_handle_method_initialize
+    parser = util_parser "Document-method: BasicObject::new\n blah */"
+
+    parser.handle_method('private_method', 'rb_cBasicObject',
+                         'initialize', 'rb_obj_dummy', -1)
+
+    bo = @top_level.find_module_named 'BasicObject'
+
+    assert_equal 1, bo.method_list.length
+
+    new = bo.method_list.first
+
+    assert_equal 'new',   new.name
+    assert_equal :public, new.visibility
   end
 
   def test_look_for_directives_in
