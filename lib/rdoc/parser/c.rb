@@ -778,14 +778,13 @@ class RDoc::Parser::C < RDoc::Parser
 
       p_count = Integer(param_count) rescue -1
 
-      if p_count < 0 then
-        meth_obj.params = "(*args)"
-      elsif p_count == 0
-        meth_obj.params = "()"
-      else
-        params = (1..p_count).map { |i| "p#{i}" }.join(', ')
-        meth_obj.params = "(#{params})"
-      end
+      meth_obj.params = if p_count < -1 then # -2 is Array
+                          '(*args)'
+                        elsif p_count == -1 then # argc, argv
+                          rb_scan_args meth_body
+                        else
+                          "(#{(1..p_count).map { |i| "p#{i}" }.join ', '})"
+                        end
 
       if source_file then
         file_name = File.join @file_dir, source_file
@@ -859,6 +858,90 @@ class RDoc::Parser::C < RDoc::Parser
     end
 
     comment
+  end
+
+  ##
+  # Extracts parameters from the +method_body+ and returns a method
+  # parameter string.  Follows 1.9.3dev's scan-arg-spec, see README.EXT
+
+  def rb_scan_args method_body
+    method_body =~ /rb_scan_args\((.*?)\)/m
+    return '(*args)' unless $1
+
+    $1.split(/,/)[2] =~ /"(.*?)"/ # format argument
+    format = $1.split(//)
+
+    lead = opt = trail = 0
+
+    if format.first =~ /\d/ then
+      lead = $&.to_i
+      format.shift
+      if format.first =~ /\d/ then
+        opt = $&.to_i
+        format.shift
+        if format.first =~ /\d/ then
+          trail = $&.to_i
+          format.shift
+          block_arg = true
+        end
+      end
+    end
+
+    if format.first == '*' and not block_arg then
+      var = true
+      format.shift
+      if format.first =~ /\d/ then
+        trail = $&.to_i
+        format.shift
+      end
+    end
+
+    if format.first == ':' then
+      hash = true
+      format.shift
+    end
+
+    if format.first == '&' then
+      block = true
+      format.shift
+    end
+
+    # if the format string is not empty there's a bug in the C code, ignore it
+
+    args = []
+    position = 1
+
+    (1...(position + lead)).each do |index|
+      args << "p#{index}"
+    end
+
+    position += lead
+
+    (position...(position + opt)).each do |index|
+      args << "p#{index} = v#{index}"
+    end
+
+    position += opt
+
+    if var then
+      args << '*args'
+      position += 1
+    end
+
+    (position...(position + trail)).each do |index|
+      args << "p#{index}"
+    end
+
+    position += trail
+
+    if hash then
+      args << "p#{position} = {}"
+      position += 1
+    end
+
+    args << '&block' if block
+
+    "(#{args.join ', '})"
   end
 
   ##

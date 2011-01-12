@@ -1,5 +1,9 @@
 === 3.4.1
 
+* Minor enhancements
+  * RDoc::Parser::C looks for rb_scan_args and fills in RDoc::AnyMethod#params
+    appropriately.  This may provide useful information if the author did not
+    provide a call-seq.
 * Bug fixes
   * Locations of module aliases are now recorded.
 

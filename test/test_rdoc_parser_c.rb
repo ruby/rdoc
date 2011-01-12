@@ -761,7 +761,21 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
     assert_equal @top_level, m.file
   end
 
-  def test_handle_method_args
+  def test_handle_method_args_0
+    parser = util_parser "Document-method: BasicObject#==\n blah */"
+
+    parser.handle_method 'method', 'rb_cBasicObject', '==', 'rb_obj_equal', 0
+
+    bo = @top_level.find_module_named 'BasicObject'
+
+    assert_equal 1, bo.method_list.length
+
+    equals2 = bo.method_list.first
+
+    assert_equal '()', equals2.params
+  end
+
+  def test_handle_method_args_2
     parser = util_parser "Document-method: BasicObject#==\n blah */"
 
     parser.handle_method 'method', 'rb_cBasicObject', '==', 'rb_obj_equal', 2
@@ -799,6 +813,24 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
     m = @top_level.find_module_named('Object').method_list.first
 
     assert_equal '(*args)', m.params
+  end
+
+  def test_handle_method_rb_scan_args
+    parser = util_parser "Document-method: Object#m\n blah */"
+
+    body = <<-BODY
+VALUE
+m(int argc, VALUE *argv, VALUE obj) {
+  VALUE o1, o2;
+  rb_scan_args(argc, argv, "1", &o1, &o2);
+}
+    BODY
+
+    parser.handle_method 'method', 'rb_cObject', 'm', body, -1
+
+    m = @top_level.find_module_named('Object').method_list.first
+
+    assert_equal '(p1)', m.params
   end
 
   def test_look_for_directives_in
@@ -925,6 +957,65 @@ Init_IO(void) {
     assert_equal "read", read_method.name
     assert_equal "Method Comment!   ", read_method.comment
     assert read_method.singleton
+  end
+
+  def test_rb_scan_args
+    parser = util_parser ''
+
+    assert_equal '(p1)',
+                 parser.rb_scan_args('rb_scan_args(a, b, "1",)')
+    assert_equal '(p1, p2)',
+                 parser.rb_scan_args('rb_scan_args(a, b, "2",)')
+
+    assert_equal '(p1 = v1)',
+                 parser.rb_scan_args('rb_scan_args(a, b, "01",)')
+    assert_equal '(p1 = v1, p2 = v2)',
+                 parser.rb_scan_args('rb_scan_args(a, b, "02",)')
+
+    assert_equal '(p1, p2 = v2)',
+                 parser.rb_scan_args('rb_scan_args(a, b, "11",)')
+
+    assert_equal '(p1, *args)',
+                 parser.rb_scan_args('rb_scan_args(a, b, "1*",)')
+    assert_equal '(p1, p2 = {})',
+                 parser.rb_scan_args('rb_scan_args(a, b, "1:",)')
+    assert_equal '(p1, &block)',
+                 parser.rb_scan_args('rb_scan_args(a, b, "1&",)')
+
+    assert_equal '(p1, p2)',
+                 parser.rb_scan_args('rb_scan_args(a, b, "101",)')
+
+    assert_equal '(p1, p2 = v2, p3)',
+                 parser.rb_scan_args('rb_scan_args(a, b, "111",)')
+
+    assert_equal '(p1, *args, p3)',
+                 parser.rb_scan_args('rb_scan_args(a, b, "1*1",)')
+
+    assert_equal '(p1, p2 = v2, *args)',
+                 parser.rb_scan_args('rb_scan_args(a, b, "11*",)')
+    assert_equal '(p1, p2 = v2, p3 = {})',
+                 parser.rb_scan_args('rb_scan_args(a, b, "11:",)')
+    assert_equal '(p1, p2 = v2, &block)',
+                 parser.rb_scan_args('rb_scan_args(a, b, "11&",)')
+
+    assert_equal '(p1, p2 = v2, *args, p4, p5 = {}, &block)',
+                 parser.rb_scan_args('rb_scan_args(a, b, "11*1:&",)')
+
+    # The following aren't valid according to spec but are according to the
+    # implementation.
+    assert_equal '(*args)',
+                 parser.rb_scan_args('rb_scan_args(a, b, "*",)')
+    assert_equal '(p1 = {})',
+                 parser.rb_scan_args('rb_scan_args(a, b, ":",)')
+    assert_equal '(&block)',
+                 parser.rb_scan_args('rb_scan_args(a, b, "&",)')
+
+    assert_equal '(*args, p2 = {})',
+                 parser.rb_scan_args('rb_scan_args(a, b, "*:",)')
+    assert_equal '(p1 = {}, &block)',
+                 parser.rb_scan_args('rb_scan_args(a, b, ":&",)')
+    assert_equal '(*args, p2 = {}, &block)',
+                 parser.rb_scan_args('rb_scan_args(a, b, "*:&",)')
   end
 
   def util_get_class(content, name)
