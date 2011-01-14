@@ -129,6 +129,12 @@ class TestRDocCodeObject < XrefTestCase
     assert_nil @co.instance_variable_get(:@full_name)
   end
 
+  def test_line
+    @c1_m.line = 5
+
+    assert_equal 5, @c1_m.line
+  end
+
   def test_metadata
     assert_empty @co.metadata
 
@@ -139,6 +145,12 @@ class TestRDocCodeObject < XrefTestCase
     assert_equal expected, @co.metadata
 
     assert_equal 'not_rdoc', @co.metadata['markup']
+  end
+
+  def test_offset
+    @c1_m.offset = 5
+
+    assert_equal 5, @c1_m.offset
   end
 
   def test_parent_file_name

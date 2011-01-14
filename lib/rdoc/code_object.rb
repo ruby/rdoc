@@ -61,9 +61,21 @@ class RDoc::CodeObject
   attr_reader :force_documentation
 
   ##
+  # Line in #file where this CodeObject was defined
+
+  attr_accessor :line
+
+  ##
   # Hash of arbitrary metadata for this CodeObject
 
   attr_reader :metadata
+
+  ##
+  # Offset in #file where this CodeObject was defined
+  #--
+  # TODO character or byte?
+
+  attr_accessor :offset
 
   ##
   # Our parent CodeObject

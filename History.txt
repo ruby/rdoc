@@ -6,6 +6,7 @@
     provide a call-seq.
   * RDoc::Parser::C now records the function name for methods implemented in
     C.
+  * RDoc now records file and byte offset inforamtion for methods.
 * Bug fixes
   * Locations of module aliases are now recorded.
   * RDoc::Parser::C finds method bodies better now.

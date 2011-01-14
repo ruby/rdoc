@@ -379,11 +379,11 @@ class RDoc::Parser::C < RDoc::Parser
              \s*(\(.*?\))([^;]|$))%xm then
       comment = $1
       body = $2
+      offset = $~.offset(2).first
 
       remove_private_comments comment if comment
 
-      # see if we can find the whole body
-
+      # try to find the whole body
       body = $& if /#{Regexp.escape body}[^(]*?\{.*?^\}/m =~ file_content
 
       # The comment block may have been overridden with a 'Document-method'
@@ -403,11 +403,15 @@ class RDoc::Parser::C < RDoc::Parser
       tk.set_text body
       meth_obj.add_token tk
       meth_obj.comment = strip_stars comment
+      meth_obj.offset  = offset
+      meth_obj.line    = file_content[0, offset].count("\n") + 1
 
       body
     when %r%((?>/\*.*?\*/\s*))^\s*(\#\s*define\s+#{meth_name}\s+(\w+))%m then
       comment = $1
       body = $2
+      offset = $~.offset(2).first
+
       find_body class_name, $3, meth_obj, file_content, true
       find_modifiers comment, meth_obj
 
@@ -416,9 +420,14 @@ class RDoc::Parser::C < RDoc::Parser
       tk.set_text body
       meth_obj.add_token tk
       meth_obj.comment = strip_stars(comment) + meth_obj.comment.to_s
+      meth_obj.offset  = offset
+      meth_obj.line    = file_content[0, offset].count("\n") + 1
 
       body
     when %r%^\s*\#\s*define\s+#{meth_name}\s+(\w+)%m then
+      # with no comment we hope the aliased definition has it and use it's
+      # definition
+
       body = find_body(class_name, $1, meth_obj, file_content, true)
 
       return body if body

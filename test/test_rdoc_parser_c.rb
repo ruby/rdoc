@@ -581,6 +581,41 @@ init_gi_repository (void)
 
   def test_find_body_define
     content = <<-EOF
+#define something something_else
+
+#define other_function rb_other_function
+
+/*
+ * a comment for rb_other_function
+ */
+VALUE
+rb_other_function() {
+}
+
+void
+Init_Foo(void) {
+    VALUE foo = rb_define_class("Foo", rb_cObject);
+
+    rb_define_method(foo, "my_method", other_function, 0);
+}
+    EOF
+
+    klass = util_get_class content, 'foo'
+    other_function = klass.method_list.first
+
+    assert_equal 'my_method', other_function.name
+    assert_equal 'a comment for rb_other_function', other_function.comment
+    assert_equal '()', other_function.params
+    assert_equal 118, other_function.offset
+    assert_equal 8, other_function.line
+
+    code = other_function.token_stream.first.text
+
+    assert_equal "VALUE\nrb_other_function() {\n}", code
+  end
+
+  def test_find_body_define_comment
+    content = <<-EOF
 /*
  * a comment for other_function
  */
@@ -603,9 +638,10 @@ Init_Foo(void) {
     other_function = klass.method_list.first
 
     assert_equal 'my_method', other_function.name
-    assert_equal "a comment for other_function",
-                 other_function.comment
+    assert_equal 'a comment for other_function', other_function.comment
     assert_equal '()', other_function.params
+    assert_equal 39, other_function.offset
+    assert_equal 4, other_function.line
 
     code = other_function.token_stream.first.text
 
@@ -749,17 +785,35 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
     assert_equal expected, comment
   end
 
-  def test_handle_method
+  def test_handle_method_args_minus_1
     parser = util_parser "Document-method: Object#m\n blah */"
 
-    parser.handle_method 'method', 'rb_cObject', 'm', 'rb_m', 2
+    parser.content = <<-BODY
+VALUE
+rb_other(VALUE obj) {
+  rb_funcall(obj, rb_intern("other"), 0);
+  return rb_str_new2("blah, blah, blah");
+}
+
+VALUE
+rb_m(int argc, VALUE *argv, VALUE obj) {
+  VALUE o1, o2;
+  rb_scan_args(argc, argv, "1", &o1, &o2);
+}
+    BODY
+
+    parser.handle_method 'method', 'rb_cObject', 'm', 'rb_m', -1
 
     m = @top_level.find_module_named('Object').method_list.first
 
     assert_equal 'm', m.name
-    assert_equal '(p1, p2)', m.params
     assert_equal @top_level, m.file
+    assert_equal 115, m.offset
+    assert_equal 7, m.line
+
+    assert_equal '(p1)', m.params
   end
+
 
   def test_handle_method_args_0
     parser = util_parser "Document-method: BasicObject#==\n blah */"
@@ -803,23 +857,7 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
     assert_equal '(p1, p2)', equals2.params
   end
 
-  def test_handle_method_args_minus_1
-    parser = util_parser "Document-method: Object#m\n blah */"
-
-    parser.content = <<-BODY
-VALUE
-rb_m(int argc, VALUE *argv, VALUE obj) {
-  VALUE o1, o2;
-  rb_scan_args(argc, argv, "1", &o1, &o2);
-}
-    BODY
-
-    parser.handle_method 'method', 'rb_cObject', 'm', 'rb_m', -1
-
-    m = @top_level.find_module_named('Object').method_list.first
-
-    assert_equal '(p1)', m.params
-  end
+  # test_handle_args_minus_1 handled by test_handle_method
 
   def test_handle_method_args_minus_2
     parser = util_parser "Document-method: BasicObject#==\n blah */"
