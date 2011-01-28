@@ -310,6 +310,8 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     assert_equal klass,      alas.parent
     assert_equal 'comment',  alas.comment
     assert_equal @top_level, alas.file
+    assert_equal 0,          alas.offset
+    assert_equal 1,          alas.line
   end
 
   def test_parse_alias_singleton
@@ -361,6 +363,8 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     assert_equal 'foo', foo.name
     assert_equal 'my attr', foo.comment
     assert_equal @top_level, foo.file
+    assert_equal 0, foo.offset
+    assert_equal 1, foo.line
   end
 
   def test_parse_attr_accessor
@@ -382,6 +386,8 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     assert_equal 'RW', foo.rw
     assert_equal 'my attr', foo.comment
     assert_equal @top_level, foo.file
+    assert_equal 0, foo.offset
+    assert_equal 1, foo.line
 
     bar = klass.attributes.last
     assert_equal 'bar', bar.name
@@ -540,6 +546,9 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     foo = @top_level.classes.first
     assert_equal 'Foo', foo.full_name
     assert_equal 'my method', foo.comment
+    assert_equal [@top_level], foo.in_files
+    assert_equal 0, foo.offset
+    assert_equal 1, foo.line
   end
 
   def test_parse_class_ghost_method
@@ -705,6 +714,10 @@ end
     assert_equal %w[A],    RDoc::TopLevel.classes.map { |c| c.full_name }
     assert_equal %w[A::B A::d], RDoc::TopLevel.modules.map { |c| c.full_name }
 
+    b = RDoc::TopLevel.modules.first
+    assert_equal 2, b.offset # HACK should be 10
+    assert_equal 2,  b.line
+
     # make sure method/alias was not added to enclosing class/module
     a = RDoc::TopLevel.all_classes_hash['A']
     assert_empty a.method_list
@@ -843,6 +856,8 @@ EOF
     assert_equal 'RW',       foo.rw
     assert_equal 'my attr',  foo.comment
     assert_equal @top_level, foo.file
+    assert_equal 0,          foo.offset
+    assert_equal 1,          foo.line
 
     assert_equal nil,        foo.viewer
     assert_equal true,       foo.document_children
@@ -872,6 +887,8 @@ EOF
     assert_equal 'foo',       foo.name
     assert_equal 'my method', foo.comment
     assert_equal @top_level,  foo.file
+    assert_equal 0,           foo.offset
+    assert_equal 1,           foo.line
 
     assert_equal [],        foo.aliases
     assert_equal nil,       foo.block_params
@@ -897,6 +914,25 @@ EOF
     ]
 
     assert_equal stream, foo.token_stream
+  end
+
+  def test_parse_constant
+    util_top_level
+
+    klass = @top_level.add_class RDoc::NormalClass, 'Foo'
+
+    util_parser "A = v"
+
+    tk = @parser.get_tk
+
+    @parser.parse_constant klass, tk, ''
+
+    foo = klass.constants.first
+
+    assert_equal 'A', foo.name
+    assert_equal @top_level, foo.file
+    assert_equal 0, foo.offset
+    assert_equal 1, foo.line
   end
 
   def test_parse_constant_attrasgn
@@ -959,6 +995,8 @@ EOF
     assert_equal 'foo',       foo.name
     assert_equal 'my method', foo.comment
     assert_equal @top_level,  foo.file
+    assert_equal 0,           foo.offset
+    assert_equal 1,           foo.line
 
     assert_equal [],      foo.aliases
     assert_equal nil,     foo.block_params
@@ -1118,6 +1156,8 @@ end
     assert_equal 'foo',       foo.name
     assert_equal 'my method', foo.comment
     assert_equal @top_level,  foo.file
+    assert_equal 0,           foo.offset
+    assert_equal 1,           foo.line
 
     assert_equal [],        foo.aliases
     assert_equal nil,       foo.block_params

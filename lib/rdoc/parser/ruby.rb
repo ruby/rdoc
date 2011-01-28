@@ -174,6 +174,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
     @scanner.exception_on_syntax_error = false
     @prev_seek = nil
 
+    @encoding = @options.encoding if Object.const_defined? :Encoding
+
     reset
   end
 
@@ -449,6 +451,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # +comment+.
 
   def parse_attr(context, single, tk, comment)
+    column  = tk.char_no
+    line_no = tk.line_no
+
     args = parse_symbol_arg 1
     if args.size > 0 then
       name = args[0]
@@ -464,6 +469,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       att = RDoc::Attr.new get_tkread, name, rw, comment, single == SINGLE
       att.record_location @top_level
+      att.offset = column
+      att.line   = line_no
 
       read_documentation_modifiers att, RDoc::ATTR_MODIFIERS
 
@@ -480,6 +487,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # comment for each to +comment+.
 
   def parse_attr_accessor(context, single, tk, comment)
+    column  = tk.char_no
+    line_no = tk.line_no
+
     args = parse_symbol_arg
     rw = "?"
 
@@ -498,6 +508,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
     for name in args
       att = RDoc::Attr.new get_tkread, name, rw, comment, single == SINGLE
       att.record_location @top_level
+      att.offset = column
+      att.line   = line_no
 
       context.add_attribute att
       @stats.add_attribute att
@@ -508,6 +520,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Parses an +alias+ in +context+ with +comment+
 
   def parse_alias(context, single, tk, comment)
+    column  = tk.char_no
+    line_no = tk.line_no
+
     skip_tkspace
 
     if TkLPAREN === peek_tk then
@@ -534,6 +549,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
     al = RDoc::Alias.new(get_tkread, old_name, new_name, comment,
                          single == SINGLE)
     al.record_location @top_level
+    al.offset = column
+    al.line   = line_no
 
     read_documentation_modifiers al, RDoc::ATTR_MODIFIERS
     context.add_alias al if al.document_self
@@ -586,6 +603,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Parses a class in +context+ with +comment+
 
   def parse_class(container, single, tk, comment)
+    column  = tk.char_no
+    line_no = tk.line_no
+
     declaration_context = container
     container, name_t, given_name = get_class_or_module container
 
@@ -606,6 +626,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       read_documentation_modifiers cls, RDoc::CLASS_MODIFIERS
       cls.record_location @top_level
+      cls.offset = column
+      cls.line   = line_no
+
       cls.comment = comment if cls.document_self
 
       @top_level.add_to_classes_or_modules cls
@@ -622,6 +645,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
         unless other then
           other = container.add_module RDoc::NormalModule, name
           other.record_location @top_level
+          other.offset  = column
+          other.line    = line_no
+
           other.comment = comment
         end
 
@@ -639,7 +665,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
         read_documentation_modifiers other, RDoc::CLASS_MODIFIERS
         parse_statements(other, SINGLE)
       end
-
     else
       warn("Expected class name or '<<'. Got #{name_t.class}: #{name_t.text.inspect}")
     end
@@ -649,6 +674,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Parses a constant in +context+ with +comment+
 
   def parse_constant(container, tk, comment)
+    column  = tk.char_no
+    line_no = tk.line_no
+
     name = tk.name
     skip_tkspace false
 
@@ -721,6 +749,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     con = RDoc::Constant.new name, res, comment
     con.record_location @top_level
+    con.offset = column
+    con.line   = line_no
     read_documentation_modifiers con, RDoc::CONSTANT_MODIFIERS
 
     @stats.add_constant con
@@ -745,6 +775,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
       meth = RDoc::GhostMethod.new get_tkread, name
       meth.record_location @top_level
       meth.singleton = singleton
+      meth.offset    = column
+      meth.line      = line_no
 
       meth.start_collecting_tokens
       indent = TkSPACE.new nil, 1, 1
@@ -777,6 +809,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
       # TODO authorize 'singleton-attr...'?
       att = RDoc::Attr.new get_tkread, name, rw, comment
       att.record_location @top_level
+      att.offset    = column
+      att.line      = line_no
 
       container.add_attribute att
 
@@ -904,6 +938,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     meth = RDoc::MetaMethod.new get_tkread, name
     meth.record_location @top_level
+    meth.offset = column
+    meth.line   = line_no
     meth.singleton = singleton
 
     remove_token_listener self
@@ -1049,6 +1085,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     meth.record_location @top_level
+    meth.offset = column
+    meth.line   = line_no
 
     meth.start_collecting_tokens
     indent = TkSPACE.new nil, 1, 1
