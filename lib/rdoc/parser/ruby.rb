@@ -185,6 +185,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def collect_first_comment
     skip_tkspace
     comment = ''
+    comment.force_encoding @encoding if @encoding
     first_line = true
 
     tk = get_tk
@@ -1259,6 +1260,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def parse_statements(container, single = NORMAL, current_method = nil,
                        comment = '')
+    comment.force_encoding @encoding if @encoding
+
     nest = 1
     save_visibility = container.visibility
 
@@ -1282,6 +1285,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
               comment.empty?
 
             comment = ''
+            comment.force_encoding @encoding if @encoding
           end
 
           while TkCOMMENT === tk do
@@ -1421,7 +1425,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
         keep_comment = false
       end
 
-      comment = '' unless keep_comment
+      unless keep_comment then
+        comment = ''
+        comment.force_encoding @encoding if @encoding
+      end
 
       begin
         get_tkread

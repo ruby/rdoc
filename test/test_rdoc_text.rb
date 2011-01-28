@@ -134,6 +134,31 @@ The comments associated with
     assert_equal expected, strip_hashes(text)
   end
 
+  def test_strip_hashes_encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    text = <<-TEXT
+##
+# we don't worry too much.
+#
+# The comments associated with
+    TEXT
+
+    text.force_encoding Encoding::CP852
+
+    expected = <<-EXPECTED
+
+  we don't worry too much.
+
+  The comments associated with
+    EXPECTED
+
+    stripped = strip_hashes text
+
+    assert_equal expected, stripped
+    assert_equal Encoding::CP852, stripped.encoding
+  end
+
   def test_strip_newlines
     assert_equal ' ',  strip_newlines("\n \n")
 
@@ -176,6 +201,54 @@ The comments associated with
     EXPECTED
 
     assert_equal expected, strip_stars(text)
+  end
+
+  def test_strip_stars_encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    text = <<-TEXT
+/*
+ * * we don't worry too much.
+ *
+ * The comments associated with
+ */
+    TEXT
+
+    text.force_encoding Encoding::CP852
+
+    expected = <<-EXPECTED
+
+   * we don't worry too much.
+
+   The comments associated with
+    EXPECTED
+
+    assert_equal expected, strip_stars(text)
+    assert_equal Encoding::CP852, text.encoding
+  end
+
+  def test_strip_hashes_encoding
+
+    text = <<-TEXT
+##
+# we don't worry too much.
+#
+# The comments associated with
+    TEXT
+
+    text.force_encoding Encoding::CP852
+
+    expected = <<-EXPECTED
+
+  we don't worry too much.
+
+  The comments associated with
+    EXPECTED
+
+    stripped = strip_hashes text
+
+    assert_equal expected, stripped
+    assert_equal Encoding::CP852, stripped.encoding
   end
 
   def test_to_html_apostrophe

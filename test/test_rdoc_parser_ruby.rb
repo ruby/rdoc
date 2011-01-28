@@ -32,6 +32,36 @@ class TestRDocParserRuby < MiniTest::Unit::TestCase
     @tempfile2.close
   end
 
+  def test_collect_first_comment
+    p = util_parser <<-CONTENT
+# first
+
+# second
+class C; end
+    CONTENT
+
+    comment = p.collect_first_comment
+
+    assert_equal "# first\n", comment
+  end
+
+  def test_collect_first_comment_encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    @options.encoding = Encoding::CP852
+
+    p = util_parser <<-CONTENT
+# first
+
+# second
+class C; end
+    CONTENT
+
+    comment = p.collect_first_comment
+
+    assert_equal Encoding::CP852, comment.encoding
+  end
+
   def test_extract_call_seq
     m = RDoc::AnyMethod.new nil, 'm'
     p = util_parser ''
@@ -1439,6 +1469,28 @@ end
     assert_equal 'my method', bar.comment
   end
 
+  def test_parse_statements_encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+    @options.encoding = Encoding::CP852
+
+    content = <<-EOF
+class Foo
+  ##
+  # this is my method
+  add_my_method :foo
+end
+    EOF
+
+    util_parser content
+
+    @parser.parse_statements @top_level
+
+    foo = @top_level.classes.first.method_list.first
+    assert_equal 'foo', foo.name
+    assert_equal 'this is my method', foo.comment
+    assert_equal Encoding::CP852, foo.comment.encoding
+  end
+
   def test_parse_statements_identifier_meta_method
     content = <<-EOF
 class Foo
@@ -1450,7 +1502,7 @@ end
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
+    @parser.parse_statements @top_level
 
     foo = @top_level.classes.first.method_list.first
     assert_equal 'foo', foo.name
@@ -1466,7 +1518,7 @@ end
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
+    @parser.parse_statements @top_level
 
     foo = @top_level.classes.first.method_list[0]
     assert_equal 'foo', foo.name
@@ -1499,7 +1551,7 @@ EOF
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
+    @parser.parse_statements @top_level
 
     foo = @top_level.classes.first.method_list[0]
     assert_equal 'foo', foo.name
@@ -1565,7 +1617,7 @@ EOF
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
+    @parser.parse_statements @top_level
 
     constants = @top_level.classes.first.constants
 
@@ -1612,7 +1664,7 @@ EOF
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
+    @parser.parse_statements @top_level
 
     foo = @top_level.classes.first.attributes.first
     assert_equal 'foo', foo.name
@@ -1624,7 +1676,7 @@ EOF
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
+    @parser.parse_statements @top_level
 
     foo = @top_level.classes.first.attributes.first
     assert_equal 'foo', foo.name
@@ -1636,7 +1688,7 @@ EOF
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
+    @parser.parse_statements @top_level
 
     foo = @top_level.classes.first
     assert_equal 'Foo', foo.name
@@ -1648,7 +1700,7 @@ EOF
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
+    @parser.parse_statements @top_level
 
     foo, s_foo = @top_level.modules.first.method_list
     assert_equal 'foo',    foo.name,       'instance method name'
@@ -1665,7 +1717,7 @@ EOF
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
+    @parser.parse_statements @top_level
 
     foo = @top_level.classes.first.method_list.first
     assert_equal 'foo', foo.name
@@ -1677,7 +1729,7 @@ EOF
 
     util_parser content
 
-    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
+    @parser.parse_statements @top_level
 
     assert_equal 1, @top_level.requires.length
   end
@@ -1695,7 +1747,7 @@ class A
 end
     RUBY
 
-    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
+    @parser.parse_statements @top_level
 
     c_a = @top_level.classes.first
     assert_equal 'A', c_a.full_name
@@ -1887,7 +1939,7 @@ class C
       end
     EOS
 
-    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil, ''
+    @parser.parse_statements @top_level
 
     foo = @top_level.modules.first.modules.first
     assert_equal 'Foo', foo.name

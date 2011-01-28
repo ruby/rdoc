@@ -97,7 +97,8 @@ module RDoc::Text
     text = strip_hashes text
     text = expand_tabs text
     text = flush_left text
-    strip_newlines text
+    text = strip_newlines text
+    text
   end
 
   ##
@@ -139,7 +140,11 @@ http://rubyforge.org/tracker/?atid=2472&group_id=627&func=browse
 
   def strip_hashes text
     return text if text =~ /^(?>\s*)[^\#]/
-    text.gsub(/^\s*(#+)/) { $1.tr '#',' ' }.gsub(/^\s+$/, '')
+
+    empty = ''
+    empty.force_encoding text.encoding if Object.const_defined? :Encoding
+
+    text.gsub(/^\s*(#+)/) { $1.tr '#', ' ' }.gsub(/^\s+$/, empty)
   end
 
   ##
