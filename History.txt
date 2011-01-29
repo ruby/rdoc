@@ -1,4 +1,4 @@
-=== 3.5
+=== 3.5 / 2010-01-29
 
 * Minor enhancements
   * RDoc::Parser::C looks for rb_scan_args and fills in RDoc::AnyMethod#params
