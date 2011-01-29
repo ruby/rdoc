@@ -15,8 +15,9 @@ Hoe.spec 'rdoc' do
   developer 'Phil Hagelberg', 'technomancy@gmail.com'
   developer 'Tony Strauss', 'tony.strauss@designingpatterns.com'
 
-  self.remote_rdoc_dir = ''
   self.rsync_args = '-avz'
+  rdoc_locations << 'drbrain@rubyforge.org:/var/www/gforge-projects/rdoc/'
+
   self.testlib = :minitest
   self.isolate_dir = 'tmp/isolate'
 
