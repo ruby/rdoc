@@ -1641,8 +1641,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Removes private comments from +comment+
 
   def remove_private_comments(comment)
-    comment.gsub!(/^#--\n.*?^#\+\+\n?/m, '')
-    comment.sub!(/^#--\n.*\n?/m, '')
+    empty = ''
+    empty.force_encoding comment.encoding if Object.const_defined? :Encoding
+
+    comment.gsub!(/^#--\n.*?^#\+\+\n?/m, empty)
+    comment.sub!(/^#--\n.*\n?/m, empty)
   end
 
   ##

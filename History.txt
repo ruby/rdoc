@@ -11,7 +11,7 @@
   * Locations of module aliases are now recorded.
   * RDoc::Parser::C finds method bodies better now.
   * Fixed further locations where output encoding was not preserved.  Bug #11
-    by Vít Ondruch.
+    by Vít Ondruch, RubyForge bug #28791 by Dzmitry Prakapenka.
   * Fixed display of numeric lists on the index page and file pages.  Bug #12
     by tobijk.
 

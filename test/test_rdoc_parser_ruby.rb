@@ -186,6 +186,23 @@ class C; end
     assert_equal expected, comment
   end
 
+  def test_remove_private_comments_encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    util_parser ''
+
+    comment = <<-EOS
+# This is text
+#--
+# this is private
+    EOS
+    comment.force_encoding Encoding::IBM437
+
+    @parser.remove_private_comments comment
+
+    assert_equal Encoding::IBM437, comment.encoding
+  end
+
   def test_remove_private_comments_rule
     util_parser ''
 
@@ -221,6 +238,45 @@ class C; end
     @parser.remove_private_comments(comment)
 
     assert_equal expected, comment
+  end
+
+  def test_remove_private_comments_toggle_encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    util_parser ''
+
+    comment = <<-EOS
+# This is text
+#--
+# this is private
+#++
+# This is text again.
+    EOS
+
+    comment.force_encoding Encoding::IBM437
+
+    @parser.remove_private_comments comment
+
+    assert_equal Encoding::IBM437, comment.encoding
+  end
+
+  def test_remove_private_comments_toggle_encoding_ruby_bug?
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    util_parser ''
+
+    comment = <<-EOS
+#--
+# this is private
+#++
+# This is text again.
+    EOS
+
+    comment.force_encoding Encoding::IBM437
+
+    @parser.remove_private_comments comment
+
+    assert_equal Encoding::IBM437, comment.encoding
   end
 
   def test_look_for_directives_in_commented
