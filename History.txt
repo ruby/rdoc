@@ -14,6 +14,8 @@
     by Vít Ondruch, RubyForge bug #28791 by Dzmitry Prakapenka.
   * Fixed display of numeric lists on the index page and file pages.  Bug #12
     by tobijk.
+  * Skip TestRDocOptions#test_check_files on windows until a windows-specific
+    test can be created.  RubyForge bug #28821 by Usaku Nakamura.
 
 === 3.4 / 2010-01-06
 
