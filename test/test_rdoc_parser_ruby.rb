@@ -801,7 +801,7 @@ end
     assert_equal %w[A::B A::d], RDoc::TopLevel.modules.map { |c| c.full_name }
 
     b = RDoc::TopLevel.modules.first
-    assert_equal 2, b.offset # HACK should be 10
+    assert_equal 10, b.offset
     assert_equal 2,  b.line
 
     # make sure method/alias was not added to enclosing class/module
