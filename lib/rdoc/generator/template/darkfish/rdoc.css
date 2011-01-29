@@ -408,9 +408,14 @@ ul.link-list .type {
 #documentation .method-description,
 #documentation .aliases {
   margin: 0 20px;
-  line-height: 1.2em;
   color: #666;
 }
+
+#documentation .method-description p,
+#documentation .aliases p {
+  line-height: 1.2em;
+}
+
 #documentation .aliases {
   padding-top: 4px;
   font-style: italic;

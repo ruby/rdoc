@@ -16,6 +16,8 @@
     by tobijk.
   * Skip TestRDocOptions#test_check_files on windows until a windows-specific
     test can be created.  RubyForge bug #28821 by Usaku Nakamura.
+  * Fixed line-height of headings in method and alias descriptions.  RubyForge
+    Bug #2770 by Adam Avilla
 
 === 3.4 / 2010-01-06
 
