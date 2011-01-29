@@ -12,8 +12,10 @@
   * RDoc::Parser::C finds method bodies better now.
   * Fixed further locations where output encoding was not preserved.  Bug #11
     by Vít Ondruch.
+  * Fixed display of numeric lists on the index page and file pages.  Bug #12
+    by tobijk.
 
-=== 3.4
+=== 3.4 / 2010-01-06
 
 * Minor enhancements
   * RDoc::RDoc#document may now be called with an RDoc::Options instance.
