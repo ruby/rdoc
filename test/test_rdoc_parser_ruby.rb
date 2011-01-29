@@ -203,6 +203,25 @@ class C; end
     assert_equal Encoding::IBM437, comment.encoding
   end
 
+  def test_remove_private_comments_long
+    util_parser ''
+
+    comment = <<-EOS
+#-----
+#++
+# this is text
+#-----
+    EOS
+
+    expected = <<-EOS
+# this is text
+    EOS
+
+    @parser.remove_private_comments(comment)
+
+    assert_equal expected, comment
+  end
+
   def test_remove_private_comments_rule
     util_parser ''
 

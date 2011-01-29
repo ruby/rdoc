@@ -1647,8 +1647,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
     empty = ''
     empty.force_encoding comment.encoding if Object.const_defined? :Encoding
 
-    comment.gsub!(/^#--\n.*?^#\+\+\n?/m, empty)
-    comment.sub!(/^#--\n.*\n?/m, empty)
+    comment.gsub!(/^#--.*?^#\+\+\n?/m, empty)
+    comment.sub!(/^#--.*/m, '')
   end
 
   ##

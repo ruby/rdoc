@@ -18,6 +18,8 @@
     test can be created.  RubyForge bug #28821 by Usaku Nakamura.
   * Fixed line-height of headings in method and alias descriptions.  RubyForge
     Bug #2770 by Adam Avilla
+  * Relaxed RDoc::Parser::Ruby#remove_private_comments to consume more dashes
+    as older versions once did.  Bug #7 by Claus Folke Brobak.
 
 === 3.4 / 2010-01-06
 
