@@ -227,30 +227,6 @@ The comments associated with
     assert_equal Encoding::CP852, text.encoding
   end
 
-  def test_strip_hashes_encoding
-
-    text = <<-TEXT
-##
-# we don't worry too much.
-#
-# The comments associated with
-    TEXT
-
-    text.force_encoding Encoding::CP852
-
-    expected = <<-EXPECTED
-
-  we don't worry too much.
-
-  The comments associated with
-    EXPECTED
-
-    stripped = strip_hashes text
-
-    assert_equal expected, stripped
-    assert_equal Encoding::CP852, stripped.encoding
-  end
-
   def test_to_html_apostrophe
     assert_equal '‘a', to_html("'a")
     assert_equal 'a’', to_html("a'")
