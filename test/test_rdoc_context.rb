@@ -179,7 +179,6 @@ class TestRDocContext < XrefTestCase
     c3_c4 = @c2.add_module_alias @c2_c3, 'C4', tl
 
     c4 = @c2.find_module_named('C4')
-    c2_c3_c4 = @c2_c3.find_module_named('C4')
 
     alias_constant = @c2.constants.first
 

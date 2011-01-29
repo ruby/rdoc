@@ -174,6 +174,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     @scanner.exception_on_syntax_error = false
     @prev_seek = nil
 
+    @encoding = nil
     @encoding = @options.encoding if Object.const_defined? :Encoding
 
     reset
