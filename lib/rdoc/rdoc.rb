@@ -354,12 +354,12 @@ The internal error was:
 
   def parse_files files
     file_list = gather_files files
+    @stats = RDoc::Stats.new file_list.size, @options.verbosity
 
     return [] if file_list.empty?
 
     file_info = []
 
-    @stats = RDoc::Stats.new file_list.size, @options.verbosity
     @stats.begin_adding
 
     file_info = file_list.map do |filename|

@@ -1,3 +1,10 @@
+=== 3.5.1
+
+* Bug fixes
+  * Fixed some typos.  Pull request #13 by R.T. Lechow.
+  * Ensure an RDoc::Stats is created in #parse_files.  Fixes documentation for
+    railties which has no files.  Reported by Aaron Patterson
+
 === 3.5 / 2010-01-29
 
 * Minor enhancements
