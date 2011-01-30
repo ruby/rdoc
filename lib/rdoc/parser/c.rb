@@ -71,7 +71,7 @@ require 'rdoc/known_classes'
 #   Documentation for the named attribute.
 #
 # [call-seq:  <i>text up to an empty line</i>]
-#   Because C source doesn't give descripive names to Ruby-level parameters,
+#   Because C source doesn't give descriptive names to Ruby-level parameters,
 #   you need to document the calling sequence explicitly
 #
 # In addition, RDoc assumes by default that the C method implementing a

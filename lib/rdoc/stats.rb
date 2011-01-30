@@ -411,7 +411,7 @@ class RDoc::Stats
   end
 
   ##
-  # Determines which parametecs in +method+ were not documented.  Returns a
+  # Determines which parameters in +method+ were not documented.  Returns a
   # total parameter count and an Array of undocumented methods.
 
   def undoc_params method

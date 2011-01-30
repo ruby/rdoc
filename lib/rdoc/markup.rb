@@ -483,7 +483,7 @@ require 'rdoc'
 # [+:include:+ _filename_]
 #   Include the contents of the named file at this point. This directive
 #   must appear alone on one line, possibly preceded by spaces. In this
-#   position, it can be escapd with a \ in front of the first colon.
+#   position, it can be escaped with a \ in front of the first colon.
 #
 #   The file will be searched for in the directories listed by the +--include+
 #   option, or in the current directory by default.  The contents of the file
