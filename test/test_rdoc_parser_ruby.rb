@@ -1144,7 +1144,7 @@ EOF
 
     content = <<-CONTENT
 inline(:my_method) do |*args|
-  "this method is causes z to disapear"
+  "this method causes z to disappear"
 end
     CONTENT
 
@@ -1986,7 +1986,7 @@ class C
   #  my method
 
   inline(:my_method) do |*args|
-    "this method used to cause z to disapear"
+    "this method used to cause z to disappear"
   end
 
   def z

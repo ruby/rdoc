@@ -47,7 +47,7 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
     assert_empty files
   end
 
-  def test_remove_unparsable
+  def test_remove_unparseable
     file_list = %w[
       blah.class
       blah.eps
