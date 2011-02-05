@@ -6,7 +6,7 @@
   * Fixed ri for methods with aliases.  Pull Request #15 by Sven Riedel.
   * Added windows-specific test for test_check_files.
 
-=== 3.5.1
+=== 3.5.1 / 2010-01-30
 
 * Bug fixes
   * Fixed some typos.  Pull request #13 by R.T. Lechow.
