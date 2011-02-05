@@ -4,6 +4,7 @@
   * Fixed syntax highlighting CSS class generation.  Reported by Daniel
     Bretoi.
   * Fixed ri for methods with aliases.  Pull Request #15 by Sven Riedel.
+  * Added windows-specific test for test_check_files.
 
 === 3.5.1
 
