@@ -1,4 +1,4 @@
-=== 3.5.2
+=== 3.5.2 / 2010-02-04
 
 * Deprecations
   * RDoc::Context::Section#sequence is now deprecated.  Use
