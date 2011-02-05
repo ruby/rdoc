@@ -16,11 +16,13 @@ Hoe.spec 'rdoc' do
   developer 'Tony Strauss', 'tony.strauss@designingpatterns.com'
 
   self.rsync_args = '-avz'
+  rdoc_locations << 'docs.seattlerb.org:/data/www/docs.seattlerb.org/rdoc/'
   rdoc_locations << 'drbrain@rubyforge.org:/var/www/gforge-projects/rdoc/'
 
   self.testlib = :minitest
   self.isolate_dir = 'tmp/isolate'
 
+  require_ruby_version '>= 1.8.7'
   extra_dev_deps   << ['minitest', '~> 2']
   extra_dev_deps   << ['isolate',  '~> 3']
   extra_dev_deps   << ['ZenTest',  '~> 4'] # for autotest/isolate
@@ -30,10 +32,12 @@ Hoe.spec 'rdoc' do
   spec_extras['homepage'] = 'http://rdoc.rubyforge.org'
 
   spec_extras[:post_install_message] = <<-EOF
-RDoc 2.5 did not save method parameters, so you should upgrade your rdoc-data
-gem to a version >= 2.5.3.
+NOTE: If you are running Ruby 1.9.2 you can ignore this message.
 
-To have ri data for core and stdlib you'll need to:
+RDoc 2.5+ has a new ri data format for Ruby 1.8.7 and 1.9.1.  (1.9.2 contains
+RDoc 2.5 so there is nothing to do!)
+
+To install new ri data for core and stdlib you'll need to:
 
   gem install rdoc-data
 
@@ -46,6 +50,9 @@ To have ri data for you gems you'll also need to run:
   gem rdoc --all --overwrite
 
 If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
+
+NOTE:  RDoc 2.5 did not save method parameters, so you should upgrade your
+rdoc-data gem to a version >= 2.5.3 if you installed an older version.
   EOF
 end
 
