@@ -20,6 +20,8 @@ class TestRDocOptions < MiniTest::Unit::TestCase
     out, err = capture_io do
       Dir.mktmpdir do |dir|
         begin
+          unreadable = nil # variable for windows
+
           Dir.chdir dir do
             if RUBY_PLATFORM =~ /mswin|mingw/ then
               unreadable = open 'unreadable'
@@ -34,7 +36,7 @@ class TestRDocOptions < MiniTest::Unit::TestCase
             @options.check_files
           end
         ensure
-          unreadable.close if defined?(unreadable)
+          unreadable.close if unreadable
         end
       end
     end
