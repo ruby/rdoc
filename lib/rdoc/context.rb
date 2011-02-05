@@ -665,22 +665,20 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Iterator for each section's contents
+  # Iterator for each section's contents.  To retrieve methods in a section
+  # use #methods_by_type with the optional +section+ parameter.
   #
   # NOTE: Do not edit collections yielded by this method
 
-  def each_section # :yields: section, constants, attributes, methods
+  def each_section # :yields: section, constants, attributes
     constants  = @constants.group_by   do |constant|  constant.section end
     constants.default = []
 
     attributes = @attributes.group_by  do |attribute| attribute.section end
     attributes.default = []
 
-    methods    = @method_list.group_by do |method|    method.section end
-    methods.default = []
-
     @sections.sort_by { |title, _| title.to_s }.each do |_, section|
-      yield section, constants[section], attributes[section], methods[section].sort
+      yield section, constants[section].sort, attributes[section].sort
     end
   end
 
@@ -891,10 +889,13 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Breaks method_list into a nested hash by type (class or instance) and
-  # visibility (public, protected, private)
+  # Breaks method_list into a nested hash by type (<tt>'class'</tt> or
+  # <tt>'instance'</tt>) and visibility (+:public+, +:protected+, +:private+).
+  #
+  # If +section+ is provided only methods in that RDoc::Context::Section will
+  # be returned.
 
-  def methods_by_type
+  def methods_by_type section = nil
     methods = {}
 
     TYPES.each do |type|
@@ -907,6 +908,7 @@ class RDoc::Context < RDoc::CodeObject
     end
 
     each_method do |method|
+      next if section and not method.section == section
       methods[method.type][method.visibility] << method
     end
 

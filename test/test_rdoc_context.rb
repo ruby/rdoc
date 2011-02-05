@@ -255,13 +255,11 @@ class TestRDocContext < XrefTestCase
     sects  = []
     consts = []
     attrs  = []
-    meths  = []
 
-    @c1.each_section do |section, constants, attributes, methods|
+    @c1.each_section do |section, constants, attributes|
       sects  << section
       consts << constants
       attrs  << attributes
-      meths  << methods
     end
 
     assert_equal [nil, 'separate'], sects.map { |section| section.title }
@@ -279,13 +277,6 @@ class TestRDocContext < XrefTestCase
     ]
 
     assert_equal expected_attrs, attrs
-
-    expected_meths = [
-      [@c1__m, @c1_m],
-      [],
-    ]
-
-    assert_equal expected_meths, meths
   end
 
   def test_find_attribute_named
@@ -408,6 +399,43 @@ class TestRDocContext < XrefTestCase
 
     assert_equal 1,  @c2_c3.<=>(@c2)
     assert_equal(-1, @c2_c3.<=>(@c3))
+  end
+
+  def test_methods_by_type
+    expected = {
+      'instance' => {
+        :private   => [],
+        :protected => [],
+        :public    => [@c1_m],
+      },
+      'class' => {
+        :private   => [],
+        :protected => [],
+        :public    => [@c1__m],
+      },
+    }
+
+    assert_equal expected, @c1.methods_by_type
+  end
+
+  def test_methods_by_type_section
+    separate = @c1.sections_hash['separate']
+    @c1_m.section = separate
+
+    expected = {
+      'instance' => {
+        :private   => [],
+        :protected => [],
+        :public    => [@c1_m],
+      },
+      'class' => {
+        :private   => [],
+        :protected => [],
+        :public    => [],
+      },
+    }
+
+    assert_equal expected, @c1.methods_by_type(separate)
   end
 
 end
