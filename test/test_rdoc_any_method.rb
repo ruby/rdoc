@@ -90,6 +90,12 @@ method(a, b) { |c, d| ... }
     assert_equal 'C1',    instance_method.parent_name
     assert_equal '(foo)', instance_method.params
 
+    aliased_method = Marshal.load Marshal.dump(@c2.method_list.last)
+
+    assert_equal 'C2#a',  aliased_method.full_name
+    assert_equal 'C2',    aliased_method.parent_name
+    assert_equal '()',    aliased_method.params
+
     class_method = Marshal.load Marshal.dump(@c1.method_list.first)
 
     assert_equal 'C1::m', class_method.full_name
