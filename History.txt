@@ -1,3 +1,9 @@
+=== 3.5.2
+
+* Bug fixes
+  * Fixed syntax highlighting CSS class generation.  Reported by Daniel
+    Bretoi.
+
 === 3.5.1
 
 * Bug fixes
