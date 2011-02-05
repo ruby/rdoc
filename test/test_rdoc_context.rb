@@ -251,6 +251,43 @@ class TestRDocContext < XrefTestCase
     refute_equal @c2_c3, @c3
   end
 
+  def test_each_section
+    sects  = []
+    consts = []
+    attrs  = []
+    meths  = []
+
+    @c1.each_section do |section, constants, attributes, methods|
+      sects  << section
+      consts << constants
+      attrs  << attributes
+      meths  << methods
+    end
+
+    assert_equal [nil, 'separate'], sects.map { |section| section.title }
+
+    expected_consts = [
+      [@c1.constants.first],
+      [],
+    ]
+
+    assert_equal expected_consts, consts
+
+    expected_attrs = [
+      [@c1.attributes[0], @c1.attributes[3]],
+      [@c1.attributes[1], @c1.attributes[2]],
+    ]
+
+    assert_equal expected_attrs, attrs
+
+    expected_meths = [
+      [@c1__m, @c1_m],
+      [],
+    ]
+
+    assert_equal expected_meths, meths
+  end
+
   def test_find_attribute_named
     assert_equal nil,  @c1.find_attribute_named('none')
     assert_equal 'R',  @c1.find_attribute_named('attr').rw

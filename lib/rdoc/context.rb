@@ -60,11 +60,6 @@ class RDoc::Context < RDoc::CodeObject
   attr_reader :requires
 
   ##
-  # Sections in this context
-
-  attr_reader :sections
-
-  ##
   # Hash <tt>old_name => [aliases]</tt>, for aliases
   # that haven't (yet) been resolved to a method/attribute.
   # (Not to be confused with the aliases of the context.)
@@ -192,7 +187,7 @@ class RDoc::Context < RDoc::CodeObject
     @visibility = :public
 
     @current_section = Section.new self, nil, nil
-    @sections = [@current_section]
+    @sections = { nil => @current_section }
 
     @classes = {}
     @modules = {}
@@ -670,6 +665,26 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
+  # Iterator for each section's contents
+  #
+  # NOTE: Do not edit collections yielded by this method
+
+  def each_section # :yields: section, constants, attributes, methods
+    constants  = @constants.group_by   do |constant|  constant.section end
+    constants.default = []
+
+    attributes = @attributes.group_by  do |attribute| attribute.section end
+    attributes.default = []
+
+    methods    = @method_list.group_by do |method|    method.section end
+    methods.default = []
+
+    @sections.sort_by { |title, _| title.to_s }.each do |_, section|
+      yield section, constants[section], attributes[section], methods[section].sort
+    end
+  end
+
+  ##
   # Finds an attribute +name+ with singleton value +singleton+.
 
   def find_attribute(name, singleton)
@@ -997,11 +1012,27 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
+  # Sections in this context
+
+  def sections
+    @sections.values
+  end
+
+  def sections_hash # :nodoc:
+    @sections
+  end
+
+  ##
   # Creates a new section with +title+ and +comment+
 
   def set_current_section(title, comment)
-    @current_section = Section.new self, title, comment
-    @sections << @current_section
+    @current_section = if @sections.key? title then
+                         @sections[title]
+                       else
+                         section = Section.new self, title, comment
+                         @sections[title] = section
+                         section
+                       end
   end
 
   ##
