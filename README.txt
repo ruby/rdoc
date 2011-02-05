@@ -1,7 +1,7 @@
 = \RDoc - Ruby Documentation System
 
 * {RDoc Project Page}[https://github.com/rdoc/rdoc/]
-* {RDoc Documentation}[http://rdoc.rubyforge.org/]
+* {RDoc Documentation}[http://docs.seattlerb.org/rdoc]
 * {RDoc Bug Tracker}[https://github.com/rdoc/rdoc/issues]
 
 == DESCRIPTION:
@@ -27,12 +27,12 @@ To generate documentation programmatically:
 == BUGS:
 
 If you find a bug, please report it at the RDoc project's
-tracker[http://rubyforge.org/tracker/?group_id=627] on RubyForge
+{issues tracker}[https://github.com/rdoc/rdoc/issues] on github
 
 == LICENSE:
 
 RDoc is Copyright (c) 2001-2003 Dave Thomas, The Pragmatic Programmers.
-Portions (c) 2007-2010 Eric Hodel.  Portions copyright others, see individual
+Portions (c) 2007-2011 Eric Hodel.  Portions copyright others, see individual
 files for details.
 
 It is free software, and may be redistributed under the terms specified in
