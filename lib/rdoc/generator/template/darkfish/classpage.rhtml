@@ -15,7 +15,7 @@
   <script src="<%= rel_prefix %>/js/darkfish.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
-<body class="<%= klass.type %>">
+<body id="top" class="<%= klass.type %>">
 
   <div id="metadata">
     <div id="home-metadata">
@@ -176,9 +176,12 @@
     </div><!-- description -->
 
     <% klass.each_section do |section, constants, attributes| %>
-    <div id="<%= section.aref %>">
+    <div id="<%= section.aref %>" class="documentation-section">
       <% if section.title then %>
-      <h2 class="section-header"><%= section.title %></h2>
+      <h2 class="section-header">
+        <%= section.title %>
+        <a href="#top">&uarr; top</a>
+      </h2>
       <% end %>
 
       <% if section.comment then %>

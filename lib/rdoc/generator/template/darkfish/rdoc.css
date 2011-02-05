@@ -371,6 +371,23 @@ ul.link-list .type {
   color: #666;
 }
 
+.documentation-section h2 {
+  position: relative;
+}
+
+.documentation-section h2 a {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 12px;
+  color: #9b9877;
+  visibility: hidden;
+}
+
+.documentation-section h2:hover a {
+  visibility: visible;
+}
+
 /* @group Method Details */
 
 #documentation .method-source-code {
