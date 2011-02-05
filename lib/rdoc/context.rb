@@ -88,10 +88,13 @@ class RDoc::Context < RDoc::CodeObject
   attr_reader :constants_hash
 
   ##
-  # A per-comment section of documentation like:
+  # A section of documentation like:
   #
   #   # :section: The title
   #   # The body
+  #
+  # Sections can be referenced multiple times and will be collapsed into a
+  # single section.
 
   class Section
 
@@ -129,7 +132,7 @@ class RDoc::Context < RDoc::CodeObject
       @@sequence.succ!
       @sequence = @@sequence.dup
 
-      set_comment comment
+      @comment = extract_comment comment
     end
 
     ##
@@ -139,39 +142,50 @@ class RDoc::Context < RDoc::CodeObject
       self.class === other and @sequence == other.sequence
     end
 
-    def inspect # :nodoc:
-      "#<%s:0x%x %s %p>" % [
-        self.class, object_id,
-        @sequence, title
-      ]
+    ##
+    # Appends +comment+ to the current comment separated by a rule.
+
+    def comment= comment
+      comment = extract_comment comment
+
+      return if comment.empty?
+
+      if @comment then
+        @comment += "\n# ---\n#{comment}"
+      else
+        @comment = comment
+      end
     end
 
     ##
-    # Set the comment for this section from the original comment block.  If
-    # the first line contains :section:, strip it and use the rest.
+    # Extracts the comment for this section from the original comment block.
+    # If the first line contains :section:, strip it and use the rest.
     # Otherwise remove lines up to the line containing :section:, and look
     # for those lines again at the end and remove them. This lets us write
     #
     #   # :section: The title
     #   # The body
 
-    def set_comment(comment)
-      return unless comment
-
+    def extract_comment comment
       if comment =~ /^#[ \t]*:section:.*\n/ then
         start = $`
         rest = $'
 
-        if start.empty?
-          @comment = rest
+        if start.empty? then
+          rest
         else
-          @comment = rest.sub(/#{start.chomp}\Z/, '')
+          rest.sub(/#{start.chomp}\Z/, '')
         end
       else
-        @comment = comment
+        comment
       end
+    end
 
-      @comment = nil if @comment.empty?
+    def inspect # :nodoc:
+      "#<%s:0x%x %s %p>" % [
+        self.class, object_id,
+        @sequence, title
+      ]
     end
 
   end
@@ -1034,13 +1048,15 @@ class RDoc::Context < RDoc::CodeObject
   # Creates a new section with +title+ and +comment+
 
   def set_current_section(title, comment)
-    @current_section = if @sections.key? title then
-                         @sections[title]
-                       else
-                         section = Section.new self, title, comment
-                         @sections[title] = section
-                         section
-                       end
+    if @sections.key? title then
+      @current_section = @sections[title]
+      @current_section.comment = comment
+    else
+      @current_section = Section.new self, title, comment
+      @sections[title] = @current_section
+    end
+
+    @current_section
   end
 
   ##
