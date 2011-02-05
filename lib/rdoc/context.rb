@@ -111,11 +111,6 @@ class RDoc::Context < RDoc::CodeObject
     attr_reader :parent
 
     ##
-    # Section sequence number (for linking)
-
-    attr_reader :sequence
-
-    ##
     # Section title
 
     attr_reader :title
@@ -125,9 +120,9 @@ class RDoc::Context < RDoc::CodeObject
     ##
     # Creates a new section with +title+ and +comment+
 
-    def initialize(parent, title, comment)
+    def initialize parent, title, comment
       @parent = parent
-      @title = title
+      @title = title ? title.strip : title
 
       @@sequence.succ!
       @sequence = @@sequence.dup
@@ -136,10 +131,19 @@ class RDoc::Context < RDoc::CodeObject
     end
 
     ##
-    # Sections are equal when they have the same #sequence
+    # Sections are equal when they have the same #title
 
-    def ==(other)
-      self.class === other and @sequence == other.sequence
+    def == other
+      self.class === other and @title == other.title
+    end
+
+    ##
+    # Anchor reference for linking to this section
+
+    def aref
+      title = @title || '[untitled]'
+
+      CGI.escape(title).gsub('%', '-').sub(/^-/, '')
     end
 
     ##
@@ -186,6 +190,14 @@ class RDoc::Context < RDoc::CodeObject
         self.class, object_id,
         @sequence, title
       ]
+    end
+
+    ##
+    # Section sequence number (deprecated)
+
+    def sequence
+      warn "RDoc::Context::Section#sequence is deprecated, use #aref"
+      @sequence
     end
 
   end

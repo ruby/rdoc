@@ -1,5 +1,9 @@
 === 3.5.2
 
+* Deprecations
+  * RDoc::Context::Section#sequence is now deprecated.  Use
+    RDoc::Context::Section#aref instead.
+
 * Bug fixes
   * Fixed syntax highlighting CSS class generation.  Reported by Daniel
     Bretoi.

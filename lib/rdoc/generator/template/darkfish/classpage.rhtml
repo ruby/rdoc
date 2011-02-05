@@ -80,7 +80,7 @@
         <h3 class="section-header">Sections</h3>
         <ul class="link-list">
           <% klass.sections.sort_by { |s| s.title.to_s }.each do |section| %>
-            <li><a href="#<%= section.sequence %>"><%= h section.title %></a></li>
+            <li><a href="#<%= section.aref %>"><%= h section.title %></a></li>
           <% end %>
         </ul>
       </div>
@@ -176,13 +176,13 @@
     </div><!-- description -->
 
     <% klass.each_section do |section, constants, attributes| %>
-    <div id="<%= section.sequence %>">
+    <div id="<%= section.aref %>">
       <% if section.title then %>
       <h2 class="section-header"><%= section.title %></h2>
       <% end %>
 
       <% if section.comment then %>
-      <div id="<%= section.sequence %>" class="description">
+      <div class="description">
         <%= section.description %>
       </div>
       <% end %>
@@ -300,7 +300,7 @@
       </div><!-- <%= visibility %>-<%= type %>-method-details -->
     <% end
        end %>
-    </div><!-- <%= section.sequence %> -->
+    </div><!-- <%= section.aref %> -->
   <% end %>
 
   </div><!-- documentation -->
