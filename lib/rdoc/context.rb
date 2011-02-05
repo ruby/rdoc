@@ -95,6 +95,8 @@ class RDoc::Context < RDoc::CodeObject
 
   class Section
 
+    include RDoc::Text
+
     ##
     # Section comment
 
@@ -665,16 +667,20 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Iterator for each section's contents.  To retrieve methods in a section
-  # use #methods_by_type with the optional +section+ parameter.
+  # Iterator for each section's contents sorted by title.  The +section+, the
+  # section's +constants+ and the sections +attributes+ are yielded.  The
+  # +constants+ and +attributes+ collections are sorted.
+  #
+  # To retrieve methods in a section use #methods_by_type with the optional
+  # +section+ parameter.
   #
   # NOTE: Do not edit collections yielded by this method
 
   def each_section # :yields: section, constants, attributes
-    constants  = @constants.group_by   do |constant|  constant.section end
+    constants  = @constants.group_by  do |constant|  constant.section end
     constants.default = []
 
-    attributes = @attributes.group_by  do |attribute| attribute.section end
+    attributes = @attributes.group_by do |attribute| attribute.section end
     attributes.default = []
 
     @sections.sort_by { |title, _| title.to_s }.each do |_, section|

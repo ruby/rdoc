@@ -5,6 +5,9 @@
     Bretoi.
   * Fixed ri for methods with aliases.  Pull Request #15 by Sven Riedel.
   * Added windows-specific test for test_check_files.
+  * Darkfish now supports sections.  Template and generator author see
+    RDoc::Context#each_section to add section support.  RubyForge Bug #26883
+    by Jeff Hodges.
 
 === 3.5.1 / 2010-01-30
 
