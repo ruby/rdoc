@@ -69,17 +69,10 @@ module RDoc::Text
 
     indent = indents.min
 
-    flush = []
-
     empty = ''
     empty.force_encoding text.encoding if Object.const_defined? :Encoding
 
-    text.each_line do |line|
-      line[/^ {0,#{indent}}/] = empty
-      flush << line
-    end
-
-    flush.join
+    text.gsub(/^ {0,#{indent}}/, empty)
   end
 
   ##
