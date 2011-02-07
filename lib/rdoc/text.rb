@@ -69,8 +69,11 @@ module RDoc::Text
 
     flush = []
 
+    empty = ''
+    empty.force_encoding text.encoding if Object.const_defined? :Encoding
+
     text.each_line do |line|
-      line[/^ {0,#{indent}}/] = ''
+      line[/^ {0,#{indent}}/] = empty
       flush << line
     end
 

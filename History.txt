@@ -6,6 +6,8 @@
     #4376 by Yui NARUSE.
   * Work around inconsistent encoding result from String#sub!.  Related to
     Ruby Bug #4376.
+  * Work around inconsistent encoding result from String#[]=.  Related to Ruby
+    Bug #4376.
 
 === 3.5.2 / 2010-02-04
 

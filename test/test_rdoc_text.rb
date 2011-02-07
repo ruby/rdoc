@@ -73,6 +73,31 @@ The comments associated with
     assert_equal expected, flush_left(text)
   end
 
+  def test_flush_left_encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    text = <<-TEXT
+
+  we don't worry too much.
+
+  The comments associated with
+    TEXT
+
+    text.force_encoding Encoding::US_ASCII
+
+    expected = <<-EXPECTED
+
+we don't worry too much.
+
+The comments associated with
+    EXPECTED
+
+    result = flush_left text
+
+    assert_equal expected, result
+    assert_equal Encoding::US_ASCII, result.encoding
+  end
+
   def test_markup
     def formatter() RDoc::Markup::ToHtml.new end
 
