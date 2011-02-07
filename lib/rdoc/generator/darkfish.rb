@@ -208,6 +208,12 @@ class RDoc::Generator::Darkfish
     out_file = @basedir + @options.op_dir + 'index.html'
 
     render_template template_file, out_file do |io| binding end
+  rescue => e
+    error = RDoc::Error.new \
+      "error generating index.html: #{e.message} (#{e.class})"
+    error.set_backtrace e.backtrace
+
+    raise error
   end
 
   ##
@@ -232,8 +238,11 @@ class RDoc::Generator::Darkfish
       render_template template_file, out_file do |io| binding end
     end
   rescue => e
-    raise RDoc::Error,
-          "error generating #{current.path}: #{e.message} (#{e.class})"
+    error = RDoc::Error.new \
+      "error generating #{current.path}: #{e.message} (#{e.class})"
+    error.set_backtrace e.backtrace
+
+    raise error
   end
 
   ##
@@ -256,8 +265,11 @@ class RDoc::Generator::Darkfish
       render_template template_file, out_file do |io| binding end
     end
   rescue => e
-    raise RDoc::Error,
-          "error generating #{out_file}: #{e.message} (#{e.class})"
+    error =
+      RDoc::Error.new "error generating #{out_file}: #{e.message} (#{e.class})"
+    error.set_backtrace e.backtrace
+
+    raise error
   end
 
   ##
