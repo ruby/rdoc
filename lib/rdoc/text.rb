@@ -61,13 +61,12 @@ module RDoc::Text
   # Flush +text+ left based on the shortest line
 
   def flush_left text
-    indents = []
+    indent = 9999
 
     text.each_line do |line|
-      indents << (line =~ /[^\s]/ || 9999)
+      line_indent = line =~ /\S/ || 9999
+      indent = line_indent if indent > line_indent
     end
-
-    indent = indents.min
 
     empty = ''
     empty.force_encoding text.encoding if Object.const_defined? :Encoding
