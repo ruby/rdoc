@@ -158,11 +158,20 @@ http://rubyforge.org/tracker/?atid=2472&group_id=627&func=browse
   # Strips /* */ style comments
 
   def strip_stars text
+    encoding = text.encoding if Object.const_defined? :Encoding
+
     text = text.gsub %r%Document-method:\s+[\w:.#]+%, ''
-    text.sub!  %r%/\*+%       do " " * $&.length end
-    text.sub!  %r%\*+/%       do " " * $&.length end
-    text.gsub! %r%^[ \t]*\*%m do " " * $&.length end
-    text.gsub(/^\s+$/, '')
+
+    space = ' '
+    space.force_encoding encoding if encoding
+
+    text.sub!  %r%/\*+%       do space * $&.length end
+    text.sub!  %r%\*+/%       do space * $&.length end
+    text.gsub! %r%^[ \t]*\*%m do space * $&.length end
+
+    empty = ''
+    empty.force_encoding encoding if encoding
+    text.gsub(/^\s+$/, empty)
   end
 
   ##

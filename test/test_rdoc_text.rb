@@ -223,8 +223,36 @@ The comments associated with
    The comments associated with
     EXPECTED
 
-    assert_equal expected, strip_stars(text)
-    assert_equal Encoding::CP852, text.encoding
+    result = strip_stars text
+
+    assert_equal expected, result
+    assert_equal Encoding::CP852, result.encoding
+  end
+
+  def test_strip_stars_encoding2
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    text = <<-TEXT
+/*
+ * * we don't worry too much.
+ *
+ * The comments associated with
+ */
+    TEXT
+
+    text.force_encoding Encoding::BINARY
+
+    expected = <<-EXPECTED
+
+   * we don't worry too much.
+
+   The comments associated with
+    EXPECTED
+
+    result = strip_stars text
+
+    assert_equal expected, result
+    assert_equal Encoding::BINARY, result.encoding
   end
 
   def test_to_html_apostrophe
