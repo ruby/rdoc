@@ -55,6 +55,18 @@ class TestRDocText < MiniTest::Unit::TestCase
                  expand_tabs(".\t\t."), 'dot tab tab dot')
   end
 
+  def test_expand_tabs_encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    inn = "hello\ns\tdave"
+    inn.force_encoding Encoding::BINARY
+
+    out = expand_tabs inn
+
+    assert_equal "hello\ns       dave", out
+    assert_equal Encoding::BINARY, out.encoding
+  end
+
   def test_flush_left
     text = <<-TEXT
 
