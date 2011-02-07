@@ -66,7 +66,7 @@ class TestRDocEncoding < MiniTest::Unit::TestCase
 
     assert_nil contents
 
-    assert_match %r%^unable to convert U\+03C0 from UTF-8 to US-ASCII for%, err
+    assert_match %r%^unable to convert%, err
   end
 
   def test_class_read_file_encoding_fancy

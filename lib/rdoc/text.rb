@@ -44,12 +44,11 @@ module RDoc::Text
   def expand_tabs text
     expanded = []
 
-    space = ' '
-    space.force_encoding text.encoding if Object.const_defined? :Encoding
-
     text.each_line do |line|
       line.gsub!(/^(.{8}*?)([^\t\r\n]{0,7})\t/) do
-        "#{$1}#{$2}#{space * (8 - $2.size)}"
+        r = "#{$1}#{$2}#{' ' * (8 - $2.size)}"
+        r.force_encoding text.encoding if Object.const_defined? :Encoding
+        r
       end until line !~ /\t/
 
       expanded << line
