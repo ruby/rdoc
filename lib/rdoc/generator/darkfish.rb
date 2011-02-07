@@ -46,7 +46,7 @@ require 'rdoc/generator/markup'
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
+
 class RDoc::Generator::Darkfish
 
   RDoc::RDoc.add_generator self
@@ -162,9 +162,9 @@ class RDoc::Generator::Darkfish
     generate_class_files
     generate_file_files
 
-  rescue StandardError => err
+  rescue => e
     debug_msg "%s: %s\n  %s" % [
-      err.class.name, err.message, err.backtrace.join("\n  ")
+      e.class.name, e.message, e.backtrace.join("\n  ")
     ]
 
     raise
@@ -216,9 +216,12 @@ class RDoc::Generator::Darkfish
   def generate_class_files
     template_file = @template_dir + 'classpage.rhtml'
     return unless template_file.exist?
-    debug_msg "Generating class documentation in #@outputdir"
+    debug_msg "Generating class documentation in #{@outputdir}"
+
+    current = nil
 
     @classes.each do |klass|
+      current = klass
       debug_msg "  working on %s (%s)" % [klass.full_name, klass.path]
       out_file   = @outputdir + klass.path
       # suppress 1.9.3 warning
@@ -228,6 +231,9 @@ class RDoc::Generator::Darkfish
       debug_msg "  rendering #{out_file}"
       render_template template_file, out_file do |io| binding end
     end
+  rescue => e
+    raise RDoc::Error,
+          "error generating #{current.path}: #{e.message} (#{e.class})"
   end
 
   ##
@@ -236,17 +242,22 @@ class RDoc::Generator::Darkfish
   def generate_file_files
     template_file = @template_dir + 'filepage.rhtml'
     return unless template_file.exist?
-    debug_msg "Generating file documentation in #@outputdir"
+    debug_msg "Generating file documentation in #{@outputdir}"
+
+    out_file = nil
 
     @files.each do |file|
       out_file     = @outputdir + file.path
-      debug_msg "  working on %s (%s)" % [ file.full_name, out_file ]
+      debug_msg "  working on %s (%s)" % [file.full_name, out_file]
       # suppress 1.9.3 warning
       rel_prefix = rel_prefix  = @outputdir.relative_path_from(out_file.dirname)
 
       debug_msg "  rendering #{out_file}"
       render_template template_file, out_file do |io| binding end
     end
+  rescue => e
+    raise RDoc::Error,
+          "error generating #{out_file}: #{e.message} (#{e.class})"
   end
 
   ##

@@ -8,6 +8,7 @@
     Ruby Bug #4376.
   * Work around inconsistent encoding result from String#[]=.  Related to Ruby
     Bug #4376.
+  * When Darkfish fails the file being generated is now reported.
 
 === 3.5.2 / 2010-02-04
 
