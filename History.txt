@@ -1,3 +1,7 @@
+* Bug fixes
+  * Remove windows-specific test for test_check_files, it is too hard to do.
+    Ruby commit r30811 by Usaku Nakamura.
+
 === 3.5.3 / 2010-02-06
 
 * Bug fixes

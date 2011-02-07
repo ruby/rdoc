@@ -17,26 +17,16 @@ class TestRDocOptions < MiniTest::Unit::TestCase
   end
 
   def test_check_files
+    skip "assumes UNIX permission model" if /mswin|mingw/ =~ RUBY_PLATFORM
     out, err = capture_io do
       Dir.mktmpdir do |dir|
-        begin
-          unreadable = nil # variable for windows
+        Dir.chdir dir do
+          FileUtils.touch 'unreadable'
+          FileUtils.chmod 0, 'unreadable'
 
-          Dir.chdir dir do
-            if RUBY_PLATFORM =~ /mswin|mingw/ then
-              unreadable = open 'unreadable'
-              File.delete 'unreadable'
-            else
-              FileUtils.touch 'unreadable'
-              FileUtils.chmod 0, 'unreadable'
-            end
+          @options.files = %w[nonexistent unreadable]
 
-            @options.files = %w[nonexistent unreadable]
-
-            @options.check_files
-          end
-        ensure
-          unreadable.close if unreadable
+          @options.check_files
         end
       end
     end
