@@ -15,8 +15,9 @@ See RDoc for a description of RDoc's markup and basic use.
 == SYNOPSIS:
 
 To learn RDoc's syntax and directives for documenting your ruby project see
-RDoc::Markup.  RDoc::Markup::Ruby and RDoc::Markup::C have additional
-directives for documenting Ruby and C files respectively.
+RDoc::Markup.  RDoc::Parser::Ruby and RDoc::Parser::C have additional
+directives (such as metaprogrammed methods) for documenting Ruby and C files
+respectively.
 
 To generate HTML documentation for your project run <tt>rdoc .</tt> in your
 project's root directory.
