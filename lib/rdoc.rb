@@ -3,18 +3,24 @@ $DEBUG_RDOC = nil
 # :main: README.txt
 
 ##
-# RDoc is a Ruby documentation system which contains RDoc and RDoc::Markup.
-
-# RDoc is an application that produces documentation for one or more Ruby
-# source files.  It works similarly to JavaDoc, parsing the source, and
-# extracting the definition for classes, modules, and methods (along with
-# includes and requires).  It associates with these optional documentation
-# contained in the immediately preceding comment block, and then renders the
-# result using a pluggable output formatter.
+# RDoc is a Ruby documentation system which contains RDoc::RDoc for generating
+# documentation, RDoc::RI for interactive documentation and RDoc::Markup for
+# text markup.
 #
-# RDoc::Markup is a library that converts plain text into various output
-# formats.  The markup library is used to interpret the comment blocks that
-# RDoc uses to document methods, classes, and so on.
+# RDoc::RDoc produces documentation for Ruby source files.  It works similarly
+# to JavaDoc, parsing the source and extracting the definition for classes,
+# modules, methods, includes and requires.  It associates these with optional
+# documentation contained in an immediately preceding comment block then
+# renders the result using an output formatter.
+#
+# RDoc::Markup that converts plain text into various output formats.  The
+# markup library is used to interpret the comment blocks that RDoc uses to
+# document methods, classes, and so on.
+#
+# RDoc::RI implements the +ri+ command-line tool which displays on-line
+# documentation for ruby classes, methods, etc.  +ri+ features several output
+# formats and an interactive mode (<tt>ri -i</tt>).  See <tt>ri --help</tt>
+# for further details.
 #
 # == Roadmap
 #
