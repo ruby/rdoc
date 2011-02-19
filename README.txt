@@ -14,15 +14,30 @@ See RDoc for a description of RDoc's markup and basic use.
 
 == SYNOPSIS:
 
-To generate HTML documentation:
+To learn RDoc's syntax and directives for documenting your ruby project see
+RDoc::Markup.  RDoc::Markup::Ruby and RDoc::Markup::C have additional
+directives for documenting Ruby and C files respectively.
 
-  rdoc .
+To generate HTML documentation for your project run <tt>rdoc .</tt> in your
+project's root directory.
+
+To determine how well your project is documented run <tt>rdoc -C lib</tt> to
+get a documentation coverage report.  <tt>rdoc -C1 lib</tt> includes parameter
+names in the documentation coverage report.
+
+To generate documentation using +rake+ see RDoc::Task.
 
 To generate documentation programmatically:
 
   gem 'rdoc'
   require 'rdoc/rdoc'
-  # ... see RDoc
+
+  options = RDoc::Options.new
+  # see RDoc::Options
+
+  rdoc = RDoc::RDoc.new
+  rdoc.document options
+  # see RDoc::RDoc
 
 == BUGS:
 
