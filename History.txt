@@ -1,3 +1,9 @@
+=== 3.6
+
+* Minor Enhancements
+  * RDoc::RDoc#generate was added to allow multiple generators to be used with
+    a set of parsed file info.
+  * RDoc::Options#finish can be called multiple times now.
 * Bug fixes
   * Remove windows-specific test for test_check_files, it is too hard to do.
     Ruby commit r30811 by Usaku Nakamura.
