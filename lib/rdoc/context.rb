@@ -480,7 +480,7 @@ class RDoc::Context < RDoc::CodeObject
   # Adds included module +include+ which should be an RDoc::Include
 
   def add_include(include)
-    add_to @includes, include
+    add_to @includes, include unless @includes.map { |i| i.full_name }.include?( include.full_name )
   end
 
   ##
