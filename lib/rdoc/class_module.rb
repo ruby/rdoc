@@ -263,7 +263,7 @@ class RDoc::ClassModule < RDoc::Context
 
     class_module.each_attribute do |attr|
       if match = attributes.find { |a| a.name == attr.name } then
-        match.rw = [match.rw, attr.rw].compact.join
+        match.rw = [match.rw, attr.rw].compact.uniq.join
       else
         add_attribute attr
       end
