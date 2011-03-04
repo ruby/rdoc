@@ -1077,7 +1077,7 @@ class RDoc::Context < RDoc::CodeObject
 
   def set_visibility_for(methods, visibility, singleton = false)
     methods_matching methods, singleton do |m|
-      m.visibility = visibility
+      m.visibility = visibility unless m.force_documentation
     end
   end
 
