@@ -1978,6 +1978,53 @@ end
     assert_equal 'm comment', m.comment
   end
 
+  def test_scan_block_comment_notflush
+  ##
+  #
+  # The previous test assumes that between the =begin/=end blocs that there is
+  # only one line, or minima formatting directives. This test tests for those
+  # who use the =begin bloc with longer / more advanced formatting within.
+  #
+  ##
+    content = <<-CONTENT
+=begin rdoc
+
+= DESCRIPTION
+
+This is a simple test class
+
+= RUMPUS
+
+Is a silly word
+
+=end
+class StevenSimpleClass
+  # A band on my iPhone as I wrote this test
+  FRUIT_BATS="Make nice music"
+
+=begin rdoc
+A nice girl
+=end
+
+  def lauren
+    puts "Summoning Lauren!"
+  end
+end
+    CONTENT
+    util_parser content
+
+    @parser.scan
+
+    foo = @top_level.classes.first
+
+    assert_equal "= DESCRIPTION\n\nThis is a simple test class\n\n= RUMPUS\n\nIs a silly word", 
+      foo.comment
+
+    m = foo.method_list.first
+
+    assert_equal 'A nice girl', m.comment
+  end
+
   def test_scan_meta_method_block
     content = <<-CONTENT
 class C
