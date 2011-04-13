@@ -36,6 +36,7 @@ class TestRDocClassModule < XrefTestCase
     cm1.comment = 'klass 1'
     cm1.add_attribute RDoc::Attr.new(nil, 'a1', 'RW', '')
     cm1.add_attribute RDoc::Attr.new(nil, 'a3', 'R', '')
+    cm1.add_attribute RDoc::Attr.new(nil, 'a4', 'R', '')
     cm1.add_constant RDoc::Constant.new('C1', nil, '')
     cm1.add_include RDoc::Include.new('I1', '')
     cm1.add_method RDoc::AnyMethod.new(nil, 'm1')
@@ -46,6 +47,7 @@ class TestRDocClassModule < XrefTestCase
                                 @RM::Paragraph.new('klass 2')))
     cm2.add_attribute RDoc::Attr.new(nil, 'a2', 'RW', '')
     cm2.add_attribute RDoc::Attr.new(nil, 'a3', 'W', '')
+    cm2.add_attribute RDoc::Attr.new(nil, 'a4', 'R', '')
     cm2.add_constant RDoc::Constant.new('C2', nil, '')
     cm2.add_include RDoc::Include.new('I2', '')
     cm2.add_method RDoc::AnyMethod.new(nil, 'm2')
@@ -62,6 +64,7 @@ class TestRDocClassModule < XrefTestCase
       RDoc::Attr.new(nil, 'a1', 'RW', ''),
       RDoc::Attr.new(nil, 'a2', 'RW', ''),
       RDoc::Attr.new(nil, 'a3', 'RW', ''),
+      RDoc::Attr.new(nil, 'a4', 'R',  ''),
     ]
 
     expected.each do |a| a.parent = cm1 end
