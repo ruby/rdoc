@@ -143,6 +143,16 @@ class TestRDocContext < XrefTestCase
     assert_equal [incl], @context.includes
   end
 
+  def test_add_include_twice
+    incl1 = RDoc::Include.new 'Name', 'comment'
+    @context.add_include incl1
+
+    incl2 = RDoc::Include.new 'Name', 'comment'
+    @context.add_include incl2
+
+    assert_equal [incl1], @context.includes
+  end
+
   def test_add_method
     meth = RDoc::AnyMethod.new nil, 'old_name'
     meth.visibility = nil
