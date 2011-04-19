@@ -996,9 +996,9 @@ Options may also be set in the 'RI' environment variable.
 
     case type
     when '#', '::' then
-      /^#{klass}#{type}#{name}$/
+      /^#{klass}#{type}#{Regexp.escape name}$/
     else
-      /^#{klass}(#|::)#{name}$/
+      /^#{klass}(#|::)#{Regexp.escape name}$/
     end
   end
 

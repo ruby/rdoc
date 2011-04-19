@@ -572,11 +572,18 @@ Foo::Bar#bother
   def test_name_regexp
     assert_equal %r%^RDoc::AnyMethod#new$%,
                  @driver.name_regexp('RDoc::AnyMethod#new')
+
     assert_equal %r%^RDoc::AnyMethod::new$%,
                  @driver.name_regexp('RDoc::AnyMethod::new')
 
     assert_equal %r%^RDoc::AnyMethod(#|::)new$%,
                  @driver.name_regexp('RDoc::AnyMethod.new')
+
+    assert_equal %r%^Hash(#|::)\[\]$%,
+                 @driver.name_regexp('Hash.[]')
+
+    assert_equal %r%^Hash::\[\]$%,
+                 @driver.name_regexp('Hash::[]')
   end
 
   def test_list_known_classes
