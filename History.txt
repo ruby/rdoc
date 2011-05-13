@@ -16,6 +16,8 @@
     Higgins.
   * private_class_method and public_class_method are now parsed correctly for
     inherited methods.  Issue #16 by gitsucks.
+  * The doc directive now forces documentation even when the method is marked
+    private or protected.
 
 === 3.5.3 / 2010-02-06
 
