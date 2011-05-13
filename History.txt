@@ -4,11 +4,13 @@
   * RDoc::RDoc#generate was added to allow multiple generators to be used with
     a set of parsed file info.
   * RDoc::Options#finish can be called multiple times now.
+  * `ri -i` only shows one level of namespace when completing class names.
 * Bug fixes
   * Remove windows-specific test for test_check_files, it is too hard to do.
     Ruby commit r30811 by Usaku Nakamura.
   * Remove unnecessary (and wrong) platform-dependent hacks.  Ruby commit
     r30829 by Usaku Nakamura.
+  * Completing via Array#[<tab> in `ri -i` no longer crashes.
 
 === 3.5.3 / 2010-02-06
 

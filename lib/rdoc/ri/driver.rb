@@ -524,7 +524,8 @@ Options may also be set in the 'RI' environment variable.
     klass_name = method ? name : klass
 
     if name !~ /#|\./ then
-      completions.push(*klasses.grep(/^#{klass_name}/))
+      completions = klasses.grep(/^#{klass_name}[^:]*$/)
+      completions.concat klasses.grep(/^#{name}[^:]*$/) if name =~ /::$/
     elsif selector then
       completions << klass if classes.key? klass
     elsif classes.key? klass_name then
@@ -910,7 +911,7 @@ Options may also be set in the 'RI' environment variable.
         methods = store.instance_methods[ancestor]
 
         if methods then
-          matches = methods.grep(/^#{method}/)
+          matches = methods.grep(/^#{Regexp.escape method.to_s}/)
 
           matches = matches.map do |match|
             "#{klass}##{match}"
@@ -924,7 +925,7 @@ Options may also be set in the 'RI' environment variable.
         methods = store.class_methods[ancestor]
 
         next unless methods
-        matches = methods.grep(/^#{method}/)
+        matches = methods.grep(/^#{Regexp.escape method.to_s}/)
 
         matches = matches.map do |match|
           "#{klass}::#{match}"
