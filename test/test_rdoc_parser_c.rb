@@ -680,7 +680,7 @@ Init_Foo(void) {
 
     baz = methods.last
     assert_equal 'Foo#baz', baz.full_name
-    assert_equal "a comment for bar", bar.comment
+    assert_equal "a comment for bar", baz.comment
   end
 
   def test_find_modifiers_call_seq
