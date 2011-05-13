@@ -933,7 +933,7 @@ Init_IO(void) {
     content = <<-EOF
 static VALUE rb_io_s_read(int, VALUE*, VALUE);
 
-/*Method Comment! */
+/* Method Comment! */
 static VALUE
 rb_io_s_read(argc, argv, io)
     int argc;

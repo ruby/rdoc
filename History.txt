@@ -12,6 +12,8 @@
     r30829 by Usaku Nakamura.
   * Completing via Array#[ in `ri -i` no longer crashes.  Ruby Bug #3167
   * Completing IO::o in `ri -i` now returns results.  Ruby Bug #3167
+  * RDoc::Parser::C ignores prototypes better.  Pull Request #34 by Pete
+    Higgins.
 
 === 3.5.3 / 2010-02-06
 
