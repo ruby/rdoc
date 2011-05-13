@@ -14,6 +14,8 @@
   * Completing IO::o in `ri -i` now returns results.  Ruby Bug #3167
   * RDoc::Parser::C ignores prototypes better.  Pull Request #34 by Pete
     Higgins.
+  * private_class_method and public_class_method are now parsed correctly for
+    inherited methods.  Issue #16 by gitsucks.
 
 === 3.5.3 / 2010-02-06
 

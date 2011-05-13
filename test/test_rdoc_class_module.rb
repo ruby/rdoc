@@ -8,6 +8,10 @@ class TestRDocClassModule < XrefTestCase
     @RM = RDoc::Markup
   end
 
+  def test_ancestors
+    assert_equal [@parent], @child.ancestors
+  end
+
   def test_comment_equals
     cm = RDoc::ClassModule.new 'Klass'
     cm.comment = '# comment 1'
@@ -21,6 +25,16 @@ class TestRDocClassModule < XrefTestCase
     cm.comment = "# * comment 3"
 
     assert_equal "comment 1\n---\ncomment 2\n---\n* comment 3", cm.comment
+  end
+
+  def test_each_ancestor
+    ancestors = []
+
+    @child.each_ancestor do |mod|
+      ancestors << mod
+    end
+
+    assert_equal [@parent], ancestors
   end
 
   # handle making a short module alias of yourself

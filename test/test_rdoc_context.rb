@@ -448,5 +448,35 @@ class TestRDocContext < XrefTestCase
     assert_equal expected, @c1.methods_by_type(separate)
   end
 
+  def test_methods_matching
+    methods = []
+
+    @parent.methods_matching 'm' do |m|
+      methods << m
+    end
+
+    assert_equal [@parent_m], methods
+  end
+
+  def test_methods_matching_singleton
+    methods = []
+
+    @parent.methods_matching 'm', true do |m|
+      methods << m
+    end
+
+    assert_equal [@parent__m], methods
+  end
+
+  def test_methods_matching_inherit
+    methods = []
+
+    @child.methods_matching 'm' do |m|
+      methods << m
+    end
+
+    assert_equal [@parent_m], methods
+  end
+
 end
 

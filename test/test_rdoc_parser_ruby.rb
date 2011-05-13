@@ -1799,6 +1799,56 @@ EOF
     assert_equal :private, foo.visibility
   end
 
+  def test_parse_statements_identifier_public_class_method
+    content = <<-CONTENT
+class Date
+  def self.now; end
+  private_class_method :now
+end
+
+class DateTime < Date
+  public_class_method :now
+end
+    CONTENT
+
+    util_parser content
+
+    @parser.parse_statements @top_level
+
+    date, date_time = @top_level.classes
+
+    date_now      = date.method_list.first
+    date_time_now = date_time.method_list.first
+
+    assert_equal :private, date_now.visibility
+    assert_equal :public,  date_time_now.visibility
+  end
+
+  def test_parse_statements_identifier_private_class_method
+    content = <<-CONTENT
+class Date
+  def self.now; end
+  public_class_method :now
+end
+
+class DateTime < Date
+  private_class_method :now
+end
+    CONTENT
+
+    util_parser content
+
+    @parser.parse_statements @top_level
+
+    date, date_time = @top_level.classes
+
+    date_now      = date.method_list.first
+    date_time_now = date_time.method_list.first
+
+    assert_equal :public,  date_now.visibility,      date_now.full_name
+    assert_equal :private, date_time_now.visibility, date_time_now.full_name
+  end
+
   def test_parse_statements_identifier_require
     content = "require 'bar'"
 

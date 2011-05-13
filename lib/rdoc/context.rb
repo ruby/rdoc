@@ -950,9 +950,13 @@ class RDoc::Context < RDoc::CodeObject
   ##
   # Yields AnyMethod and Attr entries matching the list of names in +methods+.
 
-  def methods_matching(methods, singleton = false)
+  def methods_matching(methods, singleton = false, &block)
     (@method_list + @attributes).each do |m|
       yield m if methods.include?(m.name) and m.singleton == singleton
+    end
+
+    each_ancestor do |parent|
+      parent.methods_matching(methods, singleton, &block)
     end
   end
 
