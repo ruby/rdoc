@@ -526,6 +526,8 @@ Options may also be set in the 'RI' environment variable.
     if name !~ /#|\./ then
       completions = klasses.grep(/^#{klass_name}[^:]*$/)
       completions.concat klasses.grep(/^#{name}[^:]*$/) if name =~ /::$/
+
+      completions << klass if classes.key? klass # to complete a method name
     elsif selector then
       completions << klass if classes.key? klass
     elsif classes.key? klass_name then
@@ -547,7 +549,7 @@ Options may also be set in the 'RI' environment variable.
       completions.push(*methods)
     end
 
-    completions.sort
+    completions.sort.uniq
   end
 
   ##

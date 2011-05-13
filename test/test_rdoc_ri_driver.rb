@@ -3,6 +3,7 @@ require 'rubygems'
 require 'minitest/autorun'
 require 'tmpdir'
 require 'fileutils'
+require 'stringio'
 require 'rdoc/ri/driver'
 
 class TestRDocRIDriver < MiniTest::Unit::TestCase
@@ -252,9 +253,11 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     assert_equal %w[Foo         ], @driver.complete('F')
     assert_equal %w[    Foo::Bar], @driver.complete('Foo::B')
 
-    assert_equal %w[Foo#Bar],           @driver.complete('Foo#'),  'Foo#'
-    assert_equal %w[Foo#Bar  Foo::bar], @driver.complete('Foo.'),  'Foo.'
-    assert_equal %w[Foo::Bar Foo::bar], @driver.complete('Foo::'), 'Foo::'
+    assert_equal %w[Foo#Bar],           @driver.complete('Foo#'),   'Foo#'
+    assert_equal %w[Foo#Bar  Foo::bar], @driver.complete('Foo.'),   'Foo.'
+    assert_equal %w[Foo::Bar Foo::bar], @driver.complete('Foo::'),  'Foo::'
+
+    assert_equal %w[         Foo::bar], @driver.complete('Foo::b'), 'Foo::b'
   end
 
   def test_complete_ancestor
