@@ -929,6 +929,37 @@ Init_IO(void) {
     assert read_method.singleton
   end
 
+  def test_define_method_with_prototype
+    content = <<-EOF
+static VALUE rb_io_s_read(int, VALUE*, VALUE);
+
+/*Method Comment! */
+static VALUE
+rb_io_s_read(argc, argv, io)
+    int argc;
+    VALUE *argv;
+    VALUE io;
+{
+}
+
+void
+Init_IO(void) {
+    /*
+     * a comment for class Foo on rb_define_class
+     */
+    VALUE rb_cIO = rb_define_class("IO", rb_cObject);
+    rb_define_singleton_method(rb_cIO, "read", rb_io_s_read, -1);
+}
+    EOF
+
+    klass = util_get_class content, 'rb_cIO'
+    read_method = klass.method_list.first
+    assert_equal "read", read_method.name
+    assert_equal "Method Comment!   ", read_method.comment
+    assert_equal "rb_io_s_read", read_method.c_function
+    assert read_method.singleton
+  end
+
   def test_define_method_private
     content = <<-EOF
 /*Method Comment! */
