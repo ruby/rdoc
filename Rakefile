@@ -29,31 +29,7 @@ Hoe.spec 'rdoc' do
 
   extra_rdoc_files << 'Rakefile'
   spec_extras['required_rubygems_version'] = '>= 1.3'
-  spec_extras['homepage'] = 'http://rdoc.rubyforge.org'
-
-  spec_extras[:post_install_message] = <<-EOF
-NOTE: If you are running Ruby 1.9.2 you can ignore this message.
-
-RDoc 2.5+ has a new ri data format for Ruby 1.8.7 and 1.9.1.  (1.9.2 contains
-RDoc 2.5 so there is nothing to do!)
-
-To install new ri data for core and stdlib you'll need to:
-
-  gem install rdoc-data
-
-then run:
-
-  rdoc-data --install
-
-To have ri data for you gems you'll also need to run:
-
-  gem rdoc --all --overwrite
-
-If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
-
-NOTE:  RDoc 2.5 did not save method parameters, so you should upgrade your
-rdoc-data gem to a version >= 2.5.3 if you installed an older version.
-  EOF
+  spec_extras['homepage'] = 'http://docs.seattlerb.org/rdoc'
 end
 
 # These tasks expect to have the following directory structure:
