@@ -1,3 +1,8 @@
+=== 3.6.1
+
+* Bug fixes
+  * Fix infinite loop created when re-encountering BasicObject.
+
 === 3.6 / 2011-05-13
 
 * Major Enhancements

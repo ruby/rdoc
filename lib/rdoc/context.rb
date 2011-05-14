@@ -373,6 +373,12 @@ class RDoc::Context < RDoc::CodeObject
       end
     end
 
+    # fix up superclass
+    superclass = nil if full_name == 'BasicObject'
+    superclass = nil if full_name == 'Object' and defined?(::BasicObject)
+    superclass = '::BasicObject' if
+      defined?(::BasicObject) and full_name == 'Object'
+
     # find the superclass full name
     if superclass then
       if superclass =~ /^:+/ then
