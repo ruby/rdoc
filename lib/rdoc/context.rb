@@ -664,6 +664,13 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
+  # Iterator for ancestors for duck-typing.  Does nothing.  See
+  # RDoc::ClassModule#each_ancestor.
+
+  def each_ancestor # :nodoc:
+  end
+
+  ##
   # Iterator for attributes
 
   def each_attribute # :yields: attribute

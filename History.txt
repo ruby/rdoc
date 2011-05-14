@@ -2,6 +2,7 @@
 
 * Bug fixes
   * Fix infinite loop created when re-encountering BasicObject.
+  * RDoc::Context#each_ancestor is now provided for duck-typing.
 
 === 3.6 / 2011-05-13
 
