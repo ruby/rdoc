@@ -1,10 +1,14 @@
 === 3.6
 
+* Major Enhancements
+  * Interactive ri is now the default when no names are given.
 * Minor Enhancements
   * RDoc::RDoc#generate was added to allow multiple generators to be used with
     a set of parsed file info.
   * RDoc::Options#finish can be called multiple times now.
   * `ri -i` only shows one level of namespace when completing class names.
+  * Added `ri --list` for explicit listing.  `ri -l F G` will list all classes
+    or modules starting with F or G
 * Bug fixes
   * Remove windows-specific test for test_check_files, it is too hard to do.
     Ruby commit r30811 by Usaku Nakamura.

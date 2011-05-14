@@ -197,6 +197,13 @@ Options may also be set in the 'RI' environment variable.
 
       opt.separator nil
 
+      opt.on("--list", "-l",
+             "List classes ri knows about.") do
+        options[:list] = true
+      end
+
+      opt.separator nil
+
       opt.on("--[no-]profile",
              "Run with the ruby profiler") do |value|
         options[:profile] = value
@@ -331,6 +338,7 @@ Options may also be set in the 'RI' environment variable.
     require 'profile' if options[:profile]
 
     @names = options[:names]
+    @list = options[:list]
 
     @doc_dirs = []
     @stores   = []
@@ -881,9 +889,10 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
-  # Lists classes known to ri
+  # Lists classes known to ri starting with +names+.  If +names+ is empty all
+  # known classes are shown.
 
-  def list_known_classes
+  def list_known_classes names = []
     classes = []
 
     stores.each do |store|
@@ -892,9 +901,19 @@ Options may also be set in the 'RI' environment variable.
 
     classes = classes.flatten.uniq.sort
 
+    unless names.empty? then
+      filter = Regexp.union names.map { |name| /^#{name}/ }
+
+      classes = classes.grep filter
+    end
+
     page do |io|
       if paging? or io.tty? then
-        io.puts "Classes and Modules known to ri:"
+        if names.empty? then
+          io.puts "Classes and Modules known to ri:"
+        else
+          io.puts "Classes and Modules starting with #{names.join ', '}:"
+        end
         io.puts
       end
 
@@ -1067,10 +1086,10 @@ Options may also be set in the 'RI' environment variable.
   def run
     if @list_doc_dirs then
       puts @doc_dirs
-    elsif @interactive then
+    elsif @list then
+      list_known_classes @names
+    elsif @interactive or @names.empty? then
       interactive
-    elsif @names.empty? then
-      list_known_classes
     else
       display_names @names
     end

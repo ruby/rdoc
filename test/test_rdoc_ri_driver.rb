@@ -600,6 +600,16 @@ Foo::Bar#bother
     assert_equal "Ambiguous\nFoo\nFoo::Bar\nFoo::Baz\nInc\n", out
   end
 
+  def test_list_known_classes_name
+    util_store
+
+    out, = capture_io do
+      @driver.list_known_classes %w[F I]
+    end
+
+    assert_equal "Foo\nFoo::Bar\nFoo::Baz\nInc\n", out
+  end
+
   def test_list_methods_matching
     util_store
 
