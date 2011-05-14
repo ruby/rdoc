@@ -1,4 +1,4 @@
-=== 3.6
+=== 3.6 / 2011-05-13
 
 * Major Enhancements
   * Interactive ri is now the default when no names are given.
