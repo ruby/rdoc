@@ -1,8 +1,10 @@
-=== 3.6.1
+=== 3.6.1 / 2011-05-15
 
 * Bug fixes
   * Fix infinite loop created when re-encountering BasicObject.
   * RDoc::Context#each_ancestor is now provided for duck-typing.
+  * rb_path2class() can now be used to discover the parent class in
+    rb_define_class_under.
 
 === 3.6 / 2011-05-13
 
