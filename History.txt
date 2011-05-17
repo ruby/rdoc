@@ -1,3 +1,8 @@
+=== 3.6.2 / ??
+
+* Bug fixes
+  * RDoc::Parser::C no longer creates classes when processing aliases.
+
 === 3.6.1 / 2011-05-15
 
 * Bug fixes

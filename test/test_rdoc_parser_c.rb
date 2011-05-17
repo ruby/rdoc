@@ -46,7 +46,7 @@ assert call-seq correct
 =end
 
 class RDoc::Parser::C
-  attr_accessor :classes, :singleton_classes
+  attr_accessor :classes
 
   public :do_classes, :do_constants
 end
@@ -224,6 +224,21 @@ VALUE cFoo = boot_defclass("Foo", 0);
     assert_equal nil, klass.superclass
   end
 
+  def test_do_aliases_missing_class
+    content = <<-EOF
+void Init_Blah(void) {
+  rb_define_alias(cDate, "b", "a");
+}
+    EOF
+
+    _, err = capture_io do
+      refute util_get_class(content, 'cDate')
+    end
+
+    assert_equal "Enclosing class/module \"cDate\" for alias b a not known\n",
+                 err
+  end
+
   def test_do_classes_class
     content = <<-EOF
 /* Document-class: Foo
@@ -396,6 +411,27 @@ Multiline comment goes here because this comment spans multiple lines.
     assert_equal ['MULTILINE_NOT_EMPTY', 'INT2FIX(1)', comment], constants.shift
 
     assert constants.empty?, constants.inspect
+  end
+
+  def test_do_methods_singleton_class
+    content = <<-EOF
+VALUE blah(VALUE klass, VALUE year) {
+}
+
+void Init_Blah(void) {
+  cDate = rb_define_class("Date", rb_cObject);
+  sDate = rb_singleton_class(cDate);
+
+  rb_define_method(sDate, "blah", blah, 1);
+}
+    EOF
+
+    klass = util_get_class content, 'cDate'
+
+    methods = klass.method_list
+    assert_equal 1,      methods.length
+    assert_equal 'blah', methods.first.name
+    assert               methods.first.singleton
   end
 
   def test_find_alias_comment
@@ -830,7 +866,6 @@ rb_m(int argc, VALUE *argv, VALUE obj) {
     assert_equal '(p1)', m.params
   end
 
-
   def test_handle_method_args_0
     parser = util_parser "Document-method: BasicObject#==\n blah */"
 
@@ -903,6 +938,20 @@ rb_m(int argc, VALUE *argv, VALUE obj) {
 
     assert_equal 'new',   new.name
     assert_equal :public, new.visibility
+  end
+
+  def test_handle_singleton
+    parser = util_parser <<-SINGLE
+void Init_Blah(void) {
+  cDate = rb_define_class("Date", rb_cObject);
+  sDate = rb_singleton_class(cDate);
+}
+    SINGLE
+
+    parser.scan
+
+    assert_equal 'Date', parser.known_classes['sDate']
+    assert_equal 'Date', parser.singleton_classes['sDate']
   end
 
   def test_look_for_directives_in

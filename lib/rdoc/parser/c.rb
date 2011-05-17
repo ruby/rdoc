@@ -113,6 +113,17 @@ class RDoc::Parser::C < RDoc::Parser
 
   attr_accessor :content
 
+
+  ##
+  # Maps C variable names to names of ruby classes (andsingleton classes)
+
+  attr_reader :known_classes
+
+  ##
+  # Maps C variable names to names of ruby singleton classes
+
+  attr_reader :singleton_classes
+
   ##
   # Resets cross-file state.  Call when parsing different projects that need
   # separate documentation.
@@ -132,8 +143,8 @@ class RDoc::Parser::C < RDoc::Parser
 
     @known_classes = RDoc::KNOWN_CLASSES.dup
     @content = handle_tab_width handle_ifdefs_in(@content)
-    @classes = Hash.new
-    @singleton_classes = Hash.new
+    @classes = {}
+    @singleton_classes = {}
     @file_dir = File.dirname(@file_name)
   end
 
@@ -146,17 +157,25 @@ class RDoc::Parser::C < RDoc::Parser
                    \s*"(.+?)",
                    \s*"(.+?)"
                    \s*\)/xm) do |var_name, new_name, old_name|
-      class_name = @known_classes[var_name] || var_name
-      class_obj  = find_class var_name, class_name
+      class_name = @known_classes[var_name]
+
+      unless class_name then
+        warn "Enclosing class/module %p for alias %s %s not known" % [
+          var_name, new_name, old_name]
+        next
+      end
+
+      class_obj = find_class var_name, class_name
 
       al = RDoc::Alias.new '', old_name, new_name, ''
-      al.singleton = @singleton_classes.key?(var_name)
+      al.singleton = @singleton_classes.key? var_name
 
       comment = find_alias_comment var_name, new_name, old_name
       comment = strip_stars comment
       al.comment = comment
 
       al.record_location @top_level
+
       class_obj.add_alias al
       @stats.add_alias al
     end
@@ -781,13 +800,8 @@ class RDoc::Parser::C < RDoc::Parser
 
   def handle_method(type, var_name, meth_name, function, param_count,
                     source_file = nil)
-    singleton = false
     class_name = @known_classes[var_name]
-
-    unless class_name then
-      class_name = @singleton_classes[var_name]
-      singleton = true if class_name
-    end
+    singleton  = @singleton_classes.key? var_name
 
     return unless class_name
 
@@ -845,6 +859,7 @@ class RDoc::Parser::C < RDoc::Parser
   def handle_singleton sclass_var, class_var
     class_name = @known_classes[class_var]
 
+    @known_classes[sclass_var]     = class_name
     @singleton_classes[sclass_var] = class_name
   end
 

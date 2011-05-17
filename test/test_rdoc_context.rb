@@ -137,6 +137,13 @@ class TestRDocContext < XrefTestCase
     assert_equal 'Object', object.superclass.full_name
   end
 
+  def test_add_class_singleton
+    @c1.add_class RDoc::NormalClass, 'Klass', 'Object'
+
+    assert_includes @c1.classes.map { |k| k.full_name }, 'C1::Klass'
+    assert_includes RDoc::TopLevel.classes.map { |k| k.full_name }, 'C1::Klass'
+  end
+
   def test_add_class_superclass
     @c1.add_class RDoc::NormalClass, 'Klass', 'Object'
     @c1.add_class RDoc::NormalClass, 'Klass', 'Other'
