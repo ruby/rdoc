@@ -272,6 +272,8 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
   def test_complete_classes
     util_store
 
+    assert_equal %w[                       ], @driver.complete('[')
+    assert_equal %w[                       ], @driver.complete('[::')
     assert_equal %w[Foo                    ], @driver.complete('F')
     assert_equal %w[Foo:: Foo::Bar Foo::Baz], @driver.complete('Foo::')
     assert_equal %w[      Foo::Bar Foo::Baz], @driver.complete('Foo::B')

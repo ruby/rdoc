@@ -2,6 +2,7 @@
 
 * Bug fixes
   * RDoc::Parser::C no longer creates classes when processing aliases.
+  * ri no longer crashes when attempting to complete a plain [.
 
 === 3.6.1 / 2011-05-15
 

@@ -532,8 +532,9 @@ Options may also be set in the 'RI' environment variable.
     klass_name = method ? name : klass
 
     if name !~ /#|\./ then
-      completions = klasses.grep(/^#{klass_name}[^:]*$/)
-      completions.concat klasses.grep(/^#{name}[^:]*$/) if name =~ /::$/
+      completions = klasses.grep(/^#{Regexp.escape klass_name}[^:]*$/)
+      completions.concat klasses.grep(/^#{Regexp.escape name}[^:]*$/) if
+        name =~ /::$/
 
       completions << klass if classes.key? klass # to complete a method name
     elsif selector then
