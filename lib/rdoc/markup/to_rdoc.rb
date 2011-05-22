@@ -172,6 +172,15 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   end
 
   ##
+  # Adds +paragraph+ to the output
+
+  def accept_indented_paragraph paragraph
+    @indent += paragraph.indent
+    wrap attributes(paragraph.text)
+    @indent -= paragraph.indent
+  end
+
+  ##
   # Adds +raw+ to the output
 
   def accept_raw raw
