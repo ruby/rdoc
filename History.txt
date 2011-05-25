@@ -1,6 +1,8 @@
 === 3.7 / ??
 
-* Minor enhancement
+* Minor enhancements
+  * New directive :category: which allows methods to be grouped into sections
+    more cleanly.  See RDoc::Markup for details.
   * Document-class for RDoc::Parser::C now supports Foo::CONST as well as
     CONST.
 * Bug fixes

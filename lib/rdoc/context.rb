@@ -30,9 +30,9 @@ class RDoc::Context < RDoc::CodeObject
   attr_reader :constants
 
   ##
-  # Current section of documentation
+  # Sets the current documentation section of documentation
 
-  attr_accessor :current_section
+  attr_writer :current_section
 
   ##
   # Files this context is found in
@@ -58,6 +58,11 @@ class RDoc::Context < RDoc::CodeObject
   # Files this context requires
 
   attr_reader :requires
+
+  ##
+  # Use this section for the next method, attribute or constant added.
+
+  attr_accessor :temporary_section
 
   ##
   # Hash <tt>old_name => [aliases]</tt>, for aliases
@@ -186,10 +191,7 @@ class RDoc::Context < RDoc::CodeObject
     end
 
     def inspect # :nodoc:
-      "#<%s:0x%x %s %p>" % [
-        self.class, object_id,
-        @sequence, title
-      ]
+      "#<%s:0x%x %p>" % [self.class, object_id, title]
     end
 
     ##
@@ -216,6 +218,7 @@ class RDoc::Context < RDoc::CodeObject
 
     @current_section = Section.new self, nil, nil
     @sections = { nil => @current_section }
+    @temporary_section = nil
 
     @classes = {}
     @modules = {}
@@ -444,8 +447,8 @@ class RDoc::Context < RDoc::CodeObject
   # to +self+, and its #section to #current_section. Returns +mod+.
 
   def add_class_or_module mod, self_hash, all_hash
-    mod.section = @current_section # TODO declaring context? something is
-                                   # wrong here...
+    mod.section = current_section # TODO declaring context? something is
+                                  # wrong here...
     mod.parent = self
 
     unless @done_documenting then
@@ -573,12 +576,31 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
+  # Returns a section with +title+, creating it if it doesn't already exist.
+  # +comment+ will be appended to the section's comment.
+  #
+  # A section with a +title+ of +nil+ will return the default section.
+  #
+  # See also RDoc::Context::Section
+
+  def add_section title, comment
+    if section = @sections[title] then
+      section.comment = comment
+    else
+      section = Section.new self, title, comment
+      @sections[title] = section
+    end
+
+    section
+  end
+
+  ##
   # Adds +thing+ to the collection +array+
 
   def add_to(array, thing)
     array << thing if @document_self
     thing.parent = self
-    thing.section = @current_section
+    thing.section = current_section
   end
 
   ##
@@ -646,6 +668,20 @@ class RDoc::Context < RDoc::CodeObject
 
   def classes_hash
     @classes
+  end
+
+  ##
+  # The current documentation section that new items will be added to.  If
+  # temporary_section is available it will be used.
+
+  def current_section
+    if section = @temporary_section then
+      @temporary_section = nil
+    else
+      section = @current_section
+    end
+
+    section
   end
 
   ##
@@ -1082,18 +1118,10 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Creates a new section with +title+ and +comment+
+  # Sets the current section to a section with +title+.  See also #add_section
 
-  def set_current_section(title, comment)
-    if @sections.key? title then
-      @current_section = @sections[title]
-      @current_section.comment = comment
-    else
-      @current_section = Section.new self, title, comment
-      @sections[title] = @current_section
-    end
-
-    @current_section
+  def set_current_section title, comment
+    @current_section = add_section title, comment
   end
 
   ##

@@ -96,6 +96,17 @@ contents of a string.
     assert_equal "", text
   end
 
+  def test_handle_category
+    context = RDoc::Context.new
+    original_section = context.current_section
+
+    text = "# :category: other\n"
+
+    @pp.handle text, context
+
+    refute_equal original_section, context.current_section
+  end
+
   def test_handle_code_object
     cd = RDoc::CodeObject.new
     text = "# :x: y\n"
