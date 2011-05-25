@@ -735,6 +735,36 @@ Init_Foo(void) {
     assert_equal "a comment for bar", baz.comment
   end
 
+  def test_find_body_document_method_equals
+    content = <<-EOF
+/*
+ * Document-method: Zlib::GzipFile#mtime=
+ *
+ * A comment
+ */
+static VALUE
+rb_gzfile_set_mtime(VALUE obj, VALUE mtime)
+{
+
+void
+Init_zlib() {
+    mZlib = rb_define_module("Zlib");
+    cGzipFile = rb_define_class_under(mZlib, "GzipFile", rb_cObject);
+    cGzipWriter = rb_define_class_under(mZlib, "GzipWriter", cGzipFile);
+    rb_define_method(cGzipWriter, "mtime=", rb_gzfile_set_mtime, 1);
+}
+    EOF
+
+    klass = util_get_class content, 'cGzipWriter'
+    assert_equal 1, klass.method_list.length
+
+    methods = klass.method_list.sort
+
+    bar = methods.first
+    assert_equal 'Zlib::GzipWriter#mtime=', bar.full_name
+    assert_equal 'A comment', bar.comment
+  end
+
   def test_find_modifiers_call_seq
     comment = <<-COMMENT
 /* call-seq:

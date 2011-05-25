@@ -3,6 +3,8 @@
 * Bug fixes
   * RDoc::Parser::C no longer creates classes when processing aliases.
   * ri no longer crashes when attempting to complete a plain [.
+  * RDoc::Text#strip_stars handles Document-method for methods with =, ! and ?
+    now.
 
 === 3.6.1 / 2011-05-15
 
