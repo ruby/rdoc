@@ -281,6 +281,18 @@ class RDoc::Parser::C < RDoc::Parser
       var_name = "rb_cObject" if !var_name or var_name == "rb_mKernel"
       handle_constants type, var_name, const_name, definition
     end
+
+    @content.scan(%r%
+                  \Wrb_curses_define_const
+                  \s*\(
+                    \s*
+                    (\w+)
+                    \s*
+                  \)
+                  \s*;%xm) do |(const_name)|
+      var_name = 'mCurses'
+      handle_constants 'const', 'mCurses', const_name, "UINT2NUM(#{const_name})"
+    end
   end
 
   ##
@@ -550,14 +562,19 @@ class RDoc::Parser::C < RDoc::Parser
   # Finds a comment matching +type+ and +const_name+ either above the
   # comment or in the matching Document- section.
 
-  def find_const_comment(type, const_name)
+  def find_const_comment(type, const_name, class_name = nil)
     if @content =~ %r%((?>^\s*/\*.*?\*/\s+))
                    rb_define_#{type}\((?:\s*(\w+),)?\s*
                                       "#{const_name}"\s*,
                                       .*?\)\s*;%xmi then
       $1
+    elsif class_name and
+          @content =~ %r%Document-(?:const|global|variable):\s
+                         #{class_name}::#{const_name}
+                         \s*?\n((?>.*?\*/))%xm then
+      $1
     elsif @content =~ %r%Document-(?:const|global|variable):\s#{const_name}
-                         \s*?\n((?>.*?\*/))%xm
+                         \s*?\n((?>.*?\*/))%xm then
       $1
     else
       ''
@@ -745,7 +762,7 @@ class RDoc::Parser::C < RDoc::Parser
       return
     end
 
-    comment = find_const_comment type, const_name
+    comment = find_const_comment type, const_name, class_name
     comment = strip_stars comment
     comment = normalize_comment comment
 

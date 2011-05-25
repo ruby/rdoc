@@ -413,6 +413,35 @@ Multiline comment goes here because this comment spans multiple lines.
     assert constants.empty?, constants.inspect
   end
 
+  def test_do_constants_curses
+    content = <<-EOF
+void Init_curses(){
+  mCurses = rb_define_module("Curses");
+
+  /*
+   * Document-const: Curses::COLOR_BLACK
+   *
+   * Value of the color black
+   */
+  rb_curses_define_const(COLOR_BLACK);
+}
+    EOF
+
+    @parser = util_parser content
+
+    @parser.do_classes
+    @parser.do_constants
+
+    klass = @parser.classes['mCurses']
+
+    constants = klass.constants
+    refute_empty klass.constants
+
+    assert_equal 'COLOR_BLACK', constants.first.name
+    assert_equal 'UINT2NUM(COLOR_BLACK)', constants.first.value
+    assert_equal 'Value of the color black', constants.first.comment
+  end
+
   def test_do_methods_singleton_class
     content = <<-EOF
 VALUE blah(VALUE klass, VALUE year) {
@@ -559,6 +588,53 @@ Init_Foo(void) {
     klass = util_get_class content, 'foo'
 
     assert_equal '', klass.comment
+  end
+
+  def test_find_const_comment_rb_define
+    content = <<-EOF
+/*
+ * A comment
+ */
+rb_define_const(cFoo, "CONST", value);
+    EOF
+
+    parser = util_parser content
+
+    comment = parser.find_const_comment 'const', 'CONST'
+
+    assert_equal "/*\n * A comment\n */\n", comment
+  end
+
+  def test_find_const_comment_document_const
+    content = <<-EOF
+/*
+ * Document-const: CONST
+ *
+ * A comment
+ */
+    EOF
+
+    parser = util_parser content
+
+    comment = parser.find_const_comment nil, 'CONST'
+
+    assert_equal " *\n * A comment\n */", comment
+  end
+
+  def test_find_const_comment_document_const_full_name
+    content = <<-EOF
+/*
+ * Document-const: Foo::CONST
+ *
+ * A comment
+ */
+    EOF
+
+    parser = util_parser content
+
+    comment = parser.find_const_comment nil, 'CONST', 'Foo'
+
+    assert_equal " *\n * A comment\n */", comment
   end
 
   def test_find_body

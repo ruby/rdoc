@@ -1,5 +1,8 @@
-=== 3.6.2 / ??
+=== 3.7 / ??
 
+* Minor enhancement
+  * Document-class for RDoc::Parser::C now supports Foo::CONST as well as
+    CONST.
 * Bug fixes
   * RDoc::Parser::C no longer creates classes when processing aliases.
   * ri no longer crashes when attempting to complete a plain [.
