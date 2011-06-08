@@ -17,7 +17,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   LIST_TYPE_TO_HTML = {
     :BULLET => ['<ul>', '</ul>'],
-    :LABEL  => ['<dl>', '</dl>'],
+    :LABEL  => ['<dl class="rdoc-list">', '</dl>'],
     :LALPHA => ['<ol style="display: lower-alpha">', '</ol>'],
     :NOTE   => ['<table class="rdoc-list">', '</table>'],
     :NUMBER => ['<ol>', '</ol>'],
