@@ -70,6 +70,22 @@ class TestRDocParserC < MiniTest::Unit::TestCase
     @tempfile.close
   end
 
+  def test_class_can_parse
+    c_parser = RDoc::Parser::C
+
+    assert_equal c_parser, c_parser.can_parse('file.C')
+    assert_equal c_parser, c_parser.can_parse('file.CC')
+    assert_equal c_parser, c_parser.can_parse('file.H')
+    assert_equal c_parser, c_parser.can_parse('file.HH')
+    assert_equal c_parser, c_parser.can_parse('file.c')
+    assert_equal c_parser, c_parser.can_parse('file.cc')
+    assert_equal c_parser, c_parser.can_parse('file.cpp')
+    assert_equal c_parser, c_parser.can_parse('file.cxx')
+    assert_equal c_parser, c_parser.can_parse('file.h')
+    assert_equal c_parser, c_parser.can_parse('file.hh')
+    assert_equal c_parser, c_parser.can_parse('file.y')
+  end
+
   def test_do_attr_rb_attr
     content = <<-EOF
 void Init_Blah(void) {
