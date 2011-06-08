@@ -2028,6 +2028,33 @@ end
     assert_equal 'm comment', m.comment
   end
 
+  def test_scan_block_comment_nested # Issue #41
+    content = <<-CONTENT
+require 'something'
+=begin rdoc
+findmeindoc
+=end
+module Foo
+    class Bar
+    end
+end
+    CONTENT
+
+    util_parser content
+
+    @parser.scan
+
+    foo = @top_level.modules.first
+
+    assert_equal 'Foo', foo.full_name
+    assert_equal 'findmeindoc', foo.comment
+
+    bar = foo.classes.first
+
+    assert_equal 'Foo::Bar', bar.full_name
+    assert_equal '', bar.comment
+  end
+
   def test_scan_block_comment_notflush
   ##
   #

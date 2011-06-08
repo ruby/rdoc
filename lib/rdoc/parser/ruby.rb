@@ -1295,9 +1295,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
           while TkCOMMENT === tk do
             comment << tk.text << "\n"
 
-            tk = get_tk        # this is the newline
-            skip_tkspace false # leading spaces
             tk = get_tk
+
+            if TkNL === tk then
+              skip_tkspace false # leading spaces
+              tk = get_tk
+            end
           end
 
           unless comment.empty? then
@@ -1313,7 +1316,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           non_comment_seen = true
         end
 
-        unget_tk tk
+        unget_tk tk # TODO peek instead of get then unget
         keep_comment = true
 
       when TkCLASS then

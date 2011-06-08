@@ -12,6 +12,8 @@
     now.
   * RDoc::Parser::C now allows .cpp files to be used with the "in" comment on
     rb_define_method.  Bug #35 by Hanmac.
+  * RDoc::Parser::Ruby no longer eats content when =begin/=end documentation
+    blocks are followed by a documentable item.  Issue #41 by mfn.
 
 === 3.6.1 / 2011-05-15
 
