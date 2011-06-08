@@ -458,6 +458,72 @@ void Init_curses(){
     assert_equal 'Value of the color black', constants.first.comment
   end
 
+  # HACK parsing warning instead of setting up in file
+  def test_do_methods_in_c
+    content = <<-EOF
+VALUE blah(VALUE klass, VALUE year) {
+}
+
+void Init_Blah(void) {
+  cDate = rb_define_class("Date", rb_cObject);
+
+  rb_define_method(cDate, "blah", blah, 1); /* in blah.c */
+}
+    EOF
+
+    klass = nil
+
+    _, err = capture_io do
+      klass = util_get_class content, 'cDate'
+    end
+
+    assert_match ' blah.c ', err
+  end
+
+  # HACK parsing warning instead of setting up in file
+  def test_do_methods_in_cpp
+    content = <<-EOF
+VALUE blah(VALUE klass, VALUE year) {
+}
+
+void Init_Blah(void) {
+  cDate = rb_define_class("Date", rb_cObject);
+
+  rb_define_method(cDate, "blah", blah, 1); /* in blah.cpp */
+}
+    EOF
+
+    klass = nil
+
+    _, err = capture_io do
+      klass = util_get_class content, 'cDate'
+    end
+
+    assert_match ' blah.cpp ', err
+  end
+
+  # HACK parsing warning instead of setting up in file
+  def test_do_methods_in_y
+    content = <<-EOF
+VALUE blah(VALUE klass, VALUE year) {
+}
+
+void Init_Blah(void) {
+  cDate = rb_define_class("Date", rb_cObject);
+
+  rb_define_method(cDate, "blah", blah, 1); /* in blah.y */
+}
+    EOF
+
+    klass = nil
+
+    _, err = capture_io do
+      klass = util_get_class content, 'cDate'
+    end
+
+    assert_match ' blah.y ', err
+  end
+
   def test_do_methods_singleton_class
     content = <<-EOF
 VALUE blah(VALUE klass, VALUE year) {

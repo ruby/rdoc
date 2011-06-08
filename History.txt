@@ -10,6 +10,8 @@
   * ri no longer crashes when attempting to complete a plain [.
   * RDoc::Text#strip_stars handles Document-method for methods with =, ! and ?
     now.
+  * RDoc::Parser::C now allows .cpp files to be used with the "in" comment on
+    rb_define_method.  Bug #35 by Hanmac.
 
 === 3.6.1 / 2011-05-15
 
