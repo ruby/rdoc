@@ -221,11 +221,12 @@ class RDoc::ClassModule < RDoc::Context
   def marshal_load array # :nodoc:
     # TODO must restore the singleton attribute
     initialize_methods_etc
-    @document_self    = true
-    @done_documenting = false
-    @current_section  = nil
-    @parent           = nil
-    @visibility       = nil
+    @current_section   = nil
+    @document_self     = true
+    @done_documenting  = false
+    @parent            = nil
+    @temporary_section = nil
+    @visibility        = nil
 
     @name       = array[1]
     @full_name  = array[2]
