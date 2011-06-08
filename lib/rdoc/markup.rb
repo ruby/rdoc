@@ -504,7 +504,7 @@ require 'rdoc'
 #   sensible ordering (like alphabetical).
 #
 #     # :category: Utility Methods
-#     # 
+#     #
 #     # CGI escapes +text+
 #
 #     def convert_string text
@@ -554,7 +554,7 @@ require 'rdoc'
 #
 #     ##
 #     # Comment for some_method
-#     
+#
 #     def some_method
 #       # ...
 #     end
