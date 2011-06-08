@@ -290,7 +290,6 @@ class RDoc::Parser::C < RDoc::Parser
                     \s*
                   \)
                   \s*;%xm) do |consts|
-      var_name = 'mCurses'
       const = consts.first
       handle_constants 'const', 'mCurses', const, "UINT2NUM(#{const})"
     end
