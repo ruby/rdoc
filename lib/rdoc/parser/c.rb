@@ -64,8 +64,17 @@ require 'rdoc/known_classes'
 # [Document-variable: +name+]
 #   Documentation for the named +rb_define_variable+
 #
-# [Document-method: +name+]
-#   Documentation for the named method.
+# [Document-method: +method_name+]
+#   Documentation for the named method.  Use this when the method name is
+#   unambiguous.
+#
+# [Document-method: <tt>ClassName::method_name<tt>]
+#   Documentation for a singleton method in the given class.  Use this when
+#   the method name alone is ambiguous.
+#
+# [Document-method: <tt>ClassName#method_name<tt>]
+#   Documentation for a instance method in the given class.  Use this when the
+#   method name alone is ambiguous.
 #
 # [Document-attr: +name+]
 #   Documentation for the named attribute.
@@ -432,7 +441,7 @@ class RDoc::Parser::C < RDoc::Parser
       # distinct (for example Kernel.hash and Kernel.object_id share the same
       # implementation
 
-      override_comment = find_override_comment class_name, meth_obj.name
+      override_comment = find_override_comment class_name, meth_obj
       comment = override_comment if override_comment
 
       find_modifiers comment, meth_obj if comment
@@ -475,7 +484,7 @@ class RDoc::Parser::C < RDoc::Parser
       warn "No definition for #{meth_name}" if @options.verbosity > 1
       false
     else # No body, but might still have an override comment
-      comment = find_override_comment class_name, meth_obj.name
+      comment = find_override_comment class_name, meth_obj
 
       if comment then
         find_modifiers comment, meth_obj
@@ -643,12 +652,13 @@ class RDoc::Parser::C < RDoc::Parser
   end
 
   ##
-  # Finds a <tt>Document-method</tt> override for +meth_name+ in +class_name+
+  # Finds a <tt>Document-method</tt> override for +meth_obj+ on +class_name+
 
-  def find_override_comment(class_name, meth_name)
-    name = Regexp.escape(meth_name)
+  def find_override_comment class_name, meth_obj
+    name = Regexp.escape meth_obj.name
+    prefix = Regexp.escape meth_obj.name_prefix
 
-    if @content =~ %r%Document-method:\s+#{class_name}(?:\.|::|#)#{name}\s*?\n((?>.*?\*/))%m then
+    if @content =~ %r%Document-method:\s+#{class_name}#{prefix}#{name}\s*?\n((?>.*?\*/))%m then
       $1
     elsif @content =~ %r%Document-method:\s#{name}\s*?\n((?>.*?\*/))%m then
       $1

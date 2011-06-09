@@ -923,6 +923,51 @@ Init_zlib() {
     assert_equal 'A comment', bar.comment
   end
 
+  def test_find_body_document_method_same
+    content = <<-EOF
+VALUE
+s_bar() {
+}
+
+VALUE
+bar() {
+}
+
+/*
+ * Document-method: Foo::bar
+ *
+ * a comment for Foo::bar
+ */
+
+/*
+ * Document-method: Foo#bar
+ *
+ * a comment for Foo#bar
+ */
+
+void
+Init_Foo(void) {
+    VALUE foo = rb_define_class("Foo", rb_cObject);
+
+    rb_define_singleton_method(foo, "bar", s_bar, 0);
+    rb_define_method(foo, "bar", bar, 0);
+}
+    EOF
+
+    klass = util_get_class content, 'foo'
+    assert_equal 2, klass.method_list.length
+
+    methods = klass.method_list.sort
+
+    s_bar = methods.first
+    assert_equal 'Foo::bar', s_bar.full_name
+    assert_equal "a comment for Foo::bar", s_bar.comment
+
+    bar = methods.last
+    assert_equal 'Foo#bar', bar.full_name
+    assert_equal "a comment for Foo#bar", bar.comment
+  end
+
   def test_find_modifiers_call_seq
     comment = <<-COMMENT
 /* call-seq:

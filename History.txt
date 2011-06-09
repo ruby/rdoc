@@ -17,6 +17,8 @@
   * RDoc::Markup::Formatter and subclasses now allow an optional +markup+
     parameter for adding custom markup.  The example in
     RDoc::Markup::Formatter will now work.  Issue #38 by tsilen.
+  * RDoc::Parser::C can now distinguish between class methods and instance
+    methods in Document-method.  Issue #36 by Vincent Batts.
 
 === 3.6.1 / 2011-05-15
 
