@@ -22,12 +22,11 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     ENV['HOME'] = @tmpdir
     ENV.delete 'RI'
 
-    options = RDoc::RI::Driver.process_args []
-    options[:home] = @tmpdir
-    options[:use_stdout] = true
-    options[:formatter] = @RM::ToRdoc
-    @driver = RDoc::RI::Driver.new options
-    @interactive_driver = RDoc::RI::Driver.new options.merge :interactive => true
+    @options = RDoc::RI::Driver.process_args []
+    @options[:home] = @tmpdir
+    @options[:use_stdout] = true
+    @options[:formatter] = @RM::ToRdoc
+    @driver = RDoc::RI::Driver.new @options
   end
 
   def teardown
@@ -192,26 +191,30 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
   def test_add_method_list
     out = @RM::Document.new
 
-    @driver.add_method_list out, %w[new], 'Class methods'
+    @driver.add_method_list out, %w[new parse], 'Class methods'
 
     expected = @RM::Document.new(
       @RM::Heading.new(1, 'Class methods:'),
       @RM::BlankLine.new,
       @RM::Verbatim.new('new'),
+      @RM::Verbatim.new('parse'),
       @RM::BlankLine.new)
 
     assert_equal expected, out
   end
 
   def test_add_method_list_interative
+    @options[:interactive] = true
+    driver = RDoc::RI::Driver.new @options
+
     out = @RM::Document.new
 
-    @interactive_driver.add_method_list out, %w[new], 'Class methods'
+    driver.add_method_list out, %w[new parse], 'Class methods'
 
     expected = @RM::Document.new(
       @RM::Heading.new(1, 'Class methods:'),
       @RM::BlankLine.new,
-      @RM::IndentedParagraph.new(2, 'new'),
+      @RM::IndentedParagraph.new(2, 'new, parse'),
       @RM::BlankLine.new)
 
     assert_equal expected, out

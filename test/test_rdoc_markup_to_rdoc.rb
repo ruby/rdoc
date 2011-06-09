@@ -323,5 +323,15 @@ words words words words
     assert_equal expected, @to.end_accepting
   end
 
+  def test_accept_indented_paragraph
+    ip = RDoc::Markup::IndentedParagraph.new 2, 'cats are cool'
+
+    @to.start_accepting
+
+    @to.accept_indented_paragraph ip
+
+    assert_equal "  cats are cool\n", @to.end_accepting
+  end
+
 end
 

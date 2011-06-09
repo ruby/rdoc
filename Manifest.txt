@@ -64,6 +64,7 @@ lib/rdoc/markup/document.rb
 lib/rdoc/markup/formatter.rb
 lib/rdoc/markup/formatter_test_case.rb
 lib/rdoc/markup/heading.rb
+lib/rdoc/markup/indented_paragraph.rb
 lib/rdoc/markup/inline.rb
 lib/rdoc/markup/list.rb
 lib/rdoc/markup/list_item.rb
@@ -132,6 +133,7 @@ test/test_rdoc_include.rb
 test/test_rdoc_markup.rb
 test/test_rdoc_markup_attribute_manager.rb
 test/test_rdoc_markup_document.rb
+test/test_rdoc_markup_indented_paragraph.rb
 test/test_rdoc_markup_paragraph.rb
 test/test_rdoc_markup_parser.rb
 test/test_rdoc_markup_pre_process.rb

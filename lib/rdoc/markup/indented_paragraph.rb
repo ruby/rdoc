@@ -9,11 +9,12 @@ class RDoc::Markup::IndentedParagraph < RDoc::Markup::Raw
   attr_reader :indent
 
   ##
-  # Creates a new IndentedParagraph containing +parts+ indented with +indent+ spaces
+  # Creates a new IndentedParagraph containing +parts+ indented with +indent+
+  # spaces
 
   def initialize indent, *parts
-    raise ArgumentError, "First argument must be the indent as an Integer" unless indent.is_a? Integer
     @indent = indent
+
     super(*parts)
   end
 
