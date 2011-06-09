@@ -62,7 +62,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   ##
   # Creates a new formatter that will output HTML
 
-  def initialize
+  def initialize markup = nil
     super
 
     @th = nil

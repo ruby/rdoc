@@ -44,7 +44,7 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   ##
   # Creates a new formatter that will output (mostly) \RDoc markup
 
-  def initialize
+  def initialize markup = nil
     super
 
     @markup.add_special(/\\\S/, :SUPPRESSED_CROSSREF)

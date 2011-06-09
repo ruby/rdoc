@@ -48,13 +48,13 @@ require 'rdoc'
 #     end
 #   end
 #
-#   m = RDoc::Markup.new
-#   m.add_word_pair("{", "}", :STRIKE)
-#   m.add_html("no", :STRIKE)
+#   markup = RDoc::Markup.new
+#   markup.add_word_pair("{", "}", :STRIKE)
+#   markup.add_html("no", :STRIKE)
 #
-#   m.add_special(/\b([A-Z][a-z]+[A-Z]\w+)/, :WIKIWORD)
+#   markup.add_special(/\b([A-Z][a-z]+[A-Z]\w+)/, :WIKIWORD)
 #
-#   wh = WikiHtml.new
+#   wh = WikiHtml.new markup
 #   wh.add_tag(:STRIKE, "<strike>", "</strike>")
 #
 #   puts "<body>#{wh.convert ARGF.read}</body>"

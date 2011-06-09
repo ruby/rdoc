@@ -14,6 +14,9 @@
     rb_define_method.  Bug #35 by Hanmac.
   * RDoc::Parser::Ruby no longer eats content when =begin/=end documentation
     blocks are followed by a documentable item.  Issue #41 by mfn.
+  * RDoc::Markup::Formatter and subclasses now allow an optional +markup+
+    parameter for adding custom markup.  The example in
+    RDoc::Markup::Formatter will now work.  Issue #38 by tsilen.
 
 === 3.6.1 / 2011-05-15
 

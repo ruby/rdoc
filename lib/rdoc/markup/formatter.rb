@@ -16,9 +16,10 @@ class RDoc::Markup::Formatter
   ##
   # Creates a new Formatter
 
-  def initialize
-    @markup = RDoc::Markup.new
-    @am = @markup.attribute_manager
+  def initialize markup = nil
+    @markup = markup || RDoc::Markup.new
+    @am     = @markup.attribute_manager
+
     @attr_tags = []
 
     @in_tt = 0
