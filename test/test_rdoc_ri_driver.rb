@@ -27,6 +27,7 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     options[:use_stdout] = true
     options[:formatter] = @RM::ToRdoc
     @driver = RDoc::RI::Driver.new options
+    @interactive_driver = RDoc::RI::Driver.new options.merge :interactive => true
   end
 
   def teardown
@@ -197,6 +198,20 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
       @RM::Heading.new(1, 'Class methods:'),
       @RM::BlankLine.new,
       @RM::Verbatim.new('new'),
+      @RM::BlankLine.new)
+
+    assert_equal expected, out
+  end
+
+  def test_add_method_list_interative
+    out = @RM::Document.new
+
+    @interactive_driver.add_method_list out, %w[new], 'Class methods'
+
+    expected = @RM::Document.new(
+      @RM::Heading.new(1, 'Class methods:'),
+      @RM::BlankLine.new,
+      @RM::IndentedParagraph.new(2, 'new'),
       @RM::BlankLine.new)
 
     assert_equal expected, out
