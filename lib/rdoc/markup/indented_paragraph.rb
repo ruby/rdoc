@@ -17,6 +17,10 @@ class RDoc::Markup::IndentedParagraph < RDoc::Markup::Raw
     super(*parts)
   end
 
+  def == other # :nodoc:
+    super and indent == other.indent
+  end
+
   ##
   # Calls #accept_indented_paragraph on +visitor+
 
