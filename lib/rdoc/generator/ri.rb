@@ -23,7 +23,7 @@ class RDoc::Generator::RI
 
     @store          = RDoc::RI::Store.new '.'
     @store.dry_run  = @options.dry_run
-    @store.encoding = @options.encoding
+    @store.encoding = @options.encoding if @options.respond_to? :encoding
   end
 
   ##

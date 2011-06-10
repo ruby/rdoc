@@ -9,7 +9,7 @@ class TestRDocGeneratorRI < MiniTest::Unit::TestCase
 
   def setup
     @options = RDoc::Options.new
-    @options.encoding = Encoding::UTF_8 if defined?(:Encoding)
+    @options.encoding = Encoding::UTF_8 if Object.const_defined? :Encoding
 
     @pwd = Dir.pwd
     RDoc::TopLevel.reset
@@ -61,7 +61,7 @@ class TestRDocGeneratorRI < MiniTest::Unit::TestCase
     store = RDoc::RI::Store.new @tmpdir
     store.load_cache
 
-    encoding = defined?(:Encoding) ? Encoding::UTF_8 : nil
+    encoding = Object.const_defined?(:Encoding) ? Encoding::UTF_8 : nil
 
     assert_equal encoding, store.encoding
   end
