@@ -21,6 +21,8 @@
     RDoc::Markup::Formatter will now work.  Issue #38 by tsilen.
   * RDoc::Parser::C can now distinguish between class methods and instance
     methods in Document-method.  Issue #36 by Vincent Batts.
+  * RDoc now encodes file names in the output encoding.  Issue #33 by Perry
+    Smith.
 
 === 3.6.1 / 2011-05-15
 

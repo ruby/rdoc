@@ -16,12 +16,6 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
 
     @stats = RDoc::Stats.new 0, 0
     @rdoc.instance_variable_set :@stats, @stats
-
-    @tempfile = Tempfile.new 'test_rdoc_rdoc'
-  end
-
-  def teardown
-    @tempfile.close rescue nil # HACK for 1.8.6
   end
 
   def test_gather_files
@@ -45,6 +39,20 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
     files = @rdoc.normalized_file_list [__FILE__]
 
     assert_empty files
+  end
+
+  def test_parse_file_encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+    @rdoc.options.encoding = Encoding::ISO_8859_1
+
+    Tempfile.open 'test.txt' do |io|
+      io.write 'hi'
+      io.rewind
+
+      top_level = @rdoc.parse_file io.path
+
+      assert_equal Encoding::ISO_8859_1, top_level.absolute_name.encoding
+    end
   end
 
   def test_remove_unparseable
@@ -120,14 +128,16 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
   end
 
   def test_setup_output_dir_exists_file
-    path = @tempfile.path
+    Tempfile.open 'test_rdoc_rdoc' do |tempfile|
+      path = tempfile.path
 
-    e = assert_raises RDoc::Error do
-      @rdoc.setup_output_dir path, false
+      e = assert_raises RDoc::Error do
+        @rdoc.setup_output_dir path, false
+      end
+
+      assert_match(%r%#{Regexp.escape path} exists and is not a directory%,
+                   e.message)
     end
-
-    assert_match(%r%#{Regexp.escape path} exists and is not a directory%,
-                 e.message)
   end
 
   def test_setup_output_dir_exists_not_rdoc
