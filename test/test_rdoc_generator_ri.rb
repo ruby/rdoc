@@ -9,6 +9,7 @@ class TestRDocGeneratorRI < MiniTest::Unit::TestCase
 
   def setup
     @options = RDoc::Options.new
+    @options.encoding = Encoding::UTF_8 if defined?(:Encoding)
 
     @pwd = Dir.pwd
     RDoc::TopLevel.reset
@@ -56,6 +57,13 @@ class TestRDocGeneratorRI < MiniTest::Unit::TestCase
     assert_file File.join(@tmpdir, 'Object', 'attr-i.ri')
     assert_file File.join(@tmpdir, 'Object', 'method-i.ri')
     assert_file File.join(@tmpdir, 'Object', 'method%21-i.ri')
+
+    store = RDoc::RI::Store.new @tmpdir
+    store.load_cache
+
+    encoding = defined?(:Encoding) ? Encoding::UTF_8 : nil
+
+    assert_equal encoding, store.encoding
   end
 
   def test_generate_dry_run

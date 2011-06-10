@@ -47,11 +47,12 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
 
   def assert_cache imethods, cmethods, attrs, modules, ancestors = {}
     expected = {
-      :class_methods    => cmethods,
-      :instance_methods => imethods,
+      :ancestors        => ancestors,
       :attributes       => attrs,
+      :class_methods    => cmethods,
+      :encoding         => nil,
+      :instance_methods => imethods,
       :modules          => modules,
-      :ancestors        => ancestors
     }
 
     assert_equal expected, @s.cache
@@ -138,8 +139,9 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
 
   def test_load_cache
     cache = {
-      :methods => %w[Object#method],
-      :modules => %w[Object],
+      :encoding => :encoding_value,
+      :methods  => %w[Object#method],
+      :modules  => %w[Object],
     }
 
     Dir.mkdir @tmpdir
@@ -151,6 +153,32 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     @s.load_cache
 
     assert_equal cache, @s.cache
+
+    assert_equal :encoding_value, @s.encoding
+  end
+
+  def test_load_cache_encoding_differs
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    cache = {
+      :encoding => Encoding::ISO_8859_1,
+      :methods  => %w[Object#method],
+      :modules  => %w[Object],
+    }
+
+    Dir.mkdir @tmpdir
+
+    open File.join(@tmpdir, 'cache.ri'), 'wb' do |io|
+      Marshal.dump cache, io
+    end
+
+    @s.encoding = Encoding::UTF_8
+
+    @s.load_cache
+
+    assert_equal cache, @s.cache
+
+    assert_equal Encoding::UTF_8, @s.encoding
   end
 
   def test_load_cache_no_cache
@@ -158,6 +186,7 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
       :ancestors        => {},
       :attributes       => {},
       :class_methods    => {},
+      :encoding         => nil,
       :instance_methods => {},
       :modules          => [],
     }
@@ -199,6 +228,7 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     @s.save_method @klass, @meth
     @s.save_method @klass, @cmeth
     @s.save_class @nest_klass
+    @s.encoding = :encoding_value
 
     @s.save_cache
 
@@ -213,6 +243,7 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
         'Object'           => %w[],
         'Object::SubClass' => %w[Incl Object],
       },
+      :encoding => :encoding_value,
     }
 
     expected[:ancestors]['Object'] = %w[BasicObject] if defined?(::BasicObject)

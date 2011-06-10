@@ -44,19 +44,26 @@ class RDoc::RI::Store
   attr_reader :cache
 
   ##
+  # The encoding of the contents in the Store
+
+  attr_accessor :encoding
+
+  ##
   # Creates a new Store of +type+ that will load or save to +path+
 
   def initialize path, type = nil
-    @dry_run = false
-    @type    = type
-    @path    = path
+    @dry_run  = false
+    @type     = type
+    @path     = path
+    @encoding = nil
 
     @cache = {
-      :class_methods    => {},
-      :instance_methods => {},
-      :attributes       => {},
-      :modules          => [],
       :ancestors        => {},
+      :attributes       => {},
+      :class_methods    => {},
+      :encoding         => @encoding,
+      :instance_methods => {},
+      :modules          => [],
     }
   end
 
@@ -138,9 +145,29 @@ class RDoc::RI::Store
   # Loads cache file for this store
 
   def load_cache
+    #orig_enc = @encoding
+
     open cache_path, 'rb' do |io|
       @cache = Marshal.load io.read
     end
+
+    load_enc = @cache[:encoding]
+
+    # TODO this feature will be time-consuming to add:
+    # a) Encodings may be incompatible but transcodeable
+    # b) Need to warn in the appropriate spots, wherever they may be
+    # c) Need to handle cross-cache differences in encodings
+    # d) Need to warn when generating into a cache with diffent encodings
+    #
+    #if orig_enc and load_enc != orig_enc then
+    #  warn "Cached encoding #{load_enc} is incompatible with #{orig_enc}\n" \
+    #       "from #{path}/cache.ri" unless
+    #    Encoding.compatible? orig_enc, load_enc
+    #end
+
+    @encoding = load_enc unless @encoding
+
+    @cache
   rescue Errno::ENOENT
   end
 
@@ -198,6 +225,7 @@ class RDoc::RI::Store
     @cache[:class_methods].   each do |_, m| m.uniq!; m.sort! end
     @cache[:instance_methods].each do |_, m| m.uniq!; m.sort! end
     @cache[:modules].uniq!; @cache[:modules].sort!
+    @cache[:encoding] = @encoding # this gets set twice due to assert_cache
 
     return if @dry_run
 
