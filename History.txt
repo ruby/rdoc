@@ -23,6 +23,8 @@
     methods in Document-method.  Issue #36 by Vincent Batts.
   * RDoc now encodes file names in the output encoding.  Issue #33 by Perry
     Smith.
+  * ri data generation for method aliases no longer duplicates the class in
+    #full_name
 
 === 3.6.1 / 2011-05-15
 

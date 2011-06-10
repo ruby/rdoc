@@ -83,7 +83,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
 
   def marshal_dump
     aliases = @aliases.map do |a|
-      [a.full_name, parse(a.comment)]
+      [a.name, parse(a.comment)]
     end
 
     [ MARSHAL_VERSION,

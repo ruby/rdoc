@@ -83,6 +83,37 @@ method(a, b) { |c, d| ... }
     assert_equal '', @c2_a.markup_code
   end
 
+  def test_marshal_dump
+    m = RDoc::AnyMethod.new nil, 'method'
+    m.block_params = 'some_block'
+    m.call_seq     = 'call_seq'
+    m.comment      = 'this is a comment'
+    m.params       = 'param'
+
+    cm = RDoc::ClassModule.new 'Klass'
+    cm.add_method m
+
+    al = RDoc::Alias.new nil, 'method', 'aliased', 'alias comment'
+    al_m = m.add_alias al, cm
+
+    loaded = Marshal.load Marshal.dump m
+
+    comment = RDoc::Markup::Document.new(
+                RDoc::Markup::Paragraph.new('this is a comment'))
+
+    assert_equal m, loaded
+
+    assert_equal [al_m],         loaded.aliases
+    assert_equal 'some_block',   loaded.block_params
+    assert_equal 'call_seq',     loaded.call_seq
+    assert_equal comment,        loaded.comment
+    assert_equal 'Klass#method', loaded.full_name
+    assert_equal 'method',       loaded.name
+    assert_equal 'param',        loaded.params
+    assert_equal nil,            loaded.singleton # defaults to nil
+    assert_equal :public,        loaded.visibility
+  end
+
   def test_marshal_load
     instance_method = Marshal.load Marshal.dump(@c1.method_list.last)
 

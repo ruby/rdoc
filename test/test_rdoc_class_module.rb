@@ -45,6 +45,39 @@ class TestRDocClassModule < XrefTestCase
     assert_nil @c2.find_class_named('C1')
   end
 
+  def test_marshal_dump
+    tl = RDoc::TopLevel.new 'file.rb'
+    ns = tl.add_module RDoc::NormalModule, 'Namespace'
+    cm = ns.add_class RDoc::NormalClass, 'Klass', 'Super'
+
+    a = RDoc::Attr.new(nil, 'a1', 'RW', '')
+    m = RDoc::AnyMethod.new(nil, 'm1')
+    c = RDoc::Constant.new('C1', nil, '') 
+    i = RDoc::Include.new('I1', '')
+
+    cm.add_attribute a
+    cm.add_method m
+    cm.add_constant c
+    cm.add_include i
+    cm.comment = 'this is a comment'
+
+    loaded = Marshal.load Marshal.dump cm
+
+    assert_equal cm, loaded
+
+    comment = RDoc::Markup::Document.new(
+                RDoc::Markup::Paragraph.new('this is a comment'))
+
+    assert_equal [a],                loaded.attributes
+    assert_equal comment,            loaded.comment
+    assert_equal [c],                loaded.constants
+    assert_equal 'Namespace::Klass', loaded.full_name
+    assert_equal [i],                loaded.includes
+    assert_equal [m],                loaded.method_list
+    assert_equal 'Klass',            loaded.name
+    assert_equal 'Super',            loaded.superclass
+  end
+
   def test_merge
     cm1 = RDoc::ClassModule.new 'Klass'
     cm1.comment = 'klass 1'
