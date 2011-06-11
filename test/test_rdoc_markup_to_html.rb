@@ -30,6 +30,10 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_empty @to.res.join
   end
 
+  def accept_document
+    assert_equal "\n<p>hello</p>\n", @to.res.join
+  end
+
   def accept_heading
     assert_equal "\n<h5>Hello</h5>\n", @to.res.join
   end

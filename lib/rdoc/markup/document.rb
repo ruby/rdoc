@@ -4,6 +4,12 @@
 class RDoc::Markup::Document
 
   ##
+  # The file this document was created from.  See also
+  # RDoc::ClassModule#add_comment
+
+  attr_accessor :file
+
+  ##
   # The parts of the Document
 
   attr_reader :parts
@@ -14,6 +20,8 @@ class RDoc::Markup::Document
   def initialize *parts
     @parts = []
     @parts.push(*parts)
+
+    @file = nil
   end
 
   ##

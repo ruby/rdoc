@@ -27,6 +27,15 @@ class RDoc::Markup::Formatter
   end
 
   ##
+  # Adds +document+ to the output
+
+  def accept_document document
+    document.parts.each do |item|
+      item.accept self
+    end
+  end
+
+  ##
   # Add a new set of tags for an attribute. We allow separate start and end
   # tags for flexibility
 

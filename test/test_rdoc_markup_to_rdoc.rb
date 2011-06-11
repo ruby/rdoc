@@ -18,6 +18,10 @@ class TestRDocMarkupToRDoc < RDoc::Markup::TextFormatterTestCase
     assert_equal "\n", @to.res.join
   end
 
+  def accept_document
+    assert_equal "hello\n", @to.res.join
+  end
+
   def accept_heading
     assert_equal "===== Hello\n", @to.res.join
   end
