@@ -16,7 +16,7 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     @top_level = RDoc::TopLevel.new 'file.rb'
 
     @klass = @top_level.add_class RDoc::NormalClass, 'Object'
-    @klass.comment = 'original'
+    @klass.add_comment 'original', @top_level
 
     @cmeth = RDoc::AnyMethod.new nil, 'cmethod'
     @cmeth.singleton = true
@@ -324,7 +324,7 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     @s.save_class @klass
 
     klass = RDoc::NormalClass.new 'Object'
-    klass.comment = 'new class'
+    klass.add_comment 'new class', @top_level
 
     s = RDoc::RI::Store.new @tmpdir
     s.save_class klass

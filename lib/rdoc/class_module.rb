@@ -13,6 +13,11 @@ class RDoc::ClassModule < RDoc::Context
 
   attr_accessor :constant_aliases
 
+  ##
+  # Comment and the location it came from.  Use #add_comment to add comments
+
+  attr_reader :comment_location
+
   attr_accessor :diagram # :nodoc:
 
   ##
@@ -26,7 +31,7 @@ class RDoc::ClassModule < RDoc::Context
 
   def self.from_module(class_type, mod)
     klass = class_type.new(mod.name)
-    klass.comment = mod.comment
+    klass.add_comment mod.comment, nil
     klass.parent = mod.parent
     klass.section = mod.section
     klass.viewer = mod.viewer
@@ -85,7 +90,25 @@ class RDoc::ClassModule < RDoc::Context
     @is_alias_for     = nil
     @name             = name
     @superclass       = superclass
+    @comment_location = [] # [[comment, location]]
+
     super()
+  end
+
+  ##
+  # Adds +comment+ to this ClassModule's list of comments at +location+.  This
+  # method is preferred over #comment= since it allows ri data to be updated
+  # across multiple runs.
+
+  def add_comment comment, location
+    return if comment.empty?
+
+    original = comment
+
+    comment = normalize_comment comment
+    @comment_location << [comment, location]
+
+    self.comment = original
   end
 
   ##
@@ -112,6 +135,8 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
+  # This method is deprecated, use #add_comment instead.
+  #
   # Appends +comment+ to the current comment, but separated by a rule.  Works
   # more like <tt>+=</tt>.
 
@@ -119,10 +144,9 @@ class RDoc::ClassModule < RDoc::Context
     return if comment.empty?
 
     comment = normalize_comment comment
-    comment = "#{@comment}\n---\n#{comment}" unless
-      @comment.empty?
+    comment = "#{@comment}\n---\n#{comment}" unless @comment.empty?
 
-    super
+    super comment
   end
 
   ##

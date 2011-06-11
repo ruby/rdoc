@@ -564,7 +564,7 @@ class RDoc::Parser::C < RDoc::Parser
 
     comment = look_for_directives_in class_mod, comment
 
-    class_mod.comment = comment
+    class_mod.add_comment comment, @top_level
   end
 
   ##

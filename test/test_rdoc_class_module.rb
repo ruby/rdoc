@@ -8,6 +8,30 @@ class TestRDocClassModule < XrefTestCase
     @RM = RDoc::Markup
   end
 
+  def test_add_comment
+    tl1 = RDoc::TopLevel.new 'one.rb'
+    tl2 = RDoc::TopLevel.new 'two.rb'
+    tl3 = RDoc::TopLevel.new 'three.rb'
+
+    cm = RDoc::ClassModule.new 'Klass'
+    cm.add_comment '# comment 1', tl1
+
+    assert_equal [['comment 1', tl1]], cm.comment_location
+    assert_equal 'comment 1', cm.comment
+
+    cm.add_comment '# comment 2', tl2
+
+    assert_equal [['comment 1', tl1], ['comment 2', tl2]], cm.comment_location
+    assert_equal "comment 1\n---\ncomment 2", cm.comment
+
+    cm.add_comment "# * comment 3", tl3
+
+    assert_equal [['comment 1', tl1],
+                  ['comment 2', tl2],
+                  ['* comment 3', tl3]], cm.comment_location
+    assert_equal "comment 1\n---\ncomment 2\n---\n* comment 3", cm.comment
+  end
+
   def test_ancestors
     assert_equal [@parent], @child.ancestors
   end
@@ -60,7 +84,7 @@ class TestRDocClassModule < XrefTestCase
     cm.add_method m
     cm.add_constant c
     cm.add_include i
-    cm.comment = 'this is a comment'
+    cm.add_comment 'this is a comment', tl
 
     loaded = Marshal.load Marshal.dump cm
 
@@ -93,7 +117,7 @@ class TestRDocClassModule < XrefTestCase
     cm.add_method m
     cm.add_constant c
     cm.add_include i
-    cm.comment = 'this is a comment'
+    cm.add_comment 'this is a comment', tl
 
     loaded = Marshal.load "\x04\bU:\x16RDoc::NormalClass[\x0Ei\x00\"\nKlass" \
                           "\"\x15Namespace::KlassI\"\nSuper\x06:\x06EF" \
@@ -125,8 +149,10 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_merge
+    tl = RDoc::TopLevel.new 'file.rb'
+
     cm1 = RDoc::ClassModule.new 'Klass'
-    cm1.comment = 'klass 1'
+    cm1.add_comment 'klass 1', tl
     cm1.add_attribute RDoc::Attr.new(nil, 'a1', 'RW', '')
     cm1.add_attribute RDoc::Attr.new(nil, 'a3', 'R', '')
     cm1.add_attribute RDoc::Attr.new(nil, 'a4', 'R', '')

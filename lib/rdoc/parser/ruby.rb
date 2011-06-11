@@ -631,7 +631,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       cls.offset = offset
       cls.line   = line_no
 
-      cls.comment = comment if cls.document_self
+      cls.add_comment comment, @top_level if cls.document_self
 
       @top_level.add_to_classes_or_modules cls
       @stats.add_class cls
@@ -650,7 +650,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           other.offset  = offset
           other.line    = line_no
 
-          other.comment = comment
+          other.add_comment comment, @top_level
         end
 
         # notify :nodoc: all if not a constant-named class/module
@@ -1231,7 +1231,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     mod.record_location @top_level
 
     read_documentation_modifiers mod, RDoc::CLASS_MODIFIERS
-    mod.comment = comment if mod.document_self
+    mod.add_comment comment, @top_level if mod.document_self
     parse_statements(mod)
 
     @top_level.add_to_classes_or_modules mod
