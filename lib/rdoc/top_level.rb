@@ -295,6 +295,10 @@ class RDoc::TopLevel < RDoc::Context
     RDoc::TopLevel.files_hash[file_name] = self
   end
 
+  def == other # :nodoc:
+    other.class === self and @absolute_name == other.absolute_name
+  end
+
   ##
   # Adds +an_alias+ to +Object+ instead of +self+.
 

@@ -641,11 +641,13 @@ Foo::Bar#bother
     util_store
 
     index = RDoc::AnyMethod.new nil, '[]'
+    index.record_location @top_level
     @cFoo.add_method index
     @store.save_method @cFoo, index
 
     c_index = RDoc::AnyMethod.new nil, '[]'
     c_index.singleton = true
+    c_index.record_location @top_level
     @cFoo.add_method c_index
     @store.save_method @cFoo, c_index
 
@@ -878,10 +880,12 @@ Foo::Bar#bother
     @cFoo_Baz.parent = @cFoo
 
     @baz = RDoc::AnyMethod.new nil, 'baz'
+    @baz.record_location @top_level
     @cBar.add_method @baz
 
     @override = RDoc::AnyMethod.new nil, 'override'
     @override.comment = 'must be displayed'
+    @override.record_location @top_level
     @cBar.add_method @override
 
     @store2.save_class @mAmbiguous
@@ -899,6 +903,8 @@ Foo::Bar#bother
   def util_store
     @store = RDoc::RI::Store.new @home_ri
 
+    @top_level = RDoc::TopLevel.new 'file.rb'
+
     @cFoo       = RDoc::NormalClass.new 'Foo'
     @mInc       = RDoc::NormalModule.new 'Inc'
     @cAmbiguous = RDoc::NormalClass.new 'Ambiguous'
@@ -913,12 +919,15 @@ Foo::Bar#bother
 
     @blah = RDoc::AnyMethod.new nil, 'blah'
     @blah.call_seq = "blah(5) => 5\nblah(6) => 6\n"
+    @blah.record_location @top_level
 
     @bother = RDoc::AnyMethod.new nil, 'bother'
-    @bother.params = "(things)"
     @bother.block_params = "stuff"
+    @bother.params = "(things)"
+    @bother.record_location @top_level
 
     @new  = RDoc::AnyMethod.new nil, 'new'
+    @new.record_location @top_level
     @new.singleton = true
 
     @cFoo_Bar.add_method @blah
@@ -926,6 +935,7 @@ Foo::Bar#bother
     @cFoo_Bar.add_method @new
 
     @attr = RDoc::Attr.new nil, 'attr', 'RW', ''
+    @attr.record_location @top_level
 
     @cFoo_Bar.add_attribute @attr
 
@@ -933,11 +943,13 @@ Foo::Bar#bother
     @cFoo_Baz.parent = @cFoo
 
     @inherit = RDoc::AnyMethod.new nil, 'inherit'
+    @inherit.record_location @top_level
     @cFoo.add_method @inherit
 
     # overriden by Bar in multi_store
     @overriden = RDoc::AnyMethod.new nil, 'override'
     @overriden.comment = 'must not be displayed'
+    @overriden.record_location @top_level
     @cFoo.add_method @overriden
 
     @store.save_class @cFoo

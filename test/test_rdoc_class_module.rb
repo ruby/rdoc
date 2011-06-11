@@ -49,10 +49,11 @@ class TestRDocClassModule < XrefTestCase
     tl = RDoc::TopLevel.new 'file.rb'
     ns = tl.add_module RDoc::NormalModule, 'Namespace'
     cm = ns.add_class RDoc::NormalClass, 'Klass', 'Super'
+    cm.record_location tl
 
     a = RDoc::Attr.new(nil, 'a1', 'RW', '')
     m = RDoc::AnyMethod.new(nil, 'm1')
-    c = RDoc::Constant.new('C1', nil, '') 
+    c = RDoc::Constant.new('C1', nil, '')
     i = RDoc::Include.new('I1', '')
 
     cm.add_attribute a
@@ -76,6 +77,51 @@ class TestRDocClassModule < XrefTestCase
     assert_equal [m],                loaded.method_list
     assert_equal 'Klass',            loaded.name
     assert_equal 'Super',            loaded.superclass
+  end
+
+  def test_marshal_load_version_0
+    tl = RDoc::TopLevel.new 'file.rb'
+    ns = tl.add_module RDoc::NormalModule, 'Namespace'
+    cm = ns.add_class RDoc::NormalClass, 'Klass', 'Super'
+
+    a = RDoc::Attr.new(nil, 'a1', 'RW', '')
+    m = RDoc::AnyMethod.new(nil, 'm1')
+    c = RDoc::Constant.new('C1', nil, '')
+    i = RDoc::Include.new('I1', '')
+
+    cm.add_attribute a
+    cm.add_method m
+    cm.add_constant c
+    cm.add_include i
+    cm.comment = 'this is a comment'
+
+    loaded = Marshal.load "\x04\bU:\x16RDoc::NormalClass[\x0Ei\x00\"\nKlass" \
+                          "\"\x15Namespace::KlassI\"\nSuper\x06:\x06EF" \
+                          "o:\eRDoc::Markup::Document\x06:\v@parts[\x06" \
+                          "o:\x1CRDoc::Markup::Paragraph\x06;\b[\x06I" \
+                          "\"\x16this is a comment\x06;\x06F[\x06[\aI" \
+                          "\"\aa1\x06;\x06FI\"\aRW\x06;\x06F[\x06[\aI" \
+                          "\"\aC1\x06;\x06Fo;\a\x06;\b[\x00[\x06[\aI" \
+                          "\"\aI1\x06;\x06Fo;\a\x06;\b[\x00[\a[\aI" \
+                          "\"\nclass\x06;\x06F[\b[\a:\vpublic[\x00[\a" \
+                          ":\x0Eprotected[\x00[\a:\fprivate[\x00[\aI" \
+                          "\"\rinstance\x06;\x06F[\b[\a;\n[\x06I" \
+                          "\"\am1\x06;\x06F[\a;\v[\x00[\a;\f[\x00"
+
+    assert_equal cm, loaded
+
+    comment = RDoc::Markup::Document.new(
+                RDoc::Markup::Paragraph.new('this is a comment'))
+
+    assert_equal [a],                loaded.attributes
+    assert_equal comment,            loaded.comment
+    assert_equal [c],                loaded.constants
+    assert_equal 'Namespace::Klass', loaded.full_name
+    assert_equal [i],                loaded.includes
+    assert_equal [m],                loaded.method_list
+    assert_equal 'Klass',            loaded.name
+    assert_equal 'Super',            loaded.superclass
+    assert_equal nil,                loaded.file
   end
 
   def test_merge

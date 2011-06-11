@@ -20,11 +20,16 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
 
     @cmeth = RDoc::AnyMethod.new nil, 'cmethod'
     @cmeth.singleton = true
+    @cmeth.record_location @top_level
 
     @meth = RDoc::AnyMethod.new nil, 'method'
+    @meth.record_location @top_level
+
     @meth_bang = RDoc::AnyMethod.new nil, 'method!'
+    @meth_bang.record_location @top_level
 
     @attr = RDoc::Attr.new nil, 'attr', 'RW', ''
+    @attr.record_location @top_level
 
     @klass.add_method @cmeth
     @klass.add_method @meth
@@ -33,6 +38,7 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
 
     @nest_klass = @klass.add_class RDoc::NormalClass, 'SubClass'
     @nest_meth = RDoc::AnyMethod.new nil, 'method'
+    @nest_meth.record_location @top_level
     @nest_incl = RDoc::Include.new 'Incl', ''
 
     @nest_klass.add_method @nest_meth

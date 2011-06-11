@@ -6,7 +6,7 @@ require 'rdoc/method_attr'
 
 class RDoc::Attr < RDoc::MethodAttr
 
-  MARSHAL_VERSION = 1 # :nodoc:
+  MARSHAL_VERSION = 2 # :nodoc:
 
   ##
   # Is the attribute readable ('R'), writable ('W') or both ('RW')?
@@ -92,6 +92,7 @@ class RDoc::Attr < RDoc::MethodAttr
       @visibility,
       parse(@comment),
       singleton,
+      @file.absolute_name,
     ]
   end
 
@@ -103,12 +104,15 @@ class RDoc::Attr < RDoc::MethodAttr
   # * #parent_name
 
   def marshal_load array
+    version     = array[0]
     @name       = array[1]
     @full_name  = array[2]
     @rw         = array[3]
     @visibility = array[4]
     @comment    = array[5]
     @singleton  = array[6] || false # MARSHAL_VERSION == 0
+
+    @file = RDoc::TopLevel.new array[7] if version > 1
 
     @parent_name = @full_name
   end

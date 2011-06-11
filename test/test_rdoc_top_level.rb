@@ -93,6 +93,15 @@ class TestRDocTopLevel < XrefTestCase
     assert_equal 'top_level.rb', @top_level.base_name
   end
 
+  def test_equals2
+    top_level2 = RDoc::TopLevel.new 'path/top_level.rb'
+    other_level = RDoc::TopLevel.new 'path/other_level.rb'
+
+    assert_equal @top_level, top_level2
+
+    refute_equal other_level, @top_level
+  end
+
   def test_find_class_or_module
     assert_equal @c1,    @xref_data.find_class_or_module('C1')
     assert_equal @c2_c3, @xref_data.find_class_or_module('C2::C3')

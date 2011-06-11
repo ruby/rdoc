@@ -43,7 +43,11 @@ class TestRDocAttr < MiniTest::Unit::TestCase
   end
 
   def test_marshal_dump
+    tl = RDoc::TopLevel.new 'file.rb'
+
     @a.comment = 'this is a comment'
+    @a.record_location tl
+
     cm = RDoc::ClassModule.new 'Klass'
     cm.add_attribute @a
 
@@ -55,6 +59,7 @@ class TestRDocAttr < MiniTest::Unit::TestCase
                 RDoc::Markup::Paragraph.new('this is a comment'))
 
     assert_equal comment,      loaded.comment
+    assert_equal 'file.rb',    loaded.file.relative_name
     assert_equal 'Klass#attr', loaded.full_name
     assert_equal 'attr',       loaded.name
     assert_equal 'RW',         loaded.rw
@@ -75,6 +80,28 @@ class TestRDocAttr < MiniTest::Unit::TestCase
     assert_equal 'R',           loaded.rw
     assert_equal true,          loaded.singleton
     assert_equal :protected,    loaded.visibility
+  end
+
+  def test_marshal_load_version_1
+    data = "\x04\bU:\x0FRDoc::Attr[\fi\x06I\"\tattr\x06:\x06EF" \
+           "\"\x0FKlass#attrI\"\aRW\x06;\x06F:\vpublic" \
+           "o:\eRDoc::Markup::Document\x06:\v@parts[\x06" \
+           "o:\x1CRDoc::Markup::Paragraph\x06;\t[\x06I" \
+           "\"\x16this is a comment\x06;\x06FF"
+
+    loaded = Marshal.load data
+
+    comment = RDoc::Markup::Document.new(
+                RDoc::Markup::Paragraph.new('this is a comment'))
+
+    assert_equal comment,      loaded.comment
+    assert_equal 'Klass#attr', loaded.full_name
+    assert_equal 'attr',       loaded.name
+    assert_equal 'RW',         loaded.rw
+    assert_equal false,        loaded.singleton
+    assert_equal :public,      loaded.visibility
+
+    assert_equal nil,          loaded.file # version 2
   end
 
   def test_params
