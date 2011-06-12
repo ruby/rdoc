@@ -317,6 +317,8 @@ class RDoc::Context < RDoc::CodeObject
       add_to @attributes, attribute
       resolve_aliases attribute
     end
+
+    attribute
   end
 
   ##

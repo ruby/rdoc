@@ -297,7 +297,11 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
-  # Merges +class_module+ into this ClassModule
+  # Merges +class_module+ into this ClassModule.
+  #
+  # The receiver's data is preferred over +class_module+.
+  #--
+  # TODO swap this to work like Hash#merge
 
   def merge class_module
     other_document = class_module.comment
@@ -315,13 +319,24 @@ class RDoc::ClassModule < RDoc::Context
       @comment = document
     end
 
-    class_module.each_attribute do |attr|
-      if match = attributes.find { |a| a.name == attr.name } then
-        match.rw = [match.rw, attr.rw].compact.uniq.join
-      else
+    other_attrs = class_module.attributes.group_by { |attr| attr.file }
+    my_attrs    = attributes.             group_by { |attr| attr.file }
+
+    other_attrs.each do |file, attrs|
+      next if my_attrs.include? file
+
+      attrs.each do |attr|
         add_attribute attr
       end
     end
+
+    #class_module.each_attribute do |attr|
+    #  if match = attributes.find { |a| a.name == attr.name } then
+    #    match.rw = [match.rw, attr.rw].compact.uniq.join
+    #  else
+    #    add_attribute attr
+    #  end
+    #end
 
     class_module.each_constant do |const|
       add_constant const

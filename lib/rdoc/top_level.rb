@@ -295,9 +295,14 @@ class RDoc::TopLevel < RDoc::Context
     RDoc::TopLevel.files_hash[file_name] = self
   end
 
-  def == other # :nodoc:
+  ##
+  # An RDoc::TopLevel is equal to another with the same absolute_name
+
+  def == other
     other.class === self and @absolute_name == other.absolute_name
   end
+
+  alias eql? ==
 
   ##
   # Adds +an_alias+ to +Object+ instead of +self+.
@@ -377,6 +382,14 @@ class RDoc::TopLevel < RDoc::Context
 
   def full_name
     @relative_name
+  end
+
+  ##
+  # An RDoc::TopLevel has the same hash as another with the same
+  # absolute_name
+
+  def hash
+    @absolute_name.hash
   end
 
   ##

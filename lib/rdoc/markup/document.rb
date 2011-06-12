@@ -74,6 +74,8 @@ class RDoc::Markup::Document
   # contains only other documents as its direct children) #merge replaces
   # documents in this class with documents from +other+ when the file matches
   # and adds documents from +other+ when the files do not.
+  #
+  # The information in +other+ is preferred over the receiver
 
   def merge other
     other.parts.each do |other_part|

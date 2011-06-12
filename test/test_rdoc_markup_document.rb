@@ -94,7 +94,11 @@ class TestRDocMarkupDocument < MiniTest::Unit::TestCase
 
     result = root.merge other
 
-    assert_equal other, result
+    inner = @RM::Document.new @RM::Paragraph.new 'replace'
+    inner.file = 'file.rb'
+    expected = @RM::Document.new inner
+
+    assert_equal expected, result
   end
 
   def test_merge_add
