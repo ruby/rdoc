@@ -83,15 +83,20 @@ class TestRDocClassModule < XrefTestCase
     cm = ns.add_class RDoc::NormalClass, 'Klass', 'Super'
     cm.record_location tl
 
-    a = RDoc::Attr.new(nil, 'a1', 'RW', '')
-    m = RDoc::AnyMethod.new(nil, 'm1')
-    c = RDoc::Constant.new('C1', nil, '')
-    i = RDoc::Include.new('I1', '')
+    a1 = RDoc::Attr.new nil, 'a1', 'RW', ''
+    a1.record_location tl
+    a2 = RDoc::Attr.new nil, 'a2', 'RW', '', true
+    a2.record_location tl
 
-    cm.add_attribute a
-    cm.add_method m
-    cm.add_constant c
-    cm.add_include i
+    m1 = RDoc::AnyMethod.new nil, 'm1'
+    c1 = RDoc::Constant.new 'C1', nil, ''
+    i1 = RDoc::Include.new 'I1', ''
+
+    cm.add_attribute a1
+    cm.add_attribute a2
+    cm.add_method m1
+    cm.add_constant c1
+    cm.add_include i1
     cm.add_comment 'this is a comment', tl
 
     loaded = Marshal.load Marshal.dump cm
@@ -104,14 +109,16 @@ class TestRDocClassModule < XrefTestCase
 
     comment = RDoc::Markup::Document.new inner
 
-    assert_equal [a],                loaded.attributes
+    assert_equal [a2, a1],           loaded.attributes.sort
     assert_equal comment,            loaded.comment
-    assert_equal [c],                loaded.constants
+    assert_equal [c1],               loaded.constants
     assert_equal 'Namespace::Klass', loaded.full_name
-    assert_equal [i],                loaded.includes
-    assert_equal [m],                loaded.method_list
+    assert_equal [i1],               loaded.includes
+    assert_equal [m1],               loaded.method_list
     assert_equal 'Klass',            loaded.name
     assert_equal 'Super',            loaded.superclass
+
+    assert_equal tl, loaded.attributes.first.file
   end
 
   def test_marshal_load_version_0

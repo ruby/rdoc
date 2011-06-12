@@ -6,7 +6,12 @@ require 'rdoc/context'
 
 class RDoc::ClassModule < RDoc::Context
 
-  MARSHAL_VERSION = 0 # :nodoc:
+  ##
+  # 1::
+  #   RDoc 3.7
+  #   * Added visibility, singleton and file to attributes
+
+  MARSHAL_VERSION = 1 # :nodoc:
 
   ##
   # Constants that are aliases for this class or module
@@ -209,9 +214,11 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   def marshal_dump # :nodoc:
-    # TODO must store the singleton attribute
     attrs = attributes.sort.map do |attr|
-      [attr.name, attr.rw]
+      [ attr.name, attr.rw,
+        # new in version 1
+        attr.visibility, attr.singleton, attr.file.absolute_name,
+      ]
     end
 
     method_types = methods_by_type.map do |type, visibilities|
@@ -243,7 +250,6 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   def marshal_load array # :nodoc:
-    # TODO must restore the singleton attribute
     initialize_methods_etc
     @current_section   = nil
     @document_self     = true
@@ -258,8 +264,15 @@ class RDoc::ClassModule < RDoc::Context
     @superclass = array[3]
     @comment    = array[4]
 
-    array[5].each do |name, rw|
-      add_attribute RDoc::Attr.new(nil, name, rw, nil)
+    array[5].each do |name, rw, visibility, singleton, file|
+      singleton  ||= false
+      visibility ||= :public
+
+      attr = RDoc::Attr.new nil, name, rw, nil, singleton
+
+      add_attribute attr
+      attr.visibility = visibility
+      attr.record_location RDoc::TopLevel.new file
     end
 
     array[6].each do |name, comment|
