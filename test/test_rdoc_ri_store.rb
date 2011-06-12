@@ -4,6 +4,7 @@ require 'rdoc/ri'
 require 'rdoc/markup'
 require 'tmpdir'
 require 'fileutils'
+require 'pp'
 
 class TestRDocRIStore < MiniTest::Unit::TestCase
 
@@ -49,6 +50,13 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
 
   def teardown
     FileUtils.rm_rf @tmpdir
+  end
+
+  def mu_pp obj
+    s = ''
+    s = PP.pp obj, s
+    s.force_encoding Encoding.default_external if defined? Encoding
+    s.chomp
   end
 
   def assert_cache imethods, cmethods, attrs, modules, ancestors = {}
@@ -324,16 +332,17 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     @s.save_class @klass
 
     klass = RDoc::NormalClass.new 'Object'
-    klass.add_comment 'new class', @top_level
+    klass.add_comment 'new comment', @top_level
 
     s = RDoc::RI::Store.new @tmpdir
     s.save_class klass
 
     s = RDoc::RI::Store.new @tmpdir
 
-    document = @RM::Document.new(
-      @RM::Paragraph.new('original'),
-      @RM::Paragraph.new('new class'))
+    inner = @RM::Document.new @RM::Paragraph.new 'new comment'
+    inner.file = @top_level.absolute_name
+
+    document = @RM::Document.new inner
 
     assert_equal document, s.load_class('Object').comment
   end

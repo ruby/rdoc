@@ -44,7 +44,9 @@ class RDoc::Markup::Document
   end
 
   def == other # :nodoc:
-    self.class == other.class and @parts == other.parts
+    self.class == other.class and
+      @file == other.file and
+      @parts == other.parts
   end
 
   ##
@@ -67,8 +69,28 @@ class RDoc::Markup::Document
     @parts.empty?
   end
 
+  ##
+  # When this is a collection of documents (#file is not set and this document
+  # contains only other documents as its direct children) #merge replaces
+  # documents in this class with documents from +other+ when the file matches
+  # and adds documents from +other+ when the files do not.
+
+  def merge other
+    other.parts.each do |other_part|
+      self.parts.delete_if do |self_part|
+        self_part.file and self_part.file == other_part.file
+      end
+
+      self.parts << other_part
+    end
+
+    self
+  end
+
   def pretty_print q # :nodoc:
-    q.group 2, '[doc: ', ']' do
+    start = @file ? "[doc (#{@file}): " : '[doc: '
+
+    q.group 2, start, ']' do
       q.seplist @parts do |part|
         q.pp part
       end

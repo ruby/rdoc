@@ -230,7 +230,7 @@ class RDoc::ClassModule < RDoc::Context
       @name,
       full_name,
       @superclass,
-      parse(@comment),
+      parse(@comment_location),
       attrs,
       constants.map do |const|
         [const.name, parse(const.comment)]
@@ -287,14 +287,19 @@ class RDoc::ClassModule < RDoc::Context
   # Merges +class_module+ into this ClassModule
 
   def merge class_module
-    comment = class_module.comment
+    other_document = class_module.comment
 
-    if comment then
-      document = parse @comment
+    # TODO #parse needs to skip when Document is in @comment_location
+    if other_document then
+      # wrap in a Document for backwards compatibility
+      other_document = RDoc::Markup::Document.new other_document unless
+        RDoc::Markup::Document === other_document.parts.first
 
-      comment.parts.concat document.parts
+      document = parse @comment_location
 
-      @comment = comment
+      document = other_document.merge document
+
+      @comment = document
     end
 
     class_module.each_attribute do |attr|
@@ -332,6 +337,29 @@ class RDoc::ClassModule < RDoc::Context
 
   def name= new_name
     @name = new_name
+  end
+
+  ##
+  # Parses +comment_location+ into an RDoc::Markup::Document composed of
+  # multiple RDoc::Markup::Documents with their file set.
+
+  def parse comment_location
+    case comment_location
+    when String then
+      super
+    when Array then
+      docs = comment_location.map do |comment, location|
+        doc = super comment
+        doc.file = location.absolute_name
+        doc
+      end
+
+      RDoc::Markup::Document.new(*docs)
+    when RDoc::Markup::Document then
+      return
+    else
+      raise ArgumentError, "unknown comment class #{comment_location.class}"
+    end
   end
 
   ##

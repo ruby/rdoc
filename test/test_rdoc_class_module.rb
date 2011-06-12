@@ -1,3 +1,4 @@
+require 'pp'
 require File.expand_path '../xref_test_case', __FILE__
 
 class TestRDocClassModule < XrefTestCase
@@ -6,6 +7,13 @@ class TestRDocClassModule < XrefTestCase
     super
 
     @RM = RDoc::Markup
+  end
+
+  def mu_pp obj
+    s = ''
+    s = PP.pp obj, s
+    s.force_encoding Encoding.default_external if defined? Encoding
+    s.chomp
   end
 
   def test_add_comment
@@ -90,8 +98,11 @@ class TestRDocClassModule < XrefTestCase
 
     assert_equal cm, loaded
 
-    comment = RDoc::Markup::Document.new(
-                RDoc::Markup::Paragraph.new('this is a comment'))
+    inner = RDoc::Markup::Document.new(
+      RDoc::Markup::Paragraph.new('this is a comment'))
+    inner.file = tl.absolute_name
+
+    comment = RDoc::Markup::Document.new inner
 
     assert_equal [a],                loaded.attributes
     assert_equal comment,            loaded.comment
@@ -161,6 +172,7 @@ class TestRDocClassModule < XrefTestCase
     cm1.add_method RDoc::AnyMethod.new(nil, 'm1')
 
     cm2 = RDoc::ClassModule.new 'Klass'
+    # this is now wrapped in a Document to test backwards compatibility
     cm2.instance_variable_set(:@comment,
                               @RM::Document.new(
                                 @RM::Paragraph.new('klass 2')))
@@ -173,11 +185,15 @@ class TestRDocClassModule < XrefTestCase
 
     cm1.merge cm2
 
-    document = @RM::Document.new(
-      @RM::Paragraph.new('klass 2'),
+    inner = @RM::Document.new(
       @RM::Paragraph.new('klass 1'))
+    inner.file = 'file.rb'
 
-    assert_equal document, cm1.comment
+    expected = @RM::Document.new \
+      @RM::Document.new(@RM::Paragraph.new('klass 2')),
+      inner
+
+    assert_equal expected, cm1.comment
 
     expected = [
       RDoc::Attr.new(nil, 'a1', 'RW', ''),
@@ -212,6 +228,24 @@ class TestRDocClassModule < XrefTestCase
 
     expected.each do |m| m.parent = cm1 end
     assert_equal expected, cm1.method_list.sort
+  end
+
+  def test_parse
+    tl1 = RDoc::TopLevel.new 'one.rb'
+    tl2 = RDoc::TopLevel.new 'two.rb'
+
+    cm = RDoc::ClassModule.new 'Klass'
+    cm.add_comment 'comment 1', tl1
+    cm.add_comment 'comment 2', tl2
+
+    doc1 = @RM::Document.new @RM::Paragraph.new 'comment 1'
+    doc1.file = tl1.absolute_name
+    doc2 = @RM::Document.new @RM::Paragraph.new 'comment 2'
+    doc2.file = tl2.absolute_name
+
+    expected = @RM::Document.new doc1, doc2
+
+    assert_equal expected, cm.parse(cm.comment_location)
   end
 
   def test_remove_nodoc_children
