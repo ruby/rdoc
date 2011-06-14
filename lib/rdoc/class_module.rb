@@ -243,7 +243,7 @@ class RDoc::ClassModule < RDoc::Context
         [const.name, parse(const.comment), const.file.absolute_name]
       end,
       includes.map do |incl|
-        [incl.name, parse(incl.comment)]
+        [incl.name, parse(incl.comment), incl.file.absolute_name]
       end,
       method_types,
     ]
@@ -280,8 +280,9 @@ class RDoc::ClassModule < RDoc::Context
       const.record_location RDoc::TopLevel.new file
     end
 
-    array[7].each do |name, comment|
-      add_include RDoc::Include.new(name, comment)
+    array[7].each do |name, comment, file|
+      incl = add_include RDoc::Include.new(name, comment)
+      incl.record_location RDoc::TopLevel.new file
     end
 
     array[8].each do |type, visibilities|
@@ -320,34 +321,31 @@ class RDoc::ClassModule < RDoc::Context
       @comment = document
     end
 
-    other_attrs = class_module.attributes.group_by { |attr| attr.file }
-    my_attrs    = attributes.             group_by { |attr| attr.file }
-
-    other_attrs.each do |file, attrs|
-      next if my_attrs.include? file
-
-      attrs.each do |attr|
-        add_attribute attr
-      end
+    merge_collections attributes, class_module.attributes do |const|
+      add_attribute const
     end
 
-    other_consts = class_module.constants.group_by { |const| const.file }
-    my_consts    = constants.             group_by { |const| const.file }
-
-    other_consts.each do |file, consts|
-      next if my_consts.include? file
-
-      consts.each do |const|
-        add_constant const
-      end
+    merge_collections constants, class_module.constants do |const|
+      add_constant const
     end
 
-    class_module.each_include do |incl|
+    merge_collections includes, class_module.includes do |incl|
       add_include incl
     end
 
     class_module.each_method do |meth|
       add_method meth
+    end
+  end
+
+  def merge_collections mine, other, &block # :nodoc:
+    my_things    = mine. group_by { |thing| thing.file }
+    other_things = other.group_by { |thing| thing.file }
+
+    other_things.each do |file, things|
+      next if my_things.include? file
+
+      things.each(&block)
     end
   end
 

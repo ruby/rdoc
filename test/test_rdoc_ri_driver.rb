@@ -912,6 +912,7 @@ Foo::Bar#bother
     doc = @RM::Document.new @RM::Paragraph.new('Include thingy')
 
     @cFooInc = RDoc::Include.new 'Inc', doc
+    @cFooInc.record_location @top_level
     @cFoo.add_include @cFooInc
 
     @cFoo_Bar = RDoc::NormalClass.new 'Bar'

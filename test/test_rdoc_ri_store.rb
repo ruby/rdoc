@@ -40,7 +40,9 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     @nest_klass = @klass.add_class RDoc::NormalClass, 'SubClass'
     @nest_meth = RDoc::AnyMethod.new nil, 'method'
     @nest_meth.record_location @top_level
+
     @nest_incl = RDoc::Include.new 'Incl', ''
+    @nest_incl.record_location @top_level
 
     @nest_klass.add_method @nest_meth
     @nest_klass.add_include @nest_incl

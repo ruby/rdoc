@@ -94,6 +94,7 @@ class TestRDocClassModule < XrefTestCase
     c1.record_location tl
 
     i1 = RDoc::Include.new 'I1', ''
+    i1.record_location tl
 
     cm.add_attribute a1
     cm.add_attribute a2
@@ -124,6 +125,8 @@ class TestRDocClassModule < XrefTestCase
     assert_equal tl, loaded.attributes.first.file
 
     assert_equal tl, loaded.constants.first.file
+
+    assert_equal tl, loaded.includes.first.file
   end
 
   def test_marshal_load_version_0
@@ -177,7 +180,6 @@ class TestRDocClassModule < XrefTestCase
     cm1 = RDoc::ClassModule.new 'Klass'
     cm1.add_comment 'klass 1', tl
 
-    cm1.add_include RDoc::Include.new('I1', '')
     cm1.add_method RDoc::AnyMethod.new(nil, 'm1')
 
     cm2 = RDoc::ClassModule.new 'Klass'
@@ -186,7 +188,6 @@ class TestRDocClassModule < XrefTestCase
                               @RM::Document.new(
                                 @RM::Paragraph.new('klass 2')))
 
-    cm2.add_include RDoc::Include.new('I2', '')
     cm2.add_method RDoc::AnyMethod.new(nil, 'm2')
 
     cm1.merge cm2
@@ -199,14 +200,6 @@ class TestRDocClassModule < XrefTestCase
       inner
 
     assert_equal expected, cm1.comment
-
-    expected = [
-      RDoc::Include.new('I1', ''),
-      RDoc::Include.new('I2', ''),
-    ]
-
-    expected.each do |i| i.parent = cm1 end
-    assert_equal expected, cm1.includes.sort
 
     expected = [
       RDoc::AnyMethod.new(nil, 'm1'),
@@ -286,6 +279,40 @@ class TestRDocClassModule < XrefTestCase
     expected.each do |a| a.parent = cm1 end
 
     assert_equal expected, cm1.constants.sort
+  end
+
+  def test_merge_includes
+    tl1 = RDoc::TopLevel.new 'one.rb'
+    tl2 = RDoc::TopLevel.new 'two.rb'
+
+    cm1 = RDoc::ClassModule.new 'Klass'
+
+    incl = cm1.add_include RDoc::Include.new('I1', 'one')
+    incl.record_location tl1
+    incl = cm1.add_include RDoc::Include.new('I3', 'one')
+    incl.record_location tl1
+
+    cm2 = RDoc::ClassModule.new 'Klass'
+    cm2.instance_variable_set :@comment, @RM::Document.new
+
+    incl = cm2.add_include RDoc::Include.new('I2', 'two')
+    incl.record_location tl2
+    incl = cm2.add_include RDoc::Include.new('I3', 'two')
+    incl.record_location tl1
+    incl = cm2.add_include RDoc::Include.new('I4', 'two')
+    incl.record_location tl1
+
+    cm1.merge cm2
+
+    expected = [
+      RDoc::Include.new('I1', 'one'),
+      RDoc::Include.new('I2', 'two'),
+      RDoc::Include.new('I3', 'one'),
+    ]
+
+    expected.each do |a| a.parent = cm1 end
+
+    assert_equal expected, cm1.includes.sort
   end
 
 #  # TODO use merge with a version 0 ClassModule
