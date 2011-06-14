@@ -467,7 +467,7 @@ class RDoc::Context < RDoc::CodeObject
   # Adds +constant+ if not already there. If it is, updates the comment,
   # value and/or is_alias_for of the known constant if they were empty/nil.
 
-  def add_constant(constant)
+  def add_constant constant
     return constant unless @document_self
 
     # HACK: avoid duplicate 'PI' & 'E' in math.c (1.8.7 source code)
@@ -485,6 +485,8 @@ class RDoc::Context < RDoc::CodeObject
       @constants_hash[constant.name] = constant
       add_to @constants, constant
     end
+
+    constant
   end
 
   ##

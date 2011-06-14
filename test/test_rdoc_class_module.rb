@@ -89,7 +89,10 @@ class TestRDocClassModule < XrefTestCase
     a2.record_location tl
 
     m1 = RDoc::AnyMethod.new nil, 'm1'
+
     c1 = RDoc::Constant.new 'C1', nil, ''
+    c1.record_location tl
+
     i1 = RDoc::Include.new 'I1', ''
 
     cm.add_attribute a1
@@ -119,6 +122,8 @@ class TestRDocClassModule < XrefTestCase
     assert_equal 'Super',            loaded.superclass
 
     assert_equal tl, loaded.attributes.first.file
+
+    assert_equal tl, loaded.constants.first.file
   end
 
   def test_marshal_load_version_0
@@ -172,7 +177,6 @@ class TestRDocClassModule < XrefTestCase
     cm1 = RDoc::ClassModule.new 'Klass'
     cm1.add_comment 'klass 1', tl
 
-    cm1.add_constant RDoc::Constant.new('C1', nil, '')
     cm1.add_include RDoc::Include.new('I1', '')
     cm1.add_method RDoc::AnyMethod.new(nil, 'm1')
 
@@ -182,7 +186,6 @@ class TestRDocClassModule < XrefTestCase
                               @RM::Document.new(
                                 @RM::Paragraph.new('klass 2')))
 
-    cm2.add_constant RDoc::Constant.new('C2', nil, '')
     cm2.add_include RDoc::Include.new('I2', '')
     cm2.add_method RDoc::AnyMethod.new(nil, 'm2')
 
@@ -196,14 +199,6 @@ class TestRDocClassModule < XrefTestCase
       inner
 
     assert_equal expected, cm1.comment
-
-    expected = [
-      RDoc::Constant.new('C1', nil, ''),
-      RDoc::Constant.new('C2', nil, ''),
-    ]
-
-    expected.each do |c| c.parent = cm1 end
-    assert_equal expected, cm1.constants.sort
 
     expected = [
       RDoc::Include.new('I1', ''),
@@ -257,6 +252,40 @@ class TestRDocClassModule < XrefTestCase
 
     expected.each do |a| a.parent = cm1 end
     assert_equal expected, cm1.attributes.sort
+  end
+
+  def test_merge_constants
+    tl1 = RDoc::TopLevel.new 'one.rb'
+    tl2 = RDoc::TopLevel.new 'two.rb'
+
+    cm1 = RDoc::ClassModule.new 'Klass'
+
+    const = cm1.add_constant RDoc::Constant.new('C1', nil, 'one')
+    const.record_location tl1
+    const = cm1.add_constant RDoc::Constant.new('C3', nil, 'one')
+    const.record_location tl1
+
+    cm2 = RDoc::ClassModule.new 'Klass'
+    cm2.instance_variable_set :@comment, @RM::Document.new
+
+    const = cm2.add_constant RDoc::Constant.new('C2', nil, 'two')
+    const.record_location tl2
+    const = cm2.add_constant RDoc::Constant.new('C3', nil, 'two')
+    const.record_location tl1
+    const = cm2.add_constant RDoc::Constant.new('C4', nil, 'two')
+    const.record_location tl1
+
+    cm1.merge cm2
+
+    expected = [
+      RDoc::Constant.new('C1', nil, 'one'),
+      RDoc::Constant.new('C2', nil, 'two'),
+      RDoc::Constant.new('C3', nil, 'one'),
+    ]
+
+    expected.each do |a| a.parent = cm1 end
+
+    assert_equal expected, cm1.constants.sort
   end
 
 #  # TODO use merge with a version 0 ClassModule

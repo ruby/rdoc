@@ -240,7 +240,7 @@ class RDoc::ClassModule < RDoc::Context
       parse(@comment_location),
       attrs,
       constants.map do |const|
-        [const.name, parse(const.comment)]
+        [const.name, parse(const.comment), const.file.absolute_name]
       end,
       includes.map do |incl|
         [incl.name, parse(incl.comment)]
@@ -275,8 +275,9 @@ class RDoc::ClassModule < RDoc::Context
       attr.record_location RDoc::TopLevel.new file
     end
 
-    array[6].each do |name, comment|
-      add_constant RDoc::Constant.new(name, nil, comment)
+    array[6].each do |name, comment, file|
+      const = add_constant RDoc::Constant.new(name, nil, comment)
+      const.record_location RDoc::TopLevel.new file
     end
 
     array[7].each do |name, comment|
@@ -330,16 +331,15 @@ class RDoc::ClassModule < RDoc::Context
       end
     end
 
-    #class_module.each_attribute do |attr|
-    #  if match = attributes.find { |a| a.name == attr.name } then
-    #    match.rw = [match.rw, attr.rw].compact.uniq.join
-    #  else
-    #    add_attribute attr
-    #  end
-    #end
+    other_consts = class_module.constants.group_by { |const| const.file }
+    my_consts    = constants.             group_by { |const| const.file }
 
-    class_module.each_constant do |const|
-      add_constant const
+    other_consts.each do |file, consts|
+      next if my_consts.include? file
+
+      consts.each do |const|
+        add_constant const
+      end
     end
 
     class_module.each_include do |incl|
