@@ -266,6 +266,12 @@ class RDoc::ClassModule < RDoc::Context
     @superclass = array[3]
     @comment    = array[4]
 
+    @comment_location = if RDoc::Markup::Document === @comment.parts.first then
+                          @comment
+                        else
+                          RDoc::Markup::Document.new @comment
+                        end
+
     array[5].each do |name, rw, visibility, singleton, file|
       singleton  ||= false
       visibility ||= :public
@@ -304,51 +310,71 @@ class RDoc::ClassModule < RDoc::Context
   ##
   # Merges +class_module+ into this ClassModule.
   #
-  # The receiver's data is preferred over +class_module+.
-  #--
-  # TODO swap this to work like Hash#merge
+  # The data in +class_module+ is preferred over the receiver.
 
   def merge class_module
-    other_document = class_module.comment
+    other_document = parse class_module.comment_location
 
-    # TODO #parse should skip when Document is in @comment_location
     if other_document then
-      # wrap in a Document for backwards compatibility
-      other_document = RDoc::Markup::Document.new other_document unless
-        RDoc::Markup::Document === other_document.parts.first
-
       document = parse @comment_location
 
-      document = other_document.merge document
+      document = document.merge other_document
 
-      @comment = document
+      @comment = @comment_location = document
     end
 
-    merge_collections attributes, class_module.attributes do |const|
-      add_attribute const
+    merge_collections attributes, class_module.attributes do |add, attr|
+      if add then
+        add_attribute attr
+      else
+        @attributes.delete attr
+        @methods_hash.delete attr.pretty_name
+      end
     end
 
-    merge_collections constants, class_module.constants do |const|
-      add_constant const
+    merge_collections constants, class_module.constants do |add, const|
+      if add then
+        add_constant const
+      else
+        @constants.delete const
+        @constants_hash.delete const.name
+      end
     end
 
-    merge_collections includes, class_module.includes do |incl|
-      add_include incl
+    merge_collections includes, class_module.includes do |add, incl|
+      if add then
+        add_include incl
+      else
+        @includes.delete incl
+      end
     end
 
-    merge_collections method_list, class_module.method_list do |meth|
-      add_method meth
+    merge_collections method_list, class_module.method_list do |add, meth|
+      if add then
+        add_method meth
+      else
+        @method_list.delete meth
+        @methods_hash.delete meth.pretty_name
+      end
     end
+
+    self
   end
+
+  ##
+  # Merges collection +mine+ with +other+ preferring other.
 
   def merge_collections mine, other, &block # :nodoc:
     my_things    = mine. group_by { |thing| thing.file }
     other_things = other.group_by { |thing| thing.file }
 
     other_things.each do |file, things|
-      next if my_things.include? file
+      my_things[file].each { |thing| yield false, thing } if
+        my_things.include? file
 
-      things.each(&block)
+      things.each do |thing|
+        yield true, thing
+      end
     end
   end
 
@@ -385,7 +411,7 @@ class RDoc::ClassModule < RDoc::Context
 
       RDoc::Markup::Document.new(*docs)
     when RDoc::Markup::Document then
-      return
+      return comment_location
     else
       raise ArgumentError, "unknown comment class #{comment_location.class}"
     end

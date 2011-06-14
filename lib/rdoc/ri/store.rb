@@ -251,7 +251,7 @@ class RDoc::RI::Store
         disk_klass = Marshal.load io.read
       end
 
-      klass.merge disk_klass
+      klass = disk_klass.merge klass
     rescue Errno::ENOENT
     end
 

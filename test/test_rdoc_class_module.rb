@@ -206,10 +206,9 @@ class TestRDocClassModule < XrefTestCase
     cm1.merge cm2
 
     expected = [
-      RDoc::Attr.new(nil, 'a1', 'RW', ''),
       RDoc::Attr.new(nil, 'a2', 'RW', ''),
-      RDoc::Attr.new(nil, 'a3', 'R',  ''),
-      RDoc::Attr.new(nil, 'a4', 'R',  ''),
+      RDoc::Attr.new(nil, 'a3', 'W',  ''),
+      RDoc::Attr.new(nil, 'a4', 'W',  ''),
     ]
 
     expected.each do |a| a.parent = cm1 end
@@ -259,12 +258,13 @@ class TestRDocClassModule < XrefTestCase
 
     cm2 = RDoc::ClassModule.new 'Klass'
     cm2.add_comment 'klass 2', tl2
+    cm2.add_comment 'klass 3', tl1
 
     cm2 = Marshal.load Marshal.dump cm2
 
     cm1.merge cm2
 
-    inner1 = @RM::Document.new @RM::Paragraph.new 'klass 1'
+    inner1 = @RM::Document.new @RM::Paragraph.new 'klass 3'
     inner1.file = 'one.rb'
     inner2 = @RM::Document.new @RM::Paragraph.new 'klass 2'
     inner2.file = 'two.rb'
@@ -285,6 +285,7 @@ class TestRDocClassModule < XrefTestCase
     cm2.instance_variable_set(:@comment,
                               @RM::Document.new(
                                 @RM::Paragraph.new('klass 2')))
+    cm2.instance_variable_set :@comment_location, @RM::Document.new(cm2.comment)
 
     cm1.merge cm2
 
@@ -292,8 +293,8 @@ class TestRDocClassModule < XrefTestCase
     inner.file = 'file.rb'
 
     expected = @RM::Document.new \
-      @RM::Document.new(@RM::Paragraph.new('klass 2')),
-      inner
+      inner,
+      @RM::Document.new(@RM::Paragraph.new('klass 2'))
 
     assert_equal expected, cm1.comment
   end
@@ -314,17 +315,17 @@ class TestRDocClassModule < XrefTestCase
 
     const = cm2.add_constant RDoc::Constant.new('C2', nil, 'two')
     const.record_location tl2
-    const = cm2.add_constant RDoc::Constant.new('C3', nil, 'two')
+    const = cm2.add_constant RDoc::Constant.new('C3', nil, 'one')
     const.record_location tl1
-    const = cm2.add_constant RDoc::Constant.new('C4', nil, 'two')
+    const = cm2.add_constant RDoc::Constant.new('C4', nil, 'one')
     const.record_location tl1
 
     cm1.merge cm2
 
     expected = [
-      RDoc::Constant.new('C1', nil, 'one'),
       RDoc::Constant.new('C2', nil, 'two'),
       RDoc::Constant.new('C3', nil, 'one'),
+      RDoc::Constant.new('C4', nil, 'one'),
     ]
 
     expected.each do |a| a.parent = cm1 end
@@ -380,17 +381,17 @@ class TestRDocClassModule < XrefTestCase
 
     incl = cm2.add_include RDoc::Include.new('I2', 'two')
     incl.record_location tl2
-    incl = cm2.add_include RDoc::Include.new('I3', 'two')
+    incl = cm2.add_include RDoc::Include.new('I3', 'one')
     incl.record_location tl1
-    incl = cm2.add_include RDoc::Include.new('I4', 'two')
+    incl = cm2.add_include RDoc::Include.new('I4', 'one')
     incl.record_location tl1
 
     cm1.merge cm2
 
     expected = [
-      RDoc::Include.new('I1', 'one'),
       RDoc::Include.new('I2', 'two'),
       RDoc::Include.new('I3', 'one'),
+      RDoc::Include.new('I4', 'one'),
     ]
 
     expected.each do |a| a.parent = cm1 end
@@ -454,9 +455,9 @@ class TestRDocClassModule < XrefTestCase
     cm1.merge cm2
 
     expected = [
-      RDoc::AnyMethod.new(nil, 'm1'),
       RDoc::AnyMethod.new(nil, 'm2'),
       RDoc::AnyMethod.new(nil, 'm3'),
+      RDoc::AnyMethod.new(nil, 'm4'),
     ]
 
     expected.each do |a| a.parent = cm1 end
@@ -512,6 +513,26 @@ class TestRDocClassModule < XrefTestCase
     expected = @RM::Document.new doc1, doc2
 
     assert_equal expected, cm.parse(cm.comment_location)
+  end
+
+  def test_parse_comment_location
+    tl1 = RDoc::TopLevel.new 'one.rb'
+    tl2 = RDoc::TopLevel.new 'two.rb'
+
+    cm = RDoc::ClassModule.new 'Klass'
+    cm.add_comment 'comment 1', tl1
+    cm.add_comment 'comment 2', tl2
+
+    cm = Marshal.load Marshal.dump cm
+
+    doc1 = @RM::Document.new @RM::Paragraph.new 'comment 1'
+    doc1.file = tl1.absolute_name
+    doc2 = @RM::Document.new @RM::Paragraph.new 'comment 2'
+    doc2.file = tl2.absolute_name
+
+    expected = @RM::Document.new doc1, doc2
+
+    assert_same cm.comment_location, cm.parse(cm.comment_location)
   end
 
   def test_remove_nodoc_children

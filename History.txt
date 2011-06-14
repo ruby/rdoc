@@ -7,6 +7,8 @@
     CONST.
   * ri method output is now a comma-separated list when displayed
     interactively.  Pull Request #39 by Benoit Daloze.
+  * RDoc::ClassModule#merge now prefers the argument's information over the
+    receiver's (like Hash#merge!).
 * Bug fixes
   * RDoc::Parser::C no longer creates classes when processing aliases.
   * ri no longer crashes when attempting to complete a plain [.
