@@ -220,6 +220,20 @@ class RDoc::TopLevel < RDoc::Context
   end
 
   ##
+  # Creates a new RDoc::TopLevel with +file_name+ only if one with the same
+  # name does not exist in all_files.
+
+  def self.new file_name
+    if top_level = @all_files_hash[file_name] then
+      top_level
+    else
+      top_level = super
+      @all_files_hash[file_name] = top_level
+      top_level
+    end
+  end
+
+  ##
   # Removes from +all_hash+ the contexts that are nodoc or have no content.
   #
   # See RDoc::Context#remove_from_documentation?

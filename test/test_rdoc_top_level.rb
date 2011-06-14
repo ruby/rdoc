@@ -81,6 +81,15 @@ class TestRDocTopLevel < XrefTestCase
                  RDoc::TopLevel.modules.map { |m| m.full_name }.sort
   end
 
+  def test_class_new
+    tl1 = RDoc::TopLevel.new 'file.rb'
+    tl2 = RDoc::TopLevel.new 'file.rb'
+    tl3 = RDoc::TopLevel.new 'other.rb'
+
+    assert_same tl1, tl2
+    refute_same tl1, tl3
+  end
+
   def test_class_reset
     RDoc::TopLevel.reset
 
