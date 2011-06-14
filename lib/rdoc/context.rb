@@ -503,15 +503,14 @@ class RDoc::Context < RDoc::CodeObject
   # Adds +method+ if not already there. If it is (as method or attribute),
   # updates the comment if it was empty.
 
-  def add_method(method)
+  def add_method method
     return method unless @document_self
 
     # HACK: avoid duplicate 'new' in io.c & struct.c (1.8.7 source code)
     key = method.pretty_name
     known = @methods_hash[key]
-    if known
-      # TODO issue stderr messages if --verbose
-      #$stderr.puts "\n#{display(method)} already registered as #{display(known)}"
+
+    if known then
       known.comment = method.comment if known.comment.empty?
     else
       @methods_hash[key] = method
@@ -519,6 +518,8 @@ class RDoc::Context < RDoc::CodeObject
       add_to @method_list, method
       resolve_aliases method
     end
+
+    method
   end
 
   ##

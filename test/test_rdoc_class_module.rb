@@ -79,7 +79,9 @@ class TestRDocClassModule < XrefTestCase
 
   def test_marshal_dump
     tl = RDoc::TopLevel.new 'file.rb'
+
     ns = tl.add_module RDoc::NormalModule, 'Namespace'
+
     cm = ns.add_class RDoc::NormalClass, 'Klass', 'Super'
     cm.record_location tl
 
@@ -89,6 +91,7 @@ class TestRDocClassModule < XrefTestCase
     a2.record_location tl
 
     m1 = RDoc::AnyMethod.new nil, 'm1'
+    m1.record_location tl
 
     c1 = RDoc::Constant.new 'C1', nil, ''
     c1.record_location tl
@@ -127,6 +130,8 @@ class TestRDocClassModule < XrefTestCase
     assert_equal tl, loaded.constants.first.file
 
     assert_equal tl, loaded.includes.first.file
+
+    assert_equal tl, loaded.method_list.first.file
   end
 
   def test_marshal_load_version_0
@@ -174,42 +179,6 @@ class TestRDocClassModule < XrefTestCase
     assert_equal nil,                loaded.file
   end
 
-  def test_merge
-    tl = RDoc::TopLevel.new 'file.rb'
-
-    cm1 = RDoc::ClassModule.new 'Klass'
-    cm1.add_comment 'klass 1', tl
-
-    cm1.add_method RDoc::AnyMethod.new(nil, 'm1')
-
-    cm2 = RDoc::ClassModule.new 'Klass'
-    # this is not wrapped in a Document to test backwards compatibility
-    cm2.instance_variable_set(:@comment,
-                              @RM::Document.new(
-                                @RM::Paragraph.new('klass 2')))
-
-    cm2.add_method RDoc::AnyMethod.new(nil, 'm2')
-
-    cm1.merge cm2
-
-    inner = @RM::Document.new @RM::Paragraph.new 'klass 1'
-    inner.file = 'file.rb'
-
-    expected = @RM::Document.new \
-      @RM::Document.new(@RM::Paragraph.new('klass 2')),
-      inner
-
-    assert_equal expected, cm1.comment
-
-    expected = [
-      RDoc::AnyMethod.new(nil, 'm1'),
-      RDoc::AnyMethod.new(nil, 'm2'),
-    ]
-
-    expected.each do |m| m.parent = cm1 end
-    assert_equal expected, cm1.method_list.sort
-  end
-
   def test_merge_attributes
     tl1 = RDoc::TopLevel.new 'one.rb'
     tl2 = RDoc::TopLevel.new 'two.rb'
@@ -245,6 +214,54 @@ class TestRDocClassModule < XrefTestCase
 
     expected.each do |a| a.parent = cm1 end
     assert_equal expected, cm1.attributes.sort
+  end
+
+  def test_merge_comment
+    tl1 = RDoc::TopLevel.new 'one.rb'
+    tl2 = RDoc::TopLevel.new 'two.rb'
+
+    cm1 = RDoc::ClassModule.new 'Klass'
+    cm1.add_comment 'klass 1', tl1
+
+    cm2 = RDoc::ClassModule.new 'Klass'
+    cm2.add_comment 'klass 2', tl2
+
+    cm2 = Marshal.load Marshal.dump cm2
+
+    cm1.merge cm2
+
+    inner1 = @RM::Document.new @RM::Paragraph.new 'klass 1'
+    inner1.file = 'one.rb'
+    inner2 = @RM::Document.new @RM::Paragraph.new 'klass 2'
+    inner2.file = 'two.rb'
+
+    expected = @RM::Document.new inner2, inner1
+
+    assert_equal expected, cm1.comment
+  end
+
+  def test_merge_comment_version_0
+    tl = RDoc::TopLevel.new 'file.rb'
+
+    cm1 = RDoc::ClassModule.new 'Klass'
+    cm1.add_comment 'klass 1', tl
+
+    cm2 = RDoc::ClassModule.new 'Klass'
+
+    cm2.instance_variable_set(:@comment,
+                              @RM::Document.new(
+                                @RM::Paragraph.new('klass 2')))
+
+    cm1.merge cm2
+
+    inner = @RM::Document.new @RM::Paragraph.new 'klass 1'
+    inner.file = 'file.rb'
+
+    expected = @RM::Document.new \
+      @RM::Document.new(@RM::Paragraph.new('klass 2')),
+      inner
+
+    assert_equal expected, cm1.comment
   end
 
   def test_merge_constants
@@ -313,6 +330,40 @@ class TestRDocClassModule < XrefTestCase
     expected.each do |a| a.parent = cm1 end
 
     assert_equal expected, cm1.includes.sort
+  end
+
+  def test_merge_methods
+    tl1 = RDoc::TopLevel.new 'one.rb'
+    tl2 = RDoc::TopLevel.new 'two.rb'
+
+    cm1 = RDoc::ClassModule.new 'Klass'
+
+    meth = cm1.add_method RDoc::AnyMethod.new(nil, 'm1')
+    meth.record_location tl1
+    meth = cm1.add_method RDoc::AnyMethod.new(nil, 'm3')
+    meth.record_location tl1
+
+    cm2 = RDoc::ClassModule.new 'Klass'
+    cm2.instance_variable_set :@comment, @RM::Document.new
+
+    meth = cm2.add_method RDoc::AnyMethod.new(nil, 'm2')
+    meth.record_location tl2
+    meth = cm2.add_method RDoc::AnyMethod.new(nil, 'm3')
+    meth.record_location tl1
+    meth = cm2.add_method RDoc::AnyMethod.new(nil, 'm4')
+    meth.record_location tl1
+
+    cm1.merge cm2
+
+    expected = [
+      RDoc::AnyMethod.new(nil, 'm1'),
+      RDoc::AnyMethod.new(nil, 'm2'),
+      RDoc::AnyMethod.new(nil, 'm3'),
+    ]
+
+    expected.each do |a| a.parent = cm1 end
+
+    assert_equal expected, cm1.method_list.sort
   end
 
 #  # TODO use merge with a version 0 ClassModule

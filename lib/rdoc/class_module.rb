@@ -10,6 +10,9 @@ class RDoc::ClassModule < RDoc::Context
   # 1::
   #   RDoc 3.7
   #   * Added visibility, singleton and file to attributes
+  #   * Added file to constants
+  #   * Added file to includes
+  #   * Added file to methods
 
   MARSHAL_VERSION = 1 # :nodoc:
 
@@ -216,7 +219,6 @@ class RDoc::ClassModule < RDoc::Context
   def marshal_dump # :nodoc:
     attrs = attributes.sort.map do |attr|
       [ attr.name, attr.rw,
-        # new in version 1
         attr.visibility, attr.singleton, attr.file.absolute_name,
       ]
     end
@@ -224,7 +226,7 @@ class RDoc::ClassModule < RDoc::Context
     method_types = methods_by_type.map do |type, visibilities|
       visibilities = visibilities.map do |visibility, methods|
         method_names = methods.map do |method|
-          method.name
+          [method.name, method.file.absolute_name]
         end
 
         [visibility, method_names.uniq]
@@ -289,9 +291,10 @@ class RDoc::ClassModule < RDoc::Context
       visibilities.each do |visibility, methods|
         @visibility = visibility
 
-        methods.each do |name|
+        methods.each do |name, file|
           method = RDoc::AnyMethod.new nil, name
           method.singleton = true if type == 'class'
+          method.record_location RDoc::TopLevel.new file
           add_method method
         end
       end
@@ -333,7 +336,7 @@ class RDoc::ClassModule < RDoc::Context
       add_include incl
     end
 
-    class_module.each_method do |meth|
+    merge_collections method_list, class_module.method_list do |meth|
       add_method meth
     end
   end
