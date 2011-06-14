@@ -117,6 +117,17 @@ class RDoc::Attr < RDoc::MethodAttr
     @parent_name = @full_name
   end
 
+  def pretty_print q # :nodoc:
+    q.group 2, "[#{self.class.name} #{full_name} #{rw} #{visibility}", "]" do
+      unless comment.empty? then
+        q.breakable
+        q.text "comment:"
+        q.breakable
+        q.pp @comment
+      end
+    end
+  end
+
   def to_s # :nodoc:
     "#{definition} #{name} in: #{parent}"
   end

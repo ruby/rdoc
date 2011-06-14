@@ -290,22 +290,32 @@ class RDoc::Context < RDoc::CodeObject
     # TODO find a policy for 'attr_reader :foo' + 'def foo=()'
     register = false
 
-    if attribute.rw.index('R') then
+    key = nil
+
+    if attribute.rw.index 'R' then
       key = attribute.pretty_name
       known = @methods_hash[key]
+
       if known then
         known.comment = attribute.comment if known.comment.empty?
+      elsif registered = @methods_hash[attribute.pretty_name << '='] and
+            RDoc::Attr === registered then
+        registered.rw = 'RW'
       else
         @methods_hash[key] = attribute
         register = true
       end
     end
 
-    if attribute.rw.index('W')
+    if attribute.rw.index 'W' then
       key = attribute.pretty_name << '='
       known = @methods_hash[key]
+
       if known then
         known.comment = attribute.comment if known.comment.empty?
+      elsif registered = @methods_hash[attribute.pretty_name] and
+            RDoc::Attr === registered then
+        registered.rw = 'RW'
       else
         @methods_hash[key] = attribute
         register = true

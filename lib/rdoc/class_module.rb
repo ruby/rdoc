@@ -311,7 +311,7 @@ class RDoc::ClassModule < RDoc::Context
   def merge class_module
     other_document = class_module.comment
 
-    # TODO #parse needs to skip when Document is in @comment_location
+    # TODO #parse should skip when Document is in @comment_location
     if other_document then
       # wrap in a Document for backwards compatibility
       other_document = RDoc::Markup::Document.new other_document unless
