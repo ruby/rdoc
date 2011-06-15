@@ -217,7 +217,6 @@ class TestRDocClassModule < XrefTestCase
 
   def test_merge_attributes_version_0
     tl1 = RDoc::TopLevel.new 'one.rb'
-    tl2 = RDoc::TopLevel.new 'two.rb'
 
     cm1 = RDoc::ClassModule.new 'Klass'
 
@@ -335,7 +334,6 @@ class TestRDocClassModule < XrefTestCase
 
   def test_merge_constants_version_0
     tl1 = RDoc::TopLevel.new 'one.rb'
-    tl2 = RDoc::TopLevel.new 'two.rb'
 
     cm1 = RDoc::ClassModule.new 'Klass'
 
@@ -401,7 +399,6 @@ class TestRDocClassModule < XrefTestCase
 
   def test_merge_includes_version_0
     tl1 = RDoc::TopLevel.new 'one.rb'
-    tl2 = RDoc::TopLevel.new 'two.rb'
 
     cm1 = RDoc::ClassModule.new 'Klass'
 
@@ -467,7 +464,6 @@ class TestRDocClassModule < XrefTestCase
 
   def test_merge_methods_version_0
     tl1 = RDoc::TopLevel.new 'one.rb'
-    tl2 = RDoc::TopLevel.new 'two.rb'
 
     cm1 = RDoc::ClassModule.new 'Klass'
 
@@ -529,8 +525,6 @@ class TestRDocClassModule < XrefTestCase
     doc1.file = tl1.absolute_name
     doc2 = @RM::Document.new @RM::Paragraph.new 'comment 2'
     doc2.file = tl2.absolute_name
-
-    expected = @RM::Document.new doc1, doc2
 
     assert_same cm.comment_location, cm.parse(cm.comment_location)
   end

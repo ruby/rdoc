@@ -260,7 +260,6 @@ class RDoc::ClassModule < RDoc::Context
     @temporary_section = nil
     @visibility        = nil
 
-    version     = array[0]
     @name       = array[1]
     @full_name  = array[2]
     @superclass = array[3]

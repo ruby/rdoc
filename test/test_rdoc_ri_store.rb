@@ -353,7 +353,7 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     @s = RDoc::RI::Store.new @tmpdir
     @s.load_cache
 
-    loaded = @s.load_class 'Object'
+    @s.load_class 'Object'
 
     assert_cache({ 'Object' => %w[replace] }, {},
                  { 'Object' => %w[attr_accessor\ attr] }, %w[Object],

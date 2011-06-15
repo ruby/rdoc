@@ -1092,7 +1092,7 @@ EOF
 
     util_parser "include I"
 
-    tk = @parser.get_tk # include
+    @parser.get_tk # include
 
     @parser.parse_include klass, comment
 
