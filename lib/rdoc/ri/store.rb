@@ -19,6 +19,8 @@ require 'fileutils'
 #      :modules          => [], # classes and modules in this store
 #      :ancestors        => {}, # class name => ancestor names
 #    }
+#--
+# TODO need to store the list of files and prune classes
 
 class RDoc::RI::Store
 
