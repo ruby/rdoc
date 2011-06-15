@@ -350,7 +350,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def get_constant_with_optional_parens
     skip_tkspace false
+
     nest = 0
+
     while TkLPAREN === (tk = peek_tk) or TkfLPAREN === tk do
       get_tk
       skip_tkspace
@@ -826,14 +828,19 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Parses an +include+ in +context+ with +comment+
 
-  def parse_include(context, comment)
+  def parse_include context, comment
     loop do
       skip_tkspace_comment
 
       name = get_constant_with_optional_parens
-      context.add_include RDoc::Include.new(name, comment) unless name.empty?
+
+      unless name.empty? then
+        incl = context.add_include RDoc::Include.new(name, comment)
+        incl.record_location @top_level
+      end
 
       return unless TkCOMMA === peek_tk
+
       get_tk
     end
   end

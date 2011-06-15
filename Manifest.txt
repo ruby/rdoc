@@ -101,6 +101,7 @@ lib/rdoc/ri/paths.rb
 lib/rdoc/ri/store.rb
 lib/rdoc/ruby_lex.rb
 lib/rdoc/ruby_token.rb
+lib/rdoc/rubygems_hook.rb
 lib/rdoc/single_class.rb
 lib/rdoc/stats.rb
 lib/rdoc/stats/normal.rb
@@ -158,6 +159,7 @@ test/test_rdoc_ri_driver.rb
 test/test_rdoc_ri_paths.rb
 test/test_rdoc_ri_store.rb
 test/test_rdoc_ruby_lex.rb
+test/test_rdoc_rubygems_hook.rb
 test/test_rdoc_single_class.rb
 test/test_rdoc_stats.rb
 test/test_rdoc_task.rb

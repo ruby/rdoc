@@ -1084,6 +1084,26 @@ EOF
     assert_equal top_bar, bar.find_module_named('A')
   end
 
+  def test_parse_include
+    klass = RDoc::NormalClass.new 'C'
+    klass.parent = @top_level
+
+    comment = "# my include\n"
+
+    util_parser "include I"
+
+    tk = @parser.get_tk # include
+
+    @parser.parse_include klass, comment
+
+    assert_equal 1, klass.includes.length
+
+    incl = klass.includes.first
+    assert_equal 'I', incl.name
+    assert_equal 'my include', incl.comment
+    assert_equal @top_level, incl.file
+  end
+
   def test_parse_meta_method
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level

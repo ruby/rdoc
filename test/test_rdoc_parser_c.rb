@@ -458,6 +458,24 @@ void Init_curses(){
     assert_equal 'Value of the color black', constants.first.comment
   end
 
+  def test_do_includes
+    content = <<-EOF
+Init_foo() {
+   VALUE cFoo = rb_define_class("Foo", rb_cObject);
+   VALUE mInc = rb_define_module("Inc");
+
+   rb_include_module(cFoo, mInc);
+}
+    EOF
+
+    klass = util_get_class content, 'cFoo'
+
+    incl = klass.includes.first
+    assert_equal 'Inc',      incl.name
+    assert_equal '',         incl.comment
+    assert_equal @top_level, incl.file
+  end
+
   # HACK parsing warning instead of setting up in file
   def test_do_methods_in_c
     content = <<-EOF
