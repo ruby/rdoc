@@ -18,6 +18,27 @@ class TestRDocRDoc < MiniTest::Unit::TestCase
     @rdoc.instance_variable_set :@stats, @stats
   end
 
+  def test_class_reset
+    tl = RDoc::TopLevel.new 'file.rb'
+    tl.add_class RDoc::NormalClass, 'C'
+    tl.add_class RDoc::NormalModule, 'M'
+
+    c = RDoc::Parser::C
+    enclosure_classes = c.class_variable_get :@@enclosure_classes
+    enclosure_classes['A'] = 'B'
+    known_bodies = c.class_variable_get :@@known_bodies
+    known_bodies['A'] = 'B'
+
+    RDoc::RDoc.reset
+
+    assert_empty RDoc::TopLevel.all_classes_hash
+    assert_empty RDoc::TopLevel.all_files_hash
+    assert_empty RDoc::TopLevel.all_modules_hash
+
+    assert_empty c.class_variable_get :@@enclosure_classes
+    assert_empty c.class_variable_get :@@known_bodies
+  end
+
   def test_gather_files
     file = File.expand_path __FILE__
     assert_equal [file], @rdoc.gather_files([file, file])

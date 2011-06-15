@@ -10,6 +10,7 @@
   * RDoc::ClassModule#merge now prefers the argument's information over the
     receiver's (it now behaves like Hash#merge! instead of a backwards
     Hash#merge!).
+  * Added RDoc::RDoc::reset
 * Bug fixes
   * RDoc::Parser::C no longer creates classes when processing aliases.
   * ri no longer crashes when attempting to complete a plain [.
