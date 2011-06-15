@@ -8,6 +8,8 @@ require 'pp'
 
 class TestRDocRIStore < MiniTest::Unit::TestCase
 
+  OBJECT_ANCESTORS = defined?(::BasicObject) ? %w[BasicObject] : []
+
   def setup
     RDoc::TopLevel.reset
 
@@ -62,6 +64,10 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
   end
 
   def assert_cache imethods, cmethods, attrs, modules, ancestors = {}
+    imethods ||= { 'Object' => %w[method method!] }
+    cmethods ||= { 'Object' => %w[cmethod] }
+    attrs    ||= { 'Object' => ['attr_accessor attr'] }
+
     expected = {
       :ancestors        => ancestors,
       :attributes       => attrs,
@@ -70,6 +76,8 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
       :instance_methods => imethods,
       :modules          => modules,
     }
+
+    @s.save_cache
 
     assert_equal expected, @s.cache
   end
@@ -253,7 +261,10 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     expected = {
       :attributes => { 'Object' => ['attr_accessor attr'] },
       :class_methods => { 'Object' => %w[cmethod] },
-      :instance_methods => { 'Object' => %w[method] },
+      :instance_methods => {
+        'Object' => %w[method method!],
+        'Object::SubClass' => %w[method],
+      },
       :modules => %w[Object Object::SubClass],
       :ancestors => {
         'Object'           => %w[],
@@ -299,10 +310,7 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     assert_directory File.join(@tmpdir, 'Object')
     assert_file File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
 
-    object_ancestors = defined?(::BasicObject) ? %w[BasicObject] : []
-
-    assert_cache({}, {}, { 'Object' => ['attr_accessor attr'] }, %w[Object],
-                 'Object' => object_ancestors)
+    assert_cache nil, nil, nil, %w[Object], 'Object' => OBJECT_ANCESTORS
 
     assert_equal @klass, @s.load_class('Object')
   end
@@ -315,10 +323,43 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     assert_directory File.join(@tmpdir, 'Object')
     assert_file File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
 
-    assert_cache({}, {}, { 'Object' => ['attr_accessor attr'] }, %w[Object],
-                 'Object' => %w[])
+    assert_cache(nil, nil, nil, %w[Object])
 
     assert_equal @klass, @s.load_class('Object')
+  end
+
+  def test_save_class_delete
+    # save original
+    @s.save_class @klass
+    @s.save_method @klass, @meth
+    @s.save_method @klass, @meth_bang
+    @s.save_method @klass, @cmeth
+    @s.save_cache
+
+    klass = RDoc::NormalClass.new 'Object'
+
+    meth = klass.add_method RDoc::AnyMethod.new(nil, 'replace')
+    meth.record_location @top_level
+
+    # load original, save newly updated class
+    @s = RDoc::RI::Store.new @tmpdir
+    @s.load_cache
+    @s.save_class klass
+    @s.save_cache
+
+    # load from disk again
+    @s = RDoc::RI::Store.new @tmpdir
+    @s.load_cache
+
+    loaded = @s.load_class 'Object'
+
+    assert_cache({ 'Object' => %w[replace] }, {},
+                 { 'Object' => %w[attr_accessor\ attr] }, %w[Object],
+                 'Object' => OBJECT_ANCESTORS)
+
+    refute File.exist? @s.method_file(@klass.full_name, @meth.full_name)
+    refute File.exist? @s.method_file(@klass.full_name, @meth_bang.full_name)
+    refute File.exist? @s.method_file(@klass.full_name, @cmeth.full_name)
   end
 
   def test_save_class_dry_run
@@ -355,10 +396,7 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     assert_directory File.join(@tmpdir, 'Object')
     assert_file File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
 
-    object_ancestors = defined?(::BasicObject) ? %w[BasicObject] : []
-
-    assert_cache({}, {}, { 'Object' => ['attr_accessor attr'] }, %w[Object],
-                 'Object' => object_ancestors)
+    assert_cache nil, nil, nil, %w[Object], 'Object' => OBJECT_ANCESTORS
 
     assert_equal @klass, @s.load_class('Object')
   end
@@ -369,8 +407,8 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     assert_directory File.join(@tmpdir, 'Object', 'SubClass')
     assert_file File.join(@tmpdir, 'Object', 'SubClass', 'cdesc-SubClass.ri')
 
-    assert_cache({}, {}, {}, %w[Object::SubClass],
-                 'Object::SubClass' => %w[Incl Object])
+    assert_cache({ 'Object::SubClass' => %w[method] }, {}, {},
+                 %w[Object::SubClass], 'Object::SubClass' => %w[Incl Object])
   end
 
   def test_save_method

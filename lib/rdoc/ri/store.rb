@@ -114,6 +114,22 @@ class RDoc::RI::Store
   end
 
   ##
+  # Removes empty items and ensures item in each collection are unique and
+  # sorted
+
+  def clean_cache_collection collection # :nodoc:
+    collection.each do |name, item|
+      if item.empty? then
+        collection.delete name
+      else
+        # HACK mongrel-1.1.5 documents its files twice
+        item.uniq!
+        item.sort!
+      end
+    end
+  end
+
+  ##
   # Friendly rendition of #path
 
   def friendly_path
@@ -219,12 +235,13 @@ class RDoc::RI::Store
   # Writes the cache file for this store
 
   def save_cache
-    # HACK mongrel-1.1.5 documents its files twice
-    @cache[:ancestors].       each do |_, m| m.uniq!; m.sort! end
-    @cache[:attributes].      each do |_, m| m.uniq!; m.sort! end
-    @cache[:class_methods].   each do |_, m| m.uniq!; m.sort! end
-    @cache[:instance_methods].each do |_, m| m.uniq!; m.sort! end
-    @cache[:modules].uniq!; @cache[:modules].sort!
+    clean_cache_collection @cache[:ancestors]
+    clean_cache_collection @cache[:attributes]
+    clean_cache_collection @cache[:class_methods]
+    clean_cache_collection @cache[:instance_methods]
+
+    @cache[:modules].uniq!
+    @cache[:modules].sort!
     @cache[:encoding] = @encoding # this gets set twice due to assert_cache
 
     return if @dry_run
@@ -238,11 +255,13 @@ class RDoc::RI::Store
   # Writes the ri data for +klass+
 
   def save_class klass
-    FileUtils.mkdir_p class_path(klass.full_name) unless @dry_run
+    full_name = klass.full_name
 
-    @cache[:modules] << klass.full_name
+    FileUtils.mkdir_p class_path(full_name) unless @dry_run
 
-    path = class_file klass.full_name
+    @cache[:modules] << full_name
+
+    path = class_file full_name
 
     begin
       disk_klass = nil
@@ -261,19 +280,47 @@ class RDoc::RI::Store
       String === ancestor ? ancestor : ancestor.full_name
     end
 
-    @cache[:ancestors][klass.full_name] ||= []
-    @cache[:ancestors][klass.full_name].push(*ancestors)
+    @cache[:ancestors][full_name] ||= []
+    @cache[:ancestors][full_name].push(*ancestors)
 
     attributes = klass.attributes.map do |attribute|
       "#{attribute.definition} #{attribute.name}"
     end
 
     unless attributes.empty? then
-      @cache[:attributes][klass.full_name] ||= []
-      @cache[:attributes][klass.full_name].push(*attributes)
+      @cache[:attributes][full_name] ||= []
+      @cache[:attributes][full_name].push(*attributes)
+    end
+
+    to_delete = []
+
+    unless klass.method_list.empty? then
+      @cache[:class_methods][full_name]    ||= []
+      @cache[:instance_methods][full_name] ||= []
+
+      class_methods, instance_methods =
+        klass.method_list.partition { |meth| meth.singleton }
+
+      class_methods    = class_methods.   map { |method| method.name }
+      instance_methods = instance_methods.map { |method| method.name }
+
+      old = @cache[:class_methods][full_name] - class_methods
+      to_delete.concat old.map { |method|
+        method_file full_name, "#{full_name}::#{method}"
+      }
+
+      old = @cache[:instance_methods][full_name] - instance_methods
+      to_delete.concat old.map { |method|
+        method_file full_name, "#{full_name}##{method}"
+      }
+
+      @cache[:class_methods][full_name]    = class_methods
+      @cache[:instance_methods][full_name] = instance_methods
     end
 
     return if @dry_run
+
+    FileUtils.rm_f to_delete
 
     open path, 'wb' do |io|
       Marshal.dump klass, io
@@ -284,19 +331,21 @@ class RDoc::RI::Store
   # Writes the ri data for +method+ on +klass+
 
   def save_method klass, method
-    FileUtils.mkdir_p class_path(klass.full_name) unless @dry_run
+    full_name = klass.full_name
+
+    FileUtils.mkdir_p class_path(full_name) unless @dry_run
 
     cache = if method.singleton then
               @cache[:class_methods]
             else
               @cache[:instance_methods]
             end
-    cache[klass.full_name] ||= []
-    cache[klass.full_name] << method.name
+    cache[full_name] ||= []
+    cache[full_name] << method.name
 
     return if @dry_run
 
-    open method_file(klass.full_name, method.full_name), 'wb' do |io|
+    open method_file(full_name, method.full_name), 'wb' do |io|
       Marshal.dump method, io
     end
   end

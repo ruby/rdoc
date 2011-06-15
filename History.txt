@@ -28,6 +28,15 @@
     Smith.
   * ri data generation for method aliases no longer duplicates the class in
     #full_name
+  * ri data now tracks which file information came from so it can process
+    removals and changes to:
+    * Classes and Modules
+    * Methods
+    * Attributes
+    * Includes
+    * Constants
+    You will need to rebuild your ri data for it to update properly.  Issue
+    #21 by Sven Riedel
 
 === 3.6.1 / 2011-05-15
 
