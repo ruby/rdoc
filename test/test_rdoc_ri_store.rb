@@ -68,6 +68,9 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
     cmethods ||= { 'Object' => %w[cmethod] }
     attrs    ||= { 'Object' => ['attr_accessor attr'] }
 
+    # this is sort-of a hack
+    @s.clean_cache_collection ancestors
+
     expected = {
       :ancestors        => ancestors,
       :attributes       => attrs,
@@ -267,7 +270,6 @@ class TestRDocRIStore < MiniTest::Unit::TestCase
       },
       :modules => %w[Object Object::SubClass],
       :ancestors => {
-        'Object'           => %w[],
         'Object::SubClass' => %w[Incl Object],
       },
       :encoding => :encoding_value,
