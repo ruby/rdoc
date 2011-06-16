@@ -36,10 +36,16 @@ class RDoc::ClassModule < RDoc::Context
   ##
   # Return a RDoc::ClassModule of class +class_type+ that is a copy
   # of module +module+. Used to promote modules to classes.
+  #--
+  # TODO move to RDoc::NormalClass (I think)
 
-  def self.from_module(class_type, mod)
-    klass = class_type.new(mod.name)
-    klass.add_comment mod.comment, nil
+  def self.from_module class_type, mod
+    klass = class_type.new mod.name
+
+    mod.comment_location.each do |comment, location|
+      klass.add_comment comment, location
+    end
+
     klass.parent = mod.parent
     klass.section = mod.section
     klass.viewer = mod.viewer
@@ -404,7 +410,7 @@ class RDoc::ClassModule < RDoc::Context
     when Array then
       docs = comment_location.map do |comment, location|
         doc = super comment
-        doc.file = location.absolute_name if location
+        doc.file = location.absolute_name
         doc
       end
 

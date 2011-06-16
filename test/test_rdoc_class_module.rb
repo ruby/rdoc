@@ -77,6 +77,16 @@ class TestRDocClassModule < XrefTestCase
     assert_nil @c2.find_class_named('C1')
   end
 
+  def test_from_module_comment
+    tl = RDoc::TopLevel.new 'file.rb'
+    klass = tl.add_class RDoc::NormalModule, 'Klass'
+    klass.add_comment 'really a class', tl
+
+    klass = RDoc::ClassModule.from_module RDoc::NormalClass, klass
+
+    assert_equal [['really a class', tl]], klass.comment_location
+  end
+
   def test_marshal_dump
     tl = RDoc::TopLevel.new 'file.rb'
 
@@ -527,17 +537,6 @@ class TestRDocClassModule < XrefTestCase
     doc2.file = tl2.absolute_name
 
     assert_same cm.comment_location, cm.parse(cm.comment_location)
-  end
-
-  def test_parse_no_file
-    cm = RDoc::ClassModule.new 'Klass'
-    cm.add_comment 'comment', nil
-
-    cm = Marshal.load Marshal.dump cm
-
-    doc1 = @RM::Document.new @RM::Document.new @RM::Paragraph.new 'comment'
-
-    assert_equal doc1, cm.parse(cm.comment_location)
   end
 
   def test_remove_nodoc_children

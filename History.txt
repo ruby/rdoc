@@ -14,8 +14,18 @@
   * Added RDoc::RDoc::reset
   * Added RDoc::CodeObject#file_name
 * Bug fixes
-  * RDoc::Parser::C no longer creates classes when processing aliases.
   * ri no longer crashes when attempting to complete a plain [.
+  * ri data now tracks which file information came from so it can process
+    removals and changes to:
+    * Classes and Modules
+    * Methods
+    * Attributes
+    * Includes
+    * Constants
+    You will need to rebuild your ri data for it to update properly.  Issue
+    #21 by Sven Riedel
+  * Signal and SignalException no longer clobber each other
+  * RDoc::Parser::C no longer creates classes when processing aliases.
   * RDoc::Text#strip_stars handles Document-method for methods with =, ! and ?
     now.
   * RDoc::Parser::C now allows .cpp files to be used with the "in" comment on
@@ -31,15 +41,6 @@
     Smith.
   * ri data generation for method aliases no longer duplicates the class in
     #full_name
-  * ri data now tracks which file information came from so it can process
-    removals and changes to:
-    * Classes and Modules
-    * Methods
-    * Attributes
-    * Includes
-    * Constants
-    You will need to rebuild your ri data for it to update properly.  Issue
-    #21 by Sven Riedel
 
 === 3.6.1 / 2011-05-15
 
