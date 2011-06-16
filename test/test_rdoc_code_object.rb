@@ -129,6 +129,14 @@ class TestRDocCodeObject < XrefTestCase
     assert_equal [@parent, @xref_data], parents
   end
 
+  def test_file_name
+    assert_equal nil, @co.file_name
+
+    @co.record_location RDoc::TopLevel.new 'lib/file.rb'
+
+    assert_equal 'lib/file.rb', @co.file_name
+  end
+
   def test_full_name_equals
     @co.full_name = 'hi'
 

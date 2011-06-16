@@ -219,14 +219,14 @@ class RDoc::ClassModule < RDoc::Context
   def marshal_dump # :nodoc:
     attrs = attributes.sort.map do |attr|
       [ attr.name, attr.rw,
-        attr.visibility, attr.singleton, attr.file.absolute_name,
+        attr.visibility, attr.singleton, attr.file_name,
       ]
     end
 
     method_types = methods_by_type.map do |type, visibilities|
       visibilities = visibilities.map do |visibility, methods|
         method_names = methods.map do |method|
-          [method.name, method.file.absolute_name]
+          [method.name, method.file_name]
         end
 
         [visibility, method_names.uniq]
@@ -242,10 +242,10 @@ class RDoc::ClassModule < RDoc::Context
       parse(@comment_location),
       attrs,
       constants.map do |const|
-        [const.name, parse(const.comment), const.file.absolute_name]
+        [const.name, parse(const.comment), const.file_name]
       end,
       includes.map do |incl|
-        [incl.name, parse(incl.comment), incl.file.absolute_name]
+        [incl.name, parse(incl.comment), incl.file_name]
       end,
       method_types,
     ]
@@ -404,7 +404,7 @@ class RDoc::ClassModule < RDoc::Context
     when Array then
       docs = comment_location.map do |comment, location|
         doc = super comment
-        doc.file = location.absolute_name
+        doc.file = location.absolute_name if location
         doc
       end
 

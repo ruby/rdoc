@@ -529,6 +529,17 @@ class TestRDocClassModule < XrefTestCase
     assert_same cm.comment_location, cm.parse(cm.comment_location)
   end
 
+  def test_parse_no_file
+    cm = RDoc::ClassModule.new 'Klass'
+    cm.add_comment 'comment', nil
+
+    cm = Marshal.load Marshal.dump cm
+
+    doc1 = @RM::Document.new @RM::Document.new @RM::Paragraph.new 'comment'
+
+    assert_equal doc1, cm.parse(cm.comment_location)
+  end
+
   def test_remove_nodoc_children
     parent = RDoc::ClassModule.new 'A'
     parent.modules_hash.replace 'B' => true, 'C' => true

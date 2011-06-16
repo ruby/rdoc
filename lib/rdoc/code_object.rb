@@ -194,6 +194,12 @@ class RDoc::CodeObject
     self
   end
 
+  def file_name
+    return unless @file
+
+    @file.absolute_name
+  end
+
   ##
   # Force the documentation of this object unless documentation
   # has been turned off by :endoc:
