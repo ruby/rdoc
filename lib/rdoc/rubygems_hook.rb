@@ -218,6 +218,3 @@ class RDoc::RubygemsHook
 
 end
 
-Gem.done_installing(&RDoc::RubygemsHook.method(:generation_hook)) if
-  Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.9')
-
