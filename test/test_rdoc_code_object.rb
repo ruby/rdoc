@@ -30,6 +30,15 @@ class TestRDocCodeObject < XrefTestCase
     assert_equal 'I am a comment', @co.comment
   end
 
+  def test_comment_equals_document
+    doc = RDoc::Markup::Document.new
+    @co.comment = doc
+
+    @co.comment = ''
+
+    assert_equal doc, @co.comment
+  end
+
   def test_comment_equals_encoding
     skip "Encoding not implemented" unless Object.const_defined? :Encoding
 
