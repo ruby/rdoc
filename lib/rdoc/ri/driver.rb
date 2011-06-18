@@ -344,8 +344,8 @@ Options may also be set in the 'RI' environment variable.
     @stores   = []
 
     RDoc::RI::Paths.each(options[:use_system], options[:use_site],
-                                   options[:use_home], options[:use_gems],
-                                   *options[:extra_doc_dirs]) do |path, type|
+                         options[:use_home], options[:use_gems],
+                         *options[:extra_doc_dirs]) do |path, type|
       @doc_dirs << path
 
       store = RDoc::RI::Store.new path, type
@@ -736,6 +736,7 @@ Options may also be set in the 'RI' environment variable.
       display_name name
     end
   end
+
   ##
   # Expands abbreviated klass +klass+ into a fully-qualified class.  "Zl::Da"
   # will be expanded to Zlib::DataError.
