@@ -10,6 +10,7 @@
   * RDoc::ClassModule#merge now prefers the argument's information over the
     receiver's (it now behaves like Hash#merge! instead of a backwards
     Hash#merge!).
+  * RDoc::Markup#convert now accepts an RDoc::Markup::Document instance
   * RDoc now owns the code for generating RDoc and ri data when gems install
   * Added RDoc::RDoc::reset
   * Added RDoc::CodeObject#file_name
