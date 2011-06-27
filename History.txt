@@ -1,4 +1,4 @@
-=== 3.7 / ??
+=== 3.7 / 2011-06-27
 
 * Minor enhancements
   * New directive :category: which allows methods to be grouped into sections
