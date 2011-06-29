@@ -164,11 +164,11 @@ class TestRDocTopLevel < XrefTestCase
     @top_level.add_method method
 
     object = RDoc::TopLevel.find_class_named 'Object'
-    assert_equal [method], object.method
+    assert_equal [method], object.method_list
     assert_includes object.in_files, @top_level
   end
 
-  def test_add_method
+  def test_add_method_stopdoc
     @top_level.document_self = false
 
     method = RDoc::AnyMethod.new nil, 'm'
