@@ -1,3 +1,9 @@
+=== 3.8 / ??
+
+* Minor enhancements
+  * RDoc::Parser::C can now discover methods on ENV and ARGF.
+  * RDoc::Parser::C now knows about rb_cSocket and rb_mDL.
+
 === 3.7 / 2011-06-27
 
 * Minor enhancements
