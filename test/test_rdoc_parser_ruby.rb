@@ -446,7 +446,7 @@ class C; end
 
     tk = @parser.get_tk
 
-    alas = @parser.parse_alias klass, RDoc::Parser::Ruby::NORMAL, tk, 'comment'
+    @parser.parse_alias klass, RDoc::Parser::Ruby::NORMAL, tk, 'comment'
 
     assert_empty klass.aliases
     assert_empty klass.unmatched_alias_lists
