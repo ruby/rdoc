@@ -150,6 +150,61 @@ contents of a string.
     assert_empty cd.metadata
   end
 
+  def test_handle_doc
+    code_object = RDoc::CodeObject.new
+    code_object.document_self = false
+    code_object.force_documentation = false
+
+    text = "# :doc:\n"
+
+    @pp.handle text, code_object
+
+    assert code_object.document_self
+    assert code_object.force_documentation
+  end
+
+  def test_handle_doc_no_context
+    text = "# :doc:\n"
+
+    assert_empty @pp.handle(text, nil)
+
+    assert_empty text
+  end
+
+  def test_handle_nodoc
+    code_object = RDoc::CodeObject.new
+    code_object.document_self = true
+    code_object.document_children = true
+
+    text = "# :nodoc:\n"
+
+    @pp.handle text, code_object
+
+    refute code_object.document_self
+    assert code_object.document_children
+  end
+
+  def test_handle_nodoc_all
+    code_object = RDoc::CodeObject.new
+    code_object.document_self = true
+    code_object.document_children = true
+
+    text = "# :nodoc: all\n"
+
+    @pp.handle text, code_object
+
+    refute code_object.document_self
+    refute code_object.document_children
+  end
+
+  def test_handle_nodoc_no_context
+    text = "# :nodoc:\n"
+
+    assert_empty @pp.handle(text, nil)
+
+    assert_empty text
+  end
+
   def test_handle_registered
     RDoc::Markup::PreProcess.register 'x'
     text = "# :x: y\n"
@@ -216,6 +271,48 @@ contents of a string.
 
     assert_equal "", text
     assert_empty cd.metadata
+  end
+
+  def test_handle_yield
+    method = RDoc::AnyMethod.new nil, 'm'
+    method.params = 'index, &block'
+
+    text = "# :yield: item\n"
+
+    @pp.handle text, method
+
+    assert_equal 'item', method.block_params
+    assert_equal 'index', method.params
+  end
+
+  def test_handle_yield_block_param
+    method = RDoc::AnyMethod.new nil, 'm'
+    method.params = '&block'
+
+    text = "# :yield: item\n"
+
+    @pp.handle text, method
+
+    assert_equal 'item', method.block_params
+    assert_empty method.params
+  end
+
+  def test_handle_yield_no_context
+    text = "# :yield: item\n"
+
+    assert_empty @pp.handle(text, nil)
+
+    assert_empty text
+  end
+
+  def test_handle_yields
+    method = RDoc::AnyMethod.new nil, 'm'
+
+    text = "# :yields: item\n"
+
+    @pp.handle text, method
+
+    assert_equal 'item', method.block_params
   end
 
 end

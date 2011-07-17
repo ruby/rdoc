@@ -81,6 +81,20 @@ class RDoc::Markup::PreProcess
         end
 
         '' # ignore category if we're not on an RDoc::Context
+      when 'doc' then
+        next unless code_object
+        code_object.document_self = true
+        code_object.force_documentation = true
+      when 'nodoc' then
+        next unless code_object
+        code_object.document_self = nil # notify nodoc
+        code_object.document_children = param.to_s.downcase != 'all'
+      when 'yield', 'yields' then
+        next unless code_object
+        # remove parameter &block
+        code_object.params.sub!(/,?\s*&\w+/, '') if code_object.params
+
+        code_object.block_params = param
       else
         result = yield directive, param if block_given?
 

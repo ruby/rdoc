@@ -3,6 +3,7 @@
 * Minor enhancements
   * RDoc::Parser::C can now discover methods on ENV and ARGF.
   * RDoc::Parser::C now knows about rb_cSocket and rb_mDL.
+  * RDoc::Parser::C now supports :doc: and :nodoc: for class comments
 * Bug fixes
   * Updating Object in an ri data store with new data now removes methods,
     includes, constants and aliases.
