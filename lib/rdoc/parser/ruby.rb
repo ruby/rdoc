@@ -406,16 +406,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # This routine modifies its +comment+ parameter.
 
   def look_for_directives_in(context, comment)
-    preprocess = RDoc::Markup::PreProcess.new @file_name, @options.rdoc_include
-
-    preprocess.handle comment, context do |directive, param|
+    @preprocess.handle comment, context do |directive, param|
       case directive
-      when 'enddoc' then
-        context.done_documenting = true
-        ''
-      when 'main' then
-        @options.main_page = param if @options.respond_to? :main_page
-        ''
       when 'method', 'singleton-method',
            'attr', 'attr_accessor', 'attr_reader', 'attr_writer' then
         false # handled elsewhere
@@ -423,16 +415,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
         context.set_current_section param, comment
         comment.replace ''
         break
-      when 'startdoc' then
-        context.start_doc
-        context.force_documentation = true
-        ''
-      when 'stopdoc' then
-        context.stop_doc
-        ''
-      when 'title' then
-        @options.default_title = param if @options.respond_to? :default_title=
-        ''
       end
     end
 
@@ -1643,16 +1625,17 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Handles the directive for +context+ if the directive is listed in +allow+.
   # This method is called for directives following a definition.
 
-  def read_documentation_modifiers(context, allow)
+  def read_documentation_modifiers context, allow
     directive, value = read_directive allow
 
     return unless directive
 
-    case directive
-    when 'notnew', 'not_new', 'not-new' then
-      context.dont_rename_initialize = true
-    else
-      RDoc::Parser.process_directive context, directive, value
+    @preprocess.handle_directive '', directive, value, context do |directive, param|
+      if %w[notnew not_new not-new].include? directive then
+        context.dont_rename_initialize = true
+
+        true
+      end
     end
   end
 

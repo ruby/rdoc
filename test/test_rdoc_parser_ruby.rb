@@ -313,22 +313,6 @@ class C; end
                  comment
   end
 
-  def test_look_for_directives_in_enddoc
-    util_parser ""
-
-    @parser.look_for_directives_in @top_level, "# :enddoc:\n"
-
-    assert @top_level.done_documenting
-  end
-
-  def test_look_for_directives_in_main
-    util_parser ""
-
-    @parser.look_for_directives_in @top_level, "# :main: new main page\n"
-
-    assert_equal 'new main page', @options.main_page
-  end
-
   def test_look_for_directives_in_method
     util_parser ""
 
@@ -345,31 +329,6 @@ class C; end
     assert_equal "# :singleton-method: my_method\n", comment
   end
 
-  def test_look_for_directives_in_startdoc
-    util_parser ""
-
-    @top_level.stop_doc
-    assert !@top_level.document_self
-    assert !@top_level.document_children
-
-    @parser.look_for_directives_in @top_level, "# :startdoc:\n"
-
-    assert @top_level.document_self
-    assert @top_level.document_children
-  end
-
-  def test_look_for_directives_in_stopdoc
-    util_parser ""
-
-    assert @top_level.document_self
-    assert @top_level.document_children
-
-    @parser.look_for_directives_in @top_level, "# :stopdoc:\n"
-
-    assert !@top_level.document_self
-    assert !@top_level.document_children
-  end
-
   def test_look_for_directives_in_section
     util_parser ""
 
@@ -382,14 +341,6 @@ class C; end
     assert_equal "# woo stuff\n", section.comment
 
     assert_equal '', comment
-  end
-
-  def test_look_for_directives_in_title
-    util_parser ""
-
-    @parser.look_for_directives_in @top_level, "# :title: new title\n"
-
-    assert_equal 'new title', @options.title
   end
 
   def test_look_for_directives_in_unhandled
