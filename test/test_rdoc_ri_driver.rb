@@ -805,6 +805,42 @@ Foo::Bar#bother
     assert_equal 'baz',      meth,  'Foo::Bar#baz method'
   end
 
+  def test_parse_name_special
+    specials = %w[
+      %
+      &
+      *
+      +
+      +@
+      -
+      -@
+      /
+      <
+      <<
+      <=
+      <=>
+      ==
+      ===
+      =>
+      =~
+      >
+      >>
+      []
+      []=
+      ^
+      `
+      |
+      ~
+      ~@
+    ]
+
+    specials.each do |special|
+      parsed = @driver.parse_name special
+
+      assert_equal ['', '.', special], parsed
+    end
+  end
+
   def _test_setup_pager # this test doesn't do anything anymore :(
     @driver.use_stdout = false
 

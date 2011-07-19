@@ -7,6 +7,8 @@
 * Bug fixes
   * Updating Object in an ri data store with new data now removes methods,
     includes, constants and aliases.
+  * `ri []` and other special methods now work properly.  Issue #52 by
+    ddebernardy.
 
 === 3.7 / 2011-06-27
 

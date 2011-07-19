@@ -1090,11 +1090,11 @@ Options may also be set in the 'RI' environment variable.
   # NOTE: Given Foo::Bar, Bar is considered a class even though it may be a
   #       method
 
-  def parse_name(name)
+  def parse_name name
     parts = name.split(/(::|#|\.)/)
 
     if parts.length == 1 then
-      if parts.first =~ /^[a-z]/ then
+      if parts.first =~ /^[a-z]|^([%&*+\/<>^`|~-]|\+@|-@|<<|<=>?|===?|=>|=~|>>|\[\]=?|~@)$/ then
         type = '.'
         meth = parts.pop
       else
