@@ -1630,8 +1630,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     return unless directive
 
-    @preprocess.handle_directive '', directive, value, context do |directive, param|
-      if %w[notnew not_new not-new].include? directive then
+    @preprocess.handle_directive '', directive, value, context do |dir, param|
+      if %w[notnew not_new not-new].include? dir then
         context.dont_rename_initialize = true
 
         true
