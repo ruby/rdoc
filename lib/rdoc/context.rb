@@ -623,8 +623,10 @@ class RDoc::Context < RDoc::CodeObject
 
   ##
   # Is there any content?
-  # This means any of: comment, aliases, methods, attributes,
-  # external aliases, require, constant.
+  #
+  # This means any of: comment, aliases, methods, attributes, external
+  # aliases, require, constant.
+  #
   # Includes are also checked unless <tt>includes == false</tt>.
 
   def any_content(includes = true)
