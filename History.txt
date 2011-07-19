@@ -9,6 +9,7 @@
     includes, constants and aliases.
   * `ri []` and other special methods now work properly.  Issue #52 by
     ddebernardy.
+  * `ri` now has space between class comments from multiple files.
 
 === 3.7 / 2011-06-27
 
