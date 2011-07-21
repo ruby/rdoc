@@ -1,1 +1,9 @@
-you don't have to
+To run the tests:
+
+  ruby -w -Ilib -e "ARGV.dup.each {|test| load test}" test/test_*.rb 
+
+The tests require at least ruby-1.8.7, rubygems-1.8.5, and depend on minitest
+and rake being available:
+
+  gem install minitest rake
+
