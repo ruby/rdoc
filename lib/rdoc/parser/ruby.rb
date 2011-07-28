@@ -405,7 +405,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   #
   # This routine modifies its +comment+ parameter.
 
-  def look_for_directives_in(context, comment)
+  def look_for_directives_in context, comment
     @preprocess.handle comment, context do |directive, param|
       case directive
       when 'method', 'singleton-method',
