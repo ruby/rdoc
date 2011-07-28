@@ -1,15 +1,20 @@
-=== 3.8 / ??
+=== 3.9 / ??
+
+* Minor enhancements
+  * RDoc::Parser::C now supports :doc: and :nodoc: for class comments
+* Bug fixes
+  * `ri []` and other special methods now work properly.  Issue #52 by
+    ddebernardy.
+  * `ri` now has space between class comments from multiple files.
+
+=== 3.8 / 2011-06-29
 
 * Minor enhancements
   * RDoc::Parser::C can now discover methods on ENV and ARGF.
   * RDoc::Parser::C now knows about rb_cSocket and rb_mDL.
-  * RDoc::Parser::C now supports :doc: and :nodoc: for class comments
 * Bug fixes
   * Updating Object in an ri data store with new data now removes methods,
     includes, constants and aliases.
-  * `ri []` and other special methods now work properly.  Issue #52 by
-    ddebernardy.
-  * `ri` now has space between class comments from multiple files.
 
 === 3.7 / 2011-06-27
 

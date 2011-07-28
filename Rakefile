@@ -19,6 +19,16 @@ Hoe.spec 'rdoc' do
   rdoc_locations << 'docs.seattlerb.org:/data/www/docs.seattlerb.org/rdoc/'
   rdoc_locations << 'drbrain@rubyforge.org:/var/www/gforge-projects/rdoc/'
 
+
+  spec_extras[:post_install_message] = <<-MESSAGE
+Depending on your version of ruby, you may need to install ruby rdoc/ri data:
+
+<= 1.8.6 : unsupported
+ = 1.8.7 : gem install rdoc-data; rdoc-data --install
+ = 1.9.1 : gem install rdoc-data; rdoc-data --install
+>= 1.9.2 : nothing to do! Yay!
+  MESSAGE
+
   self.testlib = :minitest
   self.isolate_dir = 'tmp/isolate'
 
