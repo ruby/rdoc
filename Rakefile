@@ -30,12 +30,16 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   MESSAGE
 
   self.testlib = :minitest
-  self.isolate_dir = 'tmp/isolate'
+  if respond_to? :isolate_dir= then # HACK Hoe issue #7
+    self.isolate_dir = 'tmp/isolate'
+  else
+    warn 'please: gem install isolate'
+  end
 
   require_ruby_version '>= 1.8.7'
-  extra_dev_deps   << ['minitest', '~> 2']
-  extra_dev_deps   << ['isolate',  '~> 3']
-  extra_dev_deps   << ['ZenTest',  '~> 4'] # for autotest/isolate
+  extra_dev_deps << ['minitest', '~> 2']
+  extra_dev_deps << ['isolate',  '~> 3']
+  extra_dev_deps << ['ZenTest',  '~> 4'] # for autotest/isolate
 
   extra_rdoc_files << 'Rakefile'
   spec_extras['required_rubygems_version'] = '>= 1.3'
