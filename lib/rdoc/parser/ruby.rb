@@ -1498,9 +1498,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Parses statements in the top-level +container+
 
-  def parse_top_level_statements(container)
+  def parse_top_level_statements container
     comment = collect_first_comment
-    look_for_directives_in(container, comment)
+    look_for_directives_in container, comment
+
     # HACK move if to RDoc::Context#comment=
     container.comment = comment if container.document_self unless comment.empty?
     parse_statements container, NORMAL, nil, comment
