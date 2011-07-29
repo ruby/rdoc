@@ -6,8 +6,8 @@
   * `ri []` and other special methods now work properly.  Issue #52 by
     ddebernardy.
   * `ri` now has space between class comments from multiple files.
-  * The stopdoc directive no longer creates Object references.  Issue #55 by
-    Simon Chiang
+  * :stopdoc: no longer creates Object references.  Issue #55 by Simon Chiang
+  * :nodoc: works on class aliases now.  Issue #51 by Steven G. Harms
 
 === 3.8 / 2011-06-29
 

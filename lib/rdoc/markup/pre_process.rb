@@ -118,7 +118,7 @@ class RDoc::Markup::PreProcess
     when 'nodoc' then
       return blankline unless code_object
       code_object.document_self = nil # notify nodoc
-      code_object.document_children = param.to_s.downcase != 'all'
+      code_object.document_children = param !~ /all/i
 
       blankline
     when 'notnew', 'not_new', 'not-new' then

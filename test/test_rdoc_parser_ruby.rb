@@ -2193,6 +2193,25 @@ end
     assert @top_level.find_module_named('Example').ignored?
   end
 
+  # This tests parse_comment
+  def test_parse_top_level_statements_constant_nodoc_integration
+    content = <<-CONTENT
+class A
+  C = A # :nodoc:
+end
+    CONTENT
+
+    util_parser content
+
+    @parser.parse_top_level_statements @top_level
+
+    klass = @top_level.find_module_named('A')
+
+    c = klass.constants.first
+
+    assert_nil c.document_self, 'C should not be documented'
+  end
+
   def test_parse_yield_in_braces_with_parens
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level

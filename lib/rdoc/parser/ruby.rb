@@ -701,7 +701,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when TkRPAREN, TkRBRACE, TkRBRACK, TkEND then
         nest -= 1
       when TkCOMMENT then
-        if nest <= 0 && @scanner.lex_state == EXPR_END
+        if nest <= 0 &&
+           (@scanner.lex_state == EXPR_END || !@scanner.continue) then
           unget_tk tk
           break
         end
@@ -716,7 +717,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
                 end
 
           container.add_module_alias mod, name, @top_level if mod
-          get_tk # TkNL
           break
         end
       when TkNL then
