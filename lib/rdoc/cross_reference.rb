@@ -88,36 +88,21 @@ class RDoc::CrossReference
   attr_accessor :seen
 
   ##
-  # Sets up the cross-reference for the given +context+ (RDoc::Context).
-  # +from_path+ is used to create HTML links from #link.
+  # Allows cross-references to be created based on the given +context+
+  # (RDoc::Context).
 
-  def initialize context, from_path = nil
+  def initialize context
     @context = context
-    @from_path = from_path
 
     @seen = {}
-  end
-
-  ##
-  # Creates an HTML link to +name+ with the given +text+.  +from_path+ must be
-  # set.
-
-  def link name, text
-    ref = resolve name, text
-
-    case ref
-    when String then
-      ref
-    else
-      "<a href=\"#{ref.as_href @from_path}\">#{text}</a>"
-    end
   end
 
   ##
   # Returns a reference to +name+.
   #
   # If the reference is found and +name+ is not documented +text+ will be
-  # returned.  If +name+ is escaped +name+ is returned.
+  # returned.  If +name+ is escaped +name+ is returned.  If +name+ is not
+  # found +text+ is returned.
 
   def resolve name, text
     return @seen[name] if @seen.include? name

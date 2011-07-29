@@ -7,7 +7,7 @@ class TestRDocCrossReference < XrefTestCase
   def setup
     super
 
-    @xref = RDoc::CrossReference.new @c1, 'index.html'
+    @xref = RDoc::CrossReference.new @c1
   end
 
   def assert_ref expected, name
@@ -18,14 +18,8 @@ class TestRDocCrossReference < XrefTestCase
     assert_equal name, @xref.resolve(name, name)
   end
 
-  def test_link
-    assert_equal 'n', @xref.link('n', 'n')
-
-    assert_equal '<a href="C1.html#method-c-m">m</a>', @xref.link('m', 'm')
-  end
-
   def test_resolve_C2
-    @xref = RDoc::CrossReference.new @c2, 'classes/C2.html'
+    @xref = RDoc::CrossReference.new @c2
 
     refute_ref '#m'
 
@@ -40,7 +34,7 @@ class TestRDocCrossReference < XrefTestCase
   end
 
   def test_resolve_C2_C3
-    @xref = RDoc::CrossReference.new @c2_c3, 'classes/C2/C3.html'
+    @xref = RDoc::CrossReference.new @c2_c3
 
     assert_ref @c2_c3_m, '#m'
 
@@ -56,7 +50,7 @@ class TestRDocCrossReference < XrefTestCase
   end
 
   def test_resolve_C3
-    @xref = RDoc::CrossReference.new @c3, 'classes/C3.html'
+    @xref = RDoc::CrossReference.new @c3
 
     assert_ref @c3, 'C3'
 
@@ -72,14 +66,14 @@ class TestRDocCrossReference < XrefTestCase
   end
 
   def test_resolve_C4
-    @xref = RDoc::CrossReference.new @c4, 'classes/C4.html'
+    @xref = RDoc::CrossReference.new @c4
 
     # C4 ref inside a C4 containing a C4 should resolve to the contained class
     assert_ref @c4_c4, 'C4'
   end
 
   def test_resolve_C4_C4
-    @xref = RDoc::CrossReference.new @c4_c4, 'classes/C4/C4.html'
+    @xref = RDoc::CrossReference.new @c4_c4
 
     # A C4 reference inside a C4 class contained within a C4 class should
     # resolve to the inner C4 class.

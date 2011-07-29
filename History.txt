@@ -8,7 +8,7 @@
     the <tt>link:</tt> scheme which is dependent upon the exact file name.
     Issue #53 by Simon Chiang
   * Pulled RDoc::CrossReference out of RDoc::Markup::ToHtmlCrossref.
-    Cross-references can now be created without cut-and-paste.
+    Cross-references can now be created easily for non-HTML formatters.
 * Bug fixes
   * `ri []` and other special methods now work properly.  Issue #52 by
     ddebernardy.

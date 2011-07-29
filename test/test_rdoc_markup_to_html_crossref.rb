@@ -58,6 +58,12 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
     assert_equal '<a href="README_txt.html">tidy</a>', link
   end
 
+  def test_link
+    assert_equal 'n', @to.link('n', 'n')
+
+    assert_equal '<a href="C1.html#method-c-m">m</a>', @to.link('m', 'm')
+  end
+
   def SPECIAL text
     @to.handle_special_CROSSREF special text
   end

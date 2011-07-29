@@ -2,8 +2,9 @@ require 'rdoc/markup/to_html'
 require 'rdoc/cross_reference'
 
 ##
-# Subclass of the RDoc::Markup::ToHtml class that supports looking up words
-# from a context.  Those that are found will be linked.
+# Subclass of the RDoc::Markup::ToHtml class that supports looking up method
+# names, classes, etc to create links.  RDoc::CrossReference is used to
+# generate those links based on the current context.
 
 class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
@@ -37,13 +38,14 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
     crossref_re = hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
 
-    @cross_reference = RDoc::CrossReference.new context, from_path
+    @cross_reference = RDoc::CrossReference.new context
 
     @markup.add_special crossref_re, :CROSSREF
     @markup.add_special /rdoc:\S+\w/, :HYPERLINK
 
-    @show_hash = show_hash
+    @from_path     = from_path
     @hyperlink_all = hyperlink_all
+    @show_hash     = show_hash
   end
 
   ##
@@ -57,7 +59,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
     text = name unless text
 
-    @cross_reference.link lookup, text
+    link lookup, text
   end
 
   ##
@@ -98,6 +100,20 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     super unless url =~ /\Ardoc-ref:/
 
     cross_reference $', text
+  end
+
+  ##
+  # Creates an HTML link to +name+ with the given +text+.
+
+  def link name, text
+    ref = @cross_reference.resolve name, text
+
+    case ref
+    when String then
+      ref
+    else
+      "<a href=\"#{ref.as_href @from_path}\">#{text}</a>"
+    end
   end
 
 end
