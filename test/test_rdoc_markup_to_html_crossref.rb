@@ -200,11 +200,11 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
   end
 
   def hyper reference
-    RDoc::Markup::Special.new 0, "rdoc:#{reference}"
+    RDoc::Markup::Special.new 0, "rdoc-ref:#{reference}"
   end
 
   def tidy reference
-    RDoc::Markup::Special.new 0, "{tidy}[rdoc:#{reference}]"
+    RDoc::Markup::Special.new 0, "{tidy}[rdoc-ref:#{reference}]"
   end
 
 end

@@ -2,10 +2,11 @@
 
 * Minor enhancements
   * RDoc::Parser::C now supports :doc: and :nodoc: for class comments
-  * Added the <tt>rdoc:</tt> link scheme which links to a named reference.
-    This can be used to create cross-generator named links unlike the
-    <tt>link:</tt> scheme which is dependent upon the exact file name.  Issue
-    #53 by Simon Chiang
+  * Added the <tt>rdoc-ref:</tt> link scheme which links to a named reference.
+    <tt>rdoc-ref:</tt> can resolve references to classes, modules, methods,
+    files, etc.  This can be used to create cross-generator named links unlike
+    the <tt>link:</tt> scheme which is dependent upon the exact file name.
+    Issue #53 by Simon Chiang
 * Bug fixes
   * `ri []` and other special methods now work properly.  Issue #52 by
     ddebernardy.

@@ -2,7 +2,7 @@ require 'rdoc/markup/to_html'
 
 ##
 # Subclass of the RDoc::Markup::ToHtml class that supports looking up words
-# from a context.  Those that are found will be hyperlinked.
+# from a context.  Those that are found will be linked.
 
 class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
@@ -102,7 +102,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # Creates a new crossref resolver that generates links relative to +context+
   # which lives at +from_path+ in the generated files.  '#' characters on
   # references are removed unless +show_hash+ is true.  Only method names
-  # preceded by '#' or '::' are hyperlinked, unless +hyperlink_all+ is true.
+  # preceded by '#' or '::' are linked, unless +hyperlink_all+ is true.
 
   def initialize(from_path, context, show_hash, hyperlink_all = false,
                  markup = nil)
@@ -193,10 +193,10 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
   ##
   # We're invoked when any text matches the CROSSREF pattern.  If we find the
-  # corresponding reference, generate a hyperlink.  If the name we're looking
-  # for contains no punctuation, we look for it up the module/class chain.
-  # For example, ToHtml is found, even without the <tt>RDoc::Markup::</tt>
-  # prefix, because we look for it in module Markup first.
+  # corresponding reference, generate a link.  If the name we're looking for
+  # contains no punctuation, we look for it up the module/class chain.  For
+  # example, ToHtml is found, even without the <tt>RDoc::Markup::</tt> prefix,
+  # because we look for it in module Markup first.
 
   def handle_special_CROSSREF(special)
     name = special.text
@@ -212,20 +212,22 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   end
 
   ##
-  # Handles <tt>rdoc:</tt> scheme hyperlinks
+  # Handles <tt>rdoc-ref:</tt> scheme links and allows RDoc::Markup::ToHtml to
+  # handle other schemes.
 
   def handle_special_HYPERLINK special
-    return cross_reference $' if special.text =~ /\Ardoc:/
+    return cross_reference $' if special.text =~ /\Ardoc-ref:/
 
     super
   end
 
   ##
-  # Generates links for <tt>rdoc:</tt> scheme URLs
+  # Generates links for <tt>rdoc-ref:</tt> scheme URLs and allows
+  # RDoc::Markup::ToHtml to handle other schemes.
 
   def gen_url url, text
-    super unless url =~ /\Ardoc:/
-      
+    super unless url =~ /\Ardoc-ref:/
+
     cross_reference $', text
   end
 
