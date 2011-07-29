@@ -423,6 +423,7 @@ class RDoc::Context < RDoc::CodeObject
     if klass then
       # if TopLevel, it may not be registered in the classes:
       enclosing.classes_hash[name] = klass
+
       # update the superclass if needed
       if superclass then
         existing = klass.superclass

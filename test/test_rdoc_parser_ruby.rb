@@ -748,12 +748,7 @@ end
 
     @parser.parse_class @top_level, RDoc::Parser::Ruby::NORMAL, tk, comment
 
-    foo = @top_level.classes.first
-    assert_equal 'Foo', foo.full_name
-    assert_equal 'my class', foo.comment
-    assert_equal [@top_level], foo.in_files
-    assert_equal 0, foo.offset
-    assert_equal 1, foo.line
+    assert_empty @top_level.classes.first.comment
   end
 
   def test_parse_multi_ghost_methods
@@ -2176,6 +2171,26 @@ end
     @parser.parse_top_level_statements @top_level
 
     assert_empty @top_level.comment
+  end
+
+  def test_parse_top_level_statements_stopdoc_integration
+    content = <<-CONTENT
+# :stopdoc:
+
+class Example
+  def method_name
+  end
+end
+    CONTENT
+
+    util_parser content
+
+    @parser.parse_top_level_statements @top_level
+
+    assert_equal 1, @top_level.classes.length
+    assert_empty @top_level.modules
+
+    assert @top_level.find_module_named('Example').ignored?
   end
 
   def test_parse_yield_in_braces_with_parens

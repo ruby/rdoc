@@ -611,6 +611,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       cls_type = single == SINGLE ? RDoc::SingleClass : RDoc::NormalClass
       cls = declaration_context.add_class cls_type, given_name, superclass
+      cls.ignore unless container.document_children
 
       read_documentation_modifiers cls, RDoc::CLASS_MODIFIERS
       cls.record_location @top_level
@@ -1309,11 +1310,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         keep_comment = true
 
       when TkCLASS then
-        if container.document_children then
-          parse_class container, single, tk, comment
-        else
-          nest += 1
-        end
+        parse_class container, single, tk, comment
 
       when TkMODULE then
         if container.document_children then
@@ -1504,6 +1501,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     # HACK move if to RDoc::Context#comment=
     container.comment = comment if container.document_self unless comment.empty?
+
     parse_statements container, NORMAL, nil, comment
   end
 
