@@ -276,7 +276,8 @@ require 'rdoc'
 # converted into an inline image element.
 #
 # Links starting with <tt>rdoc-ref:</tt> will link to the referenced class,
-# module, method, file, etc.
+# module, method, file, etc.  If the referenced item is not documented the
+# text will be and no link will be generated.
 #
 # Links starting with +link:+ refer to local files whose path is relative to
 # the <tt>--op</tt> directory.
