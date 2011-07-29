@@ -662,7 +662,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Parses a constant in +context+ with +comment+
 
-  def parse_constant(container, tk, comment)
+  def parse_constant container, tk, comment
     offset  = tk.seek
     line_no = tk.line_no
 
