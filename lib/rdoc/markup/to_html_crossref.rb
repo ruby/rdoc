@@ -112,6 +112,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     crossref_re = hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
 
     @markup.add_special crossref_re, :CROSSREF
+    @markup.add_special /rdoc:\S+\w/, :HYPERLINK
 
     @from_path = from_path
     @context = context
@@ -122,27 +123,17 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   end
 
   ##
-  # We're invoked when any text matches the CROSSREF pattern.  If we find the
-  # corresponding reference, generate a hyperlink.  If the name we're looking
-  # for contains no punctuation, we look for it up the module/class chain.
-  # For example, ToHtml is found, even without the <tt>RDoc::Markup::</tt>
-  # prefix, because we look for it in module Markup first.
+  # Creates a link to the reference +name+ if the name exists.  If +text+ is
+  # given it is used as the link text, otherwise +name+ is used.
 
-  def handle_special_CROSSREF(special)
-    name = special.text
-
-    unless @hyperlink_all then
-      # This ensures that words entirely consisting of lowercase letters will
-      # not have cross-references generated (to suppress lots of erroneous
-      # cross-references to "new" in text, for instance)
-      return name if name =~ /\A[a-z]*\z/
-    end
-
+  def cross_reference name, text = nil
     return @seen[name] if @seen.include? name
 
     lookup = name
 
     name = name[1..-1] unless @show_hash if name[0, 1] == '#'
+
+    text = name unless text
 
     # Find class, module, or method in class or module.
     #
@@ -187,7 +178,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
             ref ? $' : lookup
           elsif ref then
             if ref.document_self then
-              "<a href=\"#{ref.as_href @from_path}\">#{name}</a>"
+              "<a href=\"#{ref.as_href @from_path}\">#{text}</a>"
             else
               name
             end
@@ -198,6 +189,44 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     @seen[lookup] = out
 
     out
+  end
+
+  ##
+  # We're invoked when any text matches the CROSSREF pattern.  If we find the
+  # corresponding reference, generate a hyperlink.  If the name we're looking
+  # for contains no punctuation, we look for it up the module/class chain.
+  # For example, ToHtml is found, even without the <tt>RDoc::Markup::</tt>
+  # prefix, because we look for it in module Markup first.
+
+  def handle_special_CROSSREF(special)
+    name = special.text
+
+    unless @hyperlink_all then
+      # This ensures that words entirely consisting of lowercase letters will
+      # not have cross-references generated (to suppress lots of erroneous
+      # cross-references to "new" in text, for instance)
+      return name if name =~ /\A[a-z]*\z/
+    end
+
+    cross_reference name
+  end
+
+  ##
+  # Handles <tt>rdoc:</tt> scheme hyperlinks
+
+  def handle_special_HYPERLINK special
+    return cross_reference $' if special.text =~ /\Ardoc:/
+
+    super
+  end
+
+  ##
+  # Generates links for <tt>rdoc:</tt> scheme URLs
+
+  def gen_url url, text
+    super unless url =~ /\Ardoc:/
+      
+    cross_reference $', text
   end
 
 end

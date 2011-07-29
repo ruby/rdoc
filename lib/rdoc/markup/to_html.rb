@@ -97,6 +97,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   def handle_special_HYPERLINK(special)
     url = special.text
+
     gen_url url, url
   end
 

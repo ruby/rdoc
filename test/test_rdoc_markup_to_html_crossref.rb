@@ -165,5 +165,47 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
                  @xref.convert('C2::C3;method(*)')
   end
 
+  def test_handle_special_HYPERLINK_rdoc
+    RDoc::TopLevel.new 'README.txt'
+    @to = RDoc::Markup::ToHtmlCrossref.new 'C2.html', @c2, true
+
+    link = @to.handle_special_HYPERLINK hyper 'C2::C3'
+
+    assert_equal '<a href="C2/C3.html">C2::C3</a>', link
+
+    link = @to.handle_special_HYPERLINK hyper 'C4'
+
+    assert_equal '<a href="C4.html">C4</a>', link
+
+    link = @to.handle_special_HYPERLINK hyper 'README.txt'
+
+    assert_equal '<a href="README_txt.html">README.txt</a>', link
+  end
+
+  def test_handle_special_TIDYLINK_rdoc
+    RDoc::TopLevel.new 'README.txt'
+    @to = RDoc::Markup::ToHtmlCrossref.new 'C2.html', @c2, true
+
+    link = @to.handle_special_TIDYLINK tidy 'C2::C3'
+
+    assert_equal '<a href="C2/C3.html">tidy</a>', link
+
+    link = @to.handle_special_TIDYLINK tidy 'C4'
+
+    assert_equal '<a href="C4.html">tidy</a>', link
+
+    link = @to.handle_special_TIDYLINK tidy 'README.txt'
+
+    assert_equal '<a href="README_txt.html">tidy</a>', link
+  end
+
+  def hyper reference
+    RDoc::Markup::Special.new 0, "rdoc:#{reference}"
+  end
+
+  def tidy reference
+    RDoc::Markup::Special.new 0, "{tidy}[rdoc:#{reference}]"
+  end
+
 end
 
