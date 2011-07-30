@@ -70,7 +70,7 @@ class TestRDocCodeObject < XrefTestCase
   def test_display_eh_document_self
     assert @co.display?
 
-    @co.stop_doc
+    @co.document_self = false
 
     refute @co.display?
   end
@@ -83,6 +83,10 @@ class TestRDocCodeObject < XrefTestCase
     refute @co.display?
 
     @co.stop_doc
+
+    refute @co.display?
+
+    @co.done_documenting = false
 
     refute @co.display?
   end

@@ -144,7 +144,7 @@ class RDoc::CodeObject
   # Should this CodeObject be shown in documentation?
 
   def display?
-    @document_self and not @ignore
+    @document_self and not @ignored
   end
 
   ##
@@ -239,10 +239,10 @@ class RDoc::CodeObject
   # documentation.
   #
   # See github issue #55
-  #--
+  #
   # The ignored status is temporary in order to allow implementation details
   # to be hidden.  At the end of processing a file RDoc allows all classes
-  # and modules to add documentation.
+  # and modules to add new documentation to previously created classes.
   #
   # If a class was ignored (via stopdoc) then reopened later with additional
   # documentation it should be shown.  If a class was ignored and never

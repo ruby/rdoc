@@ -13,6 +13,18 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
     @to = RDoc::Markup::ToHtmlCrossref.new 'index.html', @c1, true
   end
 
+  def test_convert_CROSSREF
+    result = @to.convert 'C1'
+
+    assert_equal "\n<p><a href=\"C1.html\">C1</a></p>\n", result
+  end
+
+  def test_convert_HYPERLINK_rdoc_ref
+    result = @to.convert 'rdoc-ref:C1'
+
+    assert_equal "\n<p><a href=\"C1.html\">C1</a></p>\n", result
+  end
+
   def test_handle_special_CROSSREF
     assert_equal "<a href=\"C2/C3.html\">C2::C3</a>", SPECIAL('C2::C3')
   end

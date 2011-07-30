@@ -41,7 +41,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     @cross_reference = RDoc::CrossReference.new context
 
     @markup.add_special crossref_re, :CROSSREF
-    @markup.add_special /rdoc:\S+\w/, :HYPERLINK
+    @markup.add_special(/rdoc-ref:\S+\w/, :HYPERLINK)
 
     @from_path     = from_path
     @hyperlink_all = hyperlink_all
