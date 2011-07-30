@@ -1,4 +1,4 @@
-=== 3.9 / ??
+=== 3.9 / 2011-07-30
 
 * Minor enhancements
   * RDoc::Parser::C now supports :doc: and :nodoc: for class comments
