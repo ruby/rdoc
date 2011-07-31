@@ -3,6 +3,7 @@
 * Bug fixes
   * Fix RDoc::Markup parser for a header followed by a non-text token.  Issue
     #56 by Adam Tait
+  * Fix RDoc::Markup::ToHtmlCrossref#gen_url for non-<tt>rdoc-ref</tt> links.
   * Fix bug report URL when rdoc crashes.
 
 === 3.9 / 2011-07-30
