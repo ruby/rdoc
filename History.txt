@@ -1,3 +1,8 @@
+=== 3.9.1 / ??
+
+* Bug fixes
+  * Fix bug report URL when rdoc crashes.
+
 === 3.9 / 2011-07-30
 
 * Minor enhancements
