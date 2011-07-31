@@ -1,6 +1,8 @@
 === 3.9.1 / ??
 
 * Bug fixes
+  * Fix RDoc::Markup parser for a header followed by a non-text token.  Issue
+    #56 by Adam Tait
   * Fix bug report URL when rdoc crashes.
 
 === 3.9 / 2011-07-30
