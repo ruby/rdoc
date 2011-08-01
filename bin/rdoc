@@ -5,8 +5,6 @@
 #
 #  Copyright (c) 2003 Dave Thomas
 #  Released under the same terms as Ruby
-#
-#  $Revision: 15033 $
 
 begin
   gem 'rdoc'
