@@ -632,9 +632,22 @@ class RDoc::Markup
     document.accept formatter
   end
 
+  autoload :BlankLine,         'rdoc/markup/blank_line'
+  autoload :Document,          'rdoc/markup/document'
+  autoload :Heading,           'rdoc/markup/heading'
+  autoload :Include,           'rdoc/markup/include'
+  autoload :IndentedParagraph, 'rdoc/markup/indented_paragraph'
+  autoload :List,              'rdoc/markup/list'
+  autoload :ListItem,          'rdoc/markup/list_item'
+  autoload :Paragraph,         'rdoc/markup/paragraph'
+  autoload :Raw,               'rdoc/markup/raw'
+  autoload :Rule,              'rdoc/markup/rule'
+  autoload :Verbatim,          'rdoc/markup/verbatim'
+
+  autoload :Parser,            'rdoc/markup/parser'
+  autoload :AttributeManager,  'rdoc/markup/attribute_manager'
+  autoload :Inline,            'rdoc/markup/inline'
+
 end
 
-require 'rdoc/markup/parser'
-require 'rdoc/markup/attribute_manager'
-require 'rdoc/markup/inline'
 

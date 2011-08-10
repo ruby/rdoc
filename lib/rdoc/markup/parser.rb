@@ -484,14 +484,3 @@ class RDoc::Markup::Parser
 
 end
 
-require 'rdoc/markup/blank_line'
-require 'rdoc/markup/document'
-require 'rdoc/markup/heading'
-require 'rdoc/markup/list'
-require 'rdoc/markup/list_item'
-require 'rdoc/markup/raw'
-require 'rdoc/markup/paragraph'
-require 'rdoc/markup/indented_paragraph'
-require 'rdoc/markup/rule'
-require 'rdoc/markup/verbatim'
-

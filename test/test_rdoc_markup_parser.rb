@@ -623,7 +623,7 @@ for all good men
   def test_parse_paragraph_multiline
     str = "now is the time\nfor all good men"
 
-    expected = @RM::Paragraph.new 'now is the time for all good men'
+    expected = @RM::Paragraph.new 'now is the time', 'for all good men'
     assert_equal [expected], @RMP.parse(str).parts
   end
 

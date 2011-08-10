@@ -24,7 +24,7 @@ class RDoc::Markup::Raw
   end
 
   def == other # :nodoc:
-    self.class == other.class and text == other.text
+    self.class == other.class and @parts == other.parts
   end
 
   ##

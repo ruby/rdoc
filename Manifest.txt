@@ -65,6 +65,7 @@ lib/rdoc/markup/document.rb
 lib/rdoc/markup/formatter.rb
 lib/rdoc/markup/formatter_test_case.rb
 lib/rdoc/markup/heading.rb
+lib/rdoc/markup/include.rb
 lib/rdoc/markup/indented_paragraph.rb
 lib/rdoc/markup/inline.rb
 lib/rdoc/markup/list.rb
@@ -93,6 +94,10 @@ lib/rdoc/parser/c.rb
 lib/rdoc/parser/ruby.rb
 lib/rdoc/parser/ruby_tools.rb
 lib/rdoc/parser/simple.rb
+lib/rdoc/rd.rb
+lib/rdoc/rd/block_parser.ry
+lib/rdoc/rd/inline.rb
+lib/rdoc/rd/inline_parser.ry
 lib/rdoc/rdoc.rb
 lib/rdoc/require.rb
 lib/rdoc/ri.rb
@@ -136,6 +141,7 @@ test/test_rdoc_include.rb
 test/test_rdoc_markup.rb
 test/test_rdoc_markup_attribute_manager.rb
 test/test_rdoc_markup_document.rb
+test/test_rdoc_markup_include.rb
 test/test_rdoc_markup_indented_paragraph.rb
 test/test_rdoc_markup_paragraph.rb
 test/test_rdoc_markup_parser.rb
@@ -155,6 +161,9 @@ test/test_rdoc_parser.rb
 test/test_rdoc_parser_c.rb
 test/test_rdoc_parser_ruby.rb
 test/test_rdoc_parser_simple.rb
+test/test_rdoc_rd_block_parser.rb
+test/test_rdoc_rd_inline.rb
+test/test_rdoc_rd_inline_parser.rb
 test/test_rdoc_rdoc.rb
 test/test_rdoc_require.rb
 test/test_rdoc_ri_driver.rb

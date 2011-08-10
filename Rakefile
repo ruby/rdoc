@@ -2,6 +2,12 @@ require 'hoe'
 $:.unshift 'lib'
 require 'rdoc/rdoc'
 
+task :docs    => :generate
+task :test    => :generate
+
+RD_BLOCK_PARSER  = 'lib/rdoc/rd/block_parser.rb'
+RD_INLINE_PARSER = 'lib/rdoc/rd/inline_parser.rb'
+
 Hoe.plugin :git
 Hoe.plugin :isolate
 Hoe.plugin :minitest
@@ -19,7 +25,6 @@ Hoe.spec 'rdoc' do
   rdoc_locations << 'docs.seattlerb.org:/data/www/docs.seattlerb.org/rdoc/'
   rdoc_locations << 'drbrain@rubyforge.org:/var/www/gforge-projects/rdoc/'
 
-
   spec_extras[:post_install_message] = <<-MESSAGE
 Depending on your version of ruby, you may need to install ruby rdoc/ri data:
 
@@ -36,7 +41,13 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
     warn 'please: gem install isolate'
   end
 
+  self.clean_globs = [
+    RD_BLOCK_PARSER,
+    RD_INLINE_PARSER,
+  ]
+
   require_ruby_version '>= 1.8.7'
+  extra_dev_deps << ['racc',     '>= 0']
   extra_dev_deps << ['minitest', '~> 2']
   extra_dev_deps << ['isolate',  '~> 3']
   extra_dev_deps << ['ZenTest',  '~> 4'] # for autotest/isolate
@@ -44,6 +55,17 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   extra_rdoc_files << 'Rakefile'
   spec_extras['required_rubygems_version'] = '>= 1.3'
   spec_extras['homepage'] = 'http://docs.seattlerb.org/rdoc'
+end
+
+task 'generate' => [
+  RD_BLOCK_PARSER,
+  RD_INLINE_PARSER,
+]
+
+rule '.rb' => '.ry' do |t|
+  racc = File.join Gem.dir, 'bin', 'racc'
+
+  sh "#{racc} -l -o #{t.name} #{t.source}"
 end
 
 # These tasks expect to have the following directory structure:

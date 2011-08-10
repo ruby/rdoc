@@ -14,7 +14,8 @@ class RDoc::Markup::List
   attr_reader :items
 
   ##
-  # Creates a new list of +type+ with +items+
+  # Creates a new list of +type+ with +items+.  Valid list types are:
+  # +:BULLET+, +:LABEL+, +:LALPHA+, +:NOTE+, +:NUMBER+, +:UALPHA+ 
 
   def initialize type = nil, *items
     @type = type

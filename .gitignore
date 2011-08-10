@@ -1,8 +1,10 @@
 *.rbc
 *.swp
-/TAGS
-/doc
-/pkg
-/tmp
 .DS_Store
 .rvmrc
+/TAGS
+/doc
+/lib/rdoc/rd/block_parser.rb
+/lib/rdoc/rd/inline_parser.rb
+/pkg
+/tmp

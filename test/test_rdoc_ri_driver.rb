@@ -85,8 +85,8 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
     expected = @RM::Document.new(
       @RM::Rule.new(1),
       @RM::Paragraph.new('Also found in:'),
-      @RM::Verbatim.new("ruby core\n",
-                        "~/.ri\n"))
+      @RM::Verbatim.new("ruby core", "\n",
+                        "~/.ri", "\n"))
 
     assert_equal expected, out
   end
@@ -145,7 +145,7 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
       @RM::BlankLine.new,
       @RM::Paragraph.new("Include thingy"),
       @RM::BlankLine.new,
-      @RM::Verbatim.new("Enumerable\n"))
+      @RM::Verbatim.new("Enumerable", "\n"))
 
     assert_equal expected, out
   end
@@ -165,8 +165,8 @@ class TestRDocRIDriver < MiniTest::Unit::TestCase
       @RM::Rule.new(1),
       @RM::Heading.new(1, "Includes:"),
       @RM::Paragraph.new("(from #{@store.friendly_path})"),
-      @RM::Verbatim.new("Inc\n",
-                        "Enumerable\n"))
+      @RM::Verbatim.new("Inc", "\n",
+                        "Enumerable", "\n"))
 
     assert_equal expected, out
   end
