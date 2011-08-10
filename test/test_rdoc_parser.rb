@@ -10,6 +10,10 @@ class TestRDocParser < MiniTest::Unit::TestCase
   def setup
     @RP = RDoc::Parser
     @binary_dat = File.expand_path '../binary.dat', __FILE__
+
+    @fn = 'file.rb'
+    @top_level = RDoc::TopLevel.new @fn
+    @options = RDoc::Options.new
   end
 
   def test_class_binary_eh_marshal
@@ -80,14 +84,71 @@ class TestRDocParser < MiniTest::Unit::TestCase
     assert_nil @RP.for(nil, @binary_dat, nil, nil, nil)
   end
 
+  def test_class_for_format
+    content = <<-CONTENT
+# coding: utf-8 format: rd
+    CONTENT
+
+    parser = @RP.for @top_level, __FILE__, content, @options, nil
+
+    assert_kind_of @RP::RD, parser
+  end
+
+  def test_class_use_format
+    content = <<-CONTENT
+# coding: utf-8 format: rd
+    CONTENT
+
+    parser = @RP.use_format content
+
+    assert_equal @RP::RD, parser
+  end
+
+  def test_class_use_format_modeline
+    content = <<-CONTENT
+# -*- coding: utf-8 -*-
+# format: rd
+    CONTENT
+
+    parser = @RP.use_format content
+
+    assert_equal @RP::RD, parser
+  end
+
+  def test_class_use_format_modeline_shebang
+    content = <<-CONTENT
+#!/bin/sh
+/* -*- coding: utf-8 -*-
+ * format: rd
+ */
+    CONTENT
+
+    parser = @RP.use_format content
+
+    assert_equal @RP::RD, parser
+  end
+
+  def test_class_use_format_shebang
+    content = <<-CONTENT
+#!/usr/bin/env ruby
+# coding: utf-8 format: rd
+    CONTENT
+
+    parser = @RP.use_format content
+
+    assert_equal @RP::RD, parser
+  end
+
+  def test_class_use_format_none
+    parser = @RP.use_format ''
+
+    assert_nil parser
+  end
+
   def test_initialize
-    file_name = 'file.rb'
-    top_level = RDoc::TopLevel.new file_name
-    options = RDoc::Options.new
+    parser = @RP.new @top_level, @fn, '', @options, nil
 
-    parser = RDoc::Parser.new top_level, file_name, '', options, nil
-
-    assert_equal RDoc::Parser, top_level.parser
+    assert_equal @RP, @top_level.parser
   end
 
 end

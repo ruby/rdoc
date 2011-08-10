@@ -149,26 +149,30 @@ class RDoc::Parser
   end
 
   ##
-  # Find the correct parser for a particular file name. Return a SimpleParser
-  # for ones that we don't know
+  # Finds and instantiates the correct parser for the given +file_name+ and
+  # +content+.
 
-  def self.for(top_level, file_name, body, options, stats)
+  def self.for top_level, file_name, content, options, stats
     return if binary? file_name
 
-    # If no extension, look for shebang
-    if file_name !~ /\.\w+$/ && body =~ %r{\A#!(.+)} then
-      shebang = $1
-      case shebang
-      when %r{env\s+ruby}, %r{/ruby}
-        file_name = "dummy.rb"
-      end
-    end
+    parser = use_format content
 
-    parser = can_parse file_name
+    unless parser then
+      # If no extension, look for shebang
+      if file_name !~ /\.\w+$/ && content =~ %r{\A#!(.+)} then
+        shebang = $1
+        case shebang
+        when %r{env\s+ruby}, %r{/ruby}
+          file_name = "dummy.rb"
+        end
+      end
+
+      parser = can_parse file_name
+    end
 
     return unless parser
 
-    parser.new top_level, file_name, body, options, stats
+    parser.new top_level, file_name, content, options, stats
   end
 
   ##
@@ -178,6 +182,35 @@ class RDoc::Parser
 
   def self.parse_files_matching(regexp)
     RDoc::Parser.parsers.unshift [regexp, self]
+  end
+
+  ##
+  # If there is a <tt>format: parser_name</tt> comment at the front of the
+  # file, use it to determine the parser.  For example:
+  #
+  #   # format: rdoc
+  #   # Class comment can go here
+  #
+  #   class C
+  #   end
+  #
+  # The comment should appear as the first line of the +content+.
+  #
+  # If the content contains a shebang or editor modeline the comment may
+  # appear on the second or third line.
+  #
+  # Any comment style may be used to hide the format comment.
+
+  def self.use_format content
+    format = content.lines.first(3).grep(/format:\s+(\w+)/) { $1 }.first
+
+    return unless format
+
+    format = Regexp.escape format
+
+    RDoc::Parser.parsers.find do |_, parser|
+      /^#{format}$/i =~ parser.name.sub(/.*:/, '')
+    end.last
   end
 
   ##

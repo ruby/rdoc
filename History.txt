@@ -4,6 +4,9 @@
   * RDoc supports RD format documentation.
 
 * Minor enhancements
+  * RDoc now looks for a <tt>format: parser_name</tt> magic comment to choose
+    alternate documentation formats.  The format comment must be in the first
+    three lines of the file (to allow for a shebang or modeline).
   * Added RDoc::TopLevel#text? and RDoc::Parser::Text to indicate a
     parsed file contains no ruby constructs.
 
