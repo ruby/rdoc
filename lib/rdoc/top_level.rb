@@ -118,7 +118,7 @@ class RDoc::TopLevel < RDoc::Context
     @all_files_hash.each_key do |file_name|
       tl = @all_files_hash[file_name]
 
-      unless RDoc::Parser::Simple === tl.parser then
+      unless tl.text? then
         tl.modules_hash.clear
         tl.classes_hash.clear
 
@@ -464,6 +464,13 @@ class RDoc::TopLevel < RDoc::Context
       items.push(*@modules.map { |n,c| c })
       q.seplist items do |mod| q.pp mod end
     end
+  end
+
+  ##
+  # Is this TopLevel from a text file instead of a source code file?
+
+  def text?
+    @parser.ancestors.include? RDoc::Parser::Text
   end
 
   def to_s # :nodoc:

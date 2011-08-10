@@ -1,4 +1,13 @@
-=== 3.9.1 / ??
+=== 3.10 / ??
+
+* Major enhancements
+  * RDoc supports RD format documentation.
+
+* Minor enhancements
+  * Added RDoc::TopLevel#text? and RDoc::Parser::Text to indicate a
+    parsed file contains no ruby constructs.
+
+=== 3.9.1 / 2011-07-31
 
 * Bug fixes
   * Fix RDoc::Markup parser for a header followed by a non-text token.  Issue

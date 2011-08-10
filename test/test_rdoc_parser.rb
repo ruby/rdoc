@@ -2,6 +2,7 @@ require 'rubygems'
 require 'minitest/autorun'
 require 'rdoc/parser'
 require 'rdoc/parser/ruby'
+require 'rdoc/options'
 require 'tmpdir'
 
 class TestRDocParser < MiniTest::Unit::TestCase
@@ -77,6 +78,16 @@ class TestRDocParser < MiniTest::Unit::TestCase
     def rp.can_parse(*args) nil end
 
     assert_nil @RP.for(nil, @binary_dat, nil, nil, nil)
+  end
+
+  def test_initialize
+    file_name = 'file.rb'
+    top_level = RDoc::TopLevel.new file_name
+    options = RDoc::Options.new
+
+    parser = RDoc::Parser.new top_level, file_name, '', options, nil
+
+    assert_equal RDoc::Parser, top_level.parser
   end
 
 end

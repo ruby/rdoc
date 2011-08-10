@@ -128,7 +128,7 @@
     </div>
 
     <div id="project-metadata">
-      <% simple_files = @files.select {|tl| tl.parser == RDoc::Parser::Simple } %>
+      <% simple_files = @files.select { |f| f.text? } %>
       <% unless simple_files.empty? then %>
       <div id="fileindex-section" class="section project-section">
         <h3 class="section-header">Files</h3>

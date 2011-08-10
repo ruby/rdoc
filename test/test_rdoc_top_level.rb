@@ -8,6 +8,7 @@ class TestRDocTopLevel < XrefTestCase
     super
 
     @top_level = RDoc::TopLevel.new 'path/top_level.rb'
+    @top_level.parser = RDoc::Parser::Ruby
   end
 
   def test_class_all_classes_and_modules
@@ -234,6 +235,20 @@ class TestRDocTopLevel < XrefTestCase
 
   def test_name
     assert_equal 'top_level.rb', @top_level.name
+  end
+
+  def test_text_eh
+    refute @xref_data.text?
+
+    rd = RDoc::TopLevel.new 'rd_format.rd'
+    rd.parser = RDoc::Parser::RD
+
+    assert rd.text?
+
+    simple = RDoc::TopLevel.new 'simple.txt'
+    simple.parser = RDoc::Parser::Simple
+
+    assert simple.text?
   end
 
 end

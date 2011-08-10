@@ -4,39 +4,33 @@ require 'rdoc/markup/pre_process'
 require 'rdoc/stats'
 
 ##
-# A parser is simple a class that implements
+# A parser is simple a class that subclasses RDoc::Parser and implements #scan
+# to fill in an RDoc::TopLevel with parsed data.
 #
-#   #initialize(file_name, body, options)
+# The initialize method takes an RDoc::TopLevel to fill with parsed content,
+# the name of the file to be parsed, the content of the file, an RDoc::Options
+# object and an RDoc::Stats object to inform the user of parsed items.  The
+# scan method is then called to parse the file and must return the
+# RDoc::TopLevel object.  By calling super these items will be set for you.
 #
-# and
-#
-#   #scan
-#
-# The initialize method takes a file name to be used, the body of the file,
-# and an RDoc::Options object. The scan method is then called to return an
-# appropriately parsed TopLevel code object.
-#
-# The ParseFactory is used to redirect to the correct parser given a
-# filename extension. This magic works because individual parsers have to
-# register themselves with us as they are loaded in. The do this using the
-# following incantation
+# In order to be used by RDoc the parser needs to register the file extensions
+# it can parse.  Use ::parse_files_matching to register extensions.
 #
 #   require "rdoc/parser"
 #
 #   class RDoc::Parser::Xyz < RDoc::Parser
-#     parse_files_matching /\.xyz$/ # <<<<
+#     parse_files_matching /\.xyz$/
 #
-#     def initialize(file_name, body, options)
-#       ...
+#     def initialize top_level, file_name, content, options, stats
+#       super
+#
+#       # extra initialization if needed
 #     end
 #
 #     def scan
-#       ...
+#       # parse file and fill in @top_level
 #     end
 #   end
-#
-# Just to make life interesting, if we suspect a plain text file, we also
-# look for a shebang line just in case it's a potential shell script
 
 class RDoc::Parser
 
@@ -188,12 +182,14 @@ class RDoc::Parser
 
   ##
   # Creates a new Parser storing +top_level+, +file_name+, +content+,
-  # +options+ and +stats+ in instance variables.
-  #
-  # Usually invoked by +super+
+  # +options+ and +stats+ in instance variables.  In +@preprocess+ an
+  # RDoc::Markup::PreProcess object is created which allows processing of
+  # directives.
 
-  def initialize(top_level, file_name, content, options, stats)
+  def initialize top_level, file_name, content, options, stats
     @top_level = top_level
+    @top_level.parser = self.class
+
     @file_name = file_name
     @content = content
     @options = options
@@ -205,5 +201,9 @@ class RDoc::Parser
 
 end
 
+require 'rdoc/parser/text'
+
+# simple must come first in order to show up last in the parsers list
 require 'rdoc/parser/simple'
+require 'rdoc/parser/rd'
 

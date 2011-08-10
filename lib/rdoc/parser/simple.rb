@@ -4,6 +4,8 @@
 
 class RDoc::Parser::Simple < RDoc::Parser
 
+  include RDoc::Parser::Text
+
   parse_files_matching(//)
 
   attr_reader :content # :nodoc:
@@ -27,7 +29,6 @@ class RDoc::Parser::Simple < RDoc::Parser
     comment = remove_private_comments comment
 
     @top_level.comment = comment
-    @top_level.parser = self.class
     @top_level
   end
 

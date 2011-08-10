@@ -4,6 +4,7 @@ require 'rdoc/stats'
 require 'rdoc/code_objects'
 require 'rdoc/markup'
 require 'rdoc/parser'
+require 'rdoc/parser/ruby'
 
 class TestRDocStats < MiniTest::Unit::TestCase
 
@@ -11,16 +12,18 @@ class TestRDocStats < MiniTest::Unit::TestCase
     RDoc::TopLevel.reset
 
     @s = RDoc::Stats.new 0
+
+    @tl = RDoc::TopLevel.new 'file.rb'
+    @tl.parser = RDoc::Parser::Ruby
   end
 
   def test_report_attr
-    tl = RDoc::TopLevel.new 'file.rb'
-    c = tl.add_class RDoc::NormalClass, 'C'
-    c.record_location tl
-    c.add_comment 'C', tl
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
+    c.add_comment 'C', @tl
 
     a = RDoc::Attr.new nil, 'a', 'RW', nil
-    a.record_location tl
+    a.record_location @tl
     c.add_attribute a
 
     RDoc::TopLevel.complete :public
@@ -40,13 +43,12 @@ end
   end
 
   def test_report_attr_documented
-    tl = RDoc::TopLevel.new 'file.rb'
-    c = tl.add_class RDoc::NormalClass, 'C'
-    c.record_location tl
-    c.add_comment 'C', tl
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
+    c.add_comment 'C', @tl
 
     a = RDoc::Attr.new nil, 'a', 'RW', 'a'
-    a.record_location tl
+    a.record_location @tl
     c.add_attribute a
 
     RDoc::TopLevel.complete :public
@@ -57,13 +59,12 @@ end
   end
 
   def test_report_constant
-    tl = RDoc::TopLevel.new 'file.rb'
-    m = tl.add_module RDoc::NormalModule, 'M'
-    m.record_location tl
-    m.add_comment 'M', tl
+    m = @tl.add_module RDoc::NormalModule, 'M'
+    m.record_location @tl
+    m.add_comment 'M', @tl
 
     c = RDoc::Constant.new 'C', nil, nil
-    c.record_location tl
+    c.record_location @tl
     m.add_constant c
 
     RDoc::TopLevel.complete :public
@@ -84,16 +85,15 @@ end
   end
 
   def test_report_constant_alias
-    tl = RDoc::TopLevel.new 'file.rb'
-    mod = tl.add_module RDoc::NormalModule, 'M'
+    mod = @tl.add_module RDoc::NormalModule, 'M'
 
-    c = tl.add_class RDoc::NormalClass, 'C'
+    c = @tl.add_class RDoc::NormalClass, 'C'
     mod.add_constant c
 
     ca = RDoc::Constant.new 'CA', nil, nil
     ca.is_alias_for = c
 
-    tl.add_constant ca
+    @tl.add_constant ca
 
     RDoc::TopLevel.complete :public
 
@@ -105,13 +105,12 @@ end
   end
 
   def test_report_constant_documented
-    tl = RDoc::TopLevel.new 'file.rb'
-    m = tl.add_module RDoc::NormalModule, 'M'
-    m.record_location tl
+    m = @tl.add_module RDoc::NormalModule, 'M'
+    m.record_location @tl
     m.comment = 'M'
 
     c = RDoc::Constant.new 'C', nil, 'C'
-    c.record_location tl
+    c.record_location @tl
     m.add_constant c
 
     RDoc::TopLevel.complete :public
@@ -122,12 +121,11 @@ end
   end
 
   def test_report_class
-    tl = RDoc::TopLevel.new 'file.rb'
-    c = tl.add_class RDoc::NormalClass, 'C'
-    c.record_location tl
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
 
     m = RDoc::AnyMethod.new nil, 'm'
-    m.record_location tl
+    m.record_location @tl
     c.add_method m
     m.comment = 'm'
 
@@ -149,13 +147,12 @@ end
   end
 
   def test_report_class_documented
-    tl = RDoc::TopLevel.new 'file.rb'
-    c = tl.add_class RDoc::NormalClass, 'C'
-    c.record_location tl
-    c.add_comment 'C', tl
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
+    c.add_comment 'C', @tl
 
     m = RDoc::AnyMethod.new nil, 'm'
-    m.record_location tl
+    m.record_location @tl
     c.add_method m
     m.comment = 'm'
 
@@ -167,21 +164,20 @@ end
   end
 
   def test_report_class_documented_level_1
-    tl = RDoc::TopLevel.new 'file.rb'
-    c1 = tl.add_class RDoc::NormalClass, 'C1'
-    c1.record_location tl
-    c1.add_comment 'C1', tl
+    c1 = @tl.add_class RDoc::NormalClass, 'C1'
+    c1.record_location @tl
+    c1.add_comment 'C1', @tl
 
     m1 = RDoc::AnyMethod.new nil, 'm1'
-    m1.record_location tl
+    m1.record_location @tl
     c1.add_method m1
     m1.comment = 'm1'
 
-    c2 = tl.add_class RDoc::NormalClass, 'C2'
-    c2.record_location tl
+    c2 = @tl.add_class RDoc::NormalClass, 'C2'
+    c2.record_location @tl
 
     m2 = RDoc::AnyMethod.new nil, 'm2'
-    m2.record_location tl
+    m2.record_location @tl
     c2.add_method m2
     m2.comment = 'm2'
 
@@ -206,8 +202,7 @@ end
   end
 
   def test_report_class_empty
-    tl = RDoc::TopLevel.new 'file.rb'
-    tl.add_class RDoc::NormalClass, 'C'
+    @tl.add_class RDoc::NormalClass, 'C'
 
     RDoc::TopLevel.complete :public
 
@@ -225,13 +220,12 @@ The following items are not documented:
   end
 
   def test_report_class_empty_2
-    tl = RDoc::TopLevel.new 'file.rb'
-    c1 = tl.add_class RDoc::NormalClass, 'C1'
-    c1.record_location tl
+    c1 = @tl.add_class RDoc::NormalClass, 'C1'
+    c1.record_location @tl
 
-    c2 = tl.add_class RDoc::NormalClass, 'C2'
-    c2.record_location tl
-    c2.add_comment 'C2', tl
+    c2 = @tl.add_class RDoc::NormalClass, 'C2'
+    c2.record_location @tl
+    c2.add_comment 'C2', @tl
 
     RDoc::TopLevel.complete :public
 
@@ -253,12 +247,11 @@ end
   end
 
   def test_report_class_method_documented
-    tl = RDoc::TopLevel.new 'file.rb'
-    c = tl.add_class RDoc::NormalClass, 'C'
-    c.record_location tl
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
 
     m = RDoc::AnyMethod.new nil, 'm'
-    m.record_location tl
+    m.record_location @tl
     c.add_method m
     m.comment = 'm'
 
@@ -288,17 +281,16 @@ end
   end
 
   def test_report_method
-    tl = RDoc::TopLevel.new 'file.rb'
-    c = tl.add_class RDoc::NormalClass, 'C'
-    c.record_location tl
-    c.add_comment 'C', tl
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
+    c.add_comment 'C', @tl
 
     m1 = RDoc::AnyMethod.new nil, 'm1'
-    m1.record_location tl
+    m1.record_location @tl
     c.add_method m1
 
     m2 = RDoc::AnyMethod.new nil, 'm2'
-    m2.record_location tl
+    m2.record_location @tl
     c.add_method m2
     m2.comment = 'm2'
 
@@ -321,13 +313,12 @@ end
   end
 
   def test_report_method_documented
-    tl = RDoc::TopLevel.new 'file.rb'
-    c = tl.add_class RDoc::NormalClass, 'C'
-    c.record_location tl
-    c.add_comment 'C', tl
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
+    c.add_comment 'C', @tl
 
     m = RDoc::AnyMethod.new nil, 'm'
-    m.record_location tl
+    m.record_location @tl
     c.add_method m
     m.comment = 'm'
 
@@ -339,19 +330,18 @@ end
   end
 
   def test_report_method_parameters
-    tl = RDoc::TopLevel.new 'file.rb'
-    c = tl.add_class RDoc::NormalClass, 'C'
-    c.record_location tl
-    c.add_comment 'C', tl
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
+    c.add_comment 'C', @tl
 
     m1 = RDoc::AnyMethod.new nil, 'm1'
-    m1.record_location tl
+    m1.record_location @tl
     m1.params = '(p1, p2)'
     m1.comment = 'Stuff with +p1+'
     c.add_method m1
 
     m2 = RDoc::AnyMethod.new nil, 'm2'
-    m2.record_location tl
+    m2.record_location @tl
     c.add_method m2
     m2.comment = 'm2'
 
@@ -376,13 +366,13 @@ end
   end
 
   def test_report_method_parameters_documented
-    tl = RDoc::TopLevel.new 'file.rb'
-    c = tl.add_class RDoc::NormalClass, 'C'
-    c.record_location tl
-    c.add_comment 'C', tl
+    @tl.parser = RDoc::Parser::Ruby
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
+    c.add_comment 'C', @tl
 
     m = RDoc::AnyMethod.new nil, 'm'
-    m.record_location tl
+    m.record_location @tl
     m.params = '(p1)'
     m.comment = 'Stuff with +p1+'
     c.add_method m
@@ -396,13 +386,12 @@ end
   end
 
   def test_report_method_parameters_yield
-    tl = RDoc::TopLevel.new 'file.rb'
-    c = tl.add_class RDoc::NormalClass, 'C'
-    c.record_location tl
-    c.add_comment 'C', tl
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
+    c.add_comment 'C', @tl
 
     m = RDoc::AnyMethod.new nil, 'm'
-    m.record_location tl
+    m.record_location @tl
     m.call_seq = <<-SEQ
 m(a) { |c| ... }
 m(a, b) { |c, d| ... }
@@ -431,23 +420,22 @@ end
   end
 
   def test_summary
-    tl = RDoc::TopLevel.new 'file.rb'
-    c = tl.add_class RDoc::NormalClass, 'C'
-    c.record_location tl
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
 
-    m = tl.add_module RDoc::NormalModule, 'M'
-    m.record_location tl
+    m = @tl.add_module RDoc::NormalModule, 'M'
+    m.record_location @tl
 
     a = RDoc::Attr.new nil, 'a', 'RW', nil
-    a.record_location tl
+    a.record_location @tl
     c.add_attribute a
 
     c_c = RDoc::Constant.new 'C', nil, nil
-    c_c.record_location tl
+    c_c.record_location @tl
     c.add_constant c_c
 
     m = RDoc::AnyMethod.new nil, 'm'
-    m.record_location tl
+    m.record_location @tl
     c.add_method m
 
     RDoc::TopLevel.complete :public
@@ -473,9 +461,8 @@ Total:      5 (5 undocumented)
   end
 
   def test_summary_level_false
-    tl = RDoc::TopLevel.new 'file.rb'
-    c = tl.add_class RDoc::NormalClass, 'C'
-    c.record_location tl
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
 
     RDoc::TopLevel.complete :public
 
@@ -502,13 +489,12 @@ Total:      1 (1 undocumented)
   end
 
   def test_summary_level_1
-    tl = RDoc::TopLevel.new 'file.rb'
-    c = tl.add_class RDoc::NormalClass, 'C'
-    c.record_location tl
-    c.add_comment 'C', tl
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
+    c.add_comment 'C', @tl
 
     m = RDoc::AnyMethod.new nil, 'm'
-    m.record_location tl
+    m.record_location @tl
     m.params = '(p1, p2)'
     m.comment = 'Stuff with +p1+'
     c.add_method m

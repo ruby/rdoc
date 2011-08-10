@@ -37,6 +37,7 @@ class TestRDocGeneratorDarkfish < MiniTest::Unit::TestCase
     rd.generator = @g
 
     @top_level = RDoc::TopLevel.new 'file.rb'
+    @top_level.parser = RDoc::Parser::Ruby
     @klass = @top_level.add_class RDoc::NormalClass, 'Object'
 
     @meth = RDoc::AnyMethod.new nil, 'method'

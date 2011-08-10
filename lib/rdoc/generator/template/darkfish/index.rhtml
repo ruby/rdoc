@@ -29,7 +29,7 @@
   <p>This is the API documentation for '<%= @options.title %>'.</p>
   <% end %>
 
-  <% simple_files = @files.select {|tl| tl.parser == RDoc::Parser::Simple } %>
+  <% simple_files = @files.select { |f| f.text? } %>
   <% unless simple_files.empty? then %>
   <h2>Files</h2>
   <ul>

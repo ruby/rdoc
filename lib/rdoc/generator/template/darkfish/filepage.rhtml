@@ -20,7 +20,7 @@
     charset="utf-8"></script>
 </head>
 
-<% if file.parser == RDoc::Parser::Simple %>
+<% if file.text? then %>
 <body class="file">
   <div id="metadata">
     <div id="home-metadata">
@@ -34,7 +34,7 @@
     </div>
 
     <div id="project-metadata">
-      <% simple_files = @files.select { |f| f.parser == RDoc::Parser::Simple } %>
+      <% simple_files = @files.select { |f| f.text? } %>
       <% unless simple_files.empty? then %>
       <div id="fileindex-section" class="section project-section">
         <h3 class="section-header">Files</h3>
