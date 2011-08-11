@@ -279,6 +279,12 @@ require 'rdoc'
 # module, method, file, etc.  If the referenced item is not documented the
 # text will be and no link will be generated.
 #
+# Links starting with <tt>rdoc-label:label_name</tt> will link to the
+# +label_name+.  You can create a label for the current link (for
+# bidirectional links) by supplying a name for the current link like
+# <tt>rdoc-label:label_name:my_name</tt>.  (RDoc::RD uses this to implement
+# footnotes).
+#
 # Links starting with +link:+ refer to local files whose path is relative to
 # the <tt>--op</tt> directory.
 #

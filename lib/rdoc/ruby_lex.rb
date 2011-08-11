@@ -411,7 +411,7 @@ class RDoc::RubyLex
       gets # consume =end
 
       @ltype = nil
-      Token(TkCOMMENT, res)
+      Token(TkRD_COMMENT, res)
     end
 
     @OP.def_rule("\n") do |op, io|

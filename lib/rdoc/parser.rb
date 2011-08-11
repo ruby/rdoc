@@ -239,4 +239,6 @@ require 'rdoc/parser/text'
 # simple must come first in order to show up last in the parsers list
 require 'rdoc/parser/simple'
 require 'rdoc/parser/rd'
+require 'rdoc/parser/ruby'
+require 'rdoc/parser/c'
 

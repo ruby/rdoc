@@ -117,6 +117,16 @@ class TestRDocRdBlockParser < MiniTest::Unit::TestCase
     assert_equal expected, parse(list)
   end
 
+  def test_parse_footnote
+    expected =
+      doc(
+        @RM::Paragraph.new("{*1}[rdoc-label:foottext-1:footmark-1]"),
+        @RM::Rule.new(1),
+        @RM::Paragraph.new("{^1}[rdoc-label:footmark-1:foottext-1]", "text"))
+
+    assert_equal expected, parse("((-text-))")
+  end
+
   def test_parse_include
     @block_parser.include_path = [Dir.tmpdir]
 

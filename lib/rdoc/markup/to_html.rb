@@ -75,7 +75,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @markup.add_special(/((link:|https?:|mailto:|ftp:|www\.)\S+\w)/, :HYPERLINK)
 
     # and links of the form  <text>[<url>]
-    @markup.add_special(/(((\{.*?\})|\b\S+?)\[\S+?\.\S+?\])/, :TIDYLINK)
+    @markup.add_special(/(((\{.*?\})|\b\S+?)\[\S+?\])/, :TIDYLINK)
 
     init_tags
   end
@@ -234,11 +234,15 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   end
 
   ##
-  # Generate a link for +url+, labeled with +text+.  Handles the special cases
+  # Generate a link to +url+ with content +text+.  Handles the special cases
   # for img: and link: described under handle_special_HYPERLINK
 
-  def gen_url(url, text)
-    if url =~ /([A-Za-z]+):(.*)/ then
+  def gen_url url, text
+    if url =~ /^rdoc-label:([^:]*)(?::(.*))?/ then
+      type = "link"
+      path = "##{$1}"
+      id   = " id=\"#{$2}\"" if $2
+    elsif url =~ /([A-Za-z]+):(.*)/ then
       type = $1
       path = $2
     else
@@ -259,7 +263,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
        url =~ /\.(gif|png|jpg|jpeg|bmp)$/ then
       "<img src=\"#{url}\" />"
     else
-      "<a href=\"#{url}\">#{text.sub(%r{^#{type}:/*}, '')}</a>"
+      "<a#{id} href=\"#{url}\">#{text.sub(%r{^#{type}:/*}, '')}</a>"
     end
   end
 

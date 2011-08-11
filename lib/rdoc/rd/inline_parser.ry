@@ -290,7 +290,7 @@ class InlineParser
 
     footnote : FOOTNOTE_OPEN content FOOTNOTE_CLOSE {
       index = @block_parser.add_footnote val[1].rdoc
-      result = "{*#{index}}[rdoc-label:footnote-#{index}]"
+      result = "{*#{index}}[rdoc-label:foottext-#{index}:footmark-#{index}]"
     }
     ;
 

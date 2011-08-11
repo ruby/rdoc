@@ -27,9 +27,13 @@ class TestRDocRdInlineParser < MiniTest::Unit::TestCase
   end
 
   def test_parse_footnote
-    assert_equal '{*1}[rdoc-label:footnote-1]', parse('((-text-))')
+    assert_equal '{*1}[rdoc-label:foottext-1:footmark-1]', parse('((-text-))')
 
-    assert_equal [@RM::Paragraph.new('text')], @block_parser.footnotes
+    expected = [
+      @RM::Paragraph.new('{^1}[rdoc-label:footmark-1:foottext-1]', 'text')
+    ]
+
+    assert_equal expected, @block_parser.footnotes
   end
 
   def test_parse_index

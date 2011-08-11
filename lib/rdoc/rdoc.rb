@@ -3,11 +3,6 @@ require 'rdoc'
 require 'rdoc/encoding'
 require 'rdoc/parser'
 
-# Simple must come first
-require 'rdoc/parser/simple'
-require 'rdoc/parser/ruby'
-require 'rdoc/parser/c'
-
 require 'rdoc/stats'
 require 'rdoc/options'
 

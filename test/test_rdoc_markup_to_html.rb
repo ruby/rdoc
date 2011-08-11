@@ -306,6 +306,16 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
                  @to.gen_url('link:example', 'example')
   end
 
+  def test_gen_url_rdoc_label
+    assert_equal '<a href="#foottext-1">example</a>',
+                 @to.gen_url('rdoc-label:foottext-1', 'example')
+  end
+
+  def test_gen_url_rdoc_label_id
+    assert_equal '<a id="footmark-1" href="#foottext-1">example</a>',
+                 @to.gen_url('rdoc-label:foottext-1:footmark-1', 'example')
+  end
+
   def test_handle_special_HYPERLINK_link
     special = RDoc::Markup::Special.new 0, 'link:README.txt'
 

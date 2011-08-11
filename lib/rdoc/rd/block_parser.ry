@@ -279,7 +279,18 @@ def parse src
 
   @yydebug = true
 
-  do_parse
+  document = do_parse
+
+  unless @footnotes.empty? then
+    blankline = document.parts.pop
+
+    document.parts << RDoc::Markup::Rule.new(1)
+    document.parts.concat @footnotes
+
+    document.parts.push blankline
+  end
+
+  document
 end
 
 def next_token
@@ -546,11 +557,13 @@ def paragraph value
 end
 
 def add_footnote content
-  index = @footnotes.length
+  index = @footnotes.length + 1
 
-  @footnotes << RDoc::Markup::Paragraph.new(*content)
+  footmark_link = "{^#{index}}[rdoc-label:footmark-#{index}:foottext-#{index}]"
 
-  index + 1
+  @footnotes << RDoc::Markup::Paragraph.new(footmark_link, *content)
+
+  index
 end
 
 def add_label label

@@ -360,7 +360,6 @@ module RDoc::RubyToken
     [:TkSEMICOLON,  Token,  ";"],
 
     [:TkCOMMENT,    TkVal],
-    [:TkRD_COMMENT],
     [:TkSPACE,      Token,  " "],
     [:TkNL,         Token,  "\n"],
     [:TkEND_OF_SCRIPT],
@@ -400,6 +399,8 @@ module RDoc::RubyToken
   for defs in TokenDefinitions
     def_token(*defs)
   end
+
+  def_token :TkRD_COMMENT, TkCOMMENT
 
   NEWLINE_TOKEN = TkNL.new nil, 0, 0, "\n"
 
