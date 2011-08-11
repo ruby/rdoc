@@ -309,6 +309,12 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal '&lt;&gt;', @to.convert_string('<>')
   end
 
+  def test_convert_TIDYLINK_rdoc_label
+    result = @to.convert '{foo}[rdoc-label:foottext-1]'
+
+    assert_equal "\n<p><a href=\"#foottext-1\">foo</a></p>\n", result
+  end
+
   def test_gen_url
     assert_equal '<a href="example">example</a>',
                  @to.gen_url('link:example', 'example')
