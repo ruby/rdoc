@@ -10,7 +10,7 @@
   * Added RDoc::TopLevel#text? and RDoc::Parser::Text to indicate a
     parsed file contains no ruby constructs.
   * Added <tt>rdoc-label</tt> link scheme which allows bidirectional links.
-  * See RDoc::
+    See RDoc::Markup for details.
 
 * Bug fixes
   * Loosened TIDYLINK regexp to allow any content in the link section like:
