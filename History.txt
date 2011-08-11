@@ -1,4 +1,10 @@
-=== 3.9.1 / ??
+=== 3.9.2 / 2011-08-11
+
+* Bug fix
+  * Loosened TIDYLINK regexp to allow any content in the link section like:
+    <tt>{foo}[rdoc-ref:SomeClass]</tt>
+
+=== 3.9.1 / 2011-07-31
 
 * Bug fixes
   * Fix RDoc::Markup parser for a header followed by a non-text token.  Issue
