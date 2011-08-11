@@ -6,7 +6,7 @@ require 'rdoc'
 require 'rdoc/stats'
 require 'rdoc/options'
 require 'rdoc/code_objects'
-require 'rdoc/parser/ruby'
+require 'rdoc/parser'
 require File.expand_path '../xref_data', __FILE__
 
 class XrefTestCase < MiniTest::Unit::TestCase

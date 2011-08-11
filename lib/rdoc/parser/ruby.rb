@@ -13,7 +13,6 @@ require 'rdoc/ruby_lex'
 require 'rdoc/code_objects'
 require 'rdoc/token_stream'
 require 'rdoc/markup/pre_process'
-require 'rdoc/parser'
 require 'rdoc/parser/ruby_tools'
 
 $TOKEN_DEBUG ||= nil

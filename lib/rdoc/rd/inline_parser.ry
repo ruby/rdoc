@@ -93,8 +93,6 @@ class InlineParser
 # ((<subst|filename/element_label>))
 
     reference : REF_OPEN substitute ref_label REF_CLOSE {
-      scheme, inline = val[2]
-
       result = "{#{val[1]}}[#{val[2].join}]"
     } | REF_OPEN ref_label2 REF_CLOSE {
       scheme, inline = val[1]

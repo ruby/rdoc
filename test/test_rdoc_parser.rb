@@ -146,7 +146,7 @@ class TestRDocParser < MiniTest::Unit::TestCase
   end
 
   def test_initialize
-    parser = @RP.new @top_level, @fn, '', @options, nil
+    @RP.new @top_level, @fn, '', @options, nil
 
     assert_equal @RP, @top_level.parser
   end
