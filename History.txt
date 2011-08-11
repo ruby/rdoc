@@ -15,6 +15,7 @@
 * Bug fixes
   * Loosened TIDYLINK regexp to allow any content in the link section like:
     <tt>{foo}[rdoc-ref:SomeClass]</tt>
+  * In HTML output headings are capped at <tt><h6></tt> again
 
 === 3.9.1 / 2011-07-31
 

@@ -297,6 +297,14 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal expected, @to.end_accepting
   end
 
+  def test_accept_heading_7
+    @to.start_accepting
+
+    @to.accept_heading @RM::Heading.new(7, 'Hello')
+
+    assert_equal "\n<h6>Hello</h6>\n", @to.res.join
+  end
+
   def test_convert_string
     assert_equal '&lt;&gt;', @to.convert_string('<>')
   end

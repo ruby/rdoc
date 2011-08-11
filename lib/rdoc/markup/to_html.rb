@@ -212,9 +212,10 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # Adds +heading+ to the output
 
   def accept_heading(heading)
-    @res << "\n<h#{heading.level}>"
+    level = [6, heading.level].min
+    @res << "\n<h#{level}>"
     @res << to_html(heading.text)
-    @res << "</h#{heading.level}>\n"
+    @res << "</h#{level}>\n"
   end
 
   ##
