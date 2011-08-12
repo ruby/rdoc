@@ -163,5 +163,6 @@ class RDoc::Markup
   autoload :ToBs,           'rdoc/markup/to_bs'
   autoload :ToHtml,         'rdoc/markup/to_html'
   autoload :ToHtmlCrossref, 'rdoc/markup/to_html_crossref'
+  autoload :ToLabel,        'rdoc/markup/to_label'
   autoload :ToRdoc,         'rdoc/markup/to_rdoc'
 end

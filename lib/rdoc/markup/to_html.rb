@@ -66,6 +66,8 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   def initialize markup = nil
     super
 
+    @to_label = RDoc::Markup::ToLabel.new
+
     @th = nil
     @in_list_entry = nil
     @list = nil
@@ -211,9 +213,10 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   ##
   # Adds +heading+ to the output
 
-  def accept_heading(heading)
+  def accept_heading heading
     level = [6, heading.level].min
-    @res << "\n<h#{level}>"
+    label = to_label heading.text.dup
+    @res << "\n<h#{level} id=\"label-#{label}\">"
     @res << to_html(heading.text)
     @res << "</h#{level}>\n"
   end
@@ -324,6 +327,13 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   def to_html item
     super convert_flow @am.flow item
+  end
+
+  ##
+  # Converts +item+ to text by removing special markup
+
+  def to_label item
+    @to_label.convert item
   end
 
 end

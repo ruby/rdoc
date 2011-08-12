@@ -658,4 +658,3 @@ class RDoc::Markup
 
 end
 
-
