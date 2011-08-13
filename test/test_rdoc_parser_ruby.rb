@@ -6,7 +6,7 @@ require 'rubygems'
 require 'minitest/autorun'
 
 require 'rdoc/options'
-require 'rdoc/parser/ruby'
+require 'rdoc/parser'
 require 'rdoc/stats'
 
 class TestRDocParserRuby < MiniTest::Unit::TestCase

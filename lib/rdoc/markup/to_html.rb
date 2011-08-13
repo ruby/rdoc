@@ -5,7 +5,7 @@ require 'rdoc/text'
 require 'cgi'
 
 ##
-# Outputs RDoc markup as HTML
+# Outputs RDoc markup as HTML.
 
 class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
@@ -28,6 +28,12 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   attr_reader :res # :nodoc:
   attr_reader :in_list_entry # :nodoc:
   attr_reader :list # :nodoc:
+
+  ##
+  # The RDoc::CodeObject HTML is being generated for.  This is used to
+  # generate namespaced URI fragments
+
+  attr_accessor :code_object
 
   ##
   # Path to this document for relative links
@@ -212,11 +218,16 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   ##
   # Adds +heading+ to the output
+  #
+  # = Foo
 
   def accept_heading heading
     level = [6, heading.level].min
-    label = to_label heading.text.dup
-    @res << "\n<h#{level} id=\"label-#{label}\">"
+    label = "label-#{to_label heading.text.dup}"
+    label = [@code_object.aref, label].compact.join '-' if
+      @code_object and @code_object.respond_to? :aref
+
+    @res << "\n<h#{level} id=\"#{label}\">"
     @res << to_html(heading.text)
     @res << "</h#{level}>\n"
   end

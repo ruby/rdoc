@@ -11,6 +11,8 @@
     Is rendered as
 
       <h1 id="label-Hello%21">Hello!</h1>
+
+    See RDoc::Markup for further details.
   * RDoc now looks for a <tt>format: parser_name</tt> magic comment to choose
     alternate documentation formats.  The format comment must be in the first
     three lines of the file (to allow for a shebang or modeline).

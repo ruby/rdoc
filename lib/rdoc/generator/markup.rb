@@ -45,6 +45,8 @@ module RDoc::Generator::Markup
 
     @formatter = RDoc::Markup::ToHtmlCrossref.new(this.path, this, show_hash,
                                                   hyperlink_all)
+    @formatter.code_object = self
+    @formatter
   end
 
   ##

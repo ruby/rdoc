@@ -96,7 +96,7 @@ require 'rdoc'
 # have been removed. In addition, the verbatim text has been shifted
 # left, so the amount of indentation of verbatim text is unimportant.
 #
-# === Headers and Rules
+# === Headers
 #
 # A line starting with an equal sign (=) is treated as a
 # heading.  Level one headings have one equals sign, level two headings
@@ -104,7 +104,33 @@ require 'rdoc'
 # (seven hyphens or more result in a level six heading).
 #
 # For example, the above header was obtained with:
-#   == Headers and Rules
+#
+#   === Headers
+#
+# In HTML output headers have an id matching their name.  The above example's
+# HTML is:
+#
+#   <h3 id="label-Headers">Headers</h3>
+#
+# If a heading is inside a method body the id will be prefixed with the
+# method's id.  If the above header where in the documentation for a method
+# such as:
+#
+#   ##
+#   # This method does fun things
+#   #
+#   # = Example
+#   #
+#   #   Example of fun things goes here ...
+#
+#   def do_fun_things
+#   end
+#
+# The header's id would be:
+#
+#   <h1 id="method-i-do_fun_things-label-Example">Example</h3>
+#
+# === Rules
 #
 # A line starting with three or more hyphens (at the current indent)
 # generates a horizontal rule.  The more hyphens, the thicker the rule

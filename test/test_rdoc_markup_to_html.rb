@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'rdoc/markup/formatter_test_case'
 require 'rdoc/markup/to_html'
+require 'rdoc/code_objects'
 require 'minitest/autorun'
 
 class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
@@ -303,6 +304,26 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     @to.accept_heading @RM::Heading.new(7, 'Hello')
 
     assert_equal "\n<h6 id=\"label-Hello\">Hello</h6>\n", @to.res.join
+  end
+
+  def test_accept_heading_aref_class
+    @to.code_object = RDoc::NormalClass.new 'Foo'
+    @to.start_accepting
+
+    @to.accept_heading @RM::Heading.new(1, 'Hello')
+
+    assert_equal "\n<h1 id=\"label-Hello\">Hello</h1>\n",
+                 @to.res.join
+  end
+
+  def test_accept_heading_aref_method
+    @to.code_object = RDoc::AnyMethod.new nil, 'foo'
+    @to.start_accepting
+
+    @to.accept_heading @RM::Heading.new(1, 'Hello')
+
+    assert_equal "\n<h1 id=\"method-i-foo-label-Hello\">Hello</h1>\n",
+                 @to.res.join
   end
 
   def test_convert_string
