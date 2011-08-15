@@ -375,6 +375,14 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
                  @to.gen_url('rdoc-label:foottext-1:footmark-1', 'example')
   end
 
+  def test_gem_url_image_url
+    assert_equal '<img src="http://example.com/image.png" />', @to.gen_url('http://example.com/image.png', 'ignored')
+  end
+
+  def test_gem_url_ssl_image_url
+    assert_equal '<img src="https://example.com/image.png" />', @to.gen_url('https://example.com/image.png', 'ignored')
+  end
+
   def test_handle_special_HYPERLINK_link
     special = RDoc::Markup::Special.new 0, 'link:README.txt'
 
