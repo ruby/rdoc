@@ -74,10 +74,11 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
     @to_label = RDoc::Markup::ToLabel.new
 
-    @th = nil
+    @code_object = nil
+    @from_path = ''
     @in_list_entry = nil
     @list = nil
-    @from_path = ''
+    @th = nil
 
     # external links
     @markup.add_special(/((link:|https?:|mailto:|ftp:|www\.)\S+\w)/, :HYPERLINK)

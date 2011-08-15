@@ -18,7 +18,7 @@ class RDoc::CrossReference
   #
   # See CLASS_REGEXP_STR
 
-  METHOD_REGEXP_STR = '([a-z]\w*[!?=]?)(?:\([\w.+*/=<>-]*\))?'
+  METHOD_REGEXP_STR = '([a-z]\w*[!?=]?|%)(?:\([\w.+*/=<>-]*\))?'
 
   ##
   # Regular expressions matching text that should potentially have
@@ -51,7 +51,7 @@ class RDoc::CrossReference
                       # after the cross-reference is a space, sentence
                       # punctuation, tag start character, or attribute
                       # marker.
-                      | #{CLASS_REGEXP_STR}(?=[\s\)\.\?\!\,\;<\000]|\z)
+                      | #{CLASS_REGEXP_STR}(?=[%\s\)\.\?\!\,\;<\000]|\z)
 
                       # Things that look like filenames
                       # The key thing is that there must be at least
@@ -63,7 +63,10 @@ class RDoc::CrossReference
                       # Don't process things like '\<' in \<tt>, though.
                       # TODO: including < is a hack, not very satisfying.
                       | \\[^\s<]
-                      )/x
+                      )
+                      
+                      # labels for headings
+                      (?:%\S+)?/x
 
   ##
   # Version of CROSSREF_REGEXP used when <tt>--hyperlink-all</tt> is specified.
@@ -76,14 +79,17 @@ class RDoc::CrossReference
                       | \\?#{METHOD_REGEXP_STR}
 
                       # A::B::C
-                      | #{CLASS_REGEXP_STR}(?=[\s\)\.\?\!\,\;<\000]|\z)
+                      | #{CLASS_REGEXP_STR}(?=[%\s\)\.\?\!\,\;<\000]|\z)
 
                       # Things that look like filenames
                       | (?:\.\.\/)*[-\/\w]+[_\/\.][-\w\/\.]+
 
                       # Things that have markup suppressed
                       | \\[^\s<]
-                      )/x
+                      )
+
+                      # labels for headings
+                      (?:%\S+)?/x
 
   attr_accessor :seen
 

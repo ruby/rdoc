@@ -4,7 +4,8 @@
 require 'rdoc/text'
 require 'rdoc/code_objects'
 require 'rdoc/generator'
-require 'rdoc/markup/to_html_crossref'
+require 'rdoc/markup'
+require 'rdoc/markup/formatter'
 require 'rdoc/ruby_token'
 
 ##

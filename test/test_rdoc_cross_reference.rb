@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'minitest/autorun'
 require File.expand_path '../xref_test_case', __FILE__
+require 'rdoc/cross_reference'
 
 class TestRDocCrossReference < XrefTestCase
 
@@ -129,6 +130,23 @@ class TestRDocCrossReference < XrefTestCase
     assert_ref @c2_c3_m, '::C2::C3#m'
     assert_ref @c2_c3_m, '::C2::C3#m()'
     assert_ref @c2_c3_m, '::C2::C3#m(*)'
+  end
+
+  def test_resolve_percent
+    i_percent = RDoc::AnyMethod.new nil, '%'
+    i_percent.singleton = false
+    @c1.add_method i_percent
+
+    c_percent = RDoc::AnyMethod.new nil, '%'
+    c_percent.singleton = true
+    @c1.add_method c_percent
+
+    assert_ref i_percent, '%'
+    assert_ref i_percent, '#%'
+    assert_ref c_percent, '::%'
+
+    assert_ref i_percent, 'C1#%'
+    assert_ref c_percent, 'C1::%'
   end
 
   def test_resolve_no_ref

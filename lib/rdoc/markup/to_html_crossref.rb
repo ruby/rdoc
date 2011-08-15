@@ -57,6 +57,8 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
     name = name[1..-1] unless @show_hash if name[0, 1] == '#'
 
+    name = $1 if name =~ /(.*[^#:])%/
+
     text = name unless text
 
     link lookup, text
@@ -125,13 +127,26 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # Creates an HTML link to +name+ with the given +text+.
 
   def link name, text
+    if name =~ /(.*[^#:])%/ then
+      name = $1
+      label = $'
+    end
+
     ref = @cross_reference.resolve name, text
 
     case ref
     when String then
       ref
     else
-      "<a href=\"#{ref.as_href @from_path}\">#{text}</a>"
+      path = ref.as_href @from_path
+
+      if path =~ /#/ then
+        path << "-label-#{label}"
+      else
+        path << "#label-#{label}"
+      end if label
+
+      "<a href=\"#{path}\">#{text}</a>"
     end
   end
 

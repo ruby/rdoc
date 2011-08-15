@@ -19,10 +19,73 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
     assert_equal "\n<p><a href=\"C1.html\">C1</a></p>\n", result
   end
 
+  def test_convert_CROSSREF_label
+    result = @to.convert 'C1%foo'
+    assert_equal "\n<p><a href=\"C1.html#label-foo\">C1</a></p>\n",
+                 result
+
+    result = @to.convert 'C1#m%foo'
+    assert_equal "\n<p><a href=\"C1.html#method-i-m-label-foo\">C1#m</a></p>\n",
+                 result
+  end
+
   def test_convert_RDOCLINK_rdoc_ref
     result = @to.convert 'rdoc-ref:C1'
 
     assert_equal "\n<p><a href=\"C1.html\">C1</a></p>\n", result
+  end
+
+  def test_convert_RDOCLINK_rdoc_ref_method
+    result = @to.convert 'rdoc-ref:C1#m'
+
+    assert_equal "\n<p><a href=\"C1.html#method-i-m\">C1#m</a></p>\n", result
+  end
+
+  def test_convert_RDOCLINK_rdoc_ref_method_label
+    result = @to.convert 'rdoc-ref:C1#m%foo'
+
+    assert_equal "\n<p><a href=\"C1.html#method-i-m-label-foo\">C1#m</a></p>\n",
+                 result, 'rdoc-ref:C1#m%foo'
+  end
+
+  def test_convert_RDOCLINK_rdoc_ref_method_percent
+    m = @c1.add_method RDoc::AnyMethod.new nil, '%'
+    m.singleton = false
+
+    result = @to.convert 'rdoc-ref:C1#%'
+
+    assert_equal "\n<p><a href=\"C1.html#method-i-25\">C1#%</a></p>\n", result
+
+    m.singleton = true
+
+    result = @to.convert 'rdoc-ref:C1::%'
+
+    assert_equal "\n<p><a href=\"C1.html#method-c-25\">C1::%</a></p>\n", result
+
+  end
+
+  def test_convert_RDOCLINK_rdoc_ref_method_percent_label
+    m = @c1.add_method RDoc::AnyMethod.new nil, '%'
+    m.singleton = false
+
+    result = @to.convert 'rdoc-ref:C1#%%f'
+
+    assert_equal "\n<p><a href=\"C1.html#method-i-25-label-f\">C1#%</a></p>\n",
+                 result
+
+    m.singleton = true
+
+    result = @to.convert 'rdoc-ref:C1::%%f'
+
+    assert_equal "\n<p><a href=\"C1.html#method-c-25-label-f\">C1::%</a></p>\n",
+                 result
+  end
+
+  def test_convert_RDOCLINK_rdoc_ref_label
+    result = @to.convert 'rdoc-ref:C1%foo'
+
+    assert_equal "\n<p><a href=\"C1.html#label-foo\">C1</a></p>\n", result,
+                 'rdoc-ref:C1%foo'
   end
 
   def test_gen_url
@@ -35,6 +98,11 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
 
   def test_handle_special_CROSSREF
     assert_equal "<a href=\"C2/C3.html\">C2::C3</a>", SPECIAL('C2::C3')
+  end
+
+  def test_handle_special_CROSSREF_label
+    assert_equal "<a href=\"C1.html#method-i-m-label-foo\">C1#m</a>",
+                  SPECIAL('C1#m%foo')
   end
 
   def test_handle_special_CROSSREF_show_hash_false
@@ -76,6 +144,13 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
     link = @to.handle_special_TIDYLINK tidy 'README.txt'
 
     assert_equal '<a href="README_txt.html">tidy</a>', link
+  end
+
+  def test_handle_special_TIDYLINK_label
+    link = @to.handle_special_TIDYLINK tidy 'C1#m%foo'
+
+    assert_equal "<a href=\"C1.html#method-i-m-label-foo\">tidy</a>",
+                 link, 'C1#m%foo'
   end
 
   def test_link
