@@ -19,7 +19,7 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
     assert_equal "\n<p><a href=\"C1.html\">C1</a></p>\n", result
   end
 
-  def test_convert_HYPERLINK_rdoc_ref
+  def test_convert_RDOCLINK_rdoc_ref
     result = @to.convert 'rdoc-ref:C1'
 
     assert_equal "\n<p><a href=\"C1.html\">C1</a></p>\n", result

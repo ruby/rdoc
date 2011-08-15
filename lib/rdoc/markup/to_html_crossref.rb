@@ -41,7 +41,6 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     @cross_reference = RDoc::CrossReference.new context
 
     @markup.add_special crossref_re, :CROSSREF
-    @markup.add_special(/rdoc-ref:\S+\w/, :HYPERLINK)
 
     @context       = context
     @from_path     = from_path
@@ -91,6 +90,25 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     return cross_reference $' if special.text =~ /\Ardoc-ref:/
 
     super
+  end
+
+  ##
+  # +special+ is an rdoc-schemed link that will be converted into a hyperlink.
+  # For the rdoc-ref scheme the cross-reference will be looked up and the
+  # given name will be used.
+  #
+  # All other contents are handled by
+  # {the superclass}[rdoc-ref:RDoc::Markup::ToHtml#handle_special_RDOCLINK]
+
+  def handle_special_RDOCLINK special
+    url = special.text
+
+    case url
+    when /\Ardoc-ref:/ then
+      cross_reference $'
+    else
+      super
+    end
   end
 
   ##

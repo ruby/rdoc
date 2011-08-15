@@ -330,6 +330,30 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal '&lt;&gt;', @to.convert_string('<>')
   end
 
+  def test_convert_RDOCLINK_label_label
+    result = @to.convert 'rdoc-label:label-One'
+
+    assert_equal "\n<p><a href=\"#label-One\">One</a></p>\n", result
+  end
+
+  def test_convert_RDOCLINK_label_foottext
+    result = @to.convert 'rdoc-label:foottext-1'
+
+    assert_equal "\n<p><a href=\"#foottext-1\">*1</a></p>\n", result
+  end
+
+  def test_convert_RDOCLINK_label_footmark
+    result = @to.convert 'rdoc-label:footmark-1'
+
+    assert_equal "\n<p><a href=\"#footmark-1\">^1</a></p>\n", result
+  end
+
+  def test_convert_RDOCLINK_ref
+    result = @to.convert 'rdoc-ref:C'
+
+    assert_equal "\n<p>C</p>\n", result
+  end
+
   def test_convert_TIDYLINK_rdoc_label
     result = @to.convert '{foo}[rdoc-label:foottext-1]'
 

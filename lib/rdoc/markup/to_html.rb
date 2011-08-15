@@ -82,6 +82,9 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     # external links
     @markup.add_special(/((link:|https?:|mailto:|ftp:|www\.)\S+\w)/, :HYPERLINK)
 
+    # internal links
+    @markup.add_special(/rdoc-[a-z]+:\S+/, :RDOCLINK)
+
     # and links of the form  <text>[<url>]
     @markup.add_special(/(((\{.*?\})|\b\S+?)\[\S+?\])/, :TIDYLINK)
 
@@ -108,6 +111,39 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     url = special.text
 
     gen_url url, url
+  end
+
+  ##
+  # +special+ is an rdoc-schemed link that will be converted into a hyperlink.
+  #
+  # For the +rdoc-ref+ scheme the named reference will be returned without
+  # creating a link.
+  #
+  # For the +rdoc-label+ scheme the footnote and label prefixes are stripped
+  # when creating a link.  All other contents will be linked verbatim.
+
+  def handle_special_RDOCLINK special
+    url = special.text
+
+    case url
+    when /\Ardoc-ref:/
+      $'
+    when /\Ardoc-label:/
+      text = $'
+
+      text = case text
+             when /\Alabel-/    then $'
+             when /\Afootmark-/ then "^#{$'}"
+             when /\Afoottext-/ then "*#{$'}"
+             else                    text
+             end
+
+      gen_url url, text
+    else
+      url =~ /\Ardoc-[a-z]+:/
+
+      $'
+    end
   end
 
   ##
