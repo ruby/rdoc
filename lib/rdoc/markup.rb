@@ -318,7 +318,9 @@ require 'rdoc'
 # A heading inside the documentation can be linked by following the class
 # or method by an <tt>@</tt> then the heading name.
 # <tt>RDoc::Markup@Links</tt> will link to this section like this:
-# RDoc::Markup@Links.
+# RDoc::Markup@Links.  Spaces in headings with multiple words must be escaped
+# with <tt>+</tt> like <tt>RDoc::Markup@Escaping+Text+Markup</tt>.
+# Punctuation and other special characters must be escaped like CGI.escape.
 #
 # Links can also be of the form <tt>label[url]</tt>, in which case +label+ is
 # used in the displayed text, and +url+ is used as the target.  If +label+

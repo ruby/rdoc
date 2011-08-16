@@ -1,4 +1,3 @@
-require 'rdoc/markup/to_html'
 require 'rdoc/cross_reference'
 
 ##
@@ -57,7 +56,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
     name = name[1..-1] unless @show_hash if name[0, 1] == '#'
 
-    name = "#{$'} at #{$1}" if name =~ /(.*[^#:])@/
+    name = "#{CGI.unescape $'} at #{$1}" if name =~ /(.*[^#:])@/
 
     text = name unless text
 
