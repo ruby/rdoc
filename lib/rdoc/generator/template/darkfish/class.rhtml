@@ -10,7 +10,7 @@
   <div id="class-metadata">
     <%= render '_sidebar_parent.rhtml' %>
     <%= render '_sidebar_sections.rhtml' %>
-    <%= render '_sidebar_namespace.rhtml' %>
+    <%= render '_sidebar_methods.rhtml' %>
     <%= render '_sidebar_includes.rhtml' %>
   </div>
 
@@ -21,7 +21,7 @@
 </div>
 
 <div id="documentation">
-  <h1 class="<%= klass.type %>"><%= klass.full_name %></h1>
+  <h1 class="<%= klass.type %>"><%= klass.type %> <%= klass.full_name %></h1>
 
   <div id="description" class="description">
     <%= klass.description %>

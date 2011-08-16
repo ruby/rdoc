@@ -1,36 +1,17 @@
 <body class="indexpage">
-<h1><%= h @title %></h1>
+<div id="metadata">
+  <%= render '_sidebar_navigation.rhtml' %>
+
+  <div id="project-metadata">
+    <%= render '_sidebar_pages.rhtml' %>
+    <%= render '_sidebar_classes.rhtml' %>
+  </div>
+</div>
 
 <% if @options.main_page && main_page = @files.find { |f| f.full_name == @options.main_page } then %>
-<div id="main">
-  <%= main_page.description.sub(%r{^\s*<h1.*?/h1>}i, '') %>
+<div id="documentation" class="description">
+  <%= main_page.description %>
 </div>
 <% else %>
-<p>This is the API documentation for '<%= @options.title %>'.</p>
+<p>This is the API documentation for <%= @title %>.</p>
 <% end %>
-
-<% simple_files = @files.select { |f| f.text? } %>
-<% unless simple_files.empty? then %>
-<h2>Pages</h2>
-<ul>
-  <% simple_files.sort.each do |file| %>
-    <li class="file"><a href="<%= file.path %>"><%= h file.page_name %></a></li>
-  <% end %>
-</ul>
-<% end %>
-
-<h2 id="classes">Classes/Modules</h2>
-<ul>
-  <% @modsort.each do |klass| %>
-  <li class="<%= klass.type %>"><a href="<%= klass.path %>"><%= klass.full_name %></a></li>
-  <% end %>
-</ul>
-
-<h2 id="methods">Methods</h2>
-<ul>
-  <% RDoc::TopLevel.all_classes_and_modules.map do |mod|
-       mod.method_list
-     end.flatten.sort.each do |method| %>
-    <li><a href="<%= method.path %>"><%= method.pretty_name %> &mdash; <%= method.parent.full_name %></a></li>
-  <% end %>
-</ul>

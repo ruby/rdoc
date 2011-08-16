@@ -161,6 +161,7 @@ class RDoc::Generator::Darkfish
     generate_index
     generate_class_files
     generate_file_files
+    generate_table_of_contents
 
   rescue => e
     debug_msg "%s: %s\n  %s" % [
@@ -278,6 +279,29 @@ class RDoc::Generator::Darkfish
   rescue => e
     error =
       RDoc::Error.new "error generating #{out_file}: #{e.message} (#{e.class})"
+    error.set_backtrace e.backtrace
+
+    raise error
+  end
+
+  ##
+  # Generate an index page which lists all the classes which are documented.
+
+  def generate_table_of_contents
+    template_file = @template_dir + 'table_of_contents.rhtml'
+    return unless template_file.exist?
+
+    debug_msg "Rendering the Table of Contents..."
+
+    out_file = @basedir + @options.op_dir + 'table_of_contents.html'
+    # suppress 1.9.3 warning
+    rel_prefix = rel_prefix = @outputdir.relative_path_from out_file.dirname
+    @title = "Table of Contents"
+
+    render_template template_file, out_file do |io| binding end
+  rescue => e
+    error = RDoc::Error.new \
+      "error generating table_of_contents.html: #{e.message} (#{e.class})"
     error.set_backtrace e.backtrace
 
     raise error

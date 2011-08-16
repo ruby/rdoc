@@ -75,6 +75,7 @@ class TestRDocGeneratorDarkfish < MiniTest::Unit::TestCase
     assert_file 'index.html'
     assert_file 'Object.html'
     assert_file 'file_rb.html'
+    assert_file 'table_of_contents.html'
 
     encoding = if Object.const_defined? :Encoding then
                  Regexp.escape Encoding.default_external.name

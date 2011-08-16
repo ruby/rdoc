@@ -13,8 +13,6 @@
 body {
   background: #efefef;
   font: 14px "Helvetica Neue", Helvetica, Tahoma, sans-serif;
-}
-body.class, body.module, body.file {
   margin-left: 40px;
 }
 body.file-popup {
@@ -43,7 +41,6 @@ pre {
   background: #ddd;
   padding: 0.5em 0;
 }
-
 
 /* @group Generic Classes */
 
@@ -86,8 +83,8 @@ pre {
 
 /* @end */
 
-
 /* @group Index Page, Standalone file pages */
+/*
 body.indexpage {
   margin: 1em 3em;
 }
@@ -148,27 +145,20 @@ body.file p {
 .indexpage li p {
   margin: 0 0;
 }
+  */
 
 /* @end */
 
 /* @group Top-Level Structure */
 
-.class #metadata,
-.file #metadata,
-.module #metadata {
+#metadata {
   float: left;
   width: 260px;
 }
 
-.class #documentation,
-.file #documentation,
-.module #documentation {
+#documentation {
   margin: 2em 1em 5em 300px;
   min-width: 340px;
-}
-
-.file #metadata {
-  margin: 0.8em;
 }
 
 #validator-badges {
@@ -237,12 +227,7 @@ ul.link-list .type {
 
 /* @end */
 
-
 /* @group Project Metadata Section */
-#project-metadata {
-  margin-top: 3em;
-}
-
 .file #project-metadata {
   margin-top: 0em;
 }
@@ -258,7 +243,6 @@ ul.link-list .type {
   position: absolute;
   right: 5px;
 }
-
 
 #project-metadata form {
   color: #777;
@@ -279,7 +263,6 @@ ul.link-list .type {
 }
 
 /* @end */
-
 
 /* @group Documentation Section */
 .description {
@@ -481,8 +464,6 @@ ul.link-list .type {
 
 /* @end */
 
-
-
 /* @group Source Code */
 
 div.method-source-code {
@@ -518,10 +499,6 @@ div.method-source-code pre {
 
 
 /* @group File Popup Contents */
-
-.file #metadata,
-.file-popup #metadata {
-}
 
 .file-popup dl {
   font-size: 80%;
@@ -559,7 +536,7 @@ div.method-source-code pre {
 .file #metadata dl dd ul li {
 }
 
-
+/*
 .file h2 {
   margin-top: 2em;
   padding: 0.75em 0.5em;
@@ -570,6 +547,7 @@ div.method-source-code pre {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
 }
+*/
 
 /* @end */
 
