@@ -1,152 +1,22 @@
 <body id="top" class="<%= klass.type %>">
 <div id="metadata">
-  <div id="home-metadata">
-    <div id="home-section" class="section">
-      <h3 class="section-header">
-        <a href="<%= rel_prefix %>/index.html">Home</a>
-        <a href="<%= rel_prefix %>/index.html#classes">Classes</a>
-        <a href="<%= rel_prefix %>/index.html#methods">Methods</a>
-      </h3>
-    </div>
-  </div>
+  <%= render '_sidebar_navigation.rhtml' %>
 
   <div id="file-metadata">
-    <div id="file-list-section" class="section">
-      <h3 class="section-header">In Files</h3>
-      <div class="section-body">
-        <ul>
-        <% klass.in_files.each do |tl| %>
-          <li><a href="<%= rel_prefix %>/<%= h tl.path %>?TB_iframe=true&amp;height=550&amp;width=785"
-            class="thickbox" title="<%= h tl.absolute_name %>"><%= h tl.absolute_name %></a></li>
-        <% end %>
-        </ul>
-      </div>
-    </div>
-
-    <% if !svninfo.empty? then %>
-    <div id="file-svninfo-section" class="section">
-      <h3 class="section-header">Subversion Info</h3>
-      <div class="section-body">
-        <dl class="svninfo">
-          <dt>Rev</dt>
-          <dd><%= svninfo[:rev] %></dd>
-
-          <dt>Last Checked In</dt>
-          <dd><%= svninfo[:commitdate].strftime('%Y-%m-%d %H:%M:%S') %>
-            (<%= svninfo[:commitdelta] %> ago)</dd>
-
-          <dt>Checked in by</dt>
-          <dd><%= svninfo[:committer] %></dd>
-        </dl>
-      </div>
-    </div>
-    <% end %>
+    <%= render '_sidebar_in_files.rhtml' %>
+    <%= render '_sidebar_VCS_info.rhtml' %>
   </div>
 
   <div id="class-metadata">
-    <% if klass.type == 'class' then %>
-    <!-- Parent Class -->
-    <div id="parent-class-section" class="section">
-      <h3 class="section-header">Parent</h3>
-      <% if klass.superclass and not String === klass.superclass then %>
-      <p class="link"><a href="<%= klass.aref_to klass.superclass.path %>"><%= klass.superclass.full_name %></a></p>
-      <% else %>
-      <p class="link"><%= klass.superclass %></p>
-      <% end %>
-    </div>
-    <% end %>
-
-    <% unless klass.sections.length == 1 then %>
-    <!-- Sections -->
-    <div id="sections-section" class="section">
-      <h3 class="section-header">Sections</h3>
-      <ul class="link-list">
-        <% klass.sections.sort_by { |s| s.title.to_s }.each do |section| %>
-          <li><a href="#<%= section.aref %>"><%= h section.title %></a></li>
-        <% end %>
-      </ul>
-    </div>
-    <% end %>
-
-    <% unless klass.classes_and_modules.empty? then %>
-    <!-- Namespace Contents -->
-    <div id="namespace-list-section" class="section">
-      <h3 class="section-header">Namespace</h3>
-      <ul class="link-list">
-        <% (klass.modules.sort + klass.classes.sort).each do |mod| %>
-        <li><span class="type"><%= mod.type.upcase %></span> <a href="<%= klass.aref_to mod.path %>"><%= mod.full_name %></a></li>
-        <% end %>
-      </ul>
-    </div>
-    <% end %>
-
-    <% unless klass.method_list.empty? then %>
-    <!-- Method Quickref -->
-    <div id="method-list-section" class="section">
-      <h3 class="section-header">Methods</h3>
-      <ul class="link-list">
-        <% klass.each_method do |meth| %>
-        <li><a href="#<%= meth.aref %>"><%= meth.singleton ? '::' : '#' %><%= meth.name %></a></li>
-        <% end %>
-      </ul>
-    </div>
-    <% end %>
-
-    <% unless klass.includes.empty? then %>
-    <!-- Included Modules -->
-    <div id="includes-section" class="section">
-      <h3 class="section-header">Included Modules</h3>
-      <ul class="link-list">
-      <% klass.each_include do |inc| %>
-      <% unless String === inc.module then %>
-        <li><a class="include" href="<%= klass.aref_to inc.module.path %>"><%= inc.module.full_name %></a></li>
-      <% else %>
-        <li><span class="include"><%= inc.name %></span></li>
-      <% end %>
-      <% end %>
-      </ul>
-    </div>
-    <% end %>
+    <%= render '_sidebar_parent.rhtml' %>
+    <%= render '_sidebar_sections.rhtml' %>
+    <%= render '_sidebar_namespace.rhtml' %>
+    <%= render '_sidebar_includes.rhtml' %>
   </div>
 
   <div id="project-metadata">
-    <% simple_files = @files.select { |f| f.text? } %>
-    <% unless simple_files.empty? then %>
-    <div id="fileindex-section" class="section project-section">
-      <h3 class="section-header">Files</h3>
-      <ul>
-      <% simple_files.each do |file| %>
-        <li class="file"><a href="<%= rel_prefix %>/<%= file.path %>"><%= h file.base_name %></a></li>
-      <% end %>
-      </ul>
-    </div>
-    <% end %>
-
-    <div id="classindex-section" class="section project-section">
-      <h3 class="section-header">Class/Module Index
-        <span class="search-toggle"><img src="<%= rel_prefix %>/images/find.png"
-          height="16" width="16" alt="[+]"
-          title="show/hide quicksearch" /></span></h3>
-      <form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
-      <fieldset>
-        <legend>Quicksearch</legend>
-        <input type="text" name="quicksearch" value=""
-          class="quicksearch-field" />
-      </fieldset>
-      </form>
-
-      <ul class="link-list">
-      <% @modsort.each do |index_klass| %>
-        <li><a href="<%= rel_prefix %>/<%= index_klass.path %>"><%= index_klass.full_name %></a></li>
-      <% end %>
-      </ul>
-      <div id="no-class-search-results" style="display: none;">No matching classes.</div>
-    </div>
-
-    <% if $DEBUG_RDOC then %>
-    <div id="debugging-toggle"><img src="<%= rel_prefix %>/images/bug.png"
-      alt="toggle debugging" height="16" width="16" /></div>
-    <% end %>
+    <%= render '_sidebar_pages.rhtml' %>
+    <%= render '_sidebar_classes.rhtml' %>
   </div>
 </div>
 

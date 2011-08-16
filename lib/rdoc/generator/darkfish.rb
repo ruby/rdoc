@@ -354,6 +354,16 @@ class RDoc::Generator::Darkfish
     TEMPLATE
   end
 
+  def render file_name
+    template_file = @template_dir + file_name
+
+    template = template_for template_file, false, ERB
+
+    template.filename = template_file.to_s
+
+    template.result @context
+  end
+
   ##
   # Load and render the erb template in the given +template_file+ and write
   # it out to +out_file+.
@@ -372,14 +382,14 @@ class RDoc::Generator::Darkfish
       out_file.open 'w', 0644 do |io|
         io.set_encoding @options.encoding if Object.const_defined? :Encoding
 
-        context = yield io
+        @context = yield io
 
-        template_result template, context, template_file
+        template_result template, @context, template_file
       end
     else
-      context = yield nil
+      @context = yield nil
 
-      output = template_result template, context, template_file
+      output = template_result template, @context, template_file
 
       debug_msg "  would have written %d characters to %s" % [
         output.length, out_file.expand_path
@@ -404,14 +414,18 @@ class RDoc::Generator::Darkfish
   ##
   # Retrieves a cache template for +file+, if present, or fills the cache.
 
-  def template_for file
+  def template_for file, page = true, klass = nil
     template = @template_cache[file]
 
     return template if template
 
-    klass = @options.dry_run ? ERB : RDoc::ERBIO
+    klass = @options.dry_run ? ERB : RDoc::ERBIO unless klass
 
-    template = assemble_template file
+    template = if page then
+                 assemble_template file
+               else
+                 file.read
+               end
 
     template = klass.new template, nil, '<>'
     @template_cache[file] = template
