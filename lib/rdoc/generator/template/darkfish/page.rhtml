@@ -1,0 +1,52 @@
+<body class="file">
+<div id="metadata">
+  <div id="home-metadata">
+    <div id="home-section" class="section">
+      <h3 class="section-header">
+        <a href="<%= rel_prefix %>/index.html">Home</a>
+        <a href="<%= rel_prefix %>/index.html#classes">Classes</a>
+        <a href="<%= rel_prefix %>/index.html#methods">Methods</a>
+      </h3>
+    </div>
+  </div>
+
+  <div id="project-metadata">
+    <% simple_files = @files.select { |f| f.text? } %>
+    <% unless simple_files.empty? then %>
+    <div id="fileindex-section" class="section project-section">
+      <h3 class="section-header">Files</h3>
+      <ul>
+      <% simple_files.each do |f| %>
+        <li class="file"><a href="<%= rel_prefix %>/<%= f.path %>"><%= h f.base_name %></a></li>
+      <% end %>
+      </ul>
+    </div>
+    <% end %>
+
+    <div id="classindex-section" class="section project-section">
+      <h3 class="section-header">Class Index
+        <span class="search-toggle"><img src="<%= rel_prefix %>/images/find.png"
+          height="16" width="16" alt="[+]"
+          title="show/hide quicksearch" /></span></h3>
+      <form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+      <fieldset>
+        <legend>Quicksearch</legend>
+        <input type="text" name="quicksearch" value=""
+          class="quicksearch-field" />
+      </fieldset>
+      </form>
+
+      <ul class="link-list">
+      <% @modsort.each do |index_klass| %>
+        <li><a href="<%= rel_prefix %>/<%= index_klass.path %>"><%= index_klass.full_name %></a></li>
+      <% end %>
+      </ul>
+      <div id="no-class-search-results" style="display: none;">No matching classes.</div>
+    </div>
+  </div>
+</div>
+
+<div id="documentation">
+  <%= file.description %>
+</div>
+

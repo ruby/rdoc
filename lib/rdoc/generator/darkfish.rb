@@ -206,6 +206,8 @@ class RDoc::Generator::Darkfish
     debug_msg "Rendering the index page..."
 
     out_file = @basedir + @options.op_dir + 'index.html'
+    rel_prefix = @outputdir.relative_path_from out_file.dirname
+    @title = @options.title
 
     render_template template_file, out_file do |io| binding end
   rescue => e
@@ -217,10 +219,10 @@ class RDoc::Generator::Darkfish
   end
 
   ##
-  # Generate a documentation file for each class
+  # Generate a documentation file for each class and module
 
   def generate_class_files
-    template_file = @template_dir + 'classpage.rhtml'
+    template_file = @template_dir + 'class.rhtml'
     return unless template_file.exist?
     debug_msg "Generating class documentation in #{@outputdir}"
 
@@ -233,6 +235,7 @@ class RDoc::Generator::Darkfish
       # suppress 1.9.3 warning
       rel_prefix = rel_prefix = @outputdir.relative_path_from(out_file.dirname)
       svninfo    = svninfo    = self.get_svninfo(klass)
+      @title = "#{klass.type.capitalize}: #{klass.full_name}"
 
       debug_msg "  rendering #{out_file}"
       render_template template_file, out_file do |io| binding end
@@ -249,8 +252,8 @@ class RDoc::Generator::Darkfish
   # Generate a documentation file for each file
 
   def generate_file_files
-    template_file = @template_dir + 'filepage.rhtml'
-    return unless template_file.exist?
+    page_file     = @template_dir + 'page.rhtml'
+    fileinfo_file = @template_dir + 'fileinfo.rhtml'
     debug_msg "Generating file documentation in #{@outputdir}"
 
     out_file = nil
@@ -260,8 +263,14 @@ class RDoc::Generator::Darkfish
       debug_msg "  working on %s (%s)" % [file.full_name, out_file]
       # suppress 1.9.3 warning
       rel_prefix = rel_prefix  = @outputdir.relative_path_from(out_file.dirname)
+      @title = "File: #{file.base_name} [#{@options.title}]"
 
-      debug_msg "  rendering #{out_file}"
+      template_file = if file.text? then
+                        page_file
+                      else
+                        fileinfo_file
+                      end
+
       render_template template_file, out_file do |io| binding end
     end
   rescue => e
@@ -324,6 +333,27 @@ class RDoc::Generator::Darkfish
     }
   end
 
+  def assemble_template body
+    head = @template_dir + '_head.rhtml'
+    footer = @template_dir + '_footer.rhtml'
+
+    <<-TEMPLATE
+<?xml version="1.0" encoding="<%= @options.charset %>"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+#{head.read}
+</head>
+
+#{body.read}
+
+#{footer.read}
+</html>
+    TEMPLATE
+  end
+
   ##
   # Load and render the erb template in the given +template_file+ and write
   # it out to +out_file+.
@@ -381,7 +411,9 @@ class RDoc::Generator::Darkfish
 
     klass = @options.dry_run ? ERB : RDoc::ERBIO
 
-    template = klass.new file.read, nil, '<>'
+    template = assemble_template file
+
+    template = klass.new template, nil, '<>'
     @template_cache[file] = template
     template
   end

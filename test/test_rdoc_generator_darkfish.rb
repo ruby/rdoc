@@ -22,7 +22,7 @@ class TestRDocGeneratorDarkfish < MiniTest::Unit::TestCase
     @options.generator = RDoc::Generator::Darkfish
 
     $LOAD_PATH.each do |path|
-      darkfish_dir = File.join path, 'rdoc/generator/template/darkfish'
+      darkfish_dir = File.join path, 'rdoc/generator/template/darkfish/'
       next unless File.directory? darkfish_dir
       @options.template_dir = darkfish_dir
       break
@@ -105,7 +105,7 @@ class TestRDocGeneratorDarkfish < MiniTest::Unit::TestCase
   end
 
   def test_template_for
-    classpage = Pathname.new @options.template_dir + '/classpage.rhtml'
+    classpage = Pathname.new @options.template_dir + 'class.rhtml'
 
     template = @g.send(:template_for, classpage)
     assert_kind_of RDoc::ERBIO, template
@@ -114,7 +114,7 @@ class TestRDocGeneratorDarkfish < MiniTest::Unit::TestCase
   end
 
   def test_template_for_dry_run
-    classpage = Pathname.new @options.template_dir + '/classpage.rhtml'
+    classpage = Pathname.new @options.template_dir + 'class.rhtml'
 
     template = @g.send(:template_for, classpage)
     assert_kind_of ERB, template

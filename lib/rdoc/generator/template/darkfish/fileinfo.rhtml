@@ -1,0 +1,33 @@
+<body class="file file-popup">
+<div id="metadata">
+  <dl>
+    <dt class="modified-date">Last Modified</dt>
+    <dd class="modified-date"><%= file.last_modified %></dd>
+
+    <% if file.requires %>
+    <dt class="requires">Requires</dt>
+    <dd class="requires">
+      <ul>
+      <% file.requires.each do |require| %>
+        <li><%= require.name %></li>
+      <% end %>
+      </ul>
+    </dd>
+    <% end %>
+
+    <% if @options.webcvs %>
+    <dt class="scs-url">Trac URL</dt>
+    <dd class="scs-url"><a target="_top"
+      href="<%= file.cvs_url %>"><%= file.cvs_url %></a></dd>
+    <% end %>
+  </dl>
+</div>
+
+<div id="documentation">
+  <% if file.comment %>
+  <div class="description">
+    <h2>Description</h2>
+    <%= file.description %>
+  </div>
+  <% end %>
+</div>
