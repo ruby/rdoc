@@ -4,7 +4,7 @@
   <h3 class="section-header">Pages</h3>
   <ul>
   <% simple_files.each do |f| %>
-    <li class="file"><a href="<%= rel_prefix %>/<%= f.path %>"><%= h f.base_name %></a></li>
+    <li class="file"><a href="<%= rel_prefix %>/<%= f.path %>"><%= h f.page_name %></a></li>
   <% end %>
   </ul>
 </div>

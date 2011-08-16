@@ -449,6 +449,15 @@ class RDoc::TopLevel < RDoc::Context
   end
 
   ##
+  # Base name of this file without the extension
+
+  def page_name
+    File.basename(@absolute_name) =~ /\.[^.]*$/
+
+    $`
+  end
+
+  ##
   # Path to this file
 
   def path

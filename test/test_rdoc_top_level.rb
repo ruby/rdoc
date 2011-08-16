@@ -237,6 +237,14 @@ class TestRDocTopLevel < XrefTestCase
     assert_equal 'top_level.rb', @top_level.name
   end
 
+  def test_page_name
+    assert_equal 'top_level', @top_level.page_name
+
+    tl = RDoc::TopLevel.new 'README.ja.rdoc'
+
+    assert_equal 'README.ja', tl.page_name
+  end
+
   def test_text_eh
     refute @xref_data.text?
 

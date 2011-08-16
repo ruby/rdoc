@@ -3,7 +3,7 @@ require 'minitest/autorun'
 require 'rdoc'
 require 'rdoc/markup'
 require 'rdoc/markup/inline'
-require 'rdoc/markup/to_html_crossref'
+require 'rdoc/cross_reference'
 
 class TestRDocMarkupAttributeManager < MiniTest::Unit::TestCase
 
@@ -212,7 +212,7 @@ class TestRDocMarkupAttributeManager < MiniTest::Unit::TestCase
   end
 
   def test_special
-    @am.add_special(RDoc::Markup::ToHtmlCrossref::CROSSREF_REGEXP, :CROSSREF)
+    @am.add_special(RDoc::CrossReference::CROSSREF_REGEXP, :CROSSREF)
 
     #
     # The apostrophes in "cats'" and "dogs'" suppress the flagging of these

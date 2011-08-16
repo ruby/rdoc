@@ -206,7 +206,8 @@ class RDoc::Generator::Darkfish
     debug_msg "Rendering the index page..."
 
     out_file = @basedir + @options.op_dir + 'index.html'
-    rel_prefix = @outputdir.relative_path_from out_file.dirname
+    # suppress 1.9.3 warning
+    rel_prefix = rel_prefix = @outputdir.relative_path_from out_file.dirname
     @title = @options.title
 
     render_template template_file, out_file do |io| binding end
@@ -262,14 +263,15 @@ class RDoc::Generator::Darkfish
       out_file     = @outputdir + file.path
       debug_msg "  working on %s (%s)" % [file.full_name, out_file]
       # suppress 1.9.3 warning
-      rel_prefix = rel_prefix  = @outputdir.relative_path_from(out_file.dirname)
-      @title = "File: #{file.base_name} [#{@options.title}]"
+      rel_prefix = rel_prefix = @outputdir.relative_path_from out_file.dirname
 
-      template_file = if file.text? then
-                        page_file
-                      else
-                        fileinfo_file
-                      end
+      if file.text? then
+        template_file = page_file
+        @title = file.page_name
+      else
+        template_file = fileinfo_file
+        @title = "File: #{file.base_name} [#{@options.title}]"
+      end
 
       render_template template_file, out_file do |io| binding end
     end
