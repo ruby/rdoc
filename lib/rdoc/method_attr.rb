@@ -1,3 +1,4 @@
+require 'cgi'
 require 'rdoc/code_object'
 
 ##
