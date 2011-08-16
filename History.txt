@@ -12,11 +12,11 @@
 
       <h1 id="label-Hello%21">Hello!</h1>
 
-    Labels for other classes or methods can be linked to by adding a %
+  * Labels for classes or methods can be linked-to by adding an <tt>@</tt>
     following the class or method reference.  For example,
-    <tt>RDoc::Markup%Links</tt>
+    <tt>RDoc::Markup@Links</tt>
 
-    See RDoc::Markup%Links for further details.
+    See RDoc::Markup@Links for further details.
   * RDoc now looks for a <tt>format: parser_name</tt> magic comment to choose
     alternate documentation formats.  The format comment must be in the first
     three lines of the file (to allow for a shebang or modeline).
@@ -24,6 +24,10 @@
     parsed file contains no ruby constructs.
   * Added <tt>rdoc-label</tt> link scheme which allows bidirectional links.
     See RDoc::Markup for details.
+
+* Bug fixes
+  * Markup defined by RDoc::Markup#add_special inside a <tt><tt></tt> is no
+    longer converted.
 
 === 3.9.2 / 2011-08-11
 

@@ -80,6 +80,7 @@ lib/rdoc/markup/to_ansi.rb
 lib/rdoc/markup/to_bs.rb
 lib/rdoc/markup/to_html.rb
 lib/rdoc/markup/to_html_crossref.rb
+lib/rdoc/markup/to_label.rb
 lib/rdoc/markup/to_rdoc.rb
 lib/rdoc/markup/to_test.rb
 lib/rdoc/markup/to_tt_only.rb
@@ -138,11 +139,13 @@ test/test_rdoc_context_section.rb
 test/test_rdoc_cross_reference.rb
 test/test_rdoc_encoding.rb
 test/test_rdoc_generator_darkfish.rb
+test/test_rdoc_generator_markup.rb
 test/test_rdoc_generator_ri.rb
 test/test_rdoc_include.rb
 test/test_rdoc_markup.rb
 test/test_rdoc_markup_attribute_manager.rb
 test/test_rdoc_markup_document.rb
+test/test_rdoc_markup_formatter.rb
 test/test_rdoc_markup_include.rb
 test/test_rdoc_markup_indented_paragraph.rb
 test/test_rdoc_markup_paragraph.rb
@@ -153,6 +156,7 @@ test/test_rdoc_markup_to_ansi.rb
 test/test_rdoc_markup_to_bs.rb
 test/test_rdoc_markup_to_html.rb
 test/test_rdoc_markup_to_html_crossref.rb
+test/test_rdoc_markup_to_label.rb
 test/test_rdoc_markup_to_rdoc.rb
 test/test_rdoc_markup_to_tt_only.rb
 test/test_rdoc_method_attr.rb

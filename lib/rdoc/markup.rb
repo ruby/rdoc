@@ -130,6 +130,9 @@ require 'rdoc'
 #
 #   <h1 id="method-i-do_fun_things-label-Example">Example</h3>
 #
+# The label can be linked-to using <tt>SomeClass@Headers</tt>.  See
+# {Links}[RDoc::Markup@Links] for further details.
+#
 # === Rules
 #
 # A line starting with three or more hyphens (at the current indent)
@@ -298,22 +301,40 @@ require 'rdoc'
 # === Links
 #
 # Links to starting with +http:+, +https:+, +mailto:+, +ftp:+ or +www.+
-# are recognized.  An HTTP url that references an external image file is
-# converted into an inline image element.
+# are recognized.  An HTTP url that references an external image is converted
+# into an inline image element.
+#
+# Classes and methods will be automatically linked to their definition.  For
+# example, <tt>RDoc::Markup</tt> will link to this documentation.  By default
+# methods will only be automatically linked if they contain an <tt>_</tt> (all
+# methods can be automatically linked through the <tt>--hyperlink-all</tt>
+# command line option).
+#
+# Single-word methods can be linked by using the <tt>#</tt> character for
+# instance methods or <tt>::</tt> for class methods.  For example,
+# <tt>#convert</tt> links to #convert.  A class or method may be combined like
+# <tt>RDoc::Markup#convert</tt>.
+#
+# A heading inside the documentation can be linked by following the class
+# or method by an <tt>@</tt> then the heading name.
+# <tt>RDoc::Markup@Links</tt> will link to this section like this:
+# RDoc::Markup@Links.
 #
 # Links can also be of the form <tt>label[url]</tt>, in which case +label+ is
 # used in the displayed text, and +url+ is used as the target.  If +label+
 # contains multiple words, put it in braces: <tt>{multi word label}[url]<tt>.
+# The +url+ may be an +http:+-type link or a cross-reference to a class,
+# module or method with a label.
 #
-# Links starting with <tt>rdoc-ref:</tt> will link to the referenced class,
-# module, method, file, etc.  If the referenced item is not documented the
-# text will be and no link will be generated.
+# Links with the <tt>rdoc-ref:</tt> scheme will link to the referenced class,
+# module, method, file, etc.  If the referenced item is does not exist
+# no link will be generated and <tt>rdoc-ref:</tt> will be removed from the
+# resulting text.
 #
 # Links starting with <tt>rdoc-label:label_name</tt> will link to the
 # +label_name+.  You can create a label for the current link (for
 # bidirectional links) by supplying a name for the current link like
-# <tt>rdoc-label:label_name:my_name</tt>.  (RDoc::RD uses this to implement
-# footnotes).
+# <tt>rdoc-label:label-other:label-mine</tt>.
 #
 # Links starting with +link:+ refer to local files whose path is relative to
 # the <tt>--op</tt> directory.  Use <tt>rdoc-ref:</tt> instead of

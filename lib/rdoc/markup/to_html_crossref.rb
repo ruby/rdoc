@@ -57,7 +57,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
     name = name[1..-1] unless @show_hash if name[0, 1] == '#'
 
-    name = $1 if name =~ /(.*[^#:])%/
+    name = "#{$'} at #{$1}" if name =~ /(.*[^#:])@/
 
     text = name unless text
 
@@ -127,7 +127,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # Creates an HTML link to +name+ with the given +text+.
 
   def link name, text
-    if name =~ /(.*[^#:])%/ then
+    if name =~ /(.*[^#:])@/ then
       name = $1
       label = $'
     end
