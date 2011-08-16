@@ -1,0 +1,11 @@
+<% unless klass.method_list.empty? then %>
+<!-- Method Quickref -->
+<div id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+  <ul class="link-list">
+    <% klass.each_method do |meth| %>
+    <li><a href="#<%= meth.aref %>"><%= meth.singleton ? '::' : '#' %><%= meth.name %></a></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>

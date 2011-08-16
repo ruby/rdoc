@@ -1,0 +1,18 @@
+<% if !svninfo.empty? then %>
+<div id="file-svninfo-section" class="section">
+  <h3 class="section-header">VCS Info</h3>
+  <div class="section-body">
+    <dl class="svninfo">
+      <dt>Rev</dt>
+      <dd><%= svninfo[:rev] %></dd>
+
+      <dt>Last Checked In</dt>
+      <dd><%= svninfo[:commitdate].strftime('%Y-%m-%d %H:%M:%S') %>
+        (<%= svninfo[:commitdelta] %> ago)</dd>
+
+      <dt>Checked in by</dt>
+      <dd><%= svninfo[:committer] %></dd>
+    </dl>
+  </div>
+</div>
+<% end %>
