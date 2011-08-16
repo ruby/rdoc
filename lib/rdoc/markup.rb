@@ -324,7 +324,7 @@ require 'rdoc'
 #
 # Links can also be of the form <tt>label[url]</tt>, in which case +label+ is
 # used in the displayed text, and +url+ is used as the target.  If +label+
-# contains multiple words, put it in braces: <tt>{multi word label}[url]<tt>.
+# contains multiple words, put it in braces: <tt>{multi word label}[url]</tt>.
 # The +url+ may be an +http:+-type link or a cross-reference to a class,
 # module or method with a label.
 #
