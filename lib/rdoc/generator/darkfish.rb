@@ -46,6 +46,11 @@ require 'rdoc/generator/markup'
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# == Attributions
+#
+# Darkfish uses the {Silk Icons}[http://www.famfamfam.com/lab/icons/silk/] set
+# by Mark James.
 
 class RDoc::Generator::Darkfish
 
