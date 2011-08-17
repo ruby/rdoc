@@ -72,8 +72,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   def initialize markup = nil
     super
 
-    @to_label = RDoc::Markup::ToLabel.new
-
     @code_object = nil
     @from_path = ''
     @in_list_entry = nil
@@ -260,7 +258,8 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   def accept_heading heading
     level = [6, heading.level].min
-    label = "label-#{to_label heading.text.dup}"
+
+    label = heading.label
     label = [@code_object.aref, label].compact.join '-' if
       @code_object and @code_object.respond_to? :aref
 
@@ -375,13 +374,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   def to_html item
     super convert_flow @am.flow item
-  end
-
-  ##
-  # Converts +item+ to text by removing special markup
-
-  def to_label item
-    @to_label.convert item
   end
 
 end

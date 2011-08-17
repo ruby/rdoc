@@ -404,10 +404,6 @@ verb2</pre>
     assert_equal "\n<p><tt>--</tt></p>\n", util_format("<tt>--</tt>")
   end
 
-  def test_to_label
-    assert_equal '--', @to.to_label('<tt>--</tt>')
-  end
-
   def util_format text
     paragraph = RDoc::Markup::Paragraph.new text
 

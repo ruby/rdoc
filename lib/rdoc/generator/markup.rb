@@ -65,9 +65,13 @@ module RDoc::Generator::Markup
 
 end
 
-class RDoc::AnyMethod
+class RDoc::CodeObject
 
   include RDoc::Generator::Markup
+
+end
+
+class RDoc::AnyMethod
 
   @add_line_numbers = false
 
@@ -158,30 +162,6 @@ class RDoc::AnyMethod
 
     src
   end
-
-end
-
-class RDoc::Attr
-
-  include RDoc::Generator::Markup
-
-end
-
-class RDoc::Alias
-
-  include RDoc::Generator::Markup
-
-end
-
-class RDoc::Constant
-
-  include RDoc::Generator::Markup
-
-end
-
-class RDoc::Context
-
-  include RDoc::Generator::Markup
 
 end
 

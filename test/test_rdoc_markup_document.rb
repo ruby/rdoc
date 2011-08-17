@@ -148,5 +148,23 @@ class TestRDocMarkupDocument < MiniTest::Unit::TestCase
     refute_empty @d
   end
 
+  def test_table_of_contents
+    doc = @RM::Document.new(
+      @RM::Heading.new(1, 'A'),
+      @RM::Paragraph.new('B'),
+      @RM::Heading.new(2, 'C'),
+      @RM::Paragraph.new('D'),
+      @RM::Heading.new(1, 'E'),
+      @RM::Paragraph.new('F'))
+
+    expected = [
+      @RM::Heading.new(1, 'A'),
+      @RM::Heading.new(2, 'C'),
+      @RM::Heading.new(1, 'E'),
+    ]
+
+    assert_equal expected, doc.table_of_contents
+  end
+
 end
 

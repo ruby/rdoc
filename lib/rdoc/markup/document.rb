@@ -123,5 +123,19 @@ class RDoc::Markup::Document
     self.parts.push(*parts)
   end
 
+  ##
+  # Returns an Array of headings in the document
+
+  def table_of_contents
+    parts.map do |part|
+      case part
+      when RDoc::Markup::Document then
+        part.table_of_contents
+      when RDoc::Markup::Heading then
+        part
+      end
+    end.flatten.compact
+  end
+
 end
 
