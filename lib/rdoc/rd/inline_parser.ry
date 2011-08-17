@@ -556,6 +556,7 @@ def inline rdoc, reference = rdoc
   RDoc::RD::Inline.new rdoc, reference
 end
 
+# :stopdoc:
 ---- header
 require 'strscan'
 

@@ -572,6 +572,8 @@ def add_label label
   label
 end
 
+# :stopdoc:
+
 ---- header
 class RDoc::RD
 
