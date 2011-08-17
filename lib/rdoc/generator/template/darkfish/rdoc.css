@@ -112,6 +112,18 @@ pre {
 .indexpage li.file {
   background: url(images/page_white_text.png) no-repeat left 4px;
 }
+.indexpage li li {
+  background: url(images/tag_blue.png) no-repeat left 4px;
+}
+.indexpage li .toc-toggle {
+  width: 16px;
+  height: 16px;
+  background: url(images/add.png) no-repeat;
+}
+
+.indexpage li .toc-toggle.open {
+  background: url(images/delete.png) no-repeat;
+}
 
 /* @end */
 

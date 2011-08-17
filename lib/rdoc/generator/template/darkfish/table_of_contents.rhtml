@@ -8,8 +8,10 @@
   <% simple_files.sort.each do |file| %>
     <li class="file">
       <a href="<%= file.path %>"><%= h file.page_name %></a>
-<% if table = file.parse(file.comment).table_of_contents then # HACK %>
-      <ul>
+<% table = file.parse(file.comment).table_of_contents # HACK
+   unless table.empty? then %>
+      <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings" />
+      <ul class="initially-hidden">
 <% table.each do |heading| %>
         <li><a href="<%= file.path %>#<%= heading.label %>"><%= heading.plain_html %></a></li>
 <%   end %>
@@ -25,8 +27,10 @@
   <% @modsort.each do |klass| %>
   <li class="<%= klass.type %>">
     <a href="<%= klass.path %>"><%= klass.full_name %></a>
-<% if table = klass.parse(klass.comment).table_of_contents then # HACK %>
-      <ul>
+<% table = klass.parse(klass.comment).table_of_contents # HACK
+   unless table.empty? then %>
+      <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings" />
+      <ul class="initially-hidden">
 <% table.each do |heading| %>
         <li><a href="<%= klass.path %>#<%= heading.label %>"><%= heading.plain_html %></a></li>
 <%   end %>
