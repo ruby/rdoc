@@ -5,36 +5,36 @@
 <% unless simple_files.empty? then %>
 <h2>Pages</h2>
 <ul>
-  <% simple_files.sort.each do |file| %>
-    <li class="file">
-      <a href="<%= file.path %>"><%= h file.page_name %></a>
+<% simple_files.sort.each do |file| %>
+  <li class="file">
+    <a href="<%= file.path %>"><%= h file.page_name %></a>
 <% table = file.parse(file.comment).table_of_contents # HACK
    unless table.empty? then %>
-      <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings" />
-      <ul class="initially-hidden">
+    <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings" />
+    <ul class="initially-hidden">
 <% table.each do |heading| %>
-        <li><a href="<%= file.path %>#<%= heading.label %>"><%= heading.plain_html %></a></li>
+      <li><a href="<%= file.path %>#<%= heading.label %>"><%= heading.plain_html %></a></li>
 <%   end %>
-      </ul>
+    </ul>
 <% end %>
-    </li>
+  </li>
   <% end %>
 </ul>
 <% end %>
 
 <h2 id="classes">Classes/Modules</h2>
 <ul>
-  <% @modsort.each do |klass| %>
+<% @modsort.each do |klass| %>
   <li class="<%= klass.type %>">
     <a href="<%= klass.path %>"><%= klass.full_name %></a>
 <% table = klass.parse(klass.comment).table_of_contents # HACK
    unless table.empty? then %>
-      <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings" />
-      <ul class="initially-hidden">
+    <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings" />
+    <ul class="initially-hidden">
 <% table.each do |heading| %>
-        <li><a href="<%= klass.path %>#<%= heading.label %>"><%= heading.plain_html %></a></li>
+      <li><a href="<%= klass.path %>#<%= heading.label %>"><%= heading.plain_html %></a></li>
 <%   end %>
-      </ul>
+    </ul>
 <% end %>
   </li>
   <% end %>
