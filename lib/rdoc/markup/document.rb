@@ -124,17 +124,12 @@ class RDoc::Markup::Document
   end
 
   ##
-  # Returns an Array of headings in the document
+  # Returns an Array of headings in the document.
+  #
+  # Require 'rdoc/markup/formatter' before calling this method.
 
   def table_of_contents
-    parts.map do |part|
-      case part
-      when RDoc::Markup::Document then
-        part.table_of_contents
-      when RDoc::Markup::Heading then
-        part
-      end
-    end.flatten.compact
+    accept RDoc::Markup::ToTableOfContents.to_toc
   end
 
 end

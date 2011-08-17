@@ -40,6 +40,7 @@ lib/rdoc/generator/template/darkfish/_sidebar_parent.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_sections.rhtml
 lib/rdoc/generator/template/darkfish/class.rhtml
 lib/rdoc/generator/template/darkfish/fileinfo.rhtml
+lib/rdoc/generator/template/darkfish/images/add.png
 lib/rdoc/generator/template/darkfish/images/brick.png
 lib/rdoc/generator/template/darkfish/images/brick_link.png
 lib/rdoc/generator/template/darkfish/images/bug.png
@@ -47,6 +48,7 @@ lib/rdoc/generator/template/darkfish/images/bullet_black.png
 lib/rdoc/generator/template/darkfish/images/bullet_toggle_minus.png
 lib/rdoc/generator/template/darkfish/images/bullet_toggle_plus.png
 lib/rdoc/generator/template/darkfish/images/date.png
+lib/rdoc/generator/template/darkfish/images/delete.png
 lib/rdoc/generator/template/darkfish/images/find.png
 lib/rdoc/generator/template/darkfish/images/loadingAnimation.gif
 lib/rdoc/generator/template/darkfish/images/macFFBgHack.png
@@ -56,7 +58,9 @@ lib/rdoc/generator/template/darkfish/images/page_white_text.png
 lib/rdoc/generator/template/darkfish/images/page_white_width.png
 lib/rdoc/generator/template/darkfish/images/plugin.png
 lib/rdoc/generator/template/darkfish/images/ruby.png
+lib/rdoc/generator/template/darkfish/images/tag_blue.png
 lib/rdoc/generator/template/darkfish/images/tag_green.png
+lib/rdoc/generator/template/darkfish/images/transparent.png
 lib/rdoc/generator/template/darkfish/images/wrench.png
 lib/rdoc/generator/template/darkfish/images/wrench_orange.png
 lib/rdoc/generator/template/darkfish/images/zoom.png
@@ -95,6 +99,7 @@ lib/rdoc/markup/to_html.rb
 lib/rdoc/markup/to_html_crossref.rb
 lib/rdoc/markup/to_label.rb
 lib/rdoc/markup/to_rdoc.rb
+lib/rdoc/markup/to_table_of_contents.rb
 lib/rdoc/markup/to_test.rb
 lib/rdoc/markup/to_tt_only.rb
 lib/rdoc/markup/verbatim.rb
@@ -172,6 +177,7 @@ test/test_rdoc_markup_to_html.rb
 test/test_rdoc_markup_to_html_crossref.rb
 test/test_rdoc_markup_to_label.rb
 test/test_rdoc_markup_to_rdoc.rb
+test/test_rdoc_markup_to_table_of_contents.rb
 test/test_rdoc_markup_to_tt_only.rb
 test/test_rdoc_method_attr.rb
 test/test_rdoc_normal_class.rb

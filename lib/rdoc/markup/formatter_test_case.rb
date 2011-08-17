@@ -1,4 +1,5 @@
 require 'minitest/unit'
+require 'rdoc/markup'
 require 'rdoc/markup/formatter'
 
 ##
@@ -54,8 +55,8 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
   def setup
     super
 
-    @m = RDoc::Markup.new
     @RM = RDoc::Markup
+    @m = @RM.new
 
     @bullet_list = @RM::List.new(:BULLET,
       @RM::ListItem.new(nil, @RM::Paragraph.new('l1')),

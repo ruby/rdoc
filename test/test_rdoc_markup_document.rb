@@ -2,6 +2,7 @@ require 'pp'
 require 'rubygems'
 require 'minitest/autorun'
 require 'rdoc/markup'
+require 'rdoc/markup/formatter'
 
 class TestRDocMarkupDocument < MiniTest::Unit::TestCase
 
