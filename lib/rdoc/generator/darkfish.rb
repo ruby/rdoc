@@ -213,7 +213,7 @@ class RDoc::Generator::Darkfish
 
     out_file = @basedir + @options.op_dir + 'index.html'
     # suppress 1.9.3 warning
-    rel_prefix = rel_prefix = @outputdir.relative_path_from out_file.dirname
+    rel_prefix = rel_prefix = @outputdir.relative_path_from(out_file.dirname)
     @title = @options.title
 
     render_template template_file, out_file do |io| binding end
@@ -269,7 +269,7 @@ class RDoc::Generator::Darkfish
       out_file     = @outputdir + file.path
       debug_msg "  working on %s (%s)" % [file.full_name, out_file]
       # suppress 1.9.3 warning
-      rel_prefix = rel_prefix = @outputdir.relative_path_from out_file.dirname
+      rel_prefix = rel_prefix = @outputdir.relative_path_from(out_file.dirname)
 
       if file.text? then
         template_file = page_file
@@ -300,7 +300,7 @@ class RDoc::Generator::Darkfish
 
     out_file = @basedir + @options.op_dir + 'table_of_contents.html'
     # suppress 1.9.3 warning
-    rel_prefix = rel_prefix = @outputdir.relative_path_from out_file.dirname
+    rel_prefix = rel_prefix = @outputdir.relative_path_from(out_file.dirname)
     @title = "Table of Contents"
 
     render_template template_file, out_file do |io| binding end
