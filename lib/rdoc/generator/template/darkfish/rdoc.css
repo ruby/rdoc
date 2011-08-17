@@ -48,14 +48,14 @@ pre {
   display: none;
 }
 
-.quicksearch-field {
+#quicksearch-field {
   width: 98%;
   background: #ddd;
   border: 1px solid #aaa;
   height: 1.5em;
   -webkit-border-radius: 4px;
 }
-.quicksearch-field:focus {
+#quicksearch-field:focus {
   background: #f1edba;
 }
 
@@ -227,19 +227,12 @@ ul.link-list .type {
   border-bottom: 1px solid #aaa;
   position: relative;
 }
-#project-metadata h3.section-header .search-toggle {
-  position: absolute;
-  right: 5px;
-}
 
 #project-metadata form {
   color: #777;
   background: #ccc;
-  padding: 8px 8px 16px;
+  padding: 8px;
   border-bottom: 1px solid #bbb;
-}
-#project-metadata fieldset {
-  border: 0;
 }
 
 #no-class-search-results {
@@ -708,22 +701,3 @@ div.method-source-code pre {
 
 /* @end */
 
-/* @group Debugging Section */
-
-#debugging-toggle {
-  text-align: center;
-}
-#debugging-toggle img {
-  cursor: pointer;
-}
-
-#rdoc-debugging-section-dump {
-  display: none;
-  margin: 0 2em 2em;
-  background: #ccc;
-  border: 1px solid #999;
-}
-
-
-
-/* @end */
