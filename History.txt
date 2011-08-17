@@ -1,6 +1,11 @@
 === 3.10 / ??
 
 * Major enhancements
+  * RDoc HTML output has been reorganized.
+    * The table of contents is now a separate page and now shows links to
+      headings inside a page or class.
+    * Class pages no longer show the namespace and no longer have file info
+      pages.
   * RDoc supports RD format documentation.
 
 * Minor enhancements

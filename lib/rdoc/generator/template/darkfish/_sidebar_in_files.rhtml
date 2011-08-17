@@ -1,11 +1,10 @@
 <div id="file-list-section" class="section">
-  <h3 class="section-header">In Files</h3>
+  <h3 class="section-header">Defined In</h3>
   <div class="section-body">
     <ul>
-    <% klass.in_files.each do |tl| %>
-      <li><a href="<%= rel_prefix %>/<%= h tl.path %>?TB_iframe=true&amp;height=550&amp;width=785"
-        class="thickbox" title="<%= h tl.absolute_name %>"><%= h tl.absolute_name %></a></li>
-    <% end %>
+<% klass.in_files.each do |tl| %>
+      <li><%= h tl.absolute_name %></li>
+<% end %>
     </ul>
   </div>
 </div>
