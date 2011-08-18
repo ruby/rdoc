@@ -331,9 +331,9 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # Maps attributes to HTML tags
 
   def init_tags
-    add_tag :BOLD, "<b>",  "</b>"
-    add_tag :TT,   "<tt>", "</tt>"
-    add_tag :EM,   "<em>", "</em>"
+    add_tag :BOLD, "<strong>", "</strong>"
+    add_tag :TT,   "<code>",   "</code>"
+    add_tag :EM,   "<em>",     "</em>"
   end
 
   ##

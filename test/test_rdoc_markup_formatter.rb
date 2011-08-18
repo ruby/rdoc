@@ -11,7 +11,7 @@ class TestRDocMarkupFormatter < MiniTest::Unit::TestCase
     def initialize markup
       super
 
-      add_tag :TT, '<tt>', '</tt>'
+      add_tag :TT, '<code>', '</code>'
     end
 
     def accept_paragraph paragraph
@@ -48,9 +48,9 @@ class TestRDocMarkupFormatter < MiniTest::Unit::TestCase
   end
 
   def test_convert_tt_special
-    converted = @to.convert '<tt>AAA</tt>'
+    converted = @to.convert '<code>AAA</code>'
 
-    assert_equal '<tt>AAA</tt>', converted
+    assert_equal '<code>AAA</code>', converted
   end
 
 end

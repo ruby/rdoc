@@ -142,6 +142,7 @@ pre {
 #validator-badges {
   clear: both;
   margin: 1em 1em 2em;
+  font-size: smaller;
 }
 
 /* @end */
@@ -447,7 +448,7 @@ ul.link-list .type {
 
 /* @group Source Code */
 
-div.method-source-code {
+.method-source-code {
   background: #262626;
   color: #efefef;
   margin: 1em;
@@ -456,7 +457,7 @@ div.method-source-code {
   overflow: hidden;
 }
 
-div.method-source-code pre {
+.method-source-code pre {
   background: inherit;
   padding: 0;
   color: white;

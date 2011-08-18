@@ -7,6 +7,7 @@
     * Class pages no longer show the namespace and no longer have file info
       pages.
     * Quicksearch box in Class/Module Index in the sidebar is always shown.
+    * HTML output is now using HTML 5.
   * RDoc supports RD format documentation.
 
 * Minor enhancements

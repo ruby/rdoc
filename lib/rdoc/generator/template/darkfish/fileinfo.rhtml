@@ -1,27 +1,26 @@
 <body class="file file-popup">
-<div id="metadata">
+<nav id="metadata">
   <dl>
-    <dt class="modified-date">Last Modified</dt>
-    <dd class="modified-date"><%= file.last_modified %></dd>
+    <dt class="modified-date">Last Modified
+    <dd class="modified-date"><%= file.last_modified %>
 
     <% if file.requires %>
-    <dt class="requires">Requires</dt>
+    <dt class="requires">Requires
     <dd class="requires">
       <ul>
       <% file.requires.each do |require| %>
-        <li><%= require.name %></li>
+        <li><%= require.name %>
       <% end %>
       </ul>
-    </dd>
     <% end %>
 
     <% if @options.webcvs %>
-    <dt class="scs-url">Trac URL</dt>
+    <dt class="scs-url">Trac URL
     <dd class="scs-url"><a target="_top"
-      href="<%= file.cvs_url %>"><%= file.cvs_url %></a></dd>
+      href="<%= file.cvs_url %>"><%= file.cvs_url %></a>
     <% end %>
   </dl>
-</div>
+</nav>
 
 <div id="documentation">
   <% if file.comment %>

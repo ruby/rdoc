@@ -14,7 +14,7 @@ class TestRDocMarkupHeading < MiniTest::Unit::TestCase
   end
 
   def test_plain_html
-    assert_equal 'Hello <b>Friend</b>!', @h.plain_html
+    assert_equal 'Hello <strong>Friend</strong>!', @h.plain_html
   end
 
 end

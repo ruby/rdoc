@@ -56,7 +56,8 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def accept_heading_b
-    assert_equal "\n<h1 id=\"label-Hello\"><b>Hello</b></h1>\n", @to.res.join
+    assert_equal "\n<h1 id=\"label-Hello\"><strong>Hello</strong></h1>\n",
+                 @to.res.join
   end
 
   def accept_heading_suppressed_crossref
@@ -148,7 +149,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
 
   def accept_list_item_start_note_2
     expected = <<-EXPECTED
-<table class="rdoc-list"><tr><td class="rdoc-term"><p><tt>teletype</tt></p></td>
+<table class="rdoc-list"><tr><td class="rdoc-term"><p><code>teletype</code></p></td>
 <td>
 <p>teletype description</p>
 </td></tr></table>
@@ -212,7 +213,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def accept_paragraph_b
-    assert_equal "\n<p>reg <b>bold words</b> reg</p>\n", @to.res.join
+    assert_equal "\n<p>reg <strong>bold words</strong> reg</p>\n", @to.res.join
   end
 
   def accept_paragraph_i
@@ -220,11 +221,11 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def accept_paragraph_plus
-    assert_equal "\n<p>reg <tt>teletype</tt> reg</p>\n", @to.res.join
+    assert_equal "\n<p>reg <code>teletype</code> reg</p>\n", @to.res.join
   end
 
   def accept_paragraph_star
-    assert_equal "\n<p>reg <b>bold</b> reg</p>\n", @to.res.join
+    assert_equal "\n<p>reg <strong>bold</strong> reg</p>\n", @to.res.join
   end
 
   def accept_paragraph_underscore
@@ -401,7 +402,7 @@ verb2</pre>
   end
 
   def test_to_html
-    assert_equal "\n<p><tt>--</tt></p>\n", util_format("<tt>--</tt>")
+    assert_equal "\n<p><code>--</code></p>\n", util_format("<tt>--</tt>")
   end
 
   def util_format text

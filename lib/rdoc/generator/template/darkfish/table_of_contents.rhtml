@@ -10,10 +10,10 @@
     <a href="<%= file.path %>"><%= h file.page_name %></a>
 <% table = file.parse(file.comment).table_of_contents # HACK
    unless table.empty? then %>
-    <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings" />
+    <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings">
     <ul class="initially-hidden">
 <% table.each do |heading| %>
-      <li><a href="<%= file.path %>#<%= heading.label %>"><%= heading.plain_html %></a></li>
+      <li><a href="<%= file.path %>#<%= heading.label %>"><%= heading.plain_html %></a>
 <%   end %>
     </ul>
 <% end %>
@@ -29,10 +29,10 @@
     <a href="<%= klass.path %>"><%= klass.full_name %></a>
 <% table = klass.parse(klass.comment).table_of_contents # HACK
    unless table.empty? then %>
-    <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings" />
+    <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings">
     <ul class="initially-hidden">
 <% table.each do |heading| %>
-      <li><a href="<%= klass.path %>#<%= heading.label %>"><%= heading.plain_html %></a></li>
+      <li><a href="<%= klass.path %>#<%= heading.label %>"><%= heading.plain_html %></a>
 <%   end %>
     </ul>
 <% end %>
@@ -45,6 +45,6 @@
   <% RDoc::TopLevel.all_classes_and_modules.map do |mod|
        mod.method_list
      end.flatten.sort.each do |method| %>
-    <li class="method"><a href="<%= method.path %>"><%= method.pretty_name %> &mdash; <%= method.parent.full_name %></a></li>
+    <li class="method"><a href="<%= method.path %>"><%= method.pretty_name %> &mdash; <%= method.parent.full_name %></a>
   <% end %>
 </ul>

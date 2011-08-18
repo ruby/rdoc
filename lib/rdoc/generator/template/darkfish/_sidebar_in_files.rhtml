@@ -1,10 +1,10 @@
-<div id="file-list-section" class="section">
+<nav id="file-list-section" class="section">
   <h3 class="section-header">Defined In</h3>
   <div class="section-body">
     <ul>
 <% klass.in_files.each do |tl| %>
-      <li><%= h tl.absolute_name %></li>
+      <li><%= h tl.absolute_name %>
 <% end %>
     </ul>
   </div>
-</div>
+</nav>

@@ -369,19 +369,15 @@ class RDoc::Generator::Darkfish
     footer = @template_dir + '_footer.rhtml'
 
     <<-TEMPLATE
-<?xml version="1.0" encoding="<%= @options.charset %>"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<html>
 <head>
 #{head.read}
-</head>
 
 #{body.read}
 
 #{footer.read}
-</html>
     TEMPLATE
   end
 

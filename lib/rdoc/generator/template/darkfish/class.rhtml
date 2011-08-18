@@ -1,5 +1,5 @@
 <body id="top" class="<%= klass.type %>">
-<div id="metadata">
+<nav id="metadata">
   <%= render '_sidebar_navigation.rhtml' %>
 
   <div id="file-metadata">
@@ -18,7 +18,7 @@
     <%= render '_sidebar_pages.rhtml' %>
     <%= render '_sidebar_classes.rhtml' %>
   </div>
-</div>
+</nav>
 
 <div id="documentation">
   <h1 class="<%= klass.type %>"><%= klass.type %> <%= klass.full_name %></h1>
@@ -30,7 +30,7 @@
   <% klass.each_section do |section, constants, attributes| %>
   <% constants = constants.select { |const| const.display? } %>
   <% attributes = attributes.select { |attr| attr.display? } %>
-  <div id="<%= section.aref %>" class="documentation-section">
+  <section id="<%= section.aref %>" class="documentation-section">
     <% if section.title then %>
     <h2 class="section-header">
       <%= section.title %>
@@ -46,32 +46,28 @@
 
     <% unless constants.empty? then %>
     <!-- Constants -->
-    <div id="constants-list" class="section">
+    <section id="constants-list" class="section">
       <h3 class="section-header">Constants</h3>
       <dl>
       <% constants.each do |const| %>
-        <dt><a name="<%= const.name %>"><%= const.name %></a></dt>
+        <dt id="<%= const.name %>"><%= const.name %>
         <% if const.comment then %>
-        <dd class="description"><%= const.description.strip %></dd>
+        <dd class="description"><%= const.description.strip %>
         <% else %>
-        <dd class="description missing-docs">(Not documented)</dd>
+        <dd class="description missing-docs">(Not documented)
         <% end %>
       <% end %>
       </dl>
-    </div>
+    </section>
     <% end %>
 
     <% unless attributes.empty? then %>
     <!-- Attributes -->
-    <div id="attribute-method-details" class="method-section section">
+    <section id="attribute-method-details" class="method-section section">
       <h3 class="section-header">Attributes</h3>
 
       <% attributes.each do |attrib| %>
-      <div id="<%= attrib.html_name %>-attribute-method" class="method-detail">
-        <a name="<%= h attrib.name %>"></a>
-        <% if attrib.rw =~ /w/i then %>
-        <a name="<%= h attrib.name %>="></a>
-        <% end %>
+      <div id="<%= attrib.aref %>" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name"><%= h attrib.name %></span><span
             class="attribute-access-type">[<%= attrib.rw %>]</span>
@@ -81,12 +77,12 @@
         <% if attrib.comment then %>
         <%= attrib.description.strip %>
         <% else %>
-        <p class="missing-docs">(Not documented)</p>
+        <p class="missing-docs">(Not documented)
         <% end %>
         </div>
       </div>
       <% end %>
-    </div><!-- attribute-method-details -->
+    </section><!-- attribute-method-details -->
     <% end %>
 
     <!-- Methods -->
@@ -94,22 +90,20 @@
        next if visibilities.empty?
        visibilities.each do |visibility, methods|
          next if methods.empty? %>
-    <div id="<%= visibility %>-<%= type %>-method-details" class="method-section section">
+     <section id="<%= visibility %>-<%= type %>-<%= section.aref %>-method-details" class="method-section section">
       <h3 class="section-header"><%= visibility.to_s.capitalize %> <%= type.capitalize %> Methods</h3>
 
     <% methods.each do |method| %>
-      <div id="<%= method.html_name %>-method" class="method-detail <%= method.is_alias_for ? "method-alias" : '' %>">
-        <a name="<%= h method.aref %>"></a>
-
+      <div id="<%= method.aref %>" class="method-detail <%= method.is_alias_for ? "method-alias" : '' %>">
         <% if method.call_seq then %>
-        <% method.call_seq.strip.split("\n").each_with_index do |call_seq, i| %>
+        <%   method.call_seq.strip.split("\n").each_with_index do |call_seq, i| %>
         <div class="method-heading">
           <span class="method-callseq"><%= call_seq.strip.gsub(/->/, '&rarr;').gsub( /^\w+\./m, '') %></span>
           <% if i == 0 then %>
           <span class="method-click-advice">click to toggle source</span>
           <% end %>
         </div>
-        <% end %>
+        <%   end %>
         <% else %>
         <div class="method-heading">
           <span class="method-name"><%= h method.name %></span><span
@@ -122,14 +116,12 @@
           <% if method.comment then %>
           <%= method.description.strip %>
           <% else %>
-          <p class="missing-docs">(Not documented)</p>
+          <p class="missing-docs">(Not documented)
           <% end %>
 
           <% if method.token_stream then %>
           <div class="method-source-code" id="<%= method.html_name %>-source">
-re>
-= method.markup_code %>
-pre>
+            <pre><%= method.markup_code %></pre>
           </div><!-- <%= method.html_name %>-source -->
           <% end %>
         </div>
@@ -154,10 +146,10 @@ pre>
       </div><!-- <%= method.html_name %>-method -->
 
     <% end %>
-    </div><!-- <%= visibility %>-<%= type %>-method-details -->
+    </section><!-- <%= visibility %>-<%= type %>-method-details -->
   <% end
      end %>
-  </div><!-- <%= section.aref %> -->
+  </section><!-- <%= section.aref %> -->
 <% end %>
 
 </div><!-- documentation -->
