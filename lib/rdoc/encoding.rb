@@ -1,3 +1,5 @@
+# coding: US-ASCII
+
 ##
 # This class is a wrapper around File IO and Encoding that helps RDoc load
 # files and convert them to the correct encoding.

@@ -1,3 +1,5 @@
+# coding: US-ASCII
+
 require 'rdoc/test_case'
 
 class TestRDocEncoding < RDoc::TestCase

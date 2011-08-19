@@ -1,3 +1,5 @@
+# coding: US-ASCII
+
 require File.expand_path '../xref_test_case', __FILE__
 
 class TestRDocCodeObject < XrefTestCase
