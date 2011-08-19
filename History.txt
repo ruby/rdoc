@@ -31,13 +31,16 @@
     parsed file contains no ruby constructs.
   * Added <tt>rdoc-label</tt> link scheme which allows bidirectional links.
     See RDoc::Markup for details.
+  * Image paths at HTTPS URLs will now be turned into +<img>+ tags.  Pull
+    Request #60 by James Mead
 
 * Bug fixes
   * Markup defined by RDoc::Markup#add_special inside a <tt><tt></tt> is no
     longer converted.
   * Performance of RDoc::RubyLex has been improved.  Ruby Bug #5202 by Ryan
     Melton.
-  * Add US-ASCII magic comments to work with <tt>ruby -Ku</tt>.  Issue #63
+  * Add US-ASCII magic comments to work with <tt>ruby -Ku</tt>.  Issue #63 by
+    Travis D. Warlick, Jr.
 
 === 3.9.2 / 2011-08-11
 
