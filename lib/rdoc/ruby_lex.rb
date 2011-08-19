@@ -119,8 +119,8 @@ class RDoc::RubyLex
   end
 
   def get_readed
-    if idx = @readed.reverse.index("\n")
-      @base_char_no = idx
+    if idx = @readed.rindex("\n")
+      @base_char_no = @readed.size - (idx + 1)
     else
       @base_char_no += @readed.size
     end
@@ -185,8 +185,8 @@ class RDoc::RubyLex
     @seek -= 1
     if c == "\n"
       @line_no -= 1
-      if idx = @readed.reverse.index("\n")
-        @char_no = @readed.size - idx
+      if idx = @readed.rindex("\n")
+        @char_no = idx + 1
       else
         @char_no = @base_char_no + @readed.size
       end

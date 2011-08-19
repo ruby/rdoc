@@ -35,6 +35,8 @@
 * Bug fixes
   * Markup defined by RDoc::Markup#add_special inside a <tt><tt></tt> is no
     longer converted.
+  * Performance of RDoc::RubyLex has been improved.  Ruby Bug #5202 by Ryan
+    Melton.
 
 === 3.9.2 / 2011-08-11
 
