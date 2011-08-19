@@ -37,6 +37,7 @@
     longer converted.
   * Performance of RDoc::RubyLex has been improved.  Ruby Bug #5202 by Ryan
     Melton.
+  * Add US-ASCII magic comments to work with <tt>ruby -Ku</tt>.  Issue #63
 
 === 3.9.2 / 2011-08-11
 
