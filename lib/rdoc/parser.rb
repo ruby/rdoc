@@ -1,7 +1,4 @@
 require 'rdoc'
-require 'rdoc/code_objects'
-require 'rdoc/markup/pre_process'
-require 'rdoc/stats'
 
 ##
 # A parser is simple a class that subclasses RDoc::Parser and implements #scan
@@ -232,9 +229,10 @@ class RDoc::Parser
     @preprocess.options = @options
   end
 
-end
+  autoload :RubyTools, 'rdoc/parser/ruby_tools'
+  autoload :Text,      'rdoc/parser/text'
 
-require 'rdoc/parser/text'
+end
 
 # simple must come first in order to show up last in the parsers list
 require 'rdoc/parser/simple'

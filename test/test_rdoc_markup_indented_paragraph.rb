@@ -1,9 +1,6 @@
-require 'pp'
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc/markup'
+require 'rdoc/test_case'
 
-class TestRDocMarkupIndentedParagraph < MiniTest::Unit::TestCase
+class TestRDocMarkupIndentedParagraph < RDoc::TestCase
 
   def setup
     @IP = RDoc::Markup::IndentedParagraph

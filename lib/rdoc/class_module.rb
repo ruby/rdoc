@@ -1,5 +1,3 @@
-require 'rdoc/context'
-
 ##
 # ClassModule is the base class for objects representing either a class or a
 # module.

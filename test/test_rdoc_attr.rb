@@ -1,8 +1,6 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc/rdoc'
+require 'rdoc/test_case'
 
-class TestRDocAttr < MiniTest::Unit::TestCase
+class TestRDocAttr < RDoc::TestCase
 
   def setup
     @a = RDoc::Attr.new nil, 'attr', 'RW', ''

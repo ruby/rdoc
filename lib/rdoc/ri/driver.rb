@@ -11,11 +11,7 @@ begin
 rescue LoadError
 end
 
-require 'rdoc/ri'
-require 'rdoc/ri/paths'
-require 'rdoc/markup'
-require 'rdoc/markup/formatter'
-require 'rdoc/text'
+require 'rdoc'
 
 ##
 # For RubyGems backwards compatibility

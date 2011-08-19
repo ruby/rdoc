@@ -1,12 +1,6 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc/rdoc'
+require 'rdoc/test_case'
 
-require 'fileutils'
-require 'tempfile'
-require 'tmpdir'
-
-class TestRDocRDoc < MiniTest::Unit::TestCase
+class TestRDocRDoc < RDoc::TestCase
 
   def setup
     RDoc::TopLevel.reset

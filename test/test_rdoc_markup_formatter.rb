@@ -1,10 +1,6 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc'
-require 'rdoc/markup'
-require 'rdoc/markup/formatter'
+require 'rdoc/test_case'
 
-class TestRDocMarkupFormatter < MiniTest::Unit::TestCase
+class TestRDocMarkupFormatter < RDoc::TestCase
 
   class ToTest < RDoc::Markup::Formatter
 

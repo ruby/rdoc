@@ -1,4 +1,3 @@
-require 'pp'
 require File.expand_path '../xref_test_case', __FILE__
 
 class TestRDocClassModule < XrefTestCase

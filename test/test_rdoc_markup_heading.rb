@@ -1,9 +1,6 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc/markup'
-require 'rdoc/markup/formatter'
+require 'rdoc/test_case'
 
-class TestRDocMarkupHeading < MiniTest::Unit::TestCase
+class TestRDocMarkupHeading < RDoc::TestCase
 
   def setup
     @h = RDoc::Markup::Heading.new 1, 'Hello *Friend*!'

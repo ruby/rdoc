@@ -1,5 +1,5 @@
-require 'rubygems/test_case'
 require 'rubygems'
+require 'rubygems/test_case'
 require 'rdoc/rubygems_hook'
 
 class TestRDocRubygemsHook < Gem::TestCase

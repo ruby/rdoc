@@ -1,7 +1,5 @@
 require 'optparse'
 
-require 'rdoc/ri/paths'
-
 ##
 # RDoc::Options handles the parsing and storage of options
 
@@ -171,7 +169,6 @@ class RDoc::Options
   attr_accessor :visibility
 
   def initialize # :nodoc:
-    require 'rdoc/rdoc'
     @dry_run = false
     @exclude = []
     @force_output = false

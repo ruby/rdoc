@@ -1,12 +1,6 @@
-require 'pp'
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc'
-require 'rdoc/markup'
-require 'rdoc/rd'
-require 'tempfile'
+require 'rdoc/test_case'
 
-class TestRDocRdBlockParser < MiniTest::Unit::TestCase
+class TestRDocRdBlockParser < RDoc::TestCase
 
   def setup
     @RM = RDoc::Markup
@@ -75,10 +69,12 @@ class TestRDocRdBlockParser < MiniTest::Unit::TestCase
     two
     LIST
 
+    contents = "one\n     two" # 1.8 vs 1.9
+
     expected =
       doc(
         @RM::List.new(:NUMBER,
-          @RM::ListItem.new(nil, @RM::Paragraph.new("one\n     two"))))
+          @RM::ListItem.new(nil, @RM::Paragraph.new(*contents))))
 
     assert_equal expected, parse(list)
   end
@@ -187,10 +183,12 @@ class TestRDocRdBlockParser < MiniTest::Unit::TestCase
   two
     LIST
 
+    contents = "one\n   two" # 1.8 vs 1.9
+
     expected =
       doc(
         @RM::List.new(:BULLET,
-          @RM::ListItem.new(nil, @RM::Paragraph.new("one\n   two"))))
+          @RM::ListItem.new(nil, @RM::Paragraph.new(*contents))))
 
     assert_equal expected, parse(list)
   end

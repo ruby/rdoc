@@ -1,5 +1,3 @@
-require 'rdoc/markup'
-
 ##
 # Base class for RDoc markup formatters
 #
@@ -160,12 +158,3 @@ class RDoc::Markup::Formatter
 
 end
 
-class RDoc::Markup
-  autoload :ToAnsi,            'rdoc/markup/to_ansi'
-  autoload :ToBs,              'rdoc/markup/to_bs'
-  autoload :ToHtml,            'rdoc/markup/to_html'
-  autoload :ToHtmlCrossref,    'rdoc/markup/to_html_crossref'
-  autoload :ToLabel,           'rdoc/markup/to_label'
-  autoload :ToRdoc,            'rdoc/markup/to_rdoc'
-  autoload :ToTableOfContents, 'rdoc/markup/to_table_of_contents'
-end

@@ -689,21 +689,38 @@ class RDoc::Markup
     document.accept formatter
   end
 
-  autoload :BlankLine,         'rdoc/markup/blank_line'
-  autoload :Document,          'rdoc/markup/document'
-  autoload :Heading,           'rdoc/markup/heading'
-  autoload :Include,           'rdoc/markup/include'
-  autoload :IndentedParagraph, 'rdoc/markup/indented_paragraph'
-  autoload :List,              'rdoc/markup/list'
-  autoload :ListItem,          'rdoc/markup/list_item'
-  autoload :Paragraph,         'rdoc/markup/paragraph'
-  autoload :Raw,               'rdoc/markup/raw'
-  autoload :Rule,              'rdoc/markup/rule'
-  autoload :Verbatim,          'rdoc/markup/verbatim'
+  autoload :AttributeManager,      'rdoc/markup/attribute_manager'
+  autoload :Inline,                'rdoc/markup/inline'
+  autoload :Parser,                'rdoc/markup/parser'
+  autoload :PreProcess,            'rdoc/markup/pre_process'
 
-  autoload :Parser,            'rdoc/markup/parser'
-  autoload :AttributeManager,  'rdoc/markup/attribute_manager'
-  autoload :Inline,            'rdoc/markup/inline'
+  # RDoc::Markup AST
+  autoload :BlankLine,             'rdoc/markup/blank_line'
+  autoload :Document,              'rdoc/markup/document'
+  autoload :Heading,               'rdoc/markup/heading'
+  autoload :Include,               'rdoc/markup/include'
+  autoload :IndentedParagraph,     'rdoc/markup/indented_paragraph'
+  autoload :List,                  'rdoc/markup/list'
+  autoload :ListItem,              'rdoc/markup/list_item'
+  autoload :Paragraph,             'rdoc/markup/paragraph'
+  autoload :Raw,                   'rdoc/markup/raw'
+  autoload :Rule,                  'rdoc/markup/rule'
+  autoload :Verbatim,              'rdoc/markup/verbatim'
+
+  # Formatters
+  autoload :Formatter,             'rdoc/markup/formatter'
+  autoload :FormatterTestCase,     'rdoc/markup/formatter_test_case'
+  autoload :TextFormatterTestCase, 'rdoc/markup/text_formatter_test_case'
+
+  autoload :ToAnsi,                'rdoc/markup/to_ansi'
+  autoload :ToBs,                  'rdoc/markup/to_bs'
+  autoload :ToHtml,                'rdoc/markup/to_html'
+  autoload :ToHtmlCrossref,        'rdoc/markup/to_html_crossref'
+  autoload :ToLabel,               'rdoc/markup/to_label'
+  autoload :ToRdoc,                'rdoc/markup/to_rdoc'
+  autoload :ToTableOfContents,     'rdoc/markup/to_table_of_contents'
+  autoload :ToTest,                'rdoc/markup/to_test'
+  autoload :ToTtOnly,              'rdoc/markup/to_tt_only'
 
 end
 

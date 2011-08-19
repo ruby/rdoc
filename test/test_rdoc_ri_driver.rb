@@ -1,13 +1,6 @@
-require 'pp'
-require 'rubygems'
-require 'minitest/autorun'
-require 'tmpdir'
-require 'fileutils'
-require 'stringio'
-require 'rdoc/ri/driver'
-require 'rdoc/rdoc'
+require 'rdoc/test_case'
 
-class TestRDocRIDriver < MiniTest::Unit::TestCase
+class TestRDocRIDriver < RDoc::TestCase
 
   def setup
     @RM = RDoc::Markup

@@ -135,6 +135,7 @@ lib/rdoc/stats/normal.rb
 lib/rdoc/stats/quiet.rb
 lib/rdoc/stats/verbose.rb
 lib/rdoc/task.rb
+lib/rdoc/test_case.rb
 lib/rdoc/text.rb
 lib/rdoc/token_stream.rb
 lib/rdoc/top_level.rb

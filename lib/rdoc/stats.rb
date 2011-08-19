@@ -1,5 +1,3 @@
-require 'rdoc'
-
 ##
 # RDoc statistics collector which prints a summary and report of a project's
 # documentation totals.
@@ -211,9 +209,6 @@ class RDoc::Stats
 
   def report
     if @coverage_level > 0 then
-      require 'rdoc/markup/to_tt_only'
-      require 'rdoc/generator/markup'
-      require 'rdoc/text'
       extend RDoc::Text
     end
 

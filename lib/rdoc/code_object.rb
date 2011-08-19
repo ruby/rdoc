@@ -1,6 +1,3 @@
-require 'rdoc'
-require 'rdoc/text'
-
 ##
 # Base class for the RDoc code tree.
 #

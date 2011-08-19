@@ -1,6 +1,4 @@
 require 'minitest/unit'
-require 'rdoc/markup'
-require 'rdoc/markup/formatter'
 
 ##
 # Test case for creating new RDoc::Markup formatters.  See

@@ -1,13 +1,8 @@
 # coding: utf-8
 
-require 'tempfile'
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc/markup/pre_process'
-require 'rdoc/code_objects'
-require 'rdoc/options'
+require 'rdoc/test_case'
 
-class TestRDocMarkupPreProcess < MiniTest::Unit::TestCase
+class TestRDocMarkupPreProcess < RDoc::TestCase
 
   def setup
     RDoc::Markup::PreProcess.registered.clear

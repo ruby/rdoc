@@ -1,11 +1,5 @@
 require 'rdoc'
 
-require 'rdoc/encoding'
-require 'rdoc/parser'
-
-require 'rdoc/stats'
-require 'rdoc/options'
-
 require 'find'
 require 'fileutils'
 require 'time'

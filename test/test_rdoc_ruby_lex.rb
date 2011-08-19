@@ -1,9 +1,7 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc/rdoc'
-require 'rdoc/ruby_lex'
+require 'rdoc/test_case'
 
-class TestRubyLex < MiniTest::Unit::TestCase
+class TestRubyLex < RDoc::TestCase
+
   def test_unary_minus
     ruby_lex = RDoc::RubyLex.new("-1", nil)
     assert_equal("-1", ruby_lex.token.value)
@@ -20,4 +18,6 @@ class TestRubyLex < MiniTest::Unit::TestCase
     2.times { ruby_lex.token } # skip "0" and "+"
     assert_equal("-0.1", ruby_lex.token.value)
   end
+
 end
+

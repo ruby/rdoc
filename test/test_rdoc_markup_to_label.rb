@@ -1,10 +1,6 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc'
-require 'rdoc/markup'
-require 'rdoc/markup/formatter'
+require 'rdoc/test_case'
 
-class TestRDocMarkupToLabel < MiniTest::Unit::TestCase
+class TestRDocMarkupToLabel < RDoc::TestCase
 
   def setup
     @to = RDoc::Markup::ToLabel.new

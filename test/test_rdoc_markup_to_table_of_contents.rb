@@ -1,6 +1,4 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc/markup/formatter_test_case'
+require 'rdoc/test_case'
 
 class TestRDocMarkupToTableOfContents < RDoc::Markup::FormatterTestCase
 

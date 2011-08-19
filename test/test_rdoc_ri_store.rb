@@ -1,13 +1,6 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc/rdoc'
-require 'rdoc/ri'
-require 'rdoc/markup'
-require 'tmpdir'
-require 'fileutils'
-require 'pp'
+require 'rdoc/test_case'
 
-class TestRDocRIStore < MiniTest::Unit::TestCase
+class TestRDocRIStore < RDoc::TestCase
 
   OBJECT_ANCESTORS = defined?(::BasicObject) ? %w[BasicObject] : []
 

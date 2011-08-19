@@ -1,7 +1,3 @@
-require 'rdoc/markup/formatter'
-require 'rdoc/markup/inline'
-require 'rdoc/text'
-
 require 'cgi'
 
 ##

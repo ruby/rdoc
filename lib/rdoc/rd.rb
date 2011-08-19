@@ -1,5 +1,3 @@
-require 'rdoc/markup'
-
 ##
 # RDoc::RD implements the RD format from the rdtool gem.
 #

@@ -1,11 +1,6 @@
-require 'pp'
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc'
-require 'rdoc/markup'
-require 'rdoc/rd'
+require 'rdoc/test_case'
 
-class TestRDocRdInlineParser < MiniTest::Unit::TestCase
+class TestRDocRdInlineParser < RDoc::TestCase
 
   def setup
     @RM = RDoc::Markup

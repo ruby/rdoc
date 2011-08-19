@@ -1,10 +1,6 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc'
-require 'rdoc/rdoc'
-require 'rdoc/generator/markup'
+require 'rdoc/test_case'
 
-class TestRDocGeneratorMarkup < MiniTest::Unit::TestCase
+class TestRDocGeneratorMarkup < RDoc::TestCase
 
   include RDoc::Text
   include RDoc::Generator::Markup

@@ -1,11 +1,6 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc'
-require 'rdoc/markup'
-require 'rdoc/markup/formatter'
-require 'rdoc/markup/attribute_manager'
+require 'rdoc/test_case'
 
-class TestAttributeManager < MiniTest::Unit::TestCase # HACK fix test name
+class TestAttributeManager < RDoc::TestCase # HACK fix test name
 
   def setup
     @am = RDoc::Markup::AttributeManager.new

@@ -1,7 +1,4 @@
-require 'rubygems'
-require 'rdoc/markup/formatter_test_case'
-require 'rdoc/markup/to_tt_only'
-require 'minitest/autorun'
+require 'rdoc/test_case'
 
 class TestRDocMarkupToTtOnly < RDoc::Markup::FormatterTestCase
 

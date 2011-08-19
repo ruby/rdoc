@@ -25,12 +25,12 @@ require 'rubygems'
 begin
   gem 'rdoc'
 rescue Gem::LoadError
-end
+end unless defined?(RDoc)
 
 begin
   gem 'rake'
 rescue Gem::LoadError
-end
+end unless defined?(Rake)
 
 require 'rdoc'
 require 'rake'
@@ -52,7 +52,6 @@ require 'rake/tasklib'
 #
 # Simple Example:
 #
-#   gem 'rdoc'
 #   require 'rdoc/task'
 #
 #   RDoc::Task.new do |rdoc|
@@ -69,7 +68,6 @@ require 'rake/tasklib'
 # generating two sets of documentation.  For instance, if you want to have a
 # development set of documentation including private methods:
 #
-#   gem 'rdoc'
 #   require 'rdoc/task'
 #
 #   RDoc::Task.new :rdoc_dev do |rdoc|
@@ -87,7 +85,6 @@ require 'rake/tasklib'
 #
 # For example:
 #
-#   gem 'rdoc'
 #   require 'rdoc/task'
 #
 #   RDoc::Task.new(:rdoc => "rdoc", :clobber_rdoc => "rdoc:clean",
@@ -241,7 +238,6 @@ class RDoc::Task < Rake::TaskLib
       args = option_list + @rdoc_files
 
       $stderr.puts "rdoc #{args.join ' '}" if Rake.application.options.trace
-      require 'rdoc/rdoc'
       RDoc::RDoc.new.document args
     end
 

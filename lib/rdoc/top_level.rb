@@ -1,5 +1,3 @@
-require 'rdoc/context'
-
 ##
 # A TopLevel context is a representation of the contents of a single file
 

@@ -1,4 +1,3 @@
-require 'rdoc/code_objects'
 require 'fileutils'
 
 ##

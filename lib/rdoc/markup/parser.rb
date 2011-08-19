@@ -1,5 +1,4 @@
 require 'strscan'
-require 'rdoc/text'
 
 ##
 # A recursive-descent parser for RDoc markup.

@@ -1,6 +1,3 @@
-require 'rdoc/markup'
-require 'rdoc/encoding'
-
 ##
 # Handle common directives that can occur in a block of text:
 #

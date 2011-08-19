@@ -1,13 +1,8 @@
 # coding: utf-8
 
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc'
-require 'rdoc/text'
-require 'rdoc/markup'
-require 'rdoc/markup/formatter'
+require 'rdoc/test_case'
 
-class TestRDocText < MiniTest::Unit::TestCase
+class TestRDocText < RDoc::TestCase
 
   include RDoc::Text
 

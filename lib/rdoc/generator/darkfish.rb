@@ -1,9 +1,8 @@
 # -*- mode: ruby; ruby-indent-level: 2; tab-width: 2 -*-
 
-require 'pathname'
+require 'erb'
 require 'fileutils'
-require 'rdoc/erbio'
-
+require 'pathname'
 require 'rdoc/generator/markup'
 
 ##

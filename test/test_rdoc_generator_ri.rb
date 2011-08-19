@@ -1,11 +1,6 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc/rdoc'
-require 'rdoc/generator/ri'
-require 'tmpdir'
-require 'fileutils'
+require 'rdoc/test_case'
 
-class TestRDocGeneratorRI < MiniTest::Unit::TestCase
+class TestRDocGeneratorRI < RDoc::TestCase
 
   def setup
     @options = RDoc::Options.new

@@ -1,9 +1,6 @@
-require 'pp'
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc/markup'
+require 'rdoc/test_case'
 
-class TestRDocMarkupRaw < MiniTest::Unit::TestCase
+class TestRDocMarkupRaw < RDoc::TestCase
 
   def setup
     @RM = RDoc::Markup

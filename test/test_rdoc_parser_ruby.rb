@@ -1,15 +1,8 @@
 # coding: utf-8
 
-require 'stringio'
-require 'tempfile'
-require 'rubygems'
-require 'minitest/autorun'
+require 'rdoc/test_case'
 
-require 'rdoc/options'
-require 'rdoc/parser'
-require 'rdoc/stats'
-
-class TestRDocParserRuby < MiniTest::Unit::TestCase
+class TestRDocParserRuby < RDoc::TestCase
 
   def setup
     @tempfile = Tempfile.new self.class.name

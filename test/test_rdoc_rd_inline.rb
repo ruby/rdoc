@@ -1,9 +1,6 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc'
-require 'rdoc/rd'
+require 'rdoc/test_case'
 
-class TestRDocRdInline < MiniTest::Unit::TestCase
+class TestRDocRdInline < RDoc::TestCase
 
   def setup
     @inline = RDoc::RD::Inline.new '+text+', 'text'

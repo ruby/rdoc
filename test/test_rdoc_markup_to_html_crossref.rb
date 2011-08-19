@@ -1,8 +1,3 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc'
-require 'rdoc/code_objects'
-require 'rdoc/markup'
 require File.expand_path '../xref_test_case', __FILE__
 
 class TestRDocMarkupToHtmlCrossref < XrefTestCase

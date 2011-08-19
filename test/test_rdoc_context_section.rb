@@ -1,10 +1,6 @@
-require 'rubygems'
-require 'cgi'
-require 'minitest/autorun'
-require 'rdoc'
-require 'rdoc/code_objects'
+require 'rdoc/test_case'
 
-class TestRDocContextSection < MiniTest::Unit::TestCase
+class TestRDocContextSection < RDoc::TestCase
 
   def setup
     @S = RDoc::Context::Section

@@ -1,11 +1,6 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc/parser'
-require 'rdoc/parser/ruby'
-require 'rdoc/options'
-require 'tmpdir'
+require 'rdoc/test_case'
 
-class TestRDocParser < MiniTest::Unit::TestCase
+class TestRDocParser < RDoc::TestCase
 
   def setup
     @RP = RDoc::Parser

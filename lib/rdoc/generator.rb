@@ -1,5 +1,3 @@
-require 'rdoc'
-
 ##
 # RDoc uses generators to turn parsed source code in the form of an
 # RDoc::CodeObject tree into some form of output.  RDoc comes with the HTML
@@ -36,5 +34,11 @@ require 'rdoc'
 # to create your desired output format.
 
 module RDoc::Generator
+
+  autoload :Markup,   'rdoc/generator/markup'
+
+  autoload :Darkfish, 'rdoc/generator/darkfish'
+  autoload :RI,       'rdoc/generator/ri'
+
 end
 

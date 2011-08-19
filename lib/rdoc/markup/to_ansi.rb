@@ -1,5 +1,3 @@
-require 'rdoc/markup/to_rdoc'
-
 ##
 # Outputs RDoc markup with vibrant ANSI color!
 

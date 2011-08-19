@@ -1,10 +1,6 @@
-require 'tempfile'
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc/options'
-require 'rdoc/parser'
+require 'rdoc/test_case'
 
-class TestRDocParserSimple < MiniTest::Unit::TestCase
+class TestRDocParserSimple < RDoc::TestCase
 
   def setup
     @tempfile = Tempfile.new self.class.name

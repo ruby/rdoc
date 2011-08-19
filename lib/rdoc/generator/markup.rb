@@ -1,15 +1,9 @@
-# This file is loaded by generators.  It allows RDoc's CodeObject tree to
-# avoid loading generator code to increase startup time (for ri).
-
-require 'rdoc/text'
-require 'rdoc/code_objects'
-require 'rdoc/generator'
-require 'rdoc/markup'
-require 'rdoc/markup/formatter'
-require 'rdoc/ruby_token'
 
 ##
 # Handle common RDoc::Markup tasks for various CodeObjects
+#
+# This module is loaded by generators.  It allows RDoc's CodeObject tree to
+# avoid loading generator code to improve startup time for +ri+.
 
 module RDoc::Generator::Markup
 

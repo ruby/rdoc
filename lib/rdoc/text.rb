@@ -202,10 +202,10 @@ https://github.com/rdoc/rdoc/issues
 
     until s.eos? do
       case
-      when s.scan(/<tt>.*?<\/tt>/) then # skip contents of tt
+      when s.scan(/<(tt|code)>.*?<\/\1>/) then # skip contents of tt
         html << s.matched.gsub('\\\\', '\\')
-      when s.scan(/<tt>.*?/) then
-        warn 'mismatched <tt> tag' # TODO signal file/line
+      when s.scan(/<(tt|code)>.*?/) then
+        warn "mismatched <#{s[1]}> tag" # TODO signal file/line
         html << s.matched
       when s.scan(/<[^>]+\/?s*>/) then # skip HTML tags
         html << s.matched

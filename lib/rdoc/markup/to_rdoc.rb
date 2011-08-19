@@ -1,6 +1,3 @@
-require 'rdoc/markup/formatter'
-require 'rdoc/markup/inline'
-
 ##
 # Outputs RDoc markup as RDoc markup! (mostly)
 

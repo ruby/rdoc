@@ -1,4 +1,3 @@
-require 'rdoc/cross_reference'
 require 'cgi'
 
 ##

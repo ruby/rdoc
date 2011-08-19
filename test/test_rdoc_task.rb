@@ -1,8 +1,7 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc/task'
+require 'rdoc/test_case'
+require 'rake'
 
-class TestRDocTask < MiniTest::Unit::TestCase
+class TestRDocTask < RDoc::TestCase
 
   def setup
     Rake::Task.clear

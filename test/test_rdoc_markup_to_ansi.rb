@@ -1,7 +1,4 @@
-require 'rubygems'
-require 'rdoc/markup/text_formatter_test_case'
-require 'rdoc/markup/to_ansi'
-require 'minitest/autorun'
+require 'rdoc/test_case'
 
 class TestRDocMarkupToAnsi < RDoc::Markup::TextFormatterTestCase
 

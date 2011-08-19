@@ -1,10 +1,6 @@
-require 'minitest/autorun'
-require 'rdoc/rdoc'
-require 'rdoc/generator/darkfish'
-require 'tmpdir'
-require 'fileutils'
+require 'rdoc/test_case'
 
-class TestRDocGeneratorDarkfish < MiniTest::Unit::TestCase
+class TestRDocGeneratorDarkfish < RDoc::TestCase
 
   def setup
     @pwd = Dir.pwd

@@ -1,6 +1,7 @@
-require 'hoe'
 $:.unshift 'lib'
-require 'rdoc/rdoc'
+require 'rdoc'
+require 'hoe'
+require 'isolate/rake'
 
 task :docs    => :generate
 task :test    => :generate

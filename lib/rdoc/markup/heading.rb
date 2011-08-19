@@ -13,8 +13,6 @@ class RDoc::Markup::Heading < Struct.new :level, :text
   def self.to_html
     return @to_html if @to_html
 
-    require 'rdoc/cross_reference'
-
     markup = RDoc::Markup.new
     markup.add_special RDoc::CrossReference::CROSSREF_REGEXP, :CROSSREF
 

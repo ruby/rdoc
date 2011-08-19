@@ -1,6 +1,3 @@
-require 'rdoc/generator'
-require 'rdoc/ri'
-
 ##
 # Generates ri data files
 

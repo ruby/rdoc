@@ -1,8 +1,4 @@
-require 'rubygems'
-require 'rdoc/markup/formatter_test_case'
-require 'rdoc/markup/to_html'
-require 'rdoc/code_objects'
-require 'minitest/autorun'
+require 'rdoc/test_case'
 
 class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
 

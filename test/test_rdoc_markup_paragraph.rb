@@ -1,9 +1,6 @@
-require 'pp'
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc/markup'
+require 'rdoc/test_case'
 
-class TestRDocMarkupParagraph < MiniTest::Unit::TestCase
+class TestRDocMarkupParagraph < RDoc::TestCase
 
   def test_accept
     visitor = Object.new

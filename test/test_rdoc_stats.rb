@@ -1,12 +1,6 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc/stats'
-require 'rdoc/code_objects'
-require 'rdoc/markup'
-require 'rdoc/parser'
-require 'rdoc/parser/ruby'
+require 'rdoc/test_case'
 
-class TestRDocStats < MiniTest::Unit::TestCase
+class TestRDocStats < RDoc::TestCase
 
   def setup
     RDoc::TopLevel.reset

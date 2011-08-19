@@ -1,10 +1,6 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'tmpdir'
-require 'fileutils'
-require 'rdoc/ri/paths'
+require 'rdoc/test_case'
 
-class TestRDocRIPaths < MiniTest::Unit::TestCase
+class TestRDocRIPaths < RDoc::TestCase
 
   def setup
     RDoc::RI::Paths.instance_variable_set :@gemdirs, %w[/nonexistent/gemdir]

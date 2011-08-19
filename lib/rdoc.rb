@@ -143,5 +143,52 @@ module RDoc
   METHOD_MODIFIERS = GENERAL_MODIFIERS +
     %w[arg args yield yields notnew not-new not_new doc]
 
+  autoload :RDoc,           'rdoc/rdoc'
+
+  autoload :CrossReference, 'rdoc/cross_reference'
+  autoload :ERBIO,          'rdoc/erbio'
+  autoload :Encoding,       'rdoc/encoding'
+  autoload :Generator,      'rdoc/generator'
+  autoload :Markup,         'rdoc/markup'
+  autoload :Options,        'rdoc/options'
+  autoload :Parser,         'rdoc/parser'
+  autoload :RD,             'rdoc/rd'
+  autoload :RI,             'rdoc/ri'
+  autoload :Stats,          'rdoc/stats'
+  autoload :Task,           'rdoc/task'
+  autoload :Text,           'rdoc/text'
+
+  autoload :KNOWN_CLASSES,  'rdoc/known_classes'
+
+  autoload :RubyLex,        'rdoc/ruby_lex'
+  autoload :RubyToken,      'rdoc/ruby_token'
+  autoload :TokenStream,    'rdoc/token_stream'
+
+  # code objects
+  #
+  # We represent the various high-level code constructs that appear in Ruby
+  # programs: classes, modules, methods, and so on.
+  autoload :CodeObject,     'rdoc/code_object'
+
+  autoload :Context,        'rdoc/context'
+  autoload :TopLevel,       'rdoc/top_level'
+
+  autoload :AnonClass,      'rdoc/anon_class'
+  autoload :ClassModule,    'rdoc/class_module'
+  autoload :NormalClass,    'rdoc/normal_class'
+  autoload :NormalModule,   'rdoc/normal_module'
+  autoload :SingleClass,    'rdoc/single_class'
+
+  autoload :Alias,          'rdoc/alias'
+  autoload :AnyMethod,      'rdoc/any_method'
+  autoload :MethodAttr,     'rdoc/method_attr'
+  autoload :GhostMethod,    'rdoc/ghost_method'
+  autoload :MetaMethod,     'rdoc/meta_method'
+  autoload :Attr,           'rdoc/attr'
+
+  autoload :Constant,       'rdoc/constant'
+  autoload :Include,        'rdoc/include'
+  autoload :Require,        'rdoc/require'
+
 end
 

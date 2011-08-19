@@ -1,5 +1,3 @@
-require 'rdoc/known_classes'
-
 ##
 # RDoc::Parser::C attempts to parse C extension files.  It looks for
 # the standard patterns that you find in extensions: <tt>rb_define_class,

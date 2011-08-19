@@ -1,11 +1,8 @@
 # coding: utf-8
 
-require 'pp'
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc/markup'
+require 'rdoc/test_case'
 
-class TestRDocMarkupParser < MiniTest::Unit::TestCase
+class TestRDocMarkupParser < RDoc::TestCase
 
   def setup
     @RM = RDoc::Markup

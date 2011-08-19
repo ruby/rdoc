@@ -1,9 +1,4 @@
-require 'stringio'
-require 'tempfile'
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc/options'
-require 'rdoc/parser/c'
+require 'rdoc/test_case'
 
 =begin
   TODO: test call-seq parsing
@@ -51,7 +46,7 @@ class RDoc::Parser::C
   public :do_classes, :do_constants
 end
 
-class TestRDocParserC < MiniTest::Unit::TestCase
+class TestRDocParserC < RDoc::TestCase
 
   def setup
     @tempfile = Tempfile.new self.class.name

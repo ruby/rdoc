@@ -1,11 +1,6 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc'
-require 'rdoc/encoding'
+require 'rdoc/test_case'
 
-require 'tempfile'
-
-class TestRDocEncoding < MiniTest::Unit::TestCase
+class TestRDocEncoding < RDoc::TestCase
 
   def setup
     @tempfile = Tempfile.new 'test_rdoc_encoding'

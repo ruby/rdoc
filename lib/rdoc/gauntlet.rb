@@ -1,4 +1,4 @@
-require 'rdoc/rdoc'
+require 'rdoc'
 require 'gauntlet'
 require 'fileutils'
 

@@ -1,4 +1,4 @@
-require 'rdoc/code_object'
+require 'cgi'
 
 ##
 # A Context is something that can hold modules, classes, methods, attributes,

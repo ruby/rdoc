@@ -1,9 +1,6 @@
-require 'rubygems'
-require 'minitest/autorun'
-require 'rdoc/markup'
-require 'rdoc/markup/to_test'
+require 'rdoc/test_case'
 
-class TestRDocMarkup < MiniTest::Unit::TestCase
+class TestRDocMarkup < RDoc::TestCase
 
   def test_convert
     str = <<-STR

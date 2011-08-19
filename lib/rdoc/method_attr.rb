@@ -1,5 +1,4 @@
 require 'cgi'
-require 'rdoc/code_object'
 
 ##
 # Abstract class representing either a method or an attribute.
