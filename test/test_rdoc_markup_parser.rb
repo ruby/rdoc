@@ -5,7 +5,8 @@ require 'rdoc/test_case'
 class TestRDocMarkupParser < RDoc::TestCase
 
   def setup
-    @RM = RDoc::Markup
+    super
+
     @RMP = @RM::Parser
   end
 

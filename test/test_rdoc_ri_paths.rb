@@ -3,10 +3,14 @@ require 'rdoc/test_case'
 class TestRDocRIPaths < RDoc::TestCase
 
   def setup
+    super
+
     RDoc::RI::Paths.instance_variable_set :@gemdirs, %w[/nonexistent/gemdir]
   end
 
   def teardown
+    super
+
     RDoc::RI::Paths.instance_variable_set :@gemdirs, nil
   end
 

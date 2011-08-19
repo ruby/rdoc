@@ -117,6 +117,5 @@ class TestRDocMethodAttr < XrefTestCase
     assert_equal 'RDoc::AnyMethod: C1::m', @c1__m.to_s
   end
 
-
 end
 

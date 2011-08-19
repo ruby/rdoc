@@ -3,6 +3,8 @@ require 'rdoc/test_case'
 class TestRDocMarkupHeading < RDoc::TestCase
 
   def setup
+    super
+
     @h = RDoc::Markup::Heading.new 1, 'Hello *Friend*!'
   end
 

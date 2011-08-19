@@ -5,7 +5,7 @@ class TestRDocRIStore < RDoc::TestCase
   OBJECT_ANCESTORS = defined?(::BasicObject) ? %w[BasicObject] : []
 
   def setup
-    RDoc::TopLevel.reset
+    super
 
     @tmpdir = File.join Dir.tmpdir, "test_rdoc_ri_store_#{$$}"
     @s = RDoc::RI::Store.new @tmpdir
@@ -42,11 +42,11 @@ class TestRDocRIStore < RDoc::TestCase
 
     @nest_klass.add_method @nest_meth
     @nest_klass.add_include @nest_incl
-
-    @RM = RDoc::Markup
   end
 
   def teardown
+    super
+
     FileUtils.rm_rf @tmpdir
   end
 

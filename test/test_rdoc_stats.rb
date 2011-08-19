@@ -3,7 +3,7 @@ require 'rdoc/test_case'
 class TestRDocStats < RDoc::TestCase
 
   def setup
-    RDoc::TopLevel.reset
+    super
 
     @s = RDoc::Stats.new 0
 

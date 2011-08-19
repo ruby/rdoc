@@ -3,7 +3,8 @@ require 'rdoc/test_case'
 class TestRDocMarkupInclude < RDoc::TestCase
 
   def setup
-    @RM = RDoc::Markup
+    super
+
     @include = @RM::Include.new 'file', [Dir.tmpdir]
   end
 

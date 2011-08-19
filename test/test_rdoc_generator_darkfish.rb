@@ -3,10 +3,10 @@ require 'rdoc/test_case'
 class TestRDocGeneratorDarkfish < RDoc::TestCase
 
   def setup
-    @pwd = Dir.pwd
+    super
+
     @lib_dir = "#{@pwd}/lib"
     $LOAD_PATH.unshift @lib_dir # ensure we load from this RDoc
-    RDoc::TopLevel.reset
 
     @options = RDoc::Options.new
     @options.option_parser = OptionParser.new
@@ -49,6 +49,8 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
   end
 
   def teardown
+    super
+
     $LOAD_PATH.shift
     Dir.chdir @pwd
     FileUtils.rm_rf @tmpdir

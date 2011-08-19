@@ -3,6 +3,8 @@ require 'rdoc/test_case'
 class TestRDocMarkupAttributeManager < RDoc::TestCase
 
   def setup
+    super
+
     @am = RDoc::Markup::AttributeManager.new
 
     @bold_on  = @am.changed_attribute_by_name([], [:BOLD])

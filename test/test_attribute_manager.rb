@@ -3,6 +3,8 @@ require 'rdoc/test_case'
 class TestAttributeManager < RDoc::TestCase # HACK fix test name
 
   def setup
+    super
+
     @am = RDoc::Markup::AttributeManager.new
     @klass = RDoc::Markup::AttributeManager
     @formatter = RDoc::Markup::Formatter.new

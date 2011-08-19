@@ -2,10 +2,6 @@ require 'rdoc/test_case'
 
 class TestRDocRd < RDoc::TestCase
 
-  def setup
-    @RM = RDoc::Markup
-  end
-
   def test_class_parse
     expected =
       @RM::Document.new(

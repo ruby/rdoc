@@ -3,7 +3,7 @@ require 'rdoc/test_case'
 class TestRDocRIDriver < RDoc::TestCase
 
   def setup
-    @RM = RDoc::Markup
+    super
 
     @tmpdir = File.join Dir.tmpdir, "test_rdoc_ri_driver_#{$$}"
     @home_ri = File.join @tmpdir, 'dot_ri'
@@ -24,6 +24,8 @@ class TestRDocRIDriver < RDoc::TestCase
   end
 
   def teardown
+    super
+
     ENV['HOME'] = @orig_home
     ENV['RI'] = @orig_ri
     FileUtils.rm_rf @tmpdir

@@ -3,6 +3,8 @@ require 'rdoc/test_case'
 class TestRDocAttr < RDoc::TestCase
 
   def setup
+    super
+
     @a = RDoc::Attr.new nil, 'attr', 'RW', ''
   end
 

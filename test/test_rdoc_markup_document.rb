@@ -3,7 +3,8 @@ require 'rdoc/test_case'
 class TestRDocMarkupDocument < RDoc::TestCase
 
   def setup
-    @RM = RDoc::Markup
+    super
+
     @d = @RM::Document.new
   end
 

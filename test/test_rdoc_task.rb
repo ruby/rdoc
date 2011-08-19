@@ -4,6 +4,8 @@ require 'rake'
 class TestRDocTask < RDoc::TestCase
 
   def setup
+    super
+
     Rake::Task.clear
 
     @t = RDoc::Task.new

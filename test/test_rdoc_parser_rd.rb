@@ -3,8 +3,9 @@ require 'rdoc/test_case'
 class TestRDocParserRd < RDoc::TestCase
 
   def setup
+    super
+
     @RP = RDoc::Parser
-    @RM = RDoc::Markup
 
     @tempfile = Tempfile.new self.class.name
     filename = @tempfile.path
@@ -13,11 +14,11 @@ class TestRDocParserRd < RDoc::TestCase
     @fn = filename
     @options = RDoc::Options.new
     @stats = RDoc::Stats.new 0
-
-    RDoc::TopLevel.reset
   end
 
   def teardown
+    super
+
     @tempfile.close
   end
 

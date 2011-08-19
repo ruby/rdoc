@@ -3,6 +3,8 @@ require 'rdoc/test_case'
 class TestRDocMarkupToLabel < RDoc::TestCase
 
   def setup
+    super
+
     @to = RDoc::Markup::ToLabel.new
   end
 

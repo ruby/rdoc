@@ -3,11 +3,15 @@ require 'rdoc/test_case'
 class TestRDocOptions < RDoc::TestCase
 
   def setup
+    super
+
     @options = RDoc::Options.new
     @generators = RDoc::RDoc::GENERATORS.dup
   end
 
   def teardown
+    super
+
     RDoc::RDoc::GENERATORS.replace @generators
   end
 

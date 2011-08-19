@@ -3,6 +3,8 @@ require 'rdoc/test_case'
 class TestRDocContextSection < RDoc::TestCase
 
   def setup
+    super
+
     @S = RDoc::Context::Section
     @s = @S.new nil, 'section', '# comment'
   end

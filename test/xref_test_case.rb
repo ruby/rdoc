@@ -1,18 +1,12 @@
 ENV['RDOC_TEST'] = 'yes'
 
-require 'rubygems'
-require 'minitest/autorun'
 require 'rdoc'
-require 'rdoc/stats'
-require 'rdoc/options'
-require 'rdoc/code_objects'
-require 'rdoc/parser'
 require File.expand_path '../xref_data', __FILE__
 
-class XrefTestCase < MiniTest::Unit::TestCase
+class XrefTestCase < RDoc::TestCase
 
   def setup
-    RDoc::TopLevel.reset
+    super
 
     @file_name = 'xref_data.rb'
     @xref_data = RDoc::TopLevel.new @file_name

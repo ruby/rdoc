@@ -3,6 +3,8 @@ require 'rdoc/test_case'
 class TestRDocMarkupIndentedParagraph < RDoc::TestCase
 
   def setup
+    super
+
     @IP = RDoc::Markup::IndentedParagraph
   end
 

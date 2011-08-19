@@ -49,6 +49,8 @@ end
 class TestRDocParserC < RDoc::TestCase
 
   def setup
+    super
+
     @tempfile = Tempfile.new self.class.name
     filename = @tempfile.path
 
@@ -56,12 +58,11 @@ class TestRDocParserC < RDoc::TestCase
     @fn = filename
     @options = RDoc::Options.new
     @stats = RDoc::Stats.new 0
-
-    RDoc::Parser::C.reset
-    RDoc::TopLevel.reset
   end
 
   def teardown
+    super
+
     @tempfile.close
   end
 

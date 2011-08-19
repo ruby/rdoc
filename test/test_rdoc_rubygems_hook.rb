@@ -6,6 +6,7 @@ class TestRDocRubygemsHook < Gem::TestCase
 
   def setup
     super
+
     skip 'requires RubyGems 1.9+' unless
       Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.9')
 

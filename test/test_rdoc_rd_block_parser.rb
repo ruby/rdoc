@@ -3,7 +3,8 @@ require 'rdoc/test_case'
 class TestRDocRdBlockParser < RDoc::TestCase
 
   def setup
-    @RM = RDoc::Markup
+    super
+
     @block_parser = RDoc::RD::BlockParser.new
   end
 

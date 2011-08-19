@@ -3,6 +3,8 @@ require 'rdoc/test_case'
 class TestRDocEncoding < RDoc::TestCase
 
   def setup
+    super
+
     @tempfile = Tempfile.new 'test_rdoc_encoding'
   end
 

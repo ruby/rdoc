@@ -3,11 +3,10 @@ require 'rdoc/test_case'
 class TestRDocGeneratorRI < RDoc::TestCase
 
   def setup
+    super
+
     @options = RDoc::Options.new
     @options.encoding = Encoding::UTF_8 if Object.const_defined? :Encoding
-
-    @pwd = Dir.pwd
-    RDoc::TopLevel.reset
 
     @tmpdir = File.join Dir.tmpdir, "test_rdoc_generator_ri_#{$$}"
     FileUtils.mkdir_p @tmpdir
@@ -33,6 +32,8 @@ class TestRDocGeneratorRI < RDoc::TestCase
   end
 
   def teardown
+    super
+
     Dir.chdir @pwd
     FileUtils.rm_rf @tmpdir
   end

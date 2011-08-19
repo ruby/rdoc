@@ -6,6 +6,8 @@ class TestRDocGeneratorMarkup < RDoc::TestCase
   include RDoc::Generator::Markup
 
   def setup
+    super
+
     @options = RDoc::Options.new
     @rdoc = RDoc::RDoc.new
     @rdoc.options = @options

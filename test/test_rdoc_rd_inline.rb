@@ -3,6 +3,8 @@ require 'rdoc/test_case'
 class TestRDocRdInline < RDoc::TestCase
 
   def setup
+    super
+
     @inline = RDoc::RD::Inline.new '+text+', 'text'
   end
 

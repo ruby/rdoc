@@ -3,6 +3,8 @@ require 'rdoc/test_case'
 class TestRDocParser < RDoc::TestCase
 
   def setup
+    super
+
     @RP = RDoc::Parser
     @binary_dat = File.expand_path '../binary.dat', __FILE__
 

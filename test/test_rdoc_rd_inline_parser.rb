@@ -3,7 +3,8 @@ require 'rdoc/test_case'
 class TestRDocRdInlineParser < RDoc::TestCase
 
   def setup
-    @RM = RDoc::Markup
+    super
+
     @block_parser = RDoc::RD::BlockParser.new
     @block_parser.instance_variable_set :@i, 0
     @inline_parser = RDoc::RD::InlineParser.new @block_parser

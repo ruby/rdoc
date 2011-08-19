@@ -2,12 +2,6 @@ require File.expand_path '../xref_test_case', __FILE__
 
 class TestRDocClassModule < XrefTestCase
 
-  def setup
-    super
-
-    @RM = RDoc::Markup
-  end
-
   def mu_pp obj
     s = ''
     s = PP.pp obj, s

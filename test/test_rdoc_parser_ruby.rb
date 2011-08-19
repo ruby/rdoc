@@ -5,6 +5,8 @@ require 'rdoc/test_case'
 class TestRDocParserRuby < RDoc::TestCase
 
   def setup
+    super
+
     @tempfile = Tempfile.new self.class.name
     @filename = @tempfile.path
 
@@ -21,6 +23,8 @@ class TestRDocParserRuby < RDoc::TestCase
   end
 
   def teardown
+    super
+
     @tempfile.close
     @tempfile2.close
   end

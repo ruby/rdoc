@@ -5,7 +5,7 @@ require 'rdoc/test_case'
 class TestRDocMarkupPreProcess < RDoc::TestCase
 
   def setup
-    RDoc::Markup::PreProcess.registered.clear
+    super
 
     @tempfile = Tempfile.new 'test_rdoc_markup_pre_process'
     @file_name = File.basename @tempfile.path
@@ -15,7 +15,7 @@ class TestRDocMarkupPreProcess < RDoc::TestCase
   end
 
   def teardown
-    RDoc::Markup::PreProcess.registered.clear
+    super
 
     @tempfile.close
   end
