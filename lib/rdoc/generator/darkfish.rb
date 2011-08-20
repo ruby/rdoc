@@ -65,7 +65,7 @@ class RDoc::Generator::Darkfish
   ##
   # Release Version
 
-  VERSION = '2'
+  VERSION = '3'
 
   ##
   # Description of this generator
