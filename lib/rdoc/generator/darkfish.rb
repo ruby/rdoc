@@ -229,6 +229,8 @@ class RDoc::Generator::Darkfish
 
   def generate_class_files
     template_file = @template_dir + 'class.rhtml'
+    template_file = @template_dir + 'classpage.rhtml' unless
+      template_file.exist?
     return unless template_file.exist?
     debug_msg "Generating class documentation in #{@outputdir}"
 
@@ -260,6 +262,11 @@ class RDoc::Generator::Darkfish
   def generate_file_files
     page_file     = @template_dir + 'page.rhtml'
     fileinfo_file = @template_dir + 'fileinfo.rhtml'
+    template_file = @template_dir + 'filepage.rhtml' unless
+      page_file.exist? or fileinfo_file.exist?
+
+    return unless
+      page_file.exist? or fileinfo_file.exist? or template_file.exist?
     debug_msg "Generating file documentation in #{@outputdir}"
 
     out_file = nil
@@ -270,12 +277,16 @@ class RDoc::Generator::Darkfish
       # suppress 1.9.3 warning
       rel_prefix = rel_prefix = @outputdir.relative_path_from(out_file.dirname)
 
-      if file.text? then
-        template_file = page_file
-        @title = file.page_name
-      else
-        template_file = fileinfo_file
-        @title = "File: #{file.base_name} [#{@options.title}]"
+      unless template_file then
+        if file.text? then
+          next unless page_file.exist?
+          template_file = page_file
+          @title = file.page_name
+        else
+          next unless fileinfo_file.exist?
+          template_file = fileinfo_file
+          @title = "File: #{file.base_name} [#{@options.title}]"
+        end
       end
 
       render_template template_file, out_file do |io| binding end
@@ -363,22 +374,35 @@ class RDoc::Generator::Darkfish
     }
   end
 
-  def assemble_template body
-    head = @template_dir + '_head.rhtml'
-    footer = @template_dir + '_footer.rhtml'
+  ##
+  # Creates a template from its components and the +body_file+.
+  #
+  # For backwards compatibility, if +body_file+ contains "<html" the body is
+  # used directly.
+
+  def assemble_template body_file
+    body = body_file.read
+    return body if body =~ /<html/
+
+    head_file = @template_dir + '_head.rhtml'
+    footer_file = @template_dir + '_footer.rhtml'
 
     <<-TEMPLATE
 <!DOCTYPE html>
 
 <html>
 <head>
-#{head.read}
+#{head_file.read}
 
-#{body.read}
+#{body}
 
-#{footer.read}
+#{footer_file.read}
     TEMPLATE
   end
+
+  ##
+  # Renders the ERb contained in +file_name+ relative to the template
+  # directory and returns the result based on the current context.
 
   def render file_name
     template_file = @template_dir + file_name
