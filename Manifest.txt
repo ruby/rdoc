@@ -136,6 +136,7 @@ test/test_rdoc_include.rb
 test/test_rdoc_markup.rb
 test/test_rdoc_markup_attribute_manager.rb
 test/test_rdoc_markup_document.rb
+test/test_rdoc_markup_formatter.rb
 test/test_rdoc_markup_indented_paragraph.rb
 test/test_rdoc_markup_paragraph.rb
 test/test_rdoc_markup_parser.rb
