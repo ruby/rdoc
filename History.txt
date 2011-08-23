@@ -1,8 +1,10 @@
 === 3.9.3 / 2011-08-23
 
-* Bug fix
+* Bug fixes
   * Add US-ASCII magic comments to work with <tt>ruby -Ku</tt>.  Issue #63 by
     Travis D. Warlick, Jr.
+  * Image paths at HTTPS URLs are now turned into +<img>+ tags.  Pull
+    Request #60 by James Mead
 
 === 3.9.2 / 2011-08-11
 
