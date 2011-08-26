@@ -1,3 +1,8 @@
+=== 3.9.4 / 2011-08-26
+
+* Bug fixes
+  * Applied typo and grammar fixes from Luke Gruber.  Ruby bug #5203
+
 === 3.9.3 / 2011-08-23
 
 * Bug fixes
