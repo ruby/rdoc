@@ -36,8 +36,8 @@ class RDoc::Parser
   class << self
 
     ##
-    # A Hash that maps file extensions regular expressions to parsers that
-    # will consume them.
+    # An Array of arrays that maps file extension (or name) regular
+    # expressions to parser classes that will parse matching filenames.
     #
     # Use parse_files_matching to register a parser's file extensions.
 
