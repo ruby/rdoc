@@ -166,6 +166,8 @@ module RDoc
   autoload :RubyToken,      'rdoc/ruby_token'
   autoload :TokenStream,    'rdoc/token_stream'
 
+  autoload :Comment,        'rdoc/comment'
+
   # code objects
   #
   # We represent the various high-level code constructs that appear in Ruby

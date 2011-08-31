@@ -10,6 +10,7 @@ class XrefTestCase < RDoc::TestCase
 
     @file_name = 'xref_data.rb'
     @xref_data = RDoc::TopLevel.new @file_name
+    @top_level = @xref_data
 
     @options = RDoc::Options.new
     @options.quiet = true

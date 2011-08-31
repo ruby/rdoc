@@ -204,7 +204,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     unget_tk tk
 
-    comment
+    RDoc::Comment.new comment, @top_level
   end
 
   ##
@@ -214,22 +214,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     msg = make_message msg
 
     abort msg
-  end
-
-  ##
-  # Look for a 'call-seq' in the comment, and override the normal parameter
-  # stuff
-  #--
-  # TODO handle undent
-
-  def extract_call_seq(comment, meth)
-    if comment.sub!(/:?call-seq:(.*?)(^\s*#?\s*$|\z)/m, '') then
-      seq = $1
-      seq.gsub!(/^\s*\#\s*/, '')
-      meth.call_seq = seq
-    end
-
-    meth
   end
 
   ##
@@ -403,8 +387,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
            'attr', 'attr_accessor', 'attr_reader', 'attr_writer' then
         false # handled elsewhere
       when 'section' then
-        context.set_current_section param, comment
-        comment.replace ''
+        context.set_current_section param, comment.dup
+        comment.text = ''
         break
       end
     end
@@ -747,10 +731,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
     offset  = tk.seek
     line_no = tk.line_no
 
-    singleton = !!comment.sub!(/(^# +:?)(singleton-)(method:)/, '\1\3')
+    text = comment.text
+
+    singleton = !!text.sub!(/(^# +:?)(singleton-)(method:)/, '\1\3')
 
     # REFACTOR
-    if comment.sub!(/^# +:?method: *(\S*).*?\n/i, '') then
+    if text.sub!(/^# +:?method: *(\S*).*?\n/i, '') then
       name = $1 unless $1.empty?
 
       meth = RDoc::GhostMethod.new get_tkread, name
@@ -769,7 +755,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       meth.params = ''
 
-      extract_call_seq comment, meth
+      comment.extract_call_seq meth
 
       return unless meth.name
 
@@ -778,7 +764,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       meth.comment = comment
 
       @stats.add_method meth
-    elsif comment.sub!(/# +:?(attr(_reader|_writer|_accessor)?): *(\S*).*?\n/i, '') then
+    elsif text.sub!(/# +:?(attr(_reader|_writer|_accessor)?): *(\S*).*?\n/i, '') then
       rw = case $1
            when 'attr_reader' then 'R'
            when 'attr_writer' then 'W'
@@ -858,7 +844,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     tmp = RDoc::CodeObject.new
     read_documentation_modifiers tmp, RDoc::ATTR_MODIFIERS
 
-    if comment.sub!(/^# +:?(attr(_reader|_writer|_accessor)?): *(\S*).*?\n/i, '') then
+    if comment.text.sub!(/^# +:?(attr(_reader|_writer|_accessor)?): *(\S*).*?\n/i, '') then
       rw = case $1
            when 'attr_reader' then 'R'
            when 'attr_writer' then 'W'
@@ -899,9 +885,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     skip_tkspace false
 
-    singleton = !!comment.sub!(/(^# +:?)(singleton-)(method:)/, '\1\3')
+    singleton = !!comment.text.sub!(/(^# +:?)(singleton-)(method:)/, '\1\3')
 
-    if comment.sub!(/^# +:?method: *(\S*).*?\n/i, '') then
+    if comment.text.sub!(/^# +:?method: *(\S*).*?\n/i, '') then
       name = $1 unless $1.empty?
     end
 
@@ -941,7 +927,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     token_listener meth do
       meth.params = ''
 
-      extract_call_seq comment, meth
+      comment.extract_call_seq meth
 
       container.add_method meth
 
@@ -1109,7 +1095,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       parse_statements container, single, meth
     end
 
-    extract_call_seq comment, meth
+    comment.extract_call_seq meth
 
     meth.comment = comment
 
@@ -1244,7 +1230,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # The core of the ruby parser.
 
   def parse_statements(container, single = NORMAL, current_method = nil,
-                       comment = '')
+                       comment = RDoc::Comment.new('', @top_level))
+    raise 'no' unless RDoc::Comment === comment
     comment.force_encoding @encoding if @encoding
 
     nest = 1
@@ -1283,6 +1270,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
               tk = get_tk
             end
           end
+
+          comment = RDoc::Comment.new comment, @top_level
 
           unless comment.empty? then
             look_for_directives_in container, comment
@@ -1361,8 +1350,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
           when 'require', 'include' then
             # ignore
           else
-            if comment =~ /\A#\#$/ then
-              case comment
+            if comment.text =~ /\A#\#$/ then
+              case comment.text
               when /^# +:?attr(_reader|_writer|_accessor)?:/ then
                 parse_meta_attr container, single, tk, comment
               else
@@ -1401,7 +1390,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
 
       unless keep_comment then
-        comment = ''
+        comment = RDoc::Comment.new '', @top_level
         comment.force_encoding @encoding if @encoding
       end
 
@@ -1631,13 +1620,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   ##
   # Removes private comments from +comment+
+  #--
+  # TODO remove
 
-  def remove_private_comments(comment)
-    empty = ''
-    empty.force_encoding comment.encoding if Object.const_defined? :Encoding
-
-    comment.gsub!(/^#--.*?^#\+\+\n?/m, empty)
-    comment.sub!(/^#--.*/m, '')
+  def remove_private_comments comment
+    comment.remove_private
   end
 
   ##

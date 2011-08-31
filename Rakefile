@@ -1,7 +1,6 @@
 $:.unshift 'lib'
 require 'rdoc'
 require 'hoe'
-require 'isolate/rake'
 
 task :docs    => :generate
 task :test    => :generate
@@ -10,7 +9,6 @@ RD_BLOCK_PARSER  = 'lib/rdoc/rd/block_parser.rb'
 RD_INLINE_PARSER = 'lib/rdoc/rd/inline_parser.rb'
 
 Hoe.plugin :git
-Hoe.plugin :isolate
 Hoe.plugin :minitest
 Hoe.plugin :rdoc_tags
 
@@ -36,11 +34,6 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   MESSAGE
 
   self.testlib = :minitest
-  if respond_to? :isolate_dir= then # HACK Hoe issue #7
-    self.isolate_dir = 'tmp/isolate'
-  else
-    warn 'please: gem install isolate'
-  end
 
   self.clean_globs = [
     RD_BLOCK_PARSER,
@@ -50,8 +43,7 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   require_ruby_version '>= 1.8.7'
   extra_dev_deps << ['racc',     '>= 0']
   extra_dev_deps << ['minitest', '~> 2']
-  extra_dev_deps << ['isolate',  '~> 3']
-  extra_dev_deps << ['ZenTest',  '~> 4'] # for autotest/isolate
+  extra_dev_deps << ['ZenTest',  '~> 4']
 
   extra_rdoc_files << 'Rakefile'
   spec_extras['required_rubygems_version'] = '>= 1.3'

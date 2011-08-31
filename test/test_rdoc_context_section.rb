@@ -6,7 +6,7 @@ class TestRDocContextSection < RDoc::TestCase
     super
 
     @S = RDoc::Context::Section
-    @s = @S.new nil, 'section', '# comment'
+    @s = @S.new nil, 'section', comment('# comment')
   end
 
   def test_aref
@@ -18,26 +18,27 @@ class TestRDocContextSection < RDoc::TestCase
   end
 
   def test_comment_equals
-    @s.comment = "# :section: section\n"
+    @s.comment = RDoc::Comment.new "# :section: section\n"
 
-    assert_equal "# comment", @s.comment
+    assert_equal "# comment", @s.comment.text
 
-    @s.comment = "# :section: section\n# other"
+    @s.comment = RDoc::Comment.new "# :section: section\n# other"
 
-    assert_equal "# comment\n# ---\n# other", @s.comment
+    assert_equal "# comment\n# ---\n# other", @s.comment.text
 
     s = @S.new nil, nil, nil
 
-    s.comment = "# :section:\n# other"
+    s.comment = RDoc::Comment.new "# :section:\n# other"
 
-    assert_equal "# other", s.comment
+    assert_equal "# other", s.comment.text
   end
 
   def test_extract_comment
-    assert_equal '',    @s.extract_comment('')
-    assert_equal '',    @s.extract_comment("# :section: b\n")
-    assert_equal '# c', @s.extract_comment("# :section: b\n# c")
-    assert_equal '# c', @s.extract_comment("# a\n# :section: b\n# c")
+    assert_equal '',    @s.extract_comment(comment('')).text
+    assert_equal '',    @s.extract_comment(comment("# :section: b\n")).text
+    assert_equal '# c', @s.extract_comment(comment("# :section: b\n# c")).text
+    assert_equal '# c',
+                 @s.extract_comment(comment("# a\n# :section: b\n# c")).text
   end
 
   def test_sequence

@@ -1,6 +1,6 @@
 require File.expand_path '../xref_test_case', __FILE__
 
-class RDocAnyMethodTest < XrefTestCase
+class TestRDocAnyMethod < XrefTestCase
 
   def test_aref
     m = RDoc::AnyMethod.new nil, 'method?'

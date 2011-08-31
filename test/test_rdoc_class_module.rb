@@ -33,6 +33,14 @@ class TestRDocClassModule < XrefTestCase
     assert_equal "comment 1\n---\ncomment 2\n---\n* comment 3", cm.comment
   end
 
+  def test_add_comment_comment
+    cm = RDoc::ClassModule.new 'Klass'
+
+    cm.add_comment comment('comment'), @top_level
+
+    assert_equal 'comment', cm.comment.text
+  end
+
   def test_add_comment_stopdoc
     tl = RDoc::TopLevel.new 'file.rb'
 
@@ -61,6 +69,14 @@ class TestRDocClassModule < XrefTestCase
     cm.comment = "# * comment 3"
 
     assert_equal "comment 1\n---\ncomment 2\n---\n* comment 3", cm.comment
+  end
+
+  def test_comment_equals_comment
+    cm = RDoc::ClassModule.new 'Klass'
+
+    cm.comment = comment 'comment'
+
+    assert_equal 'comment', cm.comment.text
   end
 
   def test_each_ancestor
@@ -550,6 +566,19 @@ class TestRDocClassModule < XrefTestCase
     expected = @RM::Document.new doc1, doc2
 
     assert_equal expected, cm.parse(cm.comment_location)
+  end
+
+  def test_parse_comment
+    tl1 = RDoc::TopLevel.new 'one.rb'
+    tl2 = RDoc::TopLevel.new 'two.rb'
+
+    cm = RDoc::ClassModule.new 'Klass'
+    cm.comment = comment 'comment 1', tl1
+
+    doc = @RM::Document.new @RM::Paragraph.new 'comment 1'
+    doc.file = tl1.absolute_name
+
+    assert_equal doc, cm.parse(cm.comment)
   end
 
   def test_parse_comment_location

@@ -78,6 +78,14 @@ contents of a string.
     assert_equal "#\n", text
   end
 
+  def test_handle_comment
+    text = "# :main: M\n"
+    out = @pp.handle RDoc::Comment.new text
+
+    assert_same out, text
+    assert_equal "#\n", text
+  end
+
   def test_handle_unregistered
     text = "# :x: y\n"
     out = @pp.handle text

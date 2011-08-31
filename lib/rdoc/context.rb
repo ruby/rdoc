@@ -132,7 +132,7 @@ class RDoc::Context < RDoc::CodeObject
       @@sequence.succ!
       @sequence = @@sequence.dup
 
-      @comment = extract_comment comment
+      @comment = extract_comment comment if comment
     end
 
     ##
@@ -160,7 +160,8 @@ class RDoc::Context < RDoc::CodeObject
       return if comment.empty?
 
       if @comment then
-        @comment += "\n# ---\n#{comment}"
+        # HACK should section comments get joined?
+        @comment.text += "\n# ---\n#{comment.text}"
       else
         @comment = comment
       end
@@ -176,18 +177,18 @@ class RDoc::Context < RDoc::CodeObject
     #   # The body
 
     def extract_comment comment
-      if comment =~ /^#[ \t]*:section:.*\n/ then
+      if comment.text =~ /^#[ \t]*:section:.*\n/ then
         start = $`
         rest = $'
 
-        if start.empty? then
-          rest
-        else
-          rest.sub(/#{start.chomp}\Z/, '')
-        end
-      else
-        comment
+        comment.text = if start.empty? then
+                         rest
+                       else
+                         rest.sub(/#{start.chomp}\Z/, '')
+                       end
       end
+
+      comment
     end
 
     def inspect # :nodoc:
@@ -602,9 +603,9 @@ class RDoc::Context < RDoc::CodeObject
   #
   # See also RDoc::Context::Section
 
-  def add_section title, comment
+  def add_section title, comment = nil
     if section = @sections[title] then
-      section.comment = comment
+      section.comment = comment if comment
     else
       section = Section.new self, title, comment
       @sections[title] = section

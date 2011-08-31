@@ -117,7 +117,12 @@ class RDoc::ClassModule < RDoc::Context
 
     original = comment
 
-    comment = normalize_comment comment
+    comment = case comment
+              when RDoc::Comment then
+                comment.normalize
+              else
+                normalize_comment comment
+              end
     @comment_location << [comment, location]
 
     self.comment = original
@@ -155,7 +160,13 @@ class RDoc::ClassModule < RDoc::Context
   def comment= comment
     return if comment.empty?
 
-    comment = normalize_comment comment
+    comment = case comment
+              when RDoc::Comment then
+                comment.normalize
+              else
+                normalize_comment comment
+              end
+
     comment = "#{@comment}\n---\n#{comment}" unless @comment.empty?
 
     super comment
@@ -441,6 +452,10 @@ class RDoc::ClassModule < RDoc::Context
       end
 
       RDoc::Markup::Document.new(*docs)
+    when RDoc::Comment then
+      doc = super comment_location.text
+      doc.file = comment_location.location.absolute_name
+      doc
     when RDoc::Markup::Document then
       return comment_location
     else

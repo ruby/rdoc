@@ -30,12 +30,18 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
   def setup
     super
 
+    @top_level = nil
+
     @RM = RDoc::Markup
 
     RDoc::RDoc.reset
     RDoc::Markup::PreProcess.registered.clear
 
     @pwd = Dir.pwd
+  end
+
+  def comment text, top_level = @top_level
+    RDoc::Comment.new text, top_level
   end
 
 end

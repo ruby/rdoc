@@ -132,6 +132,10 @@ The comments associated with
     assert_kind_of RDoc::Markup::Document, parse('hi')
   end
 
+  def test_parse_comment
+    assert_equal RDoc::Markup::Document.new, parse(comment(''))
+  end
+
   def test_parse_document
     assert_equal RDoc::Markup::Document.new, parse(RDoc::Markup::Document.new)
   end

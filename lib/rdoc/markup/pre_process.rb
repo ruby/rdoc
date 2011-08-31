@@ -55,6 +55,8 @@ class RDoc::Markup::PreProcess
   # +code_object+.  See RDoc::CodeObject#metadata
 
   def handle text, code_object = nil, &block
+    text = text.text if RDoc::Comment === text
+
     encoding = if defined?(Encoding) then text.encoding else nil end
     # regexp helper (square brackets for optional)
     # $1      $2  $3        $4      $5
@@ -89,7 +91,7 @@ class RDoc::Markup::PreProcess
       blankline
     when 'category' then
       if RDoc::Context === code_object then
-        section = code_object.add_section param, ''
+        section = code_object.add_section param
         code_object.temporary_section = section
       end
 

@@ -253,22 +253,39 @@ class TestRDocContext < XrefTestCase
   def test_add_section
     default_section = @context.sections.first
 
-    @context.add_section nil, '# comment'
+    @context.add_section nil, RDoc::Comment.new('# comment', @top_level)
 
     assert_equal 1, @context.sections.length
-    assert_equal '# comment', @context.sections.first.comment
+    assert_equal '# comment', @context.sections.first.comment.text
 
-    @context.add_section nil, '# new comment'
+    @context.add_section nil, RDoc::Comment.new('# new comment', @top_level)
 
     assert_equal 1, @context.sections.length
     assert_equal "# comment\n# ---\n# new comment",
-                 @context.sections.first.comment
+                 @context.sections.first.comment.text
 
-    @context.add_section 'other', ''
+    @context.add_section 'other', RDoc::Comment.new('', @top_level)
 
     assert_equal 2, @context.sections.length
 
     new_section = @context.sections.find { |section| section.title == 'other' }
+    assert new_section
+    assert_equal default_section, @context.current_section
+  end
+
+  def test_add_section_no_comment
+    default_section = @context.sections.first
+
+    @context.add_section nil
+
+    assert_equal 1, @context.sections.length
+
+    @context.add_section 'other'
+
+    assert_equal 2, @context.sections.length
+
+    new_section = @context.sections.find { |section| section.title == 'other' }
+
     assert new_section
     assert_equal default_section, @context.current_section
   end
@@ -286,7 +303,8 @@ class TestRDocContext < XrefTestCase
   def test_add_to_temporary_section
     incl = RDoc::Include.new 'Name', 'comment'
     arr = []
-    section = @context.add_section 'temporary', ''
+    section =
+      @context.add_section 'temporary', RDoc::Comment.new('', @top_level)
     @context.temporary_section = section
 
     @context.add_to arr, incl
@@ -326,7 +344,8 @@ class TestRDocContext < XrefTestCase
   def test_current_section
     default_section = @context.current_section
 
-    new_section = @context.add_section 'other', ''
+    new_section =
+      @context.add_section 'other', RDoc::Comment.new('', @top_level)
     @context.temporary_section = new_section
 
     assert_equal new_section, @context.current_section
@@ -651,11 +670,11 @@ class TestRDocContext < XrefTestCase
   def test_set_current_section
     default_section = @context.sections.first
 
-    @context.set_current_section nil, ''
+    @context.set_current_section nil, RDoc::Comment.new('', @top_level)
 
     assert_equal default_section, @context.current_section
 
-    @context.set_current_section 'other', ''
+    @context.set_current_section 'other', RDoc::Comment.new('', @top_level)
 
     new_section = @context.sections.find { |section|
       section != default_section

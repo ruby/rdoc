@@ -103,6 +103,7 @@ module RDoc::Text
 
   def parse text
     return text if RDoc::Markup::Document === text
+    text = text.text if RDoc::Comment === text
 
     text = normalize_comment text
 

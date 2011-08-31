@@ -121,6 +121,7 @@ class RDoc::CodeObject
     @comment = case comment
                when NilClass               then ''
                when RDoc::Markup::Document then comment
+               when RDoc::Comment          then comment.normalize
                else
                  if comment and not comment.empty? then
                    normalize_comment comment
