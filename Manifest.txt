@@ -19,6 +19,7 @@ lib/rdoc/code_objects.rb
 lib/rdoc/comment.rb
 lib/rdoc/constant.rb
 lib/rdoc/context.rb
+lib/rdoc/context/section.rb
 lib/rdoc/cross_reference.rb
 lib/rdoc/encoding.rb
 lib/rdoc/erbio.rb
