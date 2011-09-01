@@ -5,12 +5,23 @@ class RDoc::Comment
   attr_accessor :location
   attr_accessor :text
 
+  ##
+  # Overrides #parse.  Use when there is no #text for this comment
+
+  attr_writer   :document
+
   def initialize text = nil, location = nil
     @location = location
     @text     = text
+
+    @document = nil
   end
 
-  def initialize_copy copy
+  ##
+  #--
+  # TODO deep copy @document
+
+  def initialize_copy copy # :nodoc:
     @text = copy.text.dup
   end
 
@@ -92,9 +103,19 @@ class RDoc::Comment
   end
 
   def normalize
+    return self unless @text
+
     @text = normalize_comment @text
 
     self
+  end
+
+  def parse
+    return @document if @document
+
+    @document = super @text
+    @document.file = @location.absolute_name
+    @document
   end
 
   def remove_private

@@ -40,7 +40,7 @@ class TestRDocParserRd < RDoc::TestCase
 
     parser.scan
 
-    assert_equal expected, @top_level.comment
+    assert_equal expected, @top_level.comment.parse
   end
 
   def util_parser content

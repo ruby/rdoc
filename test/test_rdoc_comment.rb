@@ -219,8 +219,29 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
     assert_equal 'comment', @comment.text
   end
 
+  def test_normalize_document
+    @comment.text = nil
+    @comment.document = @RM::Document.new
+
+    assert_same @comment, @comment.normalize
+
+    assert_nil @comment.text
+  end
+
   def test_text
     assert_equal 'this is a comment', @comment.text
+  end
+
+  def test_parse
+    parsed = @comment.parse
+
+    expected = @RM::Document.new(
+      @RM::Paragraph.new('this is a comment'))
+
+    expected.file = @top_level.absolute_name
+
+    assert_equal expected, parsed
+    assert_same  parsed, @comment.parse
   end
 
   def test_remove_private_encoding
