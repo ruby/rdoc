@@ -223,36 +223,7 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
     assert_equal 'this is a comment', @comment.text
   end
 
-  def test_remove_private
-    @comment.text = <<-TEXT
-#--
-# private
-#++
-# public
-    TEXT
-
-    @comment.remove_private
-
-    assert_equal "# public\n", @comment.text
-  end
-
-  def test_remove_private_comments
-    comment = RDoc::Comment.new <<-EOS, @top_level
-# This is text
-#--
-# this is private
-    EOS
-
-    expected = RDoc::Comment.new <<-EOS, @top_level
-# This is text
-    EOS
-
-    comment.remove_private
-
-    assert_equal expected, comment
-  end
-
-  def test_remove_private_comments_encoding
+  def test_remove_private_encoding
     skip "Encoding not implemented" unless Object.const_defined? :Encoding
 
     comment = RDoc::Comment.new <<-EOS, @top_level
@@ -268,7 +239,36 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
     assert_equal Encoding::IBM437, comment.text.encoding
   end
 
-  def test_remove_private_comments_long
+  def test_remove_private_hash
+    @comment.text = <<-TEXT
+#--
+# private
+#++
+# public
+    TEXT
+
+    @comment.remove_private
+
+    assert_equal "# public\n", @comment.text
+  end
+
+  def test_remove_private_hash_trail
+    comment = RDoc::Comment.new <<-EOS, @top_level
+# This is text
+#--
+# this is private
+    EOS
+
+    expected = RDoc::Comment.new <<-EOS, @top_level
+# This is text
+    EOS
+
+    comment.remove_private
+
+    assert_equal expected, comment
+  end
+
+  def test_remove_private_long
     comment = RDoc::Comment.new <<-EOS, @top_level
 #-----
 #++
@@ -285,7 +285,7 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
     assert_equal expected, comment
   end
 
-  def test_remove_private_comments_rule
+  def test_remove_private_rule
     comment = RDoc::Comment.new <<-EOS, @top_level
 # This is text with a rule:
 # ---
@@ -299,7 +299,36 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
     assert_equal expected, comment
   end
 
-  def test_remove_private_comments_toggle
+  def test_remove_private_star
+    @comment.text = <<-TEXT
+/*
+ *--
+ * private
+ *++
+ * public
+ */
+    TEXT
+
+    @comment.remove_private
+
+    assert_equal "/*\n * public\n */\n", @comment.text
+  end
+
+  def test_remove_private_star2
+    @comment.text = <<-TEXT
+/*--
+ * private
+ *++
+ * public
+ */
+    TEXT
+
+    @comment.remove_private
+
+    assert_equal "/*--\n * private\n *++\n * public\n */\n", @comment.text
+  end
+
+  def test_remove_private_toggle
     comment = RDoc::Comment.new <<-EOS, @top_level
 # This is text
 #--
@@ -318,7 +347,7 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
     assert_equal expected, comment
   end
 
-  def test_remove_private_comments_toggle_encoding
+  def test_remove_private_toggle_encoding
     skip "Encoding not implemented" unless Object.const_defined? :Encoding
 
     comment = RDoc::Comment.new <<-EOS, @top_level
@@ -336,7 +365,7 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
     assert_equal Encoding::IBM437, comment.text.encoding
   end
 
-  def test_remove_private_comments_toggle_encoding_ruby_bug?
+  def test_remove_private_toggle_encoding_ruby_bug?
     skip "Encoding not implemented" unless Object.const_defined? :Encoding
 
     comment = RDoc::Comment.new <<-EOS, @top_level

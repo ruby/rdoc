@@ -102,8 +102,8 @@ class RDoc::Comment
     empty = ''
     empty.force_encoding @text.encoding if Object.const_defined? :Encoding
 
-    @text = @text.gsub(/^#--.*?^#\+\+\n?/m, empty)
-    @text = @text.sub(/^#--.*/m, '')
+    @text = @text.gsub(%r%^\s*([#*]?)--.*?^\s*(\1)\+\+\n?%m, empty)
+    @text = @text.sub(%r%^\s*[#*]?--.*%m, '')
   end
 
 end
