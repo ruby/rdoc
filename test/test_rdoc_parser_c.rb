@@ -112,18 +112,18 @@ void Init_Blah(void) {
     accessor = attrs.shift
     assert_equal 'accessor',            accessor.name
     assert_equal 'RW',                  accessor.rw
-    assert_equal 'This is an accessor', accessor.comment
+    assert_equal 'This is an accessor', accessor.comment.text
     assert_equal @top_level,            accessor.file
 
     reader = attrs.shift
     assert_equal 'reader',           reader.name
     assert_equal 'R',                reader.rw
-    assert_equal 'This is a reader', reader.comment
+    assert_equal 'This is a reader', reader.comment.text
 
     writer = attrs.shift
     assert_equal 'writer',           writer.name
     assert_equal 'W',                writer.rw
-    assert_equal 'This is a writer', writer.comment
+    assert_equal 'This is a writer', writer.comment.text
   end
 
   def test_do_attr_rb_define_attr
@@ -146,7 +146,7 @@ void Init_Blah(void) {
     accessor = attrs.shift
     assert_equal 'accessor',            accessor.name
     assert_equal 'RW',                  accessor.rw
-    assert_equal 'This is an accessor', accessor.comment
+    assert_equal 'This is an accessor', accessor.comment.text
     assert_equal @top_level,            accessor.file
   end
 
@@ -207,7 +207,7 @@ void Init_Blah(void) {
     assert_equal 'bleh', methods.last.name
     assert               methods.last.singleton
     assert_equal 'blah', methods.last.is_alias_for.name
-    assert_equal 'This should show up as an alias', methods.last.comment
+    assert_equal 'This should show up as an alias', methods.last.comment.text
   end
 
   def test_do_classes_boot_class
@@ -219,7 +219,7 @@ VALUE cFoo = boot_defclass("Foo", rb_cObject);
     EOF
 
     klass = util_get_class content, 'cFoo'
-    assert_equal "this is the Foo boot class", klass.comment
+    assert_equal "this is the Foo boot class", klass.comment.text
     assert_equal 'Object', klass.superclass
   end
 
@@ -232,7 +232,7 @@ VALUE cFoo = boot_defclass("Foo", 0);
     EOF
 
     klass = util_get_class content, 'cFoo'
-    assert_equal "this is the Foo boot class", klass.comment
+    assert_equal "this is the Foo boot class", klass.comment.text
     assert_equal nil, klass.superclass
   end
 
@@ -260,7 +260,7 @@ VALUE cFoo = rb_define_class("Foo", rb_cObject);
     EOF
 
     klass = util_get_class content, 'cFoo'
-    assert_equal "this is the Foo class", klass.comment
+    assert_equal "this is the Foo class", klass.comment.text
   end
 
   def test_do_classes_class_under
@@ -273,7 +273,7 @@ VALUE cFoo = rb_define_class_under(rb_mKernel, "Foo", rb_cObject);
 
     klass = util_get_class content, 'cFoo'
     assert_equal 'Kernel::Foo', klass.full_name
-    assert_equal "this is the Foo class under Kernel", klass.comment
+    assert_equal "this is the Foo class under Kernel", klass.comment.text
   end
 
   def test_do_classes_class_under_rb_path2class
@@ -288,7 +288,7 @@ VALUE cFoo = rb_define_class_under(rb_mKernel, "Foo", rb_path2class("A::B"));
 
     assert_equal 'Kernel::Foo', klass.full_name
     assert_equal 'A::B', klass.superclass
-    assert_equal 'this is Kernel::Foo < A::B', klass.comment
+    assert_equal 'this is Kernel::Foo < A::B', klass.comment.text
   end
 
   def test_do_classes_singleton
@@ -311,7 +311,7 @@ VALUE mFoo = rb_define_module("Foo");
     EOF
 
     klass = util_get_class content, 'mFoo'
-    assert_equal "this is the Foo module", klass.comment
+    assert_equal "this is the Foo module", klass.comment.text
   end
 
   def test_do_classes_module_under
@@ -323,7 +323,7 @@ VALUE mFoo = rb_define_module_under(rb_mKernel, "Foo");
     EOF
 
     klass = util_get_class content, 'mFoo'
-    assert_equal "this is the Foo module under Kernel", klass.comment
+    assert_equal "this is the Foo module under Kernel", klass.comment.text
   end
 
   def test_do_constants
@@ -389,7 +389,7 @@ void Init_foo(){
 
     assert_equal @top_level, constants.first.file
 
-    constants = constants.map { |c| [c.name, c.value, c.comment] }
+    constants = constants.map { |c| [c.name, c.value, c.comment.text] }
 
     assert_equal ['PERFECT', '300', 'The highest possible score in bowling   '],
                  constants.shift
@@ -451,7 +451,7 @@ void Init_curses(){
 
     assert_equal 'COLOR_BLACK', constants.first.name
     assert_equal 'UINT2NUM(COLOR_BLACK)', constants.first.value
-    assert_equal 'Value of the color black', constants.first.comment
+    assert_equal 'Value of the color black', constants.first.comment.text
   end
 
   def test_do_includes
@@ -468,7 +468,7 @@ Init_foo() {
 
     incl = klass.includes.first
     assert_equal 'Inc',      incl.name
-    assert_equal '',         incl.comment
+    assert_equal '',         incl.comment.text
     assert_equal @top_level, incl.file
   end
 
@@ -564,7 +564,7 @@ void Init_Blah(void) {
 
     comment = parser.find_alias_comment 'C', '[]', 'index'
 
-    assert_equal '', comment
+    assert_equal '', comment.text
 
     parser = util_parser <<-C
 /*
@@ -576,7 +576,7 @@ rb_define_alias(C, "[]", "index");
 
     comment = parser.find_alias_comment 'C', '[]', 'index'
 
-    assert_equal "/*\n * comment\n */\n\n", comment
+    assert_equal "/*\n * comment\n */\n\n", comment.text
   end
 
   def test_find_class_comment_include
@@ -596,7 +596,7 @@ Init_Foo(void) {
 
     klass = util_get_class content, 'foo'
 
-    assert_equal "a comment for class Foo\n\ntest file", klass.comment
+    assert_equal "a comment for class Foo\n\ntest file", klass.comment.text
   end
 
   def test_find_class_comment_init
@@ -612,7 +612,7 @@ Init_Foo(void) {
 
     klass = util_get_class content, 'foo'
 
-    assert_equal "a comment for class Foo", klass.comment
+    assert_equal "a comment for class Foo", klass.comment.text
   end
 
   def test_find_class_comment_define_class
@@ -625,7 +625,7 @@ VALUE foo = rb_define_class("Foo", rb_cObject);
 
     klass = util_get_class content, 'foo'
 
-    assert_equal "a comment for class Foo", klass.comment
+    assert_equal "a comment for class Foo", klass.comment.text
   end
 
   def test_find_class_comment_define_class_Init_Foo
@@ -644,7 +644,7 @@ Init_Foo(void) {
 
     klass = util_get_class content, 'foo'
 
-    assert_equal "a comment for class Foo on Init", klass.comment
+    assert_equal "a comment for class Foo on Init", klass.comment.text
   end
 
   def test_find_class_comment_define_class_Init_Foo_no_void
@@ -663,7 +663,7 @@ Init_Foo() {
 
     klass = util_get_class content, 'foo'
 
-    assert_equal "a comment for class Foo on Init", klass.comment
+    assert_equal "a comment for class Foo on Init", klass.comment.text
   end
 
   def test_find_class_comment_define_class_bogus_comment
@@ -683,7 +683,7 @@ Init_Foo(void) {
 
     klass = util_get_class content, 'foo'
 
-    assert_equal '', klass.comment
+    assert_equal '', klass.comment.text
   end
 
   def test_find_const_comment_rb_define
@@ -698,7 +698,7 @@ rb_define_const(cFoo, "CONST", value);
 
     comment = parser.find_const_comment 'const', 'CONST'
 
-    assert_equal "/*\n * A comment\n */\n", comment
+    assert_equal "/*\n * A comment\n */\n", comment.text
   end
 
   def test_find_const_comment_document_const
@@ -714,7 +714,7 @@ rb_define_const(cFoo, "CONST", value);
 
     comment = parser.find_const_comment nil, 'CONST'
 
-    assert_equal " *\n * A comment\n */", comment
+    assert_equal "/*\n *\n * A comment\n */", comment.text
   end
 
   def test_find_const_comment_document_const_full_name
@@ -730,7 +730,7 @@ rb_define_const(cFoo, "CONST", value);
 
     comment = parser.find_const_comment nil, 'CONST', 'Foo'
 
-    assert_equal " *\n * A comment\n */", comment
+    assert_equal "/*\n *\n * A comment\n */", comment.text
   end
 
   def test_find_body
@@ -755,7 +755,7 @@ Init_Foo(void) {
 
     assert_equal 'my_method', other_function.name
     assert_equal "a comment for other_function",
-                 other_function.comment
+                 other_function.comment.text
     assert_equal '()', other_function.params
 
     code = other_function.token_stream.first.text
@@ -828,7 +828,7 @@ Init_Foo(void) {
     other_function = klass.method_list.first
 
     assert_equal 'my_method', other_function.name
-    assert_equal 'a comment for rb_other_function', other_function.comment
+    assert_equal 'a comment for rb_other_function', other_function.comment.text
     assert_equal '()', other_function.params
     assert_equal 118, other_function.offset
     assert_equal 8, other_function.line
@@ -862,7 +862,7 @@ Init_Foo(void) {
     other_function = klass.method_list.first
 
     assert_equal 'my_method', other_function.name
-    assert_equal 'a comment for other_function', other_function.comment
+    assert_equal 'a comment for other_function', other_function.comment.text
     assert_equal '()', other_function.params
     assert_equal 39, other_function.offset
     assert_equal 4, other_function.line
@@ -900,11 +900,11 @@ Init_Foo(void) {
 
     bar = methods.first
     assert_equal 'Foo#bar', bar.full_name
-    assert_equal "a comment for bar", bar.comment
+    assert_equal "a comment for bar", bar.comment.text
 
     baz = methods.last
     assert_equal 'Foo#baz', baz.full_name
-    assert_equal "a comment for bar", baz.comment
+    assert_equal "a comment for bar", baz.comment.text
   end
 
   def test_find_body_document_method_equals
@@ -934,7 +934,7 @@ Init_zlib() {
 
     bar = methods.first
     assert_equal 'Zlib::GzipWriter#mtime=', bar.full_name
-    assert_equal 'A comment', bar.comment
+    assert_equal 'A comment', bar.comment.text
   end
 
   def test_find_body_document_method_same
@@ -975,28 +975,19 @@ Init_Foo(void) {
 
     s_bar = methods.first
     assert_equal 'Foo::bar', s_bar.full_name
-    assert_equal "a comment for Foo::bar", s_bar.comment
+    assert_equal "a comment for Foo::bar", s_bar.comment.text
 
     bar = methods.last
     assert_equal 'Foo#bar', bar.full_name
-    assert_equal "a comment for Foo#bar", bar.comment
+    assert_equal "a comment for Foo#bar", bar.comment.text
   end
 
   def test_find_modifiers_call_seq
-    comment = <<-COMMENT
-/* call-seq:
- *   commercial() -> Date <br />
- *   commercial(cwyear, cweek=41, cwday=5, sg=nil) -> Date [ruby 1.8] <br />
- *   commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
- *
- * If no arguments are given:
- * * ruby 1.8: returns a +Date+ for 1582-10-15 (the Day of Calendar Reform in
- *   Italy)
- * * ruby 1.9: returns a +Date+ for julian day 0
- *
- * Otherwise, returns a +Date+ for the commercial week year, commercial week,
- * and commercial week day given. Ignores the 4th argument.
- */
+    comment = RDoc::Comment.new <<-COMMENT
+call-seq:
+  commercial() -> Date <br />
+
+If no arguments are given:
 
     COMMENT
 
@@ -1007,41 +998,14 @@ Init_Foo(void) {
 
     expected = <<-CALL_SEQ.chomp
 commercial() -> Date <br />
-commercial(cwyear, cweek=41, cwday=5, sg=nil) -> Date [ruby 1.8] <br />
-commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
- 
-    CALL_SEQ
 
-    assert_equal expected, method_obj.call_seq
-  end
-
-  def test_find_modifiers_call_seq_no_blank
-    comment = <<-COMMENT
-/* call-seq:
- *   commercial() -> Date <br />
- *   commercial(cwyear, cweek=41, cwday=5, sg=nil) -> Date [ruby 1.8] <br />
- *   commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
- */
-
-    COMMENT
-
-    parser = util_parser ''
-    method_obj = RDoc::AnyMethod.new nil, 'blah'
-
-    parser.find_modifiers comment, method_obj
-
-    expected = <<-CALL_SEQ.chomp
-commercial() -> Date <br />
-commercial(cwyear, cweek=41, cwday=5, sg=nil) -> Date [ruby 1.8] <br />
-commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
- 
     CALL_SEQ
 
     assert_equal expected, method_obj.call_seq
   end
 
   def test_find_modifiers_nodoc
-    comment = <<-COMMENT
+    comment = RDoc::Comment.new <<-COMMENT
 /* :nodoc:
  *
  * Blah
@@ -1058,7 +1022,7 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
   end
 
   def test_find_modifiers_yields
-    comment = <<-COMMENT
+    comment = RDoc::Comment.new <<-COMMENT
 /* :yields: a, b
  *
  * Blah
@@ -1081,7 +1045,7 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
 
     EXPECTED
 
-    assert_equal expected, comment
+    assert_equal expected, comment.text
   end
 
   def test_handle_method_args_minus_1
@@ -1204,11 +1168,11 @@ void Init_Blah(void) {
   def test_look_for_directives_in
     parser = util_parser ''
 
-    comment = "# :markup: not_rdoc\n"
+    comment = RDoc::Comment.new "# :markup: not_rdoc\n"
 
     parser.look_for_directives_in @top_level, comment
 
-    assert_equal "# :markup: not_rdoc\n", comment
+    assert_equal "# :markup: not_rdoc\n", comment.text
     assert_equal 'not_rdoc', @top_level.metadata['markup']
   end
 
@@ -1236,7 +1200,7 @@ Init_IO(void) {
     klass = util_get_class content, 'rb_cIO'
     read_method = klass.method_list.first
     assert_equal "read", read_method.name
-    assert_equal "Method Comment!   ", read_method.comment
+    assert_equal "Method Comment!   ", read_method.comment.text
     assert_equal "rb_io_s_read", read_method.c_function
     assert read_method.singleton
   end
@@ -1267,7 +1231,7 @@ Init_IO(void) {
     klass = util_get_class content, 'rb_cIO'
     read_method = klass.method_list.first
     assert_equal "read", read_method.name
-    assert_equal "Method Comment!   ", read_method.comment
+    assert_equal "Method Comment!   ", read_method.comment.text
     assert_equal "rb_io_s_read", read_method.c_function
     assert read_method.singleton
   end
@@ -1297,7 +1261,7 @@ Init_IO(void) {
     read_method = klass.method_list.first
     assert_equal 'IO#read', read_method.full_name
     assert_equal :private, read_method.visibility
-    assert_equal "Method Comment!   ", read_method.comment
+    assert_equal "Method Comment!   ", read_method.comment.text
   end
 
   def test_define_method_private_singleton
@@ -1325,7 +1289,7 @@ Init_IO(void) {
     klass = util_get_class content, 'rb_cIO'
     read_method = klass.method_list.first
     assert_equal "read", read_method.name
-    assert_equal "Method Comment!   ", read_method.comment
+    assert_equal "Method Comment!   ", read_method.comment.text
     assert_equal :private, read_method.visibility
     assert read_method.singleton
   end
@@ -1355,7 +1319,7 @@ Init_IO(void) {
     klass = util_get_class content, 'rb_cIO'
     read_method = klass.method_list.first
     assert_equal "read", read_method.name
-    assert_equal "Method Comment!   ", read_method.comment
+    assert_equal "Method Comment!   ", read_method.comment.text
     assert read_method.singleton
   end
 

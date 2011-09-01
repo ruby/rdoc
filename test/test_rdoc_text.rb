@@ -111,12 +111,48 @@ The comments associated with
     assert_equal "<p>hi</p>", markup('hi').gsub("\n", '')
   end
 
-  def test_normalize_comment
+  def test_normalize_comment_hash
     text = <<-TEXT
 ##
 # we don't worry too much.
 #
 # The comments associated with
+    TEXT
+
+    expected = <<-EXPECTED.rstrip
+we don't worry too much.
+
+The comments associated with
+    EXPECTED
+
+    assert_equal expected, normalize_comment(text)
+  end
+
+  def test_normalize_comment_stars_single_space
+    text = <<-TEXT
+/*
+ * we don't worry too much.
+ * 
+ * The comments associated with
+ */
+    TEXT
+
+    expected = <<-EXPECTED.rstrip
+we don't worry too much.
+
+The comments associated with
+    EXPECTED
+
+    assert_equal expected, normalize_comment(text)
+  end
+
+  def test_normalize_comment_stars_single_double_space
+    text = <<-TEXT
+/*
+ *  we don't worry too much.
+ *  
+ *  The comments associated with
+ */
     TEXT
 
     expected = <<-EXPECTED.rstrip
@@ -306,6 +342,24 @@ The comments associated with
 
     assert_equal expected, result
     assert_equal Encoding::BINARY, result.encoding
+  end
+
+  def test_strip_stars_no_stars
+    text = <<-TEXT
+* we don't worry too much.
+
+The comments associated with
+
+    TEXT
+
+    expected = <<-EXPECTED
+* we don't worry too much.
+
+The comments associated with
+
+    EXPECTED
+
+    assert_equal expected, strip_stars(text)
   end
 
   def test_to_html_apostrophe

@@ -91,9 +91,10 @@ module RDoc::Text
   def normalize_comment text
     return text if text.empty?
 
-    text = strip_hashes text
-    text = expand_tabs text
-    text = flush_left text
+    text = strip_stars    text
+    text = strip_hashes   text
+    text = expand_tabs    text
+    text = flush_left     text
     text = strip_newlines text
     text
   end
@@ -156,6 +157,8 @@ https://github.com/rdoc/rdoc/issues
   # Strips /* */ style comments
 
   def strip_stars text
+    return text unless text =~ %r%/\*.*\*/%m
+
     encoding = text.encoding if Object.const_defined? :Encoding
 
     text = text.gsub %r%Document-method:\s+[\w:.#=!?]+%, ''

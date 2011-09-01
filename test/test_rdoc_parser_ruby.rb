@@ -2168,7 +2168,7 @@ end
     bar = foo.classes.first
 
     assert_equal 'Foo::Bar', bar.full_name
-    assert_equal '', bar.comment
+    assert_equal '', bar.comment.text
   end
 
   def test_scan_block_comment_notflush

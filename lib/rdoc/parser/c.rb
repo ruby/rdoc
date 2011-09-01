@@ -176,7 +176,9 @@ class RDoc::Parser::C < RDoc::Parser
       al.singleton = @singleton_classes.key? var_name
 
       comment = find_alias_comment var_name, new_name, old_name
-      comment = strip_stars comment
+
+      comment.normalize
+
       al.comment = comment
 
       al.record_location @top_level
@@ -307,7 +309,9 @@ class RDoc::Parser::C < RDoc::Parser
     @content.scan(/rb_include_module\s*\(\s*(\w+?),\s*(\w+?)\s*\)/) do |c,m|
       if cls = @classes[c]
         m = @known_classes[m] || m
-        incl = cls.add_include RDoc::Include.new(m, "")
+
+        comment = RDoc::Comment.new '', @top_level
+        incl = cls.add_include RDoc::Include.new(m, comment)
         incl.record_location @top_level
       end
     end
@@ -373,7 +377,7 @@ class RDoc::Parser::C < RDoc::Parser
                                    \s*"#{Regexp.escape new_name}"\s*,
                                    \s*"#{Regexp.escape old_name}"\s*\);%xm
 
-    $1 || ''
+    RDoc::Comment.new($1 || '', @top_level)
   end
 
   ##
@@ -394,22 +398,24 @@ class RDoc::Parser::C < RDoc::Parser
            /.*?/m
          end
 
-    if @content =~ %r%((?>/\*.*?\*/\s+))
-                      rb_define_attr\((?:\s*#{var_name},)?\s*
-                                      "#{attr_name}"\s*,
-                                      #{rw}\)\s*;%xm then
-      $1
-    elsif @content =~ %r%((?>/\*.*?\*/\s+))
-                         rb_attr\(\s*#{var_name}\s*,
-                                  \s*#{attr_name}\s*,
-                                  #{rw},.*?\)\s*;%xm then
-      $1
-    elsif @content =~ %r%Document-attr:\s#{attr_name}\s*?\n
-                         ((?>.*?\*/))%xm then
-      $1
-    else
-      ''
-    end
+    comment = if @content =~ %r%((?>/\*.*?\*/\s+))
+                                rb_define_attr\((?:\s*#{var_name},)?\s*
+                                                "#{attr_name}"\s*,
+                                                #{rw}\)\s*;%xm then
+                $1
+              elsif @content =~ %r%((?>/\*.*?\*/\s+))
+                                   rb_attr\(\s*#{var_name}\s*,
+                                            \s*#{attr_name}\s*,
+                                            #{rw},.*?\)\s*;%xm then
+                $1
+              elsif @content =~ %r%Document-attr:\s#{attr_name}\s*?\n
+                                   ((?>.*?\*/))%xm then
+                $1
+              else
+                ''
+              end
+
+    RDoc::Comment.new comment, @top_level
   end
 
   ##
@@ -421,11 +427,11 @@ class RDoc::Parser::C < RDoc::Parser
             ((?:(?:static|SWIGINTERN)\s+)?
              (?:intern\s+)?VALUE\s+#{meth_name}
              \s*(\([^)]*\))([^;]|$))%xm then
-      comment = $1
+      comment = RDoc::Comment.new $1, @top_level
       body = $2
       offset = $~.offset(2).first
 
-      remove_private_comments comment if comment
+      comment.remove_private if comment
 
       # try to find the whole body
       body = $& if /#{Regexp.escape body}[^(]*?\{.*?^\}/m =~ file_content
@@ -439,6 +445,7 @@ class RDoc::Parser::C < RDoc::Parser
       override_comment = find_override_comment class_name, meth_obj
       comment = override_comment if override_comment
 
+      comment.normalize
       find_modifiers comment, meth_obj if comment
 
       #meth_obj.params = params
@@ -446,24 +453,26 @@ class RDoc::Parser::C < RDoc::Parser
       tk = RDoc::RubyToken::Token.new nil, 1, 1
       tk.set_text body
       meth_obj.add_token tk
-      meth_obj.comment = strip_stars comment
+      meth_obj.comment = comment
       meth_obj.offset  = offset
       meth_obj.line    = file_content[0, offset].count("\n") + 1
 
       body
     when %r%((?>/\*.*?\*/\s*))^\s*(\#\s*define\s+#{meth_name}\s+(\w+))%m then
-      comment = $1
+      comment = RDoc::Comment.new $1, @top_level
       body = $2
       offset = $~.offset(2).first
 
       find_body class_name, $3, meth_obj, file_content, true
+
+      comment.normalize
       find_modifiers comment, meth_obj
 
       meth_obj.start_collecting_tokens
       tk = RDoc::RubyToken::Token.new nil, 1, 1
       tk.set_text body
       meth_obj.add_token tk
-      meth_obj.comment = strip_stars(comment) + meth_obj.comment.to_s
+      meth_obj.comment = comment
       meth_obj.offset  = offset
       meth_obj.line    = file_content[0, offset].count("\n") + 1
 
@@ -482,8 +491,9 @@ class RDoc::Parser::C < RDoc::Parser
       comment = find_override_comment class_name, meth_obj
 
       if comment then
+        comment.normalize
         find_modifiers comment, meth_obj
-        meth_obj.comment = strip_stars comment
+        meth_obj.comment = comment
 
         ''
       else
@@ -547,17 +557,18 @@ class RDoc::Parser::C < RDoc::Parser
       comment = $1.sub(%r%Document-(?:class|module):\s+#{class_name}%, '')
     elsif @content =~ %r%Document-(?:class|module):\s+#{class_name}\s*?
                          (?:<\s+[:,\w]+)?\n((?>.*?\*/))%xm then
-      comment = $1
+      comment = "/*\n#{$1}"
     elsif @content =~ %r%((?>/\*.*?\*/\s+))
                          ([\w\.\s]+\s* = \s+)?rb_define_(class|module).*?"(#{class_name})"%xm then
       comment = $1
+    else
+      comment = ''
     end
 
-    return unless comment
+    comment = RDoc::Comment.new comment, @top_level
+    comment.normalize
 
-    comment = strip_stars comment
-
-    comment = look_for_directives_in class_mod, comment
+    look_for_directives_in class_mod, comment
 
     class_mod.add_comment comment, @top_level
   end
@@ -567,79 +578,32 @@ class RDoc::Parser::C < RDoc::Parser
   # comment or in the matching Document- section.
 
   def find_const_comment(type, const_name, class_name = nil)
-    if @content =~ %r%((?>^\s*/\*.*?\*/\s+))
-                   rb_define_#{type}\((?:\s*(\w+),)?\s*
-                                      "#{const_name}"\s*,
-                                      .*?\)\s*;%xmi then
-      $1
-    elsif class_name and
-          @content =~ %r%Document-(?:const|global|variable):\s
-                         #{class_name}::#{const_name}
-                         \s*?\n((?>.*?\*/))%xm then
-      $1
-    elsif @content =~ %r%Document-(?:const|global|variable):\s#{const_name}
-                         \s*?\n((?>.*?\*/))%xm then
-      $1
-    else
-      ''
-    end
+    comment = if @content =~ %r%((?>^\s*/\*.*?\*/\s+))
+                             rb_define_#{type}\((?:\s*(\w+),)?\s*
+                                                "#{const_name}"\s*,
+                                                .*?\)\s*;%xmi then
+                $1
+              elsif class_name and
+                    @content =~ %r%Document-(?:const|global|variable):\s
+                                   #{class_name}::#{const_name}
+                                   \s*?\n((?>.*?\*/))%xm then
+                "/*\n#{$1}"
+              elsif @content =~ %r%Document-(?:const|global|variable):
+                                   \s#{const_name}
+                                   \s*?\n((?>.*?\*/))%xm then
+                "/*\n#{$1}"
+              else
+                ''
+              end
+
+    RDoc::Comment.new comment, @top_level
   end
 
   ##
   # Handles modifiers in +comment+ and updates +meth_obj+ as appropriate.
-  #
-  # If <tt>:nodoc:</tt> is found, documentation on +meth_obj+ is suppressed.
-  #
-  # If <tt>:yields:</tt> is followed by an argument list it is used for the
-  # #block_params of +meth_obj+.
-  #
-  # If the comment block contains a <tt>call-seq:</tt> section like:
-  #
-  #   call-seq:
-  #      ARGF.readlines(sep=$/)     -> array
-  #      ARGF.readlines(limit)      -> array
-  #      ARGF.readlines(sep, limit) -> array
-  #
-  #      ARGF.to_a(sep=$/)     -> array
-  #      ARGF.to_a(limit)      -> array
-  #      ARGF.to_a(sep, limit) -> array
-  #
-  # it is used for the parameters of +meth_obj+.
 
   def find_modifiers comment, meth_obj
-    # we must handle situations like the above followed by an unindented first
-    # comment.  The difficulty is to make sure not to match lines starting
-    # with ARGF at the same indent, but that are after the first description
-    # paragraph.
-
-    if comment =~ /call-seq:(.*?(?:\S|\*\/?).*?)^\s*(?:\*\/?)?\s*$/m then
-      all_start, all_stop = $~.offset(0)
-      seq_start, seq_stop = $~.offset(1)
-
-      # we get the following lines that start with the leading word at the
-      # same indent, even if they have blank lines before
-      if $1 =~ /(^\s*\*?\s*\n)+^(\s*\*?\s*\w+)/m then
-        leading = $2 # ' *    ARGF' in the example above
-        re = %r%
-          \A(
-             (^\s*\*?\s*\n)+
-             (^#{Regexp.escape leading}.*?\n)+
-            )+
-          ^\s*\*?\s*$
-        %xm
-        if comment[seq_stop..-1] =~ re then
-          all_stop = seq_stop + $~.offset(0).last
-          seq_stop = seq_stop + $~.offset(1).last
-        end
-      end
-
-      seq = comment[seq_start..seq_stop]
-      seq.gsub!(/^(\s*\*?\s*?)(\S|\n)/m, '\2')
-      comment.slice! all_start...all_stop
-      meth_obj.call_seq = seq
-    elsif comment.sub!(/\A\/\*\s*call-seq:(.*?)\*\/\Z/, '') then
-      meth_obj.call_seq = $1.strip
-    end
+    comment.extract_call_seq meth_obj
 
     look_for_directives_in meth_obj, comment
   end
@@ -651,11 +615,18 @@ class RDoc::Parser::C < RDoc::Parser
     name = Regexp.escape meth_obj.name
     prefix = Regexp.escape meth_obj.name_prefix
 
-    if @content =~ %r%Document-method:\s+#{class_name}#{prefix}#{name}\s*?\n((?>.*?\*/))%m then
-      $1
-    elsif @content =~ %r%Document-method:\s#{name}\s*?\n((?>.*?\*/))%m then
-      $1
-    end
+    comment = if @content =~ %r%Document-method:
+                                \s+#{class_name}#{prefix}#{name}
+                                \s*?\n((?>.*?\*/))%xm then
+                "/*#{$1}"
+              elsif @content =~ %r%Document-method:
+                                   \s#{name}\s*?\n((?>.*?\*/))%xm then
+                "/*#{$1}"
+              end
+
+    return unless comment
+
+    RDoc::Comment.new comment, @top_level
   end
 
   ##
@@ -676,7 +647,7 @@ class RDoc::Parser::C < RDoc::Parser
     return unless class_obj
 
     comment = find_attr_comment var_name, attr_name
-    comment = strip_stars comment
+    comment.normalize
 
     name = attr_name.gsub(/rb_intern\("([^"]+)"\)/, '\1')
 
@@ -766,14 +737,13 @@ class RDoc::Parser::C < RDoc::Parser
     end
 
     comment = find_const_comment type, const_name, class_name
-    comment = strip_stars comment
-    comment = normalize_comment comment
+    comment.normalize
 
     # In the case of rb_define_const, the definition and comment are in
     # "/* definition: comment */" form.  The literal ':' and '\' characters
     # can be escaped with a backslash.
     if type.downcase == 'const' then
-      elements = comment.split ':'
+      elements = comment.text.split ':'
 
       if elements.nil? or elements.empty? then
         con = RDoc::Constant.new const_name, definition, comment
@@ -794,6 +764,8 @@ class RDoc::Parser::C < RDoc::Parser
                       else
                         "#{$1}#{elements.last.lstrip}"
                       end
+
+        new_comment = RDoc::Comment.new new_comment, @top_level
 
         con = RDoc::Constant.new const_name, new_definition, new_comment
       end
@@ -1014,14 +986,6 @@ class RDoc::Parser::C < RDoc::Parser
 
   def remove_commented_out_lines
     @content.gsub!(%r%//.*rb_define_%, '//')
-  end
-
-  ##
-  # Removes private comments from +comment+
-
-  def remove_private_comments(comment)
-    comment.gsub!(/\/?\*--\n(.*?)\/?\*\+\+/m, '')
-    comment.sub!(/\/?\*--\n.*/m, '')
   end
 
   ##

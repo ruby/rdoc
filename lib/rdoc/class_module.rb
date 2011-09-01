@@ -113,7 +113,7 @@ class RDoc::ClassModule < RDoc::Context
   # across multiple runs.
 
   def add_comment comment, location
-    return if comment.empty? or not document_self
+    return unless document_self
 
     original = comment
 
@@ -158,8 +158,6 @@ class RDoc::ClassModule < RDoc::Context
   # more like <tt>+=</tt>.
 
   def comment= comment
-    return if comment.empty?
-
     comment = case comment
               when RDoc::Comment then
                 comment.normalize

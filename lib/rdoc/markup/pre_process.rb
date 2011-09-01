@@ -61,7 +61,7 @@ class RDoc::Markup::PreProcess
     # regexp helper (square brackets for optional)
     # $1      $2  $3        $4      $5
     # [prefix][\]:directive:[spaces][param]newline
-    text.gsub!(/^([ \t]*(?:#|\/?\*)?[ \t]*)(\\?):(\w+):([ \t]*)(.+)?\n/) do
+    text.gsub!(/^([ \t]*(?:#|\/?\*)?[ \t]*)(\\?):(\w+):([ \t]*)(.+)?(\r?\n|$)/) do
       # skip something like ':toto::'
       next $& if $4.empty? and $5 and $5[0, 1] == ':'
 

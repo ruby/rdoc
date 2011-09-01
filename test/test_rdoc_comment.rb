@@ -39,10 +39,10 @@ class TestRDocComment < RDoc::TestCase
     m = RDoc::AnyMethod.new nil, 'm'
 
     comment = RDoc::Comment.new <<-COMMENT, @top_level
-  # call-seq:
-  #   bla => true or false
-  #
-  # moar comment
+call-seq:
+  bla => true or false
+
+moar comment
     COMMENT
 
     comment.extract_call_seq m
@@ -54,9 +54,9 @@ class TestRDocComment < RDoc::TestCase
     m = RDoc::AnyMethod.new nil, 'm'
 
     comment = RDoc::Comment.new <<-COMMENT, @top_level
-  # call-seq:
-  #   bla => true or false
-  #
+call-seq:
+  bla => true or false
+
     COMMENT
 
     comment.extract_call_seq m
@@ -68,8 +68,8 @@ class TestRDocComment < RDoc::TestCase
     m = RDoc::AnyMethod.new nil, 'm'
 
     comment = RDoc::Comment.new <<-COMMENT, @top_level
-  # call-seq:
-  #   bla => true or false
+call-seq:
+  bla => true or false
     COMMENT
 
     comment.extract_call_seq m
@@ -81,14 +81,113 @@ class TestRDocComment < RDoc::TestCase
     m = RDoc::AnyMethod.new nil, 'm'
 
     comment = RDoc::Comment.new <<-COMMENT, @top_level
-  # call-seq:
-  #   bla => true or false
-  # moar comment
+call-seq:
+  bla => true or false
+moar comment
     COMMENT
 
     comment.extract_call_seq m
 
     assert_equal "bla => true or false\nmoar comment\n", m.call_seq
+  end
+
+  def test_extract_call_seq_c
+    comment = RDoc::Comment.new <<-COMMENT
+call-seq:
+  commercial() -> Date <br />
+  commercial(cwyear, cweek=41, cwday=5, sg=nil) -> Date [ruby 1.8] <br />
+  commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
+
+If no arguments are given:
+* ruby 1.8: returns a +Date+ for 1582-10-15 (the Day of Calendar Reform in
+  Italy)
+* ruby 1.9: returns a +Date+ for julian day 0
+
+Otherwise, returns a +Date+ for the commercial week year, commercial week,
+and commercial week day given. Ignores the 4th argument.
+    COMMENT
+
+    method_obj = RDoc::AnyMethod.new nil, 'blah'
+
+    comment.extract_call_seq method_obj
+
+    expected = <<-CALL_SEQ.chomp
+commercial() -> Date <br />
+commercial(cwyear, cweek=41, cwday=5, sg=nil) -> Date [ruby 1.8] <br />
+commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
+
+    CALL_SEQ
+
+    assert_equal expected, method_obj.call_seq
+  end
+
+  def test_extract_call_seq_c_no_blank
+    comment = RDoc::Comment.new <<-COMMENT
+call-seq:
+  commercial() -> Date <br />
+  commercial(cwyear, cweek=41, cwday=5, sg=nil) -> Date [ruby 1.8] <br />
+  commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
+    COMMENT
+
+    method_obj = RDoc::AnyMethod.new nil, 'blah'
+
+    comment.extract_call_seq method_obj
+
+    expected = <<-CALL_SEQ.chomp
+commercial() -> Date <br />
+commercial(cwyear, cweek=41, cwday=5, sg=nil) -> Date [ruby 1.8] <br />
+commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
+
+    CALL_SEQ
+
+    assert_equal expected, method_obj.call_seq
+  end
+
+  def test_extract_call_seq_c_separator
+    comment = RDoc::Comment.new <<-'COMMENT'
+call-seq:
+   ARGF.readlines(sep=$/)     -> array
+   ARGF.readlines(limit)      -> array
+   ARGF.readlines(sep, limit) -> array
+
+   ARGF.to_a(sep=$/)     -> array
+   ARGF.to_a(limit)      -> array
+   ARGF.to_a(sep, limit) -> array
+
+Reads +ARGF+'s current file in its entirety, returning an +Array+ of its
+lines, one line per element. Lines are assumed to be separated by _sep_.
+
+   lines = ARGF.readlines
+   lines[0]                #=> "This is line one\n"
+
+    COMMENT
+
+    method_obj = RDoc::AnyMethod.new nil, 'blah'
+
+    comment.extract_call_seq method_obj
+
+    expected = <<-CALL_SEQ
+ARGF.readlines(sep=$/)     -> array
+ARGF.readlines(limit)      -> array
+ARGF.readlines(sep, limit) -> array
+ARGF.to_a(sep=$/)     -> array
+ARGF.to_a(limit)      -> array
+ARGF.to_a(sep, limit) -> array
+    CALL_SEQ
+
+    assert_equal expected, method_obj.call_seq
+
+    expected = <<-'COMMENT'
+
+Reads +ARGF+'s current file in its entirety, returning an +Array+ of its
+lines, one line per element. Lines are assumed to be separated by _sep_.
+
+   lines = ARGF.readlines
+   lines[0]                #=> "This is line one\n"
+
+    COMMENT
+
+    assert_equal expected, comment.text
   end
 
   def test_force_encoding
