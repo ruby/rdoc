@@ -6,6 +6,12 @@ class TestRDocText < RDoc::TestCase
 
   include RDoc::Text
 
+  def setup
+    super
+
+    @top_level = RDoc::TopLevel.new 'file.rb'
+  end
+
   def test_self_encode_fallback
     skip "Encoding not implemented" unless Object.const_defined? :Encoding
 
@@ -105,10 +111,16 @@ The comments associated with
     assert_equal Encoding::US_ASCII, result.encoding
   end
 
-  def test_markup
-    def formatter() RDoc::Markup::ToHtml.new end
+  def test_markup_string
+    out = markup('hi').gsub("\n", '')
 
-    assert_equal "<p>hi</p>", markup('hi').gsub("\n", '')
+    assert_equal '<p>hi</p>', out
+  end
+
+  def test_markup_comment
+    out = markup(comment('hi')).gsub("\n", '')
+
+    assert_equal '<p>hi</p>', out
   end
 
   def test_normalize_comment_hash
@@ -169,7 +181,14 @@ The comments associated with
   end
 
   def test_parse_comment
-    assert_equal RDoc::Markup::Document.new, parse(comment(''))
+    expected = RDoc::Markup::Document.new
+    expected.file = @top_level.absolute_name
+
+    c = comment ''
+    parsed = parse c
+
+    assert_equal expected, parsed
+    assert_same parsed, parse(c)
   end
 
   def test_parse_document
@@ -444,6 +463,10 @@ The comments associated with
     end
 
     assert_equal "mismatched <tt> tag\n", err
+  end
+
+  def formatter()
+    RDoc::Markup::ToHtml.new
   end
 
 end

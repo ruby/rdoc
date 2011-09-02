@@ -80,9 +80,7 @@ module RDoc::Text
   # Requires the including class to implement #formatter
 
   def markup text
-    document = parse text
-
-    document.accept formatter
+    parse(text).accept formatter
   end
 
   ##
@@ -104,7 +102,7 @@ module RDoc::Text
 
   def parse text
     return text if RDoc::Markup::Document === text
-    text = text.text if RDoc::Comment === text
+    return text.parse if RDoc::Comment === text
 
     text = normalize_comment text
 
