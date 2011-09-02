@@ -1,3 +1,7 @@
+##
+# A comment holds the text comment for a RDoc::CodeObject and provides a
+# unified way of cleaning it up and parsing it into an RDoc::Markup::Document.
+
 class RDoc::Comment
 
   include RDoc::Text
@@ -13,9 +17,14 @@ class RDoc::Comment
   attr_reader :text
 
   ##
-  # Overrides #parse.  Use when there is no #text for this comment
+  # Overrides the content returned by #parse.  Use when there is no #text
+  # source for this comment
 
   attr_writer   :document
+
+  ##
+  # Creates a new comment with +text+ that is found in the RDoc::TopLevel
+  # +location+.
 
   def initialize text = nil, location = nil
     @location = location
@@ -98,6 +107,9 @@ class RDoc::Comment
     method
   end
 
+  ##
+  # A comment is empty if its text String is empty.
+
   def empty?
     @text.empty?
   end
@@ -109,6 +121,9 @@ class RDoc::Comment
     @text.force_encoding encoding
   end
 
+  ##
+  # Normalizes the text.  See RDoc::Text#normalize_comment for details
+
   def normalize
     return self unless @text
 
@@ -116,6 +131,10 @@ class RDoc::Comment
 
     self
   end
+
+  ##
+  # Parses the comment into an RDoc::Markup::Document.  The parsed document is
+  # cached until the text is changed.
 
   def parse
     return @document if @document
