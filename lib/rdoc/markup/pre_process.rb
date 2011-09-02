@@ -10,6 +10,16 @@
 
 class RDoc::Markup::PreProcess
 
+  ##
+  # Maps markup formats to classes that can parse them
+
+  MARKUP_FORMAT = {
+    'rdoc' => RDoc::Markup,
+    'rd'   => RDoc::RD,
+  }
+
+  MARKUP_FORMAT.default = RDoc::Markup
+
   attr_accessor :options
 
   @registered = {}
@@ -41,7 +51,7 @@ class RDoc::Markup::PreProcess
   end
 
   ##
-  # Look for directives in a chunk of +text+.
+  # Look for directives in the given +text+.
   #
   # Options that we don't handle are yielded.  If the block returns false the
   # directive is restored to the text.  If the block returns nil or no block
@@ -55,9 +65,13 @@ class RDoc::Markup::PreProcess
   # +code_object+.  See RDoc::CodeObject#metadata
 
   def handle text, code_object = nil, &block
-    text = text.text if RDoc::Comment === text
+    if RDoc::Comment === text then
+      comment = text
+      text = text.text 
+    end
 
-    encoding = if defined?(Encoding) then text.encoding else nil end
+    encoding = text.encoding if defined?(Encoding)
+
     # regexp helper (square brackets for optional)
     # $1      $2  $3        $4      $5
     # [prefix][\]:directive:[spaces][param]newline
@@ -68,10 +82,15 @@ class RDoc::Markup::PreProcess
       # skip if escaped
       next "#$1:#$3:#$4#$5\n" unless $2.empty?
 
+      # This is not in handle_directive because I didn't want to pass another
+      # argument into it
+      if comment and $3 == 'markup' then
+        comment.format = MARKUP_FORMAT[$5.downcase]
+        next "#{$1.strip}\n"
+      end
+
       handle_directive $1, $3, $5, code_object, encoding, &block
     end
-
-    text
   end
 
   #--

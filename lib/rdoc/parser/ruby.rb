@@ -164,6 +164,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     @scanner = RDoc::RubyLex.new content, @options
     @scanner.exception_on_syntax_error = false
     @prev_seek = nil
+    @markup = RDoc::Markup
 
     @encoding = nil
     @encoding = @options.encoding if Object.const_defined? :Encoding
@@ -204,7 +205,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     unget_tk tk
 
-    RDoc::Comment.new comment, @top_level
+    new_comment comment
   end
 
   ##
@@ -405,6 +406,15 @@ class RDoc::Parser::Ruby < RDoc::Parser
     prefix << "#{@scanner.line_no}:#{@scanner.char_no}:" if @scanner
 
     "#{prefix} #{message}"
+  end
+
+  ##
+  # Creates a comment with the correct format
+
+  def new_comment comment
+    c = RDoc::Comment.new comment, @top_level
+    c.format = @markup
+    c
   end
 
   ##
@@ -1230,7 +1240,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # The core of the ruby parser.
 
   def parse_statements(container, single = NORMAL, current_method = nil,
-                       comment = RDoc::Comment.new('', @top_level))
+                       comment = new_comment(''))
     raise 'no' unless RDoc::Comment === comment
     comment.force_encoding @encoding if @encoding
 
@@ -1271,7 +1281,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
             end
           end
 
-          comment = RDoc::Comment.new comment, @top_level
+          comment = new_comment comment
 
           unless comment.empty? then
             look_for_directives_in container, comment
@@ -1390,7 +1400,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
 
       unless keep_comment then
-        comment = RDoc::Comment.new '', @top_level
+        comment = new_comment ''
         comment.force_encoding @encoding if @encoding
       end
 
@@ -1477,7 +1487,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def parse_top_level_statements container
     comment = collect_first_comment
+
     look_for_directives_in container, comment
+
+    @markup = comment.format
 
     # HACK move if to RDoc::Context#comment=
     container.comment = comment if container.document_self unless comment.empty?

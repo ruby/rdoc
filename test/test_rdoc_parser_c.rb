@@ -1168,12 +1168,12 @@ void Init_Blah(void) {
   def test_look_for_directives_in
     parser = util_parser ''
 
-    comment = RDoc::Comment.new "# :markup: not_rdoc\n"
+    comment = RDoc::Comment.new "# :other: not_handled\n"
 
     parser.look_for_directives_in @top_level, comment
 
-    assert_equal "# :markup: not_rdoc\n", comment.text
-    assert_equal 'not_rdoc', @top_level.metadata['markup']
+    assert_equal "# :other: not_handled\n", comment.text
+    assert_equal 'not_handled', @top_level.metadata['other']
   end
 
   def test_define_method

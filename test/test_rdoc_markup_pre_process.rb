@@ -80,10 +80,20 @@ contents of a string.
 
   def test_handle_comment
     text = "# :main: M\n"
-    out = @pp.handle RDoc::Comment.new text
+    c = comment text
+
+    out = @pp.handle c
 
     assert_same out, text
     assert_equal "#\n", text
+  end
+
+  def test_handle_markup
+    c = comment ':markup: rd'
+
+    @pp.handle c
+
+    assert_equal RDoc::RD, c.format
   end
 
   def test_handle_unregistered

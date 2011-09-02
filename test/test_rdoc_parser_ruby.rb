@@ -2240,6 +2240,51 @@ class C
     assert_equal 2, @top_level.classes.first.method_list.length
   end
 
+  def test_scan_markup_override
+    content = <<-CONTENT
+# *awesome*
+class C
+  # :markup: rd
+  # ((*radical*))
+  def m
+  end
+end
+    CONTENT
+
+    util_parser content
+
+    @parser.scan
+
+    c = @top_level.classes.first
+
+    assert_equal RDoc::Markup, c.comment.format
+
+    assert_equal RDoc::RD, c.method_list.first.comment.format
+  end
+
+  def test_scan_markup_first_comment
+    content = <<-CONTENT
+# :markup: rd
+
+# ((*awesome*))
+class C
+  # ((*radical*))
+  def m
+  end
+end
+    CONTENT
+
+    util_parser content
+
+    @parser.scan
+
+    c = @top_level.classes.first
+
+    assert_equal RDoc::RD, c.comment.format
+
+    assert_equal RDoc::RD, c.method_list.first.comment.format
+  end
+
   def test_stopdoc_after_comment
     util_parser <<-EOS
       module Bar
