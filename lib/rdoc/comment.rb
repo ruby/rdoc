@@ -7,6 +7,11 @@ class RDoc::Comment
   include RDoc::Text
 
   ##
+  # The format of this comment.  Defaults to RDoc::Markup
+
+  attr_reader :format
+
+  ##
   # The RDoc::TopLevel this comment was found in
 
   attr_accessor :location
@@ -31,6 +36,7 @@ class RDoc::Comment
     @text     = text
 
     @document = nil
+    @format   = RDoc::Markup
   end
 
   ##
@@ -122,6 +128,14 @@ class RDoc::Comment
   end
 
   ##
+  # Sets the format of this comment and resets any parsed document
+
+  def format= format
+    @format = format
+    @document = nil
+  end
+
+  ##
   # Normalizes the text.  See RDoc::Text#normalize_comment for details
 
   def normalize
@@ -139,7 +153,7 @@ class RDoc::Comment
   def parse
     return @document if @document
 
-    @document = super @text
+    @document = super @text, @format
     @document.file = @location.absolute_name
     @document
   end

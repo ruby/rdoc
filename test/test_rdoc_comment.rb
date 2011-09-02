@@ -198,6 +198,20 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
     assert_equal Encoding::UTF_8, @comment.text.encoding
   end
 
+  def test_format
+    assert_equal RDoc::Markup, @comment.format
+  end
+
+  def test_format_equals
+    c = comment 'content'
+    document = c.parse
+
+    c.format = RDoc::RD
+
+    assert_equal RDoc::RD, c.format
+    refute_same document, c.parse
+  end
+
   def test_initialize_copy
     copy = @comment.dup
 
@@ -267,6 +281,18 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
 
     assert_equal expected, parsed
     assert_same  parsed, @comment.parse
+  end
+
+  def test_parse_rd
+    c = comment 'it ((*works*))'
+    c.format = RDoc::RD
+
+    expected =
+      @RM::Document.new(
+        @RM::Paragraph.new('it <em>works</em>'))
+    expected.file = @top_level.absolute_name
+
+    assert_equal expected, c.parse
   end
 
   def test_remove_private_encoding

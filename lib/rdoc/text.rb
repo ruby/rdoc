@@ -100,14 +100,29 @@ module RDoc::Text
   ##
   # Normalizes +text+ then builds a RDoc::Markup::Document from it
 
-  def parse text
+  def parse text, format = RDoc::Markup
     return text if RDoc::Markup::Document === text
     return text.parse if RDoc::Comment === text
 
-    text = normalize_comment text
+    text = normalize_comment text # TODO remove, should not be necessary
 
     return RDoc::Markup::Document.new if text =~ /\A\n*\z/
 
+    if format == RDoc::Markup then
+      # TODO move exception handling into RDoc::Markup#parse and dispatch
+      # directly like format.parse text
+      parse_markup text
+    elsif format == RDoc::RD then
+      RDoc::RD.parse text
+    else
+      raise RDoc::Error, "unknown format #{format}"
+    end
+  end
+
+  ##
+  # Parses +text+ which must be normalized RDoc::Markup
+
+  def parse_markup text # :nodoc:
     RDoc::Markup::Parser.parse text
   rescue RDoc::Markup::Parser::Error => e
     $stderr.puts <<-EOF

@@ -9,8 +9,8 @@ class RDoc::Parser::RD < RDoc::Parser
   parse_files_matching(/\.rd(?:\.[^.]+)?$/)
 
   def scan
-    comment = RDoc::Comment.new nil, @top_level
-    comment.document = RDoc::RD.parse @content
+    comment = RDoc::Comment.new @content, @top_level
+    comment.format = RDoc::RD
 
     @top_level.comment = comment
   end

@@ -37,6 +37,7 @@ class TestRDocParserRd < RDoc::TestCase
     expected =
       @RM::Document.new(
         @RM::Paragraph.new('it <em>really</em> works'))
+    expected.file = @top_level.absolute_name
 
     parser.scan
 

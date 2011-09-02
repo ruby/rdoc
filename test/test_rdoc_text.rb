@@ -203,6 +203,24 @@ The comments associated with
     assert_equal RDoc::Markup::Document.new, parse("#\n")
   end
 
+  def test_parse_format
+    expected =
+      @RM::Document.new(
+        @RM::Paragraph.new('it <em>works</em>'))
+
+    parsed = parse 'it ((*works*))', RDoc::RD
+
+    assert_equal expected, parsed
+  end
+
+  def test_parse_format_unknown
+    e = assert_raises RDoc::Error do
+      parse 'unknown', Object
+    end
+
+    assert_equal 'unknown format Object', e.message
+  end
+
   def test_parse_newline
     assert_equal RDoc::Markup::Document.new, parse("\n")
   end
