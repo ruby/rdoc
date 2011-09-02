@@ -232,6 +232,31 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
     assert_equal 'this is a comment', @comment.text
   end
 
+  def test_text_equals
+    @comment.text = 'other'
+
+    assert_equal 'other', @comment.text
+  end
+
+  def test_text_equals_no_text
+    c = RDoc::Comment.new nil, @top_level
+    c.document = @RM::Document.new
+
+    e = assert_raises RDoc::Error do
+      c.text = 'other'
+    end
+
+    assert_equal 'replacing document-only comment is not allowed', e.message
+  end
+
+  def test_text_equals_parsed
+    document = @comment.parse
+
+    @comment.text = 'other'
+
+    refute_equal document, @comment.parse
+  end
+
   def test_parse
     parsed = @comment.parse
 

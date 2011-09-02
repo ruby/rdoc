@@ -2,8 +2,15 @@ class RDoc::Comment
 
   include RDoc::Text
 
+  ##
+  # The RDoc::TopLevel this comment was found in
+
   attr_accessor :location
-  attr_accessor :text
+
+  ##
+  # The text for this comment
+
+  attr_reader :text
 
   ##
   # Overrides #parse.  Use when there is no #text for this comment
@@ -118,6 +125,19 @@ class RDoc::Comment
     @document
   end
 
+  ##
+  # Removes private sections from this comment.  Private sections are flush to
+  # the comment marker and start with <tt>--</tt> and end with <tt>++</tt>.
+  # For C-style comments, a private marker may not start at the opening of the
+  # comment.
+  #
+  #   /*
+  #    *--
+  #    * private
+  #    *++
+  #    * public
+  #    */
+
   def remove_private
     # Workaround for gsub encoding for Ruby 1.9.2 and earlier
     empty = ''
@@ -125,6 +145,19 @@ class RDoc::Comment
 
     @text = @text.gsub(%r%^\s*([#*]?)--.*?^\s*(\1)\+\+\n?%m, empty)
     @text = @text.sub(%r%^\s*[#*]?--.*%m, '')
+  end
+
+  ##
+  # Replaces this comment's text with +text+ and resets the parsed document.
+  #
+  # An error is raised if the comment contains a document but no text.
+
+  def text= text
+    raise RDoc::Error, 'replacing document-only comment is not allowed' if
+      @text.nil? and @document
+
+    @document = nil
+    @text = text
   end
 
 end
