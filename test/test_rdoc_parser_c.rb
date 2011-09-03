@@ -1037,15 +1037,7 @@ commercial() -> Date <br />
 
     assert_equal 'a, b', method_obj.block_params
 
-    expected = <<-EXPECTED
-/*
- *
- * Blah
- */
-
-    EXPECTED
-
-    assert_equal expected, comment.text
+    assert_equal "\n\nBlah", comment.text
   end
 
   def test_handle_method_args_minus_1

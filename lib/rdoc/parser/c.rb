@@ -603,6 +603,7 @@ class RDoc::Parser::C < RDoc::Parser
   # Handles modifiers in +comment+ and updates +meth_obj+ as appropriate.
 
   def find_modifiers comment, meth_obj
+    comment.normalize
     comment.extract_call_seq meth_obj
 
     look_for_directives_in meth_obj, comment

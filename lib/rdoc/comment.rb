@@ -60,12 +60,12 @@ class RDoc::Comment
 
   ##
   # Look for a 'call-seq' in the comment to override the normal parameter
-  # handling.  The call-seq is indented from the baseline.  All lines of the
+  # handling.  The :call-seq: is indented from the baseline.  All lines of the
   # same indentation level and prefix are consumed.
   #
-  # For example, all of the following will be used as the call-seq:
+  # For example, all of the following will be used as the :call-seq:
   #
-  #   # call-seq:
+  #   # :call-seq:
   #   #   ARGF.readlines(sep=$/)     -> array
   #   #   ARGF.readlines(limit)      -> array
   #   #   ARGF.readlines(sep, limit) -> array
@@ -79,7 +79,7 @@ class RDoc::Comment
     # comment.  The difficulty is to make sure not to match lines starting
     # with ARGF at the same indent, but that are after the first description
     # paragraph.
-    if @text =~ /call-seq:(.*?(?:\S).*?)^\s*$/m then
+    if @text =~ /^\s*:?call-seq:(.*?(?:\S).*?)^\s*$/m then
       all_start, all_stop = $~.offset(0)
       seq_start, seq_stop = $~.offset(1)
 
@@ -107,7 +107,7 @@ class RDoc::Comment
 
       method.call_seq = seq.chomp
 
-    elsif @text.sub!(/:?call-seq:(.*?)(^\s*$|\z)/m, '') then
+    elsif @text.sub!(/^\s*:?call-seq:(.*?)(^\s*$|\z)/m, '') then
       seq = $1
       seq.gsub!(/^\s*/, '')
       method.call_seq = seq

@@ -765,6 +765,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       meth.params = ''
 
+      comment.normalize
       comment.extract_call_seq meth
 
       return unless meth.name
@@ -937,6 +938,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     token_listener meth do
       meth.params = ''
 
+      comment.normalize
       comment.extract_call_seq meth
 
       container.add_method meth
@@ -1105,6 +1107,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       parse_statements container, single, meth
     end
 
+    comment.normalize
     comment.extract_call_seq meth
 
     meth.comment = comment

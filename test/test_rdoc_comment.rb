@@ -64,6 +64,21 @@ call-seq:
     assert_equal "bla => true or false\n", m.call_seq
   end
 
+  def test_extract_call_seq_commented
+    m = RDoc::AnyMethod.new nil, 'm'
+
+    comment = RDoc::Comment.new <<-COMMENT, @top_level
+# call-seq:
+#   bla => true or false
+# 
+# moar comment
+    COMMENT
+
+    comment.extract_call_seq m
+
+    assert_equal nil, m.call_seq
+  end
+
   def test_extract_call_seq_no_blank
     m = RDoc::AnyMethod.new nil, 'm'
 
