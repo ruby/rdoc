@@ -28,20 +28,24 @@ class TestRDocTomDoc < RDoc::TestCase
 
   def test_parse_arguments
     text = <<-TEXT
-Do some stuff
+Create new Arg object.
 
-foo - A comment goes here
+name        - name of argument
+description - arguments description
     TEXT
 
     expected =
       @RM::Document.new(
-        @RM::Paragraph.new('Do some stuff'),
+        @RM::Paragraph.new('Create new Arg object.'),
         @RM::BlankLine.new,
         @RM::List.new(
-          :NOTE,
+          :LABEL,
           @RM::ListItem.new(
-            'foo',
-            @RM::Paragraph.new('A comment goes here'))))
+            'name',
+            @RM::Paragraph.new('name of argument')),
+          @RM::ListItem.new(
+            'description',
+            @RM::Paragraph.new('arguments description'))))
 
     assert_equal expected, @TD.parse(text)
   end
@@ -59,7 +63,7 @@ foo - A comment goes here
         @RM::Paragraph.new('Do some stuff'),
         @RM::BlankLine.new,
         @RM::List.new(
-          :NOTE,
+          :LABEL,
           @RM::ListItem.new(
             'foo',
             @RM::Paragraph.new(
@@ -134,18 +138,22 @@ Returns a thing
 
   def test_tokenize_arguments
     @td.tokenize <<-TEXT
-Do some stuff
+Create new Arg object.
 
-foo - A comment goes here
+name        - name of argument
+description - arguments description
     TEXT
 
     expected = [
-      [:TEXT,    "Do some stuff",        0, 0],
-      [:NEWLINE, "\n",                  13, 0],
-      [:NEWLINE, "\n",                   0, 1],
-      [:NOTE,    "foo",                  0, 2],
-      [:TEXT,    "A comment goes here",  6, 2],
-      [:NEWLINE, "\n",                  25, 2],
+      [:TEXT,    "Create new Arg object.",  0, 0],
+      [:NEWLINE, "\n",                     22, 0],
+      [:NEWLINE, "\n",                      0, 1],
+      [:LABEL,   "name",                    0, 2],
+      [:TEXT,    "name of argument",       14, 2],
+      [:NEWLINE, "\n",                     30, 2],
+      [:LABEL,   "description",             0, 3],
+      [:TEXT,    "arguments description",  14, 3],
+      [:NEWLINE, "\n",                     35, 3],
     ]
 
     assert_equal expected, @td.tokens
@@ -163,7 +171,7 @@ foo - A comment goes here
       [:TEXT,    "Do some stuff",              0, 0],
       [:NEWLINE, "\n",                        13, 0],
       [:NEWLINE, "\n",                         0, 1],
-      [:NOTE,    "foo",                        0, 2],
+      [:LABEL,   "foo",                        0, 2],
       [:TEXT,    "A comment goes here",        6, 2],
       [:NEWLINE, "\n",                        25, 2],
       [:TEXT,    "and is more than one line",  2, 3],
