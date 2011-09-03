@@ -147,7 +147,7 @@ class RDoc::Comment
 
   def normalize
     return self unless @text
-    return self if @normalized
+    return self if @normalized # TODO eliminate duplicate normalization
 
     @text = normalize_comment @text
 
