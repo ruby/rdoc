@@ -2,6 +2,13 @@ require 'rdoc/test_case'
 
 class TestRDocMarkup < RDoc::TestCase
 
+  def test_class_parse
+    expected = @RM::Document.new(
+      @RM::Paragraph.new('hello'))
+
+    assert_equal expected, RDoc::Markup.parse('hello')
+  end
+
   def test_convert
     str = <<-STR
 now is

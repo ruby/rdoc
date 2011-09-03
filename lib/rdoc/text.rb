@@ -108,43 +108,7 @@ module RDoc::Text
 
     return RDoc::Markup::Document.new if text =~ /\A\n*\z/
 
-    if format == RDoc::Markup then
-      # TODO move exception handling into RDoc::Markup#parse and dispatch
-      # directly like format.parse text
-      parse_markup text
-    elsif format == RDoc::RD then
-      RDoc::RD.parse text
-    else
-      raise RDoc::Error, "unknown format #{format}"
-    end
-  end
-
-  ##
-  # Parses +text+ which must be normalized RDoc::Markup
-
-  def parse_markup text # :nodoc:
-    RDoc::Markup::Parser.parse text
-  rescue RDoc::Markup::Parser::Error => e
-    $stderr.puts <<-EOF
-While parsing markup, RDoc encountered a #{e.class}:
-
-#{e}
-\tfrom #{e.backtrace.join "\n\tfrom "}
-
----8<---
-#{text}
----8<---
-
-RDoc #{RDoc::VERSION}
-
-Ruby #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL} #{RUBY_RELEASE_DATE}
-
-Please file a bug report with the above information at:
-
-https://github.com/rdoc/rdoc/issues
-
-    EOF
-    raise
+    format.parse text
   end
 
   ##

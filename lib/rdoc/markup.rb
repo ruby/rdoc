@@ -636,6 +636,34 @@ class RDoc::Markup
   attr_reader :attribute_manager
 
   ##
+  # Parses +str+ into an RDoc::Markup::Document
+
+  def self.parse str
+    RDoc::Markup::Parser.parse str
+  rescue RDoc::Markup::Parser::Error => e
+    $stderr.puts <<-EOF
+While parsing markup, RDoc encountered a #{e.class}:
+
+#{e}
+\tfrom #{e.backtrace.join "\n\tfrom "}
+
+---8<---
+#{text}
+---8<---
+
+RDoc #{RDoc::VERSION}
+
+Ruby #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL} #{RUBY_RELEASE_DATE}
+
+Please file a bug report with the above information at:
+
+https://github.com/rdoc/rdoc/issues
+
+    EOF
+    raise
+  end
+
+  ##
   # Take a block of text and use various heuristics to determine its
   # structure (paragraphs, lists, and so on).  Invoke an event handler as we
   # identify significant chunks.
