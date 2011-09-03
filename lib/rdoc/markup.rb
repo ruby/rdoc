@@ -537,27 +537,48 @@ require 'rdoc'
 #   so you won't see the documentation unless you use the +-a+ command line
 #   option.
 #
-# === Other directives
+# === Method arguments
 #
-# [+:include:+ _filename_]
-#   Include the contents of the named file at this point. This directive
-#   must appear alone on one line, possibly preceded by spaces. In this
-#   position, it can be escaped with a \ in front of the first colon.
+# [+:arg:+ or +:args:+ _parameters_]
+#   Overrides the default argument handling with exactly these parameters.
 #
-#   The file will be searched for in the directories listed by the +--include+
-#   option, or in the current directory by default.  The contents of the file
-#   will be shifted to have the same indentation as the ':' at the start of
-#   the +:include:+ directive.
+#     ##
+#     #  :args: a, b
+#     
+#     def some_method(*a)
+#     end
 #
-# [+:title:+ _text_]
-#   Sets the title for the document.  Equivalent to the <tt>--title</tt>
-#   command line parameter.  (The command line parameter overrides any :title:
-#   directive in the source).
+# [+:yield:+ or +:yields:+ _parameters_]
+#   Overrides the default yield discovery with these parameters.
 #
-# [+:main:+ _name_]
-#   Equivalent to the <tt>--main</tt> command line parameter.
+#     ##
+#     # :yields: key, value
 #
-# [<tt>:category: section</tt>]
+#     def each_thing &block
+#       @things.each(&block)
+#     end
+#
+# [+:call-seq:+]
+#   Lines up to the next blank line or lines with a common prefix in the
+#   comment are treated as the method's calling sequence, overriding the
+#   default parsing of method parameters and yield arguments.
+#
+#   Multiple lines may be used.
+#
+#     # :call-seq:
+#     #   ARGF.readlines(sep=$/)     -> array
+#     #   ARGF.readlines(limit)      -> array
+#     #   ARGF.readlines(sep, limit) -> array
+#     #
+#     #   ARGF.to_a(sep=$/)     -> array
+#     #   ARGF.to_a(limit)      -> array
+#     #   ARGF.to_a(sep, limit) -> array
+#     #
+#     # The remaining lines are documentation ...
+#
+# === Sections
+#
+# [+:category:+ _section_]
 #   Adds this item to the named +section+ overriding the current section.  Use
 #   this to group methods by section in RDoc output while maintaining a
 #   sensible ordering (like alphabetical).
@@ -586,7 +607,7 @@ require 'rdoc'
 #   Use the :section: directive to provide introductory text for a section of
 #   documentation.
 #
-# [<tt>:section: title</tt>]
+# [+:section:+ _title_]
 #   Provides section introductory text in RDoc output.  The title following
 #   +:section:+ is used as the section name and the remainder of the comment
 #   containing the section is used as introductory text.  A section's comment
@@ -618,12 +639,37 @@ require 'rdoc'
 #       # ...
 #     end
 #
-# [+:call-seq:+]
-#   Lines up to the next blank line in the comment are treated as the method's
-#   calling sequence, overriding the default parsing of method parameters and
-#   yield arguments.
+# === Other directives
 #
-# Further directives can be found in RDoc::Parser::Ruby and RDoc::Parser::C.
+# [+:markup:+ _type_]
+#   Overrides the default markup type for this comment with the specified
+#   markup type.  For ruby files, if the first comment contains this directive
+#   it is applied automatically to all comments in the file.
+#
+#   To add additional markup types to RDoc, add the type's name and parsing
+#   class to RDoc::Text::MARKUP_FORMAT.  The parsing class must respond to
+#   \::parse and accept a String argument.
+#
+#   The parsing class must return an RDoc::Document.
+#
+# [+:include:+ _filename_]
+#   Include the contents of the named file at this point. This directive
+#   must appear alone on one line, possibly preceded by spaces. In this
+#   position, it can be escaped with a \ in front of the first colon.
+#
+#   The file will be searched for in the directories listed by the +--include+
+#   option, or in the current directory by default.  The contents of the file
+#   will be shifted to have the same indentation as the ':' at the start of
+#   the +:include:+ directive.
+#
+# [+:title:+ _text_]
+#   Sets the title for the document.  Equivalent to the <tt>--title</tt>
+#   command line parameter.  (The command line parameter overrides any :title:
+#   directive in the source).
+#
+# [+:main:+ _name_]
+#   Equivalent to the <tt>--main</tt> command line parameter.
+#
 #--
 # Original Author:: Dave Thomas,  dave@pragmaticprogrammer.com
 # License:: Ruby license

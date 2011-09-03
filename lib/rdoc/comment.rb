@@ -1,6 +1,12 @@
 ##
 # A comment holds the text comment for a RDoc::CodeObject and provides a
 # unified way of cleaning it up and parsing it into an RDoc::Markup::Document.
+#
+# Each comment may have a different markup format set by #format=.  By default
+# 'rdoc' is used.  The :markup: directive tells RDoc which format to use.
+#
+# See RDoc::Markup@Other+directives for instructions on adding an alternate
+# format.
 
 class RDoc::Comment
 
@@ -59,14 +65,14 @@ class RDoc::Comment
   #
   # For example, all of the following will be used as the call-seq:
   #
-  #   call-seq:
-  #     ARGF.readlines(sep=$/)     -> array
-  #     ARGF.readlines(limit)      -> array
-  #     ARGF.readlines(sep, limit) -> array
-  #
-  #     ARGF.to_a(sep=$/)     -> array
-  #     ARGF.to_a(limit)      -> array
-  #     ARGF.to_a(sep, limit) -> array
+  #   # call-seq:
+  #   #   ARGF.readlines(sep=$/)     -> array
+  #   #   ARGF.readlines(limit)      -> array
+  #   #   ARGF.readlines(sep, limit) -> array
+  #   #
+  #   #   ARGF.to_a(sep=$/)     -> array
+  #   #   ARGF.to_a(limit)      -> array
+  #   #   ARGF.to_a(sep, limit) -> array
 
   def extract_call_seq method
     # we must handle situations like the above followed by an unindented first
