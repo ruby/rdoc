@@ -248,6 +248,20 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
     assert_equal 'comment', @comment.text
   end
 
+  def test_normalize_twice
+    @comment.text = <<-TEXT
+  # comment
+    TEXT
+
+    @comment.normalize
+
+    text = @comment.text
+
+    @comment.normalize
+
+    assert_same text, @comment.text, 'normalize not cached'
+  end
+
   def test_normalize_document
     @comment.text = nil
     @comment.document = @RM::Document.new
@@ -255,6 +269,14 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
     assert_same @comment, @comment.normalize
 
     assert_nil @comment.text
+  end
+
+  def test_normalize_eh
+    refute @comment.normalized?
+
+    @comment.normalize
+
+    assert @comment.normalized?
   end
 
   def test_text
@@ -265,6 +287,7 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
     @comment.text = 'other'
 
     assert_equal 'other', @comment.text
+    refute @comment.normalized?
   end
 
   def test_text_equals_no_text

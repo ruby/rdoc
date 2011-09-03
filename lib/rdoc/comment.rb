@@ -41,8 +41,9 @@ class RDoc::Comment
     @location = location
     @text     = text
 
-    @document = nil
-    @format   = 'rdoc'
+    @document   = nil
+    @format     = 'rdoc'
+    @normalized = false
   end
 
   ##
@@ -146,10 +147,20 @@ class RDoc::Comment
 
   def normalize
     return self unless @text
+    return self if @normalized
 
     @text = normalize_comment @text
 
+    @normalized = true
+
     self
+  end
+
+  ##
+  # Was this text normalized?
+
+  def normalized? # :nodoc:
+    @normalized
   end
 
   ##

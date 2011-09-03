@@ -596,7 +596,7 @@ Init_Foo(void) {
 
     klass = util_get_class content, 'foo'
 
-    assert_equal "a comment for class Foo\n\ntest file", klass.comment.text
+    assert_equal "a comment for class Foo\n\ntest file\n", klass.comment.text
   end
 
   def test_find_class_comment_init
