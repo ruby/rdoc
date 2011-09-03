@@ -17,17 +17,17 @@ class TestRDocTomDoc < RDoc::TestCase
   end
 
   def test_parse_paragraph
-    c = comment "Public: Do some stuff\n"
+    text = "Public: Do some stuff\n"
 
     expected =
       @RM::Document.new(
         @RM::Paragraph.new('Do some stuff'))
 
-    assert_equal expected, @TD.parse(c)
+    assert_equal expected, @TD.parse(text)
   end
 
   def test_parse_arguments
-    c = comment <<-TEXT
+    text = <<-TEXT
 Do some stuff
 
 foo - A comment goes here
@@ -43,11 +43,11 @@ foo - A comment goes here
             'foo',
             @RM::Paragraph.new('A comment goes here'))))
 
-    assert_equal expected, @TD.parse(c)
+    assert_equal expected, @TD.parse(text)
   end
 
   def test_parse_arguments_multiline
-    c = comment <<-TEXT
+    text = <<-TEXT
 Do some stuff
 
 foo - A comment goes here
@@ -65,11 +65,11 @@ foo - A comment goes here
             @RM::Paragraph.new(
               'A comment goes here', 'and is more than one line'))))
 
-    assert_equal expected, @TD.parse(c)
+    assert_equal expected, @TD.parse(text)
   end
 
   def test_parse_examples
-    c = comment <<-TEXT
+    text = <<-TEXT
 Do some stuff
 
 Examples
@@ -85,11 +85,11 @@ Examples
         @RM::BlankLine.new,
         @RM::Verbatim.new("1 + 1\n"))
 
-    assert_equal expected, @TD.parse(c)
+    assert_equal expected, @TD.parse(text)
   end
 
   def test_parse_returns
-    c = comment <<-TEXT
+    text = <<-TEXT
 Do some stuff
 
 Returns a thing
@@ -101,11 +101,11 @@ Returns a thing
         @RM::BlankLine.new,
         @RM::Paragraph.new('Returns a thing'))
 
-    assert_equal expected, @TD.parse(c)
+    assert_equal expected, @TD.parse(text)
   end
 
   def test_parse_returns_multiline
-    c = comment <<-TEXT
+    text = <<-TEXT
 Do some stuff
 
 Returns a thing
@@ -118,7 +118,7 @@ Returns a thing
         @RM::BlankLine.new,
         @RM::Paragraph.new('Returns a thing', 'that is multiline'))
 
-    assert_equal expected, @TD.parse(c)
+    assert_equal expected, @TD.parse(text)
   end
 
   def test_tokenize_paragraph

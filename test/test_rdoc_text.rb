@@ -203,12 +203,34 @@ The comments associated with
     assert_equal RDoc::Markup::Document.new, parse("#\n")
   end
 
-  def test_parse_format
+  def test_parse_format_rd
     expected =
       @RM::Document.new(
         @RM::Paragraph.new('it <em>works</em>'))
 
     parsed = parse 'it ((*works*))', 'rd'
+
+    assert_equal expected, parsed
+  end
+
+  def test_parse_format_tomdoc
+    expected =
+      @RM::Document.new(
+        @RM::Paragraph.new('It does a thing'),
+        @RM::BlankLine.new,
+        @RM::Heading.new(3, 'Examples'),
+        @RM::BlankLine.new,
+        @RM::Verbatim.new("1 + 1"))
+
+    text = <<-TOMDOC
+It does a thing
+
+Examples
+
+  1 + 1
+    TOMDOC
+
+    parsed = parse text, 'tomdoc'
 
     assert_equal expected, parsed
   end

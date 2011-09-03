@@ -15,8 +15,9 @@ module RDoc::Text
   # unknown, "rdoc" format is used.
 
   MARKUP_FORMAT = {
-    'rdoc' => RDoc::Markup,
-    'rd'   => RDoc::RD,
+    'rdoc'   => RDoc::Markup,
+    'rd'     => RDoc::RD,
+    'tomdoc' => RDoc::TomDoc,
   }
 
   MARKUP_FORMAT.default = RDoc::Markup

@@ -17,12 +17,12 @@ class RDoc::TomDoc < RDoc::Markup::Parser
   attr_reader :tokens
 
   ##
-  # Parses TomDoc from the RDoc::Comment +comment+.
+  # Parses TomDoc from +text+
 
-  def self.parse comment
+  def self.parse text
     parser = new
 
-    parser.tokenize comment.text
+    parser.tokenize text
     doc = RDoc::Markup::Document.new
     parser.parse doc
   end
