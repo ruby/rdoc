@@ -10,16 +10,6 @@
 
 class RDoc::Markup::PreProcess
 
-  ##
-  # Maps markup formats to classes that can parse them
-
-  MARKUP_FORMAT = {
-    'rdoc' => RDoc::Markup,
-    'rd'   => RDoc::RD,
-  }
-
-  MARKUP_FORMAT.default = RDoc::Markup
-
   attr_accessor :options
 
   @registered = {}
@@ -85,7 +75,7 @@ class RDoc::Markup::PreProcess
       # This is not in handle_directive because I didn't want to pass another
       # argument into it
       if comment and $3 == 'markup' then
-        comment.format = MARKUP_FORMAT[$5.downcase]
+        comment.format = $5.downcase
         next "#{$1.strip}\n"
       end
 

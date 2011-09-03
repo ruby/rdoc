@@ -10,7 +10,7 @@ class RDoc::Parser::RD < RDoc::Parser
 
   def scan
     comment = RDoc::Comment.new @content, @top_level
-    comment.format = RDoc::RD
+    comment.format = 'rd'
 
     @top_level.comment = comment
   end

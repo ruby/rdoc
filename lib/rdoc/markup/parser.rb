@@ -51,7 +51,9 @@ class RDoc::Markup::Parser
   attr_reader :tokens
 
   ##
-  # Parses +str+ into a Document
+  # Parses +str+ into a Document.
+  # 
+  # Use RDoc::Markup#parse instead of this method.
 
   def self.parse str
     parser = new

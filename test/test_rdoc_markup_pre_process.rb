@@ -93,7 +93,7 @@ contents of a string.
 
     @pp.handle c
 
-    assert_equal RDoc::RD, c.format
+    assert_equal 'rd', c.format
   end
 
   def test_handle_unregistered

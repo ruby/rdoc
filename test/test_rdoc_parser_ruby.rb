@@ -2257,9 +2257,9 @@ end
 
     c = @top_level.classes.first
 
-    assert_equal RDoc::Markup, c.comment.format
+    assert_equal 'rdoc', c.comment.format
 
-    assert_equal RDoc::RD, c.method_list.first.comment.format
+    assert_equal 'rd', c.method_list.first.comment.format
   end
 
   def test_scan_markup_first_comment
@@ -2280,9 +2280,9 @@ end
 
     c = @top_level.classes.first
 
-    assert_equal RDoc::RD, c.comment.format
+    assert_equal 'rd', c.comment.format
 
-    assert_equal RDoc::RD, c.method_list.first.comment.format
+    assert_equal 'rd', c.method_list.first.comment.format
   end
 
   def test_stopdoc_after_comment

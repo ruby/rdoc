@@ -199,7 +199,7 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
   end
 
   def test_format
-    assert_equal RDoc::Markup, @comment.format
+    assert_equal 'rdoc', @comment.format
   end
 
   def test_format_equals
@@ -285,7 +285,7 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
 
   def test_parse_rd
     c = comment 'it ((*works*))'
-    c.format = RDoc::RD
+    c.format = 'rd'
 
     expected =
       @RM::Document.new(

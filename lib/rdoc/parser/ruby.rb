@@ -164,7 +164,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     @scanner = RDoc::RubyLex.new content, @options
     @scanner.exception_on_syntax_error = false
     @prev_seek = nil
-    @markup = RDoc::Markup
+    @markup = 'rdoc'
 
     @encoding = nil
     @encoding = @options.encoding if Object.const_defined? :Encoding

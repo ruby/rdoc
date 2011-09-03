@@ -208,7 +208,7 @@ The comments associated with
       @RM::Document.new(
         @RM::Paragraph.new('it <em>works</em>'))
 
-    parsed = parse 'it ((*works*))', RDoc::RD
+    parsed = parse 'it ((*works*))', 'rd'
 
     assert_equal expected, parsed
   end

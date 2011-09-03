@@ -636,7 +636,7 @@ class RDoc::Markup
   attr_reader :attribute_manager
 
   ##
-  # Parses +str+ into an RDoc::Markup::Document
+  # Parses +str+ into an RDoc::Markup::Document.
 
   def self.parse str
     RDoc::Markup::Parser.parse str

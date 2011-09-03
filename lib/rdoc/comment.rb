@@ -36,7 +36,7 @@ class RDoc::Comment
     @text     = text
 
     @document = nil
-    @format   = RDoc::Markup
+    @format   = 'rdoc'
   end
 
   ##

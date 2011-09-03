@@ -11,6 +11,17 @@ require 'strscan'
 module RDoc::Text
 
   ##
+  # Maps markup formats to classes that can parse them.  If the format is
+  # unknown, "rdoc" format is used.
+
+  MARKUP_FORMAT = {
+    'rdoc' => RDoc::Markup,
+    'rd'   => RDoc::RD,
+  }
+
+  MARKUP_FORMAT.default = RDoc::Markup
+
+  ##
   # Maps an encoding to a Hash of characters properly transcoded for that
   # encoding.
   #
@@ -100,7 +111,7 @@ module RDoc::Text
   ##
   # Normalizes +text+ then builds a RDoc::Markup::Document from it
 
-  def parse text, format = RDoc::Markup
+  def parse text, format = 'rdoc'
     return text if RDoc::Markup::Document === text
     return text.parse if RDoc::Comment === text
 
@@ -108,7 +119,7 @@ module RDoc::Text
 
     return RDoc::Markup::Document.new if text =~ /\A\n*\z/
 
-    format.parse text
+    MARKUP_FORMAT[format].parse text
   end
 
   ##
