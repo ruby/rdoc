@@ -8,7 +8,14 @@
       pages.
     * Quicksearch box in Class/Module Index in the sidebar is always shown.
     * HTML output is now using HTML 5.
-  * RDoc supports RD format documentation.
+  * RDoc supports additional documentation types:
+    * TomDoc 1.0.0-pre
+    * RD format
+
+    The format of documentation in a particular file can be specified by the
+    +:markup:+ directive.  If the :markup: directive is in the first comment
+    it is used as the default for the entire file.  For other comments it
+    overrides the default markup format.
 
 * Minor enhancements
   * HTML headings now have ids matching their titles.
