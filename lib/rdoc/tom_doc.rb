@@ -1,0 +1,95 @@
+##
+# A parser for TomDoc based on TomDoc 1.0.0-pre (d38f5da7)
+#
+# The TomDoc format can be found at:
+#
+# http://tomdoc.org
+#
+# The latest version of the TomDoc format can be found at:
+#
+# https://github.com/mojombo/tomdoc/blob/master/tomdoc.md
+
+class RDoc::TomDoc < RDoc::Markup::Parser
+
+  ##
+  # Token accessor
+
+  attr_reader :tokens
+
+  ##
+  # Parses TomDoc from the RDoc::Comment +comment+.
+
+  def self.parse comment
+    parser = new
+
+    parser.tokenize comment.text
+    doc = RDoc::Markup::Document.new
+    parser.parse doc
+  end
+
+  ##
+  # Builds a Paragraph.
+
+  def build_paragraph margin
+    p :paragraph_start => margin if @debug
+
+    paragraph = RDoc::Markup::Paragraph.new
+
+    until @tokens.empty? do
+      type, data, column, = get
+
+      if type == :TEXT then
+        paragraph << data
+        skip :NEWLINE
+      else
+        unget
+        break
+      end
+    end
+
+    p :paragraph_end => margin if @debug
+
+    paragraph
+  end
+
+  ##
+  # Turns text +input+ into a stream of tokens
+
+  def tokenize text
+    text.sub!(/\A(Public|Internal|Deprecated):\s+/, '')
+
+    s = StringScanner.new text
+
+    @line = 0
+    @line_pos = 0
+
+    until s.eos? do
+      pos = s.pos
+
+      # leading spaces will be reflected by the column of the next token
+      # the only thing we loose are trailing spaces at the end of the file
+      next if s.scan(/ +/)
+
+      @tokens << case
+                 when s.scan(/\r?\n/) then
+                   token = [:NEWLINE, s.matched, *token_pos(pos)]
+                   @line_pos = s.pos
+                   @line += 1
+                   token
+                 when s.scan(/(Examples)$/) then
+                   @tokens << [:HEADER, 3, *token_pos(pos)]
+
+                   [:TEXT, 'Examples', *token_pos(pos)]
+                 when s.scan(/([:\w]\w*) - /) then
+                   [:NOTE, s[1], *token_pos(pos)]
+                 else
+                   s.scan(/.*/)
+                   [:TEXT, s.matched.sub(/\r$/, ''), *token_pos(pos)]
+                 end
+    end
+
+    self
+  end
+
+end
+

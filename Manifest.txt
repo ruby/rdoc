@@ -140,6 +140,7 @@ lib/rdoc/task.rb
 lib/rdoc/test_case.rb
 lib/rdoc/text.rb
 lib/rdoc/token_stream.rb
+lib/rdoc/tom_doc.rb
 lib/rdoc/top_level.rb
 test/README
 test/binary.dat
@@ -207,6 +208,7 @@ test/test_rdoc_single_class.rb
 test/test_rdoc_stats.rb
 test/test_rdoc_task.rb
 test/test_rdoc_text.rb
+test/test_rdoc_tom_doc.rb
 test/test_rdoc_top_level.rb
 test/xref_data.rb
 test/xref_test_case.rb

@@ -151,14 +151,16 @@ module RDoc
   autoload :ERBIO,          'rdoc/erbio'
   autoload :Encoding,       'rdoc/encoding'
   autoload :Generator,      'rdoc/generator'
-  autoload :Markup,         'rdoc/markup'
   autoload :Options,        'rdoc/options'
   autoload :Parser,         'rdoc/parser'
-  autoload :RD,             'rdoc/rd'
   autoload :RI,             'rdoc/ri'
   autoload :Stats,          'rdoc/stats'
   autoload :Task,           'rdoc/task'
   autoload :Text,           'rdoc/text'
+
+  autoload :Markup,         'rdoc/markup'
+  autoload :RD,             'rdoc/rd'
+  autoload :TomDoc,         'rdoc/tom_doc'
 
   autoload :KNOWN_CLASSES,  'rdoc/known_classes'
 
