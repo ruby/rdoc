@@ -38,6 +38,7 @@ class RDoc::Context::Section
     @@sequence.succ!
     @sequence = @@sequence.dup
 
+    @comment = nil
     @comment = extract_comment comment if comment
   end
 

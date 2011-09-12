@@ -37,7 +37,7 @@ class RDoc::TomDoc < RDoc::Markup::Parser
     paragraph = RDoc::Markup::Paragraph.new
 
     until @tokens.empty? do
-      type, data, column, = get
+      type, data, = get
 
       if type == :TEXT then
         paragraph << data

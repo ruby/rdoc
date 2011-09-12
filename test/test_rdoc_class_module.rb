@@ -570,7 +570,6 @@ class TestRDocClassModule < XrefTestCase
 
   def test_parse_comment
     tl1 = RDoc::TopLevel.new 'one.rb'
-    tl2 = RDoc::TopLevel.new 'two.rb'
 
     cm = RDoc::ClassModule.new 'Klass'
     cm.comment = comment 'comment 1', tl1
