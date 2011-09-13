@@ -16,6 +16,26 @@ class TestRDocTomDoc < RDoc::TestCase
     s.chomp
   end
 
+  def test_class_add_post_processor
+    RDoc::TomDoc.add_post_processor
+
+    pp = RDoc::Markup::PreProcess.new __FILE__, []
+
+    text = "# Public: Do some stuff\n"
+
+    comment = RDoc::Comment.new text, nil
+    comment.format = 'tomdoc'
+
+    parent = RDoc::Context.new
+    method = RDoc::AnyMethod.new nil, 'm'
+    method.parent = parent
+
+    pp.handle comment, method
+
+    assert_equal 'Public', method.section.title
+    assert_equal "# Do some stuff\n", comment.text
+  end
+
   def test_parse_paragraph
     text = "Public: Do some stuff\n"
 

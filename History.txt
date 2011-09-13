@@ -41,6 +41,8 @@
   * Image paths at HTTPS URLs will now be turned into +<img>+ tags.  Pull
     Request #60 by James Mead
   * Added RDoc::Comment which encapsulates comment-handling functionality.
+  * Added RDoc::Markup::PreProcess::post_process to allow arbitrary comment
+    munging.
 
 * Bug fixes
   * Markup defined by RDoc::Markup#add_special inside a <tt><tt></tt> is no

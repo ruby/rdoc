@@ -17,6 +17,26 @@ class RDoc::TomDoc < RDoc::Markup::Parser
   attr_reader :tokens
 
   ##
+  # Adds a post-processor which sets the RDoc section based on the comment's
+  # status.
+
+  def self.add_post_processor # :nodoc:
+    RDoc::Markup::PreProcess.post_process do |comment, code_object|
+      next unless code_object and
+                  RDoc::Comment === comment and comment.format == 'tomdoc'
+
+      comment.text.gsub!(/(\A\s*# )(Public|Internal|Deprecated):\s+/) do
+        section = code_object.parent.add_section $2
+        code_object.section = section
+
+        $1
+      end
+    end
+  end
+
+  add_post_processor
+
+  ##
   # Parses TomDoc from +text+
 
   def self.parse text

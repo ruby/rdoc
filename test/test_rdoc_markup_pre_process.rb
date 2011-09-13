@@ -20,6 +20,18 @@ class TestRDocMarkupPreProcess < RDoc::TestCase
     @tempfile.close
   end
 
+  def test_class_register
+    RDoc::Markup::PreProcess.register 'for_test' do raise 'fail' end
+
+    assert_equal %w[for_test], RDoc::Markup::PreProcess.registered.keys
+  end
+
+  def test_class_post_process
+    RDoc::Markup::PreProcess.post_process do end
+
+    assert_equal 1, RDoc::Markup::PreProcess.post_processors.length
+  end
+
   def test_include_file
     @tempfile.write <<-INCLUDE
 # -*- mode: rdoc; coding: utf-8; fill-column: 74; -*-
@@ -94,6 +106,24 @@ contents of a string.
     @pp.handle c
 
     assert_equal 'rd', c.format
+  end
+
+  def test_handle_post_process
+    cd = RDoc::CodeObject.new
+
+    RDoc::Markup::PreProcess.post_process do |text, code_object|
+      code_object.metadata[:stuff] = text
+
+      :junk
+    end
+
+    text = "# a b c\n"
+
+    out = @pp.handle text, cd
+
+    assert_same out, text
+    assert_equal "# a b c\n", text
+    assert_equal "# a b c\n", cd.metadata[:stuff]
   end
 
   def test_handle_unregistered

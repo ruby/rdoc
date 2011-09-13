@@ -35,7 +35,7 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
     @RM = RDoc::Markup
 
     RDoc::RDoc.reset
-    RDoc::Markup::PreProcess.registered.clear
+    RDoc::Markup::PreProcess.reset
 
     @pwd = Dir.pwd
   end

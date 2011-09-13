@@ -12,7 +12,21 @@ class RDoc::Markup::PreProcess
 
   attr_accessor :options
 
-  @registered = {}
+  ##
+  # Adds a post-process handler for directives.  The handler will be called
+  # with the result RDoc::Comment (or text String) and the code object for the
+  # comment (if any).
+
+  def self.post_process &block
+    @post_processors << block
+  end
+
+  ##
+  # Registered post-processors
+
+  def self.post_processors
+    @post_processors
+  end
 
   ##
   # Registers +directive+ as one handled by RDoc.  If a block is given the
@@ -29,6 +43,16 @@ class RDoc::Markup::PreProcess
   def self.registered
     @registered
   end
+
+  ##
+  # Clears all registered directives and post-processors
+
+  def self.reset
+    @post_processors = []
+    @registered = {}
+  end
+
+  reset
 
   ##
   # Creates a new pre-processor for +input_file_name+ that will look for
@@ -57,7 +81,7 @@ class RDoc::Markup::PreProcess
   def handle text, code_object = nil, &block
     if RDoc::Comment === text then
       comment = text
-      text = text.text 
+      text = text.text
     end
 
     encoding = text.encoding if defined?(Encoding)
@@ -81,6 +105,14 @@ class RDoc::Markup::PreProcess
 
       handle_directive $1, $3, $5, code_object, encoding, &block
     end
+
+    comment = text unless comment
+
+    self.class.post_processors.each do |handler|
+      handler.call comment, code_object
+    end
+
+    text
   end
 
   #--
