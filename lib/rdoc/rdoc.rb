@@ -85,7 +85,7 @@ class RDoc::RDoc
   ##
   # Sets the active RDoc::RDoc instance
 
-  def self.current=(rdoc)
+  def self.current= rdoc
     @current = rdoc
   end
 
@@ -95,6 +95,7 @@ class RDoc::RDoc
   def self.reset
     RDoc::TopLevel.reset
     RDoc::Parser::C.reset
+    RDoc::RDoc.current = nil
   end
 
   ##
@@ -398,6 +399,7 @@ The internal error was:
 
   def document options
     RDoc::RDoc.reset
+    RDoc::RDoc.current = self
 
     if RDoc::Options === options then
       @options = options
@@ -457,18 +459,12 @@ The internal error was:
 
   def generate file_info
     Dir.chdir @options.op_dir do
-      begin
-        self.class.current = self
-
-        unless @options.quiet then
-          $stderr.puts "\nGenerating #{@generator.class.name.sub(/^.*::/, '')} format into #{Dir.pwd}..."
-        end
-
-        @generator.generate file_info
-        update_output_dir '.', @start_time, @last_modified
-      ensure
-        self.class.current = nil
+      unless @options.quiet then
+        $stderr.puts "\nGenerating #{@generator.class.name.sub(/^.*::/, '')} format into #{Dir.pwd}..."
       end
+
+      @generator.generate file_info
+      update_output_dir '.', @start_time, @last_modified
     end
   end
 

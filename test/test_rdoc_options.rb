@@ -285,6 +285,17 @@ file 'unreadable' not readable
     assert_equal 'MAIN', @options.main_page
   end
 
+  def test_parse_markup
+    out, err = capture_io do
+      @options.parse %w[--markup tomdoc]
+    end
+
+    assert_empty out
+    assert_empty err
+
+    assert_equal 'tomdoc', @options.markup
+  end
+
   def test_parse_template
     out, err = capture_io do
       @options.parse %w[--template darkfish]

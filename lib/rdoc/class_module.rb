@@ -451,7 +451,7 @@ class RDoc::ClassModule < RDoc::Context
 
       RDoc::Markup::Document.new(*docs)
     when RDoc::Comment then
-      doc = super comment_location.text
+      doc = super comment_location.text, comment_location.format
       doc.file = comment_location.location.absolute_name
       doc
     when RDoc::Markup::Document then

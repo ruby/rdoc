@@ -92,6 +92,32 @@ foo - A comment goes here
     assert_equal expected, @TD.parse(text)
   end
 
+  def test_parse_arguments_nested
+    text = <<-TEXT
+Do some stuff
+
+foo - A comment goes here
+      :bar - bar documentation
+    TEXT
+
+    expected =
+      @RM::Document.new(
+        @RM::Paragraph.new('Do some stuff'),
+        @RM::BlankLine.new,
+        @RM::List.new(
+          :LABEL,
+          @RM::ListItem.new(
+            'foo',
+            @RM::Paragraph.new('A comment goes here'),
+            @RM::List.new(
+              :LABEL,
+              @RM::ListItem.new(
+                ':bar',
+                @RM::Paragraph.new('bar documentation'))))))
+
+    assert_equal expected, @TD.parse(text)
+  end
+
   def test_parse_examples
     text = <<-TEXT
 Do some stuff
@@ -196,6 +222,29 @@ foo - A comment goes here
       [:NEWLINE, "\n",                        25, 2],
       [:TEXT,    "and is more than one line",  2, 3],
       [:NEWLINE, "\n",                        27, 3],
+    ]
+
+    assert_equal expected, @td.tokens
+  end
+
+  def test_tokenize_arguments_nested
+    @td.tokenize <<-TEXT
+Do some stuff
+
+foo - A comment goes here
+      :bar - bar documentation
+    TEXT
+
+    expected = [
+      [:TEXT,    "Do some stuff",              0, 0],
+      [:NEWLINE, "\n",                        13, 0],
+      [:NEWLINE, "\n",                         0, 1],
+      [:LABEL,   "foo",                        0, 2],
+      [:TEXT,    "A comment goes here",        6, 2],
+      [:NEWLINE, "\n",                        25, 2],
+      [:LABEL,   ":bar",                       6, 3],
+      [:TEXT,    "bar documentation",         13, 3],
+      [:NEWLINE, "\n",                        30, 3],
     ]
 
     assert_equal expected, @td.tokens

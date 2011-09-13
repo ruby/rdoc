@@ -159,6 +159,17 @@ class RDoc::AnyMethod
 
 end
 
+class RDoc::ClassModule
+
+  ##
+  # Handy wrapper for marking up this class or module's comment
+
+  def description
+    markup @comment_location
+  end
+
+end
+
 class RDoc::Context::Section
 
   include RDoc::Generator::Markup

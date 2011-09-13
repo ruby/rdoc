@@ -580,6 +580,19 @@ class TestRDocClassModule < XrefTestCase
     assert_equal doc, cm.parse(cm.comment)
   end
 
+  def test_parse_comment_format
+    tl1 = RDoc::TopLevel.new 'one.rb'
+
+    cm = RDoc::ClassModule.new 'Klass'
+    cm.comment = comment 'comment ((*1*))', tl1
+    cm.comment.format = 'rd'
+
+    doc = @RM::Document.new @RM::Paragraph.new 'comment <em>1</em>'
+    doc.file = tl1.absolute_name
+
+    assert_equal doc, cm.parse(cm.comment)
+  end
+
   def test_parse_comment_location
     tl1 = RDoc::TopLevel.new 'one.rb'
     tl2 = RDoc::TopLevel.new 'two.rb'

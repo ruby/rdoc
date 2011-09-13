@@ -97,6 +97,12 @@ class RDoc::Options
   attr_accessor :main_page
 
   ##
+  # The default markup format.  The default is 'rdoc'.  'tomdoc' and 'rd' are
+  # also built-in.
+
+  attr_accessor :markup
+
+  ##
   # If true, only report on undocumented files
 
   attr_accessor :coverage_report
@@ -180,6 +186,7 @@ class RDoc::Options
     @hyperlink_all = false
     @line_numbers = false
     @main_page = nil
+    @markup = 'rdoc'
     @coverage_report = false
     @op_dir = nil
     @pipe = false
@@ -446,6 +453,17 @@ Usage: #{opt.program_name} [options] [names...]
              "One of 'public', 'protected' (the default)",
              "or 'private'. Can be abbreviated.") do |value|
         @visibility = value
+      end
+
+      opt.separator nil
+
+      markup_formats = RDoc::Text::MARKUP_FORMAT.keys.sort
+
+      opt.on("--markup=MARKUP", markup_formats,
+             "The markup format for the named files.",
+             "The default is rdoc.  Valid values are:",
+             markup_formats.join(', ')) do |value|
+        @markup = value
       end
 
       opt.separator nil

@@ -13,6 +13,8 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_class_reset
+    RDoc::RDoc.current = :junk
+
     tl = RDoc::TopLevel.new 'file.rb'
     tl.add_class RDoc::NormalClass, 'C'
     tl.add_class RDoc::NormalModule, 'M'
@@ -24,6 +26,8 @@ class TestRDocRDoc < RDoc::TestCase
     known_bodies['A'] = 'B'
 
     RDoc::RDoc.reset
+
+    assert_nil RDoc::RDoc.current
 
     assert_empty RDoc::TopLevel.all_classes_hash
     assert_empty RDoc::TopLevel.all_files_hash

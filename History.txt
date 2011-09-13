@@ -12,6 +12,8 @@
     * TomDoc 1.0.0-pre
     * RD format
 
+    The default format can be set via the <tt>--markup</tt> option.
+
     The format of documentation in a particular file can be specified by the
     +:markup:+ directive.  If the :markup: directive is in the first comment
     it is used as the default for the entire file.  For other comments it
@@ -43,6 +45,7 @@
   * Added RDoc::Comment which encapsulates comment-handling functionality.
   * Added RDoc::Markup::PreProcess::post_process to allow arbitrary comment
     munging.
+  * RDoc::RDoc::current is set for the entire RDoc run.
 
 * Bug fixes
   * Markup defined by RDoc::Markup#add_special inside a <tt><tt></tt> is no

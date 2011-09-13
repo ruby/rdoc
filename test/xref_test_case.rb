@@ -26,6 +26,7 @@ class XrefTestCase < RDoc::TestCase
     def generator.class_dir() nil end
     def generator.file_dir() nil end
     rdoc = RDoc::RDoc.new
+    rdoc.options = @options
     RDoc::RDoc.current = rdoc
     rdoc.generator = generator
 
