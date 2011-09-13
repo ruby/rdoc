@@ -59,7 +59,7 @@ description - arguments description
         @RM::Paragraph.new('Create new Arg object.'),
         @RM::BlankLine.new,
         @RM::List.new(
-          :LABEL,
+          :NOTE,
           @RM::ListItem.new(
             'name',
             @RM::Paragraph.new('name of argument')),
@@ -83,7 +83,7 @@ foo - A comment goes here
         @RM::Paragraph.new('Do some stuff'),
         @RM::BlankLine.new,
         @RM::List.new(
-          :LABEL,
+          :NOTE,
           @RM::ListItem.new(
             'foo',
             @RM::Paragraph.new(
@@ -105,12 +105,12 @@ foo - A comment goes here
         @RM::Paragraph.new('Do some stuff'),
         @RM::BlankLine.new,
         @RM::List.new(
-          :LABEL,
+          :NOTE,
           @RM::ListItem.new(
             'foo',
             @RM::Paragraph.new('A comment goes here'),
             @RM::List.new(
-              :LABEL,
+              :NOTE,
               @RM::ListItem.new(
                 ':bar',
                 @RM::Paragraph.new('bar documentation'))))))
@@ -194,10 +194,10 @@ description - arguments description
       [:TEXT,    "Create new Arg object.",  0, 0],
       [:NEWLINE, "\n",                     22, 0],
       [:NEWLINE, "\n",                      0, 1],
-      [:LABEL,   "name",                    0, 2],
+      [:NOTE,    "name",                    0, 2],
       [:TEXT,    "name of argument",       14, 2],
       [:NEWLINE, "\n",                     30, 2],
-      [:LABEL,   "description",             0, 3],
+      [:NOTE,    "description",             0, 3],
       [:TEXT,    "arguments description",  14, 3],
       [:NEWLINE, "\n",                     35, 3],
     ]
@@ -217,7 +217,7 @@ foo - A comment goes here
       [:TEXT,    "Do some stuff",              0, 0],
       [:NEWLINE, "\n",                        13, 0],
       [:NEWLINE, "\n",                         0, 1],
-      [:LABEL,   "foo",                        0, 2],
+      [:NOTE,    "foo",                        0, 2],
       [:TEXT,    "A comment goes here",        6, 2],
       [:NEWLINE, "\n",                        25, 2],
       [:TEXT,    "and is more than one line",  2, 3],
@@ -239,10 +239,10 @@ foo - A comment goes here
       [:TEXT,    "Do some stuff",              0, 0],
       [:NEWLINE, "\n",                        13, 0],
       [:NEWLINE, "\n",                         0, 1],
-      [:LABEL,   "foo",                        0, 2],
+      [:NOTE,    "foo",                        0, 2],
       [:TEXT,    "A comment goes here",        6, 2],
       [:NEWLINE, "\n",                        25, 2],
-      [:LABEL,   ":bar",                       6, 3],
+      [:NOTE,    ":bar",                       6, 3],
       [:TEXT,    "bar documentation",         13, 3],
       [:NEWLINE, "\n",                        30, 3],
     ]

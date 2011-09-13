@@ -102,7 +102,7 @@ class RDoc::TomDoc < RDoc::Markup::Parser
 
                    [:TEXT, 'Examples', *token_pos(pos)]
                  when s.scan(/([:\w]\w*)[ ]+- /) then
-                   [:LABEL, s[1], *token_pos(pos)]
+                   [:NOTE, s[1], *token_pos(pos)]
                  else
                    s.scan(/.*/)
                    [:TEXT, s.matched.sub(/\r$/, ''), *token_pos(pos)]
