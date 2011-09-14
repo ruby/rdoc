@@ -433,6 +433,9 @@ ul.link-list .type {
 #documentation .method-description ul {
   margin-left: 1.5em;
 }
+#documentation .method-description pre {
+  margin: 0.5em 0;
+}
 
 #documentation .attribute-method-heading {
   background: url(images/tag_green.png) no-repeat left bottom;
