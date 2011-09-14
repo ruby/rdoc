@@ -280,8 +280,10 @@ ul.link-list .type {
 }
 
 .note-list dt {
-  padding: 2px 0;
   font-weight: bold;
+}
+.note-list dd {
+  padding: 0 12px;
 }
 
 .label-list dt {
@@ -289,7 +291,6 @@ ul.link-list .type {
   font-weight: bold;
   background: #ddd;
 }
-.note-list dd,
 .label-list dd {
   padding: 2px 12px;
 }
