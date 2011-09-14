@@ -13,11 +13,11 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # Maps RDoc::Markup::Parser::LIST_TOKENS types to HTML tags
 
   LIST_TYPE_TO_HTML = {
-    :BULLET => ['<ul>', '</ul>'],
-    :LABEL  => ['<dl class="rdoc-list">', '</dl>'],
+    :BULLET => ['<ul>',                              '</ul>'],
+    :LABEL  => ['<dl class="rdoc-list label-list">', '</dl>'],
     :LALPHA => ['<ol style="display: lower-alpha">', '</ol>'],
-    :NOTE   => ['<table class="rdoc-list">', '</table>'],
-    :NUMBER => ['<ol>', '</ol>'],
+    :NOTE   => ['<dl class="rdoc-list note-list">',  '</dl>'],
+    :NUMBER => ['<ol>',                              '</ol>'],
     :UALPHA => ['<ol style="display: upper-alpha">', '</ol>'],
   }
 
@@ -340,10 +340,8 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     case list_type
     when :BULLET, :LALPHA, :NUMBER, :UALPHA then
       "<li>"
-    when :LABEL then
-      "<dt>#{to_html list_item.label}</dt>\n<dd>"
-    when :NOTE then
-      "<tr><td class=\"rdoc-term\"><p>#{to_html list_item.label}</p></td>\n<td>"
+    when :LABEL, :NOTE then
+      "<dt>#{to_html list_item.label}\n<dd>"
     else
       raise RDoc::Error, "Invalid list type: #{list_type.inspect}"
     end
@@ -356,10 +354,8 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     case list_type
     when :BULLET, :LALPHA, :NUMBER, :UALPHA then
       "</li>"
-    when :LABEL then
+    when :LABEL, :NOTE then
       "</dd>"
-    when :NOTE then
-      "</td></tr>"
     else
       raise RDoc::Error, "Invalid list type: #{list_type.inspect}"
     end

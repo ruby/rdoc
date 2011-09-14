@@ -267,27 +267,34 @@ ul.link-list .type {
   line-height: 1.4em;
 }
 
-.description dl,
-#documentation dl {
+.note-list {
+  margin: 8px 0;
+}
+
+.label-list {
   margin: 8px 1.5em;
   border: 1px solid #ccc;
 }
-.description dl {
+.description .label-list {
   font-size: 14px;
 }
 
-.description dt,
-#documentation dt {
+.note-list dt {
+  padding: 2px 0;
+  font-weight: bold;
+}
+
+.label-list dt {
   padding: 2px 4px;
   font-weight: bold;
   background: #ddd;
 }
-.description dd,
-#documentation dd  {
+.note-list dd,
+.label-list dd {
   padding: 2px 12px;
 }
-.description dd + dt,
-#documentation dd + dt {
+.label-list dd + dt,
+.note-list dd + dt {
   margin-top: 0.7em;
 }
 
@@ -420,9 +427,6 @@ ul.link-list .type {
   cursor: default;
 }
 #documentation .method-description p {
-  padding: 0;
-}
-#documentation .method-description p + p {
   margin-bottom: 0.5em;
 }
 #documentation .method-description ul {

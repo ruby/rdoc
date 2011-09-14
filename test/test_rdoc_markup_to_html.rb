@@ -71,7 +71,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal [], @to.list
     assert_equal [], @to.in_list_entry
 
-    assert_equal "<dl class=\"rdoc-list\"></dl>\n", @to.res.join
+    assert_equal "<dl class=\"rdoc-list label-list\"></dl>\n", @to.res.join
   end
 
   def accept_list_end_lalpha
@@ -92,7 +92,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal [], @to.list
     assert_equal [], @to.in_list_entry
 
-    assert_equal "<table class=\"rdoc-list\"></table>\n", @to.res.join
+    assert_equal "<dl class=\"rdoc-list note-list\"></dl>\n", @to.res.join
   end
 
   def accept_list_end_ualpha
@@ -115,7 +115,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def accept_list_item_end_note
-    assert_equal %w[</td></tr>], @to.in_list_entry
+    assert_equal %w[</dd>], @to.in_list_entry
   end
 
   def accept_list_item_end_number
@@ -131,7 +131,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def accept_list_item_start_label
-    assert_equal "<dl class=\"rdoc-list\"><dt>cat</dt>\n<dd>", @to.res.join
+    assert_equal "<dl class=\"rdoc-list label-list\"><dt>cat\n<dd>", @to.res.join
   end
 
   def accept_list_item_start_lalpha
@@ -139,16 +139,16 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def accept_list_item_start_note
-    assert_equal "<table class=\"rdoc-list\"><tr><td class=\"rdoc-term\"><p>cat</p></td>\n<td>",
+    assert_equal "<dl class=\"rdoc-list note-list\"><dt>cat\n<dd>",
                  @to.res.join
   end
 
   def accept_list_item_start_note_2
     expected = <<-EXPECTED
-<table class="rdoc-list"><tr><td class="rdoc-term"><p><code>teletype</code></p></td>
-<td>
+<dl class="rdoc-list note-list"><dt><code>teletype</code>
+<dd>
 <p>teletype description</p>
-</td></tr></table>
+</dd></dl>
     EXPECTED
 
     assert_equal expected, @to.res.join
@@ -173,7 +173,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal [:LABEL], @to.list
     assert_equal [false], @to.in_list_entry
 
-    assert_equal '<dl class="rdoc-list">', @to.res.join
+    assert_equal '<dl class="rdoc-list label-list">', @to.res.join
   end
 
   def accept_list_start_lalpha
@@ -187,7 +187,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal [:NOTE], @to.list
     assert_equal [false], @to.in_list_entry
 
-    assert_equal "<table class=\"rdoc-list\">", @to.res.join
+    assert_equal "<dl class=\"rdoc-list note-list\">", @to.res.join
   end
 
   def accept_list_start_number
