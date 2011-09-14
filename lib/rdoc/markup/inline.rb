@@ -1,5 +1,3 @@
-require 'rdoc/markup'
-
 class RDoc::Markup
 
   ##

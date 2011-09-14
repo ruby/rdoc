@@ -1,5 +1,3 @@
-require 'rdoc'
-
 ##
 # RDoc::Markup parses plain text documents and attempts to decompose them into
 # their constituent parts.  Some of these parts are high-level: paragraphs,
@@ -26,7 +24,7 @@ require 'rdoc'
 # the +convert+ method, so you can use the same RDoc::Markup converter to
 # convert multiple input strings.
 #
-#   require 'rdoc/markup/to_html'
+#   require 'rdoc'
 #
 #   h = RDoc::Markup::ToHtml.new
 #
@@ -39,8 +37,7 @@ require 'rdoc'
 # strike-through text.  We then subclass the HTML output class to deal
 # with these:
 #
-#   require 'rdoc/markup'
-#   require 'rdoc/markup/to_html'
+#   require 'rdoc'
 #
 #   class WikiHtml < RDoc::Markup::ToHtml
 #     def handle_special_WIKIWORD(special)
@@ -763,10 +760,13 @@ https://github.com/rdoc/rdoc/issues
     document.accept formatter
   end
 
+  autoload :AttrChanger,           'rdoc/markup/inline'
+  autoload :AttrSpan,              'rdoc/markup/inline'
+  autoload :Attribute,             'rdoc/markup/inline'
   autoload :AttributeManager,      'rdoc/markup/attribute_manager'
-  autoload :Inline,                'rdoc/markup/inline'
   autoload :Parser,                'rdoc/markup/parser'
   autoload :PreProcess,            'rdoc/markup/pre_process'
+  autoload :Special,               'rdoc/markup/inline'
 
   # RDoc::Markup AST
   autoload :BlankLine,             'rdoc/markup/blank_line'

@@ -1,5 +1,3 @@
-require 'rdoc'
-
 ##
 # A parser is simple a class that subclasses RDoc::Parser and implements #scan
 # to fill in an RDoc::TopLevel with parsed data.
@@ -13,7 +11,7 @@ require 'rdoc'
 # In order to be used by RDoc the parser needs to register the file extensions
 # it can parse.  Use ::parse_files_matching to register extensions.
 #
-#   require "rdoc/parser"
+#   require 'rdoc'
 #
 #   class RDoc::Parser::Xyz < RDoc::Parser
 #     parse_files_matching /\.xyz$/

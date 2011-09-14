@@ -1,4 +1,5 @@
-$:.unshift 'lib'
+$:.unshift File.expand_path 'lib'
+require 'rdoc'
 require 'hoe'
 
 task :docs    => :generate
