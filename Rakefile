@@ -1,12 +1,13 @@
 $:.unshift 'lib'
-require 'rdoc'
 require 'hoe'
 
 task :docs    => :generate
 task :test    => :generate
 
-RD_BLOCK_PARSER  = 'lib/rdoc/rd/block_parser.rb'
-RD_INLINE_PARSER = 'lib/rdoc/rd/inline_parser.rb'
+PARSER_FILES = %w[
+  lib/rdoc/rd/block_parser.rb
+  lib/rdoc/rd/inline_parser.rb
+]
 
 Hoe.plugin :git
 Hoe.plugin :minitest
@@ -35,10 +36,7 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
 
   self.testlib = :minitest
 
-  self.clean_globs = [
-    RD_BLOCK_PARSER,
-    RD_INLINE_PARSER,
-  ]
+  self.clean_globs += PARSER_FILES
 
   require_ruby_version '>= 1.8.7'
   extra_dev_deps << ['racc',     '>= 0']
@@ -50,10 +48,7 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   spec_extras['homepage'] = 'http://docs.seattlerb.org/rdoc'
 end
 
-task 'generate' => [
-  RD_BLOCK_PARSER,
-  RD_INLINE_PARSER,
-]
+task 'generate' => PARSER_FILES
 
 rule '.rb' => '.ry' do |t|
   racc = File.join Gem.dir, 'bin', 'racc'
