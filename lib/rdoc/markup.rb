@@ -760,12 +760,14 @@ https://github.com/rdoc/rdoc/issues
     document.accept formatter
   end
 
+  autoload :Parser,                'rdoc/markup/parser'
+  autoload :PreProcess,            'rdoc/markup/pre_process'
+
+  # Inline markup classes
   autoload :AttrChanger,           'rdoc/markup/attr_changer'
   autoload :AttrSpan,              'rdoc/markup/attr_span'
   autoload :Attribute,             'rdoc/markup/attribute'
   autoload :AttributeManager,      'rdoc/markup/attribute_manager'
-  autoload :Parser,                'rdoc/markup/parser'
-  autoload :PreProcess,            'rdoc/markup/pre_process'
   autoload :Special,               'rdoc/markup/special'
 
   # RDoc::Markup AST
