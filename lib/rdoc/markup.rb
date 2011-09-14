@@ -760,13 +760,13 @@ https://github.com/rdoc/rdoc/issues
     document.accept formatter
   end
 
-  autoload :AttrChanger,           'rdoc/markup/inline'
-  autoload :AttrSpan,              'rdoc/markup/inline'
-  autoload :Attribute,             'rdoc/markup/inline'
+  autoload :AttrChanger,           'rdoc/markup/attr_changer'
+  autoload :AttrSpan,              'rdoc/markup/attr_span'
+  autoload :Attribute,             'rdoc/markup/attribute'
   autoload :AttributeManager,      'rdoc/markup/attribute_manager'
   autoload :Parser,                'rdoc/markup/parser'
   autoload :PreProcess,            'rdoc/markup/pre_process'
-  autoload :Special,               'rdoc/markup/inline'
+  autoload :Special,               'rdoc/markup/special'
 
   # RDoc::Markup AST
   autoload :BlankLine,             'rdoc/markup/blank_line'

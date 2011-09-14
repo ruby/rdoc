@@ -46,6 +46,7 @@
   * Added RDoc::Markup::PreProcess::post_process to allow arbitrary comment
     munging.
   * RDoc::RDoc::current is set for the entire RDoc run.
+  * Split rdoc/markup/inline into individual files for its component classes.
 
 * Bug fixes
   * Markup defined by RDoc::Markup#add_special inside a <tt><tt></tt> is no

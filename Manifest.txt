@@ -78,6 +78,9 @@ lib/rdoc/ghost_method.rb
 lib/rdoc/include.rb
 lib/rdoc/known_classes.rb
 lib/rdoc/markup.rb
+lib/rdoc/markup/attr_changer.rb
+lib/rdoc/markup/attr_span.rb
+lib/rdoc/markup/attribute.rb
 lib/rdoc/markup/attribute_manager.rb
 lib/rdoc/markup/blank_line.rb
 lib/rdoc/markup/document.rb
@@ -94,6 +97,7 @@ lib/rdoc/markup/parser.rb
 lib/rdoc/markup/pre_process.rb
 lib/rdoc/markup/raw.rb
 lib/rdoc/markup/rule.rb
+lib/rdoc/markup/special.rb
 lib/rdoc/markup/text_formatter_test_case.rb
 lib/rdoc/markup/to_ansi.rb
 lib/rdoc/markup/to_bs.rb
