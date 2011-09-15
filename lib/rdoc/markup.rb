@@ -93,6 +93,11 @@
 # have been removed. In addition, the verbatim text has been shifted
 # left, so the amount of indentation of verbatim text is unimportant.
 #
+# For HTML output RDoc makes a small effort to determine if a verbatim section
+# contains ruby source code.  If so, the verbatim block will be marked up as
+# HTML.  Triggers include "def", "class", "module", "require", the "hash
+# rocket"# (=>) or a block call with a parameter.
+#
 # === Headers
 #
 # A line starting with an equal sign (=) is treated as a
@@ -265,7 +270,6 @@
 #     point 2, third paragraph
 #   verbatim text outside of the list (the list is therefore closed)
 # regular paragraph after the list
-#
 #
 # == Text Markup
 #

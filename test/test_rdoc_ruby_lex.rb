@@ -1,6 +1,23 @@
 require 'rdoc/test_case'
 
-class TestRubyLex < RDoc::TestCase
+class TestRDocRubyLex < RDoc::TestCase
+
+  def test_class_tokenize
+    tokens = RDoc::RubyLex.tokenize "def x() end", nil
+
+    expected = [
+      RDoc::RubyToken::TkDEF       .new( 0, 1,  0, "def"),
+      RDoc::RubyToken::TkSPACE     .new( 3, 1,  3, " "),
+      RDoc::RubyToken::TkIDENTIFIER.new( 4, 1,  4, "x"),
+      RDoc::RubyToken::TkLPAREN    .new( 5, 1,  5, "("),
+      RDoc::RubyToken::TkRPAREN    .new( 6, 1,  6, ")"),
+      RDoc::RubyToken::TkSPACE     .new( 7, 1,  7, " "),
+      RDoc::RubyToken::TkEND       .new( 8, 1,  8, "end"),
+      RDoc::RubyToken::TkNL        .new(11, 1, 11, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
 
   def test_unary_minus
     ruby_lex = RDoc::RubyLex.new("-1", nil)

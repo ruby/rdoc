@@ -22,6 +22,12 @@ class RDoc::RubyLex
 
   # :stopdoc:
 
+  ##
+  # Raised upon invalid input
+
+  class Error < RDoc::Error
+  end
+
   extend Exception2MessageMapper
 
   def_exception(:AlreadyDefinedToken, "Already defined token(%s)")
@@ -49,6 +55,19 @@ class RDoc::RubyLex
   end
 
   self.debug_level = 0
+
+  def self.tokenize text, options
+    tokens = []
+
+    scanner = RDoc::RubyLex.new text, options
+    scanner.exception_on_syntax_error = true
+
+    while token = scanner.token do
+      tokens << token 
+    end
+
+    tokens
+  end
 
   def initialize(content, options)
     lex_init
@@ -322,7 +341,7 @@ class RDoc::RubyLex
         tk = @OP.match(self)
         @space_seen = tk.kind_of?(TkSPACE)
       rescue SyntaxError => e
-        raise RDoc::Error, "syntax error: #{e.message}" if
+        raise Error, "syntax error: #{e.message}" if
           @exception_on_syntax_error
 
         tk = TkError.new(@seek, @line_no, @char_no)
@@ -1004,7 +1023,7 @@ class RDoc::RubyLex
     elsif ch =~ /\W/
       lt = "\""
     else
-      raise RDoc::Error, "unknown type of %string #{ch.inspect}"
+      raise Error, "unknown type of %string #{ch.inspect}"
     end
     #     if ch !~ /\W/
     #       ungetc
@@ -1039,7 +1058,7 @@ class RDoc::RubyLex
       when /[0-7]/
         match = /[0-7_]/
       when /[89]/
-        raise RDoc::Error, "Illegal octal digit"
+        raise Error, "Illegal octal digit"
       else
         return Token(TkINTEGER, num)
       end
@@ -1053,7 +1072,7 @@ class RDoc::RubyLex
         if match =~ ch
           if ch == "_"
             if non_digit
-              raise RDoc::Error, "trailing `#{ch}' in number"
+              raise Error, "trailing `#{ch}' in number"
             else
               non_digit = ch
             end
@@ -1065,10 +1084,10 @@ class RDoc::RubyLex
           ungetc
           num[-1, 1] = ''
           if len0
-            raise RDoc::Error, "numeric literal without digits"
+            raise Error, "numeric literal without digits"
           end
           if non_digit
-            raise RDoc::Error, "trailing `#{non_digit}' in number"
+            raise Error, "trailing `#{non_digit}' in number"
           end
           break
         end
@@ -1089,7 +1108,7 @@ class RDoc::RubyLex
         non_digit = ch
       when allow_point && "."
         if non_digit
-          raise RDoc::Error, "trailing `#{non_digit}' in number"
+          raise Error, "trailing `#{non_digit}' in number"
         end
         type = TkFLOAT
         if peek(0) !~ /[0-9]/
@@ -1101,7 +1120,7 @@ class RDoc::RubyLex
         allow_point = false
       when allow_e && "e", allow_e && "E"
         if non_digit
-          raise RDoc::Error, "trailing `#{non_digit}' in number"
+          raise Error, "trailing `#{non_digit}' in number"
         end
         type = TkFLOAT
         if peek(0) =~ /[+-]/
@@ -1112,7 +1131,7 @@ class RDoc::RubyLex
         non_digit = ch
       else
         if non_digit
-          raise RDoc::Error, "trailing `#{non_digit}' in number"
+          raise Error, "trailing `#{non_digit}' in number"
         end
         ungetc
         num[-1, 1] = ''

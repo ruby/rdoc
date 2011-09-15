@@ -40,7 +40,7 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   self.clean_globs += PARSER_FILES
 
   require_ruby_version '>= 1.8.7'
-  extra_dev_deps << ['racc',     '>= 0']
+  extra_dev_deps << ['racc',     '~> 1.4']
   extra_dev_deps << ['minitest', '~> 2']
   extra_dev_deps << ['ZenTest',  '~> 4']
 
@@ -52,9 +52,9 @@ end
 task 'generate' => PARSER_FILES
 
 rule '.rb' => '.ry' do |t|
-  racc = File.join Gem.dir, 'bin', 'racc'
+  racc = Gem.bin_path 'racc', 'racc'
 
-  sh "#{racc} -l -o #{t.name} #{t.source}"
+  ruby "-rubygems #{racc} -l -o #{t.name} #{t.source}"
 end
 
 # These tasks expect to have the following directory structure:

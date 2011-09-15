@@ -474,13 +474,26 @@ ul.link-list .type {
 
 /* @group Ruby keyword styles */
 
+.description pre,
+.method-description pre {
+  overflow: auto;
+  background: #262626;
+  color: #efefef;
+  border: 1px dashed #999;
+  padding: 0.5em;
+}
+
+.description pre {
+  margin: 0 0.4em;
+}
+
 .ruby-constant   { color: #7fffd4; background: transparent; }
 .ruby-keyword    { color: #00ffff; background: transparent; }
 .ruby-ivar       { color: #eedd82; background: transparent; }
 .ruby-operator   { color: #00ffee; background: transparent; }
 .ruby-identifier { color: #ffdead; background: transparent; }
 .ruby-node       { color: #ffa07a; background: transparent; }
-.ruby-comment    { color: #b22222; font-weight: bold; background: transparent; }
+.ruby-comment    { color: #dc0000; font-weight: bold; background: transparent; }
 .ruby-regexp     { color: #ffa07a; background: transparent; }
 .ruby-value      { color: #7fffd4; background: transparent; }
 

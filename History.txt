@@ -36,6 +36,8 @@
   * RDoc now looks for a <tt>format: parser_name</tt> magic comment to choose
     alternate documentation formats.  The format comment must be in the first
     three lines of the file (to allow for a shebang or modeline).
+  * RDoc makes an effort to syntax-highlight ruby code in verbatim sections.
+    See RDoc::Markup@Paragraphs+and+Verbatim
   * Added RDoc::TopLevel#text? and RDoc::Parser::Text to indicate a
     parsed file contains no ruby constructs.
   * Added <tt>rdoc-label</tt> link scheme which allows bidirectional links.
@@ -47,6 +49,8 @@
     munging.
   * RDoc::RDoc::current is set for the entire RDoc run.
   * Split rdoc/markup/inline into individual files for its component classes.
+  * Moved token stream HTML markup out of RDoc::AnyMethod#markup_code into
+    RDoc::TokenStream::to_html
 
 * Bug fixes
   * Markup defined by RDoc::Markup#add_special inside a <tt><tt></tt> is no

@@ -323,6 +323,47 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
                  @to.res.join
   end
 
+  def test_accept_verbatim_ruby
+    options = RDoc::Options.new
+    rdoc = RDoc::RDoc.new
+    rdoc.options = options
+    RDoc::RDoc.current = rdoc
+
+    verb = @RM::Verbatim.new("class C\n", "end\n")
+
+    @to.start_accepting
+    @to.accept_verbatim verb
+
+    expected = <<-EXPECTED
+
+<pre class="ruby"><span class="ruby-keyword">class</span> <span class="ruby-constant">C</span>
+<span class="ruby-keyword">end</span>
+</pre>
+    EXPECTED
+
+    assert_equal expected, @to.res.join
+  end
+
+  def test_accept_verbatim_ruby_error
+    options = RDoc::Options.new
+    rdoc = RDoc::RDoc.new
+    rdoc.options = options
+    RDoc::RDoc.current = rdoc
+
+    verb = @RM::Verbatim.new("a %z'foo' # => blah\n")
+
+    @to.start_accepting
+    @to.accept_verbatim verb
+
+    expected = <<-EXPECTED
+
+<pre>a %z'foo' # =&gt; blah
+</pre>
+    EXPECTED
+
+    assert_equal expected, @to.res.join
+  end
+
   def test_convert_string
     assert_equal '&lt;&gt;', @to.convert_string('<>')
   end
@@ -403,6 +444,17 @@ verb2</pre>
     EXPECTED
 
     assert_equal expected, @m.convert(str, @to)
+  end
+
+  def test_parseable_eh
+    assert @to.parseable?('def x() end'),      'def'
+    assert @to.parseable?('class C end'),      'class'
+    assert @to.parseable?('module M end'),     'module'
+    assert @to.parseable?('a # => blah'),      '=>'
+    assert @to.parseable?('x { |y| ... }'),    '{ |x|'
+    assert @to.parseable?('x do |y| ... end'), 'do |x|'
+    refute @to.parseable?('* 1'),              '* 1'
+    refute @to.parseable?('# only a comment'), '# only a comment'
   end
 
   def test_to_html

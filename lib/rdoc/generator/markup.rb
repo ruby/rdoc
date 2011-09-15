@@ -112,32 +112,7 @@ class RDoc::AnyMethod
   def markup_code
     return '' unless @token_stream
 
-    src = ""
-
-    @token_stream.each do |t|
-      next unless t
-
-      style = case t
-              when RDoc::RubyToken::TkCONSTANT then 'ruby-constant'
-              when RDoc::RubyToken::TkKW       then 'ruby-keyword'
-              when RDoc::RubyToken::TkIVAR     then 'ruby-ivar'
-              when RDoc::RubyToken::TkOp       then 'ruby-operator'
-              when RDoc::RubyToken::TkId       then 'ruby-identifier'
-              when RDoc::RubyToken::TkNode     then 'ruby-node'
-              when RDoc::RubyToken::TkCOMMENT  then 'ruby-comment'
-              when RDoc::RubyToken::TkREGEXP   then 'ruby-regexp'
-              when RDoc::RubyToken::TkSTRING   then 'ruby-string'
-              when RDoc::RubyToken::TkVal      then 'ruby-value'
-              end
-
-      text = CGI.escapeHTML t.text
-
-      if style then
-        src << "<span class=\"#{style}\">#{text}</span>"
-      else
-        src << text
-      end
-    end
+    src = RDoc::TokenStream.to_html @token_stream
 
     # dedent the source
     indent = src.length

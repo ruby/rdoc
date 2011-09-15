@@ -212,6 +212,7 @@ test/test_rdoc_single_class.rb
 test/test_rdoc_stats.rb
 test/test_rdoc_task.rb
 test/test_rdoc_text.rb
+test/test_rdoc_token_stream.rb
 test/test_rdoc_tom_doc.rb
 test/test_rdoc_top_level.rb
 test/xref_data.rb

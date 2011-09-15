@@ -187,10 +187,24 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   ##
   # Adds +verbatim+ to the output
 
-  def accept_verbatim(verbatim)
-    @res << "\n<pre>"
-    @res << CGI.escapeHTML(verbatim.text.rstrip)
-    @res << "</pre>\n"
+  def accept_verbatim verbatim
+    text = verbatim.text.rstrip
+
+    @res << if parseable? text then
+              options = RDoc::RDoc.current.options if RDoc::RDoc.current
+
+              begin
+                tokens = RDoc::RubyLex.tokenize text, options
+
+                "\n<pre class=\"ruby\">" \
+                "#{RDoc::TokenStream.to_html tokens}" \
+                "</pre>\n"
+              rescue RDoc::RubyLex::Error
+                "\n<pre>#{CGI.escapeHTML text}</pre>\n"
+              end
+            else
+              "\n<pre>#{CGI.escapeHTML text}</pre>\n"
+            end
   end
 
   ##
@@ -359,6 +373,13 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     else
       raise RDoc::Error, "Invalid list type: #{list_type.inspect}"
     end
+  end
+
+  ##
+  # Returns true if Ripper is available it can create a sexp from +text+
+
+  def parseable? text
+    text =~ /\b(def|class|module|require)\b|=>|\{\s?\||do \|/
   end
 
   ##
