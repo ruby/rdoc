@@ -416,7 +416,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     rdoc = <<-RDOC
 = Hello
 
-This is some text, it *will* be cut off after 100 characters and an elipsis
+This is some text, it *will* be cut off after 100 characters and an ellipsis
 must follow
 
 So there you have it
@@ -425,13 +425,13 @@ So there you have it
     expected = <<-EXPECTED
 <p>Hello
 <p>This is some text, it <strong>will</strong> be cut off after 100 characters
-and an elipsis must follow
+and an ellipsis must follow
 <p>So there you ...
     EXPECTED
 
     actual = @to.convert rdoc
 
-    assert_equal 110, @to.characters
+    assert_equal 111, @to.characters
     assert_equal expected, actual
   end
 
@@ -499,30 +499,24 @@ See RDoc for a description of RDoc's markup and basic use.
 
   def test_convert_limit_verbatim
     rdoc = <<-RDOC
-= Hello
+= Hello There
 
-This is some text, it *will* be cut off
+This is some text, it *will* be cut off after 100 characters
 
-* After 100 characters
-And an elipsis must follow
-
-  So there you have it
+  This one is cut off in this verbatim section
     RDOC
 
     expected = <<-EXPECTED
-<p>Hello
-<p>This is some text, it <strong>will</strong> be cut off
-<p>After 100 characters
+<p>Hello There
+<p>This is some text, it <strong>will</strong> be cut off after 100 characters
 
-<p>And an elipsis must follow
-
-<pre>So there you ...</pre>
+<pre>This one is cut off in this verbatim ...</pre>
     EXPECTED
 
     actual = @to.convert rdoc
 
-    assert_equal 108, @to.characters
     assert_equal expected, actual
+    assert_equal 113, @to.characters
   end
 
   def test_convert_limit_verbatim_2
