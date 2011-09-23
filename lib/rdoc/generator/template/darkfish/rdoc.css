@@ -97,6 +97,11 @@ pre {
   font-size: 16px;
 }
 
+.file #documentation ol,
+.file #documentation ul {
+  padding-left: 20px;
+}
+
 .indexpage li {
   padding-left: 20px;
 }
