@@ -433,7 +433,7 @@ ul.link-list .type {
 #documentation .method-description ul {
   margin-left: 1.5em;
 }
-#documentation .method-description pre {
+pre {
   margin: 0.5em 0;
 }
 
@@ -474,8 +474,7 @@ ul.link-list .type {
 
 /* @group Ruby keyword styles */
 
-.description pre,
-.method-description pre {
+pre {
   overflow: auto;
   background: #262626;
   color: #efefef;
@@ -584,6 +583,10 @@ ul.link-list .type {
 #search-results li em {
   background: yellow;
   font-style: normal;
+}
+
+#search-results pre {
+  margin: 0.5em;
 }
 
 /* @end */

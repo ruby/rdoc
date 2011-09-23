@@ -105,7 +105,7 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     input = verbatim.text.rstrip
 
     text = truncate input
-    text << '...' unless text == input
+    text << to_html(' ...') unless text == input
 
     super RDoc::Markup::Verbatim.new text
 
@@ -221,7 +221,7 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
       end
     end
 
-    res << '...' if @characters >= @character_limit
+    res << ' ...' if @characters >= @character_limit
 
     res.join
   end

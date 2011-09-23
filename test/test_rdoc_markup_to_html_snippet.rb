@@ -426,7 +426,7 @@ So there you have it
 <p>Hello
 <p>This is some text, it <strong>will</strong> be cut off after 100 characters
 and an elipsis must follow
-<p>So there you...
+<p>So there you ...
     EXPECTED
 
     actual = @to.convert rdoc
@@ -445,57 +445,13 @@ be guessed, raises an error if +name+ couldn't be guessed.
 
     expected = <<-EXPECTED
 <p>Outputs formatted RI data for the class or method <code>name</code>.
-<p>Returns true if <code>name</code> was found, false if it was...
+<p>Returns true if <code>name</code> was found, false if it was ...
     EXPECTED
 
     actual = @to.convert rdoc
 
     assert_equal expected, actual
     assert_equal 159, @to.characters
-  end
-
-  def test_convert_limit_verbatim
-    rdoc = <<-RDOC
-Extracts the class, selector and method name parts from +name+ like
-Foo::Bar#baz.
-
-NOTE: Given Foo::Bar, Bar is considered a class even though it may be a
-      method
-    RDOC
-
-    expected = <<-EXPECTED
-<p>Extracts the class, selector and method name parts from <code>name</code>
-like Foo::Bar#baz.
-<p>NOTE: Given Foo::Bar,...
-    EXPECTED
-
-    actual = @to.convert rdoc
-
-    assert_equal expected, actual
-    assert_equal 101, @to.characters
-  end
-
-  def test_convert_limit_verbatim_multiline
-    rdoc = <<-RDOC
-Look for directives in a normal comment block:
-
-  # :stopdoc:
-  # Don't display comment from this point forward
-
-This routine modifies its +comment+ parameter.
-    RDOC
-
-    expected = <<-EXPECTED
-<p>Look for directives in a normal comment block:
-
-<pre># :stopdoc:
-# Don't display comment from this point forward</pre>
-    EXPECTED
-
-    actual = @to.convert rdoc
-
-    assert_equal expected, actual
-    assert_equal 105, @to.characters
   end
 
   def test_convert_limit_paragraphs
@@ -533,7 +489,7 @@ See RDoc for a description of RDoc's markup and basic use.
     @to = RDoc::Markup::ToHtmlSnippet.new 4
     rdoc = "* ab *c* d\n"
 
-    expected = "<p>ab <strong>c</strong>...\n\n"
+    expected = "<p>ab <strong>c</strong> ...\n\n"
 
     actual = @to.convert rdoc
 
@@ -560,7 +516,7 @@ And an elipsis must follow
 
 <p>And an elipsis must follow
 
-<pre>So there you...</pre>
+<pre>So there you ...</pre>
     EXPECTED
 
     actual = @to.convert rdoc
@@ -569,13 +525,57 @@ And an elipsis must follow
     assert_equal expected, actual
   end
 
+  def test_convert_limit_verbatim_2
+    rdoc = <<-RDOC
+Extracts the class, selector and method name parts from +name+ like
+Foo::Bar#baz.
+
+NOTE: Given Foo::Bar, Bar is considered a class even though it may be a
+      method
+    RDOC
+
+    expected = <<-EXPECTED
+<p>Extracts the class, selector and method name parts from <code>name</code>
+like Foo::Bar#baz.
+<p>NOTE: Given Foo::Bar, ...
+    EXPECTED
+
+    actual = @to.convert rdoc
+
+    assert_equal expected, actual
+    assert_equal 101, @to.characters
+  end
+
+  def test_convert_limit_verbatim_multiline
+    rdoc = <<-RDOC
+Look for directives in a normal comment block:
+
+  # :stopdoc:
+  # Don't display comment from this point forward
+
+This routine modifies its +comment+ parameter.
+    RDOC
+
+    expected = <<-EXPECTED
+<p>Look for directives in a normal comment block:
+
+<pre># :stopdoc:
+# Don't display comment from this point forward</pre>
+    EXPECTED
+
+    actual = @to.convert rdoc
+
+    assert_equal expected, actual
+    assert_equal 105, @to.characters
+  end
+
   def test_convert_limit_over
     @to = RDoc::Markup::ToHtmlSnippet.new 4
     rdoc = "* text\n" * 2
 
     expected = "<p>text\n"
     expected.chomp!
-    expected << "...\n"
+    expected << " ...\n"
 
     actual = @to.convert rdoc
 
