@@ -7,7 +7,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
   def setup
     super
 
-    @to = RDoc::Markup::ToHtmlSnippet.new
+    @to = RDoc::Markup::ToHtmlSnippet.new 100, 100
   end
 
   def accept_blank_line
@@ -401,30 +401,37 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_equal 19, @to.chars
   end
 
+  def test_add_paragraph
+    @to = RDoc::Markup::ToHtmlSnippet.new 0, 3
+    assert_throws :done do
+      @to.add_paragraph
+      @to.add_paragraph
+      @to.add_paragraph
+    end
+
+    assert_equal 3, @to.paragraphs
+  end
+
   def test_convert_limit
     rdoc = <<-RDOC
 = Hello
 
-This is some text, it *will* be cut off
-
-* After 100 characters
-* And an elipsis must follow
+This is some text, it *will* be cut off after 100 characters and an elipsis
+must follow
 
 So there you have it
     RDOC
 
     expected = <<-EXPECTED
 <p>Hello
-<p>This is some text, it <strong>will</strong> be cut off
-<p>After 100 characters
-<p>And an elipsis must follow
-
+<p>This is some text, it <strong>will</strong> be cut off after 100 characters
+and an elipsis must follow
 <p>So there you...
     EXPECTED
 
     actual = @to.convert rdoc
 
-    assert_equal 108, @to.chars
+    assert_equal 110, @to.chars
     assert_equal expected, actual
   end
 
@@ -447,16 +454,46 @@ be guessed, raises an error if +name+ couldn't be guessed.
     assert_equal 159, @to.chars
   end
 
-  def test_convert_limit_in_tag
-    rdoc = "* ab *c*\n" * 30
+  def test_convert_limit_paragraphs
+    @to = RDoc::Markup::ToHtmlSnippet.new 100, 3
 
-    expected = "<p>ab <strong>c</strong>\n" * 25
-    expected.chomp!
-    expected << "...\n"
+    rdoc = <<-RDOC
+= \RDoc - Ruby Documentation System
+
+* {RDoc Project Page}[https://github.com/rdoc/rdoc/]
+* {RDoc Documentation}[http://docs.seattlerb.org/rdoc]
+* {RDoc Bug Tracker}[https://github.com/rdoc/rdoc/issues]
+
+== DESCRIPTION:
+
+RDoc produces HTML and command-line documentation for Ruby projects.  RDoc
+includes the +rdoc+ and +ri+ tools for generating and displaying online
+documentation.
+
+See RDoc for a description of RDoc's markup and basic use.
+    RDOC
+
+    expected = <<-EXPECTED
+<p>RDoc - Ruby Documentation System
+<p>RDoc Project Page
+<p>RDoc Documentation
+    EXPECTED
 
     actual = @to.convert rdoc
 
-    assert_equal 100, @to.chars
+    assert_equal expected, actual
+    assert_equal 67, @to.chars
+  end
+
+  def test_convert_limit_in_tag
+    @to = RDoc::Markup::ToHtmlSnippet.new 4
+    rdoc = "* ab *c* d\n"
+
+    expected = "<p>ab <strong>c</strong>...\n\n"
+
+    actual = @to.convert rdoc
+
+    assert_equal 4, @to.chars
     assert_equal expected, actual
   end
 
@@ -472,15 +509,14 @@ And an elipsis must follow
   So there you have it
     RDOC
 
-    expected = <<-EXPECTED.chomp
+    expected = <<-EXPECTED
 <p>Hello
 <p>This is some text, it <strong>will</strong> be cut off
 <p>After 100 characters
 
 <p>And an elipsis must follow
 
-<pre>So there you</pre>
-...
+<pre>So there you...</pre>
     EXPECTED
 
     actual = @to.convert rdoc
@@ -490,15 +526,16 @@ And an elipsis must follow
   end
 
   def test_convert_limit_over
-    rdoc = "* text\n" * 30
+    @to = RDoc::Markup::ToHtmlSnippet.new 4
+    rdoc = "* text\n" * 2
 
-    expected = "<p>text\n" * 25
+    expected = "<p>text\n"
     expected.chomp!
     expected << "...\n"
 
     actual = @to.convert rdoc
 
-    assert_equal 100, @to.chars
+    assert_equal 4, @to.chars
     assert_equal expected, actual
   end
 

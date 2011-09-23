@@ -6,7 +6,7 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
   ##
   # After this many characters the input will be cut off.
 
-  attr_reader :limit
+  attr_reader :character_limit
 
   ##
   # The number of characters seen so far.
@@ -19,15 +19,29 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
   attr_reader :mask
 
   ##
-  # Creates a new ToHtmlSnippet formatter that will cut off the input on the
-  # next word boundary after +limit+ characters.
+  # After this many paragraphs the input will be cut off.
 
-  def initialize limit = 100, markup = nil
+  attr_reader :paragraph_limit
+
+  ##
+  # Count of paragraphs found
+
+  attr_reader :paragraphs
+
+  ##
+  # Creates a new ToHtmlSnippet formatter that will cut off the input on the
+  # next word boundary after the given number of +characters+ or +paragraphs+
+  # of text have been encountered.
+
+  def initialize characters = 100, paragraphs = 3, markup = nil
     super markup
 
-    @limit = limit
-    @chars = 0
-    @mask  = 0
+    @character_limit = characters
+    @paragraph_limit = paragraphs
+
+    @chars      = 0
+    @mask       = 0
+    @paragraphs = 0
 
     @markup.add_special RDoc::CrossReference::CROSSREF_REGEXP, :CROSSREF
   end
@@ -37,6 +51,8 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
 
   def accept_heading heading
     @res << "<p>#{to_html heading.text}\n"
+
+    add_paragraph
   end
 
   ##
@@ -55,6 +71,8 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     para = @in_list_entry.last || "<p>"
 
     @res << "#{para}#{wrap to_html paragraph.text}\n"
+
+    add_paragraph
   end
 
   ##
@@ -84,11 +102,13 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
 
   def accept_verbatim verbatim
     input = verbatim.text.rstrip
+
     text = truncate input
+    text << '...' unless text == input
 
     super RDoc::Markup::Verbatim.new text
 
-    @res << '...' unless text == input
+    add_paragraph
   end
 
   ##
@@ -108,7 +128,7 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
   # Lists are paragraphs, but notes and labels have a separator
 
   def list_item_start list_item, list_type
-    throw :done if @chars >= @limit
+    throw :done if @chars >= @character_limit
 
     case list_type
     when :BULLET, :LALPHA, :NUMBER, :UALPHA then
@@ -151,6 +171,15 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
   end
 
   ##
+  # Throws +:done+ when paragraph_limit paragraphs have been encountered
+
+  def add_paragraph
+    @paragraphs += 1
+
+    throw :done if @paragraphs >= @paragraph_limit
+  end
+
+  ##
   # Marks up +content+
 
   def convert content
@@ -165,7 +194,7 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
   # Converts flow items +flow+
 
   def convert_flow flow
-    throw :done if @chars >= @limit
+    throw :done if @chars >= @character_limit
 
     res = []
     @mask = 0
@@ -185,13 +214,13 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
         raise "Unknown flow element: #{item.inspect}"
       end
 
-      if @chars >= @limit then
+      if @chars >= @character_limit then
         off_tags res, RDoc::Markup::AttrChanger.new(0, @mask)
         break
       end
     end
 
-    res << '...' if @chars >= @limit
+    res << '...' if @chars >= @character_limit
 
     res.join
   end
@@ -213,9 +242,9 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     chars = @chars
     @chars += length
 
-    return text if @chars < @limit
+    return text if @chars < @character_limit
 
-    remaining = @limit - chars
+    remaining = @character_limit - chars
 
     text =~ /\A(.{#{remaining},}?)(\s|$)/
 
