@@ -2,6 +2,11 @@ The items below are may not be implemented as ideas change.
 
 === RDoc 3.10
 
+* Sections
+  * Check section support for TomDoc
+  * Fix markup for "go to top"
+  * Add default section for multiple sections
+
 === RDoc 3.11
 
 * Reload the RDoc tree from an RI store
