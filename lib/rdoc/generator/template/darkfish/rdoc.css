@@ -97,15 +97,6 @@ pre {
   font-size: 16px;
 }
 
-.file #documentation ol,
-.file #documentation ul {
-  padding-left: 20px;
-}
-
-.indexpage li {
-  padding-left: 20px;
-}
-
 .indexpage ul > li {
   background: url(images/bullet_black.png) no-repeat left 4px;
 }
@@ -267,9 +258,11 @@ ul.link-list .type {
   margin: 0;
 }
 
+.description ol,
 .description ul {
   margin-left: 1.5em;
 }
+.description ol li,
 .description ul li {
   line-height: 1.4em;
 }
