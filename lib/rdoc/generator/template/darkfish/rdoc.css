@@ -97,6 +97,10 @@ pre {
   font-size: 16px;
 }
 
+.indexpage li {
+  padding-left: 20px;
+}
+
 .indexpage ul > li {
   background: url(images/bullet_black.png) no-repeat left 4px;
 }
