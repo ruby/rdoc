@@ -78,7 +78,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal [], @to.list
     assert_equal [], @to.in_list_entry
 
-    assert_equal "<ol style=\"display: lower-alpha\"></ol>\n", @to.res.join
+    assert_equal "<ol style=\"list-style-type: lower-alpha\"></ol>\n", @to.res.join
   end
 
   def accept_list_end_number
@@ -99,7 +99,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal [], @to.list
     assert_equal [], @to.in_list_entry
 
-    assert_equal "<ol style=\"display: upper-alpha\"></ol>\n", @to.res.join
+    assert_equal "<ol style=\"list-style-type: upper-alpha\"></ol>\n", @to.res.join
   end
 
   def accept_list_item_end_bullet
@@ -135,7 +135,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def accept_list_item_start_lalpha
-    assert_equal "<ol style=\"display: lower-alpha\"><li>", @to.res.join
+    assert_equal "<ol style=\"list-style-type: lower-alpha\"><li>", @to.res.join
   end
 
   def accept_list_item_start_note
@@ -159,7 +159,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def accept_list_item_start_ualpha
-    assert_equal "<ol style=\"display: upper-alpha\"><li>", @to.res.join
+    assert_equal "<ol style=\"list-style-type: upper-alpha\"><li>", @to.res.join
   end
 
   def accept_list_start_bullet
@@ -180,7 +180,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal [:LALPHA], @to.list
     assert_equal [false], @to.in_list_entry
 
-    assert_equal "<ol style=\"display: lower-alpha\">", @to.res.join
+    assert_equal "<ol style=\"list-style-type: lower-alpha\">", @to.res.join
   end
 
   def accept_list_start_note
@@ -201,7 +201,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal [:UALPHA], @to.list
     assert_equal [false], @to.in_list_entry
 
-    assert_equal "<ol style=\"display: upper-alpha\">", @to.res.join
+    assert_equal "<ol style=\"list-style-type: upper-alpha\">", @to.res.join
   end
 
   def accept_paragraph

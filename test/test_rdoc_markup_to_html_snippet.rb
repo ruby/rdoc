@@ -454,7 +454,7 @@ be guessed, raises an error if +name+ couldn't be guessed.
     assert_equal 159, @to.characters
   end
 
-  def test_convert_limit_3
+  def test_convert_limit_verbatim
     rdoc = <<-RDOC
 Extracts the class, selector and method name parts from +name+ like
 Foo::Bar#baz.
