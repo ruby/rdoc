@@ -27,10 +27,10 @@ class TestRDocTomDoc < RDoc::TestCase
     comment.format = 'tomdoc'
 
     parent = RDoc::Context.new
-    method = RDoc::AnyMethod.new nil, 'm'
-    method.parent = parent
 
-    pp.handle comment, method
+    pp.handle comment, parent
+
+    method = parent.add_method RDoc::AnyMethod.new(nil, 'm')
 
     assert_equal 'Public', method.section.title
     assert_equal "# Do some stuff\n", comment.text

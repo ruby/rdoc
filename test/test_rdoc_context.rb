@@ -683,6 +683,28 @@ class TestRDocContext < XrefTestCase
     assert_equal new_section, @context.current_section
   end
 
+  def test_sort_sections
+    c = RDoc::Context.new
+    c.add_section 'C'
+    c.add_section 'A'
+    c.add_section 'B'
+
+    titles = c.sort_sections.map { |section| section.title }
+
+    assert_equal [nil, 'A', 'B', 'C'], titles
+  end
+
+  def test_sort_sections_tomdoc
+    c = RDoc::Context.new
+    c.add_section 'Public'
+    c.add_section 'Internal'
+    c.add_section 'Deprecated'
+
+    titles = c.sort_sections.map { |section| section.title }
+
+    assert_equal [nil, 'Public', 'Internal', 'Deprecated'], titles
+  end
+
   def util_visibilities
     @pub  = RDoc::AnyMethod.new nil, 'pub'
     @prot = RDoc::AnyMethod.new nil, 'prot'

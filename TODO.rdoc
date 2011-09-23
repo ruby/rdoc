@@ -2,8 +2,6 @@ The items below are may not be implemented as ideas change.
 
 === RDoc 3.10
 
-* Sections
-  * Check section support for TomDoc
 * Search
   * Display full_name
   * Search by full_name

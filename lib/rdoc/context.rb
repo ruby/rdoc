@@ -15,6 +15,11 @@ class RDoc::Context < RDoc::CodeObject
   TYPES = %w[class instance]
 
   ##
+  # If a context has these titles it will be sorted in this order.
+
+  TOMDOC_TITLES = [nil, 'Public', 'Internal', 'Deprecated'] # :nodoc:
+
+  ##
   # Class/module aliases
 
   attr_reader :aliases
@@ -661,13 +666,15 @@ class RDoc::Context < RDoc::CodeObject
   # NOTE: Do not edit collections yielded by this method
 
   def each_section # :yields: section, constants, attributes
+    return enum_for __method__ unless block_given?
+
     constants  = @constants.group_by  do |constant|  constant.section end
     constants.default = []
 
     attributes = @attributes.group_by do |attribute| attribute.section end
     attributes.default = []
 
-    @sections.sort_by { |title, _| title.to_s }.each do |_, section|
+    sort_sections.each do |section|
       yield section, constants[section].sort, attributes[section].sort
     end
   end
@@ -1039,6 +1046,25 @@ class RDoc::Context < RDoc::CodeObject
   def set_visibility_for(methods, visibility, singleton = false)
     methods_matching methods, singleton do |m|
       m.visibility = visibility
+    end
+  end
+
+  ##
+  # Sorts sections alphabetically (default) or in TomDoc fasion (none, Public,
+  # Internal, Deprecated)
+
+  def sort_sections
+    titles = @sections.map { |title, _| title }
+
+    if titles.length > 1 and
+      TOMDOC_TITLES == (titles | TOMDOC_TITLES) then
+      @sections.values_at(*TOMDOC_TITLES)
+    else
+      @sections.sort_by { |title, _|
+        title.to_s
+      }.map { |_, section|
+        section
+      }
     end
   end
 

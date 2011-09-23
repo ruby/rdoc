@@ -579,6 +579,12 @@
 #
 # === Sections
 #
+# Sections allow you to group methods in a class into sensible containers.  If
+# you use the sections 'Public', 'Internal' and 'Deprecated' (the three
+# allowed method statuses from TomDoc) the sections will be displayed in that
+# order placing the most useful methods at the top.  Otherwise, sections will
+# be displayed in alphabetical order.
+#
 # [+:category:+ _section_]
 #   Adds this item to the named +section+ overriding the current section.  Use
 #   this to group methods by section in RDoc output while maintaining a
