@@ -6,6 +6,9 @@ The items below are may not be implemented as ideas change.
   * Check section support for TomDoc
   * Fix markup for "go to top"
   * Add default section for multiple sections
+* Search
+  * Display full_name
+  * Search by full_name
 * Issue #61
 * Issue #66
 * Issue #67
