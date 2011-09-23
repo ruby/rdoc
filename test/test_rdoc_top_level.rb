@@ -258,6 +258,23 @@ class TestRDocTopLevel < XrefTestCase
     assert_equal expected, @xref_data.search_record
   end
 
+  def test_search_record_page
+    page = RDoc::TopLevel.new 'README.txt'
+    page.parser = RDoc::Parser::Simple
+    page.comment = 'This is a comment.'
+
+    expected = [
+      'README',
+      '',
+      'README_txt.html',
+      '',
+      "<p>This is a comment.\n",
+      RDoc::Generator::JsonIndex::TYPE_FILE,
+    ]
+
+    assert_equal expected, page.search_record
+  end
+
   def test_text_eh
     refute @xref_data.text?
 

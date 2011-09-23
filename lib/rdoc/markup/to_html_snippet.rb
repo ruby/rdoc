@@ -11,7 +11,7 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
   ##
   # The number of characters seen so far.
 
-  attr_reader :chars # :nodoc:
+  attr_reader :characters # :nodoc:
 
   ##
   # The attribute bitmask
@@ -39,7 +39,7 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     @character_limit = characters
     @paragraph_limit = paragraphs
 
-    @chars      = 0
+    @characters = 0
     @mask       = 0
     @paragraphs = 0
 
@@ -101,6 +101,7 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
   # Adds +verbatim+ to the output
 
   def accept_verbatim verbatim
+    throw :done if @characters >= @character_limit
     input = verbatim.text.rstrip
 
     text = truncate input
@@ -117,7 +118,7 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
   def start_accepting
     super
 
-    @chars = 0
+    @characters = 0
   end
 
   def handle_special_CROSSREF special
@@ -128,14 +129,14 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
   # Lists are paragraphs, but notes and labels have a separator
 
   def list_item_start list_item, list_type
-    throw :done if @chars >= @character_limit
+    throw :done if @characters >= @character_limit
 
     case list_type
     when :BULLET, :LALPHA, :NUMBER, :UALPHA then
       "<p>"
     when :LABEL, :NOTE then
       start = "<p>#{to_html list_item.label} &mdash; "
-      @chars += 1 # try to include the label
+      @characters += 1 # try to include the label
       start
     else
       raise RDoc::Error, "Invalid list type: #{list_type.inspect}"
@@ -194,7 +195,7 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
   # Converts flow items +flow+
 
   def convert_flow flow
-    throw :done if @chars >= @character_limit
+    throw :done if @characters >= @character_limit
 
     res = []
     @mask = 0
@@ -214,13 +215,13 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
         raise "Unknown flow element: #{item.inspect}"
       end
 
-      if @chars >= @character_limit then
+      if @characters >= @character_limit then
         off_tags res, RDoc::Markup::AttrChanger.new(0, @mask)
         break
       end
     end
 
-    res << '...' if @chars >= @character_limit
+    res << '...' if @characters >= @character_limit
 
     res.join
   end
@@ -239,12 +240,12 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
 
   def truncate text
     length = text.length
-    chars = @chars
-    @chars += length
+    characters = @characters
+    @characters += length
 
-    return text if @chars < @character_limit
+    return text if @characters < @character_limit
 
-    remaining = @character_limit - chars
+    remaining = @character_limit - characters
 
     text =~ /\A(.{#{remaining},}?)(\s|$)/
 

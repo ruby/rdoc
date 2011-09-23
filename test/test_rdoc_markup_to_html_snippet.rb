@@ -16,43 +16,43 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
 
   def accept_document
     assert_equal "<p>hello\n", @to.res.join
-    assert_equal 5, @to.chars
+    assert_equal 5, @to.characters
   end
 
   def accept_heading
     assert_equal "<p>Hello\n", @to.res.join
-    assert_equal 5, @to.chars
+    assert_equal 5, @to.characters
   end
 
   def accept_heading_1
     assert_equal "<p>Hello\n", @to.res.join
-    assert_equal 5, @to.chars
+    assert_equal 5, @to.characters
   end
 
   def accept_heading_2
     assert_equal "<p>Hello\n", @to.res.join
-    assert_equal 5, @to.chars
+    assert_equal 5, @to.characters
   end
 
   def accept_heading_3
     assert_equal "<p>Hello\n", @to.res.join
-    assert_equal 5, @to.chars
+    assert_equal 5, @to.characters
   end
 
   def accept_heading_4
     assert_equal "<p>Hello\n", @to.res.join
-    assert_equal 5, @to.chars
+    assert_equal 5, @to.characters
   end
 
   def accept_heading_b
     assert_equal "<p><strong>Hello</strong>\n",
                  @to.res.join
-    assert_equal 5, @to.chars
+    assert_equal 5, @to.characters
   end
 
   def accept_heading_suppressed_crossref
     assert_equal "<p>Hello\n", @to.res.join
-    assert_equal 5, @to.chars
+    assert_equal 5, @to.characters
   end
 
   def accept_list_end_bullet
@@ -60,7 +60,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_equal [], @to.in_list_entry
 
     assert_equal "\n", @to.res.join
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_end_label
@@ -68,7 +68,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_equal [], @to.in_list_entry
 
     assert_equal "\n", @to.res.join
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_end_lalpha
@@ -76,7 +76,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_equal [], @to.in_list_entry
 
     assert_equal "\n", @to.res.join
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_end_number
@@ -84,7 +84,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_equal [], @to.in_list_entry
 
     assert_equal "\n", @to.res.join
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_end_note
@@ -92,7 +92,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_equal [], @to.in_list_entry
 
     assert_equal "\n", @to.res.join
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_end_ualpha
@@ -100,58 +100,58 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_equal [], @to.in_list_entry
 
     assert_equal "\n", @to.res.join
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_item_end_bullet
     assert_equal [''], @to.in_list_entry
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_item_end_label
     assert_equal [''], @to.in_list_entry
-    assert_equal 4, @to.chars
+    assert_equal 4, @to.characters
   end
 
   def accept_list_item_end_lalpha
     assert_equal [''], @to.in_list_entry
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_item_end_note
     assert_equal [''], @to.in_list_entry
-    assert_equal 4, @to.chars
+    assert_equal 4, @to.characters
   end
 
   def accept_list_item_end_number
     assert_equal [''], @to.in_list_entry
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_item_end_ualpha
     assert_equal [''], @to.in_list_entry
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_item_start_bullet
     assert_equal "<p>", @to.res.join
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_item_start_label
     assert_equal "<p>cat &mdash; ", @to.res.join
-    assert_equal 4, @to.chars
+    assert_equal 4, @to.characters
   end
 
   def accept_list_item_start_lalpha
     assert_equal "<p>", @to.res.join
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_item_start_note
     assert_equal "<p>cat &mdash; ",
                  @to.res.join
-    assert_equal 4, @to.chars
+    assert_equal 4, @to.characters
   end
 
   def accept_list_item_start_note_2
@@ -161,17 +161,17 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     EXPECTED
 
     assert_equal expected, @to.res.join
-    assert_equal 29, @to.chars
+    assert_equal 29, @to.characters
   end
 
   def accept_list_item_start_number
     assert_equal "<p>", @to.res.join
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_item_start_ualpha
     assert_equal "<p>", @to.res.join
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_start_bullet
@@ -179,7 +179,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_equal [''], @to.in_list_entry
 
     assert_equal '', @to.res.join
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_start_label
@@ -187,7 +187,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_equal [''], @to.in_list_entry
 
     assert_equal '', @to.res.join
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_start_lalpha
@@ -195,7 +195,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_equal [''], @to.in_list_entry
 
     assert_equal '', @to.res.join
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_start_note
@@ -203,7 +203,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_equal [''], @to.in_list_entry
 
     assert_equal '', @to.res.join
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_start_number
@@ -211,7 +211,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_equal [''], @to.in_list_entry
 
     assert_equal '', @to.res.join
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_list_start_ualpha
@@ -219,43 +219,43 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_equal [''], @to.in_list_entry
 
     assert_equal '', @to.res.join
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_paragraph
     assert_equal "<p>hi\n", @to.res.join
 
-    assert_equal 2, @to.chars
+    assert_equal 2, @to.characters
   end
 
   def accept_paragraph_b
     assert_equal "<p>reg <strong>bold words</strong> reg\n", @to.res.join
 
-    assert_equal 18, @to.chars
+    assert_equal 18, @to.characters
   end
 
   def accept_paragraph_i
     assert_equal "<p>reg <em>italic words</em> reg\n", @to.res.join
 
-    assert_equal 20, @to.chars
+    assert_equal 20, @to.characters
   end
 
   def accept_paragraph_plus
     assert_equal "<p>reg <code>teletype</code> reg\n", @to.res.join
 
-    assert_equal 16, @to.chars
+    assert_equal 16, @to.characters
   end
 
   def accept_paragraph_star
     assert_equal "<p>reg <strong>bold</strong> reg\n", @to.res.join
 
-    assert_equal 12, @to.chars
+    assert_equal 12, @to.characters
   end
 
   def accept_paragraph_underscore
     assert_equal "<p>reg <em>italic</em> reg\n", @to.res.join
 
-    assert_equal 14, @to.chars
+    assert_equal 14, @to.characters
   end
 
   def accept_raw
@@ -268,17 +268,17 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     RAW
 
     assert_equal '', @to.res.join
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_rule
     assert_empty @to.res
-    assert_equal 0, @to.chars
+    assert_equal 0, @to.characters
   end
 
   def accept_verbatim
     assert_equal "\n<pre>hi\n  world</pre>\n", @to.res.join
-    assert_equal 10, @to.chars
+    assert_equal 10, @to.characters
   end
 
   def end_accepting
@@ -289,7 +289,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_equal [], @to.res
     assert_equal [], @to.in_list_entry
     assert_equal [], @to.list
-    assert_equal 0,  @to.chars
+    assert_equal 0,  @to.characters
   end
 
   def list_nested
@@ -302,7 +302,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     EXPECTED
 
     assert_equal expected, @to.res.join
-    assert_equal 8, @to.chars
+    assert_equal 8, @to.characters
   end
 
   def list_verbatim
@@ -324,7 +324,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     EXPECTED
 
     assert_equal expected, @to.end_accepting
-    assert_equal 81, @to.chars
+    assert_equal 81, @to.characters
   end
 
   def test_accept_heading_7
@@ -333,7 +333,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     @to.accept_heading @RM::Heading.new(7, 'Hello')
 
     assert_equal "<p>Hello\n", @to.res.join
-    assert_equal 5, @to.chars
+    assert_equal 5, @to.characters
   end
 
   def test_accept_heading_aref_class
@@ -344,7 +344,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
 
     assert_equal "<p>Hello\n",
                  @to.res.join
-    assert_equal 5, @to.chars
+    assert_equal 5, @to.characters
   end
 
   def test_accept_heading_aref_method
@@ -355,7 +355,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
 
     assert_equal "<p>Hello\n",
                  @to.res.join
-    assert_equal 5, @to.chars
+    assert_equal 5, @to.characters
   end
 
   def test_accept_verbatim_ruby
@@ -377,7 +377,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     EXPECTED
 
     assert_equal expected, @to.res.join
-    assert_equal 11, @to.chars
+    assert_equal 11, @to.characters
   end
 
   def test_accept_verbatim_ruby_error
@@ -398,7 +398,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     EXPECTED
 
     assert_equal expected, @to.res.join
-    assert_equal 19, @to.chars
+    assert_equal 19, @to.characters
   end
 
   def test_add_paragraph
@@ -431,7 +431,7 @@ and an elipsis must follow
 
     actual = @to.convert rdoc
 
-    assert_equal 110, @to.chars
+    assert_equal 110, @to.characters
     assert_equal expected, actual
   end
 
@@ -451,7 +451,28 @@ be guessed, raises an error if +name+ couldn't be guessed.
     actual = @to.convert rdoc
 
     assert_equal expected, actual
-    assert_equal 159, @to.chars
+    assert_equal 159, @to.characters
+  end
+
+  def test_convert_limit_3
+    rdoc = <<-RDOC
+Extracts the class, selector and method name parts from +name+ like
+Foo::Bar#baz.
+
+NOTE: Given Foo::Bar, Bar is considered a class even though it may be a
+      method
+    RDOC
+
+    expected = <<-EXPECTED
+<p>Extracts the class, selector and method name parts from <code>name</code>
+like Foo::Bar#baz.
+<p>NOTE: Given Foo::Bar,...
+    EXPECTED
+
+    actual = @to.convert rdoc
+
+    assert_equal expected, actual
+    assert_equal 101, @to.characters
   end
 
   def test_convert_limit_paragraphs
@@ -482,7 +503,7 @@ See RDoc for a description of RDoc's markup and basic use.
     actual = @to.convert rdoc
 
     assert_equal expected, actual
-    assert_equal 67, @to.chars
+    assert_equal 67, @to.characters
   end
 
   def test_convert_limit_in_tag
@@ -493,7 +514,7 @@ See RDoc for a description of RDoc's markup and basic use.
 
     actual = @to.convert rdoc
 
-    assert_equal 4, @to.chars
+    assert_equal 4, @to.characters
     assert_equal expected, actual
   end
 
@@ -521,7 +542,7 @@ And an elipsis must follow
 
     actual = @to.convert rdoc
 
-    assert_equal 108, @to.chars
+    assert_equal 108, @to.characters
     assert_equal expected, actual
   end
 
@@ -535,7 +556,7 @@ And an elipsis must follow
 
     actual = @to.convert rdoc
 
-    assert_equal 4, @to.chars
+    assert_equal 4, @to.characters
     assert_equal expected, actual
   end
 
@@ -547,35 +568,35 @@ And an elipsis must follow
     result = @to.convert 'rdoc-label:label-One'
 
     assert_equal "<p>One\n", result
-    assert_equal 3, @to.chars
+    assert_equal 3, @to.characters
   end
 
   def test_convert_RDOCLINK_label_foottext
     result = @to.convert 'rdoc-label:foottext-1'
 
     assert_equal "<p>*1\n", result
-    assert_equal 2, @to.chars
+    assert_equal 2, @to.characters
   end
 
   def test_convert_RDOCLINK_label_footmark
     result = @to.convert 'rdoc-label:footmark-1'
 
     assert_equal "<p>^1\n", result
-    assert_equal 2, @to.chars
+    assert_equal 2, @to.characters
   end
 
   def test_convert_RDOCLINK_ref
     result = @to.convert 'rdoc-ref:C'
 
     assert_equal "<p>C\n", result
-    assert_equal 1, @to.chars
+    assert_equal 1, @to.characters
   end
 
   def test_convert_TIDYLINK_rdoc_label
     result = @to.convert '{foo}[rdoc-label:foottext-1]'
 
     assert_equal "<p>foo\n", result
-    assert_equal 3, @to.chars
+    assert_equal 3, @to.characters
   end
 
   def test_handle_special_HYPERLINK_link
@@ -599,7 +620,7 @@ verb2</pre>
     EXPECTED
 
     assert_equal expected, @m.convert(str, @to)
-    assert_equal 17, @to.chars
+    assert_equal 17, @to.characters
   end
 
   def test_on_tags
@@ -622,7 +643,7 @@ verb2</pre>
 
   def test_to_html
     assert_equal "<p><code>--</code>\n", util_format("<tt>--</tt>")
-    assert_equal 2, @to.chars
+    assert_equal 2, @to.characters
   end
 
   def util_format text
