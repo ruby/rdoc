@@ -74,6 +74,7 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
     assert_file 'Object.html'
     assert_file 'file_rb.html'
     assert_file 'table_of_contents.html'
+    assert_file 'js/search_index.js'
 
     encoding = if Object.const_defined? :Encoding then
                  Regexp.escape Encoding.default_external.name

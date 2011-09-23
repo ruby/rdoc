@@ -239,6 +239,43 @@ Examples
     assert_equal RDoc::Markup::Document.new, parse("\n")
   end
 
+#  def test_snippet
+#    text = <<-TEXT
+#This is one-hundred characters or more of text in a single paragraph.  This
+#paragraph will be cut off some point after the one-hundredth character.
+#    TEXT
+#
+#    expected = text.gsub(/\r?\n/, ' ').sub(/ some point.*/, '')
+#
+#    assert_equal expected, snippet(text)
+#  end
+#
+#  def test_snippet_comment
+#    c = comment 'This is a comment'
+#
+#    assert_equal 'This is a comment', snippet(c)
+#  end
+#
+#  def test_snippet_no_space
+#    text = <<-TEXT.strip
+#This is one-hundred characters or more of text in a single paragraph.  This
+#paragraph will not be cut
+#    TEXT
+#
+#    expected = <<-EXPECTED.strip.gsub(/\r?\n/, ' ')
+#This is one-hundred characters or more of text in a single paragraph.  This
+#paragraph will not be cut
+#    EXPECTED
+#
+#    assert_equal expected, snippet(text)
+#  end
+#
+#  def test_snippet_short
+#    text = 'This is a comment'
+#
+#    assert_equal text.dup, snippet(text)
+#  end
+
   def test_strip_hashes
     text = <<-TEXT
 ##

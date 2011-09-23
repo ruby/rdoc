@@ -2,11 +2,14 @@
 
 * Major enhancements
   * RDoc HTML output has been reorganized.
+    * The search from Володя Колесников's sdoc has been integrated.
+
+      The search index generation is a reusable component through
+      RDoc::Generator::JsonIndex
     * The table of contents is now a separate page and now shows links to
       headings inside a page or class.
     * Class pages no longer show the namespace and no longer have file info
       pages.
-    * Quicksearch box in Class/Module Index in the sidebar is always shown.
     * HTML output is now using HTML 5.
   * RDoc supports additional documentation types:
     * TomDoc 1.0.0-pre

@@ -474,6 +474,20 @@ class RDoc::TopLevel < RDoc::Context
   end
 
   ##
+  # Search record used by RDoc::Generator::JsonIndex
+
+  def search_record
+    [
+      name,
+      path,
+      path,
+      '',
+      snippet(@comment),
+      RDoc::Generator::JsonIndex::TYPE_FILE,
+    ]
+  end
+
+  ##
   # Is this TopLevel from a text file instead of a source code file?
 
   def text?

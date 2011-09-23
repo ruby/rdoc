@@ -57,6 +57,7 @@ class RDoc::Generator::Darkfish
 
   include ERB::Util
 
+  ##
   # Path to this file's parent directory. Used to find templates and other
   # resources.
 
@@ -73,6 +74,12 @@ class RDoc::Generator::Darkfish
   DESCRIPTION = 'HTML generator, written by Michael Granger'
 
   ##
+  # The path to generate files into, combined with <tt>--op</tt> from the
+  # options for a full path.
+
+  attr_reader :base_dir
+
+  ##
   # Initialize a few instance variables before we start
 
   def initialize options
@@ -84,7 +91,9 @@ class RDoc::Generator::Darkfish
     @files      = nil
     @classes    = nil
 
-    @basedir = Pathname.pwd.expand_path
+    @base_dir = Pathname.pwd.expand_path
+
+    @json_index = RDoc::Generator::JsonIndex.new self, options
   end
 
   ##
@@ -153,7 +162,7 @@ class RDoc::Generator::Darkfish
   # objects containing the extracted information.
 
   def generate top_levels
-    @outputdir = Pathname.new(@options.op_dir).expand_path(@basedir)
+    @outputdir = Pathname.new(@options.op_dir).expand_path(@base_dir)
 
     @files = top_levels.sort
     @classes = RDoc::TopLevel.all_classes_and_modules.sort
@@ -166,6 +175,7 @@ class RDoc::Generator::Darkfish
     generate_class_files
     generate_file_files
     generate_table_of_contents
+    @json_index.generate top_levels
 
   rescue => e
     debug_msg "%s: %s\n  %s" % [
@@ -210,7 +220,7 @@ class RDoc::Generator::Darkfish
 
     debug_msg "Rendering the index page..."
 
-    out_file = @basedir + @options.op_dir + 'index.html'
+    out_file = @base_dir + @options.op_dir + 'index.html'
     # suppress 1.9.3 warning
     rel_prefix = rel_prefix = @outputdir.relative_path_from(out_file.dirname)
     @title = @options.title
@@ -308,7 +318,7 @@ class RDoc::Generator::Darkfish
 
     debug_msg "Rendering the Table of Contents..."
 
-    out_file = @basedir + @options.op_dir + 'table_of_contents.html'
+    out_file = @base_dir + @options.op_dir + 'table_of_contents.html'
     # suppress 1.9.3 warning
     rel_prefix = rel_prefix = @outputdir.relative_path_from(out_file.dirname)
     @title = "Table of Contents"

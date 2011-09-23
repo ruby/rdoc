@@ -262,9 +262,8 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   end
 
   ##
-  # Adds +heading+ to the output
-  #
-  # = Foo
+  # Adds +heading+ to the output.  The headings greater than 6 are trimmed to
+  # level 6.
 
   def accept_heading heading
     level = [6, heading.level].min

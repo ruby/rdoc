@@ -200,5 +200,15 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     params
   end
 
+  def search_record
+    [
+      @name,
+      @parent.full_name,
+      path,
+      params,
+      snippet(@comment),
+      RDoc::Generator::JsonIndex::TYPE_METHOD
+    ]
+  end
 end
 

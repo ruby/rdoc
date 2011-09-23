@@ -79,6 +79,22 @@ class TestRDocClassModule < XrefTestCase
     assert_equal 'comment', cm.comment.text
   end
 
+  def test_docuent_self_or_methods
+    assert @c1.document_self_or_methods
+
+    @c1.document_self = false
+
+    assert @c1.document_self_or_methods
+
+    @c1_m.document_self = false
+
+    assert @c1.document_self_or_methods
+
+    @c1__m.document_self = false
+
+    refute @c1.document_self_or_methods
+  end
+
   def test_each_ancestor
     ancestors = []
 

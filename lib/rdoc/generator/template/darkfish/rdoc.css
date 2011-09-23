@@ -50,13 +50,17 @@ pre {
 
 #quicksearch-field {
   width: 98%;
-  background: #ddd;
-  border: 1px solid #aaa;
+  background: #eee;
+  border: none;
   height: 1.5em;
   -webkit-border-radius: 4px;
 }
 #quicksearch-field:focus {
   background: #f1edba;
+}
+#quicksearch-field::-webkit-input-placeholder {
+  font-weight: bold;
+  color: #666;
 }
 
 .missing-docs {
@@ -232,11 +236,9 @@ ul.link-list .type {
 #project-metadata form {
   color: #777;
   background: #ccc;
-  padding: 8px;
-  border-bottom: 1px solid #bbb;
 }
 
-#no-class-search-results {
+#no-search-results {
   margin: 0 auto 1em;
   text-align: center;
   font-size: 14px;
@@ -554,8 +556,39 @@ ul.link-list .type {
 
 /* @end */
 
+/* @group search results */
+#search-results h1 {
+  font-size: 1em;
+  font-weight: normal;
+  text-shadow: none;
+}
 
+#search-results li {
+  list-style: none;
+  border-bottom: 1px solid #AAA;
+  margin-bottom: 0.5em;
+}
 
+#search-results li:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+#search-results li p {
+  padding: 0;
+  margin: 0.5em;
+}
+
+#search-results .search-namespace {
+  font-weight: bold;
+}
+
+#search-results li em {
+  background: yellow;
+  font-style: normal;
+}
+
+/* @end */
 
 /* @group ThickBox Styles */
 #TB_window {

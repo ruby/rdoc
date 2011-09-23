@@ -235,5 +235,20 @@ method(a, b) { |c, d| ... }
     assert_equal 'C1', @c1.method_list.last.parent_name
   end
 
+  def test_search_record
+    @c1_m.comment = 'This is a comment.'
+
+    expected = [
+      'm',
+      'C1',
+      'C1.html#method-i-m',
+      '(foo)',
+      "<p>This is a comment.\n",
+      RDoc::Generator::JsonIndex::TYPE_METHOD,
+    ]
+
+    assert_equal expected, @c1_m.search_record
+  end
+
 end
 

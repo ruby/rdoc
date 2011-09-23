@@ -6,6 +6,11 @@
 require 'strscan'
 
 ##
+# For RDoc::Text#snippet
+
+require 'json'
+
+##
 # Methods for manipulating comment text
 
 module RDoc::Text
@@ -121,6 +126,15 @@ module RDoc::Text
     return RDoc::Markup::Document.new if text =~ /\A\n*\z/
 
     MARKUP_FORMAT[format].parse text
+  end
+
+  ##
+  # The first +limit+ characters of +text+ as HTML
+
+  def snippet text, limit = 100
+    document = parse text
+
+    RDoc::Markup::ToHtmlSnippet.new(limit).convert document
   end
 
   ##

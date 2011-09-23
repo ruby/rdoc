@@ -986,15 +986,14 @@ class RDoc::Context < RDoc::CodeObject
   ##
   # Only called when min_visibility == :public or :private
 
-  def remove_invisible_in(array, min_visibility) # :nodoc:
-    if min_visibility == :public
+  def remove_invisible_in array, min_visibility # :nodoc:
+    if min_visibility == :public then
       array.reject! { |e|
         e.visibility != :public and not e.force_documentation
       }
     else
       array.reject! { |e|
-        e.visibility == :private and
-          not e.force_documentation
+        e.visibility == :private and not e.force_documentation
       }
     end
   end

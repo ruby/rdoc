@@ -33,5 +33,20 @@ class TestRDocNormalModule < XrefTestCase
     assert @mod.module?
   end
 
+  def test_search_record
+    @m1.comment = 'This is a comment.'
+
+    expected = [
+      'M1',
+      'xref_data.rb',
+      'M1.html',
+      '',
+      "<p>This is a comment.\n",
+      RDoc::Generator::JsonIndex::TYPE_CLASS,
+    ]
+
+    assert_equal expected, @m1.search_record
+  end
+
 end
 

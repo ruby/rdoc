@@ -1,0 +1,17 @@
+The items below are may not be implemented as ideas change.
+
+=== RDoc 3.10
+
+=== RDoc 3.11
+
+* Reload the RDoc tree from an RI store
+  * Re-run generators
+  * Parse only changed files (like in ruby)
+
+=== RDoc 4
+
+API changes to RDoc
+
+* RDoc::TopLevel#add_method should automatically create the appropriate method
+  class rather than requiring one be passed in.
+

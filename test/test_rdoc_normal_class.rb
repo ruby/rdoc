@@ -19,5 +19,20 @@ class TestRDocNormalClass < XrefTestCase
     assert_equal 'class C', c.definition
   end
 
+  def test_search_record
+    @c1.comment = 'This is a comment.'
+
+    expected = [
+      'C1',
+      'xref_data.rb',
+      'C1.html',
+      ' < Object',
+      "<p>This is a comment.\n",
+      RDoc::Generator::JsonIndex::TYPE_CLASS,
+    ]
+
+    assert_equal expected, @c1.search_record
+  end
+
 end
 

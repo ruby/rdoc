@@ -65,5 +65,25 @@ class RDoc::NormalClass < RDoc::ClassModule
     end
   end
 
+  ##
+  # Search record used by RDoc::Generator::JsonIndex
+
+  def search_record
+    # TODO squashing the file list seems simplistic
+    files = @in_files.map { |file| file.absolute_name }
+    file = files.include?(@parent.full_name) ? files.first : @parent.full_name
+
+    sclass = " < #{String === superclass ? superclass : superclass.full_name}"
+
+    [
+      name,
+      file,
+      path,
+      sclass,
+      snippet(@comment),
+      RDoc::Generator::JsonIndex::TYPE_CLASS,
+    ]
+  end
+
 end
 

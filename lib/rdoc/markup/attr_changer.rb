@@ -11,13 +11,13 @@ end
 class RDoc::Markup::AttrChanger
 
   def to_s # :nodoc:
-    "Attr: +#{Attribute.as_string turn_on}/-#{Attribute.as_string turn_off}"
+    "Attr: +#{RDoc::Markup::Attribute.as_string turn_on}/-#{RDoc::Markup::Attribute.as_string turn_off}"
   end
 
   def inspect # :nodoc:
     "+%s/-%s" % [
-      Attribute.as_string(turn_on),
-      Attribute.as_string(turn_off),
+      RDoc::Markup::Attribute.as_string(turn_on),
+      RDoc::Markup::Attribute.as_string(turn_off),
     ]
   end
 

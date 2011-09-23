@@ -183,6 +183,13 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
+  # Does this ClassModule or any of its methods have document_self set?
+
+  def document_self_or_methods
+    document_self || method_list.any?{ |m| m.document_self }
+  end
+
+  ##
   # Iterates the ancestors of this class or module for which an
   # RDoc::ClassModule exists.
 
