@@ -1097,7 +1097,7 @@ Options may also be set in the 'RI' environment variable.
   # Foo::Bar#baz.
   #
   # NOTE: Given Foo::Bar, Bar is considered a class even though it may be a
-  #       method
+  # method
 
   def parse_name name
     parts = name.split(/(::|#|\.)/)
