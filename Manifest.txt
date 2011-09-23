@@ -1,11 +1,12 @@
 .autotest
 .document
 History.txt
-LICENSE.txt
+LICENSE.rdoc
 Manifest.txt
 README.txt
 RI.txt
 Rakefile
+TODO.rdoc
 bin/rdoc
 bin/ri
 lib/rdoc.rb
@@ -26,6 +27,7 @@ lib/rdoc/erbio.rb
 lib/rdoc/gauntlet.rb
 lib/rdoc/generator.rb
 lib/rdoc/generator/darkfish.rb
+lib/rdoc/generator/json_index.rb
 lib/rdoc/generator/markup.rb
 lib/rdoc/generator/ri.rb
 lib/rdoc/generator/template/darkfish/.document
@@ -39,6 +41,7 @@ lib/rdoc/generator/template/darkfish/_sidebar_methods.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_navigation.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_pages.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_parent.rhtml
+lib/rdoc/generator/template/darkfish/_sidebar_search.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_sections.rhtml
 lib/rdoc/generator/template/darkfish/class.rhtml
 lib/rdoc/generator/template/darkfish/fileinfo.rhtml
@@ -70,6 +73,8 @@ lib/rdoc/generator/template/darkfish/index.rhtml
 lib/rdoc/generator/template/darkfish/js/darkfish.js
 lib/rdoc/generator/template/darkfish/js/jquery.js
 lib/rdoc/generator/template/darkfish/js/quicksearch.js
+lib/rdoc/generator/template/darkfish/js/search.js
+lib/rdoc/generator/template/darkfish/js/searcher.js
 lib/rdoc/generator/template/darkfish/js/thickbox-compressed.js
 lib/rdoc/generator/template/darkfish/page.rhtml
 lib/rdoc/generator/template/darkfish/rdoc.css
@@ -103,6 +108,7 @@ lib/rdoc/markup/to_ansi.rb
 lib/rdoc/markup/to_bs.rb
 lib/rdoc/markup/to_html.rb
 lib/rdoc/markup/to_html_crossref.rb
+lib/rdoc/markup/to_html_snippet.rb
 lib/rdoc/markup/to_label.rb
 lib/rdoc/markup/to_rdoc.rb
 lib/rdoc/markup/to_table_of_contents.rb
@@ -166,6 +172,7 @@ test/test_rdoc_context_section.rb
 test/test_rdoc_cross_reference.rb
 test/test_rdoc_encoding.rb
 test/test_rdoc_generator_darkfish.rb
+test/test_rdoc_generator_json_index.rb
 test/test_rdoc_generator_markup.rb
 test/test_rdoc_generator_ri.rb
 test/test_rdoc_include.rb
@@ -184,6 +191,7 @@ test/test_rdoc_markup_to_ansi.rb
 test/test_rdoc_markup_to_bs.rb
 test/test_rdoc_markup_to_html.rb
 test/test_rdoc_markup_to_html_crossref.rb
+test/test_rdoc_markup_to_html_snippet.rb
 test/test_rdoc_markup_to_label.rb
 test/test_rdoc_markup_to_rdoc.rb
 test/test_rdoc_markup_to_table_of_contents.rb
