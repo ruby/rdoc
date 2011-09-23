@@ -54,6 +54,7 @@
   * Split rdoc/markup/inline into individual files for its component classes.
   * Moved token stream HTML markup out of RDoc::AnyMethod#markup_code into
     RDoc::TokenStream::to_html
+  * "Top" link in section headers is no longer inside the heading element.
 
 * Bug fixes
   * Markup defined by RDoc::Markup#add_special inside a <tt><tt></tt> is no

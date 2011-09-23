@@ -4,7 +4,6 @@ The items below are may not be implemented as ideas change.
 
 * Sections
   * Check section support for TomDoc
-  * Fix markup for "go to top"
   * Add default section for multiple sections
 * Search
   * Display full_name

@@ -34,10 +34,14 @@
   <% attributes = attributes.select { |attr| attr.display? } %>
   <section id="<%= section.aref %>" class="documentation-section">
     <% if section.title then %>
-    <h2 class="section-header">
-      <%= section.title %>
-      <a href="#top">&uarr; top</a>
-    </h2>
+    <div class="documentation-section-title">
+      <h2 class="section-header">
+        <%= section.title %>
+      </h2>
+      <span class="section-click-top">
+        <a href="#top">&uarr; top</a>
+      </span>
+    </div>
     <% end %>
 
     <% if section.comment then %>

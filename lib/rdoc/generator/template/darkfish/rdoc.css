@@ -308,8 +308,8 @@ ul.link-list .type {
 }
 
 #documentation h2.section-header {
-  margin-top: 2em;
-  padding: 0.75em 0.5em;
+  margin-top: 1em;
+  padding: 0.25em 0.5em;
   background: #ccc;
   color: #333;
   font-size: 175%;
@@ -318,8 +318,25 @@ ul.link-list .type {
   -webkit-border-radius: 3px;
 }
 
+.documentation-section-title {
+  position: relative;
+}
+.documentation-section-title .section-click-top {
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  font-size: 10px;
+  color: #9b9877;
+  visibility: hidden;
+  padding-right: 0.5px;
+}
+
+.documentation-section-title:hover .section-click-top {
+  visibility: visible;
+}
+
 #documentation h3.section-header {
-  margin-top: 2em;
+  margin-top: 1em;
   padding: 0.25em 0.5em;
   background-color: #dedede;
   color: #333;
