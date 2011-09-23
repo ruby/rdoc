@@ -475,6 +475,29 @@ like Foo::Bar#baz.
     assert_equal 101, @to.characters
   end
 
+  def test_convert_limit_verbatim_multiline
+    rdoc = <<-RDOC
+Look for directives in a normal comment block:
+
+  # :stopdoc:
+  # Don't display comment from this point forward
+
+This routine modifies its +comment+ parameter.
+    RDOC
+
+    expected = <<-EXPECTED
+<p>Look for directives in a normal comment block:
+
+<pre># :stopdoc:
+# Don't display comment from this point forward</pre>
+    EXPECTED
+
+    actual = @to.convert rdoc
+
+    assert_equal expected, actual
+    assert_equal 105, @to.characters
+  end
+
   def test_convert_limit_paragraphs
     @to = RDoc::Markup::ToHtmlSnippet.new 100, 3
 

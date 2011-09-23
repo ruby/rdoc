@@ -247,7 +247,7 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
 
     remaining = @character_limit - characters
 
-    text =~ /\A(.{#{remaining},}?)(\s|$)/
+    text =~ /\A(.{#{remaining},}?)(\s|$)/m
 
     $1
   end
