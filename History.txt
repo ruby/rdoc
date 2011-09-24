@@ -63,6 +63,8 @@
     Melton.
   * Add US-ASCII magic comments to work with <tt>ruby -Ku</tt>.  Issue #63 by
     Travis D. Warlick, Jr.
+  * Clicking a link in the method description now works.  Issue #61 by Alan
+    Hogan.
 
 === 3.9.2 / 2011-08-11
 

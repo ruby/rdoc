@@ -423,7 +423,7 @@ ul.link-list .type {
   line-height: 20px;
   background: url(images/zoom.png) no-repeat right top;
 }
-#documentation .method-detail:hover .method-click-advice {
+#documentation .method-heading:hover .method-click-advice {
   visibility: visible;
 }
 
