@@ -2,6 +2,13 @@ require 'rdoc/test_case'
 
 class TestRDocRubyLex < RDoc::TestCase
 
+  def mu_pp(obj)
+    s = ''
+    s = PP.pp obj, s
+    s = s.force_encoding(Encoding.default_external) if defined? Encoding
+    s.chomp
+  end
+
   def test_class_tokenize
     tokens = RDoc::RubyLex.tokenize "def x() end", nil
 

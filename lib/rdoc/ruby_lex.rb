@@ -1143,6 +1143,7 @@ class RDoc::RubyLex
   end
 
   def identify_string(ltype, quoted = ltype)
+    close = PERCENT_PAREN.values.include?(@quoted)
     @ltype = ltype
     @quoted = quoted
 
@@ -1159,7 +1160,7 @@ class RDoc::RubyLex
       while ch = getc
         str << ch
 
-        if @quoted == ch and nest == 0
+        if @quoted == ch and nest <= 0
           break
         elsif @ltype != "'" && @ltype != "]" && @ltype != ":" and ch == "#"
           ch = getc
@@ -1180,7 +1181,7 @@ class RDoc::RubyLex
           str << read_escape
         end
 
-        if PERCENT_PAREN.values.include?(@quoted)
+        if close then
           if PERCENT_PAREN[ch] == @quoted
             nest += 1
           elsif ch == @quoted

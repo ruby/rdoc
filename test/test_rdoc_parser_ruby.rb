@@ -1545,6 +1545,16 @@ end
     assert_equal 'my method', bar.comment.text
   end
 
+  def test_parse_statements_def_percent_string_pound
+    util_parser "class C\ndef a\n%r{#}\nend\ndef b() end\nend"
+
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL
+
+    x = @top_level.classes.first
+
+    assert_equal 2, x.method_list.length
+  end
+
   def test_parse_statements_encoding
     skip "Encoding not implemented" unless Object.const_defined? :Encoding
     @options.encoding = Encoding::CP852
