@@ -93,6 +93,9 @@ class RDoc::Generator::JsonIndex
     index_methods
     index_pages
 
+    @index[:searchIndex].uniq!
+    @index[:longSearchIndex].uniq!
+
     debug_msg "  writing search index to %s" % SEARCH_INDEX_FILE
     data = { :index => @index }
 

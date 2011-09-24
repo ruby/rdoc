@@ -36,6 +36,8 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
     @nest_klass = @klass.add_class RDoc::NormalClass, 'D'
     @nest_klass.record_location @top_level
 
+    @nest_meth = @nest_klass.add_method RDoc::AnyMethod.new(nil, 'meth')
+
     @ignored = @top_level.add_class RDoc::NormalClass, 'Ignored'
     @ignored.ignore
 
@@ -92,6 +94,7 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
       @klass.search_record,
       @nest_klass.search_record,
       @meth.search_record,
+      @nest_meth.search_record,
       @page.search_record,
     ]
 
@@ -106,7 +109,7 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
         'longSearchIndex' => [
           'file.rb',
           'c',
-          'c',
+          'c::d',
           'page_rdoc.html',
         ],
         'info' => info,
@@ -137,6 +140,7 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
     @klass.document_self      = false
     @nest_klass.document_self = false
     @meth.document_self       = false
+    @nest_meth.document_self  = false
 
     @g.reset @top_levels, @klasses
 
@@ -152,8 +156,6 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
   end
 
   def test_index_methods
-    nest_meth = @nest_klass.add_method RDoc::AnyMethod.new(nil, 'meth')
-
     @g.reset @top_levels, @klasses
 
     @g.index_methods
@@ -163,7 +165,7 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
       :longSearchIndex => %w[c c::d],
       :info            => [
         @meth.search_record,
-        nest_meth.search_record,
+        @nest_meth.search_record,
       ],
     }
 
