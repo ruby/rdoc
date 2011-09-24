@@ -150,7 +150,7 @@ module RDoc::RubyToken
 
     def inspect # :nodoc:
       klass = self.class.name.split('::').last
-      "{%s %d, %d:%d %p}" % [klass, @seek, @line_no, @char_no, @value]
+      "{%s %s, %d:%d %p}" % [klass, @seek, @line_no, @char_no, @value]
     end
 
   end
@@ -443,7 +443,7 @@ module RDoc::RubyToken
 
   def_token :TkRD_COMMENT, TkCOMMENT
 
-  NEWLINE_TOKEN = TkNL.new nil, 0, 0, "\n"
+  NEWLINE_TOKEN = TkNL.new 0, 0, 0, "\n"
 
   class TkSYMBOL
 

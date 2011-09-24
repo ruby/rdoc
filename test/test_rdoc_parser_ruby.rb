@@ -31,6 +31,13 @@ class TestRDocParserRuby < RDoc::TestCase
     @tempfile2.close
   end
 
+  def mu_pp obj
+    s = ''
+    s = PP.pp obj, s
+    s = s.force_encoding(Encoding.default_external) if defined? Encoding
+    s.chomp
+  end
+
   def test_collect_first_comment
     p = util_parser <<-CONTENT
 # first
@@ -1553,6 +1560,24 @@ end
     x = @top_level.classes.first
 
     assert_equal 2, x.method_list.length
+    a = x.method_list.first
+
+    rt = RDoc::RubyToken
+
+    expected = [
+      rt::TkCOMMENT   .new( 0, 2, 1, "# File #{@filename}, line 2"),
+      rt::TkNL        .new( 0, 0, 0, "\n"),
+      rt::TkSPACE     .new( 0, 1, 1, ""),
+      rt::TkDEF       .new( 8, 2, 0, "def"),
+      rt::TkSPACE     .new(11, 2, 3, " "),
+      rt::TkIDENTIFIER.new(12, 2, 4, "a"),
+      rt::TkNL        .new(13, 2, 5, "\n"),
+      rt::TkDREGEXP   .new(14, 3, 0, "%r{#}"),
+      rt::TkNL        .new(19, 3, 5, "\n"),
+      rt::TkEND       .new(20, 4, 0, "end"),
+    ]
+
+    assert_equal expected, a.token_stream
   end
 
   def test_parse_statements_encoding
@@ -2090,7 +2115,7 @@ end
   def test_sanity_interpolation_curly
     util_parser '%{ #{} }'
 
-    assert_equal '%{ #{} }', @parser.get_tk.text
+    assert_equal '%Q{ #{} }', @parser.get_tk.text
     assert_equal RDoc::RubyToken::TkNL, @parser.get_tk.class
   end
 
@@ -2325,9 +2350,9 @@ end
 
     token = if klass.instance_method(:initialize).arity == 3 then
               raise ArgumentError, "name not used for #{klass}" unless name.nil?
-              klass.new nil, line, char
+              klass.new 0, line, char
             else
-              klass.new nil, line, char, name
+              klass.new 0, line, char, name
             end
 
     token.set_text text
