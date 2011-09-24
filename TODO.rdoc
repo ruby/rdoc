@@ -2,9 +2,7 @@ The items below are may not be implemented as ideas change.
 
 === RDoc 3.10
 
-* Search
-  * Display full_name
-  * Search by full_name
+* TomDoc 1.0.0-rc1
 
 === RDoc 3.11
 
