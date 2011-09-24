@@ -200,14 +200,5 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     params
   end
 
-  def search_record
-    [
-      @name,
-      @parent.full_name,
-      path,
-      params,
-      snippet(@comment),
-    ]
-  end
 end
 

@@ -20,17 +20,17 @@ class TestRDocNormalClass < XrefTestCase
   end
 
   def test_search_record
-    @c1.comment = 'This is a comment.'
+    @c2_c3.comment = 'This is a comment.'
 
     expected = [
-      'C1',
-      'xref_data.rb',
-      'C1.html',
+      'C3',
+      'C2::C3',
+      'C2/C3.html',
       ' < Object',
       "<p>This is a comment.\n"
     ]
 
-    assert_equal expected, @c1.search_record
+    assert_equal expected, @c2_c3.search_record
   end
 
 end

@@ -70,7 +70,7 @@ class RDoc::NormalModule < RDoc::ClassModule
 
     [
       name,
-      file,
+      full_name,
       path,
       '',
       snippet(@comment),

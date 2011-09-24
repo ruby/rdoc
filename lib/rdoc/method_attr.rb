@@ -343,6 +343,15 @@ class RDoc::MethodAttr < RDoc::CodeObject
     ]
   end
 
+  def search_record
+    [
+      @name,
+      @parent.full_name,
+      path,
+      params,
+      snippet(@comment),
+    ]
+  end
   def to_s # :nodoc:
     if @is_alias_for
       "#{self.class.name}: #{full_name} -> #{is_alias_for}"

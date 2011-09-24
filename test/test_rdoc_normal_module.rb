@@ -34,17 +34,17 @@ class TestRDocNormalModule < XrefTestCase
   end
 
   def test_search_record
-    @m1.comment = 'This is a comment.'
+    @m1_m2.comment = 'This is a comment.'
 
     expected = [
-      'M1',
-      'xref_data.rb',
-      'M1.html',
+      'M2',
+      'M1::M2',
+      'M1/M2.html',
       '',
       "<p>This is a comment.\n",
     ]
 
-    assert_equal expected, @m1.search_record
+    assert_equal expected, @m1_m2.search_record
   end
 
 end
