@@ -6,7 +6,6 @@ The items below are may not be implemented as ideas change.
   * Display full_name
   * Search by full_name
 * Issue #66
-* Issue #67
 
 === RDoc 3.11
 

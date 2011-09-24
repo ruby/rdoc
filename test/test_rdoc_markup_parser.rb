@@ -1183,6 +1183,38 @@ the time
     assert_equal expected, @RMP.tokenize(str)
   end
 
+  def test_tokenize_label_newline
+    str = <<-STR
+[cat]
+  l1
+    STR
+
+    expected = [
+      [:LABEL,   'cat',   0, 0],
+      [:NEWLINE, "\n",    5, 0],
+      [:TEXT,    'l1',    2, 1],
+      [:NEWLINE, "\n",    4, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str)
+  end
+
+  def test_tokenize_label_newline_windows
+    str = <<-STR
+[cat]\r
+  l1\r
+    STR
+
+    expected = [
+      [:LABEL,   'cat',   0, 0],
+      [:NEWLINE, "\n",    6, 0],
+      [:TEXT,    'l1',    2, 1],
+      [:NEWLINE, "\n",    5, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str)
+  end
+
   def test_tokenize_lalpha
     str = <<-STR
 a. l1
@@ -1230,6 +1262,38 @@ dog::
       [:NEWLINE, "\n",  5, 0],
       [:NOTE,    'dog', 0, 1],
       [:NEWLINE, "\n",  5, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str)
+  end
+
+  def test_tokenize_note_newline
+    str = <<-STR
+cat::
+  l1
+    STR
+
+    expected = [
+      [:NOTE,    'cat',   0, 0],
+      [:NEWLINE, "\n",    5, 0],
+      [:TEXT,    'l1',    2, 1],
+      [:NEWLINE, "\n",    4, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str)
+  end
+
+  def test_tokenize_note_newline_windows
+    str = <<-STR
+cat::\r
+  l1\r
+    STR
+
+    expected = [
+      [:NOTE,    'cat',   0, 0],
+      [:NEWLINE, "\n",    6, 0],
+      [:TEXT,    'l1',    2, 1],
+      [:NEWLINE, "\n",    5, 1],
     ]
 
     assert_equal expected, @RMP.tokenize(str)
@@ -1356,6 +1420,24 @@ for all
       [:NEWLINE, "\n",         0, 1],
       [:TEXT, "--- blah ---",  0, 2],
       [:NEWLINE, "\n",        12, 2],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str)
+  end
+
+  def test_tokenize_rule_windows
+    str = <<-STR
+---\r
+
+--- blah ---\r
+    STR
+
+    expected = [
+      [:RULE,    1,            0, 0],
+      [:NEWLINE, "\n",         4, 0],
+      [:NEWLINE, "\n",         0, 1],
+      [:TEXT, "--- blah ---",  0, 2],
+      [:NEWLINE, "\n",        13, 2],
     ]
 
     assert_equal expected, @RMP.tokenize(str)

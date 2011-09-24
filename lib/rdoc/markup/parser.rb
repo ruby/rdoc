@@ -52,7 +52,7 @@ class RDoc::Markup::Parser
 
   ##
   # Parses +str+ into a Document.
-  # 
+  #
   # Use RDoc::Markup#parse instead of this method.
 
   def self.parse str
@@ -427,7 +427,7 @@ class RDoc::Markup::Parser
                      [:TEXT, s.matched.sub(/\r$/, ''), *token_pos(pos)]
                    end
                  # --- (at least 3) and nothing else on the line => :RULE
-                 when s.scan(/(-{3,}) *$/) then
+                 when s.scan(/(-{3,}) *\r?$/) then
                    [:RULE, s[1].length - 2, *token_pos(pos)]
                  # * or - followed by white space and text => :BULLET
                  when s.scan(/([*-]) +(\S)/) then
@@ -452,10 +452,10 @@ class RDoc::Markup::Parser
                      end
                    [list_type, list_label, *token_pos(pos)]
                  # [text] followed by spaces or end of line => :LABEL
-                 when s.scan(/\[(.*?)\]( +|$)/) then
+                 when s.scan(/\[(.*?)\]( +|\r?$)/) then
                    [:LABEL, s[1], *token_pos(pos)]
                  # text:: followed by spaces or end of line => :NOTE
-                 when s.scan(/(.*?)::( +|$)/) then
+                 when s.scan(/(.*?)::( +|\r?$)/) then
                    [:NOTE, s[1], *token_pos(pos)]
                  # anything else: :TEXT
                  else s.scan(/.*/)

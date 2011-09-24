@@ -65,6 +65,8 @@
     Travis D. Warlick, Jr.
   * Clicking a link in the method description now works.  Issue #61 by Alan
     Hogan.
+  * Fixed RDoc::Markup::Parser for CRLF line endings.  Issue #67 by Marvin
+    Gülker.
 
 === 3.9.2 / 2011-08-11
 
