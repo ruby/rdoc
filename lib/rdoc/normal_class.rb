@@ -73,13 +73,11 @@ class RDoc::NormalClass < RDoc::ClassModule
     files = @in_files.map { |file| file.absolute_name }
     file = files.include?(@parent.full_name) ? files.first : @parent.full_name
 
-    sclass = " < #{String === superclass ? superclass : superclass.full_name}"
-
     [
-      name,
       full_name,
+      '',
       path,
-      sclass,
+      '',
       snippet(@comment),
     ]
   end
