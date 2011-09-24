@@ -1,24 +1,49 @@
-##
+# :markup: tomdoc
+
 # A parser for TomDoc based on TomDoc 1.0.0-pre (d38f5da7)
 #
-# The TomDoc format can be found at:
+# The TomDoc specification can be found at:
 #
 # http://tomdoc.org
 #
-# The latest version of the TomDoc format can be found at:
+# The latest version of the TomDoc specification can be found at:
 #
 # https://github.com/mojombo/tomdoc/blob/master/tomdoc.md
+#
+# There are a few differences between this parser and the specification.  A
+# best-effort was made to follow the specification as closely as possible but
+# some choices to deviate were made.
+#
+# A future version of RDoc will warn when a MUST or MUST NOT is violated and
+# may warn when a SHOULD or SHOULD NOT is violated.  RDoc will always try
+# to emit documentation even if given invalid TomDoc.
+#
+# Here are some implementation choices this parser currently makes:
+#
+# This parser allows rdoc-style inline markup but you should not depended on
+# it.
+#
+# This parser allows a space between the comment and the method body.
+#
+# This parser does not require the default value to be described for an
+# optional argument.
+#
+# This parser does not examine the order of sections.  An Examples section may
+# precede the Arguments section.
+#
+# This class is documented in TomDoc format.  Since this is a subclass of the
+# RDoc markup parser there isn't much to see here, unfortunately.
 
 class RDoc::TomDoc < RDoc::Markup::Parser
 
-  ##
-  # Token accessor
+  # Internal: Token accessor
 
   attr_reader :tokens
 
-  ##
-  # Adds a post-processor which sets the RDoc section based on the comment's
-  # status.
+  # Internal: Adds a post-processor which sets the RDoc section based on the
+  # comment's status.
+  #
+  # Returns nothing.
 
   def self.add_post_processor # :nodoc:
     RDoc::Markup::PreProcess.post_process do |comment, code_object|
@@ -36,8 +61,19 @@ class RDoc::TomDoc < RDoc::Markup::Parser
 
   add_post_processor
 
-  ##
-  # Parses TomDoc from +text+
+  # Parses TomDoc from text
+  #
+  # text - A String containing TomDoc-format text.
+  #
+  # Examples
+  #
+  #   RDoc::TomDoc.parse <<-TOMDOC
+  #   This method does some things
+  #
+  #   Returns nothing.
+  #   TOMDOC
+  #
+  # Returns an RDoc::Markup::Document representing the TomDoc format.
 
   def self.parse text
     parser = new
@@ -48,8 +84,11 @@ class RDoc::TomDoc < RDoc::Markup::Parser
     doc
   end
 
-  ##
-  # Builds a Paragraph.
+  # Internal: Builds a paragraph from the token stream
+  #
+  # margin - Unused
+  #
+  # Returns an RDoc::Markup::Paragraph.
 
   def build_paragraph margin
     p :paragraph_start => margin if @debug
@@ -73,8 +112,11 @@ class RDoc::TomDoc < RDoc::Markup::Parser
     paragraph
   end
 
-  ##
-  # Turns text +input+ into a stream of tokens
+  # Internal: Turns text into an Array of tokens
+  #
+  # text - A String containing TomDoc-format text.
+  #
+  # Returns self.
 
   def tokenize text
     text.sub!(/\A(Public|Internal|Deprecated):\s+/, '')

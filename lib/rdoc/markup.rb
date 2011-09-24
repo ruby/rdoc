@@ -545,7 +545,7 @@
 #
 #     ##
 #     #  :args: a, b
-#     
+#
 #     def some_method(*a)
 #     end
 #
