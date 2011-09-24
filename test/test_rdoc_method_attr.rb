@@ -116,6 +116,8 @@ class TestRDocMethodAttr < XrefTestCase
 
     expected = [
       'm',
+      'C1#m',
+      'm',
       'C1',
       'C1.html#method-i-m',
       '(foo)',

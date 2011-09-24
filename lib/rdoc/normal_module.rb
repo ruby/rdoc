@@ -69,6 +69,8 @@ class RDoc::NormalModule < RDoc::ClassModule
     file = files.include?(@parent.full_name) ? files.first : @parent.full_name
 
     [
+      name,
+      full_name,
       full_name,
       '',
       path,

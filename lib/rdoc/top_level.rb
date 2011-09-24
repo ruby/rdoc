@@ -482,6 +482,8 @@ class RDoc::TopLevel < RDoc::Context
     [
       page_name,
       '',
+      page_name,
+      '',
       path,
       '',
       snippet(@comment),

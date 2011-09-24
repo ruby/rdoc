@@ -37,6 +37,8 @@ class TestRDocNormalModule < XrefTestCase
     @m1_m2.comment = 'This is a comment.'
 
     expected = [
+      'M2',
+      'M1::M2',
       'M1::M2',
       '',
       'M1/M2.html',

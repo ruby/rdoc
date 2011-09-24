@@ -255,6 +255,8 @@ class TestRDocTopLevel < XrefTestCase
     expected = [
       'README',
       '',
+      'README',
+      '',
       'README_txt.html',
       '',
       "<p>This is a comment.\n",

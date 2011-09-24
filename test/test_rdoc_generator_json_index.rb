@@ -91,11 +91,11 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
     index = JSON.parse index
 
     info = [
-      @klass.search_record,
-      @nest_klass.search_record,
-      @meth.search_record,
-      @nest_meth.search_record,
-      @page.search_record,
+      @klass.search_record[2..-1],
+      @nest_klass.search_record[2..-1],
+      @meth.search_record[2..-1],
+      @nest_meth.search_record[2..-1],
+      @page.search_record[2..-1],
     ]
 
     expected = {
@@ -130,8 +130,8 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
       :searchIndex     => %w[c d],
       :longSearchIndex => %w[c c::d],
       :info            => [
-        @klass.search_record,
-        @nest_klass.search_record,
+        @klass.search_record[2..-1],
+        @nest_klass.search_record[2..-1],
       ],
     }
 
@@ -166,8 +166,8 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
       :searchIndex     => %w[meth() meth()],
       :longSearchIndex => %w[c#meth() c::d#meth()],
       :info            => [
-        @meth.search_record,
-        @nest_meth.search_record,
+        @meth.search_record[2..-1],
+        @nest_meth.search_record[2..-1],
       ],
     }
 
@@ -182,7 +182,7 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
     expected = {
       :searchIndex     => %w[page],
       :longSearchIndex => [''],
-      :info            => [@page.search_record],
+      :info            => [@page.search_record[2..-1]],
     }
 
     assert_equal expected, @g.index

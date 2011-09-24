@@ -23,6 +23,8 @@ class TestRDocNormalClass < XrefTestCase
     @c2_c3.comment = 'This is a comment.'
 
     expected = [
+      'C3',
+      'C2::C3',
       'C2::C3',
       '',
       'C2/C3.html',

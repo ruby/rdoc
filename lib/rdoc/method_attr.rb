@@ -346,6 +346,8 @@ class RDoc::MethodAttr < RDoc::CodeObject
   def search_record
     [
       @name,
+      full_name,
+      @name,
       @parent.full_name,
       path,
       params,

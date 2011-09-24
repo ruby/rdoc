@@ -145,9 +145,10 @@ class RDoc::Generator::JsonIndex
 
     documented.each do |klass|
       debug_msg "    #{klass.full_name}"
-      @index[:searchIndex]     << search_string(klass.name)
-      @index[:longSearchIndex] << search_string(klass.full_name)
-      @index[:info]            << klass.search_record
+      record = klass.search_record
+      @index[:searchIndex]     << search_string(record.shift)
+      @index[:longSearchIndex] << search_string(record.shift)
+      @index[:info]            << record
     end
   end
 
@@ -165,9 +166,10 @@ class RDoc::Generator::JsonIndex
 
     list.each do |method|
       debug_msg "    #{method.full_name}"
-      @index[:searchIndex]     << "#{search_string method.name}()"
-      @index[:longSearchIndex] << search_string("#{method.full_name}()")
-      @index[:info]            << method.search_record
+      record = method.search_record
+      @index[:searchIndex]     << "#{search_string record.shift}()"
+      @index[:longSearchIndex] << "#{search_string record.shift}()"
+      @index[:info]            << record
     end
   end
 
@@ -183,9 +185,11 @@ class RDoc::Generator::JsonIndex
 
     pages.each do |page|
       debug_msg "    #{page.page_name}"
-      @index[:searchIndex]     << search_string(page.page_name)
+      record = page.search_record
+      @index[:searchIndex]     << search_string(record.shift)
       @index[:longSearchIndex] << ''
-      @index[:info]            << page.search_record
+      record.shift
+      @index[:info]            << record
     end
   end
 
