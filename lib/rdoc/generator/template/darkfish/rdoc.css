@@ -477,19 +477,7 @@ pre {
 
 /* @group Source Code */
 
-.method-source-code {
-  background: #262626;
-  color: #efefef;
-  margin: 1em;
-  padding: 0.5em;
-  border: 1px dashed #999;
-  overflow: hidden;
-}
-
 .method-source-code pre {
-  background: inherit;
-  padding: 0;
-  color: white;
   overflow: auto;
 }
 
@@ -498,7 +486,7 @@ pre {
 pre {
   overflow: auto;
   background: #262626;
-  color: #efefef;
+  color: white;
   border: 1px dashed #999;
   padding: 0.5em;
 }
