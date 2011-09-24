@@ -42,7 +42,6 @@ class TestRDocNormalModule < XrefTestCase
       'M1.html',
       '',
       "<p>This is a comment.\n",
-      RDoc::Generator::JsonIndex::TYPE_CLASS,
     ]
 
     assert_equal expected, @m1.search_record

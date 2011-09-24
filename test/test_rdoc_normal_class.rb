@@ -27,8 +27,7 @@ class TestRDocNormalClass < XrefTestCase
       'xref_data.rb',
       'C1.html',
       ' < Object',
-      "<p>This is a comment.\n",
-      RDoc::Generator::JsonIndex::TYPE_CLASS,
+      "<p>This is a comment.\n"
     ]
 
     assert_equal expected, @c1.search_record

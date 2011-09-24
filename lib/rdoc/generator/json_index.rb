@@ -53,13 +53,6 @@ class RDoc::Generator::JsonIndex
 
   SEARCH_INDEX_FILE = File.join 'js', 'search_index.js'
 
-  # Used in js to reduce index sizes
-  # :stopdoc:
-  TYPE_CLASS  = 1
-  TYPE_METHOD = 2
-  TYPE_FILE   = 3
-  # :startdoc:
-
   attr_reader :index # :nodoc:
 
   ##

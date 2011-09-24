@@ -207,7 +207,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       path,
       params,
       snippet(@comment),
-      RDoc::Generator::JsonIndex::TYPE_METHOD
     ]
   end
 end

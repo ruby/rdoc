@@ -74,7 +74,6 @@ class RDoc::NormalModule < RDoc::ClassModule
       path,
       '',
       snippet(@comment),
-      RDoc::Generator::JsonIndex::TYPE_CLASS,
     ]
   end
 

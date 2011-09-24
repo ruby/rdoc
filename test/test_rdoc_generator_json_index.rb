@@ -89,9 +89,9 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
     index = JSON.parse index
 
     info = [
-      ['C',       'file.rb',          'C.html',               ' < Object', '', 1],
-      ['D',       'C',                'C/D.html',             ' < Object', '', 1],
-      ['meth',    'C',                'C.html#method-i-meth', nil,         '', 2],
+      @klass.search_record,
+      @nest_klass.search_record,
+      @meth.search_record,
       @page.search_record,
     ]
 

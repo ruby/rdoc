@@ -477,25 +477,15 @@ class RDoc::TopLevel < RDoc::Context
   # Search record used by RDoc::Generator::JsonIndex
 
   def search_record
-    if @parser < RDoc::Parser::Text then
-      [
-        page_name,
-        '',
-        path,
-        '',
-        snippet(@comment),
-        RDoc::Generator::JsonIndex::TYPE_FILE,
-      ]
-    else
-      [
-        name,
-        path,
-        path,
-        '',
-        snippet(@comment),
-        RDoc::Generator::JsonIndex::TYPE_FILE,
-      ]
-    end
+    return unless @parser < RDoc::Parser::Text
+
+    [
+      page_name,
+      '',
+      path,
+      '',
+      snippet(@comment),
+    ]
   end
 
   ##

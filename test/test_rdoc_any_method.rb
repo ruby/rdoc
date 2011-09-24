@@ -244,7 +244,6 @@ method(a, b) { |c, d| ... }
       'C1.html#method-i-m',
       '(foo)',
       "<p>This is a comment.\n",
-      RDoc::Generator::JsonIndex::TYPE_METHOD,
     ]
 
     assert_equal expected, @c1_m.search_record

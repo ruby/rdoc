@@ -244,18 +244,7 @@ class TestRDocTopLevel < XrefTestCase
   end
 
   def test_search_record
-    @xref_data.comment = 'This is a comment.'
-
-    expected = [
-      'xref_data.rb',
-      'xref_data_rb.html',
-      'xref_data_rb.html',
-      '',
-      "<p>This is a comment.\n",
-      RDoc::Generator::JsonIndex::TYPE_FILE,
-    ]
-
-    assert_equal expected, @xref_data.search_record
+    assert_nil @xref_data.search_record
   end
 
   def test_search_record_page
@@ -269,7 +258,6 @@ class TestRDocTopLevel < XrefTestCase
       'README_txt.html',
       '',
       "<p>This is a comment.\n",
-      RDoc::Generator::JsonIndex::TYPE_FILE,
     ]
 
     assert_equal expected, page.search_record

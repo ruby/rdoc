@@ -81,7 +81,6 @@ class RDoc::NormalClass < RDoc::ClassModule
       path,
       sclass,
       snippet(@comment),
-      RDoc::Generator::JsonIndex::TYPE_CLASS,
     ]
   end
 
