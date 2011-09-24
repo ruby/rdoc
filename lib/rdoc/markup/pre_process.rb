@@ -99,6 +99,7 @@ class RDoc::Markup::PreProcess
       # This is not in handle_directive because I didn't want to pass another
       # argument into it
       if comment and $3 == 'markup' then
+        next "#{$1.strip}\n" unless $5
         comment.format = $5.downcase
         next "#{$1.strip}\n"
       end

@@ -108,6 +108,14 @@ contents of a string.
     assert_equal 'rd', c.format
   end
 
+  def test_handle_markup_empty
+    c = comment ':markup:'
+
+    @pp.handle c
+
+    assert_equal 'rdoc', c.format
+  end
+
   def test_handle_post_process
     cd = RDoc::CodeObject.new
 
