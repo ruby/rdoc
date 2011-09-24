@@ -104,13 +104,15 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
           'c',
           'd',
           'meth()',
-          'page.rdoc',
+          'meth()',
+          'page',
         ],
         'longSearchIndex' => [
-          'file.rb',
           'c',
           'c::d',
-          'page_rdoc.html',
+          'c#meth()',
+          'c::d#meth()',
+          '',
         ],
         'info' => info,
       },
@@ -126,7 +128,7 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
 
     expected = {
       :searchIndex     => %w[c d],
-      :longSearchIndex => %w[file.rb c],
+      :longSearchIndex => %w[c c::d],
       :info            => [
         @klass.search_record,
         @nest_klass.search_record,
@@ -162,7 +164,7 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
 
     expected = {
       :searchIndex     => %w[meth() meth()],
-      :longSearchIndex => %w[c c::d],
+      :longSearchIndex => %w[c#meth() c::d#meth()],
       :info            => [
         @meth.search_record,
         @nest_meth.search_record,
@@ -178,8 +180,8 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
     @g.index_pages
 
     expected = {
-      :searchIndex     => %w[page.rdoc],
-      :longSearchIndex => %w[page_rdoc.html],
+      :searchIndex     => %w[page],
+      :longSearchIndex => [''],
       :info            => [@page.search_record],
     }
 

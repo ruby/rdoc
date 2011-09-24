@@ -21,6 +21,31 @@ require 'json'
 #     end
 #   end
 #
+# == Index Format
+#
+# The index is output as a JSON file assigned to the global variable
+# +search_data+.  The structure is:
+#
+#   var search_data = {
+#     "index": {
+#       "searchIndex":
+#         ["a", "b", ...],
+#       "longSearchIndex":
+#         ["a", "a::b", ...],
+#       "info": [
+#         ["A", "A", "A.html", "", ""],
+#         ["B", "A::B", "A::B.html", "", ""],
+#         ...
+#       ]
+#     }
+#   }
+#
+# The same item is described across the +searchIndex+, +longSearchIndex+ and
+# +info+ fields.  The +searchIndex+ field contains the item's short name, the
+# +longSearchIndex+ field contains the full_name (when appropriate) and the
+# +info+ field contains the item's name, full_name, path, parameters and a
+# snippet of the item's comment.
+#
 # == LICENSE
 #
 # Copyright (c) 2009 Vladimir Kolesnikov
@@ -93,9 +118,6 @@ class RDoc::Generator::JsonIndex
     index_methods
     index_pages
 
-    @index[:searchIndex].uniq!
-    @index[:longSearchIndex].uniq!
-
     debug_msg "  writing search index to %s" % SEARCH_INDEX_FILE
     data = { :index => @index }
 
@@ -122,9 +144,9 @@ class RDoc::Generator::JsonIndex
     end
 
     documented.each do |klass|
-      debug_msg "    #{klass.parent.full_name}::#{klass.name}"
+      debug_msg "    #{klass.full_name}"
       @index[:searchIndex]     << search_string(klass.name)
-      @index[:longSearchIndex] << search_string(klass.parent.full_name)
+      @index[:longSearchIndex] << search_string(klass.full_name)
       @index[:info]            << klass.search_record
     end
   end
@@ -144,7 +166,7 @@ class RDoc::Generator::JsonIndex
     list.each do |method|
       debug_msg "    #{method.full_name}"
       @index[:searchIndex]     << "#{search_string method.name}()"
-      @index[:longSearchIndex] << search_string(method.parent.full_name)
+      @index[:longSearchIndex] << search_string("#{method.full_name}()")
       @index[:info]            << method.search_record
     end
   end
@@ -160,9 +182,9 @@ class RDoc::Generator::JsonIndex
     end
 
     pages.each do |page|
-      debug_msg "    #{page.path}"
-      @index[:searchIndex]     << search_string(page.name)
-      @index[:longSearchIndex] << search_string(page.path)
+      debug_msg "    #{page.page_name}"
+      @index[:searchIndex]     << search_string(page.page_name)
+      @index[:longSearchIndex] << ''
       @index[:info]            << page.search_record
     end
   end
