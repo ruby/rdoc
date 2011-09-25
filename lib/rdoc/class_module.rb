@@ -519,10 +519,6 @@ class RDoc::ClassModule < RDoc::Context
   # Search record used by RDoc::Generator::JsonIndex
 
   def search_record
-    # TODO squashing the file list seems simplistic
-    files = @in_files.map { |file| file.absolute_name }
-    file = files.include?(@parent.full_name) ? files.first : @parent.full_name
-
     [
       name,
       full_name,

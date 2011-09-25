@@ -804,7 +804,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def parse_comment_tomdoc container, tk, comment
     return unless signature = RDoc::TomDoc.signature(comment)
-    column  = tk.char_no
     offset  = tk.seek
     line_no = tk.line_no
 

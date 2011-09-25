@@ -109,6 +109,7 @@ class RDoc::RubyLex
 
     @prompt = nil
     @prev_seek = nil
+    @ltype = nil
   end
 
   def inspect # :nodoc:
@@ -1144,7 +1145,7 @@ class RDoc::RubyLex
   end
 
   def identify_string(ltype, quoted = ltype)
-    close = PERCENT_PAREN.values.include?(@quoted)
+    close = PERCENT_PAREN.values.include?(quoted)
     @ltype = ltype
     @quoted = quoted
 

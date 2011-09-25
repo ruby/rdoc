@@ -138,7 +138,6 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
 
     json =~ /\Avar search_data = /
 
-    assignment = $&
     index = $'
 
     index = JSON.parse index

@@ -259,14 +259,6 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
   end
 
   def accept_raw
-    raw = <<-RAW.rstrip
-<table>
-<tr><th>Name<th>Count
-<tr><td>a<td>1
-<tr><td>b<td>2
-</table>
-    RAW
-
     assert_equal '', @to.res.join
     assert_equal 0, @to.characters
   end
