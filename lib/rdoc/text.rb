@@ -8,6 +8,11 @@ require 'strscan'
 ##
 # For RDoc::Text#snippet
 
+begin
+  gem 'json'
+rescue Gem::LoadError
+end
+
 require 'json'
 
 ##
