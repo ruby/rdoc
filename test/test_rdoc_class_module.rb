@@ -158,7 +158,7 @@ class TestRDocClassModule < XrefTestCase
 
     inner = RDoc::Markup::Document.new(
       RDoc::Markup::Paragraph.new('this is a comment'))
-    inner.file = tl.absolute_name
+    inner.file = tl
 
     comment = RDoc::Markup::Document.new inner
 
@@ -575,9 +575,9 @@ class TestRDocClassModule < XrefTestCase
     cm.add_comment 'comment 2', tl2
 
     doc1 = @RM::Document.new @RM::Paragraph.new 'comment 1'
-    doc1.file = tl1.absolute_name
+    doc1.file = tl1
     doc2 = @RM::Document.new @RM::Paragraph.new 'comment 2'
-    doc2.file = tl2.absolute_name
+    doc2.file = tl2
 
     expected = @RM::Document.new doc1, doc2
 
@@ -591,7 +591,7 @@ class TestRDocClassModule < XrefTestCase
     cm.comment = comment 'comment 1', tl1
 
     doc = @RM::Document.new @RM::Paragraph.new 'comment 1'
-    doc.file = tl1.absolute_name
+    doc.file = tl1
 
     assert_equal doc, cm.parse(cm.comment)
   end
@@ -604,7 +604,7 @@ class TestRDocClassModule < XrefTestCase
     cm.comment.format = 'rd'
 
     doc = @RM::Document.new @RM::Paragraph.new 'comment <em>1</em>'
-    doc.file = tl1.absolute_name
+    doc.file = tl1
 
     assert_equal doc, cm.parse(cm.comment)
   end
@@ -620,9 +620,9 @@ class TestRDocClassModule < XrefTestCase
     cm = Marshal.load Marshal.dump cm
 
     doc1 = @RM::Document.new @RM::Paragraph.new 'comment 1'
-    doc1.file = tl1.absolute_name
+    doc1.file = tl1
     doc2 = @RM::Document.new @RM::Paragraph.new 'comment 2'
-    doc2.file = tl2.absolute_name
+    doc2.file = tl2
 
     assert_same cm.comment_location, cm.parse(cm.comment_location)
   end

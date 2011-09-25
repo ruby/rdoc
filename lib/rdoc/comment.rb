@@ -171,7 +171,7 @@ class RDoc::Comment
     return @document if @document
 
     @document = super @text, @format
-    @document.file = @location.absolute_name
+    @document.file = @location
     @document
   end
 

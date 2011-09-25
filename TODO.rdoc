@@ -2,10 +2,7 @@ The items below are may not be implemented as ideas change.
 
 === RDoc 3.10
 
-* TomDoc 1.0.0-rc1
 * TomDoc Examples should always be highlighted as ruby
-* RDoc::Document and RDoc::Comment need to accept an RDoc::TopLevel for
-  file/location
 
 === RDoc 3.11
 

@@ -323,7 +323,7 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
     expected = @RM::Document.new(
       @RM::Paragraph.new('this is a comment'))
 
-    expected.file = @top_level.absolute_name
+    expected.file = @top_level
 
     assert_equal expected, parsed
     assert_same  parsed, @comment.parse
@@ -336,7 +336,7 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
     expected =
       @RM::Document.new(
         @RM::Paragraph.new('it <em>works</em>'))
-    expected.file = @top_level.absolute_name
+    expected.file = @top_level
 
     assert_equal expected, c.parse
   end

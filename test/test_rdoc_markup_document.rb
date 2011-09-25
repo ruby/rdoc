@@ -80,6 +80,18 @@ class TestRDocMarkupDocument < RDoc::TestCase
     assert_equal @d, d2
   end
 
+  def test_file_equals
+    @d.file = 'file.rb'
+
+    assert_equal 'file.rb', @d.file
+  end
+
+  def test_file_equals_top_level
+    @d.file = RDoc::TopLevel.new 'file.rb'
+
+    assert_equal 'file.rb', @d.file
+  end
+
   def test_lt2
     @d << @RM::BlankLine.new
 

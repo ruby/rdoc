@@ -452,14 +452,14 @@ class RDoc::ClassModule < RDoc::Context
     when Array then
       docs = comment_location.map do |comment, location|
         doc = super comment
-        doc.file = location.absolute_name
+        doc.file = location
         doc
       end
 
       RDoc::Markup::Document.new(*docs)
     when RDoc::Comment then
       doc = super comment_location.text, comment_location.format
-      doc.file = comment_location.location.absolute_name
+      doc.file = comment_location.location
       doc
     when RDoc::Markup::Document then
       return comment_location

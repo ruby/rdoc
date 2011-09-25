@@ -2351,7 +2351,7 @@ end
         @RM::List.new(:NOTE,
           @RM::ListItem.new('field',
             @RM::Paragraph.new('A field name.'))))
-    expected.file = @top_level.absolute_name
+    expected.file = @top_level
 
     assert_equal expected, m.comment.parse
   end

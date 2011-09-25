@@ -379,7 +379,7 @@ class TestRDocRIStore < RDoc::TestCase
     s = RDoc::RI::Store.new @tmpdir
 
     inner = @RM::Document.new @RM::Paragraph.new 'new comment'
-    inner.file = @top_level.absolute_name
+    inner.file = @top_level
 
     document = @RM::Document.new inner
 

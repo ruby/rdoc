@@ -182,7 +182,7 @@ The comments associated with
 
   def test_parse_comment
     expected = RDoc::Markup::Document.new
-    expected.file = @top_level.absolute_name
+    expected.file = @top_level
 
     c = comment ''
     parsed = parse c

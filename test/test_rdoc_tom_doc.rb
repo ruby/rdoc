@@ -72,7 +72,7 @@ here - something
         @RM::List.new(:NOTE,
           @RM::ListItem.new('here',
             @RM::Paragraph.new('something'))))
-    expected.file = @top_level.absolute_name
+    expected.file = @top_level
 
     assert_equal expected, c.parse
   end
@@ -120,7 +120,7 @@ here - something
         @RM::List.new(:NOTE,
           @RM::ListItem.new('here',
             @RM::Paragraph.new('something'))))
-    expected.file = @top_level.absolute_name
+    expected.file = @top_level
 
     assert_equal expected, c.parse
   end

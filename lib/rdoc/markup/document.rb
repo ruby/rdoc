@@ -7,7 +7,7 @@ class RDoc::Markup::Document
   # The file this document was created from.  See also
   # RDoc::ClassModule#add_comment
 
-  attr_accessor :file
+  attr_reader :file
 
   ##
   # The parts of the Document
@@ -72,6 +72,18 @@ class RDoc::Markup::Document
 
   def empty?
     @parts.empty? or (@parts.length == 1 and merged? and @parts.first.empty?)
+  end
+
+  ##
+  # The file this Document was created from.
+
+  def file= location
+    @file = case location
+            when RDoc::TopLevel then
+              location.absolute_name
+            else
+              location
+            end
   end
 
   ##
