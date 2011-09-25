@@ -129,7 +129,7 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
 
     text = "5\xB0"
     text.force_encoding Encoding::ISO_8859_1
-    @klass.comment = comment text
+    @klass.add_comment comment(text), @top_level
 
     @g.generate @top_levels
 

@@ -19,21 +19,5 @@ class TestRDocNormalClass < XrefTestCase
     assert_equal 'class C', c.definition
   end
 
-  def test_search_record
-    @c2_c3.comment = 'This is a comment.'
-
-    expected = [
-      'C3',
-      'C2::C3',
-      'C2::C3',
-      '',
-      'C2/C3.html',
-      '',
-      "<p>This is a comment.\n"
-    ]
-
-    assert_equal expected, @c2_c3.search_record
-  end
-
 end
 

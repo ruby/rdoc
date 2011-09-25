@@ -641,6 +641,39 @@ class TestRDocClassModule < XrefTestCase
     assert_equal %w[D], parent.classes_hash.keys
   end
 
+  def test_search_record
+    @c2_c3.add_comment 'This is a comment.', @xref_data
+
+    expected = [
+      'C3',
+      'C2::C3',
+      'C2::C3',
+      '',
+      'C2/C3.html',
+      '',
+      "<p>This is a comment.\n"
+    ]
+
+    assert_equal expected, @c2_c3.search_record
+  end
+
+  def test_search_record_merged
+    @c2_c3.add_comment 'comment A', RDoc::TopLevel.new('a.rb')
+    @c2_c3.add_comment 'comment B', RDoc::TopLevel.new('b.rb')
+
+    expected = [
+      'C3',
+      'C2::C3',
+      'C2::C3',
+      '',
+      'C2/C3.html',
+      '',
+      "<p>comment A\n<p>comment B\n"
+    ]
+
+    assert_equal expected, @c2_c3.search_record
+  end
+
   def test_superclass
     assert_equal @c3_h1, @c3_h2.superclass
   end

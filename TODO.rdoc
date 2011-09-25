@@ -14,6 +14,7 @@ API changes to RDoc
 
 * RDoc::TopLevel#add_method should automatically create the appropriate method
   class rather than requiring one be passed in.
+* Remove #comment= from Context subclasses in favor of #add_comment
 * RDoc::CodeObject
   * Move into own namespace
   * Rename TopLevel to File

@@ -142,6 +142,10 @@ class RDoc::Comment
     @document = nil
   end
 
+  def inspect # :nodoc:
+    "#<%s:%x %s %p>" % [self.class, object_id, @location.absolute_name, @text]
+  end
+
   ##
   # Normalizes the text.  See RDoc::Text#normalize_comment for details
 
