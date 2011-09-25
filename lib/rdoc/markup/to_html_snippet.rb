@@ -185,7 +185,7 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
 
   def convert content
     catch :done do
-      return @markup.convert(content, self)
+      return super
     end
 
     end_accepting
