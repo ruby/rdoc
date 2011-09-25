@@ -61,7 +61,7 @@ class RDoc::TomDoc < RDoc::Markup::Parser
 
   add_post_processor
 
-  # Parses TomDoc from text
+  # Public: Parses TomDoc from text
   #
   # text - A String containing TomDoc-format text.
   #
@@ -72,6 +72,7 @@ class RDoc::TomDoc < RDoc::Markup::Parser
   #
   #   Returns nothing.
   #   TOMDOC
+  #   # => #<RDoc::Markup::Document:0xXXX @parts=[...], @file=nil>
   #
   # Returns an RDoc::Markup::Document representing the TomDoc format.
 
