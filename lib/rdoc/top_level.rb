@@ -311,7 +311,7 @@ class RDoc::TopLevel < RDoc::Context
   # An RDoc::TopLevel is equal to another with the same absolute_name
 
   def == other
-    other.class === self and @absolute_name == other.absolute_name
+    self.class === other and @absolute_name == other.absolute_name
   end
 
   alias eql? ==
