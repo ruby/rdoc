@@ -171,6 +171,26 @@ Returns a thing
     assert_equal expected, @TD.parse(text)
   end
 
+  def test_parse_signature
+    text = <<-TEXT
+Do some stuff
+
+Signature
+
+  some_method(args)
+    TEXT
+
+    expected =
+      @RM::Document.new(
+        @RM::Paragraph.new('Do some stuff'),
+        @RM::BlankLine.new,
+        @RM::Heading.new(3, 'Signature'),
+        @RM::BlankLine.new,
+        @RM::Verbatim.new("some_method(args)\n"))
+
+    assert_equal expected, @TD.parse(text)
+  end
+
   def test_tokenize_paragraph
     @td.tokenize "Public: Do some stuff\n"
 
