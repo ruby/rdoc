@@ -705,6 +705,16 @@ class TestRDocContext < XrefTestCase
     assert_equal [nil, 'Public', 'Internal', 'Deprecated'], titles
   end
 
+  def test_sort_sections_tomdoc_missing
+    c = RDoc::Context.new
+    c.add_section 'Internal'
+    c.add_section 'Public'
+
+    titles = c.sort_sections.map { |section| section.title }
+
+    assert_equal [nil, 'Public', 'Internal'], titles
+  end
+
   def util_visibilities
     @pub  = RDoc::AnyMethod.new nil, 'pub'
     @prot = RDoc::AnyMethod.new nil, 'prot'

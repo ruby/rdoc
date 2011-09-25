@@ -18,6 +18,7 @@ class RDoc::Context < RDoc::CodeObject
   # If a context has these titles it will be sorted in this order.
 
   TOMDOC_TITLES = [nil, 'Public', 'Internal', 'Deprecated'] # :nodoc:
+  TOMDOC_TITLES_SORT = TOMDOC_TITLES.sort_by { |title| title.to_s } # :nodoc:
 
   ##
   # Class/module aliases
@@ -1057,8 +1058,9 @@ class RDoc::Context < RDoc::CodeObject
     titles = @sections.map { |title, _| title }
 
     if titles.length > 1 and
-      TOMDOC_TITLES == (titles | TOMDOC_TITLES) then
-      @sections.values_at(*TOMDOC_TITLES)
+       TOMDOC_TITLES_SORT ==
+         (titles | TOMDOC_TITLES).sort_by { |title| title.to_s } then
+      @sections.values_at(*TOMDOC_TITLES).compact
     else
       @sections.sort_by { |title, _|
         title.to_s
