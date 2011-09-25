@@ -210,5 +210,12 @@ class RDoc::Comment
     @text = text
   end
 
+  ##
+  # Returns true if this comment is in TomDoc format.
+
+  def tomdoc?
+    @format == 'tomdoc'
+  end
+
 end
 

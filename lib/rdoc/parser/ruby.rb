@@ -736,7 +736,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Generates an RDoc::Method or RDoc::Attr from +comment+ by looking for
   # :method: or :attr: directives in +comment+.
 
-  def parse_comment(container, tk, comment)
+  def parse_comment container, tk, comment
+    return parse_comment_tomdoc container, tk, comment if @markup == 'tomdoc'
     column  = tk.char_no
     offset  = tk.seek
     line_no = tk.line_no
@@ -795,6 +796,44 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     true
+  end
+
+  ##
+  # Creates an RDoc::Method on +container+ from +comment+ if there is a
+  # Signature section in the comment
+
+  def parse_comment_tomdoc container, tk, comment
+    return unless signature = RDoc::TomDoc.signature(comment)
+    column  = tk.char_no
+    offset  = tk.seek
+    line_no = tk.line_no
+
+    name, = signature.split %r%[ \(]%, 2
+
+    meth = RDoc::GhostMethod.new get_tkread, name
+    meth.record_location @top_level
+    meth.offset    = offset
+    meth.line      = line_no
+
+    meth.start_collecting_tokens
+    indent = TkSPACE.new 0, 1, 1
+    indent.set_text " " * offset
+
+    position_comment = TkCOMMENT.new 0, line_no, 1
+    position_comment.set_text "# File #{@top_level.absolute_name}, line #{line_no}"
+    meth.add_tokens [position_comment, NEWLINE_TOKEN, indent]
+
+    meth.call_seq = signature
+
+    comment.normalize
+
+    return unless meth.name
+
+    container.add_method meth
+
+    meth.comment = comment
+
+    @stats.add_method meth
   end
 
   ##

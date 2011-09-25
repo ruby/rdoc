@@ -309,6 +309,14 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
     refute_equal document, @comment.parse
   end
 
+  def test_tomdoc_eh
+    refute @comment.tomdoc?
+
+    @comment.format = 'tomdoc'
+
+    assert @comment.tomdoc?
+  end
+
   def test_parse
     parsed = @comment.parse
 

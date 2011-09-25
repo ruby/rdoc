@@ -12,10 +12,10 @@
       pages.
     * HTML output is now using HTML 5.
   * RDoc supports additional documentation types:
-    * TomDoc 1.0.0-pre
+    * TomDoc 1.0.0-rc1
     * RD format
 
-    The default format can be set via the <tt>--markup</tt> option.
+    The default markup can be set via the <tt>--markup</tt> option.
 
     The format of documentation in a particular file can be specified by the
     +:markup:+ directive.  If the :markup: directive is in the first comment

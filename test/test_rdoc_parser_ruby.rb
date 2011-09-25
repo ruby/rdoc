@@ -2320,6 +2320,42 @@ end
     assert_equal 'rd', c.method_list.first.comment.format
   end
 
+  def test_scan_tomdoc_meta
+    util_parser <<-RUBY
+# :markup: tomdoc
+
+class C
+
+  # Signature
+  #
+  #   find_by_<field>[_and_<field>...](args)
+  #
+  # field - A field name.
+
+end
+
+    RUBY
+
+    @parser.scan
+
+    c = @top_level.classes.first
+
+    m = c.method_list.first
+
+    assert_equal "find_by_<field>[_and_<field>...]", m.name
+    assert_equal "find_by_<field>[_and_<field>...](args)\n", m.call_seq
+
+    expected =
+      @RM::Document.new(
+        @RM::Heading.new(3, 'Signature'),
+        @RM::List.new(:NOTE,
+          @RM::ListItem.new('field',
+            @RM::Paragraph.new('A field name.'))))
+    expected.file = @top_level.absolute_name
+
+    assert_equal expected, m.comment.parse
+  end
+
   def test_stopdoc_after_comment
     util_parser <<-EOS
       module Bar

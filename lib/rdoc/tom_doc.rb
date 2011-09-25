@@ -84,6 +84,41 @@ class RDoc::TomDoc < RDoc::Markup::Parser
     doc
   end
 
+  # Internal: Extracts the Signature section's method signature
+  #
+  # comment - An RDoc::Comment that will be parsed and have the signature
+  #           extracted
+  #
+  # Returns a String containing the signature and nil if not
+
+  def self.signature comment
+    return unless comment.tomdoc?
+
+    document = comment.parse
+
+    signature = nil
+    found_heading = false
+    found_signature = false
+
+    document.parts.delete_if do |part|
+      next false if found_signature
+
+      found_heading ||=
+        RDoc::Markup::Heading === part && part.text == 'Signature'
+
+      next false unless found_heading
+
+      next true if RDoc::Markup::BlankLine === part
+
+      if RDoc::Markup::Verbatim === part then
+        signature = part
+        found_signature = true
+      end
+    end
+
+    signature and signature.text
+  end
+
   # Internal: Builds a paragraph from the token stream
   #
   # margin - Unused

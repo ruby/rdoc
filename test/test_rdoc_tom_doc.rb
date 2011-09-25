@@ -5,6 +5,8 @@ class TestRDocTomDoc < RDoc::TestCase
   def setup
     super
 
+    @top_level = RDoc::TopLevel.new 'file.rb'
+
     @TD = RDoc::TomDoc
     @td = @TD.new
   end
@@ -34,6 +36,93 @@ class TestRDocTomDoc < RDoc::TestCase
 
     assert_equal 'Public', method.section.title
     assert_equal "# Do some stuff\n", comment.text
+  end
+
+  def test_class_signature
+    c = comment <<-COMMENT
+Signature
+
+  method_<here>(args)
+
+here - something
+    COMMENT
+    c.format = 'tomdoc'
+
+    signature = @TD.signature c
+
+    assert_equal "method_<here>(args)\n", signature
+  end
+
+  def test_class_signature_no_space
+    c = comment <<-COMMENT
+Signature
+  method_<here>(args)
+
+here - something
+    COMMENT
+    c.format = 'tomdoc'
+
+    signature = @TD.signature c
+
+    assert_equal "method_<here>(args)\n", signature
+
+    expected =
+      @RM::Document.new(
+        @RM::Heading.new(3, 'Signature'),
+        @RM::List.new(:NOTE,
+          @RM::ListItem.new('here',
+            @RM::Paragraph.new('something'))))
+    expected.file = @top_level.absolute_name
+
+    assert_equal expected, c.parse
+  end
+
+  def test_class_signature_none
+    c = comment ''
+    c.format = 'tomdoc'
+
+    assert_nil @TD.signature c
+  end
+
+  def test_class_rdoc
+    c = comment <<-COMMENT
+=== Signature
+
+  method_<here>(args)
+
+here - something
+    COMMENT
+    c.format = 'rdoc'
+
+    signature = @TD.signature c
+
+    assert_nil signature
+  end
+
+  def test_class_signature_two_space
+    c = comment <<-COMMENT
+Signature
+
+
+  method_<here>(args)
+
+here - something
+    COMMENT
+    c.format = 'tomdoc'
+
+    signature = @TD.signature c
+
+    assert_equal "method_<here>(args)\n", signature
+
+    expected =
+      @RM::Document.new(
+        @RM::Heading.new(3, 'Signature'),
+        @RM::List.new(:NOTE,
+          @RM::ListItem.new('here',
+            @RM::Paragraph.new('something'))))
+    expected.file = @top_level.absolute_name
+
+    assert_equal expected, c.parse
   end
 
   def test_parse_paragraph
