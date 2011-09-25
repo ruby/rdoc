@@ -996,14 +996,15 @@ class RDoc::RubyLex
     end
 
     @here_header = false
-    doc = ''
+    doc = '"'
     while l = gets
-      l = l.sub(/(:?\r)?\n\z/, '')
+      l = l.sub(/(:?\r)?\n\z/, "\n")
       if (indent ? l.strip : l) == quoted
         break
       end
       doc << l
     end
+    doc << '"'
 
     @here_header = true
     @here_readed.concat reserve
