@@ -1,8 +1,6 @@
-The items below are may not be implemented as ideas change.
+Some file contains some things that might happen in RDoc, or might not
 
 === RDoc 3.10
-
-* TomDoc Examples should always be highlighted as ruby
 
 === RDoc 3.11
 

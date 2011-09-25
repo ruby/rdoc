@@ -74,11 +74,10 @@ lib/rdoc/generator/template/darkfish/js/darkfish.js
 lib/rdoc/generator/template/darkfish/js/jquery.js
 lib/rdoc/generator/template/darkfish/js/quicksearch.js
 lib/rdoc/generator/template/darkfish/js/search.js
-lib/rdoc/generator/template/darkfish/js/searcher.js
-lib/rdoc/generator/template/darkfish/js/thickbox-compressed.js
 lib/rdoc/generator/template/darkfish/page.rhtml
 lib/rdoc/generator/template/darkfish/rdoc.css
 lib/rdoc/generator/template/darkfish/table_of_contents.rhtml
+lib/rdoc/generator/template/json_index/js/searcher.js
 lib/rdoc/ghost_method.rb
 lib/rdoc/include.rb
 lib/rdoc/known_classes.rb
@@ -196,6 +195,7 @@ test/test_rdoc_markup_to_label.rb
 test/test_rdoc_markup_to_rdoc.rb
 test/test_rdoc_markup_to_table_of_contents.rb
 test/test_rdoc_markup_to_tt_only.rb
+test/test_rdoc_markup_verbatim.rb
 test/test_rdoc_method_attr.rb
 test/test_rdoc_normal_class.rb
 test/test_rdoc_normal_module.rb

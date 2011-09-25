@@ -4,6 +4,17 @@
 class RDoc::Markup::Verbatim < RDoc::Markup::Raw
 
   ##
+  # Format of this verbatim section
+
+  attr_accessor :format
+
+  def initialize *parts # :nodoc:
+    super
+
+    @format = nil
+  end
+
+  ##
   # Calls #accept_verbatim on +visitor+
 
   def accept visitor
@@ -32,6 +43,13 @@ class RDoc::Markup::Verbatim < RDoc::Markup::Raw
     parts.pop if parts.last =~ /\A\r?\n\z/
 
     @parts = parts
+  end
+
+  ##
+  # Is this verbatim section ruby code?
+
+  def ruby?
+    @format == :ruby
   end
 
   ##

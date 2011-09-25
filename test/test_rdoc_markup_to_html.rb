@@ -323,7 +323,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
                  @to.res.join
   end
 
-  def test_accept_verbatim_ruby
+  def test_accept_verbatim_parseable
     options = RDoc::Options.new
     rdoc = RDoc::RDoc.new
     rdoc.options = options
@@ -344,7 +344,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal expected, @to.res.join
   end
 
-  def test_accept_verbatim_ruby_error
+  def test_accept_verbatim_parseable_error
     options = RDoc::Options.new
     rdoc = RDoc::RDoc.new
     rdoc.options = options
@@ -358,6 +358,27 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     expected = <<-EXPECTED
 
 <pre>a %z'foo' # =&gt; blah
+</pre>
+    EXPECTED
+
+    assert_equal expected, @to.res.join
+  end
+
+  def test_accept_verbatim_ruby
+    options = RDoc::Options.new
+    rdoc = RDoc::RDoc.new
+    rdoc.options = options
+    RDoc::RDoc.current = rdoc
+
+    verb = @RM::Verbatim.new("1 + 1\n")
+    verb.format = :ruby
+
+    @to.start_accepting
+    @to.accept_verbatim verb
+
+    expected = <<-EXPECTED
+
+<pre class="ruby"><span class="ruby-value">1</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>
 </pre>
     EXPECTED
 

@@ -119,6 +119,44 @@ class RDoc::TomDoc < RDoc::Markup::Parser
     signature and signature.text
   end
 
+  # Public: Creates a new TomDoc parser.  See also RDoc::Markup::parse
+
+  def initialize
+    super
+
+    @section = nil
+  end
+
+  # Internal: Builds a heading from the token stream
+  #
+  # level - The level of heading to create
+  #
+  # Returns an RDoc::Markup::Heading
+
+  def build_heading level
+    heading = super
+
+    @section = heading.text
+
+    heading
+  end
+
+  # Internal: Builds a verbatim from the token stream.  A verbatim in the
+  # Examples section will be marked as in ruby format.
+  #
+  # margin - The indentation from the margin for lines that belong to this
+  #          verbatim section.
+  #
+  # Returns an RDoc::Markup::Verbatim
+
+  def build_verbatim margin
+    verbatim = super
+
+    verbatim.format = :ruby if @section == 'Examples'
+
+    verbatim
+  end
+
   # Internal: Builds a paragraph from the token stream
   #
   # margin - Unused

@@ -190,7 +190,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   def accept_verbatim verbatim
     text = verbatim.text.rstrip
 
-    @res << if parseable? text then
+    @res << if verbatim.ruby? or parseable? text then
               options = RDoc::RDoc.current.options if RDoc::RDoc.current
 
               begin

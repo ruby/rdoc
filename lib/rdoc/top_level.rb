@@ -450,9 +450,10 @@ class RDoc::TopLevel < RDoc::Context
   # Base name of this file without the extension
 
   def page_name
-    File.basename(@absolute_name) =~ /\.[^.]*$/
+    basename = File.basename @absolute_name
+    basename =~ /\.[^.]*$/
 
-    $`
+    $` || basename
   end
 
   ##

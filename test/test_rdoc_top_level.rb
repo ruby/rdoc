@@ -241,6 +241,10 @@ class TestRDocTopLevel < XrefTestCase
     tl = RDoc::TopLevel.new 'README.ja.rdoc'
 
     assert_equal 'README.ja', tl.page_name
+
+    tl = RDoc::TopLevel.new 'Rakefile'
+
+    assert_equal 'Rakefile', tl.page_name
   end
 
   def test_search_record
