@@ -8,6 +8,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     super
 
     @to = RDoc::Markup::ToHtmlSnippet.new 100, 100
+    @ellipsis = @to.to_html '...'
   end
 
   def accept_blank_line
@@ -418,7 +419,7 @@ So there you have it
 <p>Hello
 <p>This is some text, it <strong>will</strong> be cut off after 100 characters
 and an ellipsis must follow
-<p>So there you ...
+<p>So there you #{@ellipsis}
     EXPECTED
 
     actual = @to.convert rdoc
@@ -437,7 +438,7 @@ be guessed, raises an error if +name+ couldn't be guessed.
 
     expected = <<-EXPECTED
 <p>Outputs formatted RI data for the class or method <code>name</code>.
-<p>Returns true if <code>name</code> was found, false if it was ...
+<p>Returns true if <code>name</code> was found, false if it was #{@ellipsis}
     EXPECTED
 
     actual = @to.convert rdoc
@@ -481,7 +482,7 @@ See RDoc for a description of RDoc's markup and basic use.
     @to = RDoc::Markup::ToHtmlSnippet.new 4
     rdoc = "* ab *c* d\n"
 
-    expected = "<p>ab <strong>c</strong> ...\n\n"
+    expected = "<p>ab <strong>c</strong> #{@ellipsis}\n\n"
 
     actual = @to.convert rdoc
 
@@ -523,7 +524,7 @@ NOTE: Given Foo::Bar, Bar is considered a class even though it may be a
     expected = <<-EXPECTED
 <p>Extracts the class, selector and method name parts from <code>name</code>
 like Foo::Bar#baz.
-<p>NOTE: Given Foo::Bar, ...
+<p>NOTE: Given Foo::Bar, #{@ellipsis}
     EXPECTED
 
     actual = @to.convert rdoc
@@ -561,7 +562,7 @@ This routine modifies its +comment+ parameter.
 
     expected = "<p>text\n"
     expected.chomp!
-    expected << " ...\n"
+    expected << " #{@ellipsis}\n"
 
     actual = @to.convert rdoc
 

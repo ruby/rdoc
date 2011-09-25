@@ -12,6 +12,7 @@ Some file contains some things that might happen in RDoc, or might not
 
 API changes to RDoc
 
+* Remove RDoc::RDocError
 * RDoc::TopLevel#add_method should automatically create the appropriate method
   class rather than requiring one be passed in.
 * Remove #comment= from Context subclasses in favor of #add_comment

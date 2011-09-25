@@ -46,3 +46,10 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
 
 end
 
+# This hack allows autoload to work when Dir.pwd is changed for Ruby 1.8 since
+# -I paths are not expanded.
+$LOAD_PATH.each do |load_path|
+  break if load_path[0] == ?/
+  load_path.replace File.expand_path load_path
+end if RUBY_VERSION < '1.9'
+

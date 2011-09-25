@@ -1151,8 +1151,10 @@ class RDoc::RubyLex
 
     str = if ltype == quoted then
             ltype.dup
-          else
+          elsif RUBY_VERSION > '1.9' then
             "%#{PERCENT_LTYPE.key ltype}#{PERCENT_PAREN_REV[quoted]}"
+          else
+            "%#{PERCENT_LTYPE.index ltype}#{PERCENT_PAREN_REV[quoted]}"
           end
 
     subtype = nil

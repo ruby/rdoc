@@ -10,7 +10,6 @@ class TestRDocGeneratorRI < RDoc::TestCase
 
     @tmpdir = File.join Dir.tmpdir, "test_rdoc_generator_ri_#{$$}"
     FileUtils.mkdir_p @tmpdir
-    Dir.chdir @tmpdir
 
     @g = RDoc::Generator::RI.new @options
 
@@ -29,6 +28,8 @@ class TestRDocGeneratorRI < RDoc::TestCase
     @klass.add_method @meth
     @klass.add_method @meth_bang
     @klass.add_attribute @attr
+
+    Dir.chdir @tmpdir
   end
 
   def teardown

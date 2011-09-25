@@ -1,5 +1,4 @@
 require 'autotest/restart'
-require 'autotest/isolate'
 
 Autotest.add_hook :run_command do |at|
   at.unit_diff = 'cat'

@@ -94,7 +94,7 @@ module RDoc
 
   def self.const_missing const_name # :nodoc:
     if const_name.to_s == 'RDocError' then
-      warn "RDoc::RDocError is deprecated"
+      warn "RDoc::RDocError is deprecated and will be removed in RDoc 4"
       return Error
     end
 

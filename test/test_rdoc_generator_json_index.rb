@@ -9,12 +9,12 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
 
     @tmpdir = File.join Dir.tmpdir, "test_rdoc_generator_darkfish_#{$$}"
     FileUtils.mkdir_p @tmpdir
-    Dir.chdir @tmpdir
 
     @options = RDoc::Options.new
     @options.files = []
     # JsonIndex is used in conjunction with another generator
     @options.setup_generator 'darkfish'
+    @options.template_dir = ''
     @options.op_dir = @tmpdir
     @options.option_parser = OptionParser.new
     @options.finish
@@ -48,6 +48,8 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
 
     @top_levels = [@top_level, @page].sort
     @klasses    = [@klass, @nest_klass, @ignored]
+
+    Dir.chdir @tmpdir
   end
 
   def teardown
