@@ -1,3 +1,5 @@
+# coding: US-ASCII
+
 require 'rdoc/test_case'
 
 class TestRDocGeneratorJsonIndex < RDoc::TestCase
@@ -93,6 +95,60 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
 
     info = [
       @klass.search_record[2..-1],
+      @nest_klass.search_record[2..-1],
+      @meth.search_record[2..-1],
+      @nest_meth.search_record[2..-1],
+      @page.search_record[2..-1],
+    ]
+
+    expected = {
+      'index' => {
+        'searchIndex' => [
+          'c',
+          'd',
+          'meth()',
+          'meth()',
+          'page',
+        ],
+        'longSearchIndex' => [
+          'c',
+          'c::d',
+          'c#meth()',
+          'c::d#meth()',
+          '',
+        ],
+        'info' => info,
+      },
+    }
+
+    assert_equal expected, index
+  end
+
+  def test_generate_utf_8
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    text = "5\xB0"
+    text.force_encoding Encoding::ISO_8859_1
+    @klass.comment = comment text
+
+    @g.generate @top_levels
+
+    json = File.read 'js/search_index.js'
+    json.force_encoding Encoding::UTF_8
+
+    json =~ /\Avar search_data = /
+
+    assignment = $&
+    index = $'
+
+    index = JSON.parse index
+
+    klass_record = @klass.search_record[2..-1]
+    klass_record[-1] = "<p>5\xc2\xb0\n"
+    klass_record.last.force_encoding Encoding::UTF_8
+
+    info = [
+      klass_record,
       @nest_klass.search_record[2..-1],
       @meth.search_record[2..-1],
       @nest_meth.search_record[2..-1],
