@@ -1,7 +1,9 @@
 ##
 # Base class for RDoc markup formatters
 #
-# Formatters use a visitor pattern to convert content into output.
+# Formatters are a visitor that converts an RDoc::Markup tree (from a comment)
+# into some kind of output.  RDoc ships with formatters for converting back to
+# rdoc, ANSI text, HTML, a Table of Contents and other formats.
 #
 # If you'd like to write your own Formatter use
 # RDoc::Markup::FormatterTestCase.  If you're writing a text-output formatter
@@ -56,7 +58,7 @@ class RDoc::Markup::Formatter
   ##
   # Marks up +content+
 
-  def convert(content)
+  def convert content
     @markup.convert content, self
   end
 
