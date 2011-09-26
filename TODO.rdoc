@@ -2,6 +2,8 @@ Some file contains some things that might happen in RDoc, or might not
 
 === RDoc 3.10
 
+* Copy static files into doc dir for HTML
+
 === RDoc 3.11
 
 * Reload the RDoc tree from an RI store

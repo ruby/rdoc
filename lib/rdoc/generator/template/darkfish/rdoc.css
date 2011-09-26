@@ -8,7 +8,7 @@
 
 /* Base Green is: #6C8C22 */
 
-*{ padding: 0; margin: 0; }
+* { padding: 0; margin: 0; }
 
 body {
   background: #efefef;
@@ -236,14 +236,6 @@ ul.link-list .type {
 #project-metadata form {
   color: #777;
   background: #ccc;
-}
-
-#no-search-results {
-  margin: 0 auto 1em;
-  text-align: center;
-  font-size: 14px;
-  font-weight: bold;
-  color: #aaa;
 }
 
 /* @end */
@@ -567,6 +559,10 @@ pre {
   font-size: 1em;
   font-weight: normal;
   text-shadow: none;
+}
+
+#search-results .current .search-match {
+  font-weight: bold;
 }
 
 #search-results li {

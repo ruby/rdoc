@@ -78,11 +78,6 @@ class RDoc::Generator::JsonIndex
 
   SEARCH_INDEX_FILE = File.join 'js', 'search_index.js'
 
-  ##
-  # Where the search implementation lives in the generated output
-
-  SEARCHER_FILE = File.join 'js', 'searcher.js'
-
   attr_reader :index # :nodoc:
 
   ##
@@ -95,7 +90,7 @@ class RDoc::Generator::JsonIndex
     @parent_generator = parent_generator
     @options = options
 
-    @template_dir = Pathname.new options.template_dir
+    @template_dir = File.expand_path '../template/json_index', __FILE__
     @base_dir = @parent_generator.base_dir
 
     @classes = nil
@@ -140,13 +135,13 @@ class RDoc::Generator::JsonIndex
       JSON.dump data, io, 0
     end
 
-    searcher_file = out_dir + SEARCHER_FILE
+    Dir.chdir @template_dir do
+      Dir['**/*.js'].each do |source|
+        dest = File.join out_dir, source
 
-    searcher =
-      File.expand_path "../template/json_index/#{SEARCHER_FILE}", __FILE__
-
-    FileUtils.install(searcher, searcher_file,
-                      :mode => 0644, :verbose => $DEBUG_RDOC)
+        FileUtils.install source, dest, :mode => 0644, :verbose => $DEBUG_RDOC
+      end
+    end
   end
 
   ##

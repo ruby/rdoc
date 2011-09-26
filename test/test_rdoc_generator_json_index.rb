@@ -82,6 +82,7 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
     @g.generate @top_levels
 
     assert_file 'js/searcher.js'
+    assert_file 'js/navigation.js'
     assert_file 'js/search_index.js'
 
     json = File.read 'js/search_index.js'
