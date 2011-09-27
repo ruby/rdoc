@@ -48,17 +48,18 @@ pre {
   display: none;
 }
 
-#quicksearch-field {
+#search-field {
   width: 98%;
   background: #eee;
   border: none;
   height: 1.5em;
   -webkit-border-radius: 4px;
 }
-#quicksearch-field:focus {
+#search-field:focus {
   background: #f1edba;
 }
-#quicksearch-field::-webkit-input-placeholder {
+#search-field:-moz-placeholder,
+#search-field::-webkit-input-placeholder {
   font-weight: bold;
   color: #666;
 }

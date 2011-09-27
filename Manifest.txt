@@ -72,7 +72,6 @@ lib/rdoc/generator/template/darkfish/images/zoom.png
 lib/rdoc/generator/template/darkfish/index.rhtml
 lib/rdoc/generator/template/darkfish/js/darkfish.js
 lib/rdoc/generator/template/darkfish/js/jquery.js
-lib/rdoc/generator/template/darkfish/js/quicksearch.js
 lib/rdoc/generator/template/darkfish/js/search.js
 lib/rdoc/generator/template/darkfish/page.rhtml
 lib/rdoc/generator/template/darkfish/rdoc.css

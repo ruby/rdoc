@@ -1,10 +1,6 @@
 <nav id="classindex-section" class="section project-section">
   <h3 class="section-header">Class and Module Index</h3>
 
-  <form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
-    <input type="text" name="quicksearch" placeholder="Search" id="quicksearch-field">
-  </form>
-
   <ul class="link-list">
   <% @modsort.each do |index_klass| %>
     <li><a href="<%= rel_prefix %>/<%= index_klass.path %>"><%= index_klass.full_name %></a>
