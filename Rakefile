@@ -16,7 +16,7 @@ Hoe.plugin :rdoc_tags
 
 $rdoc_rakefile = true
 
-Hoe.spec 'rdoc' do
+hoe = Hoe.spec 'rdoc' do
   developer 'Eric Hodel', 'drbrain@segment7.net'
   developer 'Dave Thomas', ''
   developer 'Phil Hagelberg', 'technomancy@gmail.com'
@@ -50,13 +50,17 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   spec_extras['homepage'] = 'http://docs.seattlerb.org/rdoc'
 end
 
-task 'generate' => PARSER_FILES
+task :generate => PARSER_FILES
 
 rule '.rb' => '.ry' do |t|
   racc = Gem.bin_path 'racc', 'racc'
 
   ruby "-rubygems #{racc} -l -o #{t.name} #{t.source}"
 end
+
+path = "pkg/#{hoe.spec.full_name}"
+package_parser_files = PARSER_FILES.map { |file| "#{path}/#{file}" }
+task "#{path}.gem" => package_parser_files
 
 # These tasks expect to have the following directory structure:
 #

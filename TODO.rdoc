@@ -4,7 +4,6 @@ Some file contains some things that might happen in RDoc, or might not
 
 * Copy static files into doc dir for HTML
 * Add sections to the ToC
-* Generate rd parser files into pkg dir
 * Add a markup option to RDoc::Task
 
 === RDoc 3.11
