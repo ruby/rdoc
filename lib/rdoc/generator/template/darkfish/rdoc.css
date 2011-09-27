@@ -561,13 +561,17 @@ pre {
   text-shadow: none;
 }
 
-#search-results .current .search-match {
-  font-weight: bold;
+#search-results .current {
+  background: #ccc;
+  border-bottom: 1px solid transparent;
 }
 
 #search-results li {
   list-style: none;
-  border-bottom: 1px solid #AAA;
+  border-bottom: 1px solid #aaa;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
   margin-bottom: 0.5em;
 }
 
