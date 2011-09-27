@@ -9,6 +9,8 @@ Some file contains some things that might happen in RDoc, or might not
 * Reload the RDoc tree from an RI store
   * Re-run generators
   * Parse only changed files (like in ruby)
+* Page of Glory (or Shame) in HTML output showing documentation coverage
+  statistics.
 
 === RDoc 4
 
