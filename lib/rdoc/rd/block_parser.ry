@@ -228,6 +228,8 @@ end
 
 ---- inner
 
+# :stopdoc:
+
 TMPFILE = ["rdtmp", $$, 0]
 
 MARK_TO_LEVEL = {
@@ -239,9 +241,26 @@ MARK_TO_LEVEL = {
   '++'   => 6,
 }
 
+# :startdoc:
+
+##
+# Footnotes for this document
+
 attr_reader :footnotes
+
+##
+# Labels for items in this document
+
 attr_reader :labels
+
+##
+# Path to find included files in
+
 attr_accessor :include_path
+
+##
+# Creates a new RDoc::RD::BlockParser.  Use #parse to parse an rd-format
+# document.
 
 def initialize
   @inline_parser = RDoc::RD::InlineParser.new self
@@ -251,6 +270,9 @@ def initialize
   @footnotes = []
   @labels    = {}
 end
+
+##
+# Parses +src+ and returns an RDoc::Markup::Document.
 
 def parse src
   @src = src
@@ -293,7 +315,10 @@ def parse src
   document
 end
 
-def next_token
+##
+# Returns the next token from the document
+
+def next_token # :nodoc:
   # preprocessing
   # if it is not in RD part
   # => method
@@ -445,12 +470,10 @@ def next_token
   end
 end
 
-=begin private
-  --- RDParser#if_current_indent_equal(indent)
-        if (({@current_indent == ((|indent|))})) then yield block, otherwise
-        process indentation.
-=end
-# always @current_indent = @indent_stack.join("")
+##
+# Yields to the given block if +indent+ matches the current indent, otherwise
+# an indentation token is processed.
+
 def if_current_indent_equal(indent)
   indent = indent.sub(/\t/, "\s" * 8)
   if @current_indent == indent
@@ -465,6 +488,9 @@ def if_current_indent_equal(indent)
   end
 end
 private :if_current_indent_equal
+
+##
+# Cuts off excess whitespace in +src+
 
 def cut_off(src)
   ret = []
@@ -499,6 +525,9 @@ def set_term_to_element(parent, term)
 end
 private :set_term_to_element
 
+##
+# Raises a ParseError
+
 def on_error(et, ev, _values)
   prv, cur, nxt = format_line_num(@i, @i+1, @i+2)
 
@@ -512,9 +541,15 @@ RD syntax error: line #{@i+1}:
 Msg
 end
 
+##
+# Current line number
+
 def line_index
   @i
 end
+
+##
+# Parses subtree +src+
 
 def parse_subtree src
   @subparser ||= RDoc::RD::BlockParser.new
@@ -522,6 +557,9 @@ def parse_subtree src
   @subparser.parse src
 end
 private :parse_subtree
+
+##
+# Retrieves the content for +file+ from the include_path
 
 def get_included(file)
   included = []
@@ -539,15 +577,24 @@ def get_included(file)
 end
 private :get_included
 
-def format_line_num(*args)
-  width = args.collect{|i| i.to_s.length }.max
-  args.collect{|i| sprintf("%#{width}d", i) }
+##
+# Formats line numbers +line_numbers+ prettily
+
+def format_line_num(*line_numbers)
+  width = line_numbers.collect{|i| i.to_s.length }.max
+  line_numbers.collect{|i| sprintf("%#{width}d", i) }
 end
 private :format_line_num
+
+##
+# Retrieves the content of +values+ as a single String
 
 def content values
  values.map { |value| value.content }.join
 end
+
+##
+# Creates a paragraph for +value+
 
 def paragraph value
   content = cut_off(value).join(' ').rstrip
@@ -555,6 +602,9 @@ def paragraph value
 
   RDoc::Markup::Paragraph.new(*contents)
 end
+
+##
+# Adds footnote +content+ to the document
 
 def add_footnote content
   index = @footnotes.length + 1
@@ -565,6 +615,9 @@ def add_footnote content
 
   index
 end
+
+##
+# Adds label +label+ to the document
 
 def add_label label
   @labels[label] = true

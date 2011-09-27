@@ -40,6 +40,10 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
     @pwd = Dir.pwd
   end
 
+  ##
+  # Creates an RDoc::Comment with +text+ which was defined on +top_level+.
+  # By default the comment has the 'rdoc' format.
+
   def comment text, top_level = @top_level
     RDoc::Comment.new text, top_level
   end

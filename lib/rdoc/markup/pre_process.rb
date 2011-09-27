@@ -10,6 +10,10 @@
 
 class RDoc::Markup::PreProcess
 
+  ##
+  # An RDoc::Options instance that will be filled in with overrides from
+  # directives
+
   attr_accessor :options
 
   ##
@@ -75,8 +79,9 @@ class RDoc::Markup::PreProcess
   # If no matching directive was registered the directive is restored to the
   # text.
   #
-  # If +code_object+ is given and the param is set as metadata on the
-  # +code_object+.  See RDoc::CodeObject#metadata
+  # If +code_object+ is given and the directive is unknown then the
+  # directive's parameter is set as metadata on the +code_object+.  See
+  # RDoc::CodeObject#metadata for details.
 
   def handle text, code_object = nil, &block
     if RDoc::Comment === text then
@@ -116,6 +121,14 @@ class RDoc::Markup::PreProcess
     text
   end
 
+  ##
+  # Performs the actions described by +directive+ and its parameter +param+.
+  #
+  # +code_object+ is used for directives that operate on a class or module.
+  # +prefix+ is used to ensure the replacement for handled directives is
+  # correct.  +encoding+ is used for the <tt>include</tt> directive.
+  #
+  # For a list of directives in RDoc see RDoc::Markup.
   #--
   # When 1.8.7 support is ditched prefix can be defaulted to ''
 

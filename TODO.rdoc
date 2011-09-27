@@ -3,6 +3,7 @@ Some file contains some things that might happen in RDoc, or might not
 === RDoc 3.10
 
 * Copy static files into doc dir for HTML
+* Add sections to the ToC
 
 === RDoc 3.11
 
@@ -11,6 +12,7 @@ Some file contains some things that might happen in RDoc, or might not
   * Parse only changed files (like in ruby)
 * Page of Glory (or Shame) in HTML output showing documentation coverage
   statistics.
+* Link to the parent-class implementation of methods that use super
 
 === RDoc 4
 

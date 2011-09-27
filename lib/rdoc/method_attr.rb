@@ -343,6 +343,10 @@ class RDoc::MethodAttr < RDoc::CodeObject
     ]
   end
 
+  ##
+  # Used by RDoc::Generator::JsonIndex to create a record for the search
+  # engine.
+
   def search_record
     [
       @name,
@@ -354,6 +358,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
       snippet(@comment),
     ]
   end
+
   def to_s # :nodoc:
     if @is_alias_for
       "#{self.class.name}: #{full_name} -> #{is_alias_for}"

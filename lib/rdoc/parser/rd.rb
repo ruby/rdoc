@@ -8,6 +8,9 @@ class RDoc::Parser::RD < RDoc::Parser
 
   parse_files_matching(/\.rd(?:\.[^.]+)?$/)
 
+  ##
+  # Creates an rd-format TopLevel for the given file.
+
   def scan
     comment = RDoc::Comment.new @content, @top_level
     comment.format = 'rd'

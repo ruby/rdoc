@@ -355,6 +355,9 @@ class InlineParser
 end
 
 ---- inner
+
+# :stopdoc:
+
 EM_OPEN = '((*'
 EM_OPEN_RE = /\A#{Regexp.quote(EM_OPEN)}/
 EM_CLOSE = '*))'
@@ -416,6 +419,8 @@ OTHER_RE = Regexp.new(
               #{Regexp.quote(SLASH)}|
               #{Regexp.quote(BACK_SLASH)}|
               #{Regexp.quote(URL)})", other_re_mode)
+
+# :startdoc:
 
 def initialize block_parser
   @block_parser = block_parser

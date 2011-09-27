@@ -6,9 +6,16 @@ class RDoc::Markup::Heading < Struct.new :level, :text
   @to_html = nil
   @to_label = nil
 
+  ##
+  # A singleton RDoc::Markup::ToLabel formatter for headings.
+
   def self.to_label
     @to_label ||= RDoc::Markup::ToLabel.new
   end
+
+  ##
+  # A singleton plain HTML formatter for headings.  Used for creating labels
+  # for the Table of Contents
 
   def self.to_html
     return @to_html if @to_html

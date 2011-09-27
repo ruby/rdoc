@@ -91,6 +91,9 @@ class RDoc::CrossReference
                       # labels for headings
                       (?:@[\w+%-]+)?/x
 
+  ##
+  # Hash of references that have been looked-up to their replacements
+
   attr_accessor :seen
 
   ##

@@ -121,6 +121,9 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     @characters = 0
   end
 
+  ##
+  # Removes escaping from the cross-references in +special+
+
   def handle_special_CROSSREF special
     special.text.sub(/\A\\/, '')
   end
@@ -226,17 +229,28 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     res.join
   end
 
+  ##
+  # Maintains a bitmask to allow HTML elements to be closed properly.  See
+  # RDoc::Markup::Formatter.
+
   def on_tags res, item
     @mask ^= item.turn_on
 
     super
   end
 
+  ##
+  # Maintains a bitmask to allow HTML elements to be closed properly.  See
+  # RDoc::Markup::Formatter.
+
   def off_tags res, item
     @mask ^= item.turn_off
 
     super
   end
+
+  ##
+  # Truncates +text+ at the end of the first word after the character_limit.
 
   def truncate text
     length = text.length
@@ -247,7 +261,7 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
 
     remaining = @character_limit - characters
 
-    text =~ /\A(.{#{remaining},}?)(\s|$)/m
+    text =~ /\A(.{#{remaining},}?)(\s|$)/m # TODO word-break instead of \s?
 
     $1
   end
