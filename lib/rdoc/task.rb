@@ -101,6 +101,12 @@ class RDoc::Task < Rake::TaskLib
   attr_accessor :name
 
   ##
+  # Comment markup format.  rdoc, rd and tomdoc are supported.  (default is
+  # 'rdoc')
+
+  attr_accessor :markup
+
+  ##
   # Name of directory to receive the html output files. (default is "html")
 
   attr_accessor :rdoc_dir
@@ -249,11 +255,12 @@ class RDoc::Task < Rake::TaskLib
 
   def option_list
     result = @options.dup
-    result << "-o"      << @rdoc_dir
-    result << "--main"  << main      if main
-    result << "--title" << title     if title
-    result << "-T"      << template  if template
-    result << '-f'      << generator if generator
+    result << "-o"       << @rdoc_dir
+    result << "--main"   << main      if main
+    result << "--markup" << markup    if markup
+    result << "--title"  << title     if title
+    result << "-T"       << template  if template
+    result << '-f'       << generator if generator
     result
   end
 

@@ -33,6 +33,14 @@ class TestRDocTask < RDoc::TestCase
     end
   end
 
+  def test_markup_option
+    rdoc_task = RDoc::Task.new do |rd|
+      rd.markup = "tomdoc"
+    end
+
+    assert_equal %w[-o html --markup tomdoc], rdoc_task.option_list
+  end
+
   def test_tasks_creation
     RDoc::Task.new
     assert Rake::Task[:rdoc]

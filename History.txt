@@ -22,6 +22,8 @@
     it is used as the default for the entire file.  For other comments it
     overrides the default markup format.
 
+    The markup format can be set for rake tasks using RDoc::Task#markup
+
 * Minor enhancements
   * HTML headings now have ids matching their titles.
 
