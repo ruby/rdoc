@@ -39,12 +39,6 @@ class RDoc::Markup::ToTableOfContents < RDoc::Markup::Formatter
     @res = []
   end
 
-  ##
-  # Ignores the content of nodes that aren't headings
-
-  def ignore node
-  end
-
   # :stopdoc:
   alias accept_raw             ignore
   alias accept_rule            ignore

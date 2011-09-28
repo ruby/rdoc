@@ -56,16 +56,14 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
   end
 
   ##
-  # Raw content is untrusted and ignored.
+  # Raw sections are untrusted and ignored
 
-  def accept_raw raw
-  end
+  alias accept_raw ignore
 
   ##
   # Rules are ignored
 
-  def accept_rule rule
-  end
+  alias accept_rule ignore
 
   def accept_paragraph paragraph
     para = @in_list_entry.last || "<p>"

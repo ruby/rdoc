@@ -115,6 +115,17 @@ class RDoc::Markup::Formatter
   end
 
   ##
+  # Use ignore in your subclass to ignore the content of a node.
+  #
+  #   ##
+  #   # We don't support raw nodes in ToNoRaw
+  #
+  #   alias accept_raw ignore
+
+  def ignore node
+  end
+
+  ##
   # Are we currently inside tt tags?
 
   def in_tt?
