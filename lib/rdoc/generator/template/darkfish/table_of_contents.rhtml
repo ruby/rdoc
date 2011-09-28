@@ -8,7 +8,9 @@
 <% simple_files.sort.each do |file| %>
   <li class="file">
     <a href="<%= file.path %>"><%= h file.page_name %></a>
-<% table = file.parse(file.comment).table_of_contents # HACK
+<%
+   # HACK table_of_contents should not exist on Document
+   table = file.parse(file.comment).table_of_contents
    unless table.empty? then %>
     <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings">
     <ul class="initially-hidden">
@@ -27,12 +29,15 @@
 <% @modsort.each do |klass| %>
   <li class="<%= klass.type %>">
     <a href="<%= klass.path %>"><%= klass.full_name %></a>
-<% table = klass.parse(klass.comment).table_of_contents # HACK
+<% table = []
+   table.push(*klass.parse(klass.comment).table_of_contents)
+   table.push(*klass.section_contents)
+
    unless table.empty? then %>
     <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings">
     <ul class="initially-hidden">
-<% table.each do |heading| %>
-      <li><a href="<%= klass.path %>#<%= heading.label %>"><%= heading.plain_html %></a>
+<% table.each do |item| %>
+      <li><a href="<%= klass.path %>#<%= item.aref %>"><%= item.plain_html %></a>
 <%   end %>
     </ul>
 <% end %>

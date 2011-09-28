@@ -268,7 +268,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   def accept_heading heading
     level = [6, heading.level].min
 
-    label = heading.label
+    label = heading.aref
     label = [@code_object.aref, label].compact.join '-' if
       @code_object and @code_object.respond_to? :aref
 

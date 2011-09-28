@@ -653,7 +653,9 @@ class RDoc::Context < RDoc::CodeObject
   # Iterator for methods
 
   def each_method # :yields: method
-    @method_list.sort.each {|m| yield m}
+    return enum_for __method__ unless block_given?
+
+    @method_list.sort.each { |m| yield m }
   end
 
   ##
@@ -1007,10 +1009,10 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Tries to resolve unmatched aliases when a method
-  # or attribute has just been added.
+  # Tries to resolve unmatched aliases when a method or attribute has just
+  # been added.
 
-  def resolve_aliases(added)
+  def resolve_aliases added
     # resolve any pending unmatched aliases
     key = added.pretty_name
     unmatched_alias_list = @unmatched_alias_lists[key]
@@ -1020,6 +1022,31 @@ class RDoc::Context < RDoc::CodeObject
       @external_aliases.delete unmatched_alias
     end
     @unmatched_alias_lists.delete key
+  end
+
+  ##
+  # Returns RDoc::Context::Section objects referenced in this context for use
+  # in a table of contents.
+
+  def section_contents
+    used_sections = {}
+
+    each_method do |method|
+      next unless method.display?
+
+      used_sections[method.section] = true
+    end
+
+    # order found sections
+    sections = sort_sections.select do |section|
+      used_sections[section]
+    end
+
+    # only the default section is used
+    return [] if
+      sections.length == 1 and not sections.first.title
+
+    sections
   end
 
   ##

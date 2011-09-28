@@ -103,6 +103,15 @@ class RDoc::Context::Section
   end
 
   ##
+  # The section's title, or 'Top Section' if the title is nil.
+  #
+  # This is used by the table of contents template so the name is silly.
+
+  def plain_html
+    @title || 'Top Section'
+  end
+
+  ##
   # Section sequence number (deprecated)
 
   def sequence

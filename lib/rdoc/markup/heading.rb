@@ -40,9 +40,9 @@ class RDoc::Markup::Heading < Struct.new :level, :text
   end
 
   ##
-  # An HTML-safe label for this header.
+  # An HTML-safe anchor reference for this header.
 
-  def label
+  def aref
     "label-#{self.class.to_label.convert text.dup}"
   end
 

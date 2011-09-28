@@ -364,6 +364,10 @@ class TestRDocContext < XrefTestCase
     refute_equal @c2_c3, @c3
   end
 
+  def test_each_method_enumerator
+    assert_kind_of Enumerator, @c1.each_method
+  end
+
   def test_each_section
     sects  = []
     consts = []
@@ -390,6 +394,10 @@ class TestRDocContext < XrefTestCase
     ]
 
     assert_equal expected_attrs, attrs
+  end
+
+  def test_each_section_enumerator
+    assert_kind_of Enumerator, @c1.each_section
   end
 
   def test_find_attribute_named
@@ -665,6 +673,43 @@ class TestRDocContext < XrefTestCase
     @c1.remove_invisible_in methods, :public
 
     assert_equal [@pub, @prot, @priv], methods
+  end
+
+  def test_section_contents
+    default = @context.sections.first
+    @context.add_method RDoc::AnyMethod.new(nil, 'm1')
+
+    b = @context.add_section 'B'
+    m = @context.add_method RDoc::AnyMethod.new(nil, 'm2')
+    m.section = b
+
+    assert_equal [default, b], @context.section_contents
+  end
+
+  def test_section_contents_no_default
+    @context = RDoc::Context.new
+    b = @context.add_section 'B'
+    m = @context.add_method RDoc::AnyMethod.new(nil, 'm')
+    m.section = b
+
+    assert_equal [b], @context.section_contents
+  end
+
+  def test_section_contents_only_default
+    @context = RDoc::Context.new
+
+    @context.add_method RDoc::AnyMethod.new(nil, 'm')
+
+    assert_empty @context.section_contents
+  end
+
+  def test_section_contents_unused
+    @context = RDoc::Context.new
+
+    @context.add_method RDoc::AnyMethod.new(nil, 'm')
+    b = @context.add_section 'B'
+
+    assert_empty @context.section_contents
   end
 
   def test_set_current_section

@@ -8,8 +8,8 @@ class TestRDocMarkupHeading < RDoc::TestCase
     @h = RDoc::Markup::Heading.new 1, 'Hello *Friend*!'
   end
 
-  def test_label
-    assert_equal 'label-Hello+Friend%21', @h.label
+  def test_aref
+    assert_equal 'label-Hello+Friend%21', @h.aref
   end
 
   def test_plain_html
