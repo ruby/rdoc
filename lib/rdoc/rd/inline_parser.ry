@@ -422,9 +422,16 @@ OTHER_RE = Regexp.new(
 
 # :startdoc:
 
+##
+# Creates a new parser for inline markup in the rd format.  The +block_parser+
+# is used to for footnotes and labels in the inline text.
+
 def initialize block_parser
   @block_parser = block_parser
 end
+
+##
+# Parses the +inline+ text from RD format into RDoc format.
 
 def parse inline
   @inline = inline
@@ -432,14 +439,10 @@ def parse inline
   @pre = ""
   @yydebug = true
   do_parse.to_s
-rescue
-  puts $!
-  puts
-  puts @inline[0, @src.pos].inspect
-  puts @src.rest[0..40]
-  puts
-  raise
 end
+
+##
+# Returns the next token from the inline text
 
 def next_token
   return [false, false] if @src.eos?
@@ -518,6 +521,9 @@ def next_token
   end
 end
 
+##
+# Raises a ParseError when invalid formatting is found
+
 def on_error(et, ev, values)
   lines_of_rest = @src.rest.lines.to_a.length
   prev_words = prev_words_on_error(ev)
@@ -532,6 +538,9 @@ RD syntax error: line #{@block_parser.line_index - lines_of_rest}:
   raise ParseError, message
 end
 
+##
+# Returns words before the error
+
 def prev_words_on_error(ev)
   pre = @pre
   if ev and /#{Regexp.quote(ev)}$/ =~ pre
@@ -539,6 +548,9 @@ def prev_words_on_error(ev)
   end
   last_line(pre)
 end
+
+##
+# Returns the last line of +src+
 
 def last_line(src)
   if n = src.rindex("\n")
@@ -549,6 +561,9 @@ def last_line(src)
 end
 private :last_line
 
+##
+# Returns words following an error
+
 def next_words_on_error
   if n = @src.rest.index("\n")
     @src.rest[0 .. (n-1)]
@@ -556,6 +571,9 @@ def next_words_on_error
     @src.rest
   end
 end
+
+##
+# Creates a new RDoc::RD::Inline for the +rdoc+ markup and the raw +reference+
 
 def inline rdoc, reference = rdoc
   RDoc::RD::Inline.new rdoc, reference

@@ -11,6 +11,26 @@ class TestRDocStats < RDoc::TestCase
     @tl.parser = RDoc::Parser::Ruby
   end
 
+  def test_doc_stats
+    c = RDoc::CodeObject.new
+
+    assert_equal [1, 1], @s.doc_stats([c])
+  end
+
+  def test_doc_stats_documented
+    c = RDoc::CodeObject.new
+    c.comment = comment 'x'
+
+    assert_equal [1, 0], @s.doc_stats([c])
+  end
+
+  def test_doc_stats_display_eh
+    c = RDoc::CodeObject.new
+    c.ignore
+
+    assert_equal [0, 0], @s.doc_stats([c])
+  end
+
   def test_report_attr
     c = @tl.add_class RDoc::NormalClass, 'C'
     c.record_location @tl
@@ -264,6 +284,17 @@ end
     EXPECTED
 
     assert_equal expected, report
+  end
+
+  def test_report_class_module_ignore
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.ignore
+
+    RDoc::TopLevel.complete :public
+
+    report = @s.report_class_module c
+
+    assert_nil report
   end
 
   def test_report_empty

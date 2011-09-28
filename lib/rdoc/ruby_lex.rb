@@ -20,13 +20,13 @@ require "stringio"
 
 class RDoc::RubyLex
 
-  # :stopdoc:
-
   ##
   # Raised upon invalid input
 
   class Error < RDoc::Error
   end
+
+  # :stopdoc:
 
   extend Exception2MessageMapper
 
@@ -55,11 +55,17 @@ class RDoc::RubyLex
   end
 
   self.debug_level = 0
+  
+  # :startdoc:
 
-  def self.tokenize text, options
+  ##
+  # Returns an Array of +ruby+ tokens.  See ::new for a description of
+  # +options+.
+
+  def self.tokenize ruby, options
     tokens = []
 
-    scanner = RDoc::RubyLex.new text, options
+    scanner = RDoc::RubyLex.new ruby, options
     scanner.exception_on_syntax_error = true
 
     while token = scanner.token do
@@ -68,6 +74,10 @@ class RDoc::RubyLex
 
     tokens
   end
+
+  ##
+  # Creates a new lexer for +content+.  +options+ is an RDoc::Options, only
+  # +tab_width is used.
 
   def initialize(content, options)
     lex_init
@@ -111,6 +121,8 @@ class RDoc::RubyLex
     @prev_seek = nil
     @ltype = nil
   end
+
+  # :stopdoc:
 
   def inspect # :nodoc:
     "#<%s:0x%x pos %d lex_state %p space_seen %p>" % [

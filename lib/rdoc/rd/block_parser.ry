@@ -526,7 +526,7 @@ end
 private :set_term_to_element
 
 ##
-# Raises a ParseError
+# Raises a ParseError when invalid formatting is found
 
 def on_error(et, ev, _values)
   prv, cur, nxt = format_line_num(@i, @i+1, @i+2)

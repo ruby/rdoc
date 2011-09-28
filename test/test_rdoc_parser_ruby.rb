@@ -2356,6 +2356,25 @@ end
     assert_equal expected, m.comment.parse
   end
 
+  def test_scan_stopdoc
+    util_parser <<-RUBY
+class C
+  # :stopdoc:
+  class Hidden
+  end
+end
+    RUBY
+
+    @parser.scan
+
+    c = @top_level.classes.first
+
+    hidden = c.classes.first
+
+    refute hidden.document_self
+    assert hidden.ignored?
+  end
+
   def test_stopdoc_after_comment
     util_parser <<-EOS
       module Bar

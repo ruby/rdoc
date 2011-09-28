@@ -158,7 +158,8 @@ class RDoc::Stats
   # Returns the length and number of undocumented items in +collection+.
 
   def doc_stats collection
-    [collection.length, collection.count { |item| not item.documented? }]
+    visible = collection.select { |item| item.display? }
+    [visible.length, visible.count { |item| not item.documented? }]
   end
 
   ##
@@ -266,6 +267,7 @@ class RDoc::Stats
 
   def report_class_module cm
     return if cm.fully_documented? and @coverage_level.zero?
+    return unless cm.display?
 
     report = []
 
