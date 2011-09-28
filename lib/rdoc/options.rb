@@ -23,9 +23,14 @@ class RDoc::Options
   }
 
   ##
+  # Path option validator for OptionParser
+
+  Path = Object.new
+
+  ##
   # Template option validator for OptionParser
 
-  Template = nil
+  Template = Object.new
 
   ##
   # Character-set for HTML output.  #encoding is preferred over #charset
@@ -133,6 +138,11 @@ class RDoc::Options
   attr_accessor :show_hash
 
   ##
+  # Directory to copy static files from
+
+  attr_accessor :static_path
+
+  ##
   # The number of columns in a tab
 
   attr_accessor :tab_width
@@ -192,6 +202,7 @@ class RDoc::Options
     @pipe = false
     @rdoc_include = []
     @show_hash = false
+    @static_path = []
     @stylesheet_url = nil
     @tab_width = 8
     @template = nil
@@ -376,6 +387,14 @@ Usage: #{opt.program_name} [options] [names...]
         else
           [template, template_dir]
         end
+      end
+
+      opt.accept Path do |directory|
+        directory = File.expand_path directory
+
+        raise OptionParser::InvalidArgument unless File.exist? directory
+
+        directory
       end
 
       opt.separator nil
@@ -587,6 +606,18 @@ Usage: #{opt.program_name} [options] [names...]
       opt.on("--title=TITLE", "-t",
              "Set TITLE as the title for HTML output.") do |value|
         @title = value
+      end
+
+      opt.separator nil
+
+      opt.on("--copy-files=PATH", Path,
+             "Specify a file or directory to copy static",
+             "files from.",
+             "If a file is given it will be copied into",
+             "the output dir.  If a directory is given the",
+             "entire directory will be copied.",
+             "You can use this multiple times") do |value|
+        @static_path << value
       end
 
       opt.separator nil

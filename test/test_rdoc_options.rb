@@ -66,6 +66,35 @@ file 'unreadable' not readable
     assert_equal expected, @options.generator_descriptions
   end
 
+  def test_parse_copy_files_file_relative
+    file = File.basename __FILE__
+    expected = File.expand_path __FILE__
+
+    Dir.chdir File.expand_path('..', __FILE__) do
+      @options.parse %W[--copy-files #{file}]
+
+      assert_equal [expected], @options.static_path
+    end
+  end
+
+  def test_parse_copy_files_file_absolute
+    @options.parse %W[--copy-files #{File.expand_path __FILE__}]
+
+    assert_equal [File.expand_path(__FILE__)], @options.static_path
+  end
+
+  def test_parse_copy_files_directory_relative
+    @options.parse %w[--copy-files .]
+
+    assert_equal [@pwd], @options.static_path
+  end
+
+  def test_parse_copy_files_directory_absolute
+    @options.parse %w[--copy-files /]
+
+    assert_equal ['/'], @options.static_path
+  end
+
   def test_parse_coverage
     @options.parse %w[--dcov]
 

@@ -1,7 +1,7 @@
 === 3.10 / ??
 
 * Major enhancements
-  * RDoc HTML output has been reorganized.
+  * RDoc HTML output has been improved:
     * The search from Володя Колесников's sdoc has been integrated.
 
       The search index generation is a reusable component through
@@ -10,8 +10,9 @@
       headings inside a page or class.
     * Class pages no longer show the namespace and no longer have file info
       pages.
-    * HTML output is now using HTML 5.
-  * RDoc supports additional documentation types:
+    * HTML output is HTML 5.
+    * Static files can be copied into RDoc using --copy-files
+  * RDoc supports additional documentation formats:
     * TomDoc 1.0.0-rc1
     * RD format
 

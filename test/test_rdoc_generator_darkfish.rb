@@ -104,6 +104,35 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
     refute_file 'file_rb.html'
   end
 
+  def test_generate_static
+    FileUtils.mkdir_p 'dir/images'
+    FileUtils.touch 'dir/images/image.png'
+    FileUtils.mkdir_p 'file'
+    FileUtils.touch 'file/file.txt'
+
+    @options.static_path = [
+      File.expand_path('dir'),
+      File.expand_path('file/file.txt'),
+    ]
+
+    @g.generate [@top_level]
+
+    assert_file 'images/image.png'
+    assert_file 'file.txt'
+  end
+
+  def test_generate_static_dry_run
+    FileUtils.mkdir 'static'
+    FileUtils.touch 'static/image.png'
+
+    @options.static_path = [File.expand_path('static')]
+    @options.dry_run = true
+
+    @g.generate [@top_level]
+
+    refute_file 'image.png'
+  end
+
   def test_template_for
     classpage = Pathname.new @options.template_dir + 'class.rhtml'
 

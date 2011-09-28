@@ -177,6 +177,8 @@ class RDoc::Generator::Darkfish
     generate_table_of_contents
     @json_index.generate top_levels
 
+    copy_static
+
   rescue => e
     debug_msg "%s: %s\n  %s" % [
       e.class.name, e.message, e.backtrace.join("\n  ")
@@ -186,6 +188,34 @@ class RDoc::Generator::Darkfish
   end
 
   protected
+
+  ##
+  # Copies static files from the static_path into the output directory
+
+  def copy_static
+    return if @options.static_path.empty?
+
+    fu_options = { :verbose => $DEBUG_RDOC, :noop => @options.dry_run }
+
+    @options.static_path.each do |path|
+      unless File.directory? path then
+        FileUtils.install path, @base_dir, fu_options.merge(:mode => 0644)
+        next
+      end
+
+      Dir.chdir path do
+        Dir[File.join('**', '*')].each do |entry|
+          dest_file = @base_dir + entry
+
+          if File.directory? entry then
+            FileUtils.mkdir_p entry, fu_options
+          else
+            FileUtils.install entry, dest_file, fu_options.merge(:mode => 0644)
+          end
+        end
+      end
+    end
+  end
 
   ##
   # Return a list of the documented modules sorted by salience first, then

@@ -2,7 +2,6 @@ Some file contains some things that might happen in RDoc, or might not
 
 === RDoc 3.10
 
-* Copy static files into doc dir for HTML
 * Add sections to the ToC
 
 === RDoc 3.11
@@ -15,6 +14,7 @@ Some file contains some things that might happen in RDoc, or might not
 * Link to the parent-class implementation of methods that use super
 * Add direct accessor to RDoc::Options to RDoc::Task
 * Remove Public in HTML output if there are only public methods
+* Method markup support for rd documentation
 
 === RDoc 4
 
