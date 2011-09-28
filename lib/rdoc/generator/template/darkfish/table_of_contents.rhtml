@@ -15,7 +15,7 @@
     <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings">
     <ul class="initially-hidden">
 <% table.each do |heading| %>
-      <li><a href="<%= file.path %>#<%= heading.label %>"><%= heading.plain_html %></a>
+      <li><a href="<%= file.path %>#<%= heading.aref %>"><%= heading.plain_html %></a>
 <%   end %>
     </ul>
 <% end %>
