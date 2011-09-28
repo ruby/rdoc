@@ -59,7 +59,13 @@ rule '.rb' => '.ry' do |t|
 end
 
 path = "pkg/#{hoe.spec.full_name}"
-package_parser_files = PARSER_FILES.map { |file| "#{path}/#{file}" }
+
+package_parser_files = PARSER_FILES.map do |parser_file|
+  package_parser_file = "#{path}/#{parser_file}"
+  file package_parser_file => parser_file # ensure copy runs before racc
+  package_parser_file
+end
+
 task "#{path}.gem" => package_parser_files
 
 # These tasks expect to have the following directory structure:
