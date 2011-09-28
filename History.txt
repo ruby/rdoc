@@ -19,7 +19,7 @@
     The default markup can be set via the <tt>--markup</tt> option.
 
     The format of documentation in a particular file can be specified by the
-    +:markup:+ directive.  If the :markup: directive is in the first comment
+    +:markup:+ directive.  If the +:markup:+ directive is in the first comment
     it is used as the default for the entire file.  For other comments it
     overrides the default markup format.
 
@@ -39,7 +39,7 @@
     <tt>RDoc::Markup@Links</tt>
 
     See RDoc::Markup@Links for further details.
-  * RDoc now looks for a <tt>format: parser_name</tt> magic comment to choose
+  * RDoc now looks for a <tt>markup: parser_name</tt> magic comment to choose
     alternate documentation formats.  The format comment must be in the first
     three lines of the file (to allow for a shebang or modeline).
   * RDoc makes an effort to syntax-highlight ruby code in verbatim sections.

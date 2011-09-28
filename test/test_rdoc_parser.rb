@@ -81,9 +81,9 @@ class TestRDocParser < RDoc::TestCase
     assert_nil @RP.for(nil, @binary_dat, nil, nil, nil)
   end
 
-  def test_class_for_format
+  def test_class_for_markup
     content = <<-CONTENT
-# coding: utf-8 format: rd
+# coding: utf-8 markup: rd
     CONTENT
 
     parser = @RP.for @top_level, __FILE__, content, @options, nil
@@ -91,53 +91,63 @@ class TestRDocParser < RDoc::TestCase
     assert_kind_of @RP::RD, parser
   end
 
-  def test_class_use_format
+  def test_class_use_markup
     content = <<-CONTENT
-# coding: utf-8 format: rd
+# coding: utf-8 markup: rd
     CONTENT
 
-    parser = @RP.use_format content
+    parser = @RP.use_markup content
 
     assert_equal @RP::RD, parser
   end
 
-  def test_class_use_format_modeline
+  def test_class_use_markup_modeline
     content = <<-CONTENT
 # -*- coding: utf-8 -*-
-# format: rd
+# markup: rd
     CONTENT
 
-    parser = @RP.use_format content
+    parser = @RP.use_markup content
 
     assert_equal @RP::RD, parser
   end
 
-  def test_class_use_format_modeline_shebang
+  def test_class_use_markup_modeline_shebang
     content = <<-CONTENT
 #!/bin/sh
 /* -*- coding: utf-8 -*-
- * format: rd
+ * markup: rd
  */
     CONTENT
 
-    parser = @RP.use_format content
+    parser = @RP.use_markup content
 
     assert_equal @RP::RD, parser
   end
 
-  def test_class_use_format_shebang
+  def test_class_use_markup_shebang
     content = <<-CONTENT
 #!/usr/bin/env ruby
-# coding: utf-8 format: rd
+# coding: utf-8 markup: rd
     CONTENT
 
-    parser = @RP.use_format content
+    parser = @RP.use_markup content
 
     assert_equal @RP::RD, parser
   end
 
-  def test_class_use_format_none
-    parser = @RP.use_format ''
+  def test_class_use_markup_tomdoc
+    content = <<-CONTENT
+# coding: utf-8 markup: tomdoc
+    CONTENT
+
+    parser = @RP.use_markup content
+
+    assert_equal @RP::Ruby, parser
+  end
+
+  def test_class_use_markup_none
+    parser = @RP.use_markup ''
 
     assert_nil parser
   end

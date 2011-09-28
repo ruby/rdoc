@@ -150,7 +150,7 @@ class RDoc::Parser
   def self.for top_level, file_name, content, options, stats
     return if binary? file_name
 
-    parser = use_format content
+    parser = use_markup content
 
     unless parser then
       # If no extension, look for shebang
@@ -180,10 +180,10 @@ class RDoc::Parser
   end
 
   ##
-  # If there is a <tt>format: parser_name</tt> comment at the front of the
+  # If there is a <tt>markup: parser_name</tt> comment at the front of the
   # file, use it to determine the parser.  For example:
   #
-  #   # format: rdoc
+  #   # markup: rdoc
   #   # Class comment can go here
   #
   #   class C
@@ -194,17 +194,19 @@ class RDoc::Parser
   # If the content contains a shebang or editor modeline the comment may
   # appear on the second or third line.
   #
-  # Any comment style may be used to hide the format comment.
+  # Any comment style may be used to hide the markup comment.
 
-  def self.use_format content
-    format = content.lines.first(3).grep(/format:\s+(\w+)/) { $1 }.first
+  def self.use_markup content
+    markup = content.lines.first(3).grep(/markup:\s+(\w+)/) { $1 }.first
 
-    return unless format
+    return unless markup
 
-    format = Regexp.escape format
+    return RDoc::Parser::Ruby if markup == 'tomdoc'
+
+    markup = Regexp.escape markup
 
     RDoc::Parser.parsers.find do |_, parser|
-      /^#{format}$/i =~ parser.name.sub(/.*:/, '')
+      /^#{markup}$/i =~ parser.name.sub(/.*:/, '')
     end.last
   end
 
