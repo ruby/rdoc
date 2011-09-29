@@ -470,12 +470,6 @@ pre {
 
 /* @group Source Code */
 
-.method-source-code pre {
-  overflow: auto;
-}
-
-/* @group Ruby keyword styles */
-
 pre {
   overflow: auto;
   background: #262626;
@@ -499,61 +493,7 @@ pre {
 .ruby-value      { color: #7fffd4; background: transparent; }
 
 /* @end */
-/* @end */
 
-
-/* @group File Popup Contents */
-
-.file-popup dl {
-  font-size: 80%;
-  padding: 0.75em;
-  background-color: #dedede;
-  color: #333;
-  border: 1px solid #bbb;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-}
-.file dt {
-  font-weight: bold;
-  padding-left: 22px;
-  line-height: 20px;
-  background: url(images/page_white_width.png) no-repeat left top;
-}
-.file dt.modified-date {
-  background: url(images/date.png) no-repeat left top;
-}
-.file dt.requires {
-  background: url(images/plugin.png) no-repeat left top;
-}
-.file dt.scs-url {
-  background: url(images/wrench.png) no-repeat left top;
-}
-
-.file dl dd {
-  margin: 0 0 1em 0;
-}
-.file #metadata dl dd ul {
-  list-style: circle;
-  margin-left: 20px;
-  padding-top: 0;
-}
-.file #metadata dl dd ul li {
-}
-
-/*
-.file h2 {
-  margin-top: 2em;
-  padding: 0.75em 0.5em;
-  background-color: #dedede;
-  color: #333;
-  font-size: 120%;
-  border: 1px solid #bbb;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-}
-*/
-
-/* @end */
 
 /* @group search results */
 #search-results h1 {

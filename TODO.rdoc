@@ -3,7 +3,6 @@ Some file contains some things that might happen in RDoc, or might not
 === 3.10
 
 * Figure out why README@Bugs does not work here
-* Fix CSS for RI 
 
 === 3.11
 

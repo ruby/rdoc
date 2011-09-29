@@ -199,13 +199,13 @@ class RDoc::Generator::Darkfish
 
     @options.static_path.each do |path|
       unless File.directory? path then
-        FileUtils.install path, @base_dir, fu_options.merge(:mode => 0644)
+        FileUtils.install path, @outputdir, fu_options.merge(:mode => 0644)
         next
       end
 
       Dir.chdir path do
         Dir[File.join('**', '*')].each do |entry|
-          dest_file = @base_dir + entry
+          dest_file = @outputdir + entry
 
           if File.directory? entry then
             FileUtils.mkdir_p entry, fu_options
@@ -348,7 +348,7 @@ class RDoc::Generator::Darkfish
 
     debug_msg "Rendering the Table of Contents..."
 
-    out_file = @base_dir + @options.op_dir + 'table_of_contents.html'
+    out_file = @outputdir + 'table_of_contents.html'
     # suppress 1.9.3 warning
     rel_prefix = rel_prefix = @outputdir.relative_path_from(out_file.dirname)
     @title = "Table of Contents"
