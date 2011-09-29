@@ -1,14 +1,15 @@
 .autotest
 .document
-History.txt
+History.rdoc
 LICENSE.rdoc
 Manifest.txt
-README.txt
-RI.txt
+README.rdoc
+RI.rdoc
 Rakefile
 TODO.rdoc
 bin/rdoc
 bin/ri
+lib/gauntlet_rdoc.rb
 lib/rdoc.rb
 lib/rdoc/alias.rb
 lib/rdoc/anon_class.rb
@@ -24,7 +25,6 @@ lib/rdoc/context/section.rb
 lib/rdoc/cross_reference.rb
 lib/rdoc/encoding.rb
 lib/rdoc/erbio.rb
-lib/rdoc/gauntlet.rb
 lib/rdoc/generator.rb
 lib/rdoc/generator/darkfish.rb
 lib/rdoc/generator/json_index.rb
@@ -44,7 +44,6 @@ lib/rdoc/generator/template/darkfish/_sidebar_parent.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_search.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_sections.rhtml
 lib/rdoc/generator/template/darkfish/class.rhtml
-lib/rdoc/generator/template/darkfish/fileinfo.rhtml
 lib/rdoc/generator/template/darkfish/images/add.png
 lib/rdoc/generator/template/darkfish/images/brick.png
 lib/rdoc/generator/template/darkfish/images/brick_link.png
