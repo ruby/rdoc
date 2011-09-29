@@ -709,7 +709,7 @@ class TestRDocContext < XrefTestCase
     @context = RDoc::Context.new
 
     @context.add_method RDoc::AnyMethod.new(nil, 'm')
-    b = @context.add_section 'B'
+    @context.add_section 'B'
 
     assert_empty @context.section_contents
   end
