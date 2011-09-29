@@ -116,16 +116,6 @@ class RDoc::CrossReference
   def resolve name, text
     return @seen[name] if @seen.include? name
 
-    # Find class, module, or method in class or module.
-    #
-    # Do not, however, use an if/elsif/else chain to do so.  Instead, test
-    # each possible pattern until one matches.  The reason for this is that a
-    # string like "YAML.txt" could be the txt() class method of class YAML (in
-    # which case it would match the first pattern, which splits the string
-    # into container and method components and looks up both) or a filename
-    # (in which case it would match the last pattern, which just checks
-    # whether the string as a whole is a known symbol).
-
     if /#{CLASS_REGEXP_STR}([.#]|::)#{METHOD_REGEXP_STR}/o =~ name then
       type = $2
       type = '' if type == '.'  # will find either #method or ::method
@@ -150,12 +140,15 @@ class RDoc::CrossReference
 
     ref = case name
           when /^\\(#{CLASS_REGEXP_STR})$/o then
-            ref = @context.find_symbol $1
+            @context.find_symbol $1
           else
-            ref = @context.find_symbol name
+            @context.find_symbol name
           end unless ref
 
-    ref = nil if RDoc::Alias === ref # external alias: can't link to it
+    # Try a page name
+    ref = RDoc::TopLevel.page name if not ref and name =~ /^\w+$/
+
+    ref = nil if RDoc::Alias === ref # external alias, can't link to it
 
     out = if name == '\\' then
             name

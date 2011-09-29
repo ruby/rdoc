@@ -16,6 +16,13 @@ class TestRDocCrossReference < XrefTestCase
     assert_equal name, @xref.resolve(name, name)
   end
 
+  def test_resolve_page
+    page = RDoc::TopLevel.new 'README.txt'
+    page.parser = RDoc::Parser::Simple
+
+    assert_ref page, 'README'
+  end
+
   def test_resolve_C2
     @xref = RDoc::CrossReference.new @c2
 

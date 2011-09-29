@@ -231,6 +231,12 @@ class RDoc::TopLevel < RDoc::Context
     end
   end
 
+  def self.page page
+    @all_files_hash.each_value.find do |file|
+      file.text? and file.page_name == page
+    end
+  end
+
   ##
   # Removes from +all_hash+ the contexts that are nodoc or have no content.
   #
@@ -495,7 +501,7 @@ class RDoc::TopLevel < RDoc::Context
   # Is this TopLevel from a text file instead of a source code file?
 
   def text?
-    @parser.ancestors.include? RDoc::Parser::Text
+    @parser and @parser.ancestors.include? RDoc::Parser::Text
   end
 
   def to_s # :nodoc:

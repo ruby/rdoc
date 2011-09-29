@@ -89,6 +89,15 @@ class TestRDocTopLevel < XrefTestCase
     refute_same tl1, tl3
   end
 
+  def test_class_page
+    page = RDoc::TopLevel.new 'PAGE.txt'
+    page.parser = RDoc::Parser::Simple
+
+    assert_nil RDoc::TopLevel.page 'no such page'
+
+    assert_equal page, RDoc::TopLevel.page('PAGE')
+  end
+
   def test_class_reset
     RDoc::TopLevel.reset
 
@@ -281,6 +290,14 @@ class TestRDocTopLevel < XrefTestCase
     simple.parser = RDoc::Parser::Simple
 
     assert simple.text?
+  end
+
+  def test_text_eh_no_parser
+    refute @xref_data.text?
+
+    rd = RDoc::TopLevel.new 'rd_format.rd'
+
+    refute rd.text?
   end
 
 end
