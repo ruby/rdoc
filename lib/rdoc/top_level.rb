@@ -334,7 +334,7 @@ class RDoc::TopLevel < RDoc::Context
   ##
   # Adds +constant+ to +Object+ instead of +self+.
 
-  def add_constant(constant)
+  def add_constant constant
     object_class.record_location self
     return constant unless @document_self
     object_class.add_constant constant

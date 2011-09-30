@@ -575,7 +575,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Parses a class in +context+ with +comment+
 
-  def parse_class(container, single, tk, comment)
+  def parse_class container, single, tk, comment
     offset  = tk.seek
     line_no = tk.line_no
 
@@ -728,7 +728,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
     read_documentation_modifiers con, RDoc::CONSTANT_MODIFIERS
 
     @stats.add_constant con
-    container.add_constant con
+    con = container.add_constant con
+
     true
   end
 
@@ -1240,17 +1241,18 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Parses an RDoc::NormalModule in +container+ with +comment+
 
-  def parse_module(container, single, tk, comment)
+  def parse_module container, single, tk, comment
     container, name_t, = get_class_or_module container
 
     name = name_t.name
 
     mod = container.add_module RDoc::NormalModule, name
+    mod.ignore unless container.document_children
     mod.record_location @top_level
 
     read_documentation_modifiers mod, RDoc::CLASS_MODIFIERS
     mod.add_comment comment, @top_level
-    parse_statements(mod)
+    parse_statements mod
 
     @top_level.add_to_classes_or_modules mod
     @stats.add_module mod
@@ -1344,11 +1346,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         parse_class container, single, tk, comment
 
       when TkMODULE then
-        if container.document_children then
-          parse_module container, single, tk, comment
-        else
-          nest += 1
-        end
+        parse_module container, single, tk, comment
 
       when TkDEF then
         parse_method container, single, tk, comment
@@ -1690,6 +1688,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     catch :eof do
       begin
         parse_top_level_statements @top_level
+
       rescue StandardError => e
         bytes = ''
 

@@ -686,7 +686,7 @@ end
 
     foo = @top_level.modules.first
     assert_equal 'Foo', foo.full_name
-    assert_equal 'my module', foo.comment.text
+    assert_empty foo.comment
   end
 
   def test_parse_class_colon3
@@ -2373,6 +2373,24 @@ end
 
     refute hidden.document_self
     assert hidden.ignored?
+  end
+
+  def test_scan_stopdoc_class_alias
+    util_parser <<-RUBY
+# :stopdoc:
+module A
+  B = C
+end
+    RUBY
+
+    @parser.scan
+
+    assert_empty RDoc::TopLevel.classes
+
+    assert_equal 1, RDoc::TopLevel.modules.length
+    m = RDoc::TopLevel.modules.first
+
+    assert m.ignored?
   end
 
   def test_stopdoc_after_comment

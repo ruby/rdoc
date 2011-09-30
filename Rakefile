@@ -35,7 +35,7 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
 >= 1.9.2 : nothing to do! Yay!
   MESSAGE
 
-  self.readme_file = 'README.rdoc'
+  self.readme_file  = 'README.rdoc'
   self.history_file = 'History.rdoc'
   self.testlib = :minitest
 
