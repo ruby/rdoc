@@ -352,7 +352,8 @@ class RDoc::Stats
       next if method.documented? and not param_report
       report << "  # in file #{method.file.full_name}"
       report << param_report if param_report
-      report << "  def #{method.name}#{method.params}; end"
+      scope = method.singleton ? 'self.' : nil
+      report << "  def #{scope}#{method.name}#{method.params}; end"
       report << nil
     end
 

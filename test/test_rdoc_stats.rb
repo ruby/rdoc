@@ -337,6 +337,40 @@ end
     assert_equal expected, report
   end
 
+  def test_report_method_class
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
+    c.add_comment 'C', @tl
+
+    m1 = RDoc::AnyMethod.new nil, 'm1'
+    m1.record_location @tl
+    m1.singleton = true
+    c.add_method m1
+
+    m2 = RDoc::AnyMethod.new nil, 'm2'
+    m2.record_location @tl
+    m2.singleton = true
+    c.add_method m2
+    m2.comment = 'm2'
+
+    RDoc::TopLevel.complete :public
+
+    report = @s.report
+
+    expected = <<-EXPECTED
+The following items are not documented:
+
+class C # is documented
+
+  # in file file.rb
+  def self.m1; end
+
+end
+    EXPECTED
+
+    assert_equal expected, report
+  end
+
   def test_report_method_documented
     c = @tl.add_class RDoc::NormalClass, 'C'
     c.record_location @tl
