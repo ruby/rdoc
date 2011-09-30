@@ -38,6 +38,13 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   self.readme_file  = 'README.rdoc'
   self.history_file = 'History.rdoc'
   self.testlib = :minitest
+  self.extra_rdoc_files += %w[
+    History.rdoc
+    LICENSE.rdoc
+    README.rdoc
+    RI.rdoc
+    TODO.rdoc
+  ]
 
   self.clean_globs += PARSER_FILES
 

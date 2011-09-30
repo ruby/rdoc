@@ -1,6 +1,6 @@
 $DEBUG_RDOC = nil
 
-# :main: README.txt
+# :main: README.rdoc
 
 ##
 # RDoc is a Ruby documentation system which contains RDoc::RDoc for generating
@@ -61,7 +61,7 @@ $DEBUG_RDOC = nil
 # index page contain the documentation for the primary file.  In our
 # case, we could type
 #
-#   % rdoc --main README.txt
+#   % rdoc --main README.rdoc
 #
 # You'll find information on the various formatting tricks you can use
 # in comment blocks in the documentation this generates.
