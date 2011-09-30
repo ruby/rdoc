@@ -231,9 +231,12 @@ class RDoc::TopLevel < RDoc::Context
     end
   end
 
-  def self.page page
+  ##
+  # Returns the RDoc::TopLevel that has the given +name+
+
+  def self.page name
     @all_files_hash.each_value.find do |file|
-      file.text? and file.page_name == page
+      file.text? and file.page_name == name
     end
   end
 
