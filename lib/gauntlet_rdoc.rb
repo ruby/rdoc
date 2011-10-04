@@ -1,3 +1,5 @@
+require 'rubygems'
+Gem.load_yaml
 require 'rdoc'
 require 'gauntlet'
 require 'fileutils'
@@ -7,19 +9,33 @@ require 'fileutils'
 
 class RDoc::Gauntlet < Gauntlet
 
+  def initialize
+    super
+
+    @args = nil
+    @type = nil
+  end
+
   ##
   # Runs an RDoc generator for gem +name+
 
   def run name
     return if self.data.key? name
 
-    dir = File.expand_path "~/.gauntlet/data/rdoc/#{name}"
+    dir = File.expand_path "~/.gauntlet/data/#{@type}/#{name}"
     FileUtils.rm_rf dir if File.exist? dir
 
     yaml = File.read 'gemspec'
-    spec = Gem::Specification.from_yaml yaml
+    begin
+      spec = Gem::Specification.from_yaml yaml
+    rescue Psych::SyntaxError
+      puts "bad spec #{name}"
+      self.data[name] = false
+      return
+    end
 
-    args = %W[--ri --op #{dir}]
+    args = @args.dup
+    args << '--op' << dir
     args.push(*spec.rdoc_options)
     args << spec.require_paths
     args << spec.extra_rdoc_files
@@ -46,7 +62,19 @@ class RDoc::Gauntlet < Gauntlet
     puts
   end
 
+  def run_the_gauntlet type = 'rdoc', filter = nil
+    @type = type || 'rdoc'
+    @args = type == 'rdoc' ? [] : %w[--ri]
+    @data_file = "#{DATADIR}/#{@type}-data.yml"
+
+    super filter
+  end
+
 end
 
-RDoc::Gauntlet.new.run_the_gauntlet if $0 == __FILE__
+type = ARGV.shift
+filter = ARGV.shift
+filter = /#{filter}/ if filter
+
+RDoc::Gauntlet.new.run_the_gauntlet type, filter
 
