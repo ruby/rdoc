@@ -230,6 +230,17 @@ class RDoc::Parser::C < RDoc::Parser
       handle_class_module(var_name, "class", class_name, parent, nil)
     end
 
+    @content.scan(/([\w\.]+)\s* = \s*rb_struct_define_without_accessor\s*
+              \(
+                 \s*"(\w+)",  # Class name
+                 \s*(\w+),    # Parent class
+                 \s*\w+,      # Allocation function
+                 (\s*"\w+",)* # Attributes
+                 \s*NULL
+              \)/mx) do |var_name, class_name, parent|
+      handle_class_module(var_name, "class", class_name, parent, nil)
+    end
+
     @content.scan(/(\w+)\s*=\s*boot_defclass\s*\(\s*"(\w+?)",\s*(\w+?)\s*\)/) do
       |var_name, class_name, parent|
       parent = nil if parent == "0"
