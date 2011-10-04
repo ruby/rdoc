@@ -263,6 +263,20 @@ VALUE cFoo = rb_define_class("Foo", rb_cObject);
     assert_equal "this is the Foo class", klass.comment.text
   end
 
+  def test_do_classes_struct
+    content = <<-EOF
+/* Document-class: Foo
+ * this is the Foo class
+ */
+VALUE cFoo = rb_struct_define_without_accessor(
+        "Foo", rb_cObject, foo_alloc,
+        "some", "various", "fields", NULL);
+    EOF
+
+    klass = util_get_class content, 'cFoo'
+    assert_equal "this is the Foo class", klass.comment.text
+  end
+
   def test_do_classes_class_under
     content = <<-EOF
 /* Document-class: Kernel::Foo
