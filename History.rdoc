@@ -71,6 +71,9 @@
   * Fixed RDoc::Markup::Parser for CRLF line endings.  Issue #67 by Marvin
     Gülker.
   * Fixed lexing of percent strings like %r{#}.  Issue #68 by eclectic923.
+  * The C parser now understands classes defined with
+    +rb_struct_define_without_accessor+ (like Range).  Pull Request #73 by Dan
+    Bernier
 
 === 3.9.2 / 2011-08-11
 
