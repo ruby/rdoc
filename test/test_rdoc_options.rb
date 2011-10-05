@@ -57,9 +57,11 @@ file 'unreadable' not readable
 
     @options.encode_with coder
 
+    encoding = Object.const_defined?(:Encoding) ? 'UTF-8' : nil
+
     expected = {
       'charset'        => 'UTF-8',
-      'encoding'       => 'UTF-8',
+      'encoding'       => encoding,
       'exclude'        => [],
       'hyperlink_all'  => false,
       'line_numbers'   => false,
