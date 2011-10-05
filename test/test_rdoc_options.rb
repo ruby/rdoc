@@ -138,7 +138,24 @@ file 'unreadable' not readable
 
     options = YAML.load YAML.dump @options
 
-    assert_equal Encoding::IBM437, @options.encoding
+    assert_equal Encoding::IBM437, options.encoding
+  end
+
+  def test_init_with_trim_paths
+    RDoc.load_yaml
+
+    yaml = <<-YAML
+--- !ruby/object:RDoc::Options
+static_path:
+- /etc
+rdoc_include:
+- /etc
+    YAML
+
+    options = YAML.load yaml
+
+    assert_empty options.rdoc_include
+    assert_empty options.static_path
   end
 
   def test_parse_copy_files_file_relative

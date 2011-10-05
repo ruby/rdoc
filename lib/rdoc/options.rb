@@ -304,14 +304,15 @@ class RDoc::Options
     @main_page      = map['main_page']
     @markup         = map['markup']
     @op_dir         = map['op_dir']
-    @rdoc_include   = map['rdoc_include']
     @show_hash      = map['show_hash']
-    @static_path    = map['static_path']
     @tab_width      = map['tab_width']
     @template_dir   = map['template_dir']
     @title          = map['title']
     @visibility     = map['visibility']
     @webcvs         = map['webcvs']
+
+    @rdoc_include = sanitize_path map['rdoc_include']
+    @static_path  = sanitize_path map['static_path']
   end
 
   def yaml_initialize tag, map # :nodoc:
