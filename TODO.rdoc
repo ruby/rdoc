@@ -1,9 +1,5 @@
 Some file contains some things that might happen in RDoc, or might not
 
-=== 3.10
-
-* Trim path options to paths relative to the project dir
-
 === 3.11
 
 * Reload the RDoc tree from an RI store
