@@ -51,6 +51,65 @@ file 'unreadable' not readable
     refute @options.dry_run
   end
 
+  def test_encode_with
+    coder = {}
+    class << coder; alias add []=; end
+
+    @options.encode_with coder
+
+    expected = {
+      'charset'        => 'UTF-8',
+      'encoding'       => 'UTF-8',
+      'exclude'        => [],
+      'hyperlink_all'  => false,
+      'line_numbers'   => false,
+      'main_page'      => nil,
+      'markup'         => 'rdoc',
+      'rdoc_include'   => [],
+      'show_hash'      => false,
+      'static_path'    => [],
+      'tab_width'      => 8,
+      'title'          => nil,
+      'visibility'     => :protected,
+      'webcvs'         => nil,
+    }
+
+    assert_equal expected, coder
+  end
+
+  def test_encode_with_trim_paths
+    subdir = nil
+    coder = {}
+    class << coder; alias add []=; end
+
+    temp_dir do |dir|
+      FileUtils.mkdir 'project'
+      FileUtils.mkdir 'dir'
+      FileUtils.touch 'file'
+
+      Dir.chdir 'project' do
+        subdir = File.expand_path 'subdir'
+        FileUtils.mkdir 'subdir'
+        @options.parse %w[
+          --copy subdir
+          --copy ../file
+          --copy ../
+          --copy /
+          --include subdir
+          --include ../dir
+          --include ../
+          --include /
+        ]
+
+        @options.encode_with coder
+      end
+    end
+
+    assert_equal [subdir], coder['rdoc_include']
+
+    assert_equal [subdir], coder['static_path']
+  end
+
   def test_encoding_default
     skip "Encoding not implemented" unless Object.const_defined? :Encoding
 

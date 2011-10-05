@@ -49,25 +49,38 @@ class RDoc::Options
   # RDoc options ignored by --write-options
 
   SPECIAL = %w[
+    coverage_report
     dry_run
+    encoding
+    files
+    force_output
+    force_update
     generator
     generator_name
     generator_options
     generators
-    coverage_report
+    op_dir
     option_parser
     pipe
+    rdoc_include
+    static_path
+    stylesheet_url
     template
+    template_dir
     update_output_dir
     verbosity
     write_options
-    encoding
   ]
 
   ##
   # Path option validator for OptionParser
 
   Path = Object.new
+
+  ##
+  # Array of Paths option validator for OptionParser
+
+  PathArray = Object.new
 
   ##
   # Template option validator for OptionParser
@@ -371,6 +384,8 @@ class RDoc::Options
     encoding = @encoding ? @encoding.name : nil
 
     coder.add 'encoding', encoding
+    coder.add 'static_path',  sanitize_path(@static_path)
+    coder.add 'rdoc_include', sanitize_path(@rdoc_include)
 
     ivars = instance_variables.map { |ivar| ivar.to_s[1..-1] }
     ivars -= SPECIAL
@@ -516,6 +531,20 @@ Usage: #{opt.program_name} [options] [names...]
         directory
       end
 
+      opt.accept PathArray do |directories,|
+        directories = if directories then
+                        directories.split(',').map { |d| d unless d.empty? }
+                      end
+
+        directories.map do |directory|
+          directory = File.expand_path directory
+
+          raise OptionParser::InvalidArgument unless File.exist? directory
+
+          directory
+        end
+      end
+
       opt.separator nil
       opt.separator "Parsing options:"
       opt.separator nil
@@ -630,7 +659,7 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--include=DIRECTORIES", "-i", Array,
+      opt.on("--include=DIRECTORIES", "-i", PathArray,
              "Set (or add to) the list of directories to",
              "be searched when satisfying :include:",
              "requests. Can be used more than once.") do |value|
@@ -917,6 +946,20 @@ Usage: #{opt.program_name} [options] [names...]
 
   def quiet= bool
     @verbosity = bool ? 0 : 1
+  end
+
+  ##
+  # Removes directories from +path+ that are outside the current directory
+
+  def sanitize_path path
+    require 'pathname'
+    dot = Pathname.new('.').expand_path
+
+    path.reject do |item|
+      path = Pathname.new(item).expand_path
+      relative = path.relative_path_from(dot).to_s
+      relative.start_with? '..'
+    end
   end
 
   ##
