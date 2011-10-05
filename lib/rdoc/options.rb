@@ -2,6 +2,29 @@ require 'optparse'
 
 ##
 # RDoc::Options handles the parsing and storage of options
+#
+# == Saved Options
+#
+# You can save some options like the markup format in the
+# <tt>.rdoc_options</tt> file in your gem.  The easiest way to do this is:
+#
+#   rdoc --markup tomdoc --write-options
+#
+# Which will automatically create the file and fill it with the options you
+# specified.
+#
+# The following options will not be saved since they interfere with the user's
+# preferences or with the normal operation of RDoc:
+#
+# * +--coverage-report+
+# * +--dry-run+
+# * +--encoding+
+# * +--force-update+
+# * +--format+
+# * +--pipe+
+# * +--quiet+
+# * +--template+
+# * +--verbose+
 
 class RDoc::Options
 
@@ -21,6 +44,25 @@ class RDoc::Options
     '--promiscuous'   => 'files always only document their content',
     '--ri-system'     => 'Ruby installers use other techniques',
   }
+
+  ##
+  # RDoc options ignored by --write-options
+
+  SPECIAL = %w[
+    dry_run
+    generator
+    generator_name
+    generator_options
+    generators
+    coverage_report
+    option_parser
+    pipe
+    template
+    update_output_dir
+    verbosity
+    write_options
+    encoding
+  ]
 
   ##
   # Path option validator for OptionParser
@@ -45,7 +87,7 @@ class RDoc::Options
   ##
   # Encoding of output where.  This is set via --encoding.
 
-  attr_accessor :encoding if Object.const_defined? :Encoding
+  attr_accessor :encoding
 
   ##
   # Files matching this pattern will be excluded
@@ -77,6 +119,11 @@ class RDoc::Options
   # Description of the output generator (set with the <tt>--fmt</tt> option)
 
   attr_accessor :generator
+
+  ##
+  # For #==
+
+  attr_reader :generator_name # :nodoc:
 
   ##
   # Loaded generator options.  Used to prevent --help from loading the same
@@ -185,8 +232,13 @@ class RDoc::Options
   attr_accessor :visibility
 
   def initialize # :nodoc:
+    init_ivars
+  end
+
+  def init_ivars # :nodoc:
     @dry_run = false
     @exclude = []
+    @files = nil
     @force_output = false
     @force_update = true
     @generator = nil
@@ -203,7 +255,7 @@ class RDoc::Options
     @rdoc_include = []
     @show_hash = false
     @static_path = []
-    @stylesheet_url = nil
+    @stylesheet_url = nil # TODO remove in RDoc 4
     @tab_width = 8
     @template = nil
     @template_dir = nil
@@ -211,14 +263,65 @@ class RDoc::Options
     @update_output_dir = true
     @verbosity = 1
     @visibility = :protected
+    @write_options = false
     @webcvs = nil
 
     if Object.const_defined? :Encoding then
       @encoding = Encoding.default_external
       @charset = @encoding.to_s
     else
+      @encoding = nil
       @charset = 'UTF-8'
     end
+  end
+
+  def init_with map # :nodoc:
+    init_ivars
+
+    encoding = map['encoding']
+    @encoding = if Object.const_defined? :Encoding then
+                  encoding ? Encoding.find(encoding) : encoding
+                end
+
+    @charset        = map['charset']
+    @exclude        = map['exclude']
+    @generator_name = map['generator_name']
+    @hyperlink_all  = map['hyperlink_all']
+    @line_numbers   = map['line_numbers']
+    @main_page      = map['main_page']
+    @markup         = map['markup']
+    @op_dir         = map['op_dir']
+    @rdoc_include   = map['rdoc_include']
+    @show_hash      = map['show_hash']
+    @static_path    = map['static_path']
+    @tab_width      = map['tab_width']
+    @template_dir   = map['template_dir']
+    @title          = map['title']
+    @visibility     = map['visibility']
+    @webcvs         = map['webcvs']
+  end
+
+  def yaml_initialize tag, map # :nodoc:
+    init_with map
+  end
+
+  def == other # :nodoc:
+    self.class === other and
+      @encoding       == other.encoding       and
+      @generator_name == other.generator_name and
+      @hyperlink_all  == other.hyperlink_all  and
+      @line_numbers   == other.line_numbers   and
+      @main_page      == other.main_page      and
+      @markup         == other.markup         and
+      @op_dir         == other.op_dir         and
+      @rdoc_include   == other.rdoc_include   and
+      @show_hash      == other.show_hash      and
+      @static_path    == other.static_path    and
+      @tab_width      == other.tab_width      and
+      @template       == other.template       and
+      @title          == other.title          and
+      @visibility     == other.visibility     and
+      @webcvs         == other.webcvs
   end
 
   ##
@@ -259,6 +362,22 @@ class RDoc::Options
 
   def default_title=(string)
     @title ||= string
+  end
+
+  ##
+  # For dumping YAML
+
+  def encode_with coder # :nodoc:
+    encoding = @encoding ? @encoding.name : nil
+
+    coder.add 'encoding', encoding
+
+    ivars = instance_variables.map { |ivar| ivar.to_s[1..-1] }
+    ivars -= SPECIAL
+
+    ivars.sort.each do |ivar|
+      coder.add ivar, instance_variable_get("@#{ivar}")
+    end
   end
 
   ##
@@ -321,7 +440,7 @@ class RDoc::Options
   ##
   # Parses command line options.
 
-  def parse(argv)
+  def parse argv
     ignore_invalid = true
 
     argv.insert(0, *ENV['RDOCOPT'].split) if ENV['RDOCOPT']
@@ -666,15 +785,29 @@ Usage: #{opt.program_name} [options] [names...]
       opt.separator "Generic options:"
       opt.separator nil
 
+      opt.on("--write-options",
+             "Write .rdoc_options to the current",
+             "directory with the given options.  Not all",
+             "options will be used.  See RDoc::Options",
+             "for details.") do |value|
+        @write_options = true
+      end
+
+      opt.separator nil
+
       opt.on("--[no-]dry-run",
              "Don't write any files") do |value|
         @dry_run = value
       end
 
+      opt.separator nil
+
       opt.on("-D", "--[no-]debug",
              "Displays lots on internal stuff.") do |value|
         $DEBUG_RDOC = value
       end
+
+      opt.separator nil
 
       opt.on("--[no-]ignore-invalid",
              "Ignore invalid options and continue",
@@ -682,15 +815,21 @@ Usage: #{opt.program_name} [options] [names...]
         ignore_invalid = value
       end
 
+      opt.separator nil
+
       opt.on("--quiet", "-q",
              "Don't show progress as we parse.") do |value|
         @verbosity = 0
       end
 
+      opt.separator nil
+
       opt.on("--verbose", "-v",
              "Display extra progress as RDoc parses") do |value|
         @verbosity = 2
       end
+
+      opt.separator nil
 
       opt.on("--help",
              "Display this help") do
@@ -757,6 +896,13 @@ Usage: #{opt.program_name} [options] [names...]
     @files = argv.dup
 
     finish
+
+    if @write_options then
+      write_options
+      exit
+    end
+
+    self
   end
 
   ##
@@ -809,6 +955,33 @@ Usage: #{opt.program_name} [options] [names...]
       File.join File.expand_path(path), template_path
     end.find do |dir|
       File.directory? dir
+    end
+  end
+
+  ##
+  # This is compatibility code for syck
+
+  def to_yaml opts = {} # :nodoc:
+    return super if YAML.const_defined?(:ENGINE) and not YAML::ENGINE.syck?
+
+    YAML.quick_emit self, opts do |out|
+      out.map taguri, to_yaml_style do |map|
+        encode_with map
+      end
+    end
+  end
+
+  ##
+  # Writes the YAML file .rdoc_options to the current directory containing the
+  # parsed options.
+
+  def write_options
+    RDoc.load_yaml
+
+    open '.rdoc_options', 'w' do |io|
+      io.set_encoding Encoding::UTF_8 if Object.const_defined? :Encoding
+
+      YAML.dump self, io
     end
   end
 

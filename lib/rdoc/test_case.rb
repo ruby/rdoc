@@ -48,6 +48,22 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
     RDoc::Comment.new text, top_level
   end
 
+  ##
+  # Creates a temporary directory changes the current directory to it for the
+  # duration of the block.
+  #
+  # Depends upon Dir.mktmpdir
+
+  def temp_dir
+    skip "No Dir::mktmpdir, upgrade your ruby" unless Dir.respond_to? :mktmpdir
+
+    Dir.mktmpdir do |temp_dir|
+      Dir.chdir temp_dir do
+        yield temp_dir
+      end
+    end
+  end
+
 end
 
 # This hack allows autoload to work when Dir.pwd is changed for Ruby 1.8 since

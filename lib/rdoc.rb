@@ -27,13 +27,15 @@ $DEBUG_RDOC = nil
 # * If you want to use RDoc to create documentation for your Ruby source files,
 #   see RDoc::Markup and refer to <tt>rdoc --help</tt> for command line
 #   usage.
+# * If you want to store rdoc configuration in your gem see
+#   RDoc::Options@Saved+Options
 # * If you want to write documentation for Ruby files see RDoc::Parser::Ruby
 # * If you want to write documentation for extensions written in C see
 #   RDoc::Parser::C
 # * If you want to generate documentation using <tt>rake</tt> see RDoc::Task.
 # * If you want to drive RDoc programmatically, see RDoc::RDoc.
-# * If you want to use the library to format text blocks into HTML, look at
-#   RDoc::Markup.
+# * If you want to use the library to format text blocks into HTML or other
+#   formats, look at RDoc::Markup.
 # * If you want to make an RDoc plugin such as a generator or directive
 #   handler see RDoc::RDoc.
 # * If you want to write your own output generator see RDoc::Generator.
@@ -142,6 +144,20 @@ module RDoc
 
   METHOD_MODIFIERS = GENERAL_MODIFIERS +
     %w[arg args yield yields notnew not-new not_new doc]
+
+  def self.load_yaml
+    begin
+      gem 'psych'
+    rescue Gem::LoadError
+    end
+
+    begin
+      require 'psych'
+    rescue ::LoadError
+    ensure
+      require 'yaml'
+    end
+  end
 
   autoload :RDoc,           'rdoc/rdoc'
 

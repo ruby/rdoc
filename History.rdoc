@@ -24,6 +24,18 @@
     overrides the default markup format.
 
     The markup format can be set for rake tasks using RDoc::Task#markup
+  * RDoc can save and load an options file.
+
+    To create an options file that defaults to using TomDoc markup run:
+
+      rdoc --markup tomdoc --write-options
+
+    This will create a .rdoc_options file.  Check it in to your VCS and
+    package it with your gem.  RDoc will automatically load this file and
+    combine it with the user's options.
+
+    Some options are not saved.  See RDoc::Options@Saved+Options for full
+    details.
 
 * Minor enhancements
   * HTML headings now have ids matching their titles.

@@ -42,6 +42,41 @@ class TestRDocRDoc < RDoc::TestCase
     assert_equal [file], @rdoc.gather_files([file, file])
   end
 
+  def test_load_options
+    temp_dir do
+      options = RDoc::Options.new
+      options.markup = 'tomdoc'
+      options.write_options
+
+      options = @rdoc.load_options
+
+      assert_equal 'tomdoc', options.markup
+    end
+  end
+
+  def test_load_options_invalid
+    temp_dir do
+      open '.rdoc_options', 'w' do |io|
+        io.write "a: !ruby.yaml.org,2002:str |\nfoo"
+      end
+
+      e = assert_raises RDoc::Error do
+        @rdoc.load_options
+      end
+
+      options_file = File.expand_path '.rdoc_options'
+      assert_equal "#{options_file} is not a valid rdoc options file", e.message
+    end
+  end
+
+  def load_options_no_file
+    temp_dir do
+      options = @rdoc.load_options
+
+      assert_kind_of RDoc::Options, options
+    end
+  end
+
   def test_normalized_file_list
     files = @rdoc.normalized_file_list [__FILE__]
 
@@ -88,8 +123,6 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_setup_output_dir
-    skip "No Dir::mktmpdir, upgrade your ruby" unless Dir.respond_to? :mktmpdir
-
     Dir.mktmpdir {|d|
       path = File.join d, 'testdir'
 
@@ -103,8 +136,6 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_setup_output_dir_dry_run
-    skip "No Dir::mktmpdir, upgrade your ruby" unless Dir.respond_to? :mktmpdir
-
     @rdoc.options.dry_run = true
 
     Dir.mktmpdir do |d|
@@ -117,8 +148,6 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_setup_output_dir_exists
-    skip "No Dir::mktmpdir, upgrade your ruby" unless Dir.respond_to? :mktmpdir
-
     Dir.mktmpdir {|path|
       open @rdoc.output_flag_file(path), 'w' do |io|
         io.puts Time.at 0
@@ -133,8 +162,6 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_setup_output_dir_exists_empty_created_rid
-    skip "No Dir::mktmpdir, upgrade your ruby" unless Dir.respond_to? :mktmpdir
-
     Dir.mktmpdir {|path|
       open @rdoc.output_flag_file(path), 'w' do end
 
@@ -160,8 +187,6 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_setup_output_dir_exists_not_rdoc
-    skip "No Dir::mktmpdir, upgrade your ruby" unless Dir.respond_to? :mktmpdir
-
     Dir.mktmpdir do |dir|
       e = assert_raises RDoc::Error do
         @rdoc.setup_output_dir dir, false
@@ -172,8 +197,6 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_update_output_dir
-    skip "No Dir::mktmpdir, upgrade your ruby" unless Dir.respond_to? :mktmpdir
-
     Dir.mktmpdir do |d|
       @rdoc.update_output_dir d, Time.now, {}
 
@@ -182,8 +205,6 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_update_output_dir_dont
-    skip "No Dir::mktmpdir, upgrade your ruby" unless Dir.respond_to? :mktmpdir
-
     Dir.mktmpdir do |d|
       @rdoc.options.update_output_dir = false
       @rdoc.update_output_dir d, Time.now, {}
@@ -193,8 +214,6 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_update_output_dir_dry_run
-    skip "No Dir::mktmpdir, upgrade your ruby" unless Dir.respond_to? :mktmpdir
-
     Dir.mktmpdir do |d|
       @rdoc.options.dry_run = true
       @rdoc.update_output_dir d, Time.now, {}

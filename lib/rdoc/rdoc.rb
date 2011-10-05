@@ -38,6 +38,11 @@ require 'time'
 class RDoc::RDoc
 
   ##
+  # This is the list of supported output generators
+
+  GENERATORS = {}
+
+  ##
   # File pattern to exclude
 
   attr_accessor :exclude
@@ -61,11 +66,6 @@ class RDoc::RDoc
   # Accessor for statistics.  Available after each call to parse_files
 
   attr_reader :stats
-
-  ##
-  # This is the list of supported output generators
-
-  GENERATORS = {}
 
   ##
   # Add +klass+ that can generate output after parsing
@@ -153,6 +153,33 @@ class RDoc::RDoc
     @old_siginfo = trap 'INFO' do
       puts @current if @current
     end
+  end
+
+  ##
+  # Loads options from .rdoc_options if the file exists, otherwise creates a
+  # new RDoc::Options instance.
+
+  def load_options
+    options_file = File.expand_path '.rdoc_options'
+    return RDoc::Options.new unless File.exist? options_file
+
+    RDoc.load_yaml
+
+    parse_error = if Object.const_defined? :Psych then
+                    Psych::SyntaxError
+                  else
+                    ArgumentError
+                  end
+
+    begin
+      options = YAML.load_file '.rdoc_options'
+    rescue *parse_error
+    end
+
+    raise RDoc::Error, "#{options_file} is not a valid rdoc options file" unless
+      RDoc::Options === options
+
+    options
   end
 
   ##
@@ -405,7 +432,7 @@ The internal error was:
       @options = options
       @options.finish
     else
-      @options = RDoc::Options.new
+      @options = load_options
       @options.parse options
     end
 

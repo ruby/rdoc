@@ -15,18 +15,23 @@ class TestRDocOptions < RDoc::TestCase
     RDoc::RDoc::GENERATORS.replace @generators
   end
 
+  def mu_pp obj
+    s = ''
+    s = PP.pp obj, s
+    s = s.force_encoding Encoding.default_external if defined? Encoding
+    s.chomp
+  end
+
   def test_check_files
     skip "assumes UNIX permission model" if /mswin|mingw/ =~ RUBY_PLATFORM
     out, err = capture_io do
-      Dir.mktmpdir do |dir|
-        Dir.chdir dir do
-          FileUtils.touch 'unreadable'
-          FileUtils.chmod 0, 'unreadable'
+      temp_dir do
+        FileUtils.touch 'unreadable'
+        FileUtils.chmod 0, 'unreadable'
 
-          @options.files = %w[nonexistent unreadable]
+        @options.files = %w[nonexistent unreadable]
 
-          @options.check_files
-        end
+        @options.check_files
       end
     end
 
@@ -64,6 +69,17 @@ file 'unreadable' not readable
     EXPECTED
 
     assert_equal expected, @options.generator_descriptions
+  end
+
+  def test_init_with_encoding
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+    RDoc.load_yaml
+
+    @options.encoding = Encoding::IBM437
+
+    options = YAML.load YAML.dump @options
+
+    assert_equal Encoding::IBM437, @options.encoding
   end
 
   def test_parse_copy_files_file_relative
@@ -376,6 +392,23 @@ file 'unreadable' not readable
     $LOAD_PATH.replace orig_LOAD_PATH
   end
 
+  def test_parse_write_options
+    tmpdir = File.join Dir.tmpdir, "test_rdoc_options_#{$$}"
+    FileUtils.mkdir_p tmpdir
+
+    Dir.chdir tmpdir do
+      e = assert_raises SystemExit do
+        @options.parse %w[--write-options]
+      end
+
+      assert_equal 0, e.status
+    
+      assert File.exist? '.rdoc_options'
+    end
+  ensure
+    FileUtils.rm_rf tmpdir
+  end
+
   def test_setup_generator
     test_generator = Class.new do
       def self.setup_options op
@@ -425,6 +458,16 @@ file 'unreadable' not readable
     @options.update_output_dir = false
 
     refute @options.update_output_dir
+  end
+
+  def test_write_options
+    temp_dir do |dir|
+      @options.write_options
+    
+      assert File.exist? '.rdoc_options'
+
+      assert_equal @options, YAML.load(File.read('.rdoc_options'))
+    end
   end
 
 end
