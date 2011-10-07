@@ -55,7 +55,7 @@ class RDoc::RubyLex
   end
 
   self.debug_level = 0
-  
+
   # :startdoc:
 
   ##
@@ -69,7 +69,7 @@ class RDoc::RubyLex
     scanner.exception_on_syntax_error = true
 
     while token = scanner.token do
-      tokens << token 
+      tokens << token
     end
 
     tokens
@@ -960,7 +960,8 @@ class RDoc::RubyLex
       if peek(0) == '='
         token.concat getc
       end
-    elsif @lex_state == EXPR_BEG || @lex_state == EXPR_DOT
+    elsif @lex_state == EXPR_BEG || @lex_state == EXPR_DOT ||
+          @lex_state == EXPR_ARG
       @lex_state = EXPR_ARG
     else
       @lex_state = EXPR_END

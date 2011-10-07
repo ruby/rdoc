@@ -50,6 +50,25 @@ STRING
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_heredoc_percent_N
+    tokens = RDoc::RubyLex.tokenize <<-'RUBY', nil
+a b <<-U
+%N
+U
+    RUBY
+
+    expected = [
+      @TK::TkIDENTIFIER.new( 0, 1,  0, 'a'),
+      @TK::TkSPACE     .new( 1, 1,  1, ' '),
+      @TK::TkIDENTIFIER.new( 2, 1,  2, 'b'),
+      @TK::TkSPACE     .new( 3, 1,  3, ' '),
+      @TK::TkSTRING    .new( 4, 1,  4, %Q{"%N\n"}),
+      @TK::TkNL        .new(13, 3, 14, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_unary_minus
     ruby_lex = RDoc::RubyLex.new("-1", nil)
     assert_equal("-1", ruby_lex.token.value)

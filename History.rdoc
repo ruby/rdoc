@@ -86,6 +86,7 @@
   * The C parser now understands classes defined with
     +rb_struct_define_without_accessor+ (like Range).  Pull Request #73 by Dan
     Bernier
+  * Fixed lexing of <code>a b <<-HEREDOC</code>.  Issue #75 by John Mair.
 
 === 3.9.2 / 2011-08-11
 

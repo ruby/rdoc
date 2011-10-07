@@ -11,6 +11,9 @@ Some file contains some things that might happen in RDoc, or might not
 * Add direct accessor to RDoc::Options to RDoc::Task
 * Remove Public in HTML output if there are only public methods
 * Method markup support for rd documentation
+* Improve SIGINFO handling
+* Global variable support
+* Page support for ri
 
 === 4
 
