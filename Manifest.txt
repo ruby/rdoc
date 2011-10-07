@@ -1,6 +1,7 @@
 .autotest
 .document
 History.rdoc
+LEGAL.rdoc
 LICENSE.rdoc
 Manifest.txt
 README.rdoc

@@ -191,6 +191,15 @@ class TestRDocTopLevel < XrefTestCase
     assert_equal 'top_level.rb', @top_level.base_name
   end
 
+  def test_display_eh
+    refute @top_level.display?
+
+    page = RDoc::TopLevel.new 'README.txt'
+    page.parser = RDoc::Parser::Simple
+
+    assert page.display?
+  end
+
   def test_eql_eh
     top_level2 = RDoc::TopLevel.new 'path/top_level.rb'
     other_level = RDoc::TopLevel.new 'path/other_level.rb'

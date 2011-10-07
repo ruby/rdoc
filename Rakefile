@@ -41,6 +41,7 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   self.extra_rdoc_files += %w[
     History.rdoc
     LICENSE.rdoc
+    LEGAL.rdoc
     README.rdoc
     RI.rdoc
     TODO.rdoc
@@ -127,4 +128,5 @@ task :diff_rubinius do
   sh "diff #{diff_options} lib/rdoc #{rubinius_dir}/lib/rdoc; true"
   sh "diff #{diff_options} test #{rubinius_dir}/test/rdoc; true"
 end
+
 

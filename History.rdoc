@@ -2,7 +2,8 @@
 
 * Major enhancements
   * RDoc HTML output has been improved:
-    * The search from Володя Колесников's sdoc has been integrated.
+    * The search from Володя Колесников's (Vladimir Kolesnikov) Sdoc has been
+      integrated.
 
       The search index generation is a reusable component through
       RDoc::Generator::JsonIndex
@@ -87,6 +88,8 @@
     +rb_struct_define_without_accessor+ (like Range).  Pull Request #73 by Dan
     Bernier
   * Fixed lexing of <code>a b <<-HEREDOC</code>.  Issue #75 by John Mair.
+  * Added LEGAL.rdoc with references to licenses in other files.  Issue #78 by
+    Dmitry Jemerov.
 
 === 3.9.2 / 2011-08-11
 

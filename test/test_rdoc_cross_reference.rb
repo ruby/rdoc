@@ -16,13 +16,6 @@ class TestRDocCrossReference < XrefTestCase
     assert_equal name, @xref.resolve(name, name)
   end
 
-  def test_resolve_page
-    page = RDoc::TopLevel.new 'README.txt'
-    page.parser = RDoc::Parser::Simple
-
-    assert_ref page, 'README'
-  end
-
   def test_resolve_C2
     @xref = RDoc::CrossReference.new @c2
 
@@ -100,7 +93,7 @@ class TestRDocCrossReference < XrefTestCase
   end
 
   def test_resolve_file
-    assert_ref @xref_data, 'xref_data.rb'
+    refute_ref 'xref_data.rb'
   end
 
   def test_resolve_method
@@ -134,6 +127,13 @@ class TestRDocCrossReference < XrefTestCase
     assert_ref @c2_c3_m, '::C2::C3#m'
     assert_ref @c2_c3_m, '::C2::C3#m()'
     assert_ref @c2_c3_m, '::C2::C3#m(*)'
+  end
+
+  def test_resolve_page
+    page = RDoc::TopLevel.new 'README.txt'
+    page.parser = RDoc::Parser::Simple
+
+    assert_ref page, 'README'
   end
 
   def test_resolve_percent

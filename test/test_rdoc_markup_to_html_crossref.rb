@@ -118,7 +118,9 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
   end
 
   def test_handle_special_HYPERLINK_rdoc
-    RDoc::TopLevel.new 'README.txt'
+    readme = RDoc::TopLevel.new 'README.txt'
+    readme.parser = RDoc::Parser::Simple
+
     @to = RDoc::Markup::ToHtmlCrossref.new 'C2.html', @c2, true
 
     link = @to.handle_special_HYPERLINK hyper 'C2::C3'
@@ -135,7 +137,9 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
   end
 
   def test_handle_special_TIDYLINK_rdoc
-    RDoc::TopLevel.new 'README.txt'
+    readme = RDoc::TopLevel.new 'README.txt'
+    readme.parser = RDoc::Parser::Simple
+
     @to = RDoc::Markup::ToHtmlCrossref.new 'C2.html', @c2, true
 
     link = @to.handle_special_TIDYLINK tidy 'C2::C3'
