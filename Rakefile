@@ -2,6 +2,8 @@ $:.unshift File.expand_path 'lib'
 require 'rdoc'
 require 'hoe'
 
+ENV['BENCHMARK'] = 'yes'
+
 task :docs    => :generate
 task :test    => :generate
 

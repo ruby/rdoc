@@ -774,6 +774,19 @@ class TestRDocClassModule < XrefTestCase
     assert_equal [a, c], @c1.includes
   end
 
+  def test_update_includes_trim
+    a = RDoc::Include.new 'D::M', nil
+    b = RDoc::Include.new 'D::M', nil
+
+    @c1.add_include a
+    @c1.add_include b
+    @c1.ancestors # cache included modules
+
+    @c1.update_includes
+
+    assert_equal [a], @c1.includes
+  end
+
   def test_update_includes_with_colons
     a = RDoc::Include.new 'M1', nil
     b = RDoc::Include.new 'M1::M2', nil

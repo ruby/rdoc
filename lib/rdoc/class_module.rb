@@ -374,6 +374,8 @@ class RDoc::ClassModule < RDoc::Context
       end
     end
 
+    @includes.uniq! # clean up
+
     merge_collections method_list, cm.method_list, other_files do |add, meth|
       if add then
         add_method meth
@@ -609,6 +611,8 @@ class RDoc::ClassModule < RDoc::Context
       mod = include.module
       !(String === mod) && RDoc::TopLevel.all_modules_hash[mod.full_name].nil?
     end
+
+    includes.uniq!
   end
 
 end

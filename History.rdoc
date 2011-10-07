@@ -94,6 +94,9 @@
     Andrea Singh.
   * The method parameter coverage report no longer includes parameter default
     values.  Issue #77 by Jake Goulding.
+  * The module for an include is not looked up until parsed all the files are
+    parsed.  Unless your project includes nonexistent modules this avoids
+    worst-case behavior (<tt>O(n!)</tt>) of RDoc::Include#module.
 
 === 3.9.2 / 2011-08-11
 

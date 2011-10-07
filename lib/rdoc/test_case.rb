@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'minitest/autorun'
+require 'minitest/benchmark' if ENV['BENCHMARK']
 
 require 'fileutils'
 require 'pp'
