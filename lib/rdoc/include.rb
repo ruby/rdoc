@@ -79,12 +79,12 @@ class RDoc::Include < RDoc::CodeObject
     end
 
     # go up the hierarchy of names
-    p = parent.parent
-    while p
-      full_name = p.child_name(@name)
+    up = parent.parent
+    while up
+      full_name = up.child_name(@name)
       @module = RDoc::TopLevel.modules_hash[full_name]
       return @module if @module
-      p = p.parent
+      up = up.parent
     end
 
     @name
