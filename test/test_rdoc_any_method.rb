@@ -176,6 +176,15 @@ method(a, b) { |c, d| ... }
     assert_equal %w[a b c d], m.param_list
   end
 
+  def test_param_list_default
+    m = RDoc::AnyMethod.new nil, 'method'
+    m.parent = @c1
+
+    m.params = '(b = default)'
+
+    assert_equal %w[b], m.param_list
+  end
+
   def test_param_list_params
     m = RDoc::AnyMethod.new nil, 'method'
     m.parent = @c1

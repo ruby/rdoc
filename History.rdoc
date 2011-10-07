@@ -92,6 +92,8 @@
     Dmitry Jemerov.
   * Block parameters are displayed in Darkfish output again.  Issue #76 by
     Andrea Singh.
+  * The method parameter coverage report no longer includes parameter default
+    values.  Issue #77 by Jake Goulding.
 
 === 3.9.2 / 2011-08-11
 

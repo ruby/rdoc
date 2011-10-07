@@ -166,7 +166,9 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       return []
     end
 
-    params.gsub(/\s+/, '').split ','
+    params = params.gsub(/\s+/, '').split ','
+
+    params.map { |param| param.sub(/=.*/, '') }
   end
 
   ##
@@ -178,10 +180,12 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       params = @call_seq.split("\n").last
       params = params.sub(/[^( ]+/, '')
       params = params.sub(/(\|[^|]+\|)\s*\.\.\.\s*(end|\})/, '\1 \2')
-    else
+    elsif @params then
       params = @params.gsub(/\s*\#.*/, '')
       params = params.tr("\n", " ").squeeze(" ")
       params = "(#{params})" unless params[0] == ?(
+    else
+      params = ''
     end
 
     if @block_params then
