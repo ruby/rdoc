@@ -90,6 +90,8 @@
   * Fixed lexing of <code>a b <<-HEREDOC</code>.  Issue #75 by John Mair.
   * Added LEGAL.rdoc with references to licenses in other files.  Issue #78 by
     Dmitry Jemerov.
+  * Block parameters are displayed in Darkfish output again.  Issue #76 by
+    Andrea Singh.
 
 === 3.9.2 / 2011-08-11
 
