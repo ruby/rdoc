@@ -39,6 +39,7 @@
     details.
 
 * Minor enhancements
+  * RDoc autoloads everything.  You only need to require 'rdoc' now.
   * HTML headings now have ids matching their titles.
 
       = Hello!
