@@ -46,7 +46,7 @@ class RDoc::Options
   }
 
   ##
-  # RDoc options ignored by --write-options
+  # RDoc options ignored (or handled specially) by --write-options
 
   SPECIAL = %w[
     coverage_report
@@ -276,8 +276,8 @@ class RDoc::Options
     @update_output_dir = true
     @verbosity = 1
     @visibility = :protected
-    @write_options = false
     @webcvs = nil
+    @write_options = false
 
     if Object.const_defined? :Encoding then
       @encoding = Encoding.default_external
@@ -517,7 +517,7 @@ Usage: #{opt.program_name} [options] [names...]
         template_dir = template_dir_for template
 
         unless template_dir then
-          warn "could not find template #{template}"
+          $stderr.puts "could not find template #{template}"
           nil
         else
           [template, template_dir]
@@ -1013,6 +1013,13 @@ Usage: #{opt.program_name} [options] [names...]
         encode_with map
       end
     end
+  end
+
+  ##
+  # Displays a warning using Kernel#warn if we're being verbose
+
+  def warn message
+    super message if @verbosity > 1
   end
 
   ##

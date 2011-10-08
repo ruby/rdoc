@@ -71,6 +71,8 @@
   * Moved token stream HTML markup out of RDoc::AnyMethod#markup_code into
     RDoc::TokenStream::to_html
   * "Top" link in section headers is no longer inside the heading element.
+  * RDoc avoids printing some warnings unless run with `rdoc --verbose`.  For
+    Rails issue #1646.
 
 * Bug fixes
   * Markup defined by RDoc::Markup#add_special inside a <tt><tt></tt> is no

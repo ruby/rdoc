@@ -1801,12 +1801,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
-  # Prints +msg+ to +$stderr+ unless we're being quiet
+  # Prints +message+ to +$stderr+ unless we're being quiet
 
-  def warn(msg)
-    return if @options.quiet
-    msg = make_message msg
-    $stderr.puts msg
+  def warn message
+    @options.warn make_message message
   end
 
 end

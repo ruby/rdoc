@@ -57,6 +57,7 @@ class TestRDocParserC < RDoc::TestCase
     @top_level = RDoc::TopLevel.new filename
     @fn = filename
     @options = RDoc::Options.new
+    @options.verbosity = 2
     @stats = RDoc::Stats.new 0
   end
 

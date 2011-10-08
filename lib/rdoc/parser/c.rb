@@ -165,7 +165,7 @@ class RDoc::Parser::C < RDoc::Parser
       class_name = @known_classes[var_name]
 
       unless class_name then
-        warn "Enclosing class/module %p for alias %s %s not known" % [
+        @options.warn "Enclosing class/module %p for alias %s %s not known" % [
           var_name, new_name, old_name]
         next
       end
@@ -496,7 +496,7 @@ class RDoc::Parser::C < RDoc::Parser
 
       return body if body
 
-      warn "No definition for #{meth_name}" if @options.verbosity > 1
+      @options.warn "No definition for #{meth_name}"
       false
     else # No body, but might still have an override comment
       comment = find_override_comment class_name, meth_obj
@@ -508,7 +508,7 @@ class RDoc::Parser::C < RDoc::Parser
 
         ''
       else
-        warn "No definition for #{meth_name}" if @options.verbosity > 1
+        @options.warn "No definition for #{meth_name}"
         false
       end
     end
@@ -687,7 +687,8 @@ class RDoc::Parser::C < RDoc::Parser
       end
 
       unless enclosure then
-        warn "Enclosing class/module '#{in_module}' for #{type} #{class_name} not known"
+        @options.warn "Enclosing class/module '#{in_module}' for " \
+                      "#{type} #{class_name} not known"
         return
       end
     else
@@ -744,7 +745,7 @@ class RDoc::Parser::C < RDoc::Parser
     class_obj = find_class var_name, class_name
 
     unless class_obj then
-      warn "Enclosing class/module #{const_name.inspect} not known"
+      @options.warn "Enclosing class/module #{const_name.inspect} not known"
       return
     end
 
@@ -831,7 +832,8 @@ class RDoc::Parser::C < RDoc::Parser
         if File.exist? file_name then
           file_content = (@@known_bodies[file_name] ||= File.read(file_name))
         else
-          warn "unknown source #{source_file} for #{meth_name} in #{@file_name}"
+          @options.warn "unknown source #{source_file} for " \
+                        "#{meth_name} in #{@file_name}"
         end
       else
         file_content = @content

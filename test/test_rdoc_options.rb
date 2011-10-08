@@ -24,6 +24,7 @@ class TestRDocOptions < RDoc::TestCase
 
   def test_check_files
     skip "assumes UNIX permission model" if /mswin|mingw/ =~ RUBY_PLATFORM
+
     out, err = capture_io do
       temp_dir do
         FileUtils.touch 'unreadable'
@@ -37,14 +38,22 @@ class TestRDocOptions < RDoc::TestCase
 
     assert_empty @options.files
 
-    assert_equal '', out
+    assert_empty out
+    assert_empty err
+  end
 
-    expected = <<-EXPECTED
-file 'nonexistent' not found
-file 'unreadable' not readable
-    EXPECTED
+  def test_check_files_warn
+    @options.verbosity = 2
 
-    assert_equal expected, err
+    out, err = capture_io do
+      @options.files = %w[nonexistent]
+
+      @options.check_files
+    end
+
+    assert_empty out
+    assert_equal "file 'nonexistent' not found\n", err
+    assert_empty @options.files
   end
 
   def test_dry_run_default
@@ -536,6 +545,24 @@ rdoc_include:
     @options.update_output_dir = false
 
     refute @options.update_output_dir
+  end
+
+  def test_warn
+    out, err = capture_io do
+      @options.warn "warnings off"
+    end
+
+    assert_empty out
+    assert_empty err
+
+    @options.verbosity = 2
+
+    out, err = capture_io do
+      @options.warn "warnings on"
+    end
+
+    assert_empty out
+    assert_equal "warnings on\n", err
   end
 
   def test_write_options
