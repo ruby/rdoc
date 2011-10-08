@@ -203,6 +203,11 @@ class RDoc::Markup::Parser
 
       if type == :TEXT && column == margin then
         paragraph << data
+
+        if peek_token[0] == :BREAK then
+          break
+        end
+
         skip :NEWLINE
       else
         unget
@@ -268,7 +273,7 @@ class RDoc::Markup::Parser
         peek_column ||= column + width
         indent = peek_column - column - width
         line << ' ' * indent
-      when :TEXT then
+      when :BREAK, :TEXT then
         line << data
       else # *LIST_TOKENS
         list_marker = case type
@@ -322,7 +327,12 @@ class RDoc::Markup::Parser
     until @tokens.empty? do
       type, data, column, = get
 
-      if type == :NEWLINE then
+      case type
+      when :BREAK then
+        parent << RDoc::Markup::BlankLine.new
+        skip :NEWLINE, false
+        next
+      when :NEWLINE then
         # trailing newlines are skipped below, so this is a blank line
         parent << RDoc::Markup::BlankLine.new
         skip :NEWLINE, false
@@ -458,8 +468,15 @@ class RDoc::Markup::Parser
                  when s.scan(/(.*?)::( +|\r?$)/) then
                    [:NOTE, s[1], *token_pos(pos)]
                  # anything else: :TEXT
-                 else s.scan(/.*/)
-                   [:TEXT, s.matched.sub(/\r$/, ''), *token_pos(pos)]
+                 else s.scan(/(.*?)(  )?\r?$/)
+                   token = [:TEXT, s[1], *token_pos(pos)]
+
+                   if s[2] then
+                     @tokens << token
+                     [:BREAK, s[2], *token_pos(pos + s[1].length)]
+                   else
+                     token
+                   end
                  end
     end
 

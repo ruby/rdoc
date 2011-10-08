@@ -73,6 +73,8 @@
   * "Top" link in section headers is no longer inside the heading element.
   * RDoc avoids printing some warnings unless run with `rdoc --verbose`.  For
     Rails issue #1646.
+  * Finishing a paragraph with two or more spaces will result in a line break.
+    This feature is experimental and may be modified or removed.
 
 * Bug fixes
   * Markup defined by RDoc::Markup#add_special inside a <tt><tt></tt> is no

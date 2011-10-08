@@ -441,6 +441,17 @@ a. 新しい機能
     assert_equal expected, @RMP.parse(str).parts
   end
 
+  def test_parse_line_break
+    str = "now is\nthe time  \nfor all"
+
+    expected = [
+      @RM::Paragraph.new('now is', 'the time'),
+      @RM::BlankLine.new,
+      @RM::Paragraph.new('for all')]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
   def test_parse_list_list_1
     str = <<-STR
 10. para 1
@@ -1228,6 +1239,53 @@ b. l1.1
       [:LALPHA,  'b',     0, 1],
       [:TEXT,    'l1.1',  3, 1],
       [:NEWLINE, "\n",    7, 1],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str)
+  end
+
+  def test_tokenize_line_break
+    str = "now is\nthe time  \nfor all\n"
+
+    expected = [
+      [:TEXT,    'now is',    0, 0],
+      [:NEWLINE, "\n",        6, 0],
+      [:TEXT,    'the time',  0, 1],
+      [:BREAK,   "  ",        8, 1],
+      [:NEWLINE, "\n",       10, 1],
+      [:TEXT,    'for all',   0, 2],
+      [:NEWLINE, "\n",        7, 2],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str)
+  end
+
+  def test_tokenize_line_break_long
+    str = "now is\nthe time   \nfor all\n"
+
+    expected = [
+      [:TEXT,    'now is',     0, 0],
+      [:NEWLINE, "\n",         6, 0],
+      [:TEXT,    'the time ',  0, 1],
+      [:BREAK,   '  ',         9, 1],
+      [:NEWLINE, "\n",        11, 1],
+      [:TEXT,    'for all',    0, 2],
+      [:NEWLINE, "\n",         7, 2],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str)
+  end
+
+  def test_tokenize_line_break_no_short
+    str = "now is\nthe time \nfor all\n"
+
+    expected = [
+      [:TEXT,    'now is',    0, 0],
+      [:NEWLINE, "\n",        6, 0],
+      [:TEXT,    'the time ', 0, 1],
+      [:NEWLINE, "\n",        9, 1],
+      [:TEXT,    'for all',   0, 2],
+      [:NEWLINE, "\n",        7, 2],
     ]
 
     assert_equal expected, @RMP.tokenize(str)
