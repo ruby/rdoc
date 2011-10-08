@@ -65,6 +65,16 @@ class TestRDocAttr < RDoc::TestCase
     assert_equal 'RW',         loaded.rw
     assert_equal false,        loaded.singleton
     assert_equal :public,      loaded.visibility
+  end
+
+  def test_marshal_dump_singleton
+    tl = RDoc::TopLevel.new 'file.rb'
+
+    @a.comment = 'this is a comment'
+    @a.record_location tl
+
+    cm = RDoc::ClassModule.new 'Klass'
+    cm.add_attribute @a
 
     @a.rw = 'R'
     @a.singleton = true
@@ -73,6 +83,9 @@ class TestRDocAttr < RDoc::TestCase
     loaded = Marshal.load Marshal.dump @a
 
     assert_equal @a, loaded
+
+    comment = RDoc::Markup::Document.new(
+                RDoc::Markup::Paragraph.new('this is a comment'))
 
     assert_equal comment,       loaded.comment
     assert_equal 'Klass::attr', loaded.full_name

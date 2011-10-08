@@ -268,14 +268,27 @@ class RDoc::MethodAttr < RDoc::CodeObject
   # Full method/attribute name including namespace
 
   def full_name
-    @full_name || "#{parent_name}#{pretty_name}"
+    @full_name ||= "#{parent_name}#{pretty_name}"
   end
 
   ##
   # '::' for a class method/attribute, '#' for an instance method.
 
   def name_prefix
-    singleton ? '::' : '#'
+    @singleton ? '::' : '#'
+  end
+
+  ##
+  # Name for output to HTML.  For class methods the full name with a "." is
+  # used like +SomeClass.method_name+.  For instance methods the class name is
+  # used if +context+ does not match the parent.
+  #
+  # This is to help prevent people from using :: to call class methods.
+
+  def output_name context
+    return "#{name_prefix}#{@name}" if context == parent
+
+    "#{parent_name}#{@singleton ? '.' : '#'}#{@name}"
   end
 
   ##

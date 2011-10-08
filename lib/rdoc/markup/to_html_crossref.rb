@@ -131,6 +131,8 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
     ref = @cross_reference.resolve name, text
 
+    text = ref.output_name @context if RDoc::MethodAttr === ref and not label
+
     case ref
     when String then
       ref

@@ -43,7 +43,7 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
   def test_convert_RDOCLINK_rdoc_ref_method
     result = @to.convert 'rdoc-ref:C1#m'
 
-    assert_equal para("<a href=\"C1.html#method-i-m\">C1#m</a>"), result
+    assert_equal para("<a href=\"C1.html#method-i-m\">#m</a>"), result
   end
 
   def test_convert_RDOCLINK_rdoc_ref_method_label
@@ -59,14 +59,13 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
 
     result = @to.convert 'rdoc-ref:C1#%'
 
-    assert_equal para("<a href=\"C1.html#method-i-25\">C1#%</a>"), result
+    assert_equal para("<a href=\"C1.html#method-i-25\">#%</a>"), result
 
     m.singleton = true
 
     result = @to.convert 'rdoc-ref:C1::%'
 
-    assert_equal para("<a href=\"C1.html#method-c-25\">C1::%</a>"), result
-
+    assert_equal para("<a href=\"C1.html#method-c-25\">::%</a>"), result
   end
 
   def test_convert_RDOCLINK_rdoc_ref_method_percent_label
@@ -113,7 +112,7 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
   def test_handle_special_CROSSREF_show_hash_false
     @to.show_hash = false
 
-    assert_equal "<a href=\"C1.html#method-i-m\">m</a>",
+    assert_equal "<a href=\"C1.html#method-i-m\">#m</a>",
                  SPECIAL('#m')
   end
 
@@ -165,7 +164,12 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
   def test_link
     assert_equal 'n', @to.link('n', 'n')
 
-    assert_equal '<a href="C1.html#method-c-m">m</a>', @to.link('m', 'm')
+    assert_equal '<a href="C1.html#method-c-m">::m</a>', @to.link('m', 'm')
+  end
+
+  def test_link_class_method_full
+    assert_equal '<a href="Parent.html#method-c-m">Parent.m</a>',
+                 @to.link('Parent::m', 'Parent::m')
   end
 
   def para text

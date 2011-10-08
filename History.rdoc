@@ -52,9 +52,9 @@
     <tt>RDoc::Markup@Links</tt>
 
     See RDoc::Markup@Links for further details.
-  * RDoc now looks for a <tt>markup: parser_name</tt> magic comment to choose
-    alternate documentation formats.  The format comment must be in the first
-    three lines of the file (to allow for a shebang or modeline).
+  * For HTML output RDoc uses +SomeClass.method_name+ and
+    +SomeClass#method_name+ for remote methods and attributes and
+    +::method_name+ and +#method_name+ for local methods.
   * RDoc makes an effort to syntax-highlight ruby code in verbatim sections.
     See RDoc::Markup@Paragraphs+and+Verbatim
   * Added RDoc::TopLevel#text? and RDoc::Parser::Text to indicate a
