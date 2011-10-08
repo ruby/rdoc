@@ -145,6 +145,9 @@ module RDoc
   METHOD_MODIFIERS = GENERAL_MODIFIERS +
     %w[arg args yield yields notnew not-new not_new doc]
 
+  ##
+  # Loads the best available YAML library.
+
   def self.load_yaml
     begin
       gem 'psych'

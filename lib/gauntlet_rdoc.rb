@@ -9,7 +9,7 @@ require 'fileutils'
 
 class RDoc::Gauntlet < Gauntlet
 
-  def initialize
+  def initialize # :nodoc:
     super
 
     @args = nil
@@ -61,6 +61,10 @@ class RDoc::Gauntlet < Gauntlet
   ensure
     puts
   end
+
+  ##
+  # Runs the gauntlet with the given +type+ (rdoc or ri) and +filter+ for
+  # which gems to run
 
   def run_the_gauntlet type = 'rdoc', filter = nil
     @type = type || 'rdoc'
