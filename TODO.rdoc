@@ -30,3 +30,7 @@ API changes to RDoc
   * Rename Context to Container
   * Rename NormalClass to Class
 
+=== Crazy Ideas
+
+  * Auto-normalize heading levels to look OK.  It's weird to see an <h1> in
+    the middle of a method section.

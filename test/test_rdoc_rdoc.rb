@@ -122,6 +122,34 @@ class TestRDocRDoc < RDoc::TestCase
     assert_empty @rdoc.remove_unparseable file_list
   end
 
+  def test_remove_unparseable_tags_emacs
+    temp_dir do
+      open 'TAGS', 'w' do |io| # emacs
+        io.write "\f\nlib/foo.rb,43\n"
+      end
+
+      file_list = %w[
+        TAGS
+      ]
+
+      assert_empty @rdoc.remove_unparseable file_list
+    end
+  end
+
+  def test_remove_unparseable_tags_vim
+    temp_dir do
+      open 'TAGS', 'w' do |io| # emacs
+        io.write "!_TAG_"
+      end
+
+      file_list = %w[
+        TAGS
+      ]
+
+      assert_empty @rdoc.remove_unparseable file_list
+    end
+  end
+
   def test_setup_output_dir
     Dir.mktmpdir {|d|
       path = File.join d, 'testdir'

@@ -402,11 +402,16 @@ The internal error was:
   end
 
   ##
-  # Removes file extensions known to be unparseable from +files+
+  # Removes file extensions known to be unparseable from +files+ and TAGS
+  # files for emacs and vim.
 
   def remove_unparseable files
     files.reject do |file|
-      file =~ /\.(?:class|eps|erb|scpt\.txt|ttf|yml)$/i
+      file =~ /\.(?:class|eps|erb|scpt\.txt|ttf|yml)$/i or
+        (file =~ /tags$/i and
+         open(file, 'rb') { |io|
+           io.read(100) =~ /\A(\f\n[^,]+,\d+$|!_TAG_)/
+         })
     end
   end
 

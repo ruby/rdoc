@@ -1,4 +1,10 @@
-=== 3.10 / ??
+=== 3.11 / 2011/10-17
+
+* Bug fixes
+  * Avoid parsing TAGS files included in gems.  Issue #81 by Santiago
+    Pastorino.
+
+=== 3.10 / 2011-10-08
 
 * Major enhancements
   * RDoc HTML output has been improved:
