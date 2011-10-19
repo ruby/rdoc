@@ -1,5 +1,9 @@
 === 3.12 / ??
 
+* Minor enhancements
+  * Improved title for HTML output to include <code>--title</code> in the
+    title element.
+
 * Bug fixes
   * Fix title on HTML output for pages.
 

@@ -283,7 +283,7 @@ class RDoc::Generator::Darkfish
       # suppress 1.9.3 warning
       rel_prefix = rel_prefix = @outputdir.relative_path_from(out_file.dirname)
       svninfo    = svninfo    = self.get_svninfo(klass)
-      @title = "#{klass.type.capitalize}: #{klass.full_name}"
+      @title = "#{klass.type} #{klass.full_name} - #{@options.title}"
 
       debug_msg "  rendering #{out_file}"
       render_template template_file, out_file do |io| binding end
@@ -332,6 +332,7 @@ class RDoc::Generator::Darkfish
         end
       end
 
+      @title += " - #{@options.title}"
       template_file ||= filepage_file
 
       render_template template_file, out_file do |io| binding end
@@ -356,7 +357,7 @@ class RDoc::Generator::Darkfish
     out_file = @outputdir + 'table_of_contents.html'
     # suppress 1.9.3 warning
     rel_prefix = rel_prefix = @outputdir.relative_path_from(out_file.dirname)
-    @title = "Table of Contents"
+    @title = "Table of Contents - #{@options.title}"
 
     render_template template_file, out_file do |io| binding end
   rescue => e
