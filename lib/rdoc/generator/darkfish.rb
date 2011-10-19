@@ -302,7 +302,9 @@ class RDoc::Generator::Darkfish
   def generate_file_files
     page_file     = @template_dir + 'page.rhtml'
     fileinfo_file = @template_dir + 'fileinfo.rhtml'
-    template_file = @template_dir + 'filepage.rhtml' unless
+
+    # for legacy templates
+    filepage_file = @template_dir + 'filepage.rhtml' unless
       page_file.exist? or fileinfo_file.exist?
 
     return unless
@@ -312,12 +314,13 @@ class RDoc::Generator::Darkfish
     out_file = nil
 
     @files.each do |file|
-      out_file     = @outputdir + file.path
+      template_file = nil
+      out_file = @outputdir + file.path
       debug_msg "  working on %s (%s)" % [file.full_name, out_file]
       # suppress 1.9.3 warning
       rel_prefix = rel_prefix = @outputdir.relative_path_from(out_file.dirname)
 
-      unless template_file then
+      unless filepage_file then
         if file.text? then
           next unless page_file.exist?
           template_file = page_file
@@ -325,9 +328,11 @@ class RDoc::Generator::Darkfish
         else
           next unless fileinfo_file.exist?
           template_file = fileinfo_file
-          @title = "File: #{file.base_name} [#{@options.title}]"
+          @title = "File: #{file.base_name}"
         end
       end
+
+      template_file ||= filepage_file
 
       render_template template_file, out_file do |io| binding end
     end
