@@ -1,6 +1,7 @@
-Some file contains some things that might happen in RDoc, or might not
+This file contains some things that might happen in RDoc, or might not.
+Forward Looking Statements applies.
 
-=== 3.11
+=== 3.next
 
 * Reload the RDoc tree from an RI store
   * Re-run generators
@@ -9,8 +10,8 @@ Some file contains some things that might happen in RDoc, or might not
   statistics.
 * Link to the parent-class implementation of methods that use super
 * Add direct accessor to RDoc::Options to RDoc::Task
-* Remove Public in HTML output if there are only public methods
-* Method markup support for rd documentation
+* Remove "Public" in HTML output if there are only public methods
+* Method markup support for rd documentation (per rd syntax)
 * Improve SIGINFO handling
 * Global variable support
 * Page support for ri
