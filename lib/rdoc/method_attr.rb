@@ -1,5 +1,3 @@
-require 'cgi'
-
 ##
 # Abstract class representing either a method or an attribute.
 
@@ -261,6 +259,8 @@ class RDoc::MethodAttr < RDoc::CodeObject
   # HTML id-friendly method/attribute name
 
   def html_name
+    require 'cgi'
+
     CGI.escape(@name.gsub('-', '-2D')).gsub('%','-').sub(/^-/, '')
   end
 
