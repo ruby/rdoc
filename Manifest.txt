@@ -1,5 +1,6 @@
 .autotest
 .document
+DEVELOPERS.rdoc
 History.rdoc
 LEGAL.rdoc
 LICENSE.rdoc

@@ -4,7 +4,7 @@
 # generator RDoc::Generator::Darkfish and an ri data generator
 # RDoc::Generator::RI.
 #
-# = Registering a Generator
+# == Registering a Generator
 #
 # Generators are registered by calling RDoc::RDoc.add_generator with the class
 # of the generator:
@@ -13,7 +13,7 @@
 #     RDoc::RDoc.add_generator self
 #   end
 #
-# = Adding Options to +rdoc+
+# == Adding Options to +rdoc+
 #
 # Before option processing in +rdoc+, RDoc::Options will call ::setup_options
 # on the generator class with an RDoc::Options instance.  The generator can
@@ -23,7 +23,7 @@
 # You can extend the RDoc::Options instance with additional accessors for your
 # generator.
 #
-# = Generator Instantiation
+# == Generator Instantiation
 #
 # After parsing, RDoc::RDoc will instantiate a generator by calling
 # #initialize with an RDoc::Options instance.

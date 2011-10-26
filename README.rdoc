@@ -43,7 +43,7 @@ To generate documentation programmatically:
 == Bugs
 
 If you find a bug, please report it at the RDoc project's
-{issues tracker}[https://github.com/rdoc/rdoc/issues] on github
+{issues tracker}[https://github.com/rdoc/rdoc/issues] on github.
 
 == License
 
