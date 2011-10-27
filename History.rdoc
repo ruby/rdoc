@@ -1,6 +1,8 @@
 === 3.12 / ??
 
 * Minor enhancements
+  * Added DEVELOPERS document which contains an overview of how RDoc works and
+    how to add new features to RDoc.
   * Improved title for HTML output to include <code>--title</code> in the
     title element.
 
