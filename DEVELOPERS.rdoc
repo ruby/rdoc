@@ -17,6 +17,38 @@ the issue.  Here are some examples of good issues:
 * https://github.com/rdoc/rdoc/issues/55
 * https://github.com/rdoc/rdoc/issues/61
 
+== Plugins
+
+When 'rdoc/rdoc' is loaded RDoc looks for 'rdoc/discover' files in your
+installed gems.  This can be used to load parsers, alternate generators, or
+additional preprocessor directives.  An rdoc plugin layout should look
+something like this:
+
+  lib/rdoc/discover.rb
+  lib/my/rdoc/plugin.rb
+  # etc.
+
+In your rdoc/discover.rb file you will want to wrap the loading of your plugin
+in an RDoc version check like this:
+
+  begin
+    gem 'rdoc', '~> 3'
+    require 'my/rdoc/plugin'
+  rescue Gem::LoadError
+  end
+
+=== Plugin Types
+
+In RDoc you can change the following behaviors:
+
+* Add a parser for a new file format
+* Add a new output generator
+* Add a new markup directive
+* Add a new type of documentation markup
+* Add a new type of formatter
+
+All of these are described below
+
 == Option Parsing
 
 Option parsing is handled by RDoc::Options.  When you're writing a generator
@@ -41,6 +73,8 @@ When the parsers are finished the document tree is cleaned up to remove
 dangling references to aliases and includes that were not found (and may exist
 in a separate library).
 
+To write your own parser for a new file format see RDoc::Parser.
+
 === Documentation Tree
 
 The parsers build a documentation tree that is composed of RDoc::CodeObject and
@@ -57,8 +91,9 @@ can be enumerated using RDoc::Context#each_section.
 An RDoc generator turns the documentation tree into some other kind of output.
 RDoc comes with an HTML generator (RDoc::Generator::Darkfish) and an RI
 database generator (RDoc::Generator::RI).  The output a generator creates does
-not have to be human-readable.  To create your own generator see
-RDoc::Generator.
+not have to be human-readable.
+
+To create your own generator see RDoc::Generator.
 
 === Comments
 
@@ -69,6 +104,8 @@ normalized to remove comment markers and remove indentation then parsed lazily
 via RDoc::Comment#document to create a generic markup tree that can be
 processed by a formatter.
 
+To add your own markup format see RDoc::Markup@Other+directives
+
 ==== Formatters
 
 To transform a comment into some form of output an RDoc::Markup::Formatter
@@ -76,7 +113,7 @@ subclass is used like RDoc::Markup::ToHtml.  A formatter is a visitor that
 walks a parsed comment tree (an RDoc::Markup::Document) of any format.  To help
 write a formatter RDoc::Markup::FormatterTestCase exists for generic parsers,
 and RDoc::Markup::TextFormatterTestCase which contains extra test cases for
-text-type output.
+text-type output (like +ri+ output).
 
 RDoc ships with formatters that will turn a comment into HTML, rdoc-markup-like
 text, ANSI or terminal backspace highlighted text, HTML, cross-referenced HTML,
@@ -85,7 +122,15 @@ table-of-contents page, and text with only code blocks.
 
 The output of the formatter does not need to be text or text-like.
 RDoc::Markup::ToLabel creates an HTML-safe label for use in an HTML id
-attribute.  A formatter could count the number of words and the average word length for a comment, for example.
+attribute.  A formatter could count the number of words and the average word
+length for a comment, for example.
+
+==== Directives
+
+For comments in markup you can add new directives (:nodoc: is a directive).
+Directives may replace text or store it off for later use.
+
+See RDoc::Markup::PreProcess::register for details.
 
 === JSONIndex
 

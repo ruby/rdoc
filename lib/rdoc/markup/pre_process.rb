@@ -6,7 +6,12 @@
 # Directives can be escaped by preceding them with a backslash.
 #
 # RDoc plugin authors can register additional directives to be handled by
-# using RDoc::Markup::PreProcess::register
+# using RDoc::Markup::PreProcess::register.
+#
+# Any directive that is not built-in to RDoc (including those registered via
+# plugins) will be stored in the metadata hash on the CodeObject the comment
+# is attached to.  See RDoc::Markup@Directives for the list of built-in
+# directives.
 
 class RDoc::Markup::PreProcess
 
@@ -36,6 +41,13 @@ class RDoc::Markup::PreProcess
   # Registers +directive+ as one handled by RDoc.  If a block is given the
   # directive will be replaced by the result of the block, otherwise the
   # directive will be removed from the processed text.
+  #
+  # The block will be called with the directive name and the directive
+  # parameter:
+  #
+  #   RDoc::Markup::PreProcess.register 'my-directive' do |directive, param|
+  #     # replace text, etc.
+  #   end
 
   def self.register directive, &block
     @registered[directive] = block

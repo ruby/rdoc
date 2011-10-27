@@ -15,6 +15,7 @@ Forward Looking Statements applies.
 * Improve SIGINFO handling
 * Global variable support
 * Page support for ri
+* Provide the code_object to directive handlers
 
 === 4
 

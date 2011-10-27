@@ -5,35 +5,24 @@ require 'fileutils'
 require 'time'
 
 ##
-# Encapsulate the production of rdoc documentation. Basically you can use this
-# as you would invoke rdoc from the command line:
+# This is the driver for generating RDoc output.  It file parsing and
+# generation of output.
+#
+# To use this class to generate RDoc output via the API, the recommended way
+# is:
 #
 #   rdoc = RDoc::RDoc.new
-#   rdoc.document(args)
+#   options = rdoc.load_options # returns an RDoc::Options instance
+#   # set extra options
+#   rdoc.document options
 #
-# Where +args+ is an array of strings, each corresponding to an argument you'd
+# You can also generate output like the +rdoc+ executable:
+#
+#   rdoc = RDoc::RDoc.new
+#   rdoc.document argv
+#
+# Where +argv+ is an array of strings, each corresponding to an argument you'd
 # give rdoc on the command line.  See <tt>rdoc --help<tt> for details.
-#
-# = Plugins
-#
-# When you <tt>require 'rdoc/rdoc'</tt> RDoc looks for 'rdoc/discover' files
-# in your installed gems.  This can be used to load alternate generators or
-# add additional preprocessor directives.
-#
-# You will want to wrap your plugin loading in an RDoc version check.
-# Something like:
-#
-#   begin
-#     gem 'rdoc', '~> 3'
-#     require 'path/to/my/awesome/rdoc/plugin'
-#   rescue Gem::LoadError
-#   end
-#
-# The most obvious plugin type is a new output generator.  See RDoc::Generator
-# for details.
-#
-# You can also hook into RDoc::Markup to add new directives (:nodoc: is a
-# directive).  See RDoc::Markup::PreProcess::register for details.
 
 class RDoc::RDoc
 
