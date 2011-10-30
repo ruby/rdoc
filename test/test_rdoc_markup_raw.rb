@@ -21,5 +21,9 @@ class TestRDocMarkupRaw < RDoc::TestCase
     assert_equal @RM::Raw.new('hi', 'there'), @p
   end
 
+  def test_pretty_print
+    assert_equal '[raw: ]', mu_pp(@p)
+  end
+
 end
 
