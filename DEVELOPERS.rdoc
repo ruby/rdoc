@@ -71,7 +71,7 @@ proceeding to add classes, modules and methods to each nested item.
 
 When the parsers are finished the document tree is cleaned up to remove
 dangling references to aliases and includes that were not found (and may exist
-in a separate library).
+in a separate library) through RDoc::ClassModule#complete.
 
 To write your own parser for a new file format see RDoc::Parser.
 
