@@ -3,6 +3,7 @@ Forward Looking Statements applies.
 
 === 3.next
 
+* Update LICENSE to match ruby's switch
 * Reload the RDoc tree from an RI store
   * Re-run generators
   * Parse only changed files (like in ruby)
