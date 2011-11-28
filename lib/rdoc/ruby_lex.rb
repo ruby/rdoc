@@ -491,7 +491,7 @@ class RDoc::RubyLex
       |op, io|
       tk = nil
       if @lex_state != EXPR_END && @lex_state != EXPR_CLASS &&
-        (@lex_state != EXPR_ARG || @space_seen)
+         (@lex_state != EXPR_ARG || @space_seen)
         c = peek(0)
         if /\S/ =~ c && (/["'`]/ =~ c || /\w/ =~ c || c == "-")
           tk = identify_here_document
@@ -1013,7 +1013,7 @@ class RDoc::RubyLex
     doc = '"'
     while l = gets
       l = l.sub(/(:?\r)?\n\z/, "\n")
-      if (indent ? l.strip : l) == quoted
+      if (indent ? l.strip : l.chomp) == quoted
         break
       end
       doc << l
