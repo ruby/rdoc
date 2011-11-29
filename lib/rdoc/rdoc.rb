@@ -128,7 +128,11 @@ class RDoc::RDoc
   def handle_pipe
     @html = RDoc::Markup::ToHtml.new
 
-    out = @html.convert $stdin.read
+    parser = RDoc::Text::MARKUP_FORMAT[@options.markup]
+
+    document = parser.parse $stdin.read
+
+    out = @html.convert document
 
     $stdout.write out
   end

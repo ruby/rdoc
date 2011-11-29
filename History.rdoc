@@ -5,6 +5,7 @@
     how to add new features to RDoc.
   * Improved title for HTML output to include <code>--title</code> in the
     title element.
+  * <code>rdoc --pipe</code> now understands <code>--markup</code>.
 
 * Bug fixes
   * Fix title on HTML output for pages.

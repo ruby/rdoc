@@ -42,6 +42,32 @@ class TestRDocRDoc < RDoc::TestCase
     assert_equal [file], @rdoc.gather_files([file, file])
   end
 
+  def test_handle_pipe
+    $stdin = StringIO.new "hello"
+
+    out, = capture_io do
+      @rdoc.handle_pipe
+    end
+
+    assert_equal "\n<p>hello</p>\n", out
+  ensure
+    $stdin = STDIN
+  end
+
+  def test_handle_pipe_rd
+    $stdin = StringIO.new "=begin\nhello\n=end"
+
+    @rdoc.options.markup = 'rd'
+
+    out, = capture_io do
+      @rdoc.handle_pipe
+    end
+
+    assert_equal "\n<p>hello</p>\n", out
+  ensure
+    $stdin = STDIN
+  end
+
   def test_load_options
     temp_dir do
       options = RDoc::Options.new
