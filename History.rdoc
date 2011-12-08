@@ -10,6 +10,7 @@
 * Bug fixes
   * Fix title on HTML output for pages.
   * Fixed parsing of non-indented HEREDOC.
+  * Fixed parsing of <code>%w[]</code> and other % literals
 
 === 3.11 / 2011/10-17
 

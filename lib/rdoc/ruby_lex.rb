@@ -1162,7 +1162,7 @@ class RDoc::RubyLex
     @ltype = ltype
     @quoted = quoted
 
-    str = if ltype == quoted then
+    str = if ltype == quoted and %w[" '].include? ltype then
             ltype.dup
           elsif RUBY_VERSION > '1.9' then
             "%#{PERCENT_LTYPE.key ltype}#{PERCENT_PAREN_REV[quoted]}"
