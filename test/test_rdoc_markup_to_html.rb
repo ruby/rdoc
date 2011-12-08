@@ -476,6 +476,7 @@ verb2</pre>
     assert @to.parseable?('x do |y| ... end'), 'do |x|'
     refute @to.parseable?('* 1'),              '* 1'
     refute @to.parseable?('# only a comment'), '# only a comment'
+    refute @to.parseable?('<% require "foo" %>'),    'ERB'
   end
 
   def test_to_html

@@ -14,6 +14,8 @@
     Erik Hollensbe
   * Fixed arrow replacement in HTML output munging the spaceship operator.
     Issue #85 by eclectic923.
+  * Verbatim sections with ERB that match the ruby code whitelist are no
+    longer syntax-highlighted.  Issue #86 by eclectic923
 
 === 3.11 / 2011/10-17
 
