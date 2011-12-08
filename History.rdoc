@@ -10,7 +10,10 @@
 * Bug fixes
   * Fix title on HTML output for pages.
   * Fixed parsing of non-indented HEREDOC.
-  * Fixed parsing of <code>%w[]</code> and other % literals
+  * Fixed parsing of <code>%w[]</code> and other % literals.  Issue #84 by
+    Erik Hollensbe
+  * Fixed arrow replacement in HTML output munging the spaceship operator.
+    Issue #85 by eclectic923.
 
 === 3.11 / 2011/10-17
 
