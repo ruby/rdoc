@@ -663,6 +663,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
       return false
     end
 
+    value = ''
+    con = RDoc::Constant.new name, value, comment
     nest = 0
     get_tkread
 
@@ -690,6 +692,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
            (@scanner.lex_state == EXPR_END || !@scanner.continue) then
           unget_tk tk
           break
+        else
+          unget_tk tk
+          read_documentation_modifiers con, RDoc::CONSTANT_MODIFIERS
         end
       when TkCONSTANT then
         rhs_name << tk.name
@@ -721,7 +726,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     res = get_tkread.gsub(/^[ \t]+/, '').strip
     res = "" if res == ";"
 
-    con = RDoc::Constant.new name, res, comment
+    value.replace res
     con.record_location @top_level
     con.offset = offset
     con.line   = line_no

@@ -2253,6 +2253,41 @@ end
     assert_equal 'A nice girl', m.comment.text
   end
 
+  def test_scan_constant_nodoc
+    content = <<-CONTENT # newline is after M is important
+module M
+
+  C = v # :nodoc:
+end
+    CONTENT
+
+    util_parser content
+
+    @parser.scan
+
+    c = @top_level.modules.first.constants.first
+
+    assert c.documented?
+  end
+
+  def test_scan_constant_nodoc_block
+    content = <<-CONTENT # newline is after M is important
+module M
+
+  C = v do # :nodoc:
+  end
+end
+    CONTENT
+
+    util_parser content
+
+    @parser.scan
+
+    c = @top_level.modules.first.constants.first
+
+    assert c.documented?
+  end
+
   def test_scan_meta_method_block
     content = <<-CONTENT
 class C

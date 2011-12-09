@@ -18,6 +18,9 @@
     longer syntax-highlighted.  Issue #86 by eclectic923
   * Line endings on windows are normalized immediately after reading with
     binmode.  Issue #87 by Usa Nakamura
+  * RDoc better understands directives for comments.  Comment directives can
+    now be found anywhere in multi-line comments.  Issue #90 by Ryan Davis
+  
 
 === 3.11 / 2011/10-17
 
