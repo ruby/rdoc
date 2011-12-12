@@ -21,6 +21,8 @@
   * RDoc better understands directives for comments.  Comment directives can
     now be found anywhere in multi-line comments.  Issue #90 by Ryan Davis
   * Tidy links to methods show the label again.  Issue #88 by Simon Chiang
+  * RDoc::Parser::C can now find comments directly above
+    +rb_define_class_under+.  Issue #89 by Enrico
 
 === 3.11 / 2011/10-17
 

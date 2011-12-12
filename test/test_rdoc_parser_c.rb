@@ -701,6 +701,41 @@ Init_Foo(void) {
     assert_equal '', klass.comment.text
   end
 
+  def test_find_class_comment_define_class_under
+    content = <<-EOF
+/*
+ * a comment for class Foo
+ */
+VALUE foo = rb_define_class_under(rb_cObject, "Foo", rb_cObject);
+    EOF
+
+    klass = util_get_class content, 'foo'
+
+    assert_equal "a comment for class Foo", klass.comment.text
+  end
+
+  def test_find_class_comment_define_class_under_Init
+    content = <<-EOF
+/*
+ * a comment for class Foo on Init
+ */
+void
+Init_Foo(void) {
+    /*
+     * a comment for class Foo on rb_define_class
+     */
+    VALUE foo = rb_define_class_under(rb_cObject, "Foo", rb_cObject);
+}
+    EOF
+
+    klass = util_get_class content, 'foo'
+
+    # the inner comment is used since Object::Foo is not necessarily the same
+    # thing as "Foo" for Init_
+    assert_equal "a comment for class Foo on rb_define_class",
+                 klass.comment.text
+  end
+
   def test_find_const_comment_rb_define
     content = <<-EOF
 /*

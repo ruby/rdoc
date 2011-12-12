@@ -572,6 +572,9 @@ class RDoc::Parser::C < RDoc::Parser
     elsif @content =~ %r%((?>/\*.*?\*/\s+))
                          ([\w\.\s]+\s* = \s+)?rb_define_(class|module).*?"(#{class_name})"%xm then
       comment = $1
+    elsif @content =~ %r%((?>/\*.*?\*/\s+))
+                         ([\w\.\s]+\s* = \s+)?rb_define_(class|module)_under.*?"(#{class_name.split('::').last})"%xm then
+      comment = $1
     else
       comment = ''
     end
