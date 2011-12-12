@@ -112,7 +112,7 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
   def test_handle_special_CROSSREF_show_hash_false
     @to.show_hash = false
 
-    assert_equal "<a href=\"C1.html#method-i-m\">#m</a>",
+    assert_equal "<a href=\"C1.html#method-i-m\">m</a>",
                  SPECIAL('#m')
   end
 
@@ -148,6 +148,10 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
     link = @to.handle_special_TIDYLINK tidy 'C4'
 
     assert_equal '<a href="C4.html">tidy</a>', link
+
+    link = @to.handle_special_TIDYLINK tidy 'C1#m'
+
+    assert_equal '<a href="C1.html#method-i-m">tidy</a>', link
 
     link = @to.handle_special_TIDYLINK tidy 'README.txt'
 

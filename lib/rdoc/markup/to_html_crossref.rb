@@ -124,6 +124,8 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # Creates an HTML link to +name+ with the given +text+.
 
   def link name, text
+    original_name = name
+
     if name =~ /(.*[^#:])@/ then
       name = $1
       label = $'
@@ -131,7 +133,8 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
     ref = @cross_reference.resolve name, text
 
-    text = ref.output_name @context if RDoc::MethodAttr === ref and not label
+    text = ref.output_name @context if
+      RDoc::MethodAttr === ref and text == original_name
 
     case ref
     when String then
