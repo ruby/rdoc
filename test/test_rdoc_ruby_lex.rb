@@ -95,10 +95,10 @@ U
   end
 
   def test_class_tokenize_percent_w
-    tokens = RDoc::RubyLex.tokenize "%w[hi]", nil
+    tokens = RDoc::RubyLex.tokenize '%w[hi]', nil
 
     expected = [
-      @TK::TkDSTRING.new( 0, 1,  0, "%w[hi]"),
+      @TK::TkDSTRING.new( 0, 1,  0, '%w[hi]'),
       @TK::TkNL     .new( 6, 1, 6, "\n"),
     ]
 

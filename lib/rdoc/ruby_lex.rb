@@ -1032,13 +1032,14 @@ class RDoc::RubyLex
   end
 
   def identify_quotation
-    ch = getc
-    if lt = PERCENT_LTYPE[ch]
+    type = ch = getc
+    if lt = PERCENT_LTYPE[type]
       ch = getc
-    elsif ch =~ /\W/
+    elsif type =~ /\W/
+      type = nil
       lt = "\""
     else
-      raise Error, "unknown type of %string #{ch.inspect}"
+      raise Error, "unknown type of %string #{type.inspect}"
     end
     #     if ch !~ /\W/
     #       ungetc
@@ -1046,7 +1047,7 @@ class RDoc::RubyLex
     #     end
     #@ltype = lt
     @quoted = ch unless @quoted = PERCENT_PAREN[ch]
-    identify_string(lt, @quoted)
+    identify_string(lt, @quoted, type)
   end
 
   def identify_number(op = "")
@@ -1157,7 +1158,7 @@ class RDoc::RubyLex
     Token(type, num)
   end
 
-  def identify_string(ltype, quoted = ltype)
+  def identify_string(ltype, quoted = ltype, type = nil)
     close = PERCENT_PAREN.values.include?(quoted)
     @ltype = ltype
     @quoted = quoted
@@ -1165,9 +1166,9 @@ class RDoc::RubyLex
     str = if ltype == quoted and %w[" '].include? ltype then
             ltype.dup
           elsif RUBY_VERSION > '1.9' then
-            "%#{PERCENT_LTYPE.key ltype}#{PERCENT_PAREN_REV[quoted]}"
+            "%#{type or PERCENT_LTYPE.key ltype}#{PERCENT_PAREN_REV[quoted]}"
           else
-            "%#{PERCENT_LTYPE.index ltype}#{PERCENT_PAREN_REV[quoted]}"
+            "%#{type or PERCENT_LTYPE.index ltype}#{PERCENT_PAREN_REV[quoted]}"
           end
 
     subtype = nil
