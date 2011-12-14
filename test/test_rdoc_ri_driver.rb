@@ -613,11 +613,14 @@ Foo::Bar#bother
   def test_in_path_eh
     path = ENV['PATH']
 
-    refute @driver.in_path?('/nonexistent')
+    temp_dir do |dir|
+      nonexistent = File.join dir, 'nonexistent'
+      refute @driver.in_path?(nonexistent)
 
-    ENV['PATH'] = File.expand_path '..', __FILE__
+      ENV['PATH'] = File.expand_path '..', __FILE__
 
-    assert @driver.in_path?(File.basename(__FILE__))
+      assert @driver.in_path?(File.basename(__FILE__))
+    end
   ensure
     ENV['PATH'] = path
   end
