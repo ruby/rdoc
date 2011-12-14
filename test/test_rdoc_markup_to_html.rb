@@ -389,6 +389,12 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal '&lt;&gt;', @to.convert_string('<>')
   end
 
+  def test_convert_HYPERLINK_irc
+    result = @to.convert 'irc://irc.freenode.net/#ruby-lang'
+
+    assert_equal "\n<p><a href=\"irc://irc.freenode.net/#ruby-lang\">irc.freenode.net/#ruby-lang</a></p>\n", result
+  end
+
   def test_convert_RDOCLINK_label_label
     result = @to.convert 'rdoc-label:label-One'
 
@@ -417,6 +423,12 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     result = @to.convert '{foo}[rdoc-label:foottext-1]'
 
     assert_equal "\n<p><a href=\"#foottext-1\">foo</a></p>\n", result
+  end
+
+  def test_convert_TIDYLINK_irc
+    result = @to.convert '{ruby-lang}[irc://irc.freenode.net/#ruby-lang]'
+
+    assert_equal "\n<p><a href=\"irc://irc.freenode.net/#ruby-lang\">ruby-lang</a></p>\n", result
   end
 
   def test_gen_url
@@ -448,6 +460,14 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     link = @to.handle_special_HYPERLINK special
 
     assert_equal '<a href="README.txt">README.txt</a>', link
+  end
+
+  def test_handle_special_HYPERLINK_irc
+    special = RDoc::Markup::Special.new 0, 'irc://irc.freenode.net/#ruby-lang'
+
+    link = @to.handle_special_HYPERLINK special
+
+    assert_equal '<a href="irc://irc.freenode.net/#ruby-lang">irc.freenode.net/#ruby-lang</a>', link
   end
 
   def test_list_verbatim_2

@@ -75,7 +75,8 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @th = nil
 
     # external links
-    @markup.add_special(/((link:|https?:|mailto:|ftp:|www\.)\S+\w)/, :HYPERLINK)
+    @markup.add_special(/((link:|https?:|mailto:|ftp:|irc:|www\.)\S+\w)/,
+                        :HYPERLINK)
 
     # internal links
     @markup.add_special(/rdoc-[a-z]+:\S+/, :RDOCLINK)
