@@ -23,6 +23,10 @@
   * Tidy links to methods show the label again.  Issue #88 by Simon Chiang
   * RDoc::Parser::C can now find comments directly above
     +rb_define_class_under+.  Issue #89 by Enrico
+  * In rdoc, backspace and ansi formatters, labels and notes without bodies
+    are now shown.
+  * In rdoc, backspace and ansi formatters, whitespace between label or note
+    and the colon is now stripped.
 
 === 3.11 / 2011/10-17
 

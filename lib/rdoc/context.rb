@@ -882,6 +882,8 @@ class RDoc::Context < RDoc::CodeObject
 
   ##
   # Instance methods
+  #--
+  # TODO rename to instance_methods
 
   def instance_method_list
     @instance_method_list ||= method_list.reject { |a| a.singleton }

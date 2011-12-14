@@ -103,6 +103,11 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
             when :BULLET then
               2
             when :NOTE, :LABEL then
+              if @prefix then
+                @res << @prefix.strip
+                @prefix = nil
+              end
+
               @res << "\n"
               2
             else
@@ -122,7 +127,7 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
 
     case type
     when :NOTE, :LABEL then
-      bullet = attributes(list_item.label) + ":\n"
+      bullet = attributes(list_item.label).strip + ":\n"
       @prefix = ' ' * @indent
       @indent += 2
       @prefix << bullet + (' ' * @indent)
@@ -249,8 +254,7 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   # prefix for later consumption.
 
   def use_prefix
-    prefix = @prefix
-    @prefix = nil
+    prefix, @prefix = @prefix, nil
     @res << prefix if prefix
 
     prefix

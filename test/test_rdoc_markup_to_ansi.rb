@@ -64,7 +64,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::TextFormatterTestCase
   end
 
   def accept_list_item_end_label
-    assert_equal "\e[0m", @to.res.join
+    assert_equal "\e[0mcat:\n", @to.res.join
     assert_equal 0, @to.indent, 'indent'
   end
 
@@ -74,7 +74,7 @@ class TestRDocMarkupToAnsi < RDoc::Markup::TextFormatterTestCase
   end
 
   def accept_list_item_end_note
-    assert_equal "\e[0m", @to.res.join
+    assert_equal "\e[0mcat:\n", @to.res.join
     assert_equal 0, @to.indent, 'indent'
   end
 
@@ -323,6 +323,25 @@ words words words words
     EXPECTED
 
     assert_equal expected, @to.end_accepting
+  end
+
+  # functional test
+  def test_convert_list_note
+    note_list = <<-NOTE_LIST
+foo ::
+bar ::
+  hi
+    NOTE_LIST
+
+    expected = <<-EXPECTED
+\e[0m
+foo:
+bar:
+  hi
+
+    EXPECTED
+
+    assert_equal expected, @to.convert(note_list)
   end
 
 end

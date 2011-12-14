@@ -64,7 +64,7 @@ class TestRDocMarkupToRDoc < RDoc::Markup::TextFormatterTestCase
   end
 
   def accept_list_item_end_label
-    assert_equal "\n", @to.res.join
+    assert_equal "cat:\n", @to.res.join
     assert_equal 0, @to.indent, 'indent'
   end
 
@@ -74,7 +74,7 @@ class TestRDocMarkupToRDoc < RDoc::Markup::TextFormatterTestCase
   end
 
   def accept_list_item_end_note
-    assert_equal "\n", @to.res.join
+    assert_equal "cat:\n", @to.res.join
     assert_equal 0, @to.indent, 'indent'
   end
 
@@ -322,6 +322,25 @@ words words words words
     EXPECTED
 
     assert_equal expected, @to.end_accepting
+  end
+
+  # functional test
+  def test_convert_list_note
+    note_list = <<-NOTE_LIST
+foo ::
+bar ::
+  hi
+    NOTE_LIST
+
+    expected = <<-EXPECTED
+
+foo:
+bar:
+  hi
+
+    EXPECTED
+
+    assert_equal expected, @to.convert(note_list)
   end
 
   def test_accept_indented_paragraph

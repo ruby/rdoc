@@ -65,7 +65,7 @@ class TestRDocMarkupToBs < RDoc::Markup::TextFormatterTestCase
   end
 
   def accept_list_item_end_label
-    assert_equal "\n", @to.res.join
+    assert_equal "cat:\n", @to.res.join
     assert_equal 0, @to.indent, 'indent'
   end
 
@@ -75,7 +75,7 @@ class TestRDocMarkupToBs < RDoc::Markup::TextFormatterTestCase
   end
 
   def accept_list_item_end_note
-    assert_equal "\n", @to.res.join
+    assert_equal "cat:\n", @to.res.join
     assert_equal 0, @to.indent, 'indent'
   end
 
