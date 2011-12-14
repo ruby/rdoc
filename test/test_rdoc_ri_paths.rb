@@ -15,9 +15,12 @@ class TestRDocRIPaths < RDoc::TestCase
   end
 
   def test_class_path_nonexistent
-    path = RDoc::RI::Paths.path true, true, true, true, '/nonexistent'
+    temp_dir do |dir|
+      nonexistent = File.join dir, 'nonexistent'
+      path = RDoc::RI::Paths.path true, true, true, true, nonexistent
 
-    refute_includes path, '/nonexistent'
+      refute_includes path, nonexistent
+    end
   end
 
   def test_class_raw_path
