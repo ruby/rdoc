@@ -1,4 +1,4 @@
-=== 3.12 / ??
+=== 3.12 / 2011-12-15
 
 * Minor enhancements
   * Added DEVELOPERS document which contains an overview of how RDoc works and
@@ -29,7 +29,7 @@
   * In rdoc, backspace and ansi formatters, whitespace between label or note
     and the colon is now stripped.
 
-=== 3.11 / 2011/10-17
+=== 3.11 / 2011-10-17
 
 * Bug fixes
   * Avoid parsing TAGS files included in gems.  Issue #81 by Santiago
