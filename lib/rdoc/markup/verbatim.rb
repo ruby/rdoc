@@ -49,6 +49,7 @@ class RDoc::Markup::Verbatim < RDoc::Markup::Raw
   # Is this verbatim section ruby code?
 
   def ruby?
+    @format ||= nil # TODO for older ri data, switch the tree to marshal_dump
     @format == :ruby
   end
 

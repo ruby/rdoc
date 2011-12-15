@@ -26,6 +26,8 @@ require 'time'
 
 class RDoc::RDoc
 
+  @current = nil
+
   ##
   # This is the list of supported output generators
 
