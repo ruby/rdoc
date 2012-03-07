@@ -42,7 +42,7 @@ class RDoc::Markup::Raw
   end
 
   def pretty_print q # :nodoc:
-    self.class.name =~ /.*::(\w{1,4})$/i
+    self.class.name =~ /.*::(\w{1,4})/i
 
     q.group 2, "[#{$1.downcase}: ", ']' do
       q.seplist @parts do |part|

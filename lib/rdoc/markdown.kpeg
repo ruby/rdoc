@@ -1,0 +1,889 @@
+%% name = RDoc::Markdown
+
+%% header {
+# coding: UTF-8
+}
+
+%% {
+
+# Limitations:
+#
+# * Link titles are not used
+# * Image links are not always generated correctly
+# * Footnotes are collapsed into a single paragraph
+
+  require 'rubygems'
+  require 'rdoc'
+  require 'rdoc/markup/to_joined_paragraph'
+  require 'rdoc/markdown/entities'
+
+  if RUBY_VERSION > '1.9' then
+    require 'rdoc/markdown/literals_1_9'
+  else
+    require 'rdoc/markdown/literals_1_8'
+  end
+
+  EXTENSIONS = []
+
+  def self.extension name
+    EXTENSIONS << name
+
+    eval <<-RUBY
+      def #{name}?
+        extension? __method__
+      end
+
+      def #{name}= enable
+        extension __method__, enable
+      end
+    RUBY
+  end
+
+  ##
+  # Allow style blocks
+
+  extension :css
+
+  ##
+  # Allow HTML
+
+  extension :html
+
+  ##
+  # Use the notes extension?
+
+  extension :notes
+
+  def self.parse text
+    parser = new
+
+    parser.parse text
+  end
+
+  alias orig_initialize initialize
+
+  def initialize extensions = [], debug = false
+    @debug      = debug
+    @formatter  = RDoc::Markup::ToJoinedParagraph.new
+    @extensions = extensions
+
+    @references          = nil
+    @unlinked_references = nil
+
+    @footnotes      = nil
+    @notes          = nil
+    @unlinked_notes = nil
+  end
+
+  def extension? name
+    name = name.to_s.delete('?').intern
+
+    @extensions.include? name
+  end
+
+  def extension name, enable
+    name = name.to_s.delete('=').intern
+
+    if enable then
+      @extensions |= [name]
+    else
+      @extensions -= [name]
+    end
+  end
+
+  ##
+  # Parses +text+ in a clone of this parser.  This is used for handling nested
+  # lists the same way as markdown_parser.
+
+  def inner_parse text # :nodoc:
+    parser = clone
+
+    parser.setup_parser text, @debug
+
+    parser.peg_parse
+
+    doc = parser.result
+
+    doc.parts
+  end
+
+  ##
+  # Finds a link reference for +label+ and creates a new link to it with
+  # +content+ as the link text.  If +label+ has not be encountered in the
+  # document a placeholder is created that will be filled later.
+
+  def link_to content, label = content
+    raise 'enable notes extension' if
+      content.start_with? '^' and label == content
+
+    if ref = @references[label] then
+      "{#{content}}[#{ref}]"
+    else
+      ref = @unlinked_references[label] || ""
+      @unlinked_references[label] = ref
+      ["{#{content}}[", ref, "]"]
+    end
+  end
+
+  ##
+  # Creates an RDoc::Markup::ListItem from +parsed+ including parsing nested
+  # lists.
+
+  def list_item_from parsed
+    out = RDoc::Markup::ListItem.new nil
+
+    parsed.each do |part|
+      case part
+      when String then
+        case out.parts.last
+        when RDoc::Markup::Paragraph then
+          out.parts.last << part
+        else
+          out << RDoc::Markup::Paragraph.new(part)
+        end
+      when RDoc::Markup::Paragraph then
+        out << part
+      when RDoc::Markup::Raw then
+        inner = inner_parse part.text
+        out.push(*inner)
+      else
+        raise part.inspect
+      end
+    end
+
+    out
+  end
+
+  ##
+  # Finds a footnote reference for +label+ and creates a new link to it with
+  # +content+ as the link text.  If +label+ has not be encountered in the
+  # document a placeholder is created that will be filled later.
+
+  def note_for label
+    if ref = @notes[label] then
+      "{*#{label}}[#{ref}]"
+    else
+      ref = @unlinked_notes[label] || ""
+      @unlinked_notes[label] = ref
+      ["{*#{label}}[", ref, "]"]
+    end
+  end
+
+  alias peg_parse parse
+
+  def parse markdown
+    setup_parser markdown, @debug
+
+    if notes? then
+      @footnotes      = []
+      @notes          = {}
+      @unlinked_notes = {}
+    end
+
+    @references          = {}
+    @unlinked_references = {}
+
+    peg_parse
+
+    doc = result
+
+    if notes? then
+      unless @footnotes.empty? then
+        doc << RDoc::Markup::Rule.new(1)
+        doc.push(*@footnotes)
+      end
+    end
+
+    doc.accept @formatter
+
+    doc
+  end
+
+  ##
+  # Stores +label+ as a reference to +link+ and fills in previously unknown
+  # link references.
+
+  def reference label, link
+    if ref = @unlinked_references.delete(label) then
+      ref.replace link
+    end
+
+    @references[label] = link
+  end
+
+  ##
+  # Stores +label+ as a note and fills in previously unknown note references.
+
+  def note label
+    foottext = "rdoc-label:foottext-#{label}:footmark-#{label}"
+
+    if ref = @unlinked_notes.delete(label) then
+      ref.replace foottext
+    end
+
+    @notes[label] = foottext
+
+    "{^1}[rdoc-label:footmark-#{label}:foottext-#{label}] "
+  end
+}
+
+root = Doc
+
+Doc =       BOM? Block*:a { RDoc::Markup::Document.new(*a.compact) }
+
+Block =     BlankLine*
+            ( BlockQuote
+            | Verbatim
+            | Note
+            | Reference
+            | HorizontalRule
+            | Heading
+            | OrderedList
+            | BulletList
+            | HtmlBlock
+            | StyleBlock
+            | Para
+            | Plain )
+
+Para =      NonindentSpace Inlines:a BlankLine+
+            { RDoc::Markup::Paragraph.new(*a) }
+
+Plain =     Inlines:a
+            { RDoc::Markup::Paragraph.new(*a) }
+
+AtxInline = !Newline !(Sp? "#"* Sp Newline) Inline
+
+AtxStart =  < ( "######" | "#####" | "####" | "###" | "##" | "#" ) >
+            { text.length }
+
+AtxHeading = AtxStart:s Sp? AtxInline+:a (Sp? "#"* Sp)?  Newline
+            { RDoc::Markup::Heading.new(s, *a) }
+
+SetextHeading = SetextHeading1 | SetextHeading2
+
+SetextBottom1 = "===" "="* Newline
+
+SetextBottom2 = "---" "-"* Newline
+
+SetextHeading1 =  &(RawLine SetextBottom1)
+                  StartList:a ( !Endline Inline:a )+ Sp? Newline
+                  SetextBottom1
+                  { RDoc::Markup::Heading.new(1, *a) }
+
+SetextHeading2 =  &(RawLine SetextBottom2)
+                  StartList:a ( !Endline Inline:a )+ Sp? Newline
+                  SetextBottom2
+                  { RDoc::Markup::Heading.new(2, *a) }
+
+Heading = SetextHeading | AtxHeading
+
+BlockQuote = BlockQuoteRaw:a
+             { RDoc::Markup::BlockQuote.new(*a) }
+
+BlockQuoteRaw =  StartList:a
+                 (( ">" " "? Line:l { a << l } )
+                  ( !">" !BlankLine Line:c { a << c } )*
+                  ( BlankLine:n { a << n } )*
+                 )+
+                 { a }
+
+NonblankIndentedLine = !BlankLine IndentedLine
+
+VerbatimChunk = BlankLine*:a
+                NonblankIndentedLine+:b
+                { a.push(*b) }
+
+Verbatim =     VerbatimChunk+:a
+               { RDoc::Markup::Verbatim.new(*a) }
+
+HorizontalRule = NonindentSpace
+                 ( "*" Sp "*" Sp "*" (Sp "*")*
+                 | "-" Sp "-" Sp "-" (Sp "-")*
+                 | "_" Sp "_" Sp "_" (Sp "_")*)
+                 Sp Newline BlankLine+
+                 { RDoc::Markup::Rule.new 1 }
+
+Bullet = !HorizontalRule NonindentSpace ("+" | "*" | "-") Spacechar+
+
+BulletList = &Bullet (ListTight | ListLoose):a
+             { RDoc::Markup::List.new(:BULLET, *a) }
+
+ListTight = ListItemTight+:a
+            BlankLine* !(Bullet | Enumerator)
+            { a }
+
+ListLoose = StartList:a
+            ( ListItem:b BlankLine* { a << b } )+
+            { a }
+
+ListItem =  ( Bullet | Enumerator )
+            StartList:a
+            ListBlock:b { a << b }
+            ( ListContinuationBlock:c { a.push(*c) } )*
+            { list_item_from a }
+
+ListItemTight =
+            ( Bullet | Enumerator )
+            ListBlock:a
+            ( !BlankLine
+              ListContinuationBlock:b { a.push(*b) } )*
+            !ListContinuationBlock
+            { list_item_from a.parts }
+
+ListBlock = !BlankLine Line:a
+            ListBlockLine*:c
+            { RDoc::Markup::Paragraph.new(a, *c) }
+
+ListContinuationBlock = StartList:a { a = [] }
+                        ( < BlankLine* >
+                          { a << text unless text =~ /\A\n?\z/ } )
+                        ( Indent
+                          ListBlock:b {
+                            a << RDoc::Markup::Raw.new(*b.parts)
+                          } )+
+                        { a }
+
+Enumerator = NonindentSpace [0-9]+ "." Spacechar+
+
+OrderedList = &Enumerator (ListTight | ListLoose):a
+             { RDoc::Markup::List.new(:NUMBER, *a) }
+
+ListBlockLine = !BlankLine
+                !( Indent? (Bullet | Enumerator) )
+                !HorizontalRule
+                OptionallyIndentedLine
+
+# Parsers for different kinds of block-level HTML content.
+# This is repetitive due to constraints of PEG grammar.
+
+HtmlBlockOpenAddress = "<" Spnl ("address" | "ADDRESS") Spnl HtmlAttribute* ">"
+HtmlBlockCloseAddress = "<" Spnl "/" ("address" | "ADDRESS") Spnl ">"
+HtmlBlockAddress = HtmlBlockOpenAddress (HtmlBlockAddress | !HtmlBlockCloseAddress .)* HtmlBlockCloseAddress
+
+HtmlBlockOpenBlockquote = "<" Spnl ("blockquote" | "BLOCKQUOTE") Spnl HtmlAttribute* ">"
+HtmlBlockCloseBlockquote = "<" Spnl "/" ("blockquote" | "BLOCKQUOTE") Spnl ">"
+HtmlBlockBlockquote = HtmlBlockOpenBlockquote (HtmlBlockBlockquote | !HtmlBlockCloseBlockquote .)* HtmlBlockCloseBlockquote
+
+HtmlBlockOpenCenter = "<" Spnl ("center" | "CENTER") Spnl HtmlAttribute* ">"
+HtmlBlockCloseCenter = "<" Spnl "/" ("center" | "CENTER") Spnl ">"
+HtmlBlockCenter = HtmlBlockOpenCenter (HtmlBlockCenter | !HtmlBlockCloseCenter .)* HtmlBlockCloseCenter
+
+HtmlBlockOpenDir = "<" Spnl ("dir" | "DIR") Spnl HtmlAttribute* ">"
+HtmlBlockCloseDir = "<" Spnl "/" ("dir" | "DIR") Spnl ">"
+HtmlBlockDir = HtmlBlockOpenDir (HtmlBlockDir | !HtmlBlockCloseDir .)* HtmlBlockCloseDir
+
+HtmlBlockOpenDiv = "<" Spnl ("div" | "DIV") Spnl HtmlAttribute* ">"
+HtmlBlockCloseDiv = "<" Spnl "/" ("div" | "DIV") Spnl ">"
+HtmlBlockDiv = HtmlBlockOpenDiv (HtmlBlockDiv | !HtmlBlockCloseDiv .)* HtmlBlockCloseDiv
+
+HtmlBlockOpenDl = "<" Spnl ("dl" | "DL") Spnl HtmlAttribute* ">"
+HtmlBlockCloseDl = "<" Spnl "/" ("dl" | "DL") Spnl ">"
+HtmlBlockDl = HtmlBlockOpenDl (HtmlBlockDl | !HtmlBlockCloseDl .)* HtmlBlockCloseDl
+
+HtmlBlockOpenFieldset = "<" Spnl ("fieldset" | "FIELDSET") Spnl HtmlAttribute* ">"
+HtmlBlockCloseFieldset = "<" Spnl "/" ("fieldset" | "FIELDSET") Spnl ">"
+HtmlBlockFieldset = HtmlBlockOpenFieldset (HtmlBlockFieldset | !HtmlBlockCloseFieldset .)* HtmlBlockCloseFieldset
+
+HtmlBlockOpenForm = "<" Spnl ("form" | "FORM") Spnl HtmlAttribute* ">"
+HtmlBlockCloseForm = "<" Spnl "/" ("form" | "FORM") Spnl ">"
+HtmlBlockForm = HtmlBlockOpenForm (HtmlBlockForm | !HtmlBlockCloseForm .)* HtmlBlockCloseForm
+
+HtmlBlockOpenH1 = "<" Spnl ("h1" | "H1") Spnl HtmlAttribute* ">"
+HtmlBlockCloseH1 = "<" Spnl "/" ("h1" | "H1") Spnl ">"
+HtmlBlockH1 = HtmlBlockOpenH1 (HtmlBlockH1 | !HtmlBlockCloseH1 .)* HtmlBlockCloseH1
+
+HtmlBlockOpenH2 = "<" Spnl ("h2" | "H2") Spnl HtmlAttribute* ">"
+HtmlBlockCloseH2 = "<" Spnl "/" ("h2" | "H2") Spnl ">"
+HtmlBlockH2 = HtmlBlockOpenH2 (HtmlBlockH2 | !HtmlBlockCloseH2 .)* HtmlBlockCloseH2
+
+HtmlBlockOpenH3 = "<" Spnl ("h3" | "H3") Spnl HtmlAttribute* ">"
+HtmlBlockCloseH3 = "<" Spnl "/" ("h3" | "H3") Spnl ">"
+HtmlBlockH3 = HtmlBlockOpenH3 (HtmlBlockH3 | !HtmlBlockCloseH3 .)* HtmlBlockCloseH3
+
+HtmlBlockOpenH4 = "<" Spnl ("h4" | "H4") Spnl HtmlAttribute* ">"
+HtmlBlockCloseH4 = "<" Spnl "/" ("h4" | "H4") Spnl ">"
+HtmlBlockH4 = HtmlBlockOpenH4 (HtmlBlockH4 | !HtmlBlockCloseH4 .)* HtmlBlockCloseH4
+
+HtmlBlockOpenH5 = "<" Spnl ("h5" | "H5") Spnl HtmlAttribute* ">"
+HtmlBlockCloseH5 = "<" Spnl "/" ("h5" | "H5") Spnl ">"
+HtmlBlockH5 = HtmlBlockOpenH5 (HtmlBlockH5 | !HtmlBlockCloseH5 .)* HtmlBlockCloseH5
+
+HtmlBlockOpenH6 = "<" Spnl ("h6" | "H6") Spnl HtmlAttribute* ">"
+HtmlBlockCloseH6 = "<" Spnl "/" ("h6" | "H6") Spnl ">"
+HtmlBlockH6 = HtmlBlockOpenH6 (HtmlBlockH6 | !HtmlBlockCloseH6 .)* HtmlBlockCloseH6
+
+HtmlBlockOpenMenu = "<" Spnl ("menu" | "MENU") Spnl HtmlAttribute* ">"
+HtmlBlockCloseMenu = "<" Spnl "/" ("menu" | "MENU") Spnl ">"
+HtmlBlockMenu = HtmlBlockOpenMenu (HtmlBlockMenu | !HtmlBlockCloseMenu .)* HtmlBlockCloseMenu
+
+HtmlBlockOpenNoframes = "<" Spnl ("noframes" | "NOFRAMES") Spnl HtmlAttribute* ">"
+HtmlBlockCloseNoframes = "<" Spnl "/" ("noframes" | "NOFRAMES") Spnl ">"
+HtmlBlockNoframes = HtmlBlockOpenNoframes (HtmlBlockNoframes | !HtmlBlockCloseNoframes .)* HtmlBlockCloseNoframes
+
+HtmlBlockOpenNoscript = "<" Spnl ("noscript" | "NOSCRIPT") Spnl HtmlAttribute* ">"
+HtmlBlockCloseNoscript = "<" Spnl "/" ("noscript" | "NOSCRIPT") Spnl ">"
+HtmlBlockNoscript = HtmlBlockOpenNoscript (HtmlBlockNoscript | !HtmlBlockCloseNoscript .)* HtmlBlockCloseNoscript
+
+HtmlBlockOpenOl = "<" Spnl ("ol" | "OL") Spnl HtmlAttribute* ">"
+HtmlBlockCloseOl = "<" Spnl "/" ("ol" | "OL") Spnl ">"
+HtmlBlockOl = HtmlBlockOpenOl (HtmlBlockOl | !HtmlBlockCloseOl .)* HtmlBlockCloseOl
+
+HtmlBlockOpenP = "<" Spnl ("p" | "P") Spnl HtmlAttribute* ">"
+HtmlBlockCloseP = "<" Spnl "/" ("p" | "P") Spnl ">"
+HtmlBlockP = HtmlBlockOpenP (HtmlBlockP | !HtmlBlockCloseP .)* HtmlBlockCloseP
+
+HtmlBlockOpenPre = "<" Spnl ("pre" | "PRE") Spnl HtmlAttribute* ">"
+HtmlBlockClosePre = "<" Spnl "/" ("pre" | "PRE") Spnl ">"
+HtmlBlockPre = HtmlBlockOpenPre (HtmlBlockPre | !HtmlBlockClosePre .)* HtmlBlockClosePre
+
+HtmlBlockOpenTable = "<" Spnl ("table" | "TABLE") Spnl HtmlAttribute* ">"
+HtmlBlockCloseTable = "<" Spnl "/" ("table" | "TABLE") Spnl ">"
+HtmlBlockTable = HtmlBlockOpenTable (HtmlBlockTable | !HtmlBlockCloseTable .)* HtmlBlockCloseTable
+
+HtmlBlockOpenUl = "<" Spnl ("ul" | "UL") Spnl HtmlAttribute* ">"
+HtmlBlockCloseUl = "<" Spnl "/" ("ul" | "UL") Spnl ">"
+HtmlBlockUl = HtmlBlockOpenUl (HtmlBlockUl | !HtmlBlockCloseUl .)* HtmlBlockCloseUl
+
+HtmlBlockOpenDd = "<" Spnl ("dd" | "DD") Spnl HtmlAttribute* ">"
+HtmlBlockCloseDd = "<" Spnl "/" ("dd" | "DD") Spnl ">"
+HtmlBlockDd = HtmlBlockOpenDd (HtmlBlockDd | !HtmlBlockCloseDd .)* HtmlBlockCloseDd
+
+HtmlBlockOpenDt = "<" Spnl ("dt" | "DT") Spnl HtmlAttribute* ">"
+HtmlBlockCloseDt = "<" Spnl "/" ("dt" | "DT") Spnl ">"
+HtmlBlockDt = HtmlBlockOpenDt (HtmlBlockDt | !HtmlBlockCloseDt .)* HtmlBlockCloseDt
+
+HtmlBlockOpenFrameset = "<" Spnl ("frameset" | "FRAMESET") Spnl HtmlAttribute* ">"
+HtmlBlockCloseFrameset = "<" Spnl "/" ("frameset" | "FRAMESET") Spnl ">"
+HtmlBlockFrameset = HtmlBlockOpenFrameset (HtmlBlockFrameset | !HtmlBlockCloseFrameset .)* HtmlBlockCloseFrameset
+
+HtmlBlockOpenLi = "<" Spnl ("li" | "LI") Spnl HtmlAttribute* ">"
+HtmlBlockCloseLi = "<" Spnl "/" ("li" | "LI") Spnl ">"
+HtmlBlockLi = HtmlBlockOpenLi (HtmlBlockLi | !HtmlBlockCloseLi .)* HtmlBlockCloseLi
+
+HtmlBlockOpenTbody = "<" Spnl ("tbody" | "TBODY") Spnl HtmlAttribute* ">"
+HtmlBlockCloseTbody = "<" Spnl "/" ("tbody" | "TBODY") Spnl ">"
+HtmlBlockTbody = HtmlBlockOpenTbody (HtmlBlockTbody | !HtmlBlockCloseTbody .)* HtmlBlockCloseTbody
+
+HtmlBlockOpenTd = "<" Spnl ("td" | "TD") Spnl HtmlAttribute* ">"
+HtmlBlockCloseTd = "<" Spnl "/" ("td" | "TD") Spnl ">"
+HtmlBlockTd = HtmlBlockOpenTd (HtmlBlockTd | !HtmlBlockCloseTd .)* HtmlBlockCloseTd
+
+HtmlBlockOpenTfoot = "<" Spnl ("tfoot" | "TFOOT") Spnl HtmlAttribute* ">"
+HtmlBlockCloseTfoot = "<" Spnl "/" ("tfoot" | "TFOOT") Spnl ">"
+HtmlBlockTfoot = HtmlBlockOpenTfoot (HtmlBlockTfoot | !HtmlBlockCloseTfoot .)* HtmlBlockCloseTfoot
+
+HtmlBlockOpenTh = "<" Spnl ("th" | "TH") Spnl HtmlAttribute* ">"
+HtmlBlockCloseTh = "<" Spnl "/" ("th" | "TH") Spnl ">"
+HtmlBlockTh = HtmlBlockOpenTh (HtmlBlockTh | !HtmlBlockCloseTh .)* HtmlBlockCloseTh
+
+HtmlBlockOpenThead = "<" Spnl ("thead" | "THEAD") Spnl HtmlAttribute* ">"
+HtmlBlockCloseThead = "<" Spnl "/" ("thead" | "THEAD") Spnl ">"
+HtmlBlockThead = HtmlBlockOpenThead (HtmlBlockThead | !HtmlBlockCloseThead .)* HtmlBlockCloseThead
+
+HtmlBlockOpenTr = "<" Spnl ("tr" | "TR") Spnl HtmlAttribute* ">"
+HtmlBlockCloseTr = "<" Spnl "/" ("tr" | "TR") Spnl ">"
+HtmlBlockTr = HtmlBlockOpenTr (HtmlBlockTr | !HtmlBlockCloseTr .)* HtmlBlockCloseTr
+
+HtmlBlockOpenScript = "<" Spnl ("script" | "SCRIPT") Spnl HtmlAttribute* ">"
+HtmlBlockCloseScript = "<" Spnl "/" ("script" | "SCRIPT") Spnl ">"
+HtmlBlockScript = HtmlBlockOpenScript (!HtmlBlockCloseScript .)* HtmlBlockCloseScript
+
+
+HtmlBlockInTags = HtmlBlockAddress
+                | HtmlBlockBlockquote
+                | HtmlBlockCenter
+                | HtmlBlockDir
+                | HtmlBlockDiv
+                | HtmlBlockDl
+                | HtmlBlockFieldset
+                | HtmlBlockForm
+                | HtmlBlockH1
+                | HtmlBlockH2
+                | HtmlBlockH3
+                | HtmlBlockH4
+                | HtmlBlockH5
+                | HtmlBlockH6
+                | HtmlBlockMenu
+                | HtmlBlockNoframes
+                | HtmlBlockNoscript
+                | HtmlBlockOl
+                | HtmlBlockP
+                | HtmlBlockPre
+                | HtmlBlockTable
+                | HtmlBlockUl
+                | HtmlBlockDd
+                | HtmlBlockDt
+                | HtmlBlockFrameset
+                | HtmlBlockLi
+                | HtmlBlockTbody
+                | HtmlBlockTd
+                | HtmlBlockTfoot
+                | HtmlBlockTh
+                | HtmlBlockThead
+                | HtmlBlockTr
+                | HtmlBlockScript
+
+HtmlBlock = < ( HtmlBlockInTags | HtmlComment | HtmlBlockSelfClosing ) >
+            BlankLine+
+            { if html? then
+                RDoc::Markup::Raw.new text
+              end }
+
+HtmlBlockSelfClosing = "<" Spnl HtmlBlockType Spnl HtmlAttribute* "/" Spnl ">"
+
+HtmlBlockType = "ADDRESS" |
+                "BLOCKQUOTE" |
+                "CENTER" |
+                "DD" |
+                "DIR" |
+                "DIV" |
+                "DL" |
+                "DT" |
+                "FIELDSET" |
+                "FORM" |
+                "FRAMESET" |
+                "H1" |
+                "H2" |
+                "H3" |
+                "H4" |
+                "H5" |
+                "H6" |
+                "HR" |
+                "ISINDEX" |
+                "LI" |
+                "MENU" |
+                "NOFRAMES" |
+                "NOSCRIPT" |
+                "OL" |
+                "P" |
+                "PRE" |
+                "SCRIPT" |
+                "TABLE" |
+                "TBODY" |
+                "TD" |
+                "TFOOT" |
+                "TH" |
+                "THEAD" |
+                "TR" |
+                "UL" |
+                "address" |
+                "blockquote" |
+                "center" |
+                "dd" |
+                "dir" |
+                "div" |
+                "dl" |
+                "dt" |
+                "fieldset" |
+                "form" |
+                "frameset" |
+                "h1" |
+                "h2" |
+                "h3" |
+                "h4" |
+                "h5" |
+                "h6" |
+                "hr" |
+                "isindex" |
+                "li" |
+                "menu" |
+                "noframes" |
+                "noscript" |
+                "ol" |
+                "p" |
+                "pre" |
+                "script" |
+                "table" |
+                "tbody" |
+                "td" |
+                "tfoot" |
+                "th" |
+                "thead" |
+                "tr" |
+                "ul"
+
+StyleOpen =     "<" Spnl ("style" | "STYLE") Spnl HtmlAttribute* ">"
+StyleClose =    "<" Spnl "/" ("style" | "STYLE") Spnl ">"
+InStyleTags =   StyleOpen (!StyleClose .)* StyleClose
+StyleBlock =    < InStyleTags >
+                BlankLine*
+                { if css? then
+                    RDoc::Markup::Raw.new text
+                  end }
+
+Inlines  =  ( !Endline Inline:i { i }
+            | Endline:c &Inline { c } )+:chunks Endline?
+            { chunks }
+
+Inline  = Str
+        | Endline
+        | UlOrStarLine
+        | Space
+        | Strong
+        | Emph
+        | Image
+        | Link
+        | NoteReference
+        | InlineNote
+        | Code
+        | RawHtml
+        | Entity
+        | EscapedChar
+        | Symbol
+
+Space = Spacechar+ { " " }
+
+Str = StartList:a
+      < NormalChar+ > { a = text }
+      ( StrChunk:c { a << c } )* { a }
+
+StrChunk = < (NormalChar | "_"+ &Alphanumeric)+ > { text }
+
+EscapedChar =   "\\" !Newline < /[\`|*_{}\[\]()#+.!><-]/ > { text }
+
+Entity =    ( HexEntity | DecEntity | CharEntity ):a { a }
+
+Endline =   LineBreak | TerminalEndline | NormalEndline
+
+NormalEndline =   Sp Newline !BlankLine !">" !AtxStart
+                  !(Line ("===" "="* | "---" "-"*) Newline)
+                  { "\n" }
+
+TerminalEndline = Sp Newline Eof
+
+LineBreak = < "  " NormalEndline > { text }
+
+Symbol = < SpecialChar >
+         { text }
+
+# This keeps the parser from getting bogged down on long strings of '*' or '_',
+# or strings of '*' or '_' with space on each side:
+UlOrStarLine =  (UlLine | StarLine):a { a }
+StarLine = < "****" "*"* > { text } |
+           < Spacechar "*"+ &Spacechar > { text }
+UlLine   = < "____" "_"* > { text } |
+           < Spacechar "_"+ &Spacechar > { text }
+
+Emph =      EmphStar | EmphUl
+
+OneStarOpen  =  !StarLine "*" !Spacechar !Newline
+OneStarClose =  !Spacechar !Newline Inline:a !StrongStar "*" { "_#{a}_" }
+
+EmphStar =  OneStarOpen
+            StartList:a
+            ( !OneStarClose Inline:l { a << l } )*
+            OneStarClose:l { a << l }
+            { a }
+
+OneUlOpen  =  !UlLine "_" !Spacechar !Newline
+OneUlClose =  !Spacechar !Newline Inline:a !StrongUl "_" !Alphanumeric
+              { "_#{a}_" }
+
+EmphUl =    OneUlOpen
+            StartList:a
+            ( !OneUlClose Inline:l { a << l } )*
+            OneUlClose:l { a << l }
+            { a }
+
+Strong = StrongStar | StrongUl
+
+TwoStarOpen =   !StarLine "**" !Spacechar !Newline
+TwoStarClose =  !Spacechar !Newline Inline:a "**" { "*#{a}*" }
+
+StrongStar =    TwoStarOpen
+                StartList:a
+                ( !TwoStarClose Inline:l { a << l } )*
+                TwoStarClose:l { a << l }
+                { a }
+
+TwoUlOpen =     !UlLine "__" !Spacechar !Newline
+TwoUlClose =    !Spacechar !Newline Inline:a "__" !Alphanumeric { "*#{a}*" }
+
+StrongUl =  TwoUlOpen
+            StartList:a
+            ( !TwoUlClose Inline:a { a << l } )*
+            TwoUlClose:l { a << l }
+            { a }
+
+Image = "!" ( ExplicitLink | ReferenceLink ):a
+        { a }
+
+Link =  ExplicitLink | ReferenceLink | AutoLink
+
+ReferenceLink = ReferenceLinkDouble | ReferenceLinkSingle
+
+ReferenceLinkDouble = Label:content < Spnl > !"[]" Label:label
+                      { link_to content, label }
+
+ReferenceLinkSingle = Label:content < (Spnl "[]")? >
+                      { link_to content }
+
+ExplicitLink =  Label:l Spnl "(" Sp Source:s Spnl Title:t Sp ")"
+                { s }
+
+Source  = ( "<" < SourceContents > ">" | < SourceContents > )
+          { text }
+
+SourceContents = ( ( !"(" !")" !">" Nonspacechar )+ | "(" SourceContents ")")*
+                 | ""
+
+Title = ( TitleSingle | TitleDouble | < "" > ):a
+        { a }
+
+TitleSingle = "'" < ( !( "'" Sp ( ")" | Newline ) ) . )* > "'"
+
+TitleDouble = "\"" < ( !( "\"" Sp ( ")" | Newline ) ) . )* > "\""
+
+AutoLink = AutoLinkUrl | AutoLinkEmail
+
+AutoLinkUrl =   "<" < /[A-Za-z]+/ "://" ( !Newline !">" . )+ > ">"
+                { text }
+
+AutoLinkEmail = "<" < /[-A-Za-z0-9+_]+/ "@" ( !Newline !">" . )+ > ">"
+                { "mailto:#{text}" }
+
+Reference = NonindentSpace !"[]"
+              Label:label ":" Spnl RefSrc:link RefTitle:title BlankLine+
+            { # TODO use title
+              reference label, link
+              nil
+            }
+
+Label = "[" ( !"^" &{ notes? } | &. &{ !notes? } )
+        StartList:a
+        ( !"]" Inline:l { a << l } )*
+        "]"
+        { a.join }
+
+RefSrc = < Nonspacechar+ > { text }
+
+RefTitle = ( RefTitleSingle | RefTitleDouble | RefTitleParens | EmptyTitle )
+
+EmptyTitle = < "" >
+
+RefTitleSingle = Spnl "'" < ( !( "'" Sp Newline | Newline ) . )* > "'" { text }
+
+RefTitleDouble = Spnl "\"" < ( !("\"" Sp Newline | Newline) . )* > "\"" { text }
+
+RefTitleParens = Spnl "(" < ( !(")" Sp Newline | Newline) . )* > ")" { text }
+
+Ticks1 = "`" !"`"
+Ticks2 = "``" !"`"
+Ticks3 = "```" !"`"
+Ticks4 = "````" !"`"
+Ticks5 = "`````" !"`"
+
+Code = ( Ticks1 Sp < (
+           ( !"`" Nonspacechar )+ | !Ticks1 "`"+ |
+           !( Sp Ticks1 ) ( Spacechar | Newline !BlankLine )
+         )+ > Sp Ticks1 |
+         Ticks2 Sp < (
+           ( !"`" Nonspacechar )+ |
+           !Ticks2 "`"+ |
+           !( Sp Ticks2 ) ( Spacechar | Newline !BlankLine )
+         )+ > Sp Ticks2 |
+         Ticks3 Sp < (
+           ( !"`" Nonspacechar )+ |
+           !Ticks3 "`"+ |
+           !( Sp Ticks3 ) ( Spacechar | Newline !BlankLine )
+         )+ > Sp Ticks3 |
+         Ticks4 Sp < (
+           ( !"`" Nonspacechar )+ |
+           !Ticks4 "`"+ |
+           !( Sp Ticks4 ) ( Spacechar | Newline !BlankLine )
+         )+ > Sp Ticks4 |
+         Ticks5 Sp < (
+           ( !"`" Nonspacechar )+ |
+           !Ticks5 "`"+ |
+           !( Sp Ticks5 ) ( Spacechar | Newline !BlankLine )
+         )+ > Sp Ticks5
+       )
+       { "<code>#{text}</code>" }
+
+RawHtml = < (HtmlComment | HtmlBlockScript | HtmlTag) >
+          { if html? then text else '' end }
+
+BlankLine =     Sp Newline { "\n" }
+
+Quoted =        "\"" (!"\"" .)* "\"" | "'" (!"'" .)* "'"
+HtmlAttribute = (AlphanumericAscii | "-")+ Spnl ("=" Spnl (Quoted | (!">" Nonspacechar)+))? Spnl
+HtmlComment =   "<!--" (!"-->" .)* "-->"
+HtmlTag =       "<" Spnl "/"? AlphanumericAscii+ Spnl HtmlAttribute* "/"? Spnl ">"
+Eof =           !.
+Nonspacechar =  !Spacechar !Newline .
+Sp =            Spacechar*
+Spnl =          Sp (Newline Sp)?
+SpecialChar =   "*" | "_" | "`" | "&" | "[" | "]" | "(" | ")" | "<" | "!" | "#" | "\\" | "'" | "\"" | ExtendedSpecialChar
+NormalChar =    !( SpecialChar | Spacechar | Newline ) .
+Digit = [0-9]
+
+%literals         = RDoc::Markdown::Literals
+Alphanumeric      = %literals.Alphanumeric
+AlphanumericAscii = %literals.AlphanumericAscii
+BOM               = %literals.BOM
+Newline           = %literals.Newline
+NonAlphanumeric   = %literals.NonAlphanumeric
+Spacechar         = %literals.Spacechar
+
+HexEntity  = "&" "#" /[Xx]/ < /[0-9a-fA-F]+/ > ";"
+             { [text.to_i(16)].pack 'U' }
+DecEntity  = "&" "#"        < /[0-9]+/       > ";"
+             { [text.to_i].pack 'U' }
+CharEntity = "&"            </[A-Za-z0-9]+/  > ";"
+             { HTML_ENTITIES[text].pack 'U*' }
+
+NonindentSpace =    "   " | "  " | " " | ""
+Indent =            "\t" | "    "
+IndentedLine =      Indent Line
+OptionallyIndentedLine = Indent? Line
+
+# StartList starts a list data structure that can be added to with cons:
+StartList = &.
+            { [] }
+
+Line =  RawLine:a { a }
+RawLine = ( < (!"\r" !"\n" .)* Newline > { text }
+        | < .+ > Eof )
+
+SkipBlock = ( !BlankLine RawLine )+ BlankLine*
+          | BlankLine+
+
+# Syntax extensions
+
+ExtendedSpecialChar = &{ notes? } ( "^" )
+
+NoteReference = &{ notes? }
+                RawNoteReference:ref
+                { note_for ref }
+
+RawNoteReference = "[^" < ( !Newline !"]" . )+ > "]" { text }
+
+# TODO multiple paragraphs for a footnote
+Note =          &{ notes? }
+                NonindentSpace RawNoteReference:ref ":" Sp
+                StartList:a
+                ( RawNoteBlock:l )
+                ( &Indent RawNoteBlock:i { a.concat i } )*
+                { a.unshift note ref
+                  @footnotes << RDoc::Markup::Paragraph.new(*a)
+                  nil
+                }
+
+InlineNote = &{ notes? }
+             "^["
+             StartList:a
+             ( !"]" Inline:l { a << l } )+
+             "]"
+             { ref = @footnotes.length + 1
+               a.unshift note ref
+
+               @footnotes << RDoc::Markup::Paragraph.new(*a)
+
+               note_for ref
+             }
+
+RawNoteBlock = StartList:a
+               ( !BlankLine OptionallyIndentedLine:l { a << l } )+
+               ( < BlankLine* > { a << text } )
+               { a }
+

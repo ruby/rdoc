@@ -82,12 +82,20 @@ lib/rdoc/generator/template/json_index/js/searcher.js
 lib/rdoc/ghost_method.rb
 lib/rdoc/include.rb
 lib/rdoc/known_classes.rb
+lib/rdoc/markdown.kpeg
+lib/rdoc/markdown.rb
+lib/rdoc/markdown/entities.rb
+lib/rdoc/markdown/literals_1_8.kpeg
+lib/rdoc/markdown/literals_1_8.rb
+lib/rdoc/markdown/literals_1_9.kpeg
+lib/rdoc/markdown/literals_1_9.rb
 lib/rdoc/markup.rb
 lib/rdoc/markup/attr_changer.rb
 lib/rdoc/markup/attr_span.rb
 lib/rdoc/markup/attribute.rb
 lib/rdoc/markup/attribute_manager.rb
 lib/rdoc/markup/blank_line.rb
+lib/rdoc/markup/block_quote.rb
 lib/rdoc/markup/document.rb
 lib/rdoc/markup/formatter.rb
 lib/rdoc/markup/formatter_test_case.rb
@@ -109,6 +117,7 @@ lib/rdoc/markup/to_bs.rb
 lib/rdoc/markup/to_html.rb
 lib/rdoc/markup/to_html_crossref.rb
 lib/rdoc/markup/to_html_snippet.rb
+lib/rdoc/markup/to_joined_paragraph.rb
 lib/rdoc/markup/to_label.rb
 lib/rdoc/markup/to_rdoc.rb
 lib/rdoc/markup/to_table_of_contents.rb
@@ -176,6 +185,7 @@ test/test_rdoc_generator_json_index.rb
 test/test_rdoc_generator_markup.rb
 test/test_rdoc_generator_ri.rb
 test/test_rdoc_include.rb
+test/test_rdoc_markdown.rb
 test/test_rdoc_markup.rb
 test/test_rdoc_markup_attribute_manager.rb
 test/test_rdoc_markup_document.rb

@@ -10,11 +10,16 @@ task :test    => :generate
 PARSER_FILES = %w[
   lib/rdoc/rd/block_parser.rb
   lib/rdoc/rd/inline_parser.rb
+  lib/rdoc/markdown.rb
+  lib/rdoc/markdown/literals_1_8.rb
+  lib/rdoc/markdown/literals_1_9.rb
 ]
 
 Hoe.plugin :git
+Hoe.plugin :kpeg
 Hoe.plugin :minitest
 Hoe.plugin :rdoc_tags
+Hoe.plugin :travis
 
 $rdoc_rakefile = true
 
@@ -51,6 +56,7 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   ]
 
   self.clean_globs += PARSER_FILES
+  self.kpeg_flags = '-fsv'
 
   require_ruby_version '>= 1.8.7'
   extra_deps     << ['json',     '~> 1.4']
@@ -62,6 +68,9 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   spec_extras['required_rubygems_version'] = '>= 1.3'
   spec_extras['homepage'] = 'http://docs.seattlerb.org/rdoc'
 end
+
+# requires ruby 1.8 and ruby 1.8 to build
+hoe.clean_globs -= PARSER_FILES.grep(/literals_/)
 
 task :generate => PARSER_FILES
 
