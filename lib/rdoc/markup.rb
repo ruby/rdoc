@@ -653,11 +653,7 @@
 #   markup type.  For ruby files, if the first comment contains this directive
 #   it is applied automatically to all comments in the file.
 #
-#   To add additional markup types to RDoc, add the type's name and parsing
-#   class to RDoc::Text::MARKUP_FORMAT.  The parsing class must respond to
-#   \::parse and accept a String argument.
-#
-#   The parsing class must return an RDoc::Document.
+#   See Markup@DEVELOPERS for instructions on adding a new markup format.
 #
 # [+:include:+ _filename_]
 #   Include the contents of the named file at this point. This directive
