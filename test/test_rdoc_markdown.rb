@@ -23,6 +23,14 @@ class TestRDocMarkdown < RDoc::TestCase
     s.chomp
   end
 
+  def test_class_parse
+    doc = RDoc::Markdown.parse "hello\n\nworld"
+
+    expected = doc(para("hello"), para("world"))
+
+    assert_equal expected, doc
+  end
+
   def test_parse_auto_link_email
     doc = parse "Autolink: <nobody@example>"
 
@@ -195,6 +203,8 @@ heading
   end
 
   def test_parse_html_no_html
+    @parser.html = false
+
     doc = parse "<address>Links here</address>\n"
 
     expected = doc()
@@ -425,6 +435,8 @@ Some text. ^[With a footnote]
   end
 
   def test_parse_note_no_notes
+    @parser.notes = false
+
     assert_raises RuntimeError do
       parse "Some text.[^1]"
     end
@@ -460,6 +472,8 @@ Some text. ^[With a footnote]
   end
 
   def test_parse_paragraph_html_no_html
+    @parser.html = false
+
     doc = parse "<address>Links here</address>"
 
     expected = @RM::Document.new(

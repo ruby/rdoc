@@ -1,6 +1,10 @@
 === 3.13
 
 * Minor enhancements
+  * Added Markdown as a supported format.  The markdown format can be set on a
+    per-file or per-comment basis with the +:markdown:+ directive like the rd
+    and tomdoc formats and on a per-project basis with
+    <tt>rdoc --markup markdown --write-options</tt>
   * Added a table of contents to the sidebar.
 
 === 3.12 / 2011-12-15

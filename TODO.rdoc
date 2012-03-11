@@ -1,7 +1,19 @@
 This file contains some things that might happen in RDoc, or might not.
 Forward Looking Statements applies.
 
-=== 3.next
+=== RDoc::VERSION.succ
+
+Blockers:
+
+* The alias keyword should not be bidirectional
+* Github extensions to markdown
+* Fix RDoc::Parser#use_markup to handle the filename (see TODO)
+* Fix markdown link:
+    [peg-markdown][pegmarkdown]
+
+    [pegmarkdown]: https://...
+
+Nice to have:
 
 * Update LICENSE to match ruby's switch
 * Reload the RDoc tree from an RI store
@@ -17,7 +29,6 @@ Forward Looking Statements applies.
 * Global variable support
 * Page support for ri
 * Provide the code_object to directive handlers
-* Add markup parser documentation to DEVELOPERS.rdoc
 
 === 4
 

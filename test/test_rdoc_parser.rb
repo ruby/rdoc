@@ -101,6 +101,16 @@ class TestRDocParser < RDoc::TestCase
     assert_equal @RP::RD, parser
   end
 
+  def test_class_use_markup_markdown
+    content = <<-CONTENT
+# coding: utf-8 markup: markdown
+    CONTENT
+
+    parser = @RP.use_markup content
+
+    assert_equal @RP::Ruby, parser
+  end
+
   def test_class_use_markup_modeline
     content = <<-CONTENT
 # -*- coding: utf-8 -*-

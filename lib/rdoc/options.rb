@@ -162,8 +162,8 @@ class RDoc::Options
   attr_accessor :main_page
 
   ##
-  # The default markup format.  The default is 'rdoc'.  'tomdoc' and 'rd' are
-  # also built-in.
+  # The default markup format.  The default is 'rdoc'.  'markdown', 'tomdoc'
+  # and 'rd' are also built-in.
 
   attr_accessor :markup
 

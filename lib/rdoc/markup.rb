@@ -6,11 +6,44 @@
 # is similar in spirit to that used on WikiWiki webs, where folks create web
 # pages using a simple set of formatting rules.
 #
-# RDoc::Markup itself does no output formatting: this is left to a different
-# set of classes.
+# RDoc::Markup and other markup formats do no output formatting, this is
+# handled by the RDoc::Markup::Formatter subclasses.
 #
-# RDoc::Markup is extendable at runtime: you can add \new markup elements to
-# be recognised in the documents that RDoc::Markup parses.
+# = Supported Formats
+#
+# Besides the RDoc::Markup format, the following formats are built in to RDoc:
+#
+# markdown::
+#   The markdown format as described by
+#   http://daringfireball.net/projects/markdown/.  See RDoc::Markdown for
+#   details on the parser and supported extensions.
+# rd::
+#   The rdtool format.  See RDoc::RD for details on the parser and format.
+# tomdoc::
+#   The TomDoc format as described by http://tomdoc.org/.  See RDoc::TomDoc
+#   for details on the parser and supported extensions.
+#
+# You can choose a markup format using the following methods:
+#
+# per project::
+#   If you build your documentation with rake use RDoc::Task#markup.
+#
+#   If you build your documentation by hand run:
+#
+#      rdoc --markup your_favorite_format --write-options
+#
+#   and commit <tt>.rdoc_options</tt> and ship it with your packaged gem.
+# per file::
+#   At the top of the file use the <tt>:markup:</tt> directive to set the
+#   default format for the rest of the file.
+# per comment::
+#   Use the <tt>:markup:</tt> directive at the top of a comment you want
+#   to write in a different format.
+#
+# = RDoc::Markup
+#
+# RDoc::Markup is extensible at runtime: you can add \new markup elements to
+# be recognized in the documents that RDoc::Markup parses.
 #
 # RDoc::Markup is intended to be the basis for a family of tools which share
 # the common requirement that simple, plain-text should be rendered in a

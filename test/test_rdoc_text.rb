@@ -203,6 +203,16 @@ The comments associated with
     assert_equal RDoc::Markup::Document.new, parse("#\n")
   end
 
+  def test_parse_format_markdown
+    expected =
+      @RM::Document.new(
+        @RM::Paragraph.new('it _works_'))
+
+    parsed = parse 'it *works*', 'markdown'
+
+    assert_equal expected, parsed
+  end
+
   def test_parse_format_rd
     expected =
       @RM::Document.new(

@@ -201,7 +201,8 @@ class RDoc::Parser
 
     return unless markup
 
-    return RDoc::Parser::Ruby if markup == 'tomdoc'
+    # TODO Ruby should be returned only when the filename is correct
+    return RDoc::Parser::Ruby if %w[tomdoc markdown].include? markup
 
     markup = Regexp.escape markup
 
@@ -236,7 +237,8 @@ end
 
 # simple must come first in order to show up last in the parsers list
 require 'rdoc/parser/simple'
+require 'rdoc/parser/c'
+require 'rdoc/parser/markdown'
 require 'rdoc/parser/rd'
 require 'rdoc/parser/ruby'
-require 'rdoc/parser/c'
 

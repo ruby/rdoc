@@ -28,8 +28,10 @@ $DEBUG_RDOC = nil
 # * If you want to use RDoc to create documentation for your Ruby source files,
 #   see RDoc::Markup and refer to <tt>rdoc --help</tt> for command line
 #   usage.
-# * If you want to store rdoc configuration in your gem see
-#   RDoc::Options@Saved+Options
+# * If you want to set the default markup format see
+#   RDoc::Markup@Supported+Formats
+# * If you want to store rdoc configuration in your gem (such as the default
+#   markup format) see RDoc::Options@Saved+Options
 # * If you want to write documentation for Ruby files see RDoc::Parser::Ruby
 # * If you want to write documentation for extensions written in C see
 #   RDoc::Parser::C
@@ -179,6 +181,7 @@ module RDoc
   autoload :Task,           'rdoc/task'
   autoload :Text,           'rdoc/text'
 
+  autoload :Markdown,       'rdoc/markdown'
   autoload :Markup,         'rdoc/markup'
   autoload :RD,             'rdoc/rd'
   autoload :TomDoc,         'rdoc/tom_doc'

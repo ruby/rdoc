@@ -2,17 +2,60 @@
 
 %% header {
 # coding: UTF-8
+# :markup: markdown
 
-# Limitations:
+##
+# RDoc::Markdown as described by the [markdown syntax][syntax].
+#
+# ## Extensions
+#
+# The following markdown extensions are supported by the parser, but not all
+# are used in RDoc output by default.
+#
+# ### CSS
+#
+# Enables CSS blocks to be included in the output, but they are not used by
+# RDoc.  This extension is disabled by default.
+#
+# Example:
+#
+#     <style type="text/css">
+#     h1 { font-size: 3em }
+#     </style>
+#
+# ### HTML
+#
+# Enables raw HTML to be included in the output.  This extension is enabled by
+# default.
+#
+# Example:
+#
+#     <table>
+#     ...
+#     </table>
+#
+# ### Notes
+#
+# Enables footnote support.  This extension is enabled by default.
+#
+# Example:
+#
+#     Here is some text[^1] that continues
+#
+#     ...
+#
+#     [^1]: With the footnote text down at the bottom
+#
+# ## Limitations
 #
 # * Link titles are not used
 # * Image links are not always generated correctly
 # * Footnotes are collapsed into a single paragraph
 #
-# == Author
+# ## Author
 #
-# This Markdown parser is a port to kpeg from peg-markdown by John MacFarlane
-# from https://github.com/jgm/peg-markdown
+# This markdown parser is a port to kpeg from [peg-markdown][pegmarkdown] by
+# John MacFarlane.
 #
 # It is used under the MIT license:
 #
@@ -22,10 +65,10 @@
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -35,6 +78,9 @@
 # THE SOFTWARE.
 #
 # The port to kpeg was performed by Eric Hodel and Evan Phoenix
+#
+# [syntax]: http://daringfireball.net/projects/markdown/syntax
+# [pegmarkdown]: https://github.com/jgm/peg-markdown
 
 }
 
@@ -51,7 +97,14 @@
     require 'rdoc/markdown/literals_1_8'
   end
 
+  ##
+  # Supported extensions
+
   EXTENSIONS = []
+
+  ##
+  # Creates extension methods for the `name` extension to enable and disable
+  # the extension and to query if they are active.
 
   def self.extension name
     EXTENSIONS << name
@@ -78,19 +131,24 @@
   extension :html
 
   ##
-  # Use the notes extension?
+  # Enables the notes extension
 
   extension :notes
 
-  def self.parse text
+  ##
+  # Parses the `markdown` document into an RDoc::Document using the default
+  # extensions.
+
+  def self.parse markdown
     parser = new
 
-    parser.parse text
+    parser.parse markdown
   end
 
-  alias orig_initialize initialize
+  # TODO remove when kpeg 0.10 is released
+  alias orig_initialize initialize # :nodoc:
 
-  def initialize extensions = [], debug = false
+  def initialize extensions = [:html, :notes], debug = false
     @debug      = debug
     @formatter  = RDoc::Markup::ToJoinedParagraph.new
     @extensions = extensions
@@ -103,11 +161,17 @@
     @unlinked_notes = nil
   end
 
+  ##
+  # Is the extension `name` enabled?
+
   def extension? name
     name = name.to_s.delete('?').intern
 
     @extensions.include? name
   end
+
+  ##
+  # Enables or disables the extension with `name`
 
   def extension name, enable
     name = name.to_s.delete('=').intern
@@ -120,7 +184,7 @@
   end
 
   ##
-  # Parses +text+ in a clone of this parser.  This is used for handling nested
+  # Parses `text` in a clone of this parser.  This is used for handling nested
   # lists the same way as markdown_parser.
 
   def inner_parse text # :nodoc:
@@ -136,8 +200,8 @@
   end
 
   ##
-  # Finds a link reference for +label+ and creates a new link to it with
-  # +content+ as the link text.  If +label+ has not be encountered in the
+  # Finds a link reference for `label` and creates a new link to it with
+  # `content` as the link text.  If `label` has not be encountered in the
   # document a placeholder is created that will be filled later.
 
   def link_to content, label = content
@@ -154,7 +218,7 @@
   end
 
   ##
-  # Creates an RDoc::Markup::ListItem from +parsed+ including parsing nested
+  # Creates an RDoc::Markup::ListItem from `parsed` including parsing nested
   # lists.
 
   def list_item_from parsed
@@ -183,8 +247,8 @@
   end
 
   ##
-  # Finds a footnote reference for +label+ and creates a new link to it with
-  # +content+ as the link text.  If +label+ has not be encountered in the
+  # Finds a footnote reference for `label` and creates a new link to it with
+  # `content` as the link text.  If `label` has not be encountered in the
   # document a placeholder is created that will be filled later.
 
   def note_for label
@@ -197,7 +261,13 @@
     end
   end
 
-  alias peg_parse parse
+  ##
+  # The internal kpeg parse method
+
+  alias peg_parse parse # :nodoc:
+
+  ##
+  # Parses `markdown` into an RDoc::Document
 
   def parse markdown
     setup_parser markdown, @debug
@@ -228,7 +298,7 @@
   end
 
   ##
-  # Stores +label+ as a reference to +link+ and fills in previously unknown
+  # Stores `label` as a reference to `link` and fills in previously unknown
   # link references.
 
   def reference label, link
@@ -240,7 +310,7 @@
   end
 
   ##
-  # Stores +label+ as a note and fills in previously unknown note references.
+  # Stores `label` as a note and fills in previously unknown note references.
 
   def note label
     foottext = "rdoc-label:foottext-#{label}:footmark-#{label}"
