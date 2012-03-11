@@ -11,4 +11,4 @@ rvm:
 - 1.9.2
 - 1.9.3
 - ruby-head
-script: rake travis
+script: rake test travis:fake_config clean check_manifest
