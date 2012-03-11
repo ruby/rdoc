@@ -45,6 +45,7 @@ lib/rdoc/generator/template/darkfish/_sidebar_pages.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_parent.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_search.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_sections.rhtml
+lib/rdoc/generator/template/darkfish/_sidebar_table_of_contents.rhtml
 lib/rdoc/generator/template/darkfish/class.rhtml
 lib/rdoc/generator/template/darkfish/images/add.png
 lib/rdoc/generator/template/darkfish/images/brick.png

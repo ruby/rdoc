@@ -1,3 +1,8 @@
+=== 3.13
+
+* Minor enhancements
+  * Added a table of contents to the sidebar.
+
 === 3.12 / 2011-12-15
 
 * Minor enhancements

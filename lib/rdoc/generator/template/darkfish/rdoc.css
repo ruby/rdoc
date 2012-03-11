@@ -193,6 +193,15 @@ pre {
   list-style-image: url(images/page_green.png);
 }
 
+#table-of-contents {
+  margin-top: 2em;
+}
+
+#table-of-contents ul {
+  padding-left: 28px;
+  list-style-image: url(images/tag_blue.png);
+}
+
 dl.svninfo {
   color: #666;
   margin: 0;

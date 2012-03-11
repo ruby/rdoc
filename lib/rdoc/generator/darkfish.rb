@@ -309,11 +309,14 @@ class RDoc::Generator::Darkfish
 
     return unless
       page_file.exist? or fileinfo_file.exist? or template_file.exist?
+
     debug_msg "Generating file documentation in #{@outputdir}"
 
     out_file = nil
+    current = nil
 
     @files.each do |file|
+      current = file
       template_file = nil
       out_file = @outputdir + file.path
       debug_msg "  working on %s (%s)" % [file.full_name, out_file]
