@@ -723,7 +723,7 @@ Options may also be set in the 'RI' environment variable.
     page do |io|
       io.puts "#{name} not found, maybe you meant:"
       io.puts
-      io.puts matches.join("\n")
+      io.puts matches.sort.join("\n")
     end
 
     false

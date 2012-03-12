@@ -701,7 +701,7 @@ end
 
     @parser.parse_class @top_level, false, @parser.get_tk, @comment
 
-    assert_equal %w[A B],    RDoc::TopLevel.classes.map { |c| c.full_name }
+    assert_equal %w[A B], RDoc::TopLevel.classes.map { |c| c.full_name }.sort
   end
 
   def test_parse_class_single
@@ -720,10 +720,12 @@ end
 
     @parser.parse_class @top_level, false, @parser.get_tk, @comment
 
-    assert_equal %w[A],    RDoc::TopLevel.classes.map { |c| c.full_name }
-    assert_equal %w[A::B A::d], RDoc::TopLevel.modules.map { |c| c.full_name }
+    assert_equal %w[A], RDoc::TopLevel.classes.map { |c| c.full_name }
 
-    b = RDoc::TopLevel.modules.first
+    modules = RDoc::TopLevel.modules.sort_by { |c| c.full_name }
+    assert_equal %w[A::B A::d], modules.map { |c| c.full_name }
+
+    b = modules.first
     assert_equal 10, b.offset
     assert_equal 2,  b.line
 
@@ -1851,10 +1853,10 @@ end
 
     @parser.parse_statements @top_level
 
-    date, date_time = @top_level.classes
+    date, date_time = @top_level.classes.sort_by { |c| c.full_name }
 
     date_now      = date.method_list.first
-    date_time_now = date_time.method_list.first
+    date_time_now = date_time.method_list.sort_by { |m| m.full_name }.first
 
     assert_equal :private, date_now.visibility
     assert_equal :public,  date_time_now.visibility
@@ -1876,10 +1878,11 @@ end
 
     @parser.parse_statements @top_level
 
-    date, date_time = @top_level.classes
+    # TODO sort classes by default
+    date, date_time = @top_level.classes.sort_by { |c| c.full_name }
 
     date_now      = date.method_list.first
-    date_time_now = date_time.method_list.first
+    date_time_now = date_time.method_list.sort_by { |m| m.full_name }.first
 
     assert_equal :public,  date_now.visibility,      date_now.full_name
     assert_equal :private, date_time_now.visibility, date_time_now.full_name

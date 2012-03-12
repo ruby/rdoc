@@ -340,7 +340,7 @@ class TestRDocContext < XrefTestCase
 
   def test_classes
     assert_equal %w[C2::C3], @c2.classes.map { |k| k.full_name }
-    assert_equal %w[C3::H1 C3::H2], @c3.classes.map { |k| k.full_name }
+    assert_equal %w[C3::H1 C3::H2], @c3.classes.map { |k| k.full_name }.sort
   end
 
   def test_current_section
