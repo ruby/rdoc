@@ -7,7 +7,8 @@ Autotest.add_hook :run_command do |at|
 end
 
 Autotest.add_hook :initialize do |at|
-  at.testlib = 'minitest/unit' if at.respond_to? :testlib=
+  at.testlib = 'minitest/autorun'
+  at.add_exception '.git'
 
   def at.path_to_classname(s)
     sep = File::SEPARATOR

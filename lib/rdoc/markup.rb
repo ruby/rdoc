@@ -811,6 +811,7 @@ https://github.com/rdoc/rdoc/issues
 
   # RDoc::Markup AST
   autoload :BlankLine,             'rdoc/markup/blank_line'
+  autoload :BlockQuote,            'rdoc/markup/block_quote'
   autoload :Document,              'rdoc/markup/document'
   autoload :Heading,               'rdoc/markup/heading'
   autoload :Include,               'rdoc/markup/include'

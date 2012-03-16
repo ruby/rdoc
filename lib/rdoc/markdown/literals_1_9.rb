@@ -376,42 +376,9 @@ class RDoc::Markdown::Literals
     return _tmp
   end
 
-  # Newline = ("\n" | "" "\n"? | /\p{Zl}|\p{Zp}/)
+  # Newline = /\n|\r\n?|\p{Zl}|\p{Zp}/
   def _Newline
-
-    _save = self.pos
-    while true # choice
-      _tmp = match_string("\n")
-      break if _tmp
-      self.pos = _save
-
-      _save1 = self.pos
-      while true # sequence
-        _tmp = match_string("\r")
-        unless _tmp
-          self.pos = _save1
-          break
-        end
-        _save2 = self.pos
-        _tmp = match_string("\n")
-        unless _tmp
-          _tmp = true
-          self.pos = _save2
-        end
-        unless _tmp
-          self.pos = _save1
-        end
-        break
-      end # end sequence
-
-      break if _tmp
-      self.pos = _save
-      _tmp = scan(/\A(?-mix:\p{Zl}|\p{Zp})/)
-      break if _tmp
-      self.pos = _save
-      break
-    end # end choice
-
+    _tmp = scan(/\A(?-mix:\n|\r\n?|\p{Zl}|\p{Zp})/)
     set_failed_rule :_Newline unless _tmp
     return _tmp
   end
@@ -423,20 +390,9 @@ class RDoc::Markdown::Literals
     return _tmp
   end
 
-  # Spacechar = ("\t" | /\p{Zs}/)
+  # Spacechar = /\t|\p{Zs}/
   def _Spacechar
-
-    _save = self.pos
-    while true # choice
-      _tmp = match_string("\t")
-      break if _tmp
-      self.pos = _save
-      _tmp = scan(/\A(?-mix:\p{Zs})/)
-      break if _tmp
-      self.pos = _save
-      break
-    end # end choice
-
+    _tmp = scan(/\A(?-mix:\t|\p{Zs})/)
     set_failed_rule :_Spacechar unless _tmp
     return _tmp
   end
@@ -445,8 +401,8 @@ class RDoc::Markdown::Literals
   Rules[:_Alphanumeric] = rule_info("Alphanumeric", "/\\p{Word}/")
   Rules[:_AlphanumericAscii] = rule_info("AlphanumericAscii", "/[A-Za-z0-9]/")
   Rules[:_BOM] = rule_info("BOM", "\"uFEFF\"")
-  Rules[:_Newline] = rule_info("Newline", "(\"\\n\" | \"\" \"\\n\"? | /\\p{Zl}|\\p{Zp}/)")
+  Rules[:_Newline] = rule_info("Newline", "/\\n|\\r\\n?|\\p{Zl}|\\p{Zp}/")
   Rules[:_NonAlphanumeric] = rule_info("NonAlphanumeric", "/\\p{^Word}/")
-  Rules[:_Spacechar] = rule_info("Spacechar", "(\"\\t\" | /\\p{Zs}/)")
+  Rules[:_Spacechar] = rule_info("Spacechar", "/\\t|\\p{Zs}/")
   # :startdoc:
 end

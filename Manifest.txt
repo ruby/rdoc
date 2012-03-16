@@ -163,6 +163,28 @@ lib/rdoc/text.rb
 lib/rdoc/token_stream.rb
 lib/rdoc/tom_doc.rb
 lib/rdoc/top_level.rb
+test/MarkdownTest_1.0.3/Amps and angle encoding.text
+test/MarkdownTest_1.0.3/Auto links.text
+test/MarkdownTest_1.0.3/Backslash escapes.text
+test/MarkdownTest_1.0.3/Blockquotes with code blocks.text
+test/MarkdownTest_1.0.3/Code Blocks.text
+test/MarkdownTest_1.0.3/Code Spans.text
+test/MarkdownTest_1.0.3/Hard-wrapped paragraphs with list-like lines.text
+test/MarkdownTest_1.0.3/Horizontal rules.text
+test/MarkdownTest_1.0.3/Inline HTML (Advanced).text
+test/MarkdownTest_1.0.3/Inline HTML (Simple).text
+test/MarkdownTest_1.0.3/Inline HTML comments.text
+test/MarkdownTest_1.0.3/Links, inline style.text
+test/MarkdownTest_1.0.3/Links, reference style.text
+test/MarkdownTest_1.0.3/Links, shortcut references.text
+test/MarkdownTest_1.0.3/Literal quotes in titles.text
+test/MarkdownTest_1.0.3/Markdown Documentation - Basics.text
+test/MarkdownTest_1.0.3/Markdown Documentation - Syntax.text
+test/MarkdownTest_1.0.3/Nested blockquotes.text
+test/MarkdownTest_1.0.3/Ordered and unordered lists.text
+test/MarkdownTest_1.0.3/Strong and em together.text
+test/MarkdownTest_1.0.3/Tabs.text
+test/MarkdownTest_1.0.3/Tidyness.text
 test/README
 test/binary.dat
 test/hidden.zip.txt
@@ -188,6 +210,7 @@ test/test_rdoc_generator_markup.rb
 test/test_rdoc_generator_ri.rb
 test/test_rdoc_include.rb
 test/test_rdoc_markdown.rb
+test/test_rdoc_markdown_test.rb
 test/test_rdoc_markup.rb
 test/test_rdoc_markup_attribute_manager.rb
 test/test_rdoc_markup_document.rb

@@ -162,6 +162,17 @@
   end
 
   ##
+  # Wraps `text` in emphasis for rdoc inline formatting
+
+  def emphasis text
+    if text =~ /\A[a-z\d.\/]+\z/i then
+      "_#{text}_"
+    else
+      "<em>#{text}</em>"
+    end
+  end
+
+  ##
   # Is the extension `name` enabled?
 
   def extension? name
@@ -196,54 +207,37 @@
 
     doc = parser.result
 
+    doc.accept @formatter
+
     doc.parts
   end
 
   ##
   # Finds a link reference for `label` and creates a new link to it with
-  # `content` as the link text.  If `label` has not be encountered in the
-  # document a placeholder is created that will be filled later.
+  # `content` as the link text.  If `label` was not encountered in the
+  # reference-gathering parser pass the label and content are reconstructed
+  # with the linking `text` (usually whitespace).
 
-  def link_to content, label = content
+  def link_to content, label = content, text = nil
     raise 'enable notes extension' if
-      content.start_with? '^' and label == content
+      content.start_with? '^' and label.equal? content
 
     if ref = @references[label] then
       "{#{content}}[#{ref}]"
+    elsif label.equal? content then
+      "[#{content}]#{text}"
     else
-      ref = @unlinked_references[label] || ""
-      @unlinked_references[label] = ref
-      ["{#{content}}[", ref, "]"]
+      "[#{content}]#{text}[#{label}]"
     end
   end
 
   ##
-  # Creates an RDoc::Markup::ListItem from `parsed` including parsing nested
-  # lists.
+  # Creates an RDoc::Markup::ListItem by parsing the `unparsed` content from
+  # the first parsing pass.
 
-  def list_item_from parsed
-    out = RDoc::Markup::ListItem.new nil
-
-    parsed.each do |part|
-      case part
-      when String then
-        case out.parts.last
-        when RDoc::Markup::Paragraph then
-          out.parts.last << part
-        else
-          out << RDoc::Markup::Paragraph.new(part)
-        end
-      when RDoc::Markup::Paragraph then
-        out << part
-      when RDoc::Markup::Raw then
-        inner = inner_parse part.text
-        out.push(*inner)
-      else
-        raise part.inspect
-      end
-    end
-
-    out
+  def list_item_from unparsed
+    parsed = inner_parse unparsed.join
+    RDoc::Markup::ListItem.new nil, *parsed
   end
 
   ##
@@ -270,17 +264,27 @@
   # Parses `markdown` into an RDoc::Document
 
   def parse markdown
+    @references          = {}
+    @unlinked_references = {}
+
+    markdown += "\n\n"
+
     setup_parser markdown, @debug
+    peg_parse 'References'
 
     if notes? then
       @footnotes      = []
       @notes          = {}
       @unlinked_notes = {}
+
+      setup_parser markdown, @debug
+      peg_parse 'Notes'
+
+      # reset footnotes to avoid grabbing them twice
+      @footnotes = []
     end
 
-    @references          = {}
-    @unlinked_references = {}
-
+    setup_parser markdown, @debug
     peg_parse
 
     doc = result
@@ -307,6 +311,17 @@
     end
 
     @references[label] = link
+  end
+
+  ##
+  # Wraps `text` in strong markup for rdoc inline formatting
+
+  def strong text
+    if text =~ /\A[a-z\d.\/-]+\z/i then
+      "*#{text}*"
+    else
+      "<b>#{text}</b>"
+    end
   end
 
   ##
@@ -355,7 +370,7 @@ AtxStart =  < ( "######" | "#####" | "####" | "###" | "##" | "#" ) >
             { text.length }
 
 AtxHeading = AtxStart:s Sp? AtxInline+:a (Sp? "#"* Sp)?  Newline
-            { RDoc::Markup::Heading.new(s, *a) }
+            { RDoc::Markup::Heading.new(s, a.join) }
 
 SetextHeading = SetextHeading1 | SetextHeading2
 
@@ -364,14 +379,14 @@ SetextBottom1 = "===" "="* Newline
 SetextBottom2 = "---" "-"* Newline
 
 SetextHeading1 =  &(RawLine SetextBottom1)
-                  StartList:a ( !Endline Inline:a )+ Sp? Newline
+                  StartList:a ( !Endline Inline:b { a << b } )+ Sp? Newline
                   SetextBottom1
-                  { RDoc::Markup::Heading.new(1, *a) }
+                  { a; RDoc::Markup::Heading.new(1, a.join) }
 
 SetextHeading2 =  &(RawLine SetextBottom2)
-                  StartList:a ( !Endline Inline:a )+ Sp? Newline
+                  StartList:a ( !Endline Inline:b { a << b })+ Sp? Newline
                   SetextBottom2
-                  { RDoc::Markup::Heading.new(2, *a) }
+                  { RDoc::Markup::Heading.new(2, a.join) }
 
 Heading = SetextHeading | AtxHeading
 
@@ -383,16 +398,16 @@ BlockQuoteRaw =  StartList:a
                   ( !">" !BlankLine Line:c { a << c } )*
                   ( BlankLine:n { a << n } )*
                  )+
-                 { a }
+                 { inner_parse a.join }
 
 NonblankIndentedLine = !BlankLine IndentedLine
 
 VerbatimChunk = BlankLine*:a
                 NonblankIndentedLine+:b
-                { a.push(*b) }
+                { a.concat b }
 
 Verbatim =     VerbatimChunk+:a
-               { RDoc::Markup::Verbatim.new(*a) }
+               { RDoc::Markup::Verbatim.new(*a.flatten) }
 
 HorizontalRule = NonindentSpace
                  ( "*" Sp "*" Sp "*" (Sp "*")*
@@ -426,19 +441,17 @@ ListItemTight =
             ( !BlankLine
               ListContinuationBlock:b { a.push(*b) } )*
             !ListContinuationBlock
-            { list_item_from a.parts }
+            { list_item_from a }
 
 ListBlock = !BlankLine Line:a
             ListBlockLine*:c
-            { RDoc::Markup::Paragraph.new(a, *c) }
+            { [a, *c] }
 
-ListContinuationBlock = StartList:a { a = [] }
+ListContinuationBlock = StartList:a
                         ( < BlankLine* >
-                          { a << text unless text =~ /\A\n?\z/ } )
+                          { a << "\n" } )
                         ( Indent
-                          ListBlock:b {
-                            a << RDoc::Markup::Raw.new(*b.parts)
-                          } )+
+                          ListBlock:b { a.concat b } )+
                         { a }
 
 Enumerator = NonindentSpace [0-9]+ "." Spacechar+
@@ -621,11 +634,15 @@ HtmlBlockInTags = HtmlBlockAddress
                 | HtmlBlockTr
                 | HtmlBlockScript
 
-HtmlBlock = < ( HtmlBlockInTags | HtmlComment | HtmlBlockSelfClosing ) >
+HtmlBlock = < ( HtmlBlockInTags | HtmlComment | HtmlBlockSelfClosing | HtmlUnclosed) >
             BlankLine+
             { if html? then
                 RDoc::Markup::Raw.new text
               end }
+
+HtmlUnclosed = "<" Spnl HtmlUnclosedType Spnl HtmlAttribute* Spnl ">"
+
+HtmlUnclosedType = "HR" | "hr"
 
 HtmlBlockSelfClosing = "<" Spnl HtmlBlockType Spnl HtmlAttribute* "/" Spnl ">"
 
@@ -737,7 +754,7 @@ Str = StartList:a
 
 StrChunk = < (NormalChar | "_"+ &Alphanumeric)+ > { text }
 
-EscapedChar =   "\\" !Newline < /[\`|*_{}\[\]()#+.!><-]/ > { text }
+EscapedChar =   "\\" !Newline < /[\\`|*_{}\[\]()#+.!><-]/ > { text }
 
 Entity =    ( HexEntity | DecEntity | CharEntity ):a { a }
 
@@ -765,44 +782,47 @@ UlLine   = < "____" "_"* > { text } |
 Emph =      EmphStar | EmphUl
 
 OneStarOpen  =  !StarLine "*" !Spacechar !Newline
-OneStarClose =  !Spacechar !Newline Inline:a !StrongStar "*" { "_#{a}_" }
+OneStarClose =  !Spacechar !Newline Inline:a !StrongStar "*"
+                { a }
 
 EmphStar =  OneStarOpen
             StartList:a
             ( !OneStarClose Inline:l { a << l } )*
             OneStarClose:l { a << l }
-            { a }
+            { emphasis a.join }
 
 OneUlOpen  =  !UlLine "_" !Spacechar !Newline
-OneUlClose =  !Spacechar !Newline Inline:a !StrongUl "_" !Alphanumeric
-              { "_#{a}_" }
+OneUlClose =  !Spacechar !Newline Inline:a !StrongUl "_" # !Alphanumeric # TODO check
+              { a }
 
 EmphUl =    OneUlOpen
             StartList:a
             ( !OneUlClose Inline:l { a << l } )*
             OneUlClose:l { a << l }
-            { a }
+            { emphasis a.join }
 
 Strong = StrongStar | StrongUl
 
 TwoStarOpen =   !StarLine "**" !Spacechar !Newline
-TwoStarClose =  !Spacechar !Newline Inline:a "**" { "*#{a}*" }
+TwoStarClose =  !Spacechar !Newline Inline:a "**" { a }
 
 StrongStar =    TwoStarOpen
                 StartList:a
                 ( !TwoStarClose Inline:l { a << l } )*
                 TwoStarClose:l { a << l }
-                { a }
+                { strong a.join }
 
 TwoUlOpen =     !UlLine "__" !Spacechar !Newline
-TwoUlClose =    !Spacechar !Newline Inline:a "__" !Alphanumeric { "*#{a}*" }
+TwoUlClose =    !Spacechar !Newline Inline:a "__" # !Alphanumeric # TODO check
+                { a }
 
 StrongUl =  TwoUlOpen
             StartList:a
-            ( !TwoUlClose Inline:a { a << l } )*
+            ( !TwoUlClose Inline:i { a << i } )*
             TwoUlClose:l { a << l }
-            { a }
+            { strong a.join }
 
+# TODO image link support
 Image = "!" ( ExplicitLink | ReferenceLink ):a
         { a }
 
@@ -811,13 +831,13 @@ Link =  ExplicitLink | ReferenceLink | AutoLink
 ReferenceLink = ReferenceLinkDouble | ReferenceLinkSingle
 
 ReferenceLinkDouble = Label:content < Spnl > !"[]" Label:label
-                      { link_to content, label }
+                      { link_to content, label, text }
 
 ReferenceLinkSingle = Label:content < (Spnl "[]")? >
-                      { link_to content }
+                      { link_to content, content, text }
 
 ExplicitLink =  Label:l Spnl "(" Sp Source:s Spnl Title:t Sp ")"
-                { s }
+                { "{#{l}}[#{s}]" }
 
 Source  = ( "<" < SourceContents > ">" | < SourceContents > )
           { text }
@@ -851,7 +871,7 @@ Label = "[" ( !"^" &{ notes? } | &. &{ !notes? } )
         StartList:a
         ( !"]" Inline:l { a << l } )*
         "]"
-        { a.join }
+        { a.join.gsub(/\s+/, ' ') }
 
 RefSrc = < Nonspacechar+ > { text }
 
@@ -864,6 +884,8 @@ RefTitleSingle = Spnl "'" < ( !( "'" Sp Newline | Newline ) . )* > "'" { text }
 RefTitleDouble = Spnl "\"" < ( !("\"" Sp Newline | Newline) . )* > "\"" { text }
 
 RefTitleParens = Spnl "(" < ( !(")" Sp Newline | Newline) . )* > ")" { text }
+
+References = ( Reference | SkipBlock )*
 
 Ticks1 = "`" !"`"
 Ticks2 = "``" !"`"
@@ -940,8 +962,8 @@ StartList = &.
             { [] }
 
 Line =  RawLine:a { a }
-RawLine = ( < (!"\r" !"\n" .)* Newline > { text }
-        | < .+ > Eof )
+RawLine = ( < (!"\r" !"\n" .)* Newline >
+        | < .+ > Eof ) { text }
 
 SkipBlock = ( !BlankLine RawLine )+ BlankLine*
           | BlankLine+
@@ -960,7 +982,7 @@ RawNoteReference = "[^" < ( !Newline !"]" . )+ > "]" { text }
 Note =          &{ notes? }
                 NonindentSpace RawNoteReference:ref ":" Sp
                 StartList:a
-                ( RawNoteBlock:l )
+                RawNoteBlock:l
                 ( &Indent RawNoteBlock:i { a.concat i } )*
                 { a.unshift note ref
                   @footnotes << RDoc::Markup::Paragraph.new(*a)
@@ -979,6 +1001,8 @@ InlineNote = &{ notes? }
 
                note_for ref
              }
+
+Notes = ( Note | SkipBlock )*
 
 RawNoteBlock = StartList:a
                ( !BlankLine OptionallyIndentedLine:l { a << l } )+

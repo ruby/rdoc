@@ -13,7 +13,7 @@ class RDoc::Markup::ToJoinedParagraph < RDoc::Markup::Formatter
   end
 
   def accept_paragraph paragraph
-    paragraph.parts.replace [paragraph.parts.join]
+    paragraph.parts.replace [paragraph.parts.join.rstrip]
   end
 
   alias accept_block_quote     ignore

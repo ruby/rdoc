@@ -42,11 +42,67 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
   end
 
   ##
+  # Shortcut for RDoc::Markup::BlockQuote.new with +contents+
+
+  def block *contents
+    @RM::BlockQuote.new(*contents)
+  end
+
+  ##
   # Creates an RDoc::Comment with +text+ which was defined on +top_level+.
   # By default the comment has the 'rdoc' format.
 
   def comment text, top_level = @top_level
     RDoc::Comment.new text, top_level
+  end
+
+  ##
+  # Shortcut for RDoc::Markup::Document.new with +contents+
+
+  def doc *contents
+    @RM::Document.new(*contents)
+  end
+
+  ##
+  # Shortcut for RDoc::Markup::Heading.new with +level+ and +text+
+
+  def head level, text
+    @RM::Heading.new level, text
+  end
+
+  ##
+  # Shortcut for RDoc::Markup::ListItem.new with +label+ and +parts+
+
+  def item label = nil, *parts
+    @RM::ListItem.new label, *parts
+  end
+
+  ##
+  # Shortcut for RDoc::Markup::List.new with +type+ and +items+
+
+  def list type = nil, *items
+    @RM::List.new type, *items
+  end
+
+  ##
+  # Shortcut for RDoc::Markup::Paragraph.new with +contents+
+
+  def para *a
+    @RM::Paragraph.new(*a)
+  end
+
+  ##
+  # Shortcut for RDoc::Markup::Rule.new with +weight+
+
+  def rule weight
+    @RM::Rule.new weight
+  end
+
+  ##
+  # Shortcut for RDoc::Markup::Raw.new with +contents+
+
+  def raw *contents
+    @RM::Raw.new(*contents)
   end
 
   ##
@@ -63,6 +119,13 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
         yield temp_dir
       end
     end
+  end
+
+  ##
+  # Shortcut for RDoc::Markup::Verbatim.new with +parts+
+
+  def verb *parts
+    @RM::Verbatim.new(*parts)
   end
 
 end

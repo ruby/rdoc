@@ -25,3 +25,15 @@ Sdoc::
     from sdoc.
   * RDoc::ClassModule#document_self_or_methods comes from Sdoc.
 
+peg-markdown::
+  RDoc's Markdown support is derived from peg-markdown by John MacFarlane.  It
+  is used under the MIT license.  See RDoc::Markdown for license details.
+
+MarkdownTest::
+  test/test_rdoc_markdown_test.rb uses MarkdownTest 1.0.3's source files which
+  are included as test/MarkdownTest_1.0.3/*.text which are Copyright (c)
+  2004-2005 John Gruber http://daringfireball.net and is included under the
+  same terms as Perl itself.
+
+  See http://dev.perl.org/licenses/ for the terms of the Perl license.
+

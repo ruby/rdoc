@@ -508,10 +508,6 @@ two
     assert_equal expected, parse("one\ntwo")
   end
 
-  def doc *parts
-    @RM::Document.new(*parts)
-  end
-
   def parse text
     text = ["=begin", text, "=end"].join "\n"
 

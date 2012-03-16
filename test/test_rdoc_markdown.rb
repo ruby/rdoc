@@ -31,6 +31,12 @@ class TestRDocMarkdown < RDoc::TestCase
     assert_equal expected, doc
   end
 
+  def test_emphasis
+    assert_equal '_word_',             @parser.emphasis('word')
+    assert_equal '<em>two words</em>', @parser.emphasis('two words')
+    assert_equal '<em>*bold*</em>',    @parser.emphasis('*bold*')
+  end
+
   def test_parse_auto_link_email
     doc = parse "Autolink: <nobody@example>"
 
@@ -53,8 +59,10 @@ class TestRDocMarkdown < RDoc::TestCase
 > a block quote
     BLOCK_QUOTE
 
-    expected = @RM::Document.new(
-      @RM::BlockQuote.new("this is\n", "a block quote\n"))
+    expected =
+      doc(
+        block(
+          para("this is\na block quote")))
 
     assert_equal expected, doc
   end
@@ -65,8 +73,29 @@ class TestRDocMarkdown < RDoc::TestCase
 a block quote
     BLOCK_QUOTE
 
-    expected = @RM::Document.new(
-      @RM::BlockQuote.new("this is\n", "a block quote\n"))
+    expected =
+      doc(
+        block(
+          para("this is\na block quote")))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_block_quote_list
+    doc = parse <<-BLOCK_QUOTE
+> text
+>
+> * one
+> * two
+    BLOCK_QUOTE
+
+    expected =
+      doc(
+        block(
+          para("text"),
+          list(:BULLET,
+            item(nil, para("one")),
+            item(nil, para("two")))))
 
     assert_equal expected, doc
   end
@@ -78,8 +107,10 @@ a block quote
 
     BLOCK_QUOTE
 
-    expected = @RM::Document.new(
-      @RM::BlockQuote.new("this is\n", "a block quote\n", "\n"))
+    expected =
+      doc(
+        block(
+          para("this is\na block quote")))
 
     assert_equal expected, doc
   end
@@ -92,10 +123,11 @@ a block quote
 > that continues
     BLOCK_QUOTE
 
-    expected = @RM::Document.new(
-      @RM::BlockQuote.new("this is\n", "a block quote\n",
-                          "\n",
-                          "that continues\n"))
+    expected =
+      doc(
+        block(
+          para("this is\na block quote"),
+          para("that continues")))
 
     assert_equal expected, doc
   end
@@ -151,11 +183,9 @@ a block quote
   end
 
   def test_parse_escape
-    doc = parse "Backtick: \\`"
+    assert_equal doc(para("Backtick: `")), parse("Backtick: \\`")
 
-    expected = doc(para("Backtick: `"))
-
-    assert_equal expected, doc
+    assert_equal doc(para("Backslash: \\")), parse("Backslash: \\\\")
   end
 
   def test_parse_heading_atx
@@ -202,6 +232,16 @@ heading
     assert_equal expected, doc
   end
 
+  def test_parse_html_hr
+    @parser.html = true
+
+    doc = parse "<hr>\n"
+
+    expected = doc(raw("<hr>"))
+
+    assert_equal expected, doc
+  end
+
   def test_parse_html_no_html
     @parser.html = false
 
@@ -215,7 +255,7 @@ heading
   def test_parse_image
     doc = parse "image ![alt text](path/to/image.jpg)"
 
-    expected = doc(para("image path/to/image.jpg"))
+    expected = doc(para("image {alt text}[path/to/image.jpg]"))
 
     assert_equal expected, doc
   end
@@ -231,6 +271,32 @@ heading
 
   def test_parse_link_reference_id
     doc = parse <<-MD
+This is [an example][id] reference-style link.
+
+[id]: http://example.com "Optional Title Here"
+    MD
+
+    expected = doc(
+      para("This is {an example}[http://example.com] reference-style link."))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_link_reference_id_adjacent
+    doc = parse <<-MD
+[this] [this] should work
+
+[this]: example
+    MD
+
+    expected = doc(
+      para("{this}[example] should work"))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_link_reference_id_eof
+    doc = parse <<-MD.chomp
 This is [an example][id] reference-style link.
 
 [id]: http://example.com "Optional Title Here"
@@ -277,10 +343,22 @@ This is [an example][] reference-style link.
 * two
     MD
 
-    expected = @RM::Document.new(
-      @RM::List.new(:BULLET, *[
-        @RM::ListItem.new(nil, @RM::Paragraph.new("one\n")),
-        @RM::ListItem.new(nil, @RM::Paragraph.new("two\n"))]))
+    expected = doc(
+      list(:BULLET,
+        item(nil, para("one")),
+        item(nil, para("two"))))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_list_bullet_auto_link
+    doc = parse <<-MD
+* <http://example/>
+    MD
+
+    expected = doc(
+      list(:BULLET,
+        item(nil, para("http://example/"))))
 
     assert_equal expected, doc
   end
@@ -292,10 +370,23 @@ This is [an example][] reference-style link.
 * two
     MD
 
-    expected = @RM::Document.new(
-      @RM::List.new(:BULLET, *[
-        @RM::ListItem.new(nil, @RM::Paragraph.new("one\n")),
-        @RM::ListItem.new(nil, @RM::Paragraph.new("two\n"))]))
+    expected = doc(
+      list(:BULLET,
+        item(nil, para("one")),
+        item(nil, para("two"))))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_list_bullet_multiline
+    doc = parse <<-MD
+* one
+  two
+    MD
+
+    expected = doc(
+      list(:BULLET,
+        item(nil, para("one\n two"))))
 
     assert_equal expected, doc
   end
@@ -306,12 +397,13 @@ This is [an example][] reference-style link.
     * inner
     MD
 
-    expected = @RM::Document.new(
-      @RM::List.new(:BULLET, *[
-        @RM::ListItem.new(nil,
-          @RM::Paragraph.new("outer\n"),
-          @RM::List.new(:BULLET, *[
-            @RM::ListItem.new(nil, @RM::Paragraph.new("inner\n"))]))]))
+    expected = doc(
+      list(:BULLET,
+        item(nil,
+          para("outer"),
+          list(:BULLET,
+            item(nil,
+              para("inner"))))))
 
     assert_equal expected, doc
   end
@@ -323,12 +415,12 @@ This is [an example][] reference-style link.
     * inner
     MD
 
-    expected = @RM::Document.new(
-      @RM::List.new(:BULLET, *[
-        @RM::ListItem.new(nil,
-          @RM::Paragraph.new("outer\n"),
-          @RM::List.new(:BULLET, *[
-            @RM::ListItem.new(nil, @RM::Paragraph.new("inner\n"))]))]))
+    expected = doc(
+      list(:BULLET,
+        item(nil,
+          para("outer"),
+          list(:BULLET,
+            item(nil, para("inner"))))))
 
     assert_equal expected, doc
   end
@@ -337,19 +429,19 @@ This is [an example][] reference-style link.
     doc = parse <<-MD
 * outer
     * inner
-  continue
+  continue inner
 * outer 2
     MD
 
-    expected = @RM::Document.new(
-      @RM::List.new(:BULLET, *[
-        @RM::ListItem.new(nil,
-          @RM::Paragraph.new("outer\n"),
-          @RM::List.new(:BULLET, *[
-            @RM::ListItem.new(nil,
-              @RM::Paragraph.new("inner\n   continue\n"))])),
-        @RM::ListItem.new(nil,
-          @RM::Paragraph.new("outer 2\n"))]))
+    expected = doc(
+      list(:BULLET,
+        item(nil,
+          para("outer"),
+          list(:BULLET,
+            item(nil,
+              para("inner\n continue inner")))),
+        item(nil,
+          para("outer 2"))))
 
     assert_equal expected, doc
   end
@@ -360,10 +452,10 @@ This is [an example][] reference-style link.
 1. two
     MD
 
-    expected = @RM::Document.new(
-      @RM::List.new(:NUMBER, *[
-        @RM::ListItem.new(nil, @RM::Paragraph.new("one\n")),
-        @RM::ListItem.new(nil, @RM::Paragraph.new("two\n"))]))
+    expected = doc(
+      list(:NUMBER,
+        item(nil, para("one")),
+        item(nil, para("two"))))
 
     assert_equal expected, doc
   end
@@ -375,10 +467,10 @@ This is [an example][] reference-style link.
 1. two
     MD
 
-    expected = @RM::Document.new(
-      @RM::List.new(:NUMBER, *[
-        @RM::ListItem.new(nil, @RM::Paragraph.new("one\n")),
-        @RM::ListItem.new(nil, @RM::Paragraph.new("two\n"))]))
+    expected = doc(
+      list(:NUMBER,
+        item(nil, para("one")),
+        item(nil, para("two"))))
 
     assert_equal expected, doc
   end
@@ -395,7 +487,7 @@ Some text.[^1]
     expected = doc(
       para("Some text.{*1}[rdoc-label:foottext-1:footmark-1]"),
       @RM::Rule.new(1),
-      para("{^1}[rdoc-label:footmark-1:foottext-1] With a footnote\n"))
+      para("{^1}[rdoc-label:footmark-1:foottext-1] With a footnote"))
 
     assert_equal expected, doc
   end
@@ -413,8 +505,8 @@ Some text.[^1]
 
     expected = doc(
       para("Some text.{*1}[rdoc-label:foottext-1:footmark-1]"),
-      @RM::Rule.new(1),
-      para("{^1}[rdoc-label:footmark-1:foottext-1] With a footnote\n\nmore\n"))
+      rule(1),
+      para("{^1}[rdoc-label:footmark-1:foottext-1] With a footnote\n\nmore"))
 
     assert_equal expected, doc
   end
@@ -465,8 +557,7 @@ Some text. ^[With a footnote]
 
     doc = parse "<address>Links here</address>"
 
-    expected = @RM::Document.new(
-      @RM::Paragraph.new("<address>Links here</address>"))
+    expected = doc(raw("<address>Links here</address>"))
 
     assert_equal expected, doc
   end
@@ -476,8 +567,7 @@ Some text. ^[With a footnote]
 
     doc = parse "<address>Links here</address>"
 
-    expected = @RM::Document.new(
-      @RM::Paragraph.new("Links here"))
+    expected = doc()
 
     assert_equal expected, doc
   end
@@ -487,7 +577,7 @@ Some text. ^[With a footnote]
  text
     MD
 
-    expected = @RM::Document.new(@RM::Paragraph.new(" text"))
+    expected = doc(para("text"))
 
     assert_equal expected, doc
   end
@@ -497,7 +587,7 @@ Some text. ^[With a footnote]
   text
     MD
 
-    expected = @RM::Document.new(@RM::Paragraph.new(" text"))
+    expected = doc(para("text"))
 
     assert_equal expected, doc
   end
@@ -507,7 +597,7 @@ Some text. ^[With a footnote]
    text
     MD
 
-    expected = @RM::Document.new(@RM::Paragraph.new(" text"))
+    expected = doc(para("text"))
 
     assert_equal expected, doc
   end
@@ -535,6 +625,16 @@ Some text. ^[With a footnote]
 
     expected = @RM::Document.new(
       @RM::Paragraph.new("it worked"))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_reference_link_embedded_bracket
+    doc = parse "With [embedded [brackets]] [b].\n\n[b]: /url/\n"
+
+    expected =
+      doc(
+        para("With {embedded [brackets]}[/url/]."))
 
     assert_equal expected, doc
   end
@@ -581,6 +681,24 @@ Some text. ^[With a footnote]
     assert_equal expected, doc
   end
 
+  def test_parse_strong_emphasis_star
+    doc = parse "it ***works***\n"
+
+    expected = @RM::Document.new(
+      @RM::Paragraph.new("it <b>_works_</b>"))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_strong_emphasis_underscore
+    doc = parse "it ___works___\n"
+
+    expected = @RM::Document.new(
+      @RM::Paragraph.new("it <b>_works_</b>"))
+
+    assert_equal expected, doc
+  end
+
   def test_parse_style
     @parser.css = true
 
@@ -605,17 +723,23 @@ Some text. ^[With a footnote]
     text
     MD
 
-    expected = @RM::Document.new(@RM::Verbatim.new(["text\n"]))
+    expected = doc(verb("text\n"))
 
     assert_equal expected, doc
   end
 
-  def doc *a
-    @RM::Document.new(*a)
+  def test_parse_verbatim_eof
+    doc = parse "    text"
+
+    expected = doc(verb("text\n"))
+
+    assert_equal expected, doc
   end
 
-  def para *a
-    @RM::Paragraph.new(*a)
+  def test_strong
+    assert_equal '*word*',            @parser.strong('word')
+    assert_equal '<b>two words</b>',  @parser.strong('two words')
+    assert_equal '<b>_emphasis_</b>', @parser.strong('_emphasis_')
   end
 
   def parse text
