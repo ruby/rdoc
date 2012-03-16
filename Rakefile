@@ -72,6 +72,7 @@ end
 # requires ruby 1.8 and ruby 1.8 to build
 hoe.clean_globs -= PARSER_FILES.grep(/literals_/)
 
+task :generate => :isolate
 task :generate => PARSER_FILES
 
 rule '.rb' => '.ry' do |t|
