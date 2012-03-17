@@ -140,6 +140,43 @@ a block quote
     assert_equal expected, doc
   end
 
+  def test_parse_code_github
+    doc = parse <<-MD
+Example:
+
+```
+code goes here
+```
+    MD
+
+    expected =
+      doc(
+        para("Example:"),
+        verb("code goes here\n"))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_code_github_format
+    doc = parse <<-MD
+Example:
+
+``` ruby
+code goes here
+```
+    MD
+
+    code = verb("code goes here\n")
+    code.format = :ruby
+
+    expected =
+      doc(
+        para("Example:"),
+        code)
+
+    assert_equal expected, doc
+  end
+
   def test_parse_entity_dec
     doc = parse "Entity: &#65;"
 

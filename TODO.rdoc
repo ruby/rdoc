@@ -42,6 +42,7 @@ API changes to RDoc
   * Rename TopLevel to File
   * Rename Context to Container
   * Rename NormalClass to Class
+* Add versions to RDoc::Markup syntax tree marshal format
 
 === Crazy Ideas
 

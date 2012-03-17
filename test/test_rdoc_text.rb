@@ -12,6 +12,13 @@ class TestRDocText < RDoc::TestCase
     @top_level = RDoc::TopLevel.new 'file.rb'
   end
 
+  def mu_pp obj
+    s = ''
+    s = PP.pp obj, s
+    s = s.force_encoding Encoding.default_external if defined? Encoding
+    s.chomp
+  end
+
   def test_self_encode_fallback
     skip "Encoding not implemented" unless Object.const_defined? :Encoding
 
@@ -224,13 +231,16 @@ The comments associated with
   end
 
   def test_parse_format_tomdoc
+    code = verb('1 + 1')
+    code.format = :ruby
+
     expected =
-      @RM::Document.new(
-        @RM::Paragraph.new('It does a thing'),
-        @RM::BlankLine.new,
-        @RM::Heading.new(3, 'Examples'),
-        @RM::BlankLine.new,
-        @RM::Verbatim.new("1 + 1"))
+      doc(
+        para('It does a thing'),
+        blank_line,
+        head(3, 'Examples'),
+        blank_line,
+        code)
 
     text = <<-TOMDOC
 It does a thing

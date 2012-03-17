@@ -216,13 +216,16 @@ Examples
   1 + 1
     TEXT
 
+    code = verb("1 + 1\n")
+    code.format = :ruby
+
     expected =
-      @RM::Document.new(
-        @RM::Paragraph.new('Do some stuff'),
-        @RM::BlankLine.new,
-        @RM::Heading.new(3, 'Examples'),
-        @RM::BlankLine.new,
-        @RM::Verbatim.new("1 + 1\n"))
+      doc(
+        para('Do some stuff'),
+        blank_line,
+        head(3, 'Examples'),
+        blank_line,
+        code)
 
     document = @TD.parse(text)
     assert_equal expected, document
@@ -242,21 +245,25 @@ Signature
   foo(args)
     TEXT
 
-    expected =
-      @RM::Document.new(
-        @RM::Paragraph.new('Do some stuff'),
-        @RM::BlankLine.new,
-        @RM::Heading.new(3, 'Examples'),
-        @RM::BlankLine.new,
-        @RM::Verbatim.new("1 + 1\n"),
-        @RM::Heading.new(3, 'Signature'),
-        @RM::BlankLine.new,
-        @RM::Verbatim.new("foo(args)\n"))
+    code1 = verb("1 + 1\n")
+    code1.format = :ruby
 
-    document = @TD.parse(text)
+    code2 = verb("foo(args)\n")
+
+    expected =
+      doc(
+        para('Do some stuff'),
+        blank_line,
+        head(3, 'Examples'),
+        blank_line,
+        code1,
+        head(3, 'Signature'),
+        blank_line,
+        code2)
+
+    document = @TD.parse text
+
     assert_equal expected, document
-    assert document.parts[4].ruby?
-    refute document.parts.last.ruby?
   end
 
   def test_parse_returns

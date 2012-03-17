@@ -14,6 +14,10 @@ class RDoc::Markup::Verbatim < RDoc::Markup::Raw
     @format = nil
   end
 
+  def == other # :nodoc:
+    super and @format == other.format
+  end
+
   ##
   # Calls #accept_verbatim on +visitor+
 
@@ -43,6 +47,21 @@ class RDoc::Markup::Verbatim < RDoc::Markup::Raw
     parts.pop if parts.last =~ /\A\r?\n\z/
 
     @parts = parts
+  end
+
+  def pretty_print q # :nodoc:
+    self.class.name =~ /.*::(\w{1,4})/i
+
+    q.group 2, "[#{$1.downcase}: ", ']' do
+      if @format then
+        q.text "format: #{@format}"
+        q.breakable
+      end
+
+      q.seplist @parts do |part|
+        q.pp part
+      end
+    end
   end
 
   ##

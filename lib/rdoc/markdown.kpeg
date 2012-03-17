@@ -23,6 +23,15 @@
 #     h1 { font-size: 3em }
 #     </style>
 #
+# ### Github
+#
+# Enables a partial set of [github flavored markdown] [GFM].  This extension is
+# enabled by default.
+#
+# #### Fenced code blocks
+#
+# Use ` ``` ` around a block of code instead of indenting it four spaces.
+#
 # ### HTML
 #
 # Enables raw HTML to be included in the output.  This extension is enabled by
@@ -81,6 +90,7 @@
 #
 # [syntax]: http://daringfireball.net/projects/markdown/syntax
 # [pegmarkdown]: https://github.com/jgm/peg-markdown
+# [GFM]: http://github.github.com/github-flavored-markdown/
 
 }
 
@@ -101,6 +111,15 @@
   # Supported extensions
 
   EXTENSIONS = []
+
+  ##
+  # Extensions enabled by default
+
+  DEFAULT_EXTENSIONS = [
+    :github,
+    :html,
+    :notes,
+  ]
 
   ##
   # Creates extension methods for the `name` extension to enable and disable
@@ -126,6 +145,11 @@
   extension :css
 
   ##
+  # Allow Github Flavored Markdown
+
+  extension :github
+
+  ##
   # Allow HTML
 
   extension :html
@@ -148,7 +172,10 @@
   # TODO remove when kpeg 0.10 is released
   alias orig_initialize initialize # :nodoc:
 
-  def initialize extensions = [:html, :notes], debug = false
+  ##
+  # Creates a new markdown parser that enables the given +extensions+.
+
+  def initialize extensions = DEFAULT_EXTENSIONS, debug = false
     @debug      = debug
     @formatter  = RDoc::Markup::ToJoinedParagraph.new
     @extensions = extensions
@@ -347,6 +374,7 @@ Doc =       BOM? Block*:a { RDoc::Markup::Document.new(*a.compact) }
 Block =     BlankLine*
             ( BlockQuote
             | Verbatim
+            | CodeFence
             | Note
             | Reference
             | HorizontalRule
@@ -1009,3 +1037,14 @@ RawNoteBlock = StartList:a
                ( < BlankLine* > { a << text } )
                { a }
 
+CodeFence = &{ github? }
+            Ticks3 (Sp StrChunk:format)? Spnl < (
+              ( !"`" Nonspacechar )+ |
+              !Ticks3 "`"+ |
+              Spacechar |
+              Newline
+            )+ > Ticks3 Sp Newline*
+            { verbatim = RDoc::Markup::Verbatim.new text
+              verbatim.format = format.intern if format
+              verbatim
+            }
