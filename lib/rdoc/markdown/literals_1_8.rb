@@ -1,3 +1,9 @@
+# :markup: markdown
+
+##
+# Provides Literals appropriate for your ruby version.
+#--
+# This set of literals is for ruby 1.8 regular expressions.
 class RDoc::Markdown::Literals
   # :stopdoc:
 

@@ -1,4 +1,13 @@
 # coding: UTF-8
+# :markup: markdown
+
+##
+#--
+# This set of literals is for ruby 1.9 regular expressions and gives full
+# unicode support.
+#
+# Unlike peg-markdown, this set of literals recognizes Unicode alphanumeric
+# characters, newlines and spaces.
 class RDoc::Markdown::Literals
   # :stopdoc:
 

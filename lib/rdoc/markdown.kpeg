@@ -28,9 +28,16 @@
 # Enables a partial set of [github flavored markdown] [GFM].  This extension is
 # enabled by default.
 #
+# Supported github extensions include:
+#
 # #### Fenced code blocks
 #
 # Use ` ``` ` around a block of code instead of indenting it four spaces.
+#
+# #### Syntax highlighting
+#
+# Use ` ``` ruby ` as the start of a code fence to add syntax highlighting.
+# (Currently only `ruby` syntax is supported).
 #
 # ### HTML
 #
@@ -54,6 +61,13 @@
 #     ...
 #
 #     [^1]: With the footnote text down at the bottom
+#
+# ### RDoc
+#
+# RDoc extensions cannot be disabled since the happen after Markdown parsing
+# during output.
+#
+# For HTML output RDoc always auto-links all URLs.
 #
 # ## Limitations
 #
@@ -121,6 +135,8 @@
     :notes,
   ]
 
+  # :section: Extensions
+
   ##
   # Creates extension methods for the `name` extension to enable and disable
   # the extension and to query if they are active.
@@ -158,6 +174,8 @@
   # Enables the notes extension
 
   extension :notes
+
+  # :section:
 
   ##
   # Parses the `markdown` document into an RDoc::Document using the default
@@ -200,6 +218,8 @@
   end
 
   ##
+  # :category: Extensions
+  #
   # Is the extension `name` enabled?
 
   def extension? name
@@ -209,6 +229,8 @@
   end
 
   ##
+  # :category: Extensions
+  #
   # Enables or disables the extension with `name`
 
   def extension name, enable
