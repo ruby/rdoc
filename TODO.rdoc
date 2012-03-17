@@ -8,10 +8,8 @@ Blockers:
 * The alias keyword should not be bidirectional
 * Github extensions to markdown
 * Fix RDoc::Parser#use_markup to handle the filename (see TODO)
-* Fix markdown link:
-    [peg-markdown][pegmarkdown]
-
-    [pegmarkdown]: https://...
+* Restore backwards compatibility due to paragraph text joining from existing
+  ri files
 
 Nice to have:
 

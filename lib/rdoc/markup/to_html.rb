@@ -73,6 +73,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @in_list_entry = nil
     @list = nil
     @th = nil
+    @hard_break = "<br>\n"
 
     # external links
     @markup.add_special(/((link:|https?:|mailto:|ftp:|irc:|www\.)\S+\w)/,
@@ -90,6 +91,13 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # :section: Special Handling
   #
   # These methods handle special markup added by RDoc::Markup#add_special.
+
+  ##
+  # +special+ is a <code><br></code> that is not converted.
+
+  def handle_special_HARD_BREAK special
+    special.text
+  end
 
   ##
   # +special+ is a potential link.  The following schemes are handled:
@@ -179,9 +187,10 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   ##
   # Adds +paragraph+ to the output
 
-  def accept_paragraph(paragraph)
+  def accept_paragraph paragraph
     @res << "\n<p>"
-    @res << wrap(to_html(paragraph.text))
+    text = paragraph.text @hard_break
+    @res << wrap(to_html(text))
     @res << "</p>\n"
   end
 
@@ -288,7 +297,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # :section: Utilities
 
   ##
-  # CGI escapes +text+
+  # CGI-escapes +text+
 
   def convert_string(text)
     CGI.escapeHTML text

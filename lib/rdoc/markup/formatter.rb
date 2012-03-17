@@ -23,11 +23,14 @@ class RDoc::Markup::Formatter
   def initialize markup = nil
     @markup = markup || RDoc::Markup.new
     @am     = @markup.attribute_manager
+    @am.add_special(/<br>/, :HARD_BREAK)
 
     @attr_tags = []
 
     @in_tt = 0
     @tt_bit = RDoc::Markup::Attribute.bitmap_for :TT
+
+    @hard_break = ''
   end
 
   ##

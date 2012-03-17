@@ -245,6 +245,10 @@ class TestRDocMarkupToRDoc < RDoc::Markup::TextFormatterTestCase
     assert_equal "reg <b>bold words</b> reg\n", @to.end_accepting
   end
 
+  def accept_paragraph_break
+    assert_equal "hello\nworld\n", @to.end_accepting
+  end
+
   def accept_paragraph_i
     assert_equal "reg <em>italic words</em> reg\n", @to.end_accepting
   end

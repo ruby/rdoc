@@ -471,6 +471,10 @@ The comments associated with
     assert_equal 'S', to_html('\\S')
   end
 
+  def test_to_html_br
+    assert_equal '<br>', to_html('<br>')
+  end
+
   def test_to_html_copyright
     assert_equal '©', to_html('(c)')
   end

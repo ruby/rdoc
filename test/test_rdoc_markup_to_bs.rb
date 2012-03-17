@@ -255,6 +255,12 @@ class TestRDocMarkupToBs < RDoc::Markup::TextFormatterTestCase
                  @to.end_accepting
   end
 
+  def accept_paragraph_break
+    skip "No String#chars, upgrade your ruby" unless ''.respond_to? :chars
+    assert_equal "hello\nworld\n",
+                 @to.end_accepting
+  end
+
   def accept_paragraph_i
     skip "No String#chars, upgrade your ruby" unless ''.respond_to? :chars
     assert_equal "reg _\bi_\bt_\ba_\bl_\bi_\bc_\b _\bw_\bo_\br_\bd_\bs reg\n",

@@ -235,6 +235,12 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_equal 18, @to.characters
   end
 
+  def accept_paragraph_break
+    assert_equal "<p>hello<br>\nworld\n", @to.res.join
+
+    assert_equal 15, @to.characters
+  end
+
   def accept_paragraph_i
     assert_equal "<p>reg <em>italic words</em> reg\n", @to.res.join
 
@@ -424,8 +430,8 @@ and an ellipsis must follow
 
     actual = @to.convert rdoc
 
-    assert_equal 111, @to.characters
     assert_equal expected, actual
+    assert_equal 111, @to.characters, 'snippet character length'
   end
 
   def test_convert_limit_2
@@ -444,7 +450,7 @@ be guessed, raises an error if +name+ couldn't be guessed.
     actual = @to.convert rdoc
 
     assert_equal expected, actual
-    assert_equal 159, @to.characters
+    assert_equal 159, @to.characters, 'snippet character length'
   end
 
   def test_convert_limit_paragraphs

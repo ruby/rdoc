@@ -201,19 +201,19 @@ class RDoc::Markup::Parser
     until @tokens.empty? do
       type, data, column, = get
 
-      if type == :TEXT && column == margin then
+      if type == :TEXT and column == margin then
         paragraph << data
 
-        if peek_token[0] == :BREAK then
-          break
-        end
+        break if peek_token.first == :BREAK
 
-        skip :NEWLINE
+        data << ' ' if skip :NEWLINE
       else
         unget
         break
       end
     end
+
+    paragraph.parts.last.sub!(/ \z/, '') # cleanup
 
     p :paragraph_end => margin if @debug
 

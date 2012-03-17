@@ -766,7 +766,7 @@ NormalEndline =   Sp Newline !BlankLine !">" !AtxStart
 
 TerminalEndline = Sp Newline Eof
 
-LineBreak = < "  " NormalEndline > { text }
+LineBreak = < "  " NormalEndline > { RDoc::Markup::HardBreak.new }
 
 Symbol = < SpecialChar >
          { text }

@@ -35,5 +35,19 @@ class TestRDocMarkupIndentedParagraph < RDoc::TestCase
     refute_equal one, two
   end
 
+  def test_text
+    paragraph = @IP.new(2, 'hello', ' world')
+
+    assert_equal 'hello world', paragraph.text
+  end
+
+  def test_text_break
+    paragraph = @IP.new(2, 'hello', hard_break, 'world')
+
+    assert_equal 'helloworld', paragraph.text
+
+    assert_equal "hello\n  world", paragraph.text("\n")
+  end
+
 end
 

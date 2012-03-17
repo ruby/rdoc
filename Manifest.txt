@@ -100,6 +100,7 @@ lib/rdoc/markup/block_quote.rb
 lib/rdoc/markup/document.rb
 lib/rdoc/markup/formatter.rb
 lib/rdoc/markup/formatter_test_case.rb
+lib/rdoc/markup/hard_break.rb
 lib/rdoc/markup/heading.rb
 lib/rdoc/markup/include.rb
 lib/rdoc/markup/indented_paragraph.rb
@@ -215,6 +216,7 @@ test/test_rdoc_markup.rb
 test/test_rdoc_markup_attribute_manager.rb
 test/test_rdoc_markup_document.rb
 test/test_rdoc_markup_formatter.rb
+test/test_rdoc_markup_hard_break.rb
 test/test_rdoc_markup_heading.rb
 test/test_rdoc_markup_include.rb
 test/test_rdoc_markup_indented_paragraph.rb
@@ -227,6 +229,7 @@ test/test_rdoc_markup_to_bs.rb
 test/test_rdoc_markup_to_html.rb
 test/test_rdoc_markup_to_html_crossref.rb
 test/test_rdoc_markup_to_html_snippet.rb
+test/test_rdoc_markup_to_joined_paragraph.rb
 test/test_rdoc_markup_to_label.rb
 test/test_rdoc_markup_to_rdoc.rb
 test/test_rdoc_markup_to_table_of_contents.rb

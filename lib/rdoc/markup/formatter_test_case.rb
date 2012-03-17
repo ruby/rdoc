@@ -34,7 +34,7 @@ require 'minitest/unit'
 #
 #  end
 
-class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
+class RDoc::Markup::FormatterTestCase < RDoc::TestCase
 
   ##
   # Call #setup when inheriting from this test case.
@@ -53,7 +53,6 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
   def setup
     super
 
-    @RM = RDoc::Markup
     @m = @RM.new
 
     @bullet_list = @RM::List.new(:BULLET,
@@ -230,6 +229,17 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
         @to.accept_paragraph @RM::Paragraph.new('reg <b>bold words</b> reg')
 
         accept_paragraph_b
+      end
+
+      ##
+      # Calls accept_paragraph with a Paragraph containing a hard break
+
+      def test_accept_paragraph_break
+        @to.start_accepting
+
+        @to.accept_paragraph para('hello', hard_break, 'world')
+
+        accept_paragraph_break
       end
 
       ##
@@ -669,22 +679,23 @@ class RDoc::Markup::FormatterTestCase < MiniTest::Unit::TestCase
       # Calls list_verbatim with a list containing a verbatim block
 
       def test_list_verbatim # HACK overblown
-        doc = @RM::Document.new(
-                @RM::List.new(:BULLET,
-                  @RM::ListItem.new(nil,
-                    @RM::Paragraph.new('list', 'stuff'),
-                    @RM::BlankLine.new,
-                    @RM::Verbatim.new("* list\n",
-                                      "  with\n",
-                                      "\n",
-                                      "  second\n",
-                                      "\n",
-                                      "  1. indented\n",
-                                      "  2. numbered\n",
-                                      "\n",
-                                      "  third\n",
-                                      "\n",
-                                      "* second\n"))))
+        doc =
+          doc(
+            list(:BULLET,
+              item(nil,
+                para('list stuff'),
+                blank_line,
+                verb("* list\n",
+                     "  with\n",
+                     "\n",
+                     "  second\n",
+                     "\n",
+                     "  1. indented\n",
+                     "  2. numbered\n",
+                     "\n",
+                     "  third\n",
+                     "\n",
+                     "* second\n"))))
 
         doc.accept @to
 

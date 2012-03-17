@@ -813,6 +813,7 @@ https://github.com/rdoc/rdoc/issues
   autoload :BlankLine,             'rdoc/markup/blank_line'
   autoload :BlockQuote,            'rdoc/markup/block_quote'
   autoload :Document,              'rdoc/markup/document'
+  autoload :HardBreak,             'rdoc/markup/hard_break'
   autoload :Heading,               'rdoc/markup/heading'
   autoload :Include,               'rdoc/markup/include'
   autoload :IndentedParagraph,     'rdoc/markup/indented_paragraph'

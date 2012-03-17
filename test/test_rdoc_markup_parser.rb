@@ -146,13 +146,11 @@ the time
     STR
 
     expected = [
-      @RM::List.new(:BULLET, *[
-        @RM::ListItem.new(nil,
-          @RM::Paragraph.new('l1', 'l1+')),
-        @RM::ListItem.new(nil,
-          @RM::Paragraph.new('l2')),
-      ]),
-    ]
+      list(:BULLET,
+        item(nil,
+          para('l1 ', 'l1+')),
+        item(nil,
+          para('l2')))]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -189,16 +187,16 @@ the time
     STR
 
     expected = [
-      @RM::List.new(:BULLET, *[
-        @RM::ListItem.new(nil,
-          @RM::Paragraph.new('l1'),
-          @RM::List.new(:BULLET, *[
-            @RM::ListItem.new(nil,
-              @RM::Paragraph.new('l1.1', 'text'),
-              @RM::Verbatim.new("code\n", "  code\n"),
-              @RM::Paragraph.new('text'))])),
-        @RM::ListItem.new(nil,
-          @RM::Paragraph.new('l2'))])]
+      list(:BULLET,
+        item(nil,
+          para('l1'),
+          list(:BULLET,
+            item(nil,
+              para('l1.1 ', 'text'),
+              verb("code\n", "  code\n"),
+              para('text')))),
+        item(nil,
+          para('l2')))]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -361,11 +359,11 @@ the time
     STR
 
     expected = [
-      @RM::List.new(:LABEL, *[
-        @RM::ListItem.new('cat',
-          @RM::Paragraph.new('l1', 'continuation')),
-        @RM::ListItem.new('dog',
-          @RM::Paragraph.new('l2'))])]
+      list(:LABEL,
+        item('cat',
+          para('l1 ', 'continuation')),
+        item('dog',
+          para('l2')))]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -445,9 +443,9 @@ a. 新しい機能
     str = "now is\nthe time  \nfor all"
 
     expected = [
-      @RM::Paragraph.new('now is', 'the time'),
-      @RM::BlankLine.new,
-      @RM::Paragraph.new('for all')]
+      para('now is ', 'the time'),
+      blank_line,
+      para('for all')]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -632,7 +630,7 @@ for all good men
   def test_parse_paragraph_multiline
     str = "now is the time\nfor all good men"
 
-    expected = @RM::Paragraph.new 'now is the time', 'for all good men'
+    expected = @RM::Paragraph.new 'now is the time ', 'for all good men'
     assert_equal [expected], @RMP.parse(str).parts
   end
 

@@ -57,6 +57,8 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
     @headings[4] = ['==== ',   '']
     @headings[5] = ['===== ',  '']
     @headings[6] = ['====== ', '']
+
+    @hard_break = "\n"
   end
 
   ##
@@ -170,7 +172,8 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   # Adds +paragraph+ to the output
 
   def accept_paragraph paragraph
-    wrap attributes(paragraph.text)
+    text = paragraph.text @hard_break
+    wrap attributes text
   end
 
   ##
@@ -178,7 +181,8 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
 
   def accept_indented_paragraph paragraph
     @indent += paragraph.indent
-    wrap attributes(paragraph.text)
+    text = paragraph.text @hard_break
+    wrap attributes text
     @indent -= paragraph.indent
   end
 

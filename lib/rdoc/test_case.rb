@@ -42,6 +42,13 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
   end
 
   ##
+  # Shortcut for RDoc::Markup::BlankLine.new
+
+  def blank_line
+    @RM::BlankLine.new
+  end
+
+  ##
   # Shortcut for RDoc::Markup::BlockQuote.new with +contents+
 
   def block *contents
@@ -61,6 +68,13 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
 
   def doc *contents
     @RM::Document.new(*contents)
+  end
+
+  ##
+  # Shortcut for RDoc::Markup::HardBreak.new
+
+  def hard_break
+    @RM::HardBreak.new
   end
 
   ##

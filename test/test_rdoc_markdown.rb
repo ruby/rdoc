@@ -264,7 +264,7 @@ heading
     doc = parse "Some text  \nwith extra lines"
 
     expected = doc(
-      para("Some text  \nwith extra lines"))
+      para("Some text", hard_break, "with extra lines"))
 
     assert_equal expected, doc
   end

@@ -236,7 +236,7 @@ class RDoc::Markup::AttributeManager
   ##
   # Processes +str+ converting attributes, HTML and specials
 
-  def flow(str)
+  def flow str
     @str = str
 
     mask_protected_sequences
