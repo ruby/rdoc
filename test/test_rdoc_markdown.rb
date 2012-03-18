@@ -213,8 +213,29 @@ code goes here
   def test_parse_emphasis_underscore
     doc = parse "it _works_\n"
 
-    expected = @RM::Document.new(
-      @RM::Paragraph.new("it _works_"))
+    expected =
+      doc(
+        para("it _works_"))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_emphasis_underscore_embedded
+    doc = parse "foo_bar bar_baz\n"
+
+    expected =
+      doc(
+        para("foo_bar bar_baz"))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_emphasis_underscore_in_word
+    doc = parse "it foo_bar_baz\n"
+
+    expected =
+      doc(
+        para("it foo_bar_baz"))
 
     assert_equal expected, doc
   end

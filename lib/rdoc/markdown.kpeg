@@ -64,15 +64,19 @@
 #
 # ### RDoc
 #
-# RDoc extensions cannot be disabled since the happen after Markdown parsing
-# during output.
+# The RDoc Markdown parser has the following built-in behaviors that cannot be
+# disabled.
 #
-# For HTML output RDoc always auto-links all URLs.
+# Underscores embedded in words are never interpreted as emphasis.  (While the
+# [markdown dingus][dingus] emphasizes in-word underscores, neither the
+# Markdown syntax nor MarkdownTest mention this behavior.)
+#
+# For HTML output, RDoc always auto-links bare URLs.
 #
 # ## Limitations
 #
 # * Link titles are not used
-# * Image links are not always generated correctly
+# * Image links are not generated correctly
 # * Footnotes are collapsed into a single paragraph
 #
 # ## Author
@@ -105,6 +109,7 @@
 # [syntax]: http://daringfireball.net/projects/markdown/syntax
 # [pegmarkdown]: https://github.com/jgm/peg-markdown
 # [GFM]: http://github.github.com/github-flavored-markdown/
+# [dingus]: http://daringfireball.net/projects/markdown/dingus
 
 }
 
