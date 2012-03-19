@@ -12,6 +12,17 @@
 # The following markdown extensions are supported by the parser, but not all
 # are used in RDoc output by default.
 #
+# ### RDoc
+#
+# The RDoc Markdown parser has the following built-in behaviors that cannot be
+# disabled.
+#
+# Underscores embedded in words are never interpreted as emphasis.  (While the
+# [markdown dingus][dingus] emphasizes in-word underscores, neither the
+# Markdown syntax nor MarkdownTest mention this behavior.)
+#
+# For HTML output, RDoc always auto-links bare URLs.
+#
 # ### CSS
 #
 # Enables CSS blocks to be included in the output, but they are not used by
@@ -61,17 +72,6 @@
 #     ...
 #
 #     [^1]: With the footnote text down at the bottom
-#
-# ### RDoc
-#
-# The RDoc Markdown parser has the following built-in behaviors that cannot be
-# disabled.
-#
-# Underscores embedded in words are never interpreted as emphasis.  (While the
-# [markdown dingus][dingus] emphasizes in-word underscores, neither the
-# Markdown syntax nor MarkdownTest mention this behavior.)
-#
-# For HTML output, RDoc always auto-links bare URLs.
 #
 # ## Limitations
 #
