@@ -83,7 +83,11 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @markup.add_special(/rdoc-[a-z]+:\S+/, :RDOCLINK)
 
     # and links of the form  <text>[<url>]
-    @markup.add_special(/(((\{.*?\})|\b\S+?)\[\S+?\])/, :TIDYLINK)
+    @markup.add_special(/((
+                           (\{.*?\})     # multi-word label
+                           |\b[^\s{}]+?) # single-word label
+                          \[\S+?\])      # link target
+                        /x, :TIDYLINK)
 
     init_tags
   end

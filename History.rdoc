@@ -7,6 +7,10 @@
     <tt>rdoc --markup markdown --write-options</tt>
   * Added a table of contents to the sidebar.
 
+* Bug fixes
+  * A word that is directly followed by a multi-word tidy link label no longer
+    disappears.  (Like <code>text{link}[http://example]</code>)
+
 === 3.12 / 2011-12-15
 
 * Minor enhancements
@@ -18,7 +22,7 @@
   * RDoc now supports irc-scheme hyperlinks.  Issue #83 by trans.
 
 * Bug fixes
-  * Fix title on HTML output for pages.
+  * Fixed title on HTML output for pages.
   * Fixed parsing of non-indented HEREDOC.
   * Fixed parsing of <code>%w[]</code> and other % literals.  Issue #84 by
     Erik Hollensbe
