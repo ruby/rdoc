@@ -177,6 +177,62 @@ code goes here
     assert_equal expected, doc
   end
 
+  def test_parse_definition_list
+    doc = parse <<-MD
+one
+:   This is a definition
+
+two
+:   This is another definition
+    MD
+
+    expected = doc(
+      list(:NOTE,
+        item("one", para("This is a definition")),
+        item("two", para("This is another definition"))))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_definition_list_no
+    @parser.definition_lists = false
+
+    doc = parse <<-MD
+one
+:   This is a definition
+
+two
+:   This is another definition
+    MD
+
+    expected = doc(
+        para("one\n: This is a definition"),
+        para("two\n: This is another definition"))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_definition_list_multiline
+    doc = parse <<-MD
+one
+:   This is a definition
+that extends to two lines
+
+two
+:   This is another definition
+that also extends to two lines
+    MD
+
+    expected = doc(
+      list(:NOTE,
+        item("one",
+          para("This is a definition\nthat extends to two lines")),
+        item("two",
+          para("This is another definition\nthat also extends to two lines"))))
+
+    assert_equal expected, doc
+  end
+
   def test_parse_entity_dec
     doc = parse "Entity: &#65;"
 
@@ -587,7 +643,7 @@ Some text. ^[With a footnote]
   def test_parse_note_no_notes
     @parser.notes = false
 
-    assert_raises RuntimeError do
+    assert_raises RuntimeError do # TODO use a real error
       parse "Some text.[^1]"
     end
   end

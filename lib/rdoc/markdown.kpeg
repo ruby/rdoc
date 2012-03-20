@@ -41,6 +41,35 @@
 #     h1 { font-size: 3em }
 #     </style>
 #
+# ### Definition Lists
+#
+# The definition_lists extension allows definition lists using the [PHP
+# Markdown Extra syntax][PHPE], but only one label and definition are supported
+# at this time.  This extension is enabled by default.
+#
+# Example:
+#
+# ```
+# cat
+# :   A small furry mammal
+# that seems to sleep a lot
+#
+# ant
+# :   A little insect that is known
+# to enjoy picnics
+# 
+# ```
+#
+# Produces:
+#
+# cat
+# :   A small furry mammal
+# that seems to sleep a lot
+#
+# ant
+# :   A little insect that is known
+# to enjoy picnics
+#
 # ### Github
 #
 # The #github extension enables a partial set of [Github Flavored Markdown]
@@ -75,11 +104,17 @@
 #
 # Example:
 #
-#     Here is some text[^1] that continues
+#     Here is some text[^1] including an inline footnote ^[for short footnotes]
 #
 #     ...
 #
 #     [^1]: With the footnote text down at the bottom
+#
+# Produces:
+#
+# Here is some text[^1] including an inline footnote ^[for short footnotes]
+#
+# [^1]: With the footnote text down at the bottom
 #
 # ## Limitations
 #
@@ -114,10 +149,11 @@
 #
 # The port to kpeg was performed by Eric Hodel and Evan Phoenix
 #
-# [syntax]: http://daringfireball.net/projects/markdown/syntax
-# [pegmarkdown]: https://github.com/jgm/peg-markdown
-# [GFM]: http://github.github.com/github-flavored-markdown/
 # [dingus]: http://daringfireball.net/projects/markdown/dingus
+# [GFM]: http://github.github.com/github-flavored-markdown/
+# [pegmarkdown]: https://github.com/jgm/peg-markdown
+# [PHPE]: http://michelf.com/projects/php-markdown/extra/#def-list
+# [syntax]: http://daringfireball.net/projects/markdown/syntax
 
 }
 
@@ -143,6 +179,7 @@
   # Extensions enabled by default
 
   DEFAULT_EXTENSIONS = [
+    :definition_lists,
     :github,
     :html,
     :notes,
@@ -177,6 +214,11 @@
   # Allow style blocks
 
   extension :css
+
+  ##
+  # Allow PHP Markdown Extras style definition lists
+
+  extension :definition_lists
 
   ##
   # Allow Github Flavored Markdown
@@ -437,6 +479,7 @@ Block =     BlankLine*
             | Heading
             | OrderedList
             | BulletList
+            | DefinitionList
             | HtmlBlock
             | StyleBlock
             | Para
@@ -1104,3 +1147,17 @@ CodeFence = &{ github? }
               verbatim.format = format.intern if format
               verbatim
             }
+
+DefinitionList = &{ definition_lists? }
+                 ( DefinitionListItem+:list )
+                 { RDoc::Markup::List.new :NOTE, *list }
+
+DefinitionListItem = DefinitionListLabel:label
+                     DefinitionListDefinition:defn
+                     { RDoc::Markup::ListItem.new label, defn }
+
+DefinitionListLabel = StrChunk:label Spnl
+                      { label }
+
+DefinitionListDefinition = ":" NonindentSpace Inlines:a BlankLine+
+                           { paragraph a }
