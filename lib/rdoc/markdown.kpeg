@@ -23,10 +23,17 @@
 #
 # For HTML output, RDoc always auto-links bare URLs.
 #
+# ### Break on Newline
+#
+# The break_on_newline extension converts all newlines into hard line breaks
+# as in [Github Flavored Markdown][GFM].  This extension is disabled by
+# default.
+#
 # ### CSS
 #
-# Enables CSS blocks to be included in the output, but they are not used by
-# RDoc.  This extension is disabled by default.
+# The #css extension enables CSS blocks to be included in the output, but they
+# are not used for any built-in RDoc output format.  This extension is disabled
+# by default.
 #
 # Example:
 #
@@ -36,8 +43,8 @@
 #
 # ### Github
 #
-# Enables a partial set of [github flavored markdown] [GFM].  This extension is
-# enabled by default.
+# The #github extension enables a partial set of [Github Flavored Markdown]
+# [GFM].  This extension is enabled by default.
 #
 # Supported github extensions include:
 #
@@ -63,7 +70,8 @@
 #
 # ### Notes
 #
-# Enables footnote support.  This extension is enabled by default.
+# The #notes extension enables footnote support.  This extension is enabled by
+# default.
 #
 # Example:
 #
@@ -159,6 +167,11 @@
       end
     RUBY
   end
+
+  ##
+  # Converts all newlines into hard breaks
+
+  extension :break_on_newline
 
   ##
   # Allow style blocks
@@ -315,6 +328,22 @@
   alias peg_parse parse # :nodoc:
 
   ##
+  # Creates an RDoc::Markup::Paragraph from `parts` and including
+  # extension-specific behavior
+
+  def paragraph parts
+    parts = parts.map do |part|
+      if "\n" == part then
+        RDoc::Markup::HardBreak.new
+      else
+        part
+      end
+    end if break_on_newline?
+
+    RDoc::Markup::Paragraph.new(*parts)
+  end
+
+  ##
   # Parses `markdown` into an RDoc::Document
 
   def parse markdown
@@ -414,10 +443,10 @@ Block =     BlankLine*
             | Plain )
 
 Para =      NonindentSpace Inlines:a BlankLine+
-            { RDoc::Markup::Paragraph.new(*a) }
+            { paragraph a }
 
 Plain =     Inlines:a
-            { RDoc::Markup::Paragraph.new(*a) }
+            { paragraph a }
 
 AtxInline = !Newline !(Sp? "#"* Sp Newline) Inline
 
@@ -1040,7 +1069,7 @@ Note =          &{ notes? }
                 RawNoteBlock:l
                 ( &Indent RawNoteBlock:i { a.concat i } )*
                 { a.unshift note ref
-                  @footnotes << RDoc::Markup::Paragraph.new(*a)
+                  @footnotes << paragraph(a)
                   nil
                 }
 
@@ -1052,7 +1081,7 @@ InlineNote = &{ notes? }
              { ref = @footnotes.length + 1
                a.unshift note ref
 
-               @footnotes << RDoc::Markup::Paragraph.new(*a)
+               @footnotes << paragraph(a)
 
                note_for ref
              }

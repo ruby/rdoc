@@ -595,8 +595,23 @@ Some text. ^[With a footnote]
   def test_parse_paragraph
     doc = parse "it worked\n"
 
-    expected = @RM::Document.new(
-      @RM::Paragraph.new("it worked"))
+    expected = doc(para("it worked"))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_paragraph_break_on_newline
+    @parser.break_on_newline = true
+
+    doc = parse "one\ntwo\n"
+
+    expected = doc(para("one", hard_break, "two"))
+
+    assert_equal expected, doc
+
+    doc = parse "one  \ntwo\nthree\n"
+
+    expected = doc(para("one", hard_break, "two", hard_break, "three"))
 
     assert_equal expected, doc
   end
