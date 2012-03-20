@@ -76,17 +76,19 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @hard_break = "<br>\n"
 
     # external links
-    @markup.add_special(/((link:|https?:|mailto:|ftp:|irc:|www\.)\S+\w)/,
+    @markup.add_special(/(?:link:|https?:|mailto:|ftp:|irc:|www\.)\S+\w/,
                         :HYPERLINK)
 
     # internal links
     @markup.add_special(/rdoc-[a-z]+:\S+/, :RDOCLINK)
 
     # and links of the form  <text>[<url>]
-    @markup.add_special(/((
-                           (\{.*?\})     # multi-word label
-                           |\b[^\s{}]+?) # single-word label
-                          \[\S+?\])      # link target
+    @markup.add_special(/(?:
+                          \{.*?\} |   # multi-word label
+                          \b[^\s{}]+? # single-word label
+                         )
+
+                         \[\S+?\]     # link target
                         /x, :TIDYLINK)
 
     init_tags
