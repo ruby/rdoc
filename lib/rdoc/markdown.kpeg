@@ -1155,11 +1155,20 @@ CodeFence = &{ github? }
 
 DefinitionList = &{ definition_lists? }
                  ( DefinitionListItem+:list )
-                 { RDoc::Markup::List.new :NOTE, *list }
+                 { RDoc::Markup::List.new :NOTE, *list.flatten }
 
-DefinitionListItem = DefinitionListLabel:label
-                     DefinitionListDefinition:defn
-                     { RDoc::Markup::ListItem.new label, defn }
+DefinitionListItem = ( DefinitionListLabel+ ):label
+                     ( DefinitionListDefinition+ ):defn
+                     { list_items = []
+                       list_items <<
+                         RDoc::Markup::ListItem.new(label, defn.shift)
+
+                       list_items.concat defn.map { |defn|
+                         RDoc::Markup::ListItem.new nil, defn
+                       } unless list_items.empty?
+
+                       list_items
+                     }
 
 DefinitionListLabel = StrChunk:label Sp Newline
                       { label }

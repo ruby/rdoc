@@ -242,6 +242,16 @@ class TestRDocMarkupToAnsi < RDoc::Markup::TextFormatterTestCase
                  @to.res.join
   end
 
+  def accept_list_item_start_note_multi_description
+    assert_equal "\e[0mlabel:\n  description one\n\n  description two\n\n",
+                 @to.res.join
+  end
+
+  def accept_list_item_start_note_multi_label
+    assert_equal "\e[0mone\ntwo:\n  two headers\n\n",
+                 @to.res.join
+  end
+
   def accept_paragraph_b
     assert_equal "\e[0mreg \e[1mbold words\e[m reg\n", @to.end_accepting
   end

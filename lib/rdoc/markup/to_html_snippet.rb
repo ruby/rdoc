@@ -138,7 +138,13 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     when :BULLET, :LALPHA, :NUMBER, :UALPHA then
       "<p>"
     when :LABEL, :NOTE then
-      start = "<p>#{to_html list_item.label} &mdash; "
+      labels = Array(list_item.label).map do |label|
+        to_html label
+      end.join ', '
+
+      labels << " &mdash; " unless labels.empty?
+
+      start = "<p>#{labels}"
       @characters += 1 # try to include the label
       start
     else

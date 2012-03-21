@@ -178,6 +178,14 @@ class TestRDocMarkupToTtOnly < RDoc::Markup::FormatterTestCase
     assert_equal [nil, 'teletype', nil], @to.res
   end
 
+  def accept_list_item_start_note_multi_description
+    assert_empty @to.res
+  end
+
+  def accept_list_item_start_note_multi_label
+    assert_empty @to.res
+  end
+
   def accept_paragraph_b
     assert_empty @to.end_accepting
   end

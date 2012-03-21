@@ -1,5 +1,24 @@
 ##
-# A List of ListItems
+# A List is a homogeneous set of ListItems.
+#
+# The supported list types include:
+#
+# :BULLET::
+#   An unordered list
+# :LABEL::
+#   An unordered definition list, but using an alternate RDoc::Markup syntax
+# :LALPHA::
+#   An ordered list using increasing lowercase English letters
+# :NOTE::
+#   An unordered definition list
+# :NUMBER::
+#   An ordered list using increasing Arabic numerals
+# :UALPHA::
+#   An ordered list using increasing uppercase English letters
+#
+# Definition lists behave like HTML definition lists.  Each list item can
+# describe multiple terms.  See RDoc::Markup::ListItem for how labels and
+# definition are stored as list items.
 
 class RDoc::Markup::List
 

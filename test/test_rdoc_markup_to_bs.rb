@@ -249,6 +249,15 @@ class TestRDocMarkupToBs < RDoc::Markup::TextFormatterTestCase
     assert_equal "teletype:\n  teletype description\n\n", @to.res.join
   end
 
+  def accept_list_item_start_note_multi_description
+    assert_equal "label:\n  description one\n\n  description two\n\n",
+                 @to.res.join
+  end
+
+  def accept_list_item_start_note_multi_label
+    assert_equal "one\ntwo:\n  two headers\n\n", @to.res.join
+  end
+
   def accept_paragraph_b
     skip "No String#chars, upgrade your ruby" unless ''.respond_to? :chars
     assert_equal "reg b\bbo\bol\bld\bd \b w\bwo\bor\brd\bds\bs reg\n",

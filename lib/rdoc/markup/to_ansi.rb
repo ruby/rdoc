@@ -56,7 +56,13 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
              when :BULLET then
                '*'
              when :NOTE, :LABEL then
-               attributes(list_item.label).strip + ":\n"
+               labels = Array(list_item.label).map do |label|
+                 attributes(label).strip
+               end.join "\n"
+
+               labels << ":\n" unless labels.empty?
+
+               labels
              else
                @list_index.last.to_s + '.'
              end

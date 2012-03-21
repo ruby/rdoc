@@ -370,7 +370,9 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     when :BULLET, :LALPHA, :NUMBER, :UALPHA then
       "<li>"
     when :LABEL, :NOTE then
-      "<dt>#{to_html list_item.label}\n<dd>"
+      Array(list_item.label).map do |label|
+        "<dt>#{to_html label}\n"
+      end.join << "<dd>"
     else
       raise RDoc::Error, "Invalid list type: #{list_type.inspect}"
     end

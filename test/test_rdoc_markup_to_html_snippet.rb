@@ -165,6 +165,27 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_equal 29, @to.characters
   end
 
+  def accept_list_item_start_note_multi_description
+    expected = <<-EXPECTED
+<p>label &mdash; description one
+<p>description two
+
+    EXPECTED
+
+    assert_equal expected, @to.res.join
+    assert_equal 37, @to.characters
+  end
+
+  def accept_list_item_start_note_multi_label
+    expected = <<-EXPECTED
+<p>one, two &mdash; two headers
+
+    EXPECTED
+
+    assert_equal expected, @to.res.join
+    assert_equal 18, @to.characters
+  end
+
   def accept_list_item_start_number
     assert_equal "<p>", @to.res.join
     assert_equal 0, @to.characters

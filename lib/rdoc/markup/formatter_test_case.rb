@@ -383,9 +383,9 @@ class RDoc::Markup::FormatterTestCase < RDoc::TestCase
       # Calls accept_list_item_start_note_2
 
       def test_accept_list_item_start_note_2
-        list = @RM::List.new(:NOTE,
-                 @RM::ListItem.new('<tt>teletype</tt>',
-                   @RM::Paragraph.new('teletype description')))
+        list = list(:NOTE,
+                 item('<tt>teletype</tt>',
+                   para('teletype description')))
 
         @to.start_accepting
 
@@ -394,6 +394,41 @@ class RDoc::Markup::FormatterTestCase < RDoc::TestCase
         @to.end_accepting
 
         accept_list_item_start_note_2
+      end
+
+      ##
+      # Calls accept_list_item_start_note_multi_description
+
+      def test_accept_list_item_start_note_multi_description
+        list = list(:NOTE,
+                 item(%w[label],
+                   para('description one')),
+                 item(nil, para('description two')))
+
+        @to.start_accepting
+
+        list.accept @to
+
+        @to.end_accepting
+
+        accept_list_item_start_note_multi_description
+      end
+
+      ##
+      # Calls accept_list_item_start_note_multi_label
+
+      def test_accept_list_item_start_note_multi_label
+        list = list(:NOTE,
+                 item(%w[one two],
+                   para('two headers')))
+
+        @to.start_accepting
+
+        list.accept @to
+
+        @to.end_accepting
+
+        accept_list_item_start_note_multi_label
       end
 
       ##

@@ -188,8 +188,8 @@ two
 
     expected = doc(
       list(:NOTE,
-        item("one", para("This is a definition")),
-        item("two", para("This is another definition"))))
+        item(%w[one], para("This is a definition")),
+        item(%w[two], para("This is another definition"))))
 
     assert_equal expected, doc
   end
@@ -215,16 +215,46 @@ four
 
     expected = doc(
       list(:NOTE,
-        item("zero",  para("Indented zero characters")),
-        item("one",   para("Indented one characters")),
-        item("two",   para("Indented two characters")),
-        item("three", para("Indented three characters"))),
+        item(%w[zero],  para("Indented zero characters")),
+        item(%w[one],   para("Indented one characters")),
+        item(%w[two],   para("Indented two characters")),
+        item(%w[three], para("Indented three characters"))),
       para("four\n : Indented four characters"))
 
     assert_equal expected, doc
   end
 
-  def test_parse_definition_list_multiline
+  def test_parse_definition_list_multi_description
+    doc = parse <<-MD
+label
+:   This is a definition
+
+:   This is another definition
+    MD
+
+    expected = doc(
+      list(:NOTE,
+        item(%w[label], para("This is a definition")),
+        item(nil,       para("This is another definition"))))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_definition_list_multi_label
+    doc = parse <<-MD
+one
+two
+:   This is a definition
+    MD
+
+    expected = doc(
+      list(:NOTE,
+        item(%w[one two], para("This is a definition"))))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_definition_list_multi_line
     doc = parse <<-MD
 one
 :   This is a definition
@@ -237,9 +267,9 @@ that also extends to two lines
 
     expected = doc(
       list(:NOTE,
-        item("one",
+        item(%w[one],
           para("This is a definition\nthat extends to two lines")),
-        item("two",
+        item(%w[two],
           para("This is another definition\nthat also extends to two lines"))))
 
     assert_equal expected, doc
