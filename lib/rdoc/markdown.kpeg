@@ -1095,7 +1095,7 @@ SkipBlock = HtmlBlock
           | ( !"#" !SetextBottom1 !SetextBottom2 !BlankLine RawLine )+
             BlankLine*
           | BlankLine+
-          | ( &("#" | SetextBottom1 | SetextBottom2) RawLine )
+          | RawLine
 
 # Syntax extensions
 
