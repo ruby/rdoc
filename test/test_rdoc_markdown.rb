@@ -38,9 +38,9 @@ class TestRDocMarkdown < RDoc::TestCase
   end
 
   def test_parse_auto_link_email
-    doc = parse "Autolink: <nobody@example>"
+    doc = parse "Autolink: <nobody-0+_./!%~$@example>"
 
-    expected = doc(para("Autolink: mailto:nobody@example"))
+    expected = doc(para("Autolink: mailto:nobody-0+_./!%~$@example"))
 
     assert_equal expected, doc
   end

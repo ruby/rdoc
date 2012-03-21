@@ -983,7 +983,7 @@ AutoLink = AutoLinkUrl | AutoLinkEmail
 AutoLinkUrl =   "<" < /[A-Za-z]+/ "://" ( !Newline !">" . )+ > ">"
                 { text }
 
-AutoLinkEmail = "<" < /[-A-Za-z0-9+_]+/ "@" ( !Newline !">" . )+ > ">"
+AutoLinkEmail = "<" ("mailto:")? < /[\w+_.\/!%~$-]+/i "@" ( !Newline !">" . )+ > ">"
                 { "mailto:#{text}" }
 
 Reference = NonindentSpace !"[]"
