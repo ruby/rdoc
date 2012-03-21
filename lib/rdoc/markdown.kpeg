@@ -918,7 +918,7 @@ EmphStar =  OneStarOpen
             { emphasis a.join }
 
 OneUlOpen  =  !UlLine "_" !Spacechar !Newline
-OneUlClose =  !Spacechar !Newline Inline:a !StrongUl "_" # !Alphanumeric # TODO check
+OneUlClose =  !Spacechar !Newline Inline:a "_" # !Alphanumeric # TODO check
               { a }
 
 EmphUl =    OneUlOpen
