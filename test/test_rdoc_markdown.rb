@@ -194,20 +194,32 @@ two
     assert_equal expected, doc
   end
 
-  def test_parse_definition_list_no
-    @parser.definition_lists = false
-
+  def test_parse_definition_list_indents
     doc = parse <<-MD
+zero
+: Indented zero characters
+
 one
-:   This is a definition
+ : Indented one characters
 
 two
-:   This is another definition
+  : Indented two characters
+
+three
+   : Indented three characters
+
+four
+    : Indented four characters
+
     MD
 
     expected = doc(
-        para("one\n: This is a definition"),
-        para("two\n: This is another definition"))
+      list(:NOTE,
+        item("zero",  para("Indented zero characters")),
+        item("one",   para("Indented one characters")),
+        item("two",   para("Indented two characters")),
+        item("three", para("Indented three characters"))),
+      para("four\n : Indented four characters"))
 
     assert_equal expected, doc
   end
@@ -229,6 +241,24 @@ that also extends to two lines
           para("This is a definition\nthat extends to two lines")),
         item("two",
           para("This is another definition\nthat also extends to two lines"))))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_definition_list_no
+    @parser.definition_lists = false
+
+    doc = parse <<-MD
+one
+:   This is a definition
+
+two
+:   This is another definition
+    MD
+
+    expected = doc(
+        para("one\n: This is a definition"),
+        para("two\n: This is another definition"))
 
     assert_equal expected, doc
   end

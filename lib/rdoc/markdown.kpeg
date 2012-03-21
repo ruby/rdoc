@@ -1156,8 +1156,8 @@ DefinitionListItem = DefinitionListLabel:label
                      DefinitionListDefinition:defn
                      { RDoc::Markup::ListItem.new label, defn }
 
-DefinitionListLabel = StrChunk:label Spnl
+DefinitionListLabel = StrChunk:label Sp Newline
                       { label }
 
-DefinitionListDefinition = ":" NonindentSpace Inlines:a BlankLine+
+DefinitionListDefinition = NonindentSpace ":" Space Inlines:a BlankLine+
                            { paragraph a }
