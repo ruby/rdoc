@@ -880,7 +880,7 @@ Str = StartList:a
 
 StrChunk = < (NormalChar | "_"+ &Alphanumeric)+ > { text }
 
-EscapedChar =   "\\" !Newline < /[\\`|*_{}\[\]()#+.!><-]/ > { text }
+EscapedChar =   "\\" !Newline < /[:\\`|*_{}\[\]()#+.!><-]/ > { text }
 
 Entity =    ( HexEntity | DecEntity | CharEntity ):a { a }
 

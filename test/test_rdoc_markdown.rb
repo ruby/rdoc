@@ -300,6 +300,8 @@ that also extends to two lines
     assert_equal doc(para("Backtick: `")), parse("Backtick: \\`")
 
     assert_equal doc(para("Backslash: \\")), parse("Backslash: \\\\")
+
+    assert_equal doc(para("Colon: :")), parse("Colon: \\:")
   end
 
   def test_parse_heading_atx
