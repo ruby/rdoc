@@ -261,9 +261,8 @@
     @references          = nil
     @unlinked_references = nil
 
-    @footnotes      = nil
-    @notes          = nil
-    @unlinked_notes = nil
+    @footnotes       = nil
+    @note_order      = nil
   end
 
   ##
@@ -350,18 +349,28 @@
   end
 
   ##
-  # Finds a footnote reference for `label` and creates a new link to it with
-  # `content` as the link text.  If `label` has not be encountered in the
-  # document a placeholder is created that will be filled later.
+  # Stores `label` as a note and fills in previously unknown note references.
 
-  def note_for label
-    if ref = @notes[label] then
-      "{*#{label}}[#{ref}]"
-    else
-      ref = @unlinked_notes[label] || ""
-      @unlinked_notes[label] = ref
-      ["{*#{label}}[", ref, "]"]
-    end
+  def note label
+    #foottext = "rdoc-label:foottext-#{label}:footmark-#{label}"
+
+    #ref.replace foottext if ref = @unlinked_notes.delete(label)
+
+    @notes[label] = foottext
+
+    #"{^1}[rdoc-label:footmark-#{label}:foottext-#{label}] "
+  end
+
+  ##
+  # Creates a new link for the footnote `reference` and adds the reference to
+  # the note order list for proper display at the end of the document.
+
+  def note_for ref
+    @note_order << ref
+
+    label = @note_order.length
+
+    "{*#{label}}[rdoc-label:foottext-#{label}:footmark-#{label}]"
   end
 
   ##
@@ -398,15 +407,13 @@
     peg_parse 'References'
 
     if notes? then
-      @footnotes      = []
-      @notes          = {}
-      @unlinked_notes = {}
+      @footnotes       = {}
 
       setup_parser markdown, @debug
       peg_parse 'Notes'
 
-      # reset footnotes to avoid grabbing them twice
-      @footnotes = []
+      # using note_order on the first pass would be a bug
+      @note_order      = []
     end
 
     setup_parser markdown, @debug
@@ -414,10 +421,17 @@
 
     doc = result
 
-    if notes? then
-      unless @footnotes.empty? then
-        doc << RDoc::Markup::Rule.new(1)
-        doc.push(*@footnotes)
+    if notes? and not @footnotes.empty? then
+      doc << RDoc::Markup::Rule.new(1)
+
+      @note_order.each_with_index do |ref, index|
+        label = index + 1
+        note = @footnotes[ref]
+
+        link = "{^#{label}}[rdoc-label:footmark-#{label}:foottext-#{label}] "
+        note.parts.unshift link
+
+        doc << note
       end
     end
 
@@ -447,21 +461,6 @@
     else
       "<b>#{text}</b>"
     end
-  end
-
-  ##
-  # Stores `label` as a note and fills in previously unknown note references.
-
-  def note label
-    foottext = "rdoc-label:foottext-#{label}:footmark-#{label}"
-
-    if ref = @unlinked_notes.delete(label) then
-      ref.replace foottext
-    end
-
-    @notes[label] = foottext
-
-    "{^1}[rdoc-label:footmark-#{label}:foottext-#{label}] "
   end
 }
 
@@ -1111,8 +1110,8 @@ Note =          &{ notes? }
                 StartList:a
                 RawNoteBlock:l
                 ( &Indent RawNoteBlock:i { a.concat i } )*
-                { a.unshift note ref
-                  @footnotes << paragraph(a)
+                { @footnotes[ref] = paragraph a
+
                   nil
                 }
 
@@ -1121,10 +1120,9 @@ InlineNote = &{ notes? }
              StartList:a
              ( !"]" Inline:l { a << l } )+
              "]"
-             { ref = @footnotes.length + 1
-               a.unshift note ref
-
-               @footnotes << paragraph(a)
+             { 
+               ref = [:inline, @note_order.length]
+               @footnotes[ref] = paragraph a
 
                note_for ref
              }
@@ -1135,6 +1133,8 @@ RawNoteBlock = StartList:a
                ( !BlankLine OptionallyIndentedLine:l { a << l } )+
                ( < BlankLine* > { a << text } )
                { a }
+
+# Markdown extensions added by RDoc follow
 
 CodeFence = &{ github? }
             Ticks3 (Sp StrChunk:format)? Spnl < (
