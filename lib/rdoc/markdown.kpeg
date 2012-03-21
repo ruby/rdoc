@@ -908,7 +908,7 @@ UlLine   = < "____" "_"* > { text } |
 Emph =      EmphStar | EmphUl
 
 OneStarOpen  =  !StarLine "*" !Spacechar !Newline
-OneStarClose =  !Spacechar !Newline Inline:a !StrongStar "*"
+OneStarClose =  !Spacechar !Newline Inline:a "*"
                 { a }
 
 EmphStar =  OneStarOpen
