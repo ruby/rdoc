@@ -108,13 +108,13 @@ class RDoc::Markup::Parser
     p :list_start => margin if @debug
 
     list = RDoc::Markup::List.new
+    label = nil
 
     until @tokens.empty? do
       type, data, column, = get
 
       case type
-      when :BULLET, :LABEL, :LALPHA, :NOTE, :NUMBER, :UALPHA then
-
+      when *LIST_TOKENS then
         if column < margin || (list.type && list.type != type) then
           unget
           break
@@ -125,6 +125,8 @@ class RDoc::Markup::Parser
 
         case type
         when :NOTE, :LABEL then
+          label = [] unless label
+
           if peek_type == :NEWLINE then
             # description not on the same line as LABEL/NOTE
             # skip the trailing newline & any blank lines below
@@ -147,30 +149,33 @@ class RDoc::Markup::Parser
             # In all cases, we have an empty description.
             # In the last case only, we continue.
             if peek_type.nil? || column < margin then
-              empty = 1
+              empty = true
             elsif column == margin then
               case peek_type
               when type
-                empty = 2 # continue
+                empty = :continue
               when *LIST_TOKENS
-                empty = 1
+                empty = true
               else
-                empty = 0
+                empty = false
               end
             else
-              empty = 0
+              empty = false
             end
 
-            if empty > 0 then
-              item = RDoc::Markup::ListItem.new(data)
-              item << RDoc::Markup::BlankLine.new
-              list << item
-              break if empty == 1
-              next
+            if empty then
+              label << data
+              next if empty == :continue
+              break
             end
           end
         else
           data = nil
+        end
+
+        if label then
+          data = label << data
+          label = nil
         end
 
         list_item = RDoc::Markup::ListItem.new data
@@ -185,7 +190,13 @@ class RDoc::Markup::Parser
 
     p :list_end => margin if @debug
 
-    return nil if list.empty?
+    if list.empty? then
+      return nil unless label
+      return nil unless [:LABEL, :NOTE].include? list.type
+
+      list_item = RDoc::Markup::ListItem.new label, RDoc::Markup::BlankLine.new
+      list << list_item
+    end
 
     list
   end

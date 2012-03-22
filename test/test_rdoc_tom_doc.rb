@@ -67,11 +67,11 @@ here - something
     assert_equal "method_<here>(args)\n", signature
 
     expected =
-      @RM::Document.new(
-        @RM::Heading.new(3, 'Signature'),
-        @RM::List.new(:NOTE,
-          @RM::ListItem.new('here',
-            @RM::Paragraph.new('something'))))
+      doc(
+        head(3, 'Signature'),
+        list(:NOTE,
+          item(%w[here],
+            para('something'))))
     expected.file = @top_level
 
     assert_equal expected, c.parse
@@ -115,11 +115,11 @@ here - something
     assert_equal "method_<here>(args)\n", signature
 
     expected =
-      @RM::Document.new(
-        @RM::Heading.new(3, 'Signature'),
-        @RM::List.new(:NOTE,
-          @RM::ListItem.new('here',
-            @RM::Paragraph.new('something'))))
+      doc(
+        head(3, 'Signature'),
+        list(:NOTE,
+          item(%w[here],
+            para('something'))))
     expected.file = @top_level
 
     assert_equal expected, c.parse
@@ -144,17 +144,14 @@ description - arguments description
     TEXT
 
     expected =
-      @RM::Document.new(
-        @RM::Paragraph.new('Create new Arg object.'),
-        @RM::BlankLine.new,
-        @RM::List.new(
-          :NOTE,
-          @RM::ListItem.new(
-            'name',
-            @RM::Paragraph.new('name of argument')),
-          @RM::ListItem.new(
-            'description',
-            @RM::Paragraph.new('arguments description'))))
+      doc(
+        para('Create new Arg object.'),
+        blank_line,
+        list(:NOTE,
+          item(%w[name],
+            para('name of argument')),
+          item(%w[description],
+            para('arguments description'))))
 
     assert_equal expected, @TD.parse(text)
   end
@@ -168,15 +165,12 @@ foo - A comment goes here
     TEXT
 
     expected =
-      @RM::Document.new(
-        @RM::Paragraph.new('Do some stuff'),
-        @RM::BlankLine.new,
-        @RM::List.new(
-          :NOTE,
-          @RM::ListItem.new(
-            'foo',
-            @RM::Paragraph.new(
-              'A comment goes here', 'and is more than one line'))))
+      doc(
+        para('Do some stuff'),
+        blank_line,
+        list(:NOTE,
+          item(%w[foo],
+            para('A comment goes here', 'and is more than one line'))))
 
     assert_equal expected, @TD.parse(text)
   end
@@ -190,19 +184,15 @@ foo - A comment goes here
     TEXT
 
     expected =
-      @RM::Document.new(
-        @RM::Paragraph.new('Do some stuff'),
-        @RM::BlankLine.new,
-        @RM::List.new(
-          :NOTE,
-          @RM::ListItem.new(
-            'foo',
-            @RM::Paragraph.new('A comment goes here'),
-            @RM::List.new(
-              :NOTE,
-              @RM::ListItem.new(
-                ':bar',
-                @RM::Paragraph.new('bar documentation'))))))
+      doc(
+        para('Do some stuff'),
+        blank_line,
+        list(:NOTE,
+          item(%w[foo],
+            para('A comment goes here'),
+            list(:NOTE,
+              item(%w[:bar],
+                para('bar documentation'))))))
 
     assert_equal expected, @TD.parse(text)
   end

@@ -322,11 +322,11 @@ the time
     STR
 
     expected = [
-      @RM::List.new(:LABEL, *[
-        @RM::ListItem.new('one',
-          @RM::Paragraph.new('item one')),
-        @RM::ListItem.new('two',
-          @RM::Paragraph.new('item two'))])]
+      list(:LABEL,
+        item(%w[one],
+          para('item one')),
+        item(%w[two],
+          para('item two')))]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -339,19 +339,33 @@ the time
     STR
 
     expected = [
-      @RM::List.new(:LABEL, *[
-        @RM::ListItem.new('cat',
-          @RM::Paragraph.new('l1'),
-          @RM::List.new(:BULLET, *[
-            @RM::ListItem.new(nil,
-              @RM::Paragraph.new('l1.1'))])),
-        @RM::ListItem.new('dog',
-          @RM::Paragraph.new('l2'))])]
+      list(:LABEL,
+        item(%w[cat],
+          para('l1'),
+          list(:BULLET,
+            item(nil,
+              para('l1.1')))),
+        item(%w[dog],
+          para('l2')))]
 
     assert_equal expected, @RMP.parse(str).parts
   end
 
-  def test_parse_label_multiline
+  def test_parse_label_multi_label
+    str = <<-STR
+[one]
+[two] some description
+    STR
+
+    expected = [
+      list(:LABEL,
+        item(%w[one two],
+          para('some description')))]
+
+    assert_equal expected, @RMP.parse(str).parts
+  end
+
+  def test_parse_label_multi_line
     str = <<-STR
 [cat] l1
       continuation
@@ -360,9 +374,9 @@ the time
 
     expected = [
       list(:LABEL,
-        item('cat',
+        item(%w[cat],
           para('l1 ', 'continuation')),
-        item('dog',
+        item(%w[dog],
           para('l2')))]
 
     assert_equal expected, @RMP.parse(str).parts
@@ -377,12 +391,11 @@ the time
     STR
 
     expected = [
-      @RM::List.new(:LABEL, *[
-        @RM::ListItem.new('one',
-          @RM::Paragraph.new('item one')),
-        @RM::ListItem.new('two',
-          @RM::Paragraph.new('item two')),
-    ])]
+      list(:LABEL,
+        item(%w[one],
+          para('item one')),
+        item(%w[two],
+          para('item two')))]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -463,16 +476,16 @@ a. 新しい機能
     STR
 
     expected = [
-      @RM::List.new(:NUMBER, *[
-        @RM::ListItem.new(nil, *[
-          @RM::Paragraph.new('para 1'),
-          @RM::BlankLine.new,
-          @RM::List.new(:LABEL, *[
-            @RM::ListItem.new('label 1', *[
-              @RM::Paragraph.new('para 1.1'),
-              @RM::BlankLine.new,
-              @RM::Verbatim.new("code\n"),
-              @RM::Paragraph.new('para 1.2')])])])])]
+      list(:NUMBER,
+        item(nil,
+          para('para 1'),
+          blank_line,
+          list(:LABEL,
+            item(%w[label\ 1],
+              para('para 1.1'),
+              blank_line,
+              verb("code\n"),
+              para('para 1.2')))))]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -486,15 +499,15 @@ a. 新しい機能
     STR
 
     expected = [
-      @RM::List.new(:NUMBER, *[
-        @RM::ListItem.new(nil, *[
-          @RM::Paragraph.new('para'),
-          @RM::BlankLine.new,
-          @RM::List.new(:NOTE, *[
-            @RM::ListItem.new('label 1',
-              @RM::Paragraph.new('text 1')),
-            @RM::ListItem.new('label 2',
-              @RM::Paragraph.new('text 2'))])])])]
+      list(:NUMBER,
+        item(nil,
+          para('para'),
+          blank_line,
+          list(:NOTE,
+            item(%w[label\ 1],
+              para('text 1')),
+            item(%w[label\ 2],
+              para('text 2')))))]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -553,11 +566,11 @@ two:: item two
     STR
 
     expected = [
-      @RM::List.new(:NOTE, *[
-        @RM::ListItem.new('one',
-          @RM::Paragraph.new('item one')),
-        @RM::ListItem.new('two',
-          @RM::Paragraph.new('item two'))])]
+      list(:NOTE,
+        item(%w[one],
+          para('item one')),
+        item(%w[two],
+          para('item two')))]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -569,11 +582,9 @@ two::
     STR
 
     expected = [
-      @RM::List.new(:NOTE, *[
-        @RM::ListItem.new('one',
-          @RM::BlankLine.new),
-        @RM::ListItem.new('two',
-          @RM::BlankLine.new)])]
+      list(:NOTE,
+        item(%w[one two],
+          blank_line))]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -584,11 +595,11 @@ one:: two::
     STR
 
     expected = [
-      @RM::List.new(:NOTE, *[
-        @RM::ListItem.new('one',
-          @RM::List.new(:NOTE, *[
-            @RM::ListItem.new('two',
-              @RM::BlankLine.new)]))])]
+      list(:NOTE,
+        item(%w[one],
+          list(:NOTE,
+            item(%w[two],
+              blank_line))))]
 
     assert_equal expected, @RMP.parse(str).parts
   end
@@ -601,14 +612,14 @@ one:: two::
     STR
 
     expected = [
-      @RM::List.new(:NUMBER, *[
-        @RM::ListItem.new(nil,
-          @RM::Paragraph.new('l1'),
-          @RM::List.new(:BULLET, *[
-            @RM::ListItem.new(nil,
-              @RM::Paragraph.new('l1.1'))])),
-        @RM::ListItem.new(nil,
-          @RM::Paragraph.new('l2'))])]
+      list(:NUMBER,
+        item(nil,
+          para('l1'),
+          list(:BULLET,
+            item(nil,
+              para('l1.1')))),
+        item(nil,
+          para('l2')))]
 
     assert_equal expected, @RMP.parse(str).parts
   end

@@ -2384,11 +2384,11 @@ end
     assert_equal "find_by_<field>[_and_<field>...](args)\n", m.call_seq
 
     expected =
-      @RM::Document.new(
-        @RM::Heading.new(3, 'Signature'),
-        @RM::List.new(:NOTE,
-          @RM::ListItem.new('field',
-            @RM::Paragraph.new('A field name.'))))
+      doc(
+        head(3, 'Signature'),
+        list(:NOTE,
+          item(%w[field],
+            para('A field name.'))))
     expected.file = @top_level
 
     assert_equal expected, m.comment.parse

@@ -6,6 +6,8 @@
     and tomdoc formats and on a per-project basis with
     <tt>rdoc --markup markdown --write-options</tt>
   * Added a table of contents to the sidebar.
+  * RDoc markup format merges adjacent labels in a label or note list into a
+    single definition list item for output.
 
 * Bug fixes
   * A word that is directly followed by a multi-word tidy link label no longer

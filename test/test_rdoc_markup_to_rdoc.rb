@@ -346,8 +346,7 @@ bar ::
     NOTE_LIST
 
     expected = <<-EXPECTED
-
-foo:
+foo
 bar:
   hi
 
