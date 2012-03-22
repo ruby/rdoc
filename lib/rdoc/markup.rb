@@ -835,6 +835,7 @@ https://github.com/rdoc/rdoc/issues
   autoload :ToHtmlCrossref,        'rdoc/markup/to_html_crossref'
   autoload :ToHtmlSnippet,         'rdoc/markup/to_html_snippet'
   autoload :ToLabel,               'rdoc/markup/to_label'
+  autoload :ToMarkdown,            'rdoc/markup/to_markdown'
   autoload :ToRdoc,                'rdoc/markup/to_rdoc'
   autoload :ToTableOfContents,     'rdoc/markup/to_table_of_contents'
   autoload :ToTest,                'rdoc/markup/to_test'

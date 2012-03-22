@@ -121,6 +121,7 @@ lib/rdoc/markup/to_html_crossref.rb
 lib/rdoc/markup/to_html_snippet.rb
 lib/rdoc/markup/to_joined_paragraph.rb
 lib/rdoc/markup/to_label.rb
+lib/rdoc/markup/to_markdown.rb
 lib/rdoc/markup/to_rdoc.rb
 lib/rdoc/markup/to_table_of_contents.rb
 lib/rdoc/markup/to_test.rb
@@ -231,6 +232,7 @@ test/test_rdoc_markup_to_html_crossref.rb
 test/test_rdoc_markup_to_html_snippet.rb
 test/test_rdoc_markup_to_joined_paragraph.rb
 test/test_rdoc_markup_to_label.rb
+test/test_rdoc_markup_to_markdown.rb
 test/test_rdoc_markup_to_rdoc.rb
 test/test_rdoc_markup_to_table_of_contents.rb
 test/test_rdoc_markup_to_tt_only.rb

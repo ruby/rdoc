@@ -10,7 +10,7 @@ Autotest.add_hook :initialize do |at|
   at.testlib = 'minitest/autorun'
   at.add_exception '.git'
 
-  def at.path_to_classname(s)
+  def at.path_to_classname s
     sep = File::SEPARATOR
     f = s.sub(/^test#{sep}/, '').sub(/\.rb$/, '').split(sep)
     f = f.map { |path| path.split(/_|(\d+)/).map { |seg| seg.capitalize }.join }
