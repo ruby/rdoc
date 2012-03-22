@@ -280,7 +280,7 @@ class RDoc::RI::Store
     end
 
     @cache[:ancestors][full_name] ||= []
-    @cache[:ancestors][full_name].push(*ancestors)
+    @cache[:ancestors][full_name].concat ancestors
 
     attributes = klass.attributes.map do |attribute|
       "#{attribute.definition} #{attribute.name}"
@@ -288,7 +288,7 @@ class RDoc::RI::Store
 
     unless attributes.empty? then
       @cache[:attributes][full_name] ||= []
-      @cache[:attributes][full_name].push(*attributes)
+      @cache[:attributes][full_name].concat attributes
     end
 
     to_delete = []

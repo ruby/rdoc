@@ -19,7 +19,7 @@ class RDoc::Markup::Document
 
   def initialize *parts
     @parts = []
-    @parts.push(*parts)
+    @parts.concat parts
 
     @file = nil
   end
@@ -31,7 +31,7 @@ class RDoc::Markup::Document
     case part
     when RDoc::Markup::Document then
       unless part.empty? then
-        parts.push(*part.parts)
+        parts.concat part.parts
         parts << RDoc::Markup::BlankLine.new
       end
     when String then
@@ -65,6 +65,13 @@ class RDoc::Markup::Document
     end
 
     visitor.end_accepting
+  end
+
+  ##
+  # Concatenates the given +parts+ onto the document
+
+  def concat parts
+    self.parts.concat parts
   end
 
   ##
@@ -132,7 +139,7 @@ class RDoc::Markup::Document
   # Appends +parts+ to the document
 
   def push *parts
-    self.parts.push(*parts)
+    self.parts.concat parts
   end
 
   ##

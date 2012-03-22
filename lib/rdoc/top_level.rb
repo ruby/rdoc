@@ -486,7 +486,7 @@ class RDoc::TopLevel < RDoc::Context
       q.breakable
 
       items = @modules.map { |n,m| m }
-      items.push(*@modules.map { |n,c| c })
+      items.concat @modules.map { |n,c| c }
       q.seplist items do |mod| q.pp mod end
     end
   end

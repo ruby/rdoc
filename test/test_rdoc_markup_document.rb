@@ -45,6 +45,12 @@ class TestRDocMarkupDocument < RDoc::TestCase
     end
   end
 
+  def test_concat
+    @d.concat [@RM::BlankLine.new, @RM::BlankLine.new]
+
+    refute_empty @d
+  end
+
   def test_empty_eh
     assert_empty @d
 

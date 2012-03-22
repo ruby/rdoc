@@ -36,7 +36,7 @@ class RDoc::Gauntlet < Gauntlet
 
     args = @args.dup
     args << '--op' << dir
-    args.push(*spec.rdoc_options)
+    args.concat spec.rdoc_options
     args << spec.require_paths
     args << spec.extra_rdoc_files
     args = args.flatten.map { |a| a.to_s }

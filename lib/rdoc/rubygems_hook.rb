@@ -140,8 +140,8 @@ class RDoc::RubygemsHook
     options = ::RDoc::Options.new
     options.default_title = "#{@spec.full_name} Documentation"
     options.files = []
-    options.files.push(*@spec.require_paths)
-    options.files.push(*@spec.extra_rdoc_files)
+    options.files.concat @spec.require_paths
+    options.files.concat @spec.extra_rdoc_files
 
     args = @spec.rdoc_options
 

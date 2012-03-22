@@ -454,10 +454,10 @@ Options may also be set in the 'RI' environment variable.
     out << RDoc::Markup::Heading.new(1, "#{name}:")
     out << RDoc::Markup::BlankLine.new
 
-    if @use_stdout and !@interactive
-      out.push(*methods.map do |method|
+    if @use_stdout and !@interactive then
+      out.concat methods.map { |method|
         RDoc::Markup::Verbatim.new method
-      end)
+      }
     else
       out << RDoc::Markup::IndentedParagraph.new(2, methods.join(', '))
     end
@@ -489,8 +489,8 @@ Options may also be set in the 'RI' environment variable.
 
       klasses = klasses - seen
 
-      ancestors.push(*klasses)
-      unexamined.push(*klasses)
+      ancestors.concat klasses
+      unexamined.concat klasses
     end
 
     ancestors.reverse
@@ -538,7 +538,7 @@ Options may also be set in the 'RI' environment variable.
           parts.flatten!
           parts.pop
 
-          out.push(*parts)
+          out.concat parts
         else
           out << comment
         end
@@ -555,13 +555,13 @@ Options may also be set in the 'RI' environment variable.
 
         constants = klass.constants.sort_by { |constant| constant.name }
 
-        list.push(*constants.map do |constant|
+        list.concat constants.map { |constant|
           parts = constant.comment.parts if constant.comment
           parts << RDoc::Markup::Paragraph.new('[not documented]') if
             parts.empty?
 
           RDoc::Markup::ListItem.new(constant.name, *parts)
-        end)
+        }
 
         out << list
         out << RDoc::Markup::BlankLine.new
@@ -655,7 +655,7 @@ Options may also be set in the 'RI' environment variable.
         completions << "#{klass}#{selector}"
       end
 
-      completions.push(*methods)
+      completions.concat methods
     end
 
     completions.sort.uniq
@@ -947,7 +947,7 @@ Options may also be set in the 'RI' environment variable.
             "#{klass}##{match}"
           end
 
-          found.push(*matches)
+          found.concat matches
         end
       end
 
@@ -961,7 +961,7 @@ Options may also be set in the 'RI' environment variable.
           "#{klass}::#{match}"
         end
 
-        found.push(*matches)
+        found.concat matches
       end
     end
 

@@ -39,7 +39,7 @@ class RDoc::Markup::List
   def initialize type = nil, *items
     @type = type
     @items = []
-    @items.push(*items)
+    @items.concat items
   end
 
   ##
@@ -94,7 +94,7 @@ class RDoc::Markup::List
   # Appends +items+ to the list
 
   def push *items
-    @items.push(*items)
+    @items.concat items
   end
 
 end

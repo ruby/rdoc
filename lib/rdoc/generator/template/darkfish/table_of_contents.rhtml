@@ -30,8 +30,8 @@
   <li class="<%= klass.type %>">
     <a href="<%= klass.path %>"><%= klass.full_name %></a>
 <% table = []
-   table.push(*klass.parse(klass.comment).table_of_contents)
-   table.push(*klass.section_contents)
+   table.concat klass.parse(klass.comment).table_of_contents
+   table.concat klass.section_contents
 
    unless table.empty? then %>
     <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings">

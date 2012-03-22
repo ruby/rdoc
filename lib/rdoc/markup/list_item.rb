@@ -26,7 +26,7 @@ class RDoc::Markup::ListItem
   def initialize label = nil, *parts
     @label = label
     @parts = []
-    @parts.push(*parts)
+    @parts.concat parts
   end
 
   ##
@@ -92,7 +92,7 @@ class RDoc::Markup::ListItem
   # Adds +parts+ to the ListItem
 
   def push *parts
-    @parts.push(*parts)
+    @parts.concat parts
   end
 
 end
