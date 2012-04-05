@@ -17,6 +17,46 @@ the issue.  Here are some examples of good issues:
 * https://github.com/rdoc/rdoc/issues/55
 * https://github.com/rdoc/rdoc/issues/61
 
+== Glossary
+
+Here are definitions for some common terms in the RDoc documentation.  The
+list also briefly describes how the components of RDoc interact.
+
+parser::
+  Parses files and creates a documentation tree from the contents.
+
+documentation tree::
+  The documentation tree represents files, classes, modules, methods,
+  constants, includes, comments and other ruby syntax features as a tree.
+  RDoc walks this tree with a generator to create documentation.
+
+generator::
+  Walks the documentation tree and generates output.
+
+  RDoc ships with two generators, the Darkfish generator creates HTML and the
+  RI generator creates an RI data store.
+
+markup parser::
+  Parses comments from a file into a generic markup tree.
+
+  The markup parsers allow RDoc to handle RDoc, TomDoc, rd and Markdown format
+  documentation with common formatters.
+
+markup tree::
+  Each parsed comment has a markup tree that represents common markup items
+  such as headings, paragraphs, lists orverbatim text sections for example
+  code or output.
+
+  A generator uses a formatters to walks the tree to create output.  Some
+  generators use multiple formatters on a markup tree to produce the output.
+
+formatter::
+  Converts a parsed markup tree into some form other form of markup.
+
+  Formatters can either produce a one-to-one conversion, such as ToHtml, or
+  extract part of the parsed result, such as ToHtmlSnippet which outputs the
+  first 100 characters as HTML.
+
 == Plugins
 
 When 'rdoc/rdoc' is loaded RDoc looks for 'rdoc/discover' files in your
