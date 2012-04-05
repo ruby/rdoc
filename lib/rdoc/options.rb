@@ -25,6 +25,38 @@ require 'optparse'
 # * +--quiet+
 # * +--template+
 # * +--verbose+
+#
+# == Custom Options
+#
+# Generators can hook into RDoc::Options to add generator-specific command
+# line options.
+#
+# When <tt>--format</tt> is encountered in ARGV, RDoc calls ::setup_options on
+# the generator class to add extra options to the option parser.  Options for
+# custom generators must occur after <tt>--format</tt>.  <tt>rdoc --help</tt>
+# will list options for all installed generators.
+#
+# Example:
+#
+#   class RDoc::Generator::Spellcheck
+#     RDoc::RDoc.add_generator self
+#
+#     def self.setup_options rdoc_options
+#       op = rdoc_options.option_parser
+#
+#       op.on('--spell-dictionary DICTIONARY',
+#             RDoc::Options::Path) do |dictionary|
+#         rdoc_options.spell_dictionary = dictionary
+#       end
+#     end
+#   end
+#
+# == Option Validators
+#
+# OptionParser validators will validate and cast user input values.  In
+# addition to the validators that ship with OptionParser (String, Integer,
+# Float, TrueClass, FalseClass, Array, Regexp, Date, Time, URI, etc.),
+# RDoc::Options adds Path, PathArray and Template.
 
 class RDoc::Options
 
@@ -73,17 +105,21 @@ class RDoc::Options
   ]
 
   ##
-  # Path option validator for OptionParser
+  # Option validator for OptionParser that matches a file or directory that
+  # exists on the filesystem.
 
   Path = Object.new
 
   ##
-  # Array of Paths option validator for OptionParser
+  # Option validator for OptionParser that matches a comma-separated list of
+  # files or directories that exist on the filesystem.
 
   PathArray = Object.new
 
   ##
-  # Template option validator for OptionParser
+  # Option validator for OptionParser that matches a template directory for an
+  # installed generator that lives in
+  # <tt>"rdoc/generator/template/#{template_name}"</tt>
 
   Template = Object.new
 
@@ -524,25 +560,25 @@ Usage: #{opt.program_name} [options] [names...]
         end
       end
 
-      opt.accept Path do |directory|
-        directory = File.expand_path directory
+      opt.accept Path do |path|
+        directory = File.expand_path path
 
-        raise OptionParser::InvalidArgument unless File.exist? directory
+        raise OptionParser::InvalidArgument unless File.exist? path
 
-        directory
+        path
       end
 
-      opt.accept PathArray do |directories,|
-        directories = if directories then
-                        directories.split(',').map { |d| d unless d.empty? }
-                      end
+      opt.accept PathArray do |paths,|
+        paths = if paths then
+                  paths.split(',').map { |d| d unless d.empty? }
+                end
 
-        directories.map do |directory|
-          directory = File.expand_path directory
+        paths.map do |path|
+          path = File.expand_path path
 
-          raise OptionParser::InvalidArgument unless File.exist? directory
+          raise OptionParser::InvalidArgument unless File.exist? path
 
-          directory
+          path
         end
       end
 

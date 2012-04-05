@@ -18,7 +18,8 @@
 # Before option processing in +rdoc+, RDoc::Options will call ::setup_options
 # on the generator class with an RDoc::Options instance.  The generator can
 # use RDoc::Options#option_parser to add command-line options to the +rdoc+
-# tool.  See OptionParser for details on how to add options.
+# tool.  See RDoc::Options@Custom+Options for an example and see OptionParser
+# for details on how to add options.
 #
 # You can extend the RDoc::Options instance with additional accessors for your
 # generator.
