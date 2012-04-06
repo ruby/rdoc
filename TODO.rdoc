@@ -5,15 +5,14 @@ Forward Looking Statements applies.
 
 Blockers:
 
+* Update LICENSE to match ruby's switch
 * The alias keyword should not be bidirectional
-* Github extensions to markdown
 * Fix RDoc::Parser#use_markup to handle the filename (see TODO)
 * Restore backwards compatibility due to paragraph text joining from existing
   ri files
 
 Nice to have:
 
-* Update LICENSE to match ruby's switch
 * Reload the RDoc tree from an RI store
   * Re-run generators
   * Parse only changed files (like in ruby)
@@ -27,12 +26,14 @@ Nice to have:
 * Global variable support
 * Page support for ri
 * Provide the code_object to directive handlers
+* Add RDoc::Constant#full_name
 
 === 4
 
 API changes to RDoc
 
 * Remove global state
+  * Use top_levels argument for generators
 * Remove RDoc::RDocError
 * RDoc::TopLevel#add_method should automatically create the appropriate method
   class rather than requiring one be passed in.
@@ -43,6 +44,7 @@ API changes to RDoc
   * Rename Context to Container
   * Rename NormalClass to Class
 * Add versions to RDoc::Markup syntax tree marshal format
+* Comments can no longer be Strings
 
 === Crazy Ideas
 

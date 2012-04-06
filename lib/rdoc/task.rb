@@ -128,7 +128,8 @@ class RDoc::Task < Rake::TaskLib
   attr_accessor :template
 
   ##
-  # Name of format generator (--fmt) used by rdoc. (defaults to rdoc's default)
+  # Name of format generator (<tt>--format<tt>) used by rdoc. (defaults to
+  # rdoc's default)
 
   attr_accessor :generator
 

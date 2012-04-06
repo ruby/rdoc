@@ -1079,8 +1079,8 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Sorts sections alphabetically (default) or in TomDoc fasion (none, Public,
-  # Internal, Deprecated)
+  # Sorts sections alphabetically (default) or in TomDoc fashion (none,
+  # Public, Internal, Deprecated)
 
   def sort_sections
     titles = @sections.map { |title, _| title }

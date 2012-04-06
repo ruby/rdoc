@@ -63,7 +63,7 @@
 #
 #   puts h.convert(input_string)
 #
-# You can extend the RDoc::Markup parser to recognise new markup
+# You can extend the RDoc::Markup parser to recognize new markup
 # sequences, and to add special processing for text that matches a
 # regular expression.  Here we make WikiWords significant to the parser,
 # and also make the sequences {word} and \<no>text...</no> signify

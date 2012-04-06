@@ -142,4 +142,3 @@ task :diff_rubinius do
   sh "diff #{diff_options} test #{rubinius_dir}/test/rdoc; true"
 end
 
-

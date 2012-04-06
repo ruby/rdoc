@@ -1,4 +1,3 @@
-
 ##
 # Handle common RDoc::Markup tasks for various CodeObjects
 #
@@ -47,7 +46,7 @@ module RDoc::Generator::Markup
   ##
   # Build a webcvs URL starting for the given +url+ with +full_path+ appended
   # as the destination path.  If +url+ contains '%s' +full_path+ will be
-  # sprintf'd into +url+ instead.
+  # will replace the %s using sprintf on the +url+.
 
   def cvs_url(url, full_path)
     if /%s/ =~ url then

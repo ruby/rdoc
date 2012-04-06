@@ -94,7 +94,7 @@ $TOKEN_DEBUG ||= nil
 # You can force the name of a method using the :method: directive:
 #
 #   ##
-#   # :method: woo_hoo!
+#   # :method: some_method!
 #
 # By default, meta-methods are instance methods.  To indicate that a method is
 # a singleton method instead use the :singleton-method: directive:
@@ -105,7 +105,7 @@ $TOKEN_DEBUG ||= nil
 # You can also use the :singleton-method: directive with a name:
 #
 #   ##
-#   # :singleton-method: woo_hoo!
+#   # :singleton-method: some_method!
 #
 # Additionally you can mark a method as an attribute by
 # using :attr:, :attr_reader:, :attr_writer: or :attr_accessor:.  Just like

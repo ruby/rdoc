@@ -597,7 +597,7 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
-  # Returns the stores wherin +name+ is found along with the classes and
+  # Returns the stores wherein +name+ is found along with the classes and
   # includes that match it
 
   def classes_and_includes_for name
@@ -1008,7 +1008,7 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
-  # Builds a RDoc::Markup::Document from +found+, +klasess+ and +includes+
+  # Builds a RDoc::Markup::Document from +found+, +klasses+ and +includes+
 
   def method_document name, filtered
     out = RDoc::Markup::Document.new

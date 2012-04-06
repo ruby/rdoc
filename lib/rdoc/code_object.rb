@@ -214,7 +214,7 @@ class RDoc::CodeObject
 
   ##
   # Force the documentation of this object unless documentation
-  # has been turned off by :endoc:
+  # has been turned off by :enddoc:
   #--
   # HACK untested, was assigning to an ivar
 
@@ -283,7 +283,7 @@ class RDoc::CodeObject
 
   ##
   # Enable capture of documentation unless documentation has been
-  # turned off by :endoc:
+  # turned off by :enddoc:
 
   def start_doc
     return if @done_documenting

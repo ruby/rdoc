@@ -21,7 +21,7 @@
   * Improved title for HTML output to include <code>--title</code> in the
     title element.
   * <code>rdoc --pipe</code> now understands <code>--markup</code>.
-  * RDoc now supports irc-scheme hyperlinks.  Issue #83 by trans.
+  * RDoc now supports IRC-scheme hyperlinks.  Issue #83 by trans.
 
 * Bug fixes
   * Fixed title on HTML output for pages.
@@ -280,9 +280,9 @@
 === 3.5.3 / 2010-02-06
 
 * Bug fixes
-  * When including a file lossily force-transcode it to the output encoding
-    instead of crashing to preserve as much content as possible.  Ruby Bug
-    #4376 by Yui NARUSE.
+  * When including a file perform a lossy force-transcoding to the output
+    encoding instead of crashing to preserve as much content as possible.
+    Ruby Bug #4376 by Yui NARUSE.
   * Work around inconsistent encoding result from String#sub!, String#gsub!.
     Related to Ruby Bug #4376.
   * Work around inconsistent encoding result from String#[]=.  Related to Ruby
@@ -619,7 +619,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
 === 2.5.4 / 2010-04-18
 
 * 2 Minor Enhancements
-  * Methods will now be cross-referenced when preceeded with ::.  Ruby Bug
+  * Methods will now be cross-referenced when preceded with ::.  Ruby Bug
     #3169 by Marc-Andre Lafortune.
   * Methods now have human readable fragment identifiers for HTML output.
     (#method-i-gsub vs #M000005).  Ruby Bug #3023 by Marc-Andre Lafortune.
@@ -707,7 +707,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
   * Images are no longer executable.  Bug #27156.
   * --op is no longer overridden by --ri.  Bug #27054.
   * :method: now works when at the end of a class.  Bug #26910.
-  * Preserve elipsis from call-seq in Darkfish.  Patch #26974.
+  * Preserve ellipsis from call-seq in Darkfish.  Patch #26974.
   * Emacs-style <tt>coding:</tt> is handled properly.  Patch #27388.
   * RDoc::RubyLex now parses UTF-8 identifiers.  Bug #26946, #26947.
   * Fixed namespace lookup rules.  Bug #26161.
@@ -775,8 +775,8 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
   * Added method list to index.html
 
 * 6 Bug Fixes
-  * nodoc'd classes no longer appear in the index.  Bug #23751 by Clifford
-    Heath.
+  * A class marked nodoc no longer appears in the index.  Bug #23751 by
+    Clifford Heath.
   * Fix 1.9 compatibility issues.  Bug #23815 by paddor.
   * Darkfish now respects --charset
   * RDoc no longer attempts to be lazy when building HTML.  This is a
@@ -809,7 +809,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
   * Ignore nonexistent files instead of crashing
   * .txt and .rdoc files are always considered text.  Patch #22897 by Aaron
     Patterson.
-  * When merging ri data with a nonexistant directory, RDoc no longer crashes
+  * When merging ri data with a nonexistent directory, RDoc no longer crashes
   * Fix visibility of methods in XML output.  Issue by Yehuda Katz.
   * Fixed relative link generation
   * Fix crash, RDoc now ignores comments above local variable assignments in
@@ -901,7 +901,7 @@ documentation about ri.
   * Fixed a case where RDoc first would encounter Foo::Bar and then would
     encounter class Foo.  Previously, RDoc erroneously would have considered
     that both a Foo class and a Foo module existed.
-  * Fix a clase where RDoc would not generate correct cross-reference links
+  * Fix a class where RDoc would not generate correct cross-reference links
     to a class contained within a module of the same name (i.e. RDoc::RDoc)
   * Prevented RDoc from trying to parse binary files, which would produce
     garbage output.
@@ -953,7 +953,7 @@ documentation about ri.
   * Sections work in the default template again
   * Doesn't warn about :foo:: list item being an unrecognized directive
   * RDoc no longer converts characters inside tt tags
-  * Fixed "unitialized constant RDoc::Markup::ToHtml::HTML"
+  * Fixed "uninitialized constant RDoc::Markup::ToHtml::HTML"
   * Fixed generation of relative links
   * Fixed various diagram generation issues
   * Fixed templates broken by switch to erb

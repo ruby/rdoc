@@ -171,10 +171,10 @@ class RDoc::MethodAttr < RDoc::CodeObject
   # Abstract method. Contexts in their building phase call this
   # to register a new alias for this known method/attribute.
   #
-  # - creates a new AnyMethod/Attribute +newa+ named an_alias.new_name;
-  # - adds +self+ as +newa.is_alias_for+;
-  # - adds +newa+ to #aliases
-  # - adds +newa+ to the methods/attributes of +context+.
+  # - creates a new AnyMethod/Attribute named <tt>an_alias.new_name</tt>;
+  # - adds +self+ as an alias for the new method or attribute
+  # - adds the method or attribute to #aliases
+  # - adds the method or attribute to +context+.
 
   def add_alias(an_alias, context)
     raise NotImplementedError

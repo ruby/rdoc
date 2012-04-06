@@ -165,7 +165,7 @@ class RDoc::Options
   attr_accessor :formatter
 
   ##
-  # Description of the output generator (set with the <tt>--fmt</tt> option)
+  # Description of the output generator (set with the <tt>--format</tt> option)
 
   attr_accessor :generator
 

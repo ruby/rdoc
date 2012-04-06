@@ -679,7 +679,7 @@ class RDoc::Markup::FormatterTestCase < RDoc::TestCase
       end
 
       ##
-      # Calls accept_list_end_ulpha
+      # Calls accept_list_end_ualpha
 
       def test_accept_list_end_ualpha
         @to.start_accepting

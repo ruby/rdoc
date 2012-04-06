@@ -44,7 +44,7 @@ markup parser::
 
 markup tree::
   Each parsed comment has a markup tree that represents common markup items
-  such as headings, paragraphs, lists orverbatim text sections for example
+  such as headings, paragraphs, lists or verbatim text sections for example
   code or output.
 
   A generator uses a formatters to walks the tree to create output.  Some

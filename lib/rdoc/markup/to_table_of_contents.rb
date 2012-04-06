@@ -7,7 +7,7 @@ class RDoc::Markup::ToTableOfContents < RDoc::Markup::Formatter
   @to_toc = nil
 
   ##
-  # Singleton for ToC generation
+  # Singleton for table-of-contents generation
 
   def self.to_toc
     @to_toc ||= new
