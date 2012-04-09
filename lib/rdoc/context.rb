@@ -78,7 +78,7 @@ class RDoc::Context < RDoc::CodeObject
   attr_accessor :unmatched_alias_lists
 
   ##
-  # Aliases that could not eventually be resolved.
+  # Aliases that could not be resolved.
 
   attr_reader :external_aliases
 

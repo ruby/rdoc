@@ -82,7 +82,8 @@ class RDoc::AnyMethod
   #
   #   # File xxxxx, line dddd
   #
-  # If it has, line numbers are added an ', line dddd' is removed.
+  # If it has this comment then line numbers are added to +src+ and the <tt>,
+  # line dddd</tt> portion of the comment is removed.
 
   def add_line_numbers(src)
     return unless src.sub!(/\A(.*)(, line (\d+))/, '\1')
