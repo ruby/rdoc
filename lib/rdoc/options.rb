@@ -561,7 +561,7 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.accept Path do |path|
-        directory = File.expand_path path
+        path = File.expand_path path
 
         raise OptionParser::InvalidArgument unless File.exist? path
 
