@@ -802,8 +802,7 @@ Usage: #{opt.program_name} [options] [names...]
              "the output dir.  If a directory is given the",
              "entire directory will be copied.",
              "You can use this multiple times") do |value|
-        @static_path << (value.start_with?('/') ? value : sanitize_path([value]))
-        @static_path = @static_path.flatten
+        @static_path += (value.start_with?('/') ? [value] : sanitize_path([value]))
       end
 
       opt.separator nil
