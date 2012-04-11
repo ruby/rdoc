@@ -802,7 +802,8 @@ Usage: #{opt.program_name} [options] [names...]
              "the output dir.  If a directory is given the",
              "entire directory will be copied.",
              "You can use this multiple times") do |value|
-        @static_path << value
+        @static_path << (value.start_with?('/') ? value : sanitize_path([value]))
+        @static_path = @static_path.flatten
       end
 
       opt.separator nil
@@ -992,11 +993,12 @@ Usage: #{opt.program_name} [options] [names...]
     require 'pathname'
     dot = Pathname.new('.').expand_path
 
+    path = path.map { |this_path| Pathname.new(this_path).expand_path }
+
     path.reject do |item|
-      path = Pathname.new(item).expand_path
-      relative = path.relative_path_from(dot).to_s
+      relative = item.relative_path_from(dot).to_s
       relative.start_with? '..'
-    end
+    end.map(&:to_s)
   end
 
   ##
