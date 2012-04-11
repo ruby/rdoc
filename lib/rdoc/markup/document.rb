@@ -56,12 +56,7 @@ class RDoc::Markup::Document
     visitor.start_accepting
 
     @parts.each do |item|
-      case item
-      when RDoc::Markup::Document then # HACK
-        visitor.accept_document item
-      else
-        item.accept visitor
-      end
+      item.accept visitor
     end
 
     visitor.end_accepting
