@@ -396,7 +396,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # Returns true if Ripper is available it can create a sexp from +text+
 
   def parseable? text
-    text =~ /\b(def|class|module|require)\b|=>|\{\s?\||do \|/ and
+    text =~ /\b(def|class|module|require) |=>|\{\s?\||do \|/ and
       text !~ /<%|%>/
   end
 

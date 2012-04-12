@@ -13,6 +13,8 @@
   * A word that is directly followed by a multi-word tidy link label no longer
     disappears.  (Like <code>text{link}[http://example]</code>)
   * Fixed legacy template support.  Pull Request #107 by Justin Baker.
+  * An HTML class in a verbatim section no longer triggers ruby parsing.
+    Issue #92 by Vijay Dev
 
 === 3.12 / 2011-12-15
 

@@ -532,6 +532,7 @@ verb2</pre>
     refute @to.parseable?('* 1'),              '* 1'
     refute @to.parseable?('# only a comment'), '# only a comment'
     refute @to.parseable?('<% require "foo" %>'),    'ERB'
+    refute @to.parseable?('class="foo"'),      'HTML class'
   end
 
   def test_to_html
