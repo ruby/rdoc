@@ -394,6 +394,11 @@ ul.link-list .type {
   display: none;
 }
 
+#documentation .method-description .method-superclass {
+  position: relative;
+  color: #999;
+}
+
 #documentation .method-detail {
   margin: 0.5em 0;
   padding: 0.5em 0;

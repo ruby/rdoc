@@ -25,6 +25,11 @@ class RDoc::AnyMethod < RDoc::MethodAttr
 
   attr_accessor :params
 
+  ##
+  # Uses superclass implementation
+
+  attr_accessor :uses_superclass
+
   include RDoc::TokenStream
 
   ##
@@ -36,6 +41,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @c_function = nil
     @dont_rename_initialize = false
     @token_stream = nil
+    @uses_superclass = false
   end
 
   ##

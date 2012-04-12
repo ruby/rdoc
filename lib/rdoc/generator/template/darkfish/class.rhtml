@@ -130,6 +130,18 @@
           <% else %>
           <p class="missing-docs">(Not documented)
           <% end %>
+          <% if method.uses_superclass %>
+            <div class="method-superclass">
+              [
+              uses super method from parent class
+              <%=
+                  method.parent.superclass.kind_of?(String) ?
+                    method.parent.superclass :
+                    method.formatter.link(method.parent.superclass.full_name, method.parent.superclass.full_name)
+              %>
+              ]
+            </div>
+          <% end %>
 
           <% if method.token_stream then %>
           <div class="method-source-code" id="<%= method.html_name %>-source">
