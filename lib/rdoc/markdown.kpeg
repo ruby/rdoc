@@ -7,6 +7,10 @@
 ##
 # RDoc::Markdown as described by the [markdown syntax][syntax].
 #
+# To choose Markdown as your only default format see
+# RDoc::Options@Saved+Options for instructions on setting up a `.doc_options`
+# file to store your project default.
+#
 # ## Extensions
 #
 # The following markdown extensions are supported by the parser, but not all

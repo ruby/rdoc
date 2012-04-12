@@ -10,6 +10,10 @@
 #
 # https://github.com/mojombo/tomdoc/blob/master/tomdoc.md
 #
+# To choose TomDoc as your only default format see RDoc::Options@Saved+Options
+# for instructions on setting up a <code>.rdoc_options</code> file to store
+# your project default.
+#
 # There are a few differences between this parser and the specification.  A
 # best-effort was made to follow the specification as closely as possible but
 # some choices to deviate were made.

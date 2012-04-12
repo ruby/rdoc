@@ -686,6 +686,33 @@
 #   markup type.  For ruby files, if the first comment contains this directive
 #   it is applied automatically to all comments in the file.
 #
+#   Unless you are converting between markup formats you should use a
+#   <code>.rdoc_options</code> file to specify the default documentation
+#   format for your entire project.  See RDoc::Options@Saved+Options for
+#   instructions.
+#
+#   At the top of a file the +:markup:+ directive applies to the entire file:
+#
+#     # coding: UTF-8
+#     # :markup: TomDoc
+#
+#     # TomDoc comment here ...
+#
+#     class MyClass
+#       # ...
+#
+#   For just one comment:
+#
+#       # ...
+#     end
+#
+#     # :markup: RDoc
+#     #
+#     # This is a comment in RDoc markup format ...
+#
+#     def some_method
+#       # ...
+#
 #   See Markup@DEVELOPERS for instructions on adding a new markup format.
 #
 # [+:include:+ _filename_]

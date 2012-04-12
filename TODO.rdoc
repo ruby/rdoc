@@ -10,6 +10,7 @@ Blockers:
 * Fix RDoc::Parser#use_markup to handle the filename (see TODO)
 * Restore backwards compatibility due to paragraph text joining from existing
   ri files
+* Fix consumption of , after link like: RDoc[rdoc-ref:RDoc], <- comma here
 
 Nice to have:
 
