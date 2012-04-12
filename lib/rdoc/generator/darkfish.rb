@@ -308,7 +308,7 @@ class RDoc::Generator::Darkfish
       page_file.exist? or fileinfo_file.exist?
 
     return unless
-      page_file.exist? or fileinfo_file.exist? or template_file.exist?
+      page_file.exist? or fileinfo_file.exist? or filepage_file.exist?
 
     debug_msg "Generating file documentation in #{@outputdir}"
 
