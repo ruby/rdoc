@@ -121,6 +121,25 @@ class TestRDocRDoc < RDoc::TestCase
     assert_empty files
   end
 
+  def test_normalized_file_list_non_file_directory
+    skip '/dev/stdin is not a character special' unless
+      File.chardev? '/dev/stdin'
+
+    files = nil
+
+    out, err = capture_io do
+      files = @rdoc.normalized_file_list %w[/dev/stdin]
+    end
+
+    files = files.map { |file| File.expand_path file }
+
+    assert_empty files
+
+    assert_empty out
+    assert_match %r%^rdoc can't parse%, err
+    assert_match %r%/dev/stdin$%,       err
+  end
+
   def test_parse_file_encoding
     skip "Encoding not implemented" unless Object.const_defined? :Encoding
     @rdoc.options.encoding = Encoding::ISO_8859_1

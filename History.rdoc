@@ -19,6 +19,8 @@
     your ruby project.  Issue #94 by Henrik Hodne
   * Fixed handling of LANG in the RDoc::Options tests.  Issue #99 by Vít
     Ondruch
+  * RDoc no longer quits when given an entry that is not a file or directory.
+    Issue #101 by Charles Nutter
 
 === 3.12 / 2011-12-15
 

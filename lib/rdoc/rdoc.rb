@@ -303,7 +303,7 @@ option)
           file_list << list_files_in_directory(rel_file_name)
         end
       else
-        raise RDoc::Error, "I can't deal with a #{type} #{rel_file_name}"
+        warn "rdoc can't parse the #{type} #{rel_file_name}"
       end
     end
 
