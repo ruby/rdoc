@@ -66,11 +66,15 @@ class TestRDocOptions < RDoc::TestCase
 
     @options.encode_with coder
 
-    encoding = Object.const_defined?(:Encoding) ? 'UTF-8' : nil
+    encoding = if Object.const_defined?(:Encoding) then
+                 Encoding.default_external
+               else
+                 nil
+               end
 
     expected = {
-      'charset'        => 'UTF-8',
-      'encoding'       => encoding,
+      'charset'        => encoding.name,
+      'encoding'       => encoding.name,
       'exclude'        => [],
       'hyperlink_all'  => false,
       'line_numbers'   => false,

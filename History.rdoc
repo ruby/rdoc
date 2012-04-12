@@ -15,6 +15,10 @@
   * Fixed legacy template support.  Pull Request #107 by Justin Baker.
   * An HTML class in a verbatim section no longer triggers ruby parsing.
     Issue #92 by Vijay Dev
+  * Improved documentation for setting the default documentation format for
+    your ruby project.  Issue #94 by Henrik Hodne
+  * Fixed handling of LANG in the RDoc::Options tests.  Issue #99 by Vít
+    Ondruch
 
 === 3.12 / 2011-12-15
 
