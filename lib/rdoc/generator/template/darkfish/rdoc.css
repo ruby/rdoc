@@ -213,7 +213,9 @@ dl.svninfo dt {
 
 ul.link-list li {
   white-space: nowrap;
+  line-height: 20px;
 }
+
 ul.link-list .type {
   font-size: 8px;
   text-transform: uppercase;
@@ -221,6 +223,10 @@ ul.link-list .type {
   background: #969696;
   padding: 2px 4px;
   -webkit-border-radius: 5px;
+}
+
+ul.link-list li.superclass {
+  background: url(images/super.jpg) no-repeat right center;
 }
 
 /* @end */
