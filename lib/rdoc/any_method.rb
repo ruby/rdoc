@@ -45,6 +45,26 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   end
 
   ##
+  # For methods that use the superclass, find the next superclass method that
+  # would be called.
+
+  def find_superclass_method
+    return nil unless uses_superclass
+
+    method = nil
+    next_superclass = parent.superclass
+
+    until next_superclass.kind_of?(String) or !next_superclass
+      if method = next_superclass.method_list.find { |x| x == self }
+        break
+      end
+      next_superclass = next_superclass.superclass
+    end
+
+    return method
+  end
+
+  ##
   # Adds +an_alias+ as an alias for this method in +context+.
 
   def add_alias an_alias, context = nil

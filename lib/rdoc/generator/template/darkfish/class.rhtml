@@ -132,14 +132,12 @@
           <% end %>
           <% if method.uses_superclass %>
             <div class="method-superclass">
-              [
-              uses super method from parent class
+              Calls superclass method
               <%=
-                  method.parent.superclass.kind_of?(String) ?
-                    method.parent.superclass :
-                    method.formatter.link(method.parent.superclass.full_name, method.parent.superclass.full_name)
+                  method.find_superclass_method ?
+                  method.formatter.link(method.find_superclass_method.full_name, method.find_superclass_method.full_name) :
+                  method.parent.superclass
               %>
-              ]
             </div>
           <% end %>
 

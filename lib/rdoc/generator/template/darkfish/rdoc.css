@@ -6,6 +6,7 @@
  *
  */
 
+/* vim: ft=css et sw=2 ts=2 sts=2 */
 /* Base Green is: #6C8C22 */
 
 * { padding: 0; margin: 0; }
@@ -395,8 +396,8 @@ ul.link-list .type {
 }
 
 #documentation .method-description .method-superclass {
-  position: relative;
-  color: #999;
+  color: #333;
+  font-weight: bolder;
 }
 
 #documentation .method-detail {
