@@ -134,7 +134,9 @@ class RDoc::Options
   attr_accessor :dry_run
 
   ##
-  # Encoding of output where.  This is set via --encoding.
+  # The output encoding.  All input files will be transcoded to this encoding.
+  #
+  # The default encoding is UTF-8.  This is set via --encoding.
 
   attr_accessor :encoding
 
@@ -316,8 +318,8 @@ class RDoc::Options
     @write_options = false
 
     if Object.const_defined? :Encoding then
-      @encoding = Encoding.default_external
-      @charset = @encoding.to_s
+      @encoding = Encoding::UTF_8
+      @charset = @encoding.name
     else
       @encoding = nil
       @charset = 'UTF-8'
@@ -590,9 +592,10 @@ Usage: #{opt.program_name} [options] [names...]
         opt.on("--encoding=ENCODING", "-e", Encoding.list.map { |e| e.name },
                "Specifies the output encoding.  All files",
                "read will be converted to this encoding.",
-               "Preferred over --charset") do |value|
+               "The default encoding is UTF-8.",
+               "--encoding is preferred over --charset") do |value|
                  @encoding = Encoding.find value
-                 @charset = @encoding.to_s # may not be valid value
+                 @charset = @encoding.name # may not be valid value
                end
 
         opt.separator nil

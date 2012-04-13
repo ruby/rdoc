@@ -1,4 +1,9 @@
-=== 3.13
+=== 4.0
+
+* Breaking changes
+  * The default output encoding for RDoc is now UTF-8.  Previously RDoc used
+    the default external encoding which was determined from your locale.
+    Issue #106 by Justin Baker.
 
 * Minor enhancements
   * Added Markdown as a supported format.  The markdown format can be set on a

@@ -66,16 +66,9 @@ class TestRDocOptions < RDoc::TestCase
 
     @options.encode_with coder
 
-    if Object.const_defined?(:Encoding) then
-      charset = encoding = Encoding.default_external.name
-    else
-      charset = 'UTF-8'
-      encoding = nil
-    end
-
     expected = {
-      'charset'        => charset,
-      'encoding'       => encoding,
+      'charset'        => 'UTF-8',
+      'encoding'       => 'UTF-8',
       'exclude'        => [],
       'hyperlink_all'  => false,
       'line_numbers'   => false,
@@ -129,7 +122,7 @@ class TestRDocOptions < RDoc::TestCase
   def test_encoding_default
     skip "Encoding not implemented" unless Object.const_defined? :Encoding
 
-    assert_equal Encoding.default_external, @options.encoding
+    assert_equal Encoding::UTF_8, @options.encoding
   end
 
   def test_generator_descriptions
