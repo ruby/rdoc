@@ -3,7 +3,7 @@
 
 class RDoc::AnyMethod < RDoc::MethodAttr
 
-  MARSHAL_VERSION = 1 # :nodoc:
+  MARSHAL_VERSION = 2 # :nodoc:
 
   ##
   # Don't rename \#initialize to \::new
@@ -29,6 +29,11 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   # Uses superclass implementation
 
   attr_accessor :uses_superclass
+
+  ##
+  # for RI support. if a stored superclass method already exists, use that.
+  
+  attr_accessor :superclass_method
 
   include RDoc::TokenStream
 
@@ -108,6 +113,9 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     aliases = @aliases.map do |a|
       [a.name, parse(a.comment)]
     end
+    
+    @superclass_method = find_superclass_method 
+    @superclass_method &&= @superclass_method.full_name
 
     [ MARSHAL_VERSION,
       @name,
@@ -120,6 +128,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       aliases,
       @params,
       @file.absolute_name,
+      @superclass_method
     ]
   end
 
@@ -160,6 +169,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
                    end
 
     @file = RDoc::TopLevel.new array[10] if version > 0
+    @superclass_method = array[11] if version > 1
   end
 
   ##
