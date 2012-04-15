@@ -2456,6 +2456,32 @@ end
     assert_equal 'there', baz.comment.text
   end
 
+  def test_uses_superclass
+    util_parser <<-EOS
+      class Bar
+        def bar
+        end
+      end
+      class Foo < Bar
+        def bar
+          super
+        end
+      end
+    EOS
+
+    @parser.parse_statements @top_level
+
+    bar = @top_level.classes.first
+    foo = @top_level.classes.last
+
+    foo_bar = foo.method_list.first
+    bar_bar = bar.method_list.first
+
+    assert(foo_bar.uses_superclass)
+    assert_equal(bar_bar, foo_bar.find_superclass_method)
+    refute(bar_bar.uses_superclass)
+  end
+
   def tk(klass, line, char, name, text)
     klass = RDoc::RubyToken.const_get "Tk#{klass.to_s.upcase}"
 
