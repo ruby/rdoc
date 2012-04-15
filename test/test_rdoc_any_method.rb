@@ -244,5 +244,34 @@ method(a, b) { |c, d| ... }
     assert_equal 'C1', @c1.method_list.last.parent_name
   end
 
+  def test_find_superclass_method
+    k3 = RDoc::NormalClass.new "RDoc::CodeObject", nil
+    k2 = RDoc::NormalClass.new "RDoc::MethodAttr", k3
+    k = RDoc::NormalClass.new "RDoc::AnyMethod", k2
+
+    m = RDoc::AnyMethod.new "def test_super", "test_super"
+    m2 = RDoc::AnyMethod.new "def test_super", "test_super"
+    m3 = RDoc::AnyMethod.new "def test_no_super", "test_no_super"
+  
+    m.uses_superclass = true
+    k.add_method m
+    k.add_method m3
+
+    k2.add_method m2
+
+    assert_nil(m3.find_superclass_method, 'no superclass method for "test_no_super"')
+    assert_equal(m2, m.find_superclass_method, 'superclass method found for "test_super"')
+    
+    k2 = RDoc::NormalClass.new "RDoc::MethodAttr", k3
+    k = RDoc::NormalClass.new "RDoc::AnyMethod", k2
+    
+    m.uses_superclass = true
+    k.add_method m
+    k.add_method m3
+
+    k3.add_method m2
+
+    assert_equal(m2, m.find_superclass_method, 'superclass method found two levels up')
+  end
 end
 
