@@ -226,7 +226,7 @@ ul.link-list .type {
 }
 
 ul.link-list li.superclass {
-  background: url(images/super.jpg) no-repeat right center;
+  background: url(images/arrow_up.png) no-repeat right center;
 }
 
 /* @end */
