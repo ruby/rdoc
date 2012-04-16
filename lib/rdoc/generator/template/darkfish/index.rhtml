@@ -8,6 +8,9 @@
     <%= render '_sidebar_pages.rhtml' %>
     <%= render '_sidebar_classes.rhtml' %>
   </div>
+  <nav id="extra-section" class="section project-section">
+    <h3 class="section-header"><a href="<%= rel_prefix %>/coverage_report.html">Coverage Report</a></h3>
+  </nav>
 </nav>
 
 <% if @options.main_page && main_page = @files.find { |f| f.full_name == @options.main_page } then %>

@@ -1,6 +1,8 @@
 <body class="indexpage">
 <h1><%= h @title %></h1>
 
+<h2><a href="coverage_report.html">Coverage Report</a></h2>
+
 <% simple_files = @files.select { |f| f.text? } %>
 <% unless simple_files.empty? then %>
 <h2>Pages</h2>
