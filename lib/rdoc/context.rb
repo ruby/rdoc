@@ -2,7 +2,7 @@ require 'cgi'
 
 ##
 # A Context is something that can hold modules, classes, methods, attributes,
-# aliases, requires, and includes. Classes, modules, and files are all
+# aliases, requires, and requires. Classes, modules, and files are all
 # Contexts.
 
 class RDoc::Context < RDoc::CodeObject
@@ -49,6 +49,11 @@ class RDoc::Context < RDoc::CodeObject
   # Modules this context includes
 
   attr_reader :includes
+
+  ##
+  # Modules this context is extended with
+
+  attr_reader :extensions
 
   ##
   # Methods defined in this context
@@ -129,6 +134,7 @@ class RDoc::Context < RDoc::CodeObject
     @aliases     = []
     @requires    = []
     @includes    = []
+    @extensions  = []
     @constants   = []
     @external_aliases = []
 
@@ -404,6 +410,15 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
+  # Adds extension module +ext+ which should be an RDoc::Extension
+
+  def add_extension ext
+    add_to @extensions, ext
+
+    ext
+  end
+
+  ##
   # Adds +method+ if not already there. If it is (as method or attribute),
   # updates the comment if it was empty.
 
@@ -521,7 +536,7 @@ class RDoc::Context < RDoc::CodeObject
   # This means any of: comment, aliases, methods, attributes, external
   # aliases, require, constant.
   #
-  # Includes are also checked unless <tt>includes == false</tt>.
+  # Includes and extensions are also checked unless <tt>includes == false</tt>.
 
   def any_content(includes = true)
     @any_content ||= !(
@@ -533,7 +548,7 @@ class RDoc::Context < RDoc::CodeObject
       @requires.empty? &&
       @constants.empty?
     )
-    @any_content || (includes && !@includes.empty?)
+    @any_content || (includes && !(@includes + @extensions).empty? )
   end
 
   ##
@@ -646,6 +661,13 @@ class RDoc::Context < RDoc::CodeObject
 
   def each_include # :yields: include
     @includes.each do |i| yield i end
+  end
+
+  ##
+  # Iterator for extension modules
+
+  def each_extension # :yields: extend
+    @extensions.each do |e| yield e end
   end
 
   ##

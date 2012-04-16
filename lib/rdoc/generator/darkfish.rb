@@ -8,7 +8,7 @@ require 'rdoc/generator/markup'
 ##
 # Darkfish RDoc HTML Generator
 #
-# $Id: darkfish.rb 52 2009-01-07 02:08:11Z deveiant $
+# $Id$
 #
 # == Author/s
 # * Michael Granger (ged@FaerieMUD.org)
@@ -390,7 +390,7 @@ class RDoc::Generator::Darkfish
     return "#{seconds / 31536000} years"
   end
 
-  # %q$Id: darkfish.rb 52 2009-01-07 02:08:11Z deveiant $"
+  # %q$Id$"
   SVNID_PATTERN = /
     \$Id:\s
     (\S+)\s                # filename

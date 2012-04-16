@@ -9,19 +9,7 @@
 # Unlike peg-markdown, this set of literals recognizes Unicode alphanumeric
 # characters, newlines and spaces.
 class RDoc::Markdown::Literals
-  # :stopdoc:
-
-    # This is distinct from setup_parser so that a standalone parser
-    # can redefine #initialize and still have access to the proper
-    # parser setup code.
-    def initialize(str, debug=false)
-      setup_parser(str, debug)
-    end
-
-
-
-    # Prepares for parsing +str+.  If you define a custom initialize you must
-    # call this method before #parse
+# STANDALONE START
     def setup_parser(str, debug=false)
       @string = str
       @pos = 0
@@ -33,11 +21,19 @@ class RDoc::Markdown::Literals
       setup_foreign_grammar
     end
 
+    # This is distinct from setup_parser so that a standalone parser
+    # can redefine #initialize and still have access to the proper
+    # parser setup code.
+    #
+    def initialize(str, debug=false)
+      setup_parser(str, debug)
+    end
+
     attr_reader :string
     attr_reader :failing_rule_offset
     attr_accessor :result, :pos
 
-    
+    # STANDALONE START
     def current_column(target=pos)
       if c = string.rindex("\n", target-1)
         return target - c - 1
@@ -65,7 +61,7 @@ class RDoc::Markdown::Literals
       lines
     end
 
-
+    #
 
     def get_text(start)
       @string[start..@pos-1]
@@ -258,6 +254,7 @@ class RDoc::Markdown::Literals
     def apply_with_args(rule, *args)
       memo_key = [rule, args]
       if m = @memoizations[memo_key][@pos]
+        prev = @pos
         @pos = m.pos
         if !m.set
           m.left_rec = true
@@ -292,6 +289,7 @@ class RDoc::Markdown::Literals
 
     def apply(rule)
       if m = @memoizations[rule][@pos]
+        prev = @pos
         @pos = m.pos
         if !m.set
           m.left_rec = true
@@ -359,9 +357,7 @@ class RDoc::Markdown::Literals
       RuleInfo.new(name, rendered)
     end
 
-
-  # :startdoc:
-  # :stopdoc:
+    #
   def setup_foreign_grammar; end
 
   # Alphanumeric = /\p{Word}/
@@ -413,5 +409,4 @@ class RDoc::Markdown::Literals
   Rules[:_Newline] = rule_info("Newline", "/\\n|\\r\\n?|\\p{Zl}|\\p{Zp}/")
   Rules[:_NonAlphanumeric] = rule_info("NonAlphanumeric", "/\\p{^Word}/")
   Rules[:_Spacechar] = rule_info("Spacechar", "/\\t|\\p{Zs}/")
-  # :startdoc:
 end
