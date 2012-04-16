@@ -1,5 +1,5 @@
 ##
-# A Module extend in a class with \#extend
+# A Module extension in a class with \#extend
 
 class RDoc::Extend < RDoc::CodeObject
 
@@ -54,13 +54,13 @@ class RDoc::Extend < RDoc::CodeObject
   end
 
   ##
-  # Attempts to locate the extension module object.  Returns the name if not
+  # Attempts to locate the extend module object.  Returns the name if not
   # known.
   #
   # The scoping rules of Ruby to resolve the name of an extension module are:
   # - first look into the children of the current context;
   # - if not found, look into the children of extension modules,
-  #   in reverse extension order;
+  #   in reverse extend order;
   # - if still not found, go up the hierarchy of names.
   #
   # This method has <code>O(n!)</code> behavior when the module calling
@@ -79,7 +79,7 @@ class RDoc::Extend < RDoc::CodeObject
     return @name if @name =~ /^::/
 
     # search the includes before this one, in reverse order
-    searched = parent.extensions.take_while { |i| i != self }.reverse
+    searched = parent.extends.take_while { |i| i != self }.reverse
     searched.each do |i|
       ext = i.module
       next if String === ext

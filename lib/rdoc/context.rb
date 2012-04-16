@@ -53,7 +53,7 @@ class RDoc::Context < RDoc::CodeObject
   ##
   # Modules this context is extended with
 
-  attr_reader :extensions
+  attr_reader :extends
 
   ##
   # Methods defined in this context
@@ -134,7 +134,7 @@ class RDoc::Context < RDoc::CodeObject
     @aliases     = []
     @requires    = []
     @includes    = []
-    @extensions  = []
+    @extends     = []
     @constants   = []
     @external_aliases = []
 
@@ -410,10 +410,10 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Adds extension module +ext+ which should be an RDoc::Extension
+  # Adds extension module +ext+ which should be an RDoc::Extend
 
-  def add_extension ext
-    add_to @extensions, ext
+  def add_extend ext
+    add_to @extends, ext
 
     ext
   end
@@ -536,7 +536,7 @@ class RDoc::Context < RDoc::CodeObject
   # This means any of: comment, aliases, methods, attributes, external
   # aliases, require, constant.
   #
-  # Includes and extensions are also checked unless <tt>includes == false</tt>.
+  # Includes and extends are also checked unless <tt>includes == false</tt>.
 
   def any_content(includes = true)
     @any_content ||= !(
@@ -548,7 +548,7 @@ class RDoc::Context < RDoc::CodeObject
       @requires.empty? &&
       @constants.empty?
     )
-    @any_content || (includes && !(@includes + @extensions).empty? )
+    @any_content || (includes && !(@includes + @extends).empty? )
   end
 
   ##
@@ -666,8 +666,8 @@ class RDoc::Context < RDoc::CodeObject
   ##
   # Iterator for extension modules
 
-  def each_extension # :yields: extend
-    @extensions.each do |e| yield e end
+  def each_extend # :yields: extend
+    @extends.each do |e| yield e end
   end
 
   ##

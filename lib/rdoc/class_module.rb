@@ -13,7 +13,7 @@ class RDoc::ClassModule < RDoc::Context
   #   * Added file to methods
   # 2::
   #   RDoc 3.13
-  #   * Added extensions
+  #   * Added extends
 
   MARSHAL_VERSION = 2 # :nodoc:
 
@@ -57,7 +57,7 @@ class RDoc::ClassModule < RDoc::Context
     klass.external_aliases.concat mod.external_aliases
     klass.constants.concat mod.constants
     klass.includes.concat mod.includes
-    klass.extensions.concat mod.extensions
+    klass.extends.concat mod.extends
 
     klass.methods_hash.update mod.methods_hash
     klass.constants_hash.update mod.constants_hash
@@ -86,7 +86,7 @@ class RDoc::ClassModule < RDoc::Context
      klass.external_aliases +
      klass.constants +
      klass.includes +
-     klass.extensions +
+     klass.extends +
      klass.classes +
      klass.modules).each do |obj|
       obj.parent = klass
@@ -276,7 +276,7 @@ class RDoc::ClassModule < RDoc::Context
         [incl.name, parse(incl.comment), incl.file_name]
       end,
       method_types,
-      extensions.map do |ext|
+      extends.map do |ext|
         [ext.name, parse(ext.comment), ext.file_name]
       end
     ]
@@ -337,7 +337,7 @@ class RDoc::ClassModule < RDoc::Context
     end
 
     array[9].each do |name, comment, file|
-      ext = add_extension RDoc::Extension.new(name, comment)
+      ext = add_extend RDoc::Extend.new(name, comment)
       ext.record_location RDoc::TopLevel.new file
     end if array[9] # Support Marshal version 1
   end
@@ -389,15 +389,15 @@ class RDoc::ClassModule < RDoc::Context
 
     @includes.uniq! # clean up
 
-    merge_collections extensions, cm.extensions, other_files do |add, ext|
+    merge_collections extends, cm.extends, other_files do |add, ext|
       if add then
-        add_extension ext
+        add_extend ext
       else
-        @extensions.delete ext
+        @extends.delete ext
       end
     end
 
-    @extensions.uniq! # clean up
+    @extends.uniq! # clean up
 
     merge_collections method_list, cm.method_list, other_files do |add, meth|
       if add then
@@ -639,18 +639,18 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
-  # Deletes from #extensions those whose module has been removed from the
+  # Deletes from #extends those whose module has been removed from the
   # documentation.
   #--
-  # FIXME: extensions are not reliably removed, see _possible_bug test case
+  # FIXME: extends are not reliably removed, see _possible_bug test case
 
-  def update_extensions
-    extensions.reject! do |ext|
+  def update_extends
+    extends.reject! do |ext|
       mod = ext.module
       !(String === mod) && RDoc::TopLevel.all_modules_hash[mod.full_name].nil?
     end
 
-    extensions.uniq!
+    extends.uniq!
   end
 
 end
