@@ -3,8 +3,8 @@
 #--
 #   irb/ruby-lex.rb - ruby lexcal analyzer
 #   	$Release Version: 0.9.5$
-#   	$Revision$
-#   	$Date$
+#   	$Revision: 17979 $
+#   	$Date: 2008-07-09 10:17:05 -0700 (Wed, 09 Jul 2008) $
 #   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
 #
 #++

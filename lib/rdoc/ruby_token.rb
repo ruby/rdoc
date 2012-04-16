@@ -1,8 +1,8 @@
 #--
 #   irb/ruby-token.rb - ruby tokens
 #   	$Release Version: 0.9.5$
-#   	$Revision$
-#   	$Date$
+#   	$Revision: 11708 $
+#   	$Date: 2007-02-12 15:01:19 -0800 (Mon, 12 Feb 2007) $
 #   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
 #++
 # Definitions of all tokens involved in the lexical analysis.
