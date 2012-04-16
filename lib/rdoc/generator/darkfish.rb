@@ -175,6 +175,7 @@ class RDoc::Generator::Darkfish
     generate_class_files
     generate_file_files
     generate_table_of_contents
+    generate_coverage_report
     @json_index.generate top_levels
 
     copy_static
@@ -369,6 +370,28 @@ class RDoc::Generator::Darkfish
     error.set_backtrace e.backtrace
 
     raise error
+  end
+
+  def generate_coverage_report
+    debug_msg "Rendering the Coverage Report"
+
+    out_file = @outputdir + 'coverage_report.html'
+    
+    stats = RDoc::Stats.new(@files)
+
+    File.open(out_file, 'w') do |io|
+      io << <<-EOF
+      <html>
+      <head><title>Coverage Report</title></head>
+      <body>
+      <pre>
+      EOF
+      io << stats.report
+      io << <<-EOF
+      </pre></body></html>
+      EOF
+    end
+
   end
 
   ##
