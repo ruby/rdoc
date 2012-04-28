@@ -1388,6 +1388,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when TkCASE, TkDO, TkIF, TkUNLESS, TkBEGIN then
         nest += 1
 
+      when TkSUPER then
+        current_method.uses_superclass = true
+
       when TkIDENTIFIER then
         if nest == 1 and current_method.nil? then
           case tk.name

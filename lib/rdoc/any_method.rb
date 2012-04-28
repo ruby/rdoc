@@ -25,6 +25,11 @@ class RDoc::AnyMethod < RDoc::MethodAttr
 
   attr_accessor :params
 
+  ##
+  # Uses superclass implementation
+
+  attr_accessor :uses_superclass
+
   include RDoc::TokenStream
 
   ##
@@ -36,6 +41,27 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @c_function = nil
     @dont_rename_initialize = false
     @token_stream = nil
+    @uses_superclass = false
+  end
+
+  ##
+  # For methods that use the superclass, find the next superclass method that
+  # would be called.
+
+  def find_superclass_method
+    return nil unless uses_superclass
+
+    method = nil
+    next_superclass = parent.superclass
+
+    until next_superclass.kind_of?(String) or !next_superclass
+      if method = next_superclass.method_list.find { |x| x == self }
+        break
+      end
+      next_superclass = next_superclass.superclass
+    end
+
+    return method
   end
 
   ##
