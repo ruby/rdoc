@@ -9,3 +9,4 @@
 /lib/rdoc/markdown.rb
 /pkg
 /tmp
+.DS_Store
