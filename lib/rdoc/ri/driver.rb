@@ -555,7 +555,7 @@ Options may also be set in the 'RI' environment variable.
 
         constants = klass.constants.sort_by { |constant| constant.name }
 
-        list.concat constants.map { |constant|
+        list.items.concat constants.map { |constant|
           parts = constant.comment.parts if constant.comment
           parts << RDoc::Markup::Paragraph.new('[not documented]') if
             parts.empty?
