@@ -56,6 +56,8 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   def find_superclass_method
     return nil unless uses_superclass
 
+    return self.superclass_method if self.superclass_method
+
     method = nil
     next_superclass = parent.superclass
 
@@ -65,6 +67,10 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       end
       next_superclass = next_superclass.superclass
     end
+
+    self.superclass_method = method
+    self.superclass_method &&= @superclass_method.full_name
+
 
     return method
   end
@@ -113,9 +119,8 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     aliases = @aliases.map do |a|
       [a.name, parse(a.comment)]
     end
-    
-    @superclass_method = find_superclass_method 
-    @superclass_method &&= @superclass_method.full_name
+
+    find_superclass_method
 
     [ MARSHAL_VERSION,
       @name,
