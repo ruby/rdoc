@@ -47,6 +47,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @dont_rename_initialize = false
     @token_stream = nil
     @uses_superclass = false
+    @superclass_method = nil
   end
 
   ##
@@ -69,10 +70,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     end
 
     self.superclass_method = method
-    self.superclass_method &&= @superclass_method.full_name
-
-
-    return method
   end
 
   ##
@@ -122,6 +119,10 @@ class RDoc::AnyMethod < RDoc::MethodAttr
 
     find_superclass_method
 
+    if self.superclass_method
+      superclass_method = self.superclass_method.full_name
+    end
+
     [ MARSHAL_VERSION,
       @name,
       full_name,
@@ -133,7 +134,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       aliases,
       @params,
       @file.absolute_name,
-      @superclass_method
+      superclass_method
     ]
   end
 
