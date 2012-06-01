@@ -1,3 +1,9 @@
+=== 3.13
+
+* Bug fixes
+  * Fixed bug in syntax-highlighting that would corrupt regular expressions.
+    Ruby Bug #6488 by Benny Lyne Amorsen.
+
 === 3.12.1 / 2013-02-05
 
 * Bug fixes
