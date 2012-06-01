@@ -127,6 +127,17 @@ U
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_regexp_backref
+    tokens = RDoc::RubyLex.tokenize "/[csh](..) [csh]\\1 in/", nil
+
+    expected = [
+      @TK::TkREGEXP.new( 0, 1,  0, "/[csh](..) [csh]\\1 in/"),
+      @TK::TkNL    .new(22, 1, 22, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_string
     tokens = RDoc::RubyLex.tokenize "'hi'", nil
 
