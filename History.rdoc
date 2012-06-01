@@ -26,6 +26,8 @@
     Ondruch
   * RDoc no longer quits when given an entry that is not a file or directory.
     Issue #101 by Charles Nutter
+  * Fixed bug in syntax-highlighting that would corrupt regular expressions.
+    Ruby Bug #6488 by Benny Lyne Amorsen.
 
 === 3.12 / 2011-12-15
 
