@@ -160,6 +160,21 @@ end
     assert_equal expected, report
   end
 
+  def test_report_skip_object
+    c = @tl.add_class RDoc::NormalClass, 'Object'
+    c.record_location @tl
+
+    m = RDoc::AnyMethod.new nil, 'm'
+    m.record_location @tl
+    c.add_method m
+    m.comment = 'm'
+
+    RDoc::TopLevel.complete :public
+
+    refute_match %r%^class Object$%, @s.report
+  end
+
+
   def test_report_class_documented
     c = @tl.add_class RDoc::NormalClass, 'C'
     c.record_location @tl
