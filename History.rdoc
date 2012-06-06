@@ -28,6 +28,9 @@
     Issue #101 by Charles Nutter
   * Fixed bug in syntax-highlighting that would corrupt regular expressions.
     Ruby Bug #6488 by Benny Lyne Amorsen.
+  * "class Object" no longer appears in the coverage report if all its methods
+    are documented.  This suppresses a false positive for libraries that add
+    toplevel methods.  Pull Request #128 by Zachary Scott.
 
 === 3.12 / 2011-12-15
 
