@@ -57,7 +57,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   def find_superclass_method
     return nil unless uses_superclass
 
-    return self.superclass_method if self.superclass_method
+    return @superclass_method if @superclass_method
 
     method = nil
     next_superclass = parent.superclass
@@ -69,7 +69,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       next_superclass = next_superclass.superclass
     end
 
-    self.superclass_method = method
+    @superclass_method = method
   end
 
   ##
@@ -119,8 +119,8 @@ class RDoc::AnyMethod < RDoc::MethodAttr
 
     find_superclass_method
 
-    if self.superclass_method
-      superclass_method = self.superclass_method.full_name
+    if @superclass_method
+      @superclass_method = @superclass_method.full_name
     end
 
     [ MARSHAL_VERSION,
@@ -134,7 +134,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       aliases,
       @params,
       @file.absolute_name,
-      superclass_method
+      @superclass_method
     ]
   end
 
