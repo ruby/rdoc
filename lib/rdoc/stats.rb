@@ -107,6 +107,9 @@ class RDoc::Stats
     return if @doc_items
 
     ucm = RDoc::TopLevel.unique_classes_and_modules
+
+    classes = RDoc::TopLevel.unique_classes.reject { |cm| cm.full_name == 'Object' }
+
     constants = []
     ucm.each { |cm| constants.concat cm.constants }
 
@@ -117,7 +120,7 @@ class RDoc::Stats
     ucm.each { |cm| attributes.concat cm.attributes }
 
     @num_attributes, @undoc_attributes = doc_stats attributes
-    @num_classes,    @undoc_classes    = doc_stats RDoc::TopLevel.unique_classes
+    @num_classes,    @undoc_classes    = doc_stats classes
     @num_constants,  @undoc_constants  = doc_stats constants
     @num_methods,    @undoc_methods    = doc_stats methods
     @num_modules,    @undoc_modules    = doc_stats RDoc::TopLevel.unique_modules

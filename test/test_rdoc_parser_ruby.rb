@@ -2471,15 +2471,17 @@ end
 
     @parser.parse_statements @top_level
 
-    bar = @top_level.classes.first
-    foo = @top_level.classes.last
+    bar = @top_level.find_module_named 'Bar'
+    foo = @top_level.find_module_named 'Foo'
 
     foo_bar = foo.method_list.first
     bar_bar = bar.method_list.first
 
-    assert(foo_bar.uses_superclass)
-    assert_equal(bar_bar, foo_bar.find_superclass_method)
-    refute(bar_bar.uses_superclass)
+    assert foo_bar.uses_superclass
+
+    assert_equal bar_bar, foo_bar.find_superclass_method
+
+    refute bar_bar.uses_superclass
   end
 
   def tk(klass, line, char, name, text)
