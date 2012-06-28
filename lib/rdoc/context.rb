@@ -631,6 +631,9 @@ class RDoc::Context < RDoc::CodeObject
   ##
   # Iterator for ancestors for duck-typing.  Does nothing.  See
   # RDoc::ClassModule#each_ancestor.
+  #
+  # This method exists to make it easy to work with Context subclasses that
+  # aren't part of RDoc.
 
   def each_ancestor # :nodoc:
   end
