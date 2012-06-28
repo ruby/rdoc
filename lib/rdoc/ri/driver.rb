@@ -400,15 +400,23 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
-  # Adds +includes+ to +out+
+  # Adds +extends+ to +out+
 
-  def add_includes out, includes
-    return if includes.empty?
+  def add_extends out, extends
+    add_extension_modules out, 'Extends', extends
+  end
+
+  ##
+  # Adds a list of +extensions+ to this module of the given +type+ to +out+.
+  # add_includes and add_extends call this, so you should use those directly.
+
+  def add_extension_modules out, type, extensions
+    return if extensions.empty?
 
     out << RDoc::Markup::Rule.new(1)
-    out << RDoc::Markup::Heading.new(1, "Includes:")
+    out << RDoc::Markup::Heading.new(1, "#{type}:")
 
-    includes.each do |modules, store|
+    extensions.each do |modules, store|
       if modules.length == 1 then
         include = modules.first
         name = include.name
@@ -443,6 +451,13 @@ Options may also be set in the 'RI' environment variable.
         end
       end
     end
+  end
+
+  ##
+  # Adds +includes+ to +out+
+
+  def add_includes out, includes
+    add_extension_modules out, 'Includes', includes
   end
 
   ##
