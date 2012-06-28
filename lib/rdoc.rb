@@ -181,6 +181,7 @@ module RDoc
 
   autoload :Constant,       'rdoc/constant'
   autoload :Include,        'rdoc/include'
+  autoload :Extend,         'rdoc/extend'
   autoload :Require,        'rdoc/require'
 
 end
