@@ -1058,6 +1058,26 @@ EOF
     assert_equal @top_level, incl.file
   end
 
+  def test_parse_extend
+    klass = RDoc::NormalClass.new 'C'
+    klass.parent = @top_level
+
+    comment = RDoc::Comment.new "# my extend\n", @top_level
+
+    util_parser "extend I"
+
+    @parser.get_tk # extend
+
+    @parser.parse_extend klass, comment
+
+    assert_equal 1, klass.extends.length
+
+    ext = klass.extends.first
+    assert_equal 'I', ext.name
+    assert_equal 'my extend', ext.comment.text
+    assert_equal @top_level, ext.file
+  end
+
   def test_parse_meta_method
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level

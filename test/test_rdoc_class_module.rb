@@ -145,11 +145,15 @@ class TestRDocClassModule < XrefTestCase
     i1 = RDoc::Include.new 'I1', ''
     i1.record_location tl
 
+    e1 = RDoc::Extend.new 'E1', ''
+    e1.record_location tl
+
     cm.add_attribute a1
     cm.add_attribute a2
     cm.add_method m1
     cm.add_constant c1
     cm.add_include i1
+    cm.add_extend e1
     cm.add_comment 'this is a comment', tl
 
     loaded = Marshal.load Marshal.dump cm
@@ -167,6 +171,7 @@ class TestRDocClassModule < XrefTestCase
     assert_equal [c1],               loaded.constants
     assert_equal 'Namespace::Klass', loaded.full_name
     assert_equal [i1],               loaded.includes
+    assert_equal [e1],               loaded.extends
     assert_equal [m1],               loaded.method_list
     assert_equal 'Klass',            loaded.name
     assert_equal 'Super',            loaded.superclass
@@ -176,6 +181,8 @@ class TestRDocClassModule < XrefTestCase
     assert_equal tl, loaded.constants.first.file
 
     assert_equal tl, loaded.includes.first.file
+
+    assert_equal tl, loaded.extends.first.file
 
     assert_equal tl, loaded.method_list.first.file
   end
@@ -223,6 +230,157 @@ class TestRDocClassModule < XrefTestCase
     assert_equal 'Klass',            loaded.name
     assert_equal 'Super',            loaded.superclass
     assert_equal nil,                loaded.file
+  end
+
+  def test_marshal_load_version_1
+    tl = RDoc::TopLevel.new 'file.rb'
+
+    ns = tl.add_module RDoc::NormalModule, 'Namespace'
+
+    cm = ns.add_class RDoc::NormalClass, 'Klass', 'Super'
+    cm.record_location tl
+
+    a1 = RDoc::Attr.new nil, 'a1', 'RW', ''
+    a1.record_location tl
+    a2 = RDoc::Attr.new nil, 'a2', 'RW', '', true
+    a2.record_location tl
+
+    m1 = RDoc::AnyMethod.new nil, 'm1'
+    m1.record_location tl
+
+    c1 = RDoc::Constant.new 'C1', nil, ''
+    c1.record_location tl
+
+    i1 = RDoc::Include.new 'I1', ''
+    i1.record_location tl
+
+    cm.add_attribute a1
+    cm.add_attribute a2
+    cm.add_method m1
+    cm.add_constant c1
+    cm.add_include i1
+    cm.add_comment 'this is a comment', tl
+
+    loaded = Marshal.load "\x04\bU:\x16RDoc::NormalClass[\x0Ei\x06I\"\nKlass" \
+                          "\x06:\x06EFI\"\x15Namespace::Klass\x06;\x06FI" \
+                          "\"\nSuper\x06;\x06Fo:\eRDoc::Markup::Document\a" \
+                          ":\v@parts[\x06o;\a\a;\b[\x06o" \
+                          ":\x1CRDoc::Markup::Paragraph\x06;\b" \
+                          "[\x06I\"\x16this is a comment\x06;\x06F" \
+                          ":\n@fileI\"\ffile.rb\x06;\x06F;\n0[\a[\nI" \
+                          "\"\aa2\x06;\x06FI\"\aRW\x06;\x06F:\vpublicT@\x11" \
+                          "[\nI\"\aa1\x06;\x06FI\"\aRW\x06;\x06F;\vF@\x11" \
+                          "[\x06[\bI\"\aC1\x06;\x06Fo;\a\a;\b[\x00;\n0@\x11" \
+                          "[\x06[\bI\"\aI1\x06;\x06Fo;\a\a;\b[\x00;\n0@\x11" \
+                          "[\a[\aI\"\nclass\x06;\x06F[\b[\a;\v[\x00" \
+                          "[\a:\x0Eprotected[\x00[\a:\fprivate[\x00[\aI" \
+                          "\"\rinstance\x06;\x06F[\b[\a;\v[\x06[\aI" \
+                          "\"\am1\x06;\x06F@\x11[\a;\f[\x00[\a;\r[\x00"
+
+    assert_equal cm, loaded
+
+    inner = RDoc::Markup::Document.new(
+      RDoc::Markup::Paragraph.new('this is a comment'))
+    inner.file = tl
+
+    comment = RDoc::Markup::Document.new inner
+
+    assert_equal [a2, a1],           loaded.attributes.sort
+    assert_equal comment,            loaded.comment
+    assert_equal [c1],               loaded.constants
+    assert_equal 'Namespace::Klass', loaded.full_name
+    assert_equal [i1],               loaded.includes
+    assert_empty                     loaded.extends
+    assert_equal [m1],               loaded.method_list
+    assert_equal 'Klass',            loaded.name
+    assert_equal 'Super',            loaded.superclass
+
+    assert_equal tl, loaded.attributes.first.file
+
+    assert_equal tl, loaded.constants.first.file
+
+    assert_equal tl, loaded.includes.first.file
+
+    assert_equal tl, loaded.method_list.first.file
+  end
+
+  def test_marshal_load_version_2
+    tl = RDoc::TopLevel.new 'file.rb'
+
+    ns = tl.add_module RDoc::NormalModule, 'Namespace'
+
+    cm = ns.add_class RDoc::NormalClass, 'Klass', 'Super'
+    cm.record_location tl
+
+    a1 = RDoc::Attr.new nil, 'a1', 'RW', ''
+    a1.record_location tl
+    a2 = RDoc::Attr.new nil, 'a2', 'RW', '', true
+    a2.record_location tl
+
+    m1 = RDoc::AnyMethod.new nil, 'm1'
+    m1.record_location tl
+
+    c1 = RDoc::Constant.new 'C1', nil, ''
+    c1.record_location tl
+
+    i1 = RDoc::Include.new 'I1', ''
+    i1.record_location tl
+
+    e1 = RDoc::Extend.new 'E1', ''
+    e1.record_location tl
+
+    cm.add_attribute a1
+    cm.add_attribute a2
+    cm.add_method m1
+    cm.add_constant c1
+    cm.add_include i1
+    cm.add_extend e1
+    cm.add_comment 'this is a comment', tl
+
+    loaded = Marshal.load "\x04\bU:\x16RDoc::NormalClass[\x0Fi\aI\"\nKlass" \
+                          "\x06:\x06EFI\"\x15Namespace::Klass\x06;\x06FI" \
+                          "\"\nSuper\x06;\x06Fo:\eRDoc::Markup::Document\a" \
+                          ":\v@parts[\x06o;\a\a;\b[\x06o" \
+                          ":\x1CRDoc::Markup::Paragraph\x06;\b" \
+                          "[\x06I\"\x16this is a comment\x06;\x06F" \
+                          ":\n@fileI\"\ffile.rb\x06;\x06F;\n0[\a[\nI" \
+                          "\"\aa2\x06;\x06FI\"\aRW\x06;\x06F:\vpublicT@\x11" \
+                          "[\nI\"\aa1\x06;\x06FI\"\aRW\x06;\x06F;\vF@\x11" \
+                          "[\x06[\bI\"\aC1\x06;\x06Fo;\a\a;\b[\x00;\n0@\x11" \
+                          "[\x06[\bI\"\aI1\x06;\x06Fo;\a\a;\b[\x00;\n0@\x11" \
+                          "[\a[\aI\"\nclass\x06;\x06F[\b[\a;\v[\x00" \
+                          "[\a:\x0Eprotected[\x00[\a:\fprivate[\x00[\aI" \
+                          "\"\rinstance\x06;\x06F[\b[\a;\v[\x06[\aI" \
+                          "\"\am1\x06;\x06F@\x11[\a;\f[\x00[\a;\r[\x00" \
+                          "[\x06[\bI\"\aE1\x06;\x06Fo;\a\a;\b[\x00;\n0@\x11"
+
+    assert_equal cm, loaded
+
+    inner = RDoc::Markup::Document.new(
+      RDoc::Markup::Paragraph.new('this is a comment'))
+    inner.file = tl
+
+    comment = RDoc::Markup::Document.new inner
+
+    assert_equal [a2, a1],           loaded.attributes.sort
+    assert_equal comment,            loaded.comment
+    assert_equal [c1],               loaded.constants
+    assert_equal 'Namespace::Klass', loaded.full_name
+    assert_equal [i1],               loaded.includes
+    assert_equal [e1],               loaded.extends
+    assert_equal [m1],               loaded.method_list
+    assert_equal 'Klass',            loaded.name
+    assert_equal 'Super',            loaded.superclass
+
+    assert_equal tl, loaded.attributes.first.file
+
+    assert_equal tl, loaded.constants.first.file
+
+    assert_equal tl, loaded.includes.first.file
+
+    assert_equal tl, loaded.extends.first.file
+
+    assert_equal tl, loaded.method_list.first.file
   end
 
   def test_merge_attributes
@@ -434,6 +592,40 @@ class TestRDocClassModule < XrefTestCase
     expected.each do |a| a.parent = cm1 end
 
     assert_equal expected, cm1.constants.sort
+  end
+
+  def test_merge_extends
+    tl1 = RDoc::TopLevel.new 'one.rb'
+    tl2 = RDoc::TopLevel.new 'two.rb'
+
+    cm1 = RDoc::ClassModule.new 'Klass'
+
+    ext = cm1.add_extend RDoc::Extend.new('I1', 'one')
+    ext.record_location tl1
+    ext = cm1.add_extend RDoc::Extend.new('I3', 'one')
+    ext.record_location tl1
+
+    cm2 = RDoc::ClassModule.new 'Klass'
+    cm2.instance_variable_set :@comment, @RM::Document.new
+
+    ext = cm2.add_extend RDoc::Extend.new('I2', 'two')
+    ext.record_location tl2
+    ext = cm2.add_extend RDoc::Extend.new('I3', 'one')
+    ext.record_location tl1
+    ext = cm2.add_extend RDoc::Extend.new('I4', 'one')
+    ext.record_location tl1
+
+    cm1.merge cm2
+
+    expected = [
+      RDoc::Extend.new('I2', 'two'),
+      RDoc::Extend.new('I3', 'one'),
+      RDoc::Extend.new('I4', 'one'),
+    ]
+
+    expected.each do |a| a.parent = cm1 end
+
+    assert_equal expected, cm1.extends.sort
   end
 
   def test_merge_includes
@@ -808,6 +1000,65 @@ class TestRDocClassModule < XrefTestCase
     @c1.update_includes
 
     assert_equal [a, c], @c1.includes
+  end
+
+  def test_update_extends
+    a = RDoc::Extend.new 'M1', nil
+    b = RDoc::Extend.new 'M2', nil
+    c = RDoc::Extend.new 'C', nil
+
+    @c1.add_extend a
+    @c1.add_extend b
+    @c1.add_extend c
+    @c1.each_extend do |extend| extend.module end # cache extended modules
+
+    @m1_m2.document_self = nil
+    assert @m1_m2.remove_from_documentation?
+
+    assert RDoc::TopLevel.all_modules_hash.key? @m1_m2.full_name
+    refute RDoc::TopLevel.all_modules_hash[@m1_m2.full_name].nil?
+    RDoc::TopLevel.remove_nodoc RDoc::TopLevel.all_modules_hash
+    refute RDoc::TopLevel.all_modules_hash.key? @m1_m2.full_name
+
+    @c1.update_extends
+
+    assert_equal [a, c], @c1.extends
+  end
+
+  def test_update_extends_trim
+    a = RDoc::Extend.new 'D::M', nil
+    b = RDoc::Extend.new 'D::M', nil
+
+    @c1.add_extend a
+    @c1.add_extend b
+    @c1.each_extend do |extend| extend.module end # cache extended modules
+
+    @c1.update_extends
+
+    assert_equal [a], @c1.extends
+  end
+
+  def test_update_extends_with_colons
+    a = RDoc::Extend.new 'M1', nil
+    b = RDoc::Extend.new 'M1::M2', nil
+    c = RDoc::Extend.new 'C', nil
+
+    @c1.add_extend a
+    @c1.add_extend b
+    @c1.add_extend c
+    @c1.each_extend do |extend| extend.module end # cache extended modules
+
+    @m1_m2.document_self = nil
+    assert @m1_m2.remove_from_documentation?
+
+    assert RDoc::TopLevel.all_modules_hash.key? @m1_m2.full_name
+    refute RDoc::TopLevel.all_modules_hash[@m1_m2.full_name].nil?
+    RDoc::TopLevel.remove_nodoc RDoc::TopLevel.all_modules_hash
+    refute RDoc::TopLevel.all_modules_hash.key? @m1_m2.full_name
+
+    @c1.update_extends
+
+    assert_equal [a, c], @c1.extends
   end
 
 end

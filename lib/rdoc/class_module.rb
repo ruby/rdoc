@@ -642,11 +642,12 @@ class RDoc::ClassModule < RDoc::Context
   # Deletes from #extends those whose module has been removed from the
   # documentation.
   #--
-  # FIXME: extends are not reliably removed, see _possible_bug test case
+  # FIXME: like update_includes, extends are not reliably removed
 
   def update_extends
     extends.reject! do |ext|
       mod = ext.module
+
       !(String === mod) && RDoc::TopLevel.all_modules_hash[mod.full_name].nil?
     end
 
