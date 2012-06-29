@@ -122,7 +122,7 @@ class TestRDocRIDriver < RDoc::TestCase
 
     expected = @RM::Document.new(
       @RM::Rule.new(1),
-      @RM::Heading.new(1, "Extends:"),
+      @RM::Heading.new(1, "Extended by:"),
       @RM::Paragraph.new("Ext (from #{@store.friendly_path})"),
       @RM::BlankLine.new,
       @RM::Paragraph.new("Extend thingy"),
@@ -272,6 +272,7 @@ class TestRDocRIDriver < RDoc::TestCase
     expected = {
       'Ambiguous' => [@store1, @store2],
       'Bar'       => [@store2],
+      'Ext'       => [@store1],
       'Foo'       => [@store1],
       'Foo::Bar'  => [@store1],
       'Foo::Baz'  => [@store1, @store2],
@@ -295,11 +296,15 @@ class TestRDocRIDriver < RDoc::TestCase
       [@store, @store.load_class(@cFoo.full_name)]
     ]
 
-    out = @driver.class_document @cFoo.full_name, found, [], []
+    extends  = [[[@cFooExt], @store]]
+    includes = [[[@cFooInc], @store]]
+
+    out = @driver.class_document @cFoo.full_name, found, [], includes, extends
 
     expected = @RM::Document.new
     @driver.add_class expected, 'Foo', []
-    @driver.add_includes expected, []
+    @driver.add_includes expected, includes
+    @driver.add_extends  expected, extends
     @driver.add_from expected, @store
     expected << @RM::Rule.new(1)
 
@@ -592,6 +597,7 @@ Foo::Bar#bother
 
     expected = [
       [@store, 'Ambiguous', 'Ambiguous', :both, 'blah'],
+      [@store, 'Ext',       'Ext',       :both, 'blah'],
       [@store, 'Foo',       'Foo',       :both, 'blah'],
       [@store, 'Foo::Bar',  'Foo::Bar',  :both, 'blah'],
       [@store, 'Foo::Baz',  'Foo::Baz',  :both, 'blah'],
@@ -692,7 +698,7 @@ Foo::Bar#bother
       @driver.list_known_classes
     end
 
-    assert_equal "Ambiguous\nFoo\nFoo::Bar\nFoo::Baz\nInc\n", out
+    assert_equal "Ambiguous\nExt\nFoo\nFoo::Bar\nFoo::Baz\nInc\n", out
   end
 
   def test_list_known_classes_name
@@ -1034,6 +1040,7 @@ Foo::Bar#bother
     @top_level = RDoc::TopLevel.new 'file.rb'
 
     @cFoo = @top_level.add_class RDoc::NormalClass, 'Foo'
+    @mExt = @top_level.add_module RDoc::NormalModule, 'Ext'
     @mInc = @top_level.add_module RDoc::NormalModule, 'Inc'
     @cAmbiguous = @top_level.add_class RDoc::NormalClass, 'Ambiguous'
 
@@ -1076,6 +1083,7 @@ Foo::Bar#bother
     @store.save_class @cFoo
     @store.save_class @cFoo_Bar
     @store.save_class @cFoo_Baz
+    @store.save_class @mExt
     @store.save_class @mInc
     @store.save_class @cAmbiguous
 

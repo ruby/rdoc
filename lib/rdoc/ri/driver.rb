@@ -403,7 +403,7 @@ Options may also be set in the 'RI' environment variable.
   # Adds +extends+ to +out+
 
   def add_extends out, extends
-    add_extension_modules out, 'Extends', extends
+    add_extension_modules out, 'Extended by', extends
   end
 
   ##
@@ -520,7 +520,7 @@ Options may also be set in the 'RI' environment variable.
   ##
   # Builds a RDoc::Markup::Document from +found+, +klasess+ and +includes+
 
-  def class_document name, found, klasses, includes
+  def class_document name, found, klasses, includes, extends
     also_in = []
 
     out = RDoc::Markup::Document.new
@@ -528,6 +528,7 @@ Options may also be set in the 'RI' environment variable.
     add_class out, name, klasses
 
     add_includes out, includes
+    add_extends  out, extends
 
     found.each do |store, klass|
       comment = klass.comment
@@ -612,26 +613,29 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
-  # Returns the stores wherein +name+ is found along with the classes and
-  # includes that match it
+  # Returns the stores wherein +name+ is found along with the classes,
+  # extends and includes that match it
 
-  def classes_and_includes_for name
+  def classes_and_includes_and_extends_for name
     klasses = []
+    extends = []
     includes = []
 
     found = @stores.map do |store|
       begin
         klass = store.load_class name
         klasses  << klass
+        extends  << [klass.extends,  store] if klass.extends
         includes << [klass.includes, store] if klass.includes
         [store, klass]
       rescue Errno::ENOENT
       end
     end.compact
 
+    extends.reject!  do |modules,| modules.empty? end
     includes.reject! do |modules,| modules.empty? end
 
-    [found, klasses, includes]
+    [found, klasses, includes, extends]
   end
 
   ##
@@ -693,11 +697,12 @@ Options may also be set in the 'RI' environment variable.
   def display_class name
     return if name =~ /#|\./
 
-    found, klasses, includes = classes_and_includes_for name
+    found, klasses, includes, extends =
+      classes_and_includes_and_extends_for name
 
     return if found.empty?
 
-    out = class_document name, found, klasses, includes
+    out = class_document name, found, klasses, includes, extends
 
     display out
   end
