@@ -570,7 +570,7 @@ Options may also be set in the 'RI' environment variable.
 
         constants = klass.constants.sort_by { |constant| constant.name }
 
-        list.concat constants.map { |constant|
+        list.items.concat constants.map { |constant|
           parts = constant.comment.parts if constant.comment
           parts << RDoc::Markup::Paragraph.new('[not documented]') if
             parts.empty?
@@ -1038,12 +1038,19 @@ Options may also be set in the 'RI' environment variable.
         unless name =~ /^#{Regexp.escape method.parent_name}/ then
           out << RDoc::Markup::Heading.new(3, "Implementation from #{method.parent_name}")
         end
+
         out << RDoc::Markup::Rule.new(1)
 
         if method.arglists then
           arglists = method.arglists.chomp.split "\n"
           arglists = arglists.map { |line| line + "\n" }
           out << RDoc::Markup::Verbatim.new(*arglists)
+          out << RDoc::Markup::Rule.new(1)
+        end
+
+        if method.respond_to?(:superclass_method) and method.superclass_method
+          out << RDoc::Markup::BlankLine.new
+          out << RDoc::Markup::Heading.new(4, "(Uses superclass method #{method.superclass_method})")
           out << RDoc::Markup::Rule.new(1)
         end
 
