@@ -3,6 +3,11 @@
 
 class RDoc::AnyMethod < RDoc::MethodAttr
 
+  ##
+  # 2::
+  #   RDoc 4
+  #   Added calls_super
+
   MARSHAL_VERSION = 2 # :nodoc:
 
   ##
@@ -26,14 +31,9 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   attr_accessor :params
 
   ##
-  # Uses superclass implementation
+  # If true this method uses +super+ to call a superclass version
 
-  attr_accessor :uses_superclass
-
-  ##
-  # for RI support. if a stored superclass method already exists, use that.
-  
-  attr_accessor :superclass_method
+  attr_accessor :calls_super
 
   include RDoc::TokenStream
 
@@ -46,30 +46,8 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @c_function = nil
     @dont_rename_initialize = false
     @token_stream = nil
-    @uses_superclass = false
+    @calls_super = false
     @superclass_method = nil
-  end
-
-  ##
-  # For methods that use the superclass, find the next superclass method that
-  # would be called.
-
-  def find_superclass_method
-    return nil unless uses_superclass
-
-    return @superclass_method if @superclass_method
-
-    method = nil
-    next_superclass = parent.superclass
-
-    until next_superclass.kind_of?(String) or !next_superclass
-      if method = next_superclass.method_list.find { |x| x == self }
-        break
-      end
-      next_superclass = next_superclass.superclass
-    end
-
-    @superclass_method = method
   end
 
   ##
@@ -117,12 +95,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       [a.name, parse(a.comment)]
     end
 
-    find_superclass_method
-
-    if @superclass_method
-      @superclass_method = @superclass_method.full_name
-    end
-
     [ MARSHAL_VERSION,
       @name,
       full_name,
@@ -134,7 +106,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       aliases,
       @params,
       @file.absolute_name,
-      @superclass_method
+      @calls_super,
     ]
   end
 
@@ -159,12 +131,14 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @comment      = array[5]
     @call_seq     = array[6]
     @block_params = array[7]
+    #                     8 handled below
+    @params       = array[9]
+    #                     10 handled below
+    @calls_super  = array[11]
 
     array[8].each do |new_name, comment|
       add_alias RDoc::Alias.new(nil, @name, new_name, comment, @singleton)
     end
-
-    @params       = array[9]
 
     @parent_name = if @full_name =~ /#/ then
                      $`
@@ -175,7 +149,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
                    end
 
     @file = RDoc::TopLevel.new array[10] if version > 0
-    @superclass_method = array[11] if version > 1
   end
 
   ##
@@ -244,6 +217,23 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     end
 
     params
+  end
+
+  ##
+  # For methods that +super+, find the superclass method that would be called.
+
+  def superclass_method
+    return unless @calls_super
+    return @superclass_method if @superclass_method
+
+    parent.each_ancestor do |ancestor|
+      if method = ancestor.method_list.find { |m| m == self } then
+        @superclass_method = method
+        break
+      end
+    end
+
+    @superclass_method
   end
 
 end

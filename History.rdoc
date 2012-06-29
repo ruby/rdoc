@@ -13,6 +13,9 @@
   * Added a table of contents to the sidebar.
   * RDoc markup format merges adjacent labels in a label or note list into a
     single definition list item for output.
+  * RDoc now tracks use of extend.  Pull request #118 by Michael Granger.
+  * RDoc now tracks methods that use super.  Pull request #130 by Erik
+    Hollensbe.
 
 * Bug fixes
   * A word that is directly followed by a multi-word tidy link label no longer

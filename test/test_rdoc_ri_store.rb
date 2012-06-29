@@ -256,6 +256,9 @@ class TestRDocRIStore < RDoc::TestCase
     assert_file File.join(@tmpdir, 'cache.ri')
 
     expected = {
+      :ancestors => {
+        'Object::SubClass' => %w[Incl Object],
+      },
       :attributes => { 'Object' => ['attr_accessor attr'] },
       :class_methods => { 'Object' => %w[cmethod] },
       :instance_methods => {
@@ -263,9 +266,6 @@ class TestRDocRIStore < RDoc::TestCase
         'Object::SubClass' => %w[method],
       },
       :modules => %w[Object Object::SubClass],
-      :ancestors => {
-        'Object::SubClass' => %w[Incl Object],
-      },
       :encoding => :encoding_value,
     }
 

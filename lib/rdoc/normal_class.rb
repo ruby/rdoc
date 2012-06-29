@@ -4,10 +4,20 @@
 class RDoc::NormalClass < RDoc::ClassModule
 
   ##
-  # Appends the superclass, if any, to the included modules.
+  # The ancestors of this class including modules.  Unlike Module#ancestors,
+  # this class is not included in the result.  The result will contain both
+  # RDoc::ClassModules and Strings.
 
   def ancestors
-    superclass ? super + [superclass] : super
+    if String === superclass then
+      super << superclass
+    elsif superclass then
+      ancestors = super
+      ancestors << superclass
+      ancestors.concat superclass.ancestors
+    else
+      super
+    end
   end
 
   ##
@@ -15,6 +25,10 @@ class RDoc::NormalClass < RDoc::ClassModule
 
   def definition
     "class #{full_name}"
+  end
+
+  def direct_ancestors
+    superclass ? super + [superclass] : super
   end
 
   def inspect # :nodoc:

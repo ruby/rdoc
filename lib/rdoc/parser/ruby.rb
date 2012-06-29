@@ -1409,7 +1409,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         nest += 1
 
       when TkSUPER then
-        current_method.uses_superclass = true
+        current_method.calls_super = true
 
       when TkIDENTIFIER then
         if nest == 1 and current_method.nil? then

@@ -244,34 +244,45 @@ method(a, b) { |c, d| ... }
     assert_equal 'C1', @c1.method_list.last.parent_name
   end
 
-  def test_find_superclass_method
-    k3 = RDoc::NormalClass.new "RDoc::CodeObject", nil
-    k2 = RDoc::NormalClass.new "RDoc::MethodAttr", k3
-    k = RDoc::NormalClass.new "RDoc::AnyMethod", k2
+  def test_superclass_method
+    m3 = RDoc::AnyMethod.new '', 'no_super'
 
-    m = RDoc::AnyMethod.new "def test_super", "test_super"
-    m2 = RDoc::AnyMethod.new "def test_super", "test_super"
-    m3 = RDoc::AnyMethod.new "def test_no_super", "test_no_super"
-  
-    m.uses_superclass = true
-    k.add_method m
-    k.add_method m3
+    m2 = RDoc::AnyMethod.new '', 'supers'
+    m2.calls_super = true
 
-    k2.add_method m2
+    m1 = RDoc::AnyMethod.new '', 'supers'
 
-    assert_nil(m3.find_superclass_method, 'no superclass method for "test_no_super"')
-    assert_equal(m2, m.find_superclass_method, 'superclass method found for "test_super"')
-    
-    k2 = RDoc::NormalClass.new "RDoc::MethodAttr", k3
-    k = RDoc::NormalClass.new "RDoc::AnyMethod", k2
-    
-    m.uses_superclass = true
-    k.add_method m
-    k.add_method m3
+    c1 = RDoc::NormalClass.new 'Outer'
+    c1.add_method m1
 
-    k3.add_method m2
+    c2 = RDoc::NormalClass.new 'Inner', c1
+    c2.add_method m2
+    c2.add_method m3
 
-    assert_equal(m2, m.find_superclass_method, 'superclass method found two levels up')
+    assert_nil m3.superclass_method,
+               'no superclass method for no_super'
+
+    assert_equal m1, m2.superclass_method,
+                 'superclass method missing for supers'
   end
+
+  def test_superclass_method_multilevel
+    m2 = RDoc::AnyMethod.new '', 'supers'
+    m2.calls_super = true
+
+    m1 = RDoc::AnyMethod.new '', 'supers'
+
+    c1 = RDoc::NormalClass.new 'Outer'
+    c1.add_method m1
+
+    c2 = RDoc::NormalClass.new 'Middle', c1
+
+    c3 = RDoc::NormalClass.new 'Inner', c2
+    c3.add_method m2
+
+    assert_equal m1, m2.superclass_method,
+                 'superclass method missing for supers'
+  end
+
 end
 

@@ -150,6 +150,11 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
+  # Ancestors of this class or module only
+
+  alias direct_ancestors ancestors
+
+  ##
   # Clears the comment. Used by the ruby parser.
 
   def clear_comment
@@ -199,6 +204,8 @@ class RDoc::ClassModule < RDoc::Context
   # RDoc::ClassModule exists.
 
   def each_ancestor # :yields: module
+    return enum_for __method__ unless block_given?
+
     ancestors.each do |mod|
       next if String === mod
       yield mod

@@ -131,13 +131,12 @@
           <% else %>
           <p class="missing-docs">(Not documented)
           <% end %>
-          <% if method.uses_superclass %>
-            <div class="method-superclass">
+          <% if method.calls_super then %>
+            <div class="method-calls-super">
               Calls superclass method
               <%=
-                  method.find_superclass_method ?
-                  method.formatter.link(method.find_superclass_method.full_name, method.find_superclass_method.full_name) :
-                  method.parent.superclass
+                  method.superclass_method ?
+                  method.formatter.link(method.superclass_method.full_name, method.superclass_method.full_name) : nil
               %>
             </div>
           <% end %>

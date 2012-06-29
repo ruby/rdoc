@@ -225,7 +225,7 @@ ul.link-list .type {
   -webkit-border-radius: 5px;
 }
 
-ul.link-list li.superclass {
+.calls-super {
   background: url(images/arrow_up.png) no-repeat right center;
 }
 
@@ -401,7 +401,7 @@ ul.link-list li.superclass {
   display: none;
 }
 
-#documentation .method-description .method-superclass {
+#documentation .method-description .method-calls-super {
   color: #333;
   font-weight: bolder;
 }

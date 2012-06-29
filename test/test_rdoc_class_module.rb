@@ -53,7 +53,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_ancestors
-    assert_equal [@parent], @child.ancestors
+    assert_equal [@parent, "Object"], @child.ancestors
   end
 
   def test_comment_equals

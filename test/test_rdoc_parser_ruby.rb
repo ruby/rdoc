@@ -2476,32 +2476,13 @@ end
     assert_equal 'there', baz.comment.text
   end
 
-  def test_uses_superclass
-    util_parser <<-EOS
-      class Bar
-        def bar
-        end
-      end
-      class Foo < Bar
-        def bar
-          super
-        end
-      end
-    EOS
+  def test_parse_statements_super
+    m = RDoc::AnyMethod.new '', 'm'
+    util_parser 'super'
 
-    @parser.parse_statements @top_level
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, m
 
-    bar = @top_level.find_module_named 'Bar'
-    foo = @top_level.find_module_named 'Foo'
-
-    foo_bar = foo.method_list.first
-    bar_bar = bar.method_list.first
-
-    assert foo_bar.uses_superclass
-
-    assert_equal bar_bar, foo_bar.find_superclass_method
-
-    refute bar_bar.uses_superclass
+    assert m.calls_super
   end
 
   def tk(klass, line, char, name, text)
