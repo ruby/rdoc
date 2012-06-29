@@ -3,7 +3,7 @@
 
 class RDoc::AnyMethod < RDoc::MethodAttr
 
-  MARSHAL_VERSION = 1 # :nodoc:
+  MARSHAL_VERSION = 2 # :nodoc:
 
   ##
   # Don't rename \#initialize to \::new
@@ -30,6 +30,11 @@ class RDoc::AnyMethod < RDoc::MethodAttr
 
   attr_accessor :uses_superclass
 
+  ##
+  # for RI support. if a stored superclass method already exists, use that.
+  
+  attr_accessor :superclass_method
+
   include RDoc::TokenStream
 
   ##
@@ -42,6 +47,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @dont_rename_initialize = false
     @token_stream = nil
     @uses_superclass = false
+    @superclass_method = nil
   end
 
   ##
@@ -50,6 +56,8 @@ class RDoc::AnyMethod < RDoc::MethodAttr
 
   def find_superclass_method
     return nil unless uses_superclass
+
+    return @superclass_method if @superclass_method
 
     method = nil
     next_superclass = parent.superclass
@@ -61,7 +69,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       next_superclass = next_superclass.superclass
     end
 
-    return method
+    @superclass_method = method
   end
 
   ##
@@ -109,6 +117,12 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       [a.name, parse(a.comment)]
     end
 
+    find_superclass_method
+
+    if @superclass_method
+      @superclass_method = @superclass_method.full_name
+    end
+
     [ MARSHAL_VERSION,
       @name,
       full_name,
@@ -120,6 +134,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       aliases,
       @params,
       @file.absolute_name,
+      @superclass_method
     ]
   end
 
@@ -160,6 +175,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
                    end
 
     @file = RDoc::TopLevel.new array[10] if version > 0
+    @superclass_method = array[11] if version > 1
   end
 
   ##
