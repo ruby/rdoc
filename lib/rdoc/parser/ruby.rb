@@ -1364,7 +1364,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           non_comment_seen = true
         end
 
-        unget_tk tk # TODO peek instead of get then unget
+        unget_tk tk
         keep_comment = true
 
       when TkCLASS then
@@ -1426,6 +1426,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
             parse_alias container, single, tk, comment
           when 'require', 'include' then
             # ignore
+          when 'define_method' then
+            try_parse_comment = true
           else
             if comment.text =~ /\A#\#$/ then
               case comment.text

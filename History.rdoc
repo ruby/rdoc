@@ -14,7 +14,7 @@
   * RDoc markup format merges adjacent labels in a label or note list into a
     single definition list item for output.
   * RDoc now tracks use of extend.  Pull request #118 by Michael Granger.
-  * RDoc now tracks methods that use super.  Pull request #130 by Erik
+  * RDoc now tracks methods that use super.  Pull request #116 by Erik
     Hollensbe.
 
 * Bug fixes
@@ -36,6 +36,8 @@
     toplevel methods.  Pull Request #128 by Zachary Scott.
   * Fixed test_gen_url test name in TestRDocMarkupToHtml.  Pull Request #130
     by Zachary Scott.
+  * Comment-defined methods ahead of define_method are now discovered.  Issue
+    #133 by eclectic923
 
 === 3.12 / 2011-12-15
 

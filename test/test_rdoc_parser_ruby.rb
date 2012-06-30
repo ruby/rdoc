@@ -1816,6 +1816,22 @@ EOF
     assert_equal 'RW', foo.rw
   end
 
+  def test_parse_statements_identifier_define_method
+    util_parser <<-RUBY
+class C
+  # :method: a
+  define_method :a do end
+  # :method: b
+  define_method :b do end
+end
+    RUBY
+
+    @parser.parse_statements @top_level
+    c = @top_level.classes.first
+
+    assert_equal %w[a b], c.method_list.map { |m| m.name }
+  end
+
   def test_parse_statements_identifier_include
     content = "class Foo\ninclude Bar\nend"
 
