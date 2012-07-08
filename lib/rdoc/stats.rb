@@ -38,7 +38,7 @@ class RDoc::Stats
   # Total number of files found
 
   attr_reader :num_files
-
+  
   ##
   # Start time of the stats run
 
@@ -57,14 +57,15 @@ class RDoc::Stats
     @files_so_far = 0
     @num_files = num_files
 
+    @run_stats = RunStats.new
+    @run_stats.num_params = 0
+    @run_stats.undoc_params = 0
+
     @coverage_level = 0
     @doc_items = nil
-    @run_stats = nil
     @fully_documented = false
-    @num_params = 0
     @percent_doc = nil
     @start = Time.now
-    @undoc_params = 0
 
     @display = case verbosity
                when 0 then Quiet.new   num_files
@@ -152,15 +153,11 @@ class RDoc::Stats
     attributes = []
     ucm.each { |cm| attributes.concat cm.attributes }
 
-    @run_stats = RunStats.new
-
     @run_stats.num_attributes, @run_stats.undoc_attributes = doc_stats attributes
     @run_stats.num_classes,    @run_stats.undoc_classes    = doc_stats classes
     @run_stats.num_constants,  @run_stats.undoc_constants  = doc_stats constants
     @run_stats.num_methods,    @run_stats.undoc_methods    = doc_stats methods
     @run_stats.num_modules,    @run_stats.undoc_modules    = doc_stats RDoc::TopLevel.unique_modules
-
-    @run_stats.num_params = @num_params
 
     @run_stats.num_items =
       @run_stats.num_attributes +
@@ -169,9 +166,6 @@ class RDoc::Stats
       @run_stats.num_methods +
       @run_stats.num_modules +
       @run_stats.num_params
-
-    @num_items = @run_stats.num_items
-    @run_stats.undoc_params = @undoc_params
 
     @run_stats.undoc_items =
       @run_stats.undoc_attributes +
@@ -235,9 +229,9 @@ class RDoc::Stats
   def percent_doc
     return @percent_doc if @percent_doc
 
-    @fully_documented = (@num_items - @doc_items) == 0
+    @fully_documented = (@run_stats.num_items - @doc_items) == 0
 
-    @percent_doc = @doc_items.to_f / @num_items * 100 if @num_items.nonzero?
+    @percent_doc = @doc_items.to_f / @run_stats.num_items * 100 if @run_stats.num_items.nonzero?
     @percent_doc ||= 0
 
     @percent_doc
@@ -250,12 +244,12 @@ class RDoc::Stats
     if @coverage_level > 0 then
       extend RDoc::Text
     end
-    calculate
 
     report = []
-
+    
     if @coverage_level.zero? then
-      return great_job if @num_items == @doc_items
+      calculate
+      return great_job if @run_stats.num_items == @doc_items
     end
 
     ucm = RDoc::TopLevel.unique_classes_and_modules
@@ -271,7 +265,8 @@ class RDoc::Stats
     end
 
     if @coverage_level > 0 then
-      return great_job if @num_items == @doc_items
+      calculate
+      return great_job if @run_stats.num_items == @doc_items
     end
 
     report.unshift nil
@@ -321,26 +316,41 @@ class RDoc::Stats
 
   def report_methods cm
     return if cm.method_list.empty?
+    report = []
 
     @formatter.report_methods(cm)
+  end
+
+
+  def calculate_undoc_params(method)
+    return nil if method.documented? and @coverage_level.zero?
+
+    if @coverage_level > 0 then
+      params, undoc = undoc_params method
+
+      @run_stats.num_params += params
+
+      unless undoc.empty? then
+        @run_stats.undoc_params += undoc.length
+        return undoc
+      end
+    end
   end
 
   ##
   # Returns a summary of the collected statistics.
 
   def summary
-    calculate unless @run_stats
+    calculate
     @formatter.summary
   end
 
   ##
   # Determines which parameters in +method+ were not documented.  Returns a
   # total parameter count and an Array of undocumented methods.
-  #--
-  # XXX is this method used? Can we remove it? -ebh
 
   def undoc_params method
-    @formatter ||= RDoc::Markup::ToTtOnly.new
+    @markup_formatter ||= RDoc::Markup::ToTtOnly.new
 
     params = method.param_list
 
@@ -348,7 +358,7 @@ class RDoc::Stats
 
     document = parse method.comment
 
-    tts = document.accept @formatter
+    tts = document.accept @markup_formatter
 
     undoc = params - tts
 

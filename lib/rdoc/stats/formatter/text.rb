@@ -78,26 +78,23 @@ class RDoc::Stats::Formatter::Text
   end
 
   ##
+  # Returns a report on missing method params.
+
+  def report_params(undoc)
+    if undoc
+      undoc = undoc.map do |param| "+#{param}+" end
+      "  # #{undoc.join ', '} is not documented"
+    end
+  end
+
+  ##
   # Returns a report on undocumented methods in ClassModule +cm+
   
   def report_methods cm
     report = []
 
     cm.each_method do |method|
-      next if method.documented? and @stats.coverage_level.zero?
-
-      if @stats.coverage_level > 0 then
-        params, undoc = undoc_params method
-
-        @stats.num_params += params
-
-        unless undoc.empty? then
-          @stats.undoc_params += undoc.length
-
-          undoc = undoc.map do |param| "+#{param}+" end
-          param_report = "  # #{undoc.join ', '} is not documented"
-        end
-      end
+      param_report = report_params @stats.calculate_undoc_params(method)
 
       next if method.documented? and not param_report
       report << "  # in file #{method.file.full_name}"

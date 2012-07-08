@@ -175,8 +175,8 @@ class RDoc::Generator::Darkfish
     generate_class_files
     generate_file_files
     generate_table_of_contents
-    generate_coverage_report
     @json_index.generate top_levels
+    generate_coverage_report
 
     copy_static
 
@@ -377,7 +377,7 @@ class RDoc::Generator::Darkfish
 
     out_file = @outputdir + 'coverage_report.html'
     
-    stats = RDoc::Stats.new(@files)
+    stats = RDoc::Stats.new(@files.count)
 
     File.open(out_file, 'w') do |io|
       io << <<-EOF
