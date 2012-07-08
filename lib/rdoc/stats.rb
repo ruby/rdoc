@@ -53,7 +53,7 @@ class RDoc::Stats
   # Creates a new Stats that will have +num_files+.  +verbosity+ defaults to 1
   # which will create an RDoc::Stats::Normal outputter.
 
-  def initialize num_files, verbosity = 1, formatter = Formatter::TTY
+  def initialize num_files, verbosity = 1, formatter = Formatter::Text
     @files_so_far = 0
     @num_files = num_files
 
@@ -360,7 +360,7 @@ class RDoc::Stats
   autoload :Verbose, 'rdoc/stats/verbose'
 
   module Formatter
-    autoload :TTY, 'rdoc/stats/formatter/tty'
+    autoload :Text, 'rdoc/stats/formatter/text'
   end
 
 end

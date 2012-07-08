@@ -1,4 +1,8 @@
-class RDoc::Stats::Formatter::TTY
+class RDoc::Stats::Formatter::Text
+
+  ##
+  # Text Formatter for RDoc::Stats
+
   def initialize stats
     @stats = stats
   end
@@ -15,6 +19,9 @@ class RDoc::Stats::Formatter::TTY
     report.join "\n"
   end
   
+  ##
+  # Returns a report on undocumented items in ClassModule +cm+
+
   def report_class_module cm
     report = []
 
@@ -53,6 +60,9 @@ class RDoc::Stats::Formatter::TTY
     report
   end
   
+  ##
+  # Returns a report on undocumented constants in ClassModule +cm+
+
   def report_constants cm
     report = []
 
@@ -66,6 +76,9 @@ class RDoc::Stats::Formatter::TTY
 
     report
   end
+
+  ##
+  # Returns a report on undocumented methods in ClassModule +cm+
   
   def report_methods cm
     report = []
