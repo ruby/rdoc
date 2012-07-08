@@ -3,7 +3,12 @@
 
 class RDoc::AnyMethod < RDoc::MethodAttr
 
-  MARSHAL_VERSION = 1 # :nodoc:
+  ##
+  # 2::
+  #   RDoc 4
+  #   Added calls_super
+
+  MARSHAL_VERSION = 2 # :nodoc:
 
   ##
   # Don't rename \#initialize to \::new
@@ -25,6 +30,11 @@ class RDoc::AnyMethod < RDoc::MethodAttr
 
   attr_accessor :params
 
+  ##
+  # If true this method uses +super+ to call a superclass version
+
+  attr_accessor :calls_super
+
   include RDoc::TokenStream
 
   ##
@@ -36,6 +46,8 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @c_function = nil
     @dont_rename_initialize = false
     @token_stream = nil
+    @calls_super = false
+    @superclass_method = nil
   end
 
   ##
@@ -94,6 +106,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       aliases,
       @params,
       @file.absolute_name,
+      @calls_super,
     ]
   end
 
@@ -118,12 +131,14 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @comment      = array[5]
     @call_seq     = array[6]
     @block_params = array[7]
+    #                     8 handled below
+    @params       = array[9]
+    #                     10 handled below
+    @calls_super  = array[11]
 
     array[8].each do |new_name, comment|
       add_alias RDoc::Alias.new(nil, @name, new_name, comment, @singleton)
     end
-
-    @params       = array[9]
 
     @parent_name = if @full_name =~ /#/ then
                      $`
@@ -202,6 +217,23 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     end
 
     params
+  end
+
+  ##
+  # For methods that +super+, find the superclass method that would be called.
+
+  def superclass_method
+    return unless @calls_super
+    return @superclass_method if @superclass_method
+
+    parent.each_ancestor do |ancestor|
+      if method = ancestor.method_list.find { |m| m == self } then
+        @superclass_method = method
+        break
+      end
+    end
+
+    @superclass_method
   end
 
 end

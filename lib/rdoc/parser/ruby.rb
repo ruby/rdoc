@@ -862,6 +862,26 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
+  # Parses an +extend+ in +context+ with +comment+
+
+  def parse_extend context, comment
+    loop do
+      skip_tkspace_comment
+
+      name = get_constant_with_optional_parens
+
+      unless name.empty? then
+        incl = context.add_extend RDoc::Extend.new(name, comment)
+        incl.record_location @top_level
+      end
+
+      return unless TkCOMMA === peek_tk
+
+      get_tk
+    end
+  end
+
+  ##
   # Parses a meta-programmed attribute and creates an RDoc::Attr.
   #
   # To create foo and bar attributes on class C with comment "My attributes":
@@ -1344,7 +1364,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           non_comment_seen = true
         end
 
-        unget_tk tk # TODO peek instead of get then unget
+        unget_tk tk
         keep_comment = true
 
       when TkCLASS then
@@ -1388,6 +1408,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when TkCASE, TkDO, TkIF, TkUNLESS, TkBEGIN then
         nest += 1
 
+      when TkSUPER then
+        current_method.calls_super = true
+
       when TkIDENTIFIER then
         if nest == 1 and current_method.nil? then
           case tk.name
@@ -1403,6 +1426,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
             parse_alias container, single, tk, comment
           when 'require', 'include' then
             # ignore
+          when 'define_method' then
+            try_parse_comment = true
           else
             if comment.text =~ /\A#\#$/ then
               case comment.text
@@ -1420,6 +1445,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
           parse_require container, comment
         when "include" then
           parse_include container, comment
+        when "extend" then
+          parse_extend container, comment
         end
 
       when TkEND then

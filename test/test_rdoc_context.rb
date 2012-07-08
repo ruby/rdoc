@@ -176,6 +176,13 @@ class TestRDocContext < XrefTestCase
     assert_equal [const], @context.constants
   end
 
+  def test_add_extend
+    ext = RDoc::Extend.new 'Name', 'comment'
+    @context.add_extend ext
+
+    assert_equal [ext], @context.extends
+  end
+
   def test_add_include
     incl = RDoc::Include.new 'Name', 'comment'
     @context.add_include incl

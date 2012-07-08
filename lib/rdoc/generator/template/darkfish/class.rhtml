@@ -15,6 +15,7 @@
     <%= render '_sidebar_sections.rhtml' %>
     <%= render '_sidebar_parent.rhtml' %>
     <%= render '_sidebar_includes.rhtml' %>
+    <%= render '_sidebar_extends.rhtml' %>
     <%= render '_sidebar_methods.rhtml' %>
   </div>
 
@@ -129,6 +130,15 @@
           <%= method.description.strip %>
           <% else %>
           <p class="missing-docs">(Not documented)
+          <% end %>
+          <% if method.calls_super then %>
+            <div class="method-calls-super">
+              Calls superclass method
+              <%=
+                  method.superclass_method ?
+                  method.formatter.link(method.superclass_method.full_name, method.superclass_method.full_name) : nil
+              %>
+            </div>
           <% end %>
 
           <% if method.token_stream then %>

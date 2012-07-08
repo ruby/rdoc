@@ -13,6 +13,9 @@
   * Added a table of contents to the sidebar.
   * RDoc markup format merges adjacent labels in a label or note list into a
     single definition list item for output.
+  * RDoc now tracks use of extend.  Pull request #118 by Michael Granger.
+  * RDoc now tracks methods that use super.  Pull request #116 by Erik
+    Hollensbe.
 
 * Bug fixes
   * A word that is directly followed by a multi-word tidy link label no longer
@@ -26,6 +29,15 @@
     Ondruch
   * RDoc no longer quits when given an entry that is not a file or directory.
     Issue #101 by Charles Nutter
+  * Fixed bug in syntax-highlighting that would corrupt regular expressions.
+    Ruby Bug #6488 by Benny Lyne Amorsen.
+  * "class Object" no longer appears in the coverage report if all its methods
+    are documented.  This suppresses a false positive for libraries that add
+    toplevel methods.  Pull Request #128 by Zachary Scott.
+  * Fixed test_gen_url test name in TestRDocMarkupToHtml.  Pull Request #130
+    by Zachary Scott.
+  * Comment-defined methods ahead of define_method are now discovered.  Issue
+    #133 by eclectic923
 
 === 3.12 / 2011-12-15
 

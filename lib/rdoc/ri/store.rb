@@ -274,7 +274,7 @@ class RDoc::RI::Store
     end
 
     # BasicObject has no ancestors
-    ancestors = klass.ancestors.compact.map do |ancestor|
+    ancestors = klass.direct_ancestors.compact.map do |ancestor|
       # HACK for classes we don't know about (class X < RuntimeError)
       String === ancestor ? ancestor : ancestor.full_name
     end

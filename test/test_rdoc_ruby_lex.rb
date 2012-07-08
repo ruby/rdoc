@@ -94,12 +94,45 @@ U
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_percent_r
+    tokens = RDoc::RubyLex.tokenize '%r[hi]', nil
+
+    expected = [
+      @TK::TkREGEXP.new( 0, 1,  0, '%r[hi]'),
+      @TK::TkNL    .new( 6, 1, 6, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_percent_w
     tokens = RDoc::RubyLex.tokenize '%w[hi]', nil
 
     expected = [
       @TK::TkDSTRING.new( 0, 1,  0, '%w[hi]'),
       @TK::TkNL     .new( 6, 1, 6, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
+  def test_class_tokenize_regexp
+    tokens = RDoc::RubyLex.tokenize "/hay/", nil
+
+    expected = [
+      @TK::TkREGEXP.new( 0, 1,  0, "/hay/"),
+      @TK::TkNL    .new( 5, 1,  5, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
+  def test_class_tokenize_regexp_backref
+    tokens = RDoc::RubyLex.tokenize "/[csh](..) [csh]\\1 in/", nil
+
+    expected = [
+      @TK::TkREGEXP.new( 0, 1,  0, "/[csh](..) [csh]\\1 in/"),
+      @TK::TkNL    .new(22, 1, 22, "\n"),
     ]
 
     assert_equal expected, tokens

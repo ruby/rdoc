@@ -244,5 +244,45 @@ method(a, b) { |c, d| ... }
     assert_equal 'C1', @c1.method_list.last.parent_name
   end
 
+  def test_superclass_method
+    m3 = RDoc::AnyMethod.new '', 'no_super'
+
+    m2 = RDoc::AnyMethod.new '', 'supers'
+    m2.calls_super = true
+
+    m1 = RDoc::AnyMethod.new '', 'supers'
+
+    c1 = RDoc::NormalClass.new 'Outer'
+    c1.add_method m1
+
+    c2 = RDoc::NormalClass.new 'Inner', c1
+    c2.add_method m2
+    c2.add_method m3
+
+    assert_nil m3.superclass_method,
+               'no superclass method for no_super'
+
+    assert_equal m1, m2.superclass_method,
+                 'superclass method missing for supers'
+  end
+
+  def test_superclass_method_multilevel
+    m2 = RDoc::AnyMethod.new '', 'supers'
+    m2.calls_super = true
+
+    m1 = RDoc::AnyMethod.new '', 'supers'
+
+    c1 = RDoc::NormalClass.new 'Outer'
+    c1.add_method m1
+
+    c2 = RDoc::NormalClass.new 'Middle', c1
+
+    c3 = RDoc::NormalClass.new 'Inner', c2
+    c3.add_method m2
+
+    assert_equal m1, m2.superclass_method,
+                 'superclass method missing for supers'
+  end
+
 end
 

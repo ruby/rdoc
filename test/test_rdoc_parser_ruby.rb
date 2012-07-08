@@ -1058,6 +1058,26 @@ EOF
     assert_equal @top_level, incl.file
   end
 
+  def test_parse_extend
+    klass = RDoc::NormalClass.new 'C'
+    klass.parent = @top_level
+
+    comment = RDoc::Comment.new "# my extend\n", @top_level
+
+    util_parser "extend I"
+
+    @parser.get_tk # extend
+
+    @parser.parse_extend klass, comment
+
+    assert_equal 1, klass.extends.length
+
+    ext = klass.extends.first
+    assert_equal 'I', ext.name
+    assert_equal 'my extend', ext.comment.text
+    assert_equal @top_level, ext.file
+  end
+
   def test_parse_meta_method
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
@@ -1796,6 +1816,22 @@ EOF
     assert_equal 'RW', foo.rw
   end
 
+  def test_parse_statements_identifier_define_method
+    util_parser <<-RUBY
+class C
+  # :method: a
+  define_method :a do end
+  # :method: b
+  define_method :b do end
+end
+    RUBY
+
+    @parser.parse_statements @top_level
+    c = @top_level.classes.first
+
+    assert_equal %w[a b], c.method_list.map { |m| m.name }
+  end
+
   def test_parse_statements_identifier_include
     content = "class Foo\ninclude Bar\nend"
 
@@ -2454,6 +2490,15 @@ end
     baz = @top_level.modules.first.classes.first
     assert_equal 'Baz', baz.name
     assert_equal 'there', baz.comment.text
+  end
+
+  def test_parse_statements_super
+    m = RDoc::AnyMethod.new '', 'm'
+    util_parser 'super'
+
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, m
+
+    assert m.calls_super
   end
 
   def tk(klass, line, char, name, text)

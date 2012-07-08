@@ -5,7 +5,7 @@
 
   <ul class="link-list">
     <% klass.each_method do |meth| %>
-    <li><a href="#<%= meth.aref %>"><%= meth.singleton ? '::' : '#' %><%= h meth.name %></a>
+    <li <% if meth.calls_super %>class="calls-super" <% end %>><a href="#<%= meth.aref %>"><%= meth.singleton ? '::' : '#' %><%= h meth.name %></a>
     <% end %>
   </ul>
 </nav>

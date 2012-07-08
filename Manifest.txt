@@ -27,6 +27,7 @@ lib/rdoc/context/section.rb
 lib/rdoc/cross_reference.rb
 lib/rdoc/encoding.rb
 lib/rdoc/erbio.rb
+lib/rdoc/extend.rb
 lib/rdoc/generator.rb
 lib/rdoc/generator/darkfish.rb
 lib/rdoc/generator/json_index.rb
@@ -37,6 +38,7 @@ lib/rdoc/generator/template/darkfish/_footer.rhtml
 lib/rdoc/generator/template/darkfish/_head.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_VCS_info.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_classes.rhtml
+lib/rdoc/generator/template/darkfish/_sidebar_extends.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_in_files.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_includes.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_methods.rhtml
@@ -48,6 +50,7 @@ lib/rdoc/generator/template/darkfish/_sidebar_sections.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_table_of_contents.rhtml
 lib/rdoc/generator/template/darkfish/class.rhtml
 lib/rdoc/generator/template/darkfish/images/add.png
+lib/rdoc/generator/template/darkfish/images/arrow_up.png
 lib/rdoc/generator/template/darkfish/images/brick.png
 lib/rdoc/generator/template/darkfish/images/brick_link.png
 lib/rdoc/generator/template/darkfish/images/bug.png
@@ -206,6 +209,7 @@ test/test_rdoc_context.rb
 test/test_rdoc_context_section.rb
 test/test_rdoc_cross_reference.rb
 test/test_rdoc_encoding.rb
+test/test_rdoc_extend.rb
 test/test_rdoc_generator_darkfish.rb
 test/test_rdoc_generator_json_index.rb
 test/test_rdoc_generator_markup.rb

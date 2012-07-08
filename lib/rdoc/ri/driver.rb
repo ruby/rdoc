@@ -400,15 +400,23 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
-  # Adds +includes+ to +out+
+  # Adds +extends+ to +out+
 
-  def add_includes out, includes
-    return if includes.empty?
+  def add_extends out, extends
+    add_extension_modules out, 'Extended by', extends
+  end
+
+  ##
+  # Adds a list of +extensions+ to this module of the given +type+ to +out+.
+  # add_includes and add_extends call this, so you should use those directly.
+
+  def add_extension_modules out, type, extensions
+    return if extensions.empty?
 
     out << RDoc::Markup::Rule.new(1)
-    out << RDoc::Markup::Heading.new(1, "Includes:")
+    out << RDoc::Markup::Heading.new(1, "#{type}:")
 
-    includes.each do |modules, store|
+    extensions.each do |modules, store|
       if modules.length == 1 then
         include = modules.first
         name = include.name
@@ -443,6 +451,13 @@ Options may also be set in the 'RI' environment variable.
         end
       end
     end
+  end
+
+  ##
+  # Adds +includes+ to +out+
+
+  def add_includes out, includes
+    add_extension_modules out, 'Includes', includes
   end
 
   ##
@@ -505,7 +520,7 @@ Options may also be set in the 'RI' environment variable.
   ##
   # Builds a RDoc::Markup::Document from +found+, +klasess+ and +includes+
 
-  def class_document name, found, klasses, includes
+  def class_document name, found, klasses, includes, extends
     also_in = []
 
     out = RDoc::Markup::Document.new
@@ -513,6 +528,7 @@ Options may also be set in the 'RI' environment variable.
     add_class out, name, klasses
 
     add_includes out, includes
+    add_extends  out, extends
 
     found.each do |store, klass|
       comment = klass.comment
@@ -555,7 +571,7 @@ Options may also be set in the 'RI' environment variable.
 
         constants = klass.constants.sort_by { |constant| constant.name }
 
-        list.concat constants.map { |constant|
+        list.items.concat constants.map { |constant|
           parts = constant.comment.parts if constant.comment
           parts << RDoc::Markup::Paragraph.new('[not documented]') if
             parts.empty?
@@ -597,26 +613,29 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
-  # Returns the stores wherein +name+ is found along with the classes and
-  # includes that match it
+  # Returns the stores wherein +name+ is found along with the classes,
+  # extends and includes that match it
 
-  def classes_and_includes_for name
+  def classes_and_includes_and_extends_for name
     klasses = []
+    extends = []
     includes = []
 
     found = @stores.map do |store|
       begin
         klass = store.load_class name
         klasses  << klass
+        extends  << [klass.extends,  store] if klass.extends
         includes << [klass.includes, store] if klass.includes
         [store, klass]
       rescue Errno::ENOENT
       end
     end.compact
 
+    extends.reject!  do |modules,| modules.empty? end
     includes.reject! do |modules,| modules.empty? end
 
-    [found, klasses, includes]
+    [found, klasses, includes, extends]
   end
 
   ##
@@ -678,11 +697,12 @@ Options may also be set in the 'RI' environment variable.
   def display_class name
     return if name =~ /#|\./
 
-    found, klasses, includes = classes_and_includes_for name
+    found, klasses, includes, extends =
+      classes_and_includes_and_extends_for name
 
     return if found.empty?
 
-    out = class_document name, found, klasses, includes
+    out = class_document name, found, klasses, includes, extends
 
     display out
   end
@@ -1023,12 +1043,19 @@ Options may also be set in the 'RI' environment variable.
         unless name =~ /^#{Regexp.escape method.parent_name}/ then
           out << RDoc::Markup::Heading.new(3, "Implementation from #{method.parent_name}")
         end
+
         out << RDoc::Markup::Rule.new(1)
 
         if method.arglists then
           arglists = method.arglists.chomp.split "\n"
           arglists = arglists.map { |line| line + "\n" }
           out << RDoc::Markup::Verbatim.new(*arglists)
+          out << RDoc::Markup::Rule.new(1)
+        end
+
+        if method.respond_to?(:superclass_method) and method.superclass_method
+          out << RDoc::Markup::BlankLine.new
+          out << RDoc::Markup::Heading.new(4, "(Uses superclass method #{method.superclass_method})")
           out << RDoc::Markup::Rule.new(1)
         end
 

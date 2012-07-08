@@ -113,15 +113,33 @@ class TestRDocRIDriver < RDoc::TestCase
     assert_equal expected, out
   end
 
-  def test_add_includes_empty
+  def test_add_extends
+    util_store
+
     out = @RM::Document.new
 
-    @driver.add_includes out, []
+    @driver.add_extends out, [[[@cFooExt], @store]]
+
+    expected = @RM::Document.new(
+      @RM::Rule.new(1),
+      @RM::Heading.new(1, "Extended by:"),
+      @RM::Paragraph.new("Ext (from #{@store.friendly_path})"),
+      @RM::BlankLine.new,
+      @RM::Paragraph.new("Extend thingy"),
+      @RM::BlankLine.new)
+
+    assert_equal expected, out
+  end
+
+  def test_add_extension_modules_empty
+    out = @RM::Document.new
+
+    @driver.add_extension_modules out, 'Includes', []
 
     assert_empty out
   end
 
-  def test_add_includes_many
+  def test_add_extension_modules_many
     util_store
 
     out = @RM::Document.new
@@ -129,7 +147,7 @@ class TestRDocRIDriver < RDoc::TestCase
     enum = RDoc::Include.new 'Enumerable', nil
     @cFoo.add_include enum
 
-    @driver.add_includes out, [[[@cFooInc, enum], @store]]
+    @driver.add_extension_modules out, 'Includes', [[[@cFooInc, enum], @store]]
 
     expected = @RM::Document.new(
       @RM::Rule.new(1),
@@ -145,7 +163,7 @@ class TestRDocRIDriver < RDoc::TestCase
     assert_equal expected, out
   end
 
-  def test_add_includes_many_no_doc
+  def test_add_extension_modules_many_no_doc
     util_store
 
     out = @RM::Document.new
@@ -154,7 +172,7 @@ class TestRDocRIDriver < RDoc::TestCase
     @cFoo.add_include enum
     @cFooInc.instance_variable_set :@comment, ''
 
-    @driver.add_includes out, [[[@cFooInc, enum], @store]]
+    @driver.add_extension_modules out, 'Includes', [[[@cFooInc, enum], @store]]
 
     expected = @RM::Document.new(
       @RM::Rule.new(1),
@@ -166,7 +184,25 @@ class TestRDocRIDriver < RDoc::TestCase
     assert_equal expected, out
   end
 
-  def test_add_includes_one
+  def test_add_extension_modules_one
+    util_store
+
+    out = @RM::Document.new
+
+    @driver.add_extension_modules out, 'Includes', [[[@cFooInc], @store]]
+
+    expected = @RM::Document.new(
+      @RM::Rule.new(1),
+      @RM::Heading.new(1, "Includes:"),
+      @RM::Paragraph.new("Inc (from #{@store.friendly_path})"),
+      @RM::BlankLine.new,
+      @RM::Paragraph.new("Include thingy"),
+      @RM::BlankLine.new)
+
+    assert_equal expected, out
+  end
+
+  def test_add_includes
     util_store
 
     out = @RM::Document.new
@@ -236,6 +272,7 @@ class TestRDocRIDriver < RDoc::TestCase
     expected = {
       'Ambiguous' => [@store1, @store2],
       'Bar'       => [@store2],
+      'Ext'       => [@store1],
       'Foo'       => [@store1],
       'Foo::Bar'  => [@store1],
       'Foo::Baz'  => [@store1, @store2],
@@ -259,11 +296,15 @@ class TestRDocRIDriver < RDoc::TestCase
       [@store, @store.load_class(@cFoo.full_name)]
     ]
 
-    out = @driver.class_document @cFoo.full_name, found, [], []
+    extends  = [[[@cFooExt], @store]]
+    includes = [[[@cFooInc], @store]]
+
+    out = @driver.class_document @cFoo.full_name, found, [], includes, extends
 
     expected = @RM::Document.new
     @driver.add_class expected, 'Foo', []
-    @driver.add_includes expected, []
+    @driver.add_includes expected, includes
+    @driver.add_extends  expected, extends
     @driver.add_from expected, @store
     expected << @RM::Rule.new(1)
 
@@ -556,6 +597,7 @@ Foo::Bar#bother
 
     expected = [
       [@store, 'Ambiguous', 'Ambiguous', :both, 'blah'],
+      [@store, 'Ext',       'Ext',       :both, 'blah'],
       [@store, 'Foo',       'Foo',       :both, 'blah'],
       [@store, 'Foo::Bar',  'Foo::Bar',  :both, 'blah'],
       [@store, 'Foo::Baz',  'Foo::Baz',  :both, 'blah'],
@@ -656,7 +698,7 @@ Foo::Bar#bother
       @driver.list_known_classes
     end
 
-    assert_equal "Ambiguous\nFoo\nFoo::Bar\nFoo::Baz\nInc\n", out
+    assert_equal "Ambiguous\nExt\nFoo\nFoo::Bar\nFoo::Baz\nInc\n", out
   end
 
   def test_list_known_classes_name
@@ -998,9 +1040,13 @@ Foo::Bar#bother
     @top_level = RDoc::TopLevel.new 'file.rb'
 
     @cFoo = @top_level.add_class RDoc::NormalClass, 'Foo'
+    @mExt = @top_level.add_module RDoc::NormalModule, 'Ext'
     @mInc = @top_level.add_module RDoc::NormalModule, 'Inc'
     @cAmbiguous = @top_level.add_class RDoc::NormalClass, 'Ambiguous'
 
+    doc = @RM::Document.new @RM::Paragraph.new('Extend thingy')
+    @cFooExt = @cFoo.add_extend RDoc::Extend.new('Ext', doc)
+    @cFooExt.record_location @top_level
     doc = @RM::Document.new @RM::Paragraph.new('Include thingy')
     @cFooInc = @cFoo.add_include RDoc::Include.new('Inc', doc)
     @cFooInc.record_location @top_level
@@ -1037,6 +1083,7 @@ Foo::Bar#bother
     @store.save_class @cFoo
     @store.save_class @cFoo_Bar
     @store.save_class @cFoo_Baz
+    @store.save_class @mExt
     @store.save_class @mInc
     @store.save_class @cAmbiguous
 

@@ -51,6 +51,11 @@ class RDoc::Context < RDoc::CodeObject
   attr_reader :includes
 
   ##
+  # Modules this context is extended with
+
+  attr_reader :extends
+
+  ##
   # Methods defined in this context
 
   attr_reader :method_list
@@ -129,6 +134,7 @@ class RDoc::Context < RDoc::CodeObject
     @aliases     = []
     @requires    = []
     @includes    = []
+    @extends     = []
     @constants   = []
     @external_aliases = []
 
@@ -404,6 +410,15 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
+  # Adds extension module +ext+ which should be an RDoc::Extend
+
+  def add_extend ext
+    add_to @extends, ext
+
+    ext
+  end
+
+  ##
   # Adds +method+ if not already there. If it is (as method or attribute),
   # updates the comment if it was empty.
 
@@ -521,7 +536,7 @@ class RDoc::Context < RDoc::CodeObject
   # This means any of: comment, aliases, methods, attributes, external
   # aliases, require, constant.
   #
-  # Includes are also checked unless <tt>includes == false</tt>.
+  # Includes and extends are also checked unless <tt>includes == false</tt>.
 
   def any_content(includes = true)
     @any_content ||= !(
@@ -533,7 +548,7 @@ class RDoc::Context < RDoc::CodeObject
       @requires.empty? &&
       @constants.empty?
     )
-    @any_content || (includes && !@includes.empty?)
+    @any_content || (includes && !(@includes + @extends).empty? )
   end
 
   ##
@@ -616,6 +631,9 @@ class RDoc::Context < RDoc::CodeObject
   ##
   # Iterator for ancestors for duck-typing.  Does nothing.  See
   # RDoc::ClassModule#each_ancestor.
+  #
+  # This method exists to make it easy to work with Context subclasses that
+  # aren't part of RDoc.
 
   def each_ancestor # :nodoc:
   end
@@ -646,6 +664,13 @@ class RDoc::Context < RDoc::CodeObject
 
   def each_include # :yields: include
     @includes.each do |i| yield i end
+  end
+
+  ##
+  # Iterator for extension modules
+
+  def each_extend # :yields: extend
+    @extends.each do |e| yield e end
   end
 
   ##
