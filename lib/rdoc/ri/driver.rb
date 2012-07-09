@@ -1185,7 +1185,7 @@ Options may also be set in the 'RI' environment variable.
 
       io = IO.popen(pager, 'w') rescue next
 
-      next if $? and $?.exited? # pager didn't work
+      next if $? and $?.pid == io.pid and $?.exited? # pager didn't work
 
       @paging = true
 
