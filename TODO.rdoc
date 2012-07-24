@@ -39,15 +39,15 @@ API changes to RDoc
 * RDoc::TopLevel#add_method should automatically create the appropriate method
   class rather than requiring one be passed in.
 * Remove #comment= from Context subclasses in favor of #add_comment
-* RDoc::CodeObject
-  * Move into own namespace
-  * Rename TopLevel to File
-  * Rename Context to Container
-  * Rename NormalClass to Class
 * Add versions to RDoc::Markup syntax tree marshal format
 * Comments can no longer be Strings
 
 === Crazy Ideas
 
-  * Auto-normalize heading levels to look OK.  It's weird to see an <h1> in
-    the middle of a method section.
+* Auto-normalize heading levels to look OK.  It's weird to see an <h1> in
+  the middle of a method section.
+* RDoc::CodeObject
+  * Move into own namespace
+  * Rename TopLevel to File
+  * Rename Context to Container
+  * Rename NormalClass to Class
