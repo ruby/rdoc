@@ -384,9 +384,11 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     @to.start_accepting
     @to.accept_verbatim verb
 
+    inner = CGI.escapeHTML "a %z'foo' # => blah"
+
     expected = <<-EXPECTED
 
-<pre>a %z'foo' # =&gt; blah
+<pre>#{inner}
 </pre>
     EXPECTED
 
