@@ -38,6 +38,8 @@
     by Zachary Scott.
   * Comment-defined methods ahead of define_method are now discovered.  Issue
     #133 by eclectic923
+  * Fixed lexing of character syntax (<code>?x</code>).  Reported by Xavier
+    Noria.
 
 === 3.12 / 2011-12-15
 

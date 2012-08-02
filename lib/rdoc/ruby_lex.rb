@@ -536,13 +536,8 @@ class RDoc::RubyLex
           @lex_state = EXPR_BEG;
           Token(TkQUESTION)
         else
-          str = ch
-          if ch == '\\'
-            str << read_escape
-          end
           @lex_state = EXPR_END
-          str << (ch.respond_to?(:ord) ? ch.ord : ch[0])
-          Token(TkINTEGER, str)
+          Token(TkSTRING, ch)
         end
       end
     end
