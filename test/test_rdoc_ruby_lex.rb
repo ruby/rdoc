@@ -30,6 +30,17 @@ class TestRDocRubyLex < RDoc::TestCase
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_character_literal
+    tokens = RDoc::RubyLex.tokenize "?\\", nil
+
+    expected = [
+      @TK::TkSTRING.new( 0, 1,  0, "\\"),
+      @TK::TkNL    .new( 2, 1,  2, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_def_heredoc
     tokens = RDoc::RubyLex.tokenize <<-'RUBY', nil
 def x

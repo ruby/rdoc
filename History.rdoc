@@ -3,6 +3,8 @@
 * Bug fixes
   * Fixed bug in syntax-highlighting that would corrupt regular expressions.
     Ruby Bug #6488 by Benny Lyne Amorsen.
+  * Fixed lexing of character syntax (<code>?x</code>).  Reported by Xavier
+    Noria.
 
 === 3.12.1 / 2013-02-05
 
