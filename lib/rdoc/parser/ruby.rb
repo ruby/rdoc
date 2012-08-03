@@ -1018,7 +1018,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
         when TkSPACE then
           # expression continues
         when TkDO then
-          unget_tk tk
           parse_statements container, single, meth
           break
         else
@@ -1426,8 +1425,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
             parse_alias container, single, tk, comment
           when 'require', 'include' then
             # ignore
-          when 'define_method' then
-            try_parse_comment = true
           else
             if comment.text =~ /\A#\#$/ then
               case comment.text

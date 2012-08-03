@@ -1148,7 +1148,23 @@ end
 
     @parser.parse_meta_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
 
-    assert_nil @parser.get_tk
+    assert_equal tk(:NL, 3, 3, 3, "\n"), @parser.get_tk
+  end
+
+  def test_parse_meta_method_define_method
+    klass = RDoc::NormalClass.new 'Foo'
+    comment = RDoc::Comment.new "##\n# my method\n", @top_level
+
+    util_parser "define_method :foo do end"
+
+    tk = @parser.get_tk
+
+    @parser.parse_meta_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    foo = klass.method_list.first
+    assert_equal 'foo', foo.name
+    assert_equal 'my method', foo.comment.text
+    assert_equal @top_level,  foo.file
   end
 
   def test_parse_meta_method_name
@@ -1819,8 +1835,10 @@ EOF
   def test_parse_statements_identifier_define_method
     util_parser <<-RUBY
 class C
+  ##
   # :method: a
   define_method :a do end
+  ##
   # :method: b
   define_method :b do end
 end
