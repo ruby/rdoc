@@ -4,6 +4,9 @@
   * The default output encoding for RDoc is now UTF-8.  Previously RDoc used
     the default external encoding which was determined from your locale.
     Issue #106 by Justin Baker.
+  * Removed RDoc::RI::Paths::SYSDIR and ::SITEDIR.  These were hidden
+    constants so no breakage is expected.  Use RDoc::RI::Paths::system_dir
+    and ::site_dir instead.
 
 * Minor enhancements
   * Added Markdown as a supported format.  The markdown format can be set on a
@@ -16,6 +19,8 @@
   * RDoc now tracks use of extend.  Pull request #118 by Michael Granger.
   * RDoc now tracks methods that use super.  Pull request #116 by Erik
     Hollensbe.
+  * Added methods ::system_dir, ::site_dir, ::home_dir and ::gem_dir to fetch
+    the components of RDoc::RI::Paths.path individually.
 
 * Bug fixes
   * A word that is directly followed by a multi-word tidy link label no longer
