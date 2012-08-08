@@ -162,6 +162,7 @@ lib/rdoc/stats.rb
 lib/rdoc/stats/normal.rb
 lib/rdoc/stats/quiet.rb
 lib/rdoc/stats/verbose.rb
+lib/rdoc/store.rb
 lib/rdoc/task.rb
 lib/rdoc/test_case.rb
 lib/rdoc/text.rb
@@ -259,11 +260,11 @@ test/test_rdoc_rdoc.rb
 test/test_rdoc_require.rb
 test/test_rdoc_ri_driver.rb
 test/test_rdoc_ri_paths.rb
-test/test_rdoc_ri_store.rb
 test/test_rdoc_ruby_lex.rb
 test/test_rdoc_rubygems_hook.rb
 test/test_rdoc_single_class.rb
 test/test_rdoc_stats.rb
+test/test_rdoc_store.rb
 test/test_rdoc_task.rb
 test/test_rdoc_text.rb
 test/test_rdoc_token_stream.rb
