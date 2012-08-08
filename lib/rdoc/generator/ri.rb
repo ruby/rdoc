@@ -23,10 +23,9 @@ class RDoc::Generator::RI
   end
 
   ##
-  # Build the initial indices and output objects based on an array of TopLevel
-  # objects containing the extracted information.
+  # Writes the parsed data store to disk for use by ri.
 
-  def generate top_levels
+  def generate
     install_siginfo_handler
 
     @store.load_cache

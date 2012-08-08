@@ -18,7 +18,8 @@
     constants so no breakage is expected.  Use RDoc::RI::Paths::system_dir
     and ::site_dir instead.
   * RDoc generators must accept an RDoc::Store and an RDoc::Options in
-    initialize.
+    initialize.  RDoc no longer passes an Array of RDoc::TopLevel objects to
+    #generate.  Use RDoc::Store#all_files instead.
 
 * Minor enhancements
   * Added Markdown as a supported format.  The markdown format can be set on a

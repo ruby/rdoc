@@ -11,7 +11,6 @@ Blockers:
 * Restore backwards compatibility due to paragraph text joining from existing
   ri files
 * Fix consumption of , after link like: RDoc[rdoc-ref:RDoc], <- comma here
-* Don't pass top_level instances to #generate.
 * Move modsort thing to RDoc::Store
 
 Nice to have:

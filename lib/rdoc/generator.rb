@@ -34,10 +34,9 @@
 # a generator from RDoc 3 and earlier you should only need to replace
 # RDoc::TopLevel with the store instance.
 #
-# RDoc will then call #generate on the generator instance and pass in an Array
-# of RDoc::TopLevel instances, each representing a parsed file.  You can use
-# the various class methods on RDoc::TopLevel and in the RDoc::CodeObject tree
-# to create your desired output format.
+# RDoc will then call #generate on the generator instance.  You can use the
+# various methods on RDoc::Store and in the RDoc::CodeObject tree to create
+# your desired output format.
 
 module RDoc::Generator
 

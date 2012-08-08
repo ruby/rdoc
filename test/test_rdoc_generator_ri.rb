@@ -51,7 +51,7 @@ class TestRDocGeneratorRI < RDoc::TestCase
   end
 
   def test_generate
-    @g.generate nil
+    @g.generate
 
     assert_file File.join(@tmpdir, 'cache.ri')
 
@@ -76,7 +76,7 @@ class TestRDocGeneratorRI < RDoc::TestCase
     top_level = RDoc::TopLevel.new 'file.rb'
     top_level.add_class @klass.class, @klass.name
 
-    @g.generate nil
+    @g.generate
 
     refute_file File.join(@tmpdir, 'cache.ri')
     refute_file File.join(@tmpdir, 'Object')

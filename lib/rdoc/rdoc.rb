@@ -477,7 +477,7 @@ The internal error was:
 
       @generator = gen_klass.new @store, @options
 
-      generate file_info
+      generate
     end
 
     if @stats and (@options.coverage_report or not @options.quiet) then
@@ -493,13 +493,13 @@ The internal error was:
   # output dir using the generator selected
   # by the RDoc options
 
-  def generate file_info
+  def generate
     Dir.chdir @options.op_dir do
       unless @options.quiet then
         $stderr.puts "\nGenerating #{@generator.class.name.sub(/^.*::/, '')} format into #{Dir.pwd}..."
       end
 
-      @generator.generate file_info
+      @generator.generate
       update_output_dir '.', @start_time, @last_modified
     end
   end

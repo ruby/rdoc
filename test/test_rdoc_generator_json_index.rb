@@ -77,7 +77,7 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
   end
 
   def test_generate
-    @g.generate @top_levels
+    @g.generate
 
     assert_file 'js/searcher.js'
     assert_file 'js/navigation.js'
@@ -132,7 +132,7 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
     text.force_encoding Encoding::ISO_8859_1
     @klass.add_comment comment(text), @top_level
 
-    @g.generate @top_levels
+    @g.generate
 
     json = File.read 'js/search_index.js'
     json.force_encoding Encoding::UTF_8

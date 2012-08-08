@@ -73,7 +73,6 @@ class RDoc::RubygemsHook
 
   def initialize spec, generate_rdoc = true, generate_ri = true
     @doc_dir   = spec.doc_dir
-    @file_info = nil
     @force     = false
     @rdoc      = nil
     @spec      = spec
@@ -120,7 +119,7 @@ class RDoc::RubygemsHook
     Dir.chdir options.op_dir do
       begin
         @rdoc.class.current = @rdoc
-        @rdoc.generator.generate @file_info
+        @rdoc.generator.generate
       ensure
         @rdoc.class.current = nil
       end
@@ -160,7 +159,7 @@ class RDoc::RubygemsHook
     @rdoc.options = options
 
     Dir.chdir @spec.full_gem_path do
-      @file_info = @rdoc.parse_files options.files
+      @rdoc.parse_files options.files
     end
 
     document 'ri',       options, @ri_dir if

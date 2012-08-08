@@ -15,9 +15,9 @@ require 'json'
 #       @json_index = RDoc::Generator::JsonIndex.new self, options
 #     end
 #
-#     def generate top_levels
+#     def generate
 #       # ...
-#       @json_index.generate top_levels
+#       @json_index.generate
 #     end
 #   end
 #
@@ -110,10 +110,10 @@ class RDoc::Generator::JsonIndex
   ##
   # Creates the JSON index.
 
-  def generate top_levels
+  def generate
     debug_msg "Generating JSON index"
 
-    reset top_levels.sort, @store.all_classes_and_modules.sort
+    reset @store.all_files.sort, @store.all_classes_and_modules.sort
 
     index_classes
     index_methods

@@ -167,10 +167,10 @@ class RDoc::Generator::Darkfish
   # Build the initial indices and output objects based on an array of TopLevel
   # objects containing the extracted information.
 
-  def generate top_levels
+  def generate
     @outputdir = Pathname.new(@options.op_dir).expand_path(@base_dir)
 
-    @files = top_levels.sort
+    @files = @store.all_files.sort
     @classes = @store.all_classes_and_modules.sort
     @methods = @classes.map { |m| m.method_list }.flatten.sort
     @modsort = get_sorted_module_list(@classes)
@@ -181,7 +181,7 @@ class RDoc::Generator::Darkfish
     generate_class_files
     generate_file_files
     generate_table_of_contents
-    @json_index.generate top_levels
+    @json_index.generate
 
     copy_static
 

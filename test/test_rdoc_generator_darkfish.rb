@@ -65,7 +65,7 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
     top_level = RDoc::TopLevel.new 'file.rb'
     top_level.add_class @klass.class, @klass.name
 
-    @g.generate [top_level]
+    @g.generate
 
     assert_file 'index.html'
     assert_file 'Object.html'
@@ -91,7 +91,7 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
     top_level = RDoc::TopLevel.new 'file.rb'
     top_level.add_class @klass.class, @klass.name
 
-    @g.generate [top_level]
+    @g.generate
 
     refute_file 'index.html'
     refute_file 'Object.html'
@@ -108,7 +108,7 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
       File.expand_path('file/file.txt'),
     ]
 
-    @g.generate [@top_level]
+    @g.generate
 
     assert_file 'images/image.png'
     assert_file 'file.txt'
@@ -121,7 +121,7 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
     @options.static_path = [File.expand_path('static')]
     @options.dry_run = true
 
-    @g.generate [@top_level]
+    @g.generate
 
     refute_file 'image.png'
   end
