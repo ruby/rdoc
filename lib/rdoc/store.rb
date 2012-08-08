@@ -395,7 +395,9 @@ class RDoc::Store
 
   def load_method klass_name, method_name
     open method_file(klass_name, method_name), 'rb' do |io|
-      Marshal.load io.read
+      obj = Marshal.load io.read
+      obj.store = self
+      obj
     end
   end
 

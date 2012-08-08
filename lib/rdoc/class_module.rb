@@ -563,6 +563,19 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
+  # Sets the store for this class or module and its contained code objects.
+
+  def store= store
+    super
+
+    @attributes .each do |attr|  attr.store  = store end
+    @constants  .each do |const| const.store = store end
+    @includes   .each do |incl|  incl.store  = store end
+    @extends    .each do |ext|   ext.store   = store end
+    @method_list.each do |meth|  meth.store  = store end
+  end
+
+  ##
   # Get the superclass of this class.  Attempts to retrieve the superclass
   # object, returns the name if it is not known.
 

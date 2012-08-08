@@ -379,14 +379,10 @@ class TestRDocClassModule < XrefTestCase
     assert_equal 'Klass',            loaded.name
     assert_equal 'Super',            loaded.superclass
 
-    assert_equal tl, loaded.attributes.first.file
-
-    assert_equal tl, loaded.constants.first.file
-
-    assert_equal tl, loaded.includes.first.file
-
-    assert_equal tl, loaded.extends.first.file
-
+    assert_equal tl, loaded.attributes. first.file
+    assert_equal tl, loaded.constants.  first.file
+    assert_equal tl, loaded.includes.   first.file
+    assert_equal tl, loaded.extends.    first.file
     assert_equal tl, loaded.method_list.first.file
   end
 
@@ -877,6 +873,34 @@ class TestRDocClassModule < XrefTestCase
     ]
 
     assert_equal expected, @c2_c3.search_record
+  end
+
+  def test_store_equals
+    # version 2
+    loaded = Marshal.load "\x04\bU:\x16RDoc::NormalClass[\x0Fi\aI\"\nKlass" \
+                          "\x06:\x06EFI\"\x15Namespace::Klass\x06;\x06FI" \
+                          "\"\nSuper\x06;\x06Fo:\eRDoc::Markup::Document\a" \
+                          ":\v@parts[\x06o;\a\a;\b[\x06o" \
+                          ":\x1CRDoc::Markup::Paragraph\x06;\b" \
+                          "[\x06I\"\x16this is a comment\x06;\x06F" \
+                          ":\n@fileI\"\ffile.rb\x06;\x06F;\n0[\a[\nI" \
+                          "\"\aa2\x06;\x06FI\"\aRW\x06;\x06F:\vpublicT@\x11" \
+                          "[\nI\"\aa1\x06;\x06FI\"\aRW\x06;\x06F;\vF@\x11" \
+                          "[\x06[\bI\"\aC1\x06;\x06Fo;\a\a;\b[\x00;\n0@\x11" \
+                          "[\x06[\bI\"\aI1\x06;\x06Fo;\a\a;\b[\x00;\n0@\x11" \
+                          "[\a[\aI\"\nclass\x06;\x06F[\b[\a;\v[\x00" \
+                          "[\a:\x0Eprotected[\x00[\a:\fprivate[\x00[\aI" \
+                          "\"\rinstance\x06;\x06F[\b[\a;\v[\x06[\aI" \
+                          "\"\am1\x06;\x06F@\x11[\a;\f[\x00[\a;\r[\x00" \
+                          "[\x06[\bI\"\aE1\x06;\x06Fo;\a\a;\b[\x00;\n0@\x11"
+
+    loaded.store = @store
+
+    assert_equal @store, loaded.attributes. first.store
+    assert_equal @store, loaded.constants.  first.store
+    assert_equal @store, loaded.includes.   first.store
+    assert_equal @store, loaded.extends.    first.store
+    assert_equal @store, loaded.method_list.first.store
   end
 
   def test_superclass

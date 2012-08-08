@@ -298,6 +298,7 @@ class TestRDocStore < XrefTestCase
 
     meth = @s.load_method('Object', '#method!')
     assert_equal @meth_bang, meth
+    assert_equal @s, meth.store
   end
 
   def test_method_file

@@ -142,8 +142,10 @@ class RDoc::Context < RDoc::CodeObject
     # a method not yet encountered).
     @unmatched_alias_lists = {}
 
-    @methods_hash = {}
+    @methods_hash   = {}
     @constants_hash = {}
+
+    @store ||= nil
   end
 
   ##
