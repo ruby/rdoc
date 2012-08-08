@@ -8,7 +8,7 @@ class TestRDocRDoc < RDoc::TestCase
     @rdoc = RDoc::RDoc.new
     @rdoc.options = RDoc::Options.new
 
-    @stats = RDoc::Stats.new 0, 0
+    @stats = RDoc::Stats.new @store, 0, 0
     @rdoc.instance_variable_set :@stats, @stats
   end
 

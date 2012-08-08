@@ -484,6 +484,7 @@ class TestRDocStore < XrefTestCase
     @s.save_class klass
 
     # separate parse run, independent store
+    tl = RDoc::TopLevel.new 'file.rb'
     tl.store = RDoc::Store.new
     klass2 = tl.add_class RDoc::NormalClass, 'C'
     klass2.record_location tl
