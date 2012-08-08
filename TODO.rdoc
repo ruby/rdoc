@@ -12,6 +12,8 @@ Blockers:
   ri files
 * Fix consumption of , after link like: RDoc[rdoc-ref:RDoc], <- comma here
 * Move modsort thing to RDoc::Store
+* Improve naming of RDoc::Store#modules and RDoc::Store#all_modules.  Possibly
+  they can be merged.
 
 Nice to have:
 

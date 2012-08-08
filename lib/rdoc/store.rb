@@ -89,13 +89,6 @@ class RDoc::Store
   end
 
   ##
-  # Hash of all classes known to RDoc
-
-  def classes_hash
-    @classes_hash
-  end
-
-  ##
   # All TopLevels known to RDoc
 
   def all_files
@@ -103,24 +96,10 @@ class RDoc::Store
   end
 
   ##
-  # Hash of all files known to RDoc
-
-  def files_hash
-    @files_hash
-  end
-
-  ##
   # Returns all modules discovered by RDoc
 
   def all_modules
     modules_hash.values
-  end
-
-  ##
-  # Hash of all modules known to RDoc
-
-  def modules_hash
-    @modules_hash
   end
 
   ##
@@ -167,6 +146,13 @@ class RDoc::Store
 
   def class_path klass_name
     File.join @path, *klass_name.split('::')
+  end
+
+  ##
+  # Hash of all classes known to RDoc
+
+  def classes_hash
+    @classes_hash
   end
 
   ##
@@ -234,6 +220,13 @@ class RDoc::Store
         end
       end
     end
+  end
+
+  ##
+  # Hash of all files known to RDoc
+
+  def files_hash
+    @files_hash
   end
 
   ##
@@ -425,6 +418,13 @@ class RDoc::Store
 
   def modules
     @cache[:modules]
+  end
+
+  ##
+  # Hash of all modules known to RDoc
+
+  def modules_hash
+    @modules_hash
   end
 
   ##
