@@ -157,6 +157,7 @@ class TestRDocClassModule < XrefTestCase
     cm.add_comment 'this is a comment', tl
 
     loaded = Marshal.load Marshal.dump cm
+    loaded.store = @store
 
     assert_equal cm, loaded
 
@@ -215,6 +216,8 @@ class TestRDocClassModule < XrefTestCase
                           ":\x0Eprotected[\x00[\a:\fprivate[\x00[\aI" \
                           "\"\rinstance\x06;\x06F[\b[\a;\n[\x06I" \
                           "\"\am1\x06;\x06F[\a;\v[\x00[\a;\f[\x00"
+
+    loaded.store = @store
 
     assert_equal cm, loaded
 
@@ -276,6 +279,8 @@ class TestRDocClassModule < XrefTestCase
                           "[\a:\x0Eprotected[\x00[\a:\fprivate[\x00[\aI" \
                           "\"\rinstance\x06;\x06F[\b[\a;\v[\x06[\aI" \
                           "\"\am1\x06;\x06F@\x11[\a;\f[\x00[\a;\r[\x00"
+
+    loaded.store = @store
 
     assert_equal cm, loaded
 
@@ -353,6 +358,8 @@ class TestRDocClassModule < XrefTestCase
                           "\"\rinstance\x06;\x06F[\b[\a;\v[\x06[\aI" \
                           "\"\am1\x06;\x06F@\x11[\a;\f[\x00[\a;\r[\x00" \
                           "[\x06[\bI\"\aE1\x06;\x06Fo;\a\a;\b[\x00;\n0@\x11"
+
+    loaded.store = @store
 
     assert_equal cm, loaded
 
@@ -596,16 +603,17 @@ class TestRDocClassModule < XrefTestCase
 
   def test_merge_extends
     tl1 = RDoc::TopLevel.new 'one.rb'
-    tl2 = RDoc::TopLevel.new 'two.rb'
-
-    cm1 = RDoc::ClassModule.new 'Klass'
+    cm1 = tl1.add_class RDoc::ClassModule, 'Klass'
 
     ext = cm1.add_extend RDoc::Extend.new('I1', 'one')
     ext.record_location tl1
     ext = cm1.add_extend RDoc::Extend.new('I3', 'one')
     ext.record_location tl1
 
-    cm2 = RDoc::ClassModule.new 'Klass'
+    tl2 = RDoc::TopLevel.new 'two.rb'
+    tl2.store = RDoc::Store.new
+
+    cm2 = tl2.add_class RDoc::ClassModule, 'Klass'
     cm2.instance_variable_set :@comment, @RM::Document.new
 
     ext = cm2.add_extend RDoc::Extend.new('I2', 'two')
@@ -630,16 +638,18 @@ class TestRDocClassModule < XrefTestCase
 
   def test_merge_includes
     tl1 = RDoc::TopLevel.new 'one.rb'
-    tl2 = RDoc::TopLevel.new 'two.rb'
 
-    cm1 = RDoc::ClassModule.new 'Klass'
+    cm1 = tl1.add_class RDoc::ClassModule, 'Klass'
 
     incl = cm1.add_include RDoc::Include.new('I1', 'one')
     incl.record_location tl1
     incl = cm1.add_include RDoc::Include.new('I3', 'one')
     incl.record_location tl1
 
-    cm2 = RDoc::ClassModule.new 'Klass'
+    tl2 = RDoc::TopLevel.new 'two.rb'
+    tl2.store = RDoc::Store.new
+
+    cm2 = tl2.add_class RDoc::ClassModule, 'Klass'
     cm2.instance_variable_set :@comment, @RM::Document.new
 
     incl = cm2.add_include RDoc::Include.new('I2', 'two')
@@ -665,14 +675,17 @@ class TestRDocClassModule < XrefTestCase
   def test_merge_includes_version_0
     tl1 = RDoc::TopLevel.new 'one.rb'
 
-    cm1 = RDoc::ClassModule.new 'Klass'
+    cm1 = tl1.add_class RDoc::ClassModule, 'Klass'
 
     incl = cm1.add_include RDoc::Include.new('I1', 'one')
     incl.record_location tl1
     incl = cm1.add_include RDoc::Include.new('I3', 'one')
     incl.record_location tl1
 
-    cm2 = RDoc::ClassModule.new 'Klass'
+    tl2 = RDoc::TopLevel.new 'one.rb'
+    tl2.store = RDoc::Store.new
+
+    cm2 = tl2.add_class RDoc::ClassModule, 'Klass'
     cm2.instance_variable_set :@comment, @RM::Document.new
 
     incl = cm2.add_include RDoc::Include.new('I2', 'two')
@@ -820,12 +833,12 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_remove_nodoc_children
-    parent = RDoc::ClassModule.new 'A'
+    parent = @top_level.add_class RDoc::ClassModule, 'A'
     parent.modules_hash.replace 'B' => true, 'C' => true
-    RDoc::TopLevel.all_modules_hash.replace 'A::B' => true
+    @store.modules_hash.replace 'A::B' => true
 
     parent.classes_hash.replace 'D' => true, 'E' => true
-    RDoc::TopLevel.all_classes_hash.replace 'A::D' => true
+    @store.classes_hash.replace 'A::D' => true
 
     parent.remove_nodoc_children
 
@@ -956,10 +969,11 @@ class TestRDocClassModule < XrefTestCase
     @m1_m2.document_self = nil
     assert @m1_m2.remove_from_documentation?
 
-    assert RDoc::TopLevel.all_modules_hash.key? @m1_m2.full_name
-    refute RDoc::TopLevel.all_modules_hash[@m1_m2.full_name].nil?
-    RDoc::TopLevel.remove_nodoc RDoc::TopLevel.all_modules_hash
-    refute RDoc::TopLevel.all_modules_hash.key? @m1_m2.full_name
+    assert @store.modules_hash.key? @m1_m2.full_name
+    refute @store.modules_hash[@m1_m2.full_name].nil?
+
+    @store.remove_nodoc @store.modules_hash
+    refute @store.modules_hash.key? @m1_m2.full_name
 
     @c1.update_includes
 
@@ -992,10 +1006,10 @@ class TestRDocClassModule < XrefTestCase
     @m1_m2.document_self = nil
     assert @m1_m2.remove_from_documentation?
 
-    assert RDoc::TopLevel.all_modules_hash.key? @m1_m2.full_name
-    refute RDoc::TopLevel.all_modules_hash[@m1_m2.full_name].nil?
-    RDoc::TopLevel.remove_nodoc RDoc::TopLevel.all_modules_hash
-    refute RDoc::TopLevel.all_modules_hash.key? @m1_m2.full_name
+    assert @store.modules_hash.key? @m1_m2.full_name
+    refute @store.modules_hash[@m1_m2.full_name].nil?
+    @store.remove_nodoc @store.modules_hash
+    refute @store.modules_hash.key? @m1_m2.full_name
 
     @c1.update_includes
 
@@ -1015,10 +1029,10 @@ class TestRDocClassModule < XrefTestCase
     @m1_m2.document_self = nil
     assert @m1_m2.remove_from_documentation?
 
-    assert RDoc::TopLevel.all_modules_hash.key? @m1_m2.full_name
-    refute RDoc::TopLevel.all_modules_hash[@m1_m2.full_name].nil?
-    RDoc::TopLevel.remove_nodoc RDoc::TopLevel.all_modules_hash
-    refute RDoc::TopLevel.all_modules_hash.key? @m1_m2.full_name
+    assert @store.modules_hash.key? @m1_m2.full_name
+    refute @store.modules_hash[@m1_m2.full_name].nil?
+    @store.remove_nodoc @store.modules_hash
+    refute @store.modules_hash.key? @m1_m2.full_name
 
     @c1.update_extends
 
@@ -1051,10 +1065,11 @@ class TestRDocClassModule < XrefTestCase
     @m1_m2.document_self = nil
     assert @m1_m2.remove_from_documentation?
 
-    assert RDoc::TopLevel.all_modules_hash.key? @m1_m2.full_name
-    refute RDoc::TopLevel.all_modules_hash[@m1_m2.full_name].nil?
-    RDoc::TopLevel.remove_nodoc RDoc::TopLevel.all_modules_hash
-    refute RDoc::TopLevel.all_modules_hash.key? @m1_m2.full_name
+    assert @store.modules_hash.key? @m1_m2.full_name
+    refute @store.modules_hash[@m1_m2.full_name].nil?
+
+    @store.remove_nodoc @store.modules_hash
+    refute @store.modules_hash.key? @m1_m2.full_name
 
     @c1.update_extends
 

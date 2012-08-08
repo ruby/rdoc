@@ -74,7 +74,7 @@ class RDoc::Extend < RDoc::CodeObject
     # search the current context
     return @name unless parent
     full_name = parent.child_name(@name)
-    @module = RDoc::TopLevel.modules_hash[full_name]
+    @module = @store.modules_hash[full_name]
     return @module if @module
     return @name if @name =~ /^::/
 
@@ -84,7 +84,7 @@ class RDoc::Extend < RDoc::CodeObject
       ext = i.module
       next if String === ext
       full_name = ext.child_name(@name)
-      @module = RDoc::TopLevel.modules_hash[full_name]
+      @module = @store.modules_hash[full_name]
       return @module if @module
     end
 
@@ -92,7 +92,7 @@ class RDoc::Extend < RDoc::CodeObject
     up = parent.parent
     while up
       full_name = up.child_name(@name)
-      @module = RDoc::TopLevel.modules_hash[full_name]
+      @module = @store.modules_hash[full_name]
       return @module if @module
       up = up.parent
     end

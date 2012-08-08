@@ -13,14 +13,13 @@ class RDoc::Generator::RI
   ##
   # Set up a new ri generator
 
-  def initialize options #:not-new:
-    @options     = options
+  def initialize store, options #:not-new:
+    @options    = options
+    @store      = store
+    @store.path = '.'
+
     @old_siginfo = nil
     @current     = nil
-
-    @store          = RDoc::RI::Store.new '.'
-    @store.dry_run  = @options.dry_run
-    @store.encoding = @options.encoding if @options.respond_to? :encoding
   end
 
   ##
@@ -32,7 +31,7 @@ class RDoc::Generator::RI
 
     @store.load_cache
 
-    RDoc::TopLevel.all_classes_and_modules.each do |klass|
+    @store.all_classes_and_modules.each do |klass|
       @current = "#{klass.class}: #{klass.full_name}"
 
       @store.save_class klass

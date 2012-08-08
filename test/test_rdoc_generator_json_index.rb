@@ -19,13 +19,11 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
     @options.option_parser = OptionParser.new
     @options.finish
 
-    @darkfish = RDoc::Generator::Darkfish.new @options
+    @darkfish = RDoc::Generator::Darkfish.new @store, @options
     @g = RDoc::Generator::JsonIndex.new @darkfish, @options
 
-    @rdoc = RDoc::RDoc.new
     @rdoc.options = @options
     @rdoc.generator = @g
-    RDoc::RDoc.current = @rdoc
 
     @top_level = RDoc::TopLevel.new 'file.rb'
     @top_level.parser = RDoc::Parser::Ruby

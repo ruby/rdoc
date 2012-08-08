@@ -51,7 +51,7 @@ class TestRDocRIDriver < RDoc::TestCase
     util_store
 
     out, = capture_io do
-      RDoc::RI::Driver.dump @store.cache_path
+      RDoc::RI::Driver.dump @store1.cache_path
     end
 
     assert_match %r%:class_methods%,    out
@@ -102,11 +102,11 @@ class TestRDocRIDriver < RDoc::TestCase
 
   def test_add_from
     util_store
-    @store.type = :system
+    @store1.type = :system
 
     out = @RM::Document.new
 
-    @driver.add_from out, @store
+    @driver.add_from out, @store1
 
     expected = @RM::Document.new @RM::Paragraph.new("(from ruby core)")
 
@@ -118,12 +118,12 @@ class TestRDocRIDriver < RDoc::TestCase
 
     out = @RM::Document.new
 
-    @driver.add_extends out, [[[@cFooExt], @store]]
+    @driver.add_extends out, [[[@cFooExt], @store1]]
 
     expected = @RM::Document.new(
       @RM::Rule.new(1),
       @RM::Heading.new(1, "Extended by:"),
-      @RM::Paragraph.new("Ext (from #{@store.friendly_path})"),
+      @RM::Paragraph.new("Ext (from #{@store1.friendly_path})"),
       @RM::BlankLine.new,
       @RM::Paragraph.new("Extend thingy"),
       @RM::BlankLine.new)
@@ -147,12 +147,12 @@ class TestRDocRIDriver < RDoc::TestCase
     enum = RDoc::Include.new 'Enumerable', nil
     @cFoo.add_include enum
 
-    @driver.add_extension_modules out, 'Includes', [[[@cFooInc, enum], @store]]
+    @driver.add_extension_modules out, 'Includes', [[[@cFooInc, enum], @store1]]
 
     expected = @RM::Document.new(
       @RM::Rule.new(1),
       @RM::Heading.new(1, "Includes:"),
-      @RM::Paragraph.new("(from #{@store.friendly_path})"),
+      @RM::Paragraph.new("(from #{@store1.friendly_path})"),
       @RM::BlankLine.new,
       @RM::Paragraph.new("Inc"),
       @RM::BlankLine.new,
@@ -172,12 +172,12 @@ class TestRDocRIDriver < RDoc::TestCase
     @cFoo.add_include enum
     @cFooInc.instance_variable_set :@comment, ''
 
-    @driver.add_extension_modules out, 'Includes', [[[@cFooInc, enum], @store]]
+    @driver.add_extension_modules out, 'Includes', [[[@cFooInc, enum], @store1]]
 
     expected = @RM::Document.new(
       @RM::Rule.new(1),
       @RM::Heading.new(1, "Includes:"),
-      @RM::Paragraph.new("(from #{@store.friendly_path})"),
+      @RM::Paragraph.new("(from #{@store1.friendly_path})"),
       @RM::Verbatim.new("Inc", "\n",
                         "Enumerable", "\n"))
 
@@ -189,12 +189,12 @@ class TestRDocRIDriver < RDoc::TestCase
 
     out = @RM::Document.new
 
-    @driver.add_extension_modules out, 'Includes', [[[@cFooInc], @store]]
+    @driver.add_extension_modules out, 'Includes', [[[@cFooInc], @store1]]
 
     expected = @RM::Document.new(
       @RM::Rule.new(1),
       @RM::Heading.new(1, "Includes:"),
-      @RM::Paragraph.new("Inc (from #{@store.friendly_path})"),
+      @RM::Paragraph.new("Inc (from #{@store1.friendly_path})"),
       @RM::BlankLine.new,
       @RM::Paragraph.new("Include thingy"),
       @RM::BlankLine.new)
@@ -207,12 +207,12 @@ class TestRDocRIDriver < RDoc::TestCase
 
     out = @RM::Document.new
 
-    @driver.add_includes out, [[[@cFooInc], @store]]
+    @driver.add_includes out, [[[@cFooInc], @store1]]
 
     expected = @RM::Document.new(
       @RM::Rule.new(1),
       @RM::Heading.new(1, "Includes:"),
-      @RM::Paragraph.new("Inc (from #{@store.friendly_path})"),
+      @RM::Paragraph.new("Inc (from #{@store1.friendly_path})"),
       @RM::BlankLine.new,
       @RM::Paragraph.new("Include thingy"),
       @RM::BlankLine.new)
@@ -290,14 +290,14 @@ class TestRDocRIDriver < RDoc::TestCase
 
     @cFoo.add_comment 'one', tl1
     @cFoo.add_comment 'two', tl2
-    @store.save_class @cFoo
+    @store1.save_class @cFoo
 
     found = [
-      [@store, @store.load_class(@cFoo.full_name)]
+      [@store1, @store1.load_class(@cFoo.full_name)]
     ]
 
-    extends  = [[[@cFooExt], @store]]
-    includes = [[[@cFooInc], @store]]
+    extends  = [[[@cFooExt], @store1]]
+    includes = [[[@cFooInc], @store1]]
 
     out = @driver.class_document @cFoo.full_name, found, [], includes, extends
 
@@ -305,7 +305,7 @@ class TestRDocRIDriver < RDoc::TestCase
     @driver.add_class expected, 'Foo', []
     @driver.add_includes expected, includes
     @driver.add_extends  expected, extends
-    @driver.add_from expected, @store
+    @driver.add_from expected, @store1
     expected << @RM::Rule.new(1)
 
     doc = @RM::Document.new(@RM::Paragraph.new('one'))
@@ -580,7 +580,7 @@ Foo::Bar#bother
     end
 
     expected = [
-      [@store, 'Foo::Bar', 'Foo::Bar', :both, nil],
+      [@store1, 'Foo::Bar', 'Foo::Bar', :both, nil],
     ]
 
     assert_equal expected, items
@@ -596,12 +596,12 @@ Foo::Bar#bother
     end
 
     expected = [
-      [@store, 'Ambiguous', 'Ambiguous', :both, 'blah'],
-      [@store, 'Ext',       'Ext',       :both, 'blah'],
-      [@store, 'Foo',       'Foo',       :both, 'blah'],
-      [@store, 'Foo::Bar',  'Foo::Bar',  :both, 'blah'],
-      [@store, 'Foo::Baz',  'Foo::Baz',  :both, 'blah'],
-      [@store, 'Inc',       'Inc',       :both, 'blah'],
+      [@store1, 'Ambiguous', 'Ambiguous', :both, 'blah'],
+      [@store1, 'Ext',       'Ext',       :both, 'blah'],
+      [@store1, 'Foo',       'Foo',       :both, 'blah'],
+      [@store1, 'Foo::Bar',  'Foo::Bar',  :both, 'blah'],
+      [@store1, 'Foo::Baz',  'Foo::Baz',  :both, 'blah'],
+      [@store1, 'Inc',       'Inc',       :both, 'blah'],
     ]
 
     assert_equal expected, items
@@ -740,15 +740,15 @@ Foo::Bar#bother
     index = RDoc::AnyMethod.new nil, '[]'
     index.record_location @top_level
     @cFoo.add_method index
-    @store.save_method @cFoo, index
+    @store1.save_method @cFoo, index
 
     c_index = RDoc::AnyMethod.new nil, '[]'
     c_index.singleton = true
     c_index.record_location @top_level
     @cFoo.add_method c_index
-    @store.save_method @cFoo, c_index
+    @store1.save_method @cFoo, c_index
 
-    @store.save_cache
+    @store1.save_cache
 
     assert_equal %w[Foo#[]], @driver.list_methods_matching('Foo#[]')
     assert_equal %w[Foo::[]], @driver.list_methods_matching('Foo::[]')
@@ -757,7 +757,7 @@ Foo::Bar#bother
   def test_load_method
     util_store
 
-    method = @driver.load_method(@store, :instance_methods, 'Foo', '#',
+    method = @driver.load_method(@store1, :instance_methods, 'Foo', '#',
                                  'inherit')
 
     assert_equal @inherit, method
@@ -775,11 +775,11 @@ Foo::Bar#bother
   def test_load_methods_matching
     util_store
 
-    expected = [[@store, [@inherit]]]
+    expected = [[@store1, [@inherit]]]
 
     assert_equal expected, @driver.load_methods_matching('Foo#inherit')
 
-    expected = [[@store, [@blah]]]
+    expected = [[@store1, [@blah]]]
 
     assert_equal expected, @driver.load_methods_matching('.blah')
 
@@ -998,12 +998,12 @@ Foo::Bar#bother
   def util_multi_store
     util_store
 
-    @store1 = @store
-
-    @top_level = RDoc::TopLevel.new 'file.rb'
-
     @home_ri2 = "#{@home_ri}2"
     @store2 = RDoc::RI::Store.new @home_ri2
+
+    RDoc::RDoc.current.store = @store2
+
+    @top_level = RDoc::TopLevel.new 'file.rb'
 
     # as if seen in a namespace like class Ambiguous::Other
     @mAmbiguous = @top_level.add_module RDoc::NormalModule, 'Ambiguous'
@@ -1031,11 +1031,13 @@ Foo::Bar#bother
 
     @driver.stores = [@store1, @store2]
 
-    RDoc::RDoc.reset
+    RDoc::RDoc.current.store = @store
   end
 
   def util_store
-    @store = RDoc::RI::Store.new @home_ri
+    @store1 = RDoc::RI::Store.new @home_ri
+
+    RDoc::RDoc.current.store = @store1
 
     @top_level = RDoc::TopLevel.new 'file.rb'
 
@@ -1080,26 +1082,26 @@ Foo::Bar#bother
     @overriden.comment = 'must not be displayed'
     @overriden.record_location @top_level
 
-    @store.save_class @cFoo
-    @store.save_class @cFoo_Bar
-    @store.save_class @cFoo_Baz
-    @store.save_class @mExt
-    @store.save_class @mInc
-    @store.save_class @cAmbiguous
+    @store1.save_class @cFoo
+    @store1.save_class @cFoo_Bar
+    @store1.save_class @cFoo_Baz
+    @store1.save_class @mExt
+    @store1.save_class @mInc
+    @store1.save_class @cAmbiguous
 
-    @store.save_method @cFoo_Bar, @blah
-    @store.save_method @cFoo_Bar, @bother
-    @store.save_method @cFoo_Bar, @new
-    @store.save_method @cFoo_Bar, @attr
+    @store1.save_method @cFoo_Bar, @blah
+    @store1.save_method @cFoo_Bar, @bother
+    @store1.save_method @cFoo_Bar, @new
+    @store1.save_method @cFoo_Bar, @attr
 
-    @store.save_method @cFoo, @inherit
-    @store.save_method @cFoo, @overriden
+    @store1.save_method @cFoo, @inherit
+    @store1.save_method @cFoo, @overriden
 
-    @store.save_cache
+    @store1.save_cache
 
-    @driver.stores = [@store]
+    @driver.stores = [@store1]
 
-    RDoc::RDoc.reset
+    RDoc::RDoc.current.store = @store
   end
 
 end

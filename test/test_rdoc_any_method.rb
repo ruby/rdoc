@@ -253,9 +253,11 @@ method(a, b) { |c, d| ... }
     m1 = RDoc::AnyMethod.new '', 'supers'
 
     c1 = RDoc::NormalClass.new 'Outer'
+    c1.store = @store
     c1.add_method m1
 
     c2 = RDoc::NormalClass.new 'Inner', c1
+    c2.store = @store
     c2.add_method m2
     c2.add_method m3
 
@@ -273,11 +275,14 @@ method(a, b) { |c, d| ... }
     m1 = RDoc::AnyMethod.new '', 'supers'
 
     c1 = RDoc::NormalClass.new 'Outer'
+    c1.store = @store
     c1.add_method m1
 
     c2 = RDoc::NormalClass.new 'Middle', c1
+    c2.store = @store
 
     c3 = RDoc::NormalClass.new 'Inner', c2
+    c3.store = @store
     c3.add_method m2
 
     assert_equal m1, m2.superclass_method,

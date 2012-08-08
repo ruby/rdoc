@@ -47,7 +47,7 @@
 
 <h2 id="methods">Methods</h2>
 <ul>
-  <% RDoc::TopLevel.all_classes_and_modules.map do |mod|
+  <% @store.all_classes_and_modules.map do |mod|
        mod.method_list
      end.flatten.sort.each do |method| %>
     <li class="method"><a href="<%= method.path %>"><%= method.pretty_name %> &mdash; <%= method.parent.full_name %></a>

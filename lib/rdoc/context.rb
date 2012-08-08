@@ -266,12 +266,12 @@ class RDoc::Context < RDoc::CodeObject
       if full_name =~ /^(.+)::(\w+)$/ then
         name = $2
         ename = $1
-        enclosing = RDoc::TopLevel.classes_hash[ename] ||
-                    RDoc::TopLevel.modules_hash[ename]
+        enclosing = @store.classes_hash[ename] || @store.modules_hash[ename]
         # HACK: crashes in actionpack/lib/action_view/helpers/form_helper.rb (metaprogramming)
         unless enclosing then
           # try the given name at top level (will work for the above example)
-          enclosing = RDoc::TopLevel.classes_hash[given_name] || RDoc::TopLevel.modules_hash[given_name]
+          enclosing = @store.classes_hash[given_name] ||
+                      @store.modules_hash[given_name]
           return enclosing if enclosing
           # not found: create the parent(s)
           names = ename.split('::')
@@ -310,7 +310,7 @@ class RDoc::Context < RDoc::CodeObject
       end
 
       # did we believe it was a module?
-      mod = RDoc::TopLevel.modules_hash.delete superclass
+      mod = @store.modules_hash.delete superclass
 
       upgrade_to_class mod, RDoc::NormalClass, mod.parent if mod
 
@@ -318,7 +318,7 @@ class RDoc::Context < RDoc::CodeObject
       superclass = nil if superclass == full_name
     end
 
-    klass = RDoc::TopLevel.classes_hash[full_name]
+    klass = @store.classes_hash[full_name]
 
     if klass then
       # if TopLevel, it may not be registered in the classes:
@@ -335,7 +335,7 @@ class RDoc::Context < RDoc::CodeObject
       end
     else
       # this is a new class
-      mod = RDoc::TopLevel.modules_hash.delete full_name
+      mod = @store.modules_hash.delete full_name
 
       if mod then
         klass = upgrade_to_class mod, RDoc::NormalClass, enclosing
@@ -345,7 +345,7 @@ class RDoc::Context < RDoc::CodeObject
         klass = class_type.new name, superclass
 
         enclosing.add_class_or_module(klass, enclosing.classes_hash,
-                                      RDoc::TopLevel.classes_hash)
+                                      @store.classes_hash)
       end
     end
 
@@ -363,6 +363,7 @@ class RDoc::Context < RDoc::CodeObject
     mod.section = current_section # TODO declaring context? something is
                                   # wrong here...
     mod.parent = self
+    mod.store = @store
 
     unless @done_documenting then
       self_hash[mod.name] = mod
@@ -450,9 +451,9 @@ class RDoc::Context < RDoc::CodeObject
     return mod if mod
 
     full_name = child_name name
-    mod = RDoc::TopLevel.modules_hash[full_name] || class_type.new(name)
+    mod = @store.modules_hash[full_name] || class_type.new(name)
 
-    add_class_or_module(mod, @modules, RDoc::TopLevel.modules_hash)
+    add_class_or_module mod, @modules, @store.modules_hash
   end
 
   ##
@@ -468,13 +469,13 @@ class RDoc::Context < RDoc::CodeObject
     # see the metaprogramming in lib/active_support/basic_object.rb,
     # where we already know BasicObject as a class when we find
     # BasicObject = BlankSlate
-    return from if RDoc::TopLevel.find_class_or_module(to_name)
+    return from if @store.find_class_or_module to_name
 
     if from.module? then
-      RDoc::TopLevel.modules_hash[to_name] = from
+      @store.modules_hash[to_name] = from
       @modules[name] = from
     else
-      RDoc::TopLevel.classes_hash[to_name] = from
+      @store.classes_hash[to_name] = from
       @classes[name] = from
     end
 
@@ -524,9 +525,11 @@ class RDoc::Context < RDoc::CodeObject
   ##
   # Adds +thing+ to the collection +array+
 
-  def add_to(array, thing)
+  def add_to array, thing
     array << thing if @document_self
-    thing.parent = self
+
+    thing.parent  = self
+    thing.store   = @store
     thing.section = current_section
   end
 
@@ -773,8 +776,8 @@ class RDoc::Context < RDoc::CodeObject
   ##
   # Finds a file with +name+ in this context
 
-  def find_file_named(name)
-    top_level.class.find_file_named(name)
+  def find_file_named name
+    @store.find_file_named name
   end
 
   ##
@@ -844,7 +847,7 @@ class RDoc::Context < RDoc::CodeObject
     # look for a class or module 'symbol'
     case symbol
     when /^::/ then
-      result = RDoc::TopLevel.find_class_or_module(symbol)
+      result = @store.find_class_or_module symbol
     when /^(\w+):+(.+)$/
       suffix = $2
       top = $1
@@ -852,7 +855,7 @@ class RDoc::Context < RDoc::CodeObject
       loop do
         mod = searched.find_module_named(top)
         break unless mod
-        result = RDoc::TopLevel.find_class_or_module(mod.full_name + '::' + suffix)
+        result = @store.find_class_or_module "#{mod.full_name}::#{suffix}"
         break if result || searched.is_a?(RDoc::TopLevel)
         searched = searched.parent
       end
@@ -1147,10 +1150,11 @@ class RDoc::Context < RDoc::CodeObject
     enclosing.modules_hash.delete mod.name
 
     klass = RDoc::ClassModule.from_module class_type, mod
+    klass.store = @store
 
     # if it was there, then we keep it even if done_documenting
-    RDoc::TopLevel.classes_hash[mod.full_name] = klass
-    enclosing.classes_hash[mod.name]           = klass
+    @store.classes_hash[mod.full_name] = klass
+    enclosing.classes_hash[mod.name]   = klass
 
     klass
   end

@@ -39,6 +39,13 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
     RDoc::Markup::PreProcess.reset
 
     @pwd = Dir.pwd
+
+    @store = RDoc::Store.new
+
+    @rdoc = RDoc::RDoc.new
+    @rdoc.store = @store
+
+    RDoc::RDoc.current = @rdoc
   end
 
   ##

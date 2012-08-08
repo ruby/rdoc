@@ -220,6 +220,7 @@ class RDoc::Parser
   def initialize top_level, file_name, content, options, stats
     @top_level = top_level
     @top_level.parser = self.class
+    @store = @top_level.store
 
     @file_name = file_name
     @content = content

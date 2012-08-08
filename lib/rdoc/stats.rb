@@ -23,17 +23,18 @@ class RDoc::Stats
   # Creates a new Stats that will have +num_files+.  +verbosity+ defaults to 1
   # which will create an RDoc::Stats::Normal outputter.
 
-  def initialize num_files, verbosity = 1
-    @files_so_far = 0
+  def initialize store, num_files, verbosity = 1
     @num_files = num_files
+    @store     = store
 
-    @coverage_level = 0
-    @doc_items = nil
+    @coverage_level   = 0
+    @doc_items        = nil
+    @files_so_far     = 0
     @fully_documented = false
-    @num_params = 0
-    @percent_doc = nil
-    @start = Time.now
-    @undoc_params = 0
+    @num_params       = 0
+    @percent_doc      = nil
+    @start            = Time.now
+    @undoc_params     = 0
 
     @display = case verbosity
                when 0 then Quiet.new   num_files
@@ -106,9 +107,9 @@ class RDoc::Stats
   def calculate
     return if @doc_items
 
-    ucm = RDoc::TopLevel.unique_classes_and_modules
+    ucm = @store.unique_classes_and_modules
 
-    classes = RDoc::TopLevel.unique_classes.reject { |cm| cm.full_name == 'Object' }
+    classes = @store.unique_classes.reject { |cm| cm.full_name == 'Object' }
 
     constants = []
     ucm.each { |cm| constants.concat cm.constants }
@@ -123,7 +124,7 @@ class RDoc::Stats
     @num_classes,    @undoc_classes    = doc_stats classes
     @num_constants,  @undoc_constants  = doc_stats constants
     @num_methods,    @undoc_methods    = doc_stats methods
-    @num_modules,    @undoc_modules    = doc_stats RDoc::TopLevel.unique_modules
+    @num_modules,    @undoc_modules    = doc_stats @store.unique_modules
 
     @num_items =
       @num_attributes +
@@ -224,7 +225,7 @@ class RDoc::Stats
       return great_job if @num_items == @doc_items
     end
 
-    ucm = RDoc::TopLevel.unique_classes_and_modules
+    ucm = @store.unique_classes_and_modules
 
     ucm.sort.each do |cm|
       report << report_class_module(cm) {

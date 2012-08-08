@@ -13,7 +13,7 @@ class TestRDocParserRd < RDoc::TestCase
     @top_level = RDoc::TopLevel.new filename
     @fn = filename
     @options = RDoc::Options.new
-    @stats = RDoc::Stats.new 0
+    @stats = RDoc::Stats.new @store, 0
   end
 
   def teardown

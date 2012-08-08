@@ -88,7 +88,8 @@ class RDoc::Generator::JsonIndex
 
   def initialize parent_generator, options
     @parent_generator = parent_generator
-    @options = options
+    @store            = parent_generator.store
+    @options          = options
 
     @template_dir = File.expand_path '../template/json_index', __FILE__
     @base_dir = @parent_generator.base_dir
@@ -112,7 +113,7 @@ class RDoc::Generator::JsonIndex
   def generate top_levels
     debug_msg "Generating JSON index"
 
-    reset top_levels.sort, RDoc::TopLevel.all_classes_and_modules.sort
+    reset top_levels.sort, @store.all_classes_and_modules.sort
 
     index_classes
     index_methods

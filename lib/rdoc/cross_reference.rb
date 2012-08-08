@@ -102,6 +102,7 @@ class RDoc::CrossReference
 
   def initialize context
     @context = context
+    @store   = context.store
 
     @seen = {}
   end
@@ -146,7 +147,7 @@ class RDoc::CrossReference
           end unless ref
 
     # Try a page name
-    ref = RDoc::TopLevel.page name if not ref and name =~ /^\w+$/
+    ref = @store.page name if not ref and name =~ /^\w+$/
 
     ref = nil if RDoc::Alias === ref # external alias, can't link to it
 

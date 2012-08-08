@@ -614,7 +614,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when "self", container.name
         parse_statements container, SINGLE
       else
-        other = RDoc::TopLevel.find_class_named name
+        other = @store.find_class_named name
 
         unless other then
           other = container.add_module RDoc::NormalModule, name
@@ -701,7 +701,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
         if nest <= 0 and TkNL === peek_tk then
           mod = if rhs_name =~ /^::/ then
-                  RDoc::TopLevel.find_class_or_module rhs_name
+                  @store.find_class_or_module rhs_name
                 else
                   container.find_module_named rhs_name
                 end
@@ -1095,7 +1095,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           return
         when TkTRUE, TkFALSE, TkNIL then
           klass_name = "#{name_t.name.capitalize}Class"
-          container = RDoc::TopLevel.find_class_named klass_name
+          container = @store.find_class_named klass_name
           container ||= @top_level.add_class RDoc::NormalClass, klass_name
 
           name = name_t2.name
@@ -1408,7 +1408,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         nest += 1
 
       when TkSUPER then
-        current_method.calls_super = true
+        current_method.calls_super = true if current_method
 
       when TkIDENTIFIER then
         if nest == 1 and current_method.nil? then

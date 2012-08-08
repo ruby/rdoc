@@ -90,6 +90,11 @@ class RDoc::CodeObject
   attr_accessor :section
 
   ##
+  # The RDoc::Store for this object.
+
+  attr_accessor :store
+
+  ##
   # We are the model of the code, but we know that at some point we will be
   # worked on by viewers. By implementing the Viewable protocol, viewers can
   # associated themselves with these objects.
@@ -105,6 +110,7 @@ class RDoc::CodeObject
     @parent    = nil
     @file      = nil
     @full_name = nil
+    @store     = nil
 
     @document_children   = true
     @document_self       = true

@@ -14,14 +14,16 @@ class TestRDocParserRuby < RDoc::TestCase
     @tempfile2 = Tempfile.new self.class.name
     @filename2 = @tempfile2.path
 
-    util_top_level
+    @top_level = RDoc::TopLevel.new @filename
+    @top_level2 = RDoc::TopLevel.new @filename2
+
     @options = RDoc::Options.new
     @options.quiet = true
     @options.option_parser = OptionParser.new
 
     @comment = RDoc::Comment.new '', @top_level
 
-    @stats = RDoc::Stats.new 0
+    @stats = RDoc::Stats.new @store, 0
   end
 
   def teardown
@@ -630,7 +632,6 @@ end
   end
 
   def test_parse_class_nested_superclass
-    util_top_level
     foo = @top_level.add_module RDoc::NormalModule, 'Foo'
 
     util_parser "class Bar < Super\nend"
@@ -701,7 +702,7 @@ end
 
     @parser.parse_class @top_level, false, @parser.get_tk, @comment
 
-    assert_equal %w[A B], RDoc::TopLevel.classes.map { |c| c.full_name }.sort
+    assert_equal %w[A B], @store.all_classes.map { |c| c.full_name }.sort
   end
 
   def test_parse_class_single
@@ -720,9 +721,9 @@ end
 
     @parser.parse_class @top_level, false, @parser.get_tk, @comment
 
-    assert_equal %w[A], RDoc::TopLevel.classes.map { |c| c.full_name }
+    assert_equal %w[A], @store.all_classes.map { |c| c.full_name }
 
-    modules = RDoc::TopLevel.modules.sort_by { |c| c.full_name }
+    modules = @store.all_modules.sort_by { |c| c.full_name }
     assert_equal %w[A::B A::d], modules.map { |c| c.full_name }
 
     b = modules.first
@@ -730,11 +731,11 @@ end
     assert_equal 2,  b.line
 
     # make sure method/alias was not added to enclosing class/module
-    a = RDoc::TopLevel.all_classes_hash['A']
+    a = @store.classes_hash['A']
     assert_empty a.method_list
 
     # make sure non-constant-named module will be removed from documentation
-    d = RDoc::TopLevel.all_modules_hash['A::d']
+    d = @store.modules_hash['A::d']
     assert d.remove_from_documentation?
 
   end
@@ -756,11 +757,14 @@ end
 
     @parser.parse_module @top_level, false, @parser.get_tk, @comment
 
-    assert_equal %w[A],    RDoc::TopLevel.modules.map { |c| c.full_name }
-    assert_equal %w[A::B A::C A::Object], RDoc::TopLevel.classes.map { |c| c.full_name }.sort
-    assert_equal 'Object', RDoc::TopLevel.classes_hash['A::B'].superclass
-    assert_equal 'Object', RDoc::TopLevel.classes_hash['A::Object'].superclass
-    assert_equal 'A::Object', RDoc::TopLevel.classes_hash['A::C'].superclass.full_name
+    assert_equal %w[A],
+      @store.all_modules.map { |c| c.full_name }
+    assert_equal %w[A::B A::C A::Object],
+      @store.all_classes.map { |c| c.full_name }.sort
+
+    assert_equal 'Object',    @store.classes_hash['A::B'].superclass
+    assert_equal 'Object',    @store.classes_hash['A::Object'].superclass
+    assert_equal 'A::Object', @store.classes_hash['A::C'].superclass.full_name
   end
 
   def test_parse_class_mistaken_for_module
@@ -783,7 +787,7 @@ end
 
     @parser.scan
 
-    assert_equal %w[Foo::Baz], RDoc::TopLevel.modules_hash.keys
+    assert_equal %w[Foo::Baz], @store.modules_hash.keys
     assert_empty @top_level.modules
 
     foo = @top_level.classes.first
@@ -797,9 +801,9 @@ end
   end
 
   def test_parse_class_definition_encountered_after_class_reference
-    # The code below is not strictly legal Ruby (Foo must have been defined
-    # before Foo.bar is encountered), but RDoc might encounter Foo.bar before
-    # Foo if they live in different files.
+    # The code below is not legal Ruby (Foo must have been defined before
+    # Foo.bar is encountered), but RDoc might encounter Foo.bar before Foo if
+    # they live in different files.
 
     code = <<-EOF
 def Foo.bar
@@ -813,9 +817,8 @@ end
 
     @parser.scan
 
-    assert_empty RDoc::TopLevel.modules_hash
-    # HACK why does it fail?
-    #assert_empty @top_level.modules
+    assert_empty @store.modules_hash
+    assert_empty @store.modules
 
     foo = @top_level.classes.first
     assert_equal 'Foo', foo.full_name
@@ -961,8 +964,6 @@ EOF
   end
 
   def test_parse_constant
-    util_top_level
-
     klass = @top_level.add_class RDoc::NormalClass, 'Foo'
 
     util_parser "A = v"
@@ -980,8 +981,6 @@ EOF
   end
 
   def test_parse_constant_attrasgn
-    util_top_level
-
     klass = @top_level.add_class RDoc::NormalClass, 'Foo'
 
     util_parser "A[k] = v"
@@ -994,7 +993,6 @@ EOF
   end
 
   def test_parse_constant_alias
-    util_top_level
     klass = @top_level.add_class RDoc::NormalClass, 'Foo'
     cB = klass.add_class RDoc::NormalClass, 'B'
 
@@ -1012,7 +1010,7 @@ EOF
     top_bar = @top_level.add_class RDoc::NormalClass, 'Bar'
     bar = foo.add_class RDoc::NormalClass, 'Bar'
 
-    assert RDoc::TopLevel.find_class_or_module('::Bar')
+    assert @store.find_class_or_module('::Bar')
 
     util_parser "A = ::Bar"
 
@@ -1024,8 +1022,6 @@ EOF
   end
 
   def test_parse_constant_stopdoc
-    util_top_level
-
     klass = @top_level.add_class RDoc::NormalClass, 'Foo'
     klass.stop_doc
 
@@ -1350,7 +1346,7 @@ end
 
     @parser.parse_method @top_level, RDoc::Parser::Ruby::NORMAL, tk, @comment
 
-    klass = RDoc::TopLevel.find_class_named 'FalseClass'
+    klass = @store.find_class_named 'FalseClass'
 
     foo = klass.method_list.first
     assert_equal 'foo', foo.name
@@ -1425,7 +1421,7 @@ end
 
     @parser.parse_method @top_level, RDoc::Parser::Ruby::NORMAL, tk, @comment
 
-    klass = RDoc::TopLevel.find_class_named 'NilClass'
+    klass = @store.find_class_named 'NilClass'
 
     foo = klass.method_list.first
     assert_equal 'foo', foo.name
@@ -1499,7 +1495,7 @@ end
 
     @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, @comment
 
-    object = RDoc::TopLevel.find_class_named 'Object'
+    object = @store.find_class_named 'Object'
 
     foo = object.method_list.first
     assert_equal 'Object#foo', foo.full_name
@@ -1515,7 +1511,7 @@ end
 
     @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, @comment
 
-    object = RDoc::TopLevel.find_class_named 'Object'
+    object = @store.find_class_named 'Object'
 
     foo = object.method_list.first
     assert_equal 'Object::foo', foo.full_name
@@ -1528,7 +1524,7 @@ end
 
     @parser.parse_method @top_level, RDoc::Parser::Ruby::NORMAL, tk, @comment
 
-    klass = RDoc::TopLevel.find_class_named 'TrueClass'
+    klass = @store.find_class_named 'TrueClass'
 
     foo = klass.method_list.first
     assert_equal 'foo', foo.name
@@ -1953,8 +1949,6 @@ end
   end
 
   def test_parse_statements_stopdoc_TkALIAS
-    util_top_level
-
     klass = @top_level.add_class RDoc::NormalClass, 'Foo'
 
     util_parser "\n# :stopdoc:\nalias old new"
@@ -1966,8 +1960,6 @@ end
   end
 
   def test_parse_statements_stopdoc_TkIDENTIFIER_alias_method
-    util_top_level
-
     klass = @top_level.add_class RDoc::NormalClass, 'Foo'
 
     util_parser "\n# :stopdoc:\nalias_method :old :new"
@@ -1979,8 +1971,6 @@ end
   end
 
   def test_parse_statements_stopdoc_TkIDENTIFIER_metaprogrammed
-    util_top_level
-
     klass = @top_level.add_class RDoc::NormalClass, 'Foo'
 
     util_parser "\n# :stopdoc:\n# attr :meta"
@@ -1992,8 +1982,6 @@ end
   end
 
   def test_parse_statements_stopdoc_TkCONSTANT
-    util_top_level
-
     klass = @top_level.add_class RDoc::NormalClass, 'Foo'
 
     util_parser "\n# :stopdoc:\nA = v"
@@ -2004,8 +1992,6 @@ end
   end
 
   def test_parse_statements_stopdoc_TkDEF
-    util_top_level
-
     klass = @top_level.add_class RDoc::NormalClass, 'Foo'
 
     util_parser "\n# :stopdoc:\ndef m\n end"
@@ -2013,6 +1999,25 @@ end
     @parser.parse_statements klass, RDoc::Parser::Ruby::NORMAL, nil
 
     assert_empty klass.method_list
+  end
+
+  def test_parse_statements_super
+    m = RDoc::AnyMethod.new '', 'm'
+    util_parser 'super'
+
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, m
+
+    assert m.calls_super
+  end
+
+  def test_parse_statements_super_no_method
+    content = "super"
+
+    util_parser content
+
+    @parser.parse_statements @top_level
+
+    assert_nil @parser.get_tk
   end
 
   def test_parse_statements_while_begin
@@ -2477,10 +2482,10 @@ end
 
     @parser.scan
 
-    assert_empty RDoc::TopLevel.classes
+    assert_empty @store.all_classes
 
-    assert_equal 1, RDoc::TopLevel.modules.length
-    m = RDoc::TopLevel.modules.first
+    assert_equal 1, @store.all_modules.length
+    m = @store.all_modules.first
 
     assert m.ignored?
   end
@@ -2510,15 +2515,6 @@ end
     assert_equal 'there', baz.comment.text
   end
 
-  def test_parse_statements_super
-    m = RDoc::AnyMethod.new '', 'm'
-    util_parser 'super'
-
-    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, m
-
-    assert m.calls_super
-  end
-
   def tk(klass, line, char, name, text)
     klass = RDoc::RubyToken.const_get "Tk#{klass.to_s.upcase}"
 
@@ -2544,12 +2540,6 @@ end
 
     @parser2 = RDoc::Parser::Ruby.new @top_level2, @filename,
                                       second_file_content, @options, @stats
-  end
-
-  def util_top_level
-    RDoc::TopLevel.reset
-    @top_level = RDoc::TopLevel.new @filename
-    @top_level2 = RDoc::TopLevel.new @filename2
   end
 
 end

@@ -24,13 +24,10 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
       break
     end
 
-    rd = RDoc::RDoc.new
-    rd.options = @options
-    RDoc::RDoc.current = rd
+    @rdoc.options = @options
 
-    @g = @options.generator.new @options
-
-    rd.generator = @g
+    @g = @options.generator.new @store, @options
+    @rdoc.generator = @g
 
     @top_level = RDoc::TopLevel.new 'file.rb'
     @top_level.parser = RDoc::Parser::Ruby

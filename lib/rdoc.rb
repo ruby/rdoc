@@ -141,6 +141,7 @@ module RDoc
   autoload :Parser,         'rdoc/parser'
   autoload :RI,             'rdoc/ri'
   autoload :Stats,          'rdoc/stats'
+  autoload :Store,          'rdoc/store'
   autoload :Task,           'rdoc/task'
   autoload :Text,           'rdoc/text'
 

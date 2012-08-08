@@ -183,7 +183,7 @@ class RDoc::ClassModule < RDoc::Context
   ##
   # Prepares this ClassModule for use by a generator.
   #
-  # See RDoc::TopLevel::complete
+  # See RDoc::Store#complete
 
   def complete min_visibility
     update_aliases
@@ -538,12 +538,12 @@ class RDoc::ClassModule < RDoc::Context
 
     modules_hash.each_key do |name|
       full_name = prefix + name
-      modules_hash.delete name unless RDoc::TopLevel.all_modules_hash[full_name]
+      modules_hash.delete name unless @store.modules_hash[full_name]
     end
 
     classes_hash.each_key do |name|
       full_name = prefix + name
-      classes_hash.delete name unless RDoc::TopLevel.all_classes_hash[full_name]
+      classes_hash.delete name unless @store.classes_hash[full_name]
     end
   end
 
@@ -567,7 +567,7 @@ class RDoc::ClassModule < RDoc::Context
   # object, returns the name if it is not known.
 
   def superclass
-    RDoc::TopLevel.find_class_named(@superclass) || @superclass
+    @store.find_class_named(@superclass) || @superclass
   end
 
   ##
@@ -598,7 +598,7 @@ class RDoc::ClassModule < RDoc::Context
   # aliases through a constant.
   #
   # The aliased module/class is replaced in the children and in
-  # RDoc::TopLevel::all_modules_hash or RDoc::TopLevel::all_classes_hash
+  # RDoc::Store#modules_hash or RDoc::Store#classes_hash
   # by a copy that has <tt>RDoc::ClassModule#is_alias_for</tt> set to
   # the aliased module/class, and this copy is added to <tt>#aliases</tt>
   # of the aliased module/class.
@@ -619,10 +619,10 @@ class RDoc::ClassModule < RDoc::Context
       cm_alias.is_alias_for = cm
 
       if cm.module? then
-        RDoc::TopLevel.all_modules_hash[cm_alias.full_name] = cm_alias
+        @store.modules_hash[cm_alias.full_name] = cm_alias
         modules_hash[const.name] = cm_alias
       else
-        RDoc::TopLevel.all_classes_hash[cm_alias.full_name] = cm_alias
+        @store.classes_hash[cm_alias.full_name] = cm_alias
         classes_hash[const.name] = cm_alias
       end
 
@@ -639,7 +639,7 @@ class RDoc::ClassModule < RDoc::Context
   def update_includes
     includes.reject! do |include|
       mod = include.module
-      !(String === mod) && RDoc::TopLevel.all_modules_hash[mod.full_name].nil?
+      !(String === mod) && @store.modules_hash[mod.full_name].nil?
     end
 
     includes.uniq!
@@ -655,7 +655,7 @@ class RDoc::ClassModule < RDoc::Context
     extends.reject! do |ext|
       mod = ext.module
 
-      !(String === mod) && RDoc::TopLevel.all_modules_hash[mod.full_name].nil?
+      !(String === mod) && @store.modules_hash[mod.full_name].nil?
     end
 
     extends.uniq!

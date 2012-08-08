@@ -7,6 +7,7 @@ class TestRDocExtend < XrefTestCase
 
     @ext = RDoc::Extend.new 'M1', 'comment'
     @ext.parent = @m1
+    @ext.store = @store
   end
 
   def test_module

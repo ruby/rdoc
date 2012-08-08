@@ -80,9 +80,15 @@ class RDoc::Generator::Darkfish
   attr_reader :base_dir
 
   ##
+  # The RDoc::Store that is the source of the generated content
+
+  attr_reader :store
+
+  ##
   # Initialize a few instance variables before we start
 
-  def initialize options
+  def initialize store, options
+    @store   = store
     @options = options
 
     @template_dir = Pathname.new options.template_dir
@@ -165,7 +171,7 @@ class RDoc::Generator::Darkfish
     @outputdir = Pathname.new(@options.op_dir).expand_path(@base_dir)
 
     @files = top_levels.sort
-    @classes = RDoc::TopLevel.all_classes_and_modules.sort
+    @classes = @store.all_classes_and_modules.sort
     @methods = @classes.map { |m| m.method_list }.flatten.sort
     @modsort = get_sorted_module_list(@classes)
 

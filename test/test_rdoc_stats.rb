@@ -5,7 +5,7 @@ class TestRDocStats < RDoc::TestCase
   def setup
     super
 
-    @s = RDoc::Stats.new 0
+    @s = RDoc::Stats.new @store, 0
 
     @tl = RDoc::TopLevel.new 'file.rb'
     @tl.parser = RDoc::Parser::Ruby
@@ -40,7 +40,7 @@ class TestRDocStats < RDoc::TestCase
     a.record_location @tl
     c.add_attribute a
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     report = @s.report
 
@@ -65,7 +65,7 @@ end
     a.record_location @tl
     c.add_attribute a
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     report = @s.report
 
@@ -81,7 +81,7 @@ end
     c.record_location @tl
     m.add_constant c
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     report = @s.report
 
@@ -109,7 +109,7 @@ end
 
     @tl.add_constant ca
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     report = @s.report
 
@@ -127,7 +127,7 @@ end
     c.record_location @tl
     m.add_constant c
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     report = @s.report
 
@@ -143,7 +143,7 @@ end
     c.add_method m
     m.comment = 'm'
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     report = @s.report
 
@@ -169,7 +169,7 @@ end
     c.add_method m
     m.comment = 'm'
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     refute_match %r%^class Object$%, @s.report
   end
@@ -185,7 +185,7 @@ end
     c.add_method m
     m.comment = 'm'
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     report = @s.report
 
@@ -210,7 +210,7 @@ end
     c2.add_method m2
     m2.comment = 'm2'
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     @s.coverage_level = 1
 
@@ -233,7 +233,7 @@ end
   def test_report_class_empty
     @tl.add_class RDoc::NormalClass, 'C'
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     report = @s.report
 
@@ -256,7 +256,7 @@ The following items are not documented:
     c2.record_location @tl
     c2.add_comment 'C2', @tl
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     @s.coverage_level = 1
     report = @s.report
@@ -284,7 +284,7 @@ end
     c.add_method m
     m.comment = 'm'
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     report = @s.report
 
@@ -305,7 +305,7 @@ end
     c = @tl.add_class RDoc::NormalClass, 'C'
     c.ignore
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     report = @s.report_class_module c
 
@@ -313,7 +313,7 @@ end
   end
 
   def test_report_empty
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     report = @s.report
 
@@ -334,7 +334,7 @@ end
     c.add_method m2
     m2.comment = 'm2'
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     report = @s.report
 
@@ -368,7 +368,7 @@ end
     c.add_method m2
     m2.comment = 'm2'
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     report = @s.report
 
@@ -396,7 +396,7 @@ end
     c.add_method m
     m.comment = 'm'
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     report = @s.report
 
@@ -419,7 +419,7 @@ end
     c.add_method m2
     m2.comment = 'm2'
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     @s.coverage_level = 1
     report = @s.report
@@ -451,7 +451,7 @@ end
     m.comment = 'Stuff with +p1+'
     c.add_method m
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     @s.coverage_level = 1
     report = @s.report
@@ -473,7 +473,7 @@ m(a, b) { |c, d| ... }
     m.comment = 'Stuff with +a+, yields +c+ for you to do stuff with'
     c.add_method m
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     @s.coverage_level = 1
     report = @s.report
@@ -512,7 +512,7 @@ end
     m.record_location @tl
     c.add_method m
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     summary = @s.summary
     summary.sub!(/Elapsed:.*/, '')
@@ -538,7 +538,7 @@ Total:      5 (5 undocumented)
     c = @tl.add_class RDoc::NormalClass, 'C'
     c.record_location @tl
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     @s.coverage_level = false
 
@@ -573,7 +573,7 @@ Total:      1 (1 undocumented)
     m.comment = 'Stuff with +p1+'
     c.add_method m
 
-    RDoc::TopLevel.complete :public
+    @store.complete :public
 
     @s.coverage_level = 1
     @s.report

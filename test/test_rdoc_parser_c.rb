@@ -58,7 +58,7 @@ class TestRDocParserC < RDoc::TestCase
     @fn = filename
     @options = RDoc::Options.new
     @options.verbosity = 2
-    @stats = RDoc::Stats.new 0
+    @stats = RDoc::Stats.new @store, 0
   end
 
   def teardown

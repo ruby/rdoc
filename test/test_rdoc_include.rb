@@ -7,6 +7,7 @@ class TestRDocInclude < XrefTestCase
 
     @inc = RDoc::Include.new 'M1', 'comment'
     @inc.parent = @m1
+    @inc.store = @store
   end
 
   def test_module

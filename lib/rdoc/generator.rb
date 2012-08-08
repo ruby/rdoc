@@ -27,7 +27,12 @@
 # == Generator Instantiation
 #
 # After parsing, RDoc::RDoc will instantiate a generator by calling
-# #initialize with an RDoc::Options instance.
+# #initialize with an RDoc::Store instance and an RDoc::Options instance.
+#
+# The RDoc::Store instance holds documentation for parsed source code.  In
+# RDoc 3 and earlier the RDoc::TopLevel class held this data.  When upgrading
+# a generator from RDoc 3 and earlier you should only need to replace
+# RDoc::TopLevel with the store instance.
 #
 # RDoc will then call #generate on the generator instance and pass in an Array
 # of RDoc::TopLevel instances, each representing a parsed file.  You can use

@@ -59,6 +59,11 @@ class RDoc::RDoc
   attr_reader :stats
 
   ##
+  # The current documentation store
+
+  attr_accessor :store
+
+  ##
   # Add +klass+ that can generate output after parsing
 
   def self.add_generator(klass)
@@ -84,7 +89,6 @@ class RDoc::RDoc
   # Resets all internal state
 
   def self.reset
-    RDoc::TopLevel.reset
     RDoc::Parser::C.reset
     RDoc::RDoc.current = nil
   end
@@ -101,6 +105,7 @@ class RDoc::RDoc
     @old_siginfo   = nil
     @options       = nil
     @stats         = nil
+    @store         = nil
   end
 
   ##
@@ -378,7 +383,7 @@ The internal error was:
 
   def parse_files files
     file_list = gather_files files
-    @stats = RDoc::Stats.new file_list.size, @options.verbosity
+    @stats = RDoc::Stats.new @store, file_list.length, @options.verbosity
 
     return [] if file_list.empty?
 
@@ -425,7 +430,8 @@ The internal error was:
   # current directory, so make sure you're somewhere writable before invoking.
 
   def document options
-    RDoc::RDoc.reset
+    @store = RDoc::Store.new
+
     RDoc::RDoc.current = self
 
     if RDoc::Options === options then
@@ -447,13 +453,16 @@ The internal error was:
       @last_modified = setup_output_dir @options.op_dir, @options.force_update
     end
 
+    @store.encoding = @options.encoding if @options.respond_to? :encoding
+    @store.dry_run  = @options.dry_run
+
     @start_time = Time.now
 
     file_info = parse_files @options.files
 
     @options.default_title = "RDoc Documentation"
 
-    RDoc::TopLevel.complete @options.visibility
+    @store.complete @options.visibility
 
     @stats.coverage_level = @options.coverage_report
 
@@ -466,7 +475,7 @@ The internal error was:
     else
       gen_klass = @options.generator
 
-      @generator = gen_klass.new @options
+      @generator = gen_klass.new @store, @options
 
       generate file_info
     end

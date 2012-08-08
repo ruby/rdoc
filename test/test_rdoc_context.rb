@@ -103,7 +103,7 @@ class TestRDocContext < XrefTestCase
     @c1.add_class RDoc::NormalClass, 'Klass', 'Object'
 
     assert_includes @c1.classes.map { |k| k.full_name }, 'C1::Klass'
-    assert_includes RDoc::TopLevel.classes.map { |k| k.full_name }, 'C1::Klass'
+    assert_includes @store.all_classes.map { |k| k.full_name }, 'C1::Klass'
   end
 
   def test_add_class_basic_object
@@ -142,7 +142,7 @@ class TestRDocContext < XrefTestCase
     @c1.add_class RDoc::NormalClass, 'Klass', 'Object'
 
     assert_includes @c1.classes.map { |k| k.full_name }, 'C1::Klass'
-    assert_includes RDoc::TopLevel.classes.map { |k| k.full_name }, 'C1::Klass'
+    assert_includes @store.all_classes.map { |k| k.full_name }, 'C1::Klass'
   end
 
   def test_add_class_superclass
@@ -163,9 +163,9 @@ class TestRDocContext < XrefTestCase
     refute_includes @c1.modules.map { |k| k.full_name }, 'C1::Klass',
                     'c1 modules'
 
-    assert_includes RDoc::TopLevel.classes.map { |k| k.full_name }, 'C1::Klass',
+    assert_includes @store.all_classes.map { |k| k.full_name }, 'C1::Klass',
                     'TopLevel classes'
-    refute_includes RDoc::TopLevel.modules.map { |k| k.full_name }, 'C1::Klass',
+    refute_includes @store.all_modules.map { |k| k.full_name }, 'C1::Klass',
                     'TopLevel modules'
   end
 

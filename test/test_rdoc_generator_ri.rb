@@ -6,12 +6,15 @@ class TestRDocGeneratorRI < RDoc::TestCase
     super
 
     @options = RDoc::Options.new
-    @options.encoding = Encoding::UTF_8 if Object.const_defined? :Encoding
+    if Object.const_defined? :Encoding then
+      @options.encoding = Encoding::UTF_8
+      @store.encoding = Encoding::UTF_8
+    end
 
     @tmpdir = File.join Dir.tmpdir, "test_rdoc_generator_ri_#{$$}"
     FileUtils.mkdir_p @tmpdir
 
-    @g = RDoc::Generator::RI.new @options
+    @g = RDoc::Generator::RI.new @store, @options
 
     @top_level = RDoc::TopLevel.new 'file.rb'
     @klass = @top_level.add_class RDoc::NormalClass, 'Object'
@@ -67,8 +70,8 @@ class TestRDocGeneratorRI < RDoc::TestCase
   end
 
   def test_generate_dry_run
-    @options.dry_run = true
-    @g = RDoc::Generator::RI.new @options
+    @store.dry_run = true
+    @g = RDoc::Generator::RI.new @store, @options
 
     top_level = RDoc::TopLevel.new 'file.rb'
     top_level.add_class @klass.class, @klass.name
@@ -76,7 +79,6 @@ class TestRDocGeneratorRI < RDoc::TestCase
     @g.generate nil
 
     refute_file File.join(@tmpdir, 'cache.ri')
-
     refute_file File.join(@tmpdir, 'Object')
   end
 

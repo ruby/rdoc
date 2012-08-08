@@ -149,7 +149,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
     return nil unless parent.respond_to? :ancestors
 
     searched = parent.ancestors
-    kernel = RDoc::TopLevel.all_modules_hash['Kernel']
+    kernel = @store.modules_hash['Kernel']
 
     searched << kernel if kernel &&
       parent != kernel && !searched.include?(kernel)

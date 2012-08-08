@@ -1,6 +1,6 @@
-require 'rdoc/test_case'
+require File.expand_path '../xref_test_case', __FILE__
 
-class TestRDocRIStore < RDoc::TestCase
+class TestRDocStore < XrefTestCase
 
   OBJECT_ANCESTORS = defined?(::BasicObject) ? %w[BasicObject] : []
 
@@ -9,6 +9,8 @@ class TestRDocRIStore < RDoc::TestCase
 
     @tmpdir = File.join Dir.tmpdir, "test_rdoc_ri_store_#{$$}"
     @s = RDoc::RI::Store.new @tmpdir
+
+    RDoc::RDoc.current.store = @s
 
     @top_level = RDoc::TopLevel.new 'file.rb'
 
@@ -42,6 +44,8 @@ class TestRDocRIStore < RDoc::TestCase
 
     @nest_klass.add_method @nest_meth
     @nest_klass.add_include @nest_incl
+
+    RDoc::RDoc.current.store = @store
   end
 
   def teardown
@@ -91,6 +95,23 @@ class TestRDocRIStore < RDoc::TestCase
     refute File.exist?(path), "#{path} exists"
   end
 
+  def test_all_classes_and_modules
+    expected = %w[
+      C1 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1
+      Child
+      M1 M1::M2
+      Parent
+    ]
+
+    assert_equal expected,
+                 @store.all_classes_and_modules.map { |m| m.full_name }.sort
+  end
+
+  def test_all_files
+    assert_equal %w[xref_data.rb],
+                 @store.all_files.map { |m| m.full_name }.sort
+  end
+
   def test_attributes
     @s.cache[:attributes]['Object'] = %w[attr]
 
@@ -120,12 +141,53 @@ class TestRDocRIStore < RDoc::TestCase
                  @s.class_path('Object::SubClass')
   end
 
-  def test_dry_run
-    refute @s.dry_run
+  def test_classes
+    expected = %w[
+      C1 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1
+      Child Parent
+    ]
 
-    @s.dry_run = true
+    assert_equal expected, @store.all_classes.map { |m| m.full_name }.sort
+  end
 
-    assert @s.dry_run
+  def test_complete
+    @c2.add_module_alias @c2_c3, 'A1', @top_level
+
+    @store.complete :public
+
+    a1 = @xref_data.find_class_or_module 'C2::A1'
+
+    assert_equal 'C2::A1', a1.full_name
+    refute_empty a1.aliases
+  end
+
+  def test_find_class_named
+    assert_equal @c1, @store.find_class_named('C1')
+
+    assert_equal @c2_c3, @store.find_class_named('C2::C3')
+  end
+
+  def test_find_class_named_from
+    assert_equal @c5_c1, @store.find_class_named_from('C1', 'C5')
+
+    assert_equal @c1,    @store.find_class_named_from('C1', 'C4')
+  end
+
+  def test_find_class_or_module
+    assert_equal @m1, @store.find_class_or_module('M1')
+    assert_equal @c1, @store.find_class_or_module('C1')
+
+    assert_equal @m1, @store.find_class_or_module('::M1')
+    assert_equal @c1, @store.find_class_or_module('::C1')
+  end
+
+  def test_find_file_named
+    assert_equal @xref_data, @store.find_file_named(@file_name)
+  end
+
+  def test_find_module_named
+    assert_equal @m1,    @store.find_module_named('M1')
+    assert_equal @m1_m2, @store.find_module_named('M1::M2')
   end
 
   def test_friendly_path
@@ -148,6 +210,14 @@ class TestRDocRIStore < RDoc::TestCase
     @s.type = :gem
     @s.path = "#{@tmpdir}/gem_repository/doc/gem_name-1.0/ri"
     assert_equal "gem gem_name-1.0", @s.friendly_path
+  end
+
+  def test_dry_run
+    refute @s.dry_run
+
+    @s.dry_run = true
+
+    assert @s.dry_run
   end
 
   def test_instance_methods
@@ -242,6 +312,20 @@ class TestRDocRIStore < RDoc::TestCase
 
     assert_equal File.join(@tmpdir, 'Object', 'method-c.ri'),
                  @s.method_file('Object', 'Object::method')
+  end
+
+  def test_modules
+    assert_equal %w[M1 M1::M2],
+                 @store.all_modules.map { |m| m.full_name }.sort
+  end
+
+  def test_page
+    page = RDoc::TopLevel.new 'PAGE.txt'
+    page.parser = RDoc::Parser::Simple
+
+    assert_nil @store.page 'no such page'
+
+    assert_equal page, @store.page('PAGE')
   end
 
   def test_save_cache
@@ -389,7 +473,9 @@ class TestRDocRIStore < RDoc::TestCase
   # This is a functional test
   def test_save_class_merge_constant
     tl = RDoc::TopLevel.new 'file.rb'
-    klass = RDoc::NormalClass.new 'C'
+    tl.store = RDoc::Store.new
+
+    klass = tl.add_class RDoc::NormalClass, 'C'
     klass.add_comment 'comment', tl
 
     const = klass.add_constant RDoc::Constant.new('CONST', nil, nil)
@@ -397,14 +483,15 @@ class TestRDocRIStore < RDoc::TestCase
 
     @s.save_class klass
 
-    RDoc::RDoc.reset
-
-    klass2 = RDoc::NormalClass.new 'C'
+    # separate parse run, independent store
+    tl.store = RDoc::Store.new
+    klass2 = tl.add_class RDoc::NormalClass, 'C'
     klass2.record_location tl
 
     s = RDoc::RI::Store.new @tmpdir
     s.save_class klass2
 
+    # separate `ri` run, independent store
     s = RDoc::RI::Store.new @tmpdir
 
     result = s.load_class 'C'

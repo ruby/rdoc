@@ -15,10 +15,6 @@ class TestRDocRDoc < RDoc::TestCase
   def test_class_reset
     RDoc::RDoc.current = :junk
 
-    tl = RDoc::TopLevel.new 'file.rb'
-    tl.add_class RDoc::NormalClass, 'C'
-    tl.add_class RDoc::NormalModule, 'M'
-
     c = RDoc::Parser::C
     enclosure_classes = c.send :class_variable_get, :@@enclosure_classes
     enclosure_classes['A'] = 'B'
@@ -29,12 +25,23 @@ class TestRDocRDoc < RDoc::TestCase
 
     assert_nil RDoc::RDoc.current
 
-    assert_empty RDoc::TopLevel.all_classes_hash
-    assert_empty RDoc::TopLevel.all_files_hash
-    assert_empty RDoc::TopLevel.all_modules_hash
-
     assert_empty c.send :class_variable_get, :@@enclosure_classes
     assert_empty c.send :class_variable_get, :@@known_bodies
+  end
+
+  def test_document # functional test
+    options = RDoc::Options.new
+    options.files = [File.expand_path('../xref_data.rb')]
+    options.setup_generator 'ri'
+
+    rdoc = RDoc::RDoc.new
+    temp_dir do
+      capture_io do
+        rdoc.document options
+      end
+
+      assert File.directory? 'doc'
+    end
   end
 
   def test_gather_files

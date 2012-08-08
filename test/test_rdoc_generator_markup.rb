@@ -5,6 +5,8 @@ class TestRDocGeneratorMarkup < RDoc::TestCase
   include RDoc::Text
   include RDoc::Generator::Markup
 
+  attr_reader :store
+
   def setup
     super
 
