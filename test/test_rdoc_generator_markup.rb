@@ -11,13 +11,11 @@ class TestRDocGeneratorMarkup < RDoc::TestCase
     super
 
     @options = RDoc::Options.new
-    @rdoc = RDoc::RDoc.new
     @rdoc.options = @options
+
     @parent = self
     @path = '/index.html'
     @symbols = {}
-
-    RDoc::RDoc.current = @rdoc
   end
 
   def test_aref_to

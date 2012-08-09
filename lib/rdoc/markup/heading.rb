@@ -23,7 +23,7 @@ class RDoc::Markup::Heading < Struct.new :level, :text
     markup = RDoc::Markup.new
     markup.add_special RDoc::CrossReference::CROSSREF_REGEXP, :CROSSREF
 
-    @to_html = RDoc::Markup::ToHtml.new
+    @to_html = RDoc::Markup::ToHtml.new nil
 
     def @to_html.handle_special_CROSSREF special
       special.text.sub(/^\\/, '')

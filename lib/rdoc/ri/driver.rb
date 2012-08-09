@@ -159,6 +159,7 @@ Options may also be set in the 'RI' environment variable.
       formatters = formatters.sort.map do |formatter|
         formatter.to_s.sub('To', '').downcase
       end
+      formatters -= %w[html label test] # remove useless output formats
 
       opt.on("--format=NAME", "-f",
              "Uses the selected formatter. The default",

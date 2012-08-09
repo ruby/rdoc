@@ -53,6 +53,8 @@ class RDoc::Markup::FormatterTestCase < RDoc::TestCase
   def setup
     super
 
+    @options = RDoc::Options.new
+
     @m = @RM.new
 
     @bullet_list = @RM::List.new(:BULLET,

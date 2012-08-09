@@ -18,6 +18,10 @@ class RDoc::Markup::ToTableOfContents < RDoc::Markup::Formatter
 
   attr_reader :res
 
+  def initialize # :nodoc:
+    super nil
+  end
+
   ##
   # Adds +heading+ to the table of contents
 

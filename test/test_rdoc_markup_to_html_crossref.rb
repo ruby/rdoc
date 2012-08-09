@@ -5,7 +5,9 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
   def setup
     super
 
-    @to = RDoc::Markup::ToHtmlCrossref.new 'index.html', @c1, true
+    @options.hyperlink_all = true
+
+    @to = RDoc::Markup::ToHtmlCrossref.new @options, 'index.html', @c1
   end
 
   def test_convert_CROSSREF
@@ -120,7 +122,7 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
     readme = @store.add_file 'README.txt'
     readme.parser = RDoc::Parser::Simple
 
-    @to = RDoc::Markup::ToHtmlCrossref.new 'C2.html', @c2, true
+    @to = RDoc::Markup::ToHtmlCrossref.new @options, 'C2.html', @c2
 
     link = @to.handle_special_HYPERLINK hyper 'C2::C3'
 
@@ -139,7 +141,7 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
     readme = @store.add_file 'README.txt'
     readme.parser = RDoc::Parser::Simple
 
-    @to = RDoc::Markup::ToHtmlCrossref.new 'C2.html', @c2, true
+    @to = RDoc::Markup::ToHtmlCrossref.new @options, 'C2.html', @c2
 
     link = @to.handle_special_TIDYLINK tidy 'C2::C3'
 

@@ -65,7 +65,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   ##
   # Creates a new formatter that will output HTML
 
-  def initialize markup = nil
+  def initialize options, markup = nil
     super
 
     @code_object = nil
@@ -207,10 +207,8 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     text = verbatim.text.rstrip
 
     @res << if verbatim.ruby? or parseable? text then
-              options = RDoc::RDoc.current.options if RDoc::RDoc.current
-
               begin
-                tokens = RDoc::RubyLex.tokenize text, options
+                tokens = RDoc::RubyLex.tokenize text, @options
 
                 "\n<pre class=\"ruby\">" \
                 "#{RDoc::TokenStream.to_html tokens}" \

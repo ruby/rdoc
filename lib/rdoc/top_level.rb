@@ -208,7 +208,7 @@ class RDoc::TopLevel < RDoc::Context
   # Path to this file
 
   def path
-    http_url RDoc::RDoc.current.generator.file_dir
+    http_url @store.rdoc.generator.file_dir
   end
 
   def pretty_print q # :nodoc:

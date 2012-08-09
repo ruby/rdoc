@@ -20,7 +20,9 @@ class RDoc::Markup::Formatter
   ##
   # Creates a new Formatter
 
-  def initialize markup = nil
+  def initialize options, markup = nil
+    @options = options
+
     @markup = markup || RDoc::Markup.new
     @am     = @markup.attribute_manager
     @am.add_special(/<br>/, :HARD_BREAK)

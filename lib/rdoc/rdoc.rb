@@ -61,7 +61,7 @@ class RDoc::RDoc
   ##
   # The current documentation store
 
-  attr_accessor :store
+  attr_reader :store
 
   ##
   # Add +klass+ that can generate output after parsing
@@ -83,13 +83,6 @@ class RDoc::RDoc
 
   def self.current= rdoc
     @current = rdoc
-  end
-
-  ##
-  # Resets all internal state
-
-  def self.reset
-    RDoc::RDoc.current = nil
   end
 
   ##
@@ -132,7 +125,7 @@ class RDoc::RDoc
   # Turns RDoc from stdin into HTML
 
   def handle_pipe
-    @html = RDoc::Markup::ToHtml.new
+    @html = RDoc::Markup::ToHtml.new @options
 
     parser = RDoc::Text::MARKUP_FORMAT[@options.markup]
 
@@ -225,6 +218,15 @@ option)
     end
 
     last
+  end
+
+  ##
+  # Sets the current documentation tree to +store+ and sets the store's rdoc
+  # driver to this instance.
+
+  def store= store
+    @store = store
+    @store.rdoc = self
   end
 
   ##
@@ -430,8 +432,6 @@ The internal error was:
 
   def document options
     @store = RDoc::Store.new
-
-    RDoc::RDoc.current = self
 
     if RDoc::Options === options then
       @options = options

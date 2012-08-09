@@ -39,6 +39,12 @@ class RDoc::Store
   attr_accessor :path
 
   ##
+  # The RDoc::RDoc driver for this parse tree.  This allows classes consulting
+  # the documentation tree to access user-set options, for example.
+
+  attr_accessor :rdoc
+
+  ##
   # Type of ri datastore this was loaded from.  See RDoc::RI::Driver,
   # RDoc::RI::Paths.
 
@@ -61,6 +67,7 @@ class RDoc::Store
     @dry_run  = false
     @type     = type
     @path     = path
+    @rdoc     = nil
     @encoding = nil
 
     @cache = {

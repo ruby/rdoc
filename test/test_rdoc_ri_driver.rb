@@ -646,10 +646,6 @@ Foo::Bar#bother
     driver.instance_variable_set :@paging, true
 
     assert_instance_of @RM::ToBs, driver.formatter(StringIO.new)
-
-    driver.instance_variable_set :@formatter_klass, @RM::ToHtml
-
-    assert_instance_of @RM::ToHtml, driver.formatter(tty)
   end
 
   def test_in_path_eh

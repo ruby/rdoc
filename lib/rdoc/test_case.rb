@@ -35,7 +35,6 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
 
     @RM = RDoc::Markup
 
-    RDoc::RDoc.reset
     RDoc::Markup::PreProcess.reset
 
     @pwd = Dir.pwd
@@ -45,7 +44,10 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
     @rdoc = RDoc::RDoc.new
     @rdoc.store = @store
 
-    RDoc::RDoc.current = @rdoc
+    g = Object.new
+    def g.class_dir() end
+    def g.file_dir() end
+    @rdoc.generator = g
   end
 
   ##

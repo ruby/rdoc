@@ -7,7 +7,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   def setup
     super
 
-    @to = RDoc::Markup::ToHtml.new
+    @to = RDoc::Markup::ToHtml.new @options
   end
 
   def test_class_gen_relative_url
@@ -353,11 +353,6 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_verbatim_parseable
-    options = RDoc::Options.new
-    rdoc = RDoc::RDoc.new
-    rdoc.options = options
-    RDoc::RDoc.current = rdoc
-
     verb = @RM::Verbatim.new("class C\n", "end\n")
 
     @to.start_accepting
@@ -374,11 +369,6 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_verbatim_parseable_error
-    options = RDoc::Options.new
-    rdoc = RDoc::RDoc.new
-    rdoc.options = options
-    RDoc::RDoc.current = rdoc
-
     verb = @RM::Verbatim.new("a %z'foo' # => blah\n")
 
     @to.start_accepting
@@ -396,11 +386,6 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_verbatim_ruby
-    options = RDoc::Options.new
-    rdoc = RDoc::RDoc.new
-    rdoc.options = options
-    RDoc::RDoc.current = rdoc
-
     verb = @RM::Verbatim.new("1 + 1\n")
     verb.format = :ruby
 

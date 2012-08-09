@@ -5,9 +5,11 @@ class TestAttributeManager < RDoc::TestCase # HACK fix test name
   def setup
     super
 
+    @options = RDoc::Options.new
+
     @am = RDoc::Markup::AttributeManager.new
     @klass = RDoc::Markup::AttributeManager
-    @formatter = RDoc::Markup::Formatter.new
+    @formatter = RDoc::Markup::Formatter.new @options
     @formatter.add_tag :BOLD, '<B>', '</B>'
     @formatter.add_tag :EM, '<EM>', '</EM>'
     @formatter.add_tag :TT, '<CODE>', '</CODE>'

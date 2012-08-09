@@ -9,6 +9,8 @@ class TestRDocText < RDoc::TestCase
   def setup
     super
 
+    @options = RDoc::Options.new
+
     @top_level = @store.add_file 'file.rb'
   end
 
@@ -559,7 +561,7 @@ The comments associated with
   end
 
   def formatter()
-    RDoc::Markup::ToHtml.new
+    RDoc::Markup::ToHtml.new @options
   end
 
 end

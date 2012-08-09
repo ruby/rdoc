@@ -33,12 +33,10 @@ module RDoc::Generator::Markup
   def formatter
     return @formatter if defined? @formatter
 
-    show_hash = RDoc::RDoc.current.options.show_hash
-    hyperlink_all = RDoc::RDoc.current.options.hyperlink_all
+    options = @store.rdoc.options
     this = RDoc::Context === self ? self : @parent
 
-    @formatter = RDoc::Markup::ToHtmlCrossref.new(this.path, this, show_hash,
-                                                  hyperlink_all)
+    @formatter = RDoc::Markup::ToHtmlCrossref.new options, this.path, this
     @formatter.code_object = self
     @formatter
   end
@@ -158,7 +156,7 @@ class RDoc::TopLevel
   # command line option to set.
 
   def cvs_url
-    url = RDoc::RDoc.current.options.webcvs
+    url = @store.rdoc.options.webcvs
 
     if /%s/ =~ url then
       url % @absolute_name

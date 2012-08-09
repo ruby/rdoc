@@ -504,7 +504,7 @@ class RDoc::ClassModule < RDoc::Context
   # Path to this class or module
 
   def path
-    http_url RDoc::RDoc.current.generator.class_dir
+    http_url @store.rdoc.generator.class_dir
   end
 
   ##

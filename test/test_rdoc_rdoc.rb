@@ -12,14 +12,6 @@ class TestRDocRDoc < RDoc::TestCase
     @rdoc.instance_variable_set :@stats, @stats
   end
 
-  def test_class_reset
-    RDoc::RDoc.current = :junk
-
-    RDoc::RDoc.reset
-
-    assert_nil RDoc::RDoc.current
-  end
-
   def test_document # functional test
     options = RDoc::Options.new
     options.files = [File.expand_path('../xref_data.rb')]

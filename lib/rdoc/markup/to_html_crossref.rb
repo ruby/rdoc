@@ -28,21 +28,20 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # references are removed unless +show_hash+ is true.  Only method names
   # preceded by '#' or '::' are linked, unless +hyperlink_all+ is true.
 
-  def initialize(from_path, context, show_hash, hyperlink_all = false,
-                 markup = nil)
+  def initialize(options, from_path, context, markup = nil)
     raise ArgumentError, 'from_path cannot be nil' if from_path.nil?
-    super markup
 
-    crossref_re = hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
-
-    @cross_reference = RDoc::CrossReference.new context
-
-    @markup.add_special crossref_re, :CROSSREF
+    super options, markup
 
     @context       = context
     @from_path     = from_path
-    @hyperlink_all = hyperlink_all
-    @show_hash     = show_hash
+    @hyperlink_all = @options.hyperlink_all
+    @show_hash     = @options.show_hash
+
+    crossref_re = @hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
+    @markup.add_special crossref_re, :CROSSREF
+
+    @cross_reference = RDoc::CrossReference.new @context
   end
 
   ##

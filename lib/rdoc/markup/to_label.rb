@@ -11,7 +11,7 @@ class RDoc::Markup::ToLabel < RDoc::Markup::Formatter
   # Creates a new formatter that will output HTML-safe labels
 
   def initialize markup = nil
-    super
+    super nil, markup
 
     @markup.add_special RDoc::CrossReference::CROSSREF_REGEXP, :CROSSREF
     @markup.add_special(/(((\{.*?\})|\b\S+?)\[\S+?\])/, :TIDYLINK)

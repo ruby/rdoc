@@ -5,7 +5,7 @@ class TestRDocMarkupFormatter < RDoc::TestCase
   class ToTest < RDoc::Markup::Formatter
 
     def initialize markup
-      super
+      super nil, markup
 
       add_tag :TT, '<code>', '</code>'
     end
