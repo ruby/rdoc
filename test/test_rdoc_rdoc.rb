@@ -15,18 +15,9 @@ class TestRDocRDoc < RDoc::TestCase
   def test_class_reset
     RDoc::RDoc.current = :junk
 
-    c = RDoc::Parser::C
-    enclosure_classes = c.send :class_variable_get, :@@enclosure_classes
-    enclosure_classes['A'] = 'B'
-    known_bodies = c.send :class_variable_get, :@@known_bodies
-    known_bodies['A'] = 'B'
-
     RDoc::RDoc.reset
 
     assert_nil RDoc::RDoc.current
-
-    assert_empty c.send :class_variable_get, :@@enclosure_classes
-    assert_empty c.send :class_variable_get, :@@known_bodies
   end
 
   def test_document # functional test

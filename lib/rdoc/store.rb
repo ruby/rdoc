@@ -23,6 +23,12 @@ require 'fileutils'
 class RDoc::Store
 
   ##
+  # Stores the name of the C variable a class belongs to.  This helps wire up
+  # classes defined from C across files.
+
+  attr_reader :c_enclosure_classes
+
+  ##
   # If true this Store will not write any files
 
   attr_accessor :dry_run
@@ -69,6 +75,8 @@ class RDoc::Store
     @classes_hash = {}
     @modules_hash = {}
     @files_hash   = {}
+
+    @c_enclosure_classes = {}
 
     @unique_classes = nil
     @unique_modules = nil

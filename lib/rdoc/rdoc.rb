@@ -89,7 +89,6 @@ class RDoc::RDoc
   # Resets all internal state
 
   def self.reset
-    RDoc::Parser::C.reset
     RDoc::RDoc.current = nil
   end
 

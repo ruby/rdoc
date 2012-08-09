@@ -120,7 +120,7 @@ class RDoc::Parser::C < RDoc::Parser
 
 
   ##
-  # Maps C variable names to names of ruby classes (andsingleton classes)
+  # Maps C variable names to names of ruby classes (and singleton classes)
 
   attr_reader :known_classes
 
@@ -128,17 +128,6 @@ class RDoc::Parser::C < RDoc::Parser
   # Maps C variable names to names of ruby singleton classes
 
   attr_reader :singleton_classes
-
-  ##
-  # Resets cross-file state.  Call when parsing different projects that need
-  # separate documentation.
-
-  def self.reset
-    @@enclosure_classes = {}
-    @@known_bodies = {}
-  end
-
-  reset
 
   ##
   # Prepare to parse a C file
@@ -681,7 +670,7 @@ class RDoc::Parser::C < RDoc::Parser
     parent_name = @known_classes[parent] || parent
 
     if in_module then
-      enclosure = @classes[in_module] || @@enclosure_classes[in_module]
+      enclosure = @classes[in_module] || @store.c_enclosure_classes[in_module]
 
       if enclosure.nil? and enclosure = @known_classes[in_module] then
         enc_type = /^rb_m/ =~ in_module ? "module" : "class"
@@ -726,7 +715,7 @@ class RDoc::Parser::C < RDoc::Parser
     end
 
     @classes[var_name] = cm
-    @@enclosure_classes[var_name] = cm
+    @store.c_enclosure_classes[var_name] = cm
     @known_classes[var_name] = cm.full_name
   end
 
@@ -833,7 +822,7 @@ class RDoc::Parser::C < RDoc::Parser
         file_name = File.join @file_dir, source_file
 
         if File.exist? file_name then
-          file_content = (@@known_bodies[file_name] ||= File.read(file_name))
+          file_content = File.read file_name
         else
           @options.warn "unknown source #{source_file} for " \
                         "#{meth_name} in #{@file_name}"
