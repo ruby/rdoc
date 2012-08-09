@@ -7,7 +7,7 @@ class TestRDocStats < RDoc::TestCase
 
     @s = RDoc::Stats.new @store, 0
 
-    @tl = RDoc::TopLevel.new 'file.rb'
+    @tl = @store.add_file 'file.rb'
     @tl.parser = RDoc::Parser::Ruby
   end
 

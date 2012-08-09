@@ -40,7 +40,7 @@ class TestRDocContext < XrefTestCase
   end
 
   def test_add_alias_method_attr
-    top_level = RDoc::TopLevel.new 'file.rb'
+    top_level = @store.add_file 'file.rb'
 
     attr = RDoc::Attr.new nil, 'old_name', 'R', ''
 
@@ -60,7 +60,7 @@ class TestRDocContext < XrefTestCase
   end
 
   def test_add_alias_method
-    top_level = RDoc::TopLevel.new 'file.rb'
+    top_level = @store.add_file 'file.rb'
 
     meth = RDoc::AnyMethod.new nil, 'old_name'
     meth.singleton = false
@@ -221,7 +221,7 @@ class TestRDocContext < XrefTestCase
   end
 
   def test_add_module_alias
-    tl = RDoc::TopLevel.new 'file.rb'
+    tl = @store.add_file 'file.rb'
 
     c3_c4 = @c2.add_module_alias @c2_c3, 'C4', tl
 
@@ -364,7 +364,7 @@ class TestRDocContext < XrefTestCase
   def test_defined_in_eh
     assert @c1.defined_in?(@c1.top_level)
 
-    refute @c1.defined_in?(RDoc::TopLevel.new('name.rb'))
+    refute @c1.defined_in?(@store.add_file('name.rb'))
   end
 
   def test_equals2

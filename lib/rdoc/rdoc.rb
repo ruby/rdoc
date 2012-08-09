@@ -342,7 +342,7 @@ option)
 
     return unless content
 
-    top_level = RDoc::TopLevel.new filename
+    top_level = @store.add_file filename
 
     parser = RDoc::Parser.for top_level, filename, content, @options, @stats
 

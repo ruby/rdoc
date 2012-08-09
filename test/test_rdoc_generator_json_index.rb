@@ -25,7 +25,7 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
     @rdoc.options = @options
     @rdoc.generator = @g
 
-    @top_level = RDoc::TopLevel.new 'file.rb'
+    @top_level = @store.add_file 'file.rb'
     @top_level.parser = RDoc::Parser::Ruby
 
     @klass = @top_level.add_class RDoc::NormalClass, 'C'
@@ -41,7 +41,7 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
     @ignored = @top_level.add_class RDoc::NormalClass, 'Ignored'
     @ignored.ignore
 
-    @page = RDoc::TopLevel.new 'page.rdoc'
+    @page = @store.add_file 'page.rdoc'
     @page.parser = RDoc::Parser::Simple
 
     @top_levels = [@top_level, @page].sort

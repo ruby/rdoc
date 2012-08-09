@@ -285,8 +285,8 @@ class TestRDocRIDriver < RDoc::TestCase
   def test_class_document
     util_store
 
-    tl1 = RDoc::TopLevel.new 'one.rb'
-    tl2 = RDoc::TopLevel.new 'two.rb'
+    tl1 = @store1.add_file 'one.rb'
+    tl2 = @store1.add_file 'two.rb'
 
     @cFoo.add_comment 'one', tl1
     @cFoo.add_comment 'two', tl2
@@ -1001,9 +1001,7 @@ Foo::Bar#bother
     @home_ri2 = "#{@home_ri}2"
     @store2 = RDoc::RI::Store.new @home_ri2
 
-    RDoc::RDoc.current.store = @store2
-
-    @top_level = RDoc::TopLevel.new 'file.rb'
+    @top_level = @store2.add_file 'file.rb'
 
     # as if seen in a namespace like class Ambiguous::Other
     @mAmbiguous = @top_level.add_module RDoc::NormalModule, 'Ambiguous'
@@ -1030,16 +1028,12 @@ Foo::Bar#bother
     @store2.save_cache
 
     @driver.stores = [@store1, @store2]
-
-    RDoc::RDoc.current.store = @store
   end
 
   def util_store
     @store1 = RDoc::RI::Store.new @home_ri
 
-    RDoc::RDoc.current.store = @store1
-
-    @top_level = RDoc::TopLevel.new 'file.rb'
+    @top_level = @store1.add_file 'file.rb'
 
     @cFoo = @top_level.add_class RDoc::NormalClass, 'Foo'
     @mExt = @top_level.add_module RDoc::NormalModule, 'Ext'
@@ -1100,8 +1094,6 @@ Foo::Bar#bother
     @store1.save_cache
 
     @driver.stores = [@store1]
-
-    RDoc::RDoc.current.store = @store
   end
 
 end

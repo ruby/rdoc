@@ -133,6 +133,15 @@ class RDoc::MethodAttr < RDoc::CodeObject
     @see
   end
 
+  ##
+  # Sets the store for this class or module and its contained code objects.
+
+  def store= store
+    super
+
+    @file = @store.add_file @file.full_name if @file
+  end
+
   def find_see # :nodoc:
     return nil if singleton || is_alias_for
 

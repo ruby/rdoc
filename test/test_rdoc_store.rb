@@ -10,9 +10,7 @@ class TestRDocStore < XrefTestCase
     @tmpdir = File.join Dir.tmpdir, "test_rdoc_ri_store_#{$$}"
     @s = RDoc::RI::Store.new @tmpdir
 
-    RDoc::RDoc.current.store = @s
-
-    @top_level = RDoc::TopLevel.new 'file.rb'
+    @top_level = @store.add_file 'file.rb'
 
     @klass = @top_level.add_class RDoc::NormalClass, 'Object'
     @klass.add_comment 'original', @top_level
@@ -44,8 +42,6 @@ class TestRDocStore < XrefTestCase
 
     @nest_klass.add_method @nest_meth
     @nest_klass.add_include @nest_incl
-
-    RDoc::RDoc.current.store = @store
   end
 
   def teardown
@@ -95,11 +91,25 @@ class TestRDocStore < XrefTestCase
     refute File.exist?(path), "#{path} exists"
   end
 
+  def test_add_file
+    top_level = @store.add_file 'file.rb'
+
+    assert_kind_of RDoc::TopLevel, top_level
+    assert_equal @store, top_level.store
+    assert_equal 'file.rb', top_level.name
+    assert_includes @store.all_files, top_level
+
+    assert_same top_level, @store.add_file('file.rb')
+    refute_same top_level, @store.add_file('other.rb')
+  end
+
   def test_all_classes_and_modules
     expected = %w[
       C1 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1
       Child
       M1 M1::M2
+      Object
+      Object::SubClass
       Parent
     ]
 
@@ -108,7 +118,7 @@ class TestRDocStore < XrefTestCase
   end
 
   def test_all_files
-    assert_equal %w[xref_data.rb],
+    assert_equal %w[file.rb xref_data.rb],
                  @store.all_files.map { |m| m.full_name }.sort
   end
 
@@ -144,7 +154,10 @@ class TestRDocStore < XrefTestCase
   def test_classes
     expected = %w[
       C1 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1
-      Child Parent
+      Child
+      Object
+      Object::SubClass
+      Parent
     ]
 
     assert_equal expected, @store.all_classes.map { |m| m.full_name }.sort
@@ -321,7 +334,7 @@ class TestRDocStore < XrefTestCase
   end
 
   def test_page
-    page = RDoc::TopLevel.new 'PAGE.txt'
+    page = @store.add_file 'PAGE.txt'
     page.parser = RDoc::Parser::Simple
 
     assert_nil @store.page 'no such page'
@@ -473,8 +486,8 @@ class TestRDocStore < XrefTestCase
 
   # This is a functional test
   def test_save_class_merge_constant
-    tl = RDoc::TopLevel.new 'file.rb'
-    tl.store = RDoc::Store.new
+    store = RDoc::Store.new
+    tl = store.add_file 'file.rb'
 
     klass = tl.add_class RDoc::NormalClass, 'C'
     klass.add_comment 'comment', tl
@@ -485,8 +498,8 @@ class TestRDocStore < XrefTestCase
     @s.save_class klass
 
     # separate parse run, independent store
-    tl = RDoc::TopLevel.new 'file.rb'
-    tl.store = RDoc::Store.new
+    store = RDoc::Store.new
+    tl = store.add_file 'file.rb'
     klass2 = tl.add_class RDoc::NormalClass, 'C'
     klass2.record_location tl
 

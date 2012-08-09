@@ -75,6 +75,20 @@ class RDoc::Store
   end
 
   ##
+  # Adds the file with +name+ as an RDoc::TopLevel to the store.  Returns the
+  # created RDoc::TopLevel.
+
+  def add_file name
+    unless top_level = @files_hash[name] then
+      top_level = RDoc::TopLevel.new name
+      top_level.store = self
+      @files_hash[name] = top_level
+    end
+
+    top_level
+  end
+
+  ##
   # Returns all classes discovered by RDoc
 
   def all_classes

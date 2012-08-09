@@ -5,17 +5,8 @@ class TestRDocTopLevel < XrefTestCase
   def setup
     super
 
-    @top_level = RDoc::TopLevel.new 'path/top_level.rb'
+    @top_level = @store.add_file 'path/top_level.rb'
     @top_level.parser = RDoc::Parser::Ruby
-  end
-
-  def test_class_new
-    tl1 = RDoc::TopLevel.new 'file.rb'
-    tl2 = RDoc::TopLevel.new 'file.rb'
-    tl3 = RDoc::TopLevel.new 'other.rb'
-
-    assert_same tl1, tl2
-    refute_same tl1, tl3
   end
 
   def test_add_alias
@@ -106,15 +97,15 @@ class TestRDocTopLevel < XrefTestCase
   def test_display_eh
     refute @top_level.display?
 
-    page = RDoc::TopLevel.new 'README.txt'
+    page = @store.add_file 'README.txt'
     page.parser = RDoc::Parser::Simple
 
     assert page.display?
   end
 
   def test_eql_eh
-    top_level2 = RDoc::TopLevel.new 'path/top_level.rb'
-    other_level = RDoc::TopLevel.new 'path/other_level.rb'
+    top_level2 = @store.add_file 'path/top_level.rb'
+    other_level = @store.add_file 'path/other_level.rb'
 
     assert_operator @top_level, :eql?, top_level2
 
@@ -122,8 +113,8 @@ class TestRDocTopLevel < XrefTestCase
   end
 
   def test_equals2
-    top_level2 = RDoc::TopLevel.new 'path/top_level.rb'
-    other_level = RDoc::TopLevel.new 'path/other_level.rb'
+    top_level2 = @store.add_file 'path/top_level.rb'
+    other_level = @store.add_file 'path/other_level.rb'
 
     assert_equal @top_level, top_level2
 
@@ -142,8 +133,8 @@ class TestRDocTopLevel < XrefTestCase
   end
 
   def test_hash
-    tl2 = RDoc::TopLevel.new 'path/top_level.rb'
-    tl3 = RDoc::TopLevel.new 'other/top_level.rb'
+    tl2 = @store.add_file 'path/top_level.rb'
+    tl3 = @store.add_file 'other/top_level.rb'
 
     assert_equal @top_level.hash, tl2.hash
     refute_equal @top_level.hash, tl3.hash
@@ -168,11 +159,11 @@ class TestRDocTopLevel < XrefTestCase
   def test_page_name
     assert_equal 'top_level', @top_level.page_name
 
-    tl = RDoc::TopLevel.new 'README.ja.rdoc'
+    tl = @store.add_file 'README.ja.rdoc'
 
     assert_equal 'README.ja', tl.page_name
 
-    tl = RDoc::TopLevel.new 'Rakefile'
+    tl = @store.add_file 'Rakefile'
 
     assert_equal 'Rakefile', tl.page_name
   end
@@ -182,7 +173,7 @@ class TestRDocTopLevel < XrefTestCase
   end
 
   def test_search_record_page
-    page = RDoc::TopLevel.new 'README.txt'
+    page = @store.add_file 'README.txt'
     page.parser = RDoc::Parser::Simple
     page.comment = 'This is a comment.'
 
@@ -202,12 +193,12 @@ class TestRDocTopLevel < XrefTestCase
   def test_text_eh
     refute @xref_data.text?
 
-    rd = RDoc::TopLevel.new 'rd_format.rd'
+    rd = @store.add_file 'rd_format.rd'
     rd.parser = RDoc::Parser::RD
 
     assert rd.text?
 
-    simple = RDoc::TopLevel.new 'simple.txt'
+    simple = @store.add_file 'simple.txt'
     simple.parser = RDoc::Parser::Simple
 
     assert simple.text?
@@ -216,7 +207,7 @@ class TestRDocTopLevel < XrefTestCase
   def test_text_eh_no_parser
     refute @xref_data.text?
 
-    rd = RDoc::TopLevel.new 'rd_format.rd'
+    rd = @store.add_file 'rd_format.rd'
 
     refute rd.text?
   end

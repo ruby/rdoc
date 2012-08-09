@@ -150,6 +150,7 @@ class TestRDocRDoc < RDoc::TestCase
   def test_parse_file_encoding
     skip "Encoding not implemented" unless Object.const_defined? :Encoding
     @rdoc.options.encoding = Encoding::ISO_8859_1
+    @rdoc.store = RDoc::Store.new
 
     Tempfile.open 'test.txt' do |io|
       io.write 'hi'

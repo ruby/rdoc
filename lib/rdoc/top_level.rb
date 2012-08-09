@@ -33,19 +33,6 @@ class RDoc::TopLevel < RDoc::Context
   attr_accessor :parser
 
   ##
-  # Creates a new RDoc::TopLevel with +file_name+ only if one with the same
-  # name does not exist in all_files.
-
-  def self.new file_name
-    store = RDoc::RDoc.current.store
-    if top_level = store.files_hash[file_name] then
-      top_level
-    else
-      super
-    end
-  end
-
-  ##
   # Creates a new TopLevel for +file_name+
 
   def initialize file_name
@@ -58,9 +45,6 @@ class RDoc::TopLevel < RDoc::Context
     @parser        = nil
 
     @classes_or_modules = []
-
-    @store = RDoc::RDoc.current.store
-    @store.files_hash[file_name] = self
   end
 
   ##

@@ -7,7 +7,7 @@ class TestRDocComment < RDoc::TestCase
   def setup
     super
 
-    @top_level = RDoc::TopLevel.new 'file.rb'
+    @top_level = @store.add_file 'file.rb'
     @comment = RDoc::Comment.new
     @comment.location = @top_level
     @comment.text = 'this is a comment'

@@ -10,9 +10,9 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_add_comment
-    tl1 = RDoc::TopLevel.new 'one.rb'
-    tl2 = RDoc::TopLevel.new 'two.rb'
-    tl3 = RDoc::TopLevel.new 'three.rb'
+    tl1 = @store.add_file 'one.rb'
+    tl2 = @store.add_file 'two.rb'
+    tl3 = @store.add_file 'three.rb'
 
     cm = RDoc::ClassModule.new 'Klass'
     cm.add_comment '# comment 1', tl1
@@ -42,7 +42,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_add_comment_stopdoc
-    tl = RDoc::TopLevel.new 'file.rb'
+    tl = @store.add_file 'file.rb'
 
     cm = RDoc::ClassModule.new 'Klass'
     cm.stop_doc
@@ -114,7 +114,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_from_module_comment
-    tl = RDoc::TopLevel.new 'file.rb'
+    tl = @store.add_file 'file.rb'
     klass = tl.add_class RDoc::NormalModule, 'Klass'
     klass.add_comment 'really a class', tl
 
@@ -124,7 +124,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_marshal_dump
-    tl = RDoc::TopLevel.new 'file.rb'
+    tl = @store.add_file 'file.rb'
 
     ns = tl.add_module RDoc::NormalModule, 'Namespace'
 
@@ -189,7 +189,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_marshal_load_version_0
-    tl = RDoc::TopLevel.new 'file.rb'
+    tl = @store.add_file 'file.rb'
     ns = tl.add_module RDoc::NormalModule, 'Namespace'
     cm = ns.add_class RDoc::NormalClass, 'Klass', 'Super'
 
@@ -236,7 +236,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_marshal_load_version_1
-    tl = RDoc::TopLevel.new 'file.rb'
+    tl = @store.add_file 'file.rb'
 
     ns = tl.add_module RDoc::NormalModule, 'Namespace'
 
@@ -310,7 +310,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_marshal_load_version_2
-    tl = RDoc::TopLevel.new 'file.rb'
+    tl = @store.add_file 'file.rb'
 
     ns = tl.add_module RDoc::NormalModule, 'Namespace'
 
@@ -387,8 +387,8 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_merge_attributes
-    tl1 = RDoc::TopLevel.new 'one.rb'
-    tl2 = RDoc::TopLevel.new 'two.rb'
+    tl1 = @store.add_file 'one.rb'
+    tl2 = @store.add_file 'two.rb'
 
     cm1 = RDoc::ClassModule.new 'Klass'
 
@@ -423,7 +423,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_merge_attributes_version_0
-    tl1 = RDoc::TopLevel.new 'one.rb'
+    tl1 = @store.add_file 'one.rb'
 
     cm1 = RDoc::ClassModule.new 'Klass'
 
@@ -456,7 +456,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_merge_collections_drop
-    tl = RDoc::TopLevel.new 'file'
+    tl = @store.add_file 'file'
 
     cm1 = RDoc::ClassModule.new 'C'
     cm1.record_location tl
@@ -483,8 +483,8 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_merge_comment
-    tl1 = RDoc::TopLevel.new 'one.rb'
-    tl2 = RDoc::TopLevel.new 'two.rb'
+    tl1 = @store.add_file 'one.rb'
+    tl2 = @store.add_file 'two.rb'
 
     cm1 = RDoc::ClassModule.new 'Klass'
     cm1.add_comment 'klass 1', tl1
@@ -508,7 +508,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_merge_comment_version_0
-    tl = RDoc::TopLevel.new 'file.rb'
+    tl = @store.add_file 'file.rb'
 
     cm1 = RDoc::ClassModule.new 'Klass'
     cm1.add_comment 'klass 1', tl
@@ -533,8 +533,8 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_merge_constants
-    tl1 = RDoc::TopLevel.new 'one.rb'
-    tl2 = RDoc::TopLevel.new 'two.rb'
+    tl1 = @store.add_file 'one.rb'
+    tl2 = @store.add_file 'two.rb'
 
     cm1 = RDoc::ClassModule.new 'Klass'
 
@@ -567,7 +567,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_merge_constants_version_0
-    tl1 = RDoc::TopLevel.new 'one.rb'
+    tl1 = @store.add_file 'one.rb'
 
     cm1 = RDoc::ClassModule.new 'Klass'
 
@@ -598,7 +598,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_merge_extends
-    tl1 = RDoc::TopLevel.new 'one.rb'
+    tl1 = @store.add_file 'one.rb'
     cm1 = tl1.add_class RDoc::ClassModule, 'Klass'
 
     ext = cm1.add_extend RDoc::Extend.new('I1', 'one')
@@ -606,7 +606,7 @@ class TestRDocClassModule < XrefTestCase
     ext = cm1.add_extend RDoc::Extend.new('I3', 'one')
     ext.record_location tl1
 
-    tl2 = RDoc::TopLevel.new 'two.rb'
+    tl2 = @store.add_file 'two.rb'
     tl2.store = RDoc::Store.new
 
     cm2 = tl2.add_class RDoc::ClassModule, 'Klass'
@@ -633,7 +633,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_merge_includes
-    tl1 = RDoc::TopLevel.new 'one.rb'
+    tl1 = @store.add_file 'one.rb'
 
     cm1 = tl1.add_class RDoc::ClassModule, 'Klass'
 
@@ -642,7 +642,7 @@ class TestRDocClassModule < XrefTestCase
     incl = cm1.add_include RDoc::Include.new('I3', 'one')
     incl.record_location tl1
 
-    tl2 = RDoc::TopLevel.new 'two.rb'
+    tl2 = @store.add_file 'two.rb'
     tl2.store = RDoc::Store.new
 
     cm2 = tl2.add_class RDoc::ClassModule, 'Klass'
@@ -669,7 +669,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_merge_includes_version_0
-    tl1 = RDoc::TopLevel.new 'one.rb'
+    tl1 = @store.add_file 'one.rb'
 
     cm1 = tl1.add_class RDoc::ClassModule, 'Klass'
 
@@ -678,7 +678,7 @@ class TestRDocClassModule < XrefTestCase
     incl = cm1.add_include RDoc::Include.new('I3', 'one')
     incl.record_location tl1
 
-    tl2 = RDoc::TopLevel.new 'one.rb'
+    tl2 = @store.add_file 'one.rb'
     tl2.store = RDoc::Store.new
 
     cm2 = tl2.add_class RDoc::ClassModule, 'Klass'
@@ -703,8 +703,8 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_merge_methods
-    tl1 = RDoc::TopLevel.new 'one.rb'
-    tl2 = RDoc::TopLevel.new 'two.rb'
+    tl1 = @store.add_file 'one.rb'
+    tl2 = @store.add_file 'two.rb'
 
     cm1 = RDoc::ClassModule.new 'Klass'
 
@@ -737,7 +737,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_merge_methods_version_0
-    tl1 = RDoc::TopLevel.new 'one.rb'
+    tl1 = @store.add_file 'one.rb'
 
     cm1 = RDoc::ClassModule.new 'Klass'
 
@@ -768,8 +768,8 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_parse
-    tl1 = RDoc::TopLevel.new 'one.rb'
-    tl2 = RDoc::TopLevel.new 'two.rb'
+    tl1 = @store.add_file 'one.rb'
+    tl2 = @store.add_file 'two.rb'
 
     cm = RDoc::ClassModule.new 'Klass'
     cm.add_comment 'comment 1', tl1
@@ -786,7 +786,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_parse_comment
-    tl1 = RDoc::TopLevel.new 'one.rb'
+    tl1 = @store.add_file 'one.rb'
 
     cm = RDoc::ClassModule.new 'Klass'
     cm.comment = comment 'comment 1', tl1
@@ -798,7 +798,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_parse_comment_format
-    tl1 = RDoc::TopLevel.new 'one.rb'
+    tl1 = @store.add_file 'one.rb'
 
     cm = RDoc::ClassModule.new 'Klass'
     cm.comment = comment 'comment ((*1*))', tl1
@@ -811,8 +811,8 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_parse_comment_location
-    tl1 = RDoc::TopLevel.new 'one.rb'
-    tl2 = RDoc::TopLevel.new 'two.rb'
+    tl1 = @store.add_file 'one.rb'
+    tl2 = @store.add_file 'two.rb'
 
     cm = RDoc::ClassModule.new 'Klass'
     cm.add_comment 'comment 1', tl1
@@ -859,8 +859,8 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_search_record_merged
-    @c2_c3.add_comment 'comment A', RDoc::TopLevel.new('a.rb')
-    @c2_c3.add_comment 'comment B', RDoc::TopLevel.new('b.rb')
+    @c2_c3.add_comment 'comment A', @store.add_file('a.rb')
+    @c2_c3.add_comment 'comment B', @store.add_file('b.rb')
 
     expected = [
       'C3',
@@ -896,11 +896,27 @@ class TestRDocClassModule < XrefTestCase
 
     loaded.store = @store
 
-    assert_equal @store, loaded.attributes. first.store
-    assert_equal @store, loaded.constants.  first.store
-    assert_equal @store, loaded.includes.   first.store
-    assert_equal @store, loaded.extends.    first.store
-    assert_equal @store, loaded.method_list.first.store
+    assert_same @store, loaded.store
+
+    a = loaded.attributes.first
+    assert_same @store, a.store
+    assert_same @store, a.file.store
+
+    c = loaded.constants.first
+    assert_same @store, c.store
+    assert_same @store, c.file.store
+
+    i = loaded.includes.first
+    assert_same @store, i.store
+    assert_same @store, i.file.store
+
+    e = loaded.extends.first
+    assert_same @store, e.store
+    assert_same @store, e.file.store
+
+    m = loaded.method_list.first
+    assert_same @store, m.store
+    assert_same @store, m.file.store
   end
 
   def test_superclass

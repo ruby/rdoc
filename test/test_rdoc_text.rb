@@ -9,7 +9,7 @@ class TestRDocText < RDoc::TestCase
   def setup
     super
 
-    @top_level = RDoc::TopLevel.new 'file.rb'
+    @top_level = @store.add_file 'file.rb'
   end
 
   def mu_pp obj

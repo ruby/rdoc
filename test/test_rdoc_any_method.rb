@@ -60,7 +60,7 @@ method(a, b) { |c, d| ... }
   end
 
   def test_marshal_dump
-    top_level = RDoc::TopLevel.new 'file.rb'
+    top_level = @store.add_file 'file.rb'
     m = RDoc::AnyMethod.new nil, 'method'
     m.block_params = 'some_block'
     m.call_seq     = 'call_seq'
@@ -242,6 +242,14 @@ method(a, b) { |c, d| ... }
   def test_parent_name
     assert_equal 'C1', @c1.method_list.first.parent_name
     assert_equal 'C1', @c1.method_list.last.parent_name
+  end
+
+  def test_store_equals
+    loaded = Marshal.load Marshal.dump(@c1.method_list.last)
+
+    loaded.store = @store
+
+    assert_equal @store, loaded.file.store
   end
 
   def test_superclass_method

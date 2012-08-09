@@ -5,7 +5,7 @@ class TestRDocTomDoc < RDoc::TestCase
   def setup
     super
 
-    @top_level = RDoc::TopLevel.new 'file.rb'
+    @top_level = @store.add_file 'file.rb'
 
     @TD = RDoc::TomDoc
     @td = @TD.new

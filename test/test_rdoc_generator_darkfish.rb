@@ -29,7 +29,7 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
     @g = @options.generator.new @store, @options
     @rdoc.generator = @g
 
-    @top_level = RDoc::TopLevel.new 'file.rb'
+    @top_level = @store.add_file 'file.rb'
     @top_level.parser = RDoc::Parser::Ruby
     @klass = @top_level.add_class RDoc::NormalClass, 'Object'
 
@@ -62,7 +62,7 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
   end
 
   def test_generate
-    top_level = RDoc::TopLevel.new 'file.rb'
+    top_level = @store.add_file 'file.rb'
     top_level.add_class @klass.class, @klass.name
 
     @g.generate
@@ -88,7 +88,7 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
 
   def test_generate_dry_run
     @options.dry_run = true
-    top_level = RDoc::TopLevel.new 'file.rb'
+    top_level = @store.add_file 'file.rb'
     top_level.add_class @klass.class, @klass.name
 
     @g.generate

@@ -93,7 +93,7 @@ class TestRDocMarkupDocument < RDoc::TestCase
   end
 
   def test_file_equals_top_level
-    @d.file = RDoc::TopLevel.new 'file.rb'
+    @d.file = @store.add_file 'file.rb'
 
     assert_equal 'file.rb', @d.file
   end

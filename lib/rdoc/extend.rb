@@ -100,6 +100,15 @@ class RDoc::Extend < RDoc::CodeObject
     @name
   end
 
+  ##
+  # Sets the store for this class or module and its contained code objects.
+
+  def store= store
+    super
+
+    @file = @store.add_file @file.full_name if @file
+  end
+
   def to_s # :nodoc:
     "extend #@name in: #{parent}"
   end

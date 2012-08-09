@@ -130,7 +130,7 @@ class TestRDocCrossReference < XrefTestCase
   end
 
   def test_resolve_page
-    page = RDoc::TopLevel.new 'README.txt'
+    page = @store.add_file 'README.txt'
     page.parser = RDoc::Parser::Simple
 
     assert_ref page, 'README'

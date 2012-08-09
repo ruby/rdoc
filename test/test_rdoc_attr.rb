@@ -43,7 +43,7 @@ class TestRDocAttr < RDoc::TestCase
   end
 
   def test_marshal_dump
-    tl = RDoc::TopLevel.new 'file.rb'
+    tl = @store.add_file 'file.rb'
 
     @a.comment = 'this is a comment'
     @a.record_location tl
@@ -68,7 +68,7 @@ class TestRDocAttr < RDoc::TestCase
   end
 
   def test_marshal_dump_singleton
-    tl = RDoc::TopLevel.new 'file.rb'
+    tl = @store.add_file 'file.rb'
 
     @a.comment = 'this is a comment'
     @a.record_location tl

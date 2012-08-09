@@ -16,7 +16,7 @@ class TestRDocGeneratorRI < RDoc::TestCase
 
     @g = RDoc::Generator::RI.new @store, @options
 
-    @top_level = RDoc::TopLevel.new 'file.rb'
+    @top_level = @store.add_file 'file.rb'
     @klass = @top_level.add_class RDoc::NormalClass, 'Object'
 
     @meth = RDoc::AnyMethod.new nil, 'method'
@@ -73,7 +73,7 @@ class TestRDocGeneratorRI < RDoc::TestCase
     @store.dry_run = true
     @g = RDoc::Generator::RI.new @store, @options
 
-    top_level = RDoc::TopLevel.new 'file.rb'
+    top_level = @store.add_file 'file.rb'
     top_level.add_class @klass.class, @klass.name
 
     @g.generate

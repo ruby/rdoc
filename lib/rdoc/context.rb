@@ -531,7 +531,7 @@ class RDoc::Context < RDoc::CodeObject
     array << thing if @document_self
 
     thing.parent  = self
-    thing.store   = @store
+    thing.store   = @store if @store
     thing.section = current_section
   end
 

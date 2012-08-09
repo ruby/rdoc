@@ -174,7 +174,7 @@ class TestRDocCodeObject < XrefTestCase
   def test_file_name
     assert_equal nil, @co.file_name
 
-    @co.record_location RDoc::TopLevel.new 'lib/file.rb'
+    @co.record_location @store.add_file 'lib/file.rb'
 
     assert_equal 'lib/file.rb', @co.file_name
   end

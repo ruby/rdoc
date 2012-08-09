@@ -12,7 +12,7 @@ class XrefTestCase < RDoc::TestCase
     @options.quiet = true
 
     @file_name = 'xref_data.rb'
-    @xref_data = RDoc::TopLevel.new @file_name
+    @xref_data = @store.add_file @file_name
     @top_level = @xref_data
 
     stats = RDoc::Stats.new @store, 0

@@ -14,8 +14,8 @@ class TestRDocParserRuby < RDoc::TestCase
     @tempfile2 = Tempfile.new self.class.name
     @filename2 = @tempfile2.path
 
-    @top_level = RDoc::TopLevel.new @filename
-    @top_level2 = RDoc::TopLevel.new @filename2
+    @top_level = @store.add_file @filename
+    @top_level2 = @store.add_file @filename2
 
     @options = RDoc::Options.new
     @options.quiet = true

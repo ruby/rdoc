@@ -8,7 +8,7 @@ class TestRDocParserSimple < RDoc::TestCase
     @tempfile = Tempfile.new self.class.name
     filename = @tempfile.path
 
-    @top_level = RDoc::TopLevel.new filename
+    @top_level = @store.add_file filename
     @fn = filename
     @options = RDoc::Options.new
     @stats = RDoc::Stats.new @store, 0
