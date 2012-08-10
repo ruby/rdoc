@@ -431,7 +431,7 @@ The internal error was:
   # current directory, so make sure you're somewhere writable before invoking.
 
   def document options
-    @store = RDoc::Store.new
+    self.store = RDoc::Store.new
 
     if RDoc::Options === options then
       @options = options

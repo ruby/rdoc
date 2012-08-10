@@ -72,10 +72,11 @@ class TestAttributeManager < RDoc::TestCase # HACK fix test name
   end
 
   def test_add_special
-    @am.add_special("WikiWord", :WIKIWORD)
+    @am.add_special "WikiWord", :WIKIWORD
     specials = @am.special
-    assert_equal(1,specials.size)
-    assert(specials.has_key?("WikiWord"))
+
+    assert_equal 1, specials.size
+    assert specials.assoc "WikiWord"
   end
 
   def test_escapes

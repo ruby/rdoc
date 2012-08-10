@@ -24,6 +24,7 @@ class TestRDocRDoc < RDoc::TestCase
       end
 
       assert File.directory? 'doc'
+      assert_equal rdoc, rdoc.store.rdoc
     end
   end
 

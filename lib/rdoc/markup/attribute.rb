@@ -9,19 +9,26 @@ class RDoc::Markup::Attribute
 
   SPECIAL = 1
 
-  @@name_to_bitmap = { :_SPECIAL_ => SPECIAL }
+  @@name_to_bitmap = [
+    [:_SPECIAL_, SPECIAL],
+  ]
+
   @@next_bitmap = 2
 
   ##
   # Returns a unique bit for +name+
 
-  def self.bitmap_for(name)
-    bitmap = @@name_to_bitmap[name]
+  def self.bitmap_for name
+    bitmap = @@name_to_bitmap.assoc name
+
     unless bitmap then
       bitmap = @@next_bitmap
       @@next_bitmap <<= 1
-      @@name_to_bitmap[name] = bitmap
+      @@name_to_bitmap << [name, bitmap]
+    else
+      bitmap = bitmap.last
     end
+
     bitmap
   end
 

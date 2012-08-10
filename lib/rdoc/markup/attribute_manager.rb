@@ -60,7 +60,7 @@ class RDoc::Markup::AttributeManager
     @html_tags = {}
     @matching_word_pairs = {}
     @protectable = %w[<]
-    @special = {}
+    @special = []
     @word_pair_map = {}
 
     add_word_pair "*", "*", :BOLD
@@ -229,8 +229,8 @@ class RDoc::Markup::AttributeManager
   #
   #   @am.add_special(/((https?:)\S+\w)/, :HYPERLINK)
 
-  def add_special(pattern, name)
-    @special[pattern] = RDoc::Markup::Attribute.bitmap_for name
+  def add_special pattern, name
+    @special << [pattern, RDoc::Markup::Attribute.bitmap_for(name)]
   end
 
   ##
