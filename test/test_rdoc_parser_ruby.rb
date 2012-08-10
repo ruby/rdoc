@@ -818,7 +818,7 @@ end
     @parser.scan
 
     assert_empty @store.modules_hash
-    assert_empty @store.modules
+    assert_empty @store.all_modules
 
     foo = @top_level.classes.first
     assert_equal 'Foo', foo.full_name

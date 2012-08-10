@@ -122,6 +122,11 @@ class TestRDocStore < XrefTestCase
                  @store.all_files.map { |m| m.full_name }.sort
   end
 
+  def test_all_modules
+    assert_equal %w[M1 M1::M2],
+                 @store.all_modules.map { |m| m.full_name }.sort
+  end
+
   def test_attributes
     @s.cache[:attributes]['Object'] = %w[attr]
 
@@ -328,9 +333,10 @@ class TestRDocStore < XrefTestCase
                  @s.method_file('Object', 'Object::method')
   end
 
-  def test_modules
-    assert_equal %w[M1 M1::M2],
-                 @store.all_modules.map { |m| m.full_name }.sort
+  def test_module_names
+    @s.save_class @klass
+
+    assert_equal %w[Object], @s.module_names
   end
 
   def test_page

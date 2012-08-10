@@ -926,7 +926,7 @@ Options may also be set in the 'RI' environment variable.
     classes = []
 
     stores.each do |store|
-      classes << store.modules
+      classes << store.module_names
     end
 
     classes = classes.flatten.uniq.sort

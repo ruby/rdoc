@@ -442,10 +442,10 @@ class RDoc::Store
   end
 
   ##
-  # Modules cache accessor.  An Array of all the modules (and classes) in the
-  # store.
+  # Modules cache accessor.  An Array of all the module (and class) names in
+  # the store.
 
-  def modules
+  def module_names
     @cache[:modules]
   end
 

@@ -27,6 +27,9 @@
   * Removed RDoc::RI::Paths::SYSDIR and ::SITEDIR.  These were hidden
     constants so no breakage is expected.  Use RDoc::RI::Paths::system_dir
     and ::site_dir instead.
+  * RDoc::RI::Store#modules has been renamed to RDoc::Store#module_names
+    to avoid confusion with RDoc::Store#all_modules imported from
+    RDoc::TopLevel.
   * ri -f html is no longer supported.
 
 * Major enhancements
