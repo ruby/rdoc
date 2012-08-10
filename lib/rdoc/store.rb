@@ -387,7 +387,7 @@ class RDoc::Store
     # a) Encodings may be incompatible but transcodeable
     # b) Need to warn in the appropriate spots, wherever they may be
     # c) Need to handle cross-cache differences in encodings
-    # d) Need to warn when generating into a cache with diffent encodings
+    # d) Need to warn when generating into a cache with different encodings
     #
     #if orig_enc and load_enc != orig_enc then
     #  warn "Cached encoding #{load_enc} is incompatible with #{orig_enc}\n" \
