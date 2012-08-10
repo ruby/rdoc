@@ -832,7 +832,7 @@ https://github.com/rdoc/rdoc/issues
   # Inline markup classes
   autoload :AttrChanger,           'rdoc/markup/attr_changer'
   autoload :AttrSpan,              'rdoc/markup/attr_span'
-  autoload :Attribute,             'rdoc/markup/attribute'
+  autoload :Attributes,            'rdoc/markup/attributes'
   autoload :AttributeManager,      'rdoc/markup/attribute_manager'
   autoload :Special,               'rdoc/markup/special'
 

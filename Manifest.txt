@@ -96,8 +96,8 @@ lib/rdoc/markdown/literals_1_9.rb
 lib/rdoc/markup.rb
 lib/rdoc/markup/attr_changer.rb
 lib/rdoc/markup/attr_span.rb
-lib/rdoc/markup/attribute.rb
 lib/rdoc/markup/attribute_manager.rb
+lib/rdoc/markup/attributes.rb
 lib/rdoc/markup/blank_line.rb
 lib/rdoc/markup/block_quote.rb
 lib/rdoc/markup/document.rb
@@ -220,6 +220,7 @@ test/test_rdoc_markdown.rb
 test/test_rdoc_markdown_test.rb
 test/test_rdoc_markup.rb
 test/test_rdoc_markup_attribute_manager.rb
+test/test_rdoc_markup_attributes.rb
 test/test_rdoc_markup_document.rb
 test/test_rdoc_markup_formatter.rb
 test/test_rdoc_markup_hard_break.rb

@@ -27,10 +27,12 @@ class RDoc::Markup::Formatter
     @am     = @markup.attribute_manager
     @am.add_special(/<br>/, :HARD_BREAK)
 
+    @attributes = @am.attributes
+
     @attr_tags = []
 
     @in_tt = 0
-    @tt_bit = RDoc::Markup::Attribute.bitmap_for :TT
+    @tt_bit = @attributes.bitmap_for :TT
 
     @hard_break = ''
   end
@@ -49,7 +51,7 @@ class RDoc::Markup::Formatter
   # tags for flexibility
 
   def add_tag(name, start, stop)
-    attr = RDoc::Markup::Attribute.bitmap_for name
+    attr = @attributes.bitmap_for name
     @attr_tags << InlineTag.new(attr, start, stop)
   end
 
@@ -98,7 +100,7 @@ class RDoc::Markup::Formatter
 
     handled = false
 
-    RDoc::Markup::Attribute.each_name_of special.type do |name|
+    @attributes.each_name_of special.type do |name|
       method_name = "handle_special_#{name}"
 
       if respond_to? method_name then

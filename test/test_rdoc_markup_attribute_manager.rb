@@ -29,8 +29,8 @@ class TestRDocMarkupAttributeManager < RDoc::TestCase
   end
 
   def crossref(text)
-    crossref_bitmap = RDoc::Markup::Attribute.bitmap_for(:_SPECIAL_) |
-                      RDoc::Markup::Attribute.bitmap_for(:CROSSREF)
+    crossref_bitmap = @am.attributes.bitmap_for(:_SPECIAL_) |
+                      @am.attributes.bitmap_for(:CROSSREF)
 
     [ @am.changed_attribute_by_name([], [:CROSSREF, :_SPECIAL_]),
       RDoc::Markup::Special.new(crossref_bitmap, text),

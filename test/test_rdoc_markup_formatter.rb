@@ -38,11 +38,14 @@ class TestRDocMarkupFormatter < RDoc::TestCase
     @markup = @RM.new
     @markup.add_special(/[A-Z]+/, :CAPS)
 
+    @attribute_manager = @markup.attribute_manager
+    @attributes = @attribute_manager.attributes
+
     @to = ToTest.new @markup
 
-    @caps    = @RM::Attribute.bitmap_for :CAPS
-    @special = @RM::Attribute.bitmap_for :_SPECIAL_
-    @tt      = @RM::Attribute.bitmap_for :TT
+    @caps    = @attributes.bitmap_for :CAPS
+    @special = @attributes.bitmap_for :_SPECIAL_
+    @tt      = @attributes.bitmap_for :TT
   end
 
   def test_convert_tt_special

@@ -23,6 +23,11 @@ class RDoc::Markup::AttributeManager
   PROTECT_ATTR = A_PROTECT.chr # :nodoc:
 
   ##
+  # The attributes enabled for this markup object.
+
+  attr_reader :attributes
+
+  ##
   # This maps delimiters that occur around words (such as *bold* or +tt+)
   # where the start and end delimiters and the same. This lets us optimize
   # the regexp
@@ -62,6 +67,7 @@ class RDoc::Markup::AttributeManager
     @protectable = %w[<]
     @special = []
     @word_pair_map = {}
+    @attributes = RDoc::Markup::Attributes.new
 
     add_word_pair "*", "*", :BOLD
     add_word_pair "_", "_", :EM
@@ -96,11 +102,11 @@ class RDoc::Markup::AttributeManager
   def changed_attribute_by_name current_set, new_set
     current = new = 0
     current_set.each do |name|
-      current |= RDoc::Markup::Attribute.bitmap_for(name)
+      current |= @attributes.bitmap_for(name)
     end
 
     new_set.each do |name|
-      new |= RDoc::Markup::Attribute.bitmap_for(name)
+      new |= @attributes.bitmap_for(name)
     end
 
     change_attribute(current, new)
@@ -166,7 +172,7 @@ class RDoc::Markup::AttributeManager
       @special.each do |regexp, attr|
         str.scan(regexp) do
           attrs.set_attrs($`.length, $&.length,
-                          attr | RDoc::Markup::Attribute::SPECIAL)
+                          attr | @attributes.special)
         end
       end
     end
@@ -200,7 +206,7 @@ class RDoc::Markup::AttributeManager
     raise ArgumentError, "Word flags may not start with '<'" if
       start[0,1] == '<'
 
-    bitmap = RDoc::Markup::Attribute.bitmap_for name
+    bitmap = @attributes.bitmap_for name
 
     if start == stop then
       @matching_word_pairs[start] = bitmap
@@ -220,7 +226,7 @@ class RDoc::Markup::AttributeManager
   #   am.add_html 'em', :EM
 
   def add_html(tag, name)
-    @html_tags[tag.downcase] = RDoc::Markup::Attribute.bitmap_for name
+    @html_tags[tag.downcase] = @attributes.bitmap_for name
   end
 
   ##
@@ -230,7 +236,7 @@ class RDoc::Markup::AttributeManager
   #   @am.add_special(/((https?:)\S+\w)/, :HYPERLINK)
 
   def add_special pattern, name
-    @special << [pattern, RDoc::Markup::Attribute.bitmap_for(name)]
+    @special << [pattern, @attributes.bitmap_for(name)]
   end
 
   ##
@@ -303,9 +309,9 @@ class RDoc::Markup::AttributeManager
         res << change_attribute(current_attr, new_attr)
         current_attr = new_attr
 
-        if (current_attr & RDoc::Markup::Attribute::SPECIAL) != 0 then
+        if (current_attr & @attributes.special) != 0 then
           i += 1 while
-            i < str_len and (@attrs[i] & RDoc::Markup::Attribute::SPECIAL) != 0
+            i < str_len and (@attrs[i] & @attributes.special) != 0
 
           res << RDoc::Markup::Special.new(current_attr,
                                            copy_string(start_pos, i))
