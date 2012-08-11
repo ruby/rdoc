@@ -500,6 +500,31 @@ class RDoc::Store
   end
 
   ##
+  # Saves all entries in the store
+
+  def save
+    load_cache
+
+    all_classes_and_modules.each do |klass|
+      save_class klass
+
+      klass.each_method do |method|
+        save_method klass, method
+      end
+
+      klass.each_attribute do |attribute|
+        save_method klass, attribute
+      end
+    end
+
+    all_files.each do |file|
+      save_page file
+    end
+
+    save_cache
+  end
+
+  ##
   # Writes the cache file for this store
 
   def save_cache

@@ -10,9 +10,9 @@ class TestRDocStore < XrefTestCase
     @tmpdir = File.join Dir.tmpdir, "test_rdoc_ri_store_#{$$}"
     @s = RDoc::RI::Store.new @tmpdir
 
-    @top_level = @store.add_file 'file.rb'
+    @top_level = @s.add_file 'file.rb'
 
-    @page = @store.add_file 'README.txt'
+    @page = @s.add_file 'README.txt'
     @page.parser = RDoc::Parser::Simple
     @page.comment = RDoc::Comment.new 'This is a page', @page
 
@@ -114,8 +114,6 @@ class TestRDocStore < XrefTestCase
       C1 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1
       Child
       M1 M1::M2
-      Object
-      Object::SubClass
       Parent
     ]
 
@@ -124,7 +122,7 @@ class TestRDocStore < XrefTestCase
   end
 
   def test_all_files
-    assert_equal %w[README.txt file.rb xref_data.rb],
+    assert_equal %w[xref_data.rb],
                  @store.all_files.map { |m| m.full_name }.sort
   end
 
@@ -166,8 +164,6 @@ class TestRDocStore < XrefTestCase
     expected = %w[
       C1 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1
       Child
-      Object
-      Object::SubClass
       Parent
     ]
 
@@ -359,6 +355,44 @@ class TestRDocStore < XrefTestCase
     assert_nil @store.page 'no such page'
 
     assert_equal page, @store.page('PAGE')
+  end
+
+  def test_save
+    FileUtils.mkdir_p @tmpdir
+
+    @s.save
+
+    assert_directory File.join(@tmpdir, 'Object')
+
+    assert_file File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
+    assert_file File.join(@tmpdir, 'Object', 'method-i.ri')
+    assert_file File.join(@tmpdir, 'page-README_txt.ri')
+
+    assert_file File.join(@tmpdir, 'cache.ri')
+
+    expected = {
+      :ancestors => {
+        'Object' => OBJECT_ANCESTORS,
+        'Object::SubClass' => %w[Incl Object],
+      },
+      :attributes => { 'Object' => ['attr_accessor attr'] },
+      :class_methods => { 'Object' => %w[cmethod] },
+      :instance_methods => {
+        'Object' => %w[attr method method!],
+        'Object::SubClass' => %w[method],
+      },
+      :modules => %w[Object Object::SubClass],
+      :encoding => nil,
+      :pages => %w[README.txt],
+    }
+
+    expected[:ancestors]['Object'] = %w[BasicObject] if defined?(::BasicObject)
+
+    open File.join(@tmpdir, 'cache.ri'), 'rb' do |io|
+      cache = Marshal.load io.read
+
+      assert_equal expected, cache
+    end
   end
 
   def test_save_cache
