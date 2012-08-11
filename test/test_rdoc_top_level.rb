@@ -152,6 +152,47 @@ class TestRDocTopLevel < XrefTestCase
     assert_equal 0, @top_level.last_modified
   end
 
+  def test_marshal_dump
+    page = @store.add_file 'README.txt'
+    page.parser = RDoc::Parser::Simple
+    page.comment = RDoc::Comment.new 'This is a page', page
+
+    loaded = Marshal.load Marshal.dump page
+
+    comment = RDoc::Markup::Document.new(
+                RDoc::Markup::Paragraph.new('This is a page'))
+    comment.file = loaded
+
+    assert_equal page, loaded
+
+    assert_equal 'README.txt', loaded.absolute_name
+    assert_equal 'README.txt', loaded.relative_name
+
+    assert_equal RDoc::Parser::Simple, loaded.parser
+
+    assert_equal comment, loaded.comment
+  end
+
+  def test_marshal_load_version_0
+    loaded = Marshal.load "\x04\bU:\x13RDoc::TopLevel" \
+                          "[\ti\x00I\"\x0FREADME.txt\x06:\x06EF" \
+                          "c\x19RDoc::Parser::Simple" \
+                          "o:\eRDoc::Markup::Document\a:\v@parts" \
+                          "[\x06o:\x1CRDoc::Markup::Paragraph\x06;\b" \
+                          "[\x06I\"\x13This is a page\x06;\x06F:\n@file@\a"
+
+    comment = RDoc::Markup::Document.new(
+                RDoc::Markup::Paragraph.new('This is a page'))
+    comment.file = loaded
+
+    assert_equal 'README.txt', loaded.absolute_name
+    assert_equal 'README.txt', loaded.relative_name
+
+    assert_equal RDoc::Parser::Simple, loaded.parser
+
+    assert_equal comment, loaded.comment
+  end
+
   def test_name
     assert_equal 'top_level.rb', @top_level.name
   end

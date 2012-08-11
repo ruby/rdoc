@@ -3,6 +3,8 @@
 
 class RDoc::TopLevel < RDoc::Context
 
+  MARSHAL_VERSION = 0 # :nodoc:
+
   ##
   # This TopLevel's File::Stat struct
 
@@ -179,6 +181,32 @@ class RDoc::TopLevel < RDoc::Context
 
   def last_modified
     @file_stat ? file_stat.mtime : nil
+  end
+
+  ##
+  # Dumps this TopLevel for use by ri.  See also #marshal_load
+  def marshal_dump
+    [
+      MARSHAL_VERSION,
+      @absolute_name,
+      @parser,
+      parse(@comment),
+    ]
+  end
+
+  ##
+  # Loads this TopLevel from +array+.
+
+  def marshal_load array # :nodoc:
+    @name = nil
+    @relative_name = array[1]
+    @absolute_name = array[1]
+    @parser        = array[2]
+    @comment       = array[3]
+
+    @file_stat          = nil
+    @diagram            = nil
+    @classes_or_modules = []
   end
 
   ##

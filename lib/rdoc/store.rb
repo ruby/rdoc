@@ -16,9 +16,10 @@ require 'fileutils'
 #      :attributes       => {}, # class name => attributes
 #      :modules          => [], # classes and modules in this store
 #      :ancestors        => {}, # class name => ancestor names
+#      :pages            => [], # page names
 #    }
 #--
-# TODO need to store the list of files and prune classes
+# TODO need to prune classes
 
 class RDoc::Store
 
@@ -77,6 +78,7 @@ class RDoc::Store
       :encoding         => @encoding,
       :instance_methods => {},
       :modules          => [],
+      :pages            => [],
     }
 
     @classes_hash = {}
@@ -424,6 +426,17 @@ class RDoc::Store
   end
 
   ##
+  # Loads ri data for +page_name+
+
+  def load_page page_name
+    open page_file(page_name), 'rb' do |io|
+      obj = Marshal.load io.read
+      obj.store = self
+      obj
+    end
+  end
+
+  ##
   # Path to the ri data for +method_name+ in +klass_name+
 
   def method_file klass_name, method_name
@@ -457,12 +470,21 @@ class RDoc::Store
   end
 
   ##
-  # Returns the RDoc::TopLevel that has the given +name+
+  # Returns the RDoc::TopLevel that is a text file and has the given +name+
 
   def page name
     @files_hash.each_value.find do |file|
       file.text? and file.page_name == name
     end
+  end
+
+  ##
+  # Path to the ri data for +page_name+
+
+  def page_file page_name
+    file_name = File.basename(page_name).gsub('.', '_')
+
+    File.join @path, File.dirname(page_name), "page-#{file_name}.ri"
   end
 
   ##
@@ -488,6 +510,10 @@ class RDoc::Store
 
     @cache[:modules].uniq!
     @cache[:modules].sort!
+
+    @cache[:pages].uniq!
+    @cache[:pages].sort!
+
     @cache[:encoding] = @encoding # this gets set twice due to assert_cache
 
     return if @dry_run
@@ -500,7 +526,7 @@ class RDoc::Store
   end
 
   ##
-  # Writes the ri data for +klass+
+  # Writes the ri data for +klass+ (or module)
 
   def save_class klass
     full_name = klass.full_name
@@ -594,6 +620,28 @@ class RDoc::Store
     marshal = Marshal.dump method
 
     open method_file(full_name, method.full_name), 'wb' do |io|
+      io.write marshal
+    end
+  end
+
+  ##
+  # Writes the ri data for +page+
+
+  def save_page page
+    return unless page.text?
+
+    path = page_file page.full_name
+
+    FileUtils.mkdir_p File.dirname(path) unless @dry_run
+
+    cache[:pages] ||= []
+    cache[:pages] << page.full_name
+
+    return if @dry_run
+
+    marshal = Marshal.dump page
+
+    open path, 'wb' do |io|
       io.write marshal
     end
   end

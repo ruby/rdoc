@@ -12,6 +12,10 @@ class TestRDocStore < XrefTestCase
 
     @top_level = @store.add_file 'file.rb'
 
+    @page = @store.add_file 'README.txt'
+    @page.parser = RDoc::Parser::Simple
+    @page.comment = RDoc::Comment.new 'This is a page', @page
+
     @klass = @top_level.add_class RDoc::NormalClass, 'Object'
     @klass.add_comment 'original', @top_level
 
@@ -57,7 +61,8 @@ class TestRDocStore < XrefTestCase
     s.chomp
   end
 
-  def assert_cache imethods, cmethods, attrs, modules, ancestors = {}
+  def assert_cache imethods, cmethods, attrs, modules,
+                   ancestors = {}, pages = []
     imethods ||= { 'Object' => %w[method method!] }
     cmethods ||= { 'Object' => %w[cmethod] }
     attrs    ||= { 'Object' => ['attr_accessor attr'] }
@@ -72,6 +77,7 @@ class TestRDocStore < XrefTestCase
       :encoding         => nil,
       :instance_methods => imethods,
       :modules          => modules,
+      :pages            => pages,
     }
 
     @s.save_cache
@@ -118,7 +124,7 @@ class TestRDocStore < XrefTestCase
   end
 
   def test_all_files
-    assert_equal %w[file.rb xref_data.rb],
+    assert_equal %w[README.txt file.rb xref_data.rb],
                  @store.all_files.map { |m| m.full_name }.sort
   end
 
@@ -298,6 +304,7 @@ class TestRDocStore < XrefTestCase
       :encoding         => nil,
       :instance_methods => {},
       :modules          => [],
+      :pages            => [],
     }
 
     @s.load_cache
@@ -317,6 +324,12 @@ class TestRDocStore < XrefTestCase
     meth = @s.load_method('Object', '#method!')
     assert_equal @meth_bang, meth
     assert_equal @s, meth.store
+  end
+
+  def test_load_page
+    @s.save_page @page
+
+    assert_equal @page, @s.load_page('README.txt')
   end
 
   def test_method_file
@@ -353,6 +366,7 @@ class TestRDocStore < XrefTestCase
     @s.save_method @klass, @meth
     @s.save_method @klass, @cmeth
     @s.save_class @nest_klass
+    @s.save_page @page
     @s.encoding = :encoding_value
 
     @s.save_cache
@@ -371,6 +385,7 @@ class TestRDocStore < XrefTestCase
       },
       :modules => %w[Object Object::SubClass],
       :encoding => :encoding_value,
+      :pages => %w[README.txt],
     }
 
     expected[:ancestors]['Object'] = %w[BasicObject] if defined?(::BasicObject)
@@ -402,6 +417,15 @@ class TestRDocStore < XrefTestCase
     @s.save_cache
 
     assert_cache({ 'Object' => %w[method] }, {}, {}, [])
+  end
+
+  def test_save_cache_duplicate_pages
+    @s.save_page @page
+    @s.save_page @page
+
+    @s.save_cache
+
+    assert_cache({}, {}, {}, [], {}, %w[README.txt])
   end
 
   def test_save_class
@@ -568,6 +592,20 @@ class TestRDocStore < XrefTestCase
     assert_file File.join(@tmpdir, 'Object', 'SubClass', 'method-i.ri')
 
     assert_cache({ 'Object::SubClass' => %w[method] }, {}, {}, [])
+  end
+
+  def test_save_page
+    @s.save_page @page
+
+    assert_file File.join(@tmpdir, 'page-README_txt.ri')
+
+    assert_cache({}, {}, {}, [], {}, %w[README.txt])
+  end
+
+  def test_save_page_file
+    @s.save_page @top_level
+
+    refute_file File.join(@tmpdir, 'page-file_rb.ri')
   end
 
 end
