@@ -374,6 +374,44 @@ class RDoc::Store
   end
 
   ##
+  # Loads all items from this store into memory.  This recreates a
+  # documentation tree for use by a generator
+
+  def load_all
+    load_cache
+
+    module_names.each do |module_name|
+      mod = load_class module_name
+
+      # load method documentation since the loaded class/module does not have
+      # it
+      loaded_methods = mod.method_list.map do |method|
+        load_method module_name, method.full_name
+      end
+
+      mod.method_list.replace loaded_methods
+
+      loaded_attributes = mod.attributes.map do |attribute|
+        load_method module_name, attribute.full_name
+      end
+
+      mod.attributes.replace loaded_attributes
+
+      case mod
+      when RDoc::NormalClass then
+        @classes_hash[module_name] = mod
+      when RDoc::NormalModule then
+        @modules_hash[module_name] = mod
+      end
+    end
+
+    @cache[:pages].each do |page_name|
+      page = load_page page_name
+      @files_hash[page_name] = page
+    end
+  end
+
+  ##
   # Loads cache file for this store
 
   def load_cache

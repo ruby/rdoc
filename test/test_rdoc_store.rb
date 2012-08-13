@@ -23,14 +23,22 @@ class TestRDocStore < XrefTestCase
     @cmeth.singleton = true
     @cmeth.record_location @top_level
 
+    @meth_comment = RDoc::Comment.new 'method comment'
+    @meth_comment.location = @top_level
+
     @meth = RDoc::AnyMethod.new nil, 'method'
     @meth.record_location @top_level
+    @meth.comment = @meth_comment
 
     @meth_bang = RDoc::AnyMethod.new nil, 'method!'
     @meth_bang.record_location @top_level
 
+    @attr_comment = RDoc::Comment.new 'attribute comment'
+    @attr_comment.location = @top_level
+
     @attr = RDoc::Attr.new nil, 'attr', 'RW', ''
     @attr.record_location @top_level
+    @attr.comment = @attr_comment
 
     @klass.add_method @cmeth
     @klass.add_method @meth
@@ -46,6 +54,9 @@ class TestRDocStore < XrefTestCase
 
     @nest_klass.add_method @nest_meth
     @nest_klass.add_include @nest_incl
+
+    @mod = @top_level.add_module RDoc::NormalModule, 'Mod'
+    @mod.record_location @top_level
   end
 
   def teardown
@@ -248,6 +259,37 @@ class TestRDocStore < XrefTestCase
     assert_equal expected, @s.instance_methods
   end
 
+  def test_load_all
+    FileUtils.mkdir_p @tmpdir
+
+    @s.save
+
+    s = RDoc::Store.new @tmpdir
+
+    s.load_all
+
+    assert_equal [@klass, @nest_klass], s.all_classes
+    assert_equal [@mod],                s.all_modules
+    assert_equal [@top_level, @page],   s.all_files
+
+    methods = s.all_classes_and_modules.map do |mod|
+      mod.method_list
+    end.flatten.sort
+
+    assert_equal [@cmeth, @meth, @nest_meth, @meth_bang], methods
+
+    method = methods.find { |m| m == @meth }
+    assert_equal @meth_comment.parse, method.comment
+
+    attributes = s.all_classes_and_modules.map do |mod|
+      mod.attributes
+    end.flatten.sort
+
+    assert_equal [@attr], attributes
+
+    assert_equal @attr_comment.parse, attributes.first.comment
+  end
+
   def test_load_cache
     cache = {
       :encoding => :encoding_value,
@@ -381,7 +423,7 @@ class TestRDocStore < XrefTestCase
         'Object' => %w[attr method method!],
         'Object::SubClass' => %w[method],
       },
-      :modules => %w[Object Object::SubClass],
+      :modules => %w[Mod Object Object::SubClass],
       :encoding => nil,
       :pages => %w[README.txt],
     }
