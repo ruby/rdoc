@@ -268,15 +268,15 @@ class TestRDocStore < XrefTestCase
 
     s.load_all
 
-    assert_equal [@klass, @nest_klass], s.all_classes
-    assert_equal [@mod],                s.all_modules
-    assert_equal [@top_level, @page],   s.all_files
+    assert_equal [@klass, @nest_klass], s.all_classes.sort
+    assert_equal [@mod],                s.all_modules.sort
+    assert_equal [@page, @top_level],   s.all_files.sort
 
     methods = s.all_classes_and_modules.map do |mod|
       mod.method_list
     end.flatten.sort
 
-    assert_equal [@cmeth, @meth, @nest_meth, @meth_bang], methods
+    assert_equal [@cmeth, @meth, @nest_meth, @meth_bang], methods.sort
 
     method = methods.find { |m| m == @meth }
     assert_equal @meth_comment.parse, method.comment
@@ -414,7 +414,6 @@ class TestRDocStore < XrefTestCase
 
     expected = {
       :ancestors => {
-        'Object' => OBJECT_ANCESTORS,
         'Object::SubClass' => %w[Incl Object],
       },
       :attributes => { 'Object' => ['attr_accessor attr'] },

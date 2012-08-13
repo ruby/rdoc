@@ -198,15 +198,12 @@ class RDoc::TopLevel < RDoc::Context
   # Loads this TopLevel from +array+.
 
   def marshal_load array # :nodoc:
-    @name = nil
-    @relative_name = array[1]
-    @absolute_name = array[1]
-    @parser        = array[2]
-    @comment       = array[3]
+    initialize array[1]
+
+    @parser  = array[2]
+    @comment = array[3]
 
     @file_stat          = nil
-    @diagram            = nil
-    @classes_or_modules = []
   end
 
   ##
