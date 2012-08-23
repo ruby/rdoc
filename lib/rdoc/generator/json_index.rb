@@ -1,4 +1,4 @@
-require 'json'
+require 'multi_json'
 
 ##
 # The JsonIndex generator is designed to complement an HTML generator and
@@ -132,8 +132,7 @@ class RDoc::Generator::JsonIndex
     index_file.open 'w', 0644 do |io|
       io.set_encoding Encoding::UTF_8 if Object.const_defined? :Encoding
       io.write 'var search_data = '
-
-      JSON.dump data, io, 0
+      io.write MultiJson.dump(data)
     end
 
     Dir.chdir @template_dir do

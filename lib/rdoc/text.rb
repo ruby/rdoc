@@ -9,11 +9,11 @@ require 'strscan'
 # For RDoc::Text#snippet
 
 begin
-  gem 'json'
+  gem 'multi_json'
 rescue Gem::LoadError
 end
 
-require 'json'
+require 'multi_json'
 
 ##
 # Methods for manipulating comment text
