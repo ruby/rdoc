@@ -1,5 +1,3 @@
-require 'multi_json'
-
 ##
 # The JsonIndex generator is designed to complement an HTML generator and
 # produces a JSON search index.  This generator is derived from sdoc by
