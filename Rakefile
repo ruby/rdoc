@@ -59,7 +59,6 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   self.kpeg_flags = '-fsv' if self.respond_to? :kpeg_flags= # no plugin
 
   require_ruby_version '>= 1.8.7'
-  extra_deps     << ['multi_json', '~> 1.3']
   extra_dev_deps << ['racc',     '~> 1.4']
   extra_dev_deps << ['minitest', '~> 2']
   extra_dev_deps << ['ZenTest',  '~> 4']
