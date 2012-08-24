@@ -1,7 +1,8 @@
 # A workaround to allow RDoc to work on MacRuby, which has a known incompatibility with the json gem.
 
 module RDoc
-  case RUBY_ENGINE
+  ruby_engine = defined?(RUBY_ENGINE) ? RUBY_ENGINE : "ruby"
+  case ruby_engine
   when 'macruby' then
     begin
       require 'multi_json'
