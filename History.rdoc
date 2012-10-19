@@ -80,6 +80,7 @@
     Gülker.
   * Fixed lexing of character syntax (<code>?z</code>).  Reported by Xavier
     Noria.
+  * Add license to gem spec.  Issue #144 by pivotalcommon
 
 === 3.12 / 2011-12-15
 
