@@ -60,7 +60,9 @@ method(a, b) { |c, d| ... }
   end
 
   def test_marshal_dump
+    @store.path = Dir.tmpdir
     top_level = @store.add_file 'file.rb'
+
     m = RDoc::AnyMethod.new nil, 'method'
     m.block_params = 'some_block'
     m.call_seq     = 'call_seq'
@@ -68,13 +70,16 @@ method(a, b) { |c, d| ... }
     m.params       = 'param'
     m.record_location top_level
 
-    cm = RDoc::ClassModule.new 'Klass'
+    cm = top_level.add_class RDoc::ClassModule, 'Klass'
     cm.add_method m
+
+    section = cm.sections.first
 
     al = RDoc::Alias.new nil, 'method', 'aliased', 'alias comment'
     al_m = m.add_alias al, cm
 
     loaded = Marshal.load Marshal.dump m
+    loaded.store = @store
 
     comment = RDoc::Markup::Document.new(
                 RDoc::Markup::Paragraph.new('this is a comment'))
@@ -91,6 +96,8 @@ method(a, b) { |c, d| ... }
     assert_equal 'param',        loaded.params
     assert_equal nil,            loaded.singleton # defaults to nil
     assert_equal :public,        loaded.visibility
+    assert_equal cm,             loaded.parent
+    assert_equal section,        loaded.section
   end
 
   def test_marshal_load
@@ -114,9 +121,16 @@ method(a, b) { |c, d| ... }
   end
 
   def test_marshal_load_version_0
+    @store.path = Dir.tmpdir
+    top_level = @store.add_file 'file.rb'
+
     m = RDoc::AnyMethod.new nil, 'method'
-    cm = RDoc::ClassModule.new 'Klass'
+
+    cm = top_level.add_class RDoc::ClassModule, 'Klass'
     cm.add_method m
+
+    section = cm.sections.first
+
     al = RDoc::Alias.new nil, 'method', 'aliased', 'alias comment'
     al_m = m.add_alias al, cm
 
@@ -129,6 +143,8 @@ method(a, b) { |c, d| ... }
                           "[\x06[\aI\"\faliased\x06;\x06Fo;\b\x06;\t[\x06" \
                           "o;\n\x06;\t[\x06I\"\x12alias comment\x06;\x06FI" \
                           "\"\nparam\x06;\x06F"
+
+    loaded.store = @store
 
     comment = RDoc::Markup::Document.new(
                 RDoc::Markup::Paragraph.new('this is a comment'))
@@ -145,6 +161,8 @@ method(a, b) { |c, d| ... }
     assert_equal nil,            loaded.singleton # defaults to nil
     assert_equal :public,        loaded.visibility
     assert_equal nil,            loaded.file
+    assert_equal cm,             loaded.parent
+    assert_equal section,        loaded.section
   end
 
   def test_name

@@ -252,18 +252,20 @@ class TestRDocContext < XrefTestCase
   def test_add_section
     default_section = @context.sections.first
 
-    @context.add_section nil, RDoc::Comment.new('# comment', @top_level)
+    @context.add_section nil, comment('comment', @top_level)
 
     assert_equal 1, @context.sections.length
-    assert_equal '# comment', @context.sections.first.comment.text
+    assert_equal [comment("comment", @top_level)],
+                 @context.sections.first.comments
 
-    @context.add_section nil, RDoc::Comment.new('# new comment', @top_level)
+    @context.add_section nil, comment('new comment', @top_level)
 
     assert_equal 1, @context.sections.length
-    assert_equal "# comment\n# ---\n# new comment",
-                 @context.sections.first.comment.text
+    assert_equal [comment('comment', @top_level),
+                  comment('new comment', @top_level)],
+                 @context.sections.first.comments
 
-    @context.add_section 'other', RDoc::Comment.new('', @top_level)
+    @context.add_section 'other', comment('', @top_level)
 
     assert_equal 2, @context.sections.length
 

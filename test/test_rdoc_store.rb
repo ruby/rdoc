@@ -293,8 +293,9 @@ class TestRDocStore < XrefTestCase
   def test_load_cache
     cache = {
       :encoding => :encoding_value,
-      :methods  => %w[Object#method],
+      :methods  => { "Object" => %w[Object#method] },
       :modules  => %w[Object],
+      :pages    => [],
     }
 
     Dir.mkdir @tmpdir
@@ -315,8 +316,9 @@ class TestRDocStore < XrefTestCase
 
     cache = {
       :encoding => Encoding::ISO_8859_1,
-      :methods  => %w[Object#method],
+      :methods  => { "Object" => %w[Object#method] },
       :modules  => %w[Object],
+      :pages    => [],
     }
 
     Dir.mkdir @tmpdir
@@ -348,6 +350,40 @@ class TestRDocStore < XrefTestCase
     @s.load_cache
 
     assert_equal cache, @s.cache
+  end
+
+  def test_load_cache_legacy
+    cache = {
+      :ancestors        => {},
+      :attributes       => {},
+      :class_methods    => {},
+      :encoding         => :encoding_value,
+      :instance_methods => { "Object" => %w[Object#method] },
+      :modules          => %w[Object],
+      # no :pages
+    }
+
+    Dir.mkdir @tmpdir
+
+    open File.join(@tmpdir, 'cache.ri'), 'wb' do |io|
+      Marshal.dump cache, io
+    end
+
+    @s.load_cache
+
+    expected = {
+      :ancestors        => {},
+      :attributes       => {},
+      :class_methods    => {},
+      :encoding         => :encoding_value,
+      :instance_methods => { "Object" => %w[Object#method] },
+      :modules          => %w[Object],
+      :pages            => [],
+    }
+
+    assert_equal expected, @s.cache
+
+    assert_equal :encoding_value, @s.encoding
   end
 
   def test_load_class

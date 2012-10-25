@@ -290,6 +290,7 @@ class TestRDocRIDriver < RDoc::TestCase
 
     @cFoo.add_comment 'one', tl1
     @cFoo.add_comment 'two', tl2
+
     @store1.save_class @cFoo
 
     found = [
@@ -651,11 +652,13 @@ Foo::Bar#bother
   def test_in_path_eh
     path = ENV['PATH']
 
+    test_path = File.expand_path '..', __FILE__
+
     temp_dir do |dir|
       nonexistent = File.join dir, 'nonexistent'
       refute @driver.in_path?(nonexistent)
 
-      ENV['PATH'] = File.expand_path '..', __FILE__
+      ENV['PATH'] = test_path
 
       assert @driver.in_path?(File.basename(__FILE__))
     end

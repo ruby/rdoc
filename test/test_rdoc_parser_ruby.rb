@@ -162,7 +162,7 @@ class C; end
 
     section = @top_level.current_section
     assert_equal 'new section', section.title
-    assert_equal "# woo stuff\n", section.comment.text
+    assert_equal [comment("# woo stuff\n", @top_level)], section.comments
 
     assert_empty comment
   end

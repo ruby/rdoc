@@ -75,9 +75,9 @@ class RDoc::CodeObject
   attr_accessor :offset
 
   ##
-  # Our parent CodeObject
+  # Sets the parent CodeObject
 
-  attr_accessor :parent
+  attr_writer :parent
 
   ##
   # Did we ever receive a +:nodoc:+ directive?
@@ -105,12 +105,16 @@ class RDoc::CodeObject
   # Creates a new CodeObject that will document itself and its children
 
   def initialize
-    @metadata  = {}
-    @comment   = ''
-    @parent    = nil
-    @file      = nil
-    @full_name = nil
-    @store     = nil
+    @metadata      = {}
+    @comment       = ''
+    @parent        = nil
+    @parent_name   = nil # for loading
+    @parent_class  = nil # for loading
+    @section       = nil
+    @section_title = nil # for loading
+    @file          = nil
+    @full_name     = nil
+    @store         = nil
 
     @document_children   = true
     @document_self       = true
@@ -132,7 +136,6 @@ class RDoc::CodeObject
                  if comment and not comment.empty? then
                    normalize_comment comment
                  else
-                   # TODO is this sufficient?
                    # HACK correct fix is to have #initialize create @comment
                    #      with the correct encoding
                    if String === @comment and
@@ -263,6 +266,28 @@ class RDoc::CodeObject
 
   def ignored?
     @ignored
+  end
+
+  ##
+  # Our parent CodeObject
+
+  def parent
+    return @parent if @parent
+    return nil unless @parent_name
+
+    if @parent_class == RDoc::TopLevel then
+      @parent = @store.add_file @parent_name
+    else
+      @parent = @store.find_class_or_module @parent_name
+
+      return @parent if @parent
+
+      begin
+        @parent = @store.load_class @parent_name
+      rescue RDoc::Store::MissingFileError
+        nil
+      end
+    end
   end
 
   ##

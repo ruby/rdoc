@@ -194,6 +194,14 @@ Options may also be set in the 'RI' environment variable.
 
       opt.separator nil
 
+      opt.on("--server [PORT]", Integer,
+             "Run RDoc server on the given port.",
+             "The default port is 8214.") do |port|
+        options[:server] = port || 8214
+      end
+
+      opt.separator nil
+
       opt.on("--list", "-l",
              "List classes ri knows about.") do
         options[:list] = true
@@ -353,6 +361,7 @@ Options may also be set in the 'RI' environment variable.
     @list_doc_dirs = options[:list_doc_dirs]
 
     @interactive = options[:interactive]
+    @server      = options[:server]
     @use_stdout  = options[:use_stdout]
   end
 
@@ -629,7 +638,7 @@ Options may also be set in the 'RI' environment variable.
         extends  << [klass.extends,  store] if klass.extends
         includes << [klass.includes, store] if klass.includes
         [store, klass]
-      rescue Errno::ENOENT
+      rescue RDoc::Store::MissingFileError
       end
     end.compact
 
@@ -1159,6 +1168,8 @@ Options may also be set in the 'RI' environment variable.
       puts @doc_dirs
     elsif @list then
       list_known_classes @names
+    elsif @server then
+      start_server
     elsif @interactive or @names.empty? then
       interactive
     else
@@ -1196,6 +1207,19 @@ Options may also be set in the 'RI' environment variable.
     @use_stdout = true
 
     nil
+  end
+
+  def start_server
+    require 'webrick'
+
+    server = WEBrick::HTTPServer.new :Port => @server
+
+    server.mount '/', RDoc::Servlet
+
+    trap 'INT'  do server.shutdown end
+    trap 'TERM' do server.shutdown end
+
+    server.start
   end
 
 end

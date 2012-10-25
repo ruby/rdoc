@@ -7,6 +7,8 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   # 2::
   #   RDoc 4
   #   Added calls_super
+  #   Added parent name and class
+  #   Added section title
 
   MARSHAL_VERSION = 2 # :nodoc:
 
@@ -107,6 +109,9 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       @params,
       @file.absolute_name,
       @calls_super,
+      @parent.name,
+      @parent.class,
+      @section.title,
     ]
   end
 
@@ -117,36 +122,44 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   # * #full_name
   # * #parent_name
 
-  def marshal_load(array)
+  def marshal_load array
     @dont_rename_initialize = nil
     @is_alias_for           = nil
     @token_stream           = nil
     @aliases                = []
+    @parent                 = nil
+    @parent_name            = nil
+    @parent_class           = nil
+    @section                = nil
+    @file                   = nil
 
-    version       = array[0]
-    @name         = array[1]
-    @full_name    = array[2]
-    @singleton    = array[3]
-    @visibility   = array[4]
-    @comment      = array[5]
-    @call_seq     = array[6]
-    @block_params = array[7]
-    #                     8 handled below
-    @params       = array[9]
-    #                     10 handled below
-    @calls_super  = array[11]
+    version        = array[0]
+    @name          = array[1]
+    @full_name     = array[2]
+    @singleton     = array[3]
+    @visibility    = array[4]
+    @comment       = array[5]
+    @call_seq      = array[6]
+    @block_params  = array[7]
+    #                      8 handled below
+    @params        = array[9]
+    #                      10 handled below
+    @calls_super   = array[11]
+    @parent_name   = array[12]
+    @parent_title  = array[13]
+    @section_title = array[14]
 
     array[8].each do |new_name, comment|
       add_alias RDoc::Alias.new(nil, @name, new_name, comment, @singleton)
     end
 
-    @parent_name = if @full_name =~ /#/ then
-                     $`
-                   else
-                     name = @full_name.split('::')
-                     name.pop
-                     name.join '::'
-                   end
+    @parent_name ||= if @full_name =~ /#/ then
+                       $`
+                     else
+                       name = @full_name.split('::')
+                       name.pop
+                       name.join '::'
+                     end
 
     @file = RDoc::TopLevel.new array[10] if version > 0
   end
@@ -217,6 +230,12 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     end
 
     params
+  end
+
+  def section # :nodoc:
+    return @section if @section
+
+    @section = parent.add_section @section_title if parent
   end
 
   ##

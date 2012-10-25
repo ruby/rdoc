@@ -14,8 +14,13 @@ class RDoc::ClassModule < RDoc::Context
   # 2::
   #   RDoc 3.13
   #   * Added extends
+  # 3::
+  #   RDoc 4.0
+  #   * Added sections
+  #   * Added in_files
+  #   * Added parent name
 
-  MARSHAL_VERSION = 2 # :nodoc:
+  MARSHAL_VERSION = 3 # :nodoc:
 
   ##
   # Constants that are aliases for this class or module
@@ -133,6 +138,17 @@ class RDoc::ClassModule < RDoc::Context
     self.comment = original
   end
 
+  def add_things my_things, other_things # :nodoc:
+    other_things.each do |group, things|
+      my_things[group].each { |thing| yield false, thing } if
+        my_things.include? group
+
+      things.each do |thing|
+        yield true, thing
+      end
+    end
+  end
+
   ##
   # Ancestors list for this ClassModule: the list of included modules
   # (classes will add their superclass if any).
@@ -241,8 +257,8 @@ class RDoc::ClassModule < RDoc::Context
   # Return the fully qualified name of this class or module
 
   def full_name
-    @full_name ||= if RDoc::ClassModule === @parent then
-                     "#{@parent.full_name}::#{@name}"
+    @full_name ||= if RDoc::ClassModule === parent then
+                     "#{parent.full_name}::#{@name}"
                    else
                      @name
                    end
@@ -285,7 +301,13 @@ class RDoc::ClassModule < RDoc::Context
       method_types,
       extends.map do |ext|
         [ext.name, parse(ext.comment), ext.file_name]
-      end
+      end,
+      @sections.values,
+      @in_files.map do |tl|
+        tl.absolute_name
+      end,
+      parent.full_name,
+      parent.class,
     ]
   end
 
@@ -297,6 +319,8 @@ class RDoc::ClassModule < RDoc::Context
     @parent            = nil
     @temporary_section = nil
     @visibility        = nil
+    @classes           = {}
+    @modules           = {}
 
     @name       = array[1]
     @full_name  = array[2]
@@ -347,6 +371,23 @@ class RDoc::ClassModule < RDoc::Context
       ext = add_extend RDoc::Extend.new(name, comment)
       ext.record_location RDoc::TopLevel.new file
     end if array[9] # Support Marshal version 1
+
+    sections = (array[10] || []).map do |section|
+      [section.title, section]
+    end
+
+    @sections = Hash[*sections.flatten]
+
+    add_section nil
+
+    @in_files = []
+
+    (array[11] || []).each do |filename|
+      record_location RDoc::TopLevel.new filename
+    end
+
+    @parent_name  = array[12]
+    @parent_class = array[13]
   end
 
   ##
@@ -415,6 +456,8 @@ class RDoc::ClassModule < RDoc::Context
       end
     end
 
+    merge_sections cm
+
     self
   end
 
@@ -437,22 +480,46 @@ class RDoc::ClassModule < RDoc::Context
     my_things    = mine. group_by { |thing| thing.file }
     other_things = other.group_by { |thing| thing.file }
 
-    my_things.delete_if do |file, things|
-      next false unless other_files.include? file
+    remove_things my_things, other_files,  &block
+    add_things    my_things, other_things, &block
+  end
 
-      things.each do |thing|
-        yield false, thing
-      end
+  ##
+  # Merges the comments in this ClassModule with the comments in the other
+  # ClassModule +cm+.
 
-      true
+  def merge_sections cm # :nodoc:
+    my_sections    =    sections.group_by { |section| section.title }
+    other_sections = cm.sections.group_by { |section| section.title }
+
+    other_files = cm.in_files
+
+    remove_things my_sections, other_files do |_, section|
+      @sections.delete section.title
     end
 
-    other_things.each do |file, things|
-      my_things[file].each { |thing| yield false, thing } if
-        my_things.include?(file)
+    other_sections.each do |group, sections|
+      if my_sections.include? group
+        my_sections[group].each do |my_section|
+          other_section = cm.sections_hash[group]
 
-      things.each do |thing|
-        yield true, thing
+          my_comments    = my_section.comments
+          other_comments = other_section.comments
+
+          other_files = other_section.in_files
+
+          merge_collections my_comments, other_comments, other_files do |add, comment|
+            if add then
+              my_section.add_comment comment
+            else
+              my_section.remove_comment comment
+            end
+          end
+        end
+      else
+        sections.each do |section|
+          add_section group, section.comments
+        end
       end
     end
   end
@@ -544,6 +611,18 @@ class RDoc::ClassModule < RDoc::Context
     classes_hash.each_key do |name|
       full_name = prefix + name
       classes_hash.delete name unless @store.classes_hash[full_name]
+    end
+  end
+
+  def remove_things my_things, other_files # :nodoc:
+    my_things.delete_if do |file, things|
+      next false unless other_files.include? file
+
+      things.each do |thing|
+        yield false, thing
+      end
+
+      true
     end
   end
 

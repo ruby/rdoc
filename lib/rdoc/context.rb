@@ -351,6 +351,8 @@ class RDoc::Context < RDoc::CodeObject
       end
     end
 
+    klass.parent = self
+
     klass
   end
 
@@ -515,7 +517,7 @@ class RDoc::Context < RDoc::CodeObject
 
   def add_section title, comment = nil
     if section = @sections[title] then
-      section.comment = comment if comment
+      section.add_comment comment if comment
     else
       section = Section.new self, title, comment
       @sections[title] = section
@@ -867,6 +869,7 @@ class RDoc::Context < RDoc::CodeObject
         result = searched.find_module_named(symbol)
         break if result || searched.is_a?(RDoc::TopLevel)
         searched = searched.parent
+        break unless searched
       end
     end
 

@@ -1,0 +1,9 @@
+<nav id="home-section" class="section">
+  <h3 class="section-header">Documentation</h3>
+
+  <ul>
+  <% installed.each do |name, href| %>
+    <li class="folder"><a href="<%= href %>"><%= h name %></a>
+  <% end %>
+  </ul>
+</nav>

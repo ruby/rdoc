@@ -17,16 +17,15 @@ class TestRDocExtend < XrefTestCase
 
   def test_module_extended
     m1 = @xref_data.add_module RDoc::NormalModule, 'Mod1'
-    m1_m3 = m1.add_module RDoc::NormalModule, 'Mod3'
-    m1_m2 = m1.add_module RDoc::NormalModule, 'Mod2'
-    m1_m2_m3 = m1_m2.add_module RDoc::NormalModule, 'Mod3'
-    m1_m2_m3_m4 = m1_m2_m3.add_module RDoc::NormalModule, 'Mod4'
-    m1_m2_m4 = m1_m2.add_module RDoc::NormalModule, 'Mod4'
-    m1_m2_k0 = m1_m2.add_class RDoc::NormalClass, 'Klass0'
+                  m1.add_module RDoc::NormalModule, 'Mod3'
+    m1_m2       = m1.add_module RDoc::NormalModule, 'Mod2'
+    m1_m2_m3    = m1_m2.add_module RDoc::NormalModule, 'Mod3'
+                  m1_m2_m3.add_module RDoc::NormalModule, 'Mod4'
+                  m1_m2.add_module RDoc::NormalModule, 'Mod4'
+    m1_m2_k0    = m1_m2.add_class RDoc::NormalClass, 'Klass0'
     m1_m2_k0_m4 = m1_m2_k0.add_module RDoc::NormalModule, 'Mod4'
-    #m1_m2_k0_m4_m5 = m1_m2_k0_m4.add_module RDoc::NormalModule, 'Mod5'
-    m1_m2_k0_m4_m6 = m1_m2_k0_m4.add_module RDoc::NormalModule, 'Mod6'
-    m1_m2_k0_m5 = m1_m2_k0.add_module RDoc::NormalModule, 'Mod5'
+                  m1_m2_k0_m4.add_module RDoc::NormalModule, 'Mod6'
+                  m1_m2_k0.add_module RDoc::NormalModule, 'Mod5'
 
     e0_m4 = RDoc::Extend.new 'Mod4', nil
     e0_m5 = RDoc::Extend.new 'Mod5', nil

@@ -11,17 +11,59 @@ require 'fileutils'
 # contains the following structures:
 #
 #    @cache = {
+#      :ancestors        => {}, # class name => ancestor names
+#      :attributes       => {}, # class name => attributes
 #      :class_methods    => {}, # class name => class methods
 #      :instance_methods => {}, # class name => instance methods
-#      :attributes       => {}, # class name => attributes
 #      :modules          => [], # classes and modules in this store
-#      :ancestors        => {}, # class name => ancestor names
 #      :pages            => [], # page names
 #    }
 #--
 # TODO need to prune classes
 
 class RDoc::Store
+
+  ##
+  # Errors raised from loading or saving the store
+
+  class Error < RDoc::Error
+  end
+
+  ##
+  # Raised when a stored file for a class, module, page or method is missing.
+
+  class MissingFileError < Error
+
+    ##
+    # The store the file should exist in
+
+    attr_reader :store
+
+    ##
+    # The file the #name should be saved as
+
+    attr_reader :file
+
+    ##
+    # The name of the object the #file would be loaded from
+
+    attr_reader :name
+
+    ##
+    # Creates a new MissingFileError for the missing +file+ for the given
+    # +name+ that should have been in the +store+.
+
+    def initialize store, file, name
+      @store = store
+      @file  = file
+      @name  = name
+    end
+
+    def message
+      "store at #{@store.path} missing file #{@file} for #{@name}"
+    end
+
+  end
 
   ##
   # Stores the name of the C variable a class belongs to.  This helps wire up
@@ -405,6 +447,26 @@ class RDoc::Store
       end
     end
 
+    # This is really slow
+    module_names.each do |module_name|
+      mod = find_class_or_module module_name
+
+      mod.parent = find_class_or_module mod.parent_name
+
+      module_names.select do |name|
+        name =~ /^#{module_name}::[^:]+$/
+      end.each do |descendent_name|
+        descendent = find_class_or_module descendent_name
+
+        case descendent
+        when RDoc::NormalClass then
+          mod.classes_hash[descendent_name] = descendent
+        when RDoc::NormalModule then
+          mod.modules_hash[descendent_name] = descendent
+        end
+      end
+    end
+
     @cache[:pages].each do |page_name|
       page = load_page page_name
       @files_hash[page_name] = page
@@ -437,6 +499,8 @@ class RDoc::Store
 
     @encoding = load_enc unless @encoding
 
+    @cache[:pages] ||= []
+
     @cache
   rescue Errno::ENOENT
   end
@@ -445,33 +509,51 @@ class RDoc::Store
   # Loads ri data for +klass_name+
 
   def load_class klass_name
-    open class_file(klass_name), 'rb' do |io|
+    file = class_file klass_name
+
+    open file, 'rb' do |io|
       obj = Marshal.load io.read
       obj.store = self
       obj
     end
+  rescue Errno::ENOENT => e
+    error = MissingFileError.new(self, file, klass_name)
+    error.set_backtrace e.backtrace
+    raise error
   end
 
   ##
   # Loads ri data for +method_name+ in +klass_name+
 
   def load_method klass_name, method_name
-    open method_file(klass_name, method_name), 'rb' do |io|
+    file = method_file klass_name, method_name
+
+    open file, 'rb' do |io|
       obj = Marshal.load io.read
       obj.store = self
       obj
     end
+  rescue Errno::ENOENT => e
+    error = MissingFileError.new(self, file, klass_name + method_name)
+    error.set_backtrace e.backtrace
+    raise error
   end
 
   ##
   # Loads ri data for +page_name+
 
   def load_page page_name
-    open page_file(page_name), 'rb' do |io|
+    file = page_file page_name
+
+    open file, 'rb' do |io|
       obj = Marshal.load io.read
       obj.store = self
       obj
     end
+  rescue Errno::ENOENT => e
+    error = MissingFileError.new(self, file, page_name)
+    error.set_backtrace e.backtrace
+    raise error
   end
 
   ##
@@ -604,7 +686,7 @@ class RDoc::Store
       disk_klass = load_class full_name
 
       klass = disk_klass.merge klass
-    rescue Errno::ENOENT
+    rescue MissingFileError
     end
 
     # BasicObject has no ancestors

@@ -124,6 +124,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_marshal_dump
+    @store.path = Dir.tmpdir
     tl = @store.add_file 'file.rb'
 
     ns = tl.add_module RDoc::NormalModule, 'Namespace'
@@ -147,6 +148,13 @@ class TestRDocClassModule < XrefTestCase
 
     e1 = RDoc::Extend.new 'E1', ''
     e1.record_location tl
+
+    section_comment = RDoc::Comment.new('section comment')
+    section_comment.location = tl
+
+    assert_equal 1, cm.sections.length, 'sanity, default section only'
+    s0 = cm.sections.first
+    s1 = cm.add_section 'section', section_comment
 
     cm.add_attribute a1
     cm.add_attribute a2
@@ -176,6 +184,11 @@ class TestRDocClassModule < XrefTestCase
     assert_equal [m1],               loaded.method_list
     assert_equal 'Klass',            loaded.name
     assert_equal 'Super',            loaded.superclass
+    assert_equal [tl],               loaded.in_files
+    assert_equal 'Namespace',        loaded.parent.name
+
+    expected = { nil => s0, 'section' => s1 }
+    assert_equal expected, loaded.sections_hash
 
     assert_equal tl, loaded.attributes.first.file
 
@@ -197,6 +210,8 @@ class TestRDocClassModule < XrefTestCase
     m = RDoc::AnyMethod.new(nil, 'm1')
     c = RDoc::Constant.new('C1', nil, '')
     i = RDoc::Include.new('I1', '')
+
+    s0 = cm.sections.first
 
     cm.add_attribute a
     cm.add_method m
@@ -232,7 +247,12 @@ class TestRDocClassModule < XrefTestCase
     assert_equal [m],                loaded.method_list
     assert_equal 'Klass',            loaded.name
     assert_equal 'Super',            loaded.superclass
-    assert_equal nil,                loaded.file
+    assert_nil                       loaded.file
+    assert_empty                     loaded.in_files
+    assert_nil                       loaded.parent
+
+    expected = { nil => s0 }
+    assert_equal expected, loaded.sections_hash
   end
 
   def test_marshal_load_version_1
@@ -256,6 +276,8 @@ class TestRDocClassModule < XrefTestCase
 
     i1 = RDoc::Include.new 'I1', ''
     i1.record_location tl
+
+    s0 = cm.sections.first
 
     cm.add_attribute a1
     cm.add_attribute a2
@@ -299,14 +321,16 @@ class TestRDocClassModule < XrefTestCase
     assert_equal [m1],               loaded.method_list
     assert_equal 'Klass',            loaded.name
     assert_equal 'Super',            loaded.superclass
+    assert_empty                     loaded.in_files
+    assert_nil                       loaded.parent
 
     assert_equal tl, loaded.attributes.first.file
-
     assert_equal tl, loaded.constants.first.file
-
     assert_equal tl, loaded.includes.first.file
-
     assert_equal tl, loaded.method_list.first.file
+
+    expected = { nil => s0 }
+    assert_equal expected, loaded.sections_hash
   end
 
   def test_marshal_load_version_2
@@ -333,6 +357,8 @@ class TestRDocClassModule < XrefTestCase
 
     e1 = RDoc::Extend.new 'E1', ''
     e1.record_location tl
+
+    s0 = cm.sections.first
 
     cm.add_attribute a1
     cm.add_attribute a2
@@ -378,6 +404,110 @@ class TestRDocClassModule < XrefTestCase
     assert_equal [m1],               loaded.method_list
     assert_equal 'Klass',            loaded.name
     assert_equal 'Super',            loaded.superclass
+    assert_empty                     loaded.in_files
+    assert_nil                       loaded.parent
+
+    assert_equal tl, loaded.attributes. first.file
+    assert_equal tl, loaded.constants.  first.file
+    assert_equal tl, loaded.includes.   first.file
+    assert_equal tl, loaded.extends.    first.file
+    assert_equal tl, loaded.method_list.first.file
+
+    expected = { nil => s0 }
+    assert_equal expected, loaded.sections_hash
+  end
+
+  def test_marshal_load_version_3
+    tl = @store.add_file 'file.rb'
+
+    ns = tl.add_module RDoc::NormalModule, 'Namespace'
+
+    cm = ns.add_class RDoc::NormalClass, 'Klass', 'Super'
+    cm.record_location tl
+
+    a1 = RDoc::Attr.new nil, 'a1', 'RW', ''
+    a1.record_location tl
+    a2 = RDoc::Attr.new nil, 'a2', 'RW', '', true
+    a2.record_location tl
+
+    m1 = RDoc::AnyMethod.new nil, 'm1'
+    m1.record_location tl
+
+    c1 = RDoc::Constant.new 'C1', nil, ''
+    c1.record_location tl
+
+    i1 = RDoc::Include.new 'I1', ''
+    i1.record_location tl
+
+    e1 = RDoc::Extend.new 'E1', ''
+    e1.record_location tl
+
+    section_comment = RDoc::Comment.new('section comment')
+    section_comment.location = tl
+
+    assert_equal 1, cm.sections.length, 'sanity, default section only'
+    s0 = cm.sections.first
+    s1 = cm.add_section 'section', section_comment
+
+    cm.add_attribute a1
+    cm.add_attribute a2
+    cm.add_method m1
+    cm.add_constant c1
+    cm.add_include i1
+    cm.add_extend e1
+    cm.add_comment 'this is a comment', tl
+
+    loaded = Marshal.load "\x04\bU:\x16RDoc::NormalClass[\x13i\bI\"\nKlass" \
+                          "\x06:\x06EFI\"\x15Namespace::Klass\x06;\x06FI" \
+                          "\"\nSuper\x06;\x06Fo:\eRDoc::Markup::Document\a" \
+                          ":\v@parts[\x06o;\a\a;\b[\x06o" \
+                          ":\x1CRDoc::Markup::Paragraph\x06;\b[\x06I" \
+                          "\"\x16this is a comment\x06;\x06F:\n@fileI" \
+                          "\"\ffile.rb\x06;\x06F;\n0[\a[\nI\"\aa2\x06" \
+                          ";\x06FI\"\aRW\x06;\x06F:\vpublicT@\x11[\nI" \
+                          "\"\aa1\x06;\x06FI\"\aRW\x06;\x06F;\vF@\x11" \
+                          "[\x06[\bI\"\aC1\x06;\x06Fo;\a\a;\b[\x00" \
+                          ";\n0@\x11[\x06[\bI\"\aI1\x06;\x06Fo;\a\a;\b" \
+                          "[\x00;\n0@\x11[\a[\aI\"\nclass\x06;\x06F[\b" \
+                          "[\a;\v[\x00[\a:\x0Eprotected[\x00[\a" \
+                          ":\fprivate[\x00[\aI\"\rinstance\x06;\x06F[\b" \
+                          "[\a;\v[\x06[\aI\"\am1\x06;\x06F@\x11[\a;\f[\x00" \
+                          "[\a;\r[\x00[\x06[\bI\"\aE1\x06;\x06Fo;\a\a;\b" \
+                          "[\x00;\n0@\x11[\aU:\eRDoc::Context::Section" \
+                          "[\bi\x000o;\a\a;\b[\x00;\n0U;\x0E[\bi\x00I" \
+                          "\"\fsection\x06;\x06Fo;\a\a;\b[\x06o;\a\a;\b" \
+                          "[\x06o;\t\x06;\b[\x06I\"\x14section comment\x06" \
+                          ";\x06F;\n@\x11;\n0[\x06@\x11I\"\x0ENamespace\x06" \
+                          ";\x06Fc\x17RDoc::NormalModule"
+
+    loaded.store = @store
+
+    assert_equal cm, loaded
+
+    inner = RDoc::Markup::Document.new(
+      RDoc::Markup::Paragraph.new('this is a comment'))
+    inner.file = tl
+
+    comment = RDoc::Markup::Document.new inner
+
+    assert_equal [a2, a1],           loaded.attributes.sort
+    assert_equal comment,            loaded.comment
+    assert_equal [c1],               loaded.constants
+    assert_equal 'Namespace::Klass', loaded.full_name
+    assert_equal [i1],               loaded.includes
+    assert_equal [e1],               loaded.extends
+    assert_equal [m1],               loaded.method_list
+    assert_equal 'Klass',            loaded.name
+    assert_equal 'Super',            loaded.superclass
+    assert_equal 'Namespace',        loaded.parent.name
+
+    expected = {
+      nil       => s0,
+      'section' => s1,
+    }
+
+    assert_equal expected,           loaded.sections_hash
+    assert_equal [tl],               loaded.in_files
 
     assert_equal tl, loaded.attributes. first.file
     assert_equal tl, loaded.constants.  first.file
@@ -486,12 +616,15 @@ class TestRDocClassModule < XrefTestCase
     tl1 = @store.add_file 'one.rb'
     tl2 = @store.add_file 'two.rb'
 
-    cm1 = RDoc::ClassModule.new 'Klass'
+    cm1 = tl1.add_class RDoc::ClassModule, 'Klass'
     cm1.add_comment 'klass 1', tl1
+    cm1.record_location tl1
 
-    cm2 = RDoc::ClassModule.new 'Klass'
+    cm2 = tl1.add_class RDoc::NormalClass, 'Klass'
     cm2.add_comment 'klass 2', tl2
     cm2.add_comment 'klass 3', tl1
+    cm2.record_location tl1
+    cm2.record_location tl2
 
     cm2 = Marshal.load Marshal.dump cm2
 
@@ -767,6 +900,108 @@ class TestRDocClassModule < XrefTestCase
     assert_equal expected, cm1.method_list.sort
   end
 
+  def test_merge_sections
+    store1 = @store
+
+    tl1_1 = store1.add_file 'one.rb'
+
+    cm1  = tl1_1.add_class RDoc::ClassModule, 'Klass'
+    cm1.record_location tl1_1
+
+    s1_0 = cm1.sections.first
+    s1_1 = cm1.add_section 'section 1', comment('comment 1',   tl1_1)
+           cm1.add_section 'section 2', comment('comment 2 a', tl1_1)
+           cm1.add_section 'section 4', comment('comment 4 a', tl1_1)
+
+    store2 = RDoc::Store.new
+    tl2_1 = store2.add_file 'one.rb'
+    tl2_2 = store2.add_file 'two.rb'
+
+    cm2  = tl2_1.add_class RDoc::ClassModule, 'Klass'
+    cm2.record_location tl2_1
+    cm2.record_location tl2_2
+
+           cm2.sections.first
+    s2_2 = cm2.add_section 'section 2', comment('comment 2 b', tl2_1)
+    s2_3 = cm2.add_section 'section 3', comment('comment 3',   tl2_2)
+           cm2.add_section 'section 4', comment('comment 4 b', tl2_2)
+
+    cm1.merge cm2
+
+    expected = [
+      s1_0,
+      s1_1,
+      s2_2,
+      s2_3,
+      RDoc::Context::Section.new(cm1, 'section 4', nil)
+    ]
+
+    merged_sections = cm1.sections.sort_by do |s|
+      s.title || ''
+    end
+
+    assert_equal expected, merged_sections
+
+    assert_equal [comment('comment 2 b', tl2_1)],
+                 cm1.sections_hash['section 2'].comments
+
+    expected_s4_comments = [
+      comment('comment 4 a', tl2_1),
+      comment('comment 4 b', tl2_2),
+    ]
+
+    assert_equal expected_s4_comments, cm1.sections_hash['section 4'].comments
+  end
+
+  def test_merge_sections_overlap
+    store1 = @store
+
+    tl1_1 = store1.add_file 'one.rb'
+    tl1_3 = store1.add_file 'three.rb'
+
+    cm1  = tl1_1.add_class RDoc::ClassModule, 'Klass'
+    cm1.record_location tl1_1
+
+    cm1.add_section 'section', comment('comment 1 a', tl1_1)
+    cm1.add_section 'section', comment('comment 3',   tl1_3)
+
+    store2 = RDoc::Store.new
+    tl2_1 = store2.add_file 'one.rb'
+    tl2_2 = store2.add_file 'two.rb'
+    tl2_3 = store2.add_file 'three.rb'
+
+    cm2  = tl2_1.add_class RDoc::ClassModule, 'Klass'
+    cm2.record_location tl2_1
+    cm2.record_location tl2_2
+
+    s2_0 = cm2.sections.first
+    s2_1 = cm2.add_section 'section', comment('comment 1 b', tl1_1)
+           cm2.add_section 'section', comment('comment 2',   tl2_2)
+
+    cm1.merge_sections cm2
+
+    expected = [
+      s2_0,
+      s2_1,
+    ]
+
+    merged_sections = cm1.sections.sort_by do |s|
+      s.title || ''
+    end
+
+    assert_equal expected, merged_sections
+
+    expected = [
+      comment('comment 1 b', tl2_1),
+      comment('comment 3',   tl2_3),
+      comment('comment 2',   tl2_2),
+    ]
+
+    comments = cm1.sections_hash['section'].comments
+
+    assert_equal expected, comments.sort_by { |c| c.file.name }
+  end
+
   def test_parse
     tl1 = @store.add_file 'one.rb'
     tl2 = @store.add_file 'two.rb'
@@ -814,7 +1049,7 @@ class TestRDocClassModule < XrefTestCase
     tl1 = @store.add_file 'one.rb'
     tl2 = @store.add_file 'two.rb'
 
-    cm = RDoc::ClassModule.new 'Klass'
+    cm = tl1.add_class RDoc::NormalClass, 'Klass'
     cm.add_comment 'comment 1', tl1
     cm.add_comment 'comment 2', tl2
 

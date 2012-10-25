@@ -3,6 +3,8 @@
 
 class RDoc::Markup::Document
 
+  include Enumerable
+
   ##
   # The file this document was created from.  See also
   # RDoc::ClassModule#add_comment
@@ -72,6 +74,13 @@ class RDoc::Markup::Document
 
   def concat parts
     self.parts.concat parts
+  end
+
+  ##
+  # Enumerator for the parts of this document
+
+  def each &block
+    @parts.each(&block)
   end
 
   ##

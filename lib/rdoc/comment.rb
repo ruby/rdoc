@@ -23,6 +23,11 @@ class RDoc::Comment
   attr_accessor :location
 
   ##
+  # For duck-typing when merging classes at load time
+
+  alias file location # :nodoc:
+
+  ##
   # The text for this comment
 
   attr_reader :text
@@ -143,7 +148,9 @@ class RDoc::Comment
   end
 
   def inspect # :nodoc:
-    "#<%s:%x %s %p>" % [self.class, object_id, @location.absolute_name, @text]
+    location = @location ? @location.absolute_name : '(unknown)'
+
+    "#<%s:%x %s %p>" % [self.class, object_id, location, @text]
   end
 
   ##

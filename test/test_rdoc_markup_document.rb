@@ -51,6 +51,15 @@ class TestRDocMarkupDocument < RDoc::TestCase
     refute_empty @d
   end
 
+  def test_each
+    a = @RM::Document.new
+    b = @RM::Document.new(@RM::Paragraph.new('hi'))
+
+    @d.push a, b
+
+    assert_equal [a, b], @d.map { |sub_doc| sub_doc }
+  end
+
   def test_empty_eh
     assert_empty @d
 

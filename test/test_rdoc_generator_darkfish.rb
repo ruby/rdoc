@@ -87,7 +87,7 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
   end
 
   def test_generate_dry_run
-    @options.dry_run = true
+    @g.dry_run = true
     top_level = @store.add_file 'file.rb'
     top_level.add_class @klass.class, @klass.name
 
@@ -119,7 +119,7 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
     FileUtils.touch 'static/image.png'
 
     @options.static_path = [File.expand_path('static')]
-    @options.dry_run = true
+    @g.dry_run = true
 
     @g.generate
 
@@ -129,7 +129,7 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
   def test_template_for
     classpage = Pathname.new @options.template_dir + 'class.rhtml'
 
-    template = @g.send(:template_for, classpage)
+    template = @g.send(:template_for, classpage, true, RDoc::ERBIO)
     assert_kind_of RDoc::ERBIO, template
 
     assert_same template, @g.send(:template_for, classpage)
@@ -138,7 +138,7 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
   def test_template_for_dry_run
     classpage = Pathname.new @options.template_dir + 'class.rhtml'
 
-    template = @g.send(:template_for, classpage)
+    template = @g.send(:template_for, classpage, true, ERB)
     assert_kind_of ERB, template
 
     assert_same template, @g.send(:template_for, classpage)

@@ -135,10 +135,12 @@ module RDoc
 
   autoload :CrossReference, 'rdoc/cross_reference'
   autoload :ERBIO,          'rdoc/erbio'
+  autoload :ERBPartial,     'rdoc/erb_partial'
   autoload :Encoding,       'rdoc/encoding'
   autoload :Generator,      'rdoc/generator'
   autoload :Options,        'rdoc/options'
   autoload :Parser,         'rdoc/parser'
+  autoload :Servlet,        'rdoc/servlet'
   autoload :RI,             'rdoc/ri'
   autoload :Stats,          'rdoc/stats'
   autoload :Store,          'rdoc/store'
