@@ -3,6 +3,7 @@
 home :: https://github.com/rdoc/rdoc
 rdoc :: http://docs.seattlerb.org/rdoc
 bugs :: https://github.com/rdoc/rdoc/issues
+code quality :: {<img src="https://codeclimate.com/badge.png" />}[https://codeclimate.com/github/rdoc/rdoc]
 
 == Description
 
