@@ -108,10 +108,10 @@ class RDoc::Store
 
   def initialize path = nil, type = nil
     @dry_run  = false
-    @type     = type
+    @encoding = nil
     @path     = path
     @rdoc     = nil
-    @encoding = nil
+    @type     = type
 
     @cache = {
       :ancestors        => {},
@@ -119,6 +119,7 @@ class RDoc::Store
       :class_methods    => {},
       :encoding         => @encoding,
       :instance_methods => {},
+      :main             => nil,
       :modules          => [],
       :pages            => [],
     }
@@ -500,6 +501,7 @@ class RDoc::Store
     @encoding = load_enc unless @encoding
 
     @cache[:pages] ||= []
+    @cache[:main]  ||= nil
 
     @cache
   rescue Errno::ENOENT
@@ -554,6 +556,21 @@ class RDoc::Store
     error = MissingFileError.new(self, file, page_name)
     error.set_backtrace e.backtrace
     raise error
+  end
+
+  ##
+  # Gets the main page for this RDoc store.  This page is used as the root of
+  # the RDoc server.
+
+  def main
+    @cache[:main]
+  end
+
+  ##
+  # Sets the main page for this RDoc store.
+
+  def main= page
+    @cache[:main] = page
   end
 
   ##

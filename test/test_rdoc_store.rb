@@ -73,7 +73,7 @@ class TestRDocStore < XrefTestCase
   end
 
   def assert_cache imethods, cmethods, attrs, modules,
-                   ancestors = {}, pages = []
+                   ancestors = {}, pages = [], main = nil
     imethods ||= { 'Object' => %w[method method!] }
     cmethods ||= { 'Object' => %w[cmethod] }
     attrs    ||= { 'Object' => ['attr_accessor attr'] }
@@ -89,6 +89,7 @@ class TestRDocStore < XrefTestCase
       :instance_methods => imethods,
       :modules          => modules,
       :pages            => pages,
+      :main             => main,
     }
 
     @s.save_cache
@@ -294,6 +295,7 @@ class TestRDocStore < XrefTestCase
     cache = {
       :encoding => :encoding_value,
       :methods  => { "Object" => %w[Object#method] },
+      :main     => @page.full_name,
       :modules  => %w[Object],
       :pages    => [],
     }
@@ -309,6 +311,7 @@ class TestRDocStore < XrefTestCase
     assert_equal cache, @s.cache
 
     assert_equal :encoding_value, @s.encoding
+    assert_equal 'README.txt',    @s.main
   end
 
   def test_load_cache_encoding_differs
@@ -316,6 +319,7 @@ class TestRDocStore < XrefTestCase
 
     cache = {
       :encoding => Encoding::ISO_8859_1,
+      :main     => nil,
       :methods  => { "Object" => %w[Object#method] },
       :modules  => %w[Object],
       :pages    => [],
@@ -343,6 +347,7 @@ class TestRDocStore < XrefTestCase
       :class_methods    => {},
       :encoding         => nil,
       :instance_methods => {},
+      :main             => nil,
       :modules          => [],
       :pages            => [],
     }
@@ -361,6 +366,7 @@ class TestRDocStore < XrefTestCase
       :instance_methods => { "Object" => %w[Object#method] },
       :modules          => %w[Object],
       # no :pages
+      # no :main
     }
 
     Dir.mkdir @tmpdir
@@ -377,6 +383,7 @@ class TestRDocStore < XrefTestCase
       :class_methods    => {},
       :encoding         => :encoding_value,
       :instance_methods => { "Object" => %w[Object#method] },
+      :main             => nil,
       :modules          => %w[Object],
       :pages            => [],
     }
@@ -384,6 +391,7 @@ class TestRDocStore < XrefTestCase
     assert_equal expected, @s.cache
 
     assert_equal :encoding_value, @s.encoding
+    assert_nil                    @s.main
   end
 
   def test_load_class
@@ -404,6 +412,14 @@ class TestRDocStore < XrefTestCase
     @s.save_page @page
 
     assert_equal @page, @s.load_page('README.txt')
+  end
+
+  def test_main
+    assert_equal nil, @s.main
+
+    @s.main = 'README.txt'
+
+    assert_equal 'README.txt', @s.main
   end
 
   def test_method_file
@@ -458,6 +474,7 @@ class TestRDocStore < XrefTestCase
         'Object' => %w[attr method method!],
         'Object::SubClass' => %w[method],
       },
+      :main => nil,
       :modules => %w[Mod Object Object::SubClass],
       :encoding => nil,
       :pages => %w[README.txt],
@@ -479,6 +496,7 @@ class TestRDocStore < XrefTestCase
     @s.save_class @nest_klass
     @s.save_page @page
     @s.encoding = :encoding_value
+    @s.main = @page.full_name
 
     @s.save_cache
 
@@ -494,6 +512,7 @@ class TestRDocStore < XrefTestCase
         'Object' => %w[method method!],
         'Object::SubClass' => %w[method],
       },
+      :main => @page.full_name,
       :modules => %w[Object Object::SubClass],
       :encoding => :encoding_value,
       :pages => %w[README.txt],
