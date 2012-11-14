@@ -377,8 +377,7 @@ class RDoc::ClassModule < RDoc::Context
     end
 
     @sections = Hash[*sections.flatten]
-
-    add_section nil
+    @current_section = add_section nil
 
     @in_files = []
 

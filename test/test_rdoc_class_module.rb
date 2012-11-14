@@ -250,6 +250,7 @@ class TestRDocClassModule < XrefTestCase
     assert_nil                       loaded.file
     assert_empty                     loaded.in_files
     assert_nil                       loaded.parent
+    assert                           loaded.current_section
 
     expected = { nil => s0 }
     assert_equal expected, loaded.sections_hash
@@ -323,6 +324,7 @@ class TestRDocClassModule < XrefTestCase
     assert_equal 'Super',            loaded.superclass
     assert_empty                     loaded.in_files
     assert_nil                       loaded.parent
+    assert                           loaded.current_section
 
     assert_equal tl, loaded.attributes.first.file
     assert_equal tl, loaded.constants.first.file
@@ -406,6 +408,7 @@ class TestRDocClassModule < XrefTestCase
     assert_equal 'Super',            loaded.superclass
     assert_empty                     loaded.in_files
     assert_nil                       loaded.parent
+    assert                           loaded.current_section
 
     assert_equal tl, loaded.attributes. first.file
     assert_equal tl, loaded.constants.  first.file
@@ -500,6 +503,7 @@ class TestRDocClassModule < XrefTestCase
     assert_equal 'Klass',            loaded.name
     assert_equal 'Super',            loaded.superclass
     assert_equal 'Namespace',        loaded.parent.name
+    assert                           loaded.current_section
 
     expected = {
       nil       => s0,
