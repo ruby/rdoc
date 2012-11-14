@@ -396,6 +396,9 @@ class RDoc::ClassModule < RDoc::Context
   # The data in +class_module+ is preferred over the receiver.
 
   def merge class_module
+    @parent      = class_module.parent
+    @parent_name = class_module.parent_name
+
     other_document = parse class_module.comment_location
 
     if other_document then

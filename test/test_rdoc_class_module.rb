@@ -516,6 +516,22 @@ class TestRDocClassModule < XrefTestCase
     assert_equal tl, loaded.method_list.first.file
   end
 
+  def test_merge
+    tl = @store.add_file 'one.rb'
+    p1  = tl.add_class RDoc::NormalClass, 'Parent'
+    c1  = p1.add_class RDoc::NormalClass, 'Klass'
+
+    c2 = RDoc::NormalClass.new 'Klass'
+
+    c2.merge c1
+
+    assert_equal 'Parent', c1.parent_name, 'original parent name'
+    assert_equal 'Parent', c2.parent_name, 'merged parent name'
+
+    assert c1.current_section, 'original current_section'
+    assert c2.current_section, 'merged current_section'
+  end
+
   def test_merge_attributes
     tl1 = @store.add_file 'one.rb'
     tl2 = @store.add_file 'two.rb'
@@ -627,6 +643,7 @@ class TestRDocClassModule < XrefTestCase
     cm2.record_location tl2
 
     cm2 = Marshal.load Marshal.dump cm2
+    cm2.store = @store
 
     cm1.merge cm2
 
@@ -669,14 +686,16 @@ class TestRDocClassModule < XrefTestCase
     tl1 = @store.add_file 'one.rb'
     tl2 = @store.add_file 'two.rb'
 
-    cm1 = RDoc::ClassModule.new 'Klass'
+    cm1 = tl1.add_class RDoc::ClassModule, 'Klass'
 
     const = cm1.add_constant RDoc::Constant.new('C1', nil, 'one')
     const.record_location tl1
     const = cm1.add_constant RDoc::Constant.new('C3', nil, 'one')
     const.record_location tl1
 
-    cm2 = RDoc::ClassModule.new 'Klass'
+    store = RDoc::Store.new
+    tl = store.add_file 'one.rb'
+    cm2 = tl.add_class RDoc::ClassModule, 'Klass'
     cm2.instance_variable_set :@comment, @RM::Document.new
 
     const = cm2.add_constant RDoc::Constant.new('C2', nil, 'two')
@@ -702,14 +721,16 @@ class TestRDocClassModule < XrefTestCase
   def test_merge_constants_version_0
     tl1 = @store.add_file 'one.rb'
 
-    cm1 = RDoc::ClassModule.new 'Klass'
+    cm1 = tl1.add_class RDoc::ClassModule, 'Klass'
 
     const = cm1.add_constant RDoc::Constant.new('C1', nil, 'one')
     const.record_location tl1
     const = cm1.add_constant RDoc::Constant.new('C3', nil, 'one')
     const.record_location tl1
 
-    cm2 = RDoc::ClassModule.new 'Klass'
+    store = RDoc::Store.new
+    tl = store.add_file 'one.rb'
+    cm2 = tl.add_class RDoc::ClassModule, 'Klass'
     cm2.instance_variable_set :@comment, @RM::Document.new
 
     const = cm2.add_constant RDoc::Constant.new('C2', nil, 'two')
