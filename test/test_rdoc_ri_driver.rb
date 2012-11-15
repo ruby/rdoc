@@ -81,7 +81,7 @@ class TestRDocRIDriver < RDoc::TestCase
       @RM::Rule.new(1),
       @RM::Paragraph.new('Also found in:'),
       @RM::Verbatim.new("ruby core", "\n",
-                        "~/.ri", "\n"))
+                        "~/.rdoc", "\n"))
 
     assert_equal expected, out
   end
@@ -458,6 +458,14 @@ class TestRDocRIDriver < RDoc::TestCase
     assert_match %r%^= Inc$%, out
   end
 
+  def test_display_class_page
+    out, = capture_io do
+      @driver.display_class 'ruby:README'
+    end
+
+    assert_empty out
+  end
+
   def test_display_method
     util_store
 
@@ -546,6 +554,68 @@ Foo::Bar#bother
     assert_match %r%things.*stuff%, out
   end
 
+  def test_display_page
+    util_store
+
+    out, = capture_io do
+      @driver.display_page 'home:README.rdoc'
+    end
+
+    assert_match %r%= README%, out
+  end
+
+  def test_display_page_add_extension
+    util_store
+
+    out, = capture_io do
+      @driver.display_page 'home:README'
+    end
+
+    assert_match %r%= README%, out
+  end
+
+  def test_display_page_ambiguous
+    util_store
+
+    other = @store1.add_file 'README.md'
+    other.parser = RDoc::Parser::Simple
+    other.comment =
+      doc(
+        head(1, 'README.md'),
+        para('This is the other README'))
+
+    @store1.save_page other
+
+    out, = capture_io do
+      @driver.display_page 'home:README'
+    end
+
+    assert_match %r%= README pages in ~/\.rdoc%, out
+    assert_match %r%README\.rdoc%,               out
+    assert_match %r%README\.md%,                 out
+  end
+
+  def test_display_page_list
+    util_store
+
+    other = @store1.add_file 'OTHER.rdoc'
+    other.parser = RDoc::Parser::Simple
+    other.comment =
+      doc(
+        head(1, 'OTHER'),
+        para('This is OTHER'))
+
+    @store1.save_page other
+
+    out, = capture_io do
+      @driver.display_page_list @store1
+    end
+
+    assert_match %r%= Pages in ~/\.rdoc%, out
+    assert_match %r%README\.rdoc%,        out
+    assert_match %r%OTHER\.rdoc%,         out
+  end
+
   def test_expand_class
     util_store
 
@@ -569,6 +639,17 @@ Foo::Bar#bother
     end
 
     assert_equal 'Z', e.name
+
+    @driver.stores << RDoc::Store.new(nil, :system)
+
+    assert_equal 'ruby:README', @driver.expand_name('ruby:README')
+    assert_equal 'ruby:',       @driver.expand_name('ruby:')
+
+    e = assert_raises RDoc::RI::Driver::NotFoundError do
+      @driver.expand_name 'nonexistent_gem:'
+    end
+
+    assert_equal 'nonexistent_gem', e.name
   end
 
   def test_find_methods
@@ -632,6 +713,21 @@ Foo::Bar#bother
     sorted = @driver.filter_methods found, name
 
     assert_equal found, sorted
+  end
+
+  def test_find_store
+    @driver.stores << RDoc::Store.new(nil,              :system)
+    @driver.stores << RDoc::Store.new('doc/gem-1.0/ri', :gem)
+
+    assert_equal 'ruby',    @driver.find_store('ruby')
+    assert_equal 'gem-1.0', @driver.find_store('gem-1.0')
+    assert_equal 'gem-1.0', @driver.find_store('gem')
+
+    e = assert_raises RDoc::RI::Driver::NotFoundError do
+      @driver.find_store 'nonexistent'
+    end
+
+    assert_equal 'nonexistent', e.name
   end
 
   def test_formatter
@@ -837,6 +933,20 @@ Foo::Bar#bother
     assert_equal 'foo', meth,  '::foo method'
   end
 
+  def test_parse_name_page
+    klass, type, meth = @driver.parse_name 'ruby:README'
+
+    assert_equal 'ruby',   klass, 'ruby project'
+    assert_equal ':',      type,  'ruby type'
+    assert_equal 'README', meth,  'ruby page'
+
+    klass, type, meth = @driver.parse_name 'ruby:'
+
+    assert_equal 'ruby',   klass, 'ruby project'
+    assert_equal ':',      type,  'ruby type'
+    assert_equal nil,      meth,  'ruby page'
+  end
+
   def test_parse_name_single_class
     klass, type, meth = @driver.parse_name 'Foo'
 
@@ -1030,9 +1140,16 @@ Foo::Bar#bother
   end
 
   def util_store
-    @store1 = RDoc::RI::Store.new @home_ri
+    @store1 = RDoc::RI::Store.new @home_ri, :home
 
     @top_level = @store1.add_file 'file.rb'
+
+    @readme = @store1.add_file 'README.rdoc'
+    @readme.parser = RDoc::Parser::Simple
+    @readme.comment =
+      doc(
+        head(1, 'README'),
+        para('This is a README'))
 
     @cFoo = @top_level.add_class RDoc::NormalClass, 'Foo'
     @mExt = @top_level.add_module RDoc::NormalModule, 'Ext'
@@ -1089,6 +1206,8 @@ Foo::Bar#bother
 
     @store1.save_method @cFoo, @inherit
     @store1.save_method @cFoo, @overriden
+
+    @store1.save_page @readme
 
     @store1.save_cache
 

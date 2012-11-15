@@ -237,7 +237,7 @@ class TestRDocStore < XrefTestCase
     assert_equal "ruby site", @s.friendly_path
 
     @s.type = :home
-    assert_equal "~/.ri", @s.friendly_path
+    assert_equal "~/.rdoc", @s.friendly_path
 
     @s.type = :gem
     @s.path = "#{@tmpdir}/gem_repository/doc/gem_name-1.0/ri"
@@ -736,6 +736,28 @@ class TestRDocStore < XrefTestCase
     @s.save_page @top_level
 
     refute_file File.join(@tmpdir, 'page-file_rb.ri')
+  end
+
+  def test_source
+    @s.path = @tmpdir
+    @s.type = nil
+    assert_equal @s.path, @s.source
+
+    @s.type = :extra
+    assert_equal @s.path, @s.source
+
+    @s.type = :system
+    assert_equal "ruby", @s.source
+
+    @s.type = :site
+    assert_equal "site", @s.source
+
+    @s.type = :home
+    assert_equal "home", @s.source
+
+    @s.type = :gem
+    @s.path = "#{@tmpdir}/gem_repository/doc/gem_name-1.0/ri"
+    assert_equal "gem_name-1.0", @s.source
   end
 
 end

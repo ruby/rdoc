@@ -33,10 +33,21 @@
   * ri -f html is no longer supported.
 
 * Major enhancements
+  * ri can now show pages (README, etc.)
+
+      ri rdoc:README
+
+    Will show the README for the latest version of RDoc.  You can specify
+    exact gem versions such as "rdoc-4.0:README" or view pages from the
+    standard library documentation with "ruby:README".
+
+    RDoc 3 did not save pages in ri data so you will need to regenerate
+    documentation from your gems to use this feature.
+
   * Removed global state from RDoc.  RDoc::Store holds the documentation tree
     and connects the driver to the parsers and generator.  This also allows
-    documentation parsing and generation for multiple instances (and in
-    multiple threads), but the rdoc command-line tool does not support this.
+    documentation parsing and generation for multiple instances, but the rdoc
+    command-line tool does not support this.
 
     Due to this change RDoc::RDoc.current and RDoc::RDoc.reset no longer
     exist.

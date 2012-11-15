@@ -739,6 +739,11 @@ Options may also be set in the 'RI' environment variable.
   # be guessed, raises an error if +name+ couldn't be guessed.
 
   def display_name name
+    if name =~ /\w:(\w|$)/ then
+      display_page name
+      return true
+    end
+
     return true if display_class name
 
     display_method name if name =~ /::|#|\./
@@ -768,6 +773,61 @@ Options may also be set in the 'RI' environment variable.
 
       display_name name
     end
+  end
+
+  ##
+  # Outputs formatted RI data for page +name+.
+
+  def display_page name
+    store_name, page_name = name.split ':', 2
+
+    store = @stores.find { |store| store.source == store_name }
+
+    return display_page_list store if page_name.empty?
+
+    pages = store.cache[:pages]
+
+    unless pages.include? page_name then
+      found_names = pages.select do |name|
+        name =~ /^#{Regexp.escape page_name}\.[^.]+$/
+      end
+
+      if found_names.length > 1 then
+        return display_page_list store, found_names, page_name
+      end
+
+      page_name = found_names.first
+    end
+
+    page = store.load_page page_name
+
+    display page.comment
+  end
+
+  ##
+  # Outputs a formatted RI page list for the pages in +store+.
+
+  def display_page_list store, pages = store.cache[:pages], search = nil
+    out = RDoc::Markup::Document.new
+
+    title = if search then
+              "#{search} pages"
+            else
+              'Pages'
+            end
+
+    out << RDoc::Markup::Heading.new(1, "#{title} in #{store.friendly_path}")
+    out << RDoc::Markup::BlankLine.new
+
+    list = RDoc::Markup::List.new(:BULLET)
+
+    pages.each do |page|
+      list << RDoc::Markup::Paragraph.new(page)
+    end
+
+    out << list
+
+    display out
   end
 
   ##
@@ -802,7 +862,12 @@ Options may also be set in the 'RI' environment variable.
 
     return [selector, method].join if klass.empty?
 
-    "#{expand_class klass}#{selector}#{method}"
+    case selector
+    when ':' then
+      [find_store(klass),   selector, method]
+    else
+      [expand_class(klass), selector, method]
+    end.join
   end
 
   ##
@@ -864,6 +929,25 @@ Options may also be set in the 'RI' environment variable.
     end
 
     self
+  end
+
+  ##
+  # Finds a store that matches +name+ which can be the name of a gem, "ruby",
+  # "home" or "site".
+  #
+  # See also RDoc::Store#source
+
+  def find_store name
+    @stores.each do |store|
+      source = store.source
+
+      return source if source == name
+
+      return source if
+        store.type == :gem and source =~ /^#{Regexp.escape name}-\d/
+    end
+
+    raise RDoc::RI::Driver::NotFoundError, name
   end
 
   ##
@@ -1137,7 +1221,7 @@ Options may also be set in the 'RI' environment variable.
   # method
 
   def parse_name name
-    parts = name.split(/(::|#|\.)/)
+    parts = name.split(/(::?|#|\.)/)
 
     if parts.length == 1 then
       if parts.first =~ /^[a-z]|^([%&*+\/<>^`|~-]|\+@|-@|<<|<=>?|===?|=>|=~|>>|\[\]=?|~@)$/ then

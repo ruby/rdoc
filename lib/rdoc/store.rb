@@ -394,10 +394,9 @@ class RDoc::Store
   def friendly_path
     case type
     when :gem    then
-      sep = Regexp.union(*['/', File::ALT_SEPARATOR].compact)
-      @path =~ /#{sep}doc#{sep}(.*?)#{sep}ri$/
-      "gem #{$1}"
-    when :home   then '~/.ri'
+      parent = File.expand_path '..', @path
+      "gem #{File.basename parent}"
+    when :home   then '~/.rdoc'
     when :site   then 'ruby site'
     when :system then 'ruby core'
     else @path
@@ -805,6 +804,25 @@ class RDoc::Store
 
     open path, 'wb' do |io|
       io.write marshal
+    end
+  end
+
+  ##
+  # Source of the contents of this store.
+  #
+  # For a store from a gem the source is the gem name.  For a store from the
+  # home directory the source is "home".  For system ri store (the standard
+  # library documentation) the source is"ruby".  For a store from the site
+  # ri directory the store is "site".  For other stores the source is the
+  # #path.
+
+  def source
+    case type
+    when :gem    then File.basename File.expand_path '..', @path
+    when :home   then 'home'
+    when :site   then 'site'
+    when :system then 'ruby'
+    else @path
     end
   end
 
