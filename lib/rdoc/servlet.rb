@@ -149,6 +149,7 @@ exception:
     generator = RDoc::Generator::Darkfish.new nil, @options
 
     res.body = generator.generate_servlet_root installed
+
     res.content_type = 'text/html'
   end
 
