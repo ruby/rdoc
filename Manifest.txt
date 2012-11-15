@@ -26,6 +26,7 @@ lib/rdoc/context.rb
 lib/rdoc/context/section.rb
 lib/rdoc/cross_reference.rb
 lib/rdoc/encoding.rb
+lib/rdoc/erb_partial.rb
 lib/rdoc/erbio.rb
 lib/rdoc/extend.rb
 lib/rdoc/generator.rb
@@ -41,6 +42,7 @@ lib/rdoc/generator/template/darkfish/_sidebar_classes.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_extends.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_in_files.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_includes.rhtml
+lib/rdoc/generator/template/darkfish/_sidebar_installed.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_methods.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_navigation.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_pages.rhtml
@@ -80,6 +82,7 @@ lib/rdoc/generator/template/darkfish/js/jquery.js
 lib/rdoc/generator/template/darkfish/js/search.js
 lib/rdoc/generator/template/darkfish/page.rhtml
 lib/rdoc/generator/template/darkfish/rdoc.css
+lib/rdoc/generator/template/darkfish/servlet_root.rhtml
 lib/rdoc/generator/template/darkfish/table_of_contents.rhtml
 lib/rdoc/generator/template/json_index/js/navigation.js
 lib/rdoc/generator/template/json_index/js/searcher.js
@@ -157,6 +160,7 @@ lib/rdoc/ri/store.rb
 lib/rdoc/ruby_lex.rb
 lib/rdoc/ruby_token.rb
 lib/rdoc/rubygems_hook.rb
+lib/rdoc/servlet.rb
 lib/rdoc/single_class.rb
 lib/rdoc/stats.rb
 lib/rdoc/stats/normal.rb
@@ -263,6 +267,7 @@ test/test_rdoc_ri_driver.rb
 test/test_rdoc_ri_paths.rb
 test/test_rdoc_ruby_lex.rb
 test/test_rdoc_rubygems_hook.rb
+test/test_rdoc_servlet.rb
 test/test_rdoc_single_class.rb
 test/test_rdoc_stats.rb
 test/test_rdoc_store.rb
