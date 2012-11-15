@@ -781,7 +781,7 @@ Options may also be set in the 'RI' environment variable.
   def display_page name
     store_name, page_name = name.split ':', 2
 
-    store = @stores.find { |store| store.source == store_name }
+    store = @stores.find { |s| s.source == store_name }
 
     return display_page_list store if page_name.empty?
 
