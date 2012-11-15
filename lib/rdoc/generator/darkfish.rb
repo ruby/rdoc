@@ -302,7 +302,7 @@ class RDoc::Generator::Darkfish
 
     # suppress 1.9.3 warning
     asset_rel_prefix = asset_rel_prefix = rel_prefix + @asset_rel_path
-    svninfo          = svninfo          = get_svninfo current
+    svninfo          = svninfo          = get_svninfo(current)
 
     @title = "#{klass.type} #{klass.full_name} - #{@options.title}"
 
