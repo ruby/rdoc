@@ -246,24 +246,10 @@ class RDoc::Generator::Darkfish
   # Return a list of the documented modules sorted by salience first, then
   # by name.
 
-  def get_sorted_module_list(classes)
-    nscounts = classes.inject({}) do |counthash, klass|
-      top_level = klass.full_name.gsub(/::.*/, '')
-      counthash[top_level] ||= 0
-      counthash[top_level] += 1
-
-      counthash
-    end
-
-    # Sort based on how often the top level namespace occurs, and then on the
-    # name of the module -- this works for projects that put their stuff into
-    # a namespace, of course, but doesn't hurt if they don't.
-    classes.sort_by do |klass|
-      top_level = klass.full_name.gsub( /::.*/, '' )
-      [nscounts[top_level] * -1, klass.full_name]
-    end.select do |klass|
+  def get_sorted_module_list classes
+    classes.select do |klass|
       klass.display?
-    end
+    end.sort
   end
 
   ##

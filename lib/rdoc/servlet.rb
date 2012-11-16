@@ -172,9 +172,9 @@ exception:
     when 'table_of_contents.html' then
       res.body = generator.generate_table_of_contents
     when 'js/search_index.js' then
-      unless json_index = @cache[store][:json_index] then
-        json_index = JSON.dump generator.json_index.build_index
-        @cache[store][:json_index] = json_index
+      json_index = @cache[store].fetch :json_index do
+        @cache[store][:json_index] =
+          JSON.dump generator.json_index.build_index
       end
 
       res.content_type = 'application/javascript'
