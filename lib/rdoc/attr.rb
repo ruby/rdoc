@@ -111,6 +111,12 @@ class RDoc::Attr < RDoc::MethodAttr
   # * #parent_name
 
   def marshal_load array
+    @parent       = nil
+    @parent_name  = nil
+    @parent_class = nil
+    @section      = nil
+    @file         = nil
+
     version        = array[0]
     @name          = array[1]
     @full_name     = array[2]

@@ -141,7 +141,7 @@ class TestRDocMethodAttr < XrefTestCase
   end
 
   def test_section
-    section = @c1.sections.first
+    section = @c1.sections.find { |s| s.title.nil? }
 
     assert_equal section, @c1_m.section
 
