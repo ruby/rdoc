@@ -102,13 +102,16 @@ class RDoc::Attr < RDoc::MethodAttr
   # * #parent_name
 
   def marshal_load array
-    version     = array[0]
-    @name       = array[1]
-    @full_name  = array[2]
-    @rw         = array[3]
-    @visibility = array[4]
-    @comment    = array[5]
-    @singleton  = array[6] || false # MARSHAL_VERSION == 0
+    version       = array[0]
+    @name         = array[1]
+    @full_name    = array[2]
+    @rw           = array[3]
+    @visibility   = array[4]
+    @comment      = array[5]
+    @singleton    = array[6] || false # MARSHAL_VERSION == 0
+    @parent       = nil
+    @parent_name  = nil
+    @parent_class = nil
 
     @file = RDoc::TopLevel.new array[7] if version > 1
 

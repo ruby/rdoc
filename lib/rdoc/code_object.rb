@@ -269,7 +269,8 @@ class RDoc::CodeObject
   end
 
   ##
-  # Our parent CodeObject
+  # Our parent CodeObject.  The parent may be missing for classes loaded from
+  # legacy RI data stores.
 
   def parent
     return @parent if @parent
