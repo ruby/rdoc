@@ -532,6 +532,9 @@ class RDoc::Store
     open file, 'rb' do |io|
       obj = Marshal.load io.read
       obj.store = self
+      obj.parent =
+        find_class_or_module(klass_name) || load_class(klass_name) unless
+          obj.parent
       obj
     end
   rescue Errno::ENOENT => e
