@@ -232,12 +232,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     params
   end
 
-  def section # :nodoc:
-    return @section if @section
-
-    @section = parent.add_section @section_title if parent
-  end
-
   ##
   # Sets the store for this method and its referenced code objects.
 

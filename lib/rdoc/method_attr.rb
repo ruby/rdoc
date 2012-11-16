@@ -280,6 +280,18 @@ class RDoc::MethodAttr < RDoc::CodeObject
     @full_name ||= "#{parent_name}#{pretty_name}"
   end
 
+  def inspect # :nodoc:
+    alias_for = @is_alias_for ? " (alias for #{@is_alias_for.name})" : nil
+    visibility = self.visibility
+    visibility = "forced #{visibility}" if force_documentation
+    "#<%s:0x%x %s (%s)%s>" % [
+      self.class, object_id,
+      full_name,
+      visibility,
+      alias_for,
+    ]
+  end
+
   ##
   # '::' for a class method/attribute, '#' for an instance method.
 
@@ -353,16 +365,10 @@ class RDoc::MethodAttr < RDoc::CodeObject
     end
   end
 
-  def inspect # :nodoc:
-    alias_for = @is_alias_for ? " (alias for #{@is_alias_for.name})" : nil
-    visibility = self.visibility
-    visibility = "forced #{visibility}" if force_documentation
-    "#<%s:0x%x %s (%s)%s>" % [
-      self.class, object_id,
-      full_name,
-      visibility,
-      alias_for,
-    ]
+  def section # :nodoc:
+    return @section if @section
+
+    @section = parent.add_section @section_title if parent
   end
 
   ##
