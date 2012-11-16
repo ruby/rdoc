@@ -856,7 +856,7 @@ class RDoc::Context < RDoc::CodeObject
       suffix = $2
       top = $1
       searched = self
-      loop do
+      while searched do
         mod = searched.find_module_named(top)
         break unless mod
         result = @store.find_class_or_module "#{mod.full_name}::#{suffix}"
@@ -865,11 +865,10 @@ class RDoc::Context < RDoc::CodeObject
       end
     else
       searched = self
-      loop do
+      while searched do
         result = searched.find_module_named(symbol)
         break if result || searched.is_a?(RDoc::TopLevel)
         searched = searched.parent
-        break unless searched
       end
     end
 

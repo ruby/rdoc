@@ -484,6 +484,16 @@ class TestRDocContext < XrefTestCase
     assert_equal @c1__m, @c1.find_symbol('::m')
   end
 
+  def test_find_symbol_module
+    assert_nil @m1_m2.find_symbol_module 'N'
+    assert_nil @m1_m2.find_symbol_module 'M2::M1'
+
+    @m1_m2.parent = nil # loaded from legacy ri store
+
+    assert_nil @m1_m2.find_symbol_module 'N'
+    assert_nil @m1_m2.find_symbol_module 'M2::M1'
+  end
+
   def test_fully_documented_eh
     context = RDoc::Context.new
 
