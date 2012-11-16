@@ -197,7 +197,6 @@ class RDoc::Generator::Darkfish
   def generate
     setup
 
-    # Now actually write the output
     write_style_sheet
     generate_index
     generate_class_files
