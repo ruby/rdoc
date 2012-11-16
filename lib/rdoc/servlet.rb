@@ -14,6 +14,7 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
   def initialize server, stores
     super server
 
+    @cache   = Hash.new { |hash, store| hash[store] = {} }
     @stores  = stores
     @options = RDoc::Options.new
     @options.op_dir = '.'
@@ -171,7 +172,10 @@ exception:
     when 'table_of_contents.html' then
       res.body = generator.generate_table_of_contents
     when 'js/search_index.js' then
-      json_index = JSON.dump generator.json_index.build_index
+      unless json_index = @cache[store][:json_index] then
+        json_index = JSON.dump generator.json_index.build_index
+        @cache[store][:json_index] = json_index
+      end
 
       res.content_type = 'application/javascript'
       res.body = "var search_data = #{json_index}"
@@ -182,6 +186,8 @@ exception:
 
       res.body = generator.generate_class klass
     end
+
+    res.content_type ||= 'text/html'
   end
 
 end
