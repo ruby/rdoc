@@ -170,6 +170,11 @@ exception:
       res.body = generator.generate_index
     when 'table_of_contents.html' then
       res.body = generator.generate_table_of_contents
+    when 'js/search_index.js' then
+      json_index = JSON.dump generator.json_index.build_index
+
+      res.content_type = 'application/javascript'
+      res.body = "var search_data = #{json_index}"
     else
       name = path.sub(/.html$/, '').gsub '/', '::'
 

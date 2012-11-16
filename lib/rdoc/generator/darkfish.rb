@@ -97,6 +97,11 @@ class RDoc::Generator::Darkfish
   attr_accessor :file_output
 
   ##
+  # The JSON index generator for this Darkfish generator
+
+  attr_reader :json_index
+
+  ##
   # The RDoc::Store that is the source of the generated content
 
   attr_reader :store
@@ -274,8 +279,11 @@ class RDoc::Generator::Darkfish
     debug_msg "Rendering the index page..."
 
     out_file = @base_dir + @options.op_dir + 'index.html'
-    # suppress 1.9.3 warning
     rel_prefix = @outputdir.relative_path_from out_file.dirname
+    search_index_rel_prefix = rel_prefix
+    search_index_rel_prefix += @asset_rel_path if @file_output
+
+    # suppress 1.9.3 warning
     asset_rel_prefix = asset_rel_prefix = rel_prefix + @asset_rel_path
 
     @title = @options.title
@@ -299,6 +307,8 @@ class RDoc::Generator::Darkfish
     debug_msg "  working on %s (%s)" % [klass.full_name, klass.path]
     out_file   = @outputdir + klass.path
     rel_prefix = @outputdir.relative_path_from out_file.dirname
+    search_index_rel_prefix = rel_prefix
+    search_index_rel_prefix += @asset_rel_path if @file_output
 
     # suppress 1.9.3 warning
     asset_rel_prefix = asset_rel_prefix = rel_prefix + @asset_rel_path
@@ -363,8 +373,11 @@ class RDoc::Generator::Darkfish
       template_file = nil
       out_file = @outputdir + file.path
       debug_msg "  working on %s (%s)" % [file.full_name, out_file]
-      # suppress 1.9.3 warning
       rel_prefix = @outputdir.relative_path_from out_file.dirname
+      search_index_rel_prefix = rel_prefix
+      search_index_rel_prefix += @asset_rel_path if @file_output
+
+      # suppress 1.9.3 warning
       asset_rel_prefix = asset_rel_prefix = rel_prefix + @asset_rel_path
 
       unless filepage_file then
@@ -404,8 +417,11 @@ class RDoc::Generator::Darkfish
     debug_msg "Rendering the Table of Contents..."
 
     out_file = @outputdir + 'table_of_contents.html'
-    # suppress 1.9.3 warning
     rel_prefix = @outputdir.relative_path_from out_file.dirname
+    search_index_rel_prefix = rel_prefix
+    search_index_rel_prefix += @asset_rel_path if @file_output
+
+    # suppress 1.9.3 warning
     asset_rel_prefix = asset_rel_prefix = rel_prefix + @asset_rel_path
 
     @title = "Table of Contents - #{@options.title}"
@@ -430,8 +446,11 @@ class RDoc::Generator::Darkfish
 
     debug_msg "Rendering the servlet root page..."
 
-    # suppress 1.9.3 warning
     rel_prefix = rel_prefix = ''
+    search_index_rel_prefix = rel_prefix
+    search_index_rel_prefix += @asset_rel_path if @file_output
+
+    # suppress 1.9.3 warning
     asset_rel_prefix = asset_rel_prefix = ''
 
     @title = "RDoc Documentation"

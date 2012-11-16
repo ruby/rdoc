@@ -100,6 +100,19 @@ class RDoc::Generator::JsonIndex
   end
 
   ##
+  # Builds the JSON index as a Hash.
+
+  def build_index
+    reset @store.all_files.sort, @store.all_classes_and_modules.sort
+
+    index_classes
+    index_methods
+    index_pages
+
+    { :index => @index }
+  end
+
+  ##
   # Output progress information if debugging is enabled
 
   def debug_msg *msg
@@ -108,19 +121,13 @@ class RDoc::Generator::JsonIndex
   end
 
   ##
-  # Creates the JSON index.
+  # Writes the JSON index to disk
 
   def generate
     debug_msg "Generating JSON index"
 
-    reset @store.all_files.sort, @store.all_classes_and_modules.sort
-
-    index_classes
-    index_methods
-    index_pages
-
     debug_msg "  writing search index to %s" % SEARCH_INDEX_FILE
-    data = { :index => @index }
+    data = build_index
 
     return if @options.dry_run
 

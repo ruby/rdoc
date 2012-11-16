@@ -68,6 +68,28 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
     s.chomp
   end
 
+  def test_build_index
+    index = @g.build_index
+
+    expected = {
+      :index => {
+        :searchIndex     => %w[c d meth() meth() page],
+        :longSearchIndex => %w[c c::d c#meth() c::d#meth()],
+        :info            => [
+          @klass.search_record[2..-1],
+          @nest_klass.search_record[2..-1],
+          @meth.search_record[2..-1],
+          @nest_meth.search_record[2..-1],
+          @page.search_record[2..-1],
+        ],
+      },
+    }
+
+    expected[:index][:longSearchIndex] << ''
+
+    assert_equal expected, index
+  end
+
   def test_class_dir
     assert_equal @darkfish.class_dir, @g.class_dir
   end
