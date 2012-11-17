@@ -282,6 +282,9 @@ class RDoc::Generator::Darkfish
     raise error
   end
 
+  ##
+  # Generates a class file for +klass+
+
   def generate_class klass, template_file = nil
     setup
 
@@ -385,6 +388,35 @@ class RDoc::Generator::Darkfish
   rescue => e
     error =
       RDoc::Error.new "error generating #{out_file}: #{e.message} (#{e.class})"
+    error.set_backtrace e.backtrace
+
+    raise error
+  end
+
+  ##
+  # Generates the 404 page for the RDoc servlet
+
+  def generate_servlet_not_found path
+    setup
+
+    template_file = @template_dir + 'servlet_not_found.rhtml'
+    return unless template_file.exist?
+
+    debug_msg "Rendering the servlet root page..."
+
+    rel_prefix = rel_prefix = ''
+    search_index_rel_prefix = rel_prefix
+    search_index_rel_prefix += @asset_rel_path if @file_output
+
+    # suppress 1.9.3 warning
+    asset_rel_prefix = asset_rel_prefix = ''
+
+    @title = 'Not Found'
+
+    render_template template_file do |io| binding end
+  rescue => e
+    error = RDoc::Error.new \
+      "error generating servlet_root: #{e.message} (#{e.class})"
     error.set_backtrace e.backtrace
 
     raise error

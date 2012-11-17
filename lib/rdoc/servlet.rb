@@ -148,6 +148,11 @@ exception:
     end
   end
 
+  def not_found generator, req, res
+    res.body = generator.generate_servlet_not_found req.path
+    res.status = 404
+  end
+
   def root req, res
     installed = RDoc::RI::Paths.each.map do |path, type|
       store = RDoc::Store.new path, type
@@ -206,9 +211,12 @@ exception:
 
       klass = store.find_class_or_module name
 
+      return not_found generator, req, res unless klass
+
       res.body = generator.generate_class klass
     end
 
+  ensure
     res.content_type ||= 'text/html'
   end
 
