@@ -440,22 +440,19 @@ class RDoc::Store
       mod.attributes.replace loaded_attributes
     end
 
-    # This is really slow
-    module_names.each do |module_name|
-      mod = find_class_or_module module_name
+    all_classes_and_modules.each do |mod|
+      descendent_re = /^#{mod.full_name}::[^:]+$/
 
-      mod.parent = find_class_or_module mod.parent_name
+      module_names.each do |name|
+        next unless name =~ descendent_re
 
-      module_names.select do |name|
-        name =~ /^#{module_name}::[^:]+$/
-      end.each do |descendent_name|
-        descendent = find_class_or_module descendent_name
+        descendent = find_class_or_module name
 
         case descendent
         when RDoc::NormalClass then
-          mod.classes_hash[descendent_name] = descendent
+          mod.classes_hash[name] = descendent
         when RDoc::NormalModule then
-          mod.modules_hash[descendent_name] = descendent
+          mod.modules_hash[name] = descendent
         end
       end
     end
