@@ -1,4 +1,5 @@
 require 'rdoc'
+require 'time'
 require 'webrick'
 
 class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
@@ -41,6 +42,8 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
 
     asset_path = File.join asset_dir, req.path
 
+    if_modified_since req, res, asset_path
+
     res.body = File.read asset_path
 
     res.content_type = case req.path
@@ -62,6 +65,8 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
     else
       show_documentation req, res
     end
+  rescue WEBrick::HTTPStatus::Status
+    raise
   rescue => e
     error e, req, res
   end
@@ -128,6 +133,21 @@ exception:
     BODY
   end
 
+  def if_modified_since req, res, path = nil
+    last_modified = File.stat(path).mtime if path
+
+    res['last-modified'] = last_modified.httpdate
+
+    return unless ims = req['if-modified-since']
+
+    ims = Time.parse ims
+
+    unless ims < last_modified then
+      res.body = ''
+      raise WEBrick::HTTPStatus::NotModified
+    end
+  end
+
   def root req, res
     installed = RDoc::RI::Paths.each.map do |path, type|
       store = RDoc::Store.new path, type
@@ -156,6 +176,8 @@ exception:
 
   def show_documentation req, res
     store, path = documentation_source req.path
+
+    if_modified_since req, res, store.cache_path
 
     generator = RDoc::Generator::Darkfish.new store, @options
     generator.file_output = false
