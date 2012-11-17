@@ -703,9 +703,9 @@ class RDoc::Context < RDoc::CodeObject
     return enum_for __method__ unless block_given?
 
     constants  = @constants.group_by  do |constant|  constant.section end
-    constants.default = []
-
     attributes = @attributes.group_by do |attribute| attribute.section end
+
+    constants.default  = []
     attributes.default = []
 
     sort_sections.each do |section|

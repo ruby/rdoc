@@ -58,19 +58,24 @@ class RDoc::NormalClass < RDoc::ClassModule
       q.seplist @includes do |inc| q.pp inc end
 
       q.breakable
+      q.text "constants:"
+      q.breakable
+      q.seplist @constants do |const| q.pp const end
+
+      q.breakable
       q.text "attributes:"
       q.breakable
-      q.seplist @attributes do |inc| q.pp inc end
+      q.seplist @attributes do |attr| q.pp attr end
 
       q.breakable
       q.text "methods:"
       q.breakable
-      q.seplist @method_list do |inc| q.pp inc end
+      q.seplist @method_list do |meth| q.pp meth end
 
       q.breakable
       q.text "aliases:"
       q.breakable
-      q.seplist @aliases do |inc| q.pp inc end
+      q.seplist @aliases do |aliaz| q.pp aliaz end
 
       q.breakable
       q.text "comment:"

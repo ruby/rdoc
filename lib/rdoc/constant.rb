@@ -57,6 +57,13 @@ class RDoc::Constant < RDoc::CodeObject
     super or is_alias_for && is_alias_for.documented?
   end
 
+  ##
+  # Full constant name including namespace
+
+  def full_name
+    @full_name ||= "#{parent_name}::#{@name}"
+  end
+
   def inspect # :nodoc:
     "#<%s:0x%x %s::%s>" % [
       self.class, object_id,
@@ -69,6 +76,17 @@ class RDoc::Constant < RDoc::CodeObject
 
   def path
     "#{@parent.path}##{@name}"
+  end
+
+  def pretty_print q # :nodoc:
+    q.group 2, "[#{self.class.name} #{full_name}", "]" do
+      unless comment.empty? then
+        q.breakable
+        q.text "comment:"
+        q.breakable
+        q.pp @comment
+      end
+    end
   end
 
   ##
