@@ -62,7 +62,7 @@ class RDoc::CodeObject
 
 end
 
-class RDoc::AnyMethod
+class RDoc::MethodAttr
 
   @add_line_numbers = false
 
