@@ -423,7 +423,7 @@ class RDoc::Store
     load_cache
 
     module_names.each do |module_name|
-      mod = load_class module_name
+      mod = find_class_or_module(module_name) || load_class(module_name)
 
       # load method documentation since the loaded class/module does not have
       # it
@@ -438,13 +438,6 @@ class RDoc::Store
       end
 
       mod.attributes.replace loaded_attributes
-
-      case mod
-      when RDoc::NormalClass then
-        @classes_hash[module_name] = mod
-      when RDoc::NormalModule then
-        @modules_hash[module_name] = mod
-      end
     end
 
     # This is really slow
@@ -512,10 +505,17 @@ class RDoc::Store
   def load_class klass_name
     file = class_file klass_name
 
-    open file, 'rb' do |io|
-      obj = Marshal.load io.read
-      obj.store = self
-      obj
+    obj = open file, 'rb' do |io|
+      Marshal.load io.read
+    end
+
+    obj.store = self
+
+    case obj
+    when RDoc::NormalClass then
+      @classes_hash[klass_name] = obj
+    when RDoc::NormalModule then
+      @modules_hash[klass_name] = obj
     end
   rescue Errno::ENOENT => e
     error = MissingFileError.new(self, file, klass_name)

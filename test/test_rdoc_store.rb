@@ -396,8 +396,11 @@ class TestRDocStore < XrefTestCase
 
   def test_load_class
     @s.save_class @klass
+    @s.classes_hash.clear
 
     assert_equal @klass, @s.load_class('Object')
+
+    assert_includes @s.classes_hash, 'Object'
   end
 
   def test_load_method
