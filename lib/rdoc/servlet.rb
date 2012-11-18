@@ -5,18 +5,23 @@ require 'webrick'
 class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
 
   @server_stores = Hash.new { |hash, server| hash[server] = {} }
+  @cache         = Hash.new { |hash, store|  hash[store]  = {} }
+
+  attr_reader :asset_dirs
+
+  attr_reader :options
 
   def self.get_instance server, *options
     stores = @server_stores[server]
 
-    new server, stores, *options
+    new server, stores, @cache, *options
   end
 
-  def initialize server, stores
+  def initialize server, stores, cache
     super server
 
-    @cache   = Hash.new { |hash, store| hash[store] = {} }
     @stores  = stores
+    @cache   = cache
     @options = RDoc::Options.new
     @options.op_dir = '.'
 
@@ -37,8 +42,8 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
     }
   end
 
-  def asset generator, req, res
-    asset_dir = @asset_dirs[generator]
+  def asset generator_name, req, res
+    asset_dir = @asset_dirs[generator_name]
 
     asset_path = File.join asset_dir, req.path
 
@@ -73,27 +78,35 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
     error e, req, res
   end
 
+  def documentation_page store, generator, path, req, res
+    name = path.sub(/.html$/, '').gsub '/', '::'
+
+    if klass = store.find_class_or_module(name) then
+      res.body = generator.generate_class klass
+    elsif page = store.find_text_page(name.sub(/_([^_]*)$/, '.\1')) then
+      res.body = generator.generate_page page
+    else
+      not_found generator, req, res
+    end
+  end
+
+  def documentation_search store, generator, req, res
+    json_index = @cache[store].fetch :json_index do
+      @cache[store][:json_index] =
+        JSON.dump generator.json_index.build_index
+    end
+
+    res.content_type = 'application/javascript'
+    res.body = "var search_data = #{json_index}"
+  end
+
   def documentation_source path
     _, source_name, path = path.split '/', 3
 
     store = @stores[source_name]
     return store, path if store
 
-    store = case source_name
-            when 'ruby' then
-              RDoc::Store.new RDoc::RI::Paths.system_dir, :system
-            else
-              ri_dir, type = ri_paths.find do |dir, dir_type|
-                next unless dir_type == :gem
-
-                source_name == dir[%r%/([^/]*)/ri$%, 1]
-              end
-
-              raise "could not find ri documentation for #{source_name}" unless
-                ri_dir
-
-              RDoc::Store.new ri_dir, type
-            end
+    store = store_for source_name
 
     store.load_all
 
@@ -135,6 +148,22 @@ exception:
     BODY
   end
 
+  def generator_for store
+    generator = RDoc::Generator::Darkfish.new store, @options
+    generator.file_output = false
+    generator.asset_rel_path = '..'
+
+    rdoc = RDoc::RDoc.new
+    rdoc.store     = store
+    rdoc.generator = generator
+    rdoc.options   = @options
+
+    @options.main_page = store.main
+    @options.title     = store.title
+
+    generator
+  end
+
   def if_modified_since req, res, path = nil
     last_modified = File.stat(path).mtime if path
 
@@ -166,7 +195,7 @@ exception:
       when :home then
         ['Home Documentation', 'home/', exists, type, path]
       end
-    end.compact
+    end
   end
 
   def not_found generator, req, res
@@ -174,8 +203,8 @@ exception:
     res.status = 404
   end
 
-  def ri_paths(&block)
-    RDoc::RI::Paths.each(true, true, true, :all, &block)
+  def ri_paths &block
+    RDoc::RI::Paths.each true, true, true, :all, &block
   end
 
   def root req, res
@@ -231,17 +260,7 @@ exception:
 
     if_modified_since req, res, store.cache_path
 
-    generator = RDoc::Generator::Darkfish.new store, @options
-    generator.file_output = false
-    generator.asset_rel_path = '..'
-
-    rdoc = RDoc::RDoc.new
-    rdoc.store     = store
-    rdoc.generator = generator
-    rdoc.options   = @options
-
-    @options.main_page = store.main
-    @options.title     = store.title
+    generator = generator_for store
 
     case path
     when nil, '', 'index.html' then
@@ -249,28 +268,30 @@ exception:
     when 'table_of_contents.html' then
       res.body = generator.generate_table_of_contents
     when 'js/search_index.js' then
-      json_index = @cache[store].fetch :json_index do
-        @cache[store][:json_index] =
-          JSON.dump generator.json_index.build_index
-      end
-
-      res.content_type = 'application/javascript'
-      res.body = "var search_data = #{json_index}"
+      documentation_search store, generator, req, res
     else
-      name = path.sub(/.html$/, '').gsub '/', '::'
-
-      if klass = store.find_class_or_module(name) then
-        res.body = generator.generate_class klass
-      elsif page = store.find_text_page(name.sub(/_([^_]*)$/, '.\1')) then
-        res.body = generator.generate_page page
-      else
-        not_found generator, req, res
-      end
-
+      documentation_page store, generator, path, req, res
     end
-
   ensure
     res.content_type ||= 'text/html'
+  end
+
+  def store_for source_name
+    case source_name
+    when 'ruby' then
+      RDoc::Store.new RDoc::RI::Paths.system_dir, :system
+    else
+      ri_dir, type = ri_paths.find do |dir, dir_type|
+        next unless dir_type == :gem
+
+        source_name == dir[%r%/([^/]*)/ri$%, 1]
+      end
+
+      raise "could not find ri documentation for #{source_name}" unless
+        ri_dir
+
+      RDoc::Store.new ri_dir, type
+    end
   end
 
 end
