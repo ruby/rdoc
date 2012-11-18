@@ -83,7 +83,7 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
             when 'ruby' then
               RDoc::Store.new RDoc::RI::Paths.system_dir, :system
             else
-              ri_dir, type = RDoc::RI::Paths.each.find do |dir, dir_type|
+              ri_dir, type = ri_paths.find do |dir, dir_type|
                 next unless dir_type == :gem
 
                 source_name == dir[%r%/([^/]*)/ri$%, 1]
@@ -151,7 +151,7 @@ exception:
   end
 
   def installed_docs
-    RDoc::RI::Paths.each.map do |path, type|
+    ri_paths.map do |path, type|
       store = RDoc::Store.new path, type
 
       next unless File.exist? store.cache_path
@@ -173,6 +173,10 @@ exception:
   def not_found generator, req, res
     res.body = generator.generate_servlet_not_found req.path
     res.status = 404
+  end
+
+  def ri_paths(&block)
+    RDoc::RI::Paths.each(true, true, true, :all, &block)
   end
 
   def root req, res

@@ -30,8 +30,6 @@ module RDoc::RI::Paths
             end
   #:startdoc:
 
-  @gemdirs = nil
-
   ##
   # Iterates over each selected path yielding the directory and type.
   #
@@ -45,8 +43,9 @@ module RDoc::RI::Paths
   # :extra:: ri data directory from the command line.  Yielded for each
   #          entry in +extra_dirs+
 
-  def self.each system = true, site = true, home = true, gems = true, *extra_dirs # :yields: directory, type
-    return enum_for __method__ unless block_given?
+  def self.each system = true, site = true, home = true, gems = :latest, *extra_dirs # :yields: directory, type
+    return enum_for __method__, system, site, home, gems, *extra_dirs unless
+      block_given?
 
     extra_dirs.each do |dir|
       yield dir, :extra
@@ -56,7 +55,7 @@ module RDoc::RI::Paths
     yield site_dir,    :site   if site
     yield home_dir,    :home   if home and HOMEDIR
 
-    gemdirs.each do |dir|
+    gemdirs(gems).each do |dir|
       yield dir, :gem
     end if gems
 
@@ -75,36 +74,53 @@ module RDoc::RI::Paths
   end
 
   ##
-  # The latest installed gems' ri directories
+  # The latest installed gems' ri directories.  +filter+ can be :all or
+  # :latest.
 
-  def self.gemdirs
-    return @gemdirs if @gemdirs
-
+  def self.gemdirs filter = :latest, gem_path = Gem.path
     require 'rubygems' unless defined?(Gem)
 
-    # HACK dup'd from Gem.latest_partials and friends
-    all_paths = []
-
-    all_paths = Gem.path.map do |dir|
+    all_paths = gem_path.map do |dir|
       Dir[File.join(dir, 'doc', '*', 'ri')]
     end.flatten
 
     ri_paths = {}
 
-    all_paths.each do |dir|
-      base = File.basename File.dirname(dir)
-      if base =~ /(.*)-((\d+\.)*\d+)/ then
-        name, version = $1, $2
-        ver = Gem::Version.new version
-        if ri_paths[name].nil? or ver > ri_paths[name][0] then
-          ri_paths[name] = [ver, dir]
+    all = all_paths.map do |dir|
+      base = File.basename File.dirname dir
+
+      next unless base =~ /(.*)-((\d+\.)*\d+)/
+
+      [dir, $1, Gem::Version.new($2)]
+    end.compact
+
+    if filter == :all then
+      gemdirs = []
+
+      all.group_by do |_, name, _|
+        name
+      end.sort_by do |group, _|
+        group
+      end.map do |group, items|
+        items.sort_by do |_, _, version|
+          version
+        end.reverse_each do |dir,|
+          gemdirs << dir
         end
+      end
+
+      return gemdirs
+    end
+
+    all.each do |dir, name, ver|
+      if ri_paths[name].nil? or ver > ri_paths[name].first then
+        ri_paths[name] = [ver, name, dir]
       end
     end
 
-    @gemdirs = ri_paths.map { |k,v| v.last }.sort
+    ri_paths.sort_by { |_, (_, name, _)| name }.map { |k, v| v.last }
   rescue LoadError
-    @gemdirs = []
+    []
   end
 
   ##
@@ -124,7 +140,7 @@ module RDoc::RI::Paths
   #
   # See also ::each
 
-  def self.path(system = true, site = true, home = true, gems = true, *extra_dirs)
+  def self.path(system = true, site = true, home = true, gems = :latest, *extra_dirs)
     path = raw_path system, site, home, gems, *extra_dirs
 
     path.select { |directory| File.directory? directory }
