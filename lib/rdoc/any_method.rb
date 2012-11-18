@@ -249,7 +249,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     return @superclass_method if @superclass_method
 
     parent.each_ancestor do |ancestor|
-      if method = ancestor.method_list.find { |m| m == self } then
+      if method = ancestor.method_list.find { |m| m.name == @name } then
         @superclass_method = method
         break
       end

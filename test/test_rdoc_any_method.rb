@@ -86,7 +86,7 @@ method(a, b) { |c, d| ... }
 
     assert_equal m, loaded
 
-    assert_equal [al_m],         loaded.aliases
+    assert_equal [al_m.name],    loaded.aliases.map { |alas| alas.name }
     assert_equal 'some_block',   loaded.block_params
     assert_equal 'call_seq',     loaded.call_seq
     assert_equal comment,        loaded.comment
@@ -151,7 +151,7 @@ method(a, b) { |c, d| ... }
 
     assert_equal m, loaded
 
-    assert_equal [al_m],         loaded.aliases
+    assert_equal [al_m.name],    loaded.aliases.map { |alas| alas.name }
     assert_equal 'some_block',   loaded.block_params
     assert_equal 'call_seq',     loaded.call_seq
     assert_equal comment,        loaded.comment

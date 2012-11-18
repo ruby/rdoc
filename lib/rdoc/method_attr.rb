@@ -98,7 +98,12 @@ class RDoc::MethodAttr < RDoc::CodeObject
   # Order by #singleton then #name
 
   def <=>(other)
-    [@singleton ? 0 : 1, name] <=> [other.singleton ? 0 : 1, other.name]
+    [     @singleton ? 0 : 1,       name] <=>
+    [other.singleton ? 0 : 1, other.name]
+  end
+
+  def == other # :nodoc:
+    super or self.class == other.class and full_name == other.full_name
   end
 
   ##

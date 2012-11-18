@@ -33,6 +33,11 @@ class TestRDocStore < XrefTestCase
     @meth_bang = RDoc::AnyMethod.new nil, 'method!'
     @meth_bang.record_location @top_level
 
+    @meth_bang_alias = RDoc::Alias.new nil, 'method!', 'method_bang', ''
+    @meth_bang_alias.record_location @top_level
+
+    @meth_bang.add_alias @meth_bang_alias, @klass
+
     @attr_comment = RDoc::Comment.new 'attribute comment'
     @attr_comment.location = @top_level
 
@@ -74,7 +79,7 @@ class TestRDocStore < XrefTestCase
 
   def assert_cache imethods, cmethods, attrs, modules,
                    ancestors = {}, pages = [], main = nil, title = nil
-    imethods ||= { 'Object' => %w[method method!] }
+    imethods ||= { 'Object' => %w[method method! method_bang] }
     cmethods ||= { 'Object' => %w[cmethod] }
     attrs    ||= { 'Object' => ['attr_accessor attr'] }
 
@@ -287,10 +292,16 @@ class TestRDocStore < XrefTestCase
       mod.method_list
     end.flatten.sort
 
-    assert_equal [@cmeth, @meth, @nest_meth, @meth_bang], methods.sort
+    _meth_bang_alias = RDoc::AnyMethod.new nil, 'method_bang'
+    _meth_bang_alias.parent = @klass
+
+    assert_equal [@cmeth, @meth, @nest_meth, @meth_bang, _meth_bang_alias],
+                 methods
 
     method = methods.find { |m| m == @meth }
     assert_equal @meth_comment.parse, method.comment
+
+    assert_equal @klass, methods.last.parent
 
     attributes = s.all_classes_and_modules.map do |mod|
       mod.attributes
@@ -441,9 +452,9 @@ class TestRDocStore < XrefTestCase
     end
 
     meth = @s.load_method('Object', '#method')
-    assert_equal @meth, meth
-    assert_equal @klass, meth.parent
-    assert_equal @s, meth.store
+    assert_equal 'Klass#method', meth.full_name
+    assert_equal @klass,         meth.parent
+    assert_equal @s,             meth.store
   end
 
   def test_load_page
@@ -509,7 +520,7 @@ class TestRDocStore < XrefTestCase
       :attributes => { 'Object' => ['attr_accessor attr'] },
       :class_methods => { 'Object' => %w[cmethod] },
       :instance_methods => {
-        'Object' => %w[attr method method!],
+        'Object' => %w[attr method method! method_bang],
         'Object::SubClass' => %w[method],
       },
       :main => nil,
@@ -549,7 +560,7 @@ class TestRDocStore < XrefTestCase
       :attributes => { 'Object' => ['attr_accessor attr'] },
       :class_methods => { 'Object' => %w[cmethod] },
       :instance_methods => {
-        'Object' => %w[method method!],
+        'Object' => %w[method method! method_bang],
         'Object::SubClass' => %w[method],
       },
       :main => @page.full_name,

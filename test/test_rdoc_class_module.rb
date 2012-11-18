@@ -866,7 +866,7 @@ class TestRDocClassModule < XrefTestCase
     tl1 = @store.add_file 'one.rb'
     tl2 = @store.add_file 'two.rb'
 
-    cm1 = RDoc::ClassModule.new 'Klass'
+    cm1 = tl1.add_class RDoc::NormalClass, 'Klass'
 
     meth = cm1.add_method RDoc::AnyMethod.new(nil, 'm1')
     meth.record_location tl1
@@ -874,6 +874,7 @@ class TestRDocClassModule < XrefTestCase
     meth.record_location tl1
 
     cm2 = RDoc::ClassModule.new 'Klass'
+    cm2.store = @store
     cm2.instance_variable_set :@comment, @RM::Document.new
 
     meth = cm2.add_method RDoc::AnyMethod.new(nil, 'm2')
@@ -899,7 +900,7 @@ class TestRDocClassModule < XrefTestCase
   def test_merge_methods_version_0
     tl1 = @store.add_file 'one.rb'
 
-    cm1 = RDoc::ClassModule.new 'Klass'
+    cm1 = tl1.add_class RDoc::NormalClass, 'Klass'
 
     meth = cm1.add_method RDoc::AnyMethod.new(nil, 'm1')
     meth.record_location tl1
@@ -907,6 +908,7 @@ class TestRDocClassModule < XrefTestCase
     meth.record_location tl1
 
     cm2 = RDoc::ClassModule.new 'Klass'
+    cm2.store = @store
     cm2.instance_variable_set :@comment, @RM::Document.new
 
     meth = cm2.add_method RDoc::AnyMethod.new(nil, 'm2')

@@ -140,6 +140,11 @@ class TestRDocMethodAttr < XrefTestCase
     assert_equal expected, @c1_m.search_record
   end
 
+  def test_equals2
+    assert_equal @c1_m, @c1_m
+    refute_equal @c1_m, @parent_m
+  end
+
   def test_to_s
     assert_equal 'RDoc::AnyMethod: C1#m',  @c1_m.to_s
     assert_equal 'RDoc::AnyMethod: C2#b',  @c2_b.to_s
