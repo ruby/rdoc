@@ -329,7 +329,7 @@ class TestRDocServlet < RDoc::TestCase
 
     assert_equal 'application/javascript', @res.content_type
 
-    @res.body =~ /{.*}/
+    @res.body =~ /\{.*\}/
 
     index = JSON.parse $&
 
