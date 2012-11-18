@@ -295,8 +295,8 @@ class TestRDocStore < XrefTestCase
     _meth_bang_alias = RDoc::AnyMethod.new nil, 'method_bang'
     _meth_bang_alias.parent = @klass
 
-    assert_equal [@cmeth, @meth, @nest_meth, @meth_bang, _meth_bang_alias],
-                 methods
+    assert_equal [@meth, @meth_bang, _meth_bang_alias, @nest_meth, @cmeth],
+                 methods.sort_by { |m| m.full_name }
 
     method = methods.find { |m| m == @meth }
     assert_equal @meth_comment.parse, method.comment
