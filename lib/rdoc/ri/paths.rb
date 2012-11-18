@@ -76,23 +76,18 @@ module RDoc::RI::Paths
   ##
   # The latest installed gems' ri directories.  +filter+ can be :all or
   # :latest.
+  #
+  # A +filter+ :all includes all versions of gems and includes gems without
+  # ri documentation.
 
-  def self.gemdirs filter = :latest, gem_path = Gem.path
+  def self.gemdirs filter = :latest
     require 'rubygems' unless defined?(Gem)
-
-    all_paths = gem_path.map do |dir|
-      Dir[File.join(dir, 'doc', '*', 'ri')]
-    end.flatten
 
     ri_paths = {}
 
-    all = all_paths.map do |dir|
-      base = File.basename File.dirname dir
-
-      next unless base =~ /(.*)-((\d+\.)*\d+)/
-
-      [dir, $1, Gem::Version.new($2)]
-    end.compact
+    all = Gem::Specification.map do |spec|
+      [File.join(spec.doc_dir, 'ri'), spec.name, spec.version]
+    end
 
     if filter == :all then
       gemdirs = []
@@ -113,6 +108,8 @@ module RDoc::RI::Paths
     end
 
     all.each do |dir, name, ver|
+      next unless File.exist? dir
+
       if ri_paths[name].nil? or ver > ri_paths[name].first then
         ri_paths[name] = [ver, name, dir]
       end

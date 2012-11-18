@@ -2,8 +2,13 @@
   <h3 class="section-header">Documentation</h3>
 
   <ul>
-  <% installed.each do |name, href, _| %>
-    <li class="folder"><a href="<%= href %>"><%= h name %></a>
+  <% installed.each do |name, href, exists| %>
+    <li class="folder">
+    <% if exists then %>
+      <a href="<%= href %>"><%= h name %></a>
+    <% else %>
+      <%= h name %>
+    <% end %>
   <% end %>
   </ul>
 </nav>

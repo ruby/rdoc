@@ -153,19 +153,18 @@ exception:
   def installed_docs
     ri_paths.map do |path, type|
       store = RDoc::Store.new path, type
-
-      next unless File.exist? store.cache_path
+      exists = File.exist? store.cache_path
 
       case type
       when :gem then
         gem_path = path[%r%/([^/]*)/ri$%, 1]
-        [gem_path, "#{gem_path}/", type, path]
+        [gem_path, "#{gem_path}/", exists, type, path]
       when :system then
-        ['Ruby Documentation', 'ruby/', type, path]
+        ['Ruby Documentation', 'ruby/', exists, type, path]
       when :site then
-        ['Site Documentation', 'site/', type, path]
+        ['Site Documentation', 'site/', exists, type, path]
       when :home then
-        ['Home Documentation', 'home/', type, path]
+        ['Home Documentation', 'home/', exists, type, path]
       end
     end.compact
   end
@@ -191,7 +190,9 @@ exception:
     search_index = []
     info         = []
 
-    installed_docs.map do |name, href, type, path|
+    installed_docs.map do |name, href, exists, type, path|
+      next unless exists
+
       search_index << name
 
       comment = case type
@@ -210,7 +211,7 @@ exception:
                   'Documentation from your home directory'
                 end
 
-      info << [name, name, path, '', comment]
+      info << [name, '', path, '', comment]
     end
 
     index = {

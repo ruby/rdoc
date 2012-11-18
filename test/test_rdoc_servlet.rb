@@ -49,7 +49,7 @@ class TestRDocServlet < RDoc::TestCase
 
     @s.do_GET @req, @res
 
-    assert_match %r%<li class="folder"><a href="ruby/">Ruby Documentation</a>%,
+    assert_match %r%<a href="ruby/">Ruby Documentation</a>%,
                  @res.body
   end
 
