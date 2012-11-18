@@ -117,11 +117,12 @@ class RDoc::Constant < RDoc::CodeObject
   # * #parent_name
 
   def marshal_load array
-    @name          = array[1]
+    initialize array[1], nil, array[5]
+
     @full_name     = array[2]
     @visibility    = array[3]
     @is_alias_for  = array[4]
-    @comment       = array[5]
+    #                      5 handled above
     #                      6 handled below
     @parent_name   = array[7]
     @parent_class  = array[8]

@@ -164,7 +164,7 @@ class TestRDocServlet < RDoc::TestCase
 
     file      = store.add_file 'file.rb'
     klass     = file.add_class RDoc::NormalClass, 'Klass'
-    sub_klass = klass.add_class RDoc::NormalClass, 'Sub'
+                klass.add_class RDoc::NormalClass, 'Sub'
 
     @s.documentation_page store, generator, 'Klass::Sub.html', @req, @res
 

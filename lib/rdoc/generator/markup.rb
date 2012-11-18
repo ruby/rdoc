@@ -125,7 +125,7 @@ class RDoc::MethodAttr
     end
     src.gsub!(/^#{' ' * indent}/, '') if indent > 0
 
-    add_line_numbers(src) if self.class.add_line_numbers
+    add_line_numbers(src) if RDoc::MethodAttr.add_line_numbers
 
     src
   end

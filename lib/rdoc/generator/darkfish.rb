@@ -405,8 +405,6 @@ class RDoc::Generator::Darkfish
   def generate_page file
     setup
 
-    current = file
-
     template_file = @template_dir + 'page.rhtml'
 
     out_file = @outputdir + file.path
@@ -416,6 +414,7 @@ class RDoc::Generator::Darkfish
     search_index_rel_prefix += @asset_rel_path if @file_output
 
     # suppress 1.9.3 warning
+    current          = current          = file
     asset_rel_prefix = asset_rel_prefix = rel_prefix + @asset_rel_path
 
     @title = "#{file.page_name} - #{@options.title}"

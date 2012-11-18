@@ -788,8 +788,8 @@ Options may also be set in the 'RI' environment variable.
     pages = store.cache[:pages]
 
     unless pages.include? page_name then
-      found_names = pages.select do |name|
-        name =~ /^#{Regexp.escape page_name}\.[^.]+$/
+      found_names = pages.select do |n|
+        n =~ /^#{Regexp.escape page_name}\.[^.]+$/
       end
 
       if found_names.length > 1 then
