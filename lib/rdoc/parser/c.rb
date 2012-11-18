@@ -298,7 +298,21 @@ class RDoc::Parser::C < RDoc::Parser
                   \)
                   \s*;%xm) do |consts|
       const = consts.first
+
       handle_constants 'const', 'mCurses', const, "UINT2NUM(#{const})"
+    end
+
+    @content.scan(%r%
+                  \Wrb_file_const
+                  \s*\(
+                    \s*
+                    "([^"]+)",
+                    \s*
+                    (.*?)
+                    \s*
+                  \)
+                  \s*;%xm) do |name, value|
+      handle_constants 'const', 'rb_mFConst', name, value
     end
   end
 

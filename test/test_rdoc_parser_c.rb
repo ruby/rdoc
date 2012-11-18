@@ -469,6 +469,38 @@ void Init_curses(){
     assert_equal 'Value of the color black', constants.first.comment.text
   end
 
+  def test_do_constants_file
+    content = <<-EOF
+void Init_File(void) {
+  rb_cFile = rb_define_class("File", rb_cIO);
+  rb_mFConst = rb_define_module_under(rb_cFile, "Constants");
+  rb_include_module(rb_cIO, rb_mFConst);
+
+  /*  Document-const: LOCK_SH
+   * 
+   *  Shared lock
+   */
+  rb_file_const("LOCK_SH", INT2FIX(LOCK_SH));
+}
+    EOF
+
+    @parser = util_parser content
+
+    @parser.do_classes
+    @parser.do_constants
+
+    klass = @parser.classes['rb_mFConst']
+
+    constants = klass.constants
+    refute_empty klass.constants
+
+    constant = constants.first
+
+    assert_equal 'LOCK_SH',          constant.name
+    assert_equal 'INT2FIX(LOCK_SH)', constant.value
+    assert_equal 'Shared lock',      constant.comment.text
+  end
+
   def test_do_includes
     content = <<-EOF
 Init_foo() {
