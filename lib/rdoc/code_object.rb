@@ -85,9 +85,9 @@ class RDoc::CodeObject
   attr_reader :received_nodoc
 
   ##
-  # Which section are we in
+  # Set the section this CodeObject is in
 
-  attr_accessor :section
+  attr_writer :section
 
   ##
   # The RDoc::Store for this object.
@@ -311,6 +311,16 @@ class RDoc::CodeObject
   def record_location top_level
     @ignored = false
     @file = top_level
+  end
+
+  ##
+  # The section this CodeObject is in.  Sections allow grouping of constants,
+  # attributes and methods inside a class or module.
+
+  def section
+    return @section if @section
+
+    @section = parent.add_section @section_title if parent
   end
 
   ##

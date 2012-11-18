@@ -263,6 +263,26 @@ class TestRDocCodeObject < XrefTestCase
     refute @co.ignored?
   end
 
+  def test_section
+    parent = RDoc::Context.new
+    section = parent.sections.first
+
+    @co.parent = parent
+    @co.instance_variable_set :@section, section
+
+    assert_equal section, @co.section
+
+    @co.instance_variable_set :@section, nil
+    @co.instance_variable_set :@section_title, nil
+
+    assert_equal section, @co.section
+
+    @co.instance_variable_set :@section, nil
+    @co.instance_variable_set :@section_title, 'new title'
+
+    assert_equal 'new title', @co.section.title
+  end
+
   def test_start_doc
     @co.document_self = false
     @co.document_children = false

@@ -19,6 +19,7 @@ class RDoc::ClassModule < RDoc::Context
   #   * Added sections
   #   * Added in_files
   #   * Added parent name
+  #   * Complete Constant dump
 
   MARSHAL_VERSION = 3 # :nodoc:
 
@@ -292,9 +293,7 @@ class RDoc::ClassModule < RDoc::Context
       @superclass,
       parse(@comment_location),
       attrs,
-      constants.map do |const|
-        [const.name, parse(const.comment), const.file_name]
-      end,
+      constants,
       includes.map do |incl|
         [incl.name, parse(incl.comment), incl.file_name]
       end,
@@ -344,9 +343,14 @@ class RDoc::ClassModule < RDoc::Context
       attr.record_location RDoc::TopLevel.new file
     end
 
-    array[6].each do |name, comment, file|
-      const = add_constant RDoc::Constant.new(name, nil, comment)
-      const.record_location RDoc::TopLevel.new file
+    array[6].each do |constant, comment, file|
+      case constant
+      when RDoc::Constant then
+        add_constant constant
+      else
+        constant = add_constant RDoc::Constant.new(constant, nil, comment)
+        constant.record_location RDoc::TopLevel.new file
+      end
     end
 
     array[7].each do |name, comment, file|

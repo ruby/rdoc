@@ -140,22 +140,6 @@ class TestRDocMethodAttr < XrefTestCase
     assert_equal expected, @c1_m.search_record
   end
 
-  def test_section
-    section = @c1.sections.find { |s| s.title.nil? }
-
-    assert_equal section, @c1_m.section
-
-    @c1_m.instance_variable_set :@section, nil
-    @c1_m.instance_variable_set :@section_title, nil
-
-    assert_equal section, @c1_m.section
-
-    @c1_m.instance_variable_set :@section, nil
-    @c1_m.instance_variable_set :@section_title, 'new title'
-
-    assert_equal 'new title', @c1_m.section.title
-  end
-
   def test_to_s
     assert_equal 'RDoc::AnyMethod: C1#m',  @c1_m.to_s
     assert_equal 'RDoc::AnyMethod: C2#b',  @c2_b.to_s

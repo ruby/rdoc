@@ -461,27 +461,29 @@ class TestRDocClassModule < XrefTestCase
     cm.add_comment 'this is a comment', tl
 
     loaded = Marshal.load "\x04\bU:\x16RDoc::NormalClass[\x13i\bI\"\nKlass" \
-                          "\x06:\x06EFI\"\x15Namespace::Klass\x06;\x06FI" \
-                          "\"\nSuper\x06;\x06Fo:\eRDoc::Markup::Document\a" \
+                          "\x06:\x06ETI\"\x15Namespace::Klass\x06;\x06TI" \
+                          "\"\nSuper\x06;\x06To:\eRDoc::Markup::Document\a" \
                           ":\v@parts[\x06o;\a\a;\b[\x06o" \
                           ":\x1CRDoc::Markup::Paragraph\x06;\b[\x06I" \
-                          "\"\x16this is a comment\x06;\x06F:\n@fileI" \
-                          "\"\ffile.rb\x06;\x06F;\n0[\a[\nI\"\aa2\x06" \
-                          ";\x06FI\"\aRW\x06;\x06F:\vpublicT@\x11[\nI" \
-                          "\"\aa1\x06;\x06FI\"\aRW\x06;\x06F;\vF@\x11" \
-                          "[\x06[\bI\"\aC1\x06;\x06Fo;\a\a;\b[\x00" \
-                          ";\n0@\x11[\x06[\bI\"\aI1\x06;\x06Fo;\a\a;\b" \
-                          "[\x00;\n0@\x11[\a[\aI\"\nclass\x06;\x06F[\b" \
-                          "[\a;\v[\x00[\a:\x0Eprotected[\x00[\a" \
-                          ":\fprivate[\x00[\aI\"\rinstance\x06;\x06F[\b" \
-                          "[\a;\v[\x06[\aI\"\am1\x06;\x06F@\x11[\a;\f[\x00" \
-                          "[\a;\r[\x00[\x06[\bI\"\aE1\x06;\x06Fo;\a\a;\b" \
-                          "[\x00;\n0@\x11[\aU:\eRDoc::Context::Section" \
-                          "[\bi\x000o;\a\a;\b[\x00;\n0U;\x0E[\bi\x00I" \
-                          "\"\fsection\x06;\x06Fo;\a\a;\b[\x06o;\a\a;\b" \
-                          "[\x06o;\t\x06;\b[\x06I\"\x14section comment\x06" \
-                          ";\x06F;\n@\x11;\n0[\x06@\x11I\"\x0ENamespace\x06" \
-                          ";\x06Fc\x17RDoc::NormalModule"
+                          "\"\x16this is a comment\x06;\x06T:\n@fileI" \
+                          "\"\ffile.rb\x06;\x06T;\n0[\a[\nI\"\aa2\x06;" \
+                          "\x06TI\"\aRW\x06;\x06T:\vpublicT@\x11[\nI" \
+                          "\"\aa1\x06;\x06TI\"\aRW\x06;\x06T;\vF@\x11" \
+                          "[\x06U:\x13RDoc::Constant[\x0Fi\x00I\"\aC1\x06" \
+                          ";\x06TI\"\x19Namespace::Klass::C1\x06;\x06T00o" \
+                          ";\a\a;\b[\x00;\n0@\x11@\ac\x16RDoc::NormalClass0" \
+                          "[\x06[\bI\"\aI1\x06;\x06To;\a\a;\b[\x00;\n0@\x11" \
+                          "[\a[\aI\"\nclass\x06;\x06T[\b[\a;\v[\x00[\a" \
+                          ":\x0Eprotected[\x00[\a:\fprivate[\x00[\aI" \
+                          "\"\rinstance\x06;\x06T[\b[\a;\v[\x06[\aI" \
+                          "\"\am1\x06;\x06T@\x11[\a;\r[\x00[\a;\x0E[\x00" \
+                          "[\x06[\bI\"\aE1\x06;\x06To;\a\a;\b[\x00;\n0@\x11" \
+                          "[\aU:\eRDoc::Context::Section[\bi\x000o;\a\a;\b" \
+                          "[\x00;\n0U;\x0F[\bi\x00I\"\fsection\x06;\x06To" \
+                          ";\a\a;\b[\x06o;\a\a;\b[\x06o;\t\x06;\b[\x06I" \
+                          "\"\x14section comment\x06;\x06T;\n@\x11;\n0" \
+                          "[\x06@\x11I\"\x0ENamespace\x06" \
+                          ";\x06Tc\x17RDoc::NormalModule"
 
     loaded.store = @store
 

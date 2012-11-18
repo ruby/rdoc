@@ -365,12 +365,6 @@ class RDoc::MethodAttr < RDoc::CodeObject
     end
   end
 
-  def section # :nodoc:
-    return @section if @section
-
-    @section = parent.add_section @section_title if parent
-  end
-
   ##
   # Used by RDoc::Generator::JsonIndex to create a record for the search
   # engine.

@@ -12,6 +12,95 @@ class TestRDocConstant < XrefTestCase
     assert_equal 'C1::CONST', @const.full_name
   end
 
+  def test_marshal_dump
+    top_level = @store.add_file 'file.rb'
+
+    c = RDoc::Constant.new 'CONST', nil, 'this is a comment'
+    c.record_location top_level
+
+    aliased = top_level.add_class RDoc::NormalClass, 'Aliased'
+    c.is_alias_for = aliased
+
+    cm = top_level.add_class RDoc::NormalClass, 'Klass'
+    cm.add_constant c
+
+    section = cm.sections.first
+
+    loaded = Marshal.load Marshal.dump c
+    loaded.store = @store
+
+    comment = doc(para('this is a comment'))
+
+    assert_equal c, loaded
+
+    assert_equal aliased,        loaded.is_alias_for
+    assert_equal comment,        loaded.comment
+    assert_equal top_level,      loaded.file
+    assert_equal 'Klass::CONST', loaded.full_name
+    assert_equal 'CONST',        loaded.name
+    assert_nil                   loaded.visibility
+    assert_equal cm,             loaded.parent
+    assert_equal section,        loaded.section
+  end
+
+  def test_marshal_load
+    top_level = @store.add_file 'file.rb'
+
+    c = RDoc::Constant.new 'CONST', nil, 'this is a comment'
+    c.record_location top_level
+
+    cm = top_level.add_class RDoc::NormalClass, 'Klass'
+    cm.add_constant c
+
+    section = cm.sections.first
+
+    loaded = Marshal.load Marshal.dump c
+    loaded.store = @store
+
+    comment = doc(para('this is a comment'))
+
+    assert_equal c, loaded
+
+    assert_nil                   loaded.is_alias_for
+    assert_equal comment,        loaded.comment
+    assert_equal top_level,      loaded.file
+    assert_equal 'Klass::CONST', loaded.full_name
+    assert_equal 'CONST',        loaded.name
+    assert_nil                   loaded.visibility
+    assert_equal cm,             loaded.parent
+    assert_equal section,        loaded.section
+  end
+
+  def test_marshal_load_version_0
+    top_level = @store.add_file 'file.rb'
+
+    aliased = top_level.add_class RDoc::NormalClass, 'Aliased'
+    cm      = top_level.add_class RDoc::NormalClass, 'Klass'
+    section = cm.sections.first
+
+    loaded = Marshal.load "\x04\bU:\x13RDoc::Constant[\x0Fi\x00I" \
+                          "\"\nCONST\x06:\x06ETI\"\x11Klass::CONST\x06" \
+                          ";\x06T0I\"\fAliased\x06;\x06To" \
+                          ":\eRDoc::Markup::Document\a:\v@parts[\x06o" \
+                          ":\x1CRDoc::Markup::Paragraph\x06;\b[\x06I" \
+                          "\"\x16this is a comment\x06;\x06T:\n@file0I" \
+                          "\"\ffile.rb\x06;\x06TI\"\nKlass\x06" \
+                          ";\x06Tc\x16RDoc::NormalClass0"
+
+    loaded.store = @store
+
+    comment = doc(para('this is a comment'))
+
+    assert_equal aliased,        loaded.is_alias_for
+    assert_equal comment,        loaded.comment
+    assert_equal top_level,      loaded.file
+    assert_equal 'Klass::CONST', loaded.full_name
+    assert_equal 'CONST',        loaded.name
+    assert_nil                   loaded.visibility
+    assert_equal cm,             loaded.parent
+    assert_equal section,        loaded.section
+  end
+
   def test_path
     assert_equal 'C1.html#CONST', @const.path
   end
