@@ -62,6 +62,8 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
       asset :darkfish, req, res
     when '/js/navigation.js', '/js/searcher.js' then
       asset :json_index, req, res
+    when '/js/search_index.js' then
+      root_search req, res
     else
       show_documentation req, res
     end
@@ -148,13 +150,8 @@ exception:
     end
   end
 
-  def not_found generator, req, res
-    res.body = generator.generate_servlet_not_found req.path
-    res.status = 404
-  end
-
-  def root req, res
-    installed = RDoc::RI::Paths.each.map do |path, type|
+  def installed_docs
+    RDoc::RI::Paths.each.map do |path, type|
       store = RDoc::Store.new path, type
 
       next unless File.exist? store.cache_path
@@ -171,12 +168,40 @@ exception:
         ['Home Documentation', 'home/']
       end
     end.compact
+  end
 
+  def not_found generator, req, res
+    res.body = generator.generate_servlet_not_found req.path
+    res.status = 404
+  end
+
+  def root req, res
     generator = RDoc::Generator::Darkfish.new nil, @options
 
-    res.body = generator.generate_servlet_root installed
+    res.body = generator.generate_servlet_root installed_docs
 
     res.content_type = 'text/html'
+  end
+
+  def root_search req, res
+    search_index = []
+    info         = []
+
+    installed_docs.map do |name, path|
+      search_index << name
+      info << [name, name, path, '', '']
+    end
+
+    index = {
+      :index => {
+        :searchIndex     => search_index,
+        :longSearchIndex => search_index,
+        :info            => info,
+      }
+    }
+
+    res.body = "var search_data = #{JSON.dump index};"
+    res.content_type = 'application/javascript'
   end
 
   def show_documentation req, res
