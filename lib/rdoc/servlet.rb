@@ -236,9 +236,12 @@ exception:
     generator.asset_rel_path = '..'
 
     rdoc = RDoc::RDoc.new
-    rdoc.store = store
+    rdoc.store     = store
     rdoc.generator = generator
-    rdoc.options = @options
+    rdoc.options   = @options
+
+    @options.main_page = store.main
+    @options.title     = store.title
 
     case path
     when nil, '', 'index.html' then

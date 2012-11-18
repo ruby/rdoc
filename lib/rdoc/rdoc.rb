@@ -455,6 +455,7 @@ The internal error was:
     @store.encoding = @options.encoding if @options.respond_to? :encoding
     @store.dry_run  = @options.dry_run
     @store.main     = @options.main_page
+    @store.title    = @options.title
 
     @start_time = Time.now
 

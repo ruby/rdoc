@@ -122,6 +122,7 @@ class RDoc::Store
       :main             => nil,
       :modules          => [],
       :pages            => [],
+      :title            => nil,
     }
 
     @classes_hash = {}
@@ -834,6 +835,21 @@ class RDoc::Store
     when :system then 'ruby'
     else @path
     end
+  end
+
+  ##
+  # Gets the title for this RDoc store.  This is used as the title in each
+  # page on the RDoc server
+
+  def title
+    @cache[:title]
+  end
+
+  ##
+  # Sets the title page for this RDoc store.
+
+  def title= title
+    @cache[:title] = title
   end
 
   ##

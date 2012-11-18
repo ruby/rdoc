@@ -73,7 +73,7 @@ class TestRDocStore < XrefTestCase
   end
 
   def assert_cache imethods, cmethods, attrs, modules,
-                   ancestors = {}, pages = [], main = nil
+                   ancestors = {}, pages = [], main = nil, title = nil
     imethods ||= { 'Object' => %w[method method!] }
     cmethods ||= { 'Object' => %w[cmethod] }
     attrs    ||= { 'Object' => ['attr_accessor attr'] }
@@ -90,6 +90,7 @@ class TestRDocStore < XrefTestCase
       :modules          => modules,
       :pages            => pages,
       :main             => main,
+      :title            => title,
     }
 
     @s.save_cache
@@ -359,6 +360,7 @@ class TestRDocStore < XrefTestCase
       :main             => nil,
       :modules          => [],
       :pages            => [],
+      :title            => nil,
     }
 
     @s.load_cache
@@ -514,6 +516,7 @@ class TestRDocStore < XrefTestCase
       :modules => %w[Mod Object Object::SubClass],
       :encoding => nil,
       :pages => %w[README.txt],
+      :title => nil,
     }
 
     expected[:ancestors]['Object'] = %w[BasicObject] if defined?(::BasicObject)
@@ -532,7 +535,8 @@ class TestRDocStore < XrefTestCase
     @s.save_class @nest_klass
     @s.save_page @page
     @s.encoding = :encoding_value
-    @s.main = @page.full_name
+    @s.main     = @page.full_name
+    @s.title    = 'title'
 
     @s.save_cache
 
@@ -552,6 +556,7 @@ class TestRDocStore < XrefTestCase
       :modules => %w[Object Object::SubClass],
       :encoding => :encoding_value,
       :pages => %w[README.txt],
+      :title => 'title',
     }
 
     expected[:ancestors]['Object'] = %w[BasicObject] if defined?(::BasicObject)
@@ -794,6 +799,14 @@ class TestRDocStore < XrefTestCase
     @s.type = :gem
     @s.path = "#{@tmpdir}/gem_repository/doc/gem_name-1.0/ri"
     assert_equal "gem_name-1.0", @s.source
+  end
+
+  def test_title
+    assert_equal nil, @s.title
+
+    @s.title = 'rdoc'
+
+    assert_equal 'rdoc', @s.title
   end
 
 end

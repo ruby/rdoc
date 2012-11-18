@@ -16,8 +16,11 @@ class TestRDocRDoc < RDoc::TestCase
     options = RDoc::Options.new
     options.files = [File.expand_path('../xref_data.rb')]
     options.setup_generator 'ri'
+    options.main_page = 'MAIN_PAGE.rdoc'
+    options.title     = 'title'
 
     rdoc = RDoc::RDoc.new
+
     temp_dir do
       capture_io do
         rdoc.document options
@@ -26,6 +29,11 @@ class TestRDocRDoc < RDoc::TestCase
       assert File.directory? 'doc'
       assert_equal rdoc, rdoc.store.rdoc
     end
+
+    store = rdoc.store
+
+    assert_equal 'MAIN_PAGE.rdoc', store.main
+    assert_equal 'title',          store.title
   end
 
   def test_gather_files
