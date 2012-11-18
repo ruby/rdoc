@@ -560,7 +560,7 @@ class RDoc::Parser::C < RDoc::Parser
   #    */
   #   VALUE cFoo = rb_define_class("Foo", rb_cObject);
 
-  def find_class_comment(class_name, class_mod)
+  def find_class_comment class_name, class_mod
     comment = nil
 
     if @content =~ %r%

@@ -626,24 +626,25 @@ rb_define_alias(C, "[]", "index");
     assert_equal "/*\n * comment\n */\n\n", comment.text
   end
 
-  def test_find_class_comment_include
+  def test_find_class_comment
     @options.rdoc_include << File.dirname(__FILE__)
 
     content = <<-EOF
 /*
- * a comment for class Foo
- *
- * :include: test.txt
+ * Comment 1
  */
-void
-Init_Foo(void) {
-  VALUE foo = rb_define_class("Foo", rb_cObject);
-}
+foo = rb_define_class("MyClassName1", rb_cObject);
+
+/*
+ * Comment 2
+ */
+bar = rb_define_class("MyClassName2", rb_cObject);
     EOF
 
-    klass = util_get_class content, 'foo'
+    util_get_class content
 
-    assert_equal "a comment for class Foo\n\ntest file\n", klass.comment.text
+    assert_equal "Comment 1", @parser.classes['foo'].comment.text
+    assert_equal "Comment 2", @parser.classes['bar'].comment.text
   end
 
   def test_find_class_comment_init
@@ -1456,10 +1457,11 @@ Init_IO(void) {
                  parser.rb_scan_args('rb_scan_args(a, b, "*:&",)')
   end
 
-  def util_get_class(content, name)
+  def util_get_class content, name = nil
     @parser = util_parser content
     @parser.scan
-    @parser.classes[name]
+
+    @parser.classes[name] if name
   end
 
   def util_parser(content)
