@@ -256,11 +256,14 @@ exception:
     else
       name = path.sub(/.html$/, '').gsub '/', '::'
 
-      klass = store.find_class_or_module name
+      if klass = store.find_class_or_module(name) then
+        res.body = generator.generate_class klass
+      elsif page = store.find_text_page(name.sub(/_([^_]*)$/, '.\1')) then
+        res.body = generator.generate_page page
+      else
+        not_found generator, req, res
+      end
 
-      return not_found generator, req, res unless klass
-
-      res.body = generator.generate_class klass
     end
 
   ensure

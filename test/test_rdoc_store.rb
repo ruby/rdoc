@@ -222,6 +222,15 @@ class TestRDocStore < XrefTestCase
     assert_equal @m1_m2, @store.find_module_named('M1::M2')
   end
 
+  def test_find_text_page
+    page = @store.add_file 'PAGE.txt'
+    page.parser = RDoc::Parser::Simple
+
+    assert_nil @store.find_text_page 'no such page'
+
+    assert_equal page, @store.find_text_page('PAGE.txt')
+  end
+
   def test_friendly_path
     @s.path = @tmpdir
     @s.type = nil

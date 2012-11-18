@@ -351,6 +351,16 @@ class RDoc::Store
   end
 
   ##
+  # Returns the RDoc::TopLevel that is a text file and has the given
+  # +file_name+
+
+  def find_text_page file_name
+    @files_hash.each_value.find do |file|
+      file.text? and file.full_name == file_name
+    end
+  end
+
+  ##
   # Finds unique classes/modules defined in +all_hash+,
   # and returns them as an array. Performs the alias
   # updates in +all_hash+: see ::complete.
