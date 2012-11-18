@@ -61,15 +61,6 @@ module RDoc
 
   class Error < RuntimeError; end
 
-  def self.const_missing const_name # :nodoc:
-    if const_name.to_s == 'RDocError' then
-      warn "RDoc::RDocError is deprecated and will be removed in RDoc 4"
-      return Error
-    end
-
-    super
-  end
-
   ##
   # RDoc version you are using
 

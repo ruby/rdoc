@@ -11,13 +11,11 @@ Blockers:
 * Restore backwards compatibility due to paragraph text joining from existing
   ri files
 * Fix consumption of , after link like: RDoc[rdoc-ref:RDoc], <- comma here
-* Move modsort thing to RDoc::Store
+* Remove support for links like Matrix[*rows]
 
 Nice to have:
 
-* Reload the RDoc tree from an RI store
-  * Re-run generators
-  * Parse only changed files (like in ruby)
+* Parse only changed files (like in ruby)
 * Page of Glory (or Shame) in HTML output showing documentation coverage
   statistics.
 * Link to the parent-class implementation of methods that use super
@@ -26,17 +24,12 @@ Nice to have:
 * Method markup support for rd documentation (per rd syntax)
 * Improve SIGINFO handling
 * Global variable support
-* Page support for ri
 * Provide the code_object to directive handlers
-* Add RDoc::Constant#full_name
 
 === 4
 
 API changes to RDoc
 
-* Remove global state
-  * Use top_levels argument for generators
-* Remove RDoc::RDocError
 * RDoc::TopLevel#add_method should automatically create the appropriate method
   class rather than requiring one be passed in.
 * Remove #comment= from Context subclasses in favor of #add_comment
