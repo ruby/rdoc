@@ -2,7 +2,7 @@
   <h3 class="section-header">Documentation</h3>
 
   <ul>
-  <% installed.each do |name, href| %>
+  <% installed.each do |name, href, _| %>
     <li class="folder"><a href="<%= href %>"><%= h name %></a>
   <% end %>
   </ul>

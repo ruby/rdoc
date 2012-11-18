@@ -461,7 +461,7 @@ class RDoc::Generator::Darkfish
     template_file = @template_dir + 'servlet_root.rhtml'
     return unless template_file.exist?
 
-    debug_msg "Rendering the servlet root page..."
+    debug_msg 'Rendering the servlet root page...'
 
     rel_prefix = rel_prefix = ''
     search_index_rel_prefix = rel_prefix
@@ -470,7 +470,7 @@ class RDoc::Generator::Darkfish
     # suppress 1.9.3 warning
     asset_rel_prefix = asset_rel_prefix = ''
 
-    @title = "RDoc Documentation"
+    @title = 'Local RDoc Documentation'
 
     render_template template_file do |io| binding end
   rescue => e

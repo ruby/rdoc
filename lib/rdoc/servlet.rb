@@ -159,13 +159,13 @@ exception:
       case type
       when :gem then
         gem_path = path[%r%/([^/]*)/ri$%, 1]
-        [gem_path, "#{gem_path}/"]
+        [gem_path, "#{gem_path}/", type, path]
       when :system then
-        ['Ruby Documentation', 'ruby/']
+        ['Ruby Documentation', 'ruby/', type, path]
       when :site then
-        ['Site Documentation', 'site/']
+        ['Site Documentation', 'site/', type, path]
       when :home then
-        ['Home Documentation', 'home/']
+        ['Home Documentation', 'home/', type, path]
       end
     end.compact
   end
@@ -191,9 +191,26 @@ exception:
     search_index = []
     info         = []
 
-    installed_docs.map do |name, path|
+    installed_docs.map do |name, href, type, path|
       search_index << name
-      info << [name, name, path, '', '']
+
+      comment = case type
+                when :gem
+                  gemspec = path.gsub(%r%/doc/([^/]*?)/ri$%,
+                                      '/specifications/\1.gemspec')
+
+                  spec = Gem::Specification.load gemspec
+
+                  spec.summary
+                when :system then
+                  'Documentation for the Ruby standard library'
+                when :site then
+                  'Documentation for non-gem libraries'
+                when :home then
+                  'Documentation from your home directory'
+                end
+
+      info << [name, name, path, '', comment]
     end
 
     index = {
