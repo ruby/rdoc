@@ -229,8 +229,27 @@ class TestRDocContext < XrefTestCase
 
     alias_constant = @c2.constants.first
 
-    assert_equal c4, c3_c4
+    assert_equal 'C2::C4', c3_c4.full_name
     assert_equal tl, alias_constant.file
+  end
+
+  def test_add_module_alias_top_level
+    store = RDoc::Store.new
+
+    top_level = store.add_file 'file.rb'
+
+    klass  = top_level.add_class RDoc::NormalClass, 'Klass'
+    klass.comment = 'klass comment'
+
+    object = top_level.add_class RDoc::NormalClass, 'Object'
+
+    top_level.add_module_alias klass, 'A', top_level
+
+    refute_empty object.constants
+
+    constant = object.constants.first
+
+    assert_equal 'klass comment', constant.comment
   end
 
   def test_add_module_class

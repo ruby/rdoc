@@ -99,6 +99,8 @@
     Lucy
   * Generated RD parser files are now included in the gem.  Issue #145 by
     Marvin Gülker
+  * Class and module aliases now create new classes to avoid duplicate names
+    in the class list.  Issue #143 by Richard Schneeman, Rails Issue #2839
 
 === 3.12 / 2011-12-15
 

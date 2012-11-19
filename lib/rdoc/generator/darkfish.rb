@@ -86,6 +86,12 @@ class RDoc::Generator::Darkfish
   attr_reader :base_dir
 
   ##
+  # Classes and modules to be used by this generator, not necessarily
+  # displayed.  See also #modsort
+
+  attr_reader :classes
+
+  ##
   # No files will be written when dry_run is true.
 
   attr_accessor :dry_run
@@ -97,9 +103,24 @@ class RDoc::Generator::Darkfish
   attr_accessor :file_output
 
   ##
+  # Files to be displayed by this generator
+
+  attr_reader :files
+
+  ##
   # The JSON index generator for this Darkfish generator
 
   attr_reader :json_index
+
+  ##
+  # Methods to be displayed by this generator
+
+  attr_reader :methods
+
+  ##
+  # Sorted list of classes and modules to be displayed by this generator
+
+  attr_reader :modsort
 
   ##
   # The RDoc::Store that is the source of the generated content

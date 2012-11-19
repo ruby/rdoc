@@ -467,31 +467,34 @@ class RDoc::Context < RDoc::CodeObject
   def add_module_alias from, name, file
     return from if @done_documenting
 
-    to_name = child_name(name)
+    to_name = child_name name
 
     # if we already know this name, don't register an alias:
     # see the metaprogramming in lib/active_support/basic_object.rb,
-    # where we already know BasicObject as a class when we find
+    # where we already know BasicObject is a class when we find
     # BasicObject = BlankSlate
     return from if @store.find_class_or_module to_name
 
-    if from.module? then
-      @store.modules_hash[to_name] = from
-      @modules[name] = from
+    to = from.dup
+    to.name = name
+    to.full_name = nil
+
+    if to.module? then
+      @store.modules_hash[to_name] = to
+      @modules[name] = to
     else
-      @store.classes_hash[to_name] = from
-      @classes[name] = from
+      @store.classes_hash[to_name] = to
+      @classes[name] = to
     end
 
-    # HACK: register a constant for this alias:
-    # constant value and comment will be updated after,
-    # when the Ruby parser adds the constant
-    const = RDoc::Constant.new name, nil, ''
+    # Registers a constant for this alias.  The constant value and comment
+    # will be updated later, when the Ruby parser adds the constant
+    const = RDoc::Constant.new name, nil, to.comment
     const.record_location file
     const.is_alias_for = from
     add_constant const
 
-    from
+    to
   end
 
   ##

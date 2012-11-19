@@ -31,7 +31,14 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
 
     @top_level = @store.add_file 'file.rb'
     @top_level.parser = RDoc::Parser::Ruby
-    @klass = @top_level.add_class RDoc::NormalClass, 'Object'
+    @klass = @top_level.add_class RDoc::NormalClass, 'Klass'
+
+    @alias_constant = RDoc::Constant.new 'A', nil, ''
+    @alias_constant.record_location @top_level
+
+    @top_level.add_constant @alias_constant
+
+    @klass.add_module_alias @klass, 'A', @top_level
 
     @meth = RDoc::AnyMethod.new nil, 'method'
     @meth_bang = RDoc::AnyMethod.new nil, 'method!'
@@ -43,6 +50,11 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
 
     @ignored = @top_level.add_class RDoc::NormalClass, 'Ignored'
     @ignored.ignore
+
+    @store.complete :private
+
+    @object      = @store.find_class_or_module 'Object'
+    @klass_alias = @store.find_class_or_module 'Klass::A'
   end
 
   def teardown
@@ -59,6 +71,13 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
 
   def refute_file path
     refute File.exist?(path), "#{path} exists"
+  end
+
+  def mu_pp obj
+    s = ''
+    s = PP.pp obj, s
+    s = s.force_encoding Encoding.default_external if defined? Encoding
+    s.chomp
   end
 
   def test_generate
@@ -124,6 +143,16 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
     @g.generate
 
     refute_file 'image.png'
+  end
+
+  def test_setup
+    @g.setup
+
+    assert_equal [@klass_alias, @ignored, @klass, @object],
+                 @g.classes.sort_by { |klass| klass.full_name }
+    assert_equal [@top_level],                           @g.files
+    assert_equal [@meth, @meth, @meth_bang, @meth_bang], @g.methods
+    assert_equal [@klass_alias, @klass, @object], @g.modsort
   end
 
   def test_template_for

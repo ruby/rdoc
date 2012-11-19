@@ -1260,6 +1260,30 @@ class TestRDocClassModule < XrefTestCase
     assert_equal 'O1::A1', o1_a1_m.full_name
   end
 
+  def test_update_aliases_reparent_root
+    store = RDoc::Store.new
+
+    top_level = store.add_file 'file.rb'
+
+    klass  = top_level.add_class RDoc::NormalClass, 'Klass'
+    object = top_level.add_class RDoc::NormalClass, 'Object'
+
+    const = RDoc::Constant.new 'A', nil, ''
+    const.record_location top_level
+    const.is_alias_for = klass
+
+    top_level.add_module_alias klass, 'A', top_level
+
+    object.add_constant const
+
+    object.update_aliases
+
+    assert_equal %w[A Klass Object], store.classes_hash.keys.sort
+
+    assert_equal 'A',     store.classes_hash['A'].full_name
+    assert_equal 'Klass', store.classes_hash['Klass'].full_name
+  end
+
   def test_update_includes
     a = RDoc::Include.new 'M1', nil
     b = RDoc::Include.new 'M2', nil

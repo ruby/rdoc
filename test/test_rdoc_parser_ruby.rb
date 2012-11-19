@@ -1002,7 +1002,7 @@ EOF
 
     @parser.parse_constant klass, tk, @comment
 
-    assert_equal cB, klass.find_module_named('A')
+    assert_equal 'Foo::A', klass.find_module_named('A').full_name
   end
 
   def test_parse_constant_alias_same_name
@@ -1018,7 +1018,7 @@ EOF
 
     @parser.parse_constant foo, tk, @comment
 
-    assert_equal top_bar, bar.find_module_named('A')
+    assert_equal 'A', bar.find_module_named('A').full_name
   end
 
   def test_parse_constant_stopdoc
