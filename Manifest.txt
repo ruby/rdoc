@@ -267,6 +267,7 @@ test/test_rdoc_require.rb
 test/test_rdoc_ri_driver.rb
 test/test_rdoc_ri_paths.rb
 test/test_rdoc_ruby_lex.rb
+test/test_rdoc_ruby_token.rb
 test/test_rdoc_rubygems_hook.rb
 test/test_rdoc_servlet.rb
 test/test_rdoc_single_class.rb

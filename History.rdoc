@@ -95,6 +95,8 @@
     Noria.
   * Add license to gem spec.  Issue #144 by pivotalcommon
   * Fixed comment selection for classes.  Pull request #146 by pioz
+  * Fixed parsing of <code>def self.&() end</code>.  Issue #148 by Michael
+    Lucy
 
 === 3.12 / 2011-12-15
 

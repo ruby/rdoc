@@ -1339,6 +1339,21 @@ end
     assert klass.aliases.empty?
   end
 
+  def test_parse_method_ampersand
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    util_parser "def self.&\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, @comment
+
+    ampersand = klass.method_list.first
+    assert_equal '&', ampersand.name
+    assert            ampersand.singleton
+  end
+
   def test_parse_method_false
     util_parser "def false.foo() :bar end"
 
@@ -1362,7 +1377,7 @@ end
 
     @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, @comment
 
-    assert klass.method_list.empty?
+    assert_empty klass.method_list
   end
 
   def test_parse_method_gvar
@@ -1468,6 +1483,21 @@ end
 
     foo = klass.method_list.first
     assert_equal '(arg1, arg2, arg3)', foo.params
+  end
+
+  def test_parse_method_star
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    util_parser "def self.*\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, @comment
+
+    ampersand = klass.method_list.first
+    assert_equal '*', ampersand.name
+    assert            ampersand.singleton
   end
 
   def test_parse_method_stopdoc

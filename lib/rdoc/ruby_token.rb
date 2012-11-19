@@ -370,13 +370,13 @@ module RDoc::RubyToken
     [:TkfLPAREN,    Token,  "("], # func( #
     [:TkfLBRACK,    Token,  "["], # func[ #
     [:TkfLBRACE,    Token,  "{"], # func{ #
-    [:TkSTAR,       Token,  "*"], # *arg
-    [:TkAMPER,      Token,  "&"], # &arg #
     [:TkSYMBEG,     Token,  ":"], # :SYMBOL
 
+    [:TkAMPER,      TkOp,   "&"],
     [:TkGT,         TkOp,   ">"],
     [:TkLT,         TkOp,   "<"],
     [:TkPLUS,       TkOp,   "+"],
+    [:TkSTAR,       TkOp,   "*"],
     [:TkMINUS,      TkOp,   "-"],
     [:TkMULT,       TkOp,   "*"],
     [:TkDIV,        TkOp,   "/"],
