@@ -903,6 +903,19 @@ Foo::Bar#bother
     refute @driver.paging?
   end
 
+  def test_page_in_presence_of_child_status
+    @driver.use_stdout = false
+
+    dummy = `:;\n`
+
+    with_dummy_pager do
+      @driver.page do |io|
+        refute_equal $stdout, io
+        assert @driver.paging?
+      end
+    end
+  end
+
   def test_page_stdout
     @driver.use_stdout = true
 
