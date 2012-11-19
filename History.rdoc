@@ -97,6 +97,8 @@
   * Fixed comment selection for classes.  Pull request #146 by pioz
   * Fixed parsing of <code>def self.&() end</code>.  Issue #148 by Michael
     Lucy
+  * Generated RD parser files are now included in the gem.  Issue #145 by
+    Marvin Gülker
 
 === 3.12 / 2011-12-15
 
