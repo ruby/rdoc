@@ -30,6 +30,7 @@
   * RDoc::RI::Store#modules has been renamed to RDoc::Store#module_names
     to avoid confusion with RDoc::Store#all_modules imported from
     RDoc::TopLevel.
+  * RDoc::RDocError has been removed.  It was deprecated throughout RDoc 3.
   * ri -f html is no longer supported.
 
 * Major enhancements
