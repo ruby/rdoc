@@ -28,6 +28,19 @@ class TestRDocMarkupParser < RDoc::TestCase
     assert_equal @RM::Heading.new(3, 'heading three'), parser.build_heading(3)
   end
 
+  def test_char_pos
+    parser = @RMP.new
+    s = parser.setup_scanner 'cät'
+
+    s.scan(/\S+/)
+
+    if Object.const_defined? :Encoding then
+      assert_equal 3, parser.char_pos(s.pos)
+    else
+      assert_equal 4, parser.char_pos(s.pos)
+    end
+  end
+
   def test_get
     parser = util_parser
 
@@ -1350,6 +1363,32 @@ cat::
     assert_equal expected, @RMP.tokenize(str)
   end
 
+  def test_tokenize_note_utf_8
+    skip 'Encoding not implemented' unless Object.const_defined? :Encoding
+
+    str = <<-STR
+cät:: l1a
+      l1b
+døg:: l2a
+      l2b
+    STR
+
+    expected = [
+      [:NOTE,    'cät',   0, 0],
+      [:TEXT,    'l1a',   6, 0],
+      [:NEWLINE, "\n",    9, 0],
+      [:TEXT,    'l1b',   6, 1],
+      [:NEWLINE, "\n",    9, 1],
+      [:NOTE,    'døg',   0, 2],
+      [:TEXT,    'l2a',   6, 2],
+      [:NEWLINE, "\n",    9, 2],
+      [:TEXT,    'l2b',   6, 3],
+      [:NEWLINE, "\n",    9, 3],
+    ]
+
+    assert_equal expected, @RMP.tokenize(str)
+  end
+
   def test_tokenize_note_newline_windows
     str = <<-STR
 cat::\r
@@ -1583,6 +1622,19 @@ Example heading:
     ]
 
     assert_equal expected, @RMP.tokenize(str)
+  end
+
+  def test_token_pos
+    parser = @RMP.new
+    s = parser.setup_scanner 'cät'
+
+    s.scan(/\S+/)
+
+    if Object.const_defined? :Encoding then
+      assert_equal [3, 0], parser.token_pos(s.pos)
+    else
+      assert_equal [4, 0], parser.token_pos(s.pos)
+    end
   end
 
   # HACK move to Verbatim test case
