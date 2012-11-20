@@ -104,6 +104,8 @@
   * RDoc::Markup::Parser now correctly matches indentation of lists when
     multibyte characters are used in the list labels.  Issue #140 by
     burningTyger
+  * Fixed mangling of email addresses that look like labels.  Issue #129 by
+    Tobias Koch
 
 === 3.12 / 2011-12-15
 

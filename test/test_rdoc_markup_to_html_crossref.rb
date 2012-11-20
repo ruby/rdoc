@@ -167,6 +167,22 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
                  link, 'C1#m@foo'
   end
 
+  def test_to_html_CROSSREF_email
+    @options.hyperlink_all = false
+
+    @to = RDoc::Markup::ToHtmlCrossref.new @options, 'index.html', @c1
+
+    result = @to.to_html 'first.last@example.com'
+
+    assert_equal 'first.last@example.com', result
+  end
+
+  def test_to_html_CROSSREF_email_hyperlink_all
+    result = @to.to_html 'first.last@example.com'
+
+    assert_equal 'first.last@example.com', result
+  end
+
   def test_link
     assert_equal 'n', @to.link('n', 'n')
 
