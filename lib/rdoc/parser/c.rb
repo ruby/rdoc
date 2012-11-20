@@ -200,74 +200,26 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # Scans #content for rb_define_module, rb_define_class, boot_defclass,
-  # rb_define_module_under, rb_define_class_under and rb_singleton_class
-
-  def do_classes
-    @content.scan(/(\w+)\s* = \s*rb_define_module\s*\(\s*"(\w+)"\s*\)/mx) do
-      |var_name, class_name|
-      handle_class_module(var_name, "module", class_name, nil, nil)
-    end
-
-    # The '.' lets us handle SWIG-generated files
-    @content.scan(/([\w\.]+)\s* = \s*rb_define_class\s*
-              \(
-                 \s*"(\w+)",
-                 \s*(\w+)\s*
-              \)/mx) do |var_name, class_name, parent|
-      handle_class_module(var_name, "class", class_name, parent, nil)
-    end
-
-    @content.scan(/([\w\.]+)\s* = \s*rb_struct_define_without_accessor\s*
-              \(
-                 \s*"(\w+)",  # Class name
-                 \s*(\w+),    # Parent class
-                 \s*\w+,      # Allocation function
-                 (\s*"\w+",)* # Attributes
-                 \s*NULL
-              \)/mx) do |var_name, class_name, parent|
-      handle_class_module(var_name, "class", class_name, parent, nil)
-    end
-
+  def do_boot_defclass
     @content.scan(/(\w+)\s*=\s*boot_defclass\s*\(\s*"(\w+?)",\s*(\w+?)\s*\)/) do
       |var_name, class_name, parent|
       parent = nil if parent == "0"
       handle_class_module(var_name, "class", class_name, parent, nil)
     end
+  end
 
-    @content.scan(/(\w+)\s* = \s*rb_define_module_under\s*
-              \(
-                 \s*(\w+),
-                 \s*"(\w+)"
-              \s*\)/mx) do |var_name, in_module, class_name|
-      handle_class_module(var_name, "module", class_name, nil, in_module)
-    end
+  ##
+  # Scans #content for rb_define_module, rb_define_class, boot_defclass,
+  # rb_define_module_under, rb_define_class_under and rb_singleton_class
 
-    @content.scan(/([\w\.]+)\s* =                  # var_name
-                   \s*rb_define_class_under\s*
-                   \(
-                     \s* (\w+),                    # under
-                     \s* "(\w+)",                  # class_name
-                     \s*
-                     (?:
-                       ([\w\*\s\(\)\.\->]+) |      # parent_name
-                       rb_path2class\("([\w:]+)"\) # path
-                     )
-                     \s*
-                   \)
-                  /mx) do |var_name, under, class_name, parent_name, path|
-      parent = path || parent_name
-
-      handle_class_module var_name, 'class', class_name, parent, under
-    end
-
-    @content.scan(/([\w\.]+)\s* = \s*rb_singleton_class\s*
-                  \(
-                    \s*(\w+)
-                  \s*\)/mx) do |sclass_var, class_var|
-      handle_singleton sclass_var, class_var
-    end
+  def do_classes
+    do_define_module
+    do_define_class
+    do_struct_define_without_accessor
+    do_boot_defclass
+    do_define_module_under
+    do_define_class_under
+    do_define_singleton_class
   end
 
   ##
@@ -313,6 +265,63 @@ class RDoc::Parser::C < RDoc::Parser
                   \)
                   \s*;%xm) do |name, value|
       handle_constants 'const', 'rb_mFConst', name, value
+    end
+  end
+
+  def do_define_class
+    # The '.' lets us handle SWIG-generated files
+    @content.scan(/([\w\.]+)\s* = \s*rb_define_class\s*
+              \(
+                 \s*"(\w+)",
+                 \s*(\w+)\s*
+              \)/mx) do |var_name, class_name, parent|
+      handle_class_module(var_name, "class", class_name, parent, nil)
+    end
+  end
+
+  def do_define_class_under
+    @content.scan(/([\w\.]+)\s* =                  # var_name
+                   \s*rb_define_class_under\s*
+                   \(
+                     \s* (\w+),                    # under
+                     \s* "(\w+)",                  # class_name
+                     \s*
+                     (?:
+                       ([\w\*\s\(\)\.\->]+) |      # parent_name
+                       rb_path2class\("([\w:]+)"\) # path
+                     )
+                     \s*
+                   \)
+                  /mx) do |var_name, under, class_name, parent_name, path|
+      parent = path || parent_name
+
+      handle_class_module var_name, 'class', class_name, parent, under
+    end
+  end
+
+  def do_define_module
+    @content.scan(/(\w+)\s* = \s*rb_define_module\s*\(\s*"(\w+)"\s*\)/mx) do
+      |var_name, class_name|
+      handle_class_module(var_name, "module", class_name, nil, nil)
+    end
+  end
+
+  def do_define_module_under
+    @content.scan(/(\w+)\s* = \s*rb_define_module_under\s*
+              \(
+                 \s*(\w+),
+                 \s*"(\w+)"
+              \s*\)/mx) do |var_name, in_module, class_name|
+      handle_class_module(var_name, "module", class_name, nil, in_module)
+    end
+  end
+
+  def do_define_singleton_class
+    @content.scan(/([\w\.]+)\s* = \s*rb_singleton_class\s*
+                  \(
+                    \s*(\w+)
+                  \s*\)/mx) do |sclass_var, class_var|
+      handle_singleton sclass_var, class_var
     end
   end
 
@@ -378,6 +387,19 @@ class RDoc::Parser::C < RDoc::Parser
       handle_method("method", "rb_mFileTest", meth_name, function, param_count)
       handle_method("singleton_method", "rb_cFile", meth_name, function,
                     param_count)
+    end
+  end
+
+  def do_struct_define_without_accessor
+    @content.scan(/([\w\.]+)\s* = \s*rb_struct_define_without_accessor\s*
+              \(
+                 \s*"(\w+)",  # Class name
+                 \s*(\w+),    # Parent class
+                 \s*\w+,      # Allocation function
+                 (\s*"\w+",)* # Attributes
+                 \s*NULL
+              \)/mx) do |var_name, class_name, parent|
+      handle_class_module(var_name, "class", class_name, parent, nil)
     end
   end
 
@@ -693,7 +715,7 @@ class RDoc::Parser::C < RDoc::Parser
       end
 
       unless enclosure then
-        @options.warn "Enclosing class/module '#{in_module}' for  #{type} #{class_name} not known"
+        @options.warn "Enclosing class/module '#{in_module}' for #{type} #{class_name} not known"
         return
       end
     else

@@ -1464,7 +1464,7 @@ Init_IO(void) {
     @parser.classes[name] if name
   end
 
-  def util_parser(content)
+  def util_parser content
     RDoc::Parser::C.new @top_level, @fn, content, @options, @stats
   end
 
