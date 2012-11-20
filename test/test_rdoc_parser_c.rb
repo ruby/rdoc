@@ -248,7 +248,7 @@ void Init_Blah(void) {
       refute util_get_class(content, 'cDate')
     end
 
-    assert_equal "Enclosing class/module \"cDate\" for alias b a not known\n",
+    assert_equal "Enclosing class or module \"cDate\" for alias b a is not known\n",
                  err
   end
 
@@ -456,6 +456,7 @@ void Init_curses(){
 
     @parser = util_parser content
 
+    @parser.do_modules
     @parser.do_classes
     @parser.do_constants
 
@@ -486,6 +487,7 @@ void Init_File(void) {
 
     @parser = util_parser content
 
+    @parser.do_modules
     @parser.do_classes
     @parser.do_constants
 

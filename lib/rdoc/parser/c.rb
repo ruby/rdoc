@@ -154,7 +154,7 @@ class RDoc::Parser::C < RDoc::Parser
       class_name = @known_classes[var_name]
 
       unless class_name then
-        @options.warn "Enclosing class/module %p for alias %s %s not known" % [
+        @options.warn "Enclosing class or module %p for alias %s %s is not known" % [
           var_name, new_name, old_name]
         next
       end
@@ -209,17 +209,15 @@ class RDoc::Parser::C < RDoc::Parser
   end
 
   ##
-  # Scans #content for rb_define_module, rb_define_class, boot_defclass,
-  # rb_define_module_under, rb_define_class_under and rb_singleton_class
+  # Scans #content for rb_define_class, boot_defclass, rb_define_class_under
+  # and rb_singleton_class
 
   def do_classes
-    do_define_module
-    do_define_class
-    do_struct_define_without_accessor
     do_boot_defclass
-    do_define_module_under
+    do_define_class
     do_define_class_under
-    do_define_singleton_class
+    do_singleton_class
+    do_struct_define_without_accessor
   end
 
   ##
@@ -268,6 +266,9 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
+  ##
+  # Scans #content for rb_define_class
+
   def do_define_class
     # The '.' lets us handle SWIG-generated files
     @content.scan(/([\w\.]+)\s* = \s*rb_define_class\s*
@@ -278,6 +279,9 @@ class RDoc::Parser::C < RDoc::Parser
       handle_class_module(var_name, "class", class_name, parent, nil)
     end
   end
+
+  ##
+  # Scans #content for rb_define_class_under
 
   def do_define_class_under
     @content.scan(/([\w\.]+)\s* =                  # var_name
@@ -299,12 +303,18 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
+  ##
+  # Scans #content for rb_define_module
+
   def do_define_module
     @content.scan(/(\w+)\s* = \s*rb_define_module\s*\(\s*"(\w+)"\s*\)/mx) do
       |var_name, class_name|
       handle_class_module(var_name, "module", class_name, nil, nil)
     end
   end
+
+  ##
+  # Scans #content for rb_define_module_under
 
   def do_define_module_under
     @content.scan(/(\w+)\s* = \s*rb_define_module_under\s*
@@ -313,15 +323,6 @@ class RDoc::Parser::C < RDoc::Parser
                  \s*"(\w+)"
               \s*\)/mx) do |var_name, in_module, class_name|
       handle_class_module(var_name, "module", class_name, nil, in_module)
-    end
-  end
-
-  def do_define_singleton_class
-    @content.scan(/([\w\.]+)\s* = \s*rb_singleton_class\s*
-                  \(
-                    \s*(\w+)
-                  \s*\)/mx) do |sclass_var, class_var|
-      handle_singleton sclass_var, class_var
     end
   end
 
@@ -389,6 +390,29 @@ class RDoc::Parser::C < RDoc::Parser
                     param_count)
     end
   end
+
+  ##
+  # Scans #content for rb_define_module and rb_define_module_under
+
+  def do_modules
+    do_define_module
+    do_define_module_under
+  end
+
+  ##
+  # Scans #content for rb_singleton_class
+
+  def do_singleton_class
+    @content.scan(/([\w\.]+)\s* = \s*rb_singleton_class\s*
+                  \(
+                    \s*(\w+)
+                  \s*\)/mx) do |sclass_var, class_var|
+      handle_singleton sclass_var, class_var
+    end
+  end
+
+  ##
+  # Scans #content for struct_define_without_accessor
 
   def do_struct_define_without_accessor
     @content.scan(/([\w\.]+)\s* = \s*rb_struct_define_without_accessor\s*
@@ -715,7 +739,9 @@ class RDoc::Parser::C < RDoc::Parser
       end
 
       unless enclosure then
-        @options.warn "Enclosing class/module '#{in_module}' for #{type} #{class_name} not known"
+        @options.warn "Enclosing class or module %p for %s %s is not known" % [
+           in_module, type, class_name
+        ]
         return
       end
     else
@@ -772,7 +798,7 @@ class RDoc::Parser::C < RDoc::Parser
     class_obj = find_class var_name, class_name
 
     unless class_obj then
-      @options.warn "Enclosing class/module #{const_name.inspect} not known"
+      @options.warn 'Enclosing class or module %p is not known' % [const_name]
       return
     end
 
@@ -1034,6 +1060,7 @@ class RDoc::Parser::C < RDoc::Parser
 
   def scan
     remove_commented_out_lines
+    do_modules
     do_classes
     do_constants
     do_methods
