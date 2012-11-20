@@ -724,15 +724,15 @@ and an extra note.[^2]
     MD
 
     expected = doc(
-      para("Some text{*1}[rdoc-label:foottext-1:footmark-1]\n" \
-           "with inline notes{*2}[rdoc-label:foottext-2:footmark-2]\n" \
+      para("Some text{*1}[rdoc-label:foottext-1:footmark-1]\n" +
+           "with inline notes{*2}[rdoc-label:foottext-2:footmark-2]\n" +
            "and an extra note.{*3}[rdoc-label:foottext-3:footmark-3]"),
 
       rule(1),
 
       para("{^1}[rdoc-label:footmark-1:foottext-1] With a footnote"),
       para("{^2}[rdoc-label:footmark-2:foottext-2] like this"),
-      para("{^3}[rdoc-label:footmark-3:foottext-3] " \
+      para("{^3}[rdoc-label:footmark-3:foottext-3] " +
            "Which should be numbered correctly"))
 
     assert_equal expected, doc

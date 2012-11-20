@@ -259,8 +259,7 @@ class RDoc::Stats
 
     cm.each_attribute do |attr|
       next if attr.documented?
-      report << "  #{attr.definition} :#{attr.name} " \
-        "# in file #{attr.file.full_name}"
+      report << "  #{attr.definition} :#{attr.name} # in file #{attr.file.full_name}"
     end
 
     report
@@ -277,9 +276,8 @@ class RDoc::Stats
 
     if cm.in_files.empty? then
       report << "# #{cm.definition} is referenced but empty."
-      report << '#'
-      report << '# It probably came from another project.  ' \
-        "I'm sorry I'm holding it against you."
+      report << "#"
+      report << "# It probably came from another project.  I'm sorry I'm holding it against you."
       report << nil
 
       return report

@@ -78,13 +78,13 @@ class TestRDocConstant < XrefTestCase
     cm      = top_level.add_class RDoc::NormalClass, 'Klass'
     section = cm.sections.first
 
-    loaded = Marshal.load "\x04\bU:\x13RDoc::Constant[\x0Fi\x00I" \
-                          "\"\nCONST\x06:\x06ETI\"\x11Klass::CONST\x06" \
-                          ";\x06T0I\"\fAliased\x06;\x06To" \
-                          ":\eRDoc::Markup::Document\a:\v@parts[\x06o" \
-                          ":\x1CRDoc::Markup::Paragraph\x06;\b[\x06I" \
-                          "\"\x16this is a comment\x06;\x06T:\n@file0I" \
-                          "\"\ffile.rb\x06;\x06TI\"\nKlass\x06" \
+    loaded = Marshal.load "\x04\bU:\x13RDoc::Constant[\x0Fi\x00I" +
+                          "\"\nCONST\x06:\x06ETI\"\x11Klass::CONST\x06" +
+                          ";\x06T0I\"\fAliased\x06;\x06To" +
+                          ":\eRDoc::Markup::Document\a:\v@parts[\x06o" +
+                          ":\x1CRDoc::Markup::Paragraph\x06;\b[\x06I" +
+                          "\"\x16this is a comment\x06;\x06T:\n@file0I" +
+                          "\"\ffile.rb\x06;\x06TI\"\nKlass\x06" +
                           ";\x06Tc\x16RDoc::NormalClass0"
 
     loaded.store = @store

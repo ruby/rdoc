@@ -84,12 +84,12 @@ class TestRDocContextSection < RDoc::TestCase
   end
 
   def test_marshal_load_version_0
-    loaded = Marshal.load "\x04\bU:\eRDoc::Context::Section" \
-                          "[\bi\x00I\"\fsection\x06:\x06EFo" \
-                          ":\eRDoc::Markup::Document\a:\v@parts" \
-                          "[\x06o;\a\a;\b[\x06o" \
-                          ":\x1CRDoc::Markup::Paragraph\x06;\b" \
-                          "[\x06I\"\fcomment\x06;\x06F:\n@fileI" \
+    loaded = Marshal.load "\x04\bU:\eRDoc::Context::Section" +
+                          "[\bi\x00I\"\fsection\x06:\x06EFo" +
+                          ":\eRDoc::Markup::Document\a:\v@parts" +
+                          "[\x06o;\a\a;\b[\x06o" +
+                          ":\x1CRDoc::Markup::Paragraph\x06;\b" +
+                          "[\x06I\"\fcomment\x06;\x06F:\n@fileI" +
                           "\"\ffile.rb\x06;\x06F;\n0"
 
     expected = doc RDoc::Comment.new('comment', @top_level).parse

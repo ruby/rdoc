@@ -693,8 +693,7 @@ class RDoc::Parser::C < RDoc::Parser
       end
 
       unless enclosure then
-        @options.warn "Enclosing class/module '#{in_module}' for " \
-                      "#{type} #{class_name} not known"
+        @options.warn "Enclosing class/module '#{in_module}' for  #{type} #{class_name} not known"
         return
       end
     else
@@ -838,8 +837,7 @@ class RDoc::Parser::C < RDoc::Parser
         if File.exist? file_name then
           file_content = File.read file_name
         else
-          @options.warn "unknown source #{source_file} for " \
-                        "#{meth_name} in #{@file_name}"
+          @options.warn "unknown source #{source_file} for #{meth_name} in #{@file_name}"
         end
       else
         file_content = @content

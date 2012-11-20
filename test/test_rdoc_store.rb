@@ -440,14 +440,14 @@ class TestRDocStore < XrefTestCase
     file = @s.method_file @klass.full_name, @meth.full_name
 
     open file, 'wb' do |io|
-      io.write "\x04\bU:\x14RDoc::AnyMethod[\x0Fi\x00I" \
-               "\"\vmethod\x06:\x06EF\"\x11Klass#method0:\vpublic" \
-               "o:\eRDoc::Markup::Document\x06:\v@parts[\x06" \
-               "o:\x1CRDoc::Markup::Paragraph\x06;\t[\x06I" \
-               "\"\x16this is a comment\x06;\x06FI" \
-               "\"\rcall_seq\x06;\x06FI\"\x0Fsome_block\x06;\x06F" \
-               "[\x06[\aI\"\faliased\x06;\x06Fo;\b\x06;\t[\x06" \
-               "o;\n\x06;\t[\x06I\"\x12alias comment\x06;\x06FI" \
+      io.write "\x04\bU:\x14RDoc::AnyMethod[\x0Fi\x00I" +
+               "\"\vmethod\x06:\x06EF\"\x11Klass#method0:\vpublic" +
+               "o:\eRDoc::Markup::Document\x06:\v@parts[\x06" +
+               "o:\x1CRDoc::Markup::Paragraph\x06;\t[\x06I" +
+               "\"\x16this is a comment\x06;\x06FI" +
+               "\"\rcall_seq\x06;\x06FI\"\x0Fsome_block\x06;\x06F" +
+               "[\x06[\aI\"\faliased\x06;\x06Fo;\b\x06;\t[\x06" +
+               "o;\n\x06;\t[\x06I\"\x12alias comment\x06;\x06FI" +
                "\"\nparam\x06;\x06F"
     end
 

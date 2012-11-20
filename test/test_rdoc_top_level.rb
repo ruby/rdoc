@@ -174,11 +174,11 @@ class TestRDocTopLevel < XrefTestCase
   end
 
   def test_marshal_load_version_0
-    loaded = Marshal.load "\x04\bU:\x13RDoc::TopLevel" \
-                          "[\ti\x00I\"\x0FREADME.txt\x06:\x06EF" \
-                          "c\x19RDoc::Parser::Simple" \
-                          "o:\eRDoc::Markup::Document\a:\v@parts" \
-                          "[\x06o:\x1CRDoc::Markup::Paragraph\x06;\b" \
+    loaded = Marshal.load "\x04\bU:\x13RDoc::TopLevel" +
+                          "[\ti\x00I\"\x0FREADME.txt\x06:\x06EF" +
+                          "c\x19RDoc::Parser::Simple" +
+                          "o:\eRDoc::Markup::Document\a:\v@parts" +
+                          "[\x06o:\x1CRDoc::Markup::Paragraph\x06;\b" +
                           "[\x06I\"\x13This is a page\x06;\x06F:\n@file@\a"
 
     comment = RDoc::Markup::Document.new(

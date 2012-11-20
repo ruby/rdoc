@@ -210,9 +210,9 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
               begin
                 tokens = RDoc::RubyLex.tokenize text, @options
 
-                "\n<pre class=\"ruby\">" \
-                "#{RDoc::TokenStream.to_html tokens}" \
-                "</pre>\n"
+                html = RDoc::TokenStream.to_html tokens
+
+                "\n<pre class=\"ruby\">#{html}</pre>\n"
               rescue RDoc::RubyLex::Error
                 "\n<pre>#{CGI.escapeHTML text}</pre>\n"
               end

@@ -112,10 +112,10 @@ class TestRDocAttr < RDoc::TestCase
     cm = tl.add_class RDoc::NormalClass, 'Klass'
     section = cm.sections.first
 
-    data = "\x04\bU:\x0FRDoc::Attr[\fi\x06I\"\tattr\x06:\x06EF" \
-           "\"\x0FKlass#attrI\"\aRW\x06;\x06F:\vpublic" \
-           "o:\eRDoc::Markup::Document\x06:\v@parts[\x06" \
-           "o:\x1CRDoc::Markup::Paragraph\x06;\t[\x06I" \
+    data = "\x04\bU:\x0FRDoc::Attr[\fi\x06I\"\tattr\x06:\x06EF" +
+           "\"\x0FKlass#attrI\"\aRW\x06;\x06F:\vpublic" +
+           "o:\eRDoc::Markup::Document\x06:\v@parts[\x06" +
+           "o:\x1CRDoc::Markup::Paragraph\x06;\t[\x06I" +
            "\"\x16this is a comment\x06;\x06FF"
 
     loaded = Marshal.load data
@@ -144,11 +144,11 @@ class TestRDocAttr < RDoc::TestCase
     cm = tl.add_class RDoc::NormalClass, 'Klass'
     section = cm.sections.first
 
-    loaded = Marshal.load "\x04\bU:\x0FRDoc::Attr[\ri\aI\"\tattr\x06" \
-                          ":\x06ETI\"\x0FKlass#attr\x06;\x06TI\"\aRW\x06" \
-                          ";\x06T:\vpublico:\eRDoc::Markup::Document\a" \
-                          ":\v@parts[\x06o:\x1CRDoc::Markup::Paragraph\x06;" \
-                          "\t[\x06I\"\x16this is a comment\x06;\x06T:\n" \
+    loaded = Marshal.load "\x04\bU:\x0FRDoc::Attr[\ri\aI\"\tattr\x06" +
+                          ":\x06ETI\"\x0FKlass#attr\x06;\x06TI\"\aRW\x06" +
+                          ";\x06T:\vpublico:\eRDoc::Markup::Document\a" +
+                          ":\v@parts[\x06o:\x1CRDoc::Markup::Paragraph\x06;" +
+                          "\t[\x06I\"\x16this is a comment\x06;\x06T:\n" +
                           "@file0FI\"\ffile.rb\x06;\x06T"
     loaded.store = @store
 
