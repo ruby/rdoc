@@ -167,13 +167,19 @@ class RDoc::Parser::C < RDoc::Parser
     def @enclosure_dependencies.tsort_each_node &block
       each_key(&block)
     rescue TSort::Cyclic => e
-      cycle = e.message.scan(/"(.*?)"/).flatten.map do |var_name|
+      cycle_vars = e.message.scan(/"(.*?)"/).flatten
+
+      cycle = cycle_vars.sort.map do |var_name|
+        delete var_name
+
         var_name, type, mod_name, = @missing_dependencies[var_name]
 
         "#{type} #{mod_name} (#{var_name})"
       end.join ', '
 
       warn "Unable to create #{cycle} due to a cyclic class or module creation"
+
+      retry
     end
 
     def @enclosure_dependencies.tsort_each_child node, &block
