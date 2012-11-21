@@ -10,10 +10,10 @@
   </div>
 </nav>
 
-<% if @options.main_page && main_page = @files.find { |f| f.full_name == @options.main_page } then %>
 <div id="documentation" class="description">
-  <%= main_page.description %>
-</div>
+<% if @options.main_page && main_page = @files.find { |f| f.full_name == @options.main_page } then %>
+<%= main_page.description %>
 <% else %>
 <p>This is the API documentation for <%= @title %>.
 <% end %>
+</div>
