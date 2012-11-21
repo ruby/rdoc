@@ -56,6 +56,13 @@ require 'tsort'
 # [Document-const: +name+]
 #   Documentation for the named +rb_define_const+.
 #
+#   Constant values can be supplied on the first line of the comment like so:
+#
+#     /* 300: The highest possible score in bowling */
+#     rb_define_const(cFoo, "PERFECT", INT2FIX(300));
+#
+#   The value can contain internal colons so long as they are escaped with a \
+#
 # [Document-global: +name+]
 #   Documentation for the named +rb_define_global_const+
 #
@@ -244,6 +251,9 @@ class RDoc::Parser::C < RDoc::Parser
       handle_attr var_name, attr_name, read, write
     end
   end
+
+  ##
+  # Scans #content for boot_defclass
 
   def do_boot_defclass
     @content.scan(/(\w+)\s*=\s*boot_defclass\s*\(\s*"(\w+?)",\s*(\w+?)\s*\)/) do
@@ -546,7 +556,7 @@ class RDoc::Parser::C < RDoc::Parser
              \s*(\([^)]*\))([^;]|$))%xm then
       comment = RDoc::Comment.new $1, @top_level
       body = $2
-      offset = $~.offset(2).first
+      offset, = $~.offset(2)
 
       comment.remove_private if comment
 
@@ -867,13 +877,9 @@ class RDoc::Parser::C < RDoc::Parser
     # "/* definition: comment */" form.  The literal ':' and '\' characters
     # can be escaped with a backslash.
     if type.downcase == 'const' then
-      elements = comment.text.split ':'
+      no_match, new_definition, new_comment = comment.text.split(/(\A.*):/)
 
-      if elements.nil? or elements.empty? then
-        con = RDoc::Constant.new const_name, definition, comment
-      else
-        new_definition = elements[0..-2].join(':')
-
+      if no_match and no_match.empty? then
         if new_definition.empty? then # Default to literal C definition
           new_definition = definition
         else
@@ -883,15 +889,13 @@ class RDoc::Parser::C < RDoc::Parser
 
         new_definition.sub!(/\A(\s+)/, '')
 
-        new_comment = if $1.nil? then
-                        elements.last.lstrip
-                      else
-                        "#{$1}#{elements.last.lstrip}"
-                      end
+        new_comment = "#{$1}#{new_comment.lstrip}"
 
         new_comment = RDoc::Comment.new new_comment, @top_level
 
         con = RDoc::Constant.new const_name, new_definition, new_comment
+      else
+        con = RDoc::Constant.new const_name, definition, comment
       end
     else
       con = RDoc::Constant.new const_name, definition, comment

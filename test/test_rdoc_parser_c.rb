@@ -388,6 +388,12 @@ void Init_foo(){
     */
    rb_define_const(cFoo, "MULTILINE_NOT_EMPTY", INT2FIX(1));
 
+   /*
+    * Multiline comment goes here because this comment spans multiple lines.
+    * 1: However, the value extraction should only happen for the first line
+    */
+   rb_define_const(cFoo, "MULTILINE_COLON_ON_SECOND_LINE", INT2FIX(1));
+
 }
     EOF
 
@@ -436,6 +442,13 @@ Multiline comment goes here because this comment spans multiple lines.
     assert_equal ['MULTILINE',           'INT2FIX(1)', comment], constants.shift
     assert_equal ['MULTILINE_VALUE',     '1',          comment], constants.shift
     assert_equal ['MULTILINE_NOT_EMPTY', 'INT2FIX(1)', comment], constants.shift
+
+    comment = <<-EOF.chomp
+Multiline comment goes here because this comment spans multiple lines.
+1: However, the value extraction should only happen for the first line
+    EOF
+    assert_equal ['MULTILINE_COLON_ON_SECOND_LINE', 'INT2FIX(1)', comment],
+                 constants.shift
 
     assert constants.empty?, constants.inspect
   end

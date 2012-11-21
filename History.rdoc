@@ -32,6 +32,10 @@
     RDoc::TopLevel.
   * RDoc::RDocError has been removed.  It was deprecated throughout RDoc 3.
   * ri -f html is no longer supported.
+  * Comment definitions in C comments are now only discovered from the first
+    line.  A colon on a subsequent line won't trigger definition extraction.
+    Issue #103, see also
+    http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-core/42942
 
 * Major enhancements
   * ri can now show pages (README, etc.)
