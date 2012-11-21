@@ -1431,14 +1431,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
             # ignore
           else
             if comment.text =~ /\A#\#$/ then
-              method = case comment.text
-                       when /^# +:?attr(_reader|_writer|_accessor)?:/ then
-                         parse_meta_attr container, single, tk, comment
-                       else
-                         parse_meta_method container, single, tk, comment
-                       end
-
-              method.params = container.params if container.params
+              case comment.text
+              when /^# +:?attr(_reader|_writer|_accessor)?:/ then
+                parse_meta_attr container, single, tk, comment
+              else
+                method = parse_meta_method container, single, tk, comment
+                method.params = container.params if container.params
+              end
             end
           end
         end
