@@ -5,7 +5,7 @@ require 'fileutils'
 require 'time'
 
 ##
-# This is the driver for generating RDoc output.  It file parsing and
+# This is the driver for generating RDoc output.  It handles file parsing and
 # generation of output.
 #
 # To use this class to generate RDoc output via the API, the recommended way
