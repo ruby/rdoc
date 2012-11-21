@@ -2537,6 +2537,25 @@ end
     assert m.ignored?
   end
 
+  def test_scan_stopdoc_nested
+    util_parser <<-RUBY
+# :stopdoc:
+class A::B
+end
+    RUBY
+
+    @parser.scan
+
+    a   = @store.modules_hash['A']
+    a_b = @store.classes_hash['A::B']
+
+    refute a.document_self, 'A is inside stopdoc'
+    assert a.ignored?,      'A is inside stopdoc'
+
+    refute a_b.document_self, 'A::B is inside stopdoc'
+    assert a_b.ignored?,      'A::B is inside stopdoc'
+  end
+
   def test_stopdoc_after_comment
     util_parser <<-EOS
       module Bar

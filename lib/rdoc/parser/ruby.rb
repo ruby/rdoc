@@ -240,7 +240,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # with :: separated named) and return the ultimate name, the associated
   # container, and the given name (with the ::).
 
-  def get_class_or_module(container)
+  def get_class_or_module container
     skip_tkspace
     name_t = get_tk
     given_name = ''
@@ -259,14 +259,17 @@ class RDoc::Parser::Ruby < RDoc::Parser
     while TkCOLON2 === peek_tk do
       prev_container = container
       container = container.find_module_named name_t.name
-      unless container then
-        container = prev_container.add_module RDoc::NormalModule, name_t.name
-      end
+      container ||= prev_container.add_module RDoc::NormalModule, name_t.name
+
+      container.ignore unless prev_container.document_children
+
       get_tk
       name_t = get_tk
       given_name << '::' << name_t.name
     end
+
     skip_tkspace false
+
     return [container, name_t, given_name]
   end
 
