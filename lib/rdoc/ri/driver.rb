@@ -932,6 +932,33 @@ Options may also be set in the 'RI' environment variable.
   end
 
   ##
+  # Finds the given +pager+ for jruby.  Returns an IO if +pager+ was found.
+  #
+  # Returns false if +pager+ does not exist.
+  #
+  # Returns nil if the jruby JVM doesn't support ProcessBuilder redirection
+  # (1.6 and older).
+
+  def find_pager_jruby pager
+    require 'java'
+
+    return nil unless java.lang.ProcessBuilder.constants.include? :Redirect
+
+    pb = java.lang.ProcessBuilder.new pager
+    pb = pb.redirect_output java.lang.ProcessBuilder::Redirect::INHERIT
+
+    process = pb.start
+
+    input = process.output_stream
+
+    io = input.to_io
+    io.sync = true
+    io
+  rescue java.io.IOException
+    false
+  end
+
+  ##
   # Finds a store that matches +name+ which can be the name of a gem, "ruby",
   # "home" or "site".
   #
@@ -1270,6 +1297,8 @@ Options may also be set in the 'RI' environment variable.
   def setup_pager
     return if @use_stdout
 
+    jruby = Object.const_defined?(:RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+
     pagers = [ENV['RI_PAGER'], ENV['PAGER'], 'pager', 'less', 'more']
 
     pagers.compact.uniq.each do |pager|
@@ -1279,7 +1308,15 @@ Options may also be set in the 'RI' environment variable.
 
       next unless in_path? pager_cmd
 
-      io = IO.popen(pager, 'w') rescue next
+      if jruby then
+        case io = find_pager_jruby(pager)
+        when nil   then break
+        when false then next
+        else            io
+        end
+      else
+        io = IO.popen(pager, 'w') rescue next
+      end
 
       next if $? and $?.pid == io.pid and $?.exited? # pager didn't work
 
@@ -1292,6 +1329,9 @@ Options may also be set in the 'RI' environment variable.
 
     nil
   end
+
+  ##
+  # Starts a WEBrick server for ri.
 
   def start_server
     require 'webrick'
