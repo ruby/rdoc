@@ -37,8 +37,10 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_gather_files
-    file = File.expand_path __FILE__
-    assert_equal [file], @rdoc.gather_files([file, file])
+    a = File.expand_path __FILE__
+    b = File.expand_path '../test_rdoc_text.rb', __FILE__
+
+    assert_equal [a, b], @rdoc.gather_files([b, a, b])
   end
 
   def test_handle_pipe

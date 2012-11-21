@@ -119,6 +119,8 @@ class RDoc::RDoc
     file_list = file_list.uniq
 
     file_list = remove_unparseable file_list
+
+    file_list.sort
   end
 
   ##
