@@ -99,6 +99,11 @@ class RDoc::Context < RDoc::CodeObject
   attr_reader :methods_hash
 
   ##
+  # Params to be used in the next MethodAttr parsed under this context
+
+  attr_accessor :params
+
+  ##
   # Hash of registered constants.
 
   attr_reader :constants_hash
@@ -144,6 +149,8 @@ class RDoc::Context < RDoc::CodeObject
 
     @methods_hash   = {}
     @constants_hash = {}
+
+    @params = nil
 
     @store ||= nil
   end

@@ -1746,8 +1746,25 @@ EOF
     assert_equal 'unknown', @top_level.classes.first.external_aliases[0].old_name
   end
 
-  def test_parse_statements_identifier_constant
+  def test_parse_statements_identifier_args
+    comment = "##\n# :args: x\n# :method: b\n# my method\n"
 
+    util_parser "module M\n#{comment}def_delegator :a, :b, :b\nend"
+
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL
+
+    m = @top_level.modules.first
+    assert_equal 'M', m.full_name
+
+    b = m.method_list.first
+    assert_equal 'M#b', b.full_name
+    assert_equal 'x', b.params
+    assert_equal 'my method', b.comment.text
+
+    assert_nil m.params, 'Module parameter not removed'
+  end
+
+  def test_parse_statements_identifier_constant
     sixth_constant = <<-EOF
 Class.new do
   rule :file do

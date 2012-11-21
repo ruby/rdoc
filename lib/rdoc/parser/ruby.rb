@@ -944,6 +944,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
         @stats.add_attribute att
       end
     end
+
+    att
   end
 
   ##
@@ -1029,6 +1031,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.comment = comment
 
     @stats.add_method meth
+
+    meth
   end
 
   ##
@@ -1427,12 +1431,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
             # ignore
           else
             if comment.text =~ /\A#\#$/ then
-              case comment.text
-              when /^# +:?attr(_reader|_writer|_accessor)?:/ then
-                parse_meta_attr container, single, tk, comment
-              else
-                parse_meta_method container, single, tk, comment
-              end
+              method = case comment.text
+                       when /^# +:?attr(_reader|_writer|_accessor)?:/ then
+                         parse_meta_attr container, single, tk, comment
+                       else
+                         parse_meta_method container, single, tk, comment
+                       end
+
+              method.params = container.params if container.params
             end
           end
         end
@@ -1470,6 +1476,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       unless keep_comment then
         comment = new_comment ''
         comment.force_encoding @encoding if @encoding
+        container.params = nil
       end
 
       begin
@@ -1477,6 +1484,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
         skip_tkspace false
       end while peek_tk == TkNL
     end
+
+    container.params = nil
   end
 
   ##

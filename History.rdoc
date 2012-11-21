@@ -108,6 +108,7 @@
     Tobias Koch
   * Classes and modules in a C file may now be created in any order.  Issue
     #124 by Su Zhang
+  * A metaprogrammed methods support the :args: directive.  Issue #100
 
 === 3.12 / 2011-12-15
 
