@@ -6,6 +6,8 @@ class TestRDocContext < XrefTestCase
     super
 
     @context = RDoc::Context.new
+    @context.store = @store
+
     @enumerator = # 1.8 vs 1.9
       Object.const_defined?(:Enumerator) ? Enumerator : Enumerable::Enumerator
   end
@@ -212,6 +214,34 @@ class TestRDocContext < XrefTestCase
     assert_empty @context.external_aliases
     assert_empty @context.unmatched_alias_lists
     assert_equal %w[old_name new_name], @context.method_list.map { |m| m.name }
+  end
+
+  def test_add_method_duplicate
+    @store.rdoc.options.verbosity = 2
+
+    meth1 = RDoc::AnyMethod.new nil, 'name'
+    meth1.record_location @store.add_file 'first.rb'
+    meth1.visibility = nil
+    meth1.comment = comment 'first'
+
+    @context.add_method meth1
+
+    meth2 = RDoc::AnyMethod.new nil, 'name'
+    meth2.record_location @store.add_file 'second.rb'
+    meth2.comment = comment 'second'
+
+    _, err = capture_io do
+      @context.add_method meth2
+    end
+
+    expected = 'Duplicate method (unknown)#name in file second.rb, ' \
+               'previously in file first.rb'
+
+    assert_equal expected, err.chomp
+
+    method = @context.method_list.first
+
+    assert_equal 'first', method.comment.text
   end
 
   def test_add_module

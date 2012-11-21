@@ -74,6 +74,8 @@
     the components of RDoc::RI::Paths.path individually.
   * Added support for rb_file_const.
   * RDoc now processes files in sorted order.  Issue #71 by Vít Ondruch
+  * RDoc now warns with --verbose when methods are duplicated.  Issue #71 by
+    Vít Ondruch
 
 * Bug fixes
   * A word that is directly followed by a multi-word tidy link label no longer

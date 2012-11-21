@@ -443,6 +443,10 @@ class RDoc::Context < RDoc::CodeObject
 
     if known then
       known.comment = method.comment if known.comment.empty?
+      previously = ", previously in #{known.file}" unless
+        method.file == known.file
+      @store.rdoc.options.warn \
+        "Duplicate method #{known.full_name} in #{method.file}#{previously}"
     else
       @methods_hash[key] = method
       method.visibility = @visibility
