@@ -106,6 +106,8 @@
     burningTyger
   * Fixed mangling of email addresses that look like labels.  Issue #129 by
     Tobias Koch
+  * Classes and modules in a C file may now be created in any order.  Issue
+    #124 by Su Zhang
 
 === 3.12 / 2011-12-15
 

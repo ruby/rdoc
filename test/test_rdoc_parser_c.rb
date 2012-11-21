@@ -608,8 +608,59 @@ void Init_Blah(void) {
     assert               methods.first.singleton
   end
 
+  def test_do_missing
+    parser = util_parser
+
+    klass_a = @top_level.add_class RDoc::ClassModule, 'A'
+    parser.classes['a'] = klass_a
+
+    parser.enclosure_dependencies['c'] << 'b'
+    parser.enclosure_dependencies['b'] << 'a'
+    parser.enclosure_dependencies['d'] << 'a'
+
+    parser.missing_dependencies['d'] = ['d', 'class', 'D', 'Object', 'a']
+    parser.missing_dependencies['c'] = ['c', 'class', 'C', 'Object', 'b']
+    parser.missing_dependencies['b'] = ['b', 'class', 'B', 'Object', 'a']
+
+    parser.do_missing
+
+    assert_equal %w[A A::B A::B::C A::D],
+                 @store.all_classes_and_modules.map { |m| m.full_name }.sort
+  end
+
+  def test_do_missing_cycle
+    parser = util_parser
+
+    klass_a = @top_level.add_class RDoc::ClassModule, 'A'
+    parser.classes['a'] = klass_a
+
+    parser.enclosure_dependencies['c'] << 'b'
+    parser.enclosure_dependencies['b'] << 'a'
+
+    parser.missing_dependencies['c'] = ['c', 'class', 'C', 'Object', 'b']
+    parser.missing_dependencies['b'] = ['b', 'class', 'B', 'Object', 'a']
+
+    parser.enclosure_dependencies['y'] << 'z'
+    parser.enclosure_dependencies['z'] << 'y'
+
+    parser.missing_dependencies['y'] = ['y', 'class', 'Y', 'Object', 'z']
+    parser.missing_dependencies['z'] = ['z', 'class', 'Z', 'Object', 'y']
+
+    _, err = capture_io do
+      parser.do_missing
+    end
+
+    expected = 'Unable to create class Y (y), class Z (z) ' +
+               'due to a cyclic class or module creation'
+
+    assert_equal expected, err.chomp
+
+    assert_equal %w[A A::B A::B::C],
+                 @store.all_classes_and_modules.map { |m| m.full_name }.sort
+  end
+
   def test_find_alias_comment
-    parser = util_parser ''
+    parser = util_parser
 
     comment = parser.find_alias_comment 'C', '[]', 'index'
 
@@ -1076,7 +1127,7 @@ If no arguments are given:
 
     COMMENT
 
-    parser = util_parser ''
+    parser = util_parser
     method_obj = RDoc::AnyMethod.new nil, 'blah'
 
     parser.find_modifiers comment, method_obj
@@ -1098,7 +1149,7 @@ commercial() -> Date <br />
 
     COMMENT
 
-    parser = util_parser ''
+    parser = util_parser
     method_obj = RDoc::AnyMethod.new nil, 'blah'
 
     parser.find_modifiers comment, method_obj
@@ -1115,7 +1166,7 @@ commercial() -> Date <br />
 
     COMMENT
 
-    parser = util_parser ''
+    parser = util_parser
     method_obj = RDoc::AnyMethod.new nil, 'blah'
 
     parser.find_modifiers comment, method_obj
@@ -1243,7 +1294,7 @@ void Init_Blah(void) {
   end
 
   def test_look_for_directives_in
-    parser = util_parser ''
+    parser = util_parser
 
     comment = RDoc::Comment.new "# :other: not_handled\n"
 
@@ -1401,7 +1452,7 @@ Init_IO(void) {
   end
 
   def test_rb_scan_args
-    parser = util_parser ''
+    parser = util_parser
 
     assert_equal '(p1)',
                  parser.rb_scan_args('rb_scan_args(a, b, "1",)')
@@ -1459,6 +1510,31 @@ Init_IO(void) {
                  parser.rb_scan_args('rb_scan_args(a, b, "*:&",)')
   end
 
+  def test_scan_order_dependent
+    parser = util_parser <<-C
+void a(void) {
+    mA = rb_define_module("A");
+}
+
+void b(void) {
+    cB = rb_define_class_under(mA, "B", rb_cObject);
+}
+
+void c(void) {
+    mC = rb_define_module_under(cB, "C");
+}
+
+void d(void) {
+    mD = rb_define_class_under(mC, "D");
+}
+    C
+
+    parser.scan
+
+    assert_equal %w[A A::B A::B::C],
+                 @store.all_classes_and_modules.map { |m| m.full_name }.sort
+  end
+
   def util_get_class content, name = nil
     @parser = util_parser content
     @parser.scan
@@ -1466,7 +1542,7 @@ Init_IO(void) {
     @parser.classes[name] if name
   end
 
-  def util_parser content
+  def util_parser content = ''
     RDoc::Parser::C.new @top_level, @fn, content, @options, @stats
   end
 

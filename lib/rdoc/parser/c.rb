@@ -1,3 +1,5 @@
+require 'tsort'
+
 ##
 # RDoc::Parser::C attempts to parse C extension files.  It looks for
 # the standard patterns that you find in extensions: <tt>rb_define_class,
@@ -118,11 +120,22 @@ class RDoc::Parser::C < RDoc::Parser
 
   attr_accessor :content
 
+  ##
+  # Dependencies from a missing enclosing class to the classes in
+  # missing_dependencies that depend upon it.
+
+  attr_reader :enclosure_dependencies
 
   ##
   # Maps C variable names to names of ruby classes (and singleton classes)
 
   attr_reader :known_classes
+
+  ##
+  # Classes found while parsing the C file that were not yet registered due to
+  # a missing enclosing class.  These are processed by do_missing
+
+  attr_reader :missing_dependencies
 
   ##
   # Maps C variable names to names of ruby singleton classes
@@ -140,6 +153,32 @@ class RDoc::Parser::C < RDoc::Parser
     @classes = {}
     @singleton_classes = {}
     @file_dir = File.dirname(@file_name)
+
+    # missing variable => [handle_class_module arguments]
+    @missing_dependencies = {}
+
+    # missing enclosure variable => [dependent handle_class_module arguments]
+    @enclosure_dependencies = Hash.new { |h, k| h[k] = [] }
+    @enclosure_dependencies.instance_variable_set :@missing_dependencies,
+                                                  @missing_dependencies
+
+    @enclosure_dependencies.extend TSort
+
+    def @enclosure_dependencies.tsort_each_node &block
+      each_key(&block)
+    rescue TSort::Cyclic => e
+      cycle = e.message.scan(/"(.*?)"/).flatten.map do |var_name|
+        var_name, type, mod_name, = @missing_dependencies[var_name]
+
+        "#{type} #{mod_name} (#{var_name})"
+      end.join ', '
+
+      warn "Unable to create #{cycle} due to a cyclic class or module creation"
+    end
+
+    def @enclosure_dependencies.tsort_each_child node, &block
+      fetch(node, []).each(&block)
+    end
   end
 
   ##
@@ -388,6 +427,18 @@ class RDoc::Parser::C < RDoc::Parser
       handle_method("method", "rb_mFileTest", meth_name, function, param_count)
       handle_method("singleton_method", "rb_cFile", meth_name, function,
                     param_count)
+    end
+  end
+
+  def do_missing
+    return if @missing_dependencies.empty?
+
+    @enclosure_dependencies.tsort.each do |in_module|
+      arguments = @missing_dependencies.delete in_module
+
+      next unless arguments # dependency on existing class
+
+      handle_class_module(*arguments)
     end
   end
 
@@ -739,9 +790,10 @@ class RDoc::Parser::C < RDoc::Parser
       end
 
       unless enclosure then
-        @options.warn "Enclosing class or module %p for %s %s is not known" % [
-           in_module, type, class_name
-        ]
+        @enclosure_dependencies[in_module] << var_name
+        @missing_dependencies[var_name] =
+          [var_name, type, class_name, parent, in_module]
+
         return
       end
     else
@@ -1060,8 +1112,11 @@ class RDoc::Parser::C < RDoc::Parser
 
   def scan
     remove_commented_out_lines
+
     do_modules
     do_classes
+    do_missing
+
     do_constants
     do_methods
     do_includes
