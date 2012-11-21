@@ -243,7 +243,7 @@ class RDoc::Parser::C < RDoc::Parser
     @content.scan(/(\w+)\s*=\s*boot_defclass\s*\(\s*"(\w+?)",\s*(\w+?)\s*\)/) do
       |var_name, class_name, parent|
       parent = nil if parent == "0"
-      handle_class_module(var_name, "class", class_name, parent, nil)
+      handle_class_module(var_name, :class, class_name, parent, nil)
     end
   end
 
@@ -315,7 +315,7 @@ class RDoc::Parser::C < RDoc::Parser
                  \s*"(\w+)",
                  \s*(\w+)\s*
               \)/mx) do |var_name, class_name, parent|
-      handle_class_module(var_name, "class", class_name, parent, nil)
+      handle_class_module(var_name, :class, class_name, parent, nil)
     end
   end
 
@@ -338,7 +338,7 @@ class RDoc::Parser::C < RDoc::Parser
                   /mx) do |var_name, under, class_name, parent_name, path|
       parent = path || parent_name
 
-      handle_class_module var_name, 'class', class_name, parent, under
+      handle_class_module var_name, :class, class_name, parent, under
     end
   end
 
@@ -348,7 +348,7 @@ class RDoc::Parser::C < RDoc::Parser
   def do_define_module
     @content.scan(/(\w+)\s* = \s*rb_define_module\s*\(\s*"(\w+)"\s*\)/mx) do
       |var_name, class_name|
-      handle_class_module(var_name, "module", class_name, nil, nil)
+      handle_class_module(var_name, :module, class_name, nil, nil)
     end
   end
 
@@ -361,7 +361,7 @@ class RDoc::Parser::C < RDoc::Parser
                  \s*(\w+),
                  \s*"(\w+)"
               \s*\)/mx) do |var_name, in_module, class_name|
-      handle_class_module(var_name, "module", class_name, nil, in_module)
+      handle_class_module(var_name, :module, class_name, nil, in_module)
     end
   end
 
@@ -474,7 +474,7 @@ class RDoc::Parser::C < RDoc::Parser
                  (\s*"\w+",)* # Attributes
                  \s*NULL
               \)/mx) do |var_name, class_name, parent|
-      handle_class_module(var_name, "class", class_name, parent, nil)
+      handle_class_module(var_name, :class, class_name, parent, nil)
     end
   end
 
@@ -784,7 +784,7 @@ class RDoc::Parser::C < RDoc::Parser
       enclosure = @classes[in_module] || @store.c_enclosure_classes[in_module]
 
       if enclosure.nil? and enclosure = @known_classes[in_module] then
-        enc_type = /^rb_m/ =~ in_module ? "module" : "class"
+        enc_type = /^rb_m/ =~ in_module ? :module : :class
         handle_class_module in_module, enc_type, enclosure, nil, nil
         enclosure = @classes[in_module]
       end
@@ -800,7 +800,7 @@ class RDoc::Parser::C < RDoc::Parser
       enclosure = @top_level
     end
 
-    if type == "class" then
+    if type == :class then
       full_name = if RDoc::ClassModule === enclosure then
                     enclosure.full_name + "::#{class_name}"
                   else

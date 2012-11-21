@@ -618,9 +618,9 @@ void Init_Blah(void) {
     parser.enclosure_dependencies['b'] << 'a'
     parser.enclosure_dependencies['d'] << 'a'
 
-    parser.missing_dependencies['d'] = ['d', 'class', 'D', 'Object', 'a']
-    parser.missing_dependencies['c'] = ['c', 'class', 'C', 'Object', 'b']
-    parser.missing_dependencies['b'] = ['b', 'class', 'B', 'Object', 'a']
+    parser.missing_dependencies['d'] = ['d', :class, 'D', 'Object', 'a']
+    parser.missing_dependencies['c'] = ['c', :class, 'C', 'Object', 'b']
+    parser.missing_dependencies['b'] = ['b', :class, 'B', 'Object', 'a']
 
     parser.do_missing
 
@@ -637,14 +637,14 @@ void Init_Blah(void) {
     parser.enclosure_dependencies['c'] << 'b'
     parser.enclosure_dependencies['b'] << 'a'
 
-    parser.missing_dependencies['c'] = ['c', 'class', 'C', 'Object', 'b']
-    parser.missing_dependencies['b'] = ['b', 'class', 'B', 'Object', 'a']
+    parser.missing_dependencies['c'] = ['c', :class, 'C', 'Object', 'b']
+    parser.missing_dependencies['b'] = ['b', :class, 'B', 'Object', 'a']
 
     parser.enclosure_dependencies['y'] << 'z'
     parser.enclosure_dependencies['z'] << 'y'
 
-    parser.missing_dependencies['y'] = ['y', 'class', 'Y', 'Object', 'z']
-    parser.missing_dependencies['z'] = ['z', 'class', 'Z', 'Object', 'y']
+    parser.missing_dependencies['y'] = ['y', :class, 'Y', 'Object', 'z']
+    parser.missing_dependencies['z'] = ['z', :class, 'Z', 'Object', 'y']
 
     _, err = capture_io do
       parser.do_missing
