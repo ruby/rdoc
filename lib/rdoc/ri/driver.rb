@@ -363,6 +363,9 @@ Options may also be set in the 'RI' environment variable.
     @interactive = options[:interactive]
     @server      = options[:server]
     @use_stdout  = options[:use_stdout]
+
+    # pager process for jruby
+    @jruby_pager_process = nil
   end
 
   ##
@@ -941,15 +944,18 @@ Options may also be set in the 'RI' environment variable.
 
   def find_pager_jruby pager
     require 'java'
+    require 'shellwords'
 
     return nil unless java.lang.ProcessBuilder.constants.include? :Redirect
 
-    pb = java.lang.ProcessBuilder.new pager
+    pager = Shellwords.split pager
+
+    pb = java.lang.ProcessBuilder.new(*pager)
     pb = pb.redirect_output java.lang.ProcessBuilder::Redirect::INHERIT
 
-    process = pb.start
+    @jruby_pager_process = pb.start
 
-    input = process.output_stream
+    input = @jruby_pager_process.output_stream
 
     io = input.to_io
     io.sync = true
@@ -1224,6 +1230,7 @@ Options may also be set in the 'RI' environment variable.
         yield pager
       ensure
         pager.close
+        @jruby_pager_process.wait_for if @jruby_pager_process
       end
     else
       yield $stdout
