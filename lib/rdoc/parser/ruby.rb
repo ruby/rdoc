@@ -1676,28 +1676,44 @@ class RDoc::Parser::Ruby < RDoc::Parser
   #
   #   class MyClass # :nodoc:
   #
-  # We return the directive name and any parameters as a two element array
+  # We return the directive name and any parameters as a two element array if
+  # the name is in +allowed+.  A directive can be found anywhere up to the end
+  # of the current line.
 
   def read_directive allowed
-    tk = get_tk
+    tokens = []
 
-    if TkCOMMENT === tk then
-      return unless tk.text =~ /\s*:?(\w+):\s*(.*)/
+    while tk = get_tk do
+      tokens << tk
 
-      directive = $1.downcase
+      case tk
+      when TkNL      then return
+      when TkCOMMENT then
+        return unless tk.text =~ /\s*:?([\w-]+):\s*(.*)/
 
-      return [directive, $2] if allowed.include? directive
-    else
-      unget_tk tk
+        directive = $1.downcase
+
+        return [directive, $2] if allowed.include? directive
+
+        return
+      end
+    end
+  ensure
+    unless tokens.length == 1 and TkCOMMENT === tokens.first then
+      tokens.reverse_each do |tk|
+        unget_tk tk
+      end
     end
   end
 
   ##
-  # Handles the directive for +context+ if the directive is listed in +allow+.
-  # This method is called for directives following a definition.
+  # Handles directives following the definition for +context+ (any
+  # RDoc::CodeObject) if the directives are +allowed+ at this point.
+  #
+  # See also RDoc::Markup::PreProcess#handle_directive
 
-  def read_documentation_modifiers context, allow
-    directive, value = read_directive allow
+  def read_documentation_modifiers context, allowed
+    directive, value = read_directive allowed
 
     return unless directive
 

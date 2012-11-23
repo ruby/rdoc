@@ -118,6 +118,9 @@
   * Classes and modules in a C file may now be created in any order.  Issue
     #124 by Su Zhang
   * A metaprogrammed methods support the :args: directive.  Issue #100
+  * RDoc will now look for directives up to the end of the line.  For example,
+      class B < A; end # :nodoc:
+    will now hide documentation of B.  Issue #125 by Zachary Scott
 
 === 3.12 / 2011-12-15
 

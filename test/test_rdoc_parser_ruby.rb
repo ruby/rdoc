@@ -939,9 +939,10 @@ EOF
     assert_equal klass.current_section, foo.section
 
     stream = [
-      tk(:COMMENT, 1, 1, nil, "# File #{@top_level.absolute_name}, line 1"),
+      tk(:COMMENT, 0, 1, 1, nil,
+         "# File #{@top_level.absolute_name}, line 1"),
       RDoc::Parser::Ruby::NEWLINE_TOKEN,
-      tk(:SPACE,   1, 1, nil, ''),
+      tk(:SPACE,   0, 1, 1, nil, ''),
     ]
 
     assert_equal stream, foo.token_stream
@@ -1111,16 +1112,17 @@ EOF
     assert_equal klass.current_section, foo.section
 
     stream = [
-      tk(:COMMENT,    1, 1,  nil, "# File #{@top_level.absolute_name}, line 1"),
+      tk(:COMMENT,     0, 1, 1,  nil,
+         "# File #{@top_level.absolute_name}, line 1"),
       RDoc::Parser::Ruby::NEWLINE_TOKEN,
-      tk(:SPACE,      1, 1,  nil, ''),
-      tk(:IDENTIFIER, 1, 0,  'add_my_method', 'add_my_method'),
-      tk(:SPACE,      1, 13, nil, ' '),
-      tk(:SYMBOL,     1, 14, nil, ':foo'),
-      tk(:COMMA,      1, 18, nil, ','),
-      tk(:SPACE,      1, 19, nil, ' '),
-      tk(:SYMBOL,     1, 20, nil, ':bar'),
-      tk(:NL,         1, 24, nil, "\n"),
+      tk(:SPACE,       0, 1, 1,  nil, ''),
+      tk(:IDENTIFIER,  0, 1, 0,  'add_my_method', 'add_my_method'),
+      tk(:SPACE,       0, 1, 13, nil, ' '),
+      tk(:SYMBOL,      0, 1, 14, nil, ':foo'),
+      tk(:COMMA,       0, 1, 18, nil, ','),
+      tk(:SPACE,       0, 1, 19, nil, ' '),
+      tk(:SYMBOL,      0, 1, 20, nil, ':bar'),
+      tk(:NL,          0, 1, 24, nil, "\n"),
     ]
 
     assert_equal stream, foo.token_stream
@@ -1144,7 +1146,7 @@ end
 
     @parser.parse_meta_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
 
-    assert_equal tk(:NL, 3, 3, 3, "\n"), @parser.get_tk
+    assert_equal tk(:NL, 0, 3, 3, 3, "\n"), @parser.get_tk
   end
 
   def test_parse_meta_method_define_method
@@ -1308,19 +1310,20 @@ end
     assert_equal klass.current_section, foo.section
 
     stream = [
-      tk(:COMMENT,    1, 1,  nil, "# File #{@top_level.absolute_name}, line 1"),
+      tk(:COMMENT,     0, 1, 1,  nil,
+         "# File #{@top_level.absolute_name}, line 1"),
       RDoc::Parser::Ruby::NEWLINE_TOKEN,
-      tk(:SPACE,      1, 1,  nil,   ''),
-      tk(:DEF,        1, 0,  'def', 'def'),
-      tk(:SPACE,      1, 3,  nil,   ' '),
-      tk(:IDENTIFIER, 1, 4,  'foo', 'foo'),
-      tk(:LPAREN,     1, 7,  nil,   '('),
-      tk(:RPAREN,     1, 8,  nil,   ')'),
-      tk(:SPACE,      1, 9,  nil,   ' '),
-      tk(:COLON,      1, 10, nil,   ':'),
-      tk(:IDENTIFIER, 1, 11, 'bar', 'bar'),
-      tk(:SPACE,      1, 14, nil,   ' '),
-      tk(:END,        1, 15, 'end', 'end'),
+      tk(:SPACE,       0, 1, 1,  nil,   ''),
+      tk(:DEF,         0, 1, 0,  'def', 'def'),
+      tk(:SPACE,       3, 1, 3,  nil,   ' '),
+      tk(:IDENTIFIER,  4, 1, 4,  'foo', 'foo'),
+      tk(:LPAREN,      7, 1, 7,  nil,   '('),
+      tk(:RPAREN,      8, 1, 8,  nil,   ')'),
+      tk(:SPACE,       9, 1, 9,  nil,   ' '),
+      tk(:COLON,      10, 1, 10, nil,   ':'),
+      tk(:IDENTIFIER, 11, 1, 11, 'bar', 'bar'),
+      tk(:SPACE,      14, 1, 14, nil,   ' '),
+      tk(:END,        15, 1, 15, 'end', 'end'),
     ]
 
     assert_equal stream, foo.token_stream
@@ -1629,16 +1632,16 @@ end
     rt = RDoc::RubyToken
 
     expected = [
-      rt::TkCOMMENT   .new( 0, 2, 1, "# File #{@filename}, line 2"),
-      rt::TkNL        .new( 0, 0, 0, "\n"),
-      rt::TkSPACE     .new( 0, 1, 1, ""),
-      rt::TkDEF       .new( 8, 2, 0, "def"),
-      rt::TkSPACE     .new(11, 2, 3, " "),
-      rt::TkIDENTIFIER.new(12, 2, 4, "a"),
-      rt::TkNL        .new(13, 2, 5, "\n"),
-      rt::TkDREGEXP   .new(14, 3, 0, "%r{#}"),
-      rt::TkNL        .new(19, 3, 5, "\n"),
-      rt::TkEND       .new(20, 4, 0, "end"),
+      tk(:COMMENT,     0, 2, 1, nil,   "# File #{@filename}, line 2"),
+      tk(:NL,          0, 0, 0, nil,   "\n"),
+      tk(:SPACE,       0, 1, 1, nil,   ''),
+      tk(:DEF,         8, 2, 0, 'def', 'def'),
+      tk(:SPACE,      11, 2, 3, nil,   ' '),
+      tk(:IDENTIFIER, 12, 2, 4, 'a',   'a'),
+      tk(:NL,         13, 2, 5, nil,   "\n"),
+      tk(:DREGEXP,    14, 3, 0, nil,   '%r{#}'),
+      tk(:NL,         19, 3, 5, nil,   "\n"),
+      tk(:END,        20, 4, 0, 'end', 'end'),
     ]
 
     assert_equal expected, a.token_stream
@@ -2195,6 +2198,98 @@ end
     assert_equal 'nth(i)', foo.block_params
   end
 
+  def test_read_directive
+    parser = util_parser '# :category: test'
+
+    directive, value = parser.read_directive %w[category]
+
+    assert_equal 'category', directive
+    assert_equal 'test', value
+
+    assert_kind_of RDoc::RubyToken::TkNL, parser.get_tk
+  end
+
+  def test_read_directive_allow
+    parser = util_parser '# :category: test'
+
+    directive = parser.read_directive []
+
+    assert_nil directive
+
+    assert_kind_of RDoc::RubyToken::TkNL, parser.get_tk
+  end
+
+  def test_read_directive_empty
+    parser = util_parser '# test'
+
+    directive = parser.read_directive %w[category]
+
+    assert_nil directive
+
+    assert_kind_of RDoc::RubyToken::TkNL, parser.get_tk
+  end
+
+  def test_read_directive_no_comment
+    parser = util_parser ''
+
+    directive = parser.read_directive %w[category]
+
+    assert_nil directive
+
+    assert_kind_of RDoc::RubyToken::TkNL, parser.get_tk
+  end
+
+  def test_read_directive_one_liner
+    parser = util_parser '; end # :category: test'
+
+    directive, value = parser.read_directive %w[category]
+
+    assert_equal 'category', directive
+    assert_equal 'test', value
+
+    assert_kind_of RDoc::RubyToken::TkSEMICOLON, parser.get_tk
+  end
+
+  def test_read_documentation_modifiers
+    c = RDoc::Context.new
+
+    parser = util_parser '# :category: test'
+
+    parser.read_documentation_modifiers c, %w[category]
+
+    assert_equal 'test', c.current_section.title
+  end
+
+  def test_read_documentation_modifiers_notnew
+    m = RDoc::AnyMethod.new nil, 'initialize'
+
+    parser = util_parser '# :notnew: test'
+
+    parser.read_documentation_modifiers m, %w[notnew]
+
+    assert m.dont_rename_initialize
+  end
+
+  def test_read_documentation_modifiers_not_dash_new
+    m = RDoc::AnyMethod.new nil, 'initialize'
+
+    parser = util_parser '# :not-new: test'
+
+    parser.read_documentation_modifiers m, %w[not-new]
+
+    assert m.dont_rename_initialize
+  end
+
+  def test_read_documentation_modifiers_not_new
+    m = RDoc::AnyMethod.new nil, 'initialize'
+
+    parser = util_parser '# :not_new: test'
+
+    parser.read_documentation_modifiers m, %w[not_new]
+
+    assert m.dont_rename_initialize
+  end
+
   def test_sanity_integer
     util_parser '1'
     assert_equal '1', @parser.get_tk.text
@@ -2581,14 +2676,14 @@ end
     assert_equal 'there', baz.comment.text
   end
 
-  def tk(klass, line, char, name, text)
+  def tk klass, scan, line, char, name, text
     klass = RDoc::RubyToken.const_get "Tk#{klass.to_s.upcase}"
 
     token = if klass.instance_method(:initialize).arity == 3 then
-              raise ArgumentError, "name not used for #{klass}" unless name.nil?
-              klass.new 0, line, char
+              raise ArgumentError, "name not used for #{klass}" if name
+              klass.new scan, line, char
             else
-              klass.new 0, line, char, name
+              klass.new scan, line, char, name
             end
 
     token.set_text text
