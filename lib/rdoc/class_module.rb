@@ -574,7 +574,7 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
-  # Path to this class or module
+  # Path to this class or module for use with HTML generator output.
 
   def path
     http_url @store.rdoc.generator.class_dir

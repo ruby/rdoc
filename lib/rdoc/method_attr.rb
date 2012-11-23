@@ -332,7 +332,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
   end
 
   ##
-  # Path to this method
+  # Path to this method for use with HTML generator output.
 
   def path
     "#{@parent.path}##{aref}"

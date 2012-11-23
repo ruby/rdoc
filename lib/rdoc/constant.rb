@@ -132,7 +132,7 @@ class RDoc::Constant < RDoc::CodeObject
   end
 
   ##
-  # Path to this constant
+  # Path to this constant for use with HTML generator output.
 
   def path
     "#{@parent.path}##{@name}"
