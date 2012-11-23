@@ -155,18 +155,17 @@ Options may also be set in the 'RI' environment variable.
 
       opt.separator nil
 
-      formatters = RDoc::Markup.constants.grep(/^To[A-Z][a-z]+$/).sort
-      formatters = formatters.sort.map do |formatter|
-        formatter.to_s.sub('To', '').downcase
+      opt.on("--interactive", "-i",
+             "In interactive mode you can repeatedly",
+             "look up methods with autocomplete.") do
+        options[:interactive] = true
       end
-      formatters -= %w[html label test] # remove useless output formats
 
-      opt.on("--format=NAME", "-f",
-             "Uses the selected formatter. The default",
-             "formatter is bs for paged output and ansi",
-             "otherwise. Valid formatters are:",
-             formatters.join(' '), formatters) do |value|
-        options[:formatter] = RDoc::Markup.const_get "To#{value.capitalize}"
+      opt.separator nil
+
+      opt.on("--list", "-l",
+             "List classes ri knows about.") do
+        options[:list] = true
       end
 
       opt.separator nil
@@ -186,14 +185,6 @@ Options may also be set in the 'RI' environment variable.
 
       opt.separator nil
 
-      opt.on("--interactive", "-i",
-             "In interactive mode you can repeatedly",
-             "look up methods with autocomplete.") do
-        options[:interactive] = true
-      end
-
-      opt.separator nil
-
       opt.on("--server [PORT]", Integer,
              "Run RDoc server on the given port.",
              "The default port is 8214.") do |port|
@@ -202,16 +193,18 @@ Options may also be set in the 'RI' environment variable.
 
       opt.separator nil
 
-      opt.on("--list", "-l",
-             "List classes ri knows about.") do
-        options[:list] = true
+      formatters = RDoc::Markup.constants.grep(/^To[A-Z][a-z]+$/).sort
+      formatters = formatters.sort.map do |formatter|
+        formatter.to_s.sub('To', '').downcase
       end
+      formatters -= %w[html label test] # remove useless output formats
 
-      opt.separator nil
-
-      opt.on("--[no-]profile",
-             "Run with the ruby profiler") do |value|
-        options[:profile] = value
+      opt.on("--format=NAME", "-f",
+             "Uses the selected formatter. The default",
+             "formatter is bs for paged output and ansi",
+             "otherwise. Valid formatters are:",
+             formatters.join(' '), formatters) do |value|
+        options[:formatter] = RDoc::Markup.const_get "To#{value.capitalize}"
       end
 
       opt.separator nil
@@ -287,6 +280,13 @@ Options may also be set in the 'RI' environment variable.
 
       opt.separator nil
       opt.separator "Debug options:"
+      opt.separator nil
+
+      opt.on("--[no-]profile",
+             "Run with the ruby profiler") do |value|
+        options[:profile] = value
+      end
+
       opt.separator nil
 
       opt.on("--dump=CACHE", File,
