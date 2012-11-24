@@ -119,7 +119,11 @@ Usage: #{opt.program_name} [options] [names...]
 
 Where name can be:
 
-  Class | Class::method | Class#method | Class.method | method
+  Class | Module | Module::Class
+
+  Class::method | Class#method | Class.method | method
+
+  gem_name: | gem_name:README | gem_name:History
 
 All class names may be abbreviated to their minimum unambiguous form. If a name
 is ambiguous, all valid options will be listed.
@@ -127,12 +131,18 @@ is ambiguous, all valid options will be listed.
 A '.' matches either class or instance methods, while #method
 matches only instance and ::method matches only class methods.
 
+README and other files may be displayed by prefixing them with the gem name
+they're contained in.  If the gem name is followed by a ':' all files in the
+gem will be shown.  The file name extension may be omitted where it is
+unambiguous.
+
 For example:
 
     #{opt.program_name} Fil
     #{opt.program_name} File
     #{opt.program_name} File.new
     #{opt.program_name} zip
+    #{opt.program_name} rdoc:README
 
 Note that shell quoting or escaping may be required for method names containing
 punctuation:
@@ -147,7 +157,10 @@ To see the default directories ri will search, run:
 Specifying the --system, --site, --home, --gems or --doc-dir options will
 limit ri to searching only the specified directories.
 
-Options may also be set in the 'RI' environment variable.
+ri options may be set in the 'RI' environment variable.
+
+The ri pager can be set with the 'RI_PAGER' environment variable or the
+'PAGER' environment variable.
       EOT
 
       opt.separator nil
