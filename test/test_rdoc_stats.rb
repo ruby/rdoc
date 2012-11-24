@@ -72,6 +72,23 @@ end
     assert_equal @s.great_job, report
   end
 
+  def test_report_attr_line
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
+    c.add_comment 'C', @tl
+
+    a = RDoc::Attr.new nil, 'a', 'RW', nil
+    a.record_location @tl
+    a.line = 3
+    c.add_attribute a
+
+    @store.complete :public
+
+    report = @s.report
+
+    assert_match '# in file file.rb:3', @s.report
+  end
+
   def test_report_constant
     m = @tl.add_module RDoc::NormalModule, 'M'
     m.record_location @tl
@@ -134,6 +151,21 @@ end
     assert_equal @s.great_job, report
   end
 
+  def test_report_constant_line
+    m = @tl.add_module RDoc::NormalModule, 'M'
+    m.record_location @tl
+    m.add_comment 'M', @tl
+
+    c = RDoc::Constant.new 'C', nil, nil
+    c.record_location @tl
+    c.line = 5
+    m.add_constant c
+
+    @store.complete :public
+
+    assert_match '# in file file.rb:5', @s.report
+  end
+
   def test_report_class
     c = @tl.add_class RDoc::NormalClass, 'C'
     c.record_location @tl
@@ -173,7 +205,6 @@ end
 
     refute_match %r%^class Object$%, @s.report
   end
-
 
   def test_report_class_documented
     c = @tl.add_class RDoc::NormalClass, 'C'
@@ -401,6 +432,21 @@ end
     report = @s.report
 
     assert_equal @s.great_job, report
+  end
+
+  def test_report_method_line
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
+    c.add_comment 'C', @tl
+
+    m1 = RDoc::AnyMethod.new nil, 'm1'
+    m1.record_location @tl
+    m1.line = 4
+    c.add_method m1
+
+    @store.complete :public
+
+    assert_match '# in file file.rb:4', @s.report
   end
 
   def test_report_method_parameters

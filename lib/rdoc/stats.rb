@@ -259,7 +259,8 @@ class RDoc::Stats
 
     cm.each_attribute do |attr|
       next if attr.documented?
-      report << "  #{attr.definition} :#{attr.name} # in file #{attr.file.full_name}"
+      line = attr.line ? ":#{attr.line}" : nil
+      report << "  #{attr.definition} :#{attr.name} # in file #{attr.file.full_name}#{line}"
     end
 
     report
@@ -320,7 +321,9 @@ class RDoc::Stats
       # TODO constant aliases are listed in the summary but not reported
       # figure out what to do here
       next if constant.documented? || constant.is_alias_for
-      report << "  # in file #{constant.file.full_name}"
+
+      line = constant.line ? ":#{constant.line}" : line
+      report << "  # in file #{constant.file.full_name}#{line}"
       report << "  #{constant.name} = nil"
     end
 
@@ -352,9 +355,12 @@ class RDoc::Stats
       end
 
       next if method.documented? and not param_report
-      report << "  # in file #{method.file.full_name}"
-      report << param_report if param_report
+
+      line = method.line ? ":#{method.line}" : nil
       scope = method.singleton ? 'self.' : nil
+
+      report << "  # in file #{method.file.full_name}#{line}"
+      report << param_report if param_report
       report << "  def #{scope}#{method.name}#{method.params}; end"
       report << nil
     end

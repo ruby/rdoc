@@ -78,6 +78,8 @@
     Vít Ondruch
   * ri will display documentation for all methods in a class if -a is given.
     Issue #57 by casper
+  * The RDoc coverage report will report line information for attributes,
+    constants and methods missing documentation.  Issue #121 by Zachary Scott
 
 * Bug fixes
   * A word that is directly followed by a multi-word tidy link label no longer
