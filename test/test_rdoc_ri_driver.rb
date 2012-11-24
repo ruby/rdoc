@@ -220,6 +220,119 @@ class TestRDocRIDriver < RDoc::TestCase
     assert_equal expected, out
   end
 
+  def test_add_method
+    util_store
+
+    out = doc
+
+    @driver.add_method out, 'Foo::Bar#blah'
+
+    expected =
+      doc(
+        head(1, 'Foo::Bar#blah'),
+        blank_line,
+        para('(from ~/.rdoc)'),
+        head(3, 'Implementation from Bar'),
+        rule(1),
+        verb("blah(5) => 5\n",
+             "blah(6) => 6\n"),
+        rule(1),
+        blank_line,
+        blank_line)
+
+    assert_equal expected, out
+  end
+
+  def test_add_method_attribute
+    util_store
+
+    out = doc
+
+    @driver.add_method out, 'Foo::Bar#attr'
+
+    expected =
+      doc(
+        head(1, 'Foo::Bar#attr'),
+        blank_line,
+        para('(from ~/.rdoc)'),
+        rule(1),
+        blank_line,
+        blank_line)
+
+    assert_equal expected, out
+  end
+
+  def test_add_method_inherited
+    util_multi_store
+
+    out = doc
+
+    @driver.add_method out, 'Bar#inherit'
+
+    expected =
+      doc(
+        head(1, 'Bar#inherit'),
+        blank_line,
+        para('(from ~/.rdoc)'),
+        head(3, 'Implementation from Foo'),
+        rule(1),
+        blank_line,
+        blank_line)
+
+    assert_equal expected, out
+  end
+
+  def test_add_method_overriden
+    util_multi_store
+
+    out = doc
+
+    @driver.add_method out, 'Bar#override'
+
+    expected =
+      doc(
+        head(1, 'Bar#override'),
+        blank_line,
+        para("(from #{@store2.path})"),
+        rule(1),
+        blank_line,
+        para('must be displayed'),
+        blank_line,
+        blank_line)
+
+    assert_equal expected, out
+  end
+
+  def test_add_method_documentation
+    util_store
+
+    out = doc()
+
+    missing = RDoc::AnyMethod.new nil, 'missing'
+    @cFoo.add_method missing
+
+    @driver.add_method_documentation out, @cFoo
+
+    expected =
+      doc(
+        head(1, 'Foo#inherit'),
+        blank_line,
+        para('(from ~/.rdoc)'),
+        rule(1),
+        blank_line,
+        blank_line,
+        head(1, 'Foo#override'),
+        blank_line,
+        para('(from ~/.rdoc)'),
+        rule(1),
+        blank_line,
+        para('must not be displayed in Bar#override'),
+        blank_line,
+        blank_line)
+
+    assert_equal expected, out
+  end
+
   def test_add_method_list
     out = @RM::Document.new
 
@@ -412,6 +525,32 @@ class TestRDocRIDriver < RDoc::TestCase
     assert_match %r%^  attr_accessor attr%, out
 
     assert_equal 1, out.scan(/-\n/).length
+
+    refute_match %r%Foo::Bar#blah%, out
+  end
+
+  def test_display_class_all
+    util_store
+
+    @driver.show_all = true
+
+    out, = capture_io do
+      @driver.display_class 'Foo::Bar'
+    end
+
+    assert_match %r%^= Foo::Bar%, out
+    assert_match %r%^\(from%, out
+
+    assert_match %r%^= Class methods:%, out
+    assert_match %r%^  new%, out
+    assert_match %r%^= Instance methods:%, out
+    assert_match %r%^  blah%, out
+    assert_match %r%^= Attributes:%, out
+    assert_match %r%^  attr_accessor attr%, out
+
+    assert_equal 6, out.scan(/-\n/).length
+
+    assert_match %r%Foo::Bar#blah%, out
   end
 
   def test_display_class_ambiguous
@@ -1203,7 +1342,7 @@ Foo::Bar#bother
 
     # overriden by Bar in multi_store
     @overriden = @cFoo.add_method RDoc::AnyMethod.new(nil, 'override')
-    @overriden.comment = 'must not be displayed'
+    @overriden.comment = 'must not be displayed in Bar#override'
     @overriden.record_location @top_level
 
     @store1.save_class @cFoo

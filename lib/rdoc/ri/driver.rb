@@ -57,6 +57,11 @@ class RDoc::RI::Driver
   end
 
   ##
+  # Show all method documentation following a class or module
+
+  attr_accessor :show_all
+
+  ##
   # An RDoc::RI::Store for each entry in the RI path
 
   attr_accessor :stores
@@ -71,17 +76,18 @@ class RDoc::RI::Driver
 
   def self.default_options
     options = {}
-    options[:use_stdout] = !$stdout.tty?
-    options[:width] = 72
     options[:interactive] = false
-    options[:use_cache] = true
-    options[:profile] = false
+    options[:profile]     = false
+    options[:show_all]    = false
+    options[:use_cache]   = true
+    options[:use_stdout]  = !$stdout.tty?
+    options[:width]       = 72
 
     # By default all standard paths are used.
-    options[:use_system] = true
-    options[:use_site] = true
-    options[:use_home] = true
-    options[:use_gems] = true
+    options[:use_system]     = true
+    options[:use_site]       = true
+    options[:use_home]       = true
+    options[:use_gems]       = true
     options[:extra_doc_dirs] = []
 
     return options
@@ -172,6 +178,14 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
              "In interactive mode you can repeatedly",
              "look up methods with autocomplete.") do
         options[:interactive] = true
+      end
+
+      opt.separator nil
+
+      opt.on("--[no-]all", "-a",
+             "Show all documentation for a class or",
+             "module.") do |value|
+        options[:show_all] = value
       end
 
       opt.separator nil
@@ -376,6 +390,7 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     @interactive = options[:interactive]
     @server      = options[:server]
     @use_stdout  = options[:use_stdout]
+    @show_all    = options[:show_all]
 
     # pager process for jruby
     @jruby_pager_process = nil
@@ -484,6 +499,30 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
 
   def add_includes out, includes
     add_extension_modules out, 'Includes', includes
+  end
+
+  ##
+  # Looks up the method +name+ and adds it to +out+
+
+  def add_method out, name
+    filtered   = lookup_method name
+
+    method_out = method_document name, filtered
+
+    out.concat method_out.parts
+  end
+
+  ##
+  # Adds documentation for all methods in +klass+ to +out+
+
+  def add_method_documentation out, klass
+    klass.method_list.each do |method|
+      begin
+        add_method out, method.full_name
+      rescue NotFoundError
+        next
+      end
+    end
   end
 
   ##
@@ -612,6 +651,8 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
       add_method_list out, class_methods,    'Class methods'
       add_method_list out, instance_methods, 'Instance methods'
       add_method_list out, attributes,       'Attributes'
+
+      add_method_documentation out, klass if @show_all
     end
 
     add_also_in out, also_in
@@ -737,13 +778,9 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
   # Outputs formatted RI data for method +name+
 
   def display_method name
-    found = load_methods_matching name
+    out = RDoc::Markup::Document.new
 
-    raise NotFoundError, name if found.empty?
-
-    filtered = filter_methods found, name
-
-    out = method_document name, filtered
+    add_method out, name
 
     display out
   end
@@ -1165,6 +1202,17 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     end
 
     found.reject do |path, methods| methods.empty? end
+  end
+
+  ##
+  # Returns a filtered list of methods matching +name+
+
+  def lookup_method name
+    found = load_methods_matching name
+
+    raise NotFoundError, name if found.empty?
+
+    filter_methods found, name
   end
 
   ##

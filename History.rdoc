@@ -76,6 +76,8 @@
   * RDoc now processes files in sorted order.  Issue #71 by Vít Ondruch
   * RDoc now warns with --verbose when methods are duplicated.  Issue #71 by
     Vít Ondruch
+  * ri will display documentation for all methods in a class if -a is given.
+    Issue #57 by casper
 
 * Bug fixes
   * A word that is directly followed by a multi-word tidy link label no longer
