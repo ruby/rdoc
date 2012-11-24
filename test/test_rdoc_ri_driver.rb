@@ -16,7 +16,7 @@ class TestRDocRIDriver < RDoc::TestCase
     ENV['HOME'] = @tmpdir
     ENV.delete 'RI'
 
-    @options = RDoc::RI::Driver.process_args []
+    @options = RDoc::RI::Driver.process_args %w[--no-standard-docs]
     @options[:home] = @tmpdir
     @options[:use_stdout] = true
     @options[:formatter] = @RM::ToRdoc
@@ -386,13 +386,20 @@ class TestRDocRIDriver < RDoc::TestCase
       'Ambiguous' => [@store1, @store2],
       'Bar'       => [@store2],
       'Ext'       => [@store1],
-      'Foo'       => [@store1],
+      'Foo'       => [@store1, @store2],
       'Foo::Bar'  => [@store1],
       'Foo::Baz'  => [@store1, @store2],
       'Inc'       => [@store1],
     }
 
-    assert_equal expected, @driver.classes
+    classes = @driver.classes
+
+    assert_equal expected.keys.sort, classes.keys.sort
+
+    expected.each do |klass, stores|
+      assert_equal stores, classes[klass].sort_by { |store| store.path },
+                   "mismatch for #{klass}"
+    end
   end
 
   def test_class_document
@@ -1280,14 +1287,7 @@ Foo::Bar#bother
     @override.comment = 'must be displayed'
     @override.record_location @top_level
 
-    @store2.save_class @mAmbiguous
-    @store2.save_class @cBar
-    @store2.save_class @cFoo_Baz
-
-    @store2.save_method @cBar, @override
-    @store2.save_method @cBar, @baz
-
-    @store2.save_cache
+    @store2.save
 
     @driver.stores = [@store1, @store2]
   end
@@ -1345,24 +1345,7 @@ Foo::Bar#bother
     @overriden.comment = 'must not be displayed in Bar#override'
     @overriden.record_location @top_level
 
-    @store1.save_class @cFoo
-    @store1.save_class @cFoo_Bar
-    @store1.save_class @cFoo_Baz
-    @store1.save_class @mExt
-    @store1.save_class @mInc
-    @store1.save_class @cAmbiguous
-
-    @store1.save_method @cFoo_Bar, @blah
-    @store1.save_method @cFoo_Bar, @bother
-    @store1.save_method @cFoo_Bar, @new
-    @store1.save_method @cFoo_Bar, @attr
-
-    @store1.save_method @cFoo, @inherit
-    @store1.save_method @cFoo, @overriden
-
-    @store1.save_page @readme
-
-    @store1.save_cache
+    @store1.save
 
     @driver.stores = [@store1]
   end
