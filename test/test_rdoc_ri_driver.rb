@@ -16,10 +16,16 @@ class TestRDocRIDriver < RDoc::TestCase
     ENV['HOME'] = @tmpdir
     ENV.delete 'RI'
 
-    @options = RDoc::RI::Driver.process_args %w[--no-standard-docs]
-    @options[:home] = @tmpdir
+    @options = RDoc::RI::Driver.default_options
+    @options[:use_system] = false
+    @options[:use_site]   = false
+    @options[:use_home]   = false
+    @options[:use_gems]   = false
+
+    @options[:home]       = @tmpdir
     @options[:use_stdout] = true
-    @options[:formatter] = @RM::ToRdoc
+    @options[:formatter]  = @RM::ToRdoc
+
     @driver = RDoc::RI::Driver.new @options
   end
 
