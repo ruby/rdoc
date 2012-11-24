@@ -174,40 +174,40 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
 
       opt.separator nil
 
-      opt.on("--interactive", "-i",
+      opt.on("--[no-]interactive", "-i",
              "In interactive mode you can repeatedly",
-             "look up methods with autocomplete.") do
-        options[:interactive] = true
+             "look up methods with autocomplete.") do |interactive|
+        options[:interactive] = interactive
       end
 
       opt.separator nil
 
       opt.on("--[no-]all", "-a",
              "Show all documentation for a class or",
-             "module.") do |value|
-        options[:show_all] = value
+             "module.") do |show_all|
+        options[:show_all] = show_all
       end
 
       opt.separator nil
 
-      opt.on("--list", "-l",
-             "List classes ri knows about.") do
-        options[:list] = true
+      opt.on("--[no-]list", "-l",
+             "List classes ri knows about.") do |list|
+        options[:list] = list
       end
 
       opt.separator nil
 
-      opt.on("--no-pager", "-T",
+      opt.on("--[no-]pager", "-T",
              "Send output directly to stdout,",
-             "rather than to a pager.") do
-        options[:use_stdout] = true
+             "rather than to a pager.") do |use_pager|
+        options[:use_stdout] = !use_pager
       end
 
       opt.separator nil
 
       opt.on("--width=WIDTH", "-w", OptionParser::DecimalInteger,
-             "Set the width of the output.") do |value|
-        options[:width] = value
+             "Set the width of the output.") do |width|
+        options[:width] = width
       end
 
       opt.separator nil
@@ -238,10 +238,10 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
       opt.separator "Data source options:"
       opt.separator nil
 
-      opt.on("--list-doc-dirs",
+      opt.on("--[no-]list-doc-dirs",
              "List the directories from which ri will",
-             "source documentation on stdout and exit.") do
-        options[:list_doc_dirs] = true
+             "source documentation on stdout and exit.") do |list_doc_dirs|
+        options[:list_doc_dirs] = list_doc_dirs
       end
 
       opt.separator nil
