@@ -40,6 +40,8 @@
     http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-core/42942
   * Fixed :stopdoc: for class A::B where A has not been seen.  Issue #95 by
     Ryan Davis
+  * RDoc::ClassModule#each_ancestor no longer yields itself if there is
+    circular ancestry
 
 * Major enhancements
   * ri can now show pages (README, etc.)

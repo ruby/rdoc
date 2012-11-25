@@ -96,13 +96,16 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_each_ancestor
-    ancestors = []
+    assert_equal [@parent], @child.each_ancestor.to_a
+  end
 
-    @child.each_ancestor do |mod|
-      ancestors << mod
-    end
+  def test_each_ancestor_cycle
+    m_incl = RDoc::Include.new 'M', nil
 
-    assert_equal [@parent], ancestors
+    m = @top_level.add_module RDoc::NormalModule, 'M'
+    m.add_include m_incl
+
+    assert_empty m.each_ancestor.to_a
   end
 
   # handle making a short module alias of yourself

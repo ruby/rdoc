@@ -225,6 +225,7 @@ class RDoc::ClassModule < RDoc::Context
 
     ancestors.each do |mod|
       next if String === mod
+      next if self == mod
       yield mod
     end
   end
