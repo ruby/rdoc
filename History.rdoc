@@ -82,6 +82,8 @@
     Issue #57 by casper
   * The RDoc coverage report will report line information for attributes,
     constants and methods missing documentation.  Issue #121 by Zachary Scott
+  * RDoc now reports a warning for files that are unreadable due to
+    permissions problems.
 
 * Bug fixes
   * A word that is directly followed by a multi-word tidy link label no longer

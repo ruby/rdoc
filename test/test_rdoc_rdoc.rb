@@ -156,6 +156,31 @@ class TestRDocRDoc < RDoc::TestCase
     end
   end
 
+  def test_parse_file_forbidden
+    @rdoc.store = RDoc::Store.new
+
+    Tempfile.open 'test.txt' do |io|
+      io.write 'hi'
+      io.rewind
+
+      File.chmod 0000, io.path
+
+      begin
+        top_level = :bug
+
+        _, err = capture_io do
+          top_level = @rdoc.parse_file io.path
+        end
+
+        assert_match "Unable to read #{io.path},", err
+
+        assert_nil top_level
+      ensure
+        File.chmod 0400, io.path
+      end
+    end
+  end
+
   def test_remove_unparseable
     file_list = %w[
       blah.class

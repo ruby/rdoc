@@ -360,6 +360,14 @@ option)
 
     top_level
 
+  rescue Errno::EACCES => e
+    $stderr.puts <<-EOF
+Unable to read #{filename}, #{e.message}
+
+Please check the permissions for this file.  Perhaps you do not have access to
+it or perhaps the original author's permissions are to restrictive.  If the
+this is not your library please report a bug to the author.
+    EOF
   rescue => e
     $stderr.puts <<-EOF
 Before reporting this, could you check that the file you're documenting
