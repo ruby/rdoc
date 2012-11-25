@@ -84,8 +84,6 @@ end
 
     @store.complete :public
 
-    report = @s.report
-
     assert_match '# in file file.rb:3', @s.report
   end
 

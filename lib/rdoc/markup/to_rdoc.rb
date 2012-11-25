@@ -81,7 +81,7 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   # Adds +paragraph+ to the output
 
   def accept_block_quote block_quote
-    indent = @indent += 2
+    @indent += 2
 
     block_quote.parts.each do |part|
       @prefix = '> '

@@ -1700,8 +1700,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
   ensure
     unless tokens.length == 1 and TkCOMMENT === tokens.first then
-      tokens.reverse_each do |tk|
-        unget_tk tk
+      tokens.reverse_each do |token|
+        unget_tk token
       end
     end
   end

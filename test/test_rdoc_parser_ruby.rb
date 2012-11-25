@@ -995,7 +995,7 @@ EOF
 
   def test_parse_constant_alias
     klass = @top_level.add_class RDoc::NormalClass, 'Foo'
-    cB = klass.add_class RDoc::NormalClass, 'B'
+    klass.add_class RDoc::NormalClass, 'B'
 
     util_parser "A = B"
 
@@ -1008,7 +1008,7 @@ EOF
 
   def test_parse_constant_alias_same_name
     foo = @top_level.add_class RDoc::NormalClass, 'Foo'
-    top_bar = @top_level.add_class RDoc::NormalClass, 'Bar'
+    @top_level.add_class RDoc::NormalClass, 'Bar'
     bar = foo.add_class RDoc::NormalClass, 'Bar'
 
     assert @store.find_class_or_module('::Bar')
@@ -1628,8 +1628,6 @@ end
 
     assert_equal 2, x.method_list.length
     a = x.method_list.first
-
-    rt = RDoc::RubyToken
 
     expected = [
       tk(:COMMENT,     0, 2, 1, nil,   "# File #{@filename}, line 2"),

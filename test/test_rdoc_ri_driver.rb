@@ -1059,8 +1059,6 @@ Foo::Bar#bother
     skip 'this test hangs on travis-ci.org' if ENV['CI']
     @driver.use_stdout = false
 
-    dummy = `:;\n`
-
     with_dummy_pager do
       @driver.page do |io|
         refute_equal $stdout, io
