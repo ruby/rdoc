@@ -15,6 +15,10 @@ class TestRDocMarkupToMarkdown < RDoc::Markup::TextFormatterTestCase
     assert_equal "\n", @to.res.join
   end
 
+  def accept_block_quote
+    assert_equal "> quote\n", @to.res.join
+  end
+
   def accept_document
     assert_equal "hello\n", @to.res.join
   end

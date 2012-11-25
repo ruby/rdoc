@@ -78,6 +78,21 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   end
 
   ##
+  # Adds +paragraph+ to the output
+
+  def accept_block_quote block_quote
+    indent = @indent += 2
+
+    block_quote.parts.each do |part|
+      @prefix = '> '
+
+      part.accept self
+    end
+
+    @indent -= 2
+  end
+
+  ##
   # Adds +heading+ to the output
 
   def accept_heading heading

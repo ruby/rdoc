@@ -24,6 +24,8 @@
     ToHtml*.  (This is not universal due to the difficult at accessing the
     user's options instance deep inside RDoc.  A future major release may
     remedy this.)
+  * Added RDoc::Markup::BlockQuote.  #accept_block_quote must be added to
+    formatters.
   * Removed RDoc::RI::Paths::SYSDIR and ::SITEDIR.  These were hidden
     constants so no breakage is expected.  Use RDoc::RI::Paths::system_dir
     and ::site_dir instead.

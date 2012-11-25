@@ -43,6 +43,16 @@ pre {
   padding: 0.5em 0;
 }
 
+blockquote {
+  background: #ddd;
+  margin: 1em;
+  padding: 0.25em;
+}
+
+blockquote > :first-child {
+  margin-top: 0 !important;
+}
+
 /* @group Generic Classes */
 
 .initially-hidden {

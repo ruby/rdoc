@@ -191,6 +191,19 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   end
 
   ##
+  # Adds +block_quote+ to the output
+
+  def accept_block_quote block_quote
+    @res << "\n<blockquote>"
+
+    block_quote.parts.each do |part|
+      part.accept self
+    end
+
+    @res << "</blockquote>\n"
+  end
+
+  ##
   # Adds +paragraph+ to the output
 
   def accept_paragraph paragraph

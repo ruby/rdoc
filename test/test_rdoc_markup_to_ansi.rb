@@ -15,6 +15,10 @@ class TestRDocMarkupToAnsi < RDoc::Markup::TextFormatterTestCase
     assert_equal "\e[0m\n", @to.res.join
   end
 
+  def accept_block_quote
+    assert_equal "\e[0m> quote\n", @to.res.join
+  end
+
   def accept_document
     assert_equal "\e[0mhello\n", @to.res.join
   end

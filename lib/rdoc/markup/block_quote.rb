@@ -1,5 +1,5 @@
 ##
-# A quoted section of text
+# A quoted section which contains markup items.
 
 class RDoc::Markup::BlockQuote < RDoc::Markup::Raw
 

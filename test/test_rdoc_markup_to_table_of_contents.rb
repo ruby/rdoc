@@ -47,6 +47,7 @@ class TestRDocMarkupToTableOfContents < RDoc::Markup::FormatterTestCase
   end
 
   alias accept_blank_line                             empty
+  alias accept_block_quote                            empty
   alias accept_document                               empty
   alias accept_list_end_bullet                        empty
   alias accept_list_end_label                         empty

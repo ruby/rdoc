@@ -44,6 +44,7 @@ class RDoc::Markup::ToTableOfContents < RDoc::Markup::Formatter
   end
 
   # :stopdoc:
+  alias accept_block_quote     ignore
   alias accept_raw             ignore
   alias accept_rule            ignore
   alias accept_blank_line      ignore

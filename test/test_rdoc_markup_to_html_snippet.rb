@@ -15,6 +15,12 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_empty @to.res.join
   end
 
+  def accept_block_quote
+    assert_equal "\n<blockquote><p>quote\n</blockquote>\n", @to.res.join
+
+    assert_equal 5, @to.characters
+  end
+
   def accept_document
     assert_equal "<p>hello\n", @to.res.join
     assert_equal 5, @to.characters

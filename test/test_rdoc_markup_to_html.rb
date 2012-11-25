@@ -27,6 +27,10 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_empty @to.res.join
   end
 
+  def accept_block_quote
+    assert_equal "\n<blockquote>\n<p>quote</p>\n</blockquote>\n", @to.res.join
+  end
+
   def accept_document
     assert_equal "\n<p>hello</p>\n", @to.res.join
   end

@@ -86,7 +86,7 @@ class RDoc::Markup::FormatterTestCase < RDoc::TestCase
   # Call to add the visitor tests to your test case
 
   def self.add_visitor_tests
-    self.class_eval do
+    class_eval do
 
       ##
       # Calls start_accepting which needs to verify startup state
@@ -119,6 +119,16 @@ class RDoc::Markup::FormatterTestCase < RDoc::TestCase
         accept_blank_line
       end
 
+      ##
+      # Calls accept_block_quote
+
+      def test_accept_block_quote
+        @to.start_accepting
+
+        @to.accept_block_quote block para 'quote'
+
+        accept_block_quote
+      end
       ##
       # Test case that calls <tt>@to.accept_document</tt>
 
