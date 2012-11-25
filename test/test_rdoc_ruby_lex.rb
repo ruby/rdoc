@@ -149,6 +149,17 @@ U
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_regexp_escape
+    tokens = RDoc::RubyLex.tokenize "/\\//", nil
+
+    expected = [
+      @TK::TkREGEXP.new( 0, 1,  0, "/\\//"),
+      @TK::TkNL    .new( 4, 1,  4, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_string
     tokens = RDoc::RubyLex.tokenize "'hi'", nil
 
