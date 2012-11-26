@@ -1066,15 +1066,23 @@ class RDoc::Parser::Ruby < RDoc::Parser
       meth = nil
       added_container = false
 
-      dot = get_tk
-      if TkDOT === dot or TkCOLON2 === dot then
+      case dot = get_tk
+      when TkDOT, TkCOLON2 then
         @scanner.instance_eval do @lex_state = EXPR_FNAME end
         skip_tkspace
         name_t2 = get_tk
 
         case name_t
         when TkSELF, TkMOD then
-          name = name_t2.name
+          name = case name_t2
+                 # NOTE: work around '[' being consumed early and not being
+                 # re-tokenized as a TkAREF
+                 when TkfLBRACK then
+                   get_tk
+                   '[]'
+                 else
+                   name_t2.name
+                 end
         when TkCONSTANT then
           name = name_t2.name
           prev_container = container

@@ -2741,6 +2741,20 @@ end
     assert a_b.ignored?,      'A::B is inside stopdoc'
   end
 
+  def test_scan_struct_self_brackets
+    util_parser <<-RUBY
+class C < M.m
+  def self.[]
+  end
+end
+    RUBY
+
+    @parser.scan
+
+    c = @store.find_class_named 'C'
+    assert_equal %w[C::[]], c.method_list.map { |m| m.full_name }
+  end
+
   def test_stopdoc_after_comment
     util_parser <<-EOS
       module Bar

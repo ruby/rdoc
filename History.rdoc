@@ -137,6 +137,8 @@
   * Fixed tokenization of reserved words used as new-style hash keys
   * RDoc now handles class << $gvar by ignoring the body
   * Fixed parsing of class A:: B.
+  * Worked around bug in RDoc::RubyLex where tokens won't be reinterpreted
+    after unget_tk.
 
 === 3.12 / 2011-12-15
 
