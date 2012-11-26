@@ -6,6 +6,8 @@
   * Fixed lexing of character syntax (<code>?x</code>).  Reported by Xavier
     Noria.
   * Fixed tokenization of % when it is not followed by a $-string type
+  * Fixed display of __END__ in documentation examples in HTML output
+
 
 === 3.12.1 / 2013-02-05
 

@@ -30,6 +30,17 @@ class TestRDocRubyLex < RDoc::TestCase
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize___END__
+    tokens = RDoc::RubyLex.tokenize '__END__', nil
+
+    expected = [
+      @TK::TkEND_OF_SCRIPT.new(0, 1, 0, '__END__'),
+      @TK::TkNL           .new(7, 1, 7, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_character_literal
     tokens = RDoc::RubyLex.tokenize "?\\", nil
 
