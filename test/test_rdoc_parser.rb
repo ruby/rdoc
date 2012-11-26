@@ -61,6 +61,18 @@ class TestRDocParser < RDoc::TestCase
     assert_equal @RP::Simple, @RP.can_parse(readme_file_name)
   end
 
+  def test_class_can_parse_forbidden
+    Tempfile.open 'forbidden' do |io|
+      begin
+        File.chmod 0000, io.path
+
+        assert_nil @RP.can_parse io.path
+      ensure
+        File.chmod 0400, io.path
+      end
+    end
+  end
+
   ##
   # Selenium hides a .jar file using a .txt extension.
 

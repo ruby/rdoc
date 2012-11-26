@@ -141,6 +141,7 @@ class RDoc::Parser
     return if parser == RDoc::Parser::Simple and ext_name !~ /txt|rdoc/
 
     parser
+  rescue Errno::EACCES
   end
 
   ##
