@@ -622,6 +622,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
         other = @store.find_class_named name
 
         unless other then
+          if name =~ /^::/ then
+            name = $'
+            container = @top_level
+          end
+
           other = container.add_module RDoc::NormalModule, name
           other.record_location @top_level
           other.offset  = offset

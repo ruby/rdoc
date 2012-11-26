@@ -97,6 +97,22 @@ class TestRDocEncoding < RDoc::TestCase
     assert_equal Encoding::UTF_8, content.encoding
   end
 
+  def test_class_read_file_encoding_invalid
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    @tempfile.write "# coding: ascii\nM\xE4r"
+    @tempfile.flush
+
+    contents = :junk
+    _, err = capture_io do
+      contents = RDoc::Encoding.read_file @tempfile.path, Encoding::UTF_8
+    end
+
+    assert_equal "unable to convert \"\\xE4\" on US-ASCII for #{@tempfile.path}, skipping\n", err
+
+    assert_nil contents
+  end
+
   def test_class_read_file_encoding_with_signature
     skip "Encoding not implemented" unless defined? ::Encoding
 

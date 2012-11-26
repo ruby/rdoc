@@ -605,6 +605,19 @@ end
     assert_equal 1, foo.line
   end
 
+  def test_parse_class_single_root
+    comment = RDoc::Comment.new "##\n# my class\n", @top_level
+
+    util_parser "class << ::Foo\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_class @top_level, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    foo = @store.all_modules.first
+    assert_equal 'Foo', foo.full_name
+  end
+
   def test_parse_class_stopdoc
     @top_level.stop_doc
 

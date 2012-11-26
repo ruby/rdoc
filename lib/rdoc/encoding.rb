@@ -47,10 +47,13 @@ module RDoc::Encoding
           warn "unable to convert #{filename} to #{encoding}, skipping"
           content = nil
         end
-      rescue Encoding::UndefinedConversionError => e
+      rescue Encoding::InvalidByteSequenceError,
+             Encoding::UndefinedConversionError => e
         if force_transcode then
           content.force_encoding orig_encoding
-          content.encode! encoding, :undef => :replace, :replace => '?'
+          content.encode!(encoding,
+                          :invalid => :replace, :undef => :replace,
+                          :replace => '?')
           return content
         else
           warn "unable to convert #{e.message} for #{filename}, skipping"
