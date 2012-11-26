@@ -132,6 +132,14 @@ a block quote
     assert_equal expected, doc
   end
 
+  def test_parse_char_entity
+    doc = parse '&pi; &nn;'
+
+    expected = doc(para('π &nn;'))
+
+    assert_equal expected, doc
+  end
+
   def test_parse_code
     doc = parse "Code: `text`"
 

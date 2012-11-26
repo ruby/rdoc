@@ -1082,7 +1082,12 @@ HexEntity  = "&" "#" /[Xx]/ < /[0-9a-fA-F]+/ > ";"
 DecEntity  = "&" "#"        < /[0-9]+/       > ";"
              { [text.to_i].pack 'U' }
 CharEntity = "&"            </[A-Za-z0-9]+/  > ";"
-             { HTML_ENTITIES[text].pack 'U*' }
+             { if entity = HTML_ENTITIES[text] then
+                 entity.pack 'U*'
+               else
+                 "&#{text};"
+               end
+             }
 
 NonindentSpace =    "   " | "  " | " " | ""
 Indent =            "\t" | "    "
