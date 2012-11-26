@@ -70,6 +70,18 @@ class C; end
     assert_equal Encoding::CP852, comment.text.encoding
   end
 
+  def test_get_class_specification
+    assert_equal 'A',    util_parser('A')   .get_class_specification
+    assert_equal 'A::B', util_parser('A::B').get_class_specification
+    assert_equal '::A',  util_parser('::A').get_class_specification
+
+    assert_equal 'self', util_parser('self').get_class_specification
+
+    assert_equal '',     util_parser('').get_class_specification
+
+    assert_equal '',     util_parser('$g').get_class_specification
+  end
+
   def test_get_symbol_or_name
     util_parser "* & | + 5 / 4"
 
@@ -737,7 +749,26 @@ end
     # make sure non-constant-named module will be removed from documentation
     d = @store.modules_hash['A::d']
     assert d.remove_from_documentation?
+  end
 
+  def test_parse_class_single_gvar
+    code = <<-CODE
+class << $g
+  def m
+  end
+end
+    CODE
+
+    util_parser code
+
+    @parser.parse_class @top_level, false, @parser.get_tk, ''
+
+    assert_empty @store.all_classes
+    mod = @store.all_modules.first
+
+    refute mod.document_self
+
+    assert_empty mod.method_list
   end
 
   # TODO this is really a Context#add_class test

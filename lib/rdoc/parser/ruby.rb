@@ -278,9 +278,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def get_class_specification
     tk = get_tk
-    return "self" if TkSELF === tk
+    return 'self' if TkSELF === tk
+    return ''     if TkGVAR === tk
 
-    res = ""
+    res = ''
     while TkCOLON2 === tk or TkCOLON3 === tk or TkCONSTANT === tk do
       res += tk.name
       tk = get_tk
@@ -614,7 +615,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       parse_statements cls
     when TkLSHFT
       case name = get_class_specification
-      when "self", container.name
+      when 'self', container.name
         parse_statements container, SINGLE
       else
         other = @store.find_class_named name
@@ -624,6 +625,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
           other.record_location @top_level
           other.offset  = offset
           other.line    = line_no
+
+          # class << $gvar
+          other.ignore if name.empty?
 
           other.add_comment comment, @top_level
         end
