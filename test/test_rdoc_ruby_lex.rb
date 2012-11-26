@@ -105,6 +105,21 @@ U
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_percent_1
+    tokens = RDoc::RubyLex.tokenize 'v%10==10', nil
+
+    expected = [
+      @TK::TkIDENTIFIER.new(0, 1, 0, 'v'),
+      @TK::TkMOD.new(       1, 1, 1, '%'),
+      @TK::TkINTEGER.new(   2, 1, 2, '10'),
+      @TK::TkEQ.new(        4, 1, 4, '=='),
+      @TK::TkINTEGER.new(   6, 1, 6, '10'),
+      @TK::TkNL.new(        8, 1, 8, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_percent_r
     tokens = RDoc::RubyLex.tokenize '%r[hi]', nil
 
