@@ -136,6 +136,7 @@
   * Fixed display of __END__ in documentation examples in HTML output
   * Fixed tokenization of reserved words used as new-style hash keys
   * RDoc now handles class << $gvar by ignoring the body
+  * Fixed parsing of class A:: B.
 
 === 3.12 / 2011-12-15
 

@@ -264,6 +264,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       container.ignore unless prev_container.document_children
 
       get_tk
+      skip_tkspace false
       name_t = get_tk
       given_name << '::' << name_t.name
     end

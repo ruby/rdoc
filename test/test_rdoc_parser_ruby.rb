@@ -70,6 +70,33 @@ class C; end
     assert_equal Encoding::CP852, comment.text.encoding
   end
 
+  def test_get_class_or_module
+    ctxt = RDoc::Context.new
+    ctxt.store = @store
+
+    cont, name_t, given_name = util_parser('A')    .get_class_or_module ctxt
+
+    assert_equal ctxt, cont
+    assert_equal 'A', name_t.text
+    assert_equal 'A', given_name
+
+    cont, name_t, given_name = util_parser('A::B') .get_class_or_module ctxt
+
+    assert_equal @store.find_module_named('A'), cont
+    assert_equal 'B', name_t.text
+    assert_equal 'A::B', given_name
+
+    cont, name_t, given_name = util_parser('A:: B').get_class_or_module ctxt
+
+    assert_equal @store.find_module_named('A'), cont
+    assert_equal 'B', name_t.text
+    assert_equal 'A::B', given_name
+
+    assert_raises NoMethodError do
+      util_parser("A::\nB").get_class_or_module ctxt
+    end
+  end
+
   def test_get_class_specification
     assert_equal 'A',    util_parser('A')   .get_class_specification
     assert_equal 'A::B', util_parser('A::B').get_class_specification
