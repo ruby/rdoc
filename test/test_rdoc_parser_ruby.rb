@@ -1424,6 +1424,22 @@ end
     assert @top_level.method_list.empty?
   end
 
+  def test_parse_method_gvar_insane
+    util_parser "def $stdout.foo() class << $other; end; end"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method @top_level, RDoc::Parser::Ruby::NORMAL, tk, @comment
+
+    assert @top_level.method_list.empty?
+
+    assert_empty @store.all_classes
+
+    assert_equal 1, @store.all_modules.length
+
+    refute @store.all_modules.first.document_self
+  end
+
   def test_parse_method_internal_gvar
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level

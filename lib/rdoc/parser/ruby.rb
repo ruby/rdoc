@@ -1102,6 +1102,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         when TkIDENTIFIER, TkIVAR, TkGVAR then
           dummy = RDoc::Context.new
           dummy.parent = container
+          dummy.store  = container.store
           skip_method dummy
           return
         when TkTRUE, TkFALSE, TkNIL then
