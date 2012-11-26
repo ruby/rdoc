@@ -1034,7 +1034,7 @@ class RDoc::RubyLex
       type = nil
       lt = "\""
     else
-      raise Error, "unknown type of %string #{type.inspect}"
+      return Token(TkMOD, '%')
     end
     #     if ch !~ /\W/
     #       ungetc

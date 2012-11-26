@@ -412,12 +412,12 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     rdoc.options = options
     RDoc::RDoc.current = rdoc
 
-    verb = @RM::Verbatim.new("a %z'foo' # => blah\n")
+    verb = @RM::Verbatim.new("a % 09 # => blah\n")
 
     @to.start_accepting
     @to.accept_verbatim verb
 
-    inner = CGI.escapeHTML "a %z'foo' # => blah"
+    inner = CGI.escapeHTML "a % 09 # => blah"
 
     expected = <<-EXPECTED
 
@@ -426,7 +426,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     EXPECTED
 
     assert_equal expected, @to.res.join
-    assert_equal 19, @to.characters
+    assert_equal 16, @to.characters
   end
 
   def test_add_paragraph

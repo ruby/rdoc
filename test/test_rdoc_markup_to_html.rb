@@ -373,12 +373,12 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_verbatim_parseable_error
-    verb = @RM::Verbatim.new("a %z'foo' # => blah\n")
+    verb = @RM::Verbatim.new("a % 09 # => blah\n")
 
     @to.start_accepting
     @to.accept_verbatim verb
 
-    inner = CGI.escapeHTML "a %z'foo' # => blah"
+    inner = CGI.escapeHTML "a % 09 # => blah"
 
     expected = <<-EXPECTED
 
