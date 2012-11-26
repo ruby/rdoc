@@ -936,6 +936,8 @@ class RDoc::RubyLex
                   @indent += 1
                   @indent_stack.push token_c
                 end
+              else
+                token_c = TkIDENTIFIER
               end
 
             elsif DEINDENT_CLAUSE.include?(token)
