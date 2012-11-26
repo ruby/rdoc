@@ -43,6 +43,7 @@
   * RDoc::ClassModule#each_ancestor no longer yields itself if there is
     circular ancestry
   * Fixed tokenization of % when it is not followed by a $-string type
+  * Fixed display of __END__ in documentation examples in HTML output
 
 * Major enhancements
   * ri can now show pages (README, etc.)

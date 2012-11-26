@@ -412,7 +412,7 @@ class RDoc::RubyLex
   def lex_init()
     @OP = IRB::SLex.new
     @OP.def_rules("\0", "\004", "\032") do |op, io|
-      Token(TkEND_OF_SCRIPT)
+      Token(TkEND_OF_SCRIPT, '')
     end
 
     @OP.def_rules(" ", "\t", "\f", "\r", "\13") do |op, io|
@@ -808,7 +808,8 @@ class RDoc::RubyLex
 
     @OP.def_rule("_") do
       if peek_match?(/_END__/) and @lex_state == EXPR_BEG then
-        Token(TkEND_OF_SCRIPT)
+        6.times { getc }
+        Token(TkEND_OF_SCRIPT, '__END__')
       else
         ungetc
         identify_identifier
