@@ -109,7 +109,11 @@ class RDoc::Markup::Formatter
       end
     end
 
-    raise "Unhandled special: #{special}" unless handled
+    unless handled then
+      special_name = @attributes.as_string special.type
+
+      raise RDoc::Error, "Unhandled special #{special_name}: #{special}"
+    end
 
     special.text
   end
@@ -129,7 +133,7 @@ class RDoc::Markup::Formatter
   #
   #   alias accept_raw ignore
 
-  def ignore node
+  def ignore *node
   end
 
   ##

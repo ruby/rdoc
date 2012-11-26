@@ -78,6 +78,7 @@ class TestRDocMarkupToTableOfContents < RDoc::Markup::FormatterTestCase
   alias accept_list_start_ualpha                      empty
   alias accept_paragraph                              empty
   alias accept_paragraph_b                            empty
+  alias accept_paragraph_br                           empty
   alias accept_paragraph_break                        empty
   alias accept_paragraph_i                            empty
   alias accept_paragraph_plus                         empty

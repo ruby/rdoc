@@ -31,6 +31,13 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
   end
 
   ##
+  # Adds a newline to the output
+
+  def handle_special_HARD_BREAK special
+    "  \n"
+  end
+
+  ##
   # Finishes consumption of `list`
 
   def accept_list_end list

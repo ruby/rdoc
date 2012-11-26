@@ -260,6 +260,10 @@ class TestRDocMarkupToAnsi < RDoc::Markup::TextFormatterTestCase
     assert_equal "\e[0mreg \e[1mbold words\e[m reg\n", @to.end_accepting
   end
 
+  def accept_paragraph_br
+    assert_equal "\e[0mone\ntwo\n", @to.end_accepting
+  end
+
   def accept_paragraph_break
     assert_equal "\e[0mhello\nworld\n", @to.end_accepting
   end

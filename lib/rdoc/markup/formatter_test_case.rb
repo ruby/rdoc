@@ -244,6 +244,18 @@ class RDoc::Markup::FormatterTestCase < RDoc::TestCase
       end
 
       ##
+      # Calls accept_paragraph_br with a RDoc::Markup::Paragraph containing
+      # a \<br>
+
+      def test_accept_paragraph_br
+        @to.start_accepting
+
+        @to.accept_paragraph para 'one<br>two'
+
+        accept_paragraph_br
+      end
+
+      ##
       # Calls accept_paragraph with a Paragraph containing a hard break
 
       def test_accept_paragraph_break
@@ -748,7 +760,6 @@ class RDoc::Markup::FormatterTestCase < RDoc::TestCase
 
         list_verbatim
       end
-
     end
   end
 

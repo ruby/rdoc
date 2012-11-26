@@ -262,10 +262,16 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_equal 18, @to.characters
   end
 
+  def accept_paragraph_br
+    assert_equal "<p>one<br>two\n", @to.res.join
+
+    assert_equal 6, @to.characters
+  end
+
   def accept_paragraph_break
     assert_equal "<p>hello<br>\nworld\n", @to.res.join
 
-    assert_equal 15, @to.characters
+    assert_equal 11, @to.characters
   end
 
   def accept_paragraph_i

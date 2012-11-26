@@ -99,10 +99,10 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # These methods handle special markup added by RDoc::Markup#add_special.
 
   ##
-  # +special+ is a <code><br></code> that is not converted.
+  # +special+ is a <code><br></code>
 
   def handle_special_HARD_BREAK special
-    special.text
+    '<br>'
   end
 
   ##

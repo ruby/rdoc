@@ -261,6 +261,13 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   end
 
   ##
+  # Adds a newline to the output
+
+  def handle_special_HARD_BREAK special
+    "\n"
+  end
+
+  ##
   # Prepares the visitor for text generation
 
   def start_accepting

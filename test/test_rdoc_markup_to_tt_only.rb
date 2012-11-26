@@ -194,6 +194,10 @@ class TestRDocMarkupToTtOnly < RDoc::Markup::FormatterTestCase
     assert_empty @to.end_accepting
   end
 
+  def accept_paragraph_br
+    assert_empty @to.end_accepting
+  end
+
   def accept_paragraph_i
     assert_empty @to.end_accepting
   end

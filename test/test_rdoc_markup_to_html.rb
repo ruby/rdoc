@@ -241,6 +241,10 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal "\n<p>reg <strong>bold words</strong> reg</p>\n", @to.res.join
   end
 
+  def accept_paragraph_br
+    assert_equal "\n<p>one<br>two</p>\n", @to.res.join
+  end
+
   def accept_paragraph_break
     assert_equal "\n<p>hello<br>\nworld</p>\n", @to.res.join
   end
