@@ -75,6 +75,7 @@ hoe.clean_globs -= PARSER_FILES.grep(/literals_/)
 
 task :generate => :isolate
 task :generate => PARSER_FILES
+task :check_manifest => :generate
 
 rule '.rb' => '.ry' do |t|
   racc = Gem.bin_path 'racc', 'racc'
