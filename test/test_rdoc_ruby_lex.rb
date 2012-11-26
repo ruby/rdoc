@@ -77,6 +77,23 @@ end
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_hash_symbol
+    tokens = RDoc::RubyLex.tokenize '{ class:"foo" }', nil
+
+    expected = [
+      @TK::TkLBRACE    .new( 0, 1,  0, '{'),
+      @TK::TkSPACE     .new( 1, 1,  1, ' '),
+      @TK::TkIDENTIFIER.new( 2, 1,  2, 'class'),
+      @TK::TkSYMBEG    .new( 7, 1,  7, ':'),
+      @TK::TkSTRING    .new( 8, 1,  8, '"foo"'),
+      @TK::TkSPACE     .new(13, 1, 13, ' '),
+      @TK::TkRBRACE    .new(14, 1, 14, '}'),
+      @TK::TkNL        .new(15, 1, 15, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_heredoc_indent
     tokens = RDoc::RubyLex.tokenize <<-'RUBY', nil
 string = <<-STRING
