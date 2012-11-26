@@ -757,6 +757,21 @@ end
     assert_equal %w[A B], @store.all_classes.map { |c| c.full_name }.sort
   end
 
+  def test_parse_class_colon3_self_reference
+    code = <<-CODE
+class A::B
+  class ::A
+  end
+end
+    CODE
+
+    util_parser code
+
+    @parser.parse_class @top_level, false, @parser.get_tk, @comment
+
+    assert_equal %w[A A::B], @store.all_classes.map { |c| c.full_name }.sort
+  end
+
   def test_parse_class_single
     code = <<-CODE
 class A

@@ -140,6 +140,7 @@
   * Worked around bug in RDoc::RubyLex where tokens won't be reinterpreted
     after unget_tk.
   * Fixed class << ::Foo writing documentation to /Foo.html
+  * Fixed class ::A referencing itself from inside its own namespace.
 
 === 3.12 / 2011-12-15
 

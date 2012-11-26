@@ -592,6 +592,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
       name = name_t.name
       superclass = '::Object'
 
+      if given_name =~ /^::/ then
+        declaration_context = @top_level
+        given_name = $'
+      end
+
       if TkLT === peek_tk then
         get_tk
         skip_tkspace
