@@ -42,9 +42,6 @@
     Ryan Davis
   * RDoc::ClassModule#each_ancestor no longer yields itself if there is
     circular ancestry
-  * Fixed tokenization of % when it is not followed by a $-string type
-  * Fixed display of __END__ in documentation examples in HTML output
-  * Fixed tokenization of reserved words used as new-style hash keys
 
 * Major enhancements
   * ri can now show pages (README, etc.)
@@ -130,10 +127,14 @@
     Tobias Koch
   * Classes and modules in a C file may now be created in any order.  Issue
     #124 by Su Zhang
-  * A metaprogrammed methods support the :args: directive.  Issue #100
+  * A metaprogrammed method supports the :args: directive.  Issue #100
+  * A metaprogrammed method supports the :yields: directive.
   * RDoc will now look for directives up to the end of the line.  For example,
       class B < A; end # :nodoc:
     will now hide documentation of B.  Issue #125 by Zachary Scott
+  * Fixed tokenization of % when it is not followed by a $-string type
+  * Fixed display of __END__ in documentation examples in HTML output
+  * Fixed tokenization of reserved words used as new-style hash keys
 
 === 3.12 / 2011-12-15
 

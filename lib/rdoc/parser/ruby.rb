@@ -1439,7 +1439,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
                 parse_meta_attr container, single, tk, comment
               else
                 method = parse_meta_method container, single, tk, comment
-                method.params = container.params if container.params
+                method.params = container.params if
+                  container.params
+                method.block_params = container.block_params if
+                  container.block_params
               end
             end
           end
@@ -1479,6 +1482,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         comment = new_comment ''
         comment.force_encoding @encoding if @encoding
         container.params = nil
+        container.block_params = nil
       end
 
       begin
@@ -1488,6 +1492,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     container.params = nil
+    container.block_params = nil
   end
 
   ##

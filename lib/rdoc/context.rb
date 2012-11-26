@@ -31,6 +31,11 @@ class RDoc::Context < RDoc::CodeObject
   attr_reader :attributes
 
   ##
+  # Block params to be used in the next MethodAttr parsed under this context
+
+  attr_accessor :block_params
+
+  ##
   # Constants defined
 
   attr_reader :constants

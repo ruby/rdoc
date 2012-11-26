@@ -1996,6 +1996,24 @@ end
     assert_equal 1, @top_level.requires.length
   end
 
+  def test_parse_statements_identifier_yields
+    comment = "##\n# :yields: x\n# :method: b\n# my method\n"
+
+    util_parser "module M\n#{comment}def_delegator :a, :b, :b\nend"
+
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL
+
+    m = @top_level.modules.first
+    assert_equal 'M', m.full_name
+
+    b = m.method_list.first
+    assert_equal 'M#b', b.full_name
+    assert_equal 'x', b.block_params
+    assert_equal 'my method', b.comment.text
+
+    assert_nil m.params, 'Module parameter not removed'
+  end
+
   def test_parse_statements_stopdoc_TkALIAS
     klass = @top_level.add_class RDoc::NormalClass, 'Foo'
 
