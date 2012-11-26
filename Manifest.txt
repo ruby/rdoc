@@ -148,8 +148,10 @@ lib/rdoc/parser/ruby_tools.rb
 lib/rdoc/parser/simple.rb
 lib/rdoc/parser/text.rb
 lib/rdoc/rd.rb
+lib/rdoc/rd/block_parser.rb
 lib/rdoc/rd/block_parser.ry
 lib/rdoc/rd/inline.rb
+lib/rdoc/rd/inline_parser.rb
 lib/rdoc/rd/inline_parser.ry
 lib/rdoc/rdoc.rb
 lib/rdoc/require.rb
