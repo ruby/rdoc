@@ -65,6 +65,7 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
 end
 
 task :generate => PARSER_FILES
+task :check_manifest => :generate
 
 rule '.rb' => '.ry' do |t|
   racc = Gem.bin_path 'racc', 'racc'
