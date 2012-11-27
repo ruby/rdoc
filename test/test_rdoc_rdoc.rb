@@ -147,6 +147,27 @@ class TestRDocRDoc < RDoc::TestCase
     @rdoc.store = RDoc::Store.new
 
     temp_dir do |dir|
+      @rdoc.options.root = Pathname(Dir.pwd)
+
+      open 'test.txt', 'w' do |io|
+        io.puts 'hi'
+      end
+
+      test_txt = File.join dir, 'test.txt'
+
+      top_level = @rdoc.parse_file 'test.txt'
+
+      assert_equal 'test.txt', top_level.absolute_name
+      assert_equal 'test.txt', top_level.relative_name
+    end
+  end
+
+  def test_parse_file_relative
+    pwd = Dir.pwd
+
+    @rdoc.store = RDoc::Store.new
+
+    temp_dir do |dir|
       @rdoc.options.root = Pathname(dir)
 
       open 'test.txt', 'w' do |io|
