@@ -68,6 +68,7 @@
     per-file or per-comment basis with the +:markdown:+ directive like the rd
     and tomdoc formats and on a per-project basis with
     <tt>rdoc --markup markdown --write-options</tt>
+  * Added --root for building documentation from outside the source dir.
   * Added a table of contents to the sidebar.
   * RDoc markup format merges adjacent labels in a label or note list into a
     single definition list item for output.
