@@ -346,7 +346,8 @@ option)
 
     return unless content
 
-    relative_path = Pathname(filename).relative_path_from @options.root
+    filename_path = Pathname(filename).expand_path
+    relative_path = filename_path.relative_path_from @options.root
 
     top_level = @store.add_file filename, relative_path.to_s
 
