@@ -198,7 +198,7 @@ class TestRDocRDoc < RDoc::TestCase
 
   def test_remove_unparseable_tags_emacs
     temp_dir do
-      open 'TAGS', 'w' do |io| # emacs
+      open 'TAGS', 'wb' do |io| # emacs
         io.write "\f\nlib/foo.rb,43\n"
       end
 
