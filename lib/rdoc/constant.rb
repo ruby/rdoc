@@ -103,9 +103,9 @@ class RDoc::Constant < RDoc::CodeObject
       @is_alias_for ? @is_alias_for.full_name : nil,
       parse(@comment),
       @file.absolute_name,
-      @parent.name,
-      @parent.class,
-      @section.title,
+      @parent_name   || @parent.name,
+      @parent_class  || @parent.class,
+      @section_title || section.title,
     ]
   end
 

@@ -101,6 +101,26 @@ class TestRDocConstant < XrefTestCase
     assert_equal section,        loaded.section
   end
 
+  def test_marshal_round_trip_section
+    top_level = @store.add_file 'file.rb'
+
+    c = RDoc::Constant.new 'CONST', nil, 'this is a comment'
+    c.record_location top_level
+
+    cm = top_level.add_class RDoc::NormalClass, 'Klass'
+    cm.add_constant c
+
+    section = cm.sections.first
+
+    loaded = Marshal.load Marshal.dump c
+    loaded.store = @store
+
+    reloaded = Marshal.load Marshal.dump loaded
+    reloaded.store = @store
+
+    assert_equal section, reloaded.section
+  end
+
   def test_path
     assert_equal 'C1.html#CONST', @const.path
   end
