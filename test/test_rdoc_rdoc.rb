@@ -157,6 +157,8 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_parse_file_forbidden
+    skip 'chmod not supported' if Gem.win_platform?
+
     @rdoc.store = RDoc::Store.new
 
     Tempfile.open 'test.txt' do |io|
