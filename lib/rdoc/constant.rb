@@ -79,7 +79,9 @@ class RDoc::Constant < RDoc::CodeObject
   def is_alias_for
     case @is_alias_for
     when String then
-      @is_alias_for = @store.find_class_or_module @is_alias_for
+      found = @store.find_class_or_module @is_alias_for
+      @is_alias_for = found if found
+      @is_alias_for
     else
       @is_alias_for
     end
@@ -96,16 +98,21 @@ class RDoc::Constant < RDoc::CodeObject
   # Dumps this Constant for use by ri.  See also #marshal_load
 
   def marshal_dump
+    alias_name = case found = is_alias_for
+                 when RDoc::CodeObject then found.full_name
+                 else                       found
+                 end
+
     [ MARSHAL_VERSION,
       @name,
       full_name,
       @visibility,
-      @is_alias_for ? @is_alias_for.full_name : nil,
+      alias_name,
       parse(@comment),
       @file.absolute_name,
-      @parent_name   || @parent.name,
-      @parent_class  || @parent.class,
-      @section_title || section.title,
+      parent.name,
+      parent.class,
+      section.title,
     ]
   end
 

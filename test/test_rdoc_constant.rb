@@ -12,6 +12,23 @@ class TestRDocConstant < XrefTestCase
     assert_equal 'C1::CONST', @const.full_name
   end
 
+  def test_is_alias_for
+    top_level = @store.add_file 'file.rb'
+
+    c = RDoc::Constant.new 'CONST', nil, 'comment'
+    top_level.add_constant c
+
+    assert_nil c.is_alias_for
+
+    c.is_alias_for = 'C1'
+
+    assert_equal @c1, c.is_alias_for
+
+    c.is_alias_for = 'unknown'
+
+    assert_equal 'unknown', c.is_alias_for
+  end
+
   def test_marshal_dump
     top_level = @store.add_file 'file.rb'
 
@@ -101,11 +118,12 @@ class TestRDocConstant < XrefTestCase
     assert_equal section,        loaded.section
   end
 
-  def test_marshal_round_trip_section
+  def test_marshal_round_trip
     top_level = @store.add_file 'file.rb'
 
     c = RDoc::Constant.new 'CONST', nil, 'this is a comment'
     c.record_location top_level
+    c.is_alias_for = 'Unknown'
 
     cm = top_level.add_class RDoc::NormalClass, 'Klass'
     cm.add_constant c
@@ -118,7 +136,8 @@ class TestRDocConstant < XrefTestCase
     reloaded = Marshal.load Marshal.dump loaded
     reloaded.store = @store
 
-    assert_equal section, reloaded.section
+    assert_equal section,   reloaded.section
+    assert_equal 'Unknown', reloaded.is_alias_for
   end
 
   def test_path
