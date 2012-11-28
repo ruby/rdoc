@@ -168,6 +168,8 @@ class RDoc::RubygemsHook
 
     @rdoc.store = RDoc::Store.new
 
+    say "Parsing documentation for #{@spec.full_name}"
+
     Dir.chdir @spec.full_gem_path do
       @rdoc.parse_files options.files
     end
