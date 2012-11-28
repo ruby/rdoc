@@ -103,6 +103,8 @@ class RDoc::RubygemsHook
   # Documentation will be generated into +destination+
 
   def document generator, options, destination
+    generator_name = generator
+
     options = options.dup
     options.exclude ||= [] # TODO maybe move to RDoc::Options#finish
     options.setup_generator generator
@@ -114,7 +116,7 @@ class RDoc::RubygemsHook
     @rdoc.options = options
     @rdoc.generator = generator
 
-    say "Installing #{generator} documentation for #{@spec.full_name}"
+    say "Installing #{generator_name} documentation for #{@spec.full_name}"
 
     FileUtils.mkdir_p options.op_dir
 
