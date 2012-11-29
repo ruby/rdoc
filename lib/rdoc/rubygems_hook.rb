@@ -134,6 +134,7 @@ class RDoc::RubygemsHook
   # Generates RDoc and ri data
 
   def generate
+    return if @spec.default_gem?
     return unless @generate_ri or @generate_rdoc
 
     setup
