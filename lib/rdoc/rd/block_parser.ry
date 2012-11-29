@@ -632,7 +632,7 @@ class RDoc::RD
 
 ##
 # RD format parser for headings, paragraphs, lists, verbatim sections that
-# exist as blocks.  
+# exist as blocks.
 
 ---- footer
 end
