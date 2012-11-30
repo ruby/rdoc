@@ -513,7 +513,7 @@ SetextBottom2 = "---" "-"* Newline
 SetextHeading1 =  &(RawLine SetextBottom1)
                   StartList:a ( !Endline Inline:b { a << b } )+ Sp? Newline
                   SetextBottom1
-                  { a; RDoc::Markup::Heading.new(1, a.join) }
+                  { RDoc::Markup::Heading.new(1, a.join) }
 
 SetextHeading2 =  &(RawLine SetextBottom2)
                   StartList:a ( !Endline Inline:b { a << b })+ Sp? Newline
@@ -580,7 +580,7 @@ ListBlock = !BlankLine Line:a
             { [a, *c] }
 
 ListContinuationBlock = StartList:a
-                        ( < BlankLine* >
+                        ( BlankLine*
                           { a << "\n" } )
                         ( Indent
                           ListBlock:b { a.concat b } )+
@@ -898,7 +898,7 @@ NormalEndline =   Sp Newline !BlankLine !">" !AtxStart
 
 TerminalEndline = Sp Newline Eof
 
-LineBreak = < "  " NormalEndline > { RDoc::Markup::HardBreak.new }
+LineBreak = "  " NormalEndline { RDoc::Markup::HardBreak.new }
 
 Symbol = < SpecialChar >
          { text }
@@ -968,7 +968,7 @@ ReferenceLinkDouble = Label:content < Spnl > !"[]" Label:label
 ReferenceLinkSingle = Label:content < (Spnl "[]")? >
                       { link_to content, content, text }
 
-ExplicitLink =  Label:l Spnl "(" Sp Source:s Spnl Title:t Sp ")"
+ExplicitLink =  Label:l Spnl "(" Sp Source:s Spnl Title Sp ")"
                 { "{#{l}}[#{s}]" }
 
 Source  = ( "<" < SourceContents > ">" | < SourceContents > )
@@ -977,23 +977,23 @@ Source  = ( "<" < SourceContents > ">" | < SourceContents > )
 SourceContents = ( ( !"(" !")" !">" Nonspacechar )+ | "(" SourceContents ")")*
                  | ""
 
-Title = ( TitleSingle | TitleDouble | < "" > ):a
+Title = ( TitleSingle | TitleDouble | "" ):a
         { a }
 
-TitleSingle = "'" < ( !( "'" Sp ( ")" | Newline ) ) . )* > "'"
+TitleSingle = "'" ( !( "'" Sp ( ")" | Newline ) ) . )* "'"
 
-TitleDouble = "\"" < ( !( "\"" Sp ( ")" | Newline ) ) . )* > "\""
+TitleDouble = "\"" ( !( "\"" Sp ( ")" | Newline ) ) . )* "\""
 
 AutoLink = AutoLinkUrl | AutoLinkEmail
 
 AutoLinkUrl =   "<" < /[A-Za-z]+/ "://" ( !Newline !">" . )+ > ">"
                 { text }
 
-AutoLinkEmail = "<" ("mailto:")? < /[\w+_.\/!%~$-]+/i "@" ( !Newline !">" . )+ > ">"
+AutoLinkEmail = "<" ("mailto:")? < /[\w+.\/!%~$-]+/i "@" ( !Newline !">" . )+ > ">"
                 { "mailto:#{text}" }
 
 Reference = NonindentSpace !"[]"
-              Label:label ":" Spnl RefSrc:link RefTitle:title BlankLine+
+              Label:label ":" Spnl RefSrc:link RefTitle BlankLine+
             { # TODO use title
               reference label, link
               nil
@@ -1009,7 +1009,7 @@ RefSrc = < Nonspacechar+ > { text }
 
 RefTitle = ( RefTitleSingle | RefTitleDouble | RefTitleParens | EmptyTitle )
 
-EmptyTitle = < "" >
+EmptyTitle = ""
 
 RefTitleSingle = Spnl "'" < ( !( "'" Sp Newline | Newline ) . )* > "'" { text }
 
@@ -1122,7 +1122,7 @@ RawNoteReference = "[^" < ( !Newline !"]" . )+ > "]" { text }
 Note =          &{ notes? }
                 NonindentSpace RawNoteReference:ref ":" Sp
                 StartList:a
-                RawNoteBlock:l
+                RawNoteBlock
                 ( &Indent RawNoteBlock:i { a.concat i } )*
                 { @footnotes[ref] = paragraph a
 
@@ -1167,12 +1167,12 @@ DefinitionList = &{ definition_lists? }
                  { RDoc::Markup::List.new :NOTE, *list.flatten }
 
 DefinitionListItem = ( DefinitionListLabel+ ):label
-                     ( DefinitionListDefinition+ ):defn
+                     ( DefinitionListDefinition+ ):defns
                      { list_items = []
                        list_items <<
-                         RDoc::Markup::ListItem.new(label, defn.shift)
+                         RDoc::Markup::ListItem.new(label, defns.shift)
 
-                       list_items.concat defn.map { |defn|
+                       list_items.concat defns.map { |defn|
                          RDoc::Markup::ListItem.new nil, defn
                        } unless list_items.empty?
 
