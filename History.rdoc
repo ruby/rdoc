@@ -1,4 +1,14 @@
-=== 4.0
+=== 4.0.0.preview2
+
+As a preview release, please file bugs for any problems you have with rdoc at
+https://github.com/rdoc/rdoc/issues
+
+RDoc 4.0 includes several new features and several breaking changes.  The
+changes should not affect users of `rdoc` or `ri`.
+
+Notable feature additions are markdown support and an WEBrick servlet that can
+serve HTML from an ri store.  (This means that RubyGems 2.0+ no longer needs
+to build HTML documentation when installing gems.)
 
 * Breaking changes
   * The default output encoding for RDoc is now UTF-8.  Previously RDoc used
@@ -24,8 +34,9 @@
     ToHtml*.  (This is not universal due to the difficult at accessing the
     user's options instance deep inside RDoc.  A future major release may
     remedy this.)
-  * Added RDoc::Markup::BlockQuote.  #accept_block_quote must be added to
-    formatters.
+  * Added new markup nodes and specials that RDoc::Markup::Formatter
+    subclasses must handle.  If you're using RDoc::Markup::FormatterTestCase
+    the new methods you need to add should be readily apparent.
   * Removed RDoc::RI::Paths::SYSDIR and ::SITEDIR.  These were hidden
     constants so no breakage is expected.  Use RDoc::RI::Paths::system_dir
     and ::site_dir instead.
@@ -54,7 +65,10 @@
 
     RDoc 3 did not save pages in ri data so you will need to regenerate
     documentation from your gems to use this feature.
-
+  * Added Markdown as a supported format.  The markdown format can be set on a
+    per-file or per-comment basis with the +:markdown:+ directive like the rd
+    and tomdoc formats and on a per-project basis with
+    <tt>rdoc --markup markdown --write-options</tt>
   * Removed global state from RDoc.  RDoc::Store holds the documentation tree
     and connects the driver to the parsers and generator.  This also allows
     documentation parsing and generation for multiple instances, but the rdoc
@@ -64,10 +78,6 @@
     exist.
 
 * Minor enhancements
-  * Added Markdown as a supported format.  The markdown format can be set on a
-    per-file or per-comment basis with the +:markdown:+ directive like the rd
-    and tomdoc formats and on a per-project basis with
-    <tt>rdoc --markup markdown --write-options</tt>
   * Added --root for building documentation from outside the source dir.
   * Added a table of contents to the sidebar.
   * RDoc markup format merges adjacent labels in a label or note list into a
@@ -87,6 +97,7 @@
     constants and methods missing documentation.  Issue #121 by Zachary Scott
   * RDoc now reports a warning for files that are unreadable due to
     permissions problems.
+  * RDoc controls documentation generation for RubyGems 2.0+
 
 * Bug fixes
   * A word that is directly followed by a multi-word tidy link label no longer
