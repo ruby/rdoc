@@ -103,7 +103,7 @@ task "#{path}.gem" => package_parser_files
 # RUBINIUS_PATH.
 
 diff_options = "-urpN --exclude '*svn*' --exclude '*swp' --exclude '*rbc'"
-rsync_options = "-avP --exclude '*svn*' --exclude '*swp' --exclude '*rbc' --exclude '*.rej' --exclude '*.orig'"
+rsync_options = "-avP --exclude '*svn*' --exclude '*swp' --exclude '*rbc' --exclude '*.rej' --exclude '*.orig' --exclude '*.kpeg' --exclude '*.ry' --exclude 'literals_1_8.rb' --exclude 'gauntlet_rdoc.rb'"
 
 rubinius_dir = ENV['RUBINIUS_PATH'] || '../../../git/git.rubini.us/code'
 ruby_dir = ENV['RUBY_PATH'] || '../../svn/ruby/trunk'
