@@ -62,8 +62,8 @@ class TestRDocParserChangeLog < RDoc::TestCase
         blank_line,
         head(3, 'Mon Dec  3 20:28:02 2012  Koichi Sasada  <ko1@atdot.net>'),
         blank_line,
-        list(:NOTE, item('e', para('five')), item('f', para('six'))),
-    )
+        list(:NOTE, item('e', para('five')), item('f', para('six'))))
+
     expected.file = @top_level
 
     assert_equal expected, parser.create_document(groups)
