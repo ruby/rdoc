@@ -28,7 +28,7 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
     doc << RDoc::Markup::Heading.new(1, File.basename(@file_name))
     doc << RDoc::Markup::BlankLine.new
 
-    groups.each do |day, entries|
+    groups.sort_by do |day,| day end.reverse_each do |day, entries|
       doc << RDoc::Markup::Heading.new(2, day)
       doc << RDoc::Markup::BlankLine.new
 
@@ -55,7 +55,7 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
     list = RDoc::Markup::List.new :NOTE
 
     items.each do |item|
-      title, body = item.split /:\s*/, 2
+      title, body = item.split(/:\s*/, 2)
       paragraph = RDoc::Markup::Paragraph.new body
       list_item = RDoc::Markup::ListItem.new title, paragraph
       list << list_item
@@ -85,7 +85,9 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
         entry_name = $&
 
         begin
-          Time.parse entry_name
+          time = Time.parse entry_name
+          # HACK Ruby 1.8 does not raise ArgumentError for Time.parse "Other"
+          entry_name = nil unless entry_name =~ /#{time.year}/
         rescue ArgumentError
           entry_name = nil
         end
