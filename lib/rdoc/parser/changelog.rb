@@ -6,6 +6,21 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
 
   parse_files_matching(/(\/|\\|\A)ChangeLog[^\/\\]*\z/)
 
+  def continue_entry_body entry_body, continuation
+    return unless last = entry_body.last
+
+    if last =~ /\)\s*\z/ and continuation =~ /\A\(/ then
+      last.sub!(/\)\s*\z/, ',')
+      continuation.sub!(/\A\(/, '')
+    end
+
+    if last =~ /\s\z/ then
+      last << continuation
+    else
+      last << ' ' << continuation
+    end
+  end
+
   def create_document groups
     doc = RDoc::Markup::Document.new
     doc.file = @top_level
@@ -62,6 +77,8 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
 
     @content.each_line do |line|
       case line
+      when /^\s*$/ then
+        next
       when /^\w.*/ then
         entries[entry_name] = entry_body if entry_name
 
@@ -74,17 +91,18 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
         end
 
         entry_body = []
-      when /^(\t| {8})\*\s*(.*)/ then
+      when /^(\t| {8})?\*\s*(.*)/ then # "\t* file.c (func): ..."
         entry_body << $2
-      when /^(\t| {8})\s*(.*)/ then
-        continuation = $2
-        next unless last = entry_body.last
+      when /^(\t| {8})?\s*(\(.*)/ then # "\t(func): ..."
+        entry = $2
 
-        if last =~ /\s\z/ then
-          last << continuation
+        if entry_body.last =~ /:/ then
+          entry_body << entry
         else
-          last << ' ' << continuation
+          continue_entry_body entry_body, entry
         end
+      when /^(\t| {8})?\s*(.*)/ then
+        continue_entry_body entry_body, $2
       end
     end
 

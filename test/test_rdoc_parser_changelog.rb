@@ -32,6 +32,36 @@ class TestRDocParserChangeLog < RDoc::TestCase
     assert_equal RDoc::Parser::Ruby, parser.can_parse('ChangeLog.rb')
   end
 
+  def test_continue_entry_body
+    parser = util_parser
+
+    entry_body = ['a']
+
+    parser.continue_entry_body entry_body, 'b'
+
+    assert_equal ['a b'], entry_body
+  end
+
+  def test_continue_entry_body_empty
+    parser = util_parser
+
+    entry_body = []
+
+    parser.continue_entry_body entry_body, ''
+
+    assert_empty entry_body
+  end
+
+  def test_continue_entry_body_function
+    parser = util_parser
+
+    entry_body = ['file: (func1)']
+
+    parser.continue_entry_body entry_body, '(func2): blah'
+
+    assert_equal ['file: (func1, func2): blah'], entry_body
+  end
+
   def test_create_document
     parser = util_parser
 
@@ -160,6 +190,32 @@ Other note that will be ignored
       'Mon Dec  3 20:28:02 2012  Koichi Sasada  <ko1@atdot.net>' => [
         'compile.c (iseq_specialized_instruction): change condition of ' +
           'using `opt_send_simple\'. More method invocations can be simple.',
+      ],
+    }
+
+    assert_equal expected, parser.parse_entries
+  end
+
+  def test_parse_entries_gnu
+    parser = util_parser <<-ChangeLog
+1998-08-17  Richard Stallman  <rms@gnu.org>
+
+* register.el (insert-register): Return nil.
+(jump-to-register): Likewise.
+
+* sort.el (sort-subr): Return nil.
+
+* keyboard.c (menu_bar_items, tool_bar_items)
+(Fexecute_extended_command): Deal with 'keymap' property.
+    ChangeLog
+
+    expected = {
+      '1998-08-17  Richard Stallman  <rms@gnu.org>' => [
+        'register.el (insert-register): Return nil.',
+        '(jump-to-register): Likewise.',
+        'sort.el (sort-subr): Return nil.',
+        'keyboard.c (menu_bar_items, tool_bar_items, ' +
+        'Fexecute_extended_command): Deal with \'keymap\' property.'
       ],
     }
 
