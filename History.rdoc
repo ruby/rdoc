@@ -79,6 +79,8 @@ to build HTML documentation when installing gems.)
 
 * Minor enhancements
   * Added --root for building documentation from outside the source dir.
+  * Added a ChangeLog parser.  It automatically parses files that begin
+    with 'ChangeLog'
   * Added a table of contents to the sidebar.
   * RDoc markup format merges adjacent labels in a label or note list into a
     single definition list item for output.
