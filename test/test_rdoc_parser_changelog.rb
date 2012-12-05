@@ -129,6 +129,25 @@ class TestRDocParserChangeLog < RDoc::TestCase
     assert_equal expected, parser.create_entries(entries)
   end
 
+  def test_create_entries_colons
+    parser = util_parser
+
+    entries = [
+      ['Wed Dec  5 12:17:11 2012  Naohisa Goto  <ngotogenome@gmail.com>',
+        ['func.rb (DL::Function#bind): log stuff [ruby-core:50562]']],
+    ]
+
+    expected = [
+      head(3,
+           'Wed Dec  5 12:17:11 2012  Naohisa Goto  <ngotogenome@gmail.com>'),
+      blank_line,
+      list(:NOTE,
+           item('func.rb (DL::Function#bind)',
+                para('log stuff [ruby-core:50562]')))]
+
+    assert_equal expected, parser.create_entries(entries)
+  end
+
   def test_create_items
     parser = util_parser
 

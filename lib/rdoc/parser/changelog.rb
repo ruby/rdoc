@@ -55,7 +55,11 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
     list = RDoc::Markup::List.new :NOTE
 
     items.each do |item|
-      title, body = item.split(/:\s*/, 2)
+      item =~ /\A(.*?(?:\([^)]+\))?):\s*/
+
+      title = $1
+      body = $'
+
       paragraph = RDoc::Markup::Paragraph.new body
       list_item = RDoc::Markup::ListItem.new title, paragraph
       list << list_item
