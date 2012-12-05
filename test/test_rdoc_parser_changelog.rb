@@ -96,7 +96,15 @@ class TestRDocParserChangeLog < RDoc::TestCase
 
     expected.file = @top_level
 
-    assert_equal expected, parser.create_document(groups)
+    document = parser.create_document(groups)
+
+    assert_equal expected, document
+
+    headings = document.parts.select do |part|
+      RDoc::Markup::Heading === part and part.level == 2
+    end
+
+    refute headings.all? { |heading| heading.text.frozen? }
   end
 
   def test_create_entries

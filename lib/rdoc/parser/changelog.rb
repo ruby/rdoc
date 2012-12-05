@@ -29,7 +29,7 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
     doc << RDoc::Markup::BlankLine.new
 
     groups.sort_by do |day,| day end.reverse_each do |day, entries|
-      doc << RDoc::Markup::Heading.new(2, day)
+      doc << RDoc::Markup::Heading.new(2, day.dup)
       doc << RDoc::Markup::BlankLine.new
 
       doc.concat create_entries entries
