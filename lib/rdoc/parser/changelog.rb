@@ -71,7 +71,7 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
   end
 
   def parse_entries
-    entries = {}
+    entries = []
     entry_name = nil
     entry_body = []
 
@@ -80,7 +80,7 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
       when /^\s*$/ then
         next
       when /^\w.*/ then
-        entries[entry_name] = entry_body if entry_name
+        entries << [entry_name, entry_body] if entry_name
 
         entry_name = $&
 
@@ -108,9 +108,11 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
       end
     end
 
-    entries[entry_name] = entry_body if entry_name
+    entries << [entry_name, entry_body] if entry_name
 
-    entries.delete nil
+    entries.reject! do |(entry,_)|
+      entry == nil
+    end
 
     entries
   end
