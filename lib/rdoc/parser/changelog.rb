@@ -23,6 +23,7 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
 
   def create_document groups
     doc = RDoc::Markup::Document.new
+    doc.omit_headings_below = 2
     doc.file = @top_level
 
     doc << RDoc::Markup::Heading.new(1, File.basename(@file_name))
@@ -42,8 +43,7 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
     out = []
 
     entries.each do |entry, items|
-      heading = RDoc::Markup::Heading.new 3, entry, true
-      out << heading
+      out << RDoc::Markup::Heading.new(3, entry)
       out << RDoc::Markup::BlankLine.new
 
       out << create_items(items)

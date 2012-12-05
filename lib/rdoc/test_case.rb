@@ -91,8 +91,8 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
   ##
   # Shortcut for RDoc::Markup::Heading.new with +level+ and +text+
 
-  def head level, text, omit_from_table_of_contents = nil
-    @RM::Heading.new level, text, omit_from_table_of_contents
+  def head level, text
+    @RM::Heading.new level, text
   end
 
   ##

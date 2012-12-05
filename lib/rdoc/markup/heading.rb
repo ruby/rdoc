@@ -2,7 +2,7 @@
 # A heading with a level (1-6) and text
 
 RDoc::Markup::Heading =
-  Struct.new :level, :text, :omit_from_table_of_contents do
+  Struct.new :level, :text do
 
   @to_html = nil
   @to_label = nil
