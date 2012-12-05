@@ -82,15 +82,21 @@ class TestRDocParserChangeLog < RDoc::TestCase
         blank_line,
         head(2, '2012-12-04'),
         blank_line,
-        head(3, 'Tue Dec  4 08:33:46 2012  Eric Hodel  <drbrain@segment7.net>'),
+        head(3,
+             'Tue Dec  4 08:33:46 2012  Eric Hodel  <drbrain@segment7.net>',
+             true),
         blank_line,
         list(:NOTE, item('a', para('one')), item('b', para('two'))),
-        head(3, 'Tue Dec  4 08:32:10 2012  Eric Hodel  <drbrain@segment7.net>'),
+        head(3,
+             'Tue Dec  4 08:32:10 2012  Eric Hodel  <drbrain@segment7.net>',
+             true),
         blank_line,
         list(:NOTE, item('c', para('three')), item('d', para('four'))),
         head(2, '2012-12-03'),
         blank_line,
-        head(3, 'Mon Dec  3 20:28:02 2012  Koichi Sasada  <ko1@atdot.net>'),
+        head(3,
+             'Mon Dec  3 20:28:02 2012  Koichi Sasada  <ko1@atdot.net>',
+             true),
         blank_line,
         list(:NOTE, item('e', para('five')), item('f', para('six'))))
 
@@ -118,15 +124,26 @@ class TestRDocParserChangeLog < RDoc::TestCase
     ]
 
     expected = [
-      head(3, 'Tue Dec  1 02:03:04 2012  Eric Hodel  <drbrain@segment7.net>'),
+      head(3,
+           'Tue Dec  1 02:03:04 2012  Eric Hodel  <drbrain@segment7.net>',
+           true),
       blank_line,
       list(:NOTE, item('a', para('one')), item('b', para('two'))),
-      head(3, 'Tue Dec  5 06:07:08 2012  Eric Hodel  <drbrain@segment7.net>'),
+      head(3,
+           'Tue Dec  5 06:07:08 2012  Eric Hodel  <drbrain@segment7.net>',
+           true),
       blank_line,
       list(:NOTE, item('c', para('three')), item('d', para('four'))),
     ]
 
-    assert_equal expected, parser.create_entries(entries)
+    entries = parser.create_entries(entries)
+    assert_equal expected, entries
+
+    headings = entries.select do |part|
+      RDoc::Markup::Heading === part and part.level == 3
+    end
+
+    assert headings.all? { |heading| heading.omit_from_table_of_contents }
   end
 
   def test_create_entries_colons
@@ -139,7 +156,8 @@ class TestRDocParserChangeLog < RDoc::TestCase
 
     expected = [
       head(3,
-           'Wed Dec  5 12:17:11 2012  Naohisa Goto  <ngotogenome@gmail.com>'),
+           'Wed Dec  5 12:17:11 2012  Naohisa Goto  <ngotogenome@gmail.com>',
+           true),
       blank_line,
       list(:NOTE,
            item('func.rb (DL::Function#bind)',
@@ -264,7 +282,9 @@ Mon Dec  3 20:37:22 2012  Koichi Sasada  <ko1@atdot.net>
       blank_line,
       head(2, '2012-12-04'),
       blank_line,
-      head(3, 'Tue Dec  4 08:32:10 2012  Eric Hodel  <drbrain@segment7.net>'),
+      head(3,
+           'Tue Dec  4 08:32:10 2012  Eric Hodel  <drbrain@segment7.net>',
+           true),
       blank_line,
       list(:NOTE,
         item('lib/rdoc/ri/driver.rb', para('Fixed ri page display for ' +
@@ -272,7 +292,9 @@ Mon Dec  3 20:37:22 2012  Koichi Sasada  <ko1@atdot.net>
         item('test/rdoc/test_rdoc_ri_driver.rb', para('Test for above'))),
       head(2, '2012-12-03'),
       blank_line,
-      head(3, 'Mon Dec  3 20:37:22 2012  Koichi Sasada  <ko1@atdot.net>'),
+      head(3,
+           'Mon Dec  3 20:37:22 2012  Koichi Sasada  <ko1@atdot.net>',
+           true),
       blank_line,
       list(:NOTE,
         item('vm_exec.c', para('check VM_COLLECT_USAGE_DETAILS.'))))

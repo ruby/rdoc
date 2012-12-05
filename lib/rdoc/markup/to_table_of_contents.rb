@@ -26,7 +26,7 @@ class RDoc::Markup::ToTableOfContents < RDoc::Markup::Formatter
   # Adds +heading+ to the table of contents
 
   def accept_heading heading
-    @res << heading
+    @res << heading unless heading.omit_from_table_of_contents
   end
 
   ##

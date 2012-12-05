@@ -42,7 +42,8 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
     out = []
 
     entries.each do |entry, items|
-      out << RDoc::Markup::Heading.new(3, entry)
+      heading = RDoc::Markup::Heading.new 3, entry, true
+      out << heading
       out << RDoc::Markup::BlankLine.new
 
       out << create_items(items)
