@@ -1121,6 +1121,27 @@ EOF
     assert_empty klass.constants
   end
 
+  def test_parse_comment_nested
+    content = <<-CONTENT
+A::B::C = 1
+    CONTENT
+
+    util_parser content
+
+    tk = @parser.get_tk
+
+    parsed = @parser.parse_constant @top_level, tk, 'comment'
+
+    assert parsed
+
+    a = @top_level.find_module_named 'A'
+    b = a.find_module_named 'B'
+    c = b.constants.first
+
+    assert_equal 'A::B::C', c.full_name
+    assert_equal 'comment', c.comment
+  end
+
   def test_parse_include
     klass = RDoc::NormalClass.new 'C'
     klass.parent = @top_level
