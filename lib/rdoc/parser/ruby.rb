@@ -240,7 +240,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # with :: separated named) and return the ultimate name, the associated
   # container, and the given name (with the ::).
 
-  def get_class_or_module container
+  def get_class_or_module container, ignore_constants = false
     skip_tkspace
     name_t = get_tk
     given_name = ''
@@ -259,9 +259,16 @@ class RDoc::Parser::Ruby < RDoc::Parser
     while TkCOLON2 === peek_tk do
       prev_container = container
       container = container.find_module_named name_t.name
-      container ||= prev_container.add_module RDoc::NormalModule, name_t.name
+      container ||=
+        if ignore_constants then
+          RDoc::Context.new
+        else
+          c = prev_container.add_module RDoc::NormalModule, name_t.name
+          c.ignore unless prev_container.document_children
+          c
+        end
 
-      container.ignore unless prev_container.document_children
+      container.record_location @top_level
 
       get_tk
       skip_tkspace false
@@ -663,9 +670,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
-  # Parses a constant in +context+ with +comment+
+  # Parses a constant in +context+ with +comment+.  If +ignore_constants+ is
+  # true, no found constants will be added to RDoc.
 
-  def parse_constant container, tk, comment
+  def parse_constant container, tk, comment, ignore_constants = false
     offset  = tk.seek
     line_no = tk.line_no
 
@@ -680,7 +688,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       unget_tk eq_tk
       unget_tk tk
 
-      container, name_t, given_name = get_class_or_module container
+      container, name_t, = get_class_or_module container, ignore_constants
 
       name = name_t.name
 
@@ -1438,7 +1446,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         parse_method container, single, tk, comment
 
       when TkCONSTANT then
-        unless parse_constant container, tk, comment then
+        unless parse_constant container, tk, comment, current_method then
           try_parse_comment = true
         end
 

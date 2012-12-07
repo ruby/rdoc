@@ -80,21 +80,51 @@ class C; end
     assert_equal 'A', name_t.text
     assert_equal 'A', given_name
 
-    cont, name_t, given_name = util_parser('A::B') .get_class_or_module ctxt
+    cont, name_t, given_name = util_parser('B::C') .get_class_or_module ctxt
 
-    assert_equal @store.find_module_named('A'), cont
-    assert_equal 'B', name_t.text
-    assert_equal 'A::B', given_name
+    b = @store.find_module_named('B')
+    assert_equal b, cont
+    assert_equal [@top_level], b.in_files
+    assert_equal 'C', name_t.text
+    assert_equal 'B::C', given_name
 
-    cont, name_t, given_name = util_parser('A:: B').get_class_or_module ctxt
+    cont, name_t, given_name = util_parser('D:: E').get_class_or_module ctxt
 
-    assert_equal @store.find_module_named('A'), cont
-    assert_equal 'B', name_t.text
-    assert_equal 'A::B', given_name
+    assert_equal @store.find_module_named('D'), cont
+    assert_equal 'E', name_t.text
+    assert_equal 'D::E', given_name
 
     assert_raises NoMethodError do
       util_parser("A::\nB").get_class_or_module ctxt
     end
+  end
+
+  def test_get_class_or_module_document_children
+    ctxt = @top_level.add_class RDoc::NormalClass, 'A'
+    ctxt.stop_doc
+
+    util_parser('B::C').get_class_or_module ctxt
+
+    b = @store.find_module_named('A::B')
+    assert b.ignored?
+
+    d = @top_level.add_class RDoc::NormalClass, 'A::D'
+
+    util_parser('D::E').get_class_or_module ctxt
+
+    refute d.ignored?
+  end
+
+  def test_get_class_or_module_ignore_constants
+    ctxt = RDoc::Context.new
+    ctxt.store = @store
+
+    util_parser('A')   .get_class_or_module ctxt, true
+    util_parser('A::B').get_class_or_module ctxt, true
+
+    assert_empty ctxt.constants
+    assert_empty @store.modules_hash.keys
+    assert_empty @store.classes_hash.keys
   end
 
   def test_get_class_specification
@@ -1106,6 +1136,21 @@ EOF
     @parser.parse_constant foo, tk, @comment
 
     assert_equal 'A', bar.find_module_named('A').full_name
+  end
+
+  def test_parse_constant_in_method
+    klass = @top_level.add_class RDoc::NormalClass, 'Foo'
+
+    util_parser 'A::B = v'
+
+    tk = @parser.get_tk
+
+    @parser.parse_constant klass, tk, @comment, true
+
+    assert_empty klass.constants
+
+    assert_empty @store.modules_hash.keys
+    assert_equal %w[Foo], @store.classes_hash.keys
   end
 
   def test_parse_constant_rescue
@@ -2626,7 +2671,8 @@ end
     content = <<-CONTENT # newline is after M is important
 module M
   def m
-    C
+    A
+    B::C
   end
 end
     CONTENT
@@ -2638,6 +2684,9 @@ end
     m = @top_level.modules.first
 
     assert_empty m.constants
+
+    assert_empty @store.classes_hash.keys
+    assert_equal %w[M], @store.modules_hash.keys
   end
 
   def test_scan_constant_in_rescue
