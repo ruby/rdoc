@@ -2606,6 +2606,24 @@ end
     assert_equal 'A nice girl', m.comment.text
   end
 
+  def test_scan_constant_in_method
+    content = <<-CONTENT # newline is after M is important
+module M
+  def m
+    C
+  end
+end
+    CONTENT
+
+    util_parser content
+
+    @parser.scan
+
+    m = @top_level.modules.first
+
+    assert_empty m.constants
+  end
+
   def test_scan_constant_nodoc
     content = <<-CONTENT # newline is after M is important
 module M

@@ -676,10 +676,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     eq_tk = get_tk
 
-    case eq_tk
-    when TkASSIGN then
-      # continue
-    when TkCOLON2 then
+    if TkCOLON2 === eq_tk then
       unget_tk eq_tk
       unget_tk tk
 
