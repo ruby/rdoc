@@ -3,9 +3,13 @@ require 'time'
 ##
 # A ChangeLog file parser.
 #
-# This parser converts and ChangeLog into an RDoc::Markup::Document.  When
+# This parser converts a ChangeLog into an RDoc::Markup::Document.  When
 # viewed as HTML a ChangeLog page will have an entry for each day's entries in
 # the sidebar table of contents.
+#
+# This parser is meant to parse the MRI ChangeLog, but can be used to parse any
+# {GNU style Change
+# Log}[http://www.gnu.org/prep/standards/html_node/Style-of-Change-Logs.html].
 
 class RDoc::Parser::ChangeLog < RDoc::Parser
 
