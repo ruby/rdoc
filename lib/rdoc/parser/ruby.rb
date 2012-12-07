@@ -1346,6 +1346,26 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
+  # Parses a rescue
+
+  def parse_rescue
+    skip_tkspace false
+
+    while tk = get_tk
+      case tk
+      when TkNL, TkSEMICOLON then
+        break
+      when TkCOMMA then
+        skip_tkspace false
+
+        get_tk if TkNL === peek_tk
+      end
+
+      skip_tkspace false
+    end
+  end
+
+  ##
   # The core of the ruby parser.
 
   def parse_statements(container, single = NORMAL, current_method = nil,
@@ -1451,6 +1471,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       when TkSUPER then
         current_method.calls_super = true if current_method
+
+      when TkRESCUE then
+        parse_rescue
 
       when TkIDENTIFIER then
         if nest == 1 and current_method.nil? then

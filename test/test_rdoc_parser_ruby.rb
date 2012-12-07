@@ -1108,6 +1108,22 @@ EOF
     assert_equal 'A', bar.find_module_named('A').full_name
   end
 
+  def test_parse_constant_rescue
+    klass = @top_level.add_class RDoc::NormalClass, 'Foo'
+
+    util_parser "A => e"
+
+    tk = @parser.get_tk
+
+    @parser.parse_constant klass, tk, @comment
+
+    assert_empty klass.constants
+    assert_empty klass.modules
+
+    assert_empty @store.modules_hash.keys
+    assert_equal %w[Foo], @store.classes_hash.keys
+  end
+
   def test_parse_constant_stopdoc
     klass = @top_level.add_class RDoc::NormalClass, 'Foo'
     klass.stop_doc
@@ -2622,6 +2638,39 @@ end
     m = @top_level.modules.first
 
     assert_empty m.constants
+  end
+
+  def test_scan_constant_in_rescue
+    content = <<-CONTENT # newline is after M is important
+module M
+  def m
+  rescue A::B
+  rescue A::C => e
+  rescue A::D, A::E
+  rescue A::F,
+         A::G
+  rescue H
+  rescue I => e
+  rescue J, K
+  rescue L =>
+    e
+  rescue M;
+  rescue N,
+         O => e
+  end
+end
+    CONTENT
+
+    util_parser content
+
+    @parser.scan
+
+    m = @top_level.modules.first
+
+    assert_empty m.constants
+
+    assert_empty @store.classes_hash.keys
+    assert_equal %w[M], @store.modules_hash.keys
   end
 
   def test_scan_constant_nodoc
