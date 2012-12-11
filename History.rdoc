@@ -10,7 +10,21 @@ Notable feature additions are markdown support and an WEBrick servlet that can
 serve HTML from an ri store.  (This means that RubyGems 2.0+ no longer needs
 to build HTML documentation when installing gems.)
 
-* Bug fixes
+* Minor enhancements:
+  * Added --page-dir option to give pretty names for a FAQ, guides, or other
+    documentation you write that is not stored in the project root.  For
+    example, with the following layout:
+
+      README.txt
+      guides/syntax.txt
+      guides/conversion.txt
+
+    Running `rdoc --page-dir guides` will make the files in "guides" appear to
+    be at the top level of the project.  This means they will appear to exist
+    at the top level in HTML output and you can access them with
+    `ri your_gem:syntax` and `ri your_gem:conversion`.
+
+* Bug fixes:
   * Fully qualified names for constants declared from the top level are now
     attached to their class or module properly.
 
