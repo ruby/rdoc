@@ -386,13 +386,12 @@ class RDoc::Parser::C < RDoc::Parser
 
   def do_includes
     @content.scan(/rb_include_module\s*\(\s*(\w+?),\s*(\w+?)\s*\)/) do |c,m|
-      if cls = @classes[c]
-        m = @known_classes[m] || m
+      next unless cls = @classes[c]
+      m = @known_classes[m] || m
 
-        comment = RDoc::Comment.new '', @top_level
-        incl = cls.add_include RDoc::Include.new(m, comment)
-        incl.record_location @top_level
-      end
+      comment = RDoc::Comment.new '', @top_level
+      incl = cls.add_include RDoc::Include.new(m, comment)
+      incl.record_location @top_level
     end
   end
 
