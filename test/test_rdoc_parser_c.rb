@@ -40,12 +40,6 @@ assert call-seq correct
 
 =end
 
-class RDoc::Parser::C
-  attr_accessor :classes
-
-  public :do_classes, :do_constants
-end
-
 class TestRDocParserC < RDoc::TestCase
 
   def setup
@@ -85,7 +79,7 @@ class TestRDocParserC < RDoc::TestCase
 
   def test_initialize
     some_ext        = @top_level.add_class RDoc::NormalClass, 'SomeExt'
-    some_ext_single = @top_level.add_class RDoc::SingleClass, 'SomeExtSingle'
+                      @top_level.add_class RDoc::SingleClass, 'SomeExtSingle'
 
     @store.cache[:c_class_variables] = {
       @fn => { 'cSomeExt' => 'SomeExt' }
@@ -1386,8 +1380,8 @@ void Init_Blah(void) {
   end
 
   def test_load_variable_map_singleton
-    some_ext = @top_level.add_class RDoc::NormalClass, 'SomeExt'
-               @top_level.add_class RDoc::NormalClass, 'OtherExt'
+    @top_level.add_class RDoc::NormalClass, 'SomeExt'
+    @top_level.add_class RDoc::NormalClass, 'OtherExt'
 
     @store.cache[:c_singleton_class_variables][@fn] =
       { 'cSomeExt'  => 'SomeExt'  }
