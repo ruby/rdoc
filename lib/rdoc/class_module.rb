@@ -134,6 +134,11 @@ class RDoc::ClassModule < RDoc::Context
               else
                 normalize_comment comment
               end
+
+    return if @comment_location.any? do |(c, l)|
+      c == comment and l == location
+    end
+
     @comment_location << [comment, location]
 
     self.comment = original
