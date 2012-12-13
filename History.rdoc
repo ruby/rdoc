@@ -28,6 +28,8 @@ to build HTML documentation when installing gems.)
   * Fully qualified names for constants declared from the top level are now
     attached to their class or module properly.
   * Fixed table of contents display in HTML output for classes and modules.
+  * Incremental ri builds of C files now work.  C variable names from previous
+    runs are now saved between runs.
 
 === 4.0.0.preview2 / 2012-12-01
 

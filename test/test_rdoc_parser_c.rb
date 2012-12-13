@@ -83,6 +83,37 @@ class TestRDocParserC < RDoc::TestCase
     assert_equal c_parser, c_parser.can_parse('file.y')
   end
 
+  def test_initialize
+    some_ext        = @top_level.add_class RDoc::NormalClass, 'SomeExt'
+    some_ext_single = @top_level.add_class RDoc::SingleClass, 'SomeExtSingle'
+
+    @store.cache[:c_class_variables] = {
+      @fn => { 'cSomeExt' => 'SomeExt' }
+    }
+
+    @store.cache[:c_singleton_class_variables] = {
+      @fn => { 'cSomeExtSingle' => 'SomeExtSingle' }
+    }
+
+    parser = RDoc::Parser::C.new @top_level, @fn, '', @options, @stats
+
+    expected = { 'cSomeExt' => some_ext }
+    assert_equal expected, parser.classes
+
+    expected = { 'cSomeExtSingle' => 'SomeExtSingle' }
+    assert_equal expected, parser.singleton_classes
+
+    expected = {
+      'cSomeExt'       => 'SomeExt',
+      'cSomeExtSingle' => 'SomeExtSingle',
+    }
+    known_classes = parser.known_classes.delete_if do |key, _|
+      RDoc::KNOWN_CLASSES.keys.include? key
+    end
+
+    assert_equal expected, known_classes
+  end
+
   def test_do_attr_rb_attr
     content = <<-EOF
 void Init_Blah(void) {
@@ -1317,6 +1348,81 @@ void Init_Blah(void) {
     assert_equal 'not_handled', @top_level.metadata['other']
   end
 
+  def test_load_variable_map
+    some_ext = @top_level.add_class RDoc::NormalClass, 'SomeExt'
+               @top_level.add_class RDoc::NormalClass, 'OtherExt'
+
+    @store.cache[:c_class_variables][@fn]       = { 'cSomeExt'  => 'SomeExt'  }
+    @store.cache[:c_class_variables]['other.c'] = { 'cOtherExt' => 'OtherExt' }
+
+    parser = util_parser
+
+    map = parser.load_variable_map :c_class_variables
+
+    expected = { 'cSomeExt' => some_ext }
+
+    assert_equal expected, map
+
+    assert_equal 'SomeExt', parser.known_classes['cSomeExt']
+    assert_nil              parser.known_classes['cOtherExt']
+  end
+
+  def test_load_variable_map_empty
+    parser = util_parser
+
+    map = parser.load_variable_map :c_class_variables
+
+    assert_empty map
+  end
+
+  def test_load_variable_map_legacy
+    @store.cache[:c_class_variables] = nil
+
+    parser = util_parser
+
+    map = parser.load_variable_map :c_class_variables
+
+    assert_empty map
+  end
+
+  def test_load_variable_map_singleton
+    some_ext = @top_level.add_class RDoc::NormalClass, 'SomeExt'
+               @top_level.add_class RDoc::NormalClass, 'OtherExt'
+
+    @store.cache[:c_singleton_class_variables][@fn] =
+      { 'cSomeExt'  => 'SomeExt'  }
+    @store.cache[:c_singleton_class_variables]['other.c'] =
+      { 'cOtherExt' => 'OtherExt' }
+
+    parser = util_parser
+
+    map = parser.load_variable_map :c_singleton_class_variables
+
+    expected = { 'cSomeExt' => 'SomeExt' }
+
+    assert_equal expected, map
+
+    assert_equal 'SomeExt', parser.known_classes['cSomeExt']
+    assert_nil              parser.known_classes['cOtherExt']
+  end
+
+  def test_load_variable_map_trim
+    a = @top_level.add_class RDoc::NormalClass, 'A'
+
+    @store.cache[:c_class_variables][@fn] = {
+      'cA'  => 'A',
+      'cB'  => 'B',
+    }
+
+    parser = util_parser
+
+    map = parser.load_variable_map :c_class_variables
+
+    expected = { 'cA' => a }
+
+    assert_equal expected, map
+  end
+
   def test_define_method
     content = <<-EOF
 /*Method Comment! */
@@ -1521,6 +1627,29 @@ Init_IO(void) {
                  parser.rb_scan_args('rb_scan_args(a, b, ":&",)')
     assert_equal '(*args, p2 = {}, &block)',
                  parser.rb_scan_args('rb_scan_args(a, b, "*:&",)')
+  end
+
+  def test_scan
+    parser = util_parser <<-C
+void Init(void) {
+    mM = rb_define_module("M");
+    cC = rb_define_class("C", rb_cObject);
+    sC = rb_singleton_class(cC);
+}
+    C
+
+    parser.scan
+
+    expected = {
+      @fn => {
+        'mM' => 'M',
+        'cC' => 'C', }}
+    assert_equal expected, @store.c_class_variables
+
+    expected = {
+      @fn => {
+        'sC' => 'C' } }
+    assert_equal expected, @store.c_singleton_class_variables
   end
 
   def test_scan_order_dependent
