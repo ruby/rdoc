@@ -32,7 +32,7 @@ class TestRDocRubygemsHook < Gem::TestCase
   end
 
   def test_initialize
-    assert @hook.generate_rdoc
+    refute @hook.generate_rdoc
     assert @hook.generate_ri
 
     rdoc = RDoc::RubygemsHook.new @a, false, false
@@ -69,6 +69,27 @@ class TestRDocRubygemsHook < Gem::TestCase
   end
 
   def test_generate
+    FileUtils.mkdir_p @a.doc_dir
+    FileUtils.mkdir_p File.join(@a.gem_dir, 'lib')
+
+    @hook.generate
+
+    refute @hook.rdoc_installed?
+    assert @hook.ri_installed?
+
+    rdoc = @hook.instance_variable_get :@rdoc
+
+    refute rdoc.options.hyperlink_all
+    assert_equal Pathname(@a.full_gem_path), rdoc.options.root
+    assert_equal %w[README lib], rdoc.options.files.sort
+
+    assert_equal 'MyTitle', rdoc.store.main
+  end
+
+  def test_generate_all
+    @hook.generate_rdoc = true
+    @hook.generate_ri   = true
+
     FileUtils.mkdir_p @a.doc_dir
     FileUtils.mkdir_p File.join(@a.gem_dir, 'lib')
 
@@ -145,7 +166,7 @@ class TestRDocRubygemsHook < Gem::TestCase
 
     @hook.generate
 
-    assert_path_exists File.join(@a.doc_dir('rdoc'), 'index.html')
+    refute_path_exists File.join(@a.doc_dir('rdoc'), 'index.html')
     assert_path_exists File.join(@a.doc_dir('ri'),   'cache.ri')
   end
 
@@ -195,7 +216,7 @@ class TestRDocRubygemsHook < Gem::TestCase
 
     assert_equal @a.base_dir, e.directory
   ensure
-    FileUtils.chmod 0755, @a.base_dir
+    FileUtils.chmod(0755, @a.base_dir) if File.directory?(@a.base_dir)
   end
 
   def test_ri_installed?
@@ -214,20 +235,18 @@ class TestRDocRubygemsHook < Gem::TestCase
 
   def test_setup_unwritable
     skip 'chmod not supported' if Gem.win_platform?
-    begin
-      FileUtils.mkdir_p @a.doc_dir
-      FileUtils.chmod 0, @a.doc_dir
+    FileUtils.mkdir_p @a.doc_dir
+    FileUtils.chmod 0, @a.doc_dir
 
-      e = assert_raises Gem::FilePermissionError do
-        @hook.setup
-      end
+    e = assert_raises Gem::FilePermissionError do
+      @hook.setup
+    end
 
-      assert_equal @a.doc_dir, e.directory
-    ensure
-      if File.exist? @a.doc_dir
-        FileUtils.chmod 0755, @a.doc_dir
-        FileUtils.rm_r @a.doc_dir
-      end
+    assert_equal @a.doc_dir, e.directory
+  ensure
+    if File.exist? @a.doc_dir
+      FileUtils.chmod 0755, @a.doc_dir
+      FileUtils.rm_r @a.doc_dir
     end
   end
 
