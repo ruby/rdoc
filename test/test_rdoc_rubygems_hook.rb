@@ -10,7 +10,15 @@ class TestRDocRubygemsHook < Gem::TestCase
     skip 'requires RubyGems 1.9+' unless
       Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.9')
 
-    @a = quick_spec 'a'
+    @a = quick_spec 'a' do |s|
+      s.rdoc_options = %w[--main MyTitle]
+      s.extra_rdoc_files = %w[README]
+    end
+
+    write_file File.join(@tempdir, 'lib', 'a.rb')
+    write_file File.join(@tempdir, 'README')
+
+    install_gem @a
 
     @hook = RDoc::RubygemsHook.new @a
 
@@ -72,6 +80,10 @@ class TestRDocRubygemsHook < Gem::TestCase
     rdoc = @hook.instance_variable_get :@rdoc
 
     refute rdoc.options.hyperlink_all
+    assert_equal Pathname(@a.full_gem_path), rdoc.options.root
+    assert_equal %w[README lib], rdoc.options.files.sort
+
+    assert_equal 'MyTitle', rdoc.store.main
   end
 
   def test_generate_configuration_rdoc_array
