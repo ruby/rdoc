@@ -348,9 +348,16 @@ class RDoc::Store
     @c_enclosure_classes.fetch variable do
       break unless name = @c_enclosure_names[variable]
 
-      mod = find_class_or_module(name) || load_class(name)
+      mod = find_class_or_module name
 
-      break unless mod
+      unless mod then
+        loaded_mod = load_class_data name
+
+        file = loaded_mod.in_files.first
+        file.store = self
+
+        mod = file.add_module RDoc::NormalModule, name
+      end
 
       @c_enclosure_classes[variable] = mod
     end
@@ -568,14 +575,10 @@ class RDoc::Store
   end
 
   ##
-  # Loads ri data for +klass_name+
+  # Loads ri data for +klass_name+ and hooks it up to this store.
 
   def load_class klass_name
-    file = class_file klass_name
-
-    obj = open file, 'rb' do |io|
-      Marshal.load io.read
-    end
+    obj = load_class_data klass_name
 
     obj.store = self
 
@@ -584,6 +587,17 @@ class RDoc::Store
       @classes_hash[klass_name] = obj
     when RDoc::NormalModule then
       @modules_hash[klass_name] = obj
+    end
+  end
+
+  ##
+  # Loads ri data for +klass_name+
+
+  def load_class_data klass_name
+    file = class_file klass_name
+
+    obj = open file, 'rb' do |io|
+      Marshal.load io.read
     end
   rescue Errno::ENOENT => e
     error = MissingFileError.new(self, file, klass_name)

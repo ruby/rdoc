@@ -18,6 +18,7 @@ class TestRDocStore < XrefTestCase
 
     @klass = @top_level.add_class RDoc::NormalClass, 'Object'
     @klass.add_comment 'original', @top_level
+    @klass.record_location @top_level
 
     @cmeth = RDoc::AnyMethod.new nil, 'cmethod'
     @cmeth.singleton = true
@@ -264,7 +265,11 @@ class TestRDocStore < XrefTestCase
 
     @s.c_enclosure_names['cObject'] = 'Object'
 
-    assert_equal @klass, @s.find_c_enclosure('cObject')
+    klass = @s.find_c_enclosure('cObject')
+    assert_equal @klass, klass
+
+    assert_empty klass.comment_location
+    assert_equal @top_level, klass.parent
 
     assert_includes @s.c_enclosure_classes, 'cObject'
   end

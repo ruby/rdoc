@@ -31,7 +31,7 @@ class RDoc::ClassModule < RDoc::Context
   ##
   # Comment and the location it came from.  Use #add_comment to add comments
 
-  attr_reader :comment_location
+  attr_accessor :comment_location
 
   attr_accessor :diagram # :nodoc:
 
@@ -135,9 +135,7 @@ class RDoc::ClassModule < RDoc::Context
                 normalize_comment comment
               end
 
-    return if @comment_location.any? do |(c, l)|
-      c == comment and l == location
-    end
+    @comment_location.delete_if { |(_, l)| l == location }
 
     @comment_location << [comment, location]
 
