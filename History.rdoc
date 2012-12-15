@@ -1,4 +1,4 @@
-=== 4.0.0.preview2.1 / ??
+=== 4.0.0.preview2.1 / 2012-12-14
 
 As a preview release, please file bugs for any problems you have with rdoc at
 https://github.com/rdoc/rdoc/issues
