@@ -227,13 +227,15 @@ class RDoc::Markup::Formatter
   # Extracts and a scheme, url and an anchor id from +url+ and returns them.
 
   def parse_url url
-    if url =~ /^rdoc-label:([^:]*)(?::(.*))?/ then
+    case url
+    when /^rdoc-label:([^:]*)(?::(.*))?/ then
       scheme = 'link'
       path   = "##{$1}"
       id     = " id=\"#{$2}\"" if $2
-    elsif url =~ /([A-Za-z]+):(.*)/ then
+    when /([A-Za-z]+):(.*)/ then
       scheme = $1.downcase
       path   = $2
+    when /^#/ then
     else
       scheme = 'http'
       path   = url

@@ -87,7 +87,15 @@ class TestRDocMarkupFormatter < RDoc::TestCase
     assert_equal nil,                  id
   end
 
-  def test_parse_link
+  def test_parse_url_anchor
+    scheme, url, id = @to.parse_url '#foottext-1'
+
+    assert_equal nil,           scheme
+    assert_equal '#foottext-1', url
+    assert_equal nil,           id
+  end
+
+  def test_parse_url_link
     scheme, url, id = @to.parse_url 'link:README.txt'
 
     assert_equal 'link',       scheme
@@ -95,7 +103,7 @@ class TestRDocMarkupFormatter < RDoc::TestCase
     assert_equal nil,          id
   end
 
-  def test_parse_link_id
+  def test_parse_url_link_id
     scheme, url, id = @to.parse_url 'link:README.txt#label-foo'
 
     assert_equal 'link',                 scheme
