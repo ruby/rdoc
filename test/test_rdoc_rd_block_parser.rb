@@ -15,6 +15,23 @@ class TestRDocRdBlockParser < RDoc::TestCase
     s.chomp
   end
 
+  def test_add_footnote
+    index = @block_parser.add_footnote 'context'
+
+    assert_equal 1, index
+
+    expected = [
+      para('{^1}[rdoc-label:footmark-1:foottext-1]', 'context'),
+      blank_line,
+    ]
+
+    assert_equal expected, @block_parser.footnotes
+
+    index = @block_parser.add_footnote 'other'
+
+    assert_equal 2, index
+  end
+
   def test_parse_desclist
     list = <<-LIST
 :one
@@ -119,7 +136,8 @@ class TestRDocRdBlockParser < RDoc::TestCase
       doc(
         @RM::Paragraph.new("{*1}[rdoc-label:foottext-1:footmark-1]"),
         @RM::Rule.new(1),
-        @RM::Paragraph.new("{^1}[rdoc-label:footmark-1:foottext-1]", "text"))
+        @RM::Paragraph.new("{^1}[rdoc-label:footmark-1:foottext-1]", "text"),
+        blank_line)
 
     assert_equal expected, parse("((-text-))")
   end
