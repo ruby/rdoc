@@ -143,6 +143,24 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
   end
 
   ##
+  # Handles <tt>rdoc-</tt> type links for footnotes.
+
+  def handle_rdoc_link url
+    case url
+    when /\Ardoc-ref:/ then
+      $'
+    when /\Ardoc-label:footmark-(\d+)/ then
+      "[^#{$1}]: "
+    when /\Ardoc-label:foottext-(\d+)/ then
+      "[^#{$1}]"
+    when /\Ardoc-label:label-/ then
+      gen_url url, $'
+    when /\Ardoc-[a-z]+:/ then
+      $'
+    end
+  end
+
+  ##
   # Converts the RDoc markup tidylink into a Markdown.style link.
 
   def handle_special_TIDYLINK special
@@ -153,27 +171,18 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     label = $1
     url   = $2
 
-    gen_url url, label
+    if url =~ /^rdoc-label:foot/ then
+      handle_rdoc_link url
+    else
+      gen_url url, label
+    end
   end
 
   ##
   # Converts the rdoc-...: links into a Markdown.style links.
 
   def handle_special_RDOCLINK special
-    url = special.text
-
-    case url
-    when /\Ardoc-ref:/ then
-      $'
-    when /\Ardoc-label:footmark-/ then
-      "[^#{$'}]"
-    when /\Ardoc-label:foottext-/ then
-      "[^#{$'}]: "
-    when /\Ardoc-label:label-/ then
-      gen_url url, $'
-    when /\Ardoc-[a-z]+:/ then
-      $'
-    end
+    handle_rdoc_link special.text
   end
 
 end
