@@ -364,7 +364,7 @@ words words words words
   end
 
   def test_handle_rdoc_link_label_footmark
-    assert_equal '[^1]: ', @to.handle_rdoc_link('rdoc-label:footmark-1:x')
+    assert_equal '[^1]:', @to.handle_rdoc_link('rdoc-label:footmark-1:x')
   end
 
   def test_handle_rdoc_link_label_foottext

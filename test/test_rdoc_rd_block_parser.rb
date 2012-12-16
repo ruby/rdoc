@@ -21,7 +21,7 @@ class TestRDocRdBlockParser < RDoc::TestCase
     assert_equal 1, index
 
     expected = [
-      para('{^1}[rdoc-label:footmark-1:foottext-1]', 'context'),
+      para('{^1}[rdoc-label:footmark-1:foottext-1]', ' ', 'context'),
       blank_line,
     ]
 
@@ -136,7 +136,7 @@ class TestRDocRdBlockParser < RDoc::TestCase
       doc(
         para("{*1}[rdoc-label:foottext-1:footmark-1]"),
         rule(1),
-        para("{^1}[rdoc-label:footmark-1:foottext-1]", "text"),
+        para("{^1}[rdoc-label:footmark-1:foottext-1]", " ", "text"),
         blank_line)
 
     assert_equal expected, parse("((-text-))")

@@ -150,7 +150,7 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     when /\Ardoc-ref:/ then
       $'
     when /\Ardoc-label:footmark-(\d+)/ then
-      "[^#{$1}]: "
+      "[^#{$1}]:"
     when /\Ardoc-label:foottext-(\d+)/ then
       "[^#{$1}]"
     when /\Ardoc-label:label-/ then
