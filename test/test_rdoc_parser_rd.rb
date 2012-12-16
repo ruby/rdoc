@@ -49,20 +49,6 @@ class TestRDocParserRd < RDoc::TestCase
     assert_equal expected, @top_level.comment.parse
   end
 
-  def test_scan_inline_verbatim
-    parser = util_parser "(('Here's how inline ((*emphasis*)) is written'))"
-
-    expected =
-      doc(
-        para("<tt>Here's how inline ((*emphasis*)) is written</tt>"))
-
-    expected.file = @top_level
-
-    parser.scan
-
-    assert_equal expected, @top_level.comment.parse
-  end
-
   def util_parser content
     RDoc::Parser::RD.new @top_level, @fn, content, @options, @stats
   end

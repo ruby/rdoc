@@ -161,6 +161,10 @@ class TestRDocRdInlineParser < RDoc::TestCase
     assert_equal '<tt>text "</tt>', parse("(('text \\\"'))")
   end
 
+  def test_parse_verb_emphasis
+    assert_equal '<tt>((*emphasis*))</tt>', parse("(('((*emphasis*))'))")
+  end
+
   def test_parse_verb_multiple
     assert_equal '<tt>((*text*))</tt>', parse("(('((*text*))'))")
   end
