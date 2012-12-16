@@ -1,4 +1,4 @@
-=== 4.0.0.preview2.1 / 2012-12-14
+=== 4.0.0.preview3 / ??
 
 As a preview release, please file bugs for any problems you have with rdoc at
 https://github.com/rdoc/rdoc/issues
@@ -9,6 +9,11 @@ changes should not affect users of `rdoc` or `ri`.
 Notable feature additions are markdown support and an WEBrick servlet that can
 serve HTML from an ri store.  (This means that RubyGems 2.0+ no longer needs
 to build HTML documentation when installing gems.)
+
+* Bug fixes
+  * Added link handling to Markdown output.  Bug #160 by burningTyger.
+
+=== 4.0.0.preview2.1 / 2012-12-14
 
 * Minor enhancements
   * Added --page-dir option to give pretty names for a FAQ, guides, or other

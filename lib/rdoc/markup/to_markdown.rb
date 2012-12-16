@@ -18,6 +18,9 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     @headings[5] = ['##### ',  '']
     @headings[6] = ['###### ', '']
 
+    add_special_RDOCLINK
+    add_special_TIDYLINK
+
     @hard_break = "  \n"
   end
 
@@ -128,6 +131,49 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     end
 
     @res << "\n" unless @res =~ /\n\z/
+  end
+
+  ##
+  # Creates a Markdown-style URL from +url+ with +text+.
+
+  def gen_url url, text
+    scheme, url, = parse_url url
+
+    "[#{text.sub(%r{^#{scheme}:/*}i, '')}](#{url})"
+  end
+
+  ##
+  # Converts the RDoc markup tidylink into a Markdown.style link.
+
+  def handle_special_TIDYLINK special
+    text = special.text
+
+    return text unless text =~ /\{(.*?)\}\[(.*?)\]/ or text =~ /(\S+)\[(.*?)\]/
+
+    label = $1
+    url   = $2
+
+    gen_url url, label
+  end
+
+  ##
+  # Converts the rdoc-...: links into a Markdown.style links.
+
+  def handle_special_RDOCLINK special
+    url = special.text
+
+    case url
+    when /\Ardoc-ref:/ then
+      $'
+    when /\Ardoc-label:footmark-/ then
+      "[^#{$'}]"
+    when /\Ardoc-label:foottext-/ then
+      "[^#{$'}]: "
+    when /\Ardoc-label:label-/ then
+      gen_url url, $'
+    when /\Ardoc-[a-z]+:/ then
+      $'
+    end
   end
 
 end

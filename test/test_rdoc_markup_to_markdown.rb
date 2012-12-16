@@ -348,5 +348,39 @@ words words words words
     assert_equal expected, @to.end_accepting
   end
 
+  def test_convert_RDOCLINK_label_label
+    result = @to.convert 'rdoc-label:label-One'
+
+    assert_equal "[One](#label-One)\n", result
+  end
+
+  def test_convert_RDOCLINK_label_foottext
+    result = @to.convert 'rdoc-label:foottext-1'
+
+    assert_equal "[^1]: \n", result
+  end
+
+  def test_convert_RDOCLINK_label_footmark
+    result = @to.convert 'rdoc-label:footmark-1'
+
+    assert_equal "[^1]\n", result
+  end
+
+  def test_convert_RDOCLINK_ref
+    result = @to.convert 'rdoc-ref:C'
+
+    assert_equal "C\n", result
+  end
+
+  def test_handle_special_TIDYLINK
+    special = RDoc::Markup::Special.new \
+      0, '{DSL}[http://en.wikipedia.org/wiki/Domain-specific_language]'
+
+    link = @to.handle_special_TIDYLINK special
+
+    assert_equal '[DSL](http://en.wikipedia.org/wiki/Domain-specific_language)',
+                 link
+  end
+
 end
 
