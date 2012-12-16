@@ -34,9 +34,7 @@ class TestRDocParserRd < RDoc::TestCase
   def test_scan
     parser = util_parser 'it ((*really*)) works'
 
-    expected =
-      @RM::Document.new(
-        @RM::Paragraph.new('it <em>really</em> works'))
+    expected = doc(para('it <em>really</em> works'))
     expected.file = @top_level
 
     parser.scan
