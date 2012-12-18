@@ -354,6 +354,7 @@ class RDoc::Store
         loaded_mod = load_class_data name
 
         file = loaded_mod.in_files.first
+        # HACK may be nil
         file.store = self
 
         mod = file.add_module RDoc::NormalModule, name

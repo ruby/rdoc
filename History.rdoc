@@ -12,6 +12,9 @@ to build HTML documentation when installing gems.)
 
 * Bug fixes
   * Added link handling to Markdown output.  Bug #160 by burningTyger.
+  * Fixed HEREDOC output for the limited case of a heredoc followed by a line
+    end.  When a HEREDOC is not followed by a line end RDoc is not currently
+    smart enough to restore the source correctly.  Bug #162 by Zachary Scott.
 
 === 4.0.0.preview2.1 / 2012-12-14
 
