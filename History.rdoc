@@ -10,6 +10,9 @@ Notable feature additions are markdown support and an WEBrick servlet that can
 serve HTML from an ri store.  (This means that RubyGems 2.0+ no longer needs
 to build HTML documentation when installing gems.)
 
+* Minor enhancements
+  * Added current heading and page-top links to HTML headings.
+
 * Bug fixes
   * Added link handling to Markdown output.  Bug #160 by burningTyger.
   * Fixed HEREDOC output for the limited case of a heredoc followed by a line
