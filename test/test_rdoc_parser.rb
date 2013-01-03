@@ -33,8 +33,11 @@ class TestRDocParser < RDoc::TestCase
   end
 
   def test_class_binary_large_japanese_rdoc
-    file_name = File.expand_path '../test.ja.large.rdoc', __FILE__
+    extenc, Encoding.default_external = Encoding.default_external, Encoding::US_ASCII
+    file_name = File.expand_path '../test.ja.largedoc', __FILE__
     assert !@RP.binary?(file_name)
+  ensure
+    Encoding.default_external = extenc
   end
 
   def test_class_binary_japanese_rdoc

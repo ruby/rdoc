@@ -14,6 +14,8 @@ to build HTML documentation when installing gems.)
   * Added current heading and page-top links to HTML headings.
 
 * Bug fixes
+  * Fixed parsing of multibyte files with incomplete characters at byte 1024.
+    Ruby bug #6393 by nobu, patch by Nobuyoshi Nakada and Yui NARUSE.
   * Added link handling to Markdown output.  Bug #160 by burningTyger.
   * Fixed HEREDOC output for the limited case of a heredoc followed by a line
     end.  When a HEREDOC is not followed by a line end RDoc is not currently
