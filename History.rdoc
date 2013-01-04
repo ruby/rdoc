@@ -16,6 +16,7 @@ to build HTML documentation when installing gems.)
 * Bug fixes
   * Fixed parsing of multibyte files with incomplete characters at byte 1024.
     Ruby bug #6393 by nobu, patch by Nobuyoshi Nakada and Yui NARUSE.
+  * Fixed rdoc -E.  Ruby Bug #6392 and (modified) patch by Nobuyoshi Nakada
   * Added link handling to Markdown output.  Bug #160 by burningTyger.
   * Fixed HEREDOC output for the limited case of a heredoc followed by a line
     end.  When a HEREDOC is not followed by a line end RDoc is not currently

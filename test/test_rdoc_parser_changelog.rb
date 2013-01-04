@@ -25,11 +25,15 @@ class TestRDocParserChangeLog < RDoc::TestCase
   def test_class_can_parse
     parser = RDoc::Parser::ChangeLog
 
-    assert_equal parser, parser.can_parse('ChangeLog')
+    temp_dir do
+      FileUtils.touch 'ChangeLog'
+      assert_equal parser, parser.can_parse('ChangeLog')
 
-    assert_equal parser, parser.can_parse(@tempfile.path)
+      assert_equal parser, parser.can_parse(@tempfile.path)
 
-    assert_equal RDoc::Parser::Ruby, parser.can_parse('ChangeLog.rb')
+      FileUtils.touch 'ChangeLog.rb'
+      assert_equal RDoc::Parser::Ruby, parser.can_parse('ChangeLog.rb')
+    end
   end
 
   def test_continue_entry_body
