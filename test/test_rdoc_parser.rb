@@ -33,6 +33,8 @@ class TestRDocParser < RDoc::TestCase
   end
 
   def test_class_binary_large_japanese_rdoc
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
     capture_io do
       begin
         extenc, Encoding.default_external =
