@@ -554,6 +554,8 @@ rdoc_include:
       @options.parse %w[--extension foobar=rdoc]
     end
 
+    assert_includes RDoc::Parser.parsers, [/\.foobar$/, RDoc::Parser::Simple]
+
     assert_empty out
     assert_empty err
   end
