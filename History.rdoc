@@ -1,4 +1,4 @@
-=== 4.0.0.preview3 / ??
+=== 4.0.0.preview3.1 / ??
 
 As a preview release, please file bugs for any problems you have with rdoc at
 https://github.com/rdoc/rdoc/issues
@@ -25,6 +25,7 @@ to build HTML documentation when installing gems.)
     by Marcus Stollsteimer
   * RDoc now ignores methods defined on constants instead of creating a fake
     module.  Bug #163 by Zachary Scott.
+  * Fixed ChangeLog parsing for FFI gem.  Bug #165 by Zachary Scott.
 
 === 4.0.0.preview2.1 / 2012-12-14
 
