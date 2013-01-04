@@ -365,16 +365,16 @@ description - arguments description
     @td.tokenize <<-TEXT
 Create new Arg object.
 
-names[] - names of arguments
+names[stuff] - names of arguments
     TEXT
 
     expected = [
       [:TEXT,    "Create new Arg object.",  0, 0],
       [:NEWLINE, "\n",                     22, 0],
       [:NEWLINE, "\n",                      0, 1],
-      [:NOTE,    "names[]",                 0, 2],
-      [:TEXT,    "names of arguments",     10, 2],
-      [:NEWLINE, "\n",                     28, 2],
+      [:NOTE,    "names[stuff]",            0, 2],
+      [:TEXT,    "names of arguments",     15, 2],
+      [:NEWLINE, "\n",                     33, 2],
     ]
 
     assert_equal expected, @td.tokens
