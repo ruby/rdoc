@@ -85,6 +85,7 @@ lib/rdoc/generator/template/darkfish/rdoc.css
 lib/rdoc/generator/template/darkfish/servlet_not_found.rhtml
 lib/rdoc/generator/template/darkfish/servlet_root.rhtml
 lib/rdoc/generator/template/darkfish/table_of_contents.rhtml
+lib/rdoc/generator/template/json_index/.document
 lib/rdoc/generator/template/json_index/js/navigation.js
 lib/rdoc/generator/template/json_index/js/searcher.js
 lib/rdoc/ghost_method.rb
@@ -202,7 +203,7 @@ test/MarkdownTest_1.0.3/Tidyness.text
 test/README
 test/binary.dat
 test/hidden.zip.txt
-test/test.ja.large.rdoc
+test/test.ja.largedoc
 test/test.ja.rdoc
 test/test.ja.txt
 test/test.txt
