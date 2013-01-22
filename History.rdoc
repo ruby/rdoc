@@ -28,6 +28,8 @@ to build HTML documentation when installing gems.)
   * Fixed ChangeLog parsing for FFI gem.  Bug #165 by Zachary Scott.
   * RDoc now links \#=== methods.  Bug #164 by Zachary Scott.
   * Allow [] following argument names for TomDoc.  Bug #167 by Ellis Berner.
+  * Fixed the RDoc servlet for home and site directories.  Bug #170 by Thomas
+    Leitner.
 
 === 4.0.0.preview2.1 / 2012-12-14
 
