@@ -30,6 +30,8 @@ to build HTML documentation when installing gems.)
   * Allow [] following argument names for TomDoc.  Bug #167 by Ellis Berner.
   * Fixed the RDoc servlet for home and site directories.  Bug #170 by Thomas
     Leitner.
+  * Fixed references to methods in the RDoc servlet.  Bug #171 by Thomas
+    Leitner.
 
 === 4.0.0.preview2.1 / 2012-12-14
 
