@@ -32,6 +32,8 @@ to build HTML documentation when installing gems.)
     Leitner.
   * Fixed references to methods in the RDoc servlet.  Bug #171 by Thomas
     Leitner.
+  * Fixed debug message when generating the darkfish root page.  Pull Request
+    #174 by Thomas Leitner.
 
 === 4.0.0.preview2.1 / 2012-12-14
 
