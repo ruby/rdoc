@@ -34,6 +34,8 @@ to build HTML documentation when installing gems.)
     Leitner.
   * Fixed debug message when generating the darkfish root page.  Pull Request
     #174 by Thomas Leitner.
+  * Fixed deletion of attribute ri data when a class was loaded then saved.
+    Issue #171 by Thomas Leitner.
 
 === 4.0.0.preview2.1 / 2012-12-14
 
