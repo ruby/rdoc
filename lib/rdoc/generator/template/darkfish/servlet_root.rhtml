@@ -18,12 +18,12 @@
   <p>The following additional documentation directories are available:</p>
 
   <ol>
-  <% extra_dirs.each do |_, href, exists, _, path| %>
+  <% extra_dirs.each do |name, href, exists, _, path| %>
     <li>
     <% if exists %>
-      <a href="<%= href %>"><%= h path %></a>
+      <a href="<%= href %>"><%= h name %></a> (<%= h path %>)
     <% else %>
-      <%= h path %> (not available)
+      <%= h name %> (<%= h path %>; <i>not available</i>)
     <% end %>
     </li>
   <% end %>

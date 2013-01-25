@@ -290,7 +290,9 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
         ['Home Documentation', 'home/', exists, type, path]
       when :extra then
         extra_counter += 1
-        ["Extra Documentation #{extra_counter}", "extra-#{extra_counter}/", exists, type, path]
+        store.load_cache if exists
+        title = store.title || "Extra Documentation"
+        [title, "extra-#{extra_counter}/", exists, type, path]
       end
     end
   end
@@ -348,7 +350,7 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
                 when :home then
                   'Documentation from your home directory'
                 when :extra then
-                  'Extra documentation directory specified on the command line'
+                  name
                 end
 
       info << [name, '', path, '', comment]
