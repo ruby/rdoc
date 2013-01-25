@@ -11,6 +11,25 @@
   <p>Here you can browse local documentation from the ruby standard library and
   your installed gems.
 
+<% extra_dirs = installed.select { |_, _, _, type,| type == :extra } %>
+<% unless extra_dirs.empty? %>
+  <h2>Extra Documentation Directories</h2>
+
+  <p>The following additional documentation directories are available:</p>
+
+  <ol>
+  <% extra_dirs.each do |name, href, exists, _, path| %>
+    <li>
+    <% if exists %>
+      <a href="<%= href %>"><%= h name %></a> (<%= h path %>)
+    <% else %>
+      <%= h name %> (<%= h path %>; <i>not available</i>)
+    <% end %>
+    </li>
+  <% end %>
+  </ol>
+<% end %>
+
 <% gems = installed.select { |_, _, _, type,| type == :gem } %>
 <% missing = gems.reject { |_, _, exists,| exists } %>
 <% unless missing.empty? then %>

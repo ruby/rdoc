@@ -23,7 +23,9 @@ class TestRDocServlet < RDoc::TestCase
     @stores = {}
     @cache  = Hash.new { |hash, store| hash[store] = {} }
 
-    @s = RDoc::Servlet.new @server, @stores, @cache
+    @extra_dirs = [File.join(@tempdir, 'extra1'), File.join(@tempdir, 'extra2')]
+
+    @s = RDoc::Servlet.new @server, @stores, @cache, nil, @extra_dirs
 
     @req = WEBrick::HTTPRequest.new :Logger => nil
     @res = WEBrick::HTTPResponse.new :HTTPVersion => '1.0'
@@ -37,7 +39,7 @@ class TestRDocServlet < RDoc::TestCase
     @base        = File.join @tempdir, 'base'
     @system_dir  = File.join @tempdir, 'base', 'system'
     @home_dir    = File.join @tempdir, 'home'
-    @gem_doc_dir = File.join @tempdir, 'doc' 
+    @gem_doc_dir = File.join @tempdir, 'doc'
 
     @orig_base = RDoc::RI::Paths::BASE
     RDoc::RI::Paths::BASE.replace @base
@@ -298,8 +300,13 @@ class TestRDocServlet < RDoc::TestCase
 
   def test_installed_docs
     touch_system_cache_path
+    touch_extra_cache_path
 
     expected = [
+      ['My Extra Documentation', 'extra-1/', true, :extra,
+        @extra_dirs[0]],
+      ['Extra Documentation', 'extra-2/', false, :extra,
+        @extra_dirs[1]],
       ['Ruby Documentation', 'ruby/', true,  :system,
         @system_dir],
       ['Site Documentation', 'site/', false, :site,
@@ -329,6 +336,8 @@ class TestRDocServlet < RDoc::TestCase
     paths = @s.ri_paths
 
     expected = [
+      [@extra_dirs[0],                 :extra],
+      [@extra_dirs[1],                 :extra],
       [@system_dir,                    :system],
       [File.join(@base, 'site'),       :site],
       [RDoc::RI::Paths::HOMEDIR,       :home],
@@ -347,6 +356,7 @@ class TestRDocServlet < RDoc::TestCase
 
   def test_root_search
     touch_system_cache_path
+    touch_extra_cache_path
 
     @s.root_search @req, @res
 
@@ -359,12 +369,16 @@ class TestRDocServlet < RDoc::TestCase
     expected = {
       'index' => {
         'searchIndex' => %w[
+          My\ Extra\ Documentation
           Ruby\ Documentation
         ],
         'longSearchIndex' => %w[
+          My\ Extra\ Documentation
           Ruby\ Documentation
         ],
         'info' => [
+          ['My Extra Documentation', '', @extra_dirs[0], '',
+            'My Extra Documentation'],
           ['Ruby Documentation', '', @system_dir, '',
             'Documentation for the Ruby standard library'],
         ],
@@ -454,9 +468,25 @@ class TestRDocServlet < RDoc::TestCase
     assert_equal :site, store.type
   end
 
+  def test_store_for_extra
+    store = @s.store_for 'extra-1'
+
+    assert_equal @extra_dirs.first, store.path
+    assert_equal :extra, store.type
+  end
+
   def touch_system_cache_path
     store = RDoc::Store.new @system_dir
     store.title = 'Standard Library Documentation'
+
+    FileUtils.mkdir_p File.dirname store.cache_path
+
+    store.save
+  end
+
+  def touch_extra_cache_path
+    store = RDoc::Store.new @extra_dirs.first
+    store.title = 'My Extra Documentation'
 
     FileUtils.mkdir_p File.dirname store.cache_path
 

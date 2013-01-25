@@ -1412,7 +1412,9 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
 
     server = WEBrick::HTTPServer.new :Port => @server
 
-    server.mount '/', RDoc::Servlet
+    extra_doc_dirs = @stores.map {|s| s.type == :extra ? s.path : nil}.compact
+
+    server.mount '/', RDoc::Servlet, nil, extra_doc_dirs
 
     trap 'INT'  do server.shutdown end
     trap 'TERM' do server.shutdown end
