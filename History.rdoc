@@ -1,9 +1,10 @@
 === 3.12.1
 
-* Bug fix
+* Bug fixes
   * Fixed an XSS exploit in darkfish.js.  This could lead to cookie disclosure
     to third parties.  See CVE-2012-0256[link:CVE-2012-0256.rdoc] for full
     details including a patch you can apply to generated RDoc documentation.
+  * Ensured that rd parser files are generated before checking the manifest.
 
 === 3.12 / 2011-12-15
 
