@@ -1,4 +1,4 @@
-=== 4.0.0.preview3.1 / ??
+=== 4.0.0.rc.2 / ??
 
 As a preview release, please file bugs for any problems you have with rdoc at
 https://github.com/rdoc/rdoc/issues
@@ -14,6 +14,9 @@ to build HTML documentation when installing gems.)
   * Added current heading and page-top links to HTML headings.
 
 * Bug fixes
+  * Fixed an XSS exploit in darkfish.js.  This could lead to cookie disclosure
+    to third parties.  See CVE-2012-0256.rdoc for full details including a
+    patch you can apply to generated RDoc documentation.
   * Fixed parsing of multibyte files with incomplete characters at byte 1024.
     Ruby bug #6393 by nobu, patch by Nobuyoshi Nakada and Yui NARUSE.
   * Fixed rdoc -E.  Ruby Bug #6392 and (modified) patch by Nobuyoshi Nakada

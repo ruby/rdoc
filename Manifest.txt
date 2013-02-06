@@ -1,5 +1,6 @@
 .autotest
 .document
+CVE-2013-0256.rdoc
 DEVELOPERS.rdoc
 History.rdoc
 LEGAL.rdoc
