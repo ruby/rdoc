@@ -41,7 +41,7 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   extra_dev_deps << ['isolate',  '~> 3']
   extra_dev_deps << ['ZenTest',  '~> 4'] # for autotest/isolate
 
-  extra_rdoc_files << 'Rakefile'
+  extra_rdoc_files << 'Rakefile' << 'CVE-2013-0256.rdoc'
   spec_extras['required_rubygems_version'] = '>= 1.3'
   spec_extras['homepage'] = 'http://docs.seattlerb.org/rdoc'
 end

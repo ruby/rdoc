@@ -1,3 +1,10 @@
+=== 3.9.5 / 2013-02-05
+
+* Bug fixes
+  * Fixed an XSS exploit in darkfish.js.  This could lead to cookie disclosure
+    to third parties.  See CVE-2012-0256.rdoc for full details including a
+    patch you can apply to generated RDoc documentation.
+
 === 3.9.4 / 2011-08-26
 
 * Bug fixes
