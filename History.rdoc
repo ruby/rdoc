@@ -1,4 +1,4 @@
-=== 3.12.1
+=== 3.12.1 / 2013-02-05
 
 * Bug fixes
   * Fixed an XSS exploit in darkfish.js.  This could lead to cookie disclosure
