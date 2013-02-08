@@ -1,4 +1,4 @@
-=== 4.0.0.rc.2 / 2013-02-05
+=== 4.0.0.rc.2.1
 
 As a preview release, please file bugs for any problems you have with rdoc at
 https://github.com/rdoc/rdoc/issues
@@ -9,6 +9,12 @@ changes should not affect users of `rdoc` or `ri`.
 Notable feature additions are markdown support and an WEBrick servlet that can
 serve HTML from an ri store.  (This means that RubyGems 2.0+ no longer needs
 to build HTML documentation when installing gems.)
+
+* Bug fix
+  * Templates now use the correct encoding when generating pages.  Issue #183
+    by Vít Ondruch
+
+=== 4.0.0.rc.2 / 2013-02-05
 
 * Minor enhancements
   * Added current heading and page-top links to HTML headings.
