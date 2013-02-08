@@ -703,7 +703,8 @@ class RDoc::Generator::Darkfish
       erbout = 'io'
     else
       template = file.read
-      template = template.encode @options.encoding
+      template = template.encode @options.encoding if
+        Object.const_defined? :Encoding
 
       file_var = File.basename(file).sub(/\..*/, '')
 
