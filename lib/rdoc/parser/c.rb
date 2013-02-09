@@ -422,7 +422,7 @@ class RDoc::Parser::C < RDoc::Parser
                    )
                    \s*\(\s*([\w\.]+),
                      \s*"([^"]+)",
-                     \s*(?:RUBY_METHOD_FUNC\(|VALUEFUNC\()?(\w+)\)?,
+                     \s*(?:RUBY_METHOD_FUNC\(|VALUEFUNC\(|\(METHOD\))?(\w+)\)?,
                      \s*(-?\w+)\s*\)
                    (?:;\s*/[*/]\s+in\s+(\w+?\.(?:cpp|c|y)))?
                  %xm) do |type, var_name, meth_name, function, param_count, source_file|

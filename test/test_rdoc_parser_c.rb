@@ -1000,6 +1000,36 @@ init_gi_repository (void)
     assert_equal 2, klass.method_list.length
   end
 
+  def test_find_body_cast
+    content = <<-EOF
+/*
+ * a comment for other_function
+ */
+VALUE
+other_function() {
+}
+
+void
+Init_Foo(void) {
+    VALUE foo = rb_define_class("Foo", rb_cObject);
+
+    rb_define_method(foo, "my_method", (METHOD)other_function, 0);
+}
+    EOF
+
+    klass = util_get_class content, 'foo'
+    other_function = klass.method_list.first
+
+    assert_equal 'my_method', other_function.name
+    assert_equal "a comment for other_function",
+                 other_function.comment.text
+    assert_equal '()', other_function.params
+
+    code = other_function.token_stream.first.text
+
+    assert_equal "VALUE\nother_function() {\n}", code
+  end
+
   def test_find_body_define
     content = <<-EOF
 #define something something_else
