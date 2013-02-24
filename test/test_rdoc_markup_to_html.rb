@@ -350,14 +350,14 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     rdoc.options = options
     RDoc::RDoc.current = rdoc
 
-    verb = @RM::Verbatim.new("a %z'foo' # => blah\n")
+    verb = @RM::Verbatim.new("a % 09 # => blah\n")
 
     @to.start_accepting
     @to.accept_verbatim verb
 
     expected = <<-EXPECTED
 
-<pre>a %z'foo' # =&gt; blah
+<pre>a % 09 # =&gt; blah
 </pre>
     EXPECTED
 

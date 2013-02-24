@@ -384,8 +384,6 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     @to.start_accepting
     @to.accept_verbatim verb
 
-    inner = CGI.escapeHTML "a % 09 # => blah"
-
     expected = <<-EXPECTED
 
 <pre>a % 09 # =&gt; blah
@@ -549,7 +547,7 @@ This routine modifies its +comment+ parameter.
 <p>Look for directives in a normal comment block:
 
 <pre># :stopdoc:
-# Don't display comment from this point forward</pre>
+# Don&#39;t display comment from this point forward</pre>
     EXPECTED
 
     actual = @to.convert rdoc
