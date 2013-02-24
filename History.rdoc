@@ -1,7 +1,4 @@
-=== 4.0.0.rc.2.1
-
-As a preview release, please file bugs for any problems you have with rdoc at
-https://github.com/rdoc/rdoc/issues
+=== 4.0.0 / 2013-02-24
 
 RDoc 4.0 includes several new features and several breaking changes.  The
 changes should not affect users of `rdoc` or `ri`.
