@@ -108,7 +108,7 @@ module RDoc
   ##
   # RDoc version you are using
 
-  VERSION = '3.12.1'
+  VERSION = '3.12.2'
 
   ##
   # Method visibilities
