@@ -404,6 +404,20 @@ Changes since RDoc 4.0.0.rc.2:
   * Fixed class << ::Foo writing documentation to /Foo.html
   * Fixed class ::A referencing itself from inside its own namespace.
 
+=== 3.12.2 / 2013-02-24
+
+* Bug fixes
+  * Fixed bug in syntax-highlighting that would corrupt regular expressions.
+    Ruby Bug #6488 by Benny Lyne Amorsen.
+  * Fixed lexing of character syntax (<code>?x</code>).  Reported by Xavier
+    Noria.
+  * Fixed tokenization of % when it is not followed by a $-string type
+  * Fixed display of __END__ in documentation examples in HTML output
+  * Fixed tokenization of reserved words used as new-style hash keys
+  * Fixed HEREDOC output for the limited case of a heredoc followed by a line
+    end.  When a HEREDOC is not followed by a line end RDoc is not currently
+    smart enough to restore the source correctly.  Bug #162 by Zachary Scott.
+
 === 3.12.1 / 2013-02-05
 
 * Bug fixes
