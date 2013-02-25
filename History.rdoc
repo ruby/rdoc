@@ -1,4 +1,4 @@
-=== 3.12.2
+=== 3.12.2 / 2013-02-24
 
 * Bug fixes
   * Fixed bug in syntax-highlighting that would corrupt regular expressions.
