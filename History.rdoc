@@ -1,8 +1,10 @@
 === 4.0.1
 
-* Bug Fixes
+* Bug fixes
   * Updated example of RDoc::Options to include reopening RDoc::Options.
     Pointed out by Michael Granger
+  * Moved RubyGems documentation installed message into RDoc hook.  For
+    RubyGems bug #469 by Jeff Sandberg
 
 === 4.0.0 / 2013-02-24
 
