@@ -1,3 +1,9 @@
+=== 4.0.1
+
+* Bug Fixes
+  * Updated example of RDoc::Options to include reopening RDoc::Options.
+    Pointed out by Michael Granger
+
 === 4.0.0 / 2013-02-24
 
 RDoc 4.0 includes several new features and several breaking changes.  The
