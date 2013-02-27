@@ -52,6 +52,18 @@ require 'pathname'
 #     end
 #   end
 #
+# Of course, RDoc::Options does not respond to +spell_dictionary+ by default
+# so you will need to add it:
+#
+#   class RDoc::Options
+#
+#     ##
+#     # The spell dictionary used by the spell-checking plugin.
+#
+#     attr_accessor :spell_dictionary
+#
+#   end
+#
 # == Option Validators
 #
 # OptionParser validators will validate and cast user input values.  In
