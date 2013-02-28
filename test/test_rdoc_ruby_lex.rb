@@ -162,6 +162,18 @@ Line 2
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_heredoc_missing_end
+    e = assert_raises RDoc::RubyLex::Error do
+      RDoc::RubyLex.tokenize <<-'RUBY', nil
+>> string1 = <<-TXT
+>" That's swell
+>" TXT
+      RUBY
+    end
+
+    assert_equal 'Missing terminating TXT for string', e.message
+  end
+
   def test_class_tokenize_heredoc_percent_N
     tokens = RDoc::RubyLex.tokenize <<-'RUBY', nil
 a b <<-U

@@ -5,6 +5,8 @@
     Pointed out by Michael Granger
   * Moved RubyGems documentation installed message into RDoc hook.  For
     RubyGems bug #469 by Jeff Sandberg
+  * An Error is now raised when a heredoc is not terminated.  Fixes exceptions
+    when processing comment blocks.  Reported by darix
 
 === 4.0.0 / 2013-02-24
 

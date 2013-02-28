@@ -1028,6 +1028,8 @@ class RDoc::RubyLex
     end
 
     if output_heredoc then
+      raise Error, "Missing terminating #{quoted} for string" unless l
+
       doc << l.chomp
     else
       doc << '"'
