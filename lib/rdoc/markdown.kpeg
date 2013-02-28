@@ -200,15 +200,13 @@
   def self.extension name
     EXTENSIONS << name
 
-    eval <<-RUBY
-      def #{name}?
-        extension? __method__
-      end
+    define_method "#{name}?" do
+      extension? name
+    end
 
-      def #{name}= enable
-        extension __method__, enable
-      end
-    RUBY
+    define_method "#{name}=" do |enable|
+      extension name, enable
+    end
   end
 
   ##
@@ -288,8 +286,6 @@
   # Is the extension `name` enabled?
 
   def extension? name
-    name = name.to_s.delete('?').intern
-
     @extensions.include? name
   end
 
@@ -299,8 +295,6 @@
   # Enables or disables the extension with `name`
 
   def extension name, enable
-    name = name.to_s.delete('=').intern
-
     if enable then
       @extensions |= [name]
     else
