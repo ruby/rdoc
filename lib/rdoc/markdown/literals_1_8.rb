@@ -381,39 +381,9 @@ class RDoc::Markdown::Literals
     return _tmp
   end
 
-  # Newline = ("\n" | "" "\n"?)
+  # Newline = /\n|\r\n?/
   def _Newline
-
-    _save = self.pos
-    while true # choice
-      _tmp = match_string("\n")
-      break if _tmp
-      self.pos = _save
-
-      _save1 = self.pos
-      while true # sequence
-        _tmp = match_string("\r")
-        unless _tmp
-          self.pos = _save1
-          break
-        end
-        _save2 = self.pos
-        _tmp = match_string("\n")
-        unless _tmp
-          _tmp = true
-          self.pos = _save2
-        end
-        unless _tmp
-          self.pos = _save1
-        end
-        break
-      end # end sequence
-
-      break if _tmp
-      self.pos = _save
-      break
-    end # end choice
-
+    _tmp = scan(/\A(?-mix:\n|\r\n?)/)
     set_failed_rule :_Newline unless _tmp
     return _tmp
   end
@@ -425,20 +395,9 @@ class RDoc::Markdown::Literals
     return _tmp
   end
 
-  # Spacechar = (" " | "\t")
+  # Spacechar = / |\t/
   def _Spacechar
-
-    _save = self.pos
-    while true # choice
-      _tmp = match_string(" ")
-      break if _tmp
-      self.pos = _save
-      _tmp = match_string("\t")
-      break if _tmp
-      self.pos = _save
-      break
-    end # end choice
-
+    _tmp = scan(/\A(?-mix: |\t)/)
     set_failed_rule :_Spacechar unless _tmp
     return _tmp
   end
@@ -447,8 +406,8 @@ class RDoc::Markdown::Literals
   Rules[:_Alphanumeric] = rule_info("Alphanumeric", "/[0-9A-Za-z\\200-\\377]/")
   Rules[:_AlphanumericAscii] = rule_info("AlphanumericAscii", "/[A-Za-z0-9]/")
   Rules[:_BOM] = rule_info("BOM", "\"ï»¿\"")
-  Rules[:_Newline] = rule_info("Newline", "(\"\\n\" | \"\" \"\\n\"?)")
+  Rules[:_Newline] = rule_info("Newline", "/\\n|\\r\\n?/")
   Rules[:_NonAlphanumeric] = rule_info("NonAlphanumeric", "/[\\000-\\057\\072-\\100\\133-\\140\\173-\\177]/")
-  Rules[:_Spacechar] = rule_info("Spacechar", "(\" \" | \"\\t\")")
+  Rules[:_Spacechar] = rule_info("Spacechar", "/ |\\t/")
   # :startdoc:
 end
