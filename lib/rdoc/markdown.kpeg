@@ -490,12 +490,12 @@ Para =      NonindentSpace Inlines:a BlankLine+
 Plain =     Inlines:a
             { paragraph a }
 
-AtxInline = !Newline !(Sp? "#"* Sp Newline) Inline
+AtxInline = !Newline !(Sp? /#*/ Sp Newline) Inline
 
 AtxStart =  < /\#{1,6}/ >
             { text.length }
 
-AtxHeading = AtxStart:s Sp? AtxInline+:a (Sp? "#"* Sp)?  Newline
+AtxHeading = AtxStart:s Sp? AtxInline+:a (Sp? /#*/ Sp)?  Newline
             { RDoc::Markup::Heading.new(s, a.join) }
 
 SetextHeading = SetextHeading1 | SetextHeading2
@@ -542,7 +542,7 @@ HorizontalRule = NonindentSpace
                  Sp Newline BlankLine+
                  { RDoc::Markup::Rule.new 1 }
 
-Bullet = !HorizontalRule NonindentSpace ("+" | "*" | "-") Spacechar+
+Bullet = !HorizontalRule NonindentSpace /[+*-]/ Spacechar+
 
 BulletList = &Bullet (ListTight | ListLoose):a
              { RDoc::Markup::List.new(:BULLET, *a) }
@@ -878,7 +878,7 @@ Str = StartList:a
       < NormalChar+ > { a = text }
       ( StrChunk:c { a << c } )* { a }
 
-StrChunk = < (NormalChar | "_"+ &Alphanumeric)+ > { text }
+StrChunk = < (NormalChar | /_+/ &Alphanumeric)+ > { text }
 
 EscapedChar =   "\\" !Newline < /[:\\`|*_{}\[\]()#+.!><-]/ > { text }
 
@@ -901,9 +901,9 @@ Symbol = < SpecialChar >
 # or strings of '*' or '_' with space on each side:
 UlOrStarLine =  (UlLine | StarLine):a { a }
 StarLine = < /\*{4,}/ > { text } |
-           < Spacechar "*"+ &Spacechar > { text }
+           < Spacechar /\*+/ &Spacechar > { text }
 UlLine   = < /_{4,}/ > { text } |
-           < Spacechar "_"+ &Spacechar > { text }
+           < Spacechar /_+/ &Spacechar > { text }
 
 Emph =      EmphStar | EmphUl
 
@@ -1020,27 +1020,27 @@ Ticks4 = "````" !"`"
 Ticks5 = "`````" !"`"
 
 Code = ( Ticks1 Sp < (
-           ( !"`" Nonspacechar )+ | !Ticks1 "`"+ |
+           ( !"`" Nonspacechar )+ | !Ticks1 /`+/ |
            !( Sp Ticks1 ) ( Spacechar | Newline !BlankLine )
          )+ > Sp Ticks1 |
          Ticks2 Sp < (
            ( !"`" Nonspacechar )+ |
-           !Ticks2 "`"+ |
+           !Ticks2 /`+/ |
            !( Sp Ticks2 ) ( Spacechar | Newline !BlankLine )
          )+ > Sp Ticks2 |
          Ticks3 Sp < (
            ( !"`" Nonspacechar )+ |
-           !Ticks3 "`"+ |
+           !Ticks3 /`+/ |
            !( Sp Ticks3 ) ( Spacechar | Newline !BlankLine )
          )+ > Sp Ticks3 |
          Ticks4 Sp < (
            ( !"`" Nonspacechar )+ |
-           !Ticks4 "`"+ |
+           !Ticks4 /`+/ |
            !( Sp Ticks4 ) ( Spacechar | Newline !BlankLine )
          )+ > Sp Ticks4 |
          Ticks5 Sp < (
            ( !"`" Nonspacechar )+ |
-           !Ticks5 "`"+ |
+           !Ticks5 /`+/ |
            !( Sp Ticks5 ) ( Spacechar | Newline !BlankLine )
          )+ > Sp Ticks5
        )
@@ -1147,7 +1147,7 @@ RawNoteBlock = StartList:a
 CodeFence = &{ github? }
             Ticks3 (Sp StrChunk:format)? Spnl < (
               ( !"`" Nonspacechar )+ |
-              !Ticks3 "`"+ |
+              !Ticks3 /`+/ |
               Spacechar |
               Newline
             )+ > Ticks3 Sp Newline*
