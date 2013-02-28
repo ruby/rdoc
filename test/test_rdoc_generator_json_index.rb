@@ -114,7 +114,7 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
 
     refute_empty assignment
 
-    index = JSON.parse index
+    index = RDoc::JSON.load index
 
     info = [
       @klass.search_record[2..-1],
@@ -163,7 +163,7 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
 
     index = $'
 
-    index = JSON.parse index
+    index = RDoc::JSON.load index
 
     klass_record = @klass.search_record[2..-1]
     klass_record[-1] = "<p>5\xc2\xb0\n"

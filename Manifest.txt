@@ -91,6 +91,7 @@ lib/rdoc/generator/template/json_index/js/navigation.js
 lib/rdoc/generator/template/json_index/js/searcher.js
 lib/rdoc/ghost_method.rb
 lib/rdoc/include.rb
+lib/rdoc/json.rb
 lib/rdoc/known_classes.rb
 lib/rdoc/markdown.kpeg
 lib/rdoc/markdown.rb

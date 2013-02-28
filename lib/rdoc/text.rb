@@ -6,16 +6,6 @@
 require 'strscan'
 
 ##
-# For RDoc::Text#snippet
-
-begin
-  gem 'json'
-rescue Gem::LoadError
-end
-
-require 'json'
-
-##
 # Methods for manipulating comment text
 
 module RDoc::Text

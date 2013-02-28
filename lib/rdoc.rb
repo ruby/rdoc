@@ -178,5 +178,7 @@ module RDoc
   autoload :Extend,         'rdoc/extend'
   autoload :Require,        'rdoc/require'
 
+  autoload :JSON,           'rdoc/json'
+
 end
 
