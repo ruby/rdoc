@@ -492,7 +492,7 @@ Plain =     Inlines:a
 
 AtxInline = !Newline !(Sp? "#"* Sp Newline) Inline
 
-AtxStart =  < ( "######" | "#####" | "####" | "###" | "##" | "#" ) >
+AtxStart =  < /\#{1,6}/ >
             { text.length }
 
 AtxHeading = AtxStart:s Sp? AtxInline+:a (Sp? "#"* Sp)?  Newline
@@ -500,9 +500,9 @@ AtxHeading = AtxStart:s Sp? AtxInline+:a (Sp? "#"* Sp)?  Newline
 
 SetextHeading = SetextHeading1 | SetextHeading2
 
-SetextBottom1 = "===" "="* Newline
+SetextBottom1 = /={3,}/ Newline
 
-SetextBottom2 = "---" "-"* Newline
+SetextBottom2 = /-{3,}/ Newline
 
 SetextHeading1 =  &(RawLine SetextBottom1)
                   StartList:a ( !Endline Inline:b { a << b } )+ Sp? Newline
@@ -887,7 +887,7 @@ Entity =    ( HexEntity | DecEntity | CharEntity ):a { a }
 Endline =   LineBreak | TerminalEndline | NormalEndline
 
 NormalEndline =   Sp Newline !BlankLine !">" !AtxStart
-                  !(Line ("===" "="* | "---" "-"*) Newline)
+                  !(Line /={3,}|-{3,}=/ Newline)
                   { "\n" }
 
 TerminalEndline = Sp Newline Eof
@@ -900,9 +900,9 @@ Symbol = < SpecialChar >
 # This keeps the parser from getting bogged down on long strings of '*' or '_',
 # or strings of '*' or '_' with space on each side:
 UlOrStarLine =  (UlLine | StarLine):a { a }
-StarLine = < "****" "*"* > { text } |
+StarLine = < /\*{4,}/ > { text } |
            < Spacechar "*"+ &Spacechar > { text }
-UlLine   = < "____" "_"* > { text } |
+UlLine   = < /_{4,}/ > { text } |
            < Spacechar "_"+ &Spacechar > { text }
 
 Emph =      EmphStar | EmphUl
@@ -1059,7 +1059,7 @@ Eof =           !.
 Nonspacechar =  !Spacechar !Newline .
 Sp =            Spacechar*
 Spnl =          Sp (Newline Sp)?
-SpecialChar =   "*" | "_" | "`" | "&" | "[" | "]" | "(" | ")" | "<" | "!" | "#" | "\\" | "'" | "\"" | ExtendedSpecialChar
+SpecialChar =   /[*_`&\[\]()<!#\\'"]/ | ExtendedSpecialChar
 NormalChar =    !( SpecialChar | Spacechar | Newline ) .
 Digit = [0-9]
 
@@ -1071,11 +1071,11 @@ Newline           = %literals.Newline
 NonAlphanumeric   = %literals.NonAlphanumeric
 Spacechar         = %literals.Spacechar
 
-HexEntity  = "&" "#" /[Xx]/ < /[0-9a-fA-F]+/ > ";"
+HexEntity  = /&#x/i < /[0-9a-fA-F]+/ > ";"
              { [text.to_i(16)].pack 'U' }
-DecEntity  = "&" "#"        < /[0-9]+/       > ";"
+DecEntity  = "&#"   < /[0-9]+/       > ";"
              { [text.to_i].pack 'U' }
-CharEntity = "&"            </[A-Za-z0-9]+/  > ";"
+CharEntity = "&"    </[A-Za-z0-9]+/  > ";"
              { if entity = HTML_ENTITIES[text] then
                  entity.pack 'U*'
                else
@@ -1083,8 +1083,8 @@ CharEntity = "&"            </[A-Za-z0-9]+/  > ";"
                end
              }
 
-NonindentSpace =    "   " | "  " | " " | ""
-Indent =            "\t" | "    "
+NonindentSpace =    / {0,3}/
+Indent =            /\t|    /
 IndentedLine =      Indent Line
 OptionallyIndentedLine = Indent? Line
 
