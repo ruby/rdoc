@@ -1029,18 +1029,22 @@ Usage: #{opt.program_name} [options] [names...]
       deprecated.each do |opt|
         $stderr.puts 'option ' << opt << ' is deprecated: ' << DEPRECATED[opt]
       end
+    end
 
-      unless invalid.empty? then
-        invalid = "invalid options: #{invalid.join ', '}"
+    unless invalid.empty? then
+      invalid = "invalid options: #{invalid.join ', '}"
 
-        if ignore_invalid then
+      if ignore_invalid then
+        unless quiet then
           $stderr.puts invalid
           $stderr.puts '(invalid options are ignored)'
-        else
-          $stderr.puts opts
-          $stderr.puts invalid
-          exit 1
         end
+      else
+        unless quiet then
+          $stderr.puts opts
+        end
+        $stderr.puts invalid
+        exit 1
       end
     end
 

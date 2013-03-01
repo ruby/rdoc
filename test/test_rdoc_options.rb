@@ -409,6 +409,19 @@ rdoc_include:
     assert_empty out
   end
 
+  def test_parse_ignore_invalid_no_quiet
+    out, err = capture_io do
+      assert_raises SystemExit do
+        @options.parse %w[--quiet --no-ignore-invalid --bogus=arg --bobogus --visibility=extended]
+      end
+    end
+
+    refute_match %r%^Usage: %, err
+    assert_match %r%^invalid options: --bogus=arg, --bobogus, --visibility=extended%, err
+
+    assert_empty out
+  end
+
   def test_parse_main
     out, err = capture_io do
       @options.parse %w[--main MAIN]
