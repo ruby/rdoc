@@ -18,7 +18,6 @@ PARSER_FILES = %w[
 Hoe.plugin :git
 Hoe.plugin :kpeg
 Hoe.plugin :minitest
-Hoe.plugin :rdoc_tags
 Hoe.plugin :travis
 
 $rdoc_rakefile = true
