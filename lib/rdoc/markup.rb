@@ -59,7 +59,7 @@
 #
 #   require 'rdoc'
 #
-#   h = RDoc::Markup::ToHtml.new
+#   h = RDoc::Markup::ToHtml.new(RDoc::Options.new)
 #
 #   puts h.convert(input_string)
 #
