@@ -422,6 +422,26 @@ rdoc_include:
     assert_empty out
   end
 
+  def test_ignore_needless_arg
+    out, err = capture_io do
+      @options.parse %w[--ri=foo]
+    end
+
+    assert_match %r%^invalid options: --ri=foo%, err
+
+    assert_empty out
+  end
+
+  def test_ignore_missing_arg
+    out, err = capture_io do
+      @options.parse %w[--copy-files]
+    end
+
+    assert_match %r%^invalid options: --copy-files%, err
+
+    assert_empty out
+  end
+
   def test_parse_main
     out, err = capture_io do
       @options.parse %w[--main MAIN]
