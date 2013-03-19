@@ -1003,7 +1003,7 @@ Usage: #{opt.program_name} [options] [names...]
 
     begin
       opts.parse! argv
-    rescue OptionParser::InvalidArgument, OptionParser::InvalidOption => e
+    rescue OptionParser::ParseError => e
       if DEPRECATED[e.args.first] then
         deprecated << e.args.first
       elsif %w[--format --ri -r --ri-site -R].include? e.args.first then
