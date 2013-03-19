@@ -1,6 +1,7 @@
 === 4.0.1
 
 * Bug fixes
+  * RDoc::Options parser should rescue from OptionParser::ParseError.
   * Updated example of RDoc::Options to include reopening RDoc::Options.
     Pointed out by Michael Granger
   * Moved RubyGems documentation installed message into RDoc hook.  For
