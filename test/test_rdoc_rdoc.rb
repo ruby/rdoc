@@ -162,6 +162,24 @@ class TestRDocRDoc < RDoc::TestCase
     end
   end
 
+  def test_parse_file_binary
+    @rdoc.store = RDoc::Store.new
+
+    root       = File.dirname __FILE__
+    binary_dat = File.expand_path 'binary.dat', root
+
+    @rdoc.options.root = Pathname root
+
+    out, err = capture_io do
+      Dir.chdir root do
+        assert_nil @rdoc.parse_file 'binary.dat'
+      end
+    end
+
+    assert_empty out
+    assert_empty err
+  end
+
   def test_parse_file_page_dir
     @rdoc.store = RDoc::Store.new
 

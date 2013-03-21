@@ -342,6 +342,8 @@ option)
 
     @stats.add_file filename
 
+    return if RDoc::Parser.binary? filename
+
     content = RDoc::Encoding.read_file filename, encoding
 
     return unless content

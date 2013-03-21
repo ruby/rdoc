@@ -15,6 +15,8 @@
   * RDoc::Servlet no longer ignores extra directories from -d.  Pull request
     #173 by Thomas Leitner
   * Fixed `rdoc --ri-site`.  Bug #193 by Michal Papis.
+  * RDoc no longer attempts to parse binary files.  Bug #189 by postmodern,
+    Bug #190 by Christoffer Lervåg, Bug #195 by Aaron Patterson
 
 === 4.0.0 / 2013-02-24
 
