@@ -928,7 +928,7 @@ Usage: #{opt.program_name} [options] [names...]
         check_generator
 
         @generator_name = "ri"
-        @op_dir = RDoc::RI::Paths::SITEDIR
+        @op_dir = RDoc::RI::Paths.site_dir
         setup_generator
       end
 

@@ -14,6 +14,7 @@
     Pull request #184 by Carlos Agarie
   * RDoc::Servlet no longer ignores extra directories from -d.  Pull request
     #173 by Thomas Leitner
+  * Fixed `rdoc --ri-site`.  Bug #193 by Michal Papis.
 
 === 4.0.0 / 2013-02-24
 

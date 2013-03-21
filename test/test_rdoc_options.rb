@@ -501,6 +501,13 @@ rdoc_include:
     end
   end
 
+  def test_parse_ri_site
+    @options.parse %w[--ri-site]
+
+    assert_equal RDoc::Generator::RI,      @options.generator
+    assert_equal RDoc::RI::Paths.site_dir, @options.op_dir
+  end
+
   def test_parse_root
     assert_equal Pathname(Dir.pwd), @options.root
 
