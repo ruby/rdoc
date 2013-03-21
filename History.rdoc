@@ -10,6 +10,8 @@
     when processing comment blocks.  Reported by darix
   * rdoc --quiet --no-ignore-invalid now exits for invalid options.  Pull
     request #192 by Jeremy Evans
+  * RDoc::Parser::C no longer ignores a (METHOD) cast in rb_define_method.
+    Pull request #184 by Carlos Agarie
 
 === 4.0.0 / 2013-02-24
 
