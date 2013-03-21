@@ -8,6 +8,8 @@
     RubyGems bug #469 by Jeff Sandberg
   * An Error is now raised when a heredoc is not terminated.  Fixes exceptions
     when processing comment blocks.  Reported by darix
+  * rdoc --quiet --no-ignore-invalid now exits for invalid options.  Pull
+    request #192 by Jeremy Evans
 
 === 4.0.0 / 2013-02-24
 
