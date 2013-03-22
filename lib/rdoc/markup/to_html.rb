@@ -186,19 +186,26 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   def accept_verbatim verbatim
     text = verbatim.text.rstrip
 
-    @res << if verbatim.ruby? or parseable? text then
-              begin
-                tokens = RDoc::RubyLex.tokenize text, @options
+    klass = nil
 
-                html = RDoc::TokenStream.to_html tokens
+    content = if verbatim.ruby? or parseable? text then
+                begin
+                  tokens = RDoc::RubyLex.tokenize text, @options
+                  klass  = ' class="ruby"'
 
-                "\n<pre class=\"ruby\">#{html}</pre>\n"
-              rescue RDoc::RubyLex::Error
-                "\n<pre>#{CGI.escapeHTML text}</pre>\n"
+                  RDoc::TokenStream.to_html tokens
+                rescue RDoc::RubyLex::Error
+                  CGI.escapeHTML text
+                end
+              else
+                CGI.escapeHTML text
               end
-            else
-              "\n<pre>#{CGI.escapeHTML text}</pre>\n"
-            end
+
+    if @options.pipe then
+      @res << "\n<pre><code>#{CGI.escapeHTML text}</code></pre>\n"
+    else
+      @res << "\n<pre#{klass}>#{content}</pre>\n"
+    end
   end
 
   ##

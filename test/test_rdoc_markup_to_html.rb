@@ -422,6 +422,24 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal expected, @to.res.join
   end
 
+  def test_accept_verbatim_pipe
+    @options.pipe = true
+
+    verb = @RM::Verbatim.new("1 + 1\n")
+    verb.format = :ruby
+
+    @to.start_accepting
+    @to.accept_verbatim verb
+
+    expected = <<-EXPECTED
+
+<pre><code>1 + 1
+</code></pre>
+    EXPECTED
+
+    assert_equal expected, @to.res.join
+  end
+
   def test_accept_verbatim_ruby
     verb = @RM::Verbatim.new("1 + 1\n")
     verb.format = :ruby

@@ -17,6 +17,7 @@
   * Fixed `rdoc --ri-site`.  Bug #193 by Michal Papis.
   * RDoc no longer attempts to parse binary files.  Bug #189 by postmodern,
     Bug #190 by Christoffer Lervåg, Bug #195 by Aaron Patterson
+  * `rdoc --pipe` output now contains <code></code> for markdown compliance.
 
 === 4.0.0 / 2013-02-24
 
