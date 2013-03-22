@@ -679,5 +679,16 @@ rdoc_include:
     end
   end
 
+  def test_version
+    out, _ = capture_io do
+      begin
+        @options.parse %w[--version]
+      rescue SystemExit
+      end
+    end
+
+    assert out.include?(RDoc::VERSION)
+  end
+
 end
 
