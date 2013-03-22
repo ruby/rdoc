@@ -274,7 +274,11 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     label = [@code_object.aref, label].compact.join '-' if
       @code_object and @code_object.respond_to? :aref
 
-    @res << "\n<h#{level} id=\"#{label}\">"
+    @res << if @options.output_decoration
+              "\n<h#{level} id=\"#{label}\">"
+            else
+              "\n<h#{level}>"
+            end
     @res << to_html(heading.text)
     unless @options.pipe then
       @res << "<span><a href=\"##{label}\">&para;</a>"

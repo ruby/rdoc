@@ -397,6 +397,27 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal "\n<p>hello world</p>\n", @to.res.join
   end
 
+  def test_accept_heading_output_decoration
+    @options.output_decoration = false
+
+    @to.start_accepting
+
+    @to.accept_heading @RM::Heading.new(1, 'Hello')
+
+    assert_equal "\n<h1>Hello<span><a href=\"#label-Hello\">&para;</a> <a href=\"#documentation\">&uarr;</a></span></h1>\n", @to.res.join
+  end
+
+  def test_accept_heading_output_decoration_with_pipe
+    @options.pipe = true
+    @options.output_decoration = false
+
+    @to.start_accepting
+
+    @to.accept_heading @RM::Heading.new(1, 'Hello')
+
+    assert_equal "\n<h1>Hello</h1>\n", @to.res.join
+  end
+
   def test_accept_verbatim_parseable
     verb = @RM::Verbatim.new("class C\n", "end\n")
 
