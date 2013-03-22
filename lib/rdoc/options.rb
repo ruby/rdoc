@@ -975,9 +975,16 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--verbose", "-v",
+      opt.on("--verbose", "-V",
              "Display extra progress as RDoc parses") do |value|
         @verbosity = 2
+      end
+
+      opt.separator nil
+
+      opt.on("--version", "-v", "print the version") do
+        puts opt.version
+        exit
       end
 
       opt.separator nil
