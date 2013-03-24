@@ -372,6 +372,20 @@ rdoc_include:
     assert_equal 1, out.scan(/test generator options:/).length
   end
 
+  def test_parse_format_for_extra_generator
+    RDoc::RDoc::GENERATORS['test'] = Class.new do
+      def self.setup_options options
+        op = options.option_parser
+
+        op.separator 'test generator options:'
+      end
+    end
+
+    @options.setup_generator 'test'
+
+    assert_equal @options.generator_name, 'test'
+  end
+
   def test_parse_ignore_invalid
     out, err = capture_io do
       @options.parse %w[--ignore-invalid --bogus]
