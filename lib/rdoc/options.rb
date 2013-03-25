@@ -241,6 +241,10 @@ class RDoc::Options
   attr_accessor :option_parser
 
   ##
+  # Output heading decorations?
+  attr_accessor :output_decoration
+
+  ##
   # Directory where guides, FAQ, and other pages not associated with a class
   # live.  You may leave this unset if these are at the root of your project.
 
@@ -337,6 +341,7 @@ class RDoc::Options
     @op_dir = nil
     @page_dir = nil
     @pipe = false
+    @output_decoration = true
     @rdoc_include = []
     @root = Pathname(Dir.pwd)
     @show_hash = false
