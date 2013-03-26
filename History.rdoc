@@ -24,6 +24,7 @@
     #204 by Erik Hollensbe
   * Code objects with nodoc are no longer included in the ri store.  Bug #177
     by Thomas Leitner.
+  * Text#snippet now creates a RDoc::Markup::ToHtmlSnippet correctly.
 
 === 4.0.0 / 2013-02-24
 

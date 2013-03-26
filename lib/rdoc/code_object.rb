@@ -276,6 +276,20 @@ class RDoc::CodeObject
   end
 
   ##
+  # The options instance from the store this CodeObject is attached to, or a
+  # default options instance if the CodeObject is not attached.
+  #
+  # This is used by Text#snippet
+
+  def options
+    if @store then
+      @store.rdoc.options
+    else
+      RDoc::Options.new
+    end
+  end
+
+  ##
   # Our parent CodeObject.  The parent may be missing for classes loaded from
   # legacy RI data stores.
 

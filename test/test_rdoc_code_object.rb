@@ -229,6 +229,14 @@ class TestRDocCodeObject < XrefTestCase
     assert_equal 5, @c1_m.offset
   end
 
+  def test_options
+    assert_kind_of RDoc::Options, @co.options
+
+    @co.store = @store
+
+    assert_same @options, @co.options
+  end
+
   def test_parent_file_name
     assert_equal '(unknown)', @co.parent_file_name
     assert_equal 'xref_data.rb', @c1.parent_file_name
