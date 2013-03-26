@@ -2780,6 +2780,30 @@ end
     assert c.documented?
   end
 
+  def test_scan_duplicate_module
+    content = <<-CONTENT
+# comment a
+module Foo
+end
+
+# comment b
+module Foo
+end
+    CONTENT
+
+    util_parser content
+
+    @parser.scan
+
+    foo = @top_level.modules.first
+
+    expected = [
+      RDoc::Comment.new('comment b', @top_level)
+    ]
+
+    assert_equal expected, foo.comment_location.map { |c, l| c }
+  end
+
   def test_scan_meta_method_block
     content = <<-CONTENT
 class C
