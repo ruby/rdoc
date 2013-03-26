@@ -22,6 +22,8 @@
     Bug #178 by Zachary Scott
   * RDoc no longer puts raw markup in HTML output for markdown input.  Bug
     #204 by Erik Hollensbe
+  * Code objects with nodoc are no longer included in the ri store.  Bug #177
+    by Thomas Leitner.
 
 === 4.0.0 / 2013-02-24
 
