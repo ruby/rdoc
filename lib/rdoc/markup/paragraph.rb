@@ -21,7 +21,7 @@ class RDoc::Markup::Paragraph < RDoc::Markup::Raw
       else
         part
       end
-    end.join.gsub(/\r?\n/, ' ')
+    end.join
   end
 
 end

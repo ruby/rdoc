@@ -389,6 +389,14 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal "\n<h1 id=\"label-Hello\">Hello</h1>\n", @to.res.join
   end
 
+  def test_accept_paragraph_newline
+    @to.start_accepting
+
+    @to.accept_paragraph para("hello\n", "world\n")
+
+    assert_equal "\n<p>hello world</p>\n", @to.res.join
+  end
+
   def test_accept_verbatim_parseable
     verb = @RM::Verbatim.new("class C\n", "end\n")
 

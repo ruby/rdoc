@@ -176,6 +176,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   def accept_paragraph paragraph
     @res << "\n<p>"
     text = paragraph.text @hard_break
+    text = text.gsub(/\r?\n/, ' ')
     @res << wrap(to_html(text))
     @res << "</p>\n"
   end
