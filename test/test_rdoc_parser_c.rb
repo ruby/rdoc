@@ -1699,6 +1699,80 @@ void Init(void) {
     assert_equal expected, @store.c_singleton_class_variables
   end
 
+  def test_scan_method_copy
+    parser = util_parser <<-C
+/*
+ *  call-seq:
+ *    pathname.to_s    -> string
+ *    pathname.to_path -> string
+ *
+ *  Return the path as a String.
+ *
+ *  to_path is implemented so Pathname objects are usable with File.open, etc.
+ */
+static VALUE
+path_to_s(VALUE self) { }
+
+/*
+ *  call-seq:
+ *     str[index]               -> new_str or nil
+ *     str[start, length]       -> new_str or nil
+ *     str.slice(index)         -> new_str or nil
+ *     str.slice(start, length) -> new_str or nil
+ */
+static VALUE
+path_aref_m(int argc, VALUE *argv, VALUE str) { }
+ 
+/*
+ *  call-seq:
+ *     string <=> other_string   -> -1, 0, +1 or nil
+ */
+static VALUE
+path_cmp_m(VALUE str1, VALUE str2) { }
+
+Init_pathname()
+{
+    rb_cPathname = rb_define_class("Pathname", rb_cObject);
+
+    rb_define_method(rb_cPathname, "to_s",    path_to_s, 0);
+    rb_define_method(rb_cPathname, "to_path", path_to_s, 0);
+    rb_define_method(rb_cPathname, "[]",      path_aref_m, -1);
+    rb_define_method(rb_cPathname, "slice",   path_aref_m, -1);
+    rb_define_method(rb_cPathname, "<=>",     path_cmp_m, 1);
+}
+    C
+
+    parser.scan
+
+    pathname = @store.classes_hash['Pathname']
+
+    to_path = pathname.method_list.find { |m| m.name == 'to_path' }
+    assert_equal "pathname.to_path -> string", to_path.call_seq
+
+    to_s = pathname.method_list.find { |m| m.name == 'to_s' }
+    assert_equal "pathname.to_s    -> string", to_s.call_seq
+
+    index_expected = <<-EXPECTED.chomp
+str[index]               -> new_str or nil
+str[start, length]       -> new_str or nil
+    EXPECTED
+
+    index = pathname.method_list.find { |m| m.name == '[]' }
+    assert_equal index_expected, index.call_seq, '[]'
+
+    slice_expected = <<-EXPECTED.chomp
+str.slice(index)         -> new_str or nil
+str.slice(start, length) -> new_str or nil
+    EXPECTED
+
+    slice = pathname.method_list.find { |m| m.name == 'slice' }
+    assert_equal slice_expected, slice.call_seq
+
+    spaceship = pathname.method_list.find { |m| m.name == '<=>' }
+    assert_equal "string <=> other_string   -> -1, 0, +1 or nil",
+                 spaceship.call_seq
+  end
+
   def test_scan_order_dependent
     parser = util_parser <<-C
 void a(void) {

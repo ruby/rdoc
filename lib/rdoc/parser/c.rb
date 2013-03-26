@@ -173,6 +173,9 @@ class RDoc::Parser::C < RDoc::Parser
     @classes           = load_variable_map :c_class_variables
     @singleton_classes = load_variable_map :c_singleton_class_variables
 
+    # class_variable => { function => [method, ...] }
+    @methods = Hash.new { |h, f| h[f] = Hash.new { |h, m| h[m] = [] } }
+
     # missing variable => [handle_class_module arguments]
     @missing_dependencies = {}
 
@@ -204,6 +207,41 @@ class RDoc::Parser::C < RDoc::Parser
     def @enclosure_dependencies.tsort_each_child node, &block
       fetch(node, []).each(&block)
     end
+  end
+
+  ##
+  # Removes duplicate call-seq entries for methods using the same
+  # implementation.
+
+  def deduplicate_call_seq
+    @methods.each do |var_name, functions|
+      class_name = @known_classes[var_name]
+      class_obj  = find_class var_name, class_name
+
+      functions.each_value do |method_names|
+        next if method_names.length == 1
+
+        method_names.each do |method_name|
+          deduplicate_method_name class_obj, method_name
+        end
+      end
+    end
+  end
+
+  def deduplicate_method_name class_obj, method_name
+    return unless
+      method = class_obj.method_list.find { |m| m.name == method_name }
+    return unless call_seq = method.call_seq
+
+    method_name = method_name[0] unless method_name =~ /\A\w/
+
+      entries = call_seq.split "\n"
+
+    matching = entries.select do |entry|
+      entry =~ /^\w*\.?#{Regexp.escape method_name}/
+    end
+
+    method.call_seq = matching.join "\n"
   end
 
   ##
@@ -938,6 +976,8 @@ class RDoc::Parser::C < RDoc::Parser
     class_name = @known_classes[var_name]
     singleton  = @singleton_classes.key? var_name
 
+    @methods[var_name][function] << meth_name
+
     return unless class_name
 
     class_obj = find_class var_name, class_name
@@ -1171,6 +1211,8 @@ class RDoc::Parser::C < RDoc::Parser
     do_includes
     do_aliases
     do_attrs
+
+    deduplicate_call_seq
 
     @store.add_c_variables self
 

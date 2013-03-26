@@ -25,6 +25,8 @@
   * Code objects with nodoc are no longer included in the ri store.  Bug #177
     by Thomas Leitner.
   * Text#snippet now creates a RDoc::Markup::ToHtmlSnippet correctly.
+  * The C parser now de-duplicates call-seq if the same C function is used for
+    multiple method names.  Bug #203 by Pete Higgins
 
 === 4.0.0 / 2013-02-24
 
