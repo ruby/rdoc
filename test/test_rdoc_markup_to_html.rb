@@ -256,7 +256,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def accept_paragraph_break
-    assert_equal "\n<p>hello<br>\nworld</p>\n", @to.res.join
+    assert_equal "\n<p>hello<br> world</p>\n", @to.res.join
   end
 
   def accept_paragraph_i
