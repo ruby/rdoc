@@ -233,7 +233,7 @@ class RDoc::Parser::C < RDoc::Parser
       method = class_obj.method_list.find { |m| m.name == method_name }
     return unless call_seq = method.call_seq
 
-    method_name = method_name[0] unless method_name =~ /\A\w/
+    method_name = method_name[0, 1] unless method_name =~ /\A\w/
 
       entries = call_seq.split "\n"
 
