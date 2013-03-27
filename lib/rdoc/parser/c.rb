@@ -174,7 +174,7 @@ class RDoc::Parser::C < RDoc::Parser
     @singleton_classes = load_variable_map :c_singleton_class_variables
 
     # class_variable => { function => [method, ...] }
-    @methods = Hash.new { |h, f| h[f] = Hash.new { |h, m| h[m] = [] } }
+    @methods = Hash.new { |h, f| h[f] = Hash.new { |i, m| i[m] = [] } }
 
     # missing variable => [handle_class_module arguments]
     @missing_dependencies = {}

@@ -165,8 +165,7 @@ class TestRDocRDoc < RDoc::TestCase
   def test_parse_file_binary
     @rdoc.store = RDoc::Store.new
 
-    root       = File.dirname __FILE__
-    binary_dat = File.expand_path 'binary.dat', root
+    root = File.dirname __FILE__
 
     @rdoc.options.root = Pathname root
 

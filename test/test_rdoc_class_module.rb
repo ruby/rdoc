@@ -270,8 +270,6 @@ class TestRDocClassModule < XrefTestCase
     section_comment.location = tl
 
     assert_equal 1, cm.sections.length, 'sanity, default section only'
-    s0 = cm.sections.first
-    s1 = cm.add_section 'section', section_comment
 
     cm.add_attribute a1
     cm.add_method m1
@@ -284,12 +282,6 @@ class TestRDocClassModule < XrefTestCase
     loaded.store = @store
 
     assert_equal cm, loaded
-
-    inner = RDoc::Markup::Document.new(
-      RDoc::Markup::Paragraph.new('this is a comment'))
-    inner.file = tl
-
-    comment = RDoc::Markup::Document.new inner
 
     assert_empty loaded.attributes
     assert_empty loaded.constants
