@@ -939,7 +939,10 @@ Foo::Bar#bother
     tty = Object.new
     def tty.tty?() true; end
 
-    driver = RDoc::RI::Driver.new
+    @options.delete :use_stdout
+    @options.delete :formatter
+
+    driver = RDoc::RI::Driver.new @options
 
     assert_instance_of @RM::ToAnsi, driver.formatter(tty)
 
