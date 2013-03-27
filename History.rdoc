@@ -1,4 +1,4 @@
-=== 4.0.1
+=== 4.0.1 / 2013-03-27
 
 * Bug fixes
   * RDoc::Options parser should rescue from OptionParser::ParseError.
