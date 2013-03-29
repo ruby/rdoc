@@ -289,6 +289,11 @@ class RDoc::Options
   attr_accessor :template_dir
 
   ##
+  # Additional template stylesheets
+
+  attr_accessor :template_stylesheets
+
+  ##
   # Documentation title
 
   attr_accessor :title
@@ -345,6 +350,7 @@ class RDoc::Options
     @tab_width = 8
     @template = nil
     @template_dir = nil
+    @template_stylesheets = []
     @title = nil
     @update_output_dir = true
     @verbosity = 1
@@ -869,6 +875,14 @@ Usage: #{opt.program_name} [options] [names...]
              "formatter used.") do |(template, template_dir)|
         @template     = template
         @template_dir = template_dir
+      end
+
+      opt.separator nil
+
+      opt.on("--template-stylesheets=FILES", PathArray,
+             "Set (or add to) the list of files to",
+             "include with the html template.") do |value|
+        @template_stylesheets << value
       end
 
       opt.separator nil

@@ -3,6 +3,11 @@
 <title><%= h @title %></title>
 
 <link type="text/css" media="screen" href="<%= asset_rel_prefix %>/rdoc.css" rel="stylesheet">
+<% if @options.template_stylesheets.flatten.any? %>
+  <% @options.template_stylesheets.flatten.each do |stylesheet| %>
+    <link type="text/css" href="<%= asset_rel_prefix %>/<%= File.basename stylesheet %>" rel="stylesheet">
+  <% end %>
+<% end %>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "<%= rel_prefix %>/";
