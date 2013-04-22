@@ -171,22 +171,13 @@
 # === Rules
 #
 # A line starting with three or more hyphens (at the current indent)
-# generates a horizontal rule.  The more hyphens, the thicker the rule
-# (within reason, and if supported by the output device).
-#
-# In the case of HTML output, three dashes generate a 1-pixel high rule,
-# four dashes result in 2 pixels, and so on. The actual height is limited
-# to 10 pixels:
+# generates a horizontal rule.
 #
 #   ---
-#   -----
-#   -----------------------------------------------------
 #
 # produces:
 #
 # ---
-# -----
-# -----------------------------------------------------
 #
 # === Simple Lists
 #

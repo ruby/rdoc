@@ -110,8 +110,8 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
       text = case text
              when /\Alabel-/    then $'
-             when /\Afootmark-/ then "^#{$'}"
-             when /\Afoottext-/ then "*#{$'}"
+             when /\Afootmark-/ then $'
+             when /\Afoottext-/ then $'
              else                    text
              end
 
@@ -212,10 +212,8 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   ##
   # Adds +rule+ to the output
 
-  def accept_rule(rule)
-    size = rule.weight
-    size = 10 if size > 10
-    @res << "<hr style=\"height: #{size}px\">\n"
+  def accept_rule rule
+    @res << "<hr>\n"
   end
 
   ##
@@ -314,7 +312,10 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
        url =~ /\.(gif|png|jpg|jpeg|bmp)$/ then
       "<img src=\"#{url}\" />"
     else
-      "<a#{id} href=\"#{url}\">#{text.sub(%r{^#{scheme}:/*}i, '')}</a>"
+      text = text.sub %r%^#{scheme}:/*%i, ''
+      text = text.sub %r%^[*\^](\d+)$%,   '\1'
+
+      "<a#{id} href=\"#{url}\">#{text}</a>"
     end
   end
 

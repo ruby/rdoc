@@ -1,7 +1,9 @@
 <% unless klass.method_list.empty? then %>
 <!-- Method Quickref -->
-<nav id="method-list-section" class="section">
-  <h3 class="section-header">Methods</h3>
+<nav id="method-list-section">
+  <header>
+    <h3>Methods</h3>
+  </header>
 
   <ul class="link-list">
     <% klass.each_method do |meth| %>

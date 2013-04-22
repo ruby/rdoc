@@ -1,8 +1,9 @@
-<body class="file">
+<body id="top" class="file">
 <nav id="metadata">
-  <%= render '_sidebar_navigation.rhtml' %>
-
-  <%= render '_sidebar_search.rhtml' %>
+  <div id="project-navigation">
+    <%= render '_sidebar_navigation.rhtml' %>
+    <%= render '_sidebar_search.rhtml' %>
+  </div>
 
   <%= render '_sidebar_table_of_contents.rhtml' %>
 
@@ -12,7 +13,9 @@
   </div>
 </nav>
 
-<div id="documentation" class="description">
+<main>
+<article>
   <%= file.description %>
-</div>
+</article>
+</main>
 
