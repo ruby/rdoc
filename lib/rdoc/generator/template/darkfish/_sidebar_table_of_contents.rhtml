@@ -7,8 +7,11 @@
 
    if table.length > 1 then %>
 <div id="table-of-contents">
-  <nav class="section">
-    <h3 class="section-header">Table of Contents</h3>
+  <nav>
+    <header>
+      <h3>Table of Contents</h3>
+    </header>
+
     <ul>
 <%   table.each do |heading| %>
       <li><a href="#<%= heading.aref %>"><%= heading.plain_html %></a>

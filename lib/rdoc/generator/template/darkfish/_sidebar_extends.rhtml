@@ -1,7 +1,8 @@
 <% unless klass.extends.empty? then %>
-<!-- Extension Modules -->
-<nav id="extends-section" class="section">
-  <h3 class="section-header">Extended With Modules</h3>
+<nav id="extends-section">
+  <header>
+    <h3>Extended With Modules</h3>
+  </header>
 
   <ul class="link-list">
     <% klass.each_extend do |ext| %>
