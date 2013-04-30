@@ -197,10 +197,17 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
 
       opt.separator nil
 
-      opt.on("--[no-]pager", "-T",
+      opt.on("--[no-]pager",
              "Send output directly to stdout,",
              "rather than to a pager.") do |use_pager|
         options[:use_stdout] = !use_pager
+      end
+
+      opt.separator nil
+
+      opt.on("-T",
+             "Synonym for --no-pager") do
+        options[:use_stdout] = true
       end
 
       opt.separator nil
