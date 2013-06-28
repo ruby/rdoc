@@ -196,6 +196,9 @@ class RDoc::Generator::Darkfish
     options = { :verbose => $DEBUG_RDOC, :noop => @dry_run }
 
     FileUtils.cp @template_dir + 'rdoc.css', '.', options
+    @options.template_stylesheets.each do |stylesheet|
+      FileUtils.cp stylesheet, '.', options
+    end
 
     Dir[(@template_dir + "{js,images}/**/*").to_s].each do |path|
       next if File.directory? path
