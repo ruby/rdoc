@@ -11,6 +11,13 @@ class TestRDocStats < RDoc::TestCase
     @tl.parser = RDoc::Parser::Ruby
   end
 
+  def mu_pp obj
+    s = ''
+    s = PP.pp obj, s
+    s = s.force_encoding Encoding.default_external if defined? Encoding
+    s.chomp
+  end
+
   def test_doc_stats
     c = RDoc::CodeObject.new
 
@@ -44,14 +51,17 @@ class TestRDocStats < RDoc::TestCase
 
     report = @s.report
 
-    expected = <<-EXPECTED
-The following items are not documented:
-
-class C # is documented
-
-  attr_accessor :a # in file file.rb
-end
-    EXPECTED
+    expected =
+      doc(
+        para('The following items are not documented:'),
+        blank_line,
+        verb(
+          "class C # is documented\n",
+          "\n",
+          "  attr_accessor :a # in file file.rb\n",
+          "\n",
+          "end\n"),
+        blank_line)
 
     assert_equal expected, report
   end
@@ -84,7 +94,7 @@ end
 
     @store.complete :public
 
-    assert_match '# in file file.rb:3', @s.report
+    assert_match '# in file file.rb:3', @s.report.accept(to_rdoc)
   end
 
   def test_report_constant
@@ -100,15 +110,18 @@ end
 
     report = @s.report
 
-    expected = <<-EXPECTED
-The following items are not documented:
-
-module M # is documented
-
-  # in file file.rb
-  C = nil
-end
-    EXPECTED
+    expected =
+      doc(
+        para('The following items are not documented:'),
+        blank_line,
+        verb(
+          "module M # is documented\n",
+          "\n",
+          "  # in file file.rb\n",
+          "  C = nil\n",
+          "\n",
+          "end\n"),
+        blank_line)
 
     assert_equal expected, report
   end
@@ -130,7 +143,7 @@ end
 
     # TODO change this to refute match, aliases should be ignored as they are
     # programmer convenience constructs
-    assert_match(/class Object/, report)
+    assert_match 'class Object', report.accept(to_rdoc)
   end
 
   def test_report_constant_documented
@@ -161,7 +174,7 @@ end
 
     @store.complete :public
 
-    assert_match '# in file file.rb:5', @s.report
+    assert_match '# in file file.rb:5', @s.report.accept(to_rdoc)
   end
 
   def test_report_class
@@ -177,15 +190,16 @@ end
 
     report = @s.report
 
-    expected = <<-EXPECTED
-The following items are not documented:
-
-# in files:
-#   file.rb
-
-class C
-end
-    EXPECTED
+    expected =
+      doc(
+        para('The following items are not documented:'),
+        blank_line,
+        para('In files:'),
+        list(:BULLET, *[
+          item(nil, para('file.rb'))]),
+        blank_line,
+        verb("class C\n", "end\n"),
+        blank_line)
 
     assert_equal expected, report
   end
@@ -201,7 +215,7 @@ end
 
     @store.complete :public
 
-    refute_match %r%^class Object$%, @s.report
+    refute_match %r%^class Object$%, @s.report.accept(to_rdoc)
   end
 
   def test_report_class_documented
@@ -245,16 +259,16 @@ end
 
     report = @s.report
 
-    expected = <<-EXPECTED
-The following items are not documented:
-
-
-# in files:
-#   file.rb
-
-class C2
-end
-    EXPECTED
+    expected =
+      doc(
+        para('The following items are not documented:'),
+        blank_line,
+        para('In files:'),
+        list(:BULLET, *[
+          item(nil, para('file.rb'))]),
+        blank_line,
+        verb("class C2\n", "end\n"),
+        blank_line)
 
     assert_equal expected, report
   end
@@ -266,13 +280,13 @@ end
 
     report = @s.report
 
-    expected = <<-EXPECTED
-The following items are not documented:
-
-# class C is referenced but empty.
-#
-# It probably came from another project.  I'm sorry I'm holding it against you.
-    EXPECTED
+    expected =
+      doc(
+        para('The following items are not documented:'),
+        blank_line,
+        para('class C is referenced but empty.'),
+        para("It probably came from another project.  I'm sorry I'm holding it against you."),
+        blank_line)
 
     assert_equal expected, report
   end
@@ -290,16 +304,16 @@ The following items are not documented:
     @s.coverage_level = 1
     report = @s.report
 
-    expected = <<-EXPECTED
-The following items are not documented:
-
-# in files:
-#   file.rb
-
-class C1
-end
-
-    EXPECTED
+    expected =
+      doc(
+        para('The following items are not documented:'),
+        blank_line,
+        para('In files:'),
+        list(:BULLET, *[
+          item(nil, para('file.rb'))]),
+        blank_line,
+        verb("class C1\n", "end\n"),
+        blank_line)
 
     assert_equal expected, report
   end
@@ -317,15 +331,16 @@ end
 
     report = @s.report
 
-    expected = <<-EXPECTED
-The following items are not documented:
-
-# in files:
-#   file.rb
-
-class C
-end
-    EXPECTED
+    expected =
+      doc(
+        para('The following items are not documented:'),
+        blank_line,
+        para('In files:'),
+        list(:BULLET, *[
+          item(nil, para('file.rb'))]),
+        blank_line,
+        verb("class C\n", "end\n"),
+        blank_line)
 
     assert_equal expected, report
   end
@@ -367,16 +382,18 @@ end
 
     report = @s.report
 
-    expected = <<-EXPECTED
-The following items are not documented:
-
-class C # is documented
-
-  # in file file.rb
-  def m1; end
-
-end
-    EXPECTED
+    expected =
+      doc(
+        para('The following items are not documented:'),
+        blank_line,
+        verb(*[
+          "class C # is documented\n",
+          "\n",
+          "  # in file file.rb\n",
+          "  def m1; end\n",
+          "\n",
+          "end\n"]),
+        blank_line)
 
     assert_equal expected, report
   end
@@ -401,16 +418,18 @@ end
 
     report = @s.report
 
-    expected = <<-EXPECTED
-The following items are not documented:
-
-class C # is documented
-
-  # in file file.rb
-  def self.m1; end
-
-end
-    EXPECTED
+    expected =
+      doc(
+        para('The following items are not documented:'),
+        blank_line,
+        verb(*[
+          "class C # is documented\n",
+          "\n",
+          "  # in file file.rb\n",
+          "  def self.m1; end\n",
+          "\n",
+          "end\n"]),
+        blank_line)
 
     assert_equal expected, report
   end
@@ -444,7 +463,7 @@ end
 
     @store.complete :public
 
-    assert_match '# in file file.rb:4', @s.report
+    assert_match '# in file file.rb:4', @s.report.accept(to_rdoc)
   end
 
   def test_report_method_parameters
@@ -468,17 +487,19 @@ end
     @s.coverage_level = 1
     report = @s.report
 
-    expected = <<-EXPECTED
-The following items are not documented:
-
-class C # is documented
-
-  # in file file.rb
-  # +p2+ is not documented
-  def m1(p1, p2); end
-
-end
-    EXPECTED
+    expected =
+      doc(
+        para('The following items are not documented:'),
+        blank_line,
+        verb(*[
+          "class C # is documented\n",
+          "\n",
+          "  # in file file.rb\n",
+          "  # +p2+ is not documented\n",
+          "  def m1(p1, p2); end\n",
+          "\n",
+          "end\n"]),
+        blank_line)
 
     assert_equal expected, report
   end
@@ -522,17 +543,19 @@ m(a, b) { |c, d| ... }
     @s.coverage_level = 1
     report = @s.report
 
-    expected = <<-EXPECTED
-The following items are not documented:
-
-class C # is documented
-
-  # in file file.rb
-  # +b+, +d+ is not documented
-  def m; end
-
-end
-    EXPECTED
+    expected =
+      doc(
+        para('The following items are not documented:'),
+        blank_line,
+        verb(
+          "class C # is documented\n",
+          "\n",
+          "  # in file file.rb\n",
+          "  # +b+, +d+ is not documented\n",
+          "  def m; end\n",
+          "\n",
+          "end\n"),
+        blank_line)
 
     assert_equal expected, report
   end
@@ -558,20 +581,20 @@ end
 
     @store.complete :public
 
-    summary = @s.summary
-    summary.sub!(/Elapsed:.*/, '')
+    summary = @s.summary.accept to_rdoc
+    summary.sub!(/  Elapsed:.*/m, '')
 
     expected = <<-EXPECTED
-Files:      0
+  Files:      0
 
-Classes:    1 (1 undocumented)
-Modules:    1 (1 undocumented)
-Constants:  1 (1 undocumented)
-Attributes: 1 (1 undocumented)
-Methods:    1 (1 undocumented)
+  Classes:    1 (1 undocumented)
+  Modules:    1 (1 undocumented)
+  Constants:  1 (1 undocumented)
+  Attributes: 1 (1 undocumented)
+  Methods:    1 (1 undocumented)
 
-Total:      5 (5 undocumented)
-  0.00% documented
+  Total:      5 (5 undocumented)
+    0.00% documented
 
     EXPECTED
 
@@ -586,20 +609,20 @@ Total:      5 (5 undocumented)
 
     @s.coverage_level = false
 
-    summary = @s.summary
-    summary.sub!(/Elapsed:.*/, '')
+    summary = @s.summary.accept to_rdoc
+    summary.sub!(/  Elapsed:.*/m, '')
 
     expected = <<-EXPECTED
-Files:      0
+  Files:      0
 
-Classes:    1 (1 undocumented)
-Modules:    0 (0 undocumented)
-Constants:  0 (0 undocumented)
-Attributes: 0 (0 undocumented)
-Methods:    0 (0 undocumented)
+  Classes:    1 (1 undocumented)
+  Modules:    0 (0 undocumented)
+  Constants:  0 (0 undocumented)
+  Attributes: 0 (0 undocumented)
+  Methods:    0 (0 undocumented)
 
-Total:      1 (1 undocumented)
-  0.00% documented
+  Total:      1 (1 undocumented)
+    0.00% documented
 
     EXPECTED
 
@@ -622,25 +645,29 @@ Total:      1 (1 undocumented)
     @s.coverage_level = 1
     @s.report
 
-    summary = @s.summary
-    summary.sub!(/Elapsed:.*/, '')
+    summary = @s.summary.accept to_rdoc
+    summary.sub!(/  Elapsed:.*/m, '')
 
     expected = <<-EXPECTED
-Files:      0
+  Files:      0
 
-Classes:    1 (0 undocumented)
-Modules:    0 (0 undocumented)
-Constants:  0 (0 undocumented)
-Attributes: 0 (0 undocumented)
-Methods:    1 (0 undocumented)
-Parameters: 2 (1 undocumented)
+  Classes:    1 (0 undocumented)
+  Modules:    0 (0 undocumented)
+  Constants:  0 (0 undocumented)
+  Attributes: 0 (0 undocumented)
+  Methods:    1 (0 undocumented)
+  Parameters: 2 (1 undocumented)
 
-Total:      4 (1 undocumented)
- 75.00% documented
+  Total:      4 (1 undocumented)
+   75.00% documented
 
     EXPECTED
 
     assert_equal summary, expected
+  end
+
+  def to_rdoc
+    RDoc::Markup::ToRdoc.new
   end
 
 end

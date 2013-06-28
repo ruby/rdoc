@@ -17,6 +17,8 @@
 
 * Bug fixes
   * Restored behavior of --no-pager alias -T.  Pull request #223 by ruafozy.
+  * Fixed extra whitespace output in the rdoc coverage report.  Bug #210 by
+    Ryan Davis.
 
 === 4.0.1 / 2013-03-27
 

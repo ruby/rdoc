@@ -495,7 +495,7 @@ The internal error was:
     if @options.coverage_report then
       puts
 
-      puts @stats.report
+      puts @stats.report.accept RDoc::Markup::ToRdoc.new
     elsif file_info.empty? then
       $stderr.puts "\nNo newer files." unless @options.quiet
     else
@@ -508,7 +508,7 @@ The internal error was:
 
     if @stats and (@options.coverage_report or not @options.quiet) then
       puts
-      puts @stats.summary
+      puts @stats.summary.accept RDoc::Markup::ToRdoc.new
     end
 
     exit @stats.fully_documented? if @options.coverage_report
