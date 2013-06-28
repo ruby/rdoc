@@ -11,13 +11,6 @@ class TestRDocTomDoc < RDoc::TestCase
     @td = @TD.new
   end
 
-  def mu_pp obj
-    s = ''
-    s = PP.pp obj, s
-    s = s.force_encoding Encoding.default_external if defined? Encoding
-    s.chomp
-  end
-
   def test_class_add_post_processor
     RDoc::TomDoc.add_post_processor
 

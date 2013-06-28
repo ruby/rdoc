@@ -46,13 +46,6 @@ class TestRDocRIDriver < RDoc::TestCase
     ENV['RI_PAGER'] = pager_env
   end
 
-  def mu_pp(obj)
-    s = ''
-    s = PP.pp obj, s
-    s = s.force_encoding(Encoding.default_external) if defined? Encoding
-    s.chomp
-  end
-
   def test_self_dump
     util_store
 

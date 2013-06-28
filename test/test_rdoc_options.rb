@@ -15,13 +15,6 @@ class TestRDocOptions < RDoc::TestCase
     RDoc::RDoc::GENERATORS.replace @generators
   end
 
-  def mu_pp obj
-    s = ''
-    s = PP.pp obj, s
-    s = s.force_encoding Encoding.default_external if defined? Encoding
-    s.chomp
-  end
-
   def test_check_files
     skip "assumes UNIX permission model" if /mswin|mingw/ =~ RUBY_PLATFORM
 

@@ -11,13 +11,6 @@ class TestRDocStats < RDoc::TestCase
     @tl.parser = RDoc::Parser::Ruby
   end
 
-  def mu_pp obj
-    s = ''
-    s = PP.pp obj, s
-    s = s.force_encoding Encoding.default_external if defined? Encoding
-    s.chomp
-  end
-
   def test_doc_stats
     c = RDoc::CodeObject.new
 

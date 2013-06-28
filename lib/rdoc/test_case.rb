@@ -110,6 +110,16 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
   end
 
   ##
+  # Enables pretty-print output
+
+  def mu_pp obj # :nodoc:
+    s = ''
+    s = PP.pp obj, s
+    s = s.force_encoding Encoding.default_external if defined? Encoding
+    s.chomp
+  end
+
+  ##
   # Shortcut for RDoc::Markup::Paragraph.new with +contents+
 
   def para *a

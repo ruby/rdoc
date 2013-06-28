@@ -71,13 +71,6 @@ class TestRDocStore < XrefTestCase
     FileUtils.rm_rf @tmpdir
   end
 
-  def mu_pp obj
-    s = ''
-    s = PP.pp obj, s
-    s.force_encoding Encoding.default_external if defined? Encoding
-    s.chomp
-  end
-
   def assert_cache imethods, cmethods, attrs, modules,
                    ancestors = {}, pages = [], main = nil, title = nil
     imethods ||= { 'Object' => %w[method method! method_bang] }

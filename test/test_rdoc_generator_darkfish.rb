@@ -73,13 +73,6 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
     refute File.exist?(path), "#{path} exists"
   end
 
-  def mu_pp obj
-    s = ''
-    s = PP.pp obj, s
-    s = s.force_encoding Encoding.default_external if defined? Encoding
-    s.chomp
-  end
-
   def test_generate
     top_level = @store.add_file 'file.rb'
     top_level.add_class @klass.class, @klass.name

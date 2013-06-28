@@ -14,13 +14,6 @@ class TestRDocText < RDoc::TestCase
     @top_level = @store.add_file 'file.rb'
   end
 
-  def mu_pp obj
-    s = ''
-    s = PP.pp obj, s
-    s = s.force_encoding Encoding.default_external if defined? Encoding
-    s.chomp
-  end
-
   def test_self_encode_fallback
     skip "Encoding not implemented" unless Object.const_defined? :Encoding
 

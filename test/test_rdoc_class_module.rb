@@ -2,13 +2,6 @@ require File.expand_path '../xref_test_case', __FILE__
 
 class TestRDocClassModule < XrefTestCase
 
-  def mu_pp obj
-    s = ''
-    s = PP.pp obj, s
-    s.force_encoding Encoding.default_external if defined? Encoding
-    s.chomp
-  end
-
   def test_add_comment
     tl1 = @store.add_file 'one.rb'
     tl2 = @store.add_file 'two.rb'
