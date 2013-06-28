@@ -120,13 +120,6 @@ class RDoc::CodeObject
   end
 
   ##
-  # Resets cached data for the object so it can be rebuilt by accessor methods
-
-  def initialize_copy other # :nodoc:
-    @full_name = nil
-  end
-
-  ##
   # Initializes state for visibility of this CodeObject and its children.
 
   def initialize_visibility # :nodoc:

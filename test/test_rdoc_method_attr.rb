@@ -2,6 +2,10 @@ require File.expand_path '../xref_test_case', __FILE__
 
 class TestRDocMethodAttr < XrefTestCase
 
+  def test_initialize_copy
+    refute_same @c1_m.full_name, @c1_m.dup.full_name
+  end
+
   def test_block_params_equal
 
     m = RDoc::MethodAttr.new(nil, 'foo')

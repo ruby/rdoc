@@ -19,12 +19,6 @@ class TestRDocCodeObject < XrefTestCase
     assert_equal '', @co.comment, 'comment is empty'
   end
 
-  def test_initialize_copy
-    method = RDoc::AnyMethod.new nil, 'm'
-
-    refute_same method.full_name, method.dup.full_name
-  end
-
   def test_comment_equals
     @co.comment = ''
 
