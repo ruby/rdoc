@@ -31,6 +31,8 @@
     Bug #222 by Zachary Scott, Ruby bug #8225 by David Unric.
   * ri now handles missing ri data files.  Bug #222 by Zachary Scott, Ruby bug
     #8225 by David Unric.
+  * Added TomDoc to the supported markup formats section of rdoc --help.
+    Bug #214 by Ryan Davis.
 
 === 4.0.1 / 2013-03-27
 

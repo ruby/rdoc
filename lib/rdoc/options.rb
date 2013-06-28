@@ -604,6 +604,7 @@ Usage: #{opt.program_name} [options] [names...]
       parsers.sort.each do |parser, regexp|
         opt.banner << "  - #{parser}: #{regexp.join ', '}\n"
       end
+      opt.banner << "  - TomDoc:  Only in ruby files\n"
 
       opt.banner << "\n  The following options are deprecated:\n\n"
 
