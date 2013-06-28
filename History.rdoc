@@ -1,6 +1,8 @@
 === 4.1
 
 * Minor enhancements
+  * RDoc can now link to [], []=, << and >> methods.  Pull request #202 by
+    Jeremy Evans, Bug # 191 by by Zachary Scott.
   * Added RDoc::Options#output_decoration which controls header labels for
     HTML output.  Pull Request #199 by Zachary Scott.
   * Added --template-stylesheets options to RDoc to allow specification of
