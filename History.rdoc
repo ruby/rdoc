@@ -27,6 +27,8 @@
     loss of the "?" in output.  Bug #220 by Vipul A M.
   * When looking up a method that does not exist, ri escapes the regular
     expression for fallback searches.  Bug #227 by Aaron Patterson.
+  * The ri generator now writes the class method data after +module_function+.
+    Bug #222 by Zachary Scott, Ruby bug #8225 by David Unric.
 
 === 4.0.1 / 2013-03-27
 
