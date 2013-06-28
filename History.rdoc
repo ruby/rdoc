@@ -2,7 +2,9 @@
 
 * Minor enhancements
   * Added RDoc::Options#output_decoration which controls header labels for
-  * HTML output.  Pull Request #199 by Zachary Scott.
+    HTML output.  Pull Request #199 by Zachary Scott.
+  * Added --template-stylesheets options to RDoc to allow specification of
+    alternate stylesheets.  Pull request #205 by Zachary Scott.
   * Improved performance of the Markdown and RD parsers.  Pull request #217 by
     Ryan Davis.
 
