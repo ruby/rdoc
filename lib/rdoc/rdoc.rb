@@ -217,7 +217,7 @@ option)
       end unless @options.force_output
     else
       FileUtils.mkdir_p dir
-      FileUtils.touch output_flag_file dir
+      FileUtils.touch flag_file
     end
 
     last
