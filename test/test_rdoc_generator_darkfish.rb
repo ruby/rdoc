@@ -65,14 +65,6 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
     FileUtils.rm_rf @tmpdir
   end
 
-  def assert_file path
-    assert File.file?(path), "#{path} is not a file"
-  end
-
-  def refute_file path
-    refute File.exist?(path), "#{path} exists"
-  end
-
   def test_generate
     top_level = @store.add_file 'file.rb'
     top_level.add_class @klass.class, @klass.name

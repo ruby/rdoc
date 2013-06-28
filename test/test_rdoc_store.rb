@@ -99,18 +99,6 @@ class TestRDocStore < XrefTestCase
     assert_equal expected, @s.cache
   end
 
-  def assert_directory path
-    assert File.directory?(path), "#{path} is not a directory"
-  end
-
-  def assert_file path
-    assert File.file?(path), "#{path} is not a file"
-  end
-
-  def refute_file path
-    refute File.exist?(path), "#{path} exists"
-  end
-
   def test_add_c_enclosure
     @s.add_c_enclosure 'cC1', @c1
 

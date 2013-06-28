@@ -57,10 +57,6 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
     FileUtils.rm_rf @tmpdir
   end
 
-  def assert_file path
-    assert File.file?(path), "#{path} is not a file"
-  end
-
   def test_build_index
     index = @g.build_index
 

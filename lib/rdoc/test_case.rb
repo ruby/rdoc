@@ -53,6 +53,27 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
   end
 
   ##
+  # Asserts +path+ is a file
+
+  def assert_file path
+    assert File.file?(path), "#{path} is not a file"
+  end
+
+  ##
+  # Asserts +path+ is a directory
+
+  def assert_directory path
+    assert File.directory?(path), "#{path} is not a directory"
+  end
+
+  ##
+  # Refutes +path+ exists
+
+  def refute_file path
+    refute File.exist?(path), "#{path} exists"
+  end
+
+  ##
   # Shortcut for RDoc::Markup::BlankLine.new
 
   def blank_line
