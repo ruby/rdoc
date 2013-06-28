@@ -108,7 +108,13 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_normalized_file_list
-    files = @rdoc.normalized_file_list [__FILE__]
+    files = temp_dir do |dir|
+      flag_file = @rdoc.output_flag_file dir
+
+      FileUtils.touch flag_file
+
+      @rdoc.normalized_file_list [__FILE__, flag_file]
+    end
 
     files = files.map { |file| File.expand_path file }
 

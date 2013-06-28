@@ -289,6 +289,7 @@ option)
     file_list = []
 
     relative_files.each do |rel_file_name|
+      next if rel_file_name.end_with? 'created.rid'
       next if exclude_pattern && exclude_pattern =~ rel_file_name
       stat = File.stat rel_file_name rescue next
 
