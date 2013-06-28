@@ -11,6 +11,9 @@
     Ryan Davis.
   * <code>rdoc -v</code> now prints the version instead of enabling verbose
     mode.  Pull request #201 by Lee Jarvis.
+  * Running <code>rake newb</code> now automatically installs development
+    dependencies if the parser files haven't been built.  Pull request #235 by
+    Kouhei Sutou.
 
 * Bug fixes
   * Restored behavior of --no-pager alias -T.  Pull request #223 by ruafozy.
