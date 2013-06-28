@@ -82,6 +82,7 @@ class TestRDocOptions < RDoc::TestCase
       'show_hash'         => false,
       'static_path'       => [],
       'tab_width'         => 8,
+      'template_stylesheets' => [],
       'title'             => nil,
       'visibility'        => :protected,
       'webcvs'            => nil,
