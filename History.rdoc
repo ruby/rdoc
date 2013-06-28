@@ -21,6 +21,8 @@
     Ryan Davis.
   * RDoc no longer documents its timestamp file when run on an empty
     directory.  Bug #212 by Rainer Keller
+  * HTML escape method names in the table of contents.  Bug #219 by Akinori
+    MUSHA.
 
 === 4.0.1 / 2013-03-27
 
