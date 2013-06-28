@@ -70,6 +70,18 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   spec_extras['homepage'] = 'http://docs.seattlerb.org/rdoc'
 end
 
+def rake(*args)
+  sh $0, *args
+end
+
+if PARSER_FILES.any? {|file| not File.exist?(file)}
+  Rake::Task["default"].prerequisites.clear
+  task :default do
+    rake "install_plugins"
+    rake "newb"
+  end
+end
+
 # requires ruby 1.8 and ruby 1.8 to build
 hoe.clean_globs -= PARSER_FILES.grep(/literals_/)
 
