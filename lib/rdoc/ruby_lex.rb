@@ -537,7 +537,7 @@ class RDoc::RubyLex
           Token(TkQUESTION)
         else
           @lex_state = EXPR_END
-          Token(TkSTRING, ch)
+          Token(TkCHAR, "?#{ch}")
         end
       end
     end

@@ -40,8 +40,8 @@ class TestRDocRubyLex < RDoc::TestCase
     tokens = RDoc::RubyLex.tokenize "?\\", nil
 
     expected = [
-      @TK::TkSTRING.new( 0, 1,  0, "\\"),
-      @TK::TkNL    .new( 2, 1,  2, "\n"),
+      @TK::TkCHAR.new( 0, 1,  0, "?\\"),
+      @TK::TkNL  .new( 2, 1,  2, "\n"),
     ]
 
     assert_equal expected, tokens

@@ -23,6 +23,8 @@
     directory.  Bug #212 by Rainer Keller
   * HTML escape method names in the table of contents.  Bug #219 by Akinori
     MUSHA.
+  * Character literals <code>?h</code> now create a new token type to prevent
+    loss of the "?" in output.  Bug #220 by Vipul A M.
 
 === 4.0.1 / 2013-03-27
 

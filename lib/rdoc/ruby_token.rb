@@ -335,6 +335,7 @@ module RDoc::RubyToken
     [:TkXSTRING,    TkVal],
     [:TkREGEXP,     TkVal],
     [:TkSYMBOL,     TkVal],
+    [:TkCHAR,       TkVal],
 
     [:TkDSTRING,    TkNode],
     [:TkDXSTRING,   TkNode],
