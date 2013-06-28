@@ -4,6 +4,9 @@
   * Added RDoc::Options#output_decoration which controls header labels for
   * HTML output.  Pull Request #199 by Zachary Scott.
 
+* Bug fixes
+  * Restored behavior of --no-pager alias -T.  Pull request #223 by ruafozy.
+
 === 4.0.1 / 2013-03-27
 
 * Bug fixes
