@@ -76,6 +76,7 @@ class TestRDocOptions < RDoc::TestCase
       'line_numbers'   => false,
       'main_page'      => nil,
       'markup'         => 'rdoc',
+      'output_decoration' => true,
       'page_dir'       => nil,
       'rdoc_include'   => [],
       'show_hash'      => false,
