@@ -1190,6 +1190,12 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     return unless method
 
     store.load_method klass, "#{type}#{method}"
+  rescue RDoc::Store::MissingFileError => e
+    comment = RDoc::Comment.new("missing documentation at #{e.file}").parse
+
+    method = RDoc::AnyMethod.new nil, name
+    method.comment = comment
+    method
   end
 
   ##

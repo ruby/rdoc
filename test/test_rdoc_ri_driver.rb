@@ -1098,6 +1098,17 @@ Foo::Bar#bother
     assert_equal expected, @driver.load_methods_matching('Bar#inherit')
   end
 
+  def test_load_method_missing
+    util_store
+
+    FileUtils.rm @store1.method_file 'Foo', '#inherit'
+
+    method = @driver.load_method(@store1, :instance_methods, 'Foo', '#',
+                                 'inherit')
+
+    assert_equal '(unknown)#inherit', method.full_name
+  end
+
   def _test_page # this test doesn't do anything anymore :(
     @driver.use_stdout = false
 
