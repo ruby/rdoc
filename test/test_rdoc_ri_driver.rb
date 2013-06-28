@@ -689,7 +689,7 @@ Foo::Bar#bother
     assert_equal expected, out
   end
 
-  def test_display_name_not_found_specail
+  def test_display_name_not_found_special
     util_store
 
     assert_raises RDoc::RI::Driver::NotFoundError do
