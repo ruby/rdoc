@@ -3,6 +3,8 @@
 * Minor enhancements
   * Added RDoc::Options#output_decoration which controls header labels for
   * HTML output.  Pull Request #199 by Zachary Scott.
+  * Improved performance of the Markdown and RD parsers.  Pull request #217 by
+    Ryan Davis.
 
 * Bug fixes
   * Restored behavior of --no-pager alias -T.  Pull request #223 by ruafozy.

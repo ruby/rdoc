@@ -1116,7 +1116,7 @@ RawNoteReference = "[^" < ( !@Newline !"]" . )+ > "]" { text }
 Note =          &{ notes? }
                 @NonindentSpace RawNoteReference:ref ":" @Sp
                 @StartList:a
-                RawNoteBlock
+                RawNoteBlock:i { a.concat i }
                 ( &Indent RawNoteBlock:i { a.concat i } )*
                 { @footnotes[ref] = paragraph a
 
