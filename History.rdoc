@@ -9,6 +9,8 @@
     alternate stylesheets.  Pull request #205 by Zachary Scott.
   * Improved performance of the Markdown and RD parsers.  Pull request #217 by
     Ryan Davis.
+  * <code>rdoc -v</code> now prints the version instead of enabling verbose
+    mode.  Pull request #201 by Lee Jarvis.
 
 * Bug fixes
   * Restored behavior of --no-pager alias -T.  Pull request #223 by ruafozy.
