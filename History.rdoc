@@ -1,3 +1,9 @@
+=== 4.1
+
+* Minor enhancements
+  * Added RDoc::Options#output_decoration which controls header labels for
+  * HTML output.  Pull Request #199 by Zachary Scott.
+
 === 4.0.1 / 2013-03-27
 
 * Bug fixes
