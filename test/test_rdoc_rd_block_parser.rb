@@ -8,22 +8,22 @@ class TestRDocRdBlockParser < RDoc::TestCase
     @block_parser = RDoc::RD::BlockParser.new
   end
 
-  # def test_add_footnote
-  #   index = @block_parser.add_footnote 'context'
-  #
-  #   assert_equal 1, index
-  #
-  #   expected = [
-  #     para('{^1}[rdoc-label:footmark-1:foottext-1]', ' ', 'context'),
-  #     blank_line,
-  #   ]
-  #
-  #   assert_equal expected, @block_parser.footnotes
-  #
-  #   index = @block_parser.add_footnote 'other'
-  #
-  #   assert_equal 2, index
-  # end
+  def test_add_footnote
+    index = @block_parser.add_footnote 'context'
+
+    assert_equal 1, index
+
+    expected = [
+      para('{^1}[rdoc-label:footmark-1:foottext-1]', ' ', 'context'),
+      blank_line,
+    ]
+
+    assert_equal expected, @block_parser.footnotes
+
+    index = @block_parser.add_footnote 'other'
+
+    assert_equal 2, index
+  end
 
   def test_parse_desclist
     list = <<-LIST
@@ -124,16 +124,16 @@ class TestRDocRdBlockParser < RDoc::TestCase
     assert_equal expected, parse(list)
   end
 
-  # def test_parse_footnote
-  #   expected =
-  #     doc(
-  #       para("{*1}[rdoc-label:foottext-1:footmark-1]"),
-  #       rule(1),
-  #       para("{^1}[rdoc-label:footmark-1:foottext-1]", " ", "text"),
-  #       blank_line)
-  #
-  #   assert_equal expected, parse("((-text-))")
-  # end
+  def test_parse_footnote
+    expected =
+      doc(
+        para("{*1}[rdoc-label:foottext-1:footmark-1]"),
+        rule(1),
+        para("{^1}[rdoc-label:footmark-1:foottext-1]", " ", "text"),
+        blank_line)
+
+    assert_equal expected, parse("((-text-))")
+  end
 
   def test_parse_include
     @block_parser.include_path = [Dir.tmpdir]
