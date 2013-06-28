@@ -704,6 +704,15 @@ rdoc_include:
     end
 
     assert out.include?(RDoc::VERSION)
+
+    out, _ = capture_io do
+      begin
+        @options.parse %w[-v]
+      rescue SystemExit
+      end
+    end
+
+    assert out.include?(RDoc::VERSION)
   end
 
 end
