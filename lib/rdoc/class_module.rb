@@ -224,7 +224,9 @@ class RDoc::ClassModule < RDoc::Context
   # #received_nodoc true?
 
   def documented?
-    super or !@comment_location.empty?
+    return true if @received_nodoc
+    return false if @comment_location.empty?
+    @comment_location.any? { |comment, _| not comment.empty? }
   end
 
   ##

@@ -101,23 +101,23 @@ class TestRDocClassModule < XrefTestCase
   def test_documented_eh
     cm = RDoc::ClassModule.new 'C'
 
-    refute cm.documented?
+    refute cm.documented?, 'no comments, no markers'
+
+    cm.add_comment '', @top_level
+
+    refute cm.documented?, 'empty comment'
 
     cm.add_comment 'hi', @top_level
 
-    assert cm.documented?
-
-    cm.comment.replace ''
-
-    assert cm.documented?
+    assert cm.documented?, 'commented'
 
     cm.comment_location.clear
 
-    refute cm.documented?
+    refute cm.documented?, 'no comment'
 
     cm.document_self = nil # notify :nodoc:
 
-    assert cm.documented?
+    assert cm.documented?, ':nodoc:'
   end
 
   def test_each_ancestor
