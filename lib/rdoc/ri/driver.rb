@@ -811,7 +811,7 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     true
   rescue NotFoundError
     matches = list_methods_matching name if name =~ /::|#|\./
-    matches = classes.keys.grep(/^#{name}/) if matches.empty?
+    matches = classes.keys.grep(/^#{Regexp.escape name}/) if matches.empty?
 
     raise if matches.empty?
 

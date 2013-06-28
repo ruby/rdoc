@@ -689,6 +689,14 @@ Foo::Bar#bother
     assert_equal expected, out
   end
 
+  def test_display_name_not_found_specail
+    util_store
+
+    assert_raises RDoc::RI::Driver::NotFoundError do
+      assert_equal false, @driver.display_name('Set#[]')
+    end
+  end
+
   def test_display_method_params
     util_store
 
