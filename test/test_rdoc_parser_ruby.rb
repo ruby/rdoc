@@ -1927,6 +1927,24 @@ end
     assert_equal Encoding::CP852, foo.comment.text.encoding
   end
 
+  def test_parse_statements_enddoc
+    klass = @top_level.add_class RDoc::NormalClass, 'Foo'
+
+    util_parser "\n# :enddoc:"
+
+    @parser.parse_statements klass, RDoc::Parser::Ruby::NORMAL, nil
+
+    assert klass.done_documenting
+  end
+
+  def test_parse_statements_enddoc_top_level
+    util_parser "\n# :enddoc:"
+
+    assert_throws :eof do
+      @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil
+    end
+  end
+
   def test_parse_statements_identifier_meta_method
     content = <<-EOF
 class Foo
@@ -2408,6 +2426,16 @@ end
     @parser.parse_statements @top_level
 
     # HACK where are the assertions?
+  end
+
+  def test_parse_top_level_statements_enddoc
+    util_parser <<-CONTENT
+# :enddoc:
+    CONTENT
+
+    assert_throws :eof do
+      @parser.parse_top_level_statements @top_level
+    end
   end
 
   def test_parse_top_level_statements_stopdoc

@@ -1458,6 +1458,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
             look_for_directives_in container, comment
 
             if container.done_documenting then
+              throw :eof if RDoc::TopLevel === container
               container.ongoing_visibility = save_visibility
             end
           end
@@ -1673,6 +1674,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
     comment = collect_first_comment
 
     look_for_directives_in container, comment
+
+    throw :eof if container.done_documenting
 
     @markup = comment.format
 

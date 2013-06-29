@@ -37,6 +37,8 @@
     coverage.  Bug #211 by Ryan Davis.
   * RDoc ignores constants discovered in passing in class and method bodies.
     Bug #209 by Ryan Davis.
+  * An :enddoc: at the top level stops all further parsing.  Bug #213 by Ryan
+    Davis.
 
 === 4.0.1 / 2013-03-27
 
