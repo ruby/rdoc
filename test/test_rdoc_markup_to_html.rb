@@ -288,7 +288,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def accept_rule
-    assert_equal "<hr style=\"height: 4px\">\n", @to.res.join
+    assert_equal "<hr>\n", @to.res.join
   end
 
   def accept_verbatim
