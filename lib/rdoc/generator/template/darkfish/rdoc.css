@@ -150,7 +150,9 @@ pre {
 /* @group Top-Level Structure */
 
 #metadata {
-  float: left;
+  position: absolute;
+  top: 10px;
+  left: 0px;
   width: 260px;
   font-size: 14px;
 }
@@ -254,6 +256,19 @@ article {
   border-top: 2px solid #bbb;
   font-size: 100%;
   color: #333;
+}
+
+main > article:first-child {
+  border-top: none;
+}
+
+main > article:first-child > h1:first-child,
+main > article:first-child > h2:first-child,
+main > article:first-child > h3:first-child,
+main > article:first-child > h4:first-child,
+main > article:first-child > h5:first-child,
+main > article:first-child > h6:first-child {
+  margin-top: 0px;
 }
 
 article a[id^=foot] {
