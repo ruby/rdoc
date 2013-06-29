@@ -386,6 +386,16 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
+  # Marks containers between +container+ and +ancestor+ as ignored
+
+  def ignore_parents container, ancestor # :nodoc:
+    while container and container != ancestor do
+      container.ignore
+      container = container.parent
+    end
+  end
+
+  ##
   # Look for directives in a normal comment block:
   #
   #   # :stopdoc:
@@ -625,6 +635,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
       @top_level.add_to_classes_or_modules cls
       @stats.add_class cls
 
+      ignore_parents container, declaration_context unless cls.document_self
+
       parse_statements cls
     when TkLSHFT
       case name = get_class_specification
@@ -697,10 +709,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     unless TkASSIGN === eq_tk then
-      while container and container != prev_container do
-        container.ignore
-        container = container.parent
-      end
+      ignore_parents container, prev_container
 
       unget_tk eq_tk
       return false

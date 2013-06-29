@@ -2704,6 +2704,21 @@ end
     assert_equal 'A nice girl', m.comment.text
   end
 
+  def test_scan_class_nested_nodoc
+    content = <<-CONTENT
+class A::B # :nodoc:
+end
+    CONTENT
+
+    util_parser content
+
+    @parser.scan
+
+    visible = @store.all_classes_and_modules.select { |mod| mod.display? }
+
+    assert_empty visible.map { |mod| mod.full_name }
+  end
+
   def test_scan_constant_in_method
     content = <<-CONTENT # newline is after M is important
 module M
