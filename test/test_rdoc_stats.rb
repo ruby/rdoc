@@ -142,7 +142,7 @@ class TestRDocStats < RDoc::TestCase
   def test_report_constant_documented
     m = @tl.add_module RDoc::NormalModule, 'M'
     m.record_location @tl
-    m.comment = 'M'
+    m.add_comment 'M', @tl
 
     c = RDoc::Constant.new 'C', nil, 'C'
     c.record_location @tl
