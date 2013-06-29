@@ -216,7 +216,7 @@ class TestRDocServlet < RDoc::TestCase
     @s.documentation_page store, generator, 'README_rdoc.html', @req, @res
 
     assert_match %r%<title>README - </title>%, @res.body
-    assert_match %r%<body class="file">%,      @res.body
+    assert_match %r%<body [^>]+ class="file">%,      @res.body
   end
 
   def test_documentation_source
