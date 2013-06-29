@@ -684,7 +684,7 @@ end
     assert_equal 2, foo.method_list.length
   end
 
-  def test_parse_const_fail_w_meta
+  def test_parse_const_fail_w_meta_method
     util_parser <<-CLASS
 class ConstFailMeta
   ##
@@ -704,6 +704,27 @@ end
     assert_equal 'ConstFailMeta', const_fail_meta.full_name
 
     assert_equal 1, const_fail_meta.attributes.length
+  end
+
+  def test_parse_const_third_party
+    util_parser <<-CLASS
+class A
+  true if B::C
+  true if D::E::F
+end
+    CLASS
+
+    tk = @parser.get_tk
+
+    @parser.parse_class @top_level, RDoc::Parser::Ruby::NORMAL, tk, @comment
+
+    a = @top_level.classes.first
+    assert_equal 'A', a.full_name
+
+    visible = @store.all_modules.reject { |mod| mod.ignored? }
+    visible = visible.map { |mod| mod.full_name }
+
+    assert_empty visible
   end
 
   def test_parse_class_nested_superclass

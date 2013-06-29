@@ -35,6 +35,8 @@
     Bug #214 by Ryan Davis.
   * Fixed documented? check for classes which indicated incorrect 100%
     coverage.  Bug #211 by Ryan Davis.
+  * RDoc ignores constants discovered in passing in class and method bodies.
+    Bug #209 by Ryan Davis.
 
 === 4.0.1 / 2013-03-27
 

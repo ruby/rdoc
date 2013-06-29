@@ -674,6 +674,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # true, no found constants will be added to RDoc.
 
   def parse_constant container, tk, comment, ignore_constants = false
+    prev_container = container
     offset  = tk.seek
     line_no = tk.line_no
 
@@ -696,6 +697,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     unless TkASSIGN === eq_tk then
+      while container and container != prev_container do
+        container.ignore
+        container = container.parent
+      end
+
       unget_tk eq_tk
       return false
     end
