@@ -390,7 +390,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def ignore_parents container, ancestor # :nodoc:
     while container and container != ancestor do
-      container.ignore
+      container.ignore unless container.documented?
       container = container.parent
     end
   end

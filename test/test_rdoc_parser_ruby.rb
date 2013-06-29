@@ -156,6 +156,35 @@ class C; end
     assert_equal '/', @parser.get_symbol_or_name
   end
 
+  def test_ignore_parents
+    a = @top_level.add_class RDoc::NormalClass, 'A'
+    b = a.add_class RDoc::NormalClass, 'B'
+    c = b.add_class RDoc::NormalClass, 'C'
+
+    util_parser ''
+
+    @parser.ignore_parents c, a
+
+    assert c.ignored?
+    assert b.ignored?
+    refute a.ignored?
+  end
+
+  def test_ignore_parents_documented
+    a = @top_level.add_class RDoc::NormalClass, 'A'
+    b = a.add_class RDoc::NormalClass, 'B'
+    b.add_comment RDoc::Comment.new("hello"), @top_level
+    c = b.add_class RDoc::NormalClass, 'C'
+
+    util_parser ''
+
+    @parser.ignore_parents c, a
+
+    assert c.ignored?
+    refute b.ignored?
+    refute a.ignored?
+  end
+
   def test_look_for_directives_in_attr
     util_parser ""
 
