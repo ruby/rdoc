@@ -1,9 +1,11 @@
-<body class="indexpage">
-<h1><%= h @title %></h1>
+<body id="top" class="table-of-contents">
+<main>
+<article>
+<h1 class="class"><%= h @title %></h1>
 
 <% simple_files = @files.select { |f| f.text? } %>
 <% unless simple_files.empty? then %>
-<h2>Pages</h2>
+<h2 id="pages">Pages</h2>
 <ul>
 <% simple_files.sort.each do |file| %>
   <li class="file">
@@ -53,3 +55,5 @@
     <li class="method"><a href="<%= method.path %>"><%= h method.pretty_name %> &mdash; <%= method.parent.full_name %></a>
   <% end %>
 </ul>
+</article>
+</main>

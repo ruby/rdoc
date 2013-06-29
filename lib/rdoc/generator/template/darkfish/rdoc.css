@@ -104,44 +104,51 @@ pre {
 /* @end */
 
 /* @group Index Page, Standalone file pages */
-.indexpage ul {
+.table-of-contents ul {
+  margin: 1em;
   line-height: 160%;
   list-style: none;
 }
-.indexpage ul :link,
-.indexpage ul :visited {
+
+.table-of-contents ul ul {
+  margin: 0em;
+}
+
+.table-of-contents ul :link,
+.table-of-contents ul :visited {
   font-size: 16px;
 }
 
-.indexpage li {
+.table-of-contents li {
   padding-left: 20px;
+  margin-bottom: 0.25em;
 }
 
-.indexpage ul > li {
+.table-of-contents ul > li {
   background: url(images/bullet_black.png) no-repeat left 4px;
 }
-.indexpage li.method {
+.table-of-contents li.method {
   background: url(images/plugin.png) no-repeat left 4px;
 }
-.indexpage li.module {
+.table-of-contents li.module {
   background: url(images/package.png) no-repeat left 4px;
 }
-.indexpage li.class {
+.table-of-contents li.class {
   background: url(images/ruby.png) no-repeat left 4px;
 }
-.indexpage li.file {
+.table-of-contents li.file {
   background: url(images/page_white_text.png) no-repeat left 4px;
 }
-.indexpage li li {
+.table-of-contents li li {
   background: url(images/tag_blue.png) no-repeat left 4px;
 }
-.indexpage li .toc-toggle {
+.table-of-contents li .toc-toggle {
   width: 16px;
   height: 16px;
   background: url(images/add.png) no-repeat;
 }
 
-.indexpage li .toc-toggle.open {
+.table-of-contents li .toc-toggle.open {
   background: url(images/delete.png) no-repeat;
 }
 
@@ -162,6 +169,10 @@ main {
   padding-left: 20px;
   min-width: 340px;
   font-size: 16px;
+}
+
+.table-of-contents main {
+  margin-left: 2em;
 }
 
 #validator-badges {
