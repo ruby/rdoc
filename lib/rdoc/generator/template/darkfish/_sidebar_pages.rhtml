@@ -5,9 +5,9 @@
     <h3>Pages</h3>
   </header>
 
-  <ul>
+  <ul class="link-list">
   <% simple_files.each do |f| %>
-    <li class="file"><a href="<%= rel_prefix %>/<%= f.path %>"><%= h f.page_name %></a>
+    <li><a href="<%= rel_prefix %>/<%= f.path %>"><%= h f.page_name %></a>
   <% end %>
   </ul>
 </nav>
