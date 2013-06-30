@@ -110,38 +110,15 @@ pre {
   list-style: none;
 }
 
-.table-of-contents ul ul {
-  margin: 0em;
-}
-
 .table-of-contents ul :link,
 .table-of-contents ul :visited {
   font-size: 16px;
 }
 
 .table-of-contents li {
-  padding-left: 20px;
   margin-bottom: 0.25em;
 }
 
-.table-of-contents ul > li {
-  background: url(images/bullet_black.png) no-repeat left 4px;
-}
-.table-of-contents li.method {
-  background: url(images/plugin.png) no-repeat left 4px;
-}
-.table-of-contents li.module {
-  background: url(images/package.png) no-repeat left 4px;
-}
-.table-of-contents li.class {
-  background: url(images/ruby.png) no-repeat left 4px;
-}
-.table-of-contents li.file {
-  background: url(images/page_white_text.png) no-repeat left 4px;
-}
-.table-of-contents li li {
-  background: url(images/tag_blue.png) no-repeat left 4px;
-}
 .table-of-contents li .toc-toggle {
   width: 16px;
   height: 16px;
