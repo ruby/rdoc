@@ -82,6 +82,21 @@ if PARSER_FILES.any? {|file| not File.exist?(file)}
   end
 end
 
+Rake::Task['docs'].actions.clear
+task :docs do
+  $LOAD_PATH.unshift 'lib'
+  require 'rdoc'
+
+  options = RDoc::Options.new
+  options.title = "rdoc #{RDoc::VERSION} Documentation"
+  options.op_dir = 'doc'
+  options.main_page = 'README.rdoc'
+  options.files = hoe.spec.extra_rdoc_files + %w[lib]
+  options.setup_generator 'darkfish'
+
+  RDoc::RDoc.new.document options
+end
+
 # requires ruby 1.8 and ruby 1.8 to build
 hoe.clean_globs -= PARSER_FILES.grep(/literals_/)
 
