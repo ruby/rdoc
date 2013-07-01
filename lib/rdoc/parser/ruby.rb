@@ -265,10 +265,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
         else
           c = prev_container.add_module RDoc::NormalModule, name_t.name
           c.ignore unless prev_container.document_children
+          @top_level.add_to_classes_or_modules c
           c
         end
 
-      container.record_location @top_level
+      record_location container
 
       get_tk
       skip_tkspace false
@@ -461,7 +462,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
 
       att = RDoc::Attr.new get_tkread, name, rw, comment, single == SINGLE
-      att.record_location @top_level
+      record_location att
       att.offset = offset
       att.line   = line_no
 
@@ -502,7 +503,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     for name in args
       att = RDoc::Attr.new get_tkread, name, rw, comment, single == SINGLE
-      att.record_location @top_level
+      record_location att
       att.offset = offset
       att.line   = line_no
 
@@ -543,7 +544,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     al = RDoc::Alias.new(get_tkread, old_name, new_name, comment,
                          single == SINGLE)
-    al.record_location @top_level
+    record_location al
     al.offset = offset
     al.line   = line_no
 
@@ -626,7 +627,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       cls.ignore unless container.document_children
 
       read_documentation_modifiers cls, RDoc::CLASS_MODIFIERS
-      cls.record_location @top_level
+      record_location cls
       cls.offset = offset
       cls.line   = line_no
 
@@ -652,7 +653,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           end
 
           other = container.add_module RDoc::NormalModule, name
-          other.record_location @top_level
+          record_location other
           other.offset  = offset
           other.line    = line_no
 
@@ -779,7 +780,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     res = "" if res == ";"
 
     value.replace res
-    con.record_location @top_level
+    record_location con
     con.offset = offset
     con.line   = line_no
     read_documentation_modifiers con, RDoc::CONSTANT_MODIFIERS
@@ -809,7 +810,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       name = $1 unless $1.empty?
 
       meth = RDoc::GhostMethod.new get_tkread, name
-      meth.record_location @top_level
+      record_location meth
       meth.singleton = singleton
       meth.offset    = offset
       meth.line      = line_no
@@ -845,7 +846,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       # TODO authorize 'singleton-attr...'?
       att = RDoc::Attr.new get_tkread, name, rw, comment
-      att.record_location @top_level
+      record_location att
       att.offset    = offset
       att.line      = line_no
 
@@ -868,7 +869,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     name, = signature.split %r%[ \(]%, 2
 
     meth = RDoc::GhostMethod.new get_tkread, name
-    meth.record_location @top_level
+    record_location meth
     meth.offset    = offset
     meth.line      = line_no
 
@@ -904,7 +905,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       unless name.empty? then
         incl = context.add_include RDoc::Include.new(name, comment)
-        incl.record_location @top_level
+        record_location incl
       end
 
       return unless TkCOMMA === peek_tk
@@ -924,7 +925,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       unless name.empty? then
         incl = context.add_extend RDoc::Extend.new(name, comment)
-        incl.record_location @top_level
+        record_location incl
       end
 
       return unless TkCOMMA === peek_tk
@@ -982,7 +983,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     if name then
       att = RDoc::Attr.new get_tkread, name, rw, comment, single == SINGLE
-      att.record_location @top_level
+      record_location att
 
       context.add_attribute att
       @stats.add_attribute att
@@ -990,7 +991,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       args.each do |attr_name|
         att = RDoc::Attr.new(get_tkread, attr_name, rw, comment,
                              single == SINGLE)
-        att.record_location @top_level
+        record_location att
 
         context.add_attribute att
         @stats.add_attribute att
@@ -1037,7 +1038,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     meth = RDoc::MetaMethod.new get_tkread, name
-    meth.record_location @top_level
+    record_location meth
     meth.offset = offset
     meth.line   = line_no
     meth.singleton = singleton
@@ -1162,7 +1163,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
               container = prev_container.add_module type, name_t.name
             end
 
-            container.record_location @top_level
+            record_location container
           end
         when TkIDENTIFIER, TkIVAR, TkGVAR then
           parse_method_dummy container
@@ -1205,7 +1206,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
     end
 
-    meth.record_location @top_level
+    record_location meth
     meth.offset = offset
     meth.line   = line_no
 
@@ -1356,13 +1357,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     mod = container.add_module RDoc::NormalModule, name
     mod.ignore unless container.document_children
-    mod.record_location @top_level
+    record_location mod
 
     read_documentation_modifiers mod, RDoc::CLASS_MODIFIERS
     mod.add_comment comment, @top_level
     parse_statements mod
 
-    @top_level.add_to_classes_or_modules mod
     @stats.add_module mod
   end
 
@@ -1730,7 +1730,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
         container.methods_matching args do |m|
           s_m = m.dup
-          s_m.record_location @top_level
+          record_location s_m
           s_m.singleton = true
           new_methods << s_m
         end
@@ -1740,7 +1740,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         container.methods_matching args, true do |m|
           if m.parent != container then
             m = m.dup
-            m.record_location @top_level
+            record_location m
             new_methods << m
           end
 
@@ -1832,6 +1832,19 @@ class RDoc::Parser::Ruby < RDoc::Parser
         true
       end
     end
+  end
+
+  ##
+  # Records the location of this +container+ in the file for this parser and
+  # adds it to the list of classes and modules in the file.
+
+  def record_location container # :nodoc:
+    case container
+    when RDoc::ClassModule then
+      @top_level.add_to_classes_or_modules container
+    end
+
+    container.record_location @top_level
   end
 
   ##
