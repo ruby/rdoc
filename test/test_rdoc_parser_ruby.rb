@@ -156,21 +156,21 @@ class C; end
     assert_equal '/', @parser.get_symbol_or_name
   end
 
-  def test_ignore_parents
+  def test_suppress_parents
     a = @top_level.add_class RDoc::NormalClass, 'A'
     b = a.add_class RDoc::NormalClass, 'B'
     c = b.add_class RDoc::NormalClass, 'C'
 
     util_parser ''
 
-    @parser.ignore_parents c, a
+    @parser.suppress_parents c, a
 
-    assert c.ignored?
-    assert b.ignored?
-    refute a.ignored?
+    assert c.suppressed?
+    assert b.suppressed?
+    refute a.suppressed?
   end
 
-  def test_ignore_parents_documented
+  def test_suppress_parents_documented
     a = @top_level.add_class RDoc::NormalClass, 'A'
     b = a.add_class RDoc::NormalClass, 'B'
     b.add_comment RDoc::Comment.new("hello"), @top_level
@@ -178,11 +178,11 @@ class C; end
 
     util_parser ''
 
-    @parser.ignore_parents c, a
+    @parser.suppress_parents c, a
 
-    assert c.ignored?
-    refute b.ignored?
-    refute a.ignored?
+    assert c.suppressed?
+    refute b.suppressed?
+    refute a.suppressed?
   end
 
   def test_look_for_directives_in_attr
@@ -750,7 +750,7 @@ end
     a = @top_level.classes.first
     assert_equal 'A', a.full_name
 
-    visible = @store.all_modules.reject { |mod| mod.ignored? }
+    visible = @store.all_modules.reject { |mod| mod.suppressed? }
     visible = visible.map { |mod| mod.full_name }
 
     assert_empty visible

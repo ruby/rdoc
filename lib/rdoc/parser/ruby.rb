@@ -389,9 +389,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Marks containers between +container+ and +ancestor+ as ignored
 
-  def ignore_parents container, ancestor # :nodoc:
+  def suppress_parents container, ancestor # :nodoc:
     while container and container != ancestor do
-      container.ignore unless container.documented?
+      container.suppress unless container.documented?
       container = container.parent
     end
   end
@@ -636,7 +636,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       @top_level.add_to_classes_or_modules cls
       @stats.add_class cls
 
-      ignore_parents container, declaration_context unless cls.document_self
+      suppress_parents container, declaration_context unless cls.document_self
 
       parse_statements cls
     when TkLSHFT
@@ -710,7 +710,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     unless TkASSIGN === eq_tk then
-      ignore_parents container, prev_container
+      suppress_parents container, prev_container
 
       unget_tk eq_tk
       return false
