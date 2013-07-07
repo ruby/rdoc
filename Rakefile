@@ -36,8 +36,7 @@ hoe = Hoe.spec 'rdoc' do
 Depending on your version of ruby, you may need to install ruby rdoc/ri data:
 
 <= 1.8.6 : unsupported
- = 1.8.7 : gem install rdoc-data; rdoc-data --install
- = 1.9.1 : gem install rdoc-data; rdoc-data --install
+== 1.8.7 || 1.9.1 : gem install rdoc-data; rdoc-data --install
 >= 1.9.2 : nothing to do! Yay!
   MESSAGE
 
