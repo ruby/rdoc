@@ -3,18 +3,18 @@ created from a RDoc Markup file.
 
 == Headings
 
-You shouldn't really be using headings beyond level 3, it is a sign of poor
-organization of your code or documentation.  It also becomes difficult for the
-user to figure out what you are attempting to explain to them as they have to
-track the multiple layers of nesting.
+You should not use headings beyond level 3, it is a sign of poor organization
+of your code or documentation.  It also becomes difficult for the user to
+figure out what you are attempting to explain to them as they have to track
+the multiple layers of nesting.
 
 = Heading level 1
 
 Above is a level one heading.
 
-These sentences contain some text that lets you see how the heading interacts
-with paragraphs before and after the heading.  As you can see each different
-heading has a different amount of margin above and below.
+These paragraphs are filler that exist so you can see how the heading
+interacts with paragraphs before and after the heading.  As you can see each
+different heading has a different amount of margin above and below.
 
 This should be sufficient to give you a proper picture of how it will appear in
 your documentation.
@@ -23,9 +23,9 @@ your documentation.
 
 Above is a level two heading.
 
-These sentences contain some text that lets you see how the heading interacts
-with paragraphs before and after the heading.  As you can see each different
-heading has a different amount of margin above and below.
+These paragraphs are filler that exist so you can see how the heading
+interacts with paragraphs before and after the heading.  As you can see each
+different heading has a different amount of margin above and below.
 
 This should be sufficient to give you a proper picture of how it will appear in
 your documentation.
@@ -34,9 +34,9 @@ your documentation.
 
 Above is a level three heading.
 
-These sentences contain some text that lets you see how the heading interacts
-with paragraphs before and after the heading.  As you can see each different
-heading has a different amount of margin above and below.
+These paragraphs are filler that exist so you can see how the heading
+interacts with paragraphs before and after the heading.  As you can see each
+different heading has a different amount of margin above and below.
 
 This should be sufficient to give you a proper picture of how it will appear in
 your documentation.
@@ -45,9 +45,9 @@ your documentation.
 
 Above is a level four heading.
 
-These sentences contain some text that lets you see how the heading interacts
-with paragraphs before and after the heading.  As you can see each different
-heading has a different amount of margin above and below.
+These paragraphs are filler that exist so you can see how the heading
+interacts with paragraphs before and after the heading.  As you can see each
+different heading has a different amount of margin above and below.
 
 This should be sufficient to give you a proper picture of how it will appear in
 your documentation.
@@ -56,9 +56,9 @@ your documentation.
 
 Above is a level five heading.
 
-These sentences contain some text that lets you see how the heading interacts
-with paragraphs before and after the heading.  As you can see each different
-heading has a different amount of margin above and below.
+These paragraphs are filler that exist so you can see how the heading
+interacts with paragraphs before and after the heading.  As you can see each
+different heading has a different amount of margin above and below.
 
 This should be sufficient to give you a proper picture of how it will appear in
 your documentation.
@@ -67,24 +67,24 @@ your documentation.
 
 Above is a level six heading.
 
-These sentences contain some text that lets you see how the heading interacts
-with paragraphs before and after the heading.  As you can see each different
-heading has a different amount of margin above and below.
+These paragraphs are filler that exist so you can see how the heading
+interacts with paragraphs before and after the heading.  As you can see each
+different heading has a different amount of margin above and below.
 
 This should be sufficient to give you a proper picture of how it will appear in
 your documentation.
 
 == Paragraphs
 
-This is how paragraphs look.  Since it is difficult to generate good content
-for paragraphs I have chosen to use the excellent {Riker
-Ipsum}[http://rikeripsum.com].  In the immediately preceding sentence you can
-see how a link is formatted.
+This is how a paragraph looks.  Since it is difficult to generate good content
+for paragraphs I have chosen to use {Riker Ipsum}[http://rikeripsum.com] for
+nonsense filler content.  In the previous sentence you can see how a link is
+formatted.
 
 Here is an example of *bold* and _emphasis_ styling.  Try not to combine the
 two or use them too often.  Here is an example of <code>inline verbatim
 text</code>.  That should be enough of a taste of inline markup in paragraphs.
-The Riker Ipsum follows:
+The Riker Ipsum filler follows:
 
 Shields up! Rrrrred alert! Well, I'll say this for him - he's sure of himself.
 and attack the Romulans. Worf, It's better than music. It's jazz. This should
@@ -204,5 +204,5 @@ paragraph is a rule.
 ---
 
 In historic versions of RDoc you could control the height of the rule in HTML
-output.  This is no longer true as HTML 5 no longer has such an ability.
+output.  This is no longer true as HTML 5 does not support this.
 

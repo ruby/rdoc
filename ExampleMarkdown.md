@@ -16,10 +16,10 @@ These items all use the same styles as RDoc format files.
 
 Footnotes are rendered at the bottom of the documentation section[^1].  For
 pages this will be at the bottom of the page.  For method documentation this
-will be at the end of the current documentation entry.
+will be at the end of the current method.
 
 [^1]: Here is the footnote content.  As you can see it is at the bottom of the
-documentation section.
+page.
 
 ## Blockquotes
 
