@@ -46,11 +46,13 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   self.history_file = 'History.rdoc'
   self.testlib = :minitest
   self.extra_rdoc_files += %w[
-    DEVELOPERS.rdoc
     CVE-2013-0256.rdoc
+    DEVELOPERS.rdoc
+    ExampleMarkdown.md
+    ExampleRDoc.rdoc
     History.rdoc
-    LICENSE.rdoc
     LEGAL.rdoc
+    LICENSE.rdoc
     README.rdoc
     RI.rdoc
     TODO.rdoc

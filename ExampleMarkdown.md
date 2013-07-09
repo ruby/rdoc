@@ -1,7 +1,7 @@
 This document contains example output to show RDoc styling.  This file was
 created from a Markdown file.
 
-See also ExampleOutput.rdoc for examples of the following styles:
+For the following styles, see ExampleRDoc.rdoc for style examples:
 
 * Headings
 * Paragraphs
@@ -9,6 +9,8 @@ See also ExampleOutput.rdoc for examples of the following styles:
 * Definition lists
 * Ordered lists
 * Unordered lists
+
+These items all use the same styles as RDoc format files.
 
 ## Footnotes
 
