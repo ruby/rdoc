@@ -134,9 +134,7 @@ pre {
 /* @group Top-Level Structure */
 
 #metadata {
-  position: absolute;
-  top: 10px;
-  left: 0px;
+  float: left;
   width: 260px;
   font-size: 14px;
 }
