@@ -522,7 +522,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   def test_convert_TIDYLINK_footnote
     result = @to.convert 'text{*1}[rdoc-label:foottext-1:footmark-1]'
 
-    assert_equal "\n<p>text<a id=\"footmark-1\" href=\"#foottext-1\">1</a></p>\n", result
+    assert_equal "\n<p>text<sup><a id=\"footmark-1\" href=\"#foottext-1\">1</a></sup></p>\n", result
   end
 
   def test_convert_TIDYLINK_rdoc_label
@@ -548,7 +548,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def test_gen_url_rdoc_label_id
-    assert_equal '<a id="footmark-1" href="#foottext-1">example</a>',
+    assert_equal '<sup><a id="footmark-1" href="#foottext-1">example</a></sup>',
                  @to.gen_url('rdoc-label:foottext-1:footmark-1', 'example')
   end
 

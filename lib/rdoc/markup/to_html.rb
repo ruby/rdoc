@@ -315,7 +315,11 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
       text = text.sub %r%^#{scheme}:/*%i, ''
       text = text.sub %r%^[*\^](\d+)$%,   '\1'
 
-      "<a#{id} href=\"#{url}\">#{text}</a>"
+      link = "<a#{id} href=\"#{url}\">#{text}</a>"
+
+      link = "<sup>#{link}</sup>" if /"foot/ =~ id
+
+      link
     end
   end
 

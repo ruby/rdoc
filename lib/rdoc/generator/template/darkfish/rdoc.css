@@ -257,7 +257,7 @@ main > article:first-child > h6:first-child {
   margin-top: 0px;
 }
 
-article a[id^=foot] {
+article sup {
   vertical-align: super;
   font-size: 0.8em;
 }
