@@ -6,17 +6,15 @@
    table = current.parse(comment).table_of_contents
 
    if table.length > 1 then %>
-<div id="table-of-contents">
-  <nav>
-    <header>
-      <h3>Table of Contents</h3>
-    </header>
+<nav>
+  <header>
+    <h3>Table of Contents</h3>
+  </header>
 
-    <ul class="link-list">
+  <ul class="link-list">
 <%   table.each do |heading| %>
-      <li><a href="#<%= heading.aref %>"><%= heading.plain_html %></a>
+    <li><a href="#<%= heading.aref %>"><%= heading.plain_html %></a>
 <%   end %>
-    </ul>
-  </nav>
-</div>
+  </ul>
+</nav>
 <% end %>
