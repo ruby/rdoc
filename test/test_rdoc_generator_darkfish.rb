@@ -82,10 +82,8 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
                  Regexp.escape 'UTF-8'
                end
 
-    assert_match(/<meta content="text\/html; charset=#{encoding}"/,
-                 File.read('index.html'))
-    assert_match(/<meta content="text\/html; charset=#{encoding}"/,
-                 File.read('Object.html'))
+    assert_match %r%<meta charset="#{encoding}">%, File.read('index.html')
+    assert_match %r%<meta charset="#{encoding}">%, File.read('Object.html')
 
     refute_match(/Ignored/, File.read('index.html'))
   end
