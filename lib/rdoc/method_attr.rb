@@ -218,7 +218,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
   end
 
   ##
-  # Attempts to sanitize the content passed by the ruby parser:
+  # Attempts to sanitize the content passed by the Ruby parser:
   # remove outer parentheses, etc.
 
   def block_params=(value)
