@@ -101,6 +101,11 @@ class RDoc::MethodAttr < RDoc::CodeObject
     @full_name = nil
   end
 
+  def initialize_visibility # :nodoc:
+    super
+    @see = nil
+  end
+
   ##
   # Order by #singleton then #name
 
