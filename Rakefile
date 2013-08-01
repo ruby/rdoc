@@ -65,7 +65,6 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   extra_deps     << ['json',     '~> 1.4']
   extra_dev_deps << ['racc',     '~> 1.4']
   extra_dev_deps << ['minitest', '~> 4']
-  extra_dev_deps << ['ZenTest',  '~> 4']
 
   extra_rdoc_files << 'Rakefile'
   spec_extras['required_rubygems_version'] = '>= 1.3'
