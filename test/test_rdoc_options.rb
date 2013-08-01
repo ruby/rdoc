@@ -528,7 +528,7 @@ rdoc_include:
     assert_empty err
 
     assert_equal Pathname(Dir.tmpdir), @options.root
-    assert_includes @options.rdoc_include, @options.root.to_path
+    assert_includes @options.rdoc_include, @options.root.to_s
   end
 
   def test_parse_template
