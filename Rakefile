@@ -72,6 +72,8 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   spec_extras['homepage'] = 'http://docs.seattlerb.org/rdoc'
 end
 
+hoe.test_prelude = 'gem "minitest", "~> 4.0"'
+
 def rake(*args)
   sh $0, *args
 end

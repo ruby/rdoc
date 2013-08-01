@@ -1,13 +1,11 @@
 require 'autotest/restart'
 
 Autotest.add_hook :run_command do |at|
-  at.unit_diff = 'cat'
-
   system "#{Gem.ruby} -rubygems #{Gem.bin_path 'rake', 'rake'} generate"
 end
 
 Autotest.add_hook :initialize do |at|
-  at.testlib = 'minitest/autorun'
+  at.testlib = ''
   at.add_exception '.git'
 
   def at.path_to_classname s

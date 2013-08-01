@@ -1,4 +1,11 @@
 require 'rubygems'
+
+begin
+  gem 'minitest', '~> 4.0'
+rescue NoMethodError
+  # for ruby tests
+end
+
 require 'minitest/autorun'
 require 'minitest/benchmark' if ENV['BENCHMARK']
 
