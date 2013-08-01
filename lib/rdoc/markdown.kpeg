@@ -11,6 +11,16 @@
 # RDoc::Options@Saved+Options for instructions on setting up a `.doc_options`
 # file to store your project default.
 #
+# ## Usage
+#
+# Here's a brief example of using this parse to read a markdown file by hand.
+#
+#   data = File.read("README.md")
+#   formatter = RDoc::Markup::ToHtml.new(RDoc::Options.new, nil)
+#   html = RDoc::Markdown.parse(data).accept(@formatter)
+#
+#   # do something with html
+#
 # ## Extensions
 #
 # The following markdown extensions are supported by the parser, but not all
