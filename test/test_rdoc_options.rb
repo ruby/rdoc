@@ -582,6 +582,20 @@ rdoc_include:
     $LOAD_PATH.replace orig_LOAD_PATH
   end
 
+  def test_parse_visibility
+    @options.parse %w[--visibility=public]
+    assert_equal :public, @options.visibility
+
+    @options.parse %w[--visibility=protected]
+    assert_equal :protected, @options.visibility
+
+    @options.parse %w[--visibility=private]
+    assert_equal :private, @options.visibility
+
+    @options.parse %w[--visibility=nodoc]
+    assert_equal :nodoc, @options.visibility
+  end
+
   def test_parse_write_options
     tmpdir = File.join Dir.tmpdir, "test_rdoc_options_#{$$}"
     FileUtils.mkdir_p tmpdir

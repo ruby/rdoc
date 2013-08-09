@@ -9,6 +9,7 @@ class TestRDocStore < XrefTestCase
 
     @tmpdir = File.join Dir.tmpdir, "test_rdoc_ri_store_#{$$}"
     @s = RDoc::RI::Store.new @tmpdir
+    @s.rdoc = @rdoc
 
     @top_level = @s.add_file 'file.rb'
 

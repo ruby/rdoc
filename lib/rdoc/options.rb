@@ -318,9 +318,12 @@ class RDoc::Options
   attr_accessor :webcvs
 
   ##
-  # Minimum visibility of a documented method. One of +:public+,
-  # +:protected+, +:private+. May be overridden on a per-method
-  # basis with the :doc: directive.
+  # Minimum visibility of a documented method. One of +:public+, +:protected+,
+  # +:private+ or +:nodoc+.
+  #
+  # The +:nodoc+ visibility ignores all directives related to visibility.  The
+  # other visibilities may be overridden on a per-method basis with the :doc:
+  # directive.
 
   attr_accessor :visibility
 
@@ -728,10 +731,10 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--visibility=VISIBILITY", "-V", RDoc::VISIBILITIES,
+      opt.on("--visibility=VISIBILITY", "-V", RDoc::VISIBILITIES + [:nodoc],
              "Minimum visibility to document a method.",
-             "One of 'public', 'protected' (the default)",
-             "or 'private'. Can be abbreviated.") do |value|
+             "One of 'public', 'protected' (the default),",
+             "'private' or 'nodoc' (show everything)") do |value|
         @visibility = value
       end
 

@@ -52,6 +52,7 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
 
     @rdoc = RDoc::RDoc.new
     @rdoc.store = @store
+    @rdoc.options = RDoc::Options.new
 
     g = Object.new
     def g.class_dir() end

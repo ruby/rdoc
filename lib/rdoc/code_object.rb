@@ -92,7 +92,7 @@ class RDoc::CodeObject
   ##
   # The RDoc::Store for this object.
 
-  attr_accessor :store
+  attr_reader :store
 
   ##
   # We are the model of the code, but we know that at some point we will be
@@ -105,16 +105,17 @@ class RDoc::CodeObject
   # Creates a new CodeObject that will document itself and its children
 
   def initialize
-    @metadata      = {}
-    @comment       = ''
-    @parent        = nil
-    @parent_name   = nil # for loading
-    @parent_class  = nil # for loading
-    @section       = nil
-    @section_title = nil # for loading
-    @file          = nil
-    @full_name     = nil
-    @store         = nil
+    @metadata         = {}
+    @comment          = ''
+    @parent           = nil
+    @parent_name      = nil # for loading
+    @parent_class     = nil # for loading
+    @section          = nil
+    @section_title    = nil # for loading
+    @file             = nil
+    @full_name        = nil
+    @store            = nil
+    @track_visibility = true
 
     initialize_visibility
   end
@@ -130,6 +131,7 @@ class RDoc::CodeObject
     @received_nodoc      = false
     @ignored             = false
     @suppressed          = false
+    @track_visibility    = true
   end
 
   ##
@@ -174,6 +176,8 @@ class RDoc::CodeObject
   # has been turned off by :enddoc:
 
   def document_children=(document_children)
+    return unless @track_visibility
+
     @document_children = document_children unless @done_documenting
   end
 
@@ -183,6 +187,7 @@ class RDoc::CodeObject
   # documentation is turned off by +:nodoc:+.
 
   def document_self=(document_self)
+    return unless @track_visibility
     return if @done_documenting
 
     @document_self = document_self
@@ -206,6 +211,7 @@ class RDoc::CodeObject
   # will have no effect in the current file.
 
   def done_documenting=(value)
+    return unless @track_visibility
     @done_documenting  = value
     @document_self     = !value
     @document_children = @document_self
@@ -272,6 +278,8 @@ class RDoc::CodeObject
   # occur.
 
   def ignore
+    return unless @track_visibility
+
     @ignored = true
 
     stop_doc
@@ -293,7 +301,7 @@ class RDoc::CodeObject
   # This is used by Text#snippet
 
   def options
-    if @store then
+    if @store and @store.rdoc then
       @store.rdoc.options
     else
       RDoc::Options.new
@@ -373,8 +381,24 @@ class RDoc::CodeObject
   # Disable capture of documentation
 
   def stop_doc
+    return unless @track_visibility
+
     @document_self = false
     @document_children = false
+  end
+
+  ##
+  # Sets the +store+ that contains this CodeObject
+
+  def store= store
+    @store = store
+
+    return unless @track_visibility
+
+    if :nodoc == options.visibility then
+      initialize_visibility
+      @track_visibility = false
+    end
   end
 
   ##
@@ -384,6 +408,8 @@ class RDoc::CodeObject
   # may not be displayed.
 
   def suppress
+    return unless @track_visibility
+
     @suppressed = true
 
     stop_doc
