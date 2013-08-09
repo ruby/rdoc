@@ -414,6 +414,23 @@ class C; end
     assert_equal 0, klass.attributes.length
   end
 
+  def test_parse_attr_accessor_nodoc_track
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = RDoc::Comment.new "##\n# my attr\n", @top_level
+
+    @options.visibility = :nodoc
+
+    util_parser "attr_accessor :foo, :bar # :nodoc:"
+
+    tk = @parser.get_tk
+
+    @parser.parse_attr_accessor klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    refute_empty klass.attributes
+  end
+
   def test_parse_attr_accessor_stopdoc
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
@@ -1685,6 +1702,34 @@ end
 
     foo = klass.method_list.first
     assert_equal 'foo', foo.name
+  end
+
+  def test_parse_method_nodoc
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    util_parser "def foo # :nodoc:\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment('')
+
+    assert_empty klass.method_list
+  end
+
+  def test_parse_method_nodoc_track
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    @options.visibility = :nodoc
+
+    util_parser "def foo # :nodoc:\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment('')
+
+    refute_empty klass.method_list
   end
 
   def test_parse_method_no_parens

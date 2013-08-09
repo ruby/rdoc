@@ -165,6 +165,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     @scanner.exception_on_syntax_error = false
     @prev_seek = nil
     @markup = @options.markup
+    @track_visibility = :nodoc != @options.visibility
 
     @encoding = nil
     @encoding = @options.encoding if Object.const_defined? :Encoding
@@ -491,7 +492,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     read_documentation_modifiers tmp, RDoc::ATTR_MODIFIERS
     # TODO In most other places we let the context keep track of document_self
     # and add found items appropriately but here we do not.  I'm not sure why.
-    return unless tmp.document_self
+    return if @track_visibility and not tmp.document_self
 
     case tk.name
     when "attr_reader"   then rw = "R"
@@ -1223,7 +1224,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       @scanner.instance_eval do @continue = false end
       parse_method_parameters meth
 
-      if meth.document_self then
+      if meth.document_self or not @track_visibility then
         container.add_method meth
       elsif added_container then
         container.document_self = false
