@@ -231,6 +231,16 @@ class TestRDocStore < XrefTestCase
     refute_empty a1.aliases
   end
 
+  def test_complete_nodoc
+    c_nodoc = @top_level.add_class RDoc::NormalClass, 'Nodoc'
+    c_nodoc.record_location @top_level
+    c_nodoc.document_self = nil
+
+    @s.complete :nodoc
+
+    assert_includes @s.classes_hash.keys, 'Nodoc'
+  end
+
   def test_find_c_enclosure
     assert_nil @s.find_c_enclosure 'cC1'
 

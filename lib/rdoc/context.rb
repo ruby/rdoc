@@ -1041,8 +1041,8 @@ class RDoc::Context < RDoc::CodeObject
   #--
   # TODO mark the visibility of attributes in the template (if not public?)
 
-  def remove_invisible(min_visibility)
-    return if min_visibility == :private
+  def remove_invisible min_visibility
+    return if [:private, :nodoc].include? min_visibility
     remove_invisible_in @method_list, min_visibility
     remove_invisible_in @attributes, min_visibility
   end

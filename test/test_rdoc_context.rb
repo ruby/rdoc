@@ -691,6 +691,15 @@ class TestRDocContext < XrefTestCase
     assert_equal [@apub, @aprot, @apriv], @vis.attributes
   end
 
+  def test_remove_invisible_nodoc
+    util_visibilities
+
+    @vis.remove_invisible :nodoc
+
+    assert_equal [@pub, @prot, @priv], @vis.method_list
+    assert_equal [@apub, @aprot, @apriv], @vis.attributes
+  end
+
   def test_remove_invisible_protected
     util_visibilities
 
