@@ -128,6 +128,19 @@ here - something
     assert_equal expected, @TD.parse(text)
   end
 
+  def test_parse_multiline_paragraph
+    text = "Public: Do some stuff\n"
+    text << "On a new line\n"
+
+    expected =
+      @RM::Document.new([
+        @RM::Paragraph.new('Do some stuff'),
+        @RM::Paragraph.new('On a new line')
+      ])
+
+    assert_equal expected, @TD.parse(text)
+  end
+
   def test_parse_arguments
     text = <<-TEXT
 Create new Arg object.
