@@ -344,6 +344,22 @@ Signature
     assert_equal expected, @td.tokens
   end
 
+  def test_tokenize_multiline_paragraph
+    text = "Public: Do some stuff\n"
+    text << "On a new line\n"
+
+    @td.tokenize text
+
+    expected = [
+      [:TEXT,     "Do some stuff",   0, 0],
+      [:NEWLINE,  "\n",             13, 0],
+      [:TEXT,     "On a new line",   0, 1],
+      [:NEWLINE,  "\n",             13, 1]
+    ]
+
+    assert_equal expected, @td.tokens
+  end
+
   def test_tokenize_arguments
     @td.tokenize <<-TEXT
 Create new Arg object.
