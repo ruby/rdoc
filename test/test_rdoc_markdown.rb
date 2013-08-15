@@ -1,10 +1,6 @@
 # coding: UTF-8
 
-require 'rubygems'
-require 'minitest/autorun'
-require 'pp'
-
-require 'rdoc'
+require 'rdoc/test_case'
 require 'rdoc/markup/block_quote'
 require 'rdoc/markdown'
 
