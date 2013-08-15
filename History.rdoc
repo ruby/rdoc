@@ -40,6 +40,7 @@
   * An :enddoc: at the top level stops all further parsing.  Bug #213 by Ryan
     Davis.
   * Improved handling of multiline call-seq.  Bug #207 by Erik Hollensbe.
+  * Fixed text that is missing whitespace for TomDoc.  Bug #248 by Noel Cower.
 
 === 4.0.1 / 2013-03-27
 
