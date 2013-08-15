@@ -628,6 +628,29 @@ end
     assert_equal @top_level, blah.file
   end
 
+  def test_parse_class_ghost_method_yields
+    util_parser <<-CLASS
+class Foo
+  ##
+  # :method:
+  # :call-seq:
+  #   yields(name)
+end
+    CLASS
+
+    tk = @parser.get_tk
+
+    @parser.parse_class @top_level, RDoc::Parser::Ruby::NORMAL, tk, @comment
+
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+
+    blah = foo.method_list.first
+    assert_equal 'Foo#yields', blah.full_name
+    assert_equal 'yields(name)', blah.call_seq
+    assert_equal @top_level, blah.file
+  end
+
   def test_parse_class_multi_ghost_methods
     util_parser <<-'CLASS'
 class Foo

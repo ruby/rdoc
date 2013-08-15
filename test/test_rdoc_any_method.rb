@@ -180,6 +180,22 @@ method(a, b) { |c, d| ... }
     assert_nil m.name
   end
 
+  def test_name_call_seq
+    m = RDoc::AnyMethod.new nil, nil
+
+    m.call_seq = "yields(name)\nyields(name, description)"
+
+    assert_equal 'yields', m.name
+  end
+
+  def test_name_call_seq_dot
+    m = RDoc::AnyMethod.new nil, nil
+
+    m.call_seq = "obj.yields(name)\nobj.yields(name, description)"
+
+    assert_equal 'yields', m.name
+  end
+
   def test_param_list_block_params
     m = RDoc::AnyMethod.new nil, 'method'
     m.parent = @c1
