@@ -444,9 +444,11 @@ heading
 
     doc = parse "[![alt text](path/to/image.jpg)](http://example.com)"
 
-    expected = '<a href="http://example.com"><img src="http://path/to/image.jpg" /></a>'
+    expected =
+      doc(
+        para('{{alt text}[path/to/image.jpg]}[http://example.com]'))
 
-    assert_equal expected, doc.accept(@to_html)
+    assert_equal expected, doc
   end
 
   def test_parse_line_break
