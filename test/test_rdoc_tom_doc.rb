@@ -133,10 +133,8 @@ here - something
     text << "On a new line\n"
 
     expected =
-      @RM::Document.new([
-        @RM::Paragraph.new('Do some stuff'),
-        @RM::Paragraph.new('On a new line')
-      ])
+      doc(
+        para('Do some stuff', ' ', 'On a new line'))
 
     assert_equal expected, @TD.parse(text)
   end
@@ -194,7 +192,7 @@ foo - A comment goes here
         blank_line,
         list(:NOTE,
           item(%w[foo],
-            para('A comment goes here', 'and is more than one line'))))
+            para('A comment goes here', ' ', 'and is more than one line'))))
 
     assert_equal expected, @TD.parse(text)
   end
@@ -305,10 +303,10 @@ Returns a thing
     TEXT
 
     expected =
-      @RM::Document.new(
-        @RM::Paragraph.new('Do some stuff'),
-        @RM::BlankLine.new,
-        @RM::Paragraph.new('Returns a thing', 'that is multiline'))
+      doc(
+        para('Do some stuff'),
+        blank_line,
+        para('Returns a thing', ' ', 'that is multiline'))
 
     assert_equal expected, @TD.parse(text)
   end

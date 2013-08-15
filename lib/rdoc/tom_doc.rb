@@ -176,9 +176,15 @@ class RDoc::TomDoc < RDoc::Markup::Parser
     until @tokens.empty? do
       type, data, = get
 
-      if type == :TEXT then
+      case type
+      when :TEXT then
         paragraph << data
-        skip :NEWLINE
+      when :NEWLINE then
+        if :TEXT == peek_token[0] then
+          paragraph << ' '
+        else
+          break
+        end
       else
         unget
         break
