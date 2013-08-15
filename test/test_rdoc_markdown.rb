@@ -14,6 +14,8 @@ class TestRDocMarkdown < RDoc::TestCase
     @RM = RDoc::Markup
 
     @parser = RDoc::Markdown.new
+
+    @to_html = RDoc::Markup::ToHtml.new(RDoc::Options.new, nil)
   end
 
   def test_class_parse
@@ -435,6 +437,16 @@ heading
     expected = doc(para("image {alt text}[path/to/image.jpg]"))
 
     assert_equal expected, doc
+  end
+
+  def test_parse_image_link
+    @parser.html = true
+
+    doc = parse "[![alt text](path/to/image.jpg)](http://example.com)"
+
+    expected = '<a href="http://example.com"><img src="http://path/to/image.jpg" /></a>'
+
+    assert_equal expected, doc.accept(@to_html)
   end
 
   def test_parse_line_break
