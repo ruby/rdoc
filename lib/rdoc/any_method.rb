@@ -25,7 +25,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   ##
   # Different ways to call this method
 
-  attr_accessor :call_seq
+  attr_reader :call_seq
 
   ##
   # Parameters for this method
@@ -87,6 +87,18 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     elsif @params then
       "#{name}#{param_seq}"
     end
+  end
+
+  ##
+  # Sets the different ways you can call this method.  If an empty +call_seq+
+  # is given nil is assumed.
+  #
+  # See also #param_seq
+
+  def call_seq= call_seq
+    return if call_seq.empty?
+
+    @call_seq = call_seq
   end
 
   ##

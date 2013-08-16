@@ -38,6 +38,18 @@ method(a, b) { |c, d| ... }
     assert_equal 'my_c1_m', @c1_m.c_function
   end
 
+  def test_call_seq_equals
+    m = RDoc::AnyMethod.new nil, nil
+
+    m.call_seq = ''
+
+    assert_nil m.call_seq
+
+    m.call_seq = 'foo'
+
+    assert_equal 'foo', m.call_seq
+  end
+
   def test_full_name
     assert_equal 'C1::m', @c1.method_list.first.full_name
   end

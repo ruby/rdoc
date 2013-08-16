@@ -73,6 +73,8 @@
     multiple method names.  Bug #203 by Pete Higgins
   * Handle nested links for images in markdown.  Bug #241, pull request #242
     by Zachary Scott.
+  * Ignore empty call-seq for methods.  This allows the method heading to show
+    up correctly.  Bug #244 by Neurogami.
 
 === 4.0.0 / 2013-02-24
 
