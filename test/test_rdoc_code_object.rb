@@ -239,19 +239,11 @@ class TestRDocCodeObject < XrefTestCase
     refute @co.document_self
     refute @co.document_children
     assert @co.ignored?
-  end
-
-  def test_ignore
-    @co.ignore
-
-    refute @co.document_self
-    refute @co.document_children
-    assert @co.ignored?
 
     @store.rdoc.options.visibility = :nodoc
 
     @co.store = @store
-    
+
     assert @co.document_self
     assert @co.document_children
     refute @co.ignored?
