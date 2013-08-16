@@ -233,12 +233,13 @@ class RDoc::Parser::C < RDoc::Parser
       method = class_obj.method_list.find { |m| m.name == method_name }
     return unless call_seq = method.call_seq
 
-    method_name = method_name[0, 1] unless method_name =~ /\A\w/
+    method_name = method_name[0, 1] if method_name =~ /\A\[/
 
-      entries = call_seq.split "\n"
+    entries = call_seq.split "\n"
 
     matching = entries.select do |entry|
-      entry =~ /^\w*\.?#{Regexp.escape method_name}/
+      entry =~ /^\w*\.?#{Regexp.escape method_name}/ or
+        entry =~ /\s#{Regexp.escape method_name}\s/
     end
 
     method.call_seq = matching.join "\n"

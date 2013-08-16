@@ -1730,6 +1730,14 @@ path_aref_m(int argc, VALUE *argv, VALUE str) { }
 static VALUE
 path_cmp_m(VALUE str1, VALUE str2) { }
 
+/*
+ *  call-seq:
+ *     str == obj    -> true or false
+ *     str === obj   -> true or false
+ */
+VALUE
+rb_str_equal(VALUE str1, VALUE str2) { }
+
 Init_pathname()
 {
     rb_cPathname = rb_define_class("Pathname", rb_cObject);
@@ -1739,6 +1747,8 @@ Init_pathname()
     rb_define_method(rb_cPathname, "[]",      path_aref_m, -1);
     rb_define_method(rb_cPathname, "slice",   path_aref_m, -1);
     rb_define_method(rb_cPathname, "<=>",     path_cmp_m, 1);
+    rb_define_method(rb_cPathname, "==",      rb_str_equal), 2);
+    rb_define_method(rb_cPathname, "===",     rb_str_equal), 2);
 }
     C
 
@@ -1771,6 +1781,12 @@ str.slice(start, length) -> new_str or nil
     spaceship = pathname.method_list.find { |m| m.name == '<=>' }
     assert_equal "string <=> other_string   -> -1, 0, +1 or nil",
                  spaceship.call_seq
+
+    equals2 = pathname.method_list.find { |m| m.name == '==' }
+    assert_match 'str == obj', equals2.call_seq
+
+    equals3 = pathname.method_list.find { |m| m.name == '===' }
+    assert_match 'str === obj', equals3.call_seq
   end
 
   def test_scan_order_dependent
