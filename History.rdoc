@@ -71,6 +71,8 @@
   * Text#snippet now creates a RDoc::Markup::ToHtmlSnippet correctly.
   * The C parser now de-duplicates call-seq if the same C function is used for
     multiple method names.  Bug #203 by Pete Higgins
+  * Handle nested links for images in markdown.  Bug #241, pull request #242
+    by Zachary Scott.
 
 === 4.0.0 / 2013-02-24
 

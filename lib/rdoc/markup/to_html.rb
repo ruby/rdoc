@@ -65,6 +65,16 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   #
   # These methods handle special markup added by RDoc::Markup#add_special.
 
+  def handle_TIDYLINK text # :nodoc:
+    return text unless
+      text =~ /^\{(.*)\}\[(.*?)\]$/ or text =~ /^(\S+)\[(.*?)\]$/
+
+    label = handle_TIDYLINK $1
+    url   = $2
+
+    gen_url url, label
+  end
+
   ##
   # +special+ is a <code><br></code>
 
@@ -130,11 +140,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   def handle_special_TIDYLINK(special)
     text = special.text
 
-    return text unless text =~ /\{(.*?)\}\[(.*?)\]/ or text =~ /(\S+)\[(.*?)\]/
-
-    label = $1
-    url   = $2
-    gen_url url, label
+    handle_TIDYLINK special.text
   end
 
   # :section: Visitor

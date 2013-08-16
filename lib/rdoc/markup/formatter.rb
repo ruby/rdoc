@@ -88,7 +88,7 @@ class RDoc::Markup::Formatter
 
   def add_special_TIDYLINK
     @markup.add_special(/(?:
-                          \{.*?\} |   # multi-word label
+                          \{.*\} |    # multi-word label
                           \b[^\s{}]+? # single-word label
                          )
 
