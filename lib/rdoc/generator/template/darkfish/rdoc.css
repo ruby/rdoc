@@ -182,7 +182,6 @@ main {
 
 #metadata h3 {
   margin-top: 0;
-  border-bottom: 1px solid #aaa;
   padding: 2px 8px 2px 20px;
   background-color: #dedede;
   color: #666;
@@ -203,9 +202,14 @@ main {
   text-align: center;
 }
 
-nav#search-section {
+#search-section {
   margin-top: 0;
   border-top: 0;
+}
+
+#search-section h3 {
+  border-top: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
 }
 
 ul.link-list li {
