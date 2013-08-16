@@ -529,7 +529,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     result = @to.convert '{{image}[path/to/image.jpg]}[http://example.com]'
 
     expected =
-      '<p><a href="http://example.com"><img src="http://path/to/image.jpg" /></a>'
+      "\n<p><a href=\"http://example.com\"><img src=\"http://path/to/image.jpg\" /></a></p>\n"
 
     assert_equal expected, result
   end
