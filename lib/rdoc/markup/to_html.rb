@@ -138,8 +138,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # <tt>label[url]</tt> or <tt>{long label}[url]</tt>
 
   def handle_special_TIDYLINK(special)
-    text = special.text
-
     handle_TIDYLINK special.text
   end
 
