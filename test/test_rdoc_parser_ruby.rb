@@ -2980,6 +2980,32 @@ class C
     assert_equal 2, @top_level.classes.first.method_list.length
   end
 
+  def test_scan_method_semi_method
+    content = <<-CONTENT
+class A
+  def self.m() end; def self.m=() end
+end
+
+class B
+  def self.m() end
+end
+    CONTENT
+
+    util_parser content
+
+    @parser.scan
+
+    a = @store.find_class_named 'A'
+    assert a, 'missing A'
+
+    assert_equal 2, a.method_list.length
+
+    b = @store.find_class_named 'B'
+    assert b, 'missing B'
+
+    assert_equal 1, b.method_list.length
+  end
+
   def test_scan_markup_override
     content = <<-CONTENT
 # *awesome*

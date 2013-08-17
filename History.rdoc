@@ -43,6 +43,7 @@
   * Fixed text that is missing whitespace for TomDoc.  Bug #248 by Noel Cower.
   * The RDoc methods now store the method they are aliased to.  Bug #206 by
     Jeremy Stephens.
+  * Fixed parsing of multiple methods on the same line.  Bug #221 by derula.
 
 === 4.0.1 / 2013-03-27
 

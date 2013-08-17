@@ -1796,7 +1796,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
       tokens << tk
 
       case tk
-      when TkNL      then return
+      when TkNL, TkDEF then
+        return
       when TkCOMMENT then
         return unless tk.text =~ /\s*:?([\w-]+):\s*(.*)/
 
