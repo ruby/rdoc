@@ -419,9 +419,9 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
         source_name == dir[%r%/([^/]*)/ri$%, 1]
       end
 
-      raise RDoc::Error,
-            "could not find ri documentation for #{source_name}" unless
-        ri_dir
+      unless ri_dir && File.directory?(ri_dir)
+        raise RDoc::Error, "could not find ri documentation for #{source_name}. Please run `gem rdoc --ri gem_name`"
+      end
 
       RDoc::Store.new ri_dir, type
     end
