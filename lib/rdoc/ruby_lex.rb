@@ -42,7 +42,7 @@ class RDoc::RubyLex
   include RDoc::RubyToken
   include IRB
 
-  attr_reader :continue
+  attr_accessor :continue
   attr_accessor :lex_state
   attr_reader :reader
 

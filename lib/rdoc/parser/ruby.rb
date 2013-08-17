@@ -1221,7 +1221,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.add_tokens @token_stream
 
     token_listener meth do
-      @scanner.instance_eval do @continue = false end
+      @scanner.continue = false
       parse_method_parameters meth
 
       if meth.document_self or not @track_visibility then
@@ -1771,7 +1771,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     return if method.block_params
 
     get_tkread
-    @scanner.instance_eval { @continue = false }
+    @scanner.continue = false
     method.block_params = parse_method_or_yield_parameters
   end
 
@@ -1916,7 +1916,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     b_nest = 0
     nest = 0
-    @scanner.instance_eval { @continue = false }
+    @scanner.continue = false
 
     loop do
       case tk
