@@ -529,7 +529,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     new_name = get_symbol_or_name
 
-    @scanner.instance_eval { @lex_state = EXPR_FNAME }
+    @scanner.lex_state = EXPR_FNAME
 
     skip_tkspace
     if TkCOMMA === peek_tk then
@@ -1104,7 +1104,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     add_token tk
 
     token_listener self do
-      @scanner.instance_eval do @lex_state = EXPR_FNAME end
+      @scanner.lex_state = EXPR_FNAME
 
       skip_tkspace
       name_t = get_tk
@@ -1114,7 +1114,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       case dot = get_tk
       when TkDOT, TkCOLON2 then
-        @scanner.instance_eval do @lex_state = EXPR_FNAME end
+        @scanner.lex_state = EXPR_FNAME
         skip_tkspace
         name_t2 = get_tk
 

@@ -43,7 +43,7 @@ class RDoc::RubyLex
   include IRB
 
   attr_reader :continue
-  attr_reader :lex_state
+  attr_accessor :lex_state
   attr_reader :reader
 
   class << self
