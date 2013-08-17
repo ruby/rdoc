@@ -529,7 +529,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     new_name = get_symbol_or_name
 
-    @scanner.lex_state = EXPR_FNAME
+    @scanner.lex_state = :EXPR_FNAME
 
     skip_tkspace
     if TkCOMMA === peek_tk then
@@ -579,7 +579,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when end_token
         if end_token == TkRPAREN
           nest -= 1
-          break if @scanner.lex_state == EXPR_END and nest <= 0
+          break if @scanner.lex_state == :EXPR_END and nest <= 0
         else
           break unless @scanner.continue
         end
@@ -743,7 +743,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         nest -= 1
       when TkCOMMENT then
         if nest <= 0 &&
-           (@scanner.lex_state == EXPR_END || !@scanner.continue) then
+           (@scanner.lex_state == :EXPR_END || !@scanner.continue) then
           unget_tk tk
           break
         else
@@ -765,7 +765,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         end
       when TkNL then
         if nest <= 0 &&
-           (@scanner.lex_state == EXPR_END || !@scanner.continue) then
+           (@scanner.lex_state == :EXPR_END || !@scanner.continue) then
           unget_tk tk
           break
         end
@@ -1104,7 +1104,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     add_token tk
 
     token_listener self do
-      @scanner.lex_state = EXPR_FNAME
+      @scanner.lex_state = :EXPR_FNAME
 
       skip_tkspace
       name_t = get_tk
@@ -1114,7 +1114,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       case dot = get_tk
       when TkDOT, TkCOLON2 then
-        @scanner.lex_state = EXPR_FNAME
+        @scanner.lex_state = :EXPR_FNAME
         skip_tkspace
         name_t2 = get_tk
 
@@ -1933,7 +1933,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when end_token then
         if end_token == TkRPAREN
           nest -= 1
-          break if @scanner.lex_state == EXPR_END and nest.zero?
+          break if @scanner.lex_state == :EXPR_END and nest.zero?
         else
           break unless @scanner.continue
         end
