@@ -525,7 +525,19 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal "\n<p>text<sup><a id=\"footmark-1\" href=\"#foottext-1\">1</a></sup></p>\n", result
   end
 
-  def test_convert_TIDYLINK_nested
+  def test_convert_TIDYLINK_multiple
+    result = @to.convert '{a}[http://example] {b}[http://example]'
+
+    expected = <<-EXPECTED
+
+<p><a href=\"http://example\">a</a> <a href=\"http://example\">b</a></p>
+    EXPECTED
+
+    assert_equal expected, result
+  end
+
+  def test_convert_TIDYLINK_image
+    skip 'See #241'
     result = @to.convert '{{image}[path/to/image.jpg]}[http://example.com]'
 
     expected =
