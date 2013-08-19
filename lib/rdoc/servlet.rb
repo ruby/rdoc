@@ -301,7 +301,8 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
   # Returns a 404 page built by +generator+ for +req+ on +res+.
 
   def not_found generator, req, res
-    res.body = generator.generate_servlet_not_found req.path
+    message = "The page <kbd>#{ERB::Util.h req.path}</kbd> was not found"
+    res.body = generator.generate_servlet_not_found message
     res.status = 404
   end
 

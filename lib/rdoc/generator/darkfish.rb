@@ -450,7 +450,7 @@ class RDoc::Generator::Darkfish
   ##
   # Generates the 404 page for the RDoc servlet
 
-  def generate_servlet_not_found path
+  def generate_servlet_not_found message
     setup
 
     template_file = @template_dir + 'servlet_not_found.rhtml'
