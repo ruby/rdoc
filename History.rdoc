@@ -44,6 +44,15 @@
   * The RDoc methods now store the method they are aliased to.  Bug #206 by
     Jeremy Stephens.
   * Fixed parsing of multiple methods on the same line.  Bug #221 by derula.
+  * Fixed missing support for images in markdown.  Bug #241, pull request #242
+    by Zachary Scott.
+  * Ignore empty call-seq for methods.  Improved deduplication of C methods
+    sharing the same C function.  This allows the method heading to show
+    up correctly for String#== and #===.  Bug #244 by Neurogami.
+  * RDoc no longer adds "http://" to urls without a scheme.  Bug #208 by
+    Zachary Scott.
+  * Improved the error message in the RDoc server when ri data is missing.
+    Bug #243, Pull Request #249 by Tadas Tamošauskas.
 
 === 4.0.1 / 2013-03-27
 
@@ -74,15 +83,6 @@
   * Text#snippet now creates a RDoc::Markup::ToHtmlSnippet correctly.
   * The C parser now de-duplicates call-seq if the same C function is used for
     multiple method names.  Bug #203 by Pete Higgins
-  * Fixed missing support for images in markdown.  Bug #241, pull request #242
-    by Zachary Scott.
-  * Ignore empty call-seq for methods.  Improved deduplication of C methods
-    sharing the same C function.  This allows the method heading to show
-    up correctly for String#== and #===.  Bug #244 by Neurogami.
-  * RDoc no longer adds "http://" to urls without a scheme.  Bug #208 by
-    Zachary Scott.
-  * Improved the error message in the RDoc server when ri data is missing.
-    Bug #243, Pull Request #249 by Tadas Tamošauskas.
 
 === 4.0.0 / 2013-02-24
 
