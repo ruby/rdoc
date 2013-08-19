@@ -912,8 +912,9 @@ class RDoc::RubyLex
         else
           if @lex_state != :EXPR_FNAME
             if ENINDENT_CLAUSE.include?(token)
+              valid = peek(0) != ':'
+
               # check for ``class = val'' etc.
-              valid = true
               case token
               when "class"
                 valid = false unless peek_match?(/^\s*(<<|\w|::)/)
@@ -925,7 +926,8 @@ class RDoc::RubyLex
                 valid = false if peek_match?(/^\s*([+-\/*]?=|\*|<|>|\&|\|)/)
               else
                 # no nothing
-              end
+              end if valid
+
               if valid
                 if token == "do"
                   if ![TkFOR, TkWHILE, TkUNTIL].include?(@indent_stack.last)

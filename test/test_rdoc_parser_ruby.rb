@@ -3051,6 +3051,20 @@ end
     assert_equal 'rd', c.method_list.first.comment.format
   end
 
+  def test_scan_rails_routes
+    util_parser <<-ROUTES_RB
+namespace :api do
+  scope module: :v1 do
+  end
+end
+    ROUTES_RB
+
+    @parser.scan
+
+    assert_empty @top_level.classes
+    assert_empty @top_level.modules
+  end
+
   def test_scan_tomdoc_meta
     util_parser <<-RUBY
 # :markup: tomdoc

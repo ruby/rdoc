@@ -275,6 +275,23 @@ U
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_symbol
+    tokens = RDoc::RubyLex.tokenize 'scope module: :v1', nil
+
+    expected = [
+      @TK::TkIDENTIFIER.new( 0, 1,  0, 'scope'),
+      @TK::TkSPACE     .new( 5, 1,  5, ' '),
+      @TK::TkIDENTIFIER.new( 6, 1,  6, 'module'),
+      @TK::TkCOLON     .new(12, 1, 12, ':'),
+      @TK::TkSPACE     .new(13, 1, 13, ' '),
+      @TK::TkSYMBEG    .new(14, 1, 14, ':'),
+      @TK::TkIDENTIFIER.new(15, 1, 15, 'v1'),
+      @TK::TkNL        .new(17, 1, 17, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_unary_minus
     ruby_lex = RDoc::RubyLex.new("-1", nil)
     assert_equal("-1", ruby_lex.token.value)
