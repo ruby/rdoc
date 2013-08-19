@@ -81,6 +81,8 @@
     up correctly for String#== and #===.  Bug #244 by Neurogami.
   * RDoc no longer adds "http://" to urls without a scheme.  Bug #208 by
     Zachary Scott.
+  * Improved the error message in the RDoc server when ri data is missing.
+    Bug #243, Pull Request #249 by Tadas Tamošauskas.
 
 === 4.0.0 / 2013-02-24
 
