@@ -958,9 +958,9 @@ StrongUl =  TwoUlOpen
             TwoUlClose:l { a << l }
             { strong a.join }
 
-# TODO image link support
+# TODO alt text support
 Image = "!" ( ExplicitLink | ReferenceLink ):a
-        { a }
+        { "rdoc-image:#{a[/\[(.*)\]/, 1]}" }
 
 Link =  ExplicitLink | ReferenceLink | AutoLink
 

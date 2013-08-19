@@ -65,14 +65,28 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   #
   # These methods handle special markup added by RDoc::Markup#add_special.
 
-  def handle_TIDYLINK text # :nodoc:
-    return text unless
-      text =~ /^\{(.*)\}\[(.*?)\]$/ or text =~ /^(\S+)\[(.*?)\]$/
+  def handle_RDOCLINK url # :nodoc:
+    case url
+    when /^rdoc-ref:/
+      $'
+    when /^rdoc-label:/
+      text = $'
 
-    label = handle_TIDYLINK $1
-    url   = $2
+      text = case text
+             when /\Alabel-/    then $'
+             when /\Afootmark-/ then $'
+             when /\Afoottext-/ then $'
+             else                    text
+             end
 
-    gen_url url, label
+      gen_url url, text
+    when /^rdoc-image:/
+      "<img src=\"#{$'}\">"
+    else
+      url =~ /\Ardoc-[a-z]+:/
+
+      $'
+    end
   end
 
   ##
@@ -110,27 +124,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # when creating a link.  All other contents will be linked verbatim.
 
   def handle_special_RDOCLINK special
-    url = special.text
-
-    case url
-    when /\Ardoc-ref:/
-      $'
-    when /\Ardoc-label:/
-      text = $'
-
-      text = case text
-             when /\Alabel-/    then $'
-             when /\Afootmark-/ then $'
-             when /\Afoottext-/ then $'
-             else                    text
-             end
-
-      gen_url url, text
-    else
-      url =~ /\Ardoc-[a-z]+:/
-
-      $'
-    end
+    handle_RDOCLINK special.text
   end
 
   ##
@@ -138,7 +132,17 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # <tt>label[url]</tt> or <tt>{long label}[url]</tt>
 
   def handle_special_TIDYLINK(special)
-    handle_TIDYLINK special.text
+    text = special.text
+
+    return text unless
+      text =~ /^\{(.*)\}\[(.*?)\]$/ or text =~ /^(\S+)\[(.*?)\]$/
+
+    label = $1
+    url   = $2
+
+    label = handle_RDOCLINK label if /^rdoc-image:/ =~ label
+
+    gen_url url, label
   end
 
   # :section: Visitor

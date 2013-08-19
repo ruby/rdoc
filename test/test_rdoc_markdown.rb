@@ -430,7 +430,7 @@ heading
   def test_parse_image
     doc = parse "image ![alt text](path/to/image.jpg)"
 
-    expected = doc(para("image {alt text}[path/to/image.jpg]"))
+    expected = doc(para("image rdoc-image:path/to/image.jpg"))
 
     assert_equal expected, doc
   end
@@ -442,7 +442,7 @@ heading
 
     expected =
       doc(
-        para('{{alt text}[path/to/image.jpg]}[http://example.com]'))
+        para('{rdoc-image:path/to/image.jpg}[http://example.com]'))
 
     assert_equal expected, doc
   end
