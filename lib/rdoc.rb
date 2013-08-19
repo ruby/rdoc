@@ -14,7 +14,7 @@ $DEBUG_RDOC = nil
 #
 # == Roadmap
 #
-# If you think you found a bug in RDoc see DEVELOPERS@Bugs
+# If you think you found a bug in RDoc see CONTRIBUTING@Bugs
 #
 # If you want to use RDoc to create documentation for your Ruby source files,
 # see RDoc::Markup and refer to <tt>rdoc --help</tt> for command line usage.
@@ -42,7 +42,7 @@ $DEBUG_RDOC = nil
 #
 # If you want to write your own output generator see RDoc::Generator.
 #
-# If you want an overview of how RDoc works see DEVELOPERS
+# If you want an overview of how RDoc works see CONTRIBUTING
 #
 # == Credits
 #

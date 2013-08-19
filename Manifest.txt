@@ -1,7 +1,7 @@
 .autotest
 .document
+CONTRIBUTING.rdoc
 CVE-2013-0256.rdoc
-DEVELOPERS.rdoc
 ExampleMarkdown.md
 ExampleRDoc.rdoc
 History.rdoc

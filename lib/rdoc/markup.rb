@@ -704,7 +704,7 @@
 #     def some_method
 #       # ...
 #
-#   See Markup@DEVELOPERS for instructions on adding a new markup format.
+#   See Markup@CONTRIBUTING for instructions on adding a new markup format.
 #
 # [+:include:+ _filename_]
 #   Include the contents of the named file at this point. This directive

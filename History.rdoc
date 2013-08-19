@@ -14,6 +14,7 @@
   * Running <code>rake newb</code> now automatically installs development
     dependencies if the parser files haven't been built.  Pull request #235 by
     Kouhei Sutou.
+  * Moved old DEVELOPERS file to CONTRIBUTING to match github conventions.
 
 * Bug fixes
   * Restored behavior of --no-pager alias -T.  Pull request #223 by ruafozy.

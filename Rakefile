@@ -47,7 +47,7 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   self.testlib = :minitest
   self.extra_rdoc_files += %w[
     CVE-2013-0256.rdoc
-    DEVELOPERS.rdoc
+    CONTRIBUTING.rdoc
     ExampleMarkdown.md
     ExampleRDoc.rdoc
     History.rdoc
