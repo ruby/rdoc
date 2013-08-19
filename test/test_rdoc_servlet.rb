@@ -433,6 +433,7 @@ class TestRDocServlet < RDoc::TestCase
   end
 
   def test_store_for_gem
+    FileUtils.mkdir_p(File.join @gem_doc_dir, 'spec-1.0', 'ri')
     store = @s.store_for 'spec-1.0'
 
     assert_equal File.join(@gem_doc_dir, 'spec-1.0', 'ri'), store.path
@@ -451,7 +452,7 @@ class TestRDocServlet < RDoc::TestCase
       @s.store_for 'missing'
     end
 
-    assert_equal 'could not find ri documentation for missing', e.message
+    assert_equal 'could not find ri documentation for missing. Please run `gem rdoc --ri gem_name`', e.message
   end
 
   def test_store_for_ruby
