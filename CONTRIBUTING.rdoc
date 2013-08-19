@@ -20,6 +20,23 @@ issues:
 * https://github.com/rdoc/rdoc/issues/55
 * https://github.com/rdoc/rdoc/issues/61
 
+== Developer Quick Start
+
+RDoc uses hoe for development.  To get ready to work on RDoc run:
+
+  $ gem install hoe
+  [...]
+  $ rake
+  [...]
+
+This will install all the necessary dependencies for development with rake,
+generate documentation and run the tests for the first time.  If the tests
+don't pass on the first run check the {Travis CI page for
+RDoc}[https://travis-ci.org/rdoc/rdoc] to see if there are any known failures
+(there shouldn't be).
+
+You can now use `rake` and `autotest` to run the tests.
+
 == Glossary
 
 Here are definitions for some common terms in the RDoc documentation.  The
