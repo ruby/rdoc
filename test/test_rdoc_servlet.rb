@@ -433,7 +433,10 @@ class TestRDocServlet < RDoc::TestCase
   end
 
   def test_store_for_gem
-    FileUtils.mkdir_p(File.join @gem_doc_dir, 'spec-1.0', 'ri')
+    ri_dir = File.join @gem_doc_dir, 'spec-1.0', 'ri'
+    FileUtils.mkdir_p ri_dir
+    FileUtils.touch File.join ri_dir, 'cache.ri'
+
     store = @s.store_for 'spec-1.0'
 
     assert_equal File.join(@gem_doc_dir, 'spec-1.0', 'ri'), store.path
@@ -447,12 +450,24 @@ class TestRDocServlet < RDoc::TestCase
     assert_equal :home, store.type
   end
 
-  def test_store_for_missing
-    e = assert_raises RDoc::Error do
+  def test_store_for_missing_documentation
+    FileUtils.mkdir_p(File.join @gem_doc_dir, 'spec-1.0', 'ri')
+
+    e = assert_raises WEBrick::HTTPStatus::NotFound do
+      @s.store_for 'spec-1.0'
+    end
+
+    assert_equal 'Could not find documentation for "spec-1.0". Please run `gem rdoc --ri gem_name`',
+                 e.message
+  end
+
+  def test_store_for_missing_gem
+    e = assert_raises WEBrick::HTTPStatus::NotFound do
       @s.store_for 'missing'
     end
 
-    assert_equal 'could not find ri documentation for missing. Please run `gem rdoc --ri gem_name`', e.message
+    assert_equal 'Could not find gem "missing". Are you sure you installed it?',
+                 e.message
   end
 
   def test_store_for_ruby

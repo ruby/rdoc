@@ -419,11 +419,16 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
         source_name == dir[%r%/([^/]*)/ri$%, 1]
       end
 
-      unless ri_dir && File.directory?(ri_dir)
-        raise RDoc::Error, "could not find ri documentation for #{source_name}. Please run `gem rdoc --ri gem_name`"
-      end
+      raise WEBrick::HTTPStatus::NotFound,
+            "Could not find gem \"#{source_name}\". Are you sure you installed it?" unless ri_dir
 
-      RDoc::Store.new ri_dir, type
+      store = RDoc::Store.new ri_dir, type
+
+      return store if File.exist? store.cache_path
+
+      raise WEBrick::HTTPStatus::NotFound,
+            "Could not find documentation for \"#{source_name}\". Please run `gem rdoc --ri gem_name`"
+
     end
   end
 
