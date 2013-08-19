@@ -82,9 +82,9 @@ class TestRDocMarkupFormatter < RDoc::TestCase
   def test_parse_url
     scheme, url, id = @to.parse_url 'example/foo'
 
-    assert_equal 'http',               scheme
-    assert_equal 'http://example/foo', url
-    assert_equal nil,                  id
+    assert_equal 'http',        scheme
+    assert_equal 'example/foo', url
+    assert_equal nil,           id
   end
 
   def test_parse_url_anchor

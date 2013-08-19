@@ -239,7 +239,7 @@ class RDoc::Markup::Formatter
     else
       scheme = 'http'
       path   = url
-      url    = "http://#{url}"
+      url    = url
     end
 
     if scheme == 'link' then
