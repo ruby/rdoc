@@ -147,6 +147,16 @@ class TestRDocServlet < RDoc::TestCase
     end
   end
 
+  def do_GET_not_found
+    touch_system_cache_path
+
+    @req.path = "/#{@spec.full_name}"
+
+    @s.do_GET @req, @res
+
+    assert_equal 404, @res.status
+  end
+
   def test_do_GET_not_modified
     touch_system_cache_path
     @req.header['if-modified-since'] = [(Time.now + 10).httpdate]
@@ -330,6 +340,18 @@ class TestRDocServlet < RDoc::TestCase
     assert_equal 404,                                @res.status
     assert_match %r%<title>Not Found</title>%,       @res.body
     assert_match %r%<kbd>/ruby/Missing\.html</kbd>%, @res.body
+  end
+
+  def test_not_found_message
+    generator = @s.generator_for RDoc::Store.new
+
+    @req.path = '/ruby/Missing.html'
+
+    @s.not_found generator, @req, @res, 'woo, this is a message'
+
+    assert_equal 404,                          @res.status
+    assert_match %r%<title>Not Found</title>%, @res.body
+    assert_match %r%woo, this is a message%,   @res.body
   end
 
   def test_ri_paths
