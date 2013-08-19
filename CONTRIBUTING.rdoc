@@ -10,9 +10,12 @@ classes for each feature.
 If you think you found a bug, file a ticket on the {issues
 tracker}[https://github.com/rdoc/rdoc/issues] on github.
 
-To get your bug fixed as fast as possible please include a sample file that
-illustrates the problem or link to a repository and include steps to reproduce
-the issue.  Here are some examples of good issues:
+If your bug involves an error RDoc produced please include a sample file that
+illustrates the problem or link to the repository or gem that is associated
+with the bug.
+
+Please include steps to reproduce the issue.  Here are some examples of good
+issues:
 
 * https://github.com/rdoc/rdoc/issues/55
 * https://github.com/rdoc/rdoc/issues/61
