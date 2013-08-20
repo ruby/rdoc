@@ -300,7 +300,7 @@ class TestRDocMarkupAttributeManager < RDoc::TestCase
     @am.str = '<code>foo\\</code>'
     @am.mask_protected_sequences
 
-    assert_equal "<code>foo<\u0004/code>", @am.str, 'escaped close'
+    assert_equal "<code>foo<\x04/code>", @am.str, 'escaped close'
 
     @am.str = '<code>foo\\\\</code>'
     @am.mask_protected_sequences
