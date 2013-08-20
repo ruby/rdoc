@@ -288,6 +288,26 @@ class TestRDocMarkupAttributeManager < RDoc::TestCase
     assert_equal(3, word_pairs.size)
   end
 
+  def test_mask_protected_sequence
+    def @am.str()     @str       end
+    def @am.str=(str) @str = str end
+
+    @am.str = '<code>foo</code>'
+    @am.mask_protected_sequences
+
+    assert_equal "<code>foo</code>",       @am.str
+
+    @am.str = '<code>foo\\</code>'
+    @am.mask_protected_sequences
+
+    assert_equal "<code>foo<\u0004/code>", @am.str, 'escaped close'
+
+    @am.str = '<code>foo\\\\</code>'
+    @am.mask_protected_sequences
+
+    assert_equal "<code>foo\\</code>",     @am.str, 'escaped backslash'
+  end
+
   def test_protect
     assert_equal(['cat \\ dog'],
                  @am.flow('cat \\ dog'))

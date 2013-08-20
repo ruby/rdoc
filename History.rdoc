@@ -55,6 +55,8 @@
   * Improved the error message in the RDoc server when ri data is missing.
     Bug #243, Pull Request #249 by Tadas Tamošauskas.
   * Support ruby 2.0 hash syntax for keywords.  Bug #256 by diogocsc.
+  * Prevent \\<tag> from escaping the tag in RDoc markup.  (\<tag> still
+    escapes the tag.)  Bug #251 by Pablo Bianciotto.
 
 === 4.0.1 / 2013-03-27
 
