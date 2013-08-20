@@ -28,7 +28,7 @@ class TestRDocMarkupAttributeManager < RDoc::TestCase
     @wombat_off   = @am.changed_attribute_by_name([:WOMBAT], [])
 
     @klass = RDoc::Markup::AttributeManager
-    @formatter = RDoc::Markup::Formatter.new @options
+    @formatter = RDoc::Markup::Formatter.new @rdoc.options
     @formatter.add_tag :BOLD, '<B>', '</B>'
     @formatter.add_tag :EM, '<EM>', '</EM>'
     @formatter.add_tag :TT, '<CODE>', '</CODE>'
