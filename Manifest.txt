@@ -210,7 +210,6 @@ test/test.ja.largedoc
 test/test.ja.rdoc
 test/test.ja.txt
 test/test.txt
-test/test_attribute_manager.rb
 test/test_rdoc_alias.rb
 test/test_rdoc_any_method.rb
 test/test_rdoc_attr.rb
