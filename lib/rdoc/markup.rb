@@ -347,6 +347,9 @@
 # with <tt>+</tt> like <tt>RDoc::Markup@Escaping+Text+Markup</tt>.
 # Punctuation and other special characters must be escaped like CGI.escape.
 #
+# The <tt>@</tt> can also be used to link to sections.  If a section and a
+# heading share the same name the section is preferred for the link.
+#
 # Links can also be of the form <tt>label[url]</tt>, in which case +label+ is
 # used in the displayed text, and +url+ is used as the target.  If +label+
 # contains multiple words, put it in braces: <tt>{multi word label}[url]</tt>.
