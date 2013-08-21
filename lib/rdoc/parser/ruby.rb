@@ -107,6 +107,9 @@ $TOKEN_DEBUG ||= nil
 #   ##
 #   # :singleton-method: some_method!
 #
+# You can define arguments for metaprogrammed methods via either the
+# :call-seq:, :arg: or :args: directives.
+#
 # Additionally you can mark a method as an attribute by
 # using :attr:, :attr_reader:, :attr_writer: or :attr_accessor:.  Just like
 # for :method:, the name is optional.
@@ -824,7 +827,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
       position_comment.set_text "# File #{@top_level.relative_name}, line #{line_no}"
       meth.add_tokens [position_comment, NEWLINE_TOKEN, indent]
 
-      meth.params = ''
+      meth.params =
+        if text.sub!(/^#\s+:?args?:\s*(.*?)\s*$/i, '') then
+          $1
+        else
+          ''
+        end
 
       comment.normalize
       comment.extract_call_seq meth

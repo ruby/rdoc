@@ -16,6 +16,8 @@
     Kouhei Sutou.
   * Moved old DEVELOPERS file to CONTRIBUTING to match github conventions.
   * TomDoc output now has a "Returns" heading.  Issue #234 by Brian Henderson
+  * Metaprogrammed methods can now use the :args: directive in addition to the
+    :call-seq: durective.  Issue #236 by Mike Moore.
 
 * Bug fixes
   * Restored behavior of --no-pager alias -T.  Pull request #223 by ruafozy.

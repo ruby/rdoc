@@ -1147,6 +1147,23 @@ EOF
     assert_equal stream, foo.token_stream
   end
 
+  def test_parse_comment_method_args
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+
+    util_parser "\n"
+
+    tk = @parser.get_tk
+
+    @parser.parse_comment klass, tk,
+                          comment("##\n# :method: foo\n# :args: a, b\n")
+
+    foo = klass.method_list.first
+    assert_equal 'foo',  foo.name
+    assert_equal 'a, b', foo.params
+  end
+
   def test_parse_comment_method_stopdoc
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
