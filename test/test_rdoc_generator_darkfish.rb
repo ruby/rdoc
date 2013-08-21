@@ -76,6 +76,8 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
     assert_file 'table_of_contents.html'
     assert_file 'js/search_index.js'
 
+    assert_hard_link 'rdoc.css'
+
     encoding = if Object.const_defined? :Encoding then
                  Regexp.escape Encoding::UTF_8.name
                else
@@ -164,6 +166,27 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
     assert_kind_of RDoc::ERBPartial, template
 
     assert_same template, @g.send(:template_for, partial)
+  end
+
+  ##
+  # Asserts that +filename+ has a link count greater than 1 if hard links to
+  # @tmpdir are supported.
+
+  def assert_hard_link filename
+    assert_file filename
+
+    src = @g.template_dir + '_head.rhtml'
+    dst = File.join @tmpdir, 'hardlinktest'
+
+    begin
+      FileUtils.ln src, dst
+      FileUtils.rm dst
+    rescue SystemCallError
+      return
+    end
+
+    assert_operator File.stat(filename).nlink, :>, 1,
+                    "#{filename} is not hard-linked"
   end
 
 end

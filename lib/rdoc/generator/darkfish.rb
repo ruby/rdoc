@@ -128,6 +128,11 @@ class RDoc::Generator::Darkfish
   attr_reader :store
 
   ##
+  # The directory where the template files live
+
+  attr_reader :template_dir # :nodoc:
+
+  ##
   # The output directory
 
   attr_reader :outputdir
@@ -195,7 +200,8 @@ class RDoc::Generator::Darkfish
     debug_msg "Copying static files"
     options = { :verbose => $DEBUG_RDOC, :noop => @dry_run }
 
-    FileUtils.cp @template_dir + 'rdoc.css', '.', options
+    install_rdoc_static_file @template_dir + 'rdoc.css', '.', options
+
     @options.template_stylesheets.each do |stylesheet|
       FileUtils.cp stylesheet, '.', options
     end
@@ -210,7 +216,7 @@ class RDoc::Generator::Darkfish
       dst_dir = dst.dirname
       FileUtils.mkdir_p dst_dir, options unless File.exist? dst_dir
 
-      FileUtils.cp @template_dir + path, dst, options
+      install_rdoc_static_file @template_dir + path, dst, options
     end
   end
 
@@ -531,6 +537,12 @@ class RDoc::Generator::Darkfish
     error.set_backtrace e.backtrace
 
     raise error
+  end
+
+  def install_rdoc_static_file source, destination, options # :nodoc:
+    FileUtils.ln source, destination, options
+  rescue
+    FileUtils.cp source, destination, options
   end
 
   ##
