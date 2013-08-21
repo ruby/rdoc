@@ -283,13 +283,19 @@ Signature
 Do some stuff
 
 Returns a thing
+
+Returns another thing
     TEXT
 
     expected =
-      @RM::Document.new(
-        @RM::Paragraph.new('Do some stuff'),
-        @RM::BlankLine.new,
-        @RM::Paragraph.new('Returns a thing'))
+      doc(
+        para('Do some stuff'),
+        blank_line,
+        head(3, 'Returns'),
+        blank_line,
+        para('Returns a thing'),
+        blank_line,
+        para('Returns another thing'))
 
     assert_equal expected, @TD.parse(text)
   end
@@ -305,6 +311,8 @@ Returns a thing
     expected =
       doc(
         para('Do some stuff'),
+        blank_line,
+        head(3, 'Returns'),
         blank_line,
         para('Returns a thing', ' ', 'that is multiline'))
 

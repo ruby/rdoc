@@ -15,6 +15,7 @@
     dependencies if the parser files haven't been built.  Pull request #235 by
     Kouhei Sutou.
   * Moved old DEVELOPERS file to CONTRIBUTING to match github conventions.
+  * TomDoc output now has a "Returns" heading.  Issue #234 by Brian Henderson
 
 * Bug fixes
   * Restored behavior of --no-pager alias -T.  Pull request #223 by ruafozy.
