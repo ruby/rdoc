@@ -660,30 +660,27 @@ class RDoc::Parser::Ruby < RDoc::Parser
     declaration_context = container
     container, name_t, given_name = get_class_or_module container
 
-    case name_t
-    when TkCONSTANT
-      cls =
+    cls =
+      case name_t
+      when TkCONSTANT
         parse_class_regular container, declaration_context, single,
-                            name_t, given_name, comment
-
-      cls.offset = offset
-      cls.line   = line_no
-    when TkLSHFT
-      case name = get_class_specification
-      when 'self', container.name
-        cls = parse_statements container, SINGLE
-
-        cls.offset  = offset
-        cls.line    = line_no
+          name_t, given_name, comment
+      when TkLSHFT
+        case name = get_class_specification
+        when 'self', container.name
+          parse_statements container, SINGLE
+        else
+          parse_class_singleton container, name, comment
+        end
       else
-        cls = parse_class_singleton container, name, comment
-
-        cls.offset  = offset
-        cls.line    = line_no
+        warn "Expected class name or '<<'. Got #{name_t.class}: #{name_t.text.inspect}"
+        return
       end
-    else
-      warn("Expected class name or '<<'. Got #{name_t.class}: #{name_t.text.inspect}")
-    end
+
+    cls.offset = offset
+    cls.line   = line_no
+
+    cls
   end
 
   ##
