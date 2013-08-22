@@ -662,42 +662,19 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     case name_t
     when TkCONSTANT
-      name = name_t.name
-      superclass = '::Object'
+      cls =
+        parse_class_regular container, declaration_context, single,
+                            name_t, given_name, comment
 
-      if given_name =~ /^::/ then
-        declaration_context = @top_level
-        given_name = $'
-      end
-
-      if TkLT === peek_tk then
-        get_tk
-        skip_tkspace
-        superclass = get_class_specification
-        superclass = '(unknown)' if superclass.empty?
-      end
-
-      cls_type = single == SINGLE ? RDoc::SingleClass : RDoc::NormalClass
-      cls = declaration_context.add_class cls_type, given_name, superclass
-      cls.ignore unless container.document_children
-
-      read_documentation_modifiers cls, RDoc::CLASS_MODIFIERS
-      record_location cls
       cls.offset = offset
       cls.line   = line_no
-
-      cls.add_comment comment, @top_level
-
-      @top_level.add_to_classes_or_modules cls
-      @stats.add_class cls
-
-      suppress_parents container, declaration_context unless cls.document_self
-
-      parse_statements cls
     when TkLSHFT
       case name = get_class_specification
       when 'self', container.name
-        parse_statements container, SINGLE
+        cls = parse_statements container, SINGLE
+
+        cls.offset  = offset
+        cls.line    = line_no
       else
         other = @store.find_class_named name
 
@@ -735,6 +712,45 @@ class RDoc::Parser::Ruby < RDoc::Parser
     else
       warn("Expected class name or '<<'. Got #{name_t.class}: #{name_t.text.inspect}")
     end
+  end
+
+  ##
+  # Parses and creates a regular class
+
+  def parse_class_regular container, declaration_context, single, # :nodoc:
+                          name_t, given_name, comment
+    name = name_t.name
+    superclass = '::Object'
+
+    if given_name =~ /^::/ then
+      declaration_context = @top_level
+      given_name = $'
+    end
+
+    if TkLT === peek_tk then
+      get_tk
+      skip_tkspace
+      superclass = get_class_specification
+      superclass = '(unknown)' if superclass.empty?
+    end
+
+    cls_type = single == SINGLE ? RDoc::SingleClass : RDoc::NormalClass
+    cls = declaration_context.add_class cls_type, given_name, superclass
+    cls.ignore unless container.document_children
+
+    read_documentation_modifiers cls, RDoc::CLASS_MODIFIERS
+    record_location cls
+
+    cls.add_comment comment, @top_level
+
+    @top_level.add_to_classes_or_modules cls
+    @stats.add_class cls
+
+    suppress_parents container, declaration_context unless cls.document_self
+
+    parse_statements cls
+
+    cls
   end
 
   ##
