@@ -1140,25 +1140,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     singleton = !!comment.text.sub!(/(^# +:?)(singleton-)(method:)/, '\1\3')
 
-    if comment.text.sub!(/^# +:?method: *(\S*).*?\n/i, '') then
-      name = $1 unless $1.empty?
-    end
+    name = parse_meta_method_name tk, comment
 
-    if name.nil? then
-      name_t = get_tk
-      case name_t
-      when TkSYMBOL then
-        name = name_t.text[1..-1]
-      when TkSTRING then
-        name = name_t.value[1..-2]
-      when TkASSIGN then # ignore
-        remove_token_listener self
-        return
-      else
-        warn "unknown name token #{name_t.inspect} for meta-method '#{tk.name}'"
-        name = 'unknown'
-      end
-    end
+    return unless name
 
     meth = RDoc::MetaMethod.new get_tkread, name
     record_location meth
@@ -1209,6 +1193,28 @@ class RDoc::Parser::Ruby < RDoc::Parser
     @stats.add_method meth
 
     meth
+  end
+
+  def parse_meta_method_name tk, comment
+    if comment.text.sub!(/^# +:?method: *(\S*).*?\n/i, '') then
+      return $1 unless $1.empty?
+    end
+
+    name_t = get_tk
+
+    case name_t
+    when TkSYMBOL then
+      name_t.text[1..-1]
+    when TkSTRING then
+      name_t.value[1..-2]
+    when TkASSIGN then # ignore
+      remove_token_listener self
+
+      nil
+    else
+      warn "unknown name token #{name_t.inspect} for meta-method '#{tk.name}'"
+      'unknown'
+    end
   end
 
   ##
