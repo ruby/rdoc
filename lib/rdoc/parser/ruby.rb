@@ -454,6 +454,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
   end
 
+  def stop_at_EXPR_END # :nodoc:
+    @scanner.lex_state == :EXPR_END || !@scanner.continue
+  end
+
   ##
   # Marks containers between +container+ and +ancestor+ as ignored
 
@@ -845,8 +849,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when TkRPAREN, TkRBRACE, TkRBRACK, TkEND then
         nest -= 1
       when TkCOMMENT then
-        if nest <= 0 &&
-           (@scanner.lex_state == :EXPR_END || !@scanner.continue) then
+        if nest <= 0 and stop_at_EXPR_END then
           unget_tk tk
           break
         else
@@ -861,8 +864,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           break
         end
       when TkNL then
-        if nest <= 0 &&
-           (@scanner.lex_state == :EXPR_END || !@scanner.continue) then
+        if nest <= 0 and stop_at_EXPR_END then
           unget_tk tk
           break
         end
