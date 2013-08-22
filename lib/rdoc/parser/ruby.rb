@@ -1213,7 +1213,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     singleton = !!comment.text.sub!(/(^# +:?)(singleton-)(method:)/, '\1\3')
 
-    name = parse_meta_method_name tk, comment
+    name = parse_meta_method_name comment, tk
 
     return unless name
 
@@ -1268,7 +1268,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth
   end
 
-  def parse_meta_method_name tk, comment
+  ##
+  # Parses the name of a metaprogrammed method.  +comment+ is used to
+  # determine the name while +tk+ is used in an error message if the name
+  # cannot be determined.
+
+  def parse_meta_method_name comment, tk # :nodoc:
     if comment.text.sub!(/^# +:?method: *(\S*).*?\n/i, '') then
       return $1 unless $1.empty?
     end
