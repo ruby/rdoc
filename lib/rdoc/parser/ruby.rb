@@ -687,7 +687,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def parse_class_regular container, declaration_context, single, # :nodoc:
                           name_t, given_name, comment
-    name = name_t.name
     superclass = '::Object'
 
     if given_name =~ /^::/ then
@@ -1216,9 +1215,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Parses a normal method defined by +def+
 
   def parse_method(container, single, tk, comment)
-    singleton = single == SINGLE
+    singleton = nil
     added_container = false
-    meth = nil
     name = nil
     column  = tk.char_no
     offset  = tk.seek
@@ -1232,7 +1230,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
       name, container, singleton = parse_method_name container
       added_container = container != prev_container
     end
-
 
     return unless name
 
@@ -1302,7 +1299,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     skip_tkspace
     name_t = get_tk
     back_tk = skip_tkspace
-    meth = nil
     singleton = false
 
     case dot = get_tk
