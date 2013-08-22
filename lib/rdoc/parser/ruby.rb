@@ -390,7 +390,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     unless container then
-      added_container = true
       obj = name_t.name.split("::").inject(Object) do |state, item|
         state.const_get(item)
       end rescue nil
@@ -1218,7 +1217,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def parse_method(container, single, tk, comment)
     singleton = single == SINGLE
-    added_container = nil
+    added_container = false
     meth = nil
     name = nil
     column  = tk.char_no
@@ -1229,28 +1228,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
     add_token tk
 
     token_listener self do
-      @scanner.lex_state = :EXPR_FNAME
-
-      skip_tkspace
-      name_t = get_tk
-      back_tk = skip_tkspace
-      meth = nil
-      added_container = false
-
-      case dot = get_tk
-      when TkDOT, TkCOLON2 then
-        singleton = true
-
-        name, container = parse_method_name_singleton container, name_t
-      else
-        unget_tk dot
-        back_tk.reverse_each do |token|
-          unget_tk token
-        end
-
-        name = parse_method_name_regular container, name_t
-      end
+      prev_container = container
+      name, container, singleton = parse_method_name container
+      added_container = container != prev_container
     end
+
 
     return unless name
 
@@ -1312,6 +1294,32 @@ class RDoc::Parser::Ruby < RDoc::Parser
     dummy.parent = container
     dummy.store  = container.store
     skip_method dummy
+  end
+
+  def parse_method_name container
+    @scanner.lex_state = :EXPR_FNAME
+
+    skip_tkspace
+    name_t = get_tk
+    back_tk = skip_tkspace
+    meth = nil
+    singleton = false
+
+    case dot = get_tk
+    when TkDOT, TkCOLON2 then
+      singleton = true
+
+      name, container = parse_method_name_singleton container, name_t
+    else
+      unget_tk dot
+      back_tk.reverse_each do |token|
+        unget_tk token
+      end
+
+      name = parse_method_name_regular container, name_t
+    end
+
+    return name, container, singleton
   end
 
   ##
