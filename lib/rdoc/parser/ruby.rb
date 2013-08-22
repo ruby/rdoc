@@ -1154,6 +1154,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Parses a normal method defined by +def+
 
   def parse_method(container, single, tk, comment)
+    singleton = single == SINGLE
     added_container = nil
     meth = nil
     name = nil
@@ -1179,8 +1180,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
         return unless name
 
-        meth = RDoc::AnyMethod.new(get_tkread, name)
-        meth.singleton = true
+        singleton = true
       else
         unget_tk dot
         back_tk.reverse_each do |token|
@@ -1199,10 +1199,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
                  name_t.name
                end
 
-        meth = RDoc::AnyMethod.new get_tkread, name
-        meth.singleton = (single == SINGLE)
       end
     end
+
+    meth = RDoc::AnyMethod.new get_tkread, name
+    meth.singleton = singleton
 
     record_location meth
     meth.offset = offset
