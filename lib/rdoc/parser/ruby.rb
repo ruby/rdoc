@@ -1303,6 +1303,20 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.add_tokens [token, NEWLINE_TOKEN, indent]
     meth.add_tokens @token_stream
 
+    parse_method_params_and_body container, single, meth, added_container
+
+    comment.normalize
+    comment.extract_call_seq meth
+
+    meth.comment = comment
+
+    @stats.add_method meth
+  end
+
+  ##
+  # Parses the parameters and body of +meth+
+
+  def parse_method_params_and_body container, single, meth, added_container
     token_listener meth do
       @scanner.continue = false
       parse_method_parameters meth
@@ -1316,7 +1330,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       # Having now read the method parameters and documentation modifiers, we
       # now know whether we have to rename #initialize to ::new
 
-      if name == "initialize" && !meth.singleton then
+      if meth.name == "initialize" && !meth.singleton then
         if meth.dont_rename_initialize then
           meth.visibility = :protected
         else
@@ -1328,13 +1342,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       parse_statements container, single, meth
     end
-
-    comment.normalize
-    comment.extract_call_seq meth
-
-    meth.comment = comment
-
-    @stats.add_method meth
   end
 
   ##
