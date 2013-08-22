@@ -1122,73 +1122,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       case dot = get_tk
       when TkDOT, TkCOLON2 then
-        @scanner.lex_state = :EXPR_FNAME
-        skip_tkspace
-        name_t2 = get_tk
+        name, container = parse_method_name_singleton container, name_t
 
-        case name_t
-        when TkSELF, TkMOD then
-          name = case name_t2
-                 # NOTE: work around '[' being consumed early and not being
-                 # re-tokenized as a TkAREF
-                 when TkfLBRACK then
-                   get_tk
-                   '[]'
-                 else
-                   name_t2.name
-                 end
-        when TkCONSTANT then
-          name = name_t2.name
-          prev_container = container
-          container = container.find_module_named(name_t.name)
-
-          unless container then
-            constant = prev_container.constants.find do |const|
-              const.name == name_t.name
-            end
-
-            if constant then
-              parse_method_dummy prev_container
-              return
-            end
-          end
-
-          unless container then
-            added_container = true
-            obj = name_t.name.split("::").inject(Object) do |state, item|
-              state.const_get(item)
-            end rescue nil
-
-            type = obj.class == Class ? RDoc::NormalClass : RDoc::NormalModule
-
-            unless [Class, Module].include?(obj.class) then
-              warn("Couldn't find #{name_t.name}. Assuming it's a module")
-            end
-
-            if type == RDoc::NormalClass then
-              sclass = obj.superclass ? obj.superclass.name : nil
-              container = prev_container.add_class type, name_t.name, sclass
-            else
-              container = prev_container.add_module type, name_t.name
-            end
-
-            record_location container
-          end
-        when TkIDENTIFIER, TkIVAR, TkGVAR then
-          parse_method_dummy container
-          return
-        when TkTRUE, TkFALSE, TkNIL then
-          klass_name = "#{name_t.name.capitalize}Class"
-          container = @store.find_class_named klass_name
-          container ||= @top_level.add_class RDoc::NormalClass, klass_name
-
-          name = name_t2.name
-        else
-          warn "unexpected method name token #{name_t.inspect}"
-          # break
-          skip_method container
-          return
-        end
+        return unless name
 
         meth = RDoc::AnyMethod.new(get_tkread, name)
         meth.singleton = true
@@ -1270,6 +1206,87 @@ class RDoc::Parser::Ruby < RDoc::Parser
     dummy.parent = container
     dummy.store  = container.store
     skip_method dummy
+  end
+
+  ##
+  # For the given +container+ and initial name token +name_t+ the method name
+  # and the new +container+ (if necessary) are parsed from the token stream.
+
+  def parse_method_name_singleton container, name_t # :nodoc:
+    @scanner.lex_state = :EXPR_FNAME
+    skip_tkspace
+    name_t2 = get_tk
+
+    name =
+      case name_t
+      when TkSELF, TkMOD then
+        case name_t2
+          # NOTE: work around '[' being consumed early and not being re-tokenized
+          # as a TkAREF
+        when TkfLBRACK then
+          get_tk
+          '[]'
+        else
+          name_t2.name
+        end
+      when TkCONSTANT then
+        name = name_t2.name
+        prev_container = container
+        container = container.find_module_named(name_t.name)
+
+        unless container then
+          constant = prev_container.constants.find do |const|
+            const.name == name_t.name
+          end
+
+          if constant then
+            parse_method_dummy prev_container
+            return
+          end
+        end
+
+        unless container then
+          added_container = true
+          obj = name_t.name.split("::").inject(Object) do |state, item|
+            state.const_get(item)
+          end rescue nil
+
+          type = obj.class == Class ? RDoc::NormalClass : RDoc::NormalModule
+
+          unless [Class, Module].include?(obj.class) then
+            warn("Couldn't find #{name_t.name}. Assuming it's a module")
+          end
+
+          if type == RDoc::NormalClass then
+            sclass = obj.superclass ? obj.superclass.name : nil
+            container = prev_container.add_class type, name_t.name, sclass
+          else
+            container = prev_container.add_module type, name_t.name
+          end
+
+          record_location container
+        end
+
+        name
+      when TkIDENTIFIER, TkIVAR, TkGVAR then
+        parse_method_dummy container
+
+        nil
+      when TkTRUE, TkFALSE, TkNIL then
+        klass_name = "#{name_t.name.capitalize}Class"
+        container = @store.find_class_named klass_name
+        container ||= @top_level.add_class RDoc::NormalClass, klass_name
+
+        name_t2.name
+      else
+        warn "unexpected method name token #{name_t.inspect}"
+        # break
+        skip_method container
+
+        nil
+      end
+
+    return name, container
   end
 
   ##
