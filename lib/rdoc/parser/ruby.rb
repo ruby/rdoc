@@ -256,6 +256,19 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
+  # Creates a new attribute in +container+ with +name+.
+
+  def create_attr container, single, name, rw, comment # :nodoc:
+    att = RDoc::Attr.new get_tkread, name, rw, comment, single == SINGLE
+    record_location att
+
+    container.add_attribute att
+    @stats.add_attribute att
+
+    att
+  end
+
+  ##
   # Creates a module alias in +container+ at +rhs_name+ (or at the top-level
   # for "::") with the name from +constant+.
 
@@ -588,16 +601,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
         unget_tk tk
       end
 
-      att = RDoc::Attr.new get_tkread, name, rw, comment, single == SINGLE
-      record_location att
+      att = create_attr context, single, name, rw, comment
       att.offset = offset
       att.line   = line_no
 
       read_documentation_modifiers att, RDoc::ATTR_MODIFIERS
-
-      context.add_attribute att
-
-      @stats.add_attribute att
     else
       warn "'attr' ignored - looks like a variable"
     end
@@ -629,13 +637,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     for name in args
-      att = RDoc::Attr.new get_tkread, name, rw, comment, single == SINGLE
-      record_location att
+      att = create_attr context, single, name, rw, comment
       att.offset = offset
       att.line   = line_no
-
-      context.add_attribute att
-      @stats.add_attribute att
     end
   end
 
@@ -972,13 +976,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
          else 'RW'
          end
 
-    att = RDoc::Attr.new get_tkread, name, rw, comment
-    record_location att
-
-    container.add_attribute att
-    @stats.add_attribute att
-
-    att
+    create_attr container, NORMAL, name, rw, comment
   end
 
   def parse_comment_ghost container, text, name, column, line_no, # :nodoc:
@@ -1179,19 +1177,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     if name then
-      att = RDoc::Attr.new get_tkread, name, rw, comment, single == SINGLE
-      record_location att
-
-      context.add_attribute att
-      @stats.add_attribute att
+      att = create_attr context, single, name, rw, comment
     else
       args.each do |attr_name|
-        att = RDoc::Attr.new(get_tkread, attr_name, rw, comment,
-                             single == SINGLE)
-        record_location att
-
-        context.add_attribute att
-        @stats.add_attribute att
+        att = create_attr context, single, attr_name, rw, comment
       end
     end
 
