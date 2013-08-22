@@ -421,6 +421,25 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
+  # Little hack going on here. In the statement:
+  #
+  #   f = 2*(1+yield)
+  #
+  # We see the RPAREN as the next token, so we need to exit early.  This still
+  # won't catch all cases (such as "a = yield + 1"
+
+  def get_end_token tk # :nodoc:
+    case tk
+    when TkLPAREN, TkfLPAREN
+      TkRPAREN
+    when TkRPAREN
+      nil
+    else
+      TkNL
+    end
+  end
+
+  ##
   # Retrieves the method container for a singleton method.
 
   def get_method_container container, name_t # :nodoc:
@@ -536,25 +555,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     prefix << "#{@scanner.line_no}:#{@scanner.char_no}:" if @scanner
 
     "#{prefix} #{message}"
-  end
-
-  ##
-  # Little hack going on here. In the statement:
-  #
-  #   f = 2*(1+yield)
-  #
-  # We see the RPAREN as the next token, so we need to exit early.  This still
-  # won't catch all cases (such as "a = yield + 1"
-
-  def method_parameters_end_token tk # :nodoc:
-    case tk
-    when TkLPAREN, TkfLPAREN
-      TkRPAREN
-    when TkRPAREN
-      nil
-    else
-      TkNL
-    end
   end
 
   ##
@@ -1492,7 +1492,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
                                        modifiers = RDoc::METHOD_MODIFIERS)
     skip_tkspace false
     tk = get_tk
-    end_token = method_parameters_end_token tk
+    end_token = get_end_token tk
     return '' unless end_token
 
     nest = 0
@@ -2051,12 +2051,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def skip_optional_do_after_expression
     skip_tkspace false
     tk = get_tk
-    case tk
-    when TkLPAREN, TkfLPAREN then
-      end_token = TkRPAREN
-    else
-      end_token = TkNL
-    end
+    end_token = get_end_token tk
 
     b_nest = 0
     nest = 0
