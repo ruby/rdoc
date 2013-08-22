@@ -21,6 +21,8 @@
   * Sections can be linked to using "@" like labels.  If a section and a label
     have the same name the section will be preferred.  Issue #233 by Brian
     Henderson.
+  * Files that come with a template are hard-linked to save space.  Issue #186
+    by Vít Ondruch.
 
 * Bug fixes
   * Restored behavior of --no-pager alias -T.  Pull request #223 by ruafozy.
