@@ -1758,7 +1758,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
-  # Parses up to +no+ symbol arguments and places them in +args+.
+  # Parses up to +no+ symbol arguments surrounded by () and places them in
+  # +args+.
 
   def parse_symbol_arg_paren no # :nodoc:
     args = []
