@@ -1248,7 +1248,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           unget_tk token
         end
 
-        name = parse_method_name container, name_t
+        name = parse_method_name_regular container, name_t
       end
     end
 
@@ -1318,7 +1318,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # For the given +container+ and initial name token +name_t+ the method name
   # is parsed from the token stream for a regular method.
 
-  def parse_method_name container, name_t # :nodoc:
+  def parse_method_name_regular container, name_t # :nodoc:
     case name_t
     when TkSTAR, TkAMPER then
       name_t.text
