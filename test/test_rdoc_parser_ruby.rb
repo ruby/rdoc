@@ -1303,27 +1303,7 @@ A::B::C = 1
     assert_equal 'comment', c.comment
   end
 
-  def test_parse_include
-    klass = RDoc::NormalClass.new 'C'
-    klass.parent = @top_level
-
-    comment = RDoc::Comment.new "# my include\n", @top_level
-
-    util_parser "include I"
-
-    @parser.get_tk # include
-
-    @parser.parse_include klass, comment
-
-    assert_equal 1, klass.includes.length
-
-    incl = klass.includes.first
-    assert_equal 'I', incl.name
-    assert_equal 'my include', incl.comment.text
-    assert_equal @top_level, incl.file
-  end
-
-  def test_parse_extend
+  def test_parse_extend_or_include_extend
     klass = RDoc::NormalClass.new 'C'
     klass.parent = @top_level
 
@@ -1333,7 +1313,7 @@ A::B::C = 1
 
     @parser.get_tk # extend
 
-    @parser.parse_extend klass, comment
+    @parser.parse_extend_or_include RDoc::Extend, klass, comment
 
     assert_equal 1, klass.extends.length
 
@@ -1341,6 +1321,26 @@ A::B::C = 1
     assert_equal 'I', ext.name
     assert_equal 'my extend', ext.comment.text
     assert_equal @top_level, ext.file
+  end
+
+  def test_parse_extend_or_include_include
+    klass = RDoc::NormalClass.new 'C'
+    klass.parent = @top_level
+
+    comment = RDoc::Comment.new "# my include\n", @top_level
+
+    util_parser "include I"
+
+    @parser.get_tk # include
+
+    @parser.parse_extend_or_include RDoc::Include, klass, comment
+
+    assert_equal 1, klass.includes.length
+
+    incl = klass.includes.first
+    assert_equal 'I', incl.name
+    assert_equal 'my include', incl.comment.text
+    assert_equal @top_level, incl.file
   end
 
   def test_parse_meta_method

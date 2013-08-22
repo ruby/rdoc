@@ -167,6 +167,18 @@ class RDoc::Context < RDoc::CodeObject
     full_name <=> other.full_name
   end
 
+  def add klass, name, comment
+    if RDoc::Extend == klass then
+      ext = RDoc::Extend.new name, comment
+      add_extend ext
+    elsif RDoc::Include == klass then
+      incl = RDoc::Include.new name, comment
+      add_include incl
+    else
+      raise NotImplementedError, "adding a #{klass} is not implemented"
+    end
+  end
+
   ##
   # Adds +an_alias+ that is automatically resolved
 

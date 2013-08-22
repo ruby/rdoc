@@ -41,6 +41,14 @@ class TestRDocContext < XrefTestCase
     assert_equal [as], @context.unmatched_alias_lists['#old_name']
   end
 
+  def test_add
+    @context.add RDoc::Extend,  'Ext', 'comment'
+    @context.add RDoc::Include, 'Incl', 'comment'
+
+    refute_empty @context.extends
+    refute_empty @context.includes
+  end
+
   def test_add_alias_method_attr
     top_level = @store.add_file 'file.rb'
 

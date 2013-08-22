@@ -1046,6 +1046,27 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
+  # Parses an +include+ or +extend+, indicated by the +klass+ and adds it to
+  # +container+ # with +comment+
+
+  def parse_extend_or_include klass, container, comment # :nodoc:
+    loop do
+      skip_tkspace_comment
+
+      name = get_constant_with_optional_parens
+
+      unless name.empty? then
+        obj = container.add klass, name, comment
+        record_location obj
+      end
+
+      return unless TkCOMMA === peek_tk
+
+      get_tk
+    end
+  end
+
+  ##
   # Parses identifiers that can create new methods or change visibility.
   #
   # Returns true if the comment was not consumed.
@@ -1080,46 +1101,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     false
-  end
-
-  ##
-  # Parses an +include+ in +context+ with +comment+
-
-  def parse_include context, comment
-    loop do
-      skip_tkspace_comment
-
-      name = get_constant_with_optional_parens
-
-      unless name.empty? then
-        incl = context.add_include RDoc::Include.new(name, comment)
-        record_location incl
-      end
-
-      return unless TkCOMMA === peek_tk
-
-      get_tk
-    end
-  end
-
-  ##
-  # Parses an +extend+ in +context+ with +comment+
-
-  def parse_extend context, comment
-    loop do
-      skip_tkspace_comment
-
-      name = get_constant_with_optional_parens
-
-      unless name.empty? then
-        incl = context.add_extend RDoc::Extend.new(name, comment)
-        record_location incl
-      end
-
-      return unless TkCOMMA === peek_tk
-
-      get_tk
-    end
   end
 
   ##
@@ -1719,9 +1700,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
         when "require" then
           parse_require container, comment
         when "include" then
-          parse_include container, comment
+          parse_extend_or_include RDoc::Include, container, comment
         when "extend" then
-          parse_extend container, comment
+          parse_extend_or_include RDoc::Extend, container, comment
         end
 
       when TkEND then
