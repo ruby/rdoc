@@ -904,6 +904,43 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
+  # Parses identifiers that can create new methods or change visibility.
+  #
+  # Returns true if the comment was not consumed.
+
+  def parse_identifier container, single, tk, comment # :nodoc:
+    case tk.name
+    when 'private', 'protected', 'public', 'private_class_method',
+         'public_class_method', 'module_function' then
+      parse_visibility container, single, tk
+      return true
+    when 'attr' then
+      parse_attr container, single, tk, comment
+    when /^attr_(reader|writer|accessor)$/ then
+      parse_attr_accessor container, single, tk, comment
+    when 'alias_method' then
+      parse_alias container, single, tk, comment
+    when 'require', 'include' then
+      # ignore
+    else
+      if comment.text =~ /\A#\#$/ then
+        case comment.text
+        when /^# +:?attr(_reader|_writer|_accessor)?:/ then
+          parse_meta_attr container, single, tk, comment
+        else
+          method = parse_meta_method container, single, tk, comment
+          method.params = container.params if
+            container.params
+          method.block_params = container.block_params if
+            container.block_params
+        end
+      end
+    end
+
+    false
+  end
+
+  ##
   # Parses an +include+ in +context+ with +comment+
 
   def parse_include context, comment
@@ -1546,33 +1583,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       when TkIDENTIFIER then
         if nest == 1 and current_method.nil? then
-          case tk.name
-          when 'private', 'protected', 'public', 'private_class_method',
-               'public_class_method', 'module_function' then
-            parse_visibility container, single, tk
-            keep_comment = true
-          when 'attr' then
-            parse_attr container, single, tk, comment
-          when /^attr_(reader|writer|accessor)$/ then
-            parse_attr_accessor container, single, tk, comment
-          when 'alias_method' then
-            parse_alias container, single, tk, comment
-          when 'require', 'include' then
-            # ignore
-          else
-            if comment.text =~ /\A#\#$/ then
-              case comment.text
-              when /^# +:?attr(_reader|_writer|_accessor)?:/ then
-                parse_meta_attr container, single, tk, comment
-              else
-                method = parse_meta_method container, single, tk, comment
-                method.params = container.params if
-                  container.params
-                method.block_params = container.block_params if
-                  container.block_params
-              end
-            end
-          end
+          keep_comment = parse_identifier container, single, tk, comment
         end
 
         case tk.name
