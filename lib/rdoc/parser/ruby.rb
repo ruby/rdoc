@@ -213,6 +213,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
+  # Consumes trailing whitespace from the token stream
+
+  def consume_trailing_spaces # :nodoc:
+    get_tkread
+    skip_tkspace false
+  end
+
+  ##
   # Aborts with +msg+
 
   def error(msg)
@@ -1623,10 +1631,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         container.block_params = nil
       end
 
-      begin
-        get_tkread
-        skip_tkspace false
-      end while peek_tk == TkNL
+      consume_trailing_spaces
     end
 
     container.params = nil
