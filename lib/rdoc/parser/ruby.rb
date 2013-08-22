@@ -221,6 +221,20 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
+  # Creates a module alias in +container+ at +rhs_name+ (or at the top-level
+  # for "::") with the name from +constant+.
+
+  def create_module_alias container, constant, rhs_name # :nodoc:
+    mod = if rhs_name =~ /^::/ then
+            @store.find_class_or_module rhs_name
+          else
+            container.find_module_named rhs_name
+          end
+
+    container.add_module_alias mod, constant.name, @top_level if mod
+  end
+
+  ##
   # Aborts with +msg+
 
   def error(msg)
@@ -843,13 +857,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         rhs_name << tk.name
 
         if nest <= 0 and TkNL === peek_tk then
-          mod = if rhs_name =~ /^::/ then
-                  @store.find_class_or_module rhs_name
-                else
-                  container.find_module_named rhs_name
-                end
-
-          container.add_module_alias mod, constant.name, @top_level if mod
+          create_module_alias container, constant, rhs_name
           break
         end
       when TkNL then
