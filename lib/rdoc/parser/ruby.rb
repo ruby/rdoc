@@ -504,6 +504,25 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
+  # Little hack going on here. In the statement:
+  #
+  #   f = 2*(1+yield)
+  #
+  # We see the RPAREN as the next token, so we need to exit early.  This still
+  # won't catch all cases (such as "a = yield + 1"
+
+  def method_parameters_end_token tk # :nodoc:
+    case tk
+    when TkLPAREN, TkfLPAREN
+      TkRPAREN
+    when TkRPAREN
+      nil
+    else
+      TkNL
+    end
+  end
+
+  ##
   # Creates a comment with the correct format
 
   def new_comment comment
@@ -1423,20 +1442,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
                                        modifiers = RDoc::METHOD_MODIFIERS)
     skip_tkspace false
     tk = get_tk
+    end_token = method_parameters_end_token tk
+    return '' unless end_token
 
-    # Little hack going on here. In the statement
-    #  f = 2*(1+yield)
-    # We see the RPAREN as the next token, so we need
-    # to exit early. This still won't catch all cases
-    # (such as "a = yield + 1"
-    end_token = case tk
-                when TkLPAREN, TkfLPAREN
-                  TkRPAREN
-                when TkRPAREN
-                  return ""
-                else
-                  TkNL
-                end
     nest = 0
 
     loop do
