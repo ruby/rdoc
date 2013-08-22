@@ -360,17 +360,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Return a superclass, which can be either a constant of an expression
 
   def get_class_specification
-    tk = get_tk
-    return 'self' if TkSELF === tk
-    return ''     if TkGVAR === tk
-
-    res = ''
-    while TkCOLON2 === tk or TkCOLON3 === tk or TkCONSTANT === tk do
-      res += tk.name
-      tk = get_tk
+    case peek_tk
+    when TkSELF then return 'self'
+    when TkGVAR then return ''
     end
 
-    unget_tk(tk)
+    res = get_constant
+
     skip_tkspace false
 
     get_tkread # empty out read buffer
