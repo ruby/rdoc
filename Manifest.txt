@@ -140,6 +140,7 @@ lib/rdoc/markup/to_tt_only.rb
 lib/rdoc/markup/verbatim.rb
 lib/rdoc/meta_method.rb
 lib/rdoc/method_attr.rb
+lib/rdoc/mixin.rb
 lib/rdoc/normal_class.rb
 lib/rdoc/normal_module.rb
 lib/rdoc/options.rb

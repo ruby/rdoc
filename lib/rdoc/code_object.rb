@@ -20,8 +20,9 @@
 #     * RDoc::MetaMethod
 # * RDoc::Alias
 # * RDoc::Constant
-# * RDoc::Require
-# * RDoc::Include
+# * RDoc::Mixin
+#   * RDoc::Require
+#   * RDoc::Include
 
 class RDoc::CodeObject
 

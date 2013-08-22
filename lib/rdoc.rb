@@ -174,6 +174,7 @@ module RDoc
   autoload :Attr,           'rdoc/attr'
 
   autoload :Constant,       'rdoc/constant'
+  autoload :Mixin,          'rdoc/mixin'
   autoload :Include,        'rdoc/include'
   autoload :Extend,         'rdoc/extend'
   autoload :Require,        'rdoc/require'
