@@ -1187,18 +1187,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
           unget_tk token
         end
 
-        name = case name_t
-               when TkSTAR, TkAMPER then
-                 name_t.text
-               else
-                 unless name_t.respond_to? :name then
-                   warn "expected method name token, . or ::, got #{name_t.inspect}"
-                   skip_method container
-                   return
-                 end
-                 name_t.name
-               end
+        name = parse_method_name container, name_t
 
+        return unless name
       end
     end
 
@@ -1260,6 +1251,24 @@ class RDoc::Parser::Ruby < RDoc::Parser
     dummy.parent = container
     dummy.store  = container.store
     skip_method dummy
+  end
+
+  ##
+  # For the given +container+ and initial name token +name_t+ the method name
+  # is parsed from the token stream for a regular method.
+
+  def parse_method_name container, name_t # :nodoc:
+    case name_t
+    when TkSTAR, TkAMPER then
+      name_t.text
+    else
+      unless name_t.respond_to? :name then
+        warn "expected method name token, . or ::, got #{name_t.inspect}"
+        skip_method container
+        return
+      end
+      name_t.name
+    end
   end
 
   ##
