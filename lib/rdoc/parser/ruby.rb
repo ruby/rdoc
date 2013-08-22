@@ -676,38 +676,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
         cls.offset  = offset
         cls.line    = line_no
       else
-        other = @store.find_class_named name
+        cls = parse_class_singleton container, name, comment
 
-        unless other then
-          if name =~ /^::/ then
-            name = $'
-            container = @top_level
-          end
-
-          other = container.add_module RDoc::NormalModule, name
-          record_location other
-          other.offset  = offset
-          other.line    = line_no
-
-          # class << $gvar
-          other.ignore if name.empty?
-
-          other.add_comment comment, @top_level
-        end
-
-        # notify :nodoc: all if not a constant-named class/module
-        # (and remove any comment)
-        unless name =~ /\A(::)?[A-Z]/ then
-          other.document_self = nil
-          other.document_children = false
-          other.clear_comment
-        end
-
-        @top_level.add_to_classes_or_modules other
-        @stats.add_class other
-
-        read_documentation_modifiers other, RDoc::CLASS_MODIFIERS
-        parse_statements(other, SINGLE)
+        cls.offset  = offset
+        cls.line    = line_no
       end
     else
       warn("Expected class name or '<<'. Got #{name_t.class}: #{name_t.text.inspect}")
@@ -751,6 +723,41 @@ class RDoc::Parser::Ruby < RDoc::Parser
     parse_statements cls
 
     cls
+  end
+
+  def parse_class_singleton container, name, comment
+    other = @store.find_class_named name
+
+    unless other then
+      if name =~ /^::/ then
+        name = $'
+        container = @top_level
+      end
+
+      other = container.add_module RDoc::NormalModule, name
+      record_location other
+
+      # class << $gvar
+      other.ignore if name.empty?
+
+      other.add_comment comment, @top_level
+    end
+
+    # notify :nodoc: all if not a constant-named class/module
+    # (and remove any comment)
+    unless name =~ /\A(::)?[A-Z]/ then
+      other.document_self = nil
+      other.document_children = false
+      other.clear_comment
+    end
+
+    @top_level.add_to_classes_or_modules other
+    @stats.add_class other
+
+    read_documentation_modifiers other, RDoc::CLASS_MODIFIERS
+    parse_statements(other, SINGLE)
+
+    other
   end
 
   ##
