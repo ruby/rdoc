@@ -130,6 +130,26 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
     refute_file 'image.png'
   end
 
+  def test_install_rdoc_static_file
+    src = __FILE__
+    dst = File.join @tmpdir, File.basename(src)
+    options = {}
+
+    @g.install_rdoc_static_file src, dst, options
+
+    assert_file dst
+
+    begin
+      assert_hard_link dst
+    rescue MiniTest::Assertion
+      return # hard links are not supported, no further tests needed
+    end
+
+    @g.install_rdoc_static_file src, dst, options
+
+    assert_hard_link dst
+  end
+
   def test_setup
     @g.setup
 

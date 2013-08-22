@@ -200,7 +200,7 @@ class RDoc::Generator::Darkfish
     debug_msg "Copying static files"
     options = { :verbose => $DEBUG_RDOC, :noop => @dry_run }
 
-    install_rdoc_static_file @template_dir + 'rdoc.css', '.', options
+    install_rdoc_static_file @template_dir + 'rdoc.css', './rdoc.css', options
 
     @options.template_stylesheets.each do |stylesheet|
       FileUtils.cp stylesheet, '.', options
@@ -540,7 +540,12 @@ class RDoc::Generator::Darkfish
   end
 
   def install_rdoc_static_file source, destination, options # :nodoc:
-    FileUtils.ln source, destination, options
+    begin
+      FileUtils.ln source, destination, options
+    rescue Errno::EEXIST
+      FileUtils.rm destination
+      retry
+    end
   rescue
     FileUtils.cp source, destination, options
   end
