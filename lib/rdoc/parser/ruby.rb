@@ -1264,7 +1264,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   ##
   # For the given +container+ and initial name token +name_t+ the method name
-  # and the new +container+ (if necessary) are parsed from the token stream.
+  # and the new +container+ (if necessary) are parsed from the token stream
+  # for a singleton method.
 
   def parse_method_name_singleton container, name_t # :nodoc:
     @scanner.lex_state = :EXPR_FNAME
