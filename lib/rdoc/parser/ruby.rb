@@ -401,9 +401,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
       tk = get_tk
     end
 
-#      if res.empty?
-#        warn("Unexpected token #{tk} in constant")
-#      end
     unget_tk(tk)
     res
   end
