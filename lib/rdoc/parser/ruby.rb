@@ -881,7 +881,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     column  = tk.char_no
     offset  = tk.seek
     line_no = tk.line_no
-    meth    = nil
 
     text = comment.text
 
