@@ -372,6 +372,49 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
+  # Retrieves the method container for a singleton method.
+
+  def get_method_container container, name_t # :nodoc:
+    prev_container = container
+    container = container.find_module_named(name_t.name)
+
+    unless container then
+      constant = prev_container.constants.find do |const|
+        const.name == name_t.name
+      end
+
+      if constant then
+        parse_method_dummy prev_container
+        return
+      end
+    end
+
+    unless container then
+      added_container = true
+      obj = name_t.name.split("::").inject(Object) do |state, item|
+        state.const_get(item)
+      end rescue nil
+
+      type = obj.class == Class ? RDoc::NormalClass : RDoc::NormalModule
+
+      unless [Class, Module].include?(obj.class) then
+        warn("Couldn't find #{name_t.name}. Assuming it's a module")
+      end
+
+      if type == RDoc::NormalClass then
+        sclass = obj.superclass ? obj.superclass.name : nil
+        container = prev_container.add_class type, name_t.name, sclass
+      else
+        container = prev_container.add_module type, name_t.name
+      end
+
+      record_location container
+    end
+
+    container
+  end
+
+  ##
   # Extracts a name or symbol from the token stream.
 
   def get_symbol_or_name
@@ -1293,41 +1336,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
         end
       when TkCONSTANT then
         name = name_t2.name
-        prev_container = container
-        container = container.find_module_named(name_t.name)
 
-        unless container then
-          constant = prev_container.constants.find do |const|
-            const.name == name_t.name
-          end
+        container = get_method_container container, name_t
 
-          if constant then
-            parse_method_dummy prev_container
-            return
-          end
-        end
-
-        unless container then
-          added_container = true
-          obj = name_t.name.split("::").inject(Object) do |state, item|
-            state.const_get(item)
-          end rescue nil
-
-          type = obj.class == Class ? RDoc::NormalClass : RDoc::NormalModule
-
-          unless [Class, Module].include?(obj.class) then
-            warn("Couldn't find #{name_t.name}. Assuming it's a module")
-          end
-
-          if type == RDoc::NormalClass then
-            sclass = obj.superclass ? obj.superclass.name : nil
-            container = prev_container.add_class type, name_t.name, sclass
-          else
-            container = prev_container.add_module type, name_t.name
-          end
-
-          record_location container
-        end
+        return unless container
 
         name
       when TkIDENTIFIER, TkIVAR, TkGVAR then
