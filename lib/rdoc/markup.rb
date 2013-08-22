@@ -356,6 +356,9 @@
 # The +url+ may be an +http:+-type link or a cross-reference to a class,
 # module or method with a label.
 #
+# Links with the <code>rdoc-image:</code> scheme will create an image tag for
+# HTML output.  Only fully-qualified URLs are supported.
+#
 # Links with the <tt>rdoc-ref:</tt> scheme will link to the referenced class,
 # module, method, file, etc.  If the referenced item is does not exist
 # no link will be generated and <tt>rdoc-ref:</tt> will be removed from the

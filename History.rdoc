@@ -55,6 +55,8 @@
   * Fixed parsing of multiple methods on the same line.  Bug #221 by derula.
   * Fixed missing support for images in markdown.  Bug #241, pull request #242
     by Zachary Scott.
+  * The markdown image fix also added support for images via an rdoc-image:
+    scheme.  See RDoc::Markup@Links for details.  Issue #93 by Tim Pease.
   * Ignore empty call-seq for methods.  Improved deduplication of C methods
     sharing the same C function.  This allows the method heading to show
     up correctly for String#== and #===.  Bug #244 by Neurogami.
