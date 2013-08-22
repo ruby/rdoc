@@ -1234,32 +1234,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.add_tokens [position_comment, NEWLINE_TOKEN, indent]
     meth.add_tokens @token_stream
 
-    token_listener meth do
-      meth.params = ''
-
-      comment.normalize
-      comment.extract_call_seq meth
-
-      container.add_method meth
-
-      last_tk = tk
-
-      while tk = get_tk do
-        case tk
-        when TkSEMICOLON then
-          break
-        when TkNL then
-          break unless last_tk and TkCOMMA === last_tk
-        when TkSPACE then
-          # expression continues
-        when TkDO then
-          parse_statements container, single, meth
-          break
-        else
-          last_tk = tk
-        end
-      end
-    end
+    parse_meta_method_params container, single, meth, tk, comment
 
     meth.comment = comment
 
@@ -1292,6 +1267,38 @@ class RDoc::Parser::Ruby < RDoc::Parser
     else
       warn "unknown name token #{name_t.inspect} for meta-method '#{tk.name}'"
       'unknown'
+    end
+  end
+
+  ##
+  # Parses the parameters and block for a meta-programmed method.
+
+  def parse_meta_method_params container, single, meth, tk, comment # :nodoc:
+    token_listener meth do
+      meth.params = ''
+
+      comment.normalize
+      comment.extract_call_seq meth
+
+      container.add_method meth
+
+      last_tk = tk
+
+      while tk = get_tk do
+        case tk
+        when TkSEMICOLON then
+          break
+        when TkNL then
+          break unless last_tk and TkCOMMA === last_tk
+        when TkSPACE then
+          # expression continues
+        when TkDO then
+          parse_statements container, single, meth
+          break
+        else
+          last_tk = tk
+        end
+      end
     end
   end
 
