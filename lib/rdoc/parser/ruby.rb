@@ -891,22 +891,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     if text.sub!(/^# +:?method: *(\S*).*?\n/i, '') then
       meth = parse_comment_ghost container, text, $1, column, line_no, comment
     elsif text.sub!(/# +:?(attr(_reader|_writer|_accessor)?): *(\S*).*?\n/i, '') then
-      rw = case $1
-           when 'attr_reader' then 'R'
-           when 'attr_writer' then 'W'
-           else 'RW'
-           end
-
-      name = $3 unless $3.empty?
-
-      # TODO authorize 'singleton-attr...'?
-      att = RDoc::Attr.new get_tkread, name, rw, comment
-      record_location att
-      att.offset    = offset
-      att.line      = line_no
-
-      container.add_attribute att
-      @stats.add_attribute att
+      meth = parse_comment_attr container, $1, $3, comment
     end
 
     if meth then
@@ -918,7 +903,27 @@ class RDoc::Parser::Ruby < RDoc::Parser
     true
   end
 
-  def parse_comment_ghost container, text, name, column, line_no, comment
+  def parse_comment_attr container, type, name, comment
+    rw = case $1
+         when 'attr_reader' then 'R'
+         when 'attr_writer' then 'W'
+         else 'RW'
+         end
+
+    name = nil if name.empty?
+
+    # TODO authorize 'singleton-attr...'?
+    att = RDoc::Attr.new get_tkread, name, rw, comment
+    record_location att
+
+    container.add_attribute att
+    @stats.add_attribute att
+
+    att
+  end
+
+  def parse_comment_ghost container, text, name, column, line_no, # :nodoc:
+                          comment
     name = nil if name.empty?
 
     meth = RDoc::GhostMethod.new get_tkread, name
