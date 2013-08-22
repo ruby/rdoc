@@ -1743,18 +1743,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Parse up to +no+ symbol arguments
 
   def parse_symbol_arg(no = nil)
-    args = []
-
     skip_tkspace_comment
 
     case tk = get_tk
     when TkLPAREN
-      args = parse_symbol_arg_paren no
+      parse_symbol_arg_paren no
     else
-      args = parse_symbol_arg_space no, tk
+      parse_symbol_arg_space no, tk
     end
-
-    args
   end
 
   ##
