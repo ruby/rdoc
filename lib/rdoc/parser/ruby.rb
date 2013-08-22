@@ -881,6 +881,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     column  = tk.char_no
     offset  = tk.seek
     line_no = tk.line_no
+    meth    = nil
 
     text = comment.text
 
@@ -888,39 +889,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     # REFACTOR
     if text.sub!(/^# +:?method: *(\S*).*?\n/i, '') then
-      name = $1 unless $1.empty?
-
-      meth = RDoc::GhostMethod.new get_tkread, name
-      record_location meth
-      meth.singleton = singleton
-      meth.offset    = offset
-      meth.line      = line_no
-
-      meth.start_collecting_tokens
-      indent = TkSPACE.new 0, 1, 1
-      indent.set_text " " * column
-
-      position_comment = TkCOMMENT.new 0, line_no, 1
-      position_comment.set_text "# File #{@top_level.relative_name}, line #{line_no}"
-      meth.add_tokens [position_comment, NEWLINE_TOKEN, indent]
-
-      meth.params =
-        if text.sub!(/^#\s+:?args?:\s*(.*?)\s*$/i, '') then
-          $1
-        else
-          ''
-        end
-
-      comment.normalize
-      comment.extract_call_seq meth
-
-      return unless meth.name
-
-      container.add_method meth
-
-      meth.comment = comment
-
-      @stats.add_method meth
+      meth = parse_comment_ghost container, text, $1, column, line_no, comment
     elsif text.sub!(/# +:?(attr(_reader|_writer|_accessor)?): *(\S*).*?\n/i, '') then
       rw = case $1
            when 'attr_reader' then 'R'
@@ -940,7 +909,48 @@ class RDoc::Parser::Ruby < RDoc::Parser
       @stats.add_attribute att
     end
 
+    if meth then
+      meth.singleton = singleton
+      meth.offset    = offset
+      meth.line      = line_no
+    end
+
     true
+  end
+
+  def parse_comment_ghost container, text, name, column, line_no, comment
+    name = nil if name.empty?
+
+    meth = RDoc::GhostMethod.new get_tkread, name
+    record_location meth
+
+    meth.start_collecting_tokens
+    indent = TkSPACE.new 0, 1, 1
+    indent.set_text " " * column
+
+    position_comment = TkCOMMENT.new 0, line_no, 1
+    position_comment.set_text "# File #{@top_level.relative_name}, line #{line_no}"
+    meth.add_tokens [position_comment, NEWLINE_TOKEN, indent]
+
+    meth.params =
+      if text.sub!(/^#\s+:?args?:\s*(.*?)\s*$/i, '') then
+        $1
+      else
+        ''
+      end
+
+    comment.normalize
+    comment.extract_call_seq meth
+
+    return unless meth.name
+
+    container.add_method meth
+
+    meth.comment = comment
+
+    @stats.add_method meth
+
+    meth
   end
 
   ##
