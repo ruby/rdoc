@@ -1892,45 +1892,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     when TkNL, TkUNLESS_MOD, TkIF_MOD, TkSEMICOLON then
       container.ongoing_visibility = vis
     else
-      new_methods = []
-
-      case vis_type
-      when 'module_function' then
-        args = parse_symbol_arg
-        container.set_visibility_for args, :private, false
-
-        container.methods_matching args do |m|
-          s_m = m.dup
-          record_location s_m
-          s_m.singleton = true
-          new_methods << s_m
-        end
-      when 'public_class_method', 'private_class_method' then
-        args = parse_symbol_arg
-
-        container.methods_matching args, true do |m|
-          if m.parent != container then
-            m = m.dup
-            record_location m
-            new_methods << m
-          end
-
-          m.visibility = vis
-        end
-      else
-        args = parse_symbol_arg
-        container.set_visibility_for args, vis, singleton
-      end
-
-      new_methods.each do |method|
-        case method
-        when RDoc::AnyMethod then
-          container.add_method method
-        when RDoc::Attr then
-          container.add_attribute method
-        end
-        method.visibility = vis
-      end
+      update_visibility container, vis_type, vis
     end
   end
 
@@ -2146,6 +2108,51 @@ class RDoc::Parser::Ruby < RDoc::Parser
       skip_tkspace skip_nl
       return unless TkCOMMENT === peek_tk
       get_tk
+    end
+  end
+
+  ##
+  # Updates visibility in +container+ from +vis_type+ and +vis+.
+
+  def update_visibility container, vis_type, vis # :nodoc:
+    new_methods = []
+
+    case vis_type
+    when 'module_function' then
+      args = parse_symbol_arg
+      container.set_visibility_for args, :private, false
+
+      container.methods_matching args do |m|
+        s_m = m.dup
+        record_location s_m
+        s_m.singleton = true
+        new_methods << s_m
+      end
+    when 'public_class_method', 'private_class_method' then
+      args = parse_symbol_arg
+
+      container.methods_matching args, true do |m|
+        if m.parent != container then
+          m = m.dup
+          record_location m
+          new_methods << m
+        end
+
+        m.visibility = vis
+      end
+    else
+      args = parse_symbol_arg
+      container.set_visibility_for args, vis, singleton
+    end
+
+    new_methods.each do |method|
+      case method
+      when RDoc::AnyMethod then
+        container.add_method method
+      when RDoc::Attr then
+        container.add_attribute method
+      end
+      method.visibility = vis
     end
   end
 
