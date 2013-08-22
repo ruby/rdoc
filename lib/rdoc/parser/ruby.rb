@@ -1176,11 +1176,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       case dot = get_tk
       when TkDOT, TkCOLON2 then
-        name, container = parse_method_name_singleton container, name_t
-
-        return unless name
-
         singleton = true
+
+        name, container = parse_method_name_singleton container, name_t
       else
         unget_tk dot
         back_tk.reverse_each do |token|
@@ -1188,10 +1186,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
         end
 
         name = parse_method_name container, name_t
-
-        return unless name
       end
     end
+
+    return unless name
 
     meth = RDoc::AnyMethod.new get_tkread, name
     meth.singleton = singleton
