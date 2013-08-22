@@ -1751,27 +1751,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     when TkLPAREN
       args = parse_symbol_arg_paren no
     else
-      unget_tk tk
-      if tk = parse_symbol_in_arg
-        args.push tk
-        return args if no and args.size >= no
-      end
-
-      loop do
-        skip_tkspace false
-
-        tk1 = get_tk
-        unless TkCOMMA === tk1 then
-          unget_tk tk1
-          break
-        end
-
-        skip_tkspace_comment
-        if tk = parse_symbol_in_arg
-          args.push tk
-          break if no and args.size >= no
-        end
-      end
+      args = parse_symbol_arg_space no, tk
     end
 
     args
@@ -1798,6 +1778,38 @@ class RDoc::Parser::Ruby < RDoc::Parser
       else
         warn("unexpected token: '#{tk2.inspect}'") if $DEBUG_RDOC
         break
+      end
+    end
+
+    args
+  end
+
+  ##
+  # Parses up to +no+ symbol arguments separated by spaces and places them in
+  # +args+.
+
+  def parse_symbol_arg_space no, tk # :nodoc:
+    args = []
+
+    unget_tk tk
+    if tk = parse_symbol_in_arg
+      args.push tk
+      return args if no and args.size >= no
+    end
+
+    loop do
+      skip_tkspace false
+
+      tk1 = get_tk
+      unless TkCOMMA === tk1 then
+        unget_tk tk1
+        break
+      end
+
+      skip_tkspace_comment
+      if tk = parse_symbol_in_arg
+        args.push tk
+        break if no and args.size >= no
       end
     end
 
