@@ -887,32 +887,31 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     singleton = !!text.sub!(/(^# +:?)(singleton-)(method:)/, '\1\3')
 
-    # REFACTOR
-    if text.sub!(/^# +:?method: *(\S*).*?\n/i, '') then
-      meth = parse_comment_ghost container, text, $1, column, line_no, comment
-    elsif text.sub!(/# +:?(attr(_reader|_writer|_accessor)?): *(\S*).*?\n/i, '') then
-      meth = parse_comment_attr container, $1, $3, comment
-    end
+    co = 
+      if text.sub!(/^# +:?method: *(\S*).*?\n/i, '') then
+        parse_comment_ghost container, text, $1, column, line_no, comment
+      elsif text.sub!(/# +:?(attr(_reader|_writer|_accessor)?): *(\S*).*?\n/i, '') then
+        parse_comment_attr container, $1, $3, comment
+      end
 
-    if meth then
-      meth.singleton = singleton
-      meth.offset    = offset
-      meth.line      = line_no
+    if co then
+      co.singleton = singleton
+      co.offset    = offset
+      co.line      = line_no
     end
 
     true
   end
 
   def parse_comment_attr container, type, name, comment
+    return if name.empty?
+
     rw = case $1
          when 'attr_reader' then 'R'
          when 'attr_writer' then 'W'
          else 'RW'
          end
 
-    name = nil if name.empty?
-
-    # TODO authorize 'singleton-attr...'?
     att = RDoc::Attr.new get_tkread, name, rw, comment
     record_location att
 
