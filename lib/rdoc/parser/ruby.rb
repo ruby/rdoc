@@ -186,6 +186,31 @@ class RDoc::Parser::Ruby < RDoc::Parser
     read
   end
 
+  def get_visibility_information tk
+    vis_type  = tk.name
+    singleton = false
+
+    vis =
+      case vis_type
+      when 'private'   then :private
+      when 'protected' then :protected
+      when 'public'    then :public
+      when 'private_class_method' then
+        singleton = true
+        :private
+      when 'public_class_method' then
+        singleton = true
+        :public
+      when 'module_function' then
+        singleton = true
+        :public
+      else
+        raise RDoc::Error, "Invalid visibility: #{tk.name}"
+      end
+
+    return vis_type, vis, singleton
+  end
+
   ##
   # Look for the first comment in a file that isn't a shebang line.
 
@@ -1854,24 +1879,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def parse_visibility(container, single, tk)
     singleton = (single == SINGLE)
 
-    vis_type = tk.name
-
-    vis = case vis_type
-          when 'private'   then :private
-          when 'protected' then :protected
-          when 'public'    then :public
-          when 'private_class_method' then
-            singleton = true
-            :private
-          when 'public_class_method' then
-            singleton = true
-            :public
-          when 'module_function' then
-            singleton = true
-            :public
-          else
-            raise RDoc::Error, "Invalid visibility: #{tk.name}"
-          end
+    vis_type, vis, singleton = get_visibility_information tk
 
     skip_tkspace_comment false
 
