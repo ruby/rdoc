@@ -728,20 +728,37 @@ class RDoc::Parser::Ruby < RDoc::Parser
       return false
     end
 
+    if TkGT === peek_tk then
+      unget_tk eq_tk
+      return
+    end
+
     value = ''
     con = RDoc::Constant.new name, value, comment
-    nest = 0
+
+    body = parse_constant_body container, con
+
+    return unless body
+
+    value.replace body
+    record_location con
+    con.offset = offset
+    con.line   = line_no
+    read_documentation_modifiers con, RDoc::CONSTANT_MODIFIERS
+
+    @stats.add_constant con
+    con = container.add_constant con
+
+    true
+  end
+
+  def parse_constant_body container, constant # :nodoc:
+    nest     = 0
+    rhs_name = ''
+
     get_tkread
 
     tk = get_tk
-
-    if TkGT === tk then
-      unget_tk tk
-      unget_tk eq_tk
-      return false
-    end
-
-    rhs_name = ''
 
     loop do
       case tk
@@ -759,7 +776,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           break
         else
           unget_tk tk
-          read_documentation_modifiers con, RDoc::CONSTANT_MODIFIERS
+          read_documentation_modifiers constant, RDoc::CONSTANT_MODIFIERS
         end
       when TkCONSTANT then
         rhs_name << tk.name
@@ -771,7 +788,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
                   container.find_module_named rhs_name
                 end
 
-          container.add_module_alias mod, name, @top_level if mod
+          container.add_module_alias mod, constant.name, @top_level if mod
           break
         end
       when TkNL then
@@ -791,16 +808,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     res = get_tkread.gsub(/^[ \t]+/, '').strip
     res = "" if res == ";"
 
-    value.replace res
-    record_location con
-    con.offset = offset
-    con.line   = line_no
-    read_documentation_modifiers con, RDoc::CONSTANT_MODIFIERS
-
-    @stats.add_constant con
-    con = container.add_constant con
-
-    true
+    res
   end
 
   ##
