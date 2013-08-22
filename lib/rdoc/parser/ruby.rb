@@ -458,6 +458,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     unless container then
+      # TODO seems broken, should starting at Object in @store
       obj = name_t.name.split("::").inject(Object) do |state, item|
         state.const_get(item)
       end rescue nil
