@@ -177,6 +177,16 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
+  # Retrieves the read token stream and replaces +pattern+ with +replacement+
+  # using gsub.  If the result is only a ";" returns an empty string.
+
+  def get_tkread_clean pattern, replacement # :nodoc:
+    read = get_tkread.gsub(pattern, replacement).strip
+    return '' if read == ';'
+    read
+  end
+
+  ##
   # Look for the first comment in a file that isn't a shebang line.
 
   def collect_first_comment
@@ -681,9 +691,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
       tk = get_tk
     end
-    res = get_tkread.tr("\n", " ").strip
-    res = "" if res == ";"
-    res
+
+    get_tkread_clean "\n", " "
   end
 
   ##
@@ -895,10 +904,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       tk = get_tk
     end
 
-    res = get_tkread.gsub(/^[ \t]+/, '').strip
-    res = "" if res == ";"
-
-    res
+    get_tkread_clean(/^[ \t]+/, '')
   end
 
   ##
@@ -1483,9 +1489,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       tk = get_tk
     end
 
-    res = get_tkread.gsub(/\s+/, ' ').strip
-    res = '' if res == ';'
-    res
+    get_tkread_clean(/\s+/, ' ')
   end
 
   ##
