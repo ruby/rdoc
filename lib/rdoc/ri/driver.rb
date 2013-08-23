@@ -466,15 +466,7 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
 
     extensions.each do |modules, store|
       if modules.length == 1 then
-        include = modules.first
-        name = include.name
-        path = store.friendly_path
-        out << RDoc::Markup::Paragraph.new("#{name} (from #{path})")
-
-        if include.comment then
-          out << RDoc::Markup::BlankLine.new
-          out << include.comment
-        end
+        add_extension_modules_single out, store, modules.first
       else
         out << RDoc::Markup::Paragraph.new("(from #{store.friendly_path})")
 
@@ -498,6 +490,20 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
           out << verb
         end
       end
+    end
+  end
+
+  ##
+  # Adds a single extension module +include+ from +store+ to +out+
+
+  def add_extension_modules_single out, store, include # :nodoc:
+    name = include.name
+    path = store.friendly_path
+    out << RDoc::Markup::Paragraph.new("#{name} (from #{path})")
+
+    if include.comment then
+      out << RDoc::Markup::BlankLine.new
+      out << include.comment
     end
   end
 
