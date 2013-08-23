@@ -1252,30 +1252,7 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
 
     filtered.each do |store, methods|
       methods.each do |method|
-        out << RDoc::Markup::Paragraph.new("(from #{store.friendly_path})")
-
-        unless name =~ /^#{Regexp.escape method.parent_name}/ then
-          out << RDoc::Markup::Heading.new(3, "Implementation from #{method.parent_name}")
-        end
-
-        out << RDoc::Markup::Rule.new(1)
-
-        if method.arglists then
-          arglists = method.arglists.chomp.split "\n"
-          arglists = arglists.map { |line| line + "\n" }
-          out << RDoc::Markup::Verbatim.new(*arglists)
-          out << RDoc::Markup::Rule.new(1)
-        end
-
-        if method.respond_to?(:superclass_method) and method.superclass_method
-          out << RDoc::Markup::BlankLine.new
-          out << RDoc::Markup::Heading.new(4, "(Uses superclass method #{method.superclass_method})")
-          out << RDoc::Markup::Rule.new(1)
-        end
-
-        out << RDoc::Markup::BlankLine.new
-        out << method.comment
-        out << RDoc::Markup::BlankLine.new
+        render_method out, store, method, name
       end
     end
 
@@ -1367,6 +1344,33 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     klass ||= parts.join
 
     [klass, type, meth]
+  end
+
+  def render_method out, store, method, name # :nodoc:
+    out << RDoc::Markup::Paragraph.new("(from #{store.friendly_path})")
+
+    unless name =~ /^#{Regexp.escape method.parent_name}/ then
+      out << RDoc::Markup::Heading.new(3, "Implementation from #{method.parent_name}")
+    end
+
+    out << RDoc::Markup::Rule.new(1)
+
+    if method.arglists then
+      arglists = method.arglists.chomp.split "\n"
+      arglists = arglists.map { |line| line + "\n" }
+      out << RDoc::Markup::Verbatim.new(*arglists)
+      out << RDoc::Markup::Rule.new(1)
+    end
+
+    if method.respond_to?(:superclass_method) and method.superclass_method
+      out << RDoc::Markup::BlankLine.new
+      out << RDoc::Markup::Heading.new(4, "(Uses superclass method #{method.superclass_method})")
+      out << RDoc::Markup::Rule.new(1)
+    end
+
+    out << RDoc::Markup::BlankLine.new
+    out << method.comment
+    out << RDoc::Markup::BlankLine.new
   end
 
   ##
