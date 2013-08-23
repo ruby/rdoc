@@ -616,33 +616,7 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     add_extends  out, extends
 
     found.each do |store, klass|
-      comment = klass.comment
-      # TODO the store's cache should always return an empty Array
-      class_methods    = store.class_methods[klass.full_name]    || []
-      instance_methods = store.instance_methods[klass.full_name] || []
-      attributes       = store.attributes[klass.full_name]       || []
-
-      if comment.empty? and
-         instance_methods.empty? and class_methods.empty? then
-        also_in << store
-        next
-      end
-
-      add_from out, store
-
-      class_document_comment out, comment
-
-      if class_methods or instance_methods or not klass.constants.empty? then
-        out << RDoc::Markup::Rule.new(1)
-      end
-
-      class_document_constants out, klass
-
-      add_method_list out, class_methods,    'Class methods'
-      add_method_list out, instance_methods, 'Instance methods'
-      add_method_list out, attributes,       'Attributes'
-
-      add_method_documentation out, klass if @show_all
+      render_class out, store, klass, also_in
     end
 
     add_also_in out, also_in
@@ -1357,6 +1331,40 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     klass ||= parts.join
 
     [klass, type, meth]
+  end
+
+  ##
+  # Renders the +klass+ from +store+ to +out+.  If the klass has no
+  # documentable items the class is added to +also_in+ instead.
+
+  def render_class out, store, klass, also_in # :nodoc:
+    comment = klass.comment
+    # TODO the store's cache should always return an empty Array
+    class_methods    = store.class_methods[klass.full_name]    || []
+    instance_methods = store.instance_methods[klass.full_name] || []
+    attributes       = store.attributes[klass.full_name]       || []
+
+    if comment.empty? and
+       instance_methods.empty? and class_methods.empty? then
+      also_in << store
+      return
+    end
+
+    add_from out, store
+
+    class_document_comment out, comment
+
+    if class_methods or instance_methods or not klass.constants.empty? then
+      out << RDoc::Markup::Rule.new(1)
+    end
+
+    class_document_constants out, klass
+
+    add_method_list out, class_methods,    'Class methods'
+    add_method_list out, instance_methods, 'Instance methods'
+    add_method_list out, attributes,       'Attributes'
+
+    add_method_documentation out, klass if @show_all
   end
 
   def render_method out, store, method, name # :nodoc:
