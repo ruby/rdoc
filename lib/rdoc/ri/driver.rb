@@ -623,24 +623,7 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
         out << RDoc::Markup::Rule.new(1)
       end
 
-      unless klass.constants.empty? then
-        out << RDoc::Markup::Heading.new(1, "Constants:")
-        out << RDoc::Markup::BlankLine.new
-        list = RDoc::Markup::List.new :NOTE
-
-        constants = klass.constants.sort_by { |constant| constant.name }
-
-        list.items.concat constants.map { |constant|
-          parts = constant.comment.parts if constant.comment
-          parts << RDoc::Markup::Paragraph.new('[not documented]') if
-            parts.empty?
-
-          RDoc::Markup::ListItem.new(constant.name, *parts)
-        }
-
-        out << list
-        out << RDoc::Markup::BlankLine.new
-      end
+      class_document_constants out, klass
 
       add_method_list out, class_methods,    'Class methods'
       add_method_list out, instance_methods, 'Instance methods'
@@ -672,6 +655,27 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
         out << comment
       end
     end
+  end
+
+  def class_document_constants out, klass
+    return if klass.constants.empty?
+
+    out << RDoc::Markup::Heading.new(1, "Constants:")
+    out << RDoc::Markup::BlankLine.new
+    list = RDoc::Markup::List.new :NOTE
+
+    constants = klass.constants.sort_by { |constant| constant.name }
+
+    list.items.concat constants.map { |constant|
+      parts = constant.comment.parts if constant.comment
+      parts << RDoc::Markup::Paragraph.new('[not documented]') if
+        parts.empty?
+
+      RDoc::Markup::ListItem.new(constant.name, *parts)
+    }
+
+    out << list
+    out << RDoc::Markup::BlankLine.new
   end
 
   ##
