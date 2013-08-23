@@ -720,20 +720,7 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
 
     complete_klass name, klass, selector, method, completions
 
-    if completions.include? klass and name =~ /#|\.|::/ then
-      methods = list_methods_matching name
-
-      if not methods.empty? then
-        # remove Foo if given Foo:: and a method was found
-        completions.delete klass
-      elsif selector then
-        # replace Foo with Foo:: as given
-        completions.delete klass
-        completions << "#{klass}#{selector}"
-      end
-
-      completions.concat methods
-    end
+    complete_method name, klass, selector, completions
 
     completions.sort.uniq
   end
@@ -754,6 +741,23 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
       completions << klass if classes.key? klass
     elsif classes.key? klass_name then
       completions << klass_name
+    end
+  end
+
+  def complete_method name, klass, selector, completions # :nodoc:
+    if completions.include? klass and name =~ /#|\.|::/ then
+      methods = list_methods_matching name
+
+      if not methods.empty? then
+        # remove Foo if given Foo:: and a method was found
+        completions.delete klass
+      elsif selector then
+        # replace Foo with Foo:: as given
+        completions.delete klass
+        completions << "#{klass}#{selector}"
+      end
+
+      completions.concat methods
     end
   end
 
