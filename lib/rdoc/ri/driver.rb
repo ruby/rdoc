@@ -714,25 +714,11 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
   # Completes +name+ based on the caches.  For Readline
 
   def complete name
-    klasses = classes.keys
     completions = []
 
     klass, selector, method = parse_name name
 
-    # may need to include Foo when given Foo::
-    klass_name = method ? name : klass
-
-    if name !~ /#|\./ then
-      completions = klasses.grep(/^#{Regexp.escape klass_name}[^:]*$/)
-      completions.concat klasses.grep(/^#{Regexp.escape name}[^:]*$/) if
-        name =~ /::$/
-
-      completions << klass if classes.key? klass # to complete a method name
-    elsif selector then
-      completions << klass if classes.key? klass
-    elsif classes.key? klass_name then
-      completions << klass_name
-    end
+    complete_klass name, klass, selector, method, completions
 
     if completions.include? klass and name =~ /#|\.|::/ then
       methods = list_methods_matching name
@@ -750,6 +736,25 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     end
 
     completions.sort.uniq
+  end
+
+  def complete_klass name, klass, selector, method, completions # :nodoc:
+    klasses = classes.keys
+
+    # may need to include Foo when given Foo::
+    klass_name = method ? name : klass
+
+    if name !~ /#|\./ then
+      completions.replace klasses.grep(/^#{Regexp.escape klass_name}[^:]*$/)
+      completions.concat klasses.grep(/^#{Regexp.escape name}[^:]*$/) if
+        name =~ /::$/
+
+      completions << klass if classes.key? klass # to complete a method name
+    elsif selector then
+      completions << klass if classes.key? klass
+    elsif classes.key? klass_name then
+      completions << klass_name
+    end
   end
 
   ##
