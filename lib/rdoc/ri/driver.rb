@@ -468,28 +468,35 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
       if modules.length == 1 then
         add_extension_modules_single out, store, modules.first
       else
-        out << RDoc::Markup::Paragraph.new("(from #{store.friendly_path})")
-
-        wout, with = modules.partition { |incl| incl.comment.empty? }
-
-        out << RDoc::Markup::BlankLine.new unless with.empty?
-
-        with.each do |incl|
-          out << RDoc::Markup::Paragraph.new(incl.name)
-          out << RDoc::Markup::BlankLine.new
-          out << incl.comment
-        end
-
-        unless wout.empty? then
-          verb = RDoc::Markup::Verbatim.new
-
-          wout.each do |incl|
-            verb.push incl.name, "\n"
-          end
-
-          out << verb
-        end
+        add_extension_modules_multiple out, store, modules
       end
+    end
+  end
+
+  ##
+  # Renders multiple included +modules+ from +store+ to +out+.
+
+  def add_extension_modules_multiple out, store, modules # :nodoc:
+    out << RDoc::Markup::Paragraph.new("(from #{store.friendly_path})")
+
+    wout, with = modules.partition { |incl| incl.comment.empty? }
+
+    out << RDoc::Markup::BlankLine.new unless with.empty?
+
+    with.each do |incl|
+      out << RDoc::Markup::Paragraph.new(incl.name)
+      out << RDoc::Markup::BlankLine.new
+      out << incl.comment
+    end
+
+    unless wout.empty? then
+      verb = RDoc::Markup::Verbatim.new
+
+      wout.each do |incl|
+        verb.push incl.name, "\n"
+      end
+
+      out << verb
     end
   end
 
