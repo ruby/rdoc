@@ -718,9 +718,8 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
 
     klass, selector, method = parse_name name
 
-    complete_klass name, klass, selector, method, completions
-
-    complete_method name, klass, selector, completions
+    complete_klass  name, klass, selector, method, completions
+    complete_method name, klass, selector,         completions
 
     completions.sort.uniq
   end
