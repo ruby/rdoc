@@ -617,20 +617,7 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
 
       add_from out, store
 
-      unless comment.empty? then
-        out << RDoc::Markup::Rule.new(1)
-
-        if comment.merged? then
-          parts = comment.parts
-          parts = parts.zip [RDoc::Markup::BlankLine.new] * parts.length
-          parts.flatten!
-          parts.pop
-
-          out.concat parts
-        else
-          out << comment
-        end
-      end
+      class_document_comment out, comment
 
       if class_methods or instance_methods or not klass.constants.empty? then
         out << RDoc::Markup::Rule.new(1)
@@ -665,6 +652,26 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     add_also_in out, also_in
 
     out
+  end
+
+  ##
+  # Adds the class +comment+ to +out+.
+
+  def class_document_comment out, comment # :nodoc:
+    unless comment.empty? then
+      out << RDoc::Markup::Rule.new(1)
+
+      if comment.merged? then
+        parts = comment.parts
+        parts = parts.zip [RDoc::Markup::BlankLine.new] * parts.length
+        parts.flatten!
+        parts.pop
+
+        out.concat parts
+      else
+        out << comment
+      end
+    end
   end
 
   ##
