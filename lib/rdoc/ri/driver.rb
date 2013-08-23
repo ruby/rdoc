@@ -1377,12 +1377,8 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     out << RDoc::Markup::Rule.new(1)
 
     render_method_arguments out, method.arglists
-
     render_method_superclass out, method
-
-    out << RDoc::Markup::BlankLine.new
-    out << method.comment
-    out << RDoc::Markup::BlankLine.new
+    render_method_comment out, method
   end
 
   def render_method_arguments out, arglists # :nodoc:
@@ -1392,6 +1388,12 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     arglists = arglists.map { |line| line + "\n" }
     out << RDoc::Markup::Verbatim.new(*arglists)
     out << RDoc::Markup::Rule.new(1)
+  end
+
+  def render_method_comment out, method # :nodoc:
+    out << RDoc::Markup::BlankLine.new
+    out << method.comment
+    out << RDoc::Markup::BlankLine.new
   end
 
   def render_method_superclass out, method # :nodoc:
