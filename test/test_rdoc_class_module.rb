@@ -1447,7 +1447,7 @@ class TestRDocClassModule < XrefTestCase
 
     @c1.update_extends
 
-    assert_equal [a, c], @c1.extends
+    assert_equal [a, b, c], @c1.extends
   end
 
   def test_update_extends_trim
