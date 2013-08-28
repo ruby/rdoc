@@ -491,10 +491,8 @@ main #attribute-method-details .method-detail:hover {
   cursor: default;
 }
 main .attribute-access-type {
-  font-size: 60%;
   text-transform: uppercase;
-  vertical-align: super;
-  padding: 0 2px;
+  padding: 0 1em;
 }
 /* @end */
 
