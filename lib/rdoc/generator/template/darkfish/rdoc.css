@@ -434,11 +434,10 @@ main .method-detail:hover {
 }
 main .method-heading {
   position: relative;
-  margin-bottom: 0.25em;
-  padding: 2px 4px 0 20px;
+  margin-bottom: 0.75em;
+  padding: 2px 4px 0;
   font-family: "Source Code Pro";
   color: #333;
-  background: url(images/brick.png) no-repeat left 6px;
 }
 main .method-heading :link,
 main .method-heading :visited {
@@ -462,7 +461,6 @@ main .method-heading:hover .method-click-advice {
 
 main .method-alias .method-heading {
   color: #666;
-  background: url(images/brick_link.png) no-repeat left bottom;
 }
 
 main .method-description,
@@ -488,9 +486,6 @@ main .method-description ul {
   margin-left: 1.5em;
 }
 
-main .attribute-method-heading {
-  background: url(images/tag_green.png) no-repeat left bottom;
-}
 main #attribute-method-details .method-detail:hover {
   background-color: transparent;
   cursor: default;
