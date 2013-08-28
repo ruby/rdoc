@@ -1,13 +1,11 @@
 <% if klass.type == 'class' then %>
-<nav id="parent-class-section">
-  <header>
-    <h3>Parent</h3>
-  </header>
+<div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
 
   <% if klass.superclass and not String === klass.superclass then %>
   <p class="link"><a href="<%= klass.aref_to klass.superclass.path %>"><%= klass.superclass.full_name %></a>
   <% else %>
   <p class="link"><%= klass.superclass %>
   <% end %>
-</nav>
+</div>
 <% end %>

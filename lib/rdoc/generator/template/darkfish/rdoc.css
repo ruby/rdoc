@@ -159,7 +159,7 @@ main {
 /* @end */
 
 /* @group Metadata Section */
-#metadata nav {
+#metadata .nav-section {
   margin-top: 2em;
   border-top: 2px solid #aaa;
   padding-left: 20px;
@@ -167,12 +167,9 @@ main {
   overflow: hidden;
 }
 
-#metadata header {
-  margin-left: -20px;
-}
-
 #metadata h2 {
   margin-top: 0;
+  margin-left: -20px;
   padding: 2px 8px 2px 20px;
   background-color: #dedede;
   color: #666;
@@ -182,6 +179,7 @@ main {
 
 #metadata h3 {
   margin-top: 0;
+  margin-left: -20px;
   padding: 2px 8px 2px 20px;
   background-color: #dedede;
   color: #666;
@@ -194,11 +192,13 @@ main {
   list-style: none;
 }
 
-#project-navigation nav {
+#project-navigation .nav-section {
   margin: 0;
 }
 
+#home-section h2,
 #home-section h3 {
+  padding: 2px 8px;
   text-align: center;
 }
 
@@ -208,6 +208,8 @@ main {
 }
 
 #search-section h3 {
+  margin-left: 0;
+  padding-left: 8px;
   border-top: 1px solid #aaa;
   border-bottom: 1px solid #aaa;
 }

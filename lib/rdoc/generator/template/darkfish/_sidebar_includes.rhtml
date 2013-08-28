@@ -1,8 +1,6 @@
 <% unless klass.includes.empty? then %>
-<nav id="includes-section">
-  <header>
-    <h3>Included Modules</h3>
-  </header>
+<div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
 
   <ul class="link-list">
   <% klass.each_include do |inc| %>
@@ -13,5 +11,5 @@
   <% end %>
   <% end %>
   </ul>
-</nav>
+</div>
 <% end %>
