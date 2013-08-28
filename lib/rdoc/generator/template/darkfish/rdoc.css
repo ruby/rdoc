@@ -263,7 +263,7 @@ article sup {
 article h1[class] {
   margin-top: 0;
   margin-bottom: 1em;
-  text-align: right;
+  padding-left: 2em;
   font-size: 2em;
   text-shadow: rgba(135,145,135,0.65) 2px 2px 2px;
   color: #6C8C22;
@@ -346,7 +346,7 @@ main header h2 {
   margin-top: 2em;
   border-width: 0;
   border-top: 3px solid #bbb;
-  text-align: right;
+  padding-left: 2em;
   font-size: 130%;
 }
 
@@ -354,7 +354,7 @@ main header h3 {
   margin: 2em 0 1em;
   border-width: 0;
   border-top: 2px solid #bbb;
-  text-align: right;
+  padding-left: 2em;
   font-size: 120%;
 }
 
