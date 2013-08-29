@@ -382,7 +382,7 @@ main header h3 {
 .constants-list > dl dt {
   margin-bottom: 0.25em;
   padding-left: 0;
-  font-family: "Source Code Pro", monospace;
+  font-family: "Source Code Pro", Monaco, monospace;
   background: inherit;
 }
 
@@ -439,7 +439,7 @@ main .method-heading {
   position: relative;
   margin-bottom: 0.75em;
   padding: 2px 4px 0;
-  font-family: "Source Code Pro";
+  font-family: "Source Code Pro", Monaco, monospace;
   color: #333;
 }
 main .method-heading :link,
