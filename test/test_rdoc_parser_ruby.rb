@@ -3208,6 +3208,35 @@ end
     assert_equal %w[C::[]], c.method_list.map { |m| m.full_name }
   end
 
+  def test_scan_visibility
+    util_parser <<-RUBY
+class C
+   def a() end
+
+   private :a
+
+   class << self
+     def b() end
+     private :b
+   end
+end
+    RUBY
+
+    @parser.scan
+
+    c = @store.find_class_named 'C'
+
+    c_a = c.find_method_named 'a'
+
+    assert_equal :private, c_a.visibility
+    refute c_a.singleton
+
+    c_b = c.find_method_named 'b'
+
+    assert_equal :private, c_b.visibility
+    refute c_b.singleton
+  end
+
   def test_stopdoc_after_comment
     util_parser <<-EOS
       module Bar

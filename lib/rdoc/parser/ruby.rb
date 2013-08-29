@@ -1869,7 +1869,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     when TkNL, TkUNLESS_MOD, TkIF_MOD, TkSEMICOLON then
       container.ongoing_visibility = vis
     else
-      update_visibility container, vis_type, vis
+      update_visibility container, vis_type, vis, singleton
     end
   end
 
@@ -2086,7 +2086,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Updates visibility in +container+ from +vis_type+ and +vis+.
 
-  def update_visibility container, vis_type, vis # :nodoc:
+  def update_visibility container, vis_type, vis, singleton # :nodoc:
     new_methods = []
 
     case vis_type
