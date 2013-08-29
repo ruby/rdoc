@@ -429,9 +429,12 @@ main .method-detail {
   margin-bottom: 2em;
   cursor: pointer;
 }
-main .method-detail:hover {
-  background-color: #f1edba;
+
+main .method-detail:target {
+  margin-left: -10px;
+  border-left: 10px solid #f1edba;
 }
+
 main .method-heading {
   position: relative;
   margin-bottom: 0.75em;
@@ -456,7 +459,6 @@ main .method-click-advice {
 }
 main .method-heading:hover .method-click-advice {
   visibility: visible;
-  background-color: #f1edba;
 }
 
 main .method-alias .method-heading {
