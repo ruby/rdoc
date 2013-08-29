@@ -263,7 +263,6 @@ article sup {
 article h1[class] {
   margin-top: 0;
   margin-bottom: 1em;
-  padding-left: 2em;
   font-size: 2em;
   color: #6C8C22;
 }
@@ -299,37 +298,38 @@ article h6 {
 }
 
 article p {
-  margin: 0 1em 1.2em;
+  margin: 0 0 0.5em;
   line-height: 1.3em;
 }
 
 article pre {
-  margin: 1.2em 3em;
+  margin: 1.2em 0.5em;
   padding: 1em;
   font-size: 0.8em;
 }
 
 article hr {
-  margin: 1.5em 4em 1.5em 4em;
+  margin: 1.5em 1em;
   border: 2px solid #ddd;
 }
 
 article blockquote {
   margin: 0 2em 1.2em 1.2em;
+  padding-left: 0.5em;
   border-left: 2px solid #ddd;
 }
 
 article ol,
 article ul {
-  margin: 1.5em 3em 1.5em;
+  margin: 1em 2em;
 }
 
 article li > p {
-  margin: 0 0.5em 0.5em;
+  margin-bottom: 0.5em;
 }
 
 article dl {
-  margin: 1.5em 2em 1.5em;
+  margin: 1em 0.5em;
 }
 
 article dt {
@@ -344,16 +344,14 @@ article dd {
 main header h2 {
   margin-top: 2em;
   border-width: 0;
-  border-top: 3px solid #bbb;
-  padding-left: 2em;
+  border-top: 4px solid #bbb;
   font-size: 130%;
 }
 
 main header h3 {
-  margin: 2em 0 1em;
+  margin: 2em 0 1.5em;
   border-width: 0;
-  border-top: 2px solid #bbb;
-  padding-left: 2em;
+  border-top: 3px solid #bbb;
   font-size: 120%;
 }
 
@@ -380,10 +378,10 @@ main header h3 {
 }
 
 .constants-list > dl dt {
-  margin-bottom: 0.25em;
+  margin-bottom: 0.75em;
   padding-left: 0;
   font-family: "Source Code Pro", Monaco, monospace;
-  background: inherit;
+  font-size: 110%;
 }
 
 .constants-list > dl dt a {
@@ -393,7 +391,6 @@ main header h3 {
 .constants-list > dl dd {
   margin: 0 0 2em 0;
   padding: 0;
-  padding-left: 1em;
   color: #666;
 }
 
@@ -426,7 +423,7 @@ main .method-description .method-calls-super {
 }
 
 main .method-detail {
-  margin-bottom: 2em;
+  margin-bottom: 2.5em;
   cursor: pointer;
 }
 
@@ -438,8 +435,8 @@ main .method-detail:target {
 main .method-heading {
   position: relative;
   margin-bottom: 0.75em;
-  padding: 2px 4px 0;
   font-family: "Source Code Pro", Monaco, monospace;
+  font-size: 110%;
   color: #333;
 }
 main .method-heading :link,
@@ -467,7 +464,6 @@ main .method-alias .method-heading {
 
 main .method-description,
 main .aliases {
-  margin: 0 20px;
   color: #666;
 }
 
@@ -480,9 +476,6 @@ main .aliases {
   padding-top: 4px;
   font-style: italic;
   cursor: default;
-}
-main .method-description p {
-  margin-bottom: 0.5em;
 }
 main .method-description ul {
   margin-left: 1.5em;
