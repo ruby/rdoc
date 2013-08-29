@@ -737,6 +737,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         case name = get_class_specification
         when 'self', container.name
           parse_statements container, SINGLE
+          return # don't update offset or line
         else
           parse_class_singleton container, name, comment
         end

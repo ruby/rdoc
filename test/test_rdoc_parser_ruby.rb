@@ -607,6 +607,26 @@ class C; end
     assert_equal 1, foo.line
   end
 
+  def test_parse_class_singleton
+    comment = RDoc::Comment.new "##\n# my class\n", @top_level
+
+    util_parser <<-RUBY
+class C
+  class << self
+  end
+end
+    RUBY
+
+    tk = @parser.get_tk
+
+    @parser.parse_class @top_level, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    c = @top_level.classes.first
+    assert_equal 'C', c.full_name
+    assert_equal 0, c.offset
+    assert_equal 1, c.line
+  end
+
   def test_parse_class_ghost_method
     util_parser <<-CLASS
 class Foo
