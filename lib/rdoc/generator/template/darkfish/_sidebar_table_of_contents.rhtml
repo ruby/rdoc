@@ -9,7 +9,7 @@
 <div class="nav-section">
   <h3>Table of Contents</h3>
 
-  <ul class="link-list">
+  <ul class="link-list" role="directory">
 <%   table.each do |heading| %>
     <li><a href="#<%= heading.aref %>"><%= heading.plain_html %></a>
 <%   end %>

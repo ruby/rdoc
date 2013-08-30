@@ -528,7 +528,7 @@ ul#search-results {
   text-shadow: none;
 }
 
-#search-results .current {
+#current-search-result {
   background: #dedede;
   border-bottom: 1px solid transparent;
 }

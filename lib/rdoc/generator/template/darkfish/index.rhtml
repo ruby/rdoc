@@ -1,5 +1,5 @@
-<body id="top" class="file">
-<nav id="metadata">
+<body id="top" role="document" class="file">
+<nav id="metadata" role="navigation">
   <div id="project-navigation">
     <%= render '_sidebar_navigation.rhtml' %>
 
@@ -12,8 +12,8 @@
   </div>
 </nav>
 
-<main>
-<article>
+<main role="main">
+<article role="article">
 <% if @options.main_page and
       main_page = @files.find { |f| f.full_name == @options.main_page } then %>
 <%= main_page.description %>

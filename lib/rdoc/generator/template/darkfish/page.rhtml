@@ -1,5 +1,5 @@
-<body id="top" class="file">
-<nav id="metadata">
+<body id="top" role="document" class="file">
+<nav id="metadata" role="navigation">
   <div id="project-navigation">
     <%= render '_sidebar_navigation.rhtml' %>
     <%= render '_sidebar_search.rhtml' %>
@@ -13,8 +13,8 @@
   </div>
 </nav>
 
-<main>
-<article>
+<main role="main">
+<article role="article">
   <%= file.description %>
 </article>
 </main>

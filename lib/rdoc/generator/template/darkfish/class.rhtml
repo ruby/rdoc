@@ -1,5 +1,5 @@
-<body id="top" class="<%= klass.type %>">
-<nav id="metadata">
+<body id="top" role="document" class="<%= klass.type %>">
+<nav id="metadata" role="navigation">
   <div id="project-navigation">
     <%= render '_sidebar_navigation.rhtml' %>
     <%= render '_sidebar_search.rhtml' %>
@@ -16,8 +16,8 @@
   </div>
 </nav>
 
-<main>
-<article>
+<main role="main">
+<article role="article">
   <h1 class="<%= klass.type %>"><%= klass.type %> <%= klass.full_name %></h1>
 
   <section class="description">
