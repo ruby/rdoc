@@ -133,7 +133,7 @@ pre {
 
 /* @group Top-Level Structure */
 
-#metadata {
+nav {
   float: left;
   width: 260px;
   font-size: 14px;
@@ -158,8 +158,8 @@ main {
 
 /* @end */
 
-/* @group Metadata Section */
-#metadata .nav-section {
+/* @group navigation */
+nav .nav-section {
   margin-top: 2em;
   border-top: 2px solid #aaa;
   padding-left: 20px;
@@ -167,7 +167,7 @@ main {
   overflow: hidden;
 }
 
-#metadata h2 {
+nav h2 {
   margin-top: 0;
   margin-left: -20px;
   padding: 2px 8px 2px 20px;
@@ -177,7 +177,7 @@ main {
   text-align: center;
 }
 
-#metadata h3 {
+nav h3 {
   margin-top: 0;
   margin-left: -20px;
   padding: 2px 8px 2px 20px;
@@ -185,9 +185,9 @@ main {
   color: #555;
 }
 
-#metadata ul,
-#metadata dl,
-#metadata p {
+nav ul,
+nav dl,
+nav p {
   padding:  8px;
   list-style: none;
 }
