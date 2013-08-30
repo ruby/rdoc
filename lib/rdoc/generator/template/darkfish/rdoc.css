@@ -464,7 +464,7 @@ main .method-alias .method-heading {
 
 main .method-description,
 main .aliases {
-  color: #666;
+  color: #333;
 }
 
 main .method-description p,
