@@ -357,12 +357,12 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     @to.code_object = RDoc::NormalClass.new 'Foo'
     @to.start_accepting
 
-    @to.accept_heading @RM::Heading.new(1, 'Hello')
+    @to.accept_heading head(1, 'Hello')
 
-    links = '<span><a href="#label-Hello">&para;</a> ' +
+    links = '<span><a href="#class-Foo-label-Hello">&para;</a> ' +
             '<a href="#documentation">&uarr;</a></span>'
 
-    assert_equal "\n<h1 id=\"label-Hello\">Hello#{links}</h1>\n",
+    assert_equal "\n<h1 id=\"class-Foo-label-Hello\">Hello#{links}</h1>\n",
                  @to.res.join
   end
 
