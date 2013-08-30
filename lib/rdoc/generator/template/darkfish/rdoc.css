@@ -69,6 +69,9 @@ pre {
   border: none;
   height: 1.5em;
   -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  text-align: left;
 }
 #search-field:focus {
   background: #f1edba;
@@ -159,18 +162,20 @@ main {
 /* @end */
 
 /* @group navigation */
+nav {
+  margin-bottom: 1em;
+}
+
 nav .nav-section {
   margin-top: 2em;
   border-top: 2px solid #aaa;
-  padding-left: 20px;
   font-size: 90%;
   overflow: hidden;
 }
 
 nav h2 {
-  margin-top: 0;
-  margin-left: -20px;
-  padding: 2px 8px 2px 20px;
+  margin: 0;
+  padding: 2px 8px 2px 8px;
   background-color: #e8e8e8;
   color: #555;
   font-size: 125%;
@@ -178,9 +183,9 @@ nav h2 {
 }
 
 nav h3 {
-  margin-top: 0;
-  margin-left: -20px;
-  padding: 2px 8px 2px 20px;
+  margin: 0;
+  padding: 2px 8px 2px 8px;
+  text-align: right;
   background-color: #e8e8e8;
   color: #555;
 }
@@ -188,7 +193,7 @@ nav h3 {
 nav ul,
 nav dl,
 nav p {
-  padding:  8px;
+  padding: 4px 8px 0;
   list-style: none;
 }
 
@@ -198,7 +203,6 @@ nav p {
 
 #home-section h2,
 #home-section h3 {
-  padding: 2px 8px;
   text-align: center;
 }
 
@@ -518,10 +522,6 @@ pre {
 
 
 /* @group search results */
-ul#search-results {
-  padding-left: 0;
-}
-
 #search-results h1 {
   font-size: 110%;
   font-weight: normal;
