@@ -282,6 +282,7 @@ class TestRDocClassModule < XrefTestCase
     assert_empty loaded.extends
     assert_empty loaded.method_list
   end
+
   def test_marshal_load_version_0
     tl = @store.add_file 'file.rb'
     ns = tl.add_module RDoc::NormalModule, 'Namespace'
