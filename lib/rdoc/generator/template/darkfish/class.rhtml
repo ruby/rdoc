@@ -17,8 +17,10 @@
 </nav>
 
 <main role="main">
-<article role="article">
-  <h1 class="<%= klass.type %>"><%= klass.type %> <%= klass.full_name %></h1>
+<article role="article" aria-labelledby="<%=h klass.aref %>">
+  <h1 id="<%=h klass.aref %>" class="<%= klass.type %>">
+    <%= klass.type %> <%= klass.full_name %>
+  </h1>
 
   <section class="description">
     <%= klass.description %>
