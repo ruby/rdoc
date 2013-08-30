@@ -211,11 +211,12 @@ nav p {
   border-top: 0;
 }
 
-#search-section h3 {
-  margin-left: 0;
-  padding-left: 8px;
+#search-field-wrapper {
   border-top: 1px solid #aaa;
   border-bottom: 1px solid #aaa;
+  padding: 3px 8px;
+  background-color: #e8e8e8;
+  color: #555;
 }
 
 ul.link-list li {
