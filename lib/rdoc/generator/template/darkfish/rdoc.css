@@ -12,7 +12,7 @@
 * { padding: 0; margin: 0; }
 
 body {
-  background: #efefef;
+  background: #fafafa;
   font-family: "Helvetica Neue", Helvetica, Tahoma, sans-serif;
 }
 
@@ -65,7 +65,7 @@ pre {
 
 #search-field {
   width: 98%;
-  background: #eee;
+  background: white;
   border: none;
   height: 1.5em;
   -webkit-border-radius: 4px;
@@ -171,8 +171,8 @@ main {
   margin-top: 0;
   margin-left: -20px;
   padding: 2px 8px 2px 20px;
-  background-color: #dedede;
-  color: #666;
+  background-color: #e8e8e8;
+  color: #555;
   font-size: 125%;
   text-align: center;
 }
@@ -181,8 +181,8 @@ main {
   margin-top: 0;
   margin-left: -20px;
   padding: 2px 8px 2px 20px;
-  background-color: #dedede;
-  color: #666;
+  background-color: #e8e8e8;
+  color: #555;
 }
 
 #metadata ul,
@@ -529,7 +529,7 @@ ul#search-results {
 }
 
 #search-results .search-selected {
-  background: #dedede;
+  background: #e8e8e8;
   border-bottom: 1px solid transparent;
 }
 
