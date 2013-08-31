@@ -212,10 +212,6 @@ class RDoc::Generator::Darkfish
 
       dst = Pathname.new(path).relative_path_from @template_dir
 
-      # I suck at glob
-      dst_dir = dst.dirname
-      FileUtils.mkdir_p dst_dir, options unless File.exist? dst_dir
-
       install_rdoc_static_file @template_dir + path, dst, options
     end
   end
@@ -540,6 +536,8 @@ class RDoc::Generator::Darkfish
   end
 
   def install_rdoc_static_file source, destination, options # :nodoc:
+    FileUtils.mkdir_p File.dirname(destination), options
+
     begin
       FileUtils.ln source, destination, options
     rescue Errno::EEXIST
