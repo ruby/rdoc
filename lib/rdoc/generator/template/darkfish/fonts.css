@@ -1,14 +1,82 @@
 /*
  * Copyright 2010, 2012 Adobe Systems Incorporated (http://www.adobe.com/),
- * with Reserved Font Name 'Source'. All Rights Reserved. Source is a
+ * with Reserved Font Name "Source". All Rights Reserved. Source is a
  * trademark of Adobe Systems Incorporated in the United States and/or other
  * countries.
  *
- * This Font Software is licensed under the SIL Open Font License, Version 1.1.
+ * This Font Software is licensed under the SIL Open Font License, Version
+ * 1.1.
  *
  * This license is copied below, and is also available with a FAQ at:
  * http://scripts.sil.org/OFL
+ */
+
+@font-face {
+  font-family: "Source Code Pro";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Source Code Pro"),
+       local("SourceCodePro-Regular"),
+       url("fonts/SourceCodePro-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Source Code Pro";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Source Code Pro Bold"),
+       local("SourceCodePro-Bold"),
+       url("fonts/SourceCodePro-Bold.ttf") format("truetype");
+}
+
+/*
+ * Copyright (c) 2010, Łukasz Dziedzic (dziedzic@typoland.com),
+ * with Reserved Font Name Lato.
  *
+ * This Font Software is licensed under the SIL Open Font License, Version
+ * 1.1.
+ *
+ * This license is copied below, and is also available with a FAQ at:
+ * http://scripts.sil.org/OFL
+ */
+
+@font-face {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 300;
+  src: local("Lato Light"),
+       local("Lato-Light"),
+       url("fonts/Lato-Light.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Lato";
+  font-style: italic;
+  font-weight: 300;
+  src: local("Lato Light Italic"),
+       local("Lato-LightItalic"),
+       url("fonts/Lato-LightItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Lato Regular"),
+       local("Lato-Regular"),
+       url("fonts/Lato-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Lato";
+  font-style: italic;
+  font-weight: 700;
+  src: local("Lato Italic"),
+       local("Lato-Italic"),
+       url("fonts/Lato-RegularItalic.ttf") format("truetype");
+}
+
+/*
  * -----------------------------------------------------------
  * SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
  * -----------------------------------------------------------
@@ -96,22 +164,4 @@
  * FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
  * OTHER DEALINGS IN THE FONT SOFTWARE.
  */
-
-@font-face {
-  font-family: "Source Code Pro";
-  font-style: normal;
-  font-weight: 400;
-  src: local("Source Code Pro"),
-       local("SourceCodePro-Regular"),
-       url("fonts/SourceCodePro-Regular.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Source Code Pro";
-  font-style: normal;
-  font-weight: 700;
-  src: local("Source Code Pro Bold"),
-       local("SourceCodePro-Bold"),
-       url("fonts/SourceCodePro-Bold.ttf") format("truetype");
-}
 

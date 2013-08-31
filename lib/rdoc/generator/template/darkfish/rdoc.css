@@ -13,7 +13,8 @@
 
 body {
   background: #fafafa;
-  font-family: "Helvetica Neue", Helvetica, Tahoma, sans-serif;
+  font-family: Lato, sans-serif;
+  font-weight: 300;
 }
 
 main {
@@ -139,6 +140,7 @@ pre {
 nav {
   float: left;
   width: 260px;
+  font-family: Helvetica, sans-serif;
   font-size: 14px;
 }
 
@@ -147,6 +149,15 @@ main {
   padding-left: 20px;
   min-width: 340px;
   font-size: 16px;
+}
+
+main h1,
+main h2,
+main h3,
+main h4,
+main h5,
+main h6 {
+  font-family: Helvetica, sans-serif;
 }
 
 .table-of-contents main {
@@ -523,10 +534,14 @@ pre {
 
 
 /* @group search results */
-#search-results h1 {
-  font-size: 110%;
+#search-results {
+  font-family: Lato, sans-serif;
+  font-weight: 300;
+}
+
+#search-results .search-match {
+  font-family: Helvetica, sans-serif;
   font-weight: normal;
-  text-shadow: none;
 }
 
 #search-results .search-selected {
@@ -561,6 +576,7 @@ pre {
 
 #search-results pre {
   margin: 0.5em;
+  font-family: "Source Code Pro", Monaco, monospace;
 }
 
 /* @end */
