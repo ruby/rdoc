@@ -1,6 +1,6 @@
 <body id="top" class="table-of-contents">
 <main role="main">
-<article>
+<article role="directory">
 <h1 class="class"><%= h @title %></h1>
 
 <% simple_files = @files.select { |f| f.text? } %>
@@ -14,8 +14,7 @@
    # HACK table_of_contents should not exist on Document
    table = file.parse(file.comment).table_of_contents
    unless table.empty? then %>
-    <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings">
-    <ul class="initially-hidden">
+    <ul>
 <% table.each do |heading| %>
       <li><a href="<%= file.path %>#<%= heading.aref %>"><%= heading.plain_html %></a>
 <%   end %>
@@ -26,7 +25,7 @@
 </ul>
 <% end %>
 
-<h2 id="classes">Classes/Modules</h2>
+<h2 id="classes">Classes and Modules</h2>
 <ul>
 <% @modsort.each do |klass| %>
   <li class="<%= klass.type %>">
@@ -36,8 +35,7 @@
    table.concat klass.section_contents
 
    unless table.empty? then %>
-    <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings">
-    <ul class="initially-hidden">
+    <ul>
 <% table.each do |item| %>
       <li><a href="<%= klass.path %>#<%= item.aref %>"><%= item.plain_html %></a>
 <%   end %>

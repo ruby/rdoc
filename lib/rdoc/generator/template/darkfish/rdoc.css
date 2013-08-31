@@ -113,6 +113,10 @@ pre {
   list-style: none;
 }
 
+.table-of-contents ul ul {
+  margin-top: 0.25em;
+}
+
 .table-of-contents ul :link,
 .table-of-contents ul :visited {
   font-size: 16px;
