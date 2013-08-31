@@ -2,6 +2,7 @@
 
 <title><%= h @title %></title>
 
+<link href="<%= asset_rel_prefix %>/fonts.css" rel="stylesheet">
 <link href="<%= asset_rel_prefix %>/rdoc.css" rel="stylesheet">
 <% if @options.template_stylesheets.flatten.any? then %>
 <%   @options.template_stylesheets.flatten.each do |stylesheet| %>

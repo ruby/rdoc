@@ -77,6 +77,10 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
     assert_file 'js/search_index.js'
 
     assert_hard_link 'rdoc.css'
+    assert_hard_link 'fonts.css'
+
+    assert_hard_link 'fonts/SourceCodePro-Bold.ttf'
+    assert_hard_link 'fonts/SourceCodePro-Regular.ttf'
 
     encoding = if Object.const_defined? :Encoding then
                  Regexp.escape Encoding::UTF_8.name

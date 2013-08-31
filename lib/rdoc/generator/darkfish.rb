@@ -58,6 +58,17 @@ class RDoc::Generator::Darkfish
   include ERB::Util
 
   ##
+  # Stylesheets, fonts, etc. that are included in RDoc.
+
+  BUILTIN_STYLE_ITEMS = # :nodoc:
+    %w[
+      fonts.css
+      fonts/SourceCodePro-Bold.ttf
+      fonts/SourceCodePro-Regular.ttf
+      rdoc.css
+  ]
+
+  ##
   # Path to this file's parent directory. Used to find templates and other
   # resources.
 
@@ -200,7 +211,9 @@ class RDoc::Generator::Darkfish
     debug_msg "Copying static files"
     options = { :verbose => $DEBUG_RDOC, :noop => @dry_run }
 
-    install_rdoc_static_file @template_dir + 'rdoc.css', './rdoc.css', options
+    BUILTIN_STYLE_ITEMS.each do |item|
+      install_rdoc_static_file @template_dir + item, "./#{item}", options
+    end
 
     @options.template_stylesheets.each do |stylesheet|
       FileUtils.cp stylesheet, '.', options
