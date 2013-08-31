@@ -232,7 +232,7 @@ nav p {
 
 ul.link-list li {
   white-space: nowrap;
-  line-height: 20px;
+  line-height: 1.4em;
 }
 
 ul.link-list .type {
@@ -315,7 +315,7 @@ article h6 {
 
 article p {
   margin: 0 0 0.5em;
-  line-height: 1.3em;
+  line-height: 1.4em;
 }
 
 article pre {
@@ -350,7 +350,7 @@ article dl {
 
 article dt {
   margin-bottom: 0.5em;
-  font-weight: bolder;
+  font-weight: bold;
 }
 
 article dd {
@@ -435,7 +435,7 @@ main .method-source-code {
 
 main .method-description .method-calls-super {
   color: #333;
-  font-weight: bolder;
+  font-weight: bold;
 }
 
 main .method-detail {
