@@ -275,6 +275,83 @@ U
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_string_escape
+    tokens = RDoc::RubyLex.tokenize '"\\n"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\n\""), tokens.first
+
+    tokens = RDoc::RubyLex.tokenize '"\\r"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\r\""), tokens.first
+
+    tokens = RDoc::RubyLex.tokenize '"\\f"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\f\""), tokens.first
+
+    tokens = RDoc::RubyLex.tokenize '"\\\\"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\\\\""), tokens.first
+
+    tokens = RDoc::RubyLex.tokenize '"\\t"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\t\""), tokens.first
+
+    tokens = RDoc::RubyLex.tokenize '"\\v"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\v\""), tokens.first
+
+    tokens = RDoc::RubyLex.tokenize '"\\a"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\a\""), tokens.first
+
+    tokens = RDoc::RubyLex.tokenize '"\\e"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\e\""), tokens.first
+
+    tokens = RDoc::RubyLex.tokenize '"\\b"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\b\""), tokens.first
+
+    tokens = RDoc::RubyLex.tokenize '"\\s"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\s\""), tokens.first
+
+    tokens = RDoc::RubyLex.tokenize '"\\d"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\d\""), tokens.first
+
+  end
+
+  def test_class_tokenize_string_escape_control
+    tokens = RDoc::RubyLex.tokenize '"\\C-a"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\C-a\""), tokens.first
+
+    tokens = RDoc::RubyLex.tokenize '"\\c\\a"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\c\\a\""), tokens.first
+
+    tokens = RDoc::RubyLex.tokenize '"\\C-\\M-a"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\C-\\M-a\""), tokens.first
+  end
+
+  def test_class_tokenize_string_escape_meta
+    tokens = RDoc::RubyLex.tokenize '"\\M-a"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\M-a\""), tokens.first
+
+    tokens = RDoc::RubyLex.tokenize '"\\M-\\C-a"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\M-\\C-a\""), tokens.first
+  end
+
+  def test_class_tokenize_string_escape_hexadecimal
+    tokens = RDoc::RubyLex.tokenize '"\\x0"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\x0\""), tokens.first
+
+    tokens = RDoc::RubyLex.tokenize '"\\x00"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\x00\""), tokens.first
+
+    tokens = RDoc::RubyLex.tokenize '"\\x000"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\x000\""), tokens.first
+  end
+
+  def test_class_tokenize_string_escape_octal
+    tokens = RDoc::RubyLex.tokenize '"\\0"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\0\""), tokens.first
+
+    tokens = RDoc::RubyLex.tokenize '"\\00"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\00\""), tokens.first
+
+    tokens = RDoc::RubyLex.tokenize '"\\000"', nil
+    assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\000\""), tokens.first
+  end
+
   def test_class_tokenize_symbol
     tokens = RDoc::RubyLex.tokenize 'scope module: :v1', nil
 

@@ -1287,18 +1287,19 @@ class RDoc::RubyLex
   def read_escape
     escape = ''
     ch = getc
-    escape << ch
 
     case ch
     when "\n", "\r", "\f"
+      escape << ch
     when "\\", "n", "t", "r", "f", "v", "a", "e", "b", "s" #"
+      escape << ch
     when /[0-7]/
       ungetc ch
       3.times do
         ch = getc
-        escape << ch
         case ch
         when /[0-7]/
+          escape << ch
         when nil
           break
         else
@@ -1308,11 +1309,13 @@ class RDoc::RubyLex
       end
 
     when "x"
+      escape << ch
+
       2.times do
         ch = getc
-        escape << ch
         case ch
         when /[0-9a-fA-F]/
+          escape << ch
         when nil
           break
         else
@@ -1322,26 +1325,44 @@ class RDoc::RubyLex
       end
 
     when "M"
-      ch = getc
       escape << ch
+
+      ch = getc
       if ch != '-'
         ungetc
       else
-        ch = getc
         escape << ch
+
+        ch = getc
         if ch == "\\" #"
+          ungetc
           escape << read_escape
+        else
+          escape << ch
         end
       end
 
     when "C", "c" #, "^"
-      if ch == "C" and (ch = getc) != "-"
-        escape << ch
-        ungetc
+      escape << ch
+
+      if ch == "C"
+        ch = getc
+
+        if ch == "-"
+          escape << ch
+          ch = getc
+          escape << ch
+
+          escape << read_escape if ch == "\\"
+        else
+          ungetc
+        end
       elsif (ch = getc) == "\\" #"
         escape << ch << read_escape
       end
     else
+      escape << ch
+
       # other characters
     end
 

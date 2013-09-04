@@ -67,6 +67,9 @@
   * Support ruby 2.0 hash syntax for keywords.  Bug #256 by diogocsc.
   * Prevent \\<tag> from escaping the tag in RDoc markup.  (\<tag> still
     escapes the tag.)  Bug #251 by Pablo Bianciotto.
+  * Fixed lexing of escaped characters in strings which could cause
+    duplication of the final characters in source code view.  Bug #252 by Mike
+    Stok.
 
 === 4.0.1 / 2013-03-27
 
