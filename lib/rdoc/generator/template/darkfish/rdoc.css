@@ -17,10 +17,6 @@ body {
   font-weight: 300;
 }
 
-main {
-  display: block;
-}
-
 h1 span,
 h2 span,
 h3 span,
@@ -148,7 +144,8 @@ nav {
 }
 
 main {
-  margin: 0.5em 2em 5em 260px;
+  display: block;
+  margin: 0 2em 5em 260px;
   padding-left: 20px;
   min-width: 340px;
   font-size: 16px;
@@ -213,6 +210,7 @@ nav p {
 
 #project-navigation .nav-section {
   margin: 0;
+  border-top: 0;
 }
 
 #home-section h2,
