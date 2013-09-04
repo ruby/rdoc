@@ -724,8 +724,10 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--tab-width=WIDTH", "-w", OptionParser::DecimalInteger,
+      opt.on("--tab-width=WIDTH", "-w", Integer,
              "Set the width of tab characters.") do |value|
+        raise OptionParser::InvalidArgument,
+              "#{value} is an invalid tab width" if value <= 0
         @tab_width = value
       end
 

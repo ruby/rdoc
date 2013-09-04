@@ -70,6 +70,8 @@
   * Fixed lexing of escaped characters in strings which could cause
     duplication of the final characters in source code view.  Bug #252 by Mike
     Stok.
+  * Disallow invalid tab widths for -w option.  Bug reported by Charles
+    Hixson.
 
 === 4.0.1 / 2013-03-27
 

@@ -531,6 +531,26 @@ rdoc_include:
     assert_includes @options.rdoc_include, @options.root.to_s
   end
 
+  def test_parse_tab_width
+    @options.parse %w[--tab-width=1]
+    assert_equal 1, @options.tab_width
+
+    @options.parse %w[-w2]
+    assert_equal 2, @options.tab_width
+
+    _, err = capture_io do
+      @options.parse %w[-w=2]
+    end
+
+    assert_match 'invalid options', err
+
+    _, err = capture_io do
+      @options.parse %w[-w0]
+    end
+
+    assert_match 'invalid options', err
+  end
+
   def test_parse_template
     out, err = capture_io do
       @options.parse %w[--template darkfish]
