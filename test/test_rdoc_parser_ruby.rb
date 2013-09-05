@@ -1105,6 +1105,23 @@ EOF
     assert_equal klass.current_section, foo.section
   end
 
+  def test_parse_comment_attr_attr_reader
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = RDoc::Comment.new "##\n# :attr_reader: foo\n", @top_level
+
+    util_parser "\n"
+
+    tk = @parser.get_tk
+
+    @parser.parse_comment klass, tk, comment
+
+    foo = klass.attributes.first
+    assert_equal 'foo',      foo.name
+    assert_equal 'R',        foo.rw
+  end
+
   def test_parse_comment_attr_stopdoc
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level

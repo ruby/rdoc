@@ -979,7 +979,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def parse_comment_attr container, type, name, comment # :nodoc:
     return if name.empty?
 
-    rw = case $1
+    rw = case type
          when 'attr_reader' then 'R'
          when 'attr_writer' then 'W'
          else 'RW'
