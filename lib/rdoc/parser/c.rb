@@ -228,7 +228,12 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  def deduplicate_method_name class_obj, method_name
+  ##
+  # If two ruby methods share a C implementation (and comment) this
+  # deduplicates the examples in the call_seq for the method to reduce
+  # confusion in the output.
+
+  def deduplicate_method_name class_obj, method_name # :nodoc:
     return unless
       method = class_obj.method_list.find { |m| m.name == method_name }
     return unless call_seq = method.call_seq
