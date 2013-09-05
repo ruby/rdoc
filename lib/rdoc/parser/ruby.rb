@@ -956,7 +956,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     singleton = !!text.sub!(/(^# +:?)(singleton-)(method:)/, '\1\3')
 
-    co = 
+    co =
       if text.sub!(/^# +:?method: *(\S*).*?\n/i, '') then
         parse_comment_ghost container, text, $1, column, line_no, comment
       elsif text.sub!(/# +:?(attr(_reader|_writer|_accessor)?): *(\S*).*?\n/i, '') then
