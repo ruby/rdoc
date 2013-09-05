@@ -186,7 +186,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
     read
   end
 
-  def get_visibility_information tk
+  ##
+  # Extracts the visibility information for the visibility token +tk+.
+  #
+  # Returns the visibility type (a string), the visibility (a symbol) and
+  # +singleton+ if the methods following should be converted to singleton
+  # methods.
+
+  def get_visibility_information tk # :nodoc:
     vis_type  = tk.name
     singleton = false
 
@@ -790,7 +797,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
     cls
   end
 
-  def parse_class_singleton container, name, comment
+  ##
+  # Parses a singleton class in +container+ with the given +name+ and
+  # +comment+.
+
+  def parse_class_singleton container, name, comment # :nodoc:
     other = @store.find_class_named name
 
     unless other then
@@ -961,7 +972,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
     true
   end
 
-  def parse_comment_attr container, type, name, comment
+  ##
+  # Parse a comment that is describing an attribute in +container+ with the
+  # given +name+ and +comment+.
+
+  def parse_comment_attr container, type, name, comment # :nodoc:
     return if name.empty?
 
     rw = case $1
@@ -1356,7 +1371,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
     skip_method dummy
   end
 
-  def parse_method_name container
+  ##
+  # Parses the name of a method in +container+.
+  #
+  # Returns the method name, the container it is in (for def Foo.name) and if
+  # it is a singleton or regular method.
+
+  def parse_method_name container # :nodoc:
     @scanner.lex_state = :EXPR_FNAME
 
     skip_tkspace
