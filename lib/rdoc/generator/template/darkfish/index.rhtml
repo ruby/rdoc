@@ -13,7 +13,7 @@
 </nav>
 
 <main role="main">
-<article role="article">
+<article>
 <% if @options.main_page and
       main_page = @files.find { |f| f.full_name == @options.main_page } then %>
 <%= main_page.description %>
