@@ -644,7 +644,10 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     end
   end
 
-  def class_document_constants out, klass
+  ##
+  # Adds the constants from +klass+ to the Document +out+.
+
+  def class_document_constants out, klass # :nodoc:
     return if klass.constants.empty?
 
     out << RDoc::Markup::Heading.new(1, "Constants:")
