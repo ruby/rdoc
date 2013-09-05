@@ -167,6 +167,12 @@ class RDoc::Context < RDoc::CodeObject
     full_name <=> other.full_name
   end
 
+  ##
+  # Adds an item of type +klass+ with the given +name+ and +comment+ to the
+  # context.
+  #
+  # Currently only RDoc::Extend and RDoc::Include are supported.
+
   def add klass, name, comment
     if RDoc::Extend == klass then
       ext = RDoc::Extend.new name, comment
