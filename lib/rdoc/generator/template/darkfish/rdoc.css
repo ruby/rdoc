@@ -485,11 +485,6 @@ main .aliases {
   color: #333;
 }
 
-main .method-description p,
-main .aliases p {
-  line-height: 1.2em;
-}
-
 main .aliases {
   padding-top: 4px;
   font-style: italic;
