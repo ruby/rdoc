@@ -11,7 +11,7 @@
 
   <ul class="link-list" role="directory">
 <%   table.each do |heading| %>
-    <li><a href="#<%= heading.aref %>"><%= heading.plain_html %></a>
+    <li><a href="#<%= heading.label current %>"><%= heading.plain_html %></a>
 <%   end %>
   </ul>
 </div>
