@@ -135,7 +135,7 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
   end
 
   def test_install_rdoc_static_file
-    src = __FILE__
+    src = Pathname(__FILE__)
     dst = File.join @tmpdir, File.basename(src)
     options = {}
 
@@ -152,6 +152,16 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
     @g.install_rdoc_static_file src, dst, options
 
     assert_hard_link dst
+  end
+
+  def test_install_rdoc_static_file_missing
+    src = Pathname(__FILE__) + 'nonexistent'
+    dst = File.join @tmpdir, File.basename(src)
+    options = {}
+
+    @g.install_rdoc_static_file src, dst, options
+
+    refute_file dst
   end
 
   def test_setup

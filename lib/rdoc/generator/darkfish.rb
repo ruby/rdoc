@@ -553,16 +553,20 @@ class RDoc::Generator::Darkfish
   end
 
   def install_rdoc_static_file source, destination, options # :nodoc:
-    FileUtils.mkdir_p File.dirname(destination), options
+    return unless source.exist?
 
     begin
-      FileUtils.ln source, destination, options
-    rescue Errno::EEXIST
-      FileUtils.rm destination
-      retry
+      FileUtils.mkdir_p File.dirname(destination), options
+
+      begin
+        FileUtils.ln source, destination, options
+      rescue Errno::EEXIST
+        FileUtils.rm destination
+        retry
+      end
+    rescue
+      FileUtils.cp source, destination, options
     end
-  rescue
-    FileUtils.cp source, destination, options
   end
 
   ##
