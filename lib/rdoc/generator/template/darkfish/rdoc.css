@@ -451,9 +451,9 @@ main .method-detail:target {
 
 main .method-heading {
   position: relative;
-  margin-bottom: 0.75em;
   font-family: "Source Code Pro", Monaco, monospace;
   font-size: 110%;
+  font-weight: bold;
   color: #333;
 }
 main .method-heading :link,
@@ -481,6 +481,7 @@ main .method-alias .method-heading {
 
 main .method-description,
 main .aliases {
+  margin-top: 0.75em;
   color: #333;
 }
 
