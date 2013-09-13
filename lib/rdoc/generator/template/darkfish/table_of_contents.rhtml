@@ -1,6 +1,5 @@
 <body id="top" class="table-of-contents">
 <main role="main">
-<article role="directory">
 <h1 class="class"><%= h @title %></h1>
 
 <% simple_files = @files.select { |f| f.text? } %>
@@ -56,5 +55,4 @@
     <span class="container"><%= method.parent.full_name %></span>
 <% end %>
 </ul>
-</article>
 </main>

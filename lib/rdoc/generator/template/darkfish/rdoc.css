@@ -252,109 +252,103 @@ ul.link-list .type {
 /* @end */
 
 /* @group Documentation Section */
-article {
-  border-top: 2px solid #bbb;
-  font-size: 100%;
+main {
   color: #333;
 }
 
-main > article:first-child {
-  border-top: none;
-}
-
-main > article:first-child > h1:first-child,
-main > article:first-child > h2:first-child,
-main > article:first-child > h3:first-child,
-main > article:first-child > h4:first-child,
-main > article:first-child > h5:first-child,
-main > article:first-child > h6:first-child {
+main > h1:first-child,
+main > h2:first-child,
+main > h3:first-child,
+main > h4:first-child,
+main > h5:first-child,
+main > h6:first-child {
   margin-top: 0px;
 }
 
-article sup {
+main sup {
   vertical-align: super;
   font-size: 0.8em;
 }
 
 /* The heading with the class name */
-article h1[class] {
+main h1[class] {
   margin-top: 0;
   margin-bottom: 1em;
   font-size: 2em;
   color: #6C8C22;
 }
 
-article h1 {
+main h1 {
   margin: 2em 0 0.5em;
   font-size: 1.7em;
 }
 
-article h2 {
+main h2 {
   margin: 2em 0 0.5em;
   font-size: 1.5em;
 }
 
-article h3 {
+main h3 {
   margin: 2em 0 0.5em;
   font-size: 1.2em;
 }
 
-article h4 {
+main h4 {
   margin: 2em 0 0.5em;
   font-size: 1.1em;
 }
 
-article h5 {
+main h5 {
   margin: 2em 0 0.5em;
   font-size: 1em;
 }
 
-article h6 {
+main h6 {
   margin: 2em 0 0.5em;
   font-size: 1em;
 }
 
-article p {
+main p {
   margin: 0 0 0.5em;
   line-height: 1.4em;
 }
 
-article pre {
+main pre {
   margin: 1.2em 0.5em;
   padding: 1em;
   font-size: 0.8em;
 }
 
-article hr {
+main hr {
   margin: 1.5em 1em;
   border: 2px solid #ddd;
 }
 
-article blockquote {
+main blockquote {
   margin: 0 2em 1.2em 1.2em;
   padding-left: 0.5em;
   border-left: 2px solid #ddd;
 }
 
-article ol,
-article ul {
+main ol,
+main ul {
   margin: 1em 2em;
 }
 
-article li > p {
+main li > p {
   margin-bottom: 0.5em;
 }
 
-article dl {
+main dl {
   margin: 1em 0.5em;
 }
 
-article dt {
+main dt {
   margin-bottom: 0.5em;
   font-weight: bold;
 }
 
-article dd {
+main dd {
   margin: 0 1em 1em 0.5em;
 }
 
