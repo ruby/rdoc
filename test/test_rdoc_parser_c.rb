@@ -534,10 +534,6 @@ void Init_curses(){
   def test_do_constants_file
     content = <<-EOF
 void Init_File(void) {
-  rb_cFile = rb_define_class("File", rb_cIO);
-  rb_mFConst = rb_define_module_under(rb_cFile, "Constants");
-  rb_include_module(rb_cIO, rb_mFConst);
-
   /*  Document-const: LOCK_SH
    *
    *  Shared lock

@@ -72,6 +72,8 @@
     Stok.
   * Disallow invalid tab widths for -w option.  Bug reported by Charles
     Hixson.
+  * rb_file_const() now adds constants to File::Constants when used outside
+    file.c.  Fixes missing File::Constants::FNM_* constants in ruby.
 
 === 4.0.1 / 2013-03-27
 
