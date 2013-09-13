@@ -70,7 +70,17 @@ class TestRDocMarkupFormatter < RDoc::TestCase
   def test_add_special_RDOCLINK
     @to.add_special_RDOCLINK
 
+    def @to.handle_special_RDOCLINK special
+      "<#{special.text}>"
+    end
+
     assert_includes special_names, 'RDOCLINK'
+
+    document = doc(para('{foo}[rdoc-label:bar].'))
+
+    formatted = document.accept @to
+
+    assert_equal '{foo}[<rdoc-label:bar>].', formatted
   end
 
   def test_add_special_TIDYLINK

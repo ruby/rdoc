@@ -80,7 +80,7 @@ class RDoc::Markup::Formatter
   # Adds a special for links of the form rdoc-...:
 
   def add_special_RDOCLINK
-    @markup.add_special(/rdoc-[a-z]+:\S+/, :RDOCLINK)
+    @markup.add_special(/rdoc-[a-z]+:[^\s\]]+/, :RDOCLINK)
   end
 
   ##
