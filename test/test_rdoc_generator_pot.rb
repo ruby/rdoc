@@ -67,6 +67,14 @@ msgstr ""
 msgid "This is a class"
 msgstr ""
 
+#. Object::CONSTANT
+msgid "This is a constant"
+msgstr ""
+
+#. Object#method
+msgid "This is a method"
+msgstr ""
+
 #. Object: section title
 msgid "This is a section"
 msgstr ""
@@ -75,16 +83,8 @@ msgstr ""
 msgid "This is a section comment"
 msgstr ""
 
-#. Object::CONSTANT
-msgid "This is a constant"
-msgstr ""
-
 #. Object#attr
 msgid "This is an attribute"
-msgstr ""
-
-#. Object#method
-msgid "This is a method"
 msgstr ""
     POT
   end

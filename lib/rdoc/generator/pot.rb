@@ -110,7 +110,7 @@ class RDoc::Generator::POT
 
     def to_s
       po = ''
-      @entries.each_value do |entry|
+      sort_entries.each do |entry|
         po << "\n" unless po.empty?
         po << entry.to_s
       end
@@ -148,6 +148,17 @@ Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;
                   :msgstr => content,
                   :translator_comment => comment,
                   :flags => ['fuzzy'])
+    end
+
+    def sort_entries
+      headers, messages = @entries.values.partition do |entry|
+        entry.msgid.empty?
+      end
+      # TODO: sort by location
+      sorted_messages = messages.sort_by do |entry|
+        entry.msgid
+      end
+      headers + sorted_messages
     end
   end
 
