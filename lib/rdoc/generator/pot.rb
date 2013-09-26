@@ -235,7 +235,7 @@ msgstr #{format_message(@msgstr)}
       return "\"#{escape(message)}\"" unless message.include?("\n")
 
       formatted_message = '""'
-      message.each_line.with_index do |line|
+      message.each_line do |line|
         formatted_message << "\n"
         formatted_message << "\"#{escape(line)}\""
       end
