@@ -177,6 +177,7 @@ class RDoc::Markup::AttributeManager
 
   def mask_protected_sequences
     # protect __send__, __FILE__, etc.
+    @str = String(@str)
     @str.gsub!(/__([a-z]+)__/i,
       "_#{PROTECT_ATTR}_#{PROTECT_ATTR}\\1_#{PROTECT_ATTR}_#{PROTECT_ATTR}")
     @str.gsub!(/\\([#{Regexp.escape @protectable.join('')}])/,
