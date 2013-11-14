@@ -1232,7 +1232,7 @@ class RDoc::RubyLex
 
       if @ltype == "/"
         if peek(0) =~ /i|m|x|o|e|s|u|n/
-          getc
+          str << getc
         end
       end
 

@@ -247,7 +247,7 @@ U
 
     expected = [
       @TK::TkREGEXP.new( 0, 1,  0, "/hAY/i"),
-      @TK::TkNL    .new( 5, 1,  5, "\n"),
+      @TK::TkNL    .new( 6, 1,  6, "\n"),
     ]
 
     assert_equal expected, tokens
