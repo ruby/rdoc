@@ -247,7 +247,16 @@ U
 
     expected = [
       @TK::TkREGEXP.new( 0, 1,  0, "/hAY/i"),
-      @TK::TkNL    .new( 5, 1,  5, "\n"),
+      @TK::TkNL    .new( 6, 1,  6, "\n"),
+    ]
+
+    assert_equal expected, tokens
+
+    tokens = RDoc::RubyLex.tokenize "/hAY/ix", nil
+
+    expected = [
+      @TK::TkREGEXP.new( 0, 1,  0, "/hAY/ix"),
+      @TK::TkNL    .new( 7, 1,  7, "\n"),
     ]
 
     assert_equal expected, tokens
