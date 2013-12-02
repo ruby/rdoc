@@ -238,7 +238,7 @@ class TestRDocParser < RDoc::TestCase
 
     parser = @RP.use_markup content
 
-    assert_equal @RP::RD, parser
+    assert_nil parser
   end
 
 
