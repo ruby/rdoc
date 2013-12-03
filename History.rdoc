@@ -74,6 +74,10 @@
     Hixson.
   * rb_file_const() now adds constants to File::Constants when used outside
     file.c.  Fixes missing File::Constants::FNM_* constants in ruby.
+  * Fixed handling of :markup: when the file parser is unknown.  Issue #262 by
+    Brian Henderson, pull request #269 by Rein Henrichs.
+  * Regexp options are no longer stripped in HTML output.  Bug #259 by Zachary
+    Scott, Pull request #265 by Rein Henrichs
 
 === 4.0.1 / 2013-03-27
 
@@ -104,8 +108,6 @@
   * Text#snippet now creates a RDoc::Markup::ToHtmlSnippet correctly.
   * The C parser now de-duplicates call-seq if the same C function is used for
     multiple method names.  Bug #203 by Pete Higgins
-  * Regexp options are no longer stripped in HTML output.  Bug #259 by Zachary
-    Scott, Pull request #265 by Rein Henrichs
 
 === 4.0.0 / 2013-02-24
 
