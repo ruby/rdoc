@@ -64,6 +64,22 @@ class TestRDocTask < RDoc::TestCase
     assert_equal %w[-o html -f ri], rdoc_task.option_list
   end
 
+  def test_main_option
+    rdoc_task = RDoc::Task.new do |rd|
+      rd.main = "README.md"
+    end
+
+    assert_equal %w[-o html --main README.md], rdoc_task.option_list
+  end
+
+  def test_output_dir_option
+    rdoc_task = RDoc::Task.new do |rd|
+      rd.rdoc_dir = "zomg"
+    end
+
+    assert_equal %w[-o zomg], rdoc_task.option_list
+  end
+
   def test_rdoc_task_description
     assert_equal 'Build RDoc HTML files', @t.rdoc_task_description
   end
@@ -114,6 +130,22 @@ class TestRDocTask < RDoc::TestCase
     rescue ArgumentError => e
       assert_match(/foo/, e.message)
     end
+  end
+
+  def test_template_option
+    rdoc_task = RDoc::Task.new do |rd|
+      rd.template = "foo"
+    end
+
+    assert_equal %w[-o html -T foo], rdoc_task.option_list
+  end
+
+  def test_title_option
+    rdoc_task = RDoc::Task.new do |rd|
+      rd.title = "Test Title Option"
+    end
+
+    assert_equal %w[-o html] << "--title" << "Test Title Option", rdoc_task.option_list
   end
 
 end
