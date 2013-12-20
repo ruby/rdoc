@@ -56,6 +56,23 @@ class TestRDocTask < RDoc::TestCase
     assert_equal :rdoc_dev, rd.name
   end
 
+  def test_tasks_option_parser
+    rdoc_task = RDoc::Task.new do |rd|
+      rd.title = "Test Tasks Option Parser"
+      rd.main = "README.md"
+      rd.rdoc_files.include("README.md")
+      rd.options << "--all"
+    end
+
+    assert rdoc_task.title, "Test Tasks Option Parser"
+    assert rdoc_task.main, "README.md"
+    assert rdoc_task.rdoc_files.include?("README.md")
+    assert rdoc_task.options.include?("--all")
+
+    args = %w[--all -o html --main README.md] << "--title" << "Test Tasks Option Parser" << "README.md"
+    assert_equal args, rdoc_task.option_list + rdoc_task.rdoc_files
+  end
+
   def test_generator_option
     rdoc_task = RDoc::Task.new do |rd|
       rd.generator = "ri"
