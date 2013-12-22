@@ -35,6 +35,7 @@
     by Vít Ondruch.
 
 * Bug fixes
+  * Applied typo fixes by @dvsuresh from ruby/ruby@2c5dcdf
   * Restored behavior of --no-pager alias -T.  Pull request #223 by ruafozy.
   * Fixed extra whitespace output in the rdoc coverage report.  Bug #210 by
     Ryan Davis.
