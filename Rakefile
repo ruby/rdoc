@@ -64,14 +64,14 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   require_ruby_version '>= 1.8.7'
   extra_deps     << ['json',     '~> 1.4']
   extra_dev_deps << ['racc',     '~> 1.4', '!= 1.4.10']
-  extra_dev_deps << ['minitest', '~> 4']
+  extra_dev_deps << ['minitest', '~> 5']
 
   extra_rdoc_files << 'Rakefile'
   spec_extras['required_rubygems_version'] = '>= 1.3'
   spec_extras['homepage'] = 'http://docs.seattlerb.org/rdoc'
 end
 
-hoe.test_prelude = 'gem "minitest", "~> 4.0"'
+hoe.test_prelude = 'gem "minitest", "~> 5.0"'
 
 def rake(*args)
   sh $0, *args
