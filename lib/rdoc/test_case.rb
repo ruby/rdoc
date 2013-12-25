@@ -1,7 +1,7 @@
 require 'rubygems'
 
 begin
-  gem 'minitest', '~> 4.0' unless defined?(Test::Unit)
+  gem 'minitest', '~> 5.0' unless defined?(Test::Unit)
 rescue NoMethodError
   # for ruby tests
 end
@@ -30,7 +30,7 @@ require 'rdoc'
 # * <code>@pwd</code> containing the current working directory
 # * FileUtils, pp, Tempfile, Dir.tmpdir and StringIO
 
-class RDoc::TestCase < MiniTest::Unit::TestCase
+class RDoc::TestCase < Minitest::Test
 
   ##
   # Abstract test-case setup
