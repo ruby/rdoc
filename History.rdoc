@@ -1,4 +1,4 @@
-=== 4.1.0.preview.3 / 2012-12-02
+=== 4.1.0 / 2013-12-26
 
 * Notable changes
   * Improved accessibility of HTML output.  Accessibility review was provided
