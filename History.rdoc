@@ -1,3 +1,9 @@
+=== 4.1.1
+
+* Bug fixes
+  * Removed duplicated condition in superclass fixup.  Pull request #282 by
+    Benoit Daloze.
+
 === 4.1.0 / 2013-12-26
 
 * Notable changes
