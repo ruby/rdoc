@@ -1,6 +1,8 @@
 === 4.1.1
 
 * Bug fixes
+  * Fixed reporting of undocumented method parameters when including when
+    yield and &block are present.  Pull request #281 by Victor Bilyk.
   * Removed duplicated condition in superclass fixup.  Pull request #282 by
     Benoit Daloze.
 
