@@ -226,6 +226,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     comment = ''
     comment.force_encoding @encoding if @encoding
     first_line = true
+    first_comment_tk_class = nil
 
     tk = get_tk
 
@@ -238,6 +239,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
         skip_tkspace
         tk = get_tk
       else
+        break if first_comment_tk_class and not first_comment_tk_class === tk
+        first_comment_tk_class = tk.class
+
         first_line = false
         comment << tk.text << "\n"
         tk = get_tk

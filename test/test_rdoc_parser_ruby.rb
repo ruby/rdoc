@@ -63,6 +63,21 @@ class C; end
     assert_equal Encoding::CP852, comment.text.encoding
   end
 
+  def test_collect_first_comment_rd_hash
+    parser = util_parser <<-CONTENT
+=begin
+first
+=end
+
+# second
+class C; end
+    CONTENT
+
+    comment = parser.collect_first_comment
+
+    assert_equal RDoc::Comment.new("first\n\n", @top_level), comment
+  end
+
   def test_get_class_or_module
     ctxt = RDoc::Context.new
     ctxt.store = @store
