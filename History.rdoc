@@ -5,6 +5,7 @@
     yield and &block are present.  Pull request #281 by Victor Bilyk.
   * Fixed merging of rd-style and hash-style comments at the top of a file.
     Bug #266 by Zachary Scott.
+  * Fixed Document-attr in the C parser.  Bug #271 by Hanmac.
   * Removed duplicated condition in superclass fixup.  Pull request #282 by
     Benoit Daloze.
 

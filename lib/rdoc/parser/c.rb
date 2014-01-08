@@ -594,9 +594,10 @@ class RDoc::Parser::C < RDoc::Parser
                                             \s*#{attr_name}\s*,
                                             #{rw},.*?\)\s*;%xm then
                 $1
-              elsif @content =~ %r%Document-attr:\s#{attr_name}\s*?\n
-                                   ((?>.*?\*/))%xm then
-                $1
+              elsif @content =~ %r%(/\*.*?(?:\s*\*\s*)?)
+                                   Document-attr:\s#{attr_name}\s*?\n
+                                   ((?>(.|\n)*?\*/))%x then
+                "#{$1}\n#{$2}"
               else
                 ''
               end

@@ -736,6 +736,47 @@ rb_define_alias(C, "[]", "index");
     assert_equal "/*\n * comment\n */\n\n", comment.text
   end
 
+  def test_find_attr_comment_document_attr
+    parser= util_parser <<-C
+/*
+ * Document-attr: y
+ * comment
+ */
+    C
+
+    comment = parser.find_attr_comment nil, 'y'
+
+    assert_equal "/*\n * \n * comment\n */", comment.text
+  end
+
+  def test_find_attr_comment_document_attr_oneline
+    parser= util_parser <<-C
+/* Document-attr: y
+ * comment
+ */
+    C
+
+    comment = parser.find_attr_comment nil, 'y'
+
+    assert_equal "/* \n * comment\n */", comment.text
+  end
+
+  def test_find_attr_comment_document_attr_overlap
+    parser= util_parser <<-C
+/* Document-attr: x
+ * comment
+ */
+
+/* Document-attr: y
+ * comment
+ */
+    C
+
+    comment = parser.find_attr_comment nil, 'y'
+
+    assert_equal "/* \n * comment\n */", comment.text
+  end
+
   def test_find_class_comment
     @options.rdoc_include << File.dirname(__FILE__)
 
