@@ -611,7 +611,7 @@ class RDoc::Parser::C < RDoc::Parser
   def find_body class_name, meth_name, meth_obj, file_content, quiet = false
     case file_content
     when %r%((?>/\*.*?\*/\s*)?)
-            ((?:(?:static|SWIGINTERN)\s+)?
+            ((?:(?:\w+)\s+)?
              (?:intern\s+)?VALUE\s+#{meth_name}
              \s*(\([^)]*\))([^;]|$))%xm then
       comment = RDoc::Comment.new $1, @top_level
