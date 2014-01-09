@@ -3,6 +3,8 @@
 * Minor enhancements
   * RDoc now allows any single-word macro before a C method implementation.
     Issue #722 by Hanmac.
+  * Now :all is a synonym for :private for RDoc::Options#visibility= to match
+    the --all command line option.  Pull request #276 by Zachary Scott.
 
 === 4.1.1 / 2014-01-09
 
