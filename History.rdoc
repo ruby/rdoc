@@ -1,4 +1,4 @@
-=== 4.1.1 / 2014-01-08
+=== 4.1.1 / 2014-01-09
 
 * Bug fixes
   * Fixed reporting of undocumented method parameters when including when
