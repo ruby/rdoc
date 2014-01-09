@@ -325,7 +325,7 @@ class RDoc::Options
   # other visibilities may be overridden on a per-method basis with the :doc:
   # directive.
 
-  attr_accessor :visibility
+  attr_reader :visibility
 
   def initialize # :nodoc:
     init_ivars
@@ -1171,6 +1171,22 @@ Usage: #{opt.program_name} [options] [names...]
       out.map taguri, to_yaml_style do |map|
         encode_with map
       end
+    end
+  end
+
+  # Sets the minimum visibility of a documented method.
+  #
+  # Accepts +:public+, +:protected+, +:private+, +:nodoc+, or +:all+.
+  #
+  # When +:all+ is passed, visibility is set to +:private+, similarly to
+  # RDOCOPT="--all", see #visibility for more information.
+
+  def visibility= visibility
+    case visibility
+    when :all
+      @visibility = :private
+    else
+      @visibility = visibility
     end
   end
 

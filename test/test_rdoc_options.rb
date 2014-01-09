@@ -743,5 +743,9 @@ rdoc_include:
     assert out.include?(RDoc::VERSION)
   end
 
+  def test_visibility
+    @options.visibility = :all
+    assert_equal :private, @options.visibility
+  end
 end
 
