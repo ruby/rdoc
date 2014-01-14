@@ -1,5 +1,10 @@
 === 4.2
 
+* Major enhancements
+  * RDoc can now produce translation files for use with gettext.  See
+    RDoc::Generator::POT for a workflow for creating translations of your
+    documentation.  Pull request #254 by Kouhei Sutou.
+
 * Minor enhancements
   * RDoc now allows any single-word macro before a C method implementation.
     Issue #722 by Hanmac.
