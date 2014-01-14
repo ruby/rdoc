@@ -86,6 +86,7 @@ end
 if need_racc
   Rake::Task["default"].prerequisites.clear
   task :default do
+    rake "check_extra_deps"
     rake "install_plugins"
     rake "newb"
   end
