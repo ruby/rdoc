@@ -151,6 +151,8 @@ module RDoc
 
   autoload :Comment,        'rdoc/comment'
 
+  autoload :I18n,           'rdoc/i18n'
+
   # code objects
   #
   # We represent the various high-level code constructs that appear in Ruby
