@@ -77,7 +77,13 @@ def rake(*args)
   sh $0, *args
 end
 
-if PARSER_FILES.any? {|file| not File.exist?(file)}
+need_racc = PARSER_FILES.any? do |rb_file|
+  ry_file = rb_file.gsub(/\.rb\z/, ".ry")
+  not File.exist?(rb_file) or
+    (File.exist?(ry_file) and File.mtime(rb_file) < File.mtime(ry_file))
+end
+
+if need_racc
   Rake::Task["default"].prerequisites.clear
   task :default do
     rake "install_plugins"
