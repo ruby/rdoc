@@ -336,7 +336,7 @@ option)
   # Parses +filename+ and returns an RDoc::TopLevel
 
   def parse_file filename
-    if defined?(Encoding) then
+    if Object.const_defined? :Encoding then
       encoding = @options.encoding
       filename = filename.encode encoding
     end
