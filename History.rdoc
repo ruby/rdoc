@@ -11,6 +11,11 @@
   * Now :all is a synonym for :private for RDoc::Options#visibility= to match
     the --all command line option.  Pull request #276 by Zachary Scott.
 
+* Bug fixes
+  * RDoc handles ASCII-incompatible encodings now.  An encoding hint may need
+    to be added to the file for RDoc to produce correct output, though.
+    Issue #288 by Manuel Meurer.
+
 === 4.1.1 / 2014-01-09
 
 * Bug fixes
