@@ -17,6 +17,8 @@
     Issue #288 by Manuel Meurer.
   * Fixed height recalculation issues when headings are hovered.  Issue #289
     by Dietmar H. Büto.
+  * Added pointer to font copyright and license information to LEGAL.rdoc.
+    Issue #290 by Christian Hofstaedtler.
 
 === 4.1.1 / 2014-01-09
 
