@@ -15,6 +15,8 @@
   * RDoc handles ASCII-incompatible encodings now.  An encoding hint may need
     to be added to the file for RDoc to produce correct output, though.
     Issue #288 by Manuel Meurer.
+  * Fixed height recalculation issues when headings are hovered.  Issue #289
+    by Dietmar H. Büto.
 
 === 4.1.1 / 2014-01-09
 
