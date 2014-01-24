@@ -147,6 +147,10 @@ class TestRDocMethodAttr < XrefTestCase
     assert_equal expected, @c1_m.search_record
   end
 
+  def test_spaceship
+    assert_nil @c1_m.<=>(RDoc::CodeObject.new)
+  end
+
   def test_equals2
     assert_equal @c1_m, @c1_m
     refute_equal @c1_m, @parent_m
