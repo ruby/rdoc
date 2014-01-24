@@ -19,6 +19,8 @@
     by Dietmar H. Büto.
   * Added pointer to font copyright and license information to LEGAL.rdoc.
     Issue #290 by Christian Hofstaedtler.
+  * Fixed RDoc::Context#<=> for ruby trunk.  Issue #284 by Hanmac, pull
+    request #287 by Aaron Patterson
 
 === 4.1.1 / 2014-01-09
 
