@@ -164,6 +164,7 @@ class RDoc::Context < RDoc::CodeObject
   # Contexts are sorted by full_name
 
   def <=>(other)
+    return unless other.respond_to? :full_name
     full_name <=> other.full_name
   end
 
