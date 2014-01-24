@@ -7,7 +7,6 @@ class TestRDocMethodAttr < XrefTestCase
   end
 
   def test_block_params_equal
-
     m = RDoc::MethodAttr.new(nil, 'foo')
 
     m.block_params = ''
