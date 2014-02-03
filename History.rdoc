@@ -10,6 +10,8 @@
     Issue #722 by Hanmac.
   * Now :all is a synonym for :private for RDoc::Options#visibility= to match
     the --all command line option.  Pull request #276 by Zachary Scott.
+  * Running rake for the first time now installs racc.  Pull request #285 by
+    Kouhei Sutou.
 
 * Bug fixes
   * RDoc handles ASCII-incompatible encodings now.  An encoding hint may need
