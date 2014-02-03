@@ -21,6 +21,8 @@
     Issue #290 by Christian Hofstaedtler.
   * Fixed RDoc::Context#<=> for ruby trunk.  Issue #284 by Hanmac, pull
     request #287 by Aaron Patterson
+  * Tests no longer create directories inside test/.  Pull request #286 by
+    Kouhei Sutou.
 
 === 4.1.1 / 2014-01-09
 
