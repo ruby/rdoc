@@ -84,7 +84,7 @@
 #
 #   markup.add_special(/\b([A-Z][a-z]+[A-Z]\w+)/, :WIKIWORD)
 #
-#   wh = WikiHtml.new markup
+#   wh = WikiHtml.new nil, markup
 #   wh.add_tag(:STRIKE, "<strike>", "</strike>")
 #
 #   puts "<body>#{wh.convert ARGF.read}</body>"
