@@ -368,6 +368,17 @@ rdoc_include:
     assert_equal 1, out.scan(/HTML generator options:/).length
     assert_equal 1, out.scan(/ri generator options:/).  length
     assert_equal 1, out.scan(/test generator options:/).length
+
+    out, = capture_io do
+      begin
+        @options.parse %w[-h]
+      rescue SystemExit
+      end
+    end
+
+    assert_equal 1, out.scan(/HTML generator options:/).length
+    assert_equal 1, out.scan(/ri generator options:/).  length
+    assert_equal 1, out.scan(/test generator options:/).length
   end
 
   def test_parse_format_for_extra_generator
