@@ -337,6 +337,18 @@ rdoc_include:
                  e.message
   end
 
+  def test_parse_h
+    out, = capture_io do
+      begin
+        @options.parse %w[-h]
+      rescue SystemExit
+      end
+    end
+
+    assert_equal 1, out.scan(/HTML generator options:/).length
+    assert_equal 1, out.scan(/ri generator options:/).  length
+  end
+
   def test_parse_help
     out, = capture_io do
       begin
@@ -361,17 +373,6 @@ rdoc_include:
     out, = capture_io do
       begin
         @options.parse %w[--help]
-      rescue SystemExit
-      end
-    end
-
-    assert_equal 1, out.scan(/HTML generator options:/).length
-    assert_equal 1, out.scan(/ri generator options:/).  length
-    assert_equal 1, out.scan(/test generator options:/).length
-
-    out, = capture_io do
-      begin
-        @options.parse %w[-h]
       rescue SystemExit
       end
     end
