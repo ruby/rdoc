@@ -1053,8 +1053,7 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--help",
-             "Display this help") do
+      opt.on("--help", "-h", "Display this help") do
         RDoc::RDoc::GENERATORS.each_key do |generator|
           setup_generator generator
         end
