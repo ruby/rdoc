@@ -305,6 +305,9 @@ option)
       when "directory" then
         next if rel_file_name == "CVS" || rel_file_name == ".svn"
 
+        created_rid = File.join rel_file_name, "created.rid"
+        next if File.file? created_rid
+
         dot_doc = File.join rel_file_name, RDoc::DOT_DOC_FILENAME
 
         if File.file? dot_doc then
