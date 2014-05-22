@@ -430,5 +430,20 @@ class TestRDocRDoc < RDoc::TestCase
     end
   end
 
+  def test_normalized_file_list_removes_created_rid_dir
+    temp_dir do |d|
+      FileUtils.mkdir "doc"
+      flag_file = @rdoc.output_flag_file "doc"
+      file = File.join "doc", "test"
+      FileUtils.touch flag_file
+      FileUtils.touch file
+
+      file_list = ["doc"]
+
+      output = @rdoc.normalized_file_list file_list
+
+      assert_empty output
+    end
+  end
 end
 
