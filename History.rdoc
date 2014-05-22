@@ -13,6 +13,7 @@
   * Running rake for the first time now installs racc.  Pull request #285 by
     Kouhei Sutou.
   * Added <code>-h</code> flag to also display help.  Issue #300 by Ryan Davis
+  * search_index.js is now loaded asynchronously for improved performance.
 
 * Bug fixes
   * RDoc handles ASCII-incompatible encodings now.  An encoding hint may need
