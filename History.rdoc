@@ -23,6 +23,9 @@
     by Dietmar H. Büto.
   * RDoc now ignores its own output directories.  Pull Request #306 by
     Hsing-Hui Hsu, bug #305 by Ryan Davis.
+  * Fixed RDoc::Task no longer uselessly builds documentation when generating
+    non-HTML output.  Bug #307 by Christina Thompson, pull request #308 by
+    Hsing-Hui Hsu
   * Added pointer to font copyright and license information to LEGAL.rdoc.
     Issue #290 by Christian Hofstaedtler.
   * Fixed RDoc::Context#<=> for ruby trunk.  Issue #284 by Hanmac, pull
