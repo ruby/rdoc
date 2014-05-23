@@ -46,6 +46,7 @@ class TestRDocTask < RDoc::TestCase
     assert Rake::Task[:rdoc]
     assert Rake::Task[:clobber_rdoc]
     assert Rake::Task[:rerdoc]
+    assert_equal ["html/created.rid"], Rake::Task[:rdoc].prerequisites
   end
 
   def test_tasks_creation_with_custom_name_symbol
