@@ -890,7 +890,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     read_documentation_modifiers con, RDoc::CONSTANT_MODIFIERS
 
     @stats.add_constant con
-    con = container.add_constant con
+    container.add_constant con
 
     true
   end
@@ -1876,8 +1876,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Determines the visibility in +container+ from +tk+
 
   def parse_visibility(container, single, tk)
-    singleton = (single == SINGLE)
-
     vis_type, vis, singleton = get_visibility_information tk
 
     skip_tkspace_comment false
@@ -2079,7 +2077,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def skip_for_variable
     skip_tkspace false
-    tk = get_tk
+    get_tk
     skip_tkspace false
     tk = get_tk
     unget_tk(tk) unless TkIN === tk
