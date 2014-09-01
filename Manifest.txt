@@ -37,6 +37,7 @@ lib/rdoc/generator/darkfish.rb
 lib/rdoc/generator/json_index.rb
 lib/rdoc/generator/markup.rb
 lib/rdoc/generator/ri.rb
+lib/rdoc/generator/pot.rb
 lib/rdoc/generator/template/darkfish/.document
 lib/rdoc/generator/template/darkfish/_footer.rhtml
 lib/rdoc/generator/template/darkfish/_head.rhtml
@@ -234,6 +235,9 @@ test/test_rdoc_generator_darkfish.rb
 test/test_rdoc_generator_json_index.rb
 test/test_rdoc_generator_markup.rb
 test/test_rdoc_generator_ri.rb
+test/test_rdoc_generator_pot.rb
+test/test_rdoc_generator_pot_po.rb
+test/test_rdoc_generator_pot_po_entry.rb
 test/test_rdoc_include.rb
 test/test_rdoc_markdown.rb
 test/test_rdoc_markdown_test.rb
