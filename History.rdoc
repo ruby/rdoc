@@ -1,3 +1,8 @@
+=== 4.1.2 / 2014-09-05
+
+* Bug fixes
+  * Updated vendored jQuery to 1.6.4.  Bug ruby/ruby#711 by @neuralme
+
 === 4.1.1 / 2014-01-09
 
 * Bug fixes
