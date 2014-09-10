@@ -35,6 +35,8 @@
   * Fixed documentation example in RDoc::Markup.  Pull request #292 by Gregory
     Brown.
   * Applied typo fix to RDoc::Markup. Pull request #297 by @montanalow
+  * Fixed pretty_print for RDoc::MethodAttr with an alias.  Pull request #324
+    by Hsing-Hui Hsu.
 
 === 4.1.2 / 2014-09-05
 
