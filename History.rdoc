@@ -37,6 +37,8 @@
   * Applied typo fix to RDoc::Markup. Pull request #297 by @montanalow
   * Fixed pretty_print for RDoc::MethodAttr with an alias.  Pull request #324
     by Hsing-Hui Hsu.
+  * Fixed lexing of %w"".  Issue #315 by Thierry Lambert, pull request #323 by
+    Jeremy Evans.
 
 === 4.1.2 / 2014-09-05
 
