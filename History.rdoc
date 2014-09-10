@@ -41,6 +41,8 @@
     by Hsing-Hui Hsu.
   * Fixed lexing of %w"".  Issue #315 by Thierry Lambert, pull request #323 by
     Jeremy Evans.
+  * RDoc::TokenStream now removes nil tokens.  Pull request #318 by Calle
+    Erlandsson.
 
 === 4.1.2 / 2014-09-05
 
