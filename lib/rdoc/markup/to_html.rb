@@ -286,7 +286,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << to_html(heading.text)
     unless @options.pipe then
       @res << "<span><a href=\"##{label}\">&para;</a>"
-      @res << " <a href=\"#documentation\">&uarr;</a></span>"
+      @res << " <a href=\"#top\">&uarr;</a></span>"
     end
     @res << "</h#{level}>\n"
   end
