@@ -14,7 +14,7 @@ module RDoc::RI
 
     def defaults
       super
-      @rdoc_dir = 'doc/ri'
+      @rdoc_dir = '.rdoc'
     end
 
     def rdoc_task_description
