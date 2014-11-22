@@ -45,6 +45,7 @@
     Erlandsson.
   * Fixed footer links to rubyforge and darkfish.  Pull request #328 by
     @blackwinter
+  * Fixed page-top link.  Pull request #329 by @blackwinter
 
 === 4.1.2 / 2014-09-05
 
