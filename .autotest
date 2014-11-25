@@ -1,7 +1,8 @@
 require 'autotest/restart'
 
-Autotest.add_hook :run_command do |at|
+Autotest.add_hook :run_command do |_, cmd|
   system "#{Gem.ruby} -rubygems #{Gem.bin_path 'rake', 'rake'} generate"
+  cmd.sub! "'minitest'", "'minitest', '~> 4.7'"
 end
 
 Autotest.add_hook :initialize do |at|
