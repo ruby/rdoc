@@ -48,6 +48,8 @@
   * Fixed footer links to rubyforge and darkfish.  Pull request #328 by
     @blackwinter
   * Fixed page-top link.  Pull request #329 by @blackwinter
+  * Minitest gem activation failures are now ignored during test startup.
+    Issue #313 by Vít Ondruch.
 
 === 4.1.2 / 2014-09-05
 
