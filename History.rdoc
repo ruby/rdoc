@@ -16,6 +16,8 @@
     search_index.js is now loaded asynchronously for improved performance.
   * Allow +X::Y+ as typewriter text.  Issue #319, pull request #322 by Jeremy
     Evans.
+  * Added RDoc::RI::Task for building ri data easily through rake.  Pull
+    request #332 by Zachary Scott.
 
 * Bug fixes
   * RDoc handles ASCII-incompatible encodings now.  An encoding hint may need
