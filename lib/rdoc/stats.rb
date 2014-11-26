@@ -4,6 +4,8 @@
 
 class RDoc::Stats
 
+  include RDoc::Text
+
   ##
   # Output level for the coverage report
 
