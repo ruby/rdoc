@@ -55,6 +55,8 @@
     Issue #313 by Vít Ondruch.
   * Fixed error when generating documentation from singleton classes.  Issue
     #311 by Vít Ondruch.
+  * Splat and keyword params can now be detected for documentation
+    completeness.  Issue #321 Tom Kadwill.
 
 === 4.1.2 / 2014-09-05
 
