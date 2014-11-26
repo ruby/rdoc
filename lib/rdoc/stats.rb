@@ -440,7 +440,7 @@ class RDoc::Stats
 
     params = method.param_list
 
-    params = params.map { |param| param.gsub(/^\*/, '') }
+    params = params.map { |param| param.gsub(/^\*\*?/, '') }
 
     return 0, [] if params.empty?
 
