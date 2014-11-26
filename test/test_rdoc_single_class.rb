@@ -1,6 +1,6 @@
-require File.expand_path '../xref_test_case', __FILE__
+require 'rdoc/test_case'
 
-class TestRDocSingleClass < XrefTestCase
+class TestRDocSingleClass < RDoc::TestCase
 
   def setup
     super
