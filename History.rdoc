@@ -20,6 +20,9 @@
     request #332 by Zachary Scott.
 
 * Bug fixes
+  * Fixed HTML labels for cross-browser compatibility.  This breaks existing
+    links but enables cross-browser compatibility.  Pull request #330 by Jens
+    Wille.
   * RDoc handles ASCII-incompatible encodings now.  An encoding hint may need
     to be added to the file for RDoc to produce correct output, though.
     Issue #288 by Manuel Meurer.
