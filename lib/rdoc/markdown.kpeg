@@ -602,6 +602,10 @@ ListBlockLine = !@BlankLine
 # Parsers for different kinds of block-level HTML content.
 # This is repetitive due to constraints of PEG grammar.
 
+HtmlOpenAnchor = "<" Spnl ("a" | "A") Spnl HtmlAttribute* ">"
+HtmlCloseAnchor = "<" Spnl "/" ("a" | "A") Spnl ">"
+HtmlAnchor = HtmlOpenAnchor (HtmlAnchor | !HtmlCloseAnchor .)* HtmlCloseAnchor
+
 HtmlBlockOpenAddress = "<" Spnl ("address" | "ADDRESS") Spnl HtmlAttribute* ">"
 HtmlBlockCloseAddress = "<" Spnl "/" ("address" | "ADDRESS") Spnl ">"
 HtmlBlockAddress = HtmlBlockOpenAddress (HtmlBlockAddress | !HtmlBlockCloseAddress .)* HtmlBlockCloseAddress
@@ -735,7 +739,8 @@ HtmlBlockCloseScript = "<" Spnl "/" ("script" | "SCRIPT") Spnl ">"
 HtmlBlockScript = HtmlBlockOpenScript (!HtmlBlockCloseScript .)* HtmlBlockCloseScript
 
 
-HtmlBlockInTags = HtmlBlockAddress
+HtmlBlockInTags = HtmlAnchor
+                | HtmlBlockAddress
                 | HtmlBlockBlockquote
                 | HtmlBlockCenter
                 | HtmlBlockDir

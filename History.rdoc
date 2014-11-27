@@ -57,6 +57,8 @@
     #311 by Vít Ondruch.
   * Splat and keyword params can now be detected for documentation
     completeness.  Issue #321 Tom Kadwill.
+  * Standalone anchors in markdown documents are no longer escaped.  Issue
+    #312 by Scott Thompson.
 
 === 4.1.2 / 2014-09-05
 
