@@ -59,6 +59,7 @@
     completeness.  Issue #321 Tom Kadwill.
   * Standalone anchors in markdown documents are no longer escaped.  Issue
     #312 by Scott Thompson.
+  * Fixed RegExp matching stack overflow on Ruby 1.8.7.  Issue #327 by sshao.
 
 === 4.1.2 / 2014-09-05
 
