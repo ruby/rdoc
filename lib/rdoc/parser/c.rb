@@ -749,7 +749,7 @@ class RDoc::Parser::C < RDoc::Parser
                          ([\w\.\s]+\s* = \s+)?rb_define_(class|module)[\t (]*?"(#{class_name})"%xm then
       comment = $1
     elsif @content =~ %r%((?>/\*.*?\*/\s+))
-                         ([\w\. \t]+ = \s+)?rb_define_(class|module)_under[\t (]*?"(#{class_name.split('::').last})"%xm then
+                         ([\w\. \t]+ = \s+)?rb_define_(class|module)_under[\t\w, (]*?"(#{class_name.split('::').last})"%xm then
       comment = $1
     else
       comment = ''
