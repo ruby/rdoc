@@ -1,4 +1,5 @@
 require 'json'
+require 'zlib'
 
 ##
 # The JsonIndex generator is designed to complement an HTML generator and
@@ -149,6 +150,20 @@ class RDoc::Generator::JsonIndex
 
         FileUtils.install source, dest, :mode => 0644, :verbose => $DEBUG_RDOC
       end
+    end
+  end
+
+  ##
+  # Compress the search_index.js file using gzip
+
+  def generate_gzipped
+    debug_msg "Compressing generated JSON index"
+    search_index_file = @outputdir + SEARCH_INDEX_FILE
+    outfile           = search_index_file + '.gz'
+    debug_msg "  writing gzipped search index to %s" % outfile
+
+    Zlib::GzipWriter.open(outfile) do |gz|
+      gz.write File.read(search_index_file)
     end
   end
 
