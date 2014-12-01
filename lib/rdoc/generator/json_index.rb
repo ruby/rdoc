@@ -158,9 +158,13 @@ class RDoc::Generator::JsonIndex
 
   def generate_gzipped
     debug_msg "Compressing generated JSON index"
-    search_index_file = @base_dir + SEARCH_INDEX_FILE
-    outfile           = search_index_file + '.gz'
-    debug_msg "  writing gzipped search index to %s" % outfile
+    out_dir = @base_dir + @options.op_dir
+
+    search_index_file = out_dir + SEARCH_INDEX_FILE
+    outfile           = out_dir + "#{search_index_file}.gz"
+
+    debug_msg "Reading the JSON index file from %s" % search_index_file
+    search_index = search_index_file.read
 
     Zlib::GzipWriter.open(outfile) do |gz|
       gz.write File.read(search_index_file)
