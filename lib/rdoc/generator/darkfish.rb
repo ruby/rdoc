@@ -246,6 +246,7 @@ class RDoc::Generator::Darkfish
     generate_file_files
     generate_table_of_contents
     @json_index.generate
+    @json_index.generate_gzipped
 
     copy_static
 
