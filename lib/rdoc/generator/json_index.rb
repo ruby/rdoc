@@ -167,8 +167,10 @@ class RDoc::Generator::JsonIndex
     search_index = search_index_file.read
 
     debug_msg "Writing gzipped search index to %s" % outfile
-    outfile.open 'w', 0644 do |io|
-      gz = Zlib::GzipWriter.new(io)
+
+    Zlib::GzipWriter.open(outfile) do |gz|
+      gz.mtime = File.mtime(search_index_file)
+      gz.orig_name = search_index_file.to_s
       gz.write search_index
       gz.close
     end
