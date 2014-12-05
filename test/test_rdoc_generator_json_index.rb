@@ -142,7 +142,9 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
     @g.generate_gzipped
 
     assert_file 'js/searcher.js'
+    assert_file 'js/searcher.js.gz'
     assert_file 'js/navigation.js'
+    assert_file 'js/navigation.js.gz'
     assert_file 'js/search_index.js'
     assert_file 'js/search_index.js.gz'
 

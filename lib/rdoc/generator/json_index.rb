@@ -174,6 +174,26 @@ class RDoc::Generator::JsonIndex
       gz.write search_index
       gz.close
     end
+
+    # GZip the rest of the js files
+    Dir.chdir @template_dir do
+      Dir['**/*.js'].each do |source|
+        dest = out_dir + source
+        outfile = out_dir + "#{dest}.gz"
+
+        debug_msg "Reading the original js file from %s" % dest
+        data = dest.read
+
+        debug_msg "Writing gzipped file to %s" % outfile
+
+        Zlib::GzipWriter.open(outfile) do |gz|
+          gz.mtime = File.mtime(dest)
+          gz.orig_name = dest.to_s
+          gz.write data
+          gz.close
+        end
+      end
+    end
   end
 
   ##
