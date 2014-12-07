@@ -55,7 +55,7 @@ lib/rdoc/generator/template/darkfish/_sidebar_search.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_sections.rhtml
 lib/rdoc/generator/template/darkfish/_sidebar_table_of_contents.rhtml
 lib/rdoc/generator/template/darkfish/class.rhtml
-lib/rdoc/generator/template/darkfish/fonts.css
+lib/rdoc/generator/template/darkfish/css/fonts.css
 lib/rdoc/generator/template/darkfish/fonts/Lato-Light.ttf
 lib/rdoc/generator/template/darkfish/fonts/Lato-LightItalic.ttf
 lib/rdoc/generator/template/darkfish/fonts/Lato-Regular.ttf
@@ -92,7 +92,7 @@ lib/rdoc/generator/template/darkfish/js/darkfish.js
 lib/rdoc/generator/template/darkfish/js/jquery.js
 lib/rdoc/generator/template/darkfish/js/search.js
 lib/rdoc/generator/template/darkfish/page.rhtml
-lib/rdoc/generator/template/darkfish/rdoc.css
+lib/rdoc/generator/template/darkfish/css/rdoc.css
 lib/rdoc/generator/template/darkfish/servlet_not_found.rhtml
 lib/rdoc/generator/template/darkfish/servlet_root.rhtml
 lib/rdoc/generator/template/darkfish/table_of_contents.rhtml

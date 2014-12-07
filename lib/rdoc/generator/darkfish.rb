@@ -62,14 +62,14 @@ class RDoc::Generator::Darkfish
 
   BUILTIN_STYLE_ITEMS = # :nodoc:
     %w[
-      fonts.css
+      css/fonts.css
       fonts/Lato-Light.ttf
       fonts/Lato-LightItalic.ttf
       fonts/Lato-Regular.ttf
       fonts/Lato-RegularItalic.ttf
       fonts/SourceCodePro-Bold.ttf
       fonts/SourceCodePro-Regular.ttf
-      rdoc.css
+      css/rdoc.css
   ]
 
   ##
