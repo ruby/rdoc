@@ -379,11 +379,12 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   end
 
   ##
-  # Returns true if Ripper is available it can create a sexp from +text+
+  # Returns true if text is valid ruby syntax
 
   def parseable? text
-    text =~ /\b(def|class|module|require) |=>|\{\s?\||do \|/ and
-      text !~ /<%|%>/
+    eval("BEGIN {return true}\n#{text}")
+  rescue SyntaxError
+    false
   end
 
   ##

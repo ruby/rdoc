@@ -292,7 +292,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def accept_verbatim
-    assert_equal "\n<pre>hi\n  world</pre>\n", @to.res.join
+    assert_equal "\n<pre class=\"ruby\"><span class=\"ruby-identifier\">hi</span>\n  <span class=\"ruby-identifier\">world</span>\n</pre>\n", @to.res.join
   end
 
   def end_accepting
@@ -444,8 +444,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
 
     expected = <<-EXPECTED
 
-<pre>#{inner}
-</pre>
+<pre>#{inner}</pre>
     EXPECTED
 
     assert_equal expected, @to.res.join
@@ -604,8 +603,9 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
 <ul><li>
 <p>one</p>
 
-<pre>verb1
-verb2</pre>
+<pre class=\"ruby\"><span class=\"ruby-identifier\">verb1</span>
+<span class=\"ruby-identifier\">verb2</span>
+</pre>
 </li><li>
 <p>two</p>
 </li></ul>
@@ -615,16 +615,36 @@ verb2</pre>
   end
 
   def test_parseable_eh
-    assert @to.parseable?('def x() end'),      'def'
-    assert @to.parseable?('class C end'),      'class'
-    assert @to.parseable?('module M end'),     'module'
-    assert @to.parseable?('a # => blah'),      '=>'
-    assert @to.parseable?('x { |y| ... }'),    '{ |x|'
-    assert @to.parseable?('x do |y| ... end'), 'do |x|'
-    refute @to.parseable?('* 1'),              '* 1'
-    refute @to.parseable?('# only a comment'), '# only a comment'
-    refute @to.parseable?('<% require "foo" %>'),    'ERB'
-    refute @to.parseable?('class="foo"'),      'HTML class'
+    valid_syntax = [
+      'def x() end',
+      'def x; end',
+      'class C; end',
+      "module M end",
+      'a # => blah',
+      'x { |y| nil }',
+      'x do |y| nil end',
+      '# only a comment',
+      'require "foo"',
+      'cls="foo"'
+    ]
+    invalid_syntax = [
+      'def x end',
+      'class C end',
+      'class C < end',
+      'module M < C end',
+      'a=># blah',
+      'x { |y| ... }',
+      'x do |y| ... end',
+      '// only a comment',
+      '<% require "foo" %>',
+      'class="foo"'
+    ]
+    valid_syntax.each do |t|
+      assert @to.parseable?(t), "valid syntax considered invalid: #{t}"
+    end
+    invalid_syntax.each do |t|
+      refute @to.parseable?(t), "invalid syntax considered valid: #{t}"
+    end
   end
 
   def test_to_html
