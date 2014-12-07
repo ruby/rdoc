@@ -20,6 +20,8 @@
     request #332 by Zachary Scott.
   * A gzipped search index is generated for servers configured to use
     precompressed files.  Pull request #334 by Zachary Scott.
+  * CSS files now live under /css relative to the document root.  Pull request
+    #335 by Zachary Scott.
 
 * Bug fixes
   * Fixed HTML labels for cross-browser compatibility.  This breaks existing
