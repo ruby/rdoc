@@ -22,6 +22,8 @@
     precompressed files.  Pull request #334 by Zachary Scott.
   * CSS files now live under /css relative to the document root.  Pull request
     #335 by Zachary Scott.
+  * Improved detection of valid ruby in verbatim sections.  Pull request #333
+    by Jeremy Evans.
 
 * Bug fixes
   * Fixed HTML labels for cross-browser compatibility.  This breaks existing
