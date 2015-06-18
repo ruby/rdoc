@@ -151,6 +151,7 @@ nav {
   width: 260px;
   font-family: Helvetica, sans-serif;
   font-size: 14px;
+  position: fixed;
 }
 
 main {
@@ -178,6 +179,8 @@ main h6 {
   clear: both;
   margin: 1em 1em 2em;
   font-size: smaller;
+  position: fixed;
+  bottom: 0;
 }
 
 /* @end */
