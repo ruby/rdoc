@@ -114,8 +114,8 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
     case req.path
     when '/' then
       root req, res
-    when '/rdoc.css', '/js/darkfish.js', '/js/jquery.js', '/js/search.js',
-         %r%^/images/% then
+    when '/js/darkfish.js', '/js/jquery.js', '/js/search.js',
+         %r%^/css/%, %r%^/images/%, %r%^/fonts/% then
       asset :darkfish, req, res
     when '/js/navigation.js', '/js/searcher.js' then
       asset :json_index, req, res
@@ -202,7 +202,7 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
 
 <title>Error - #{ERB::Util.html_escape exception.class}</title>
 
-<link type="text/css" media="screen" href="#{@mount_path}/rdoc.css" rel="stylesheet">
+<link type="text/css" media="screen" href="#{@mount_path}/css/rdoc.css" rel="stylesheet">
 </head>
 <body>
 <h1>Error</h1>
