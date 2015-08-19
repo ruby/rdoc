@@ -1,23 +1,94 @@
-<body id="top" role="document" class="file">
-<nav role="navigation">
-  <div id="project-navigation">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title></title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" async></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" async></script>
+</head>
+<body>
+<div class="container">
+
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default navbar-custom">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">
+                    <img alt="Brand" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Ruby_logo.svg/198px-Ruby_logo.svg.png">
+                </a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Ruby 2.2</a></li>
+                    <li><a href="#">Core API</a></li>
+                    <li><a href="#">Standard Library</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Languages <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">French / Français</a></li>
+                            <li><a href="#">German / Deutsch</a></li>
+                            <li><a href="#">Bulgarian / български</a></li>
+                            <li><a href="#">Spanish / Español</a></li>
+                            <li><a href="#">Polish / Polski</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="active"><a href="./">en <span class="sr-only">(current)</span></a></li>
+                    <li><a href="../navbar-static-top/">jp</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+    </nav>
+
+    <div class="jumbotron">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            There was 1 Ruby vulnerability reports in the last 14 days. 1 medium. Most recent: CVE-2015-2963. <a href="https://web.nvd.nist.gov/view/vuln/search-results?query=Ruby&search_type=all&cves=on" target="_blank">See details.</a>
+        </div>
+
+        <h1>Ruby Documentation</h1>
+        <p>Help and documentation for the Ruby programming language.</p>
+        <% if @options.main_page and
+          main_page = @files.find { |f| f.full_name == @options.main_page } then %>
+          <%= main_page.description %>
+          <% else %>
+            <p>This is the API documentation for <%= @title %>.
+          <% end %>
+
+        <div class="input-group">
+            <input type="text" class="form-control" aria-label="..." placeholder="Type to search ...">
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-search"></span> <span class="caret"></span></button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <li><a href="#">Search all</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#">Pages</a></li>
+                    <li><a href="#">Classes</a></li>
+                    <li><a href="#">Methods</a></li>
+                </ul>
+            </div><!-- /btn-group -->
+        </div><!-- /input-group -->
+    </div>
+
     <%= render '_sidebar_navigation.rhtml' %>
-
     <%= render '_sidebar_search.rhtml' %>
-  </div>
 
-  <div id="project-metadata">
-    <%= render '_sidebar_pages.rhtml' %>
-    <%= render '_sidebar_classes.rhtml' %>
-  </div>
-</nav>
-
-<main role="main">
-<% if @options.main_page and
-      main_page = @files.find { |f| f.full_name == @options.main_page } then %>
-<%= main_page.description %>
-<% else %>
-<p>This is the API documentation for <%= @title %>.
-<% end %>
-</main>
-
+</div> <!-- /container -->
+</body>
+</html>
