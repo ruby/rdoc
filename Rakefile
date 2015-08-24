@@ -56,6 +56,8 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
     README.rdoc
     RI.rdoc
     TODO.rdoc
+    lib/rdoc/generator/rubymodern.rb
+    lib/rdoc/generator/template/rubymodern
   ]
 
   self.clean_globs += PARSER_FILES
