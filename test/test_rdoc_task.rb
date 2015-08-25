@@ -38,7 +38,7 @@ class TestRDocTask < RDoc::TestCase
       rd.markup = "tomdoc"
     end
 
-    assert_equal %w[-o html --markup tomdoc], rdoc_task.option_list
+    assert_equal %w[-o doc --markup tomdoc], rdoc_task.option_list
   end
 
   def test_tasks_creation
@@ -46,7 +46,7 @@ class TestRDocTask < RDoc::TestCase
     assert Rake::Task[:rdoc]
     assert Rake::Task[:clobber_rdoc]
     assert Rake::Task[:rerdoc]
-    assert_equal ["html/created.rid"], Rake::Task[:rdoc].prerequisites
+    assert_equal ["doc/created.rid"], Rake::Task[:rdoc].prerequisites
   end
 
   def test_tasks_creation_with_custom_name_symbol
@@ -70,7 +70,7 @@ class TestRDocTask < RDoc::TestCase
     assert rdoc_task.rdoc_files.include?("README.md")
     assert rdoc_task.options.include?("--all")
 
-    args = %w[--all -o html --main README.md] << "--title" << "Test Tasks Option Parser" << "README.md"
+    args = %w[--all -o doc --main README.md] << "--title" << "Test Tasks Option Parser" << "README.md"
     assert_equal args, rdoc_task.option_list + rdoc_task.rdoc_files
   end
 
@@ -79,7 +79,7 @@ class TestRDocTask < RDoc::TestCase
       rd.generator = "ri"
     end
 
-    assert_equal %w[-o html -f ri], rdoc_task.option_list
+    assert_equal %w[-o doc -f ri], rdoc_task.option_list
   end
 
   def test_main_option
@@ -87,7 +87,7 @@ class TestRDocTask < RDoc::TestCase
       rd.main = "README.md"
     end
 
-    assert_equal %w[-o html --main README.md], rdoc_task.option_list
+    assert_equal %w[-o doc --main README.md], rdoc_task.option_list
   end
 
   def test_output_dir_option
@@ -155,7 +155,7 @@ class TestRDocTask < RDoc::TestCase
       rd.template = "foo"
     end
 
-    assert_equal %w[-o html -T foo], rdoc_task.option_list
+    assert_equal %w[-o doc -T foo], rdoc_task.option_list
   end
 
   def test_title_option
@@ -163,7 +163,7 @@ class TestRDocTask < RDoc::TestCase
       rd.title = "Test Title Option"
     end
 
-    assert_equal %w[-o html] << "--title" << "Test Title Option", rdoc_task.option_list
+    assert_equal %w[-o doc] << "--title" << "Test Title Option", rdoc_task.option_list
   end
 
 end
