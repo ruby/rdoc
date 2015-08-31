@@ -1,11 +1,18 @@
-<div id="home-section" role="region" title="Quick navigation" class="nav-section">
-  <h2>
-    <a href="<%= rel_prefix %>/index.html" rel="home">Home</a>
-  </h2>
-
-  <div id="table-of-contents-navigation">
-    <a href="<%= rel_prefix %>/table_of_contents.html#pages">Pages</a>
-    <a href="<%= rel_prefix %>/table_of_contents.html#classes">Classes</a>
-    <a href="<%= rel_prefix %>/table_of_contents.html#methods">Methods</a>
-  </div>
-</div>
+<ul class="nav navbar-nav">
+  <li class="active"><a href="<%= rel_prefix %>/index.html" rel="home">Home</a></li>
+  <li><a href="<%= rel_prefix %>/table_of_contents.html#pages">Pages</a></li>
+  <li><a href="<%= rel_prefix %>/table_of_contents.html#classes">Classes</a></li>
+  <li><a href="<%= rel_prefix %>/table_of_contents.html#methods">Methods</a></li>
+  <li><a href="#">Core API</a></li>
+  <li><a href="#">Standard Library</a></li>
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Languages <span class="caret"></span></a>
+    <ul class="dropdown-menu">
+      <li><a href="#">French / Français</a></li>
+      <li><a href="#">German / Deutsch</a></li>
+      <li><a href="#">Bulgarian / български</a></li>
+      <li><a href="#">Spanish / Español</a></li>
+      <li><a href="#">Polish / Polski</a></li>
+    </ul>
+  </li>
+</ul>
