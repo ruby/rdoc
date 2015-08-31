@@ -56,8 +56,6 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
     README.rdoc
     RI.rdoc
     TODO.rdoc
-    lib/rdoc/generator/rubymodern.rb
-    lib/rdoc/generator/template/rubymodern
   ]
 
   self.clean_globs += PARSER_FILES
@@ -104,7 +102,7 @@ task :docs do
   options.op_dir = 'doc'
   options.main_page = 'README.rdoc'
   options.files = hoe.spec.extra_rdoc_files + %w[lib]
-  options.setup_generator 'darkfish'
+  options.setup_generator 'rubymodern'
 
   RDoc::RDoc.new.document options
 end
