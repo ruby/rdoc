@@ -7,15 +7,14 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <title></title>
+    <title><%= @title %></title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" async></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" async></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" async></script>
 </head>
 <body>
 <div class="container">
-
     <!-- Static navbar -->
     <nav class="navbar navbar-default navbar-custom">
         <div class="container-fluid">
@@ -27,68 +26,46 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="#">
-                    <img alt="Brand" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Ruby_logo.svg/198px-Ruby_logo.svg.png">
+                    <img alt="Brand" style="width:30px; height:30px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Ruby_logo.svg/198px-Ruby_logo.svg.png">
                 </a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Ruby 2.2</a></li>
-                    <li><a href="#">Core API</a></li>
-                    <li><a href="#">Standard Library</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Languages <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">French / Français</a></li>
-                            <li><a href="#">German / Deutsch</a></li>
-                            <li><a href="#">Bulgarian / български</a></li>
-                            <li><a href="#">Spanish / Español</a></li>
-                            <li><a href="#">Polish / Polski</a></li>
-                        </ul>
-                    </li>
-                </ul>
+                <%= render '_sidebar_navigation.rhtml' %>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="active"><a href="./">en <span class="sr-only">(current)</span></a></li>
                     <li><a href="../navbar-static-top/">jp</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->
-    </nav>
+    </nav><!-- /.navbar -->
 
     <div class="jumbotron">
-        <div class="alert alert-danger alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span class="sr-only">Error:</span>
-            There was 1 Ruby vulnerability reports in the last 14 days. 1 medium. Most recent: CVE-2015-2963. <a href="https://web.nvd.nist.gov/view/vuln/search-results?query=Ruby&search_type=all&cves=on" target="_blank">See details.</a>
-        </div>
-
-        <h1>Ruby Documentation</h1>
+        <h1><%= @title %></h1>
         <p>Help and documentation for the Ruby programming language.</p>
-        <% if @options.main_page and
-          main_page = @files.find { |f| f.full_name == @options.main_page } then %>
-          <%= main_page.description %>
-          <% else %>
-            <p>This is the API documentation for <%= @title %>.
-          <% end %>
-
-        <div class="input-group">
-            <input type="text" class="form-control" aria-label="..." placeholder="Type to search ...">
-            <div class="input-group-btn">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-search"></span> <span class="caret"></span></button>
-                <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a href="#">Search all</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#">Pages</a></li>
-                    <li><a href="#">Classes</a></li>
-                    <li><a href="#">Methods</a></li>
-                </ul>
-            </div><!-- /btn-group -->
-        </div><!-- /input-group -->
-    </div>
-
-    <%= render '_sidebar_navigation.rhtml' %>
-    <%= render '_sidebar_search.rhtml' %>
-
-</div> <!-- /container -->
+        <%= render '_sidebar_search.rhtml' %>
+        <br />
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            Description
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <% if @options.main_page and
+                            main_page = @files.find { |f| f.full_name == @options.main_page } then %>
+                            <%= main_page.description %>
+                        <% else %>
+                            This is the API documentation for <%= @title %>.
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /accordion -->
+    </div><!-- /jumbotron -->
+</div><!-- /container -->
 </body>
 </html>
