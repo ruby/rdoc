@@ -1,5 +1,6 @@
 require 'rdoc'
 require 'time'
+require 'json'
 require 'webrick'
 
 ##
@@ -438,4 +439,3 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
   end
 
 end
-

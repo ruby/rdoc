@@ -629,7 +629,6 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     ]
     invalid_syntax = [
       'def x end',
-      'class C end',
       'class C < end',
       'module M < C end',
       'a=># blah',
