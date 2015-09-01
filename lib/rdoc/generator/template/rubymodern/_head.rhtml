@@ -1,6 +1,17 @@
-<meta charset="<%= @options.charset %>">
-
-<title><%= h @title %></title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="<%= @options.charset %>">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title><%= h @title %></title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" async></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" async></script>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "<%= rel_prefix %>/";
@@ -17,3 +28,4 @@
 <%   end %>
 <% end %>
 
+</head>
