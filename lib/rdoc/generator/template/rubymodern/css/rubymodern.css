@@ -1,0 +1,22 @@
+.affix-top, .affix {
+    position: static;
+}
+
+@media (min-width: 979px) {
+    #sidebar.affix-top {
+        position: static;
+        margin-top:20px;
+        width:200px;
+    }
+
+    #sidebar.affix {
+        position: fixed;
+        top:60px;
+        width:200px;
+    }
+}
+
+#sidebar li.active {
+    border:0 #eee solid;
+    border-right-width:5px;
+}
