@@ -32,14 +32,15 @@ hoe = Hoe.spec 'rdoc' do
   rdoc_locations << 'docs.seattlerb.org:/data/www/docs.seattlerb.org/rdoc/'
   rdoc_locations << 'drbrain@rubyforge.org:/var/www/gforge-projects/rdoc/'
 
-  spec_extras[:post_install_message] = <<-MESSAGE
-Depending on your version of ruby, you may need to install ruby rdoc/ri data:
+  spec_extras[:post_install_message] = if RUBY_VERSION < '1.8.7'
+    "Your version of Ruby (#{RUBY_VERSION} is unsupported."
+  elsif RUBY_VERSION < '1.9.2'
+    <<-MESSAGE
+You need to install ruby rdoc/ri data:
 
-<= 1.8.6 : unsupported
- = 1.8.7 : gem install rdoc-data; rdoc-data --install
- = 1.9.1 : gem install rdoc-data; rdoc-data --install
->= 1.9.2 : nothing to do! Yay!
-  MESSAGE
+gem install rdoc-data; rdoc-data --install
+    MESSAGE
+  end
 
   self.licenses << 'Ruby'
   self.readme_file  = 'README.rdoc'
