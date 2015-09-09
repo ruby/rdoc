@@ -151,9 +151,12 @@ lib/rdoc/generator/template/rubymodern/images/zoom.png
 lib/rdoc/generator/template/rubymodern/index.rhtml
 lib/rdoc/generator/template/rubymodern/js/darkfish.js
 lib/rdoc/generator/template/rubymodern/js/jquery.js
+lib/rdoc/generator/template/rubymodern/js/prism.js
 lib/rdoc/generator/template/rubymodern/js/search.js
 lib/rdoc/generator/template/rubymodern/page.rhtml
+lib/rdoc/generator/template/rubymodern/css/prism.css
 lib/rdoc/generator/template/rubymodern/css/rdoc.css
+lib/rdoc/generator/template/rubymodern/css/rubymodern.css
 lib/rdoc/generator/template/rubymodern/servlet_not_found.rhtml
 lib/rdoc/generator/template/rubymodern/servlet_root.rhtml
 lib/rdoc/generator/template/rubymodern/table_of_contents.rhtml
