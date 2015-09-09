@@ -142,9 +142,9 @@
                   <% end %>
 
                   <% if method.token_stream then %>
-                  <div class="method-source-code" id="<%= method.html_name %>-source">
-                    <pre><%= method.markup_code %></pre>
-                  </div>
+                  <pre id="<%= method.html_name %>-source">
+                    <code class="language-ruby"><%= method.plain_code %></code>
+                  </pre>
                   <% end %>
                 </div>
 
