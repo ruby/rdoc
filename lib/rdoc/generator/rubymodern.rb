@@ -70,6 +70,8 @@ class RDoc::Generator::Rubymodern
       fonts/SourceCodePro-Bold.ttf
       fonts/SourceCodePro-Regular.ttf
       css/rdoc.css
+      css/rubymodern.css
+      css/prism.css
   ]
 
   ##
