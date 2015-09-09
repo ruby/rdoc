@@ -10,8 +10,11 @@
   <title><%= h @title %></title>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
+  <link href="<%= asset_rel_prefix %>/css/prism.css" rel="stylesheet">
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" async></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" async></script>
+  <script src="<%= asset_rel_prefix %>/js/prism.js"></script>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "<%= rel_prefix %>/";
