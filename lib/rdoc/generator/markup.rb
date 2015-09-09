@@ -103,6 +103,17 @@ class RDoc::MethodAttr
   end
 
   ##
+  # Turns the method's token stream into plain text
+
+  def plain_code
+    return '' unless @token_stream
+
+    src = token_stream.compact.map { |token| token.text}.join ''
+
+    src
+  end
+
+  ##
   # Turns the method's token stream into HTML.
   #
   # Prepends line numbers if +add_line_numbers+ is true.
