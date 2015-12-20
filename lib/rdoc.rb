@@ -109,6 +109,8 @@ module RDoc
   def self.load_yaml
     begin
       gem 'psych'
+    rescue NameError => e # --disable-gems
+      raise unless e.name == :gem
     rescue Gem::LoadError
     end
 
