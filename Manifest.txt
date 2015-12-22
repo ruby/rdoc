@@ -100,6 +100,9 @@ lib/rdoc/generator/template/json_index/.document
 lib/rdoc/generator/template/json_index/js/navigation.js
 lib/rdoc/generator/template/json_index/js/searcher.js
 lib/rdoc/ghost_method.rb
+lib/rdoc/i18n.rb
+lib/rdoc/i18n/locale.rb
+lib/rdoc/i18n/text.rb
 lib/rdoc/include.rb
 lib/rdoc/known_classes.rb
 lib/rdoc/markdown.kpeg
@@ -238,6 +241,8 @@ test/test_rdoc_generator_ri.rb
 test/test_rdoc_generator_pot.rb
 test/test_rdoc_generator_pot_po.rb
 test/test_rdoc_generator_pot_po_entry.rb
+test/test_rdoc_i18n_locale.rb
+test/test_rdoc_i18n_text.rb
 test/test_rdoc_include.rb
 test/test_rdoc_markdown.rb
 test/test_rdoc_markdown_test.rb
