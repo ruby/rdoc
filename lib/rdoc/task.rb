@@ -107,7 +107,7 @@ class RDoc::Task < Rake::TaskLib
   attr_accessor :markup
 
   ##
-  # Name of directory to receive the html output files. (default is "doc")
+  # Name of directory to receive the html output files. (default is "html")
 
   attr_accessor :rdoc_dir
 
@@ -192,7 +192,7 @@ class RDoc::Task < Rake::TaskLib
   def defaults
     @name = :rdoc
     @rdoc_files = Rake::FileList.new
-    @rdoc_dir = 'doc'
+    @rdoc_dir = 'html'
     @main = nil
     @title = nil
     @template = nil
