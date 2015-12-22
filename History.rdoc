@@ -1,7 +1,12 @@
-=== 4.2.1
+=== 4.2.1 / 2015-12-22
 
 * Bug fixes
-  * Fixed infinite loop with CR #339
+  * Fixed infinite loop with CR #339 by @nobu
+  * Allow rdoc run with --disable-gems #340  by @luizluca
+  * Don't store full path in GZipped js files #341 by @voxik
+  * Fix relative path names for drive letters #367 by @nobu
+  * Fix for valid syntax `class C end` parsing #368 by @nobu
+
 
 === 4.2.0 / 2014-12-06
 
