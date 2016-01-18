@@ -25,26 +25,42 @@ module RDoc::Encoding
     RDoc::Encoding.set_encoding content
 
     if Object.const_defined? :Encoding then
-      encoding ||= Encoding.default_external
-      orig_encoding = content.encoding
+      begin
+        encoding ||= Encoding.default_external
+        orig_encoding = content.encoding
 
-      if utf8 then
-        content.force_encoding Encoding::UTF_8
-        content.encode! encoding
-      else
-        # assume the content is in our output encoding
-        content.force_encoding encoding
-      end
+        if not orig_encoding.ascii_compatible? then
+          content.encode! encoding
+        elsif utf8 then
+          content.force_encoding Encoding::UTF_8
+          content.encode! encoding
+        else
+          # assume the content is in our output encoding
+          content.force_encoding encoding
+        end
 
-      unless content.valid_encoding? then
-        # revert and try to transcode
-        content.force_encoding orig_encoding
-        content.encode! encoding
-      end
+        unless content.valid_encoding? then
+          # revert and try to transcode
+          content.force_encoding orig_encoding
+          content.encode! encoding
+        end
 
-      unless content.valid_encoding? then
-        warn "unable to convert #{filename} to #{encoding}, skipping"
-        content = nil
+        unless content.valid_encoding? then
+          warn "unable to convert #{filename} to #{encoding}, skipping"
+          content = nil
+        end
+      rescue Encoding::InvalidByteSequenceError,
+             Encoding::UndefinedConversionError => e
+        if force_transcode then
+          content.force_encoding orig_encoding
+          content.encode!(encoding,
+                          :invalid => :replace, :undef => :replace,
+                          :replace => '?')
+          return content
+        else
+          warn "unable to convert #{e.message} for #{filename}, skipping"
+          return nil
+        end
       end
     end
 
@@ -53,15 +69,6 @@ module RDoc::Encoding
     raise unless e.message =~ /unknown encoding name - (.*)/
     warn "unknown encoding name \"#{$1}\" for #{filename}, skipping"
     nil
-  rescue Encoding::UndefinedConversionError => e
-    if force_transcode then
-      content.force_encoding orig_encoding
-      content.encode! encoding, :undef => :replace, :replace => '?'
-      content
-    else
-      warn "unable to convert #{e.message} for #{filename}, skipping"
-      nil
-    end
   rescue Errno::EISDIR, Errno::ENOENT
     nil
   end
@@ -70,7 +77,9 @@ module RDoc::Encoding
   # Sets the encoding of +string+ based on the magic comment
 
   def self.set_encoding string
-    first_line = string[/\A(?:#!.*\n)?.*\n/]
+    string =~ /\A(?:#!.*\n)?(.*\n)/
+
+    first_line = $1
 
     name = case first_line
            when /^<\?xml[^?]*encoding=(["'])(.*?)\1/ then $2

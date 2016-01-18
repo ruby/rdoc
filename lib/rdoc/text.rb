@@ -10,10 +10,10 @@ require 'strscan'
 
 begin
   gem 'json'
+rescue NameError => e # --disable-gems
+  raise unless e.name == :gem
 rescue Gem::LoadError
 end
-
-require 'json'
 
 ##
 # Methods for manipulating comment text
@@ -68,11 +68,11 @@ module RDoc::Text
     expanded = []
 
     text.each_line do |line|
-      line.gsub!(/^((?:.{8})*?)([^\t\r\n]{0,7})\t/) do
+      nil while line.gsub!(/(?:\G|\r)((?:.{8})*?)([^\t\r\n]{0,7})\t/) do
         r = "#{$1}#{$2}#{' ' * (8 - $2.size)}"
         r.force_encoding text.encoding if Object.const_defined? :Encoding
         r
-      end until line !~ /\t/
+      end
 
       expanded << line
     end
@@ -103,6 +103,15 @@ module RDoc::Text
   # Requires the including class to implement #formatter
 
   def markup text
+    if @store.rdoc.options
+      locale = @store.rdoc.options.locale
+    else
+      locale = nil
+    end
+    if locale
+      i18n_text = RDoc::I18n::Text.new(text)
+      text = i18n_text.translate(locale)
+    end
     parse(text).accept formatter
   end
 
@@ -140,7 +149,7 @@ module RDoc::Text
   def snippet text, limit = 100
     document = parse text
 
-    RDoc::Markup::ToHtmlSnippet.new(limit).convert document
+    RDoc::Markup::ToHtmlSnippet.new(options, limit).convert document
   end
 
   ##
@@ -312,4 +321,3 @@ module RDoc::Text
   end
 
 end
-

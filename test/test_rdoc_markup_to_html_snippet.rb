@@ -15,6 +15,12 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_empty @to.res.join
   end
 
+  def accept_block_quote
+    assert_equal "\n<blockquote><p>quote\n</blockquote>\n", @to.res.join
+
+    assert_equal 5, @to.characters
+  end
+
   def accept_document
     assert_equal "<p>hello\n", @to.res.join
     assert_equal 5, @to.characters
@@ -256,10 +262,16 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     assert_equal 18, @to.characters
   end
 
+  def accept_paragraph_br
+    assert_equal "<p>one<br>two\n", @to.res.join
+
+    assert_equal 6, @to.characters
+  end
+
   def accept_paragraph_break
     assert_equal "<p>hello<br>\nworld\n", @to.res.join
 
-    assert_equal 15, @to.characters
+    assert_equal 11, @to.characters
   end
 
   def accept_paragraph_i
@@ -297,7 +309,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
   end
 
   def accept_verbatim
-    assert_equal "\n<pre>hi\n  world</pre>\n", @to.res.join
+    assert_equal "\n<pre class=\"ruby\"><span class=\"ruby-identifier\">hi</span>\n  <span class=\"ruby-identifier\">world</span>\n</pre>\n", @to.res.join
     assert_equal 10, @to.characters
   end
 
@@ -406,21 +418,20 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
     rdoc.options = options
     RDoc::RDoc.current = rdoc
 
-    verb = @RM::Verbatim.new("a %z'foo' # => blah\n")
+    verb = @RM::Verbatim.new("a % 09 # => blah\n")
 
     @to.start_accepting
     @to.accept_verbatim verb
 
-    inner = CGI.escapeHTML "a %z'foo' # => blah"
+    inner = CGI.escapeHTML "a % 09 # => blah"
 
     expected = <<-EXPECTED
 
-<pre>#{inner}
-</pre>
+<pre>#{inner}</pre>
     EXPECTED
 
     assert_equal expected, @to.res.join
-    assert_equal 19, @to.characters
+    assert_equal 16, @to.characters
   end
 
   def test_add_paragraph
@@ -576,8 +587,9 @@ This routine modifies its +comment+ parameter.
     expected = <<-EXPECTED
 <p>Look for directives in a normal comment block:
 
-<pre># :stopdoc:
-#{inner}</pre>
+<pre class=\"ruby\"><span class=\"ruby-comment\"># :stopdoc:</span>
+<span class=\"ruby-comment\">#{inner}</span>
+</pre>
     EXPECTED
 
     actual = @to.convert rdoc
@@ -614,15 +626,15 @@ This routine modifies its +comment+ parameter.
   def test_convert_RDOCLINK_label_foottext
     result = @to.convert 'rdoc-label:foottext-1'
 
-    assert_equal "<p>*1\n", result
-    assert_equal 2, @to.characters
+    assert_equal "<p>1\n", result
+    assert_equal 1, @to.characters
   end
 
   def test_convert_RDOCLINK_label_footmark
     result = @to.convert 'rdoc-label:footmark-1'
 
-    assert_equal "<p>^1\n", result
-    assert_equal 2, @to.characters
+    assert_equal "<p>1\n", result
+    assert_equal 1, @to.characters
   end
 
   def test_convert_RDOCLINK_ref
@@ -653,8 +665,9 @@ This routine modifies its +comment+ parameter.
     expected = <<-EXPECTED
 <p>one
 
-<pre>verb1
-verb2</pre>
+<pre class=\"ruby\"><span class=\"ruby-identifier\">verb1</span>
+<span class=\"ruby-identifier\">verb2</span>
+</pre>
 <p>two
 
     EXPECTED

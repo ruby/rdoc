@@ -15,13 +15,6 @@ class TestRDocOptions < RDoc::TestCase
     RDoc::RDoc::GENERATORS.replace @generators
   end
 
-  def mu_pp obj
-    s = ''
-    s = PP.pp obj, s
-    s = s.force_encoding Encoding.default_external if defined? Encoding
-    s.chomp
-  end
-
   def test_check_files
     skip "assumes UNIX permission model" if /mswin|mingw/ =~ RUBY_PLATFORM
 
@@ -45,7 +38,7 @@ class TestRDocOptions < RDoc::TestCase
   def test_check_files_warn
     @options.verbosity = 2
 
-    out, err = capture_io do
+    out, err = verbose_capture_io do
       @options.files = %w[nonexistent]
 
       @options.check_files
@@ -69,20 +62,26 @@ class TestRDocOptions < RDoc::TestCase
     encoding = Object.const_defined?(:Encoding) ? 'UTF-8' : nil
 
     expected = {
-      'charset'        => 'UTF-8',
-      'encoding'       => encoding,
-      'exclude'        => [],
-      'hyperlink_all'  => false,
-      'line_numbers'   => false,
-      'main_page'      => nil,
-      'markup'         => 'rdoc',
-      'rdoc_include'   => [],
-      'show_hash'      => false,
-      'static_path'    => [],
-      'tab_width'      => 8,
-      'title'          => nil,
-      'visibility'     => :protected,
-      'webcvs'         => nil,
+      'charset'              => 'UTF-8',
+      'encoding'             => encoding,
+      'exclude'              => [],
+      'hyperlink_all'        => false,
+      'line_numbers'         => false,
+      'locale'               => nil,
+      'locale_dir'           => 'locale',
+      'locale_name'          => nil,
+      'main_page'            => nil,
+      'markup'               => 'rdoc',
+      'output_decoration'    => true,
+      'page_dir'             => nil,
+      'rdoc_include'         => [],
+      'show_hash'            => false,
+      'static_path'          => [],
+      'tab_width'            => 8,
+      'template_stylesheets' => [],
+      'title'                => nil,
+      'visibility'           => :protected,
+      'webcvs'               => nil,
     }
 
     assert_equal expected, coder
@@ -195,7 +194,9 @@ rdoc_include:
   def test_parse_copy_files_directory_absolute
     @options.parse %w[--copy-files /]
 
-    assert_equal ['/'], @options.static_path
+    assert_equal 1, @options.static_path.length
+
+    assert_match %r%^([A-Z]:)?/$%i, @options.static_path.first
   end
 
   def test_parse_coverage
@@ -336,6 +337,18 @@ rdoc_include:
                  e.message
   end
 
+  def test_parse_h
+    out, = capture_io do
+      begin
+        @options.parse %w[-h]
+      rescue SystemExit
+      end
+    end
+
+    assert_equal 1, out.scan(/HTML generator options:/).length
+    assert_equal 1, out.scan(/ri generator options:/).  length
+  end
+
   def test_parse_help
     out, = capture_io do
       begin
@@ -367,6 +380,20 @@ rdoc_include:
     assert_equal 1, out.scan(/HTML generator options:/).length
     assert_equal 1, out.scan(/ri generator options:/).  length
     assert_equal 1, out.scan(/test generator options:/).length
+  end
+
+  def test_parse_format_for_extra_generator
+    RDoc::RDoc::GENERATORS['test'] = Class.new do
+      def self.setup_options options
+        op = options.option_parser
+
+        op.separator 'test generator options:'
+      end
+    end
+
+    @options.setup_generator 'test'
+
+    assert_equal @options.generator_name, 'test'
   end
 
   def test_parse_ignore_invalid
@@ -406,6 +433,39 @@ rdoc_include:
     assert_empty out
   end
 
+  def test_parse_ignore_invalid_no_quiet
+    out, err = capture_io do
+      assert_raises SystemExit do
+        @options.parse %w[--quiet --no-ignore-invalid --bogus=arg --bobogus --visibility=extended]
+      end
+    end
+
+    refute_match %r%^Usage: %, err
+    assert_match %r%^invalid options: --bogus=arg, --bobogus, --visibility=extended%, err
+
+    assert_empty out
+  end
+
+  def test_ignore_needless_arg
+    out, err = capture_io do
+      @options.parse %w[--ri=foo]
+    end
+
+    assert_match %r%^invalid options: --ri=foo%, err
+
+    assert_empty out
+  end
+
+  def test_ignore_missing_arg
+    out, err = capture_io do
+      @options.parse %w[--copy-files]
+    end
+
+    assert_match %r%^invalid options: --copy-files%, err
+
+    assert_empty out
+  end
+
   def test_parse_main
     out, err = capture_io do
       @options.parse %w[--main MAIN]
@@ -426,6 +486,84 @@ rdoc_include:
     assert_empty err
 
     assert_equal 'tomdoc', @options.markup
+  end
+
+  def test_parse_page_dir
+    assert_nil @options.page_dir
+
+    out, err = capture_io do
+      @options.parse %W[--page-dir #{Dir.tmpdir}]
+    end
+
+    assert_empty out
+    assert_empty err
+
+    expected =
+      Pathname(Dir.tmpdir).expand_path.relative_path_from @options.root
+
+    assert_equal expected,     @options.page_dir
+    assert_equal [Dir.tmpdir], @options.files
+  end
+
+  def test_parse_page_dir_root
+    assert_nil @options.page_dir
+
+    Dir.mktmpdir do |dir|
+      abs_root     = dir
+      abs_page_dir = File.join dir, 'pages'
+      FileUtils.mkdir abs_page_dir
+
+      out, err = capture_io do
+        @options.parse %W[--page-dir #{abs_page_dir} --root #{abs_root}]
+      end
+
+      assert_empty out
+      assert_empty err
+
+      assert_equal Pathname('pages'), @options.page_dir
+      assert_equal [abs_page_dir],    @options.files
+    end
+  end
+
+  def test_parse_ri_site
+    @options.parse %w[--ri-site]
+
+    assert_equal RDoc::Generator::RI,      @options.generator
+    assert_equal RDoc::RI::Paths.site_dir, @options.op_dir
+  end
+
+  def test_parse_root
+    assert_equal Pathname(Dir.pwd), @options.root
+
+    out, err = capture_io do
+      @options.parse %W[--root #{Dir.tmpdir}]
+    end
+
+    assert_empty out
+    assert_empty err
+
+    assert_equal Pathname(Dir.tmpdir), @options.root
+    assert_includes @options.rdoc_include, @options.root.to_s
+  end
+
+  def test_parse_tab_width
+    @options.parse %w[--tab-width=1]
+    assert_equal 1, @options.tab_width
+
+    @options.parse %w[-w2]
+    assert_equal 2, @options.tab_width
+
+    _, err = capture_io do
+      @options.parse %w[-w=2]
+    end
+
+    assert_match 'invalid options', err
+
+    _, err = capture_io do
+      @options.parse %w[-w0]
+    end
+
+    assert_match 'invalid options', err
   end
 
   def test_parse_template
@@ -479,6 +617,20 @@ rdoc_include:
     $LOAD_PATH.replace orig_LOAD_PATH
   end
 
+  def test_parse_visibility
+    @options.parse %w[--visibility=public]
+    assert_equal :public, @options.visibility
+
+    @options.parse %w[--visibility=protected]
+    assert_equal :protected, @options.visibility
+
+    @options.parse %w[--visibility=private]
+    assert_equal :private, @options.visibility
+
+    @options.parse %w[--visibility=nodoc]
+    assert_equal :nodoc, @options.visibility
+  end
+
   def test_parse_write_options
     tmpdir = File.join Dir.tmpdir, "test_rdoc_options_#{$$}"
     FileUtils.mkdir_p tmpdir
@@ -489,11 +641,22 @@ rdoc_include:
       end
 
       assert_equal 0, e.status
-    
+
       assert File.exist? '.rdoc_options'
     end
   ensure
     FileUtils.rm_rf tmpdir
+  end
+
+  def test_parse_extension_alias
+    out, err = capture_io do
+      @options.parse %w[--extension foobar=rdoc]
+    end
+
+    assert_includes RDoc::Parser.parsers, [/\.foobar$/, RDoc::Parser::Simple]
+
+    assert_empty out
+    assert_empty err
   end
 
   def test_setup_generator
@@ -557,7 +720,7 @@ rdoc_include:
 
     @options.verbosity = 2
 
-    out, err = capture_io do
+    out, err = verbose_capture_io do
       @options.warn "warnings on"
     end
 
@@ -568,12 +731,36 @@ rdoc_include:
   def test_write_options
     temp_dir do |dir|
       @options.write_options
-    
+
       assert File.exist? '.rdoc_options'
 
       assert_equal @options, YAML.load(File.read('.rdoc_options'))
     end
   end
 
+  def test_version
+    out, _ = capture_io do
+      begin
+        @options.parse %w[--version]
+      rescue SystemExit
+      end
+    end
+
+    assert out.include?(RDoc::VERSION)
+
+    out, _ = capture_io do
+      begin
+        @options.parse %w[-v]
+      rescue SystemExit
+      end
+    end
+
+    assert out.include?(RDoc::VERSION)
+  end
+
+  def test_visibility
+    @options.visibility = :all
+    assert_equal :private, @options.visibility
+  end
 end
 

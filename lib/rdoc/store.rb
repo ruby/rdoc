@@ -59,7 +59,7 @@ class RDoc::Store
       @name  = name
     end
 
-    def message
+    def message # :nodoc:
       "store at #{@store.path} missing file #{@file} for #{@name}"
     end
 
@@ -69,7 +69,19 @@ class RDoc::Store
   # Stores the name of the C variable a class belongs to.  This helps wire up
   # classes defined from C across files.
 
-  attr_reader :c_enclosure_classes
+  attr_reader :c_enclosure_classes # :nodoc:
+
+  attr_reader :c_enclosure_names # :nodoc:
+
+  ##
+  # Maps C variables to class or module names for each parsed C file.
+
+  attr_reader :c_class_variables
+
+  ##
+  # Maps C variables to singleton class names for each parsed C file.
+
+  attr_reader :c_singleton_class_variables
 
   ##
   # If true this Store will not write any files
@@ -114,15 +126,17 @@ class RDoc::Store
     @type     = type
 
     @cache = {
-      :ancestors        => {},
-      :attributes       => {},
-      :class_methods    => {},
-      :encoding         => @encoding,
-      :instance_methods => {},
-      :main             => nil,
-      :modules          => [],
-      :pages            => [],
-      :title            => nil,
+      :ancestors                   => {},
+      :attributes                  => {},
+      :class_methods               => {},
+      :c_class_variables           => {},
+      :c_singleton_class_variables => {},
+      :encoding                    => @encoding,
+      :instance_methods            => {},
+      :main                        => nil,
+      :modules                     => [],
+      :pages                       => [],
+      :title                       => nil,
     }
 
     @classes_hash = {}
@@ -130,20 +144,43 @@ class RDoc::Store
     @files_hash   = {}
 
     @c_enclosure_classes = {}
+    @c_enclosure_names   = {}
+
+    @c_class_variables           = {}
+    @c_singleton_class_variables = {}
 
     @unique_classes = nil
     @unique_modules = nil
   end
 
   ##
+  # Adds +module+ as an enclosure (namespace) for the given +variable+ for C
+  # files.
+
+  def add_c_enclosure variable, namespace
+    @c_enclosure_classes[variable] = namespace
+  end
+
+  ##
+  # Adds C variables from an RDoc::Parser::C
+
+  def add_c_variables c_parser
+    filename = c_parser.top_level.relative_name
+
+    @c_class_variables[filename] = make_variable_map c_parser.classes
+
+    @c_singleton_class_variables[filename] = c_parser.singleton_classes
+  end
+
+  ##
   # Adds the file with +name+ as an RDoc::TopLevel to the store.  Returns the
   # created RDoc::TopLevel.
 
-  def add_file name
-    unless top_level = @files_hash[name] then
-      top_level = RDoc::TopLevel.new name
+  def add_file absolute_name, relative_name = absolute_name
+    unless top_level = @files_hash[relative_name] then
+      top_level = RDoc::TopLevel.new absolute_name, relative_name
       top_level.store = self
-      @files_hash[name] = top_level
+      @files_hash[relative_name] = top_level
     end
 
     top_level
@@ -268,8 +305,10 @@ class RDoc::Store
     # cache included modules before they are removed from the documentation
     all_classes_and_modules.each { |cm| cm.ancestors }
 
-    remove_nodoc @classes_hash
-    remove_nodoc @modules_hash
+    unless min_visibility == :nodoc then
+      remove_nodoc @classes_hash
+      remove_nodoc @modules_hash
+    end
 
     @unique_classes = find_unique @classes_hash
     @unique_modules = find_unique @modules_hash
@@ -302,6 +341,31 @@ class RDoc::Store
 
   def files_hash
     @files_hash
+  end
+
+  ##
+  # Finds the enclosure (namespace) for the given C +variable+.
+
+  def find_c_enclosure variable
+    @c_enclosure_classes.fetch variable do
+      break unless name = @c_enclosure_names[variable]
+
+      mod = find_class_or_module name
+
+      unless mod then
+        loaded_mod = load_class_data name
+
+        file = loaded_mod.in_files.first
+
+        return unless file # legacy data source
+
+        file.store = self
+
+        mod = file.add_module RDoc::NormalModule, name
+      end
+
+      @c_enclosure_classes[variable] = mod
+    end
   end
 
   ##
@@ -500,22 +564,26 @@ class RDoc::Store
 
     @encoding = load_enc unless @encoding
 
-    @cache[:pages] ||= []
-    @cache[:main]  ||= nil
+    @cache[:pages]                       ||= []
+    @cache[:main]                        ||= nil
+    @cache[:c_class_variables]           ||= {}
+    @cache[:c_singleton_class_variables] ||= {}
+
+    @cache[:c_class_variables].each do |_, map|
+      map.each do |variable, name|
+        @c_enclosure_names[variable] = name
+      end
+    end
 
     @cache
   rescue Errno::ENOENT
   end
 
   ##
-  # Loads ri data for +klass_name+
+  # Loads ri data for +klass_name+ and hooks it up to this store.
 
   def load_class klass_name
-    file = class_file klass_name
-
-    obj = open file, 'rb' do |io|
-      Marshal.load io.read
-    end
+    obj = load_class_data klass_name
 
     obj.store = self
 
@@ -524,6 +592,17 @@ class RDoc::Store
       @classes_hash[klass_name] = obj
     when RDoc::NormalModule then
       @modules_hash[klass_name] = obj
+    end
+  end
+
+  ##
+  # Loads ri data for +klass_name+
+
+  def load_class_data klass_name
+    file = class_file klass_name
+
+    open file, 'rb' do |io|
+      Marshal.load io.read
     end
   rescue Errno::ENOENT => e
     error = MissingFileError.new(self, file, klass_name)
@@ -581,6 +660,20 @@ class RDoc::Store
 
   def main= page
     @cache[:main] = page
+  end
+
+  ##
+  # Converts the variable => ClassModule map +variables+ from a C parser into
+  # a variable => class name map.
+
+  def make_variable_map variables
+    map = {}
+
+    variables.each { |variable, class_module|
+      map[variable] = class_module.full_name
+    }
+
+    map
   end
 
   ##
@@ -688,6 +781,9 @@ class RDoc::Store
 
     @cache[:encoding] = @encoding # this gets set twice due to assert_cache
 
+    @cache[:c_class_variables].merge!           @c_class_variables
+    @cache[:c_singleton_class_variables].merge! @c_singleton_class_variables
+
     return if @dry_run
 
     marshal = Marshal.dump @cache
@@ -725,13 +821,13 @@ class RDoc::Store
     @cache[:ancestors][full_name] ||= []
     @cache[:ancestors][full_name].concat ancestors
 
-    attributes = klass.attributes.map do |attribute|
+    attribute_definitions = klass.attributes.map do |attribute|
       "#{attribute.definition} #{attribute.name}"
     end
 
-    unless attributes.empty? then
+    unless attribute_definitions.empty? then
       @cache[:attributes][full_name] ||= []
-      @cache[:attributes][full_name].concat attributes
+      @cache[:attributes][full_name].concat attribute_definitions
     end
 
     to_delete = []
@@ -745,13 +841,15 @@ class RDoc::Store
 
       class_methods    = class_methods.   map { |method| method.name }
       instance_methods = instance_methods.map { |method| method.name }
+      attribute_names  = klass.attributes.map { |attr|   attr.name }
 
       old = @cache[:class_methods][full_name] - class_methods
       to_delete.concat old.map { |method|
         method_file full_name, "#{full_name}::#{method}"
       }
 
-      old = @cache[:instance_methods][full_name] - instance_methods
+      old = @cache[:instance_methods][full_name] -
+        instance_methods - attribute_names
       to_delete.concat old.map { |method|
         method_file full_name, "#{full_name}##{method}"
       }

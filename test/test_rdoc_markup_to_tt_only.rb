@@ -14,6 +14,10 @@ class TestRDocMarkupToTtOnly < RDoc::Markup::FormatterTestCase
     assert_empty @to.end_accepting
   end
 
+  def accept_block_quote
+    assert_empty @to.end_accepting
+  end
+
   def accept_document
     assert_equal [], @to.res
   end
@@ -187,6 +191,10 @@ class TestRDocMarkupToTtOnly < RDoc::Markup::FormatterTestCase
   end
 
   def accept_paragraph_b
+    assert_empty @to.end_accepting
+  end
+
+  def accept_paragraph_br
     assert_empty @to.end_accepting
   end
 

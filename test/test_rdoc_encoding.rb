@@ -10,6 +10,12 @@ class TestRDocEncoding < RDoc::TestCase
     @tempfile = Tempfile.new 'test_rdoc_encoding'
   end
 
+  def teardown
+    @tempfile.close!
+
+    super
+  end
+
   def test_class_read_file
     @tempfile.write "hi everybody"
     @tempfile.flush
@@ -53,7 +59,7 @@ class TestRDocEncoding < RDoc::TestCase
 
     contents = :junk
 
-    _, err = capture_io do
+    _, err = verbose_capture_io do
       contents = RDoc::Encoding.read_file @tempfile.path, Encoding::US_ASCII
     end
 
@@ -97,6 +103,22 @@ class TestRDocEncoding < RDoc::TestCase
     assert_equal Encoding::UTF_8, content.encoding
   end
 
+  def test_class_read_file_encoding_invalid
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    @tempfile.write "# coding: ascii\nM\xE4r"
+    @tempfile.flush
+
+    contents = :junk
+    _, err = verbose_capture_io do
+      contents = RDoc::Encoding.read_file @tempfile.path, Encoding::UTF_8
+    end
+
+    assert_equal "unable to convert \"\\xE4\" on US-ASCII for #{@tempfile.path}, skipping\n", err
+
+    assert_nil contents
+  end
+
   def test_class_read_file_encoding_with_signature
     skip "Encoding not implemented" unless defined? ::Encoding
 
@@ -107,6 +129,23 @@ class TestRDocEncoding < RDoc::TestCase
     content = RDoc::Encoding.read_file @tempfile.path, Encoding::UTF_8
     assert_equal Encoding::UTF_8, content.encoding, bug3360
     assert_equal "hi everybody", content, bug3360
+  end
+
+  def test_class_read_file_encoding_iso_2022_jp
+    skip "Encoding not implemented" unless Object.const_defined? :Encoding
+
+    input = "# coding: ISO-2022-JP\n:\e$B%3%^%s%I\e(B:"
+
+    @tempfile.write input
+    @tempfile.flush
+
+    contents = RDoc::Encoding.read_file @tempfile.path, Encoding::UTF_8
+
+    expected = ":\xe3\x82\xb3\xe3\x83\x9e\xe3\x83\xb3\xe3\x83\x89:"
+    expected.force_encoding Encoding::UTF_8
+
+    assert_equal expected, contents
+    assert_equal Encoding::UTF_8, contents.encoding
   end
 
   def test_class_set_encoding
@@ -148,7 +187,7 @@ class TestRDocEncoding < RDoc::TestCase
 
     RDoc::Encoding.set_encoding s
 
-    assert_equal "# more comments", s
+    assert_equal "#!/bin/ruby\n# more comments", s
   end
 
   def test_class_set_encoding_bad

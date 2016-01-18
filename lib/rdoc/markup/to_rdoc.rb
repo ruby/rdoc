@@ -78,6 +78,21 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   end
 
   ##
+  # Adds +paragraph+ to the output
+
+  def accept_block_quote block_quote
+    @indent += 2
+
+    block_quote.parts.each do |part|
+      @prefix = '> '
+
+      part.accept self
+    end
+
+    @indent -= 2
+  end
+
+  ##
   # Adds +heading+ to the output
 
   def accept_heading heading
@@ -243,6 +258,13 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
     text = special.text
     text = text.sub('\\', '') unless in_tt?
     text
+  end
+
+  ##
+  # Adds a newline to the output
+
+  def handle_special_HARD_BREAK special
+    "\n"
   end
 
   ##

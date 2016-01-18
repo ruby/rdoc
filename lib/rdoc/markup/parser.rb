@@ -79,6 +79,8 @@ class RDoc::Markup::Parser
     @current_token  = nil
     @debug          = false
     @have_encoding  = Object.const_defined? :Encoding
+    @have_byteslice = ''.respond_to? :byteslice
+    @input          = nil
     @input_encoding = nil
     @line           = 0
     @line_pos       = 0
@@ -321,7 +323,9 @@ class RDoc::Markup::Parser
   # The character offset for the input string at the given +byte_offset+
 
   def char_pos byte_offset
-    if @have_encoding then
+    if @have_byteslice then
+      @input.byteslice(0, byte_offset).length
+    elsif @have_encoding then
       matched = @binary_input[0, byte_offset]
       matched.force_encoding @input_encoding
       matched.length
@@ -385,7 +389,7 @@ class RDoc::Markup::Parser
         skip :NEWLINE
       when :TEXT then
         unget
-        parent << build_paragraph(indent)
+        parse_text parent, indent
       when *LIST_TOKENS then
         unget
         parent << build_list(indent)
@@ -399,6 +403,13 @@ class RDoc::Markup::Parser
 
     parent
 
+  end
+
+  ##
+  # Small hook that is overridden by RDoc::TomDoc
+
+  def parse_text parent, indent # :nodoc:
+    parent << build_paragraph(indent)
   end
 
   ##
@@ -416,10 +427,11 @@ class RDoc::Markup::Parser
   def setup_scanner input
     @line     = 0
     @line_pos = 0
+    @input    = input.dup
 
-    if @have_encoding then
-      @input_encoding = input.encoding
-      @binary_input   = input.dup.force_encoding Encoding::BINARY
+    if @have_encoding and not @have_byteslice then
+      @input_encoding = @input.encoding
+      @binary_input   = @input.force_encoding Encoding::BINARY
     end
 
     @s = StringScanner.new input
@@ -523,8 +535,8 @@ class RDoc::Markup::Parser
   end
 
   ##
-  # Calculates the column (by character) and line of the current token from
-  # +scanner+ based on +byte_offset+.
+  # Calculates the column (by character) and line of the current token based
+  # on +byte_offset+.
 
   def token_pos byte_offset
     offset = char_pos byte_offset
