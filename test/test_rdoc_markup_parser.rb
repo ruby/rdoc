@@ -7,14 +7,9 @@ class TestRDocMarkupParser < RDoc::TestCase
   def setup
     super
 
-    @RMP = @RM::Parser
-  end
+    @have_byteslice = ''.respond_to? :byteslice
 
-  def mu_pp(obj)
-    s = ''
-    s = PP.pp obj, s
-    s = s.force_encoding(Encoding.default_external) if defined? Encoding
-    s.chomp
+    @RMP = @RM::Parser
   end
 
   def test_build_heading
@@ -34,7 +29,7 @@ class TestRDocMarkupParser < RDoc::TestCase
 
     s.scan(/\S+/)
 
-    if Object.const_defined? :Encoding then
+    if @have_byteslice or @have_encoding then
       assert_equal 3, parser.char_pos(s.pos)
     else
       assert_equal 4, parser.char_pos(s.pos)
@@ -1364,7 +1359,7 @@ cat::
   end
 
   def test_tokenize_note_utf_8
-    skip 'Encoding not implemented' unless Object.const_defined? :Encoding
+    skip 'Encoding not implemented' unless @have_encoding
 
     str = <<-STR
 cät:: l1a
@@ -1630,7 +1625,7 @@ Example heading:
 
     s.scan(/\S+/)
 
-    if Object.const_defined? :Encoding then
+    if @have_encoding or @have_byteslice then
       assert_equal [3, 0], parser.token_pos(s.pos)
     else
       assert_equal [4, 0], parser.token_pos(s.pos)

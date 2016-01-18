@@ -37,3 +37,14 @@ MarkdownTest::
 
   See http://dev.perl.org/licenses/ for the terms of the Perl license.
 
+Fonts::
+  Source Code Pro is (c) 2010, 2012 Adobe Systems Incorporated.
+
+  Lato is (c) 2010 Łukasz Dziedzic.
+
+  Both fonts are used under the SIL Open Font License, Version 1.1.  The
+  license is available at http://scripts.sil.org/OFL
+
+  See lib/rdoc/generator/template/darkfish/fonts.css for complete copyright
+  and license information, including a copy of the OFL.
+

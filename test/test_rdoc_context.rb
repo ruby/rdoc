@@ -41,6 +41,14 @@ class TestRDocContext < XrefTestCase
     assert_equal [as], @context.unmatched_alias_lists['#old_name']
   end
 
+  def test_add
+    @context.add RDoc::Extend,  'Ext', 'comment'
+    @context.add RDoc::Include, 'Incl', 'comment'
+
+    refute_empty @context.extends
+    refute_empty @context.includes
+  end
+
   def test_add_alias_method_attr
     top_level = @store.add_file 'file.rb'
 
@@ -230,7 +238,7 @@ class TestRDocContext < XrefTestCase
     meth2.record_location @store.add_file 'second.rb'
     meth2.comment = comment 'second'
 
-    _, err = capture_io do
+    _, err = verbose_capture_io do
       @context.add_method meth2
     end
 
@@ -238,6 +246,31 @@ class TestRDocContext < XrefTestCase
                'previously in file first.rb'
 
     assert_equal expected, err.chomp
+
+    method = @context.method_list.first
+
+    assert_equal 'first', method.comment.text
+  end
+
+  def test_add_method_duplicate_loading
+    @context.store = nil
+
+    meth1 = RDoc::AnyMethod.new nil, 'name'
+    meth1.record_location @store.add_file 'first.rb'
+    meth1.visibility = nil
+    meth1.comment = comment 'first'
+
+    @context.add_method meth1
+
+    meth2 = RDoc::AnyMethod.new nil, 'name'
+    meth2.record_location @store.add_file 'second.rb'
+    meth2.comment = comment 'second'
+
+    _, err = verbose_capture_io do
+      @context.add_method meth2
+    end
+
+    assert_empty err
 
     method = @context.method_list.first
 
@@ -254,8 +287,6 @@ class TestRDocContext < XrefTestCase
     tl = @store.add_file 'file.rb'
 
     c3_c4 = @c2.add_module_alias @c2_c3, 'C4', tl
-
-    c4 = @c2.find_module_named('C4')
 
     alias_constant = @c2.constants.first
 
@@ -590,6 +621,8 @@ class TestRDocContext < XrefTestCase
 
     assert_equal 1,  @c2_c3.<=>(@c2)
     assert_equal(-1, @c2_c3.<=>(@c3))
+
+    assert_nil @c2.<=>(Gem.loaded_specs.values.first)
   end
 
   def test_methods_by_type
@@ -663,6 +696,15 @@ class TestRDocContext < XrefTestCase
     util_visibilities
 
     @vis.remove_invisible :private
+
+    assert_equal [@pub, @prot, @priv], @vis.method_list
+    assert_equal [@apub, @aprot, @apriv], @vis.attributes
+  end
+
+  def test_remove_invisible_nodoc
+    util_visibilities
+
+    @vis.remove_invisible :nodoc
 
     assert_equal [@pub, @prot, @priv], @vis.method_list
     assert_equal [@apub, @aprot, @apriv], @vis.attributes

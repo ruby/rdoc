@@ -3,7 +3,7 @@
 ##
 # Provides Literals appropriate for your ruby version.
 #--
-# This set of literals is for ruby 1.8 regular expressions.
+# This set of literals is for Ruby 1.8 regular expressions.
 class RDoc::Markdown::Literals
   # :stopdoc:
 
@@ -19,8 +19,7 @@ class RDoc::Markdown::Literals
     # Prepares for parsing +str+.  If you define a custom initialize you must
     # call this method before #parse
     def setup_parser(str, debug=false)
-      @string = str
-      @pos = 0
+      set_string str, 0
       @memoizations = Hash.new { |h,k| h[k] = {} }
       @result = nil
       @failed_rule = nil
@@ -33,7 +32,6 @@ class RDoc::Markdown::Literals
     attr_reader :failing_rule_offset
     attr_accessor :result, :pos
 
-    
     def current_column(target=pos)
       if c = string.rindex("\n", target-1)
         return target - c - 1
@@ -65,6 +63,13 @@ class RDoc::Markdown::Literals
 
     def get_text(start)
       @string[start..@pos-1]
+    end
+
+    # Sets the string and current parsing position for the parser.
+    def set_string string, pos
+      @string = string
+      @string_size = string ? string.size : 0
+      @pos = pos
     end
 
     def show_pos
@@ -173,19 +178,19 @@ class RDoc::Markdown::Literals
       return nil
     end
 
-    if "".respond_to? :getbyte
+    if "".respond_to? :ord
       def get_byte
-        if @pos >= @string.size
+        if @pos >= @string_size
           return nil
         end
 
-        s = @string.getbyte @pos
+        s = @string[@pos].ord
         @pos += 1
         s
       end
     else
       def get_byte
-        if @pos >= @string.size
+        if @pos >= @string_size
           return nil
         end
 
@@ -234,8 +239,7 @@ class RDoc::Markdown::Literals
       old_pos = @pos
       old_string = @string
 
-      @pos = other.pos
-      @string = other.string
+      set_string other.string, other.pos
 
       begin
         if val = __send__(rule, *args)
@@ -246,8 +250,7 @@ class RDoc::Markdown::Literals
         end
         val
       ensure
-        @pos = old_pos
-        @string = old_string
+        set_string old_string, old_pos
       end
     end
 
@@ -381,39 +384,9 @@ class RDoc::Markdown::Literals
     return _tmp
   end
 
-  # Newline = ("\n" | "" "\n"?)
+  # Newline = /\n|\r\n?/
   def _Newline
-
-    _save = self.pos
-    while true # choice
-      _tmp = match_string("\n")
-      break if _tmp
-      self.pos = _save
-
-      _save1 = self.pos
-      while true # sequence
-        _tmp = match_string("\r")
-        unless _tmp
-          self.pos = _save1
-          break
-        end
-        _save2 = self.pos
-        _tmp = match_string("\n")
-        unless _tmp
-          _tmp = true
-          self.pos = _save2
-        end
-        unless _tmp
-          self.pos = _save1
-        end
-        break
-      end # end sequence
-
-      break if _tmp
-      self.pos = _save
-      break
-    end # end choice
-
+    _tmp = scan(/\A(?-mix:\n|\r\n?)/)
     set_failed_rule :_Newline unless _tmp
     return _tmp
   end
@@ -425,20 +398,9 @@ class RDoc::Markdown::Literals
     return _tmp
   end
 
-  # Spacechar = (" " | "\t")
+  # Spacechar = / |\t/
   def _Spacechar
-
-    _save = self.pos
-    while true # choice
-      _tmp = match_string(" ")
-      break if _tmp
-      self.pos = _save
-      _tmp = match_string("\t")
-      break if _tmp
-      self.pos = _save
-      break
-    end # end choice
-
+    _tmp = scan(/\A(?-mix: |\t)/)
     set_failed_rule :_Spacechar unless _tmp
     return _tmp
   end
@@ -447,8 +409,8 @@ class RDoc::Markdown::Literals
   Rules[:_Alphanumeric] = rule_info("Alphanumeric", "/[0-9A-Za-z\\200-\\377]/")
   Rules[:_AlphanumericAscii] = rule_info("AlphanumericAscii", "/[A-Za-z0-9]/")
   Rules[:_BOM] = rule_info("BOM", "\"ï»¿\"")
-  Rules[:_Newline] = rule_info("Newline", "(\"\\n\" | \"\" \"\\n\"?)")
+  Rules[:_Newline] = rule_info("Newline", "/\\n|\\r\\n?/")
   Rules[:_NonAlphanumeric] = rule_info("NonAlphanumeric", "/[\\000-\\057\\072-\\100\\133-\\140\\173-\\177]/")
-  Rules[:_Spacechar] = rule_info("Spacechar", "(\" \" | \"\\t\")")
+  Rules[:_Spacechar] = rule_info("Spacechar", "/ |\\t/")
   # :startdoc:
 end

@@ -63,7 +63,15 @@ class RDoc::Constant < RDoc::CodeObject
   # for a documented class or module.
 
   def documented?
-    super or is_alias_for && is_alias_for.documented?
+    return true if super
+    return false unless @is_alias_for
+    case @is_alias_for
+    when String then
+      found = @store.find_class_or_module @is_alias_for
+      return false unless found
+      @is_alias_for = found
+    end
+    @is_alias_for.documented?
   end
 
   ##
@@ -79,7 +87,9 @@ class RDoc::Constant < RDoc::CodeObject
   def is_alias_for
     case @is_alias_for
     when String then
-      @is_alias_for = @store.find_class_or_module @is_alias_for
+      found = @store.find_class_or_module @is_alias_for
+      @is_alias_for = found if found
+      @is_alias_for
     else
       @is_alias_for
     end
@@ -96,16 +106,21 @@ class RDoc::Constant < RDoc::CodeObject
   # Dumps this Constant for use by ri.  See also #marshal_load
 
   def marshal_dump
+    alias_name = case found = is_alias_for
+                 when RDoc::CodeObject then found.full_name
+                 else                       found
+                 end
+
     [ MARSHAL_VERSION,
       @name,
       full_name,
       @visibility,
-      @is_alias_for ? @is_alias_for.full_name : nil,
+      alias_name,
       parse(@comment),
-      @file.absolute_name,
-      @parent.name,
-      @parent.class,
-      @section.title,
+      @file.relative_name,
+      parent.name,
+      parent.class,
+      section.title,
     ]
   end
 
@@ -132,7 +147,7 @@ class RDoc::Constant < RDoc::CodeObject
   end
 
   ##
-  # Path to this constant
+  # Path to this constant for use with HTML generator output.
 
   def path
     "#{@parent.path}##{@name}"

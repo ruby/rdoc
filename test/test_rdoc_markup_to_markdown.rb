@@ -15,6 +15,10 @@ class TestRDocMarkupToMarkdown < RDoc::Markup::TextFormatterTestCase
     assert_equal "\n", @to.res.join
   end
 
+  def accept_block_quote
+    assert_equal "> quote\n", @to.res.join
+  end
+
   def accept_document
     assert_equal "hello\n", @to.res.join
   end
@@ -254,6 +258,10 @@ class TestRDocMarkupToMarkdown < RDoc::Markup::TextFormatterTestCase
     assert_equal "reg **bold words** reg\n", @to.end_accepting
   end
 
+  def accept_paragraph_br
+    assert_equal "one  \ntwo\n", @to.end_accepting
+  end
+
   def accept_paragraph_break
     assert_equal "hello  \nworld\n", @to.end_accepting
   end
@@ -338,6 +346,43 @@ words words words words
     EXPECTED
 
     assert_equal expected, @to.end_accepting
+  end
+
+  def test_convert_RDOCLINK
+    result = @to.convert 'rdoc-garbage:C'
+
+    assert_equal "C\n", result
+  end
+
+  def test_convert_RDOCLINK_image
+    result = @to.convert 'rdoc-image:/path/to/image.jpg'
+
+    assert_equal "![](/path/to/image.jpg)\n", result
+  end
+
+  def test_convert_TIDYLINK
+    result = @to.convert \
+      '{DSL}[http://en.wikipedia.org/wiki/Domain-specific_language]'
+
+    expected = "[DSL](http://en.wikipedia.org/wiki/Domain-specific_language)\n"
+
+    assert_equal expected, result
+  end
+
+  def test_handle_rdoc_link_label_footmark
+    assert_equal '[^1]:', @to.handle_rdoc_link('rdoc-label:footmark-1:x')
+  end
+
+  def test_handle_rdoc_link_label_foottext
+    assert_equal '[^1]',   @to.handle_rdoc_link('rdoc-label:foottext-1:x')
+  end
+
+  def test_handle_rdoc_link_label_label
+    assert_equal '[x](#label-x)', @to.handle_rdoc_link('rdoc-label:label-x')
+  end
+
+  def test_handle_rdoc_link_ref
+    assert_equal 'x', @to.handle_rdoc_link('rdoc-ref:x')
   end
 
 end

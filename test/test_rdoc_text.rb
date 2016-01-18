@@ -14,13 +14,6 @@ class TestRDocText < RDoc::TestCase
     @top_level = @store.add_file 'file.rb'
   end
 
-  def mu_pp obj
-    s = ''
-    s = PP.pp obj, s
-    s = s.force_encoding Encoding.default_external if defined? Encoding
-    s.chomp
-  end
-
   def test_self_encode_fallback
     skip "Encoding not implemented" unless Object.const_defined? :Encoding
 
@@ -63,6 +56,9 @@ class TestRDocText < RDoc::TestCase
 
     assert_equal('.               .',
                  expand_tabs(".\t\t."), 'dot tab tab dot')
+
+    assert_equal('a       a',
+                 Timeout.timeout(1) {expand_tabs("\ra\ta")}, "carriage return")
   end
 
   def test_expand_tabs_encoding
@@ -153,7 +149,7 @@ The comments associated with
     text = <<-TEXT
 /*
  * we don't worry too much.
- * 
+ *
  * The comments associated with
  */
     TEXT
@@ -171,7 +167,7 @@ The comments associated with
     text = <<-TEXT
 /*
  *  we don't worry too much.
- *  
+ *
  *  The comments associated with
  */
     TEXT
@@ -261,42 +257,31 @@ Examples
     assert_equal RDoc::Markup::Document.new, parse("\n")
   end
 
-#  def test_snippet
-#    text = <<-TEXT
-#This is one-hundred characters or more of text in a single paragraph.  This
-#paragraph will be cut off some point after the one-hundredth character.
-#    TEXT
-#
-#    expected = text.gsub(/\r?\n/, ' ').sub(/ some point.*/, '')
-#
-#    assert_equal expected, snippet(text)
-#  end
-#
-#  def test_snippet_comment
-#    c = comment 'This is a comment'
-#
-#    assert_equal 'This is a comment', snippet(c)
-#  end
-#
-#  def test_snippet_no_space
-#    text = <<-TEXT.strip
-#This is one-hundred characters or more of text in a single paragraph.  This
-#paragraph will not be cut
-#    TEXT
-#
-#    expected = <<-EXPECTED.strip.gsub(/\r?\n/, ' ')
-#This is one-hundred characters or more of text in a single paragraph.  This
-#paragraph will not be cut
-#    EXPECTED
-#
-#    assert_equal expected, snippet(text)
-#  end
-#
-#  def test_snippet_short
-#    text = 'This is a comment'
-#
-#    assert_equal text.dup, snippet(text)
-#  end
+  def test_snippet
+    text = <<-TEXT
+This is one-hundred characters or more of text in a single paragraph.  This
+paragraph will be cut off some point after the one-hundredth character.
+    TEXT
+
+    expected = <<-EXPECTED
+<p>This is one-hundred characters or more of text in a single paragraph.  This
+paragraph will be cut off …
+    EXPECTED
+
+    assert_equal expected, snippet(text)
+  end
+
+  def test_snippet_comment
+    c = comment 'This is a comment'
+
+    assert_equal "<p>This is a comment\n", snippet(c)
+  end
+
+  def test_snippet_short
+    text = 'This is a comment'
+
+    assert_equal "<p>#{text}\n", snippet(text)
+  end
 
   def test_strip_hashes
     text = <<-TEXT
@@ -553,15 +538,19 @@ The comments associated with
   end
 
   def test_to_html_tt_tag_mismatch
-    _, err = capture_io do
+    _, err = verbose_capture_io do
       assert_equal '<tt>hi', to_html('<tt>hi')
     end
 
     assert_equal "mismatched <tt> tag\n", err
   end
 
-  def formatter()
+  def formatter
     RDoc::Markup::ToHtml.new @options
+  end
+
+  def options
+    @options
   end
 
 end
