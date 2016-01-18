@@ -18,6 +18,9 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     @headings[5] = ['##### ',  '']
     @headings[6] = ['###### ', '']
 
+    add_special_RDOCLINK
+    add_special_TIDYLINK
+
     @hard_break = "  \n"
   end
 
@@ -28,6 +31,13 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     add_tag :BOLD, '**', '**'
     add_tag :EM,   '*',  '*'
     add_tag :TT,   '`',  '`'
+  end
+
+  ##
+  # Adds a newline to the output
+
+  def handle_special_HARD_BREAK special
+    "  \n"
   end
 
   ##
@@ -121,6 +131,60 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     end
 
     @res << "\n" unless @res =~ /\n\z/
+  end
+
+  ##
+  # Creates a Markdown-style URL from +url+ with +text+.
+
+  def gen_url url, text
+    scheme, url, = parse_url url
+
+    "[#{text.sub(%r{^#{scheme}:/*}i, '')}](#{url})"
+  end
+
+  ##
+  # Handles <tt>rdoc-</tt> type links for footnotes.
+
+  def handle_rdoc_link url
+    case url
+    when /^rdoc-ref:/ then
+      $'
+    when /^rdoc-label:footmark-(\d+)/ then
+      "[^#{$1}]:"
+    when /^rdoc-label:foottext-(\d+)/ then
+      "[^#{$1}]"
+    when /^rdoc-label:label-/ then
+      gen_url url, $'
+    when /^rdoc-image:/ then
+      "![](#{$'})"
+    when /^rdoc-[a-z]+:/ then
+      $'
+    end
+  end
+
+  ##
+  # Converts the RDoc markup tidylink into a Markdown.style link.
+
+  def handle_special_TIDYLINK special
+    text = special.text
+
+    return text unless text =~ /\{(.*?)\}\[(.*?)\]/ or text =~ /(\S+)\[(.*?)\]/
+
+    label = $1
+    url   = $2
+
+    if url =~ /^rdoc-label:foot/ then
+      handle_rdoc_link url
+    else
+      gen_url url, label
+    end
+  end
+
+  ##
+  # Converts the rdoc-...: links into a Markdown.style links.
+
+  def handle_special_RDOCLINK special
+    handle_rdoc_link special.text
   end
 
 end

@@ -8,11 +8,21 @@ class TestRDocRdBlockParser < RDoc::TestCase
     @block_parser = RDoc::RD::BlockParser.new
   end
 
-  def mu_pp(obj)
-    s = ""
-    s = PP.pp obj, s
-    s = s.force_encoding(Encoding.default_external) if defined? Encoding
-    s.chomp
+  def test_add_footnote
+    index = @block_parser.add_footnote 'context'
+
+    assert_equal 1, index
+
+    expected = [
+      para('{^1}[rdoc-label:footmark-1:foottext-1]', ' ', 'context'),
+      blank_line,
+    ]
+
+    assert_equal expected, @block_parser.footnotes
+
+    index = @block_parser.add_footnote 'other'
+
+    assert_equal 2, index
   end
 
   def test_parse_desclist
@@ -25,9 +35,9 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:NOTE,
-          @RM::ListItem.new("one", @RM::Paragraph.new("desc one")),
-          @RM::ListItem.new("two", @RM::Paragraph.new("desc two"))))
+        list(:NOTE,
+          item("one", para("desc one")),
+          item("two", para("desc two"))))
 
     assert_equal expected, parse(list)
   end
@@ -40,9 +50,9 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:NUMBER,
-          @RM::ListItem.new(nil, @RM::Paragraph.new("one")),
-          @RM::ListItem.new(nil, @RM::Paragraph.new("two"))))
+        list(:NUMBER,
+          item(nil, para("one")),
+          item(nil, para("two"))))
 
     assert_equal expected, parse(list)
   end
@@ -56,10 +66,10 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:NUMBER,
-          @RM::ListItem.new(nil,
-            @RM::Paragraph.new("one"),
-            @RM::Paragraph.new("two"))))
+        list(:NUMBER,
+          item(nil,
+            para("one"),
+            para("two"))))
 
     assert_equal expected, parse(list)
   end
@@ -74,8 +84,8 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:NUMBER,
-          @RM::ListItem.new(nil, @RM::Paragraph.new(*contents))))
+        list(:NUMBER,
+          item(nil, para(*contents))))
 
     assert_equal expected, parse(list)
   end
@@ -88,10 +98,10 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:NUMBER,
-          @RM::ListItem.new(nil,
-            @RM::Paragraph.new("item"),
-            @RM::Verbatim.new("verbatim\n"))))
+        list(:NUMBER,
+          item(nil,
+            para("item"),
+            verb("verbatim\n"))))
 
     assert_equal expected, parse(list)
   end
@@ -105,11 +115,11 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:NUMBER,
-          @RM::ListItem.new(nil,
-            @RM::Paragraph.new("one"),
-            @RM::Verbatim.new("verbatim\n"),
-            @RM::Paragraph.new("two"))))
+        list(:NUMBER,
+          item(nil,
+            para("one"),
+            verb("verbatim\n"),
+            para("two"))))
 
     assert_equal expected, parse(list)
   end
@@ -117,9 +127,10 @@ class TestRDocRdBlockParser < RDoc::TestCase
   def test_parse_footnote
     expected =
       doc(
-        @RM::Paragraph.new("{*1}[rdoc-label:foottext-1:footmark-1]"),
-        @RM::Rule.new(1),
-        @RM::Paragraph.new("{^1}[rdoc-label:footmark-1:foottext-1]", "text"))
+        para("{*1}[rdoc-label:foottext-1:footmark-1]"),
+        rule(1),
+        para("{^1}[rdoc-label:footmark-1:foottext-1]", " ", "text"),
+        blank_line)
 
     assert_equal expected, parse("((-text-))")
   end
@@ -137,12 +148,12 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::BlankLine.new,
-        @RM::Paragraph.new("include <em>worked</em>"),
-        @RM::BlankLine.new,
-        @RM::BlankLine.new)
+        blank_line,
+        para("include <em>worked</em>"),
+        blank_line,
+        blank_line)
 
-    Tempfile.open %w[parse_include .rd] do |io|
+    tf = Tempfile.open %w[parse_include .rd] do |io|
       io.puts "=begin\ninclude ((*worked*))\n=end"
       io.flush
 
@@ -151,16 +162,18 @@ class TestRDocRdBlockParser < RDoc::TestCase
       STR
 
       assert_equal expected, parse(str)
+      io
     end
+    tf.close! if tf.respond_to? :close!
   end
 
   def test_parse_heading
-    assert_equal doc(@RM::Heading.new(1, "H")), parse("= H")
-    assert_equal doc(@RM::Heading.new(2, "H")), parse("== H")
-    assert_equal doc(@RM::Heading.new(3, "H")), parse("=== H")
-    assert_equal doc(@RM::Heading.new(4, "H")), parse("==== H")
-    assert_equal doc(@RM::Heading.new(5, "H")), parse("+ H")
-    assert_equal doc(@RM::Heading.new(6, "H")), parse("++ H")
+    assert_equal doc(head(1, "H")), parse("= H")
+    assert_equal doc(head(2, "H")), parse("== H")
+    assert_equal doc(head(3, "H")), parse("=== H")
+    assert_equal doc(head(4, "H")), parse("==== H")
+    assert_equal doc(head(5, "H")), parse("+ H")
+    assert_equal doc(head(6, "H")), parse("++ H")
   end
 
   def test_parse_itemlist
@@ -171,9 +184,9 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:BULLET,
-          @RM::ListItem.new(nil, @RM::Paragraph.new("one")),
-          @RM::ListItem.new(nil, @RM::Paragraph.new("two"))))
+        list(:BULLET,
+          item(nil, para("one")),
+          item(nil, para("two"))))
 
     assert_equal expected, parse(list)
   end
@@ -188,8 +201,8 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:BULLET,
-          @RM::ListItem.new(nil, @RM::Paragraph.new(*contents))))
+        list(:BULLET,
+          item(nil, para(*contents))))
 
     assert_equal expected, parse(list)
   end
@@ -203,13 +216,13 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:BULLET,
-          @RM::ListItem.new(nil,
-            @RM::Paragraph.new("one"),
-            @RM::List.new(:BULLET,
-              @RM::ListItem.new(nil, @RM::Paragraph.new("inner")))),
-          @RM::ListItem.new(nil,
-            @RM::Paragraph.new("two"))))
+        list(:BULLET,
+          item(nil,
+            para("one"),
+            list(:BULLET,
+              item(nil, para("inner")))),
+          item(nil,
+            para("two"))))
 
     assert_equal expected, parse(list)
   end
@@ -223,10 +236,10 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:BULLET,
-          @RM::ListItem.new(nil,
-            @RM::Paragraph.new("one"),
-            @RM::Paragraph.new("two"))))
+        list(:BULLET,
+          item(nil,
+            para("one"),
+            para("two"))))
 
     assert_equal expected, parse(list)
   end
@@ -239,10 +252,10 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:BULLET,
-          @RM::ListItem.new(nil,
-            @RM::Paragraph.new("item"),
-            @RM::Verbatim.new("verbatim\n"))))
+        list(:BULLET,
+          item(nil,
+            para("item"),
+            verb("verbatim\n"))))
 
     assert_equal expected, parse(list)
   end
@@ -256,11 +269,11 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:BULLET,
-          @RM::ListItem.new(nil,
-            @RM::Paragraph.new("one"),
-            @RM::Verbatim.new("verbatim\n"),
-            @RM::Paragraph.new("two"))))
+        list(:BULLET,
+          item(nil,
+            para("one"),
+            verb("verbatim\n"),
+            para("two"))))
 
     assert_equal expected, parse(list)
   end
@@ -277,15 +290,15 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:NUMBER,
-          @RM::ListItem.new(nil, @RM::Paragraph.new("one")),
-          @RM::ListItem.new(nil, @RM::Paragraph.new("two"))),
-        @RM::List.new(:BULLET,
-          @RM::ListItem.new(nil, @RM::Paragraph.new("three")),
-          @RM::ListItem.new(nil, @RM::Paragraph.new("four"))),
-        @RM::List.new(:NUMBER,
-          @RM::ListItem.new(nil, @RM::Paragraph.new("five")),
-          @RM::ListItem.new(nil, @RM::Paragraph.new("six"))))
+        list(:NUMBER,
+          item(nil, para("one")),
+          item(nil, para("two"))),
+        list(:BULLET,
+          item(nil, para("three")),
+          item(nil, para("four"))),
+        list(:NUMBER,
+          item(nil, para("five")),
+          item(nil, para("six"))))
 
     assert_equal expected, parse(list)
   end
@@ -302,15 +315,15 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:NUMBER,
-          @RM::ListItem.new(nil, @RM::Paragraph.new("one")),
-          @RM::ListItem.new(nil,
-            @RM::Paragraph.new("two"),
-            @RM::List.new(:BULLET,
-              @RM::ListItem.new(nil, @RM::Paragraph.new("three")),
-              @RM::ListItem.new(nil, @RM::Paragraph.new("four")))),
-          @RM::ListItem.new(nil, @RM::Paragraph.new("five")),
-          @RM::ListItem.new(nil, @RM::Paragraph.new("six"))))
+        list(:NUMBER,
+          item(nil, para("one")),
+          item(nil,
+            para("two"),
+            list(:BULLET,
+              item(nil, para("three")),
+              item(nil, para("four")))),
+          item(nil, para("five")),
+          item(nil, para("six"))))
 
     assert_equal expected, parse(list)
   end
@@ -328,16 +341,16 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:NUMBER,
-          @RM::ListItem.new(nil, @RM::Paragraph.new("one")),
-          @RM::ListItem.new(nil,
-            @RM::Paragraph.new("two"),
-            @RM::List.new(:BULLET,
-              @RM::ListItem.new(nil, @RM::Paragraph.new("three")),
-              @RM::ListItem.new(nil, @RM::Paragraph.new("four"))),
-            @RM::Verbatim.new("verbatim\n")),
-          @RM::ListItem.new(nil, @RM::Paragraph.new("five")),
-          @RM::ListItem.new(nil, @RM::Paragraph.new("six"))))
+        list(:NUMBER,
+          item(nil, para("one")),
+          item(nil,
+            para("two"),
+            list(:BULLET,
+              item(nil, para("three")),
+              item(nil, para("four"))),
+            verb("verbatim\n")),
+          item(nil, para("five")),
+          item(nil, para("six"))))
 
     assert_equal expected, parse(list)
   end
@@ -355,16 +368,16 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:NUMBER,
-          @RM::ListItem.new(nil, @RM::Paragraph.new("one")),
-          @RM::ListItem.new(nil,
-            @RM::Paragraph.new("two"),
-            @RM::List.new(:BULLET,
-              @RM::ListItem.new(nil, @RM::Paragraph.new("three")),
-              @RM::ListItem.new(nil, @RM::Paragraph.new("four"))),
-            @RM::Verbatim.new("verbatim\n")),
-          @RM::ListItem.new(nil, @RM::Paragraph.new("five")),
-          @RM::ListItem.new(nil, @RM::Paragraph.new("six"))))
+        list(:NUMBER,
+          item(nil, para("one")),
+          item(nil,
+            para("two"),
+            list(:BULLET,
+              item(nil, para("three")),
+              item(nil, para("four"))),
+            verb("verbatim\n")),
+          item(nil, para("five")),
+          item(nil, para("six"))))
 
     assert_equal expected, parse(list)
   end
@@ -380,13 +393,13 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:LABEL,
-          @RM::ListItem.new(
+        list(:LABEL,
+          item(
             "<tt>Array#each {|i| ... }</tt>",
-            @RM::Paragraph.new("yield block for each item.")),
-          @RM::ListItem.new(
+            para("yield block for each item.")),
+          item(
             "<tt>Array#index(val)</tt>",
-            @RM::Paragraph.new("return index of first item which equals with val. if it hasn't same item, return nil."))))
+            para("return index of first item which equals with val. if it hasn't same item, return nil."))))
 
     assert_equal expected, parse(list)
   end
@@ -399,8 +412,8 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:LABEL,
-          @RM::ListItem.new("<tt>A#b</tt>")))
+        list(:LABEL,
+          item("<tt>A#b</tt>")))
 
     assert_equal expected, parse(list)
   end
@@ -414,10 +427,10 @@ class TestRDocRdBlockParser < RDoc::TestCase
 
     expected =
       doc(
-        @RM::List.new(:LABEL,
-          @RM::ListItem.new(
+        list(:LABEL,
+          item(
             "<tt>A#b</tt>",
-            @RM::Paragraph.new("one"))))
+            para("one"))))
 
     assert_equal expected, parse(list)
   end
@@ -432,11 +445,11 @@ two
 
     expected =
       doc(
-        @RM::List.new(:LABEL,
-          @RM::ListItem.new(
+        list(:LABEL,
+          item(
             "<tt>A#b</tt>",
-            @RM::Paragraph.new("one"))),
-        @RM::Paragraph.new("two"))
+            para("one"))),
+        para("two"))
 
     assert_equal expected, parse(list)
   end
@@ -451,21 +464,21 @@ two
 
     expected =
       doc(
-        @RM::List.new(:LABEL,
-          @RM::ListItem.new(
+        list(:LABEL,
+          item(
             "<tt>A#b</tt>",
-            @RM::Paragraph.new("text"),
-            @RM::Verbatim.new("verbatim\n"))))
+            para("text"),
+            verb("verbatim\n"))))
 
     assert_equal expected, parse(list)
   end
 
   def test_parse_verbatim
-    assert_equal doc(@RM::Verbatim.new("verbatim\n")), parse("  verbatim")
+    assert_equal doc(verb("verbatim\n")), parse("  verbatim")
   end
 
   def test_parse_verbatim_blankline
-    expected = doc(@RM::Verbatim.new("one\n", "\n", "two\n"))
+    expected = doc(verb("one\n", "\n", "two\n"))
 
     verbatim = <<-VERBATIM
   one
@@ -477,7 +490,7 @@ two
   end
 
   def test_parse_verbatim_indent
-    expected = doc(@RM::Verbatim.new("one\n", " two\n"))
+    expected = doc(verb("one\n", " two\n"))
 
     verbatim = <<-VERBATIM
   one
@@ -488,7 +501,7 @@ two
   end
 
   def test_parse_verbatim_multi
-    expected = doc(@RM::Verbatim.new("one\n", "two\n"))
+    expected = doc(verb("one\n", "two\n"))
 
     verbatim = <<-VERBATIM
   one
@@ -499,11 +512,11 @@ two
   end
 
   def test_parse_textblock
-    assert_equal doc(@RM::Paragraph.new("text")), parse("text")
+    assert_equal doc(para("text")), parse("text")
   end
 
   def test_parse_textblock_multi
-    expected = doc(@RM::Paragraph.new("one two"))
+    expected = doc(para("one two"))
 
     assert_equal expected, parse("one\ntwo")
   end
@@ -513,11 +526,10 @@ two
 
     doc = @block_parser.parse text.lines.to_a
 
-    assert_equal @RM::BlankLine.new, doc.parts.shift, "=begin blankline"
-    assert_equal @RM::BlankLine.new, doc.parts.pop, "=end blankline"
+    assert_equal blank_line, doc.parts.shift, "=begin blankline"
+    assert_equal blank_line, doc.parts.pop, "=end blankline"
 
     doc
   end
 
 end
-

@@ -1,4 +1,11 @@
 require 'rubygems'
+
+begin
+  gem 'minitest', '~> 4.0' unless defined?(Test::Unit)
+rescue NoMethodError, Gem::LoadError
+  # for ruby tests
+end
+
 require 'minitest/autorun'
 require 'minitest/benchmark' if ENV['BENCHMARK']
 
@@ -33,6 +40,8 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
 
     @top_level = nil
 
+    @have_encoding = Object.const_defined? :Encoding
+
     @RM = RDoc::Markup
 
     RDoc::Markup::PreProcess.reset
@@ -43,11 +52,33 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
 
     @rdoc = RDoc::RDoc.new
     @rdoc.store = @store
+    @rdoc.options = RDoc::Options.new
 
     g = Object.new
     def g.class_dir() end
     def g.file_dir() end
     @rdoc.generator = g
+  end
+
+  ##
+  # Asserts +path+ is a file
+
+  def assert_file path
+    assert File.file?(path), "#{path} is not a file"
+  end
+
+  ##
+  # Asserts +path+ is a directory
+
+  def assert_directory path
+    assert File.directory?(path), "#{path} is not a directory"
+  end
+
+  ##
+  # Refutes +path+ exists
+
+  def refute_file path
+    refute File.exist?(path), "#{path} exists"
   end
 
   ##
@@ -108,6 +139,16 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
   end
 
   ##
+  # Enables pretty-print output
+
+  def mu_pp obj # :nodoc:
+    s = ''
+    s = PP.pp obj, s
+    s = s.force_encoding Encoding.default_external if defined? Encoding
+    s.chomp
+  end
+
+  ##
   # Shortcut for RDoc::Markup::Paragraph.new with +contents+
 
   def para *a
@@ -151,6 +192,20 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
     @RM::Verbatim.new(*parts)
   end
 
+  ##
+  # run capture_io with setting $VERBOSE = true
+
+  def verbose_capture_io
+    capture_io do
+      begin
+        orig_verbose = $VERBOSE
+        $VERBOSE = true
+        yield
+      ensure
+        $VERBOSE = orig_verbose
+      end
+    end
+  end
 end
 
 # This hack allows autoload to work when Dir.pwd is changed for Ruby 1.8 since

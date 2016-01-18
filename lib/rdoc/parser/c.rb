@@ -123,6 +123,11 @@ class RDoc::Parser::C < RDoc::Parser
   include RDoc::Text
 
   ##
+  # Maps C variable names to names of Ruby classes or modules
+
+  attr_reader :classes
+
+  ##
   # C file the parser is parsing
 
   attr_accessor :content
@@ -134,7 +139,7 @@ class RDoc::Parser::C < RDoc::Parser
   attr_reader :enclosure_dependencies
 
   ##
-  # Maps C variable names to names of ruby classes (and singleton classes)
+  # Maps C variable names to names of Ruby classes (and singleton classes)
 
   attr_reader :known_classes
 
@@ -145,21 +150,31 @@ class RDoc::Parser::C < RDoc::Parser
   attr_reader :missing_dependencies
 
   ##
-  # Maps C variable names to names of ruby singleton classes
+  # Maps C variable names to names of Ruby singleton classes
 
   attr_reader :singleton_classes
 
   ##
-  # Prepare to parse a C file
+  # The TopLevel items in the parsed file belong to
 
-  def initialize(top_level, file_name, content, options, stats)
+  attr_reader :top_level
+
+  ##
+  # Prepares for parsing a C file.  See RDoc::Parser#initialize for details on
+  # the arguments.
+
+  def initialize top_level, file_name, content, options, stats
     super
 
     @known_classes = RDoc::KNOWN_CLASSES.dup
-    @content = handle_tab_width handle_ifdefs_in(@content)
-    @classes = {}
-    @singleton_classes = {}
-    @file_dir = File.dirname(@file_name)
+    @content = handle_tab_width handle_ifdefs_in @content
+    @file_dir = File.dirname @file_name
+
+    @classes           = load_variable_map :c_class_variables
+    @singleton_classes = load_variable_map :c_singleton_class_variables
+
+    # class_variable => { function => [method, ...] }
+    @methods = Hash.new { |h, f| h[f] = Hash.new { |i, m| i[m] = [] } }
 
     # missing variable => [handle_class_module arguments]
     @missing_dependencies = {}
@@ -192,6 +207,47 @@ class RDoc::Parser::C < RDoc::Parser
     def @enclosure_dependencies.tsort_each_child node, &block
       fetch(node, []).each(&block)
     end
+  end
+
+  ##
+  # Removes duplicate call-seq entries for methods using the same
+  # implementation.
+
+  def deduplicate_call_seq
+    @methods.each do |var_name, functions|
+      class_name = @known_classes[var_name]
+      class_obj  = find_class var_name, class_name
+
+      functions.each_value do |method_names|
+        next if method_names.length == 1
+
+        method_names.each do |method_name|
+          deduplicate_method_name class_obj, method_name
+        end
+      end
+    end
+  end
+
+  ##
+  # If two ruby methods share a C implementation (and comment) this
+  # deduplicates the examples in the call_seq for the method to reduce
+  # confusion in the output.
+
+  def deduplicate_method_name class_obj, method_name # :nodoc:
+    return unless
+      method = class_obj.method_list.find { |m| m.name == method_name }
+    return unless call_seq = method.call_seq
+
+    method_name = method_name[0, 1] if method_name =~ /\A\[/
+
+    entries = call_seq.split "\n"
+
+    matching = entries.select do |entry|
+      entry =~ /^\w*\.?#{Regexp.escape method_name}/ or
+        entry =~ /\s#{Regexp.escape method_name}\s/
+    end
+
+    method.call_seq = matching.join "\n"
   end
 
   ##
@@ -386,13 +442,12 @@ class RDoc::Parser::C < RDoc::Parser
 
   def do_includes
     @content.scan(/rb_include_module\s*\(\s*(\w+?),\s*(\w+?)\s*\)/) do |c,m|
-      if cls = @classes[c]
-        m = @known_classes[m] || m
+      next unless cls = @classes[c]
+      m = @known_classes[m] || m
 
-        comment = RDoc::Comment.new '', @top_level
-        incl = cls.add_include RDoc::Include.new(m, comment)
-        incl.record_location @top_level
-      end
+      comment = RDoc::Comment.new '', @top_level
+      incl = cls.add_include RDoc::Include.new(m, comment)
+      incl.record_location @top_level
     end
   end
 
@@ -411,7 +466,7 @@ class RDoc::Parser::C < RDoc::Parser
                    )
                    \s*\(\s*([\w\.]+),
                      \s*"([^"]+)",
-                     \s*(?:RUBY_METHOD_FUNC\(|VALUEFUNC\()?(\w+)\)?,
+                     \s*(?:RUBY_METHOD_FUNC\(|VALUEFUNC\(|\(METHOD\))?(\w+)\)?,
                      \s*(-?\w+)\s*\)
                    (?:;\s*/[*/]\s+in\s+(\w+?\.(?:cpp|c|y)))?
                  %xm) do |type, var_name, meth_name, function, param_count, source_file|
@@ -445,6 +500,10 @@ class RDoc::Parser::C < RDoc::Parser
                     param_count)
     end
   end
+
+  ##
+  # Creates classes and module that were missing were defined due to the file
+  # order being different than the declaration order.
 
   def do_missing
     return if @missing_dependencies.empty?
@@ -535,9 +594,10 @@ class RDoc::Parser::C < RDoc::Parser
                                             \s*#{attr_name}\s*,
                                             #{rw},.*?\)\s*;%xm then
                 $1
-              elsif @content =~ %r%Document-attr:\s#{attr_name}\s*?\n
-                                   ((?>.*?\*/))%xm then
-                $1
+              elsif @content =~ %r%(/\*.*?(?:\s*\*\s*)?)
+                                   Document-attr:\s#{attr_name}\s*?\n
+                                   ((?>(.|\n)*?\*/))%x then
+                "#{$1}\n#{$2}"
               else
                 ''
               end
@@ -551,7 +611,7 @@ class RDoc::Parser::C < RDoc::Parser
   def find_body class_name, meth_name, meth_obj, file_content, quiet = false
     case file_content
     when %r%((?>/\*.*?\*/\s*)?)
-            ((?:(?:static|SWIGINTERN)\s+)?
+            ((?:(?:\w+)\s+)?
              (?:intern\s+)?VALUE\s+#{meth_name}
              \s*(\([^)]*\))([^;]|$))%xm then
       comment = RDoc::Comment.new $1, @top_level
@@ -685,11 +745,11 @@ class RDoc::Parser::C < RDoc::Parser
     elsif @content =~ %r%Document-(?:class|module):\s+#{class_name}\s*?
                          (?:<\s+[:,\w]+)?\n((?>.*?\*/))%xm then
       comment = "/*\n#{$1}"
-    elsif @content =~ %r%.*((?>/\*.*?\*/\s+))
-                         ([\w\.\s]+\s* = \s+)?rb_define_(class|module).*?"(#{class_name})"%xm then
+    elsif @content =~ %r%((?>/\*.*?\*/\s+))
+                         ([\w\.\s]+\s* = \s+)?rb_define_(class|module)[\t (]*?"(#{class_name})"%xm then
       comment = $1
-    elsif @content =~ %r%.*((?>/\*.*?\*/\s+))
-                         ([\w\.\s]+\s* = \s+)?rb_define_(class|module)_under.*?"(#{class_name.split('::').last})"%xm then
+    elsif @content =~ %r%((?>/\*.*?\*/\s+))
+                         ([\w\. \t]+ = \s+)?rb_define_(class|module)_under[\t\w, (]*?"(#{class_name.split('::').last})"%xm then
       comment = $1
     else
       comment = ''
@@ -797,7 +857,7 @@ class RDoc::Parser::C < RDoc::Parser
     parent_name = @known_classes[parent] || parent
 
     if in_module then
-      enclosure = @classes[in_module] || @store.c_enclosure_classes[in_module]
+      enclosure = @classes[in_module] || @store.find_c_enclosure(in_module)
 
       if enclosure.nil? and enclosure = @known_classes[in_module] then
         enc_type = /^rb_m/ =~ in_module ? :module : :class
@@ -844,8 +904,8 @@ class RDoc::Parser::C < RDoc::Parser
     end
 
     @classes[var_name] = cm
-    @store.c_enclosure_classes[var_name] = cm
     @known_classes[var_name] = cm.full_name
+    @store.add_c_enclosure var_name, cm
   end
 
   ##
@@ -923,6 +983,8 @@ class RDoc::Parser::C < RDoc::Parser
     class_name = @known_classes[var_name]
     singleton  = @singleton_classes.key? var_name
 
+    @methods[var_name][function] << meth_name
+
     return unless class_name
 
     class_obj = find_class var_name, class_name
@@ -998,6 +1060,30 @@ class RDoc::Parser::C < RDoc::Parser
     else
       body
     end
+  end
+
+  ##
+  # Loads the variable map with the given +name+ from the RDoc::Store, if
+  # present.
+
+  def load_variable_map map_name
+    return {} unless files = @store.cache[map_name]
+    return {} unless name_map = files[@file_name]
+
+    class_map = {}
+
+    name_map.each do |variable, name|
+      next unless mod = @store.find_class_or_module(name)
+
+      class_map[variable] = if map_name == :c_class_variables then
+                              mod
+                            else
+                              name
+                            end
+      @known_classes[variable] = name
+    end
+
+    class_map
   end
 
   ##
@@ -1100,7 +1186,6 @@ class RDoc::Parser::C < RDoc::Parser
 
     if hash then
       args << "p#{position} = {}"
-      position += 1
     end
 
     args << '&block' if block
@@ -1132,6 +1217,11 @@ class RDoc::Parser::C < RDoc::Parser
     do_includes
     do_aliases
     do_attrs
+
+    deduplicate_call_seq
+
+    @store.add_c_variables self
+
     @top_level
   end
 

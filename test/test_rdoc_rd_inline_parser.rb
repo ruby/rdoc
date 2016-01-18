@@ -26,7 +26,8 @@ class TestRDocRdInlineParser < RDoc::TestCase
     assert_equal '{*1}[rdoc-label:foottext-1:footmark-1]', parse('((-text-))')
 
     expected = [
-      @RM::Paragraph.new('{^1}[rdoc-label:footmark-1:foottext-1]', 'text')
+      @RM::Paragraph.new('{^1}[rdoc-label:footmark-1:foottext-1]', ' ', 'text'),
+      blank_line,
     ]
 
     assert_equal expected, @block_parser.footnotes
@@ -161,6 +162,10 @@ class TestRDocRdInlineParser < RDoc::TestCase
     assert_equal '<tt>text "</tt>', parse("(('text \\\"'))")
   end
 
+  def test_parse_verb_emphasis
+    assert_equal '<tt>((*emphasis*))</tt>', parse("(('((*emphasis*))'))")
+  end
+
   def test_parse_verb_multiple
     assert_equal '<tt>((*text*))</tt>', parse("(('((*text*))'))")
   end
@@ -170,4 +175,3 @@ class TestRDocRdInlineParser < RDoc::TestCase
   end
 
 end
-

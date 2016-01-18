@@ -130,7 +130,7 @@ class RDoc::Markup::AttributeManager
     # first do matching ones
     tags = @matching_word_pairs.keys.join("")
 
-    re = /(^|\W)([#{tags}])([#:\\]?[\w.\/-]+?\S?)\2(\W|$)/
+    re = /(^|\W)([#{tags}])([#\\]?[\w:.\/-]+?\S?)\2(\W|$)/
 
     1 while str.gsub!(re) do
       attr = @matching_word_pairs[$2]
@@ -168,15 +168,13 @@ class RDoc::Markup::AttributeManager
   # Converts special sequences to RDoc attributes
 
   def convert_specials str, attrs
-    unless @special.empty?
-      @special.each do |regexp, attribute|
-        str.scan(regexp) do
-          capture = $~.size == 1 ? 0 : 1
+    @special.each do |regexp, attribute|
+      str.scan(regexp) do
+        capture = $~.size == 1 ? 0 : 1
 
-          s, e = $~.offset capture
+        s, e = $~.offset capture
 
-          attrs.set_attrs s, e - s, attribute | @attributes.special
-        end
+        attrs.set_attrs s, e - s, attribute | @attributes.special
       end
     end
   end
@@ -188,8 +186,9 @@ class RDoc::Markup::AttributeManager
     # protect __send__, __FILE__, etc.
     @str.gsub!(/__([a-z]+)__/i,
       "_#{PROTECT_ATTR}_#{PROTECT_ATTR}\\1_#{PROTECT_ATTR}_#{PROTECT_ATTR}")
-    @str.gsub!(/\\([#{Regexp.escape @protectable.join('')}])/,
-               "\\1#{PROTECT_ATTR}")
+    @str.gsub!(/(\A|[^\\])\\([#{Regexp.escape @protectable.join}])/m,
+               "\\1\\2#{PROTECT_ATTR}")
+    @str.gsub!(/\\(\\[#{Regexp.escape @protectable.join}])/m, "\\1")
   end
 
   ##
