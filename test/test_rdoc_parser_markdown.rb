@@ -19,7 +19,7 @@ class TestRDocParserMarkdown < RDoc::TestCase
   def teardown
     super
 
-    @tempfile.close
+    @tempfile.close!
   end
 
   def test_file
@@ -27,11 +27,17 @@ class TestRDocParserMarkdown < RDoc::TestCase
   end
 
   def test_class_can_parse
-    assert_equal @RP::Markdown, @RP.can_parse('foo.md')
-    assert_equal @RP::Markdown, @RP.can_parse('foo.md.ja')
+    temp_dir do
+      FileUtils.touch 'foo.md'
+      assert_equal @RP::Markdown, @RP.can_parse('foo.md')
+      FileUtils.touch 'foo.md.ja'
+      assert_equal @RP::Markdown, @RP.can_parse('foo.md.ja')
 
-    assert_equal @RP::Markdown, @RP.can_parse('foo.markdown')
-    assert_equal @RP::Markdown, @RP.can_parse('foo.markdown.ja')
+      FileUtils.touch 'foo.markdown'
+      assert_equal @RP::Markdown, @RP.can_parse('foo.markdown')
+      FileUtils.touch 'foo.markdown.ja'
+      assert_equal @RP::Markdown, @RP.can_parse('foo.markdown.ja')
+    end
   end
 
   def test_scan

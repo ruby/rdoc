@@ -1,7 +1,8 @@
 ##
 # A heading with a level (1-6) and text
 
-class RDoc::Markup::Heading < Struct.new :level, :text
+RDoc::Markup::Heading =
+  Struct.new :level, :text do
 
   @to_html = nil
   @to_label = nil
@@ -44,6 +45,19 @@ class RDoc::Markup::Heading < Struct.new :level, :text
 
   def aref
     "label-#{self.class.to_label.convert text.dup}"
+  end
+
+  ##
+  # Creates a fully-qualified label which will include the label from
+  # +context+.  This helps keep ids unique in HTML.
+
+  def label context = nil
+    label = aref
+
+    label = [context.aref, label].compact.join '-' if
+      context and context.respond_to? :aref
+
+    label
   end
 
   ##

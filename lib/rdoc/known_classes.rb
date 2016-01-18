@@ -59,9 +59,9 @@ module RDoc
     "rb_eZeroDivError"     => "ZeroDivError",
 
     "rb_mComparable"       => "Comparable",
-    "rb_mDL"               => "DL",
     "rb_mEnumerable"       => "Enumerable",
     "rb_mErrno"            => "Errno",
+    "rb_mFConst"           => "File::Constants",
     "rb_mFileTest"         => "FileTest",
     "rb_mGC"               => "GC",
     "rb_mKernel"           => "Kernel",

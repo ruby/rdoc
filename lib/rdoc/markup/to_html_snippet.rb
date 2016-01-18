@@ -129,6 +129,14 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
   end
 
   ##
+  # +special+ is a <code><br></code>
+
+  def handle_special_HARD_BREAK special
+    @characters -= 4
+    '<br>'
+  end
+
+  ##
   # Lists are paragraphs, but notes and labels have a separator
 
   def list_item_start list_item, list_type

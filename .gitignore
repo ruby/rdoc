@@ -1,7 +1,8 @@
 *.rbc
 *.swp
 .DS_Store
-.rvmrc
+/.rdoc
+/.rvmrc
 /TAGS
 /doc
 /lib/rdoc/rd/block_parser.rb

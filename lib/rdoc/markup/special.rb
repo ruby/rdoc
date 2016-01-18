@@ -33,7 +33,7 @@ class RDoc::Markup::Special
   end
 
   def to_s # :nodoc:
-    "Special: type=#{type}, name=#{RDoc::Markup::Attribute.as_string type}, text=#{text.dump}"
+    "Special: type=#{type} text=#{text.dump}"
   end
 
 end

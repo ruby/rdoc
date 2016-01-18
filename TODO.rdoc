@@ -45,3 +45,15 @@ API changes to RDoc
   * Rename TopLevel to File
   * Rename Context to Container
   * Rename NormalClass to Class
+
+=== Accessibility
+
+Page title in right hand side
+
+Table of contents in left hand side as sub-list under main heading
+
+For class list, never method list, method summary at top
+
+table-of-contents-navigation div => nav + role="navigation"
+
+type "mod", focus is still on "mod"

@@ -19,7 +19,7 @@ class TestRDocParserRd < RDoc::TestCase
   def teardown
     super
 
-    @tempfile.close
+    @tempfile.close!
   end
 
   def test_file
@@ -27,16 +27,19 @@ class TestRDocParserRd < RDoc::TestCase
   end
 
   def test_class_can_parse
-    assert_equal @RP::RD, @RP.can_parse('foo.rd')
-    assert_equal @RP::RD, @RP.can_parse('foo.rd.ja')
+    temp_dir do
+      FileUtils.touch 'foo.rd'
+      assert_equal @RP::RD, @RP.can_parse('foo.rd')
+
+      FileUtils.touch 'foo.rd.ja'
+      assert_equal @RP::RD, @RP.can_parse('foo.rd.ja')
+    end
   end
 
   def test_scan
     parser = util_parser 'it ((*really*)) works'
 
-    expected =
-      @RM::Document.new(
-        @RM::Paragraph.new('it <em>really</em> works'))
+    expected = doc(para('it <em>really</em> works'))
     expected.file = @top_level
 
     parser.scan

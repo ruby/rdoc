@@ -18,7 +18,6 @@ PARSER_FILES = %w[
 Hoe.plugin :git
 Hoe.plugin :kpeg
 Hoe.plugin :minitest
-Hoe.plugin :rdoc_tags
 Hoe.plugin :travis
 
 $rdoc_rakefile = true
@@ -47,10 +46,13 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   self.history_file = 'History.rdoc'
   self.testlib = :minitest
   self.extra_rdoc_files += %w[
-    DEVELOPERS.rdoc
+    CVE-2013-0256.rdoc
+    CONTRIBUTING.rdoc
+    ExampleMarkdown.md
+    ExampleRDoc.rdoc
     History.rdoc
-    LICENSE.rdoc
     LEGAL.rdoc
+    LICENSE.rdoc
     README.rdoc
     RI.rdoc
     TODO.rdoc
@@ -61,13 +63,48 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
 
   require_ruby_version '>= 1.8.7'
   extra_deps     << ['json',     '~> 1.4']
-  extra_dev_deps << ['racc',     '~> 1.4']
-  extra_dev_deps << ['minitest', '~> 2']
-  extra_dev_deps << ['ZenTest',  '~> 4']
+  extra_dev_deps << ['racc',     '~> 1.4', '> 1.4.10']
+  extra_dev_deps << ['minitest', '~> 4']
 
   extra_rdoc_files << 'Rakefile'
   spec_extras['required_rubygems_version'] = '>= 1.3'
   spec_extras['homepage'] = 'http://docs.seattlerb.org/rdoc'
+end
+
+hoe.test_prelude = 'gem "minitest", "~> 4.0"'
+
+def rake(*args)
+  sh $0, *args
+end
+
+need_racc = PARSER_FILES.any? do |rb_file|
+  ry_file = rb_file.gsub(/\.rb\z/, ".ry")
+  not File.exist?(rb_file) or
+    (File.exist?(ry_file) and File.mtime(rb_file) < File.mtime(ry_file))
+end
+
+if need_racc
+  Rake::Task["default"].prerequisites.clear
+  task :default do
+    rake "check_extra_deps"
+    rake "install_plugins"
+    rake "newb"
+  end
+end
+
+Rake::Task['docs'].actions.clear
+task :docs do
+  $LOAD_PATH.unshift 'lib'
+  require 'rdoc'
+
+  options = RDoc::Options.new
+  options.title = "rdoc #{RDoc::VERSION} Documentation"
+  options.op_dir = 'doc'
+  options.main_page = 'README.rdoc'
+  options.files = hoe.spec.extra_rdoc_files + %w[lib]
+  options.setup_generator 'darkfish'
+
+  RDoc::RDoc.new.document options
 end
 
 # requires ruby 1.8 and ruby 1.8 to build
@@ -75,6 +112,7 @@ hoe.clean_globs -= PARSER_FILES.grep(/literals_/)
 
 task :generate => :isolate
 task :generate => PARSER_FILES
+task :check_manifest => :generate
 
 rule '.rb' => '.ry' do |t|
   racc = Gem.bin_path 'racc', 'racc'
@@ -102,7 +140,7 @@ task "#{path}.gem" => package_parser_files
 # RUBINIUS_PATH.
 
 diff_options = "-urpN --exclude '*svn*' --exclude '*swp' --exclude '*rbc'"
-rsync_options = "-avP --exclude '*svn*' --exclude '*swp' --exclude '*rbc' --exclude '*.rej' --exclude '*.orig'"
+rsync_options = "-avP --exclude '*svn*' --exclude '*swp' --exclude '*rbc' --exclude '*.rej' --exclude '*.orig' --exclude '*.kpeg' --exclude '*.ry' --exclude 'literals_1_8.rb' --exclude 'gauntlet_rdoc.rb'"
 
 rubinius_dir = ENV['RUBINIUS_PATH'] || '../../../git/git.rubini.us/code'
 ruby_dir = ENV['RUBY_PATH'] || '../../svn/ruby/trunk'

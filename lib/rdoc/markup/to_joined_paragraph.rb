@@ -12,11 +12,14 @@ class RDoc::Markup::ToJoinedParagraph < RDoc::Markup::Formatter
     super nil
   end
 
-  def start_accepting
+  def start_accepting # :nodoc:
   end
 
-  def end_accepting
+  def end_accepting # :nodoc:
   end
+
+  ##
+  # Converts the parts of +paragraph+ to a single entry.
 
   def accept_paragraph paragraph
     parts = []
@@ -44,7 +47,7 @@ class RDoc::Markup::ToJoinedParagraph < RDoc::Markup::Formatter
       end
     end
 
-    # TODO use Enumerable#chunk when ruby 1.8 support is dropped
+    # TODO use Enumerable#chunk when Ruby 1.8 support is dropped
     #parts = paragraph.parts.chunk do |part|
     #  String === part
     #end.map do |string, chunk|

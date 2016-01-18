@@ -13,13 +13,6 @@ class TestRDocContextSection < RDoc::TestCase
     @s = @S.new @klass, 'section', comment('# comment', @top_level)
   end
 
-  def mu_pp obj
-    s = ''
-    s = PP.pp obj, s
-    s.force_encoding Encoding.default_external if defined? Encoding
-    s.chomp
-  end
-
   def test_add_comment
     file1 = @store.add_file 'file1.rb'
 
@@ -126,7 +119,7 @@ class TestRDocContextSection < RDoc::TestCase
   end
 
   def test_sequence
-    _, err = capture_io do
+    _, err = verbose_capture_io do
       assert_match(/\ASEC\d{5}\Z/, @s.sequence)
     end
 

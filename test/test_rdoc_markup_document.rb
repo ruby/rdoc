@@ -8,13 +8,6 @@ class TestRDocMarkupDocument < RDoc::TestCase
     @d = @RM::Document.new
   end
 
-  def mu_pp obj
-    s = ''
-    s = PP.pp obj, s
-    s.force_encoding Encoding.default_external if defined? Encoding
-    s.chomp
-  end
-
   def test_append
     @d << @RM::Paragraph.new('hi')
 
@@ -189,6 +182,25 @@ class TestRDocMarkupDocument < RDoc::TestCase
     ]
 
     assert_equal expected, doc.table_of_contents
+  end
+
+  def test_table_of_contents_omit_headings_below
+    document = doc(
+      head(1, 'A'),
+      para('B'),
+      head(2, 'C'),
+      para('D'),
+      head(1, 'E'),
+      para('F'))
+
+    document.omit_headings_below = 1
+
+    expected = [
+      head(1, 'A'),
+      head(1, 'E'),
+    ]
+
+    assert_equal expected, document.table_of_contents
   end
 
 end

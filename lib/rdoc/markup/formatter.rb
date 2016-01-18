@@ -18,6 +18,30 @@ class RDoc::Markup::Formatter
   InlineTag = Struct.new(:bit, :on, :off)
 
   ##
+  # Converts a target url to one that is relative to a given path
+
+  def self.gen_relative_url path, target
+    from        = File.dirname path
+    to, to_file = File.split target
+
+    from = from.split "/"
+    to   = to.split "/"
+
+    from.delete '.'
+    to.delete '.'
+
+    while from.size > 0 and to.size > 0 and from[0] == to[0] do
+      from.shift
+      to.shift
+    end
+
+    from.fill ".."
+    from.concat to
+    from << to_file
+    File.join(*from)
+  end
+
+  ##
   # Creates a new Formatter
 
   def initialize options, markup = nil
@@ -35,6 +59,7 @@ class RDoc::Markup::Formatter
     @tt_bit = @attributes.bitmap_for :TT
 
     @hard_break = ''
+    @from_path = '.'
   end
 
   ##
@@ -42,8 +67,33 @@ class RDoc::Markup::Formatter
 
   def accept_document document
     document.parts.each do |item|
-      item.accept self
+      case item
+      when RDoc::Markup::Document then # HACK
+        accept_document item
+      else
+        item.accept self
+      end
     end
+  end
+
+  ##
+  # Adds a special for links of the form rdoc-...:
+
+  def add_special_RDOCLINK
+    @markup.add_special(/rdoc-[a-z]+:[^\s\]]+/, :RDOCLINK)
+  end
+
+  ##
+  # Adds a special for links of the form {<text>}[<url>] and <word>[<url>]
+
+  def add_special_TIDYLINK
+    @markup.add_special(/(?:
+                          \{.*?\} |    # multi-word label
+                          \b[^\s{}]+? # single-word label
+                         )
+
+                         \[\S+?\]     # link target
+                        /x, :TIDYLINK)
   end
 
   ##
@@ -109,7 +159,11 @@ class RDoc::Markup::Formatter
       end
     end
 
-    raise "Unhandled special: #{special}" unless handled
+    unless handled then
+      special_name = @attributes.as_string special.type
+
+      raise RDoc::Error, "Unhandled special #{special_name}: #{special}"
+    end
 
     special.text
   end
@@ -129,7 +183,7 @@ class RDoc::Markup::Formatter
   #
   #   alias accept_raw ignore
 
-  def ignore node
+  def ignore *node
   end
 
   ##
@@ -167,6 +221,36 @@ class RDoc::Markup::Formatter
         res << annotate(tag.off)
       end
     end
+  end
+
+  ##
+  # Extracts and a scheme, url and an anchor id from +url+ and returns them.
+
+  def parse_url url
+    case url
+    when /^rdoc-label:([^:]*)(?::(.*))?/ then
+      scheme = 'link'
+      path   = "##{$1}"
+      id     = " id=\"#{$2}\"" if $2
+    when /([A-Za-z]+):(.*)/ then
+      scheme = $1.downcase
+      path   = $2
+    when /^#/ then
+    else
+      scheme = 'http'
+      path   = url
+      url    = url
+    end
+
+    if scheme == 'link' then
+      url = if path[0, 1] == '#' then # is this meaningful?
+              path
+            else
+              self.class.gen_relative_url @from_path, path
+            end
+    end
+
+    [scheme, url, id]
   end
 
   ##

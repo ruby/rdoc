@@ -31,7 +31,7 @@ class RDoc::ClassModule < RDoc::Context
   ##
   # Comment and the location it came from.  Use #add_comment to add comments
 
-  attr_reader :comment_location
+  attr_accessor :comment_location
 
   attr_accessor :diagram # :nodoc:
 
@@ -134,6 +134,9 @@ class RDoc::ClassModule < RDoc::Context
               else
                 normalize_comment comment
               end
+
+    @comment_location.delete_if { |(_, l)| l == location }
+
     @comment_location << [comment, location]
 
     self.comment = original
@@ -166,13 +169,25 @@ class RDoc::ClassModule < RDoc::Context
     includes.map { |i| i.module }.reverse
   end
 
+  def aref_prefix # :nodoc:
+    raise NotImplementedError, "missing aref_prefix for #{self.class}"
+  end
+
+  ##
+  # HTML fragment reference for this module or class.  See
+  # RDoc::NormalClass#aref and RDoc::NormalModule#aref
+
+  def aref
+    "#{aref_prefix}-#{full_name}"
+  end
+
   ##
   # Ancestors of this class or module only
 
   alias direct_ancestors ancestors
 
   ##
-  # Clears the comment. Used by the ruby parser.
+  # Clears the comment. Used by the Ruby parser.
 
   def clear_comment
     @comment = ''
@@ -184,7 +199,7 @@ class RDoc::ClassModule < RDoc::Context
   # Appends +comment+ to the current comment, but separated by a rule.  Works
   # more like <tt>+=</tt>.
 
-  def comment= comment
+  def comment= comment # :nodoc:
     comment = case comment
               when RDoc::Comment then
                 comment.normalize
@@ -217,6 +232,16 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
+  # Does this class or module have a comment with content or is
+  # #received_nodoc true?
+
+  def documented?
+    return true if @received_nodoc
+    return false if @comment_location.empty?
+    @comment_location.any? { |comment, _| not comment.empty? }
+  end
+
+  ##
   # Iterates the ancestors of this class or module for which an
   # RDoc::ClassModule exists.
 
@@ -225,6 +250,7 @@ class RDoc::ClassModule < RDoc::Context
 
     ancestors.each do |mod|
       next if String === mod
+      next if self == mod
       yield mod
     end
   end
@@ -270,16 +296,18 @@ class RDoc::ClassModule < RDoc::Context
 
   def marshal_dump # :nodoc:
     attrs = attributes.sort.map do |attr|
+      next unless attr.display?
       [ attr.name, attr.rw,
         attr.visibility, attr.singleton, attr.file_name,
       ]
-    end
+    end.compact
 
     method_types = methods_by_type.map do |type, visibilities|
       visibilities = visibilities.map do |visibility, methods|
         method_names = methods.map do |method|
+          next unless method.display?
           [method.name, method.file_name]
-        end
+        end.compact
 
         [visibility, method_names.uniq]
       end
@@ -293,17 +321,19 @@ class RDoc::ClassModule < RDoc::Context
       @superclass,
       parse(@comment_location),
       attrs,
-      constants,
+      constants.select { |constant| constant.display? },
       includes.map do |incl|
+        next unless incl.display?
         [incl.name, parse(incl.comment), incl.file_name]
-      end,
+      end.compact,
       method_types,
       extends.map do |ext|
+        next unless ext.display?
         [ext.name, parse(ext.comment), ext.file_name]
-      end,
+      end.compact,
       @sections.values,
       @in_files.map do |tl|
-        tl.absolute_name
+        tl.relative_name
       end,
       parent.full_name,
       parent.class,
@@ -311,6 +341,7 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   def marshal_load array # :nodoc:
+    initialize_visibility
     initialize_methods_etc
     @current_section   = nil
     @document_self     = true
@@ -574,7 +605,7 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
-  # Path to this class or module
+  # Path to this class or module for use with HTML generator output.
 
   def path
     http_url @store.rdoc.generator.class_dir

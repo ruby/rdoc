@@ -2,6 +2,7 @@ require 'rdoc'
 
 require 'find'
 require 'fileutils'
+require 'pathname'
 require 'time'
 
 ##
@@ -216,7 +217,7 @@ option)
       end unless @options.force_output
     else
       FileUtils.mkdir_p dir
-      FileUtils.touch output_flag_file dir
+      FileUtils.touch flag_file
     end
 
     last
@@ -288,6 +289,7 @@ option)
     file_list = []
 
     relative_files.each do |rel_file_name|
+      next if rel_file_name.end_with? 'created.rid'
       next if exclude_pattern && exclude_pattern =~ rel_file_name
       stat = File.stat rel_file_name rescue next
 
@@ -302,6 +304,9 @@ option)
         end
       when "directory" then
         next if rel_file_name == "CVS" || rel_file_name == ".svn"
+
+        created_rid = File.join rel_file_name, "created.rid"
+        next if File.file? created_rid
 
         dot_doc = File.join rel_file_name, RDoc::DOT_DOC_FILENAME
 
@@ -334,18 +339,33 @@ option)
   # Parses +filename+ and returns an RDoc::TopLevel
 
   def parse_file filename
-    if defined?(Encoding) then
+    if Object.const_defined? :Encoding then
       encoding = @options.encoding
       filename = filename.encode encoding
     end
 
     @stats.add_file filename
 
+    return if RDoc::Parser.binary? filename
+
     content = RDoc::Encoding.read_file filename, encoding
 
     return unless content
 
-    top_level = @store.add_file filename
+    filename_path = Pathname(filename).expand_path
+    begin
+      relative_path = filename_path.relative_path_from @options.root
+    rescue ArgumentError
+      relative_path = filename_path
+    end
+
+    if @options.page_dir and
+       relative_path.to_s.start_with? @options.page_dir.to_s then
+      relative_path =
+        relative_path.relative_path_from @options.page_dir
+    end
+
+    top_level = @store.add_file filename, relative_path.to_s
 
     parser = RDoc::Parser.for top_level, filename, content, @options, @stats
 
@@ -360,6 +380,14 @@ option)
 
     top_level
 
+  rescue Errno::EACCES => e
+    $stderr.puts <<-EOF
+Unable to read #{filename}, #{e.message}
+
+Please check the permissions for this file.  Perhaps you do not have access to
+it or perhaps the original author's permissions are to restrictive.  If the
+this is not your library please report a bug to the author.
+    EOF
   rescue => e
     $stderr.puts <<-EOF
 Before reporting this, could you check that the file you're documenting
@@ -389,8 +417,6 @@ The internal error was:
     @stats = RDoc::Stats.new @store, file_list.length, @options.verbosity
 
     return [] if file_list.empty?
-
-    file_info = []
 
     @stats.begin_adding
 
@@ -458,8 +484,11 @@ The internal error was:
     @store.dry_run  = @options.dry_run
     @store.main     = @options.main_page
     @store.title    = @options.title
+    @store.path     = @options.op_dir
 
     @start_time = Time.now
+
+    @store.load_cache
 
     file_info = parse_files @options.files
 
@@ -472,7 +501,7 @@ The internal error was:
     if @options.coverage_report then
       puts
 
-      puts @stats.report
+      puts @stats.report.accept RDoc::Markup::ToRdoc.new
     elsif file_info.empty? then
       $stderr.puts "\nNo newer files." unless @options.quiet
     else
@@ -485,7 +514,7 @@ The internal error was:
 
     if @stats and (@options.coverage_report or not @options.quiet) then
       puts
-      puts @stats.summary
+      puts @stats.summary.accept RDoc::Markup::ToRdoc.new
     end
 
     exit @stats.fully_documented? if @options.coverage_report
@@ -541,4 +570,5 @@ end
 # require built-in generators after discovery in case they've been replaced
 require 'rdoc/generator/darkfish'
 require 'rdoc/generator/ri'
+require 'rdoc/generator/pot'
 

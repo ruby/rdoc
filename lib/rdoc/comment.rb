@@ -118,9 +118,6 @@ class RDoc::Comment
       seq.gsub!(/^\s*/, '')
       method.call_seq = seq
     end
-    #elsif @text.sub!(/\A\/\*\s*call-seq:(.*?)\*\/\Z/, '') then
-    #  method.call_seq = $1.strip
-    #end
 
     method
   end
@@ -148,7 +145,7 @@ class RDoc::Comment
   end
 
   def inspect # :nodoc:
-    location = @location ? @location.absolute_name : '(unknown)'
+    location = @location ? @location.relative_name : '(unknown)'
 
     "#<%s:%x %s %p>" % [self.class, object_id, location, @text]
   end

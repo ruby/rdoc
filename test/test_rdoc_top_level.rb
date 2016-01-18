@@ -9,6 +9,20 @@ class TestRDocTopLevel < XrefTestCase
     @top_level.parser = RDoc::Parser::Ruby
   end
 
+  def test_initialize
+    t = RDoc::TopLevel.new 'path/file.rb'
+
+    assert_equal 'path/file.rb', t.absolute_name
+    assert_equal 'path/file.rb', t.relative_name
+  end
+
+  def test_initialize_relative
+    t = RDoc::TopLevel.new 'path/file.rb', 'file.rb'
+
+    assert_equal 'path/file.rb', t.absolute_name
+    assert_equal 'file.rb',      t.relative_name
+  end
+
   def test_add_alias
     a = RDoc::Alias.new nil, 'old', 'new', nil
     @top_level.add_alias a
@@ -191,6 +205,8 @@ class TestRDocTopLevel < XrefTestCase
     assert_equal RDoc::Parser::Simple, loaded.parser
 
     assert_equal comment, loaded.comment
+
+    assert loaded.display?
   end
 
   def test_name
@@ -200,13 +216,27 @@ class TestRDocTopLevel < XrefTestCase
   def test_page_name
     assert_equal 'top_level', @top_level.page_name
 
-    tl = @store.add_file 'README.ja.rdoc'
+    tl = @store.add_file 'README.ja'
 
     assert_equal 'README.ja', tl.page_name
 
     tl = @store.add_file 'Rakefile'
 
     assert_equal 'Rakefile', tl.page_name
+  end
+
+  def test_page_name_trim_extension
+    tl = @store.add_file 'README.ja.rdoc'
+
+    assert_equal 'README.ja', tl.page_name
+
+    tl = @store.add_file 'README.ja.md'
+
+    assert_equal 'README.ja', tl.page_name
+
+    tl = @store.add_file 'README.txt'
+
+    assert_equal 'README', tl.page_name
   end
 
   def test_search_record

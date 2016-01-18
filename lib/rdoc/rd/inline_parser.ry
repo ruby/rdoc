@@ -293,7 +293,7 @@ class InlineParser
     ;
 
     verb : VERB_OPEN verb_strings VERB_CLOSE {
-      result = "<tt>#{val[1]}</tt>"
+      result = inline "<tt>#{val[1]}</tt>", val[1]
     }
     ;
 
