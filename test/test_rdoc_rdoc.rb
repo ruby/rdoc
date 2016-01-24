@@ -14,19 +14,22 @@ class TestRDocRDoc < RDoc::TestCase
 
   def test_document # functional test
     options = RDoc::Options.new
-    options.files = [File.expand_path('../xref_data.rb')]
+    options.files = [File.expand_path('../xref_data.rb', __FILE__)]
     options.setup_generator 'ri'
     options.main_page = 'MAIN_PAGE.rdoc'
+    options.root      = Pathname File.expand_path('..', __FILE__)
     options.title     = 'title'
 
     rdoc = RDoc::RDoc.new
 
     temp_dir do
+      options.op_dir = 'ri'
+
       capture_io do
         rdoc.document options
       end
 
-      assert File.directory? 'doc'
+      assert File.directory? 'ri'
       assert_equal rdoc, rdoc.store.rdoc
     end
 
@@ -105,7 +108,13 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_normalized_file_list
-    files = @rdoc.normalized_file_list [__FILE__]
+    files = temp_dir do |dir|
+      flag_file = @rdoc.output_flag_file dir
+
+      FileUtils.touch flag_file
+
+      @rdoc.normalized_file_list [__FILE__, flag_file]
+    end
 
     files = files.map { |file| File.expand_path file }
 
@@ -123,13 +132,14 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_normalized_file_list_non_file_directory
-    skip '/dev/stdin is not a character special' unless
-      File.chardev? '/dev/stdin'
+    dev = defined?(File::NULL) ? File::NULL : '/dev/stdin'
+    skip "#{dev} is not a character special" unless
+      File.chardev? dev
 
     files = nil
 
-    out, err = capture_io do
-      files = @rdoc.normalized_file_list %w[/dev/stdin]
+    out, err = verbose_capture_io do
+      files = @rdoc.normalized_file_list [dev]
     end
 
     files = files.map { |file| File.expand_path file }
@@ -137,8 +147,104 @@ class TestRDocRDoc < RDoc::TestCase
     assert_empty files
 
     assert_empty out
-    assert_match %r%^rdoc can't parse%, err
-    assert_match %r%/dev/stdin$%,       err
+    assert_match %r"^rdoc can't parse", err
+    assert_match %r"#{dev}$",           err
+  end
+
+  def test_parse_file
+    @rdoc.store = RDoc::Store.new
+
+    temp_dir do |dir|
+      @rdoc.options.root = Pathname(Dir.pwd)
+
+      open 'test.txt', 'w' do |io|
+        io.puts 'hi'
+      end
+
+      top_level = @rdoc.parse_file 'test.txt'
+
+      assert_equal 'test.txt', top_level.absolute_name
+      assert_equal 'test.txt', top_level.relative_name
+    end
+  end
+
+  def test_parse_file_binary
+    @rdoc.store = RDoc::Store.new
+
+    root = File.dirname __FILE__
+
+    @rdoc.options.root = Pathname root
+
+    out, err = capture_io do
+      Dir.chdir root do
+        assert_nil @rdoc.parse_file 'binary.dat'
+      end
+    end
+
+    assert_empty out
+    assert_empty err
+  end
+
+  def test_parse_file_include_root
+    @rdoc.store = RDoc::Store.new
+
+    top_level = nil
+    temp_dir do |dir|
+      @rdoc.options.parse %W[--root #{File.dirname(__FILE__)}]
+
+      open 'include.txt', 'w' do |io|
+        io.puts ':include: test.txt'
+      end
+
+      out, err = capture_io do
+        top_level = @rdoc.parse_file 'include.txt'
+      end
+      assert_empty out
+      assert_empty err
+    end
+    assert_equal "test file", top_level.comment.text
+  end
+
+  def test_parse_file_page_dir
+    @rdoc.store = RDoc::Store.new
+
+    temp_dir do |dir|
+      FileUtils.mkdir 'pages'
+      @rdoc.options.page_dir = Pathname('pages')
+      @rdoc.options.root = Pathname(Dir.pwd)
+
+      open 'pages/test.txt', 'w' do |io|
+        io.puts 'hi'
+      end
+
+      top_level = @rdoc.parse_file 'pages/test.txt'
+
+      assert_equal 'pages/test.txt', top_level.absolute_name
+      assert_equal 'test.txt',       top_level.relative_name
+    end
+  end
+
+  def test_parse_file_relative
+    pwd = Dir.pwd
+
+    @rdoc.store = RDoc::Store.new
+
+    temp_dir do |dir|
+      @rdoc.options.root = Pathname(dir)
+
+      open 'test.txt', 'w' do |io|
+        io.puts 'hi'
+      end
+
+      test_txt = File.join dir, 'test.txt'
+
+      Dir.chdir pwd do
+        top_level = @rdoc.parse_file test_txt
+
+        assert_equal test_txt,   top_level.absolute_name
+        assert_equal 'test.txt', top_level.relative_name
+      end
+    end
   end
 
   def test_parse_file_encoding
@@ -146,14 +252,45 @@ class TestRDocRDoc < RDoc::TestCase
     @rdoc.options.encoding = Encoding::ISO_8859_1
     @rdoc.store = RDoc::Store.new
 
-    Tempfile.open 'test.txt' do |io|
+    tf = Tempfile.open 'test.txt' do |io|
       io.write 'hi'
       io.rewind
 
       top_level = @rdoc.parse_file io.path
 
       assert_equal Encoding::ISO_8859_1, top_level.absolute_name.encoding
+      io
     end
+    tf.close! if tf.respond_to? :close!
+  end
+
+  def test_parse_file_forbidden
+    skip 'chmod not supported' if Gem.win_platform?
+
+    @rdoc.store = RDoc::Store.new
+
+    tf = Tempfile.open 'test.txt' do |io|
+      io.write 'hi'
+      io.rewind
+
+      File.chmod 0000, io.path
+
+      begin
+        top_level = :bug
+
+        _, err = capture_io do
+          top_level = @rdoc.parse_file io.path
+        end
+
+        assert_match "Unable to read #{io.path},", err
+
+        assert_nil top_level
+      ensure
+        File.chmod 0400, io.path
+      end
+      io
+    end
+    tf.close! if tf.respond_to? :close!
   end
 
   def test_remove_unparseable
@@ -171,7 +308,7 @@ class TestRDocRDoc < RDoc::TestCase
 
   def test_remove_unparseable_tags_emacs
     temp_dir do
-      open 'TAGS', 'w' do |io| # emacs
+      open 'TAGS', 'wb' do |io| # emacs
         io.write "\f\nlib/foo.rb,43\n"
       end
 
@@ -249,7 +386,7 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_setup_output_dir_exists_file
-    Tempfile.open 'test_rdoc_rdoc' do |tempfile|
+    tf = Tempfile.open 'test_rdoc_rdoc' do |tempfile|
       path = tempfile.path
 
       e = assert_raises RDoc::Error do
@@ -258,7 +395,9 @@ class TestRDocRDoc < RDoc::TestCase
 
       assert_match(%r%#{Regexp.escape path} exists and is not a directory%,
                    e.message)
+      tempfile
     end
+    tf.close! if tf.respond_to? :close!
   end
 
   def test_setup_output_dir_exists_not_rdoc
@@ -297,5 +436,20 @@ class TestRDocRDoc < RDoc::TestCase
     end
   end
 
+  def test_normalized_file_list_removes_created_rid_dir
+    temp_dir do |d|
+      FileUtils.mkdir "doc"
+      flag_file = @rdoc.output_flag_file "doc"
+      file = File.join "doc", "test"
+      FileUtils.touch flag_file
+      FileUtils.touch file
+
+      file_list = ["doc"]
+
+      output = @rdoc.normalized_file_list file_list
+
+      assert_empty output
+    end
+  end
 end
 

@@ -86,7 +86,7 @@ class RDoc::Markup::FormatterTestCase < RDoc::TestCase
   # Call to add the visitor tests to your test case
 
   def self.add_visitor_tests
-    self.class_eval do
+    class_eval do
 
       ##
       # Calls start_accepting which needs to verify startup state
@@ -119,6 +119,16 @@ class RDoc::Markup::FormatterTestCase < RDoc::TestCase
         accept_blank_line
       end
 
+      ##
+      # Calls accept_block_quote
+
+      def test_accept_block_quote
+        @to.start_accepting
+
+        @to.accept_block_quote block para 'quote'
+
+        accept_block_quote
+      end
       ##
       # Test case that calls <tt>@to.accept_document</tt>
 
@@ -231,6 +241,18 @@ class RDoc::Markup::FormatterTestCase < RDoc::TestCase
         @to.accept_paragraph @RM::Paragraph.new('reg <b>bold words</b> reg')
 
         accept_paragraph_b
+      end
+
+      ##
+      # Calls accept_paragraph_br with a RDoc::Markup::Paragraph containing
+      # a \<br>
+
+      def test_accept_paragraph_br
+        @to.start_accepting
+
+        @to.accept_paragraph para 'one<br>two'
+
+        accept_paragraph_br
       end
 
       ##
@@ -738,7 +760,6 @@ class RDoc::Markup::FormatterTestCase < RDoc::TestCase
 
         list_verbatim
       end
-
     end
   end
 

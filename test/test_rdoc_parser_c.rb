@@ -40,12 +40,6 @@ assert call-seq correct
 
 =end
 
-class RDoc::Parser::C
-  attr_accessor :classes
-
-  public :do_classes, :do_constants
-end
-
 class TestRDocParserC < RDoc::TestCase
 
   def setup
@@ -64,23 +58,77 @@ class TestRDocParserC < RDoc::TestCase
   def teardown
     super
 
-    @tempfile.close
+    @tempfile.close!
   end
 
   def test_class_can_parse
     c_parser = RDoc::Parser::C
 
-    assert_equal c_parser, c_parser.can_parse('file.C')
-    assert_equal c_parser, c_parser.can_parse('file.CC')
-    assert_equal c_parser, c_parser.can_parse('file.H')
-    assert_equal c_parser, c_parser.can_parse('file.HH')
-    assert_equal c_parser, c_parser.can_parse('file.c')
-    assert_equal c_parser, c_parser.can_parse('file.cc')
-    assert_equal c_parser, c_parser.can_parse('file.cpp')
-    assert_equal c_parser, c_parser.can_parse('file.cxx')
-    assert_equal c_parser, c_parser.can_parse('file.h')
-    assert_equal c_parser, c_parser.can_parse('file.hh')
-    assert_equal c_parser, c_parser.can_parse('file.y')
+    temp_dir do
+      FileUtils.touch 'file.C'
+      assert_equal c_parser, c_parser.can_parse('file.C')
+
+      FileUtils.touch 'file.CC'
+      assert_equal c_parser, c_parser.can_parse('file.CC')
+
+      FileUtils.touch 'file.H'
+      assert_equal c_parser, c_parser.can_parse('file.H')
+
+      FileUtils.touch 'file.HH'
+      assert_equal c_parser, c_parser.can_parse('file.HH')
+
+      FileUtils.touch 'file.c'
+      assert_equal c_parser, c_parser.can_parse('file.c')
+
+      FileUtils.touch 'file.cc'
+      assert_equal c_parser, c_parser.can_parse('file.cc')
+
+      FileUtils.touch 'file.cpp'
+      assert_equal c_parser, c_parser.can_parse('file.cpp')
+
+      FileUtils.touch 'file.cxx'
+      assert_equal c_parser, c_parser.can_parse('file.cxx')
+
+      FileUtils.touch 'file.h'
+      assert_equal c_parser, c_parser.can_parse('file.h')
+
+      FileUtils.touch 'file.hh'
+      assert_equal c_parser, c_parser.can_parse('file.hh')
+
+      FileUtils.touch 'file.y'
+      assert_equal c_parser, c_parser.can_parse('file.y')
+    end
+  end
+
+  def test_initialize
+    some_ext        = @top_level.add_class RDoc::NormalClass, 'SomeExt'
+                      @top_level.add_class RDoc::SingleClass, 'SomeExtSingle'
+
+    @store.cache[:c_class_variables] = {
+      @fn => { 'cSomeExt' => 'SomeExt' }
+    }
+
+    @store.cache[:c_singleton_class_variables] = {
+      @fn => { 'cSomeExtSingle' => 'SomeExtSingle' }
+    }
+
+    parser = RDoc::Parser::C.new @top_level, @fn, '', @options, @stats
+
+    expected = { 'cSomeExt' => some_ext }
+    assert_equal expected, parser.classes
+
+    expected = { 'cSomeExtSingle' => 'SomeExtSingle' }
+    assert_equal expected, parser.singleton_classes
+
+    expected = {
+      'cSomeExt'       => 'SomeExt',
+      'cSomeExtSingle' => 'SomeExtSingle',
+    }
+    known_classes = parser.known_classes.delete_if do |key, _|
+      RDoc::KNOWN_CLASSES.keys.include? key
+    end
+
+    assert_equal expected, known_classes
   end
 
   def test_do_attr_rb_attr
@@ -244,7 +292,7 @@ void Init_Blah(void) {
 }
     EOF
 
-    _, err = capture_io do
+    _, err = verbose_capture_io do
       refute util_get_class(content, 'cDate')
     end
 
@@ -486,12 +534,8 @@ void Init_curses(){
   def test_do_constants_file
     content = <<-EOF
 void Init_File(void) {
-  rb_cFile = rb_define_class("File", rb_cIO);
-  rb_mFConst = rb_define_module_under(rb_cFile, "Constants");
-  rb_include_module(rb_cIO, rb_mFConst);
-
   /*  Document-const: LOCK_SH
-   * 
+   *
    *  Shared lock
    */
   rb_file_const("LOCK_SH", INT2FIX(LOCK_SH));
@@ -549,7 +593,7 @@ void Init_Blah(void) {
 
     klass = nil
 
-    _, err = capture_io do
+    _, err = verbose_capture_io do
       klass = util_get_class content, 'cDate'
     end
 
@@ -571,7 +615,7 @@ void Init_Blah(void) {
 
     klass = nil
 
-    _, err = capture_io do
+    _, err = verbose_capture_io do
       klass = util_get_class content, 'cDate'
     end
 
@@ -593,7 +637,7 @@ void Init_Blah(void) {
 
     klass = nil
 
-    _, err = capture_io do
+    _, err = verbose_capture_io do
       klass = util_get_class content, 'cDate'
     end
 
@@ -659,7 +703,7 @@ void Init_Blah(void) {
     parser.missing_dependencies['y'] = ['y', :class, 'Y', 'Object', 'z']
     parser.missing_dependencies['z'] = ['z', :class, 'Z', 'Object', 'y']
 
-    _, err = capture_io do
+    _, err = verbose_capture_io do
       parser.do_missing
     end
 
@@ -690,6 +734,47 @@ rb_define_alias(C, "[]", "index");
     comment = parser.find_alias_comment 'C', '[]', 'index'
 
     assert_equal "/*\n * comment\n */\n\n", comment.text
+  end
+
+  def test_find_attr_comment_document_attr
+    parser= util_parser <<-C
+/*
+ * Document-attr: y
+ * comment
+ */
+    C
+
+    comment = parser.find_attr_comment nil, 'y'
+
+    assert_equal "/*\n * \n * comment\n */", comment.text
+  end
+
+  def test_find_attr_comment_document_attr_oneline
+    parser= util_parser <<-C
+/* Document-attr: y
+ * comment
+ */
+    C
+
+    comment = parser.find_attr_comment nil, 'y'
+
+    assert_equal "/* \n * comment\n */", comment.text
+  end
+
+  def test_find_attr_comment_document_attr_overlap
+    parser= util_parser <<-C
+/* Document-attr: x
+ * comment
+ */
+
+/* Document-attr: y
+ * comment
+ */
+    C
+
+    comment = parser.find_attr_comment nil, 'y'
+
+    assert_equal "/* \n * comment\n */", comment.text
   end
 
   def test_find_class_comment
@@ -952,6 +1037,36 @@ init_gi_repository (void)
     assert_equal 2, klass.method_list.length
   end
 
+  def test_find_body_cast
+    content = <<-EOF
+/*
+ * a comment for other_function
+ */
+VALUE
+other_function() {
+}
+
+void
+Init_Foo(void) {
+    VALUE foo = rb_define_class("Foo", rb_cObject);
+
+    rb_define_method(foo, "my_method", (METHOD)other_function, 0);
+}
+    EOF
+
+    klass = util_get_class content, 'foo'
+    other_function = klass.method_list.first
+
+    assert_equal 'my_method', other_function.name
+    assert_equal "a comment for other_function",
+                 other_function.comment.text
+    assert_equal '()', other_function.params
+
+    code = other_function.token_stream.first.text
+
+    assert_equal "VALUE\nother_function() {\n}", code
+  end
+
   def test_find_body_define
     content = <<-EOF
 #define something something_else
@@ -1129,6 +1244,36 @@ Init_Foo(void) {
     bar = methods.last
     assert_equal 'Foo#bar', bar.full_name
     assert_equal "a comment for Foo#bar", bar.comment.text
+  end
+
+  def test_find_body_macro
+    content = <<-EOF
+/*
+ * a comment for other_function
+ */
+DLL_LOCAL VALUE
+other_function() {
+}
+
+void
+Init_Foo(void) {
+    VALUE foo = rb_define_class("Foo", rb_cObject);
+
+    rb_define_method(foo, "my_method", other_function, 0);
+}
+    EOF
+
+    klass = util_get_class content, 'foo'
+    other_function = klass.method_list.first
+
+    assert_equal 'my_method', other_function.name
+    assert_equal "a comment for other_function",
+                 other_function.comment.text
+    assert_equal '()', other_function.params
+
+    code = other_function.token_stream.first.text
+
+    assert_equal "DLL_LOCAL VALUE\nother_function() {\n}", code
   end
 
   def test_find_modifiers_call_seq
@@ -1315,6 +1460,81 @@ void Init_Blah(void) {
 
     assert_equal "# :other: not_handled\n", comment.text
     assert_equal 'not_handled', @top_level.metadata['other']
+  end
+
+  def test_load_variable_map
+    some_ext = @top_level.add_class RDoc::NormalClass, 'SomeExt'
+               @top_level.add_class RDoc::NormalClass, 'OtherExt'
+
+    @store.cache[:c_class_variables][@fn]       = { 'cSomeExt'  => 'SomeExt'  }
+    @store.cache[:c_class_variables]['other.c'] = { 'cOtherExt' => 'OtherExt' }
+
+    parser = util_parser
+
+    map = parser.load_variable_map :c_class_variables
+
+    expected = { 'cSomeExt' => some_ext }
+
+    assert_equal expected, map
+
+    assert_equal 'SomeExt', parser.known_classes['cSomeExt']
+    assert_nil              parser.known_classes['cOtherExt']
+  end
+
+  def test_load_variable_map_empty
+    parser = util_parser
+
+    map = parser.load_variable_map :c_class_variables
+
+    assert_empty map
+  end
+
+  def test_load_variable_map_legacy
+    @store.cache[:c_class_variables] = nil
+
+    parser = util_parser
+
+    map = parser.load_variable_map :c_class_variables
+
+    assert_empty map
+  end
+
+  def test_load_variable_map_singleton
+    @top_level.add_class RDoc::NormalClass, 'SomeExt'
+    @top_level.add_class RDoc::NormalClass, 'OtherExt'
+
+    @store.cache[:c_singleton_class_variables][@fn] =
+      { 'cSomeExt'  => 'SomeExt'  }
+    @store.cache[:c_singleton_class_variables]['other.c'] =
+      { 'cOtherExt' => 'OtherExt' }
+
+    parser = util_parser
+
+    map = parser.load_variable_map :c_singleton_class_variables
+
+    expected = { 'cSomeExt' => 'SomeExt' }
+
+    assert_equal expected, map
+
+    assert_equal 'SomeExt', parser.known_classes['cSomeExt']
+    assert_nil              parser.known_classes['cOtherExt']
+  end
+
+  def test_load_variable_map_trim
+    a = @top_level.add_class RDoc::NormalClass, 'A'
+
+    @store.cache[:c_class_variables][@fn] = {
+      'cA'  => 'A',
+      'cB'  => 'B',
+    }
+
+    parser = util_parser
+
+    map = parser.load_variable_map :c_class_variables
+
+    expected = { 'cA' => a }
+
+    assert_equal expected, map
   end
 
   def test_define_method
@@ -1521,6 +1741,119 @@ Init_IO(void) {
                  parser.rb_scan_args('rb_scan_args(a, b, ":&",)')
     assert_equal '(*args, p2 = {}, &block)',
                  parser.rb_scan_args('rb_scan_args(a, b, "*:&",)')
+  end
+
+  def test_scan
+    parser = util_parser <<-C
+void Init(void) {
+    mM = rb_define_module("M");
+    cC = rb_define_class("C", rb_cObject);
+    sC = rb_singleton_class(cC);
+}
+    C
+
+    parser.scan
+
+    expected = {
+      @fn => {
+        'mM' => 'M',
+        'cC' => 'C', }}
+    assert_equal expected, @store.c_class_variables
+
+    expected = {
+      @fn => {
+        'sC' => 'C' } }
+    assert_equal expected, @store.c_singleton_class_variables
+  end
+
+  def test_scan_method_copy
+    parser = util_parser <<-C
+/*
+ *  call-seq:
+ *    pathname.to_s    -> string
+ *    pathname.to_path -> string
+ *
+ *  Return the path as a String.
+ *
+ *  to_path is implemented so Pathname objects are usable with File.open, etc.
+ */
+static VALUE
+path_to_s(VALUE self) { }
+
+/*
+ *  call-seq:
+ *     str[index]               -> new_str or nil
+ *     str[start, length]       -> new_str or nil
+ *     str.slice(index)         -> new_str or nil
+ *     str.slice(start, length) -> new_str or nil
+ */
+static VALUE
+path_aref_m(int argc, VALUE *argv, VALUE str) { }
+
+/*
+ *  call-seq:
+ *     string <=> other_string   -> -1, 0, +1 or nil
+ */
+static VALUE
+path_cmp_m(VALUE str1, VALUE str2) { }
+
+/*
+ *  call-seq:
+ *     str == obj    -> true or false
+ *     str === obj   -> true or false
+ */
+VALUE
+rb_str_equal(VALUE str1, VALUE str2) { }
+
+Init_pathname()
+{
+    rb_cPathname = rb_define_class("Pathname", rb_cObject);
+
+    rb_define_method(rb_cPathname, "to_s",    path_to_s, 0);
+    rb_define_method(rb_cPathname, "to_path", path_to_s, 0);
+    rb_define_method(rb_cPathname, "[]",      path_aref_m, -1);
+    rb_define_method(rb_cPathname, "slice",   path_aref_m, -1);
+    rb_define_method(rb_cPathname, "<=>",     path_cmp_m, 1);
+    rb_define_method(rb_cPathname, "==",      rb_str_equal), 2);
+    rb_define_method(rb_cPathname, "===",     rb_str_equal), 2);
+}
+    C
+
+    parser.scan
+
+    pathname = @store.classes_hash['Pathname']
+
+    to_path = pathname.method_list.find { |m| m.name == 'to_path' }
+    assert_equal "pathname.to_path -> string", to_path.call_seq
+
+    to_s = pathname.method_list.find { |m| m.name == 'to_s' }
+    assert_equal "pathname.to_s    -> string", to_s.call_seq
+
+    index_expected = <<-EXPECTED.chomp
+str[index]               -> new_str or nil
+str[start, length]       -> new_str or nil
+    EXPECTED
+
+    index = pathname.method_list.find { |m| m.name == '[]' }
+    assert_equal index_expected, index.call_seq, '[]'
+
+    slice_expected = <<-EXPECTED.chomp
+str.slice(index)         -> new_str or nil
+str.slice(start, length) -> new_str or nil
+    EXPECTED
+
+    slice = pathname.method_list.find { |m| m.name == 'slice' }
+    assert_equal slice_expected, slice.call_seq
+
+    spaceship = pathname.method_list.find { |m| m.name == '<=>' }
+    assert_equal "string <=> other_string   -> -1, 0, +1 or nil",
+                 spaceship.call_seq
+
+    equals2 = pathname.method_list.find { |m| m.name == '==' }
+    assert_match 'str == obj', equals2.call_seq
+
+    equals3 = pathname.method_list.find { |m| m.name == '===' }
+    assert_match 'str === obj', equals3.call_seq
   end
 
   def test_scan_order_dependent

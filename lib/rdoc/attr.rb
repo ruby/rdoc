@@ -106,7 +106,7 @@ class RDoc::Attr < RDoc::MethodAttr
       @visibility,
       parse(@comment),
       singleton,
-      @file.absolute_name,
+      @file.relative_name,
       @parent.full_name,
       @parent.class,
       @section.title
@@ -121,6 +121,8 @@ class RDoc::Attr < RDoc::MethodAttr
   # * #parent_name
 
   def marshal_load array
+    initialize_visibility
+
     @aliases      = []
     @parent       = nil
     @parent_name  = nil

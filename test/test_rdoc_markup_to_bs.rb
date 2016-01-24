@@ -15,6 +15,10 @@ class TestRDocMarkupToBs < RDoc::Markup::TextFormatterTestCase
     assert_equal "\n", @to.res.join
   end
 
+  def accept_block_quote
+    assert_equal "> quote\n", @to.res.join
+  end
+
   def accept_document
     assert_equal "hello\n", @to.res.join
   end
@@ -262,6 +266,11 @@ class TestRDocMarkupToBs < RDoc::Markup::TextFormatterTestCase
     skip "No String#chars, upgrade your ruby" unless ''.respond_to? :chars
     assert_equal "reg b\bbo\bol\bld\bd \b w\bwo\bor\brd\bds\bs reg\n",
                  @to.end_accepting
+  end
+
+  def accept_paragraph_br
+    skip "No String#chars, upgrade your ruby" unless ''.respond_to? :chars
+    assert_equal "one\ntwo\n", @to.end_accepting
   end
 
   def accept_paragraph_break

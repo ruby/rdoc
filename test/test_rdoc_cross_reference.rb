@@ -16,6 +16,15 @@ class TestRDocCrossReference < XrefTestCase
     assert_equal name, @xref.resolve(name, name)
   end
 
+  def test_METHOD_REGEXP_STR
+    re = /#{RDoc::CrossReference::METHOD_REGEXP_STR}/
+
+    %w'=== [] []= << >>'.each do |x|
+      re =~ x
+      assert_equal x, $&
+    end
+  end
+
   def test_resolve_C2
     @xref = RDoc::CrossReference.new @c2
 
@@ -127,6 +136,13 @@ class TestRDocCrossReference < XrefTestCase
     assert_ref @c2_c3_m, '::C2::C3#m'
     assert_ref @c2_c3_m, '::C2::C3#m()'
     assert_ref @c2_c3_m, '::C2::C3#m(*)'
+  end
+
+  def test_resolve_method_equals3
+    m = RDoc::AnyMethod.new '', '==='
+    @c1.add_method m
+
+    assert_ref m, '==='
   end
 
   def test_resolve_page

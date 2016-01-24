@@ -70,7 +70,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   def handle_special_CROSSREF(special)
     name = special.text
 
-    return name if name =~ /@[\w_-]+\.[\w_-]/ # labels that look like emails
+    return name if name =~ /@[\w-]+\.[\w-]/ # labels that look like emails
 
     unless @hyperlink_all then
       # This ensures that words entirely consisting of lowercase letters will
@@ -145,6 +145,9 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
       if path =~ /#/ then
         path << "-label-#{label}"
+      elsif ref.sections and
+            ref.sections.any? { |section| label == section.title } then
+        path << "##{label}"
       else
         path << "#label-#{label}"
       end if label

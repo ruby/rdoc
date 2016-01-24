@@ -24,6 +24,13 @@ class RDoc::Markup::ToTtOnly < RDoc::Markup::Formatter
   end
 
   ##
+  # Adds tts from +block_quote+ to the output
+
+  def accept_block_quote block_quote
+    tt_sections block_quote.text
+  end
+
+  ##
   # Pops the list type for +list+ from #list_type
 
   def accept_list_end list

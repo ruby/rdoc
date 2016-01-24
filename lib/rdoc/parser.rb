@@ -1,3 +1,5 @@
+# -*- coding: us-ascii -*-
+
 ##
 # A parser is simple a class that subclasses RDoc::Parser and implements #scan
 # to fill in an RDoc::TopLevel with parsed data.
@@ -44,6 +46,11 @@ class RDoc::Parser
   end
 
   ##
+  # The name of the file being parsed
+
+  attr_reader :file_name
+
+  ##
   # Alias an extension to another extension. After this call, files ending
   # "new_ext" will be parsed using the same parser as "old_ext"
 
@@ -51,7 +58,7 @@ class RDoc::Parser
     old_ext = old_ext.sub(/^\.(.*)/, '\1')
     new_ext = new_ext.sub(/^\.(.*)/, '\1')
 
-    parser = can_parse "xxx.#{old_ext}"
+    parser = can_parse_by_name "xxx.#{old_ext}"
     return false unless parser
 
     RDoc::Parser.parsers.unshift [/\.#{new_ext}$/, parser]
@@ -70,14 +77,14 @@ class RDoc::Parser
 
     have_encoding = s.respond_to? :encoding
 
-    if have_encoding then
-      return false if s.encoding != Encoding::ASCII_8BIT and s.valid_encoding?
-    end
-
     return true if s[0, 2] == Marshal.dump('')[0, 2] or s.index("\x00")
 
     if have_encoding then
-      s.force_encoding Encoding.default_external
+      mode = "r"
+      s.sub!(/\A#!.*\n/, '')     # assume shebang line isn't longer than 1024.
+      encoding = s[/^\s*\#\s*(?:-\*-\s*)?(?:en)?coding:\s*([^\s;]+?)(?:-\*-|[\s;])/, 1]
+      mode = "rb:#{encoding}" if encoding
+      s = File.open(file, mode) {|f| f.gets(nil, 1024)}
 
       not s.valid_encoding?
     else
@@ -124,23 +131,65 @@ class RDoc::Parser
     zip_signature == "PK\x03\x04" or
       zip_signature == "PK\x05\x06" or
       zip_signature == "PK\x07\x08"
+  rescue
+    false
   end
 
   ##
   # Return a parser that can handle a particular extension
 
-  def self.can_parse(file_name)
-    parser = RDoc::Parser.parsers.find { |regexp,| regexp =~ file_name }.last
+  def self.can_parse file_name
+    parser = can_parse_by_name file_name
 
     # HACK Selenium hides a jar file using a .txt extension
     return if parser == RDoc::Parser::Simple and zip? file_name
 
+    parser
+  end
+
+  ##
+  # Returns a parser that can handle the extension for +file_name+.  This does
+  # not depend upon the file being readable.
+
+  def self.can_parse_by_name file_name
+    _, parser = RDoc::Parser.parsers.find { |regexp,| regexp =~ file_name }
+
     # The default parser must not parse binary files
     ext_name = File.extname file_name
     return parser if ext_name.empty?
-    return if parser == RDoc::Parser::Simple and ext_name !~ /txt|rdoc/
+
+    if parser == RDoc::Parser::Simple and ext_name !~ /txt|rdoc/ then
+      case check_modeline file_name
+      when nil, 'rdoc' then # continue
+      else return nil
+      end
+    end
 
     parser
+  rescue Errno::EACCES
+  end
+
+  ##
+  # Returns the file type from the modeline in +file_name+
+
+  def self.check_modeline file_name
+    line = open file_name do |io|
+      io.gets
+    end
+
+    /-\*-\s*(.*?\S)\s*-\*-/ =~ line
+
+    return nil unless type = $1
+
+    if /;/ =~ type then
+      return nil unless /(?:\s|\A)mode:\s*([^\s;]+)/i =~ type
+      type = $1
+    end
+
+    return nil if /coding:/i =~ type
+
+    type.downcase
+  rescue ArgumentError # invalid byte sequence, etc.
   end
 
   ##
@@ -153,21 +202,27 @@ class RDoc::Parser
     parser = use_markup content
 
     unless parser then
+      parse_name = file_name
+
       # If no extension, look for shebang
       if file_name !~ /\.\w+$/ && content =~ %r{\A#!(.+)} then
         shebang = $1
         case shebang
         when %r{env\s+ruby}, %r{/ruby}
-          file_name = "dummy.rb"
+          parse_name = 'dummy.rb'
         end
       end
 
-      parser = can_parse file_name
+      parser = can_parse parse_name
     end
 
     return unless parser
 
+    content = remove_modeline content
+
     parser.new top_level, file_name, content, options, stats
+  rescue SystemCallError
+    nil
   end
 
   ##
@@ -177,6 +232,13 @@ class RDoc::Parser
 
   def self.parse_files_matching(regexp)
     RDoc::Parser.parsers.unshift [regexp, self]
+  end
+
+  ##
+  # Removes an emacs-style modeline from the first line of the document
+
+  def self.remove_modeline content
+    content.sub(/\A.*-\*-\s*(.*?\S)\s*-\*-.*\r?\n/, '')
   end
 
   ##
@@ -206,9 +268,11 @@ class RDoc::Parser
 
     markup = Regexp.escape markup
 
-    RDoc::Parser.parsers.find do |_, parser|
+    _, selected = RDoc::Parser.parsers.find do |_, parser|
       /^#{markup}$/i =~ parser.name.sub(/.*:/, '')
-    end.last
+    end
+
+    selected
   end
 
   ##
@@ -239,6 +303,7 @@ end
 # simple must come first in order to show up last in the parsers list
 require 'rdoc/parser/simple'
 require 'rdoc/parser/c'
+require 'rdoc/parser/changelog'
 require 'rdoc/parser/markdown'
 require 'rdoc/parser/rd'
 require 'rdoc/parser/ruby'

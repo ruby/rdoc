@@ -16,10 +16,16 @@ class TestRDocRIDriver < RDoc::TestCase
     ENV['HOME'] = @tmpdir
     ENV.delete 'RI'
 
-    @options = RDoc::RI::Driver.process_args []
-    @options[:home] = @tmpdir
+    @options = RDoc::RI::Driver.default_options
+    @options[:use_system] = false
+    @options[:use_site]   = false
+    @options[:use_home]   = false
+    @options[:use_gems]   = false
+
+    @options[:home]       = @tmpdir
     @options[:use_stdout] = true
-    @options[:formatter] = @RM::ToRdoc
+    @options[:formatter]  = @RM::ToRdoc
+
     @driver = RDoc::RI::Driver.new @options
   end
 
@@ -38,13 +44,6 @@ class TestRDocRIDriver < RDoc::TestCase
     yield
   ensure
     ENV['RI_PAGER'] = pager_env
-  end
-
-  def mu_pp(obj)
-    s = ''
-    s = PP.pp obj, s
-    s = s.force_encoding(Encoding.default_external) if defined? Encoding
-    s.chomp
   end
 
   def test_self_dump
@@ -220,6 +219,119 @@ class TestRDocRIDriver < RDoc::TestCase
     assert_equal expected, out
   end
 
+  def test_add_method
+    util_store
+
+    out = doc
+
+    @driver.add_method out, 'Foo::Bar#blah'
+
+    expected =
+      doc(
+        head(1, 'Foo::Bar#blah'),
+        blank_line,
+        para('(from ~/.rdoc)'),
+        head(3, 'Implementation from Bar'),
+        rule(1),
+        verb("blah(5) => 5\n",
+             "blah(6) => 6\n"),
+        rule(1),
+        blank_line,
+        blank_line)
+
+    assert_equal expected, out
+  end
+
+  def test_add_method_attribute
+    util_store
+
+    out = doc
+
+    @driver.add_method out, 'Foo::Bar#attr'
+
+    expected =
+      doc(
+        head(1, 'Foo::Bar#attr'),
+        blank_line,
+        para('(from ~/.rdoc)'),
+        rule(1),
+        blank_line,
+        blank_line)
+
+    assert_equal expected, out
+  end
+
+  def test_add_method_inherited
+    util_multi_store
+
+    out = doc
+
+    @driver.add_method out, 'Bar#inherit'
+
+    expected =
+      doc(
+        head(1, 'Bar#inherit'),
+        blank_line,
+        para('(from ~/.rdoc)'),
+        head(3, 'Implementation from Foo'),
+        rule(1),
+        blank_line,
+        blank_line)
+
+    assert_equal expected, out
+  end
+
+  def test_add_method_overriden
+    util_multi_store
+
+    out = doc
+
+    @driver.add_method out, 'Bar#override'
+
+    expected =
+      doc(
+        head(1, 'Bar#override'),
+        blank_line,
+        para("(from #{@store2.path})"),
+        rule(1),
+        blank_line,
+        para('must be displayed'),
+        blank_line,
+        blank_line)
+
+    assert_equal expected, out
+  end
+
+  def test_add_method_documentation
+    util_store
+
+    out = doc()
+
+    missing = RDoc::AnyMethod.new nil, 'missing'
+    @cFoo.add_method missing
+
+    @driver.add_method_documentation out, @cFoo
+
+    expected =
+      doc(
+        head(1, 'Foo#inherit'),
+        blank_line,
+        para('(from ~/.rdoc)'),
+        rule(1),
+        blank_line,
+        blank_line,
+        head(1, 'Foo#override'),
+        blank_line,
+        para('(from ~/.rdoc)'),
+        rule(1),
+        blank_line,
+        para('must not be displayed in Bar#override'),
+        blank_line,
+        blank_line)
+
+    assert_equal expected, out
+  end
+
   def test_add_method_list
     out = @RM::Document.new
 
@@ -273,13 +385,20 @@ class TestRDocRIDriver < RDoc::TestCase
       'Ambiguous' => [@store1, @store2],
       'Bar'       => [@store2],
       'Ext'       => [@store1],
-      'Foo'       => [@store1],
+      'Foo'       => [@store1, @store2],
       'Foo::Bar'  => [@store1],
       'Foo::Baz'  => [@store1, @store2],
       'Inc'       => [@store1],
     }
 
-    assert_equal expected, @driver.classes
+    classes = @driver.classes
+
+    assert_equal expected.keys.sort, classes.keys.sort
+
+    expected.each do |klass, stores|
+      assert_equal stores, classes[klass].sort_by { |store| store.path },
+                   "mismatch for #{klass}"
+    end
   end
 
   def test_class_document
@@ -412,6 +531,32 @@ class TestRDocRIDriver < RDoc::TestCase
     assert_match %r%^  attr_accessor attr%, out
 
     assert_equal 1, out.scan(/-\n/).length
+
+    refute_match %r%Foo::Bar#blah%, out
+  end
+
+  def test_display_class_all
+    util_store
+
+    @driver.show_all = true
+
+    out, = capture_io do
+      @driver.display_class 'Foo::Bar'
+    end
+
+    assert_match %r%^= Foo::Bar%, out
+    assert_match %r%^\(from%, out
+
+    assert_match %r%^= Class methods:%, out
+    assert_match %r%^  new%, out
+    assert_match %r%^= Instance methods:%, out
+    assert_match %r%^  blah%, out
+    assert_match %r%^= Attributes:%, out
+    assert_match %r%^  attr_accessor attr%, out
+
+    assert_equal 6, out.scan(/-\n/).length
+
+    assert_match %r%Foo::Bar#blah%, out
   end
 
   def test_display_class_ambiguous
@@ -544,6 +689,14 @@ Foo::Bar#bother
     assert_equal expected, out
   end
 
+  def test_display_name_not_found_special
+    util_store
+
+    assert_raises RDoc::RI::Driver::NotFoundError do
+      assert_equal false, @driver.display_name('Set#[]')
+    end
+  end
+
   def test_display_method_params
     util_store
 
@@ -593,6 +746,59 @@ Foo::Bar#bother
     assert_match %r%= README pages in ~/\.rdoc%, out
     assert_match %r%README\.rdoc%,               out
     assert_match %r%README\.md%,                 out
+  end
+
+  def test_display_page_extension
+    util_store
+
+    other = @store1.add_file 'README.EXT'
+    other.parser = RDoc::Parser::Simple
+    other.comment =
+      doc(
+        head(1, 'README.EXT'),
+        para('This is the other README'))
+
+    @store1.save_page other
+
+    out, = capture_io do
+      @driver.display_page 'home:README.EXT'
+    end
+
+    assert_match 'other README', out
+  end
+
+  def test_display_page_ignore_directory
+    util_store
+
+    other = @store1.add_file 'doc/globals.rdoc'
+    other.parser = RDoc::Parser::Simple
+    other.comment =
+      doc(
+        head(1, 'globals.rdoc'),
+        para('Globals go here'))
+
+    @store1.save_page other
+
+    out, = capture_io do
+      @driver.display_page 'home:globals'
+    end
+
+    assert_match %r%= globals\.rdoc%, out
+  end
+
+  def test_display_page_missing
+    util_store
+
+    out, = capture_io do
+      @driver.display_page 'home:missing'
+    end
+
+    out, = capture_io do
+      @driver.display_page_list @store1
+    end
+
+    assert_match %r%= Pages in ~/\.rdoc%, out
+    assert_match %r%README\.rdoc%,        out
   end
 
   def test_display_page_list
@@ -734,7 +940,10 @@ Foo::Bar#bother
     tty = Object.new
     def tty.tty?() true; end
 
-    driver = RDoc::RI::Driver.new
+    @options.delete :use_stdout
+    @options.delete :formatter
+
+    driver = RDoc::RI::Driver.new @options
 
     assert_instance_of @RM::ToAnsi, driver.formatter(tty)
 
@@ -889,6 +1098,17 @@ Foo::Bar#bother
     assert_equal expected, @driver.load_methods_matching('Bar#inherit')
   end
 
+  def test_load_method_missing
+    util_store
+
+    FileUtils.rm @store1.method_file 'Foo', '#inherit'
+
+    method = @driver.load_method(@store1, :instance_methods, 'Foo', '#',
+                                 'inherit')
+
+    assert_equal '(unknown)#inherit', method.full_name
+  end
+
   def _test_page # this test doesn't do anything anymore :(
     @driver.use_stdout = false
 
@@ -903,11 +1123,11 @@ Foo::Bar#bother
     refute @driver.paging?
   end
 
-  def test_page_in_presence_of_child_status
+  # this test is too fragile. Perhaps using Process.spawn will make this
+  # reliable
+  def _test_page_in_presence_of_child_status
     skip 'this test hangs on travis-ci.org' if ENV['CI']
     @driver.use_stdout = false
-
-    dummy = `:;\n`
 
     with_dummy_pager do
       @driver.page do |io|
@@ -959,6 +1179,14 @@ Foo::Bar#bother
     assert_equal 'ruby',   klass, 'ruby project'
     assert_equal ':',      type,  'ruby type'
     assert_equal nil,      meth,  'ruby page'
+  end
+
+  def test_parse_name_page_extenson
+    klass, type, meth = @driver.parse_name 'ruby:README.EXT'
+
+    assert_equal 'ruby',      klass, 'ruby project'
+    assert_equal ':',         type,  'ruby type'
+    assert_equal 'README.EXT', meth,  'ruby page'
   end
 
   def test_parse_name_single_class
@@ -1141,14 +1369,7 @@ Foo::Bar#bother
     @override.comment = 'must be displayed'
     @override.record_location @top_level
 
-    @store2.save_class @mAmbiguous
-    @store2.save_class @cBar
-    @store2.save_class @cFoo_Baz
-
-    @store2.save_method @cBar, @override
-    @store2.save_method @cBar, @baz
-
-    @store2.save_cache
+    @store2.save
 
     @driver.stores = [@store1, @store2]
   end
@@ -1203,27 +1424,10 @@ Foo::Bar#bother
 
     # overriden by Bar in multi_store
     @overriden = @cFoo.add_method RDoc::AnyMethod.new(nil, 'override')
-    @overriden.comment = 'must not be displayed'
+    @overriden.comment = 'must not be displayed in Bar#override'
     @overriden.record_location @top_level
 
-    @store1.save_class @cFoo
-    @store1.save_class @cFoo_Bar
-    @store1.save_class @cFoo_Baz
-    @store1.save_class @mExt
-    @store1.save_class @mInc
-    @store1.save_class @cAmbiguous
-
-    @store1.save_method @cFoo_Bar, @blah
-    @store1.save_method @cFoo_Bar, @bother
-    @store1.save_method @cFoo_Bar, @new
-    @store1.save_method @cFoo_Bar, @attr
-
-    @store1.save_method @cFoo, @inherit
-    @store1.save_method @cFoo, @overriden
-
-    @store1.save_page @readme
-
-    @store1.save_cache
+    @store1.save
 
     @driver.stores = [@store1]
   end
