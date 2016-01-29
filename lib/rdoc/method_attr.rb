@@ -98,7 +98,10 @@ class RDoc::MethodAttr < RDoc::CodeObject
   # Order by #singleton then #name
 
   def <=>(other)
-    [@singleton ? 0 : 1, name] <=> [other.singleton ? 0 : 1, other.name]
+    return unless other.respond_to?(:singleton) &&
+                  other.respond_to?(:name)
+    [     @singleton ? 0 : 1,       name] <=>
+    [other.singleton ? 0 : 1, other.name]
   end
 
   ##

@@ -1,3 +1,10 @@
+=== 3.12.3 / 2016-01-29
+
+* Bug fixes
+   * Apply some patch to ~> 3.12
+   * 23c276
+   * 5cfb39
+
 === 3.12.2 / 2013-02-24
 
 * Bug fixes
