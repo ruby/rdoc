@@ -38,6 +38,9 @@ lib/rdoc/generator/json_index.rb
 lib/rdoc/generator/markup.rb
 lib/rdoc/generator/ri.rb
 lib/rdoc/generator/pot.rb
+lib/rdoc/generator/pot/message_extractor.rb
+lib/rdoc/generator/pot/po.rb
+lib/rdoc/generator/pot/po_entry.rb
 lib/rdoc/generator/template/darkfish/.document
 lib/rdoc/generator/template/darkfish/_footer.rhtml
 lib/rdoc/generator/template/darkfish/_head.rhtml
