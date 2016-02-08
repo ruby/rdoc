@@ -102,7 +102,7 @@ task :docs do
   options.op_dir = 'doc'
   options.main_page = 'README.rdoc'
   options.files = hoe.spec.extra_rdoc_files + %w[lib]
-  options.setup_generator 'darkfish'
+  options.setup_generator 'rubymodern'
 
   RDoc::RDoc.new.document options
 end

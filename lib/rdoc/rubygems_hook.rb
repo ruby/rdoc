@@ -201,6 +201,9 @@ class RDoc::RubygemsHook
 
     document 'darkfish', options, @rdoc_dir if
       @generate_rdoc and (@force or not File.exist? @rdoc_dir)
+
+    document 'rubymodern', options, @rdoc_dir if
+        @generate_rdoc and (@force or not File.exist? @rdoc_dir)
   end
 
   ##
