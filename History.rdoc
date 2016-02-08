@@ -1,3 +1,9 @@
+=== 4.2.2 / 2016-02-09
+
+* Bug fixes
+  * Include lib/rdoc/generator/pot/* in built gem
+
+
 === 4.2.1 / 2015-12-22
 
 * Bug fixes
