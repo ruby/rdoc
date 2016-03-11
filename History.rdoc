@@ -1,3 +1,8 @@
+=== 4.2.3 / 2016-??-??
+
+* Bug fixes
+  * Ensure badge data is included in result of JsonIndex template.
+
 === 4.2.2 / 2016-02-09
 
 * Bug fixes
