@@ -792,27 +792,41 @@ class RDoc::Parser::C < RDoc::Parser
   end
 
   ##
+  # Generate a const table
+
+  def gen_const_table file_content
+    table = {}
+    @content.scan(%r{
+      ((?>^\s*/\*.*?\*/\s+))
+        rb_define_(\w+)\((?:\s*(?:\w+),)?\s*
+                           "(\w+)"\s*,
+                           .*?\)\s*;
+    | Document-(?:const|global|variable):\s
+        ((?:\w+::)*\w+)
+        \s*?\n((?>.*?\*/))
+    }mxi) do
+      case
+      when $1 then table[[$2, $3]] = $1
+      when $4 then table[$4] = "/*\n" + $5
+      end
+    end
+    table
+  end
+
+  ##
   # Finds a comment matching +type+ and +const_name+ either above the
   # comment or in the matching Document- section.
 
   def find_const_comment(type, const_name, class_name = nil)
-    comment = if @content =~ %r%((?>^\s*/\*.*?\*/\s+))
-                             rb_define_#{type}\((?:\s*(\w+),)?\s*
-                                                "#{const_name}"\s*,
-                                                .*?\)\s*;%xmi then
-                $1
-              elsif class_name and
-                    @content =~ %r%Document-(?:const|global|variable):\s
-                                   #{class_name}::#{const_name}
-                                   \s*?\n((?>.*?\*/))%xm then
-                "/*\n#{$1}"
-              elsif @content =~ %r%Document-(?:const|global|variable):
-                                   \s#{const_name}
-                                   \s*?\n((?>.*?\*/))%xm then
-                "/*\n#{$1}"
-              else
-                ''
-              end
+    @const_table ||= {}
+    @const_table[@content] ||= gen_const_table @content
+    table = @const_table[@content]
+
+    comment =
+      table[[type, const_name]] ||
+      (class_name && table[class_name + "::" + const_name]) ||
+      table[const_name] ||
+      ''
 
     RDoc::Comment.new comment, @top_level
   end
