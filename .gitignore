@@ -10,3 +10,4 @@
 /lib/rdoc/markdown.rb
 /pkg
 /tmp
+Gemfile.lock

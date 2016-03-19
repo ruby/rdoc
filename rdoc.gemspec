@@ -58,6 +58,7 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   s.summary = "RDoc produces HTML and command-line documentation for Ruby projects"
 
   s.add_runtime_dependency("json", "~> 1.4")
+  s.add_development_dependency("rake", "~> 10.5")
   s.add_development_dependency("racc", "~> 1.4", "> 1.4.10")
   s.add_development_dependency("kpeg", "~> 0.9")
   s.add_development_dependency("minitest", "~> 4")
