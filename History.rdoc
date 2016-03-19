@@ -4,6 +4,7 @@
   * Ensure badge data is included in result of JsonIndex template.
   * Ensure items in the nil section are displayed in HTML output.  Issue #399
     by Daniel Svensson.
+  * Parse rb_intern_const correctly in C.  PR #381 by Sho Hashimoto.
 
 === 4.2.2 / 2016-02-09
 
