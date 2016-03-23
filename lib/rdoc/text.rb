@@ -1,6 +1,4 @@
 # coding: utf-8
-#
-frozen_string_literal: false
 
 ##
 # For RDoc::Text#to_html

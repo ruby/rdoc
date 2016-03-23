@@ -1,5 +1,3 @@
-#
-frozen_string_literal: false
 ##
 # AnyMethod is the base class for objects representing methods
 

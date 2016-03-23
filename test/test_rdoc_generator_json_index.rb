@@ -1,6 +1,4 @@
 # coding: US-ASCII
-#
-frozen_string_literal: false
 
 require 'rdoc/test_case'
 

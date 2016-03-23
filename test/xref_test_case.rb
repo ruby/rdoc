@@ -1,5 +1,3 @@
-#
-frozen_string_literal: false
 ENV['RDOC_TEST'] = 'yes'
 
 require 'rdoc'

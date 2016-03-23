@@ -1,5 +1,3 @@
-#
-frozen_string_literal: false
 require 'rdoc/test_case'
 
 class TestRDocMarkupToLabel < RDoc::Markup::FormatterTestCase

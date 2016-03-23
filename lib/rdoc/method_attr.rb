@@ -1,5 +1,3 @@
-#
-frozen_string_literal: false
 ##
 # Abstract class representing either a method or an attribute.
 

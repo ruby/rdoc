@@ -1,5 +1,3 @@
-#
-frozen_string_literal: false
 ##
 # RDoc::CrossReference is a reusable way to create cross references for names.
 
