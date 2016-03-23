@@ -1,3 +1,5 @@
+#
+frozen_string_literal: false
 ##
 # Represent an alias, which is an old_name/new_name pair associated with a
 # particular context

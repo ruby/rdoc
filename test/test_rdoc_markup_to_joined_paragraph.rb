@@ -1,3 +1,5 @@
+#
+frozen_string_literal: false
 require 'rdoc/test_case'
 
 class TestRDocMarkupToJoinedParagraph < RDoc::TestCase

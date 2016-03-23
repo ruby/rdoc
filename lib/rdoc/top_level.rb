@@ -1,3 +1,5 @@
+#
+frozen_string_literal: false
 ##
 # A TopLevel context is a representation of the contents of a single file
 

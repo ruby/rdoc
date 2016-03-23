@@ -1,3 +1,5 @@
+#
+frozen_string_literal: false
 ##
 # A normal class, neither singleton nor anonymous
 

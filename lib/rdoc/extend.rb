@@ -1,3 +1,5 @@
+#
+frozen_string_literal: false
 ##
 # A Module extension to a class with \#extend
 #

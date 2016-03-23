@@ -1,3 +1,5 @@
+#
+frozen_string_literal: false
 ##
 # A file loaded by \#require
 

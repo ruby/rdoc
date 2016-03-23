@@ -1,3 +1,5 @@
+#
+frozen_string_literal: false
 ##
 # An anonymous class like:
 #
