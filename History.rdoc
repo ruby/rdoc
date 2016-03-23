@@ -5,6 +5,7 @@
   * Ensure items in the nil section are displayed in HTML output.  Issue #399
     by Daniel Svensson.
   * Parse rb_intern_const correctly in C.  PR #381 by Sho Hashimoto.
+  * Fix broken assets caused by #335 when serving ri.  PR #360 by Alex Wood.
 
 === 4.2.2 / 2016-02-09
 
