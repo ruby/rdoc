@@ -698,7 +698,7 @@ Changes since RDoc 4.0.0.rc.2:
 
 * Major enhancements
   * RDoc HTML output has been improved:
-    * The search from Володя Колесников's (Vladimir Kolesnikov) Sdoc has been
+    * The search from Володя Колесников's (Vladimir Kolesnikov) SDoc has been
       integrated.
 
       The search index generation is a reusable component through
