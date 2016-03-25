@@ -8,6 +8,9 @@
   * Fix broken assets caused by #335 when serving ri.  PR #360 by Alex Wood.
   * Don't try to parse svg files.  Issue #350 by Sigurd Svela.
 
+* Minor enhancements
+  * Improve class name expansion/resolution in ri.  PR #400 by NARUSE, Yui
+
 === 4.2.2 / 2016-02-09
 
 * Bug fixes
