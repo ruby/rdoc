@@ -102,10 +102,10 @@ class RDoc::RubyLex
     @exp_line_no = @line_no = 1
     @here_readed = []
     @readed = []
-    @current_readed = @readed
     @rests = []
     @seek = 0
 
+    @here_header = false
     @indent = 0
     @indent_stack = []
     @lex_state = :EXPR_BEG
@@ -161,7 +161,7 @@ class RDoc::RubyLex
     end
 
     readed = @readed.join("")
-    @readed.clear
+    @readed = []
     readed
   end
 
@@ -171,9 +171,13 @@ class RDoc::RubyLex
       @rests.push nil unless buf_input
     end
     c = @rests.shift
-    @current_readed.push c
+    if @here_header
+      @here_readed.push c
+    else
+      @readed.push c
+    end
     @seek += 1
-    if c == "\n".freeze
+    if c == "\n"
       @line_no += 1
       @char_no = 0
     else
@@ -279,7 +283,7 @@ class RDoc::RubyLex
     @indent_stack = []
     @lex_state = :EXPR_BEG
     @space_seen = false
-    @current_readed = @readed
+    @here_header = false
 
     @continue = false
     prompt
@@ -458,8 +462,8 @@ class RDoc::RubyLex
           @indent_stack.pop
         end
       end
-      @current_readed = @readed
-      @here_readed.clear
+      @here_header = false
+      @here_readed = []
       Token(TkNL)
     end
 
@@ -1017,7 +1021,7 @@ class RDoc::RubyLex
       doc = '"'
     end
 
-    @current_readed = @readed
+    @here_header = false
     while l = gets
       l = l.sub(/(:?\r)?\n\z/, "\n")
       if (indent ? l.strip : l.chomp) == quoted
@@ -1034,7 +1038,7 @@ class RDoc::RubyLex
       doc << '"'
     end
 
-    @current_readed = @here_readed
+    @here_header = true
     @here_readed.concat reserve
     while ch = reserve.pop
       ungetc ch
