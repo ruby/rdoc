@@ -1,9 +1,9 @@
 ---
-after_script:
-- rake travis:after -t
 before_script:
 - gem install hoe-travis --no-rdoc --no-ri
 - rake travis:before -t
+after_script:
+- rake travis:after -t
 language: ruby
 notifications:
   email:
