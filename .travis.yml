@@ -1,6 +1,6 @@
 ---
 before_script:
-- gem install hoe kpeg --no-rdoc --no-ri
+- gem install hoe kpeg racc --no-rdoc --no-ri
 language: ruby
 notifications:
   email:
