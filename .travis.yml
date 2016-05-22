@@ -14,6 +14,8 @@ rvm:
 - 2.2.5
 - 2.3.1
 - ruby-head
+- jruby-1.7.25
+- jruby-9.1.0.0
 - rbx-2
 - rbx
 script: rake test
