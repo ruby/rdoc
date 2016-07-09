@@ -18,7 +18,6 @@ PARSER_FILES = %w[
 Hoe.plugin :git
 Hoe.plugin :kpeg
 Hoe.plugin :minitest
-Hoe.plugin :travis
 
 $rdoc_rakefile = true
 
@@ -180,4 +179,3 @@ task :diff_rubinius do
   sh "diff #{diff_options} lib/rdoc #{rubinius_dir}/lib/rdoc; true"
   sh "diff #{diff_options} test #{rubinius_dir}/test/rdoc; true"
 end
-
