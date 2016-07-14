@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require File.expand_path '../xref_test_case', __FILE__
 
 class TestRDocContext < XrefTestCase
@@ -416,7 +417,7 @@ class TestRDocContext < XrefTestCase
   def bench_add_include
     cm = RDoc::ClassModule.new 'Klass'
 
-    assert_performance_linear 0.7 do |count|
+    assert_performance_linear 0.5 do |count|
       count.times do |i|
         cm.add_include RDoc::Include.new("N::M#{i}", nil)
       end

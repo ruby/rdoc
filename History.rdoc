@@ -2,6 +2,14 @@
 
 * Bug fixes
   * Ensure badge data is included in result of JsonIndex template.
+  * Ensure items in the nil section are displayed in HTML output.  Issue #399
+    by Daniel Svensson.
+  * Parse rb_intern_const correctly in C.  PR #381 by Sho Hashimoto.
+  * Fix broken assets caused by #335 when serving ri.  PR #360 by Alex Wood.
+  * Don't try to parse svg files.  Issue #350 by Sigurd Svela.
+
+* Minor enhancements
+  * Improve class name expansion/resolution in ri.  PR #400 by NARUSE, Yui
 
 === 4.2.2 / 2016-02-09
 
@@ -693,7 +701,7 @@ Changes since RDoc 4.0.0.rc.2:
 
 * Major enhancements
   * RDoc HTML output has been improved:
-    * The search from Володя Колесников's (Vladimir Kolesnikov) Sdoc has been
+    * The search from Володя Колесников's (Vladimir Kolesnikov) SDoc has been
       integrated.
 
       The search index generation is a reusable component through

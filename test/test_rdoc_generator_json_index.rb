@@ -1,4 +1,5 @@
 # coding: US-ASCII
+# frozen_string_literal: false
 
 require 'rdoc/test_case'
 
@@ -152,7 +153,7 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
     assert_file 'js/search_index.js'
     assert_file 'js/search_index.js.gz'
 
-    json = File.open('js/search_index.js.gz') {|gzip|
+    json = File.open('js/search_index.js.gz', 'rb') {|gzip|
       Zlib::GzipReader.new(gzip).read
     }
 

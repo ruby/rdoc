@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 $DEBUG_RDOC = nil
 
 # :main: README.rdoc
@@ -64,7 +65,7 @@ module RDoc
   ##
   # RDoc version you are using
 
-  VERSION = '4.3.0-alpha'
+  VERSION = '4.2.3'
 
   ##
   # Method visibilities

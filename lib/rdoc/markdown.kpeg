@@ -17,7 +17,7 @@
 #
 #     data = File.read("README.md")
 #     formatter = RDoc::Markup::ToHtml.new(RDoc::Options.new, nil)
-#     html = RDoc::Markdown.parse(data).accept(@formatter)
+#     html = RDoc::Markdown.parse(data).accept(formatter)
 #
 #     # do something with html
 #

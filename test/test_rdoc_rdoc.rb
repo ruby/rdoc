@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require 'rdoc/test_case'
 
 class TestRDocRDoc < RDoc::TestCase
@@ -299,6 +300,7 @@ class TestRDocRDoc < RDoc::TestCase
       blah.eps
       blah.erb
       blah.scpt.txt
+      blah.svg
       blah.ttf
       blah.yml
     ]
