@@ -10,6 +10,7 @@
 
 * Minor enhancements
   * Improve class name expansion/resolution in ri.  PR #400 by NARUSE, Yui
+  * Improve performance of document generation. PR #397 by Yusuke Endoh.
 
 === 4.2.2 / 2016-02-09
 
