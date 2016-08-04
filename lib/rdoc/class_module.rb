@@ -196,6 +196,8 @@ class RDoc::ClassModule < RDoc::Context
   # more like <tt>+=</tt>.
 
   def comment= comment # :nodoc:
+    return if comment.empty? and not @comment.empty?
+
     comment = normalize_comment comment
     comment = "#{comment_to_string @comment}\n---\n#{comment_to_string comment}" unless @comment.empty?
 
