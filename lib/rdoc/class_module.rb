@@ -129,12 +129,7 @@ class RDoc::ClassModule < RDoc::Context
 
     original = comment
 
-    comment = case comment
-              when RDoc::Comment then
-                comment.normalize
-              else
-                normalize_comment comment
-              end
+    comment = normalize_comment comment
 
     @comment_location.delete_if { |(_, l)| l == location }
 
@@ -201,14 +196,8 @@ class RDoc::ClassModule < RDoc::Context
   # more like <tt>+=</tt>.
 
   def comment= comment # :nodoc:
-    comment = case comment
-              when RDoc::Comment then
-                comment.normalize
-              else
-                normalize_comment comment
-              end
-
-    comment = "#{@comment}\n---\n#{comment}" unless @comment.empty?
+    comment = normalize_comment comment
+    comment = "#{comment_to_string @comment}\n---\n#{comment_to_string comment}" unless @comment.empty?
 
     super comment
   end
@@ -794,6 +783,32 @@ class RDoc::ClassModule < RDoc::Context
     end
 
     extends.uniq!
+  end
+
+  ##
+  # Returns normalized version of a comment
+  # Works both for String and RDoc::Comment
+
+  def normalize_comment comment
+    case comment
+      when RDoc::Comment then
+        comment.normalize
+      else
+        super comment
+    end
+  end
+
+  ##
+  # Returns string value for a comment
+  # Works both for String and RDoc::Comment
+
+  def comment_to_string comment
+    case comment
+      when RDoc::Comment then
+        comment.text
+      else
+        comment
+    end
   end
 
 end

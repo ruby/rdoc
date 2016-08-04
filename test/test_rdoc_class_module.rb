@@ -35,6 +35,23 @@ class TestRDocClassModule < XrefTestCase
     assert_equal 'comment', cm.comment.text
   end
 
+  def test_add_several_comments_text
+    tl1 = @store.add_file 'one.rb'
+    tl2 = @store.add_file 'two.rb'
+    tl3 = @store.add_file 'three.rb'
+
+    cm = RDoc::ClassModule.new 'Klass'
+
+    cm.add_comment comment('comment 1'), tl1
+    assert_equal 'comment 1', cm.comment.text
+
+    cm.add_comment comment('comment 2'), tl2
+    assert_equal "comment 1\n---\ncomment 2", cm.comment
+
+    cm.add_comment comment("* comment 3"), tl3
+    assert_equal "comment 1\n---\ncomment 2\n---\n* comment 3", cm.comment
+  end
+
   def test_add_comment_duplicate
     tl1 = @store.add_file 'one.rb'
 
