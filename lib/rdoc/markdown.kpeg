@@ -179,7 +179,7 @@
   require 'rdoc/markup/to_joined_paragraph'
   require 'rdoc/markdown/entities'
 
-  require 'rdoc/markdown/literals_1_9'
+  require 'rdoc/markdown/literals'
 
   ##
   # Supported extensions
