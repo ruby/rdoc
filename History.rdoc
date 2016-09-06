@@ -1,4 +1,7 @@
-=== 4.2.3 / 2016-??-??
+=== 5.0.0 / 2016-??-??
+
+* Major enhancements
+  * Drop to support Ruby 1.8
 
 * Bug fixes
   * Ensure badge data is included in result of JsonIndex template.
