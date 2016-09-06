@@ -12,7 +12,6 @@ PARSER_FILES = %w[
   lib/rdoc/rd/block_parser.ry
   lib/rdoc/rd/inline_parser.ry
   lib/rdoc/markdown.kpeg
-  lib/rdoc/markdown/literals_1_8.kpeg
   lib/rdoc/markdown/literals_1_9.kpeg
 ]
 
