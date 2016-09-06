@@ -43,6 +43,7 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
 
   s.files = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   s.files << "/lib/rdoc/rd/block_parser.rb" << "/lib/rdoc/rd/inline_parser.rb" << "/lib/rdoc/markdown.rb"
+  s.bindir = "exe"
 
   s.homepage = "http://docs.seattlerb.org/rdoc"
   s.licenses = ["Ruby"]
