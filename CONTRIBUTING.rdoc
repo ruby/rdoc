@@ -22,9 +22,11 @@ issues:
 
 == Developer Quick Start
 
-RDoc uses hoe for development.  To get ready to work on RDoc run:
+RDoc uses bundler for development.  To get ready to work on RDoc run:
 
-  $ gem install hoe
+  $ gem install bundler
+  [...]
+  $ bundle install
   [...]
   $ rake
   [...]
@@ -216,4 +218,3 @@ To register the parser with rdoc, add the markup type's name and class to the
 RDoc::Text::MARKUP_FORMAT hash like:
 
   RDoc::Text::MARKUP_FORMAT['rdoc'] = RDoc::Markup
-
