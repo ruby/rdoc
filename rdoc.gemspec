@@ -15,7 +15,8 @@ Gem::Specification.new do |s|
     "Dave Thomas",
     "Phil Hagelberg",
     "Tony Strauss",
-    "Zachary Scott"
+    "Zachary Scott",
+    "Hiroshi SHIBATA"
   ]
 
   s.description = <<-DESCRIPTION
@@ -23,7 +24,7 @@ RDoc produces HTML and command-line documentation for Ruby projects.
 RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentation from the command-line.
   DESCRIPTION
 
-  s.email = ["drbrain@segment7.net", "mail@zzak.io"]
+  s.email = ["drbrain@segment7.net", "mail@zzak.io", "hsbt@ruby-lang.org"]
 
   s.executables = ["rdoc", "ri"]
 
