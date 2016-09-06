@@ -46,14 +46,6 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
 
   s.homepage = "http://docs.seattlerb.org/rdoc"
   s.licenses = ["Ruby"]
-  s.post_install_message = <<-MESSAGE
-Depending on your version of ruby, you may need to install ruby rdoc/ri data:
-
-<= 1.8.6 : unsupported
- = 1.8.7 : gem install rdoc-data; rdoc-data --install
- = 1.9.1 : gem install rdoc-data; rdoc-data --install
->= 1.9.2 : nothing to do! Yay!
-  MESSAGE
 
   s.rdoc_options = ["--main", "README.rdoc"]
   s.required_ruby_version = Gem::Requirement.new(">= 1.9.3")
