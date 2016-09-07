@@ -79,7 +79,6 @@ class RDoc::Markup::Parser
     @binary_input   = nil
     @current_token  = nil
     @debug          = false
-    @have_encoding  = Object.const_defined? :Encoding
     @input          = nil
     @input_encoding = nil
     @line           = 0

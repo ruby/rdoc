@@ -28,11 +28,7 @@ class TestRDocMarkupParser < RDoc::TestCase
 
     s.scan(/\S+/)
 
-    if @have_encoding then
-      assert_equal 3, parser.char_pos(s.pos)
-    else
-      assert_equal 4, parser.char_pos(s.pos)
-    end
+    assert_equal 3, parser.char_pos(s.pos)
   end
 
   def test_get
@@ -1358,8 +1354,6 @@ cat::
   end
 
   def test_tokenize_note_utf_8
-    skip 'Encoding not implemented' unless @have_encoding
-
     str = <<-STR
 cät:: l1a
       l1b
@@ -1624,11 +1618,7 @@ Example heading:
 
     s.scan(/\S+/)
 
-    if @have_encoding then
-      assert_equal [3, 0], parser.token_pos(s.pos)
-    else
-      assert_equal [4, 0], parser.token_pos(s.pos)
-    end
+    assert_equal [3, 0], parser.token_pos(s.pos)
   end
 
   # HACK move to Verbatim test case
