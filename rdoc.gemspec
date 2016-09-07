@@ -41,25 +41,18 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
     TODO.rdoc
   ]
 
-  s.files = File.readlines("Manifest.txt").map { |l| l.gsub("\n",'') }
+  s.files = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  s.files << "/lib/rdoc/rd/block_parser.rb" << "/lib/rdoc/rd/inline_parser.rb" << "/lib/rdoc/markdown.rb"
+  s.bindir = "exe"
 
   s.homepage = "http://docs.seattlerb.org/rdoc"
   s.licenses = ["Ruby"]
-  s.post_install_message = <<-MESSAGE
-Depending on your version of ruby, you may need to install ruby rdoc/ri data:
-
-<= 1.8.6 : unsupported
- = 1.8.7 : gem install rdoc-data; rdoc-data --install
- = 1.9.1 : gem install rdoc-data; rdoc-data --install
->= 1.9.2 : nothing to do! Yay!
-  MESSAGE
 
   s.rdoc_options = ["--main", "README.rdoc"]
-  s.required_ruby_version = Gem::Requirement.new(">= 1.8.7")
+  s.required_ruby_version = Gem::Requirement.new(">= 1.9.3")
   s.rubygems_version = "2.5.2"
   s.summary = "RDoc produces HTML and command-line documentation for Ruby projects"
 
-  s.add_runtime_dependency("json", "~> 1.4")
   s.add_development_dependency("rake", "~> 10.5")
   s.add_development_dependency("racc", "~> 1.4", "> 1.4.10")
   s.add_development_dependency("kpeg", "~> 0.9")

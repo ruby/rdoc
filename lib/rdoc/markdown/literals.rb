@@ -1,10 +1,14 @@
+# coding: UTF-8
 # frozen_string_literal: false
 # :markup: markdown
 
 ##
-# Provides Literals appropriate for your ruby version.
 #--
-# This set of literals is for Ruby 1.8 regular expressions.
+# This set of literals is for Ruby 1.9 regular expressions and gives full
+# unicode support.
+#
+# Unlike peg-markdown, this set of literals recognizes Unicode alphanumeric
+# characters, newlines and spaces.
 class RDoc::Markdown::Literals
   # :stopdoc:
 
@@ -285,8 +289,6 @@ class RDoc::Markdown::Literals
         else
           return ans
         end
-
-        return ans
       end
     end
 
@@ -319,8 +321,6 @@ class RDoc::Markdown::Literals
         else
           return ans
         end
-
-        return ans
       end
     end
 
@@ -364,9 +364,9 @@ class RDoc::Markdown::Literals
   # :stopdoc:
   def setup_foreign_grammar; end
 
-  # Alphanumeric = /[0-9A-Za-z\200-\377]/
+  # Alphanumeric = /\p{Word}/
   def _Alphanumeric
-    _tmp = scan(/\A(?-mix:[0-9A-Za-z\200-\377])/)
+    _tmp = scan(/\A(?-mix:\p{Word})/)
     set_failed_rule :_Alphanumeric unless _tmp
     return _tmp
   end
@@ -378,40 +378,40 @@ class RDoc::Markdown::Literals
     return _tmp
   end
 
-  # BOM = "ï»¿"
+  # BOM = "uFEFF"
   def _BOM
-    _tmp = match_string("\303\257\302\273\302\277")
+    _tmp = match_string("uFEFF")
     set_failed_rule :_BOM unless _tmp
     return _tmp
   end
 
-  # Newline = /\n|\r\n?/
+  # Newline = /\n|\r\n?|\p{Zl}|\p{Zp}/
   def _Newline
-    _tmp = scan(/\A(?-mix:\n|\r\n?)/)
+    _tmp = scan(/\A(?-mix:\n|\r\n?|\p{Zl}|\p{Zp})/)
     set_failed_rule :_Newline unless _tmp
     return _tmp
   end
 
-  # NonAlphanumeric = /[\000-\057\072-\100\133-\140\173-\177]/
+  # NonAlphanumeric = /\p{^Word}/
   def _NonAlphanumeric
-    _tmp = scan(/\A(?-mix:[\000-\057\072-\100\133-\140\173-\177])/)
+    _tmp = scan(/\A(?-mix:\p{^Word})/)
     set_failed_rule :_NonAlphanumeric unless _tmp
     return _tmp
   end
 
-  # Spacechar = / |\t/
+  # Spacechar = /\t|\p{Zs}/
   def _Spacechar
-    _tmp = scan(/\A(?-mix: |\t)/)
+    _tmp = scan(/\A(?-mix:\t|\p{Zs})/)
     set_failed_rule :_Spacechar unless _tmp
     return _tmp
   end
 
   Rules = {}
-  Rules[:_Alphanumeric] = rule_info("Alphanumeric", "/[0-9A-Za-z\\200-\\377]/")
+  Rules[:_Alphanumeric] = rule_info("Alphanumeric", "/\\p{Word}/")
   Rules[:_AlphanumericAscii] = rule_info("AlphanumericAscii", "/[A-Za-z0-9]/")
-  Rules[:_BOM] = rule_info("BOM", "\"ï»¿\"")
-  Rules[:_Newline] = rule_info("Newline", "/\\n|\\r\\n?/")
-  Rules[:_NonAlphanumeric] = rule_info("NonAlphanumeric", "/[\\000-\\057\\072-\\100\\133-\\140\\173-\\177]/")
-  Rules[:_Spacechar] = rule_info("Spacechar", "/ |\\t/")
+  Rules[:_BOM] = rule_info("BOM", "\"uFEFF\"")
+  Rules[:_Newline] = rule_info("Newline", "/\\n|\\r\\n?|\\p{Zl}|\\p{Zp}/")
+  Rules[:_NonAlphanumeric] = rule_info("NonAlphanumeric", "/\\p{^Word}/")
+  Rules[:_Spacechar] = rule_info("Spacechar", "/\\t|\\p{Zs}/")
   # :startdoc:
 end
