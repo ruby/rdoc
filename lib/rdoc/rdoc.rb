@@ -340,10 +340,8 @@ option)
   # Parses +filename+ and returns an RDoc::TopLevel
 
   def parse_file filename
-    if Object.const_defined? :Encoding then
-      encoding = @options.encoding
-      filename = filename.encode encoding
-    end
+    encoding = @options.encoding
+    filename = filename.encode encoding
 
     @stats.add_file filename
 
