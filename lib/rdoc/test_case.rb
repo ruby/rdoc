@@ -177,8 +177,6 @@ class RDoc::TestCase < MiniTest::Unit::TestCase
   # Depends upon Dir.mktmpdir
 
   def temp_dir
-    skip "No Dir::mktmpdir, upgrade your ruby" unless Dir.respond_to? :mktmpdir
-
     Dir.mktmpdir do |temp_dir|
       Dir.chdir temp_dir do
         yield temp_dir
