@@ -8,8 +8,6 @@ class TestRDocMarkupParser < RDoc::TestCase
   def setup
     super
 
-    @have_byteslice = ''.respond_to? :byteslice
-
     @RMP = @RM::Parser
   end
 
@@ -30,7 +28,7 @@ class TestRDocMarkupParser < RDoc::TestCase
 
     s.scan(/\S+/)
 
-    if @have_byteslice or @have_encoding then
+    if @have_encoding then
       assert_equal 3, parser.char_pos(s.pos)
     else
       assert_equal 4, parser.char_pos(s.pos)
@@ -1626,7 +1624,7 @@ Example heading:
 
     s.scan(/\S+/)
 
-    if @have_encoding or @have_byteslice then
+    if @have_encoding then
       assert_equal [3, 0], parser.token_pos(s.pos)
     else
       assert_equal [4, 0], parser.token_pos(s.pos)
@@ -1678,4 +1676,3 @@ some more text over here
   end
 
 end
-
