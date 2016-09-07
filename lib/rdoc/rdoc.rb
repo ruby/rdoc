@@ -551,16 +551,14 @@ The internal error was:
 end
 
 begin
-  if Gem.respond_to? :find_files then
-    rdoc_extensions = Gem.find_files 'rdoc/discover'
+  rdoc_extensions = Gem.find_files 'rdoc/discover'
 
-    rdoc_extensions.each do |extension|
-      begin
-        load extension
-      rescue => e
-        warn "error loading #{extension.inspect}: #{e.message} (#{e.class})"
-        warn "\t#{e.backtrace.join "\n\t"}" if $DEBUG
-      end
+  rdoc_extensions.each do |extension|
+    begin
+      load extension
+    rescue => e
+      warn "error loading #{extension.inspect}: #{e.message} (#{e.class})"
+      warn "\t#{e.backtrace.join "\n\t"}" if $DEBUG
     end
   end
 rescue LoadError
