@@ -1,4 +1,3 @@
-require 'rubygems'
 Gem.load_yaml
 require 'rdoc'
 require 'gauntlet'
@@ -81,4 +80,3 @@ filter = ARGV.shift
 filter = /#{filter}/ if filter
 
 RDoc::Gauntlet.new.run_the_gauntlet type, filter
-

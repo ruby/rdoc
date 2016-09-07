@@ -551,8 +551,6 @@ The internal error was:
 end
 
 begin
-  require 'rubygems'
-
   if Gem.respond_to? :find_files then
     rdoc_extensions = Gem.find_files 'rdoc/discover'
 
@@ -572,4 +570,3 @@ end
 require 'rdoc/generator/darkfish'
 require 'rdoc/generator/ri'
 require 'rdoc/generator/pot'
-

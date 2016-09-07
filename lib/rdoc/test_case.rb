@@ -1,6 +1,4 @@
 # frozen_string_literal: false
-require 'rubygems'
-
 begin
   gem 'minitest', '~> 4.0' unless defined?(Test::Unit)
 rescue NoMethodError, Gem::LoadError
