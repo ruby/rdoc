@@ -183,7 +183,7 @@ class RDoc::RubygemsHook
     @rdoc.options = options
 
     store = RDoc::Store.new
-    store.encoding = options.encoding if options.respond_to? :encoding
+    store.encoding = options.encoding
     store.dry_run  = options.dry_run
     store.main     = options.main_page
     store.title    = options.title
