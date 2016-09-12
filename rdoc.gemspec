@@ -54,8 +54,8 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
   s.rubygems_version = "2.5.2"
   s.summary = "RDoc produces HTML and command-line documentation for Ruby projects"
 
-  s.add_development_dependency("rake", "~> 10.5")
-  s.add_development_dependency("racc", "~> 1.4", "> 1.4.10")
-  s.add_development_dependency("kpeg", "~> 0.9")
+  s.add_development_dependency("rake")
+  s.add_development_dependency("racc", "> 1.4.10")
+  s.add_development_dependency("kpeg")
   s.add_development_dependency("minitest", "~> 4")
 end
