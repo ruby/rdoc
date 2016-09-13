@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module RDoc::RI::Paths - rdoc 5.0.0.beta2 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+  var index_rel_prefix = "../../";
+</script>
+
+<script src="../../js/jquery.js"></script>
+<script src="../../js/darkfish.js"></script>
+
+<link href="../../css/fonts.css" rel="stylesheet">
+<link href="../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../table_of_contents.html#pages">Pages</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-each">::each</a>
+    
+    <li ><a href="#method-c-gem_dir">::gem_dir</a>
+    
+    <li ><a href="#method-c-gemdirs">::gemdirs</a>
+    
+    <li ><a href="#method-c-home_dir">::home_dir</a>
+    
+    <li ><a href="#method-c-path">::path</a>
+    
+    <li ><a href="#method-c-raw_path">::raw_path</a>
+    
+    <li ><a href="#method-c-site_dir">::site_dir</a>
+    
+    <li ><a href="#method-c-system_dir">::system_dir</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-RDoc::RI::Paths">
+  <h1 id="module-RDoc::RI::Paths" class="module">
+    module RDoc::RI::Paths
+  </h1>
+
+  <section class="description">
+    
+<p>The directories where ri data lives.  <a href="Paths.html">Paths</a> can be
+enumerated via <a href="Paths.html#method-c-each">::each</a>, or queried
+individually via <a href="Paths.html#method-c-system_dir">::system_dir</a>,
+<a href="Paths.html#method-c-site_dir">::site_dir</a>, <a
+href="Paths.html#method-c-home_dir">::home_dir</a> and <a
+href="Paths.html#method-c-gem_dir">::gem_dir</a>.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-each" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">each</span><span
+            class="method-args">(system = true, site = true, home = true, gems = :latest, *extra_dirs) { |directory, type| ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Iterates over each selected path yielding the directory and type.</p>
+
+<p>Yielded types:</p>
+<dl class="rdoc-list note-list"><dt>:system
+<dd>
+<p>Where Ruby&#39;s ri data is stored.  Yielded when <code>system</code> is
+true</p>
+</dd><dt>:site
+<dd>
+<p>Where ri for installed libraries are stored.  Yielded when
+<code>site</code> is true.  Normally no ri data is stored here.</p>
+</dd><dt>:home
+<dd>
+<p>~/.rdoc.  Yielded when <code>home</code> is true.</p>
+</dd><dt>:gem
+<dd>
+<p>ri data for an installed gem.  Yielded when <code>gems</code> is true.</p>
+</dd><dt>:extra
+<dd>
+<p>ri data directory from the command line.  Yielded for each entry in
+<code>extra_dirs</code></p>
+</dd></dl>
+          
+          
+
+          
+          <div class="method-source-code" id="each-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/paths.rb, line 46</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">each</span> <span class="ruby-identifier">system</span> = <span class="ruby-keyword">true</span>, <span class="ruby-identifier">site</span> = <span class="ruby-keyword">true</span>, <span class="ruby-identifier">home</span> = <span class="ruby-keyword">true</span>, <span class="ruby-identifier">gems</span> = <span class="ruby-value">:latest</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">extra_dirs</span> <span class="ruby-comment"># :yields: directory, type</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">enum_for</span> <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">system</span>, <span class="ruby-identifier">site</span>, <span class="ruby-identifier">home</span>, <span class="ruby-identifier">gems</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">extra_dirs</span> <span class="ruby-keyword">unless</span>
+    <span class="ruby-identifier">block_given?</span>
+
+  <span class="ruby-identifier">extra_dirs</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">dir</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">yield</span> <span class="ruby-identifier">dir</span>, <span class="ruby-value">:extra</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">yield</span> <span class="ruby-identifier">system_dir</span>,  <span class="ruby-value">:system</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">system</span>
+  <span class="ruby-keyword">yield</span> <span class="ruby-identifier">site_dir</span>,    <span class="ruby-value">:site</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">site</span>
+  <span class="ruby-keyword">yield</span> <span class="ruby-identifier">home_dir</span>,    <span class="ruby-value">:home</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">home</span> <span class="ruby-keyword">and</span> <span class="ruby-constant">HOMEDIR</span>
+
+  <span class="ruby-identifier">gemdirs</span>(<span class="ruby-identifier">gems</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">dir</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">yield</span> <span class="ruby-identifier">dir</span>, <span class="ruby-value">:gem</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">gems</span>
+
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-gem_dir" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">gem_dir</span><span
+            class="method-args">(name, version)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The ri directory for the gem with <code>gem_name</code>.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="gem_dir-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/paths.rb, line 68</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">gem_dir</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">version</span>
+  <span class="ruby-identifier">req</span> = <span class="ruby-constant">Gem</span><span class="ruby-operator">::</span><span class="ruby-constant">Requirement</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;= #{version}&quot;</span>
+
+  <span class="ruby-identifier">spec</span> = <span class="ruby-constant">Gem</span><span class="ruby-operator">::</span><span class="ruby-constant">Specification</span>.<span class="ruby-identifier">find_by_name</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">req</span>
+
+  <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span> <span class="ruby-identifier">spec</span>.<span class="ruby-identifier">doc_dir</span>, <span class="ruby-string">&#39;ri&#39;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-gemdirs" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">gemdirs</span><span
+            class="method-args">(filter = :latest)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The latest installed gems&#39; ri directories.  <code>filter</code> can be
+:all or :latest.</p>
+
+<p>A <code>filter</code> :all includes all versions of gems and includes gems
+without ri documentation.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="gemdirs-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/paths.rb, line 83</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">gemdirs</span> <span class="ruby-identifier">filter</span> = <span class="ruby-value">:latest</span>
+  <span class="ruby-identifier">ri_paths</span> = {}
+
+  <span class="ruby-identifier">all</span> = <span class="ruby-constant">Gem</span><span class="ruby-operator">::</span><span class="ruby-constant">Specification</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">spec</span><span class="ruby-operator">|</span>
+    [<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">spec</span>.<span class="ruby-identifier">doc_dir</span>, <span class="ruby-string">&#39;ri&#39;</span>), <span class="ruby-identifier">spec</span>.<span class="ruby-identifier">name</span>, <span class="ruby-identifier">spec</span>.<span class="ruby-identifier">version</span>]
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">filter</span> <span class="ruby-operator">==</span> <span class="ruby-value">:all</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">gemdirs</span> = []
+
+    <span class="ruby-identifier">all</span>.<span class="ruby-identifier">group_by</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">_</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">_</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">name</span>
+    <span class="ruby-keyword">end</span>.<span class="ruby-identifier">sort_by</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">group</span>, <span class="ruby-identifier">_</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">group</span>
+    <span class="ruby-keyword">end</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">group</span>, <span class="ruby-identifier">items</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">items</span>.<span class="ruby-identifier">sort_by</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">_</span>, <span class="ruby-identifier">_</span>, <span class="ruby-identifier">version</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">version</span>
+      <span class="ruby-keyword">end</span>.<span class="ruby-identifier">reverse_each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">dir</span>,<span class="ruby-operator">|</span>
+        <span class="ruby-identifier">gemdirs</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">dir</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">gemdirs</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">all</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">dir</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">ver</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span> <span class="ruby-identifier">dir</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">ri_paths</span>[<span class="ruby-identifier">name</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">ver</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">ri_paths</span>[<span class="ruby-identifier">name</span>].<span class="ruby-identifier">first</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">ri_paths</span>[<span class="ruby-identifier">name</span>] = [<span class="ruby-identifier">ver</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">dir</span>]
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">ri_paths</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">_</span>, (<span class="ruby-identifier">_</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">_</span>)<span class="ruby-operator">|</span> <span class="ruby-identifier">name</span> }.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">k</span>, <span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">last</span> }
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>
+  []
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-home_dir" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">home_dir</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The location of the rdoc data in the user&#39;s home directory.</p>
+
+<p>Like ::system, ri data in the user&#39;s home directory is rare and
+predates libraries distributed via RubyGems.  ri data is rarely generated
+into this directory.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="home_dir-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/paths.rb, line 128</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">home_dir</span>
+  <span class="ruby-constant">HOMEDIR</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-path" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">path</span><span
+            class="method-args">(system = true, site = true, home = true, gems = :latest, *extra_dirs)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns existing directories from the selected documentation directories as
+an Array.</p>
+
+<p>See also <a href="Paths.html#method-c-each">::each</a></p>
+          
+          
+
+          
+          <div class="method-source-code" id="path-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/paths.rb, line 138</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">path</span>(<span class="ruby-identifier">system</span> = <span class="ruby-keyword">true</span>, <span class="ruby-identifier">site</span> = <span class="ruby-keyword">true</span>, <span class="ruby-identifier">home</span> = <span class="ruby-keyword">true</span>, <span class="ruby-identifier">gems</span> = <span class="ruby-value">:latest</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">extra_dirs</span>)
+  <span class="ruby-identifier">path</span> = <span class="ruby-identifier">raw_path</span> <span class="ruby-identifier">system</span>, <span class="ruby-identifier">site</span>, <span class="ruby-identifier">home</span>, <span class="ruby-identifier">gems</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">extra_dirs</span>
+
+  <span class="ruby-identifier">path</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">directory</span><span class="ruby-operator">|</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-identifier">directory</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-raw_path" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">raw_path</span><span
+            class="method-args">(system, site, home, gems, *extra_dirs)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns selected documentation directories including nonexistent
+directories.</p>
+
+<p>See also <a href="Paths.html#method-c-each">::each</a></p>
+          
+          
+
+          
+          <div class="method-source-code" id="raw_path-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/paths.rb, line 150</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">raw_path</span>(<span class="ruby-identifier">system</span>, <span class="ruby-identifier">site</span>, <span class="ruby-identifier">home</span>, <span class="ruby-identifier">gems</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">extra_dirs</span>)
+  <span class="ruby-identifier">path</span> = []
+
+  <span class="ruby-identifier">each</span>(<span class="ruby-identifier">system</span>, <span class="ruby-identifier">site</span>, <span class="ruby-identifier">home</span>, <span class="ruby-identifier">gems</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">extra_dirs</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">dir</span>, <span class="ruby-identifier">type</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">path</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">dir</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">path</span>.<span class="ruby-identifier">compact</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-site_dir" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">site_dir</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The location of ri data installed into the site dir.</p>
+
+<p>Historically this was available for documentation installed by Ruby
+libraries predating RubyGems.  It is unlikely to contain any content for
+modern Ruby installations.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="site_dir-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/paths.rb, line 167</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">site_dir</span>
+  <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span> <span class="ruby-constant">BASE</span>, <span class="ruby-string">&#39;site&#39;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-system_dir" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">system_dir</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The location of the built-in ri data.</p>
+
+<p>This data is built automatically when `make` is run when Ruby is installed.
+If you did not install Ruby by hand you may need to install the
+documentation yourself.  Please consult the documentation for your package
+manager or Ruby installer for details.  You can also use the rdoc-data gem
+to install system ri data for common versions of Ruby.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="system_dir-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/paths.rb, line 180</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">system_dir</span>
+  <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span> <span class="ruby-constant">BASE</span>, <span class="ruby-string">&#39;system&#39;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

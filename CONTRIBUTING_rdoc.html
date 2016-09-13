@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>CONTRIBUTING - rdoc 5.0.0.beta2 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="file">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#label-Developer+Introduction">Developer Introduction</a>
+    <li><a href="#label-Bugs">Bugs</a>
+    <li><a href="#label-Developer+Quick+Start">Developer Quick Start</a>
+    <li><a href="#label-Glossary">Glossary</a>
+    <li><a href="#label-Plugins">Plugins</a>
+    <li><a href="#label-Plugin+Types">Plugin Types</a>
+    <li><a href="#label-Option+Parsing">Option Parsing</a>
+    <li><a href="#label-File+Parsing">File Parsing</a>
+    <li><a href="#label-Documentation+Tree">Documentation Tree</a>
+    <li><a href="#label-Output+Generation">Output Generation</a>
+    <li><a href="#label-Comments">Comments</a>
+    <li><a href="#label-Formatters">Formatters</a>
+    <li><a href="#label-Directives">Directives</a>
+    <li><a href="#label-JSONIndex">JSONIndex</a>
+    <li><a href="#label-Markup">Markup</a>
+  </ul>
+</div>
+
+
+  <div id="project-metadata">
+    <div id="fileindex-section" class="nav-section">
+  <h3>Pages</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./CONTRIBUTING_rdoc.html">CONTRIBUTING</a>
+  
+    <li><a href="./CVE-2013-0256_rdoc.html">CVE-2013-0256</a>
+  
+    <li><a href="./ExampleRDoc_rdoc.html">ExampleRDoc</a>
+  
+    <li><a href="./History_rdoc.html">History</a>
+  
+    <li><a href="./LEGAL_rdoc.html">LEGAL</a>
+  
+    <li><a href="./LICENSE_rdoc.html">LICENSE</a>
+  
+    <li><a href="./README_rdoc.html">README</a>
+  
+    <li><a href="./RI_rdoc.html">RI</a>
+  
+    <li><a href="./TODO_rdoc.html">TODO</a>
+  
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-label="Page CONTRIBUTING.rdoc">
+
+<h1 id="label-Developer+Introduction">Developer Introduction<span><a href="#label-Developer+Introduction">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>So you want to write a generator, fix a bug, or otherwise work with <a
+href="RDoc.html">RDoc</a>.  This document provides an overview of how <a
+href="RDoc.html">RDoc</a> works from parsing options to generating output. 
+Most of the documentation can be found in the specific classes for each
+feature.</p>
+
+<h2 id="label-Bugs">Bugs<span><a href="#label-Bugs">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>If you think you found a bug, file a ticket on the <a
+href="https://github.com/rdoc/rdoc/issues">issues tracker</a> on github.</p>
+
+<p>If your bug involves an error <a href="RDoc.html">RDoc</a> produced please
+include a sample file that illustrates the problem or link to the
+repository or gem that is associated with the bug.</p>
+
+<p>Please include steps to reproduce the issue.  Here are some examples of
+good issues:</p>
+<ul><li>
+<p><a
+href="https://github.com/rdoc/rdoc/issues/55">github.com/rdoc/rdoc/issues/55</a></p>
+</li><li>
+<p><a
+href="https://github.com/rdoc/rdoc/issues/61">github.com/rdoc/rdoc/issues/61</a></p>
+</li></ul>
+
+<h2 id="label-Developer+Quick+Start">Developer Quick Start<span><a href="#label-Developer+Quick+Start">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p><a href="RDoc.html">RDoc</a> uses bundler for development.  To get ready to
+work on <a href="RDoc.html">RDoc</a> run:</p>
+
+<pre>$ gem install bundler
+[...]
+$ bundle install
+[...]
+$ rake
+[...]</pre>
+
+<p>This will install all the necessary dependencies for development with rake,
+generate documentation and run the tests for the first time.</p>
+
+<p>If the tests don&#39;t pass on the first run check the <a
+href="https://travis-ci.org/rdoc/rdoc">Travis CI page for RDoc</a> to see
+if there are any known failures (there shouldn&#39;t be).</p>
+
+<p>You can now use `rake` and `autotest` to run the tests.</p>
+
+<p>Note: the `rake` command must be used first before running any tests,
+because its used to generate various parsers implemented in <a
+href="RDoc.html">RDoc</a>. Also `rake clean` is helpful to delete these
+generated files.</p>
+
+<h2 id="label-Glossary">Glossary<span><a href="#label-Glossary">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Here are definitions for some common terms in the <a
+href="RDoc.html">RDoc</a> documentation.  The list also briefly describes
+how the components of <a href="RDoc.html">RDoc</a> interact.</p>
+<dl class="rdoc-list note-list"><dt>parser
+<dd>
+<p>Parses files and creates a documentation tree from the contents.</p>
+</dd><dt>documentation tree
+<dd>
+<p>The documentation tree represents files, classes, modules, methods,
+constants, includes, comments and other ruby syntax features as a tree. <a
+href="RDoc.html">RDoc</a> walks this tree with a generator to create
+documentation.</p>
+</dd><dt>generator
+<dd>
+<p>Walks the documentation tree and generates output.</p>
+
+<p><a href="RDoc.html">RDoc</a> ships with two generators, the Darkfish
+generator creates HTML and the <a href="RI_rdoc.html">RI</a> generator
+creates an <a href="RI_rdoc.html">RI</a> data store.</p>
+</dd><dt>markup parser
+<dd>
+<p>Parses comments from a file into a generic markup tree.</p>
+
+<p>The markup parsers allow <a href="RDoc.html">RDoc</a> to handle <a
+href="RDoc.html">RDoc</a>, TomDoc, rd and Markdown format documentation
+with common formatters.</p>
+</dd><dt>markup tree
+<dd>
+<p>Each parsed comment has a markup tree that represents common markup items
+such as headings, paragraphs, lists or verbatim text sections for example
+code or output.</p>
+
+<p>A generator uses a formatters to walks the tree to create output.  Some
+generators use multiple formatters on a markup tree to produce the output.</p>
+</dd><dt>formatter
+<dd>
+<p>Converts a parsed markup tree into some form other form of markup.</p>
+
+<p>Formatters can either produce a one-to-one conversion, such as ToHtml, or
+extract part of the parsed result, such as ToHtmlSnippet which outputs the
+first 100 characters as HTML.</p>
+</dd></dl>
+
+<h2 id="label-Plugins">Plugins<span><a href="#label-Plugins">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>When &#39;rdoc/rdoc&#39; is loaded <a href="RDoc.html">RDoc</a> looks for
+&#39;rdoc/discover&#39; files in your installed gems.  This can be used to
+load parsers, alternate generators, or additional preprocessor directives. 
+An rdoc plugin layout should look something like this:</p>
+
+<pre class="ruby"><span class="ruby-identifier">lib</span><span class="ruby-operator">/</span><span class="ruby-identifier">rdoc</span><span class="ruby-operator">/</span><span class="ruby-identifier">discover</span>.<span class="ruby-identifier">rb</span>
+<span class="ruby-identifier">lib</span><span class="ruby-operator">/</span><span class="ruby-identifier">my</span><span class="ruby-operator">/</span><span class="ruby-identifier">rdoc</span><span class="ruby-operator">/</span><span class="ruby-identifier">plugin</span>.<span class="ruby-identifier">rb</span>
+<span class="ruby-comment"># etc.</span>
+</pre>
+
+<p>In your rdoc/discover.rb file you will want to wrap the loading of your
+plugin in an <a href="RDoc.html">RDoc</a> version check like this:</p>
+
+<pre class="ruby"><span class="ruby-keyword">begin</span>
+  <span class="ruby-identifier">gem</span> <span class="ruby-string">&#39;rdoc&#39;</span>, <span class="ruby-string">&#39;~&gt; 3&#39;</span>
+  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;my/rdoc/plugin&#39;</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">Gem</span><span class="ruby-operator">::</span><span class="ruby-constant">LoadError</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<h3 id="label-Plugin+Types">Plugin Types<span><a href="#label-Plugin+Types">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>In <a href="RDoc.html">RDoc</a> you can change the following behaviors:</p>
+<ul><li>
+<p>Add a parser for a new file format</p>
+</li><li>
+<p>Add a new output generator</p>
+</li><li>
+<p>Add a new markup directive</p>
+</li><li>
+<p>Add a new type of documentation markup</p>
+</li><li>
+<p>Add a new type of formatter</p>
+</li></ul>
+
+<p>All of these are described below</p>
+
+<h2 id="label-Option+Parsing">Option Parsing<span><a href="#label-Option+Parsing">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Option parsing is handled by <a href="RDoc/Options.html">RDoc::Options</a>.
+When you&#39;re writing a generator you can provide the user with extra
+options by providing a class method <code>setup_options</code>.  The option
+parser will call this after your generator is loaded.  See <a
+href="RDoc/Generator.html">RDoc::Generator</a> for details.</p>
+
+<h2 id="label-File+Parsing">File Parsing<span><a href="#label-File+Parsing">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>After options are parsed, <a href="RDoc.html">RDoc</a> parses files from
+the files and directories in ARGV.  <a href="RDoc.html">RDoc</a> compares
+the filename against what each parser claims it can parse via
+RDoc::Parser#parse_files_matching.  For example, <a
+href="RDoc/Parser/C.html">RDoc::Parser::C</a> can parse C files, C headers,
+C++ files, C++ headers and yacc grammars.</p>
+
+<p>Once a matching parser class is found it is instantiated and
+<code>scan</code> is called. The parser needs to extract documentation from
+the file and add it to the <a href="RDoc.html">RDoc</a> document tree. 
+Usually this involves starting at the root and adding a class or a module
+(RDoc::TopLevel#add_class and <a
+href="RDoc/Context.html#method-i-add_module">RDoc::Context#add_module</a>)
+and proceeding to add classes, modules and methods to each nested item.</p>
+
+<p>When the parsers are finished the document tree is cleaned up to remove
+dangling references to aliases and includes that were not found (and may
+exist in a separate library) through <a
+href="RDoc/ClassModule.html#method-i-complete">RDoc::ClassModule#complete</a>.</p>
+
+<p>To write your own parser for a new file format see <a
+href="RDoc/Parser.html">RDoc::Parser</a>.</p>
+
+<h3 id="label-Documentation+Tree">Documentation Tree<span><a href="#label-Documentation+Tree">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>The parsers build a documentation tree that is composed of <a
+href="RDoc/CodeObject.html">RDoc::CodeObject</a> and its subclasses.  There
+are various methods to walk the tree to extract information, see <a
+href="RDoc/Context.html">RDoc::Context</a> and its subclasses.</p>
+
+<p>Within a class or module, attributes, methods and constants are divided
+into sections.  The section represents a functional grouping of parts of
+the class. TomDoc uses the sections “Public”, “Internal” and “Deprecated”. 
+The sections can be enumerated using <a
+href="RDoc/Context.html#method-i-each_section">RDoc::Context#each_section</a>.</p>
+
+<h2 id="label-Output+Generation">Output Generation<span><a href="#label-Output+Generation">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>An <a href="RDoc.html">RDoc</a> generator turns the documentation tree into
+some other kind of output. <a href="RDoc.html">RDoc</a> comes with an HTML
+generator (RDoc::Generator::Darkfish) and an <a href="RI_rdoc.html">RI</a>
+database generator (RDoc::Generator::RI).  The output a generator creates
+does not have to be human-readable.</p>
+
+<p>To create your own generator see <a
+href="RDoc/Generator.html">RDoc::Generator</a>.</p>
+
+<h3 id="label-Comments">Comments<span><a href="#label-Comments">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>In <a href="RDoc.html">RDoc</a> 3.10 and newer the comment on an <a
+href="RDoc/CodeObject.html">RDoc::CodeObject</a> is now an <a
+href="RDoc/Comment.html">RDoc::Comment</a> object instead of a String. 
+This is to support various documentation markup formats like rdoc, TomDoc
+and rd.  The comments are normalized to remove comment markers and remove
+indentation then parsed lazily via <a
+href="RDoc/Comment.html#attribute-i-document">RDoc::Comment#document</a> to
+create a generic markup tree that can be processed by a formatter.</p>
+
+<p>To add your own markup format see <a
+href="RDoc/Markup.html#label-Other+directives">Other directives at
+RDoc::Markup</a></p>
+
+<h4 id="label-Formatters">Formatters<span><a href="#label-Formatters">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>To transform a comment into some form of output an <a
+href="RDoc/Markup/Formatter.html">RDoc::Markup::Formatter</a> subclass is
+used like <a href="RDoc/Markup/ToHtml.html">RDoc::Markup::ToHtml</a>.  A
+formatter is a visitor that walks a parsed comment tree (an <a
+href="RDoc/Markup/Document.html">RDoc::Markup::Document</a>) of any format.
+To help write a formatter <a
+href="RDoc/Markup/FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a>
+exists for generic parsers, and <a
+href="RDoc/Markup/TextFormatterTestCase.html">RDoc::Markup::TextFormatterTestCase</a>
+which contains extra test cases for text-type output (like <code>ri</code>
+output).</p>
+
+<p><a href="RDoc.html">RDoc</a> ships with formatters that will turn a comment
+into HTML, rdoc-markup-like text, ANSI or terminal backspace highlighted
+text, HTML, cross-referenced HTML, an HTML snippet free of most markup, an
+HTML label for use in id attributes, a table-of-contents page, and text
+with only code blocks.</p>
+
+<p>The output of the formatter does not need to be text or text-like. <a
+href="RDoc/Markup/ToLabel.html">RDoc::Markup::ToLabel</a> creates an
+HTML-safe label for use in an HTML id attribute.  A formatter could count
+the number of words and the average word length for a comment, for example.</p>
+
+<h4 id="label-Directives">Directives<span><a href="#label-Directives">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>For comments in markup you can add new directives (:nodoc: is a directive).
+Directives may replace text or store it off for later use.</p>
+
+<p>See <a
+href="RDoc/Markup/PreProcess.html#method-c-register">RDoc::Markup::PreProcess.register</a>
+for details.</p>
+
+<h3 id="label-JSONIndex">JSONIndex<span><a href="#label-JSONIndex">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p><a href="RDoc.html">RDoc</a> contains a special generator,
+RDoc::Generator::JSONIndex, which creates a JSON-based search index and
+includes a search engine for use with HTML output. This generator can be
+used to add searching to any HTML output and is designed to be called from
+inside an HTML generator.</p>
+
+<h2 id="label-Markup">Markup<span><a href="#label-Markup">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Additional documentation markup formats can be added to <a
+href="RDoc.html">RDoc</a>.  A markup parsing class must respond to ::parse
+and accept a String argument containing the markup format.  An
+RDoc::Document containing documentation items (RDoc::Markup::Heading, <a
+href="RDoc/Markup/Paragraph.html">RDoc::Markup::Paragraph</a>, <a
+href="RDoc/Markup/Verbatim.html">RDoc::Markup::Verbatim</a>, etc.) must be
+returned.</p>
+
+<p>To register the parser with rdoc, add the markup type&#39;s name and class
+to the RDoc::Text::MARKUP_FORMAT hash like:</p>
+
+<pre class="ruby"><span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Text</span><span class="ruby-operator">::</span><span class="ruby-constant">MARKUP_FORMAT</span>[<span class="ruby-string">&#39;rdoc&#39;</span>] = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span>
+</pre>
+</main>
+
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

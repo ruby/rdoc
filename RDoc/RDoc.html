@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class RDoc::RDoc - rdoc 5.0.0.beta2 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">Object
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-add_generator">::add_generator</a>
+    
+    <li ><a href="#method-c-current">::current</a>
+    
+    <li ><a href="#method-c-current-3D">::current=</a>
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-document">#document</a>
+    
+    <li ><a href="#method-i-error">#error</a>
+    
+    <li ><a href="#method-i-gather_files">#gather_files</a>
+    
+    <li ><a href="#method-i-generate">#generate</a>
+    
+    <li ><a href="#method-i-handle_pipe">#handle_pipe</a>
+    
+    <li ><a href="#method-i-install_siginfo_handler">#install_siginfo_handler</a>
+    
+    <li ><a href="#method-i-list_files_in_directory">#list_files_in_directory</a>
+    
+    <li ><a href="#method-i-load_options">#load_options</a>
+    
+    <li ><a href="#method-i-normalized_file_list">#normalized_file_list</a>
+    
+    <li ><a href="#method-i-output_flag_file">#output_flag_file</a>
+    
+    <li ><a href="#method-i-parse_dot_doc_file">#parse_dot_doc_file</a>
+    
+    <li ><a href="#method-i-parse_file">#parse_file</a>
+    
+    <li ><a href="#method-i-parse_files">#parse_files</a>
+    
+    <li ><a href="#method-i-remove_siginfo_handler">#remove_siginfo_handler</a>
+    
+    <li ><a href="#method-i-remove_unparseable">#remove_unparseable</a>
+    
+    <li ><a href="#method-i-setup_output_dir">#setup_output_dir</a>
+    
+    <li ><a href="#method-i-store-3D">#store=</a>
+    
+    <li ><a href="#method-i-update_output_dir">#update_output_dir</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-RDoc::RDoc">
+  <h1 id="class-RDoc::RDoc" class="class">
+    class RDoc::RDoc
+  </h1>
+
+  <section class="description">
+    
+<p>This is the driver for generating <a href="RDoc.html">RDoc</a> output.  It
+handles file parsing and generation of output.</p>
+
+<p>To use this class to generate <a href="RDoc.html">RDoc</a> output via the
+API, the recommended way is:</p>
+
+<pre class="ruby"><span class="ruby-identifier">rdoc</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RDoc</span>.<span class="ruby-identifier">new</span>
+<span class="ruby-identifier">options</span> = <span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">load_options</span> <span class="ruby-comment"># returns an RDoc::Options instance</span>
+<span class="ruby-comment"># set extra options</span>
+<span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">document</span> <span class="ruby-identifier">options</span>
+</pre>
+
+<p>You can also generate output like the <code>rdoc</code> executable:</p>
+
+<pre class="ruby"><span class="ruby-identifier">rdoc</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RDoc</span>.<span class="ruby-identifier">new</span>
+<span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">document</span> <span class="ruby-identifier">argv</span>
+</pre>
+
+<p>Where <code>argv</code> is an array of strings, each corresponding to an
+argument you&#39;d give rdoc on the command line.  See &lt;tt&gt;rdoc
+–help&lt;tt&gt; for details.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="GENERATORS">GENERATORS
+        
+        <dd><p>This is the list of supported output generators</p>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-exclude" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">exclude</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>File pattern to exclude</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-generator" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">generator</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Generator instance used for creating output</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-last_modified" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">last_modified</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Hash of files and their last modified times.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-options" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">options</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p><a href="RDoc.html">RDoc</a> options</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-stats" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">stats</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Accessor for statistics.  Available after each call to <a
+href="RDoc.html#method-i-parse_files">#parse_files</a></p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-store" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">store</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The current documentation store</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-add_generator" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_generator</span><span
+            class="method-args">(klass)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Add <code>klass</code> that can generate output after parsing</p>
+          
+          
+
+          
+          <div class="method-source-code" id="add_generator-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 70</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">add_generator</span>(<span class="ruby-identifier">klass</span>)
+  <span class="ruby-identifier">name</span> = <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^RDoc::Generator::/</span>, <span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">downcase</span>
+  <span class="ruby-constant">GENERATORS</span>[<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">klass</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-current" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">current</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Active <a href="RDoc.html">RDoc::RDoc</a> instance</p>
+          
+          
+
+          
+          <div class="method-source-code" id="current-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 78</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">current</span>
+  <span class="ruby-ivar">@current</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-current-3D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">current=</span><span
+            class="method-args">(rdoc)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Sets the active <a href="RDoc.html">RDoc::RDoc</a> instance</p>
+          
+          
+
+          
+          <div class="method-source-code" id="current-3D-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 85</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">current=</span> <span class="ruby-identifier">rdoc</span>
+  <span class="ruby-ivar">@current</span> = <span class="ruby-identifier">rdoc</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates a new <a href="RDoc.html">RDoc::RDoc</a> instance.  Call <a
+href="RDoc.html#method-i-document">document</a> to parse files and generate
+documentation.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 93</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
+  <span class="ruby-ivar">@current</span>       = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@exclude</span>       = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@generator</span>     = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@last_modified</span> = {}
+  <span class="ruby-ivar">@old_siginfo</span>   = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@options</span>       = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@stats</span>         = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@store</span>         = <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-document" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">document</span><span
+            class="method-args">(options)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Generates documentation or a coverage report depending upon the settings in
+<code>options</code>.</p>
+
+<p><code>options</code> can be either an <a
+href="Options.html">RDoc::Options</a> instance or an array of strings
+equivalent to the strings that would be passed on the command line like
+<code>%w[-q -o doc -t My\ Doc\ Title]</code>.  <a
+href="RDoc.html#method-i-document">document</a> will automatically call <a
+href="Options.html#method-i-finish">RDoc::Options#finish</a> if an options
+instance was given.</p>
+
+<p>For a list of options, see either <a href="Options.html">RDoc::Options</a>
+or <code>rdoc --help</code>.</p>
+
+<p>By default, output will be stored in a directory called “doc” below the
+current directory, so make sure you&#39;re somewhere writable before
+invoking.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="document-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 459</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">document</span> <span class="ruby-identifier">options</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">store</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Store</span>.<span class="ruby-identifier">new</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Options</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">options</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>
+    <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">finish</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">load_options</span>
+    <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">parse</span> <span class="ruby-identifier">options</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">pipe</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">handle_pipe</span>
+    <span class="ruby-identifier">exit</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-ivar">@exclude</span> = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">exclude</span>
+
+  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">coverage_report</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-ivar">@last_modified</span> = <span class="ruby-identifier">setup_output_dir</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">op_dir</span>, <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">force_update</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">encoding</span> = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">encoding</span>
+  <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">dry_run</span>  = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">dry_run</span>
+  <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">main</span>     = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">main_page</span>
+  <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">title</span>    = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">title</span>
+  <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">path</span>     = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">op_dir</span>
+
+  <span class="ruby-ivar">@start_time</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+
+  <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">load_cache</span>
+
+  <span class="ruby-identifier">file_info</span> = <span class="ruby-identifier">parse_files</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">files</span>
+
+  <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">default_title</span> = <span class="ruby-string">&quot;RDoc Documentation&quot;</span>
+
+  <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">complete</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">visibility</span>
+
+  <span class="ruby-ivar">@stats</span>.<span class="ruby-identifier">coverage_level</span> = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">coverage_report</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">coverage_report</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">puts</span>
+
+    <span class="ruby-identifier">puts</span> <span class="ruby-ivar">@stats</span>.<span class="ruby-identifier">report</span>.<span class="ruby-identifier">accept</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ToRdoc</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">file_info</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;\nNo newer files.&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">quiet</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">gen_klass</span> = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">generator</span>
+
+    <span class="ruby-ivar">@generator</span> = <span class="ruby-identifier">gen_klass</span>.<span class="ruby-identifier">new</span> <span class="ruby-ivar">@store</span>, <span class="ruby-ivar">@options</span>
+
+    <span class="ruby-identifier">generate</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@stats</span> <span class="ruby-keyword">and</span> (<span class="ruby-ivar">@options</span>.<span class="ruby-identifier">coverage_report</span> <span class="ruby-keyword">or</span> <span class="ruby-keyword">not</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">quiet</span>) <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">puts</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-ivar">@stats</span>.<span class="ruby-identifier">summary</span>.<span class="ruby-identifier">accept</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ToRdoc</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">exit</span> <span class="ruby-ivar">@stats</span>.<span class="ruby-identifier">fully_documented?</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">coverage_report</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-error" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">error</span><span
+            class="method-args">(msg)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Report an error message and exit</p>
+          
+          
+
+          
+          <div class="method-source-code" id="error-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 107</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">error</span>(<span class="ruby-identifier">msg</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-identifier">msg</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-gather_files" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">gather_files</span><span
+            class="method-args">(files)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Gathers a set of parseable files from the files and directories listed in
+<code>files</code>.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="gather_files-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 115</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">gather_files</span> <span class="ruby-identifier">files</span>
+  <span class="ruby-identifier">files</span> = [<span class="ruby-string">&quot;.&quot;</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">files</span>.<span class="ruby-identifier">empty?</span>
+
+  <span class="ruby-identifier">file_list</span> = <span class="ruby-identifier">normalized_file_list</span> <span class="ruby-identifier">files</span>, <span class="ruby-keyword">true</span>, <span class="ruby-ivar">@exclude</span>
+
+  <span class="ruby-identifier">file_list</span> = <span class="ruby-identifier">file_list</span>.<span class="ruby-identifier">uniq</span>
+
+  <span class="ruby-identifier">file_list</span> = <span class="ruby-identifier">remove_unparseable</span> <span class="ruby-identifier">file_list</span>
+
+  <span class="ruby-identifier">file_list</span>.<span class="ruby-identifier">sort</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-generate" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">generate</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Generates documentation for <code>file_info</code> (from <a
+href="RDoc.html#method-i-parse_files">parse_files</a>) into the output dir
+using the generator selected by the <a href="RDoc.html">RDoc</a> options</p>
+          
+          
+
+          
+          <div class="method-source-code" id="generate-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 526</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate</span>
+  <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">chdir</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">op_dir</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">quiet</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;\nGenerating #{@generator.class.name.sub(/^.*::/, &#39;&#39;)} format into #{Dir.pwd}...&quot;</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-ivar">@generator</span>.<span class="ruby-identifier">generate</span>
+    <span class="ruby-identifier">update_output_dir</span> <span class="ruby-string">&#39;.&#39;</span>, <span class="ruby-ivar">@start_time</span>, <span class="ruby-ivar">@last_modified</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-handle_pipe" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">handle_pipe</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Turns <a href="RDoc.html">RDoc</a> from stdin into HTML</p>
+          
+          
+
+          
+          <div class="method-source-code" id="handle_pipe-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 130</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_pipe</span>
+  <span class="ruby-ivar">@html</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ToHtml</span>.<span class="ruby-identifier">new</span> <span class="ruby-ivar">@options</span>
+
+  <span class="ruby-identifier">parser</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Text</span><span class="ruby-operator">::</span><span class="ruby-constant">MARKUP_FORMAT</span>[<span class="ruby-ivar">@options</span>.<span class="ruby-identifier">markup</span>]
+
+  <span class="ruby-identifier">document</span> = <span class="ruby-identifier">parser</span>.<span class="ruby-identifier">parse</span> <span class="ruby-identifier">$stdin</span>.<span class="ruby-identifier">read</span>
+
+  <span class="ruby-identifier">out</span> = <span class="ruby-ivar">@html</span>.<span class="ruby-identifier">convert</span> <span class="ruby-identifier">document</span>
+
+  <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">write</span> <span class="ruby-identifier">out</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-install_siginfo_handler" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">install_siginfo_handler</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Installs a siginfo handler that prints the current filename.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="install_siginfo_handler-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 145</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">install_siginfo_handler</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">Signal</span>.<span class="ruby-identifier">list</span>.<span class="ruby-identifier">include?</span> <span class="ruby-string">&#39;INFO&#39;</span>
+
+  <span class="ruby-ivar">@old_siginfo</span> = <span class="ruby-identifier">trap</span> <span class="ruby-string">&#39;INFO&#39;</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-ivar">@current</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@current</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-list_files_in_directory" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">list_files_in_directory</span><span
+            class="method-args">(dir)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Return a list of the files to be processed in a directory. We know that
+this directory doesn&#39;t have a .document file, so we&#39;re looking for
+real files. However we may well contain subdirectories which must be tested
+for .document files.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="list_files_in_directory-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 332</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">list_files_in_directory</span> <span class="ruby-identifier">dir</span>
+  <span class="ruby-identifier">files</span> = <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">dir</span>, <span class="ruby-string">&quot;*&quot;</span>)
+
+  <span class="ruby-identifier">normalized_file_list</span> <span class="ruby-identifier">files</span>, <span class="ruby-keyword">false</span>, <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">exclude</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-load_options" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">load_options</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Loads options from .rdoc_options if the file exists, otherwise creates a
+new <a href="Options.html">RDoc::Options</a> instance.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="load_options-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 157</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">load_options</span>
+  <span class="ruby-identifier">options_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span> <span class="ruby-string">&#39;.rdoc_options&#39;</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Options</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span> <span class="ruby-identifier">options_file</span>
+
+  <span class="ruby-constant">RDoc</span>.<span class="ruby-identifier">load_yaml</span>
+
+  <span class="ruby-identifier">parse_error</span> = <span class="ruby-keyword">if</span> <span class="ruby-constant">Object</span>.<span class="ruby-identifier">const_defined?</span> <span class="ruby-value">:Psych</span> <span class="ruby-keyword">then</span>
+                  <span class="ruby-constant">Psych</span><span class="ruby-operator">::</span><span class="ruby-constant">SyntaxError</span>
+                <span class="ruby-keyword">else</span>
+                  <span class="ruby-constant">ArgumentError</span>
+                <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">options</span> = <span class="ruby-constant">YAML</span>.<span class="ruby-identifier">load_file</span> <span class="ruby-string">&#39;.rdoc_options&#39;</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-operator">*</span><span class="ruby-identifier">parse_error</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-node">&quot;#{options_file} is not a valid rdoc options file&quot;</span> <span class="ruby-keyword">unless</span>
+    <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Options</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">options</span>
+
+  <span class="ruby-identifier">options</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-normalized_file_list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">normalized_file_list</span><span
+            class="method-args">(relative_files, force_doc = false, exclude_pattern = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Given a list of files and directories, create a list of all the Ruby files
+they contain.</p>
+
+<p>If <code>force_doc</code> is true we always add the given files, if false,
+only add files that we guarantee we can parse.  It is true when looking at
+files given on the command line, false when recursing through
+subdirectories.</p>
+
+<p>The effect of this is that if you want a file with a non-standard extension
+parsed, you must name it explicitly.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="normalized_file_list-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 287</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">normalized_file_list</span>(<span class="ruby-identifier">relative_files</span>, <span class="ruby-identifier">force_doc</span> = <span class="ruby-keyword">false</span>,
+                         <span class="ruby-identifier">exclude_pattern</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">file_list</span> = []
+
+  <span class="ruby-identifier">relative_files</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">rel_file_name</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">rel_file_name</span>.<span class="ruby-identifier">end_with?</span> <span class="ruby-string">&#39;created.rid&#39;</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">exclude_pattern</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">exclude_pattern</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">rel_file_name</span>
+    <span class="ruby-identifier">stat</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">stat</span> <span class="ruby-identifier">rel_file_name</span> <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">next</span>
+
+    <span class="ruby-keyword">case</span> <span class="ruby-identifier">type</span> = <span class="ruby-identifier">stat</span>.<span class="ruby-identifier">ftype</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;file&quot;</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">last_modified</span> = <span class="ruby-ivar">@last_modified</span>[<span class="ruby-identifier">rel_file_name</span>] <span class="ruby-keyword">and</span>
+              <span class="ruby-identifier">stat</span>.<span class="ruby-identifier">mtime</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">last_modified</span>.<span class="ruby-identifier">to_i</span>
+
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">force_doc</span> <span class="ruby-keyword">or</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span>.<span class="ruby-identifier">can_parse</span>(<span class="ruby-identifier">rel_file_name</span>) <span class="ruby-keyword">then</span>
+        <span class="ruby-identifier">file_list</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">rel_file_name</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^\.\//</span>, <span class="ruby-string">&#39;&#39;</span>)
+        <span class="ruby-ivar">@last_modified</span>[<span class="ruby-identifier">rel_file_name</span>] = <span class="ruby-identifier">stat</span>.<span class="ruby-identifier">mtime</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;directory&quot;</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">rel_file_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;CVS&quot;</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">rel_file_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;.svn&quot;</span>
+
+      <span class="ruby-identifier">created_rid</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span> <span class="ruby-identifier">rel_file_name</span>, <span class="ruby-string">&quot;created.rid&quot;</span>
+      <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">file?</span> <span class="ruby-identifier">created_rid</span>
+
+      <span class="ruby-identifier">dot_doc</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span> <span class="ruby-identifier">rel_file_name</span>, <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">DOT_DOC_FILENAME</span>
+
+      <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">file?</span> <span class="ruby-identifier">dot_doc</span> <span class="ruby-keyword">then</span>
+        <span class="ruby-identifier">file_list</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">parse_dot_doc_file</span>(<span class="ruby-identifier">rel_file_name</span>, <span class="ruby-identifier">dot_doc</span>)
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">file_list</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">list_files_in_directory</span>(<span class="ruby-identifier">rel_file_name</span>)
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;rdoc can&#39;t parse the #{type} #{rel_file_name}&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">file_list</span>.<span class="ruby-identifier">flatten</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-output_flag_file" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">output_flag_file</span><span
+            class="method-args">(op_dir)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Return the path name of the flag file in an output directory.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="output_flag_file-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 252</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">output_flag_file</span>(<span class="ruby-identifier">op_dir</span>)
+  <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span> <span class="ruby-identifier">op_dir</span>, <span class="ruby-string">&quot;created.rid&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-parse_dot_doc_file" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">parse_dot_doc_file</span><span
+            class="method-args">(in_dir, filename)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The .document file contains a list of file and directory name patterns,
+representing candidates for documentation. It may also contain comments
+(starting with &#39;#&#39;)</p>
+          
+          
+
+          
+          <div class="method-source-code" id="parse_dot_doc_file-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 261</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_dot_doc_file</span> <span class="ruby-identifier">in_dir</span>, <span class="ruby-identifier">filename</span>
+  <span class="ruby-comment"># read and strip comments</span>
+  <span class="ruby-identifier">patterns</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">filename</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-node">/#.*/</span>, <span class="ruby-string">&#39;&#39;</span>)
+
+  <span class="ruby-identifier">result</span> = []
+
+  <span class="ruby-identifier">patterns</span>.<span class="ruby-identifier">split</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">patt</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">candidates</span> = <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">in_dir</span>, <span class="ruby-identifier">patt</span>))
+    <span class="ruby-identifier">result</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">normalized_file_list</span>(<span class="ruby-identifier">candidates</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">result</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-parse_file" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">parse_file</span><span
+            class="method-args">(filename)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Parses <code>filename</code> and returns an <a
+href="TopLevel.html">RDoc::TopLevel</a></p>
+          
+          
+
+          
+          <div class="method-source-code" id="parse_file-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 341</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_file</span> <span class="ruby-identifier">filename</span>
+    <span class="ruby-identifier">encoding</span> = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">encoding</span>
+    <span class="ruby-identifier">filename</span> = <span class="ruby-identifier">filename</span>.<span class="ruby-identifier">encode</span> <span class="ruby-identifier">encoding</span>
+
+    <span class="ruby-ivar">@stats</span>.<span class="ruby-identifier">add_file</span> <span class="ruby-identifier">filename</span>
+
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span>.<span class="ruby-identifier">binary?</span> <span class="ruby-identifier">filename</span>
+
+    <span class="ruby-identifier">content</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Encoding</span>.<span class="ruby-identifier">read_file</span> <span class="ruby-identifier">filename</span>, <span class="ruby-identifier">encoding</span>
+
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">content</span>
+
+    <span class="ruby-identifier">filename_path</span> = <span class="ruby-constant">Pathname</span>(<span class="ruby-identifier">filename</span>).<span class="ruby-identifier">expand_path</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-identifier">relative_path</span> = <span class="ruby-identifier">filename_path</span>.<span class="ruby-identifier">relative_path_from</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">root</span>
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">ArgumentError</span>
+      <span class="ruby-identifier">relative_path</span> = <span class="ruby-identifier">filename_path</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">page_dir</span> <span class="ruby-keyword">and</span>
+       <span class="ruby-identifier">relative_path</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">start_with?</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">page_dir</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">relative_path</span> =
+        <span class="ruby-identifier">relative_path</span>.<span class="ruby-identifier">relative_path_from</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">page_dir</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">top_level</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">add_file</span> <span class="ruby-identifier">filename</span>, <span class="ruby-identifier">relative_path</span>.<span class="ruby-identifier">to_s</span>
+
+    <span class="ruby-identifier">parser</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span>.<span class="ruby-identifier">for</span> <span class="ruby-identifier">top_level</span>, <span class="ruby-identifier">filename</span>, <span class="ruby-identifier">content</span>, <span class="ruby-ivar">@options</span>, <span class="ruby-ivar">@stats</span>
+
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">parser</span>
+
+    <span class="ruby-identifier">parser</span>.<span class="ruby-identifier">scan</span>
+
+    <span class="ruby-comment"># restart documentation for the classes &amp; modules found</span>
+    <span class="ruby-identifier">top_level</span>.<span class="ruby-identifier">classes_or_modules</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">cm</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">cm</span>.<span class="ruby-identifier">done_documenting</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">top_level</span>
+
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">EACCES</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+    <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value">&lt;&lt;-EOF
+Unable to read #{filename}, #{e.message}
+
+Please check the permissions for this file.  Perhaps you do not have access to
+it or perhaps the original author&#39;s permissions are to restrictive.  If the
+this is not your library please report a bug to the author.
+    EOF</span>
+  <span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+    <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value">&lt;&lt;-EOF
+Before reporting this, could you check that the file you&#39;re documenting
+has proper syntax:
+
+  #{Gem.ruby} -c #{filename}
+
+RDoc is not a full Ruby parser and will fail when fed invalid ruby programs.
+
+The internal error was:
+
+\t(#{e.class}) #{e.message}
+
+    EOF</span>
+
+    <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;\n\t&quot;</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">$DEBUG_RDOC</span>
+
+    <span class="ruby-identifier">raise</span> <span class="ruby-identifier">e</span>
+    <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-parse_files" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">parse_files</span><span
+            class="method-args">(files)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Parse each file on the command line, recursively entering directories.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="parse_files-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 413</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_files</span> <span class="ruby-identifier">files</span>
+  <span class="ruby-identifier">file_list</span> = <span class="ruby-identifier">gather_files</span> <span class="ruby-identifier">files</span>
+  <span class="ruby-ivar">@stats</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Stats</span>.<span class="ruby-identifier">new</span> <span class="ruby-ivar">@store</span>, <span class="ruby-identifier">file_list</span>.<span class="ruby-identifier">length</span>, <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">verbosity</span>
+
+  <span class="ruby-keyword">return</span> [] <span class="ruby-keyword">if</span> <span class="ruby-identifier">file_list</span>.<span class="ruby-identifier">empty?</span>
+
+  <span class="ruby-ivar">@stats</span>.<span class="ruby-identifier">begin_adding</span>
+
+  <span class="ruby-identifier">file_info</span> = <span class="ruby-identifier">file_list</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">filename</span><span class="ruby-operator">|</span>
+    <span class="ruby-ivar">@current</span> = <span class="ruby-identifier">filename</span>
+    <span class="ruby-identifier">parse_file</span> <span class="ruby-identifier">filename</span>
+  <span class="ruby-keyword">end</span>.<span class="ruby-identifier">compact</span>
+
+  <span class="ruby-ivar">@stats</span>.<span class="ruby-identifier">done_adding</span>
+
+  <span class="ruby-identifier">file_info</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-remove_siginfo_handler" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">remove_siginfo_handler</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Removes a siginfo handler and replaces the previous</p>
+          
+          
+
+          
+          <div class="method-source-code" id="remove_siginfo_handler-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 540</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">remove_siginfo_handler</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">Signal</span>.<span class="ruby-identifier">list</span>.<span class="ruby-identifier">key?</span> <span class="ruby-string">&#39;INFO&#39;</span>
+
+  <span class="ruby-identifier">handler</span> = <span class="ruby-ivar">@old_siginfo</span> <span class="ruby-operator">||</span> <span class="ruby-string">&#39;DEFAULT&#39;</span>
+
+  <span class="ruby-identifier">trap</span> <span class="ruby-string">&#39;INFO&#39;</span>, <span class="ruby-identifier">handler</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-remove_unparseable" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">remove_unparseable</span><span
+            class="method-args">(files)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Removes file extensions known to be unparseable from <code>files</code> and
+TAGS files for emacs and vim.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="remove_unparseable-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 435</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">remove_unparseable</span> <span class="ruby-identifier">files</span>
+  <span class="ruby-identifier">files</span>.<span class="ruby-identifier">reject</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">file</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\.(?:class|eps|erb|scpt\.txt|svg|ttf|yml)$/i</span> <span class="ruby-keyword">or</span>
+      (<span class="ruby-identifier">file</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/tags$/i</span> <span class="ruby-keyword">and</span>
+       <span class="ruby-identifier">open</span>(<span class="ruby-identifier">file</span>, <span class="ruby-string">&#39;rb&#39;</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+         <span class="ruby-identifier">io</span>.<span class="ruby-identifier">read</span>(<span class="ruby-value">100</span>) <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\A(\f\n[^,]+,\d+$|!_TAG_)/</span>
+       })
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-setup_output_dir" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">setup_output_dir</span><span
+            class="method-args">(dir, force)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create an output dir if it doesn&#39;t exist. If it does exist, but
+doesn&#39;t contain the flag file <code>created.rid</code> then we refuse
+to use it, as we may clobber some manually generated documentation</p>
+          
+          
+
+          
+          <div class="method-source-code" id="setup_output_dir-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 185</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">setup_output_dir</span>(<span class="ruby-identifier">dir</span>, <span class="ruby-identifier">force</span>)
+    <span class="ruby-identifier">flag_file</span> = <span class="ruby-identifier">output_flag_file</span> <span class="ruby-identifier">dir</span>
+
+    <span class="ruby-identifier">last</span> = {}
+
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">dry_run</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-comment"># do nothing</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span> <span class="ruby-identifier">dir</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">error</span> <span class="ruby-node">&quot;#{dir} exists and is not a directory&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-identifier">dir</span>
+
+      <span class="ruby-keyword">begin</span>
+        <span class="ruby-identifier">open</span> <span class="ruby-identifier">flag_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+          <span class="ruby-keyword">unless</span> <span class="ruby-identifier">force</span> <span class="ruby-keyword">then</span>
+            <span class="ruby-constant">Time</span>.<span class="ruby-identifier">parse</span> <span class="ruby-identifier">io</span>.<span class="ruby-identifier">gets</span>
+
+            <span class="ruby-identifier">io</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>
+              <span class="ruby-identifier">file</span>, <span class="ruby-identifier">time</span> = <span class="ruby-identifier">line</span>.<span class="ruby-identifier">split</span> <span class="ruby-string">&quot;\t&quot;</span>, <span class="ruby-value">2</span>
+              <span class="ruby-identifier">time</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">time</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">next</span>
+              <span class="ruby-identifier">last</span>[<span class="ruby-identifier">file</span>] = <span class="ruby-identifier">time</span>
+            <span class="ruby-keyword">end</span>
+          <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">rescue</span> <span class="ruby-constant">SystemCallError</span>, <span class="ruby-constant">TypeError</span>
+        <span class="ruby-identifier">error</span> <span class="ruby-value">&lt;&lt;-ERROR
+
+Directory #{dir} already exists, but it looks like it isn&#39;t an RDoc directory.
+
+Because RDoc doesn&#39;t want to risk destroying any of your existing files,
+you&#39;ll need to specify a different output directory name (using the --op &lt;dir&gt;
+option)
+
+        ERROR</span>
+      <span class="ruby-keyword">end</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">force_output</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">mkdir_p</span> <span class="ruby-identifier">dir</span>
+      <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">touch</span> <span class="ruby-identifier">flag_file</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">last</span>
+  <span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-store-3D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">store=</span><span
+            class="method-args">(store)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Sets the current documentation tree to <code>store</code> and sets the
+store&#39;s rdoc driver to this instance.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="store-3D-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 230</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">store=</span> <span class="ruby-identifier">store</span>
+  <span class="ruby-ivar">@store</span> = <span class="ruby-identifier">store</span>
+  <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">rdoc</span> = <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-update_output_dir" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update_output_dir</span><span
+            class="method-args">(op_dir, time, last = {})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Update the flag file in an output directory.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="update_output_dir-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/rdoc.rb, line 238</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_output_dir</span>(<span class="ruby-identifier">op_dir</span>, <span class="ruby-identifier">time</span>, <span class="ruby-identifier">last</span> = {})
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">dry_run</span> <span class="ruby-keyword">or</span> <span class="ruby-keyword">not</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">update_output_dir</span>
+
+  <span class="ruby-identifier">open</span> <span class="ruby-identifier">output_flag_file</span>(<span class="ruby-identifier">op_dir</span>), <span class="ruby-string">&quot;w&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-identifier">time</span>.<span class="ruby-identifier">rfc2822</span>
+    <span class="ruby-identifier">last</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">n</span>, <span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#{n}\t#{t.rfc2822}&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

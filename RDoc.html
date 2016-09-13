@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module RDoc - rdoc 5.0.0.beta2 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#module-RDoc-label-Roadmap">Roadmap</a>
+    <li><a href="#module-RDoc-label-Credits">Credits</a>
+  </ul>
+</div>
+
+
+  <div id="class-metadata">
+    
+    
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-load_yaml">::load_yaml</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-RDoc">
+  <h1 id="module-RDoc" class="module">
+    module RDoc
+  </h1>
+
+  <section class="description">
+    
+<p><a href="RDoc/RDoc.html">RDoc</a> produces documentation for Ruby source
+files by parsing the source and extracting the definition for classes,
+modules, methods, includes and requires.  It associates these with optional
+documentation contained in an immediately preceding comment block then
+renders the result using an output formatter.</p>
+
+<p>For a simple introduction to writing or generating documentation using <a
+href="RDoc/RDoc.html">RDoc</a> see the <a
+href="README_rdoc.html">README</a>.</p>
+
+<h2 id="module-RDoc-label-Roadmap">Roadmap<span><a href="#module-RDoc-label-Roadmap">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>If you think you found a bug in <a href="RDoc/RDoc.html">RDoc</a> see <a
+href="CONTRIBUTING_rdoc.html#label-Bugs">Bugs at CONTRIBUTING</a></p>
+
+<p>If you want to use <a href="RDoc/RDoc.html">RDoc</a> to create
+documentation for your Ruby source files, see <a
+href="RDoc/Markup.html">RDoc::Markup</a> and refer to <code>rdoc
+--help</code> for command line usage.</p>
+
+<p>If you want to set the default markup format see <a
+href="RDoc/Markup.html#label-Supported+Formats">Supported Formats at
+RDoc::Markup</a></p>
+
+<p>If you want to store rdoc configuration in your gem (such as the default
+markup format) see <a href="RDoc/Options.html#label-Saved+Options">Saved
+Options at RDoc::Options</a></p>
+
+<p>If you want to write documentation for Ruby files see <a
+href="RDoc/Parser/Ruby.html">RDoc::Parser::Ruby</a></p>
+
+<p>If you want to write documentation for extensions written in C see <a
+href="RDoc/Parser/C.html">RDoc::Parser::C</a></p>
+
+<p>If you want to generate documentation using <code>rake</code> see <a
+href="RDoc/Task.html">RDoc::Task</a>.</p>
+
+<p>If you want to drive <a href="RDoc/RDoc.html">RDoc</a> programmatically,
+see <a href="RDoc/RDoc.html">RDoc::RDoc</a>.</p>
+
+<p>If you want to use the library to format text blocks into HTML or other
+formats, look at <a href="RDoc/Markup.html">RDoc::Markup</a>.</p>
+
+<p>If you want to make an <a href="RDoc/RDoc.html">RDoc</a> plugin such as a
+generator or directive handler see <a href="RDoc/RDoc.html">RDoc::RDoc</a>.</p>
+
+<p>If you want to write your own output generator see <a
+href="RDoc/Generator.html">RDoc::Generator</a>.</p>
+
+<p>If you want an overview of how <a href="RDoc/RDoc.html">RDoc</a> works see
+<a href="CONTRIBUTING_rdoc.html">CONTRIBUTING</a></p>
+
+<h2 id="module-RDoc-label-Credits">Credits<span><a href="#module-RDoc-label-Credits">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p><a href="RDoc/RDoc.html">RDoc</a> is currently being maintained by Eric
+Hodel &lt;drbrain@segment7.net&gt;.</p>
+
+<p>Dave Thomas &lt;dave@pragmaticprogrammer.com&gt; is the original author of
+<a href="RDoc/RDoc.html">RDoc</a>.</p>
+<ul><li>
+<p>The Ruby parser in rdoc/parse.rb is based heavily on the outstanding work
+of Keiju ISHITSUKA of Nippon Rational Inc, who produced the Ruby parser for
+irb and the rtags package.</p>
+</li></ul>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="ATTR_MODIFIERS">ATTR_MODIFIERS
+        
+        <dd><p><a href="RDoc/RDoc.html">RDoc</a> modifiers for attributes</p>
+        
+      
+        <dt id="CLASS_MODIFIERS">CLASS_MODIFIERS
+        
+        <dd><p><a href="RDoc/RDoc.html">RDoc</a> modifiers for classes</p>
+        
+      
+        <dt id="CONSTANT_MODIFIERS">CONSTANT_MODIFIERS
+        
+        <dd><p><a href="RDoc/RDoc.html">RDoc</a> modifiers for constants</p>
+        
+      
+        <dt id="DOT_DOC_FILENAME">DOT_DOC_FILENAME
+        
+        <dd><p>Name of the dotfile that contains the description of files to be processed
+in the current directory</p>
+        
+      
+        <dt id="GENERAL_MODIFIERS">GENERAL_MODIFIERS
+        
+        <dd><p>General <a href="RDoc/RDoc.html">RDoc</a> modifiers</p>
+        
+      
+        <dt id="KNOWN_CLASSES">KNOWN_CLASSES
+        
+        <dd><p>Ruby&#39;s built-in classes, modules and exceptions</p>
+        
+      
+        <dt id="METHOD_MODIFIERS">METHOD_MODIFIERS
+        
+        <dd><p><a href="RDoc/RDoc.html">RDoc</a> modifiers for methods</p>
+        
+      
+        <dt id="VERSION">VERSION
+        
+        <dd><p><a href="RDoc/RDoc.html">RDoc</a> version you are using</p>
+        
+      
+        <dt id="VISIBILITIES">VISIBILITIES
+        
+        <dd><p>Method visibilities</p>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-load_yaml" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">load_yaml</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Loads the best available YAML library.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="load_yaml-source">
+            <pre><span class="ruby-comment"># File lib/rdoc.rb, line 109</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">load_yaml</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">gem</span> <span class="ruby-string">&#39;psych&#39;</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">NameError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span> <span class="ruby-comment"># --disable-gems</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-value">:gem</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Gem</span><span class="ruby-operator">::</span><span class="ruby-constant">LoadError</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;psych&#39;</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-operator">::</span><span class="ruby-constant">LoadError</span>
+  <span class="ruby-keyword">ensure</span>
+    <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;yaml&#39;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

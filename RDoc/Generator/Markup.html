@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module RDoc::Generator::Markup - rdoc 5.0.0.beta2 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+  var index_rel_prefix = "../../";
+</script>
+
+<script src="../../js/jquery.js"></script>
+<script src="../../js/darkfish.js"></script>
+
+<link href="../../css/fonts.css" rel="stylesheet">
+<link href="../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../table_of_contents.html#pages">Pages</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-aref_to">#aref_to</a>
+    
+    <li ><a href="#method-i-as_href">#as_href</a>
+    
+    <li ><a href="#method-i-cvs_url">#cvs_url</a>
+    
+    <li ><a href="#method-i-description">#description</a>
+    
+    <li ><a href="#method-i-formatter">#formatter</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-RDoc::Generator::Markup">
+  <h1 id="module-RDoc::Generator::Markup" class="module">
+    module RDoc::Generator::Markup
+  </h1>
+
+  <section class="description">
+    
+<p>Handle common <a href="../Markup.html">RDoc::Markup</a> tasks for various
+CodeObjects</p>
+
+<p>This module is loaded by generators.  It allows RDoc&#39;s <a
+href="../CodeObject.html">CodeObject</a> tree to avoid loading generator
+code to improve startup time for <code>ri</code>.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-aref_to" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">aref_to</span><span
+            class="method-args">(target_path)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Generates a relative URL from this object&#39;s path to
+<code>target_path</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="aref_to-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 12</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">aref_to</span>(<span class="ruby-identifier">target_path</span>)
+  <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ToHtml</span>.<span class="ruby-identifier">gen_relative_url</span> <span class="ruby-identifier">path</span>, <span class="ruby-identifier">target_path</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-as_href" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">as_href</span><span
+            class="method-args">(from_path)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Generates a relative URL from <code>from_path</code> to this object&#39;s
+path</p>
+          
+          
+
+          
+          <div class="method-source-code" id="as_href-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 19</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">as_href</span>(<span class="ruby-identifier">from_path</span>)
+  <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ToHtml</span>.<span class="ruby-identifier">gen_relative_url</span> <span class="ruby-identifier">from_path</span>, <span class="ruby-identifier">path</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-cvs_url" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">cvs_url</span><span
+            class="method-args">(url, full_path)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Build a webcvs URL starting for the given <code>url</code> with
+<code>full_path</code> appended as the destination path.  If
+<code>url</code> contains &#39;%s&#39; <code>full_path</code> will be will
+replace the %s using sprintf on the <code>url</code>.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="cvs_url-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 49</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">cvs_url</span>(<span class="ruby-identifier">url</span>, <span class="ruby-identifier">full_path</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-regexp">/%s/</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">url</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">sprintf</span> <span class="ruby-identifier">url</span>, <span class="ruby-identifier">full_path</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">url</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">full_path</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-description" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">description</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Handy wrapper for marking up this object&#39;s comment</p>
+          
+          
+
+          
+          <div class="method-source-code" id="description-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 26</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">description</span>
+  <span class="ruby-identifier">markup</span> <span class="ruby-ivar">@comment</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-formatter" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">formatter</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates an <a
+href="../Markup/ToHtmlCrossref.html">RDoc::Markup::ToHtmlCrossref</a>
+formatter</p>
+          
+          
+
+          
+          <div class="method-source-code" id="formatter-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 33</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">formatter</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@formatter</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span> <span class="ruby-ivar">@formatter</span>
+
+  <span class="ruby-identifier">options</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">options</span>
+  <span class="ruby-identifier">this</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Context</span> <span class="ruby-operator">===</span> <span class="ruby-keyword">self</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">self</span> <span class="ruby-operator">:</span> <span class="ruby-ivar">@parent</span>
+
+  <span class="ruby-ivar">@formatter</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ToHtmlCrossref</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">options</span>, <span class="ruby-identifier">this</span>.<span class="ruby-identifier">path</span>, <span class="ruby-identifier">this</span>
+  <span class="ruby-ivar">@formatter</span>.<span class="ruby-identifier">code_object</span> = <span class="ruby-keyword">self</span>
+  <span class="ruby-ivar">@formatter</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

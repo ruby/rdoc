@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class RDoc::Markup::ToHtmlSnippet - rdoc 5.0.0.beta2 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+  var index_rel_prefix = "../../";
+</script>
+
+<script src="../../js/jquery.js"></script>
+<script src="../../js/darkfish.js"></script>
+
+<link href="../../css/fonts.css" rel="stylesheet">
+<link href="../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../table_of_contents.html#pages">Pages</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="ToHtml.html">RDoc::Markup::ToHtml</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li class="calls-super" ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-accept_heading">#accept_heading</a>
+    
+    <li ><a href="#method-i-accept_list_item_end">#accept_list_item_end</a>
+    
+    <li ><a href="#method-i-accept_list_item_start">#accept_list_item_start</a>
+    
+    <li ><a href="#method-i-accept_list_start">#accept_list_start</a>
+    
+    <li ><a href="#method-i-accept_paragraph">#accept_paragraph</a>
+    
+    <li class="calls-super" ><a href="#method-i-accept_verbatim">#accept_verbatim</a>
+    
+    <li ><a href="#method-i-add_paragraph">#add_paragraph</a>
+    
+    <li class="calls-super" ><a href="#method-i-convert">#convert</a>
+    
+    <li ><a href="#method-i-convert_flow">#convert_flow</a>
+    
+    <li ><a href="#method-i-gen_url">#gen_url</a>
+    
+    <li ><a href="#method-i-handle_special_CROSSREF">#handle_special_CROSSREF</a>
+    
+    <li ><a href="#method-i-handle_special_HARD_BREAK">#handle_special_HARD_BREAK</a>
+    
+    <li ><a href="#method-i-html_list_name">#html_list_name</a>
+    
+    <li ><a href="#method-i-list_item_start">#list_item_start</a>
+    
+    <li class="calls-super" ><a href="#method-i-off_tags">#off_tags</a>
+    
+    <li class="calls-super" ><a href="#method-i-on_tags">#on_tags</a>
+    
+    <li class="calls-super" ><a href="#method-i-start_accepting">#start_accepting</a>
+    
+    <li ><a href="#method-i-truncate">#truncate</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-RDoc::Markup::ToHtmlSnippet">
+  <h1 id="class-RDoc::Markup::ToHtmlSnippet" class="class">
+    class RDoc::Markup::ToHtmlSnippet
+  </h1>
+
+  <section class="description">
+    
+<p>Outputs <a href="../../RDoc.html">RDoc</a> markup as paragraphs with inline
+markup only.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-character_limit" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">character_limit</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>After this many characters the input will be cut off.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-mask" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">mask</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The attribute bitmask</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-paragraph_limit" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">paragraph_limit</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>After this many paragraphs the input will be cut off.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-paragraphs" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">paragraphs</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Count of paragraphs found</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(options, characters = 100, paragraphs = 3, markup = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates a new <a href="ToHtmlSnippet.html">ToHtmlSnippet</a> formatter that
+will cut off the input on the next word boundary after the given number of
+<code>characters</code> or <code>paragraphs</code> of text have been
+encountered.</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="ToHtml.html#method-c-new">RDoc::Markup::ToHtml.new</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 36</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">options</span>, <span class="ruby-identifier">characters</span> = <span class="ruby-value">100</span>, <span class="ruby-identifier">paragraphs</span> = <span class="ruby-value">3</span>, <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">super</span> <span class="ruby-identifier">options</span>, <span class="ruby-identifier">markup</span>
+
+  <span class="ruby-ivar">@character_limit</span> = <span class="ruby-identifier">characters</span>
+  <span class="ruby-ivar">@paragraph_limit</span> = <span class="ruby-identifier">paragraphs</span>
+
+  <span class="ruby-ivar">@characters</span> = <span class="ruby-value">0</span>
+  <span class="ruby-ivar">@mask</span>       = <span class="ruby-value">0</span>
+  <span class="ruby-ivar">@paragraphs</span> = <span class="ruby-value">0</span>
+
+  <span class="ruby-ivar">@markup</span>.<span class="ruby-identifier">add_special</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">CrossReference</span><span class="ruby-operator">::</span><span class="ruby-constant">CROSSREF_REGEXP</span>, <span class="ruby-value">:CROSSREF</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-accept_heading" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">accept_heading</span><span
+            class="method-args">(heading)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Adds <code>heading</code> to the output as a paragraph</p>
+          
+          
+
+          
+          <div class="method-source-code" id="accept_heading-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 52</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_heading</span> <span class="ruby-identifier">heading</span>
+  <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;&lt;p&gt;#{to_html heading.text}\n&quot;</span>
+
+  <span class="ruby-identifier">add_paragraph</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-accept_list_item_end" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">accept_list_item_end</span><span
+            class="method-args">(list_item)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Finishes consumption of <code>list_item</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="accept_list_item_end-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 81</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_list_item_end</span> <span class="ruby-identifier">list_item</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-accept_list_item_start" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">accept_list_item_start</span><span
+            class="method-args">(list_item)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Prepares the visitor for consuming <code>list_item</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="accept_list_item_start-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 87</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-identifier">list_item</span>
+  <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">list_item_start</span>(<span class="ruby-identifier">list_item</span>, <span class="ruby-ivar">@list</span>.<span class="ruby-identifier">last</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-accept_list_start" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">accept_list_start</span><span
+            class="method-args">(list)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Prepares the visitor for consuming <code>list</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="accept_list_start-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 94</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_list_start</span> <span class="ruby-identifier">list</span>
+  <span class="ruby-ivar">@list</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">list</span>.<span class="ruby-identifier">type</span>
+  <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">html_list_name</span>(<span class="ruby-identifier">list</span>.<span class="ruby-identifier">type</span>, <span class="ruby-keyword">true</span>)
+  <span class="ruby-ivar">@in_list_entry</span>.<span class="ruby-identifier">push</span> <span class="ruby-string">&#39;&#39;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-accept_paragraph" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">accept_paragraph</span><span
+            class="method-args">(paragraph)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="accept_paragraph-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 68</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_paragraph</span> <span class="ruby-identifier">paragraph</span>
+  <span class="ruby-identifier">para</span> = <span class="ruby-ivar">@in_list_entry</span>.<span class="ruby-identifier">last</span> <span class="ruby-operator">||</span> <span class="ruby-string">&quot;&lt;p&gt;&quot;</span>
+
+  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">paragraph</span>.<span class="ruby-identifier">text</span> <span class="ruby-ivar">@hard_break</span>
+
+  <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;#{para}#{wrap to_html text}\n&quot;</span>
+
+  <span class="ruby-identifier">add_paragraph</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-accept_verbatim" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">accept_verbatim</span><span
+            class="method-args">(verbatim)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Adds <code>verbatim</code> to the output</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="ToHtml.html#method-i-accept_verbatim">RDoc::Markup::ToHtml#accept_verbatim</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="accept_verbatim-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 103</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_verbatim</span> <span class="ruby-identifier">verbatim</span>
+  <span class="ruby-identifier">throw</span> <span class="ruby-value">:done</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@characters</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-ivar">@character_limit</span>
+  <span class="ruby-identifier">input</span> = <span class="ruby-identifier">verbatim</span>.<span class="ruby-identifier">text</span>.<span class="ruby-identifier">rstrip</span>
+
+  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">truncate</span> <span class="ruby-identifier">input</span>
+  <span class="ruby-identifier">text</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39; ...&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">input</span>
+
+  <span class="ruby-keyword">super</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Verbatim</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">text</span>
+
+  <span class="ruby-identifier">add_paragraph</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-add_paragraph" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_paragraph</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Throws <code>:done</code> when <a
+href="ToHtmlSnippet.html#attribute-i-paragraph_limit">#paragraph_limit</a>
+paragraphs have been encountered</p>
+          
+          
+
+          
+          <div class="method-source-code" id="add_paragraph-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 194</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_paragraph</span>
+  <span class="ruby-ivar">@paragraphs</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+
+  <span class="ruby-identifier">throw</span> <span class="ruby-value">:done</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@paragraphs</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-ivar">@paragraph_limit</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-convert" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">convert</span><span
+            class="method-args">(content)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Marks up <code>content</code></p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="Formatter.html#method-i-convert">RDoc::Markup::Formatter#convert</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="convert-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 203</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">convert</span> <span class="ruby-identifier">content</span>
+  <span class="ruby-identifier">catch</span> <span class="ruby-value">:done</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">super</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">end_accepting</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-convert_flow" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">convert_flow</span><span
+            class="method-args">(flow)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Converts flow items <code>flow</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="convert_flow-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 214</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">convert_flow</span> <span class="ruby-identifier">flow</span>
+  <span class="ruby-identifier">throw</span> <span class="ruby-value">:done</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@characters</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-ivar">@character_limit</span>
+
+  <span class="ruby-identifier">res</span> = []
+  <span class="ruby-ivar">@mask</span> = <span class="ruby-value">0</span>
+
+  <span class="ruby-identifier">flow</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">item</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">case</span> <span class="ruby-identifier">item</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">AttrChanger</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">off_tags</span> <span class="ruby-identifier">res</span>, <span class="ruby-identifier">item</span>
+      <span class="ruby-identifier">on_tags</span>  <span class="ruby-identifier">res</span>, <span class="ruby-identifier">item</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-constant">String</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">text</span> = <span class="ruby-identifier">convert_string</span> <span class="ruby-identifier">item</span>
+      <span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">truncate</span>(<span class="ruby-identifier">text</span>)
+    <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Special</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">text</span> = <span class="ruby-identifier">convert_special</span> <span class="ruby-identifier">item</span>
+      <span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">truncate</span>(<span class="ruby-identifier">text</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Unknown flow element: #{item.inspect}&quot;</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@characters</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-ivar">@character_limit</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">off_tags</span> <span class="ruby-identifier">res</span>, <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">AttrChanger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">0</span>, <span class="ruby-ivar">@mask</span>)
+      <span class="ruby-keyword">break</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39; ...&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@characters</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-ivar">@character_limit</span>
+
+  <span class="ruby-identifier">res</span>.<span class="ruby-identifier">join</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-gen_url" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">gen_url</span><span
+            class="method-args">(url, text)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns just the text of <code>link</code>, <code>url</code> is only used
+to determine the link type.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="gen_url-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 167</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">gen_url</span> <span class="ruby-identifier">url</span>, <span class="ruby-identifier">text</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">url</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^rdoc-label:([^:]*)(?::(.*))?/</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">type</span> = <span class="ruby-string">&quot;link&quot;</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">url</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/([A-Za-z]+):(.*)/</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">type</span> = <span class="ruby-node">$1</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">type</span> = <span class="ruby-string">&quot;http&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> (<span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;http&quot;</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;https&quot;</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;link&quot;</span>) <span class="ruby-keyword">and</span>
+     <span class="ruby-identifier">url</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\.(gif|png|jpg|jpeg|bmp)$/</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-node">%r%^#{type}:/*%</span>, <span class="ruby-string">&#39;&#39;</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-handle_special_CROSSREF" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">handle_special_CROSSREF</span><span
+            class="method-args">(special)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Removes escaping from the cross-references in <code>special</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="handle_special_CROSSREF-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 127</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_special_CROSSREF</span> <span class="ruby-identifier">special</span>
+  <span class="ruby-identifier">special</span>.<span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\A\/</span>, <span class="ruby-string">&#39;&#39;</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-handle_special_HARD_BREAK" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">handle_special_HARD_BREAK</span><span
+            class="method-args">(special)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><code>special</code> is a <code><br></code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="handle_special_HARD_BREAK-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 134</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_special_HARD_BREAK</span> <span class="ruby-identifier">special</span>
+  <span class="ruby-ivar">@characters</span> <span class="ruby-operator">-=</span> <span class="ruby-value">4</span>
+  <span class="ruby-string">&#39;&lt;br&gt;&#39;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-html_list_name" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">html_list_name</span><span
+            class="method-args">(list_type, open_tag)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>In snippets, there are no lists</p>
+          
+          
+
+          
+          <div class="method-source-code" id="html_list_name-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 187</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">html_list_name</span> <span class="ruby-identifier">list_type</span>, <span class="ruby-identifier">open_tag</span>
+  <span class="ruby-string">&#39;&#39;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-list_item_start" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">list_item_start</span><span
+            class="method-args">(list_item, list_type)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Lists are paragraphs, but notes and labels have a separator</p>
+          
+          
+
+          
+          <div class="method-source-code" id="list_item_start-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 142</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">list_item_start</span> <span class="ruby-identifier">list_item</span>, <span class="ruby-identifier">list_type</span>
+  <span class="ruby-identifier">throw</span> <span class="ruby-value">:done</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@characters</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-ivar">@character_limit</span>
+
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">list_type</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-value">:BULLET</span>, <span class="ruby-value">:LALPHA</span>, <span class="ruby-value">:NUMBER</span>, <span class="ruby-value">:UALPHA</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-string">&quot;&lt;p&gt;&quot;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-value">:LABEL</span>, <span class="ruby-value">:NOTE</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">labels</span> = <span class="ruby-constant">Array</span>(<span class="ruby-identifier">list_item</span>.<span class="ruby-identifier">label</span>).<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">label</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">to_html</span> <span class="ruby-identifier">label</span>
+    <span class="ruby-keyword">end</span>.<span class="ruby-identifier">join</span> <span class="ruby-string">&#39;, &#39;</span>
+
+    <span class="ruby-identifier">labels</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot; &amp;mdash; &quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">labels</span>.<span class="ruby-identifier">empty?</span>
+
+    <span class="ruby-identifier">start</span> = <span class="ruby-node">&quot;&lt;p&gt;#{labels}&quot;</span>
+    <span class="ruby-ivar">@characters</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-comment"># try to include the label</span>
+    <span class="ruby-identifier">start</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-node">&quot;Invalid list type: #{list_type.inspect}&quot;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-off_tags" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">off_tags</span><span
+            class="method-args">(res, item)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Maintains a bitmask to allow HTML elements to be closed properly.  See <a
+href="Formatter.html">RDoc::Markup::Formatter</a>.</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="Formatter.html#method-i-off_tags">RDoc::Markup::Formatter#off_tags</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="off_tags-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 260</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">off_tags</span> <span class="ruby-identifier">res</span>, <span class="ruby-identifier">item</span>
+  <span class="ruby-ivar">@mask</span> <span class="ruby-operator">^=</span> <span class="ruby-identifier">item</span>.<span class="ruby-identifier">turn_off</span>
+
+  <span class="ruby-keyword">super</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-on_tags" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">on_tags</span><span
+            class="method-args">(res, item)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Maintains a bitmask to allow HTML elements to be closed properly.  See <a
+href="Formatter.html">RDoc::Markup::Formatter</a>.</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="Formatter.html#method-i-on_tags">RDoc::Markup::Formatter#on_tags</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="on_tags-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 250</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">on_tags</span> <span class="ruby-identifier">res</span>, <span class="ruby-identifier">item</span>
+  <span class="ruby-ivar">@mask</span> <span class="ruby-operator">^=</span> <span class="ruby-identifier">item</span>.<span class="ruby-identifier">turn_on</span>
+
+  <span class="ruby-keyword">super</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-start_accepting" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">start_accepting</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Prepares the visitor for HTML snippet generation</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="ToHtml.html#method-i-start_accepting">RDoc::Markup::ToHtml#start_accepting</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="start_accepting-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 118</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">start_accepting</span>
+  <span class="ruby-keyword">super</span>
+
+  <span class="ruby-ivar">@characters</span> = <span class="ruby-value">0</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-truncate" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">truncate</span><span
+            class="method-args">(text)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Truncates <code>text</code> at the end of the first word after the
+character_limit.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="truncate-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 269</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">truncate</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-identifier">length</span> = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">length</span>
+  <span class="ruby-identifier">characters</span> = <span class="ruby-ivar">@characters</span>
+  <span class="ruby-ivar">@characters</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">length</span>
+
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">text</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@characters</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@character_limit</span>
+
+  <span class="ruby-identifier">remaining</span> = <span class="ruby-ivar">@character_limit</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">characters</span>
+
+  <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/\A(.{#{remaining},}?)(\s|$)/m</span> <span class="ruby-comment"># TODO word-break instead of \s?</span>
+
+  <span class="ruby-node">$1</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

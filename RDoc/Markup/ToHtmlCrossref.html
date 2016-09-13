@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class RDoc::Markup::ToHtmlCrossref - rdoc 5.0.0.beta2 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+  var index_rel_prefix = "../../";
+</script>
+
+<script src="../../js/jquery.js"></script>
+<script src="../../js/darkfish.js"></script>
+
+<link href="../../css/fonts.css" rel="stylesheet">
+<link href="../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../table_of_contents.html#pages">Pages</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="ToHtml.html">RDoc::Markup::ToHtml</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li class="calls-super" ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-cross_reference">#cross_reference</a>
+    
+    <li class="calls-super" ><a href="#method-i-gen_url">#gen_url</a>
+    
+    <li ><a href="#method-i-handle_special_CROSSREF">#handle_special_CROSSREF</a>
+    
+    <li class="calls-super" ><a href="#method-i-handle_special_HYPERLINK">#handle_special_HYPERLINK</a>
+    
+    <li class="calls-super" ><a href="#method-i-handle_special_RDOCLINK">#handle_special_RDOCLINK</a>
+    
+    <li ><a href="#method-i-link">#link</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-RDoc::Markup::ToHtmlCrossref">
+  <h1 id="class-RDoc::Markup::ToHtmlCrossref" class="class">
+    class RDoc::Markup::ToHtmlCrossref
+  </h1>
+
+  <section class="description">
+    
+<p>Subclass of the <a href="ToHtml.html">RDoc::Markup::ToHtml</a> class that
+supports looking up method names, classes, etc to create links.  <a
+href="../CrossReference.html">RDoc::CrossReference</a> is used to generate
+those links based on the current context.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-context" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">context</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p><a href="../CodeObject.html">RDoc::CodeObject</a> for generating references</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-show_hash" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">show_hash</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Should we show &#39;#&#39; characters on method references?</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(options, from_path, context, markup = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates a new crossref resolver that generates links relative to
+<code>context</code> which lives at <code>from_path</code> in the generated
+files.  &#39;#&#39; characters on references are removed unless
+<code>show_hash</code> is true.  Only method names preceded by &#39;#&#39;
+or &#39;::&#39; are linked, unless <code>hyperlink_all</code> is true.</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="ToHtml.html#method-c-new">RDoc::Markup::ToHtml.new</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 31</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">options</span>, <span class="ruby-identifier">from_path</span>, <span class="ruby-identifier">context</span>, <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&#39;from_path cannot be nil&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">from_path</span>.<span class="ruby-identifier">nil?</span>
+
+  <span class="ruby-keyword">super</span> <span class="ruby-identifier">options</span>, <span class="ruby-identifier">markup</span>
+
+  <span class="ruby-ivar">@context</span>       = <span class="ruby-identifier">context</span>
+  <span class="ruby-ivar">@from_path</span>     = <span class="ruby-identifier">from_path</span>
+  <span class="ruby-ivar">@hyperlink_all</span> = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">hyperlink_all</span>
+  <span class="ruby-ivar">@show_hash</span>     = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">show_hash</span>
+
+  <span class="ruby-identifier">crossref_re</span> = <span class="ruby-ivar">@hyperlink_all</span> <span class="ruby-operator">?</span> <span class="ruby-constant">ALL_CROSSREF_REGEXP</span> <span class="ruby-operator">:</span> <span class="ruby-constant">CROSSREF_REGEXP</span>
+  <span class="ruby-ivar">@markup</span>.<span class="ruby-identifier">add_special</span> <span class="ruby-identifier">crossref_re</span>, <span class="ruby-value">:CROSSREF</span>
+
+  <span class="ruby-ivar">@cross_reference</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">CrossReference</span>.<span class="ruby-identifier">new</span> <span class="ruby-ivar">@context</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-cross_reference" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">cross_reference</span><span
+            class="method-args">(name, text = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates a link to the reference <code>name</code> if the name exists.  If
+<code>text</code> is given it is used as the link text, otherwise
+<code>name</code> is used.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="cross_reference-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 51</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">cross_reference</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">text</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">lookup</span> = <span class="ruby-identifier">name</span>
+
+  <span class="ruby-identifier">name</span> = <span class="ruby-identifier">name</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>] <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@show_hash</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span>[<span class="ruby-value">0</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&#39;#&#39;</span>
+
+  <span class="ruby-identifier">name</span> = <span class="ruby-node">&quot;#{CGI.unescape $&#39;} at #{$1}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/(.*[^#:])@/</span>
+
+  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">name</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">text</span>
+
+  <span class="ruby-identifier">link</span> <span class="ruby-identifier">lookup</span>, <span class="ruby-identifier">text</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-gen_url" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">gen_url</span><span
+            class="method-args">(url, text)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Generates links for <code>rdoc-ref:</code> scheme URLs and allows <a
+href="ToHtml.html">RDoc::Markup::ToHtml</a> to handle other schemes.</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="ToHtml.html#method-i-gen_url">RDoc::Markup::ToHtml#gen_url</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="gen_url-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 118</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">gen_url</span> <span class="ruby-identifier">url</span>, <span class="ruby-identifier">text</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">super</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">url</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\Ardoc-ref:/</span>
+
+  <span class="ruby-identifier">cross_reference</span> <span class="ruby-node">$&#39;</span>, <span class="ruby-identifier">text</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-handle_special_CROSSREF" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">handle_special_CROSSREF</span><span
+            class="method-args">(special)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>We&#39;re invoked when any text matches the CROSSREF pattern.  If we find
+the corresponding reference, generate a link.  If the name we&#39;re
+looking for contains no punctuation, we look for it up the module/class
+chain.  For example, ToHtml is found, even without the
+<code>RDoc::Markup::</code> prefix, because we look for it in module Markup
+first.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="handle_special_CROSSREF-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 70</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_special_CROSSREF</span>(<span class="ruby-identifier">special</span>)
+  <span class="ruby-identifier">name</span> = <span class="ruby-identifier">special</span>.<span class="ruby-identifier">text</span>
+
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">name</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/@[\w-]+\.[\w-]/</span> <span class="ruby-comment"># labels that look like emails</span>
+
+  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@hyperlink_all</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-comment"># This ensures that words entirely consisting of lowercase letters will</span>
+    <span class="ruby-comment"># not have cross-references generated (to suppress lots of erroneous</span>
+    <span class="ruby-comment"># cross-references to &quot;new&quot; in text, for instance)</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">name</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\A[a-z]*\z/</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">cross_reference</span> <span class="ruby-identifier">name</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-handle_special_HYPERLINK" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">handle_special_HYPERLINK</span><span
+            class="method-args">(special)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Handles <code>rdoc-ref:</code> scheme links and allows <a
+href="ToHtml.html">RDoc::Markup::ToHtml</a> to handle other schemes.</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="ToHtml.html#method-i-handle_special_HYPERLINK">RDoc::Markup::ToHtml#handle_special_HYPERLINK</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="handle_special_HYPERLINK-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 89</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_special_HYPERLINK</span> <span class="ruby-identifier">special</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">cross_reference</span> <span class="ruby-node">$&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">special</span>.<span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\Ardoc-ref:/</span>
+
+  <span class="ruby-keyword">super</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-handle_special_RDOCLINK" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">handle_special_RDOCLINK</span><span
+            class="method-args">(special)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><code>special</code> is an rdoc-schemed link that will be converted into a
+hyperlink. For the rdoc-ref scheme the cross-reference will be looked up
+and the given name will be used.</p>
+
+<p>All other contents are handled by <a
+href="ToHtml.html#method-i-handle_special_RDOCLINK">the superclass</a></p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="ToHtml.html#method-i-handle_special_RDOCLINK">RDoc::Markup::ToHtml#handle_special_RDOCLINK</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="handle_special_RDOCLINK-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 103</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_special_RDOCLINK</span> <span class="ruby-identifier">special</span>
+  <span class="ruby-identifier">url</span> = <span class="ruby-identifier">special</span>.<span class="ruby-identifier">text</span>
+
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">url</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/\Ardoc-ref:/</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">cross_reference</span> <span class="ruby-node">$&#39;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">super</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-link" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">link</span><span
+            class="method-args">(name, text)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates an HTML link to <code>name</code> with the given <code>text</code>.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="link-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 127</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">link</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">text</span>
+  <span class="ruby-identifier">original_name</span> = <span class="ruby-identifier">name</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/(.*[^#:])@/</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">name</span> = <span class="ruby-node">$1</span>
+    <span class="ruby-identifier">label</span> = <span class="ruby-node">$&#39;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">ref</span> = <span class="ruby-ivar">@cross_reference</span>.<span class="ruby-identifier">resolve</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">text</span>
+
+  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">ref</span>.<span class="ruby-identifier">output_name</span> <span class="ruby-ivar">@context</span> <span class="ruby-keyword">if</span>
+    <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">MethodAttr</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">ref</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">original_name</span>
+
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">ref</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">String</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">ref</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">path</span> = <span class="ruby-identifier">ref</span>.<span class="ruby-identifier">as_href</span> <span class="ruby-ivar">@from_path</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">path</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/#/</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">path</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;-label-#{label}&quot;</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">ref</span>.<span class="ruby-identifier">sections</span> <span class="ruby-keyword">and</span>
+          <span class="ruby-identifier">ref</span>.<span class="ruby-identifier">sections</span>.<span class="ruby-identifier">any?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">section</span><span class="ruby-operator">|</span> <span class="ruby-identifier">label</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">section</span>.<span class="ruby-identifier">title</span> } <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">path</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;##{label}&quot;</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">path</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;#label-#{label}&quot;</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">label</span>
+
+    <span class="ruby-node">&quot;&lt;a href=\&quot;#{path}\&quot;&gt;#{text}&lt;/a&gt;&quot;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

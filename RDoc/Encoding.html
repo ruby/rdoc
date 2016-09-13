@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module RDoc::Encoding - rdoc 5.0.0.beta2 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-read_file">::read_file</a>
+    
+    <li ><a href="#method-c-remove_frozen_string_literal">::remove_frozen_string_literal</a>
+    
+    <li ><a href="#method-c-set_encoding">::set_encoding</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-RDoc::Encoding">
+  <h1 id="module-RDoc::Encoding" class="module">
+    module RDoc::Encoding
+  </h1>
+
+  <section class="description">
+    
+<p>This class is a wrapper around File IO and <a
+href="Encoding.html">Encoding</a> that helps <a href="RDoc.html">RDoc</a>
+load files and convert them to the correct encoding.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-read_file" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">read_file</span><span
+            class="method-args">(filename, encoding, force_transcode = false)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Reads the contents of <code>filename</code> and handles any encoding
+directives in the file.</p>
+
+<p>The content will be converted to the <code>encoding</code>.  If the file
+cannot be converted a warning will be printed and nil will be returned.</p>
+
+<p>If <code>force_transcode</code> is true the document will be transcoded and
+any unknown character in the target encoding will be replaced with
+&#39;?&#39;</p>
+          
+          
+
+          
+          <div class="method-source-code" id="read_file-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/encoding.rb, line 18</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">read_file</span> <span class="ruby-identifier">filename</span>, <span class="ruby-identifier">encoding</span>, <span class="ruby-identifier">force_transcode</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">content</span> = <span class="ruby-identifier">open</span> <span class="ruby-identifier">filename</span>, <span class="ruby-string">&quot;rb&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span> <span class="ruby-identifier">f</span>.<span class="ruby-identifier">read</span> <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">content</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-string">&quot;\r\n&quot;</span>, <span class="ruby-string">&quot;\n&quot;</span>) <span class="ruby-keyword">if</span> <span class="ruby-constant">RUBY_PLATFORM</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/mswin|mingw/</span>
+
+  <span class="ruby-identifier">utf8</span> = <span class="ruby-identifier">content</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/\A\xef\xbb\xbf/</span>, <span class="ruby-string">&#39;&#39;</span>)
+
+  <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Encoding</span>.<span class="ruby-identifier">set_encoding</span> <span class="ruby-identifier">content</span>
+
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">encoding</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Encoding</span>.<span class="ruby-identifier">default_external</span>
+    <span class="ruby-identifier">orig_encoding</span> = <span class="ruby-identifier">content</span>.<span class="ruby-identifier">encoding</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-keyword">not</span> <span class="ruby-identifier">orig_encoding</span>.<span class="ruby-identifier">ascii_compatible?</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">content</span>.<span class="ruby-identifier">encode!</span> <span class="ruby-identifier">encoding</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">utf8</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">content</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-constant">Encoding</span><span class="ruby-operator">::</span><span class="ruby-constant">UTF_8</span>
+      <span class="ruby-identifier">content</span>.<span class="ruby-identifier">encode!</span> <span class="ruby-identifier">encoding</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-comment"># assume the content is in our output encoding</span>
+      <span class="ruby-identifier">content</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">encoding</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">content</span>.<span class="ruby-identifier">valid_encoding?</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-comment"># revert and try to transcode</span>
+      <span class="ruby-identifier">content</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">orig_encoding</span>
+      <span class="ruby-identifier">content</span>.<span class="ruby-identifier">encode!</span> <span class="ruby-identifier">encoding</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">content</span>.<span class="ruby-identifier">valid_encoding?</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;unable to convert #{filename} to #{encoding}, skipping&quot;</span>
+      <span class="ruby-identifier">content</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Encoding</span><span class="ruby-operator">::</span><span class="ruby-constant">InvalidByteSequenceError</span>,
+         <span class="ruby-constant">Encoding</span><span class="ruby-operator">::</span><span class="ruby-constant">UndefinedConversionError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">force_transcode</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">content</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">orig_encoding</span>
+      <span class="ruby-identifier">content</span>.<span class="ruby-identifier">encode!</span>(<span class="ruby-identifier">encoding</span>,
+                      <span class="ruby-value">:invalid</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:replace</span>, <span class="ruby-value">:undef</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:replace</span>,
+                      <span class="ruby-value">:replace</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;?&#39;</span>)
+      <span class="ruby-keyword">return</span> <span class="ruby-identifier">content</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;unable to convert #{e.message} for #{filename}, skipping&quot;</span>
+      <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">content</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">ArgumentError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">message</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/unknown encoding name - (.*)/</span>
+  <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;unknown encoding name \&quot;#{$1}\&quot; for #{filename}, skipping&quot;</span>
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">EISDIR</span>, <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">ENOENT</span>
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-remove_frozen_string_literal" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">remove_frozen_string_literal</span><span
+            class="method-args">(string)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="remove_frozen_string_literal-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/encoding.rb, line 73</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">remove_frozen_string_literal</span> <span class="ruby-identifier">string</span>
+  <span class="ruby-identifier">string</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/\A(?:#!.*\n)?(.*\n)/</span>
+  <span class="ruby-identifier">first_line</span> = <span class="ruby-node">$1</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">first_line</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/\A# +frozen[-_]string[-_]literal[=:].+$/i</span>
+    <span class="ruby-identifier">string</span>.<span class="ruby-identifier">sub!</span> <span class="ruby-identifier">first_line</span>, <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-set_encoding" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">set_encoding</span><span
+            class="method-args">(string)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Sets the encoding of <code>string</code> based on the magic comment</p>
+          
+          
+
+          
+          <div class="method-source-code" id="set_encoding-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/encoding.rb, line 85</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">set_encoding</span> <span class="ruby-identifier">string</span>
+  <span class="ruby-identifier">remove_frozen_string_literal</span> <span class="ruby-identifier">string</span>
+
+  <span class="ruby-identifier">string</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/\A(?:#!.*\n)?(.*\n)/</span>
+
+  <span class="ruby-identifier">first_line</span> = <span class="ruby-node">$1</span>
+
+  <span class="ruby-identifier">name</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">first_line</span>
+         <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^&lt;\?xml[^?]*encoding=([&quot;&#39;])(.*?)\1/</span> <span class="ruby-keyword">then</span> <span class="ruby-node">$2</span>
+         <span class="ruby-keyword">when</span> <span class="ruby-regexp">/\b(?:en)?coding[=:]\s*([^\s;]+)/i</span>   <span class="ruby-keyword">then</span> <span class="ruby-node">$1</span>
+         <span class="ruby-keyword">else</span>                                           <span class="ruby-keyword">return</span>
+         <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">string</span>.<span class="ruby-identifier">sub!</span> <span class="ruby-identifier">first_line</span>, <span class="ruby-string">&#39;&#39;</span>
+
+  <span class="ruby-identifier">remove_frozen_string_literal</span> <span class="ruby-identifier">string</span>
+
+  <span class="ruby-identifier">enc</span> = <span class="ruby-constant">Encoding</span>.<span class="ruby-identifier">find</span> <span class="ruby-identifier">name</span>
+  <span class="ruby-identifier">string</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">enc</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">enc</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class RDoc::Generator::Darkfish - rdoc 5.0.0.beta2 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+  var index_rel_prefix = "../../";
+</script>
+
+<script src="../../js/jquery.js"></script>
+<script src="../../js/darkfish.js"></script>
+
+<link href="../../css/fonts.css" rel="stylesheet">
+<link href="../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../table_of_contents.html#pages">Pages</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#class-RDoc::Generator::Darkfish-label-Author-2Fs">Author/s</a>
+    <li><a href="#class-RDoc::Generator::Darkfish-label-Contributors">Contributors</a>
+    <li><a href="#class-RDoc::Generator::Darkfish-label-License">License</a>
+    <li><a href="#class-RDoc::Generator::Darkfish-label-Attributions">Attributions</a>
+  </ul>
+</div>
+
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">Object
+  
+</div>
+
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><span class="include">ERB::Util</span>
+  
+  
+  </ul>
+</div>
+
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-assemble_template">#assemble_template</a>
+    
+    <li ><a href="#method-i-class_dir">#class_dir</a>
+    
+    <li ><a href="#method-i-copy_static">#copy_static</a>
+    
+    <li ><a href="#method-i-debug_msg">#debug_msg</a>
+    
+    <li ><a href="#method-i-file_dir">#file_dir</a>
+    
+    <li ><a href="#method-i-gen_sub_directories">#gen_sub_directories</a>
+    
+    <li ><a href="#method-i-generate">#generate</a>
+    
+    <li ><a href="#method-i-generate_class">#generate_class</a>
+    
+    <li ><a href="#method-i-generate_class_files">#generate_class_files</a>
+    
+    <li ><a href="#method-i-generate_file_files">#generate_file_files</a>
+    
+    <li ><a href="#method-i-generate_index">#generate_index</a>
+    
+    <li ><a href="#method-i-generate_page">#generate_page</a>
+    
+    <li ><a href="#method-i-generate_servlet_not_found">#generate_servlet_not_found</a>
+    
+    <li ><a href="#method-i-generate_servlet_root">#generate_servlet_root</a>
+    
+    <li ><a href="#method-i-generate_table_of_contents">#generate_table_of_contents</a>
+    
+    <li ><a href="#method-i-get_sorted_module_list">#get_sorted_module_list</a>
+    
+    <li ><a href="#method-i-get_svninfo">#get_svninfo</a>
+    
+    <li ><a href="#method-i-render">#render</a>
+    
+    <li ><a href="#method-i-render_template">#render_template</a>
+    
+    <li ><a href="#method-i-setup">#setup</a>
+    
+    <li ><a href="#method-i-template_for">#template_for</a>
+    
+    <li ><a href="#method-i-template_result">#template_result</a>
+    
+    <li ><a href="#method-i-time_delta_string">#time_delta_string</a>
+    
+    <li ><a href="#method-i-write_style_sheet">#write_style_sheet</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-RDoc::Generator::Darkfish">
+  <h1 id="class-RDoc::Generator::Darkfish" class="class">
+    class RDoc::Generator::Darkfish
+  </h1>
+
+  <section class="description">
+    
+<p><a href="Darkfish.html">Darkfish</a> <a href="../../RDoc.html">RDoc</a>
+HTML Generator</p>
+
+<p>$Id: darkfish.rb 52 2009-01-07 02:08:11Z deveiant $</p>
+
+<h2 id="class-RDoc::Generator::Darkfish-label-Author-2Fs">Author/s<span><a href="#class-RDoc::Generator::Darkfish-label-Author-2Fs">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<ul><li>
+<p>Michael Granger (ged@FaerieMUD.org)</p>
+</li></ul>
+
+<h2 id="class-RDoc::Generator::Darkfish-label-Contributors">Contributors<span><a href="#class-RDoc::Generator::Darkfish-label-Contributors">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<ul><li>
+<p>Mahlon E. Smith (mahlon@martini.nu)</p>
+</li><li>
+<p>Eric Hodel (drbrain@segment7.net)</p>
+</li></ul>
+
+<h2 id="class-RDoc::Generator::Darkfish-label-License">License<span><a href="#class-RDoc::Generator::Darkfish-label-License">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Copyright © 2007, 2008, Michael Granger. All rights reserved.</p>
+
+<p>Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:</p>
+<ul><li>
+<p>Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.</p>
+</li><li>
+<p>Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.</p>
+</li><li>
+<p>Neither the name of the author/s, nor the names of the project&#39;s
+contributors may be used to endorse or promote products derived from this
+software without specific prior written permission.</p>
+</li></ul>
+
+<p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS”
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.</p>
+
+<h2 id="class-RDoc::Generator::Darkfish-label-Attributions">Attributions<span><a href="#class-RDoc::Generator::Darkfish-label-Attributions">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p><a href="Darkfish.html">Darkfish</a> uses the <a
+href="http://www.famfamfam.com/lab/icons/silk/">Silk Icons</a> set by Mark
+James.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="DESCRIPTION">DESCRIPTION
+        
+        <dd><p>Description of this generator</p>
+        
+      
+        <dt id="GENERATOR_DIR">GENERATOR_DIR
+        
+        <dd><p>Path to this file&#39;s parent directory. Used to find templates and other
+resources.</p>
+        
+      
+        <dt id="SVNID_PATTERN">SVNID_PATTERN
+        
+        <dd><p>%q$Id: darkfish.rb 52 2009-01-07 02:08:11Z deveiant $“</p>
+        
+      
+        <dt id="VERSION">VERSION
+        
+        <dd><p>Release Version</p>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-asset_rel_path" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">asset_rel_path</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The relative path to style sheets and javascript.  By default this is set
+the same as the rel_prefix.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-base_dir" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">base_dir</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The path to generate files into, combined with <code>--op</code> from the
+options for a full path.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-classes" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">classes</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Classes and modules to be used by this generator, not necessarily
+displayed.  See also <a
+href="Darkfish.html#attribute-i-modsort">modsort</a></p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-dry_run" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">dry_run</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>No files will be written when <a
+href="Darkfish.html#attribute-i-dry_run">#dry_run</a> is true.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-file_output" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">file_output</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>When false the generate methods return a String instead of writing to a
+file.  The default is true.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-files" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">files</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Files to be displayed by this generator</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-json_index" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">json_index</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The JSON index generator for this <a href="Darkfish.html">Darkfish</a>
+generator</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-methods" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">methods</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Methods to be displayed by this generator</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-modsort" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">modsort</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Sorted list of classes and modules to be displayed by this generator</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-outputdir" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">outputdir</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The output directory</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-store" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">store</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The <a href="../Store.html">RDoc::Store</a> that is the source of the
+generated content</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(store, options)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Initialize a few instance variables before we start</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 157</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">store</span>, <span class="ruby-identifier">options</span>
+  <span class="ruby-ivar">@store</span>   = <span class="ruby-identifier">store</span>
+  <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>
+
+  <span class="ruby-ivar">@asset_rel_path</span> = <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-ivar">@base_dir</span>       = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">pwd</span>.<span class="ruby-identifier">expand_path</span>
+  <span class="ruby-ivar">@dry_run</span>        = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">dry_run</span>
+  <span class="ruby-ivar">@file_output</span>    = <span class="ruby-keyword">true</span>
+  <span class="ruby-ivar">@template_dir</span>   = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">template_dir</span>
+  <span class="ruby-ivar">@template_cache</span> = {}
+
+  <span class="ruby-ivar">@classes</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@context</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@files</span>   = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@methods</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@modsort</span> = <span class="ruby-keyword">nil</span>
+
+  <span class="ruby-ivar">@json_index</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Generator</span><span class="ruby-operator">::</span><span class="ruby-constant">JsonIndex</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">self</span>, <span class="ruby-identifier">options</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-assemble_template" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">assemble_template</span><span
+            class="method-args">(body_file)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates a template from its components and the <code>body_file</code>.</p>
+
+<p>For backwards compatibility, if <code>body_file</code> contains “&lt;html”
+the body is used directly.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="assemble_template-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 646</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">assemble_template</span> <span class="ruby-identifier">body_file</span>
+    <span class="ruby-identifier">body</span> = <span class="ruby-identifier">body_file</span>.<span class="ruby-identifier">read</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">body</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">body</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/&lt;html/</span>
+
+    <span class="ruby-identifier">head_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;_head.rhtml&#39;</span>
+    <span class="ruby-identifier">footer_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;_footer.rhtml&#39;</span>
+
+    <span class="ruby-value">&lt;&lt;-TEMPLATE
+&lt;!DOCTYPE html&gt;
+
+&lt;html&gt;
+&lt;head&gt;
+#{head_file.read}
+
+#{body}
+
+#{footer_file.read}
+    TEMPLATE</span>
+  <span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-class_dir" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">class_dir</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Directory where generated class HTML files live relative to the output dir.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="class_dir-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 189</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">class_dir</span>
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-copy_static" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">copy_static</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Copies static files from the static_path into the output directory</p>
+          
+          
+
+          
+          <div class="method-source-code" id="copy_static-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 263</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">copy_static</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">static_path</span>.<span class="ruby-identifier">empty?</span>
+
+  <span class="ruby-identifier">fu_options</span> = { <span class="ruby-value">:verbose</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">$DEBUG_RDOC</span>, <span class="ruby-value">:noop</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@dry_run</span> }
+
+  <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">static_path</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">path</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-identifier">path</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">install</span> <span class="ruby-identifier">path</span>, <span class="ruby-ivar">@outputdir</span>, <span class="ruby-identifier">fu_options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-value">:mode</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0644</span>)
+      <span class="ruby-keyword">next</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">chdir</span> <span class="ruby-identifier">path</span> <span class="ruby-keyword">do</span>
+      <span class="ruby-constant">Dir</span>[<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&#39;**&#39;</span>, <span class="ruby-string">&#39;*&#39;</span>)].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">dest_file</span> = <span class="ruby-ivar">@outputdir</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">entry</span>
+
+        <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-identifier">entry</span> <span class="ruby-keyword">then</span>
+          <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">mkdir_p</span> <span class="ruby-identifier">entry</span>, <span class="ruby-identifier">fu_options</span>
+        <span class="ruby-keyword">else</span>
+          <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">install</span> <span class="ruby-identifier">entry</span>, <span class="ruby-identifier">dest_file</span>, <span class="ruby-identifier">fu_options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-value">:mode</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0644</span>)
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-debug_msg" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">debug_msg</span><span
+            class="method-args">(*msg)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Output progress information if debugging is enabled</p>
+          
+          
+
+          
+          <div class="method-source-code" id="debug_msg-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 180</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">debug_msg</span> <span class="ruby-operator">*</span><span class="ruby-identifier">msg</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">$DEBUG_RDOC</span>
+  <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">msg</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-file_dir" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">file_dir</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Directory where generated class HTML files live relative to the output dir.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="file_dir-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 197</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">file_dir</span>
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-gen_sub_directories" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">gen_sub_directories</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create the directories the generated docs will live in if they don&#39;t
+already exist.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="gen_sub_directories-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 205</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">gen_sub_directories</span>
+  <span class="ruby-ivar">@outputdir</span>.<span class="ruby-identifier">mkpath</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-generate" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">generate</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Build the initial indices and output objects based on an array of TopLevel
+objects containing the extracted information.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="generate-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 239</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate</span>
+  <span class="ruby-identifier">setup</span>
+
+  <span class="ruby-identifier">write_style_sheet</span>
+  <span class="ruby-identifier">generate_index</span>
+  <span class="ruby-identifier">generate_class_files</span>
+  <span class="ruby-identifier">generate_file_files</span>
+  <span class="ruby-identifier">generate_table_of_contents</span>
+  <span class="ruby-ivar">@json_index</span>.<span class="ruby-identifier">generate</span>
+  <span class="ruby-ivar">@json_index</span>.<span class="ruby-identifier">generate_gzipped</span>
+
+  <span class="ruby-identifier">copy_static</span>
+
+<span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+  <span class="ruby-identifier">debug_msg</span> <span class="ruby-string">&quot;%s: %s\n  %s&quot;</span> <span class="ruby-operator">%</span> [
+    <span class="ruby-identifier">e</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">name</span>, <span class="ruby-identifier">e</span>.<span class="ruby-identifier">message</span>, <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;\n  &quot;</span>)
+  ]
+
+  <span class="ruby-identifier">raise</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-generate_class" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">generate_class</span><span
+            class="method-args">(klass, template_file = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Generates a class file for <code>klass</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="generate_class-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 331</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_class</span> <span class="ruby-identifier">klass</span>, <span class="ruby-identifier">template_file</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">setup</span>
+
+  <span class="ruby-identifier">current</span> = <span class="ruby-identifier">klass</span>
+
+  <span class="ruby-identifier">template_file</span> <span class="ruby-operator">||=</span> <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;class.rhtml&#39;</span>
+
+  <span class="ruby-identifier">debug_msg</span> <span class="ruby-string">&quot;  working on %s (%s)&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">klass</span>.<span class="ruby-identifier">full_name</span>, <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">path</span>]
+  <span class="ruby-identifier">out_file</span>   = <span class="ruby-ivar">@outputdir</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">path</span>
+  <span class="ruby-identifier">rel_prefix</span> = <span class="ruby-ivar">@outputdir</span>.<span class="ruby-identifier">relative_path_from</span> <span class="ruby-identifier">out_file</span>.<span class="ruby-identifier">dirname</span>
+  <span class="ruby-identifier">search_index_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span>
+  <span class="ruby-identifier">search_index_rel_prefix</span> <span class="ruby-operator">+=</span> <span class="ruby-ivar">@asset_rel_path</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file_output</span>
+
+  <span class="ruby-comment"># suppress 1.9.3 warning</span>
+  <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@asset_rel_path</span>
+  <span class="ruby-identifier">svninfo</span>          = <span class="ruby-identifier">svninfo</span>          = <span class="ruby-identifier">get_svninfo</span>(<span class="ruby-identifier">current</span>)
+
+  <span class="ruby-ivar">@title</span> = <span class="ruby-node">&quot;#{klass.type} #{klass.full_name} - #{@options.title}&quot;</span>
+
+  <span class="ruby-identifier">debug_msg</span> <span class="ruby-node">&quot;  rendering #{out_file}&quot;</span>
+  <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binding</span> <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-generate_class_files" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">generate_class_files</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Generate a documentation file for each class and module</p>
+          
+          
+
+          
+          <div class="method-source-code" id="generate_class_files-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 357</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_class_files</span>
+  <span class="ruby-identifier">setup</span>
+
+  <span class="ruby-identifier">template_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;class.rhtml&#39;</span>
+  <span class="ruby-identifier">template_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;classpage.rhtml&#39;</span> <span class="ruby-keyword">unless</span>
+    <span class="ruby-identifier">template_file</span>.<span class="ruby-identifier">exist?</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">template_file</span>.<span class="ruby-identifier">exist?</span>
+  <span class="ruby-identifier">debug_msg</span> <span class="ruby-node">&quot;Generating class documentation in #{@outputdir}&quot;</span>
+
+  <span class="ruby-identifier">current</span> = <span class="ruby-keyword">nil</span>
+
+  <span class="ruby-ivar">@classes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">klass</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">current</span> = <span class="ruby-identifier">klass</span>
+
+    <span class="ruby-identifier">generate_class</span> <span class="ruby-identifier">klass</span>, <span class="ruby-identifier">template_file</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+  <span class="ruby-identifier">error</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span>        <span class="ruby-node">&quot;error generating #{current.path}: #{e.message} (#{e.class})&quot;</span>
+  <span class="ruby-identifier">error</span>.<span class="ruby-identifier">set_backtrace</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
+
+  <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-generate_file_files" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">generate_file_files</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Generate a documentation file for each file</p>
+          
+          
+
+          
+          <div class="method-source-code" id="generate_file_files-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 384</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_file_files</span>
+  <span class="ruby-identifier">setup</span>
+
+  <span class="ruby-identifier">page_file</span>     = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;page.rhtml&#39;</span>
+  <span class="ruby-identifier">fileinfo_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;fileinfo.rhtml&#39;</span>
+
+  <span class="ruby-comment"># for legacy templates</span>
+  <span class="ruby-identifier">filepage_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;filepage.rhtml&#39;</span> <span class="ruby-keyword">unless</span>
+    <span class="ruby-identifier">page_file</span>.<span class="ruby-identifier">exist?</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">fileinfo_file</span>.<span class="ruby-identifier">exist?</span>
+
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span>
+    <span class="ruby-identifier">page_file</span>.<span class="ruby-identifier">exist?</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">fileinfo_file</span>.<span class="ruby-identifier">exist?</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">filepage_file</span>.<span class="ruby-identifier">exist?</span>
+
+  <span class="ruby-identifier">debug_msg</span> <span class="ruby-node">&quot;Generating file documentation in #{@outputdir}&quot;</span>
+
+  <span class="ruby-identifier">out_file</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">current</span> = <span class="ruby-keyword">nil</span>
+
+  <span class="ruby-ivar">@files</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">current</span> = <span class="ruby-identifier">file</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">file</span>.<span class="ruby-identifier">text?</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">page_file</span>.<span class="ruby-identifier">exist?</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">generate_page</span> <span class="ruby-identifier">file</span>
+      <span class="ruby-keyword">next</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">template_file</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-identifier">out_file</span> = <span class="ruby-ivar">@outputdir</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">file</span>.<span class="ruby-identifier">path</span>
+    <span class="ruby-identifier">debug_msg</span> <span class="ruby-string">&quot;  working on %s (%s)&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">file</span>.<span class="ruby-identifier">full_name</span>, <span class="ruby-identifier">out_file</span>]
+    <span class="ruby-identifier">rel_prefix</span> = <span class="ruby-ivar">@outputdir</span>.<span class="ruby-identifier">relative_path_from</span> <span class="ruby-identifier">out_file</span>.<span class="ruby-identifier">dirname</span>
+    <span class="ruby-identifier">search_index_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span>
+    <span class="ruby-identifier">search_index_rel_prefix</span> <span class="ruby-operator">+=</span> <span class="ruby-ivar">@asset_rel_path</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file_output</span>
+
+    <span class="ruby-comment"># suppress 1.9.3 warning</span>
+    <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@asset_rel_path</span>
+
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">filepage_file</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">file</span>.<span class="ruby-identifier">text?</span> <span class="ruby-keyword">then</span>
+        <span class="ruby-keyword">next</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">page_file</span>.<span class="ruby-identifier">exist?</span>
+        <span class="ruby-identifier">template_file</span> = <span class="ruby-identifier">page_file</span>
+        <span class="ruby-ivar">@title</span> = <span class="ruby-identifier">file</span>.<span class="ruby-identifier">page_name</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-keyword">next</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">fileinfo_file</span>.<span class="ruby-identifier">exist?</span>
+        <span class="ruby-identifier">template_file</span> = <span class="ruby-identifier">fileinfo_file</span>
+        <span class="ruby-ivar">@title</span> = <span class="ruby-node">&quot;File: #{file.base_name}&quot;</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-ivar">@title</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot; - #{@options.title}&quot;</span>
+    <span class="ruby-identifier">template_file</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">filepage_file</span>
+
+    <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binding</span> <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+  <span class="ruby-identifier">error</span> =
+    <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;error generating #{out_file}: #{e.message} (#{e.class})&quot;</span>
+  <span class="ruby-identifier">error</span>.<span class="ruby-identifier">set_backtrace</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
+
+  <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-generate_index" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">generate_index</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Generate an index page which lists all the classes which are documented.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="generate_index-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 301</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_index</span>
+  <span class="ruby-identifier">setup</span>
+
+  <span class="ruby-identifier">template_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;index.rhtml&#39;</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">template_file</span>.<span class="ruby-identifier">exist?</span>
+
+  <span class="ruby-identifier">debug_msg</span> <span class="ruby-string">&quot;Rendering the index page...&quot;</span>
+
+  <span class="ruby-identifier">out_file</span> = <span class="ruby-ivar">@base_dir</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">op_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;index.html&#39;</span>
+  <span class="ruby-identifier">rel_prefix</span> = <span class="ruby-ivar">@outputdir</span>.<span class="ruby-identifier">relative_path_from</span> <span class="ruby-identifier">out_file</span>.<span class="ruby-identifier">dirname</span>
+  <span class="ruby-identifier">search_index_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span>
+  <span class="ruby-identifier">search_index_rel_prefix</span> <span class="ruby-operator">+=</span> <span class="ruby-ivar">@asset_rel_path</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file_output</span>
+
+  <span class="ruby-comment"># suppress 1.9.3 warning</span>
+  <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@asset_rel_path</span>
+
+  <span class="ruby-ivar">@title</span> = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">title</span>
+
+  <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binding</span> <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+  <span class="ruby-identifier">error</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span>        <span class="ruby-node">&quot;error generating index.html: #{e.message} (#{e.class})&quot;</span>
+  <span class="ruby-identifier">error</span>.<span class="ruby-identifier">set_backtrace</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
+
+  <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-generate_page" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">generate_page</span><span
+            class="method-args">(file)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Generate a page file for <code>file</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="generate_page-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 448</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_page</span> <span class="ruby-identifier">file</span>
+  <span class="ruby-identifier">setup</span>
+
+  <span class="ruby-identifier">template_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;page.rhtml&#39;</span>
+
+  <span class="ruby-identifier">out_file</span> = <span class="ruby-ivar">@outputdir</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">file</span>.<span class="ruby-identifier">path</span>
+  <span class="ruby-identifier">debug_msg</span> <span class="ruby-string">&quot;  working on %s (%s)&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">file</span>.<span class="ruby-identifier">full_name</span>, <span class="ruby-identifier">out_file</span>]
+  <span class="ruby-identifier">rel_prefix</span> = <span class="ruby-ivar">@outputdir</span>.<span class="ruby-identifier">relative_path_from</span> <span class="ruby-identifier">out_file</span>.<span class="ruby-identifier">dirname</span>
+  <span class="ruby-identifier">search_index_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span>
+  <span class="ruby-identifier">search_index_rel_prefix</span> <span class="ruby-operator">+=</span> <span class="ruby-ivar">@asset_rel_path</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file_output</span>
+
+  <span class="ruby-comment"># suppress 1.9.3 warning</span>
+  <span class="ruby-identifier">current</span>          = <span class="ruby-identifier">current</span>          = <span class="ruby-identifier">file</span>
+  <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@asset_rel_path</span>
+
+  <span class="ruby-ivar">@title</span> = <span class="ruby-node">&quot;#{file.page_name} - #{@options.title}&quot;</span>
+
+  <span class="ruby-identifier">debug_msg</span> <span class="ruby-node">&quot;  rendering #{out_file}&quot;</span>
+  <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binding</span> <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-generate_servlet_not_found" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">generate_servlet_not_found</span><span
+            class="method-args">(message)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Generates the 404 page for the <a href="../../RDoc.html">RDoc</a> servlet</p>
+          
+          
+
+          
+          <div class="method-source-code" id="generate_servlet_not_found-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 472</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_servlet_not_found</span> <span class="ruby-identifier">message</span>
+  <span class="ruby-identifier">setup</span>
+
+  <span class="ruby-identifier">template_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;servlet_not_found.rhtml&#39;</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">template_file</span>.<span class="ruby-identifier">exist?</span>
+
+  <span class="ruby-identifier">debug_msg</span> <span class="ruby-string">&quot;Rendering the servlet 404 Not Found page...&quot;</span>
+
+  <span class="ruby-identifier">rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span> = <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-identifier">search_index_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span>
+  <span class="ruby-identifier">search_index_rel_prefix</span> <span class="ruby-operator">+=</span> <span class="ruby-ivar">@asset_rel_path</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file_output</span>
+
+  <span class="ruby-comment"># suppress 1.9.3 warning</span>
+  <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-string">&#39;&#39;</span>
+
+  <span class="ruby-ivar">@title</span> = <span class="ruby-string">&#39;Not Found&#39;</span>
+
+  <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binding</span> <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+  <span class="ruby-identifier">error</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span>        <span class="ruby-node">&quot;error generating servlet_not_found: #{e.message} (#{e.class})&quot;</span>
+  <span class="ruby-identifier">error</span>.<span class="ruby-identifier">set_backtrace</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
+
+  <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-generate_servlet_root" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">generate_servlet_root</span><span
+            class="method-args">(installed)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Generates the servlet root page for the <a href="../../RDoc.html">RDoc</a>
+servlet</p>
+          
+          
+
+          
+          <div class="method-source-code" id="generate_servlet_root-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 501</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_servlet_root</span> <span class="ruby-identifier">installed</span>
+  <span class="ruby-identifier">setup</span>
+
+  <span class="ruby-identifier">template_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;servlet_root.rhtml&#39;</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">template_file</span>.<span class="ruby-identifier">exist?</span>
+
+  <span class="ruby-identifier">debug_msg</span> <span class="ruby-string">&#39;Rendering the servlet root page...&#39;</span>
+
+  <span class="ruby-identifier">rel_prefix</span> = <span class="ruby-string">&#39;.&#39;</span>
+  <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span>
+  <span class="ruby-identifier">search_index_rel_prefix</span> = <span class="ruby-identifier">asset_rel_prefix</span>
+  <span class="ruby-identifier">search_index_rel_prefix</span> <span class="ruby-operator">+=</span> <span class="ruby-ivar">@asset_rel_path</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file_output</span>
+
+  <span class="ruby-ivar">@title</span> = <span class="ruby-string">&#39;Local RDoc Documentation&#39;</span>
+
+  <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binding</span> <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+  <span class="ruby-identifier">error</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span>        <span class="ruby-node">&quot;error generating servlet_root: #{e.message} (#{e.class})&quot;</span>
+  <span class="ruby-identifier">error</span>.<span class="ruby-identifier">set_backtrace</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
+
+  <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-generate_table_of_contents" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">generate_table_of_contents</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Generate an index page which lists all the classes which are documented.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="generate_table_of_contents-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 528</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_table_of_contents</span>
+  <span class="ruby-identifier">setup</span>
+
+  <span class="ruby-identifier">template_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;table_of_contents.rhtml&#39;</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">template_file</span>.<span class="ruby-identifier">exist?</span>
+
+  <span class="ruby-identifier">debug_msg</span> <span class="ruby-string">&quot;Rendering the Table of Contents...&quot;</span>
+
+  <span class="ruby-identifier">out_file</span> = <span class="ruby-ivar">@outputdir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;table_of_contents.html&#39;</span>
+  <span class="ruby-identifier">rel_prefix</span> = <span class="ruby-ivar">@outputdir</span>.<span class="ruby-identifier">relative_path_from</span> <span class="ruby-identifier">out_file</span>.<span class="ruby-identifier">dirname</span>
+  <span class="ruby-identifier">search_index_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span>
+  <span class="ruby-identifier">search_index_rel_prefix</span> <span class="ruby-operator">+=</span> <span class="ruby-ivar">@asset_rel_path</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file_output</span>
+
+  <span class="ruby-comment"># suppress 1.9.3 warning</span>
+  <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@asset_rel_path</span>
+
+  <span class="ruby-ivar">@title</span> = <span class="ruby-node">&quot;Table of Contents - #{@options.title}&quot;</span>
+
+  <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binding</span> <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+  <span class="ruby-identifier">error</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span>        <span class="ruby-node">&quot;error generating table_of_contents.html: #{e.message} (#{e.class})&quot;</span>
+  <span class="ruby-identifier">error</span>.<span class="ruby-identifier">set_backtrace</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
+
+  <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-get_sorted_module_list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_sorted_module_list</span><span
+            class="method-args">(classes)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Return a list of the documented modules sorted by salience first, then by
+name.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="get_sorted_module_list-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 292</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_sorted_module_list</span> <span class="ruby-identifier">classes</span>
+  <span class="ruby-identifier">classes</span>.<span class="ruby-identifier">select</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">klass</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">display?</span>
+  <span class="ruby-keyword">end</span>.<span class="ruby-identifier">sort</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-get_svninfo" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_svninfo</span><span
+            class="method-args">(klass)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Try to extract Subversion information out of the first constant whose value
+looks like a subversion Id tag. If no matching constant is found, and empty
+hash is returned.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="get_svninfo-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 623</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_svninfo</span> <span class="ruby-identifier">klass</span>
+  <span class="ruby-identifier">constants</span> = <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">constants</span> <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span> {}
+
+  <span class="ruby-identifier">constants</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">value</span> <span class="ruby-operator">=~</span> <span class="ruby-constant">SVNID_PATTERN</span> } <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span> {}
+
+  <span class="ruby-identifier">filename</span>, <span class="ruby-identifier">rev</span>, <span class="ruby-identifier">date</span>, <span class="ruby-identifier">time</span>, <span class="ruby-identifier">committer</span> = <span class="ruby-identifier">$~</span>.<span class="ruby-identifier">captures</span>
+  <span class="ruby-identifier">commitdate</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">parse</span> <span class="ruby-node">&quot;#{date} #{time}&quot;</span>
+
+  <span class="ruby-keyword">return</span> {
+    <span class="ruby-value">:filename</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">filename</span>,
+    <span class="ruby-value">:rev</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">rev</span>),
+    <span class="ruby-value">:commitdate</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">commitdate</span>,
+    <span class="ruby-value">:commitdelta</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">time_delta_string</span>(<span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">commitdate</span>),
+    <span class="ruby-value">:committer</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">committer</span>,
+  }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-render" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">render</span><span
+            class="method-args">(file_name)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Renders the ERb contained in <code>file_name</code> relative to the
+template directory and returns the result based on the current context.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="render-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 670</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">render</span> <span class="ruby-identifier">file_name</span>
+  <span class="ruby-identifier">template_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">file_name</span>
+
+  <span class="ruby-identifier">template</span> = <span class="ruby-identifier">template_for</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-keyword">false</span>, <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">ERBPartial</span>
+
+  <span class="ruby-identifier">template</span>.<span class="ruby-identifier">filename</span> = <span class="ruby-identifier">template_file</span>.<span class="ruby-identifier">to_s</span>
+
+  <span class="ruby-identifier">template</span>.<span class="ruby-identifier">result</span> <span class="ruby-ivar">@context</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-render_template" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">render_template</span><span
+            class="method-args">(template_file, out_file = nil) { |io| ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Load and render the erb template in the given <code>template_file</code>
+and write it out to <code>out_file</code>.</p>
+
+<p>Both <code>template_file</code> and <code>out_file</code> should be
+Pathname-like objects.</p>
+
+<p>An io will be yielded which must be captured by binding in the caller.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="render_template-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 688</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> = <span class="ruby-keyword">nil</span> <span class="ruby-comment"># :yield: io</span>
+  <span class="ruby-identifier">io_output</span> = <span class="ruby-identifier">out_file</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@dry_run</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@file_output</span>
+  <span class="ruby-identifier">erb_klass</span> = <span class="ruby-identifier">io_output</span> <span class="ruby-operator">?</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">ERBIO</span> <span class="ruby-operator">:</span> <span class="ruby-constant">ERB</span>
+
+  <span class="ruby-identifier">template</span> = <span class="ruby-identifier">template_for</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-keyword">true</span>, <span class="ruby-identifier">erb_klass</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">io_output</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">debug_msg</span> <span class="ruby-string">&quot;Outputting to %s&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">out_file</span>.<span class="ruby-identifier">expand_path</span>]
+
+    <span class="ruby-identifier">out_file</span>.<span class="ruby-identifier">dirname</span>.<span class="ruby-identifier">mkpath</span>
+    <span class="ruby-identifier">out_file</span>.<span class="ruby-identifier">open</span> <span class="ruby-string">&#39;w&#39;</span>, <span class="ruby-value">0644</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">io</span>.<span class="ruby-identifier">set_encoding</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">encoding</span>
+
+      <span class="ruby-ivar">@context</span> = <span class="ruby-keyword">yield</span> <span class="ruby-identifier">io</span>
+
+      <span class="ruby-identifier">template_result</span> <span class="ruby-identifier">template</span>, <span class="ruby-ivar">@context</span>, <span class="ruby-identifier">template_file</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@context</span> = <span class="ruby-keyword">yield</span> <span class="ruby-keyword">nil</span>
+
+    <span class="ruby-identifier">output</span> = <span class="ruby-identifier">template_result</span> <span class="ruby-identifier">template</span>, <span class="ruby-ivar">@context</span>, <span class="ruby-identifier">template_file</span>
+
+    <span class="ruby-identifier">debug_msg</span> <span class="ruby-string">&quot;  would have written %d characters to %s&quot;</span> <span class="ruby-operator">%</span> [
+      <span class="ruby-identifier">output</span>.<span class="ruby-identifier">length</span>, <span class="ruby-identifier">out_file</span>.<span class="ruby-identifier">expand_path</span>
+    ] <span class="ruby-keyword">if</span> <span class="ruby-ivar">@dry_run</span>
+
+    <span class="ruby-identifier">output</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-setup" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">setup</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Prepares for generation of output from the current directory</p>
+          
+          
+
+          
+          <div class="method-source-code" id="setup-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 575</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">setup</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">instance_variable_defined?</span> <span class="ruby-value">:@outputdir</span>
+
+  <span class="ruby-ivar">@outputdir</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@options</span>.<span class="ruby-identifier">op_dir</span>).<span class="ruby-identifier">expand_path</span> <span class="ruby-ivar">@base_dir</span>
+
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@store</span>
+
+  <span class="ruby-ivar">@classes</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">all_classes_and_modules</span>.<span class="ruby-identifier">sort</span>
+  <span class="ruby-ivar">@files</span>   = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">all_files</span>.<span class="ruby-identifier">sort</span>
+  <span class="ruby-ivar">@methods</span> = <span class="ruby-ivar">@classes</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">method_list</span> }.<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">sort</span>
+  <span class="ruby-ivar">@modsort</span> = <span class="ruby-identifier">get_sorted_module_list</span> <span class="ruby-ivar">@classes</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-template_for" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">template_for</span><span
+            class="method-args">(file, page = true, klass = ERB)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Retrieves a cache template for <code>file</code>, if present, or fills the
+cache.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="template_for-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 735</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">template_for</span> <span class="ruby-identifier">file</span>, <span class="ruby-identifier">page</span> = <span class="ruby-keyword">true</span>, <span class="ruby-identifier">klass</span> = <span class="ruby-constant">ERB</span>
+  <span class="ruby-identifier">template</span> = <span class="ruby-ivar">@template_cache</span>[<span class="ruby-identifier">file</span>]
+
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">template</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">template</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">page</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">template</span> = <span class="ruby-identifier">assemble_template</span> <span class="ruby-identifier">file</span>
+    <span class="ruby-identifier">erbout</span> = <span class="ruby-string">&#39;io&#39;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">template</span> = <span class="ruby-identifier">file</span>.<span class="ruby-identifier">read</span>
+    <span class="ruby-identifier">template</span> = <span class="ruby-identifier">template</span>.<span class="ruby-identifier">encode</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">encoding</span>
+
+    <span class="ruby-identifier">file_var</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-identifier">file</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\..*/</span>, <span class="ruby-string">&#39;&#39;</span>)
+
+    <span class="ruby-identifier">erbout</span> = <span class="ruby-node">&quot;_erbout_#{file_var}&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">template</span> = <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">template</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-string">&#39;&lt;&gt;&#39;</span>, <span class="ruby-identifier">erbout</span>
+  <span class="ruby-ivar">@template_cache</span>[<span class="ruby-identifier">file</span>] = <span class="ruby-identifier">template</span>
+  <span class="ruby-identifier">template</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-template_result" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">template_result</span><span
+            class="method-args">(template, context, template_file)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates the result for <code>template</code> with <code>context</code>.  If
+an error is raised a Pathname <code>template_file</code> will indicate the
+file where the error occurred.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="template_result-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 722</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">template_result</span> <span class="ruby-identifier">template</span>, <span class="ruby-identifier">context</span>, <span class="ruby-identifier">template_file</span>
+  <span class="ruby-identifier">template</span>.<span class="ruby-identifier">filename</span> = <span class="ruby-identifier">template_file</span>.<span class="ruby-identifier">to_s</span>
+  <span class="ruby-identifier">template</span>.<span class="ruby-identifier">result</span> <span class="ruby-identifier">context</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">NoMethodError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-string">&quot;Error while evaluating %s: %s&quot;</span> <span class="ruby-operator">%</span> [
+    <span class="ruby-identifier">template_file</span>.<span class="ruby-identifier">expand_path</span>,
+    <span class="ruby-identifier">e</span>.<span class="ruby-identifier">message</span>,
+  ], <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-time_delta_string" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">time_delta_string</span><span
+            class="method-args">(seconds)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Return a string describing the amount of time in the given number of
+seconds in terms a human can understand easily.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="time_delta_string-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 592</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">time_delta_string</span> <span class="ruby-identifier">seconds</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-string">&#39;less than a minute&#39;</span>          <span class="ruby-keyword">if</span> <span class="ruby-identifier">seconds</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">60</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;#{seconds / 60} minute#{seconds / 60 == 1 ? &#39;&#39; : &#39;s&#39;}&quot;</span> <span class="ruby-keyword">if</span>
+                                          <span class="ruby-identifier">seconds</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">3000</span>     <span class="ruby-comment"># 50 minutes</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-string">&#39;about one hour&#39;</span>              <span class="ruby-keyword">if</span> <span class="ruby-identifier">seconds</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">5400</span>     <span class="ruby-comment"># 90 minutes</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;#{seconds / 3600} hours&quot;</span>     <span class="ruby-keyword">if</span> <span class="ruby-identifier">seconds</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">64800</span>    <span class="ruby-comment"># 18 hours</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-string">&#39;one day&#39;</span>                     <span class="ruby-keyword">if</span> <span class="ruby-identifier">seconds</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">86400</span>    <span class="ruby-comment">#  1 day</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-string">&#39;about one day&#39;</span>               <span class="ruby-keyword">if</span> <span class="ruby-identifier">seconds</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">172800</span>   <span class="ruby-comment">#  2 days</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;#{seconds / 86400} days&quot;</span>     <span class="ruby-keyword">if</span> <span class="ruby-identifier">seconds</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">604800</span>   <span class="ruby-comment">#  1 week</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-string">&#39;about one week&#39;</span>              <span class="ruby-keyword">if</span> <span class="ruby-identifier">seconds</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">1209600</span>  <span class="ruby-comment">#  2 week</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;#{seconds / 604800} weeks&quot;</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">seconds</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">7257600</span>  <span class="ruby-comment">#  3 months</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;#{seconds / 2419200} months&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">seconds</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">31536000</span> <span class="ruby-comment">#  1 year</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;#{seconds / 31536000} years&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-write_style_sheet" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">write_style_sheet</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Copy over the stylesheet into the appropriate place in the output
+directory.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="write_style_sheet-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 213</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">write_style_sheet</span>
+  <span class="ruby-identifier">debug_msg</span> <span class="ruby-string">&quot;Copying static files&quot;</span>
+  <span class="ruby-identifier">options</span> = { <span class="ruby-value">:verbose</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">$DEBUG_RDOC</span>, <span class="ruby-value">:noop</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@dry_run</span> }
+
+  <span class="ruby-constant">BUILTIN_STYLE_ITEMS</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">item</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">install_rdoc_static_file</span> <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">item</span>, <span class="ruby-node">&quot;./#{item}&quot;</span>, <span class="ruby-identifier">options</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">template_stylesheets</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">stylesheet</span><span class="ruby-operator">|</span>
+    <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">cp</span> <span class="ruby-identifier">stylesheet</span>, <span class="ruby-string">&#39;.&#39;</span>, <span class="ruby-identifier">options</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-constant">Dir</span>[(<span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;{js,images}/**/*&quot;</span>).<span class="ruby-identifier">to_s</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">path</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-identifier">path</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-identifier">path</span>) <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^\./</span>
+
+    <span class="ruby-identifier">dst</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">path</span>).<span class="ruby-identifier">relative_path_from</span> <span class="ruby-ivar">@template_dir</span>
+
+    <span class="ruby-identifier">install_rdoc_static_file</span> <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">path</span>, <span class="ruby-identifier">dst</span>, <span class="ruby-identifier">options</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

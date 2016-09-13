@@ -1,0 +1,3096 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class RDoc::Markup::FormatterTestCase - rdoc 5.0.0.beta2 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+  var index_rel_prefix = "../../";
+</script>
+
+<script src="../../js/jquery.js"></script>
+<script src="../../js/darkfish.js"></script>
+
+<link href="../../css/fonts.css" rel="stylesheet">
+<link href="../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../table_of_contents.html#pages">Pages</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="../TestCase.html">RDoc::TestCase</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-add_visitor_tests">::add_visitor_tests</a>
+    
+    <li class="calls-super" ><a href="#method-i-setup">#setup</a>
+    
+    <li ><a href="#method-i-test_accept_blank_line">#test_accept_blank_line</a>
+    
+    <li ><a href="#method-i-test_accept_block_quote">#test_accept_block_quote</a>
+    
+    <li ><a href="#method-i-test_accept_document">#test_accept_document</a>
+    
+    <li ><a href="#method-i-test_accept_heading">#test_accept_heading</a>
+    
+    <li ><a href="#method-i-test_accept_heading_1">#test_accept_heading_1</a>
+    
+    <li ><a href="#method-i-test_accept_heading_2">#test_accept_heading_2</a>
+    
+    <li ><a href="#method-i-test_accept_heading_3">#test_accept_heading_3</a>
+    
+    <li ><a href="#method-i-test_accept_heading_4">#test_accept_heading_4</a>
+    
+    <li ><a href="#method-i-test_accept_heading_b">#test_accept_heading_b</a>
+    
+    <li ><a href="#method-i-test_accept_heading_suppressed_crossref">#test_accept_heading_suppressed_crossref</a>
+    
+    <li ><a href="#method-i-test_accept_list_end_bullet">#test_accept_list_end_bullet</a>
+    
+    <li ><a href="#method-i-test_accept_list_end_label">#test_accept_list_end_label</a>
+    
+    <li ><a href="#method-i-test_accept_list_end_lalpha">#test_accept_list_end_lalpha</a>
+    
+    <li ><a href="#method-i-test_accept_list_end_note">#test_accept_list_end_note</a>
+    
+    <li ><a href="#method-i-test_accept_list_end_number">#test_accept_list_end_number</a>
+    
+    <li ><a href="#method-i-test_accept_list_end_ualpha">#test_accept_list_end_ualpha</a>
+    
+    <li ><a href="#method-i-test_accept_list_item_end_bullet">#test_accept_list_item_end_bullet</a>
+    
+    <li ><a href="#method-i-test_accept_list_item_end_label">#test_accept_list_item_end_label</a>
+    
+    <li ><a href="#method-i-test_accept_list_item_end_lalpha">#test_accept_list_item_end_lalpha</a>
+    
+    <li ><a href="#method-i-test_accept_list_item_end_note">#test_accept_list_item_end_note</a>
+    
+    <li ><a href="#method-i-test_accept_list_item_end_number">#test_accept_list_item_end_number</a>
+    
+    <li ><a href="#method-i-test_accept_list_item_end_ualpha">#test_accept_list_item_end_ualpha</a>
+    
+    <li ><a href="#method-i-test_accept_list_item_start_bullet">#test_accept_list_item_start_bullet</a>
+    
+    <li ><a href="#method-i-test_accept_list_item_start_label">#test_accept_list_item_start_label</a>
+    
+    <li ><a href="#method-i-test_accept_list_item_start_lalpha">#test_accept_list_item_start_lalpha</a>
+    
+    <li ><a href="#method-i-test_accept_list_item_start_note">#test_accept_list_item_start_note</a>
+    
+    <li ><a href="#method-i-test_accept_list_item_start_note_2">#test_accept_list_item_start_note_2</a>
+    
+    <li ><a href="#method-i-test_accept_list_item_start_note_multi_description">#test_accept_list_item_start_note_multi_description</a>
+    
+    <li ><a href="#method-i-test_accept_list_item_start_note_multi_label">#test_accept_list_item_start_note_multi_label</a>
+    
+    <li ><a href="#method-i-test_accept_list_item_start_number">#test_accept_list_item_start_number</a>
+    
+    <li ><a href="#method-i-test_accept_list_item_start_ualpha">#test_accept_list_item_start_ualpha</a>
+    
+    <li ><a href="#method-i-test_accept_list_start_bullet">#test_accept_list_start_bullet</a>
+    
+    <li ><a href="#method-i-test_accept_list_start_label">#test_accept_list_start_label</a>
+    
+    <li ><a href="#method-i-test_accept_list_start_lalpha">#test_accept_list_start_lalpha</a>
+    
+    <li ><a href="#method-i-test_accept_list_start_note">#test_accept_list_start_note</a>
+    
+    <li ><a href="#method-i-test_accept_list_start_number">#test_accept_list_start_number</a>
+    
+    <li ><a href="#method-i-test_accept_list_start_ualpha">#test_accept_list_start_ualpha</a>
+    
+    <li ><a href="#method-i-test_accept_paragraph">#test_accept_paragraph</a>
+    
+    <li ><a href="#method-i-test_accept_paragraph_b">#test_accept_paragraph_b</a>
+    
+    <li ><a href="#method-i-test_accept_paragraph_br">#test_accept_paragraph_br</a>
+    
+    <li ><a href="#method-i-test_accept_paragraph_break">#test_accept_paragraph_break</a>
+    
+    <li ><a href="#method-i-test_accept_paragraph_i">#test_accept_paragraph_i</a>
+    
+    <li ><a href="#method-i-test_accept_paragraph_plus">#test_accept_paragraph_plus</a>
+    
+    <li ><a href="#method-i-test_accept_paragraph_star">#test_accept_paragraph_star</a>
+    
+    <li ><a href="#method-i-test_accept_paragraph_underscore">#test_accept_paragraph_underscore</a>
+    
+    <li ><a href="#method-i-test_accept_raw">#test_accept_raw</a>
+    
+    <li ><a href="#method-i-test_accept_rule">#test_accept_rule</a>
+    
+    <li ><a href="#method-i-test_accept_verbatim">#test_accept_verbatim</a>
+    
+    <li ><a href="#method-i-test_end_accepting">#test_end_accepting</a>
+    
+    <li ><a href="#method-i-test_list_nested">#test_list_nested</a>
+    
+    <li ><a href="#method-i-test_list_verbatim">#test_list_verbatim</a>
+    
+    <li ><a href="#method-i-test_start_accepting">#test_start_accepting</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-RDoc::Markup::FormatterTestCase">
+  <h1 id="class-RDoc::Markup::FormatterTestCase" class="class">
+    class RDoc::Markup::FormatterTestCase
+  </h1>
+
+  <section class="description">
+    
+<p><a href="../../Test.html">Test</a> case for creating new <a
+href="../Markup.html">RDoc::Markup</a> formatters.  See
+test/test_rdoc_markup_to_*.rb for examples.</p>
+
+<p>This test case adds a variety of tests to your subclass when
+add_visitor_tests is called.  Most tests set up a scenario then call a
+method you will provide to perform the assertion on the output.</p>
+
+<p>Your subclass must instantiate a visitor and assign it to <code>@to</code>.</p>
+
+<p>For example, <a
+href="FormatterTestCase.html#method-i-test_accept_blank_line">#test_accept_blank_line</a>
+sets up a RDoc::Markup::BlockLine then calls accept_blank_line on your
+visitor.  You are responsible for asserting that the output is correct.</p>
+
+<p>Example:</p>
+
+<pre class="ruby"><span class="ruby-keyword">class</span> <span class="ruby-constant">TestRDocMarkupToNewFormat</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">FormatterTestCase</span>
+
+  <span class="ruby-identifier">add_visitor_tests</span>
+
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">setup</span>
+    <span class="ruby-keyword">super</span>
+
+    <span class="ruby-ivar">@to</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ToNewFormat</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_blank_line</span>
+    <span class="ruby-identifier">assert_equal</span> :<span class="ruby-identifier">junk</span>, <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">res</span>.<span class="ruby-identifier">join</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># ...</span>
+
+<span class="ruby-keyword">end</span>
+</pre>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-add_visitor_tests" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_visitor_tests</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Call to add the visitor tests to your test case</p>
+          
+          
+
+          
+          <div class="method-source-code" id="add_visitor_tests-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 88</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">add_visitor_tests</span>
+  <span class="ruby-identifier">class_eval</span> <span class="ruby-keyword">do</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls start_accepting which needs to verify startup state</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_start_accepting</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-identifier">start_accepting</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls end_accepting on your test case which needs to call</span>
+    <span class="ruby-comment"># &lt;tt&gt;@to.end_accepting&lt;/tt&gt; and verify document generation</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_end_accepting</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;hi&#39;</span>
+
+      <span class="ruby-identifier">end_accepting</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_blank_line</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_blank_line</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_blank_line</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">BlankLine</span>.<span class="ruby-identifier">new</span>
+
+      <span class="ruby-identifier">accept_blank_line</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_block_quote</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_block_quote</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_block_quote</span> <span class="ruby-identifier">block</span> <span class="ruby-identifier">para</span> <span class="ruby-string">&#39;quote&#39;</span>
+
+      <span class="ruby-identifier">accept_block_quote</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Test case that calls &lt;tt&gt;@to.accept_document&lt;/tt&gt;</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_document</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_document</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span> <span class="ruby-string">&#39;hello&#39;</span>
+
+      <span class="ruby-identifier">accept_document</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_heading with a level 5 RDoc::Markup::Heading</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_heading</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_heading</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Heading</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">5</span>, <span class="ruby-string">&#39;Hello&#39;</span>)
+
+      <span class="ruby-identifier">accept_heading</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_heading_1 with a level 1 RDoc::Markup::Heading</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_heading_1</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_heading</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Heading</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, <span class="ruby-string">&#39;Hello&#39;</span>)
+
+      <span class="ruby-identifier">accept_heading_1</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_heading_2 with a level 2 RDoc::Markup::Heading</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_heading_2</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_heading</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Heading</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">2</span>, <span class="ruby-string">&#39;Hello&#39;</span>)
+
+      <span class="ruby-identifier">accept_heading_2</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_heading_3 with a level 3 RDoc::Markup::Heading</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_heading_3</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_heading</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Heading</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">3</span>, <span class="ruby-string">&#39;Hello&#39;</span>)
+
+      <span class="ruby-identifier">accept_heading_3</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_heading_4 with a level 4 RDoc::Markup::Heading</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_heading_4</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_heading</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Heading</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">4</span>, <span class="ruby-string">&#39;Hello&#39;</span>)
+
+      <span class="ruby-identifier">accept_heading_4</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_heading_b with a bold level 1 RDoc::Markup::Heading</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_heading_b</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_heading</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Heading</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, <span class="ruby-string">&#39;*Hello*&#39;</span>)
+
+      <span class="ruby-identifier">accept_heading_b</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_heading_suppressed_crossref with a level 1</span>
+    <span class="ruby-comment"># RDoc::Markup::Heading containing a suppressed crossref</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_heading_suppressed_crossref</span> <span class="ruby-comment"># HACK to_html_crossref test</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_heading</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Heading</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, <span class="ruby-string">&#39;\Hello&#39;</span>)
+
+      <span class="ruby-identifier">accept_heading_suppressed_crossref</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_paragraph</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;hi&#39;</span>)
+
+      <span class="ruby-identifier">accept_paragraph</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_paragraph_b with a RDoc::Markup::Paragraph containing</span>
+    <span class="ruby-comment"># bold words</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph_b</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;reg &lt;b&gt;bold words&lt;/b&gt; reg&#39;</span>)
+
+      <span class="ruby-identifier">accept_paragraph_b</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_paragraph_br with a RDoc::Markup::Paragraph containing</span>
+    <span class="ruby-comment"># a \&lt;br&gt;</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph_br</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-identifier">para</span> <span class="ruby-string">&#39;one&lt;br&gt;two&#39;</span>
+
+      <span class="ruby-identifier">accept_paragraph_br</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_paragraph with a Paragraph containing a hard break</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph_break</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-identifier">para</span>(<span class="ruby-string">&#39;hello&#39;</span>, <span class="ruby-identifier">hard_break</span>, <span class="ruby-string">&#39;world&#39;</span>)
+
+      <span class="ruby-identifier">accept_paragraph_break</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_paragraph_i with a RDoc::Markup::Paragraph containing</span>
+    <span class="ruby-comment"># emphasized words</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph_i</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;reg &lt;em&gt;italic words&lt;/em&gt; reg&#39;</span>)
+
+      <span class="ruby-identifier">accept_paragraph_i</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_paragraph_plus with a RDoc::Markup::Paragraph containing</span>
+    <span class="ruby-comment"># teletype words</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph_plus</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;reg +teletype+ reg&#39;</span>)
+
+      <span class="ruby-identifier">accept_paragraph_plus</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_paragraph_star with a RDoc::Markup::Paragraph containing</span>
+    <span class="ruby-comment"># bold words</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph_star</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;reg *bold* reg&#39;</span>)
+
+      <span class="ruby-identifier">accept_paragraph_star</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_paragraph_underscore with a RDoc::Markup::Paragraph</span>
+    <span class="ruby-comment"># containing emphasized words</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph_underscore</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;reg _italic_ reg&#39;</span>)
+
+      <span class="ruby-identifier">accept_paragraph_underscore</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_verbatim with a RDoc::Markup::Verbatim</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_verbatim</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_verbatim</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Verbatim</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;hi\n&quot;</span>, <span class="ruby-string">&quot;  world\n&quot;</span>)
+
+      <span class="ruby-identifier">accept_verbatim</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_raw with a RDoc::Markup::Raw</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_raw</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_raw</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Raw</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;&lt;table&gt;&quot;</span>,
+                                  <span class="ruby-string">&quot;&lt;tr&gt;&lt;th&gt;Name&lt;th&gt;Count&quot;</span>,
+                                  <span class="ruby-string">&quot;&lt;tr&gt;&lt;td&gt;a&lt;td&gt;1&quot;</span>,
+                                  <span class="ruby-string">&quot;&lt;tr&gt;&lt;td&gt;b&lt;td&gt;2&quot;</span>,
+                                  <span class="ruby-string">&quot;&lt;/table&gt;&quot;</span>)
+
+      <span class="ruby-identifier">accept_raw</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_rule with a RDoc::Markup::Rule</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_rule</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_rule</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Rule</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">4</span>)
+
+      <span class="ruby-identifier">accept_rule</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_item_start_bullet</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_start_bullet</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@bullet_list</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@bullet_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+      <span class="ruby-identifier">accept_list_item_start_bullet</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_item_start_label</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_start_label</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@label_list</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@label_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+      <span class="ruby-identifier">accept_list_item_start_label</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_item_start_lalpha</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_start_lalpha</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@lalpha_list</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@lalpha_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+      <span class="ruby-identifier">accept_list_item_start_lalpha</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_item_start_note</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_start_note</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@note_list</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@note_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+      <span class="ruby-identifier">accept_list_item_start_note</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_item_start_note_2</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_start_note_2</span>
+      <span class="ruby-identifier">list</span> = <span class="ruby-identifier">list</span>(<span class="ruby-value">:NOTE</span>,
+               <span class="ruby-identifier">item</span>(<span class="ruby-string">&#39;&lt;tt&gt;teletype&lt;/tt&gt;&#39;</span>,
+                 <span class="ruby-identifier">para</span>(<span class="ruby-string">&#39;teletype description&#39;</span>)))
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-identifier">list</span>.<span class="ruby-identifier">accept</span> <span class="ruby-ivar">@to</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">end_accepting</span>
+
+      <span class="ruby-identifier">accept_list_item_start_note_2</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_item_start_note_multi_description</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_start_note_multi_description</span>
+      <span class="ruby-identifier">list</span> = <span class="ruby-identifier">list</span>(<span class="ruby-value">:NOTE</span>,
+               <span class="ruby-identifier">item</span>(<span class="ruby-node">%w[label]</span>,
+                 <span class="ruby-identifier">para</span>(<span class="ruby-string">&#39;description one&#39;</span>)),
+               <span class="ruby-identifier">item</span>(<span class="ruby-keyword">nil</span>, <span class="ruby-identifier">para</span>(<span class="ruby-string">&#39;description two&#39;</span>)))
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-identifier">list</span>.<span class="ruby-identifier">accept</span> <span class="ruby-ivar">@to</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">end_accepting</span>
+
+      <span class="ruby-identifier">accept_list_item_start_note_multi_description</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_item_start_note_multi_label</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_start_note_multi_label</span>
+      <span class="ruby-identifier">list</span> = <span class="ruby-identifier">list</span>(<span class="ruby-value">:NOTE</span>,
+               <span class="ruby-identifier">item</span>(<span class="ruby-node">%w[one two]</span>,
+                 <span class="ruby-identifier">para</span>(<span class="ruby-string">&#39;two headers&#39;</span>)))
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-identifier">list</span>.<span class="ruby-identifier">accept</span> <span class="ruby-ivar">@to</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">end_accepting</span>
+
+      <span class="ruby-identifier">accept_list_item_start_note_multi_label</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_item_start_number</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_start_number</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@number_list</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@number_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+      <span class="ruby-identifier">accept_list_item_start_number</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_item_start_ualpha</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_start_ualpha</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@ualpha_list</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@ualpha_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+      <span class="ruby-identifier">accept_list_item_start_ualpha</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_item_end_bullet</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_end_bullet</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@bullet_list</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@bullet_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_end</span> <span class="ruby-ivar">@bullet_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+      <span class="ruby-identifier">accept_list_item_end_bullet</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_item_end_label</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_end_label</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@label_list</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@label_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_end</span> <span class="ruby-ivar">@label_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+      <span class="ruby-identifier">accept_list_item_end_label</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_item_end_lalpha</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_end_lalpha</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@lalpha_list</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@lalpha_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_end</span> <span class="ruby-ivar">@lalpha_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+      <span class="ruby-identifier">accept_list_item_end_lalpha</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_item_end_note</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_end_note</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@note_list</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@note_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_end</span> <span class="ruby-ivar">@note_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+      <span class="ruby-identifier">accept_list_item_end_note</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_item_end_number</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_end_number</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@number_list</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@number_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_end</span> <span class="ruby-ivar">@number_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+      <span class="ruby-identifier">accept_list_item_end_number</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_item_end_ualpha</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_end_ualpha</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@ualpha_list</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@ualpha_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_end</span> <span class="ruby-ivar">@ualpha_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+      <span class="ruby-identifier">accept_list_item_end_ualpha</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_start_bullet</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_start_bullet</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@bullet_list</span>
+
+      <span class="ruby-identifier">accept_list_start_bullet</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_start_label</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_start_label</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@label_list</span>
+
+      <span class="ruby-identifier">accept_list_start_label</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_start_lalpha</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_start_lalpha</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@lalpha_list</span>
+
+      <span class="ruby-identifier">accept_list_start_lalpha</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_start_note</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_start_note</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@note_list</span>
+
+      <span class="ruby-identifier">accept_list_start_note</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_start_number</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_start_number</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@number_list</span>
+
+      <span class="ruby-identifier">accept_list_start_number</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_start_ualpha</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_start_ualpha</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@ualpha_list</span>
+
+      <span class="ruby-identifier">accept_list_start_ualpha</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_end_bullet</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_end_bullet</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@bullet_list</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_end</span> <span class="ruby-ivar">@bullet_list</span>
+
+      <span class="ruby-identifier">accept_list_end_bullet</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_end_label</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_end_label</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@label_list</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_end</span> <span class="ruby-ivar">@label_list</span>
+
+      <span class="ruby-identifier">accept_list_end_label</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_end_lalpha</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_end_lalpha</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@lalpha_list</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_end</span> <span class="ruby-ivar">@lalpha_list</span>
+
+      <span class="ruby-identifier">accept_list_end_lalpha</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_end_number</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_end_number</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@number_list</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_end</span> <span class="ruby-ivar">@number_list</span>
+
+      <span class="ruby-identifier">accept_list_end_number</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_end_note</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_end_note</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@note_list</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_end</span> <span class="ruby-ivar">@note_list</span>
+
+      <span class="ruby-identifier">accept_list_end_note</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls accept_list_end_ualpha</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_end_ualpha</span>
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@ualpha_list</span>
+
+      <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_end</span> <span class="ruby-ivar">@ualpha_list</span>
+
+      <span class="ruby-identifier">accept_list_end_ualpha</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls list_nested with a two-level list</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_list_nested</span>
+      <span class="ruby-identifier">doc</span> = <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span>(
+              <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">List</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:BULLET</span>,
+                <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">nil</span>,
+                  <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;l1&#39;</span>),
+                  <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">List</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:BULLET</span>,
+                    <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">nil</span>,
+                      <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;l1.1&#39;</span>)))),
+                <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">nil</span>,
+                  <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;l2&#39;</span>))))
+
+      <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">accept</span> <span class="ruby-ivar">@to</span>
+
+      <span class="ruby-identifier">list_nested</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">##</span>
+    <span class="ruby-comment"># Calls list_verbatim with a list containing a verbatim block</span>
+
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_list_verbatim</span> <span class="ruby-comment"># HACK overblown</span>
+      <span class="ruby-identifier">doc</span> =
+        <span class="ruby-identifier">doc</span>(
+          <span class="ruby-identifier">list</span>(<span class="ruby-value">:BULLET</span>,
+            <span class="ruby-identifier">item</span>(<span class="ruby-keyword">nil</span>,
+              <span class="ruby-identifier">para</span>(<span class="ruby-string">&#39;list stuff&#39;</span>),
+              <span class="ruby-identifier">blank_line</span>,
+              <span class="ruby-identifier">verb</span>(<span class="ruby-string">&quot;* list\n&quot;</span>,
+                   <span class="ruby-string">&quot;  with\n&quot;</span>,
+                   <span class="ruby-string">&quot;\n&quot;</span>,
+                   <span class="ruby-string">&quot;  second\n&quot;</span>,
+                   <span class="ruby-string">&quot;\n&quot;</span>,
+                   <span class="ruby-string">&quot;  1. indented\n&quot;</span>,
+                   <span class="ruby-string">&quot;  2. numbered\n&quot;</span>,
+                   <span class="ruby-string">&quot;\n&quot;</span>,
+                   <span class="ruby-string">&quot;  third\n&quot;</span>,
+                   <span class="ruby-string">&quot;\n&quot;</span>,
+                   <span class="ruby-string">&quot;* second\n&quot;</span>))))
+
+      <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">accept</span> <span class="ruby-ivar">@to</span>
+
+      <span class="ruby-identifier">list_verbatim</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-setup" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">setup</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Call <a href="FormatterTestCase.html#method-i-setup">setup</a> when
+inheriting from this test case.</p>
+
+<p>Provides the following instance variables:</p>
+<dl class="rdoc-list note-list"><dt>+@m+
+<dd>
+<p><a href="../Markup.html#method-c-new">RDoc::Markup.new</a></p>
+</dd><dt>+@RM+
+<dd>
+<p><a href="../Markup.html">RDoc::Markup</a> # to reduce typing</p>
+</dd><dt>+@bullet_list+
+<dd>
+<p>@RM::List.new :BULLET, # …</p>
+</dd><dt>+@label_list+
+<dd>
+<p>@RM::List.new :LABEL, # …</p>
+</dd><dt>+@lalpha_list+
+<dd>
+<p>@RM::List.new :LALPHA, # …</p>
+</dd><dt>+@note_list+
+<dd>
+<p>@RM::List.new :NOTE, # …</p>
+</dd><dt>+@number_list+
+<dd>
+<p>@RM::List.new :NUMBER, # …</p>
+</dd><dt>+@ualpha_list+
+<dd>
+<p>@RM::List.new :UALPHA, # …</p>
+</dd></dl>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="../TestCase.html#method-i-setup">RDoc::TestCase#setup</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="setup-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 53</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">setup</span>
+  <span class="ruby-keyword">super</span>
+
+  <span class="ruby-ivar">@options</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Options</span>.<span class="ruby-identifier">new</span>
+
+  <span class="ruby-ivar">@m</span> = <span class="ruby-ivar">@RM</span>.<span class="ruby-identifier">new</span>
+
+  <span class="ruby-ivar">@bullet_list</span> = <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">List</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:BULLET</span>,
+    <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">nil</span>, <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;l1&#39;</span>)),
+    <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">nil</span>, <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;l2&#39;</span>)))
+
+  <span class="ruby-ivar">@label_list</span> = <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">List</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:LABEL</span>,
+    <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;cat&#39;</span>, <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;cats are cool&#39;</span>)),
+    <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;dog&#39;</span>, <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;dogs are cool too&#39;</span>)))
+
+  <span class="ruby-ivar">@lalpha_list</span> = <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">List</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:LALPHA</span>,
+    <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">nil</span>, <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;l1&#39;</span>)),
+    <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">nil</span>, <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;l2&#39;</span>)))
+
+  <span class="ruby-ivar">@note_list</span> = <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">List</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:NOTE</span>,
+    <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;cat&#39;</span>, <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;cats are cool&#39;</span>)),
+    <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;dog&#39;</span>, <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;dogs are cool too&#39;</span>)))
+
+  <span class="ruby-ivar">@number_list</span> = <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">List</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:NUMBER</span>,
+    <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">nil</span>, <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;l1&#39;</span>)),
+    <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">nil</span>, <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;l2&#39;</span>)))
+
+  <span class="ruby-ivar">@ualpha_list</span> = <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">List</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:UALPHA</span>,
+    <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">nil</span>, <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;l1&#39;</span>)),
+    <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">nil</span>, <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;l2&#39;</span>)))
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_blank_line" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_blank_line</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_blank_line</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_blank_line-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 114</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_blank_line</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_blank_line</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">BlankLine</span>.<span class="ruby-identifier">new</span>
+
+  <span class="ruby-identifier">accept_blank_line</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_block_quote" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_block_quote</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_block_quote</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_block_quote-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 125</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_block_quote</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_block_quote</span> <span class="ruby-identifier">block</span> <span class="ruby-identifier">para</span> <span class="ruby-string">&#39;quote&#39;</span>
+
+  <span class="ruby-identifier">accept_block_quote</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_document" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_document</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="../../Test.html">Test</a> case that calls
+<code>@to.accept_document</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_document-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 135</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_document</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_document</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span> <span class="ruby-string">&#39;hello&#39;</span>
+
+  <span class="ruby-identifier">accept_document</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_heading" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_heading</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_heading with a level 5 RDoc::Markup::Heading</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_heading-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 145</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_heading</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_heading</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Heading</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">5</span>, <span class="ruby-string">&#39;Hello&#39;</span>)
+
+  <span class="ruby-identifier">accept_heading</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_heading_1" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_heading_1</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_heading_1 with a level 1 RDoc::Markup::Heading</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_heading_1-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 156</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_heading_1</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_heading</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Heading</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, <span class="ruby-string">&#39;Hello&#39;</span>)
+
+  <span class="ruby-identifier">accept_heading_1</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_heading_2" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_heading_2</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_heading_2 with a level 2 RDoc::Markup::Heading</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_heading_2-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 167</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_heading_2</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_heading</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Heading</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">2</span>, <span class="ruby-string">&#39;Hello&#39;</span>)
+
+  <span class="ruby-identifier">accept_heading_2</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_heading_3" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_heading_3</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_heading_3 with a level 3 RDoc::Markup::Heading</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_heading_3-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 178</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_heading_3</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_heading</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Heading</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">3</span>, <span class="ruby-string">&#39;Hello&#39;</span>)
+
+  <span class="ruby-identifier">accept_heading_3</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_heading_4" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_heading_4</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_heading_4 with a level 4 RDoc::Markup::Heading</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_heading_4-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 189</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_heading_4</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_heading</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Heading</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">4</span>, <span class="ruby-string">&#39;Hello&#39;</span>)
+
+  <span class="ruby-identifier">accept_heading_4</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_heading_b" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_heading_b</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_heading_b with a bold level 1 RDoc::Markup::Heading</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_heading_b-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 200</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_heading_b</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_heading</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Heading</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, <span class="ruby-string">&#39;*Hello*&#39;</span>)
+
+  <span class="ruby-identifier">accept_heading_b</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_heading_suppressed_crossref" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_heading_suppressed_crossref</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_heading_suppressed_crossref with a level 1
+RDoc::Markup::Heading containing a suppressed crossref</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_heading_suppressed_crossref-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 212</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_heading_suppressed_crossref</span> <span class="ruby-comment"># HACK to_html_crossref test</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_heading</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Heading</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, <span class="ruby-string">&#39;\Hello&#39;</span>)
+
+  <span class="ruby-identifier">accept_heading_suppressed_crossref</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_end_bullet" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_end_bullet</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_end_bullet</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_end_bullet-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 640</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_end_bullet</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@bullet_list</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_end</span> <span class="ruby-ivar">@bullet_list</span>
+
+  <span class="ruby-identifier">accept_list_end_bullet</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_end_label" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_end_label</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_end_label</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_end_label-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 653</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_end_label</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@label_list</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_end</span> <span class="ruby-ivar">@label_list</span>
+
+  <span class="ruby-identifier">accept_list_end_label</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_end_lalpha" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_end_lalpha</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_end_lalpha</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_end_lalpha-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 666</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_end_lalpha</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@lalpha_list</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_end</span> <span class="ruby-ivar">@lalpha_list</span>
+
+  <span class="ruby-identifier">accept_list_end_lalpha</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_end_note" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_end_note</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_end_note</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_end_note-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 692</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_end_note</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@note_list</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_end</span> <span class="ruby-ivar">@note_list</span>
+
+  <span class="ruby-identifier">accept_list_end_note</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_end_number" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_end_number</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_end_number</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_end_number-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 679</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_end_number</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@number_list</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_end</span> <span class="ruby-ivar">@number_list</span>
+
+  <span class="ruby-identifier">accept_list_end_number</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_end_ualpha" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_end_ualpha</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_end_ualpha</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_end_ualpha-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 705</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_end_ualpha</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@ualpha_list</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_end</span> <span class="ruby-ivar">@ualpha_list</span>
+
+  <span class="ruby-identifier">accept_list_end_ualpha</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_item_end_bullet" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_item_end_bullet</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_item_end_bullet</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_item_end_bullet-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 484</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_end_bullet</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@bullet_list</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@bullet_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_end</span> <span class="ruby-ivar">@bullet_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+  <span class="ruby-identifier">accept_list_item_end_bullet</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_item_end_label" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_item_end_label</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_item_end_label</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_item_end_label-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 499</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_end_label</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@label_list</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@label_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_end</span> <span class="ruby-ivar">@label_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+  <span class="ruby-identifier">accept_list_item_end_label</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_item_end_lalpha" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_item_end_lalpha</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_item_end_lalpha</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_item_end_lalpha-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 514</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_end_lalpha</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@lalpha_list</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@lalpha_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_end</span> <span class="ruby-ivar">@lalpha_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+  <span class="ruby-identifier">accept_list_item_end_lalpha</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_item_end_note" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_item_end_note</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_item_end_note</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_item_end_note-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 529</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_end_note</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@note_list</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@note_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_end</span> <span class="ruby-ivar">@note_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+  <span class="ruby-identifier">accept_list_item_end_note</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_item_end_number" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_item_end_number</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_item_end_number</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_item_end_number-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 544</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_end_number</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@number_list</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@number_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_end</span> <span class="ruby-ivar">@number_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+  <span class="ruby-identifier">accept_list_item_end_number</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_item_end_ualpha" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_item_end_ualpha</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_item_end_ualpha</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_item_end_ualpha-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 559</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_end_ualpha</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@ualpha_list</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@ualpha_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_end</span> <span class="ruby-ivar">@ualpha_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+  <span class="ruby-identifier">accept_list_item_end_ualpha</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_item_start_bullet" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_item_start_bullet</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_item_start_bullet</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_item_start_bullet-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 354</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_start_bullet</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@bullet_list</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@bullet_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+  <span class="ruby-identifier">accept_list_item_start_bullet</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_item_start_label" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_item_start_label</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_item_start_label</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_item_start_label-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 367</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_start_label</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@label_list</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@label_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+  <span class="ruby-identifier">accept_list_item_start_label</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_item_start_lalpha" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_item_start_lalpha</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_item_start_lalpha</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_item_start_lalpha-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 380</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_start_lalpha</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@lalpha_list</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@lalpha_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+  <span class="ruby-identifier">accept_list_item_start_lalpha</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_item_start_note" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_item_start_note</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_item_start_note</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_item_start_note-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 393</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_start_note</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@note_list</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@note_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+  <span class="ruby-identifier">accept_list_item_start_note</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_item_start_note_2" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_item_start_note_2</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_item_start_note_2</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_item_start_note_2-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 406</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_start_note_2</span>
+  <span class="ruby-identifier">list</span> = <span class="ruby-identifier">list</span>(<span class="ruby-value">:NOTE</span>,
+           <span class="ruby-identifier">item</span>(<span class="ruby-string">&#39;&lt;tt&gt;teletype&lt;/tt&gt;&#39;</span>,
+             <span class="ruby-identifier">para</span>(<span class="ruby-string">&#39;teletype description&#39;</span>)))
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-identifier">list</span>.<span class="ruby-identifier">accept</span> <span class="ruby-ivar">@to</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">end_accepting</span>
+
+  <span class="ruby-identifier">accept_list_item_start_note_2</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_item_start_note_multi_description" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_item_start_note_multi_description</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_item_start_note_multi_description</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_item_start_note_multi_description-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 423</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_start_note_multi_description</span>
+  <span class="ruby-identifier">list</span> = <span class="ruby-identifier">list</span>(<span class="ruby-value">:NOTE</span>,
+           <span class="ruby-identifier">item</span>(<span class="ruby-node">%w[label]</span>,
+             <span class="ruby-identifier">para</span>(<span class="ruby-string">&#39;description one&#39;</span>)),
+           <span class="ruby-identifier">item</span>(<span class="ruby-keyword">nil</span>, <span class="ruby-identifier">para</span>(<span class="ruby-string">&#39;description two&#39;</span>)))
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-identifier">list</span>.<span class="ruby-identifier">accept</span> <span class="ruby-ivar">@to</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">end_accepting</span>
+
+  <span class="ruby-identifier">accept_list_item_start_note_multi_description</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_item_start_note_multi_label" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_item_start_note_multi_label</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_item_start_note_multi_label</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_item_start_note_multi_label-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 441</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_start_note_multi_label</span>
+  <span class="ruby-identifier">list</span> = <span class="ruby-identifier">list</span>(<span class="ruby-value">:NOTE</span>,
+           <span class="ruby-identifier">item</span>(<span class="ruby-node">%w[one two]</span>,
+             <span class="ruby-identifier">para</span>(<span class="ruby-string">&#39;two headers&#39;</span>)))
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-identifier">list</span>.<span class="ruby-identifier">accept</span> <span class="ruby-ivar">@to</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">end_accepting</span>
+
+  <span class="ruby-identifier">accept_list_item_start_note_multi_label</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_item_start_number" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_item_start_number</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_item_start_number</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_item_start_number-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 458</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_start_number</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@number_list</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@number_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+  <span class="ruby-identifier">accept_list_item_start_number</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_item_start_ualpha" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_item_start_ualpha</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_item_start_ualpha</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_item_start_ualpha-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 471</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_item_start_ualpha</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@ualpha_list</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-ivar">@ualpha_list</span>.<span class="ruby-identifier">items</span>.<span class="ruby-identifier">first</span>
+
+  <span class="ruby-identifier">accept_list_item_start_ualpha</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_start_bullet" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_start_bullet</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_start_bullet</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_start_bullet-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 574</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_start_bullet</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@bullet_list</span>
+
+  <span class="ruby-identifier">accept_list_start_bullet</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_start_label" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_start_label</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_start_label</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_start_label-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 585</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_start_label</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@label_list</span>
+
+  <span class="ruby-identifier">accept_list_start_label</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_start_lalpha" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_start_lalpha</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_start_lalpha</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_start_lalpha-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 596</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_start_lalpha</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@lalpha_list</span>
+
+  <span class="ruby-identifier">accept_list_start_lalpha</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_start_note" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_start_note</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_start_note</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_start_note-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 607</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_start_note</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@note_list</span>
+
+  <span class="ruby-identifier">accept_list_start_note</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_start_number" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_start_number</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_start_number</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_start_number-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 618</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_start_number</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@number_list</span>
+
+  <span class="ruby-identifier">accept_list_start_number</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_list_start_ualpha" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_list_start_ualpha</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_list_start_ualpha</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_list_start_ualpha-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 629</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_list_start_ualpha</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_list_start</span> <span class="ruby-ivar">@ualpha_list</span>
+
+  <span class="ruby-identifier">accept_list_start_ualpha</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_paragraph" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_paragraph</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_paragraph</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_paragraph-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 223</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;hi&#39;</span>)
+
+  <span class="ruby-identifier">accept_paragraph</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_paragraph_b" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_paragraph_b</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_paragraph_b with a <a
+href="Paragraph.html">RDoc::Markup::Paragraph</a> containing bold words</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_paragraph_b-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 235</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph_b</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;reg &lt;b&gt;bold words&lt;/b&gt; reg&#39;</span>)
+
+  <span class="ruby-identifier">accept_paragraph_b</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_paragraph_br" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_paragraph_br</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_paragraph_br with a <a
+href="Paragraph.html">RDoc::Markup::Paragraph</a> containing a &lt;br&gt;</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_paragraph_br-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 247</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph_br</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-identifier">para</span> <span class="ruby-string">&#39;one&lt;br&gt;two&#39;</span>
+
+  <span class="ruby-identifier">accept_paragraph_br</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_paragraph_break" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_paragraph_break</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_paragraph with a Paragraph containing a hard break</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_paragraph_break-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 258</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph_break</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-identifier">para</span>(<span class="ruby-string">&#39;hello&#39;</span>, <span class="ruby-identifier">hard_break</span>, <span class="ruby-string">&#39;world&#39;</span>)
+
+  <span class="ruby-identifier">accept_paragraph_break</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_paragraph_i" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_paragraph_i</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_paragraph_i with a <a
+href="Paragraph.html">RDoc::Markup::Paragraph</a> containing emphasized
+words</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_paragraph_i-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 270</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph_i</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;reg &lt;em&gt;italic words&lt;/em&gt; reg&#39;</span>)
+
+  <span class="ruby-identifier">accept_paragraph_i</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_paragraph_plus" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_paragraph_plus</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_paragraph_plus with a <a
+href="Paragraph.html">RDoc::Markup::Paragraph</a> containing teletype words</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_paragraph_plus-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 282</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph_plus</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;reg +teletype+ reg&#39;</span>)
+
+  <span class="ruby-identifier">accept_paragraph_plus</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_paragraph_star" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_paragraph_star</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_paragraph_star with a <a
+href="Paragraph.html">RDoc::Markup::Paragraph</a> containing bold words</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_paragraph_star-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 294</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph_star</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;reg *bold* reg&#39;</span>)
+
+  <span class="ruby-identifier">accept_paragraph_star</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_paragraph_underscore" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_paragraph_underscore</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_paragraph_underscore with a <a
+href="Paragraph.html">RDoc::Markup::Paragraph</a> containing emphasized
+words</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_paragraph_underscore-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 306</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph_underscore</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;reg _italic_ reg&#39;</span>)
+
+  <span class="ruby-identifier">accept_paragraph_underscore</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_raw" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_raw</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_raw with a <a href="Raw.html">RDoc::Markup::Raw</a></p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_raw-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 328</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_raw</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_raw</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Raw</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;&lt;table&gt;&quot;</span>,
+                              <span class="ruby-string">&quot;&lt;tr&gt;&lt;th&gt;Name&lt;th&gt;Count&quot;</span>,
+                              <span class="ruby-string">&quot;&lt;tr&gt;&lt;td&gt;a&lt;td&gt;1&quot;</span>,
+                              <span class="ruby-string">&quot;&lt;tr&gt;&lt;td&gt;b&lt;td&gt;2&quot;</span>,
+                              <span class="ruby-string">&quot;&lt;/table&gt;&quot;</span>)
+
+  <span class="ruby-identifier">accept_raw</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_rule" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_rule</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_rule with a <a href="Rule.html">RDoc::Markup::Rule</a></p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_rule-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 343</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_rule</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_rule</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Rule</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">4</span>)
+
+  <span class="ruby-identifier">accept_rule</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_accept_verbatim" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_accept_verbatim</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls accept_verbatim with a <a
+href="Verbatim.html">RDoc::Markup::Verbatim</a></p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_accept_verbatim-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 317</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_verbatim</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_verbatim</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Verbatim</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;hi\n&quot;</span>, <span class="ruby-string">&quot;  world\n&quot;</span>)
+
+  <span class="ruby-identifier">accept_verbatim</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_end_accepting" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_end_accepting</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls end_accepting on your test case which needs to call
+<code>@to.end_accepting</code> and verify document generation</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_end_accepting-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 104</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_end_accepting</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;hi&#39;</span>
+
+  <span class="ruby-identifier">end_accepting</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_list_nested" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_list_nested</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls list_nested with a two-level list</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_list_nested-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 718</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_list_nested</span>
+  <span class="ruby-identifier">doc</span> = <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span>(
+          <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">List</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:BULLET</span>,
+            <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">nil</span>,
+              <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;l1&#39;</span>),
+              <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">List</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:BULLET</span>,
+                <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">nil</span>,
+                  <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;l1.1&#39;</span>)))),
+            <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">nil</span>,
+              <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;l2&#39;</span>))))
+
+  <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">accept</span> <span class="ruby-ivar">@to</span>
+
+  <span class="ruby-identifier">list_nested</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_list_verbatim" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_list_verbatim</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls list_verbatim with a list containing a verbatim block</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_list_verbatim-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 737</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_list_verbatim</span> <span class="ruby-comment"># HACK overblown</span>
+  <span class="ruby-identifier">doc</span> =
+    <span class="ruby-identifier">doc</span>(
+      <span class="ruby-identifier">list</span>(<span class="ruby-value">:BULLET</span>,
+        <span class="ruby-identifier">item</span>(<span class="ruby-keyword">nil</span>,
+          <span class="ruby-identifier">para</span>(<span class="ruby-string">&#39;list stuff&#39;</span>),
+          <span class="ruby-identifier">blank_line</span>,
+          <span class="ruby-identifier">verb</span>(<span class="ruby-string">&quot;* list\n&quot;</span>,
+               <span class="ruby-string">&quot;  with\n&quot;</span>,
+               <span class="ruby-string">&quot;\n&quot;</span>,
+               <span class="ruby-string">&quot;  second\n&quot;</span>,
+               <span class="ruby-string">&quot;\n&quot;</span>,
+               <span class="ruby-string">&quot;  1. indented\n&quot;</span>,
+               <span class="ruby-string">&quot;  2. numbered\n&quot;</span>,
+               <span class="ruby-string">&quot;\n&quot;</span>,
+               <span class="ruby-string">&quot;  third\n&quot;</span>,
+               <span class="ruby-string">&quot;\n&quot;</span>,
+               <span class="ruby-string">&quot;* second\n&quot;</span>))))
+
+  <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">accept</span> <span class="ruby-ivar">@to</span>
+
+  <span class="ruby-identifier">list_verbatim</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-test_start_accepting" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">test_start_accepting</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Calls start_accepting which needs to verify startup state</p>
+          
+          
+
+          
+          <div class="method-source-code" id="test_start_accepting-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter_test_case.rb, line 94</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_start_accepting</span>
+  <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
+
+  <span class="ruby-identifier">start_accepting</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

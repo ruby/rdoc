@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class RDoc::RI::Task - rdoc 5.0.0.beta2 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+  var index_rel_prefix = "../../";
+</script>
+
+<script src="../../js/jquery.js"></script>
+<script src="../../js/darkfish.js"></script>
+
+<link href="../../css/fonts.css" rel="stylesheet">
+<link href="../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../table_of_contents.html#pages">Pages</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="../Task.html">RDoc::Task</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li class="calls-super" ><a href="#method-c-new">::new</a>
+    
+    <li class="calls-super" ><a href="#method-i-defaults">#defaults</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-RDoc::RI::Task">
+  <h1 id="class-RDoc::RI::Task" class="class">
+    class RDoc::RI::Task
+  </h1>
+
+  <section class="description">
+    
+<p><a href="Task.html">RDoc::RI::Task</a> creates ri data in
+<code>./.rdoc</code> for your project.</p>
+
+<p>It contains the following tasks:</p>
+<dl class="rdoc-list label-list"><dt>ri
+<dd>
+<p>Build ri data</p>
+</dd><dt>clobber_ri
+<dd>
+<p>Delete ri data files.  This target is automatically added to the main
+clobber target.</p>
+</dd><dt>reri
+<dd>
+<p>Rebuild the ri data from scratch even if they are not out of date.</p>
+</dd></dl>
+
+<p>Simple example:</p>
+
+<pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;rdoc/ri/task&#39;</span>
+
+<span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RI</span><span class="ruby-operator">::</span><span class="ruby-constant">Task</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ri</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">ri</span>.<span class="ruby-identifier">main</span> = <span class="ruby-string">&#39;README.rdoc&#39;</span>
+  <span class="ruby-identifier">ri</span>.<span class="ruby-identifier">rdoc_files</span>.<span class="ruby-identifier">include</span> <span class="ruby-string">&#39;README.rdoc&#39;</span>, <span class="ruby-string">&#39;lib   /*.rb&#39;</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>For further configuration details see <a
+href="../Task.html">RDoc::Task</a>.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(name = DEFAULT_NAMES) { |self| ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create an ri task with the given name. See <a
+href="../Task.html">RDoc::Task</a> for documentation on setting names.</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="../Task.html#method-c-new">RDoc::Task.new</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/task.rb, line 46</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">name</span> = <span class="ruby-constant">DEFAULT_NAMES</span> <span class="ruby-comment"># :yield: self</span>
+  <span class="ruby-keyword">super</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-defaults" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">defaults</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Sets default task values</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="../Task.html#method-i-defaults">RDoc::Task#defaults</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="defaults-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/task.rb, line 57</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">defaults</span>
+  <span class="ruby-keyword">super</span>
+
+  <span class="ruby-ivar">@rdoc_dir</span> = <span class="ruby-string">&#39;.rdoc&#39;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

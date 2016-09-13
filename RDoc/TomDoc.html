@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class RDoc::TomDoc - rdoc 5.0.0.beta2 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    <div id="sections-section" class="nav-section">
+  <h3>Sections</h3>
+
+  <ul class="link-list" role="directory">
+    
+      <li><a href="#5Buntitled-5D"></a></li>
+    
+      <li><a href="#Public">Public</a></li>
+    
+      <li><a href="#Internal">Internal</a></li>
+    
+  </ul>
+</div>
+
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="Markup/Parser.html">RDoc::Markup::Parser</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li class="calls-super" ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-c-parse">::parse</a>
+    
+    <li ><a href="#method-c-signature">::signature</a>
+    
+    <li class="calls-super" ><a href="#method-i-build_heading">#build_heading</a>
+    
+    <li ><a href="#method-i-build_paragraph">#build_paragraph</a>
+    
+    <li class="calls-super" ><a href="#method-i-build_verbatim">#build_verbatim</a>
+    
+    <li ><a href="#method-i-tokenize">#tokenize</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-RDoc::TomDoc">
+  <h1 id="class-RDoc::TomDoc" class="class">
+    class RDoc::TomDoc
+  </h1>
+
+  <section class="description">
+    
+<p>A parser for <a href="TomDoc.html">TomDoc</a> based on <a
+href="TomDoc.html">TomDoc</a> 1.0.0-rc1 (02adef9b5a)</p>
+
+<p>The <a href="TomDoc.html">TomDoc</a> specification can be found at:</p>
+
+<p><a href="http://tomdoc.org">tomdoc.org</a></p>
+
+<p>The latest version of the <a href="TomDoc.html">TomDoc</a> specification
+can be found at:</p>
+
+<p><a
+href="https://github.com/mojombo/tomdoc/blob/master/tomdoc.md">github.com/mojombo/tomdoc/blob/master/tomdoc.md</a></p>
+
+<p>To choose <a href="TomDoc.html">TomDoc</a> as your only default format see
+<a href="Options.html#label-Saved+Options">Saved Options at
+RDoc::Options</a> for instructions on setting up a
+<code>.rdoc_options</code> file to store your project default.</p>
+
+<p>There are a few differences between this parser and the specification.  A
+best-effort was made to follow the specification as closely as possible but
+some choices to deviate were made.</p>
+
+<p>A future version of <a href="../RDoc.html">RDoc</a> will warn when a MUST
+or MUST NOT is violated and may warn when a SHOULD or SHOULD NOT is
+violated.  <a href="../RDoc.html">RDoc</a> will always try to emit
+documentation even if given invalid <a href="TomDoc.html">TomDoc</a>.</p>
+
+<p>Here are some implementation choices this parser currently makes:</p>
+
+<p>This parser allows rdoc-style inline markup but you should not depended on
+it.</p>
+
+<p>This parser allows a space between the comment and the method body.</p>
+
+<p>This parser does not require the default value to be described for an
+optional argument.</p>
+
+<p>This parser does not examine the order of sections.  An Examples section
+may precede the Arguments section.</p>
+
+<p>This class is documented in <a href="TomDoc.html">TomDoc</a> format.  Since
+this is a subclass of the <a href="../RDoc.html">RDoc</a> markup parser
+there isn&#39;t much to see here, unfortunately.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+  </section>
+
+  
+  
+  <section id="Public" class="documentation-section">
+    
+    <header class="documentation-section-title">
+      <h2>
+        Public
+      </h2>
+      <span class="section-click-top">
+        <a href="#top">&uarr; top</a>
+      </span>
+    </header>
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-Public-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates a new <a href="TomDoc.html">TomDoc</a> parser.  See also <a
+href="Markup.html#method-c-parse">RDoc::Markup.parse</a></p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="Markup/Parser.html#method-c-new">RDoc::Markup::Parser.new</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 129</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
+  <span class="ruby-keyword">super</span>
+
+  <span class="ruby-ivar">@section</span>      = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@seen_returns</span> = <span class="ruby-keyword">false</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-parse" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">parse</span><span
+            class="method-args">(text)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Parses <a href="TomDoc.html">TomDoc</a> from text</p>
+<dl class="rdoc-list note-list"><dt>text
+<dd>
+<p>A String containing TomDoc-format text.</p>
+</dd></dl>
+
+<h3 id="method-c-parse-label-Examples">Examples<span><a href="#method-c-parse-label-Examples">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre class="ruby"><span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">TomDoc</span>.<span class="ruby-identifier">parse</span> <span class="ruby-value">&lt;&lt;-TOMDOC
+This method does some things
+
+Returns nothing.
+TOMDOC</span>
+<span class="ruby-comment"># =&gt; #&lt;RDoc::Markup::Document:0xXXX @parts=[...], @file=nil&gt;</span>
+</pre>
+
+<h3 id="method-c-parse-label-Returns">Returns<span><a href="#method-c-parse-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns an <a href="Markup/Document.html">RDoc::Markup::Document</a>
+representing the <a href="TomDoc.html">TomDoc</a> format.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="parse-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 83</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parse</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-identifier">parser</span> = <span class="ruby-identifier">new</span>
+
+  <span class="ruby-identifier">parser</span>.<span class="ruby-identifier">tokenize</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-identifier">doc</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">parser</span>.<span class="ruby-identifier">parse</span> <span class="ruby-identifier">doc</span>
+  <span class="ruby-identifier">doc</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+
+  
+  
+  <section id="Internal" class="documentation-section">
+    
+    <header class="documentation-section-title">
+      <h2>
+        Internal
+      </h2>
+      <span class="section-click-top">
+        <a href="#top">&uarr; top</a>
+      </span>
+    </header>
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-tokens" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">tokens</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Token accessor</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-Internal-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-signature" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">signature</span><span
+            class="method-args">(comment)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Extracts the Signature section&#39;s method signature</p>
+<dl class="rdoc-list note-list"><dt>comment
+<dd>
+<p>An <a href="Comment.html">RDoc::Comment</a> that will be parsed and have
+the signature extracted</p>
+</dd></dl>
+
+<h3 id="method-c-signature-label-Returns">Returns<span><a href="#method-c-signature-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns a String containing the signature and nil if not</p>
+          
+          
+
+          
+          <div class="method-source-code" id="signature-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 99</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">signature</span> <span class="ruby-identifier">comment</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">tomdoc?</span>
+
+  <span class="ruby-identifier">document</span> = <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">parse</span>
+
+  <span class="ruby-identifier">signature</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">found_heading</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">found_signature</span> = <span class="ruby-keyword">false</span>
+
+  <span class="ruby-identifier">document</span>.<span class="ruby-identifier">parts</span>.<span class="ruby-identifier">delete_if</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">part</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">found_signature</span>
+
+    <span class="ruby-identifier">found_heading</span> <span class="ruby-operator">||=</span>
+      <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Heading</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">part</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">part</span>.<span class="ruby-identifier">text</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;Signature&#39;</span>
+
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">found_heading</span>
+
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">BlankLine</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">part</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Verbatim</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">part</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">signature</span> = <span class="ruby-identifier">part</span>
+      <span class="ruby-identifier">found_signature</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">signature</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">signature</span>.<span class="ruby-identifier">text</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-Internal-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-build_heading" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">build_heading</span><span
+            class="method-args">(level)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Builds a heading from the token stream</p>
+<dl class="rdoc-list note-list"><dt>level
+<dd>
+<p>The level of heading to create</p>
+</dd></dl>
+
+<h3 id="method-i-build_heading-label-Returns">Returns<span><a href="#method-i-build_heading-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns an RDoc::Markup::Heading</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="Markup/Parser.html#method-i-build_heading">RDoc::Markup::Parser#build_heading</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="build_heading-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 142</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">build_heading</span> <span class="ruby-identifier">level</span>
+  <span class="ruby-identifier">heading</span> = <span class="ruby-keyword">super</span>
+
+  <span class="ruby-ivar">@section</span> = <span class="ruby-identifier">heading</span>.<span class="ruby-identifier">text</span>
+
+  <span class="ruby-identifier">heading</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-build_paragraph" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">build_paragraph</span><span
+            class="method-args">(margin)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Builds a paragraph from the token stream</p>
+<dl class="rdoc-list note-list"><dt>margin
+<dd>
+<p>Unused</p>
+</dd></dl>
+
+<h3 id="method-i-build_paragraph-label-Returns">Returns<span><a href="#method-i-build_paragraph-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns an <a href="Markup/Paragraph.html">RDoc::Markup::Paragraph</a>.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="build_paragraph-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 172</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">build_paragraph</span> <span class="ruby-identifier">margin</span>
+  <span class="ruby-identifier">p</span> <span class="ruby-value">:paragraph_start</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">margin</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
+
+  <span class="ruby-identifier">paragraph</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>
+
+  <span class="ruby-keyword">until</span> <span class="ruby-ivar">@tokens</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">type</span>, <span class="ruby-identifier">data</span>, = <span class="ruby-identifier">get</span>
+
+    <span class="ruby-keyword">case</span> <span class="ruby-identifier">type</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:TEXT</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-ivar">@section</span> = <span class="ruby-string">&#39;Returns&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">data</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\AReturns/</span>
+
+      <span class="ruby-identifier">paragraph</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">data</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:NEWLINE</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-value">:TEXT</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">peek_token</span>[<span class="ruby-value">0</span>] <span class="ruby-keyword">then</span>
+        <span class="ruby-identifier">paragraph</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39; &#39;</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-keyword">break</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">unget</span>
+      <span class="ruby-keyword">break</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">p</span> <span class="ruby-value">:paragraph_end</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">margin</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
+
+  <span class="ruby-identifier">paragraph</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-build_verbatim" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">build_verbatim</span><span
+            class="method-args">(margin)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Builds a verbatim from the token stream.  A verbatim in the Examples
+section will be marked as in Ruby format.</p>
+<dl class="rdoc-list note-list"><dt>margin
+<dd>
+<p>The indentation from the margin for lines that belong to this verbatim
+section.</p>
+</dd></dl>
+
+<h3 id="method-i-build_verbatim-label-Returns">Returns<span><a href="#method-i-build_verbatim-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns an <a href="Markup/Verbatim.html">RDoc::Markup::Verbatim</a></p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="Markup/Parser.html#method-i-build_verbatim">RDoc::Markup::Parser#build_verbatim</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="build_verbatim-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 158</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">build_verbatim</span> <span class="ruby-identifier">margin</span>
+  <span class="ruby-identifier">verbatim</span> = <span class="ruby-keyword">super</span>
+
+  <span class="ruby-identifier">verbatim</span>.<span class="ruby-identifier">format</span> = <span class="ruby-value">:ruby</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@section</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;Examples&#39;</span>
+
+  <span class="ruby-identifier">verbatim</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-tokenize" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">tokenize</span><span
+            class="method-args">(text)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Turns text into an Array of tokens</p>
+<dl class="rdoc-list note-list"><dt>text
+<dd>
+<p>A String containing TomDoc-format text.</p>
+</dd></dl>
+
+<h3 id="method-i-tokenize-label-Returns">Returns<span><a href="#method-i-tokenize-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns self.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="tokenize-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 223</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">tokenize</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/\A(Public|Internal|Deprecated):\s+/</span>, <span class="ruby-string">&#39;&#39;</span>)
+
+  <span class="ruby-identifier">setup_scanner</span> <span class="ruby-identifier">text</span>
+
+  <span class="ruby-keyword">until</span> <span class="ruby-ivar">@s</span>.<span class="ruby-identifier">eos?</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">pos</span> = <span class="ruby-ivar">@s</span>.<span class="ruby-identifier">pos</span>
+
+    <span class="ruby-comment"># leading spaces will be reflected by the column of the next token</span>
+    <span class="ruby-comment"># the only thing we loose are trailing spaces at the end of the file</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/ +/</span>)
+
+    <span class="ruby-ivar">@tokens</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-keyword">case</span>
+               <span class="ruby-keyword">when</span> <span class="ruby-ivar">@s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/\r?\n/</span>) <span class="ruby-keyword">then</span>
+                 <span class="ruby-identifier">token</span> = [<span class="ruby-value">:NEWLINE</span>, <span class="ruby-ivar">@s</span>.<span class="ruby-identifier">matched</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">token_pos</span>(<span class="ruby-identifier">pos</span>)]
+                 <span class="ruby-ivar">@line_pos</span> = <span class="ruby-identifier">char_pos</span> <span class="ruby-ivar">@s</span>.<span class="ruby-identifier">pos</span>
+                 <span class="ruby-ivar">@line</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+                 <span class="ruby-identifier">token</span>
+               <span class="ruby-keyword">when</span> <span class="ruby-ivar">@s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/(Examples|Signature)$/</span>) <span class="ruby-keyword">then</span>
+                 <span class="ruby-ivar">@tokens</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-value">:HEADER</span>, <span class="ruby-value">3</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">token_pos</span>(<span class="ruby-identifier">pos</span>)]
+
+                 [<span class="ruby-value">:TEXT</span>, <span class="ruby-ivar">@s</span>[<span class="ruby-value">1</span>], <span class="ruby-operator">*</span><span class="ruby-identifier">token_pos</span>(<span class="ruby-identifier">pos</span>)]
+               <span class="ruby-keyword">when</span> <span class="ruby-ivar">@s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/([:\w][\w\[\]]*)[ ]+- /</span>) <span class="ruby-keyword">then</span>
+                 [<span class="ruby-value">:NOTE</span>, <span class="ruby-ivar">@s</span>[<span class="ruby-value">1</span>], <span class="ruby-operator">*</span><span class="ruby-identifier">token_pos</span>(<span class="ruby-identifier">pos</span>)]
+               <span class="ruby-keyword">else</span>
+                 <span class="ruby-ivar">@s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/.*/</span>)
+                 [<span class="ruby-value">:TEXT</span>, <span class="ruby-ivar">@s</span>.<span class="ruby-identifier">matched</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\r$/</span>, <span class="ruby-string">&#39;&#39;</span>), <span class="ruby-operator">*</span><span class="ruby-identifier">token_pos</span>(<span class="ruby-identifier">pos</span>)]
+               <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

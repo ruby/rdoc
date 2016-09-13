@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class RDoc::TestCase - rdoc 5.0.0.beta2 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">MiniTest::Unit::TestCase
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-assert_directory">#assert_directory</a>
+    
+    <li ><a href="#method-i-assert_file">#assert_file</a>
+    
+    <li ><a href="#method-i-blank_line">#blank_line</a>
+    
+    <li ><a href="#method-i-block">#block</a>
+    
+    <li ><a href="#method-i-comment">#comment</a>
+    
+    <li ><a href="#method-i-doc">#doc</a>
+    
+    <li ><a href="#method-i-hard_break">#hard_break</a>
+    
+    <li ><a href="#method-i-head">#head</a>
+    
+    <li ><a href="#method-i-item">#item</a>
+    
+    <li ><a href="#method-i-list">#list</a>
+    
+    <li ><a href="#method-i-para">#para</a>
+    
+    <li ><a href="#method-i-raw">#raw</a>
+    
+    <li ><a href="#method-i-refute_file">#refute_file</a>
+    
+    <li ><a href="#method-i-rule">#rule</a>
+    
+    <li class="calls-super" ><a href="#method-i-setup">#setup</a>
+    
+    <li ><a href="#method-i-temp_dir">#temp_dir</a>
+    
+    <li ><a href="#method-i-verb">#verb</a>
+    
+    <li ><a href="#method-i-verbose_capture_io">#verbose_capture_io</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-RDoc::TestCase">
+  <h1 id="class-RDoc::TestCase" class="class">
+    class RDoc::TestCase
+  </h1>
+
+  <section class="description">
+    
+<p><a href="TestCase.html">RDoc::TestCase</a> is an abstract <a
+href="TestCase.html">TestCase</a> to provide common setup and teardown
+across all <a href="../RDoc.html">RDoc</a> tests.  The test case uses
+minitest, so all the assertions of minitest may be used.</p>
+
+<p>The testcase provides the following:</p>
+<ul><li>
+<p>A reset code-object tree</p>
+</li><li>
+<p>A reset markup preprocessor (RDoc::Markup::PreProcess)</p>
+</li><li>
+<p>The <code>@RM</code> alias of <a href="Markup.html">RDoc::Markup</a> (for
+less typing)</p>
+</li><li>
+<p><code>@pwd</code> containing the current working directory</p>
+</li><li>
+<p>FileUtils, pp, Tempfile, Dir.tmpdir and StringIO</p>
+</li></ul>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-assert_directory" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">assert_directory</span><span
+            class="method-args">(path)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asserts <code>path</code> is a directory</p>
+          
+          
+
+          
+          <div class="method-source-code" id="assert_directory-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/test_case.rb, line 69</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">assert_directory</span> <span class="ruby-identifier">path</span>
+  <span class="ruby-identifier">assert</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span>(<span class="ruby-identifier">path</span>), <span class="ruby-node">&quot;#{path} is not a directory&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-assert_file" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">assert_file</span><span
+            class="method-args">(path)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Asserts <code>path</code> is a file</p>
+          
+          
+
+          
+          <div class="method-source-code" id="assert_file-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/test_case.rb, line 62</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">assert_file</span> <span class="ruby-identifier">path</span>
+  <span class="ruby-identifier">assert</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">file?</span>(<span class="ruby-identifier">path</span>), <span class="ruby-node">&quot;#{path} is not a file&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-blank_line" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">blank_line</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Shortcut for <a
+href="Markup/BlankLine.html#method-c-new">RDoc::Markup::BlankLine.new</a></p>
+          
+          
+
+          
+          <div class="method-source-code" id="blank_line-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/test_case.rb, line 83</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">blank_line</span>
+  <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">BlankLine</span>.<span class="ruby-identifier">new</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-block" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">block</span><span
+            class="method-args">(*contents)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Shortcut for <a
+href="Markup/Raw.html#method-c-new">RDoc::Markup::Raw.new</a> with
+<code>contents</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="block-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/test_case.rb, line 90</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">block</span> <span class="ruby-operator">*</span><span class="ruby-identifier">contents</span>
+  <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">BlockQuote</span>.<span class="ruby-identifier">new</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">contents</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-comment" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">comment</span><span
+            class="method-args">(text, top_level = @top_level)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates an <a href="Comment.html">RDoc::Comment</a> with <code>text</code>
+which was defined on <code>top_level</code>. By default the comment has the
+&#39;rdoc&#39; format.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="comment-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/test_case.rb, line 98</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">comment</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">top_level</span> = <span class="ruby-ivar">@top_level</span>
+  <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">top_level</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-doc" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">doc</span><span
+            class="method-args">(*contents)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Shortcut for <a
+href="Markup/Document.html#method-c-new">RDoc::Markup::Document.new</a>
+with <code>contents</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="doc-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/test_case.rb, line 105</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">doc</span> <span class="ruby-operator">*</span><span class="ruby-identifier">contents</span>
+  <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">contents</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-hard_break" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">hard_break</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Shortcut for <a
+href="Markup/HardBreak.html#method-c-new">RDoc::Markup::HardBreak.new</a></p>
+          
+          
+
+          
+          <div class="method-source-code" id="hard_break-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/test_case.rb, line 112</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">hard_break</span>
+  <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">HardBreak</span>.<span class="ruby-identifier">new</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-head" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">head</span><span
+            class="method-args">(level, text)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Shortcut for RDoc::Markup::Heading.new with <code>level</code> and
+<code>text</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="head-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/test_case.rb, line 119</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">head</span> <span class="ruby-identifier">level</span>, <span class="ruby-identifier">text</span>
+  <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Heading</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">level</span>, <span class="ruby-identifier">text</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-item" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">item</span><span
+            class="method-args">(label = nil, *parts)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Shortcut for <a
+href="Markup/ListItem.html#method-c-new">RDoc::Markup::ListItem.new</a>
+with <code>label</code> and <code>parts</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="item-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/test_case.rb, line 126</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">item</span> <span class="ruby-identifier">label</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">parts</span>
+  <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">label</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">parts</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">list</span><span
+            class="method-args">(type = nil, *items)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Shortcut for <a
+href="Markup/List.html#method-c-new">RDoc::Markup::List.new</a> with
+<code>type</code> and <code>items</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="list-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/test_case.rb, line 133</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">list</span> <span class="ruby-identifier">type</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">items</span>
+  <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">List</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">type</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">items</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-para" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">para</span><span
+            class="method-args">(*a)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Shortcut for <a
+href="Markup/Raw.html#method-c-new">RDoc::Markup::Raw.new</a> with
+<code>contents</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="para-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/test_case.rb, line 150</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">para</span> <span class="ruby-operator">*</span><span class="ruby-identifier">a</span>
+  <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">a</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-raw" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">raw</span><span
+            class="method-args">(*contents)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Shortcut for <a
+href="Markup/Raw.html#method-c-new">RDoc::Markup::Raw.new</a> with
+<code>contents</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="raw-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/test_case.rb, line 164</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">raw</span> <span class="ruby-operator">*</span><span class="ruby-identifier">contents</span>
+  <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Raw</span>.<span class="ruby-identifier">new</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">contents</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-refute_file" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">refute_file</span><span
+            class="method-args">(path)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Refutes <code>path</code> exists</p>
+          
+          
+
+          
+          <div class="method-source-code" id="refute_file-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/test_case.rb, line 76</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">refute_file</span> <span class="ruby-identifier">path</span>
+  <span class="ruby-identifier">refute</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">path</span>), <span class="ruby-node">&quot;#{path} exists&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-rule" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">rule</span><span
+            class="method-args">(weight)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Shortcut for RDoc::Markup::Rule.new with <code>weight</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="rule-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/test_case.rb, line 157</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">rule</span> <span class="ruby-identifier">weight</span>
+  <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Rule</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">weight</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-setup" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">setup</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Abstract test-case setup</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              
+            </div>
+          
+
+          
+          <div class="method-source-code" id="setup-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/test_case.rb, line 36</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">setup</span>
+  <span class="ruby-keyword">super</span>
+
+  <span class="ruby-ivar">@top_level</span> = <span class="ruby-keyword">nil</span>
+
+  <span class="ruby-ivar">@RM</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span>
+
+  <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">PreProcess</span>.<span class="ruby-identifier">reset</span>
+
+  <span class="ruby-ivar">@pwd</span> = <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">pwd</span>
+
+  <span class="ruby-ivar">@store</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Store</span>.<span class="ruby-identifier">new</span>
+
+  <span class="ruby-ivar">@rdoc</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RDoc</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-ivar">@rdoc</span>.<span class="ruby-identifier">store</span> = <span class="ruby-ivar">@store</span>
+  <span class="ruby-ivar">@rdoc</span>.<span class="ruby-identifier">options</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Options</span>.<span class="ruby-identifier">new</span>
+
+  <span class="ruby-identifier">g</span> = <span class="ruby-constant">Object</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">g</span>.<span class="ruby-identifier">class_dir</span>() <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">g</span>.<span class="ruby-identifier">file_dir</span>() <span class="ruby-keyword">end</span>
+  <span class="ruby-ivar">@rdoc</span>.<span class="ruby-identifier">generator</span> = <span class="ruby-identifier">g</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-temp_dir" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">temp_dir</span><span
+            class="method-args">() { |temp_dir| ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates a temporary directory changes the current directory to it for the
+duration of the block.</p>
+
+<p>Depends upon Dir.mktmpdir</p>
+          
+          
+
+          
+          <div class="method-source-code" id="temp_dir-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/test_case.rb, line 174</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">temp_dir</span>
+  <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">mktmpdir</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">temp_dir</span><span class="ruby-operator">|</span>
+    <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">chdir</span> <span class="ruby-identifier">temp_dir</span> <span class="ruby-keyword">do</span>
+      <span class="ruby-keyword">yield</span> <span class="ruby-identifier">temp_dir</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-verb" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">verb</span><span
+            class="method-args">(*parts)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Shortcut for <a
+href="Markup/Raw.html#method-c-new">RDoc::Markup::Raw.new</a> with
+<code>parts</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="verb-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/test_case.rb, line 185</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">verb</span> <span class="ruby-operator">*</span><span class="ruby-identifier">parts</span>
+  <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Verbatim</span>.<span class="ruby-identifier">new</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">parts</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-verbose_capture_io" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">verbose_capture_io</span><span
+            class="method-args">() { || ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>run capture_io with setting $VERBOSE = true</p>
+          
+          
+
+          
+          <div class="method-source-code" id="verbose_capture_io-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/test_case.rb, line 192</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">verbose_capture_io</span>
+  <span class="ruby-identifier">capture_io</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-identifier">orig_verbose</span> = <span class="ruby-identifier">$VERBOSE</span>
+      <span class="ruby-identifier">$VERBOSE</span> = <span class="ruby-keyword">true</span>
+      <span class="ruby-keyword">yield</span>
+    <span class="ruby-keyword">ensure</span>
+      <span class="ruby-identifier">$VERBOSE</span> = <span class="ruby-identifier">orig_verbose</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

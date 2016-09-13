@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>RI - rdoc 5.0.0.beta2 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="file">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#label-RI">RI</a>
+    <li><a href="#label-Usage">Usage</a>
+    <li><a href="#label-Options">Options</a>
+  </ul>
+</div>
+
+
+  <div id="project-metadata">
+    <div id="fileindex-section" class="nav-section">
+  <h3>Pages</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./CONTRIBUTING_rdoc.html">CONTRIBUTING</a>
+  
+    <li><a href="./CVE-2013-0256_rdoc.html">CVE-2013-0256</a>
+  
+    <li><a href="./ExampleRDoc_rdoc.html">ExampleRDoc</a>
+  
+    <li><a href="./History_rdoc.html">History</a>
+  
+    <li><a href="./LEGAL_rdoc.html">LEGAL</a>
+  
+    <li><a href="./LICENSE_rdoc.html">LICENSE</a>
+  
+    <li><a href="./README_rdoc.html">README</a>
+  
+    <li><a href="./RI_rdoc.html">RI</a>
+  
+    <li><a href="./TODO_rdoc.html">TODO</a>
+  
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-label="Page RI.rdoc">
+
+<h1 id="label-RI"><a href="RI_rdoc.html">RI</a><span><a href="#label-RI">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p><code>ri</code> is a tool that allows Ruby documentation to be viewed on
+the command-line.</p>
+
+<p>You can use <code>ri</code> to look up information from either the command
+line or interactively.  When you run <code>ri</code> without any arguments
+it will launch in interactive mode.  In interactive mode you can
+tab-complete class and method names.</p>
+
+<h2 id="label-Usage">Usage<span><a href="#label-Usage">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>To see information for a class, do:</p>
+
+<pre class="ruby"><span class="ruby-identifier">ri</span> <span class="ruby-constant">ClassName</span>
+</pre>
+
+<p>For example, for the Array class, do:</p>
+
+<pre class="ruby"><span class="ruby-identifier">ri</span> <span class="ruby-constant">Array</span>
+</pre>
+
+<p>To see information on a method on a class, do:</p>
+
+<pre class="ruby"><span class="ruby-identifier">ri</span> <span class="ruby-constant">ClassName</span>.<span class="ruby-identifier">method</span>
+</pre>
+
+<p>This will show both instance and class methods.  For example, the IO class
+defines both IO::read and IO#read:</p>
+
+<pre class="ruby"><span class="ruby-identifier">ri</span> <span class="ruby-constant">IO</span>.<span class="ruby-identifier">read</span>
+</pre>
+
+<p>To see information for an instance method, do:</p>
+
+<pre class="ruby"><span class="ruby-identifier">ri</span> <span class="ruby-constant">ClassName</span><span class="ruby-comment">#method_name</span>
+</pre>
+
+<p>For example, for Array&#39;s <code>join</code> method, do:</p>
+
+<pre class="ruby"><span class="ruby-identifier">ri</span> <span class="ruby-constant">Array</span><span class="ruby-comment">#join</span>
+</pre>
+
+<p>To see information for a class method, do:</p>
+
+<pre class="ruby"><span class="ruby-identifier">ri</span> <span class="ruby-constant">ClassName</span><span class="ruby-operator">::</span><span class="ruby-identifier">method_name</span>
+</pre>
+
+<p>For example, for Module&#39;s <code>private</code> method, do:</p>
+
+<pre class="ruby"><span class="ruby-identifier">ri</span> <span class="ruby-constant">Module</span><span class="ruby-operator">::</span><span class="ruby-identifier">private</span>
+</pre>
+
+<p>To read documentation for all <code>read</code> methods, do:</p>
+
+<pre class="ruby"><span class="ruby-identifier">ri</span> <span class="ruby-identifier">read</span>
+</pre>
+
+<h2 id="label-Options">Options<span><a href="#label-Options">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p><code>ri</code> supports a variety of options, all of which can be viewed
+via <code>--help</code>. Of particular interest, are:</p>
+<dl class="rdoc-list label-list"><dt><code>-f</code>
+<dd>
+<p>Outputs ri data using the selected formatter.  You can see the available
+formatters in <code>ri --help</code></p>
+</dd><dt><code>-T</code>
+<dd>
+<p>Send output to stdout, rather than to a pager.</p>
+</dd></dl>
+
+<p>All options also can be specified through the <code>RI</code> environment
+variable. Command-line options always override those specified in the
+<code>RI</code> environment variable.</p>
+
+<p>The <code>RI_PAGER</code> environment variable allows you to choose a
+particular pager or particular options for your pager.</p>
+</main>
+
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class RDoc::I18n::Locale - rdoc 5.0.0.beta2 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+  var index_rel_prefix = "../../";
+</script>
+
+<script src="../../js/jquery.js"></script>
+<script src="../../js/darkfish.js"></script>
+
+<link href="../../css/fonts.css" rel="stylesheet">
+<link href="../../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../table_of_contents.html#pages">Pages</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">Object
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-5B-5D">::[]</a>
+    
+    <li ><a href="#method-c-5B-5D-3D">::[]=</a>
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-load">#load</a>
+    
+    <li ><a href="#method-i-translate">#translate</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-RDoc::I18n::Locale">
+  <h1 id="class-RDoc::I18n::Locale" class="class">
+    class RDoc::I18n::Locale
+  </h1>
+
+  <section class="description">
+    
+<p>A message container for a locale.</p>
+
+<p>This object provides the following two features:</p>
+
+<pre>* Loads translated messages from .po file.
+* Translates a message into the locale.</pre>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-name" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">name</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The name of the locale. It uses IETF language tag format +[<a
+href="_territory">language</a>[.<a href="@modifier">codeset]</a>]+.</p>
+
+<p>See also <a href="http://tools.ietf.org/rfc/bcp/bcp47.txt">BCP 47 - Tags
+for Identifying Languages</a>.</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-5B-5D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">[]</span><span
+            class="method-args">(locale_name)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the locale object for <code>locale_name</code>.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="5B-5D-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/i18n/locale.rb, line 18</span>
+<span class="ruby-keyword">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">locale_name</span>)
+  <span class="ruby-identifier">@@locales</span>[<span class="ruby-identifier">locale_name</span>] <span class="ruby-operator">||=</span> <span class="ruby-identifier">new</span>(<span class="ruby-identifier">locale_name</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-5B-5D-3D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">[]=</span><span
+            class="method-args">(locale_name, locale)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Sets the locale object for <code>locale_name</code>.</p>
+
+<p>Normally, this method is not used. This method is useful for testing.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="5B-5D-3D-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/i18n/locale.rb, line 28</span>
+<span class="ruby-keyword">def</span> <span class="ruby-operator">[]=</span>(<span class="ruby-identifier">locale_name</span>, <span class="ruby-identifier">locale</span>)
+  <span class="ruby-identifier">@@locales</span>[<span class="ruby-identifier">locale_name</span>] = <span class="ruby-identifier">locale</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(name)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates a new locale object for <code>name</code> locale. <code>name</code>
+must follow IETF language tag format.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/i18n/locale.rb, line 47</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>)
+  <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
+  <span class="ruby-ivar">@messages</span> = {}
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-load" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">load</span><span
+            class="method-args">(locale_directory)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Loads translation messages from
+<code>locale_directory</code>/+@name+/rdoc.po or
+<code>locale_directory</code>/+@name+.po. The former has high priority.</p>
+
+<p>This method requires gettext gem for parsing .po file. If you don&#39;t
+have gettext gem, this method doesn&#39;t load .po file. This method warns
+and returns <code>false</code>.</p>
+
+<p>Returns <code>true</code> if succeeded, <code>false</code> otherwise.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="load-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/i18n/locale.rb, line 62</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">load</span>(<span class="ruby-identifier">locale_directory</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@name</span>.<span class="ruby-identifier">nil?</span>
+
+  <span class="ruby-identifier">po_file_candidates</span> = [
+    <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">locale_directory</span>, <span class="ruby-ivar">@name</span>, <span class="ruby-string">&#39;rdoc.po&#39;</span>),
+    <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">locale_directory</span>, <span class="ruby-node">&quot;#{@name}.po&quot;</span>),
+  ]
+  <span class="ruby-identifier">po_file</span> = <span class="ruby-identifier">po_file_candidates</span>.<span class="ruby-identifier">find</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">po_file_candidate</span><span class="ruby-operator">|</span>
+    <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">po_file_candidate</span>)
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">po_file</span>
+
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;gettext/po_parser&#39;</span>
+    <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;gettext/mo&#39;</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>
+    <span class="ruby-identifier">warn</span>(<span class="ruby-string">&#39;Need gettext gem for i18n feature:&#39;</span>)
+    <span class="ruby-identifier">warn</span>(<span class="ruby-string">&#39;  gem install gettext&#39;</span>)
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">po_parser</span> = <span class="ruby-constant">GetText</span><span class="ruby-operator">::</span><span class="ruby-constant">POParser</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">messages</span> = <span class="ruby-constant">GetText</span><span class="ruby-operator">::</span><span class="ruby-constant">MO</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">po_parser</span>.<span class="ruby-identifier">report_warning</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">po_parser</span>.<span class="ruby-identifier">parse_file</span>(<span class="ruby-identifier">po_file</span>, <span class="ruby-identifier">messages</span>)
+
+  <span class="ruby-ivar">@messages</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-identifier">messages</span>)
+
+  <span class="ruby-keyword">true</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-translate" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">translate</span><span
+            class="method-args">(message)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Translates the <code>message</code> into locale. If there is no tranlsation
+messages for <code>message</code> in locale, <code>message</code> itself is
+returned.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="translate-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/i18n/locale.rb, line 97</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">translate</span>(<span class="ruby-identifier">message</span>)
+  <span class="ruby-ivar">@messages</span>[<span class="ruby-identifier">message</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">message</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

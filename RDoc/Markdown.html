@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class RDoc::Markdown - rdoc 5.0.0.beta2 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#class-RDoc::Markdown-label-Usage">Usage</a>
+    <li><a href="#class-RDoc::Markdown-label-Extensions">Extensions</a>
+    <li><a href="#class-RDoc::Markdown-label-RDoc">RDoc</a>
+    <li><a href="#class-RDoc::Markdown-label-Break+on+Newline">Break on Newline</a>
+    <li><a href="#class-RDoc::Markdown-label-CSS">CSS</a>
+    <li><a href="#class-RDoc::Markdown-label-Definition+Lists">Definition Lists</a>
+    <li><a href="#class-RDoc::Markdown-label-Github">Github</a>
+    <li><a href="#class-RDoc::Markdown-label-Fenced+code+blocks">Fenced code blocks</a>
+    <li><a href="#class-RDoc::Markdown-label-Syntax+highlighting">Syntax highlighting</a>
+    <li><a href="#class-RDoc::Markdown-label-HTML">HTML</a>
+    <li><a href="#class-RDoc::Markdown-label-Notes">Notes</a>
+    <li><a href="#class-RDoc::Markdown-label-Limitations">Limitations</a>
+    <li><a href="#class-RDoc::Markdown-label-Author">Author</a>
+  </ul>
+</div>
+
+
+  <div id="class-metadata">
+    <div id="sections-section" class="nav-section">
+  <h3>Sections</h3>
+
+  <ul class="link-list" role="directory">
+    
+      <li><a href="#5Buntitled-5D"></a></li>
+    
+      <li><a href="#Extensions">Extensions</a></li>
+    
+  </ul>
+</div>
+
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">Object
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-extension">::extension</a>
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-c-parse">::parse</a>
+    
+    <li ><a href="#method-i-break_on_newline">#break_on_newline</a>
+    
+    <li ><a href="#method-i-css">#css</a>
+    
+    <li ><a href="#method-i-definition_lists">#definition_lists</a>
+    
+    <li ><a href="#method-i-emphasis">#emphasis</a>
+    
+    <li ><a href="#method-i-extension">#extension</a>
+    
+    <li ><a href="#method-i-extension-3F">#extension?</a>
+    
+    <li ><a href="#method-i-github">#github</a>
+    
+    <li ><a href="#method-i-html">#html</a>
+    
+    <li ><a href="#method-i-link_to">#link_to</a>
+    
+    <li ><a href="#method-i-list_item_from">#list_item_from</a>
+    
+    <li ><a href="#method-i-note">#note</a>
+    
+    <li ><a href="#method-i-note_for">#note_for</a>
+    
+    <li ><a href="#method-i-notes">#notes</a>
+    
+    <li ><a href="#method-i-orig_initialize">#orig_initialize</a>
+    
+    <li ><a href="#method-i-paragraph">#paragraph</a>
+    
+    <li ><a href="#method-i-parse">#parse</a>
+    
+    <li ><a href="#method-i-peg_parse">#peg_parse</a>
+    
+    <li ><a href="#method-i-reference">#reference</a>
+    
+    <li ><a href="#method-i-strong">#strong</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-RDoc::Markdown">
+  <h1 id="class-RDoc::Markdown" class="class">
+    class RDoc::Markdown
+  </h1>
+
+  <section class="description">
+    
+<p><a href="Markdown.html">RDoc::Markdown</a> as described by the <a
+href="http://daringfireball.net/projects/markdown/syntax">markdown
+syntax</a>.</p>
+
+<p>To choose <a href="Markdown.html">Markdown</a> as your only default format
+see <a href="Options.html#label-Saved+Options">Saved Options at
+RDoc::Options</a> for instructions on setting up a
+<code>.doc_options</code> file to store your project default.</p>
+
+<h2 id="class-RDoc::Markdown-label-Usage">Usage<span><a href="#class-RDoc::Markdown-label-Usage">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Here is a brief example of using this parse to read a markdown file by
+hand.</p>
+
+<pre class="ruby"><span class="ruby-identifier">data</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-string">&quot;README.md&quot;</span>)
+<span class="ruby-identifier">formatter</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ToHtml</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Options</span>.<span class="ruby-identifier">new</span>, <span class="ruby-keyword">nil</span>)
+<span class="ruby-identifier">html</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markdown</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">data</span>).<span class="ruby-identifier">accept</span>(<span class="ruby-identifier">formatter</span>)
+
+<span class="ruby-comment"># do something with html</span>
+</pre>
+
+<h2 id="class-RDoc::Markdown-label-Extensions">Extensions<span><a href="#class-RDoc::Markdown-label-Extensions">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>The following markdown extensions are supported by the parser, but not all
+are used in <a href="../RDoc.html">RDoc</a> output by default.</p>
+
+<h3 id="class-RDoc::Markdown-label-RDoc"><a href="../RDoc.html">RDoc</a><span><a href="#class-RDoc::Markdown-label-RDoc">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>The <a href="../RDoc.html">RDoc</a> <a href="Markdown.html">Markdown</a>
+parser has the following built-in behaviors that cannot be disabled.</p>
+
+<p>Underscores embedded in words are never interpreted as emphasis. (While the
+<a href="http://daringfireball.net/projects/markdown/dingus">markdown
+dingus</a> emphasizes in-word underscores, neither the <a
+href="Markdown.html">Markdown</a> syntax nor MarkdownTest mention this
+behavior.)</p>
+
+<p>For HTML output, <a href="../RDoc.html">RDoc</a> always auto-links bare
+URLs.</p>
+
+<h3 id="class-RDoc::Markdown-label-Break+on+Newline">Break on Newline<span><a href="#class-RDoc::Markdown-label-Break+on+Newline">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>The <a href="Markdown.html#method-i-break_on_newline">#break_on_newline</a>
+extension converts all newlines into hard line breaks as in <a
+href="http://github.github.com/github-flavored-markdown/">Github Flavored
+Markdown</a>. This extension is disabled by default.</p>
+
+<h3 id="class-RDoc::Markdown-label-CSS">CSS<span><a href="#class-RDoc::Markdown-label-CSS">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>The <a href="Markdown.html#method-i-css">css</a> extension enables CSS
+blocks to be included in the output, but they are not used for any built-in
+<a href="../RDoc.html">RDoc</a> output format. This extension is disabled
+by default.</p>
+
+<p>Example:</p>
+
+<pre>&lt;style type=&quot;text/css&quot;&gt;
+h1 { font-size: 3em }
+&lt;/style&gt;</pre>
+
+<h3 id="class-RDoc::Markdown-label-Definition+Lists">Definition Lists<span><a href="#class-RDoc::Markdown-label-Definition+Lists">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>The <a href="Markdown.html#method-i-definition_lists">#definition_lists</a>
+extension allows definition lists using the <a
+href="http://michelf.com/projects/php-markdown/extra/#def-list">PHP
+Markdown Extra syntax</a>, but only one label and definition are supported
+at this time. This extension is enabled by default.</p>
+
+<p>Example:</p>
+
+<pre>cat
+:   A small furry mammal
+that seems to sleep a lot
+
+ant
+:   A little insect that is known
+to enjoy picnics</pre>
+
+<p>Produces:</p>
+<dl class="rdoc-list note-list"><dt>cat
+<dd>
+<p>A small furry mammal that seems to sleep a lot</p>
+</dd><dt>ant
+<dd>
+<p>A little insect that is known to enjoy picnics</p>
+</dd></dl>
+
+<h3 id="class-RDoc::Markdown-label-Github">Github<span><a href="#class-RDoc::Markdown-label-Github">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>The <a href="Markdown.html#method-i-github">github</a> extension enables a
+partial set of <a
+href="http://github.github.com/github-flavored-markdown/">Github Flavored
+Markdown</a>. This extension is enabled by default.</p>
+
+<p>Supported github extensions include:</p>
+
+<h4 id="class-RDoc::Markdown-label-Fenced+code+blocks">Fenced code blocks<span><a href="#class-RDoc::Markdown-label-Fenced+code+blocks">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>Use <code>```</code> around a block of code instead of indenting it four
+spaces.</p>
+
+<h4 id="class-RDoc::Markdown-label-Syntax+highlighting">Syntax highlighting<span><a href="#class-RDoc::Markdown-label-Syntax+highlighting">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>Use <code>``` ruby</code> as the start of a code fence to add syntax
+highlighting. (Currently only <code>ruby</code> syntax is supported).</p>
+
+<h3 id="class-RDoc::Markdown-label-HTML">HTML<span><a href="#class-RDoc::Markdown-label-HTML">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Enables raw HTML to be included in the output. This extension is enabled by
+default.</p>
+
+<p>Example:</p>
+
+<pre>&lt;table&gt;
+...
+&lt;/table&gt;</pre>
+
+<h3 id="class-RDoc::Markdown-label-Notes">Notes<span><a href="#class-RDoc::Markdown-label-Notes">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>The <a href="Markdown.html#method-i-notes">notes</a> extension enables
+footnote support. This extension is enabled by default.</p>
+
+<p>Example:</p>
+
+<pre>Here is some text[^1] including an inline footnote ^[for short footnotes]
+
+...
+
+[^1]: With the footnote text down at the bottom</pre>
+
+<p>Produces:</p>
+
+<p>Here is some text<sup><a id="footmark-1" href="#foottext-1">1</a></sup>
+including an inline footnote <sup><a id="footmark-2"
+href="#foottext-2">2</a></sup></p>
+
+<h2 id="class-RDoc::Markdown-label-Limitations">Limitations<span><a href="#class-RDoc::Markdown-label-Limitations">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<ul><li>
+<p>Link titles are not used</p>
+</li><li>
+<p>Footnotes are collapsed into a single paragraph</p>
+</li></ul>
+
+<h2 id="class-RDoc::Markdown-label-Author">Author<span><a href="#class-RDoc::Markdown-label-Author">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>This markdown parser is a port to kpeg from <a
+href="https://github.com/jgm/peg-markdown">peg-markdown</a> by John
+MacFarlane.</p>
+
+<p>It is used under the MIT license:</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the “Software”),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.</p>
+
+<p>The port to kpeg was performed by Eric Hodel and Evan Phoenix</p>
+<hr>
+
+<p><sup><a id="foottext-1" href="#footmark-1">1</a></sup> With the footnote
+text down at the bottom</p>
+
+<p><sup><a id="foottext-2" href="#footmark-2">2</a></sup> for short footnotes</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="DEFAULT_EXTENSIONS">DEFAULT_EXTENSIONS
+        
+        <dd><p>Extensions enabled by default</p>
+        
+      
+        <dt id="EXTENSIONS">EXTENSIONS
+        
+        <dd><p>Supported extensions</p>
+        
+      
+        <dt id="HTML_ENTITIES">HTML_ENTITIES
+        
+        <dd><p>HTML entity name map for <a href="Markdown.html">RDoc::Markdown</a></p>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(extensions = DEFAULT_EXTENSIONS, debug = false)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates a new markdown parser that enables the given
+<code>extensions</code>.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 611</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">extensions</span> = <span class="ruby-constant">DEFAULT_EXTENSIONS</span>, <span class="ruby-identifier">debug</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-ivar">@debug</span>      = <span class="ruby-identifier">debug</span>
+  <span class="ruby-ivar">@formatter</span>  = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ToJoinedParagraph</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-ivar">@extensions</span> = <span class="ruby-identifier">extensions</span>
+
+  <span class="ruby-ivar">@references</span>          = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@unlinked_references</span> = <span class="ruby-keyword">nil</span>
+
+  <span class="ruby-ivar">@footnotes</span>       = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@note_order</span>      = <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+        <div class="aliases">
+          Also aliased as: <a href="Markdown.html#method-i-orig_initialize">orig_initialize</a>
+        </div>
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-parse" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">parse</span><span
+            class="method-args">(markdown)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Parses the <code>markdown</code> document into an RDoc::Document using the
+default extensions.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="parse-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 599</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parse</span> <span class="ruby-identifier">markdown</span>
+  <span class="ruby-identifier">parser</span> = <span class="ruby-identifier">new</span>
+
+  <span class="ruby-identifier">parser</span>.<span class="ruby-identifier">parse</span> <span class="ruby-identifier">markdown</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-emphasis" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">emphasis</span><span
+            class="method-args">(text)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Wraps <code>text</code> in emphasis for rdoc inline formatting</p>
+          
+          
+
+          
+          <div class="method-source-code" id="emphasis-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 626</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">emphasis</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\A[a-z\d.\/]+\z/i</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-node">&quot;_#{text}_&quot;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-node">&quot;&lt;em&gt;#{text}&lt;/em&gt;&quot;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-link_to" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">link_to</span><span
+            class="method-args">(content, label = content, text = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Finds a link reference for <code>label</code> and creates a new link to it
+with <code>content</code> as the link text. If <code>label</code> was not
+encountered in the reference-gathering parser pass the label and content
+are reconstructed with the linking <code>text</code> (usually whitespace).</p>
+          
+          
+
+          
+          <div class="method-source-code" id="link_to-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 680</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">link_to</span> <span class="ruby-identifier">content</span>, <span class="ruby-identifier">label</span> = <span class="ruby-identifier">content</span>, <span class="ruby-identifier">text</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-string">&#39;enable notes extension&#39;</span> <span class="ruby-keyword">if</span>
+    <span class="ruby-identifier">content</span>.<span class="ruby-identifier">start_with?</span> <span class="ruby-string">&#39;^&#39;</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">label</span>.<span class="ruby-identifier">equal?</span> <span class="ruby-identifier">content</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">ref</span> = <span class="ruby-ivar">@references</span>[<span class="ruby-identifier">label</span>] <span class="ruby-keyword">then</span>
+    <span class="ruby-node">&quot;{#{content}}[#{ref}]&quot;</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">label</span>.<span class="ruby-identifier">equal?</span> <span class="ruby-identifier">content</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-node">&quot;[#{content}]#{text}&quot;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-node">&quot;[#{content}]#{text}[#{label}]&quot;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-list_item_from" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">list_item_from</span><span
+            class="method-args">(unparsed)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates an <a href="Markup/ListItem.html">RDoc::Markup::ListItem</a> by
+parsing the <code>unparsed</code> content from the first parsing pass.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="list_item_from-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 697</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">list_item_from</span> <span class="ruby-identifier">unparsed</span>
+  <span class="ruby-identifier">parsed</span> = <span class="ruby-identifier">inner_parse</span> <span class="ruby-identifier">unparsed</span>.<span class="ruby-identifier">join</span>
+  <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">nil</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">parsed</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-note" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">note</span><span
+            class="method-args">(label)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Stores <code>label</code> as a note and fills in previously unknown note
+references.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="note-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 705</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">note</span> <span class="ruby-identifier">label</span>
+  <span class="ruby-comment">#foottext = &quot;rdoc-label:foottext-#{label}:footmark-#{label}&quot;</span>
+
+  <span class="ruby-comment">#ref.replace foottext if ref = @unlinked_notes.delete(label)</span>
+
+  <span class="ruby-ivar">@notes</span>[<span class="ruby-identifier">label</span>] = <span class="ruby-identifier">foottext</span>
+
+  <span class="ruby-comment">#&quot;{^1}[rdoc-label:footmark-#{label}:foottext-#{label}] &quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-note_for" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">note_for</span><span
+            class="method-args">(ref)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates a new link for the footnote <code>reference</code> and adds the
+reference to the note order list for proper display at the end of the
+document.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="note_for-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 719</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">note_for</span> <span class="ruby-identifier">ref</span>
+  <span class="ruby-ivar">@note_order</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">ref</span>
+
+  <span class="ruby-identifier">label</span> = <span class="ruby-ivar">@note_order</span>.<span class="ruby-identifier">length</span>
+
+  <span class="ruby-node">&quot;{*#{label}}[rdoc-label:foottext-#{label}:footmark-#{label}]&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-orig_initialize" class="method-detail method-alias">
+        
+        <div class="method-heading">
+          <span class="method-name">orig_initialize</span><span
+            class="method-args">(extensions = DEFAULT_EXTENSIONS, debug = false)</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="../TODO_rdoc.html">TODO</a> remove when kpeg 0.10 is released</p>
+          
+          
+
+          
+        </div>
+
+        
+
+        
+        <div class="aliases">
+          Alias for: <a href="Markdown.html#method-c-new">new</a>
+        </div>
+        
+      </div>
+
+    
+      <div id="method-i-paragraph" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">paragraph</span><span
+            class="method-args">(parts)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates an <a href="Markup/Paragraph.html">RDoc::Markup::Paragraph</a> from
+<code>parts</code> and including extension-specific behavior</p>
+          
+          
+
+          
+          <div class="method-source-code" id="paragraph-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 736</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">paragraph</span> <span class="ruby-identifier">parts</span>
+  <span class="ruby-identifier">parts</span> = <span class="ruby-identifier">parts</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">part</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-string">&quot;\n&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">part</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">HardBreak</span>.<span class="ruby-identifier">new</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">part</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">break_on_newline?</span>
+
+  <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">parts</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-parse" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">parse</span><span
+            class="method-args">(markdown)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Parses <code>markdown</code> into an RDoc::Document</p>
+          
+          
+
+          
+          <div class="method-source-code" id="parse-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 751</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse</span> <span class="ruby-identifier">markdown</span>
+  <span class="ruby-ivar">@references</span>          = {}
+  <span class="ruby-ivar">@unlinked_references</span> = {}
+
+  <span class="ruby-identifier">markdown</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;\n\n&quot;</span>
+
+  <span class="ruby-identifier">setup_parser</span> <span class="ruby-identifier">markdown</span>, <span class="ruby-ivar">@debug</span>
+  <span class="ruby-identifier">peg_parse</span> <span class="ruby-string">&#39;References&#39;</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">notes?</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-ivar">@footnotes</span>       = {}
+
+    <span class="ruby-identifier">setup_parser</span> <span class="ruby-identifier">markdown</span>, <span class="ruby-ivar">@debug</span>
+    <span class="ruby-identifier">peg_parse</span> <span class="ruby-string">&#39;Notes&#39;</span>
+
+    <span class="ruby-comment"># using note_order on the first pass would be a bug</span>
+    <span class="ruby-ivar">@note_order</span>      = []
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">setup_parser</span> <span class="ruby-identifier">markdown</span>, <span class="ruby-ivar">@debug</span>
+  <span class="ruby-identifier">peg_parse</span>
+
+  <span class="ruby-identifier">doc</span> = <span class="ruby-identifier">result</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">notes?</span> <span class="ruby-keyword">and</span> <span class="ruby-keyword">not</span> <span class="ruby-ivar">@footnotes</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">doc</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Rule</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>)
+
+    <span class="ruby-ivar">@note_order</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ref</span>, <span class="ruby-identifier">index</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">label</span> = <span class="ruby-identifier">index</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>
+      <span class="ruby-identifier">note</span> = <span class="ruby-ivar">@footnotes</span>[<span class="ruby-identifier">ref</span>]
+
+      <span class="ruby-identifier">link</span> = <span class="ruby-node">&quot;{^#{label}}[rdoc-label:footmark-#{label}:foottext-#{label}] &quot;</span>
+      <span class="ruby-identifier">note</span>.<span class="ruby-identifier">parts</span>.<span class="ruby-identifier">unshift</span> <span class="ruby-identifier">link</span>
+
+      <span class="ruby-identifier">doc</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">note</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">accept</span> <span class="ruby-ivar">@formatter</span>
+
+  <span class="ruby-identifier">doc</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+        <div class="aliases">
+          Also aliased as: <a href="Markdown.html#method-i-peg_parse">peg_parse</a>
+        </div>
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-peg_parse" class="method-detail method-alias">
+        
+        <div class="method-heading">
+          <span class="method-name">peg_parse</span><span
+            class="method-args">(markdown)</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The internal kpeg parse method</p>
+          
+          
+
+          
+        </div>
+
+        
+
+        
+        <div class="aliases">
+          Alias for: <a href="Markdown.html#method-i-parse">parse</a>
+        </div>
+        
+      </div>
+
+    
+      <div id="method-i-reference" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">reference</span><span
+            class="method-args">(label, link)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Stores <code>label</code> as a reference to <code>link</code> and fills in
+previously unknown link references.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="reference-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 798</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">reference</span> <span class="ruby-identifier">label</span>, <span class="ruby-identifier">link</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">ref</span> = <span class="ruby-ivar">@unlinked_references</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">label</span>) <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">ref</span>.<span class="ruby-identifier">replace</span> <span class="ruby-identifier">link</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-ivar">@references</span>[<span class="ruby-identifier">label</span>] = <span class="ruby-identifier">link</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-strong" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">strong</span><span
+            class="method-args">(text)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Wraps <code>text</code> in strong markup for rdoc inline formatting</p>
+          
+          
+
+          
+          <div class="method-source-code" id="strong-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 809</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">strong</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\A[a-z\d.\/-]+\z/i</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-node">&quot;*#{text}*&quot;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-node">&quot;&lt;b&gt;#{text}&lt;/b&gt;&quot;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+
+  
+  
+  <section id="Extensions" class="documentation-section">
+    
+    <header class="documentation-section-title">
+      <h2>
+        Extensions
+      </h2>
+      <span class="section-click-top">
+        <a href="#top">&uarr; top</a>
+      </span>
+    </header>
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-Extensions-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-extension" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">extension</span><span
+            class="method-args">(name)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates extension methods for the <code>name</code> extension to enable and
+disable the extension and to query if they are active.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="extension-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 551</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">extension</span> <span class="ruby-identifier">name</span>
+  <span class="ruby-constant">EXTENSIONS</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">name</span>
+
+  <span class="ruby-identifier">define_method</span> <span class="ruby-node">&quot;#{name}?&quot;</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">extension?</span> <span class="ruby-identifier">name</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">define_method</span> <span class="ruby-node">&quot;#{name}=&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">enable</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">extension</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">enable</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-Extensions-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-break_on_newline" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">break_on_newline</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Converts all newlines into hard breaks</p>
+          
+          
+
+          
+          <div class="method-source-code" id="break_on_newline-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 566</span>
+<span class="ruby-identifier">extension</span> <span class="ruby-value">:break_on_newline</span>
+</pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-css" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">css</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Allow style blocks</p>
+          
+          
+
+          
+          <div class="method-source-code" id="css-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 571</span>
+<span class="ruby-identifier">extension</span> <span class="ruby-value">:css</span>
+</pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-definition_lists" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">definition_lists</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Allow PHP <a href="Markdown.html">Markdown</a> Extras style definition
+lists</p>
+          
+          
+
+          
+          <div class="method-source-code" id="definition_lists-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 576</span>
+<span class="ruby-identifier">extension</span> <span class="ruby-value">:definition_lists</span>
+</pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-extension" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">extension</span><span
+            class="method-args">(name, enable)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Enables or disables the extension with <code>name</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="extension-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 648</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">extension</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">enable</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">enable</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-ivar">@extensions</span> <span class="ruby-operator">|=</span> [<span class="ruby-identifier">name</span>]
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@extensions</span> <span class="ruby-operator">-=</span> [<span class="ruby-identifier">name</span>]
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-extension-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">extension?</span><span
+            class="method-args">(name)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Is the extension <code>name</code> enabled?</p>
+          
+          
+
+          
+          <div class="method-source-code" id="extension-3F-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 639</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">extension?</span> <span class="ruby-identifier">name</span>
+  <span class="ruby-ivar">@extensions</span>.<span class="ruby-identifier">include?</span> <span class="ruby-identifier">name</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-github" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">github</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Allow Github Flavored <a href="Markdown.html">Markdown</a></p>
+          
+          
+
+          
+          <div class="method-source-code" id="github-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 581</span>
+<span class="ruby-identifier">extension</span> <span class="ruby-value">:github</span>
+</pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-html" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">html</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Allow HTML</p>
+          
+          
+
+          
+          <div class="method-source-code" id="html-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 586</span>
+<span class="ruby-identifier">extension</span> <span class="ruby-value">:html</span>
+</pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-notes" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">notes</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Enables the notes extension</p>
+          
+          
+
+          
+          <div class="method-source-code" id="notes-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 591</span>
+<span class="ruby-identifier">extension</span> <span class="ruby-value">:notes</span>
+</pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class RDoc::MethodAttr - rdoc 5.0.0.beta2 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="CodeObject.html">RDoc::CodeObject</a>
+  
+</div>
+
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><span class="include">Comparable</span>
+  
+  
+  </ul>
+</div>
+
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li class="calls-super" ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-3C-3D-3E">#&lt;=&gt;</a>
+    
+    <li ><a href="#method-i-add_alias">#add_alias</a>
+    
+    <li ><a href="#method-i-add_line_numbers">#add_line_numbers</a>
+    
+    <li ><a href="#method-i-aref">#aref</a>
+    
+    <li ><a href="#method-i-aref_prefix">#aref_prefix</a>
+    
+    <li ><a href="#method-i-block_params-3D">#block_params=</a>
+    
+    <li class="calls-super" ><a href="#method-i-documented-3F">#documented?</a>
+    
+    <li ><a href="#method-i-full_name">#full_name</a>
+    
+    <li ><a href="#method-i-html_name">#html_name</a>
+    
+    <li ><a href="#method-i-markup_code">#markup_code</a>
+    
+    <li ><a href="#method-i-name_prefix">#name_prefix</a>
+    
+    <li ><a href="#method-i-output_name">#output_name</a>
+    
+    <li class="calls-super" ><a href="#method-i-parent_name">#parent_name</a>
+    
+    <li ><a href="#method-i-path">#path</a>
+    
+    <li ><a href="#method-i-pretty_name">#pretty_name</a>
+    
+    <li ><a href="#method-i-search_record">#search_record</a>
+    
+    <li ><a href="#method-i-see">#see</a>
+    
+    <li class="calls-super" ><a href="#method-i-store-3D">#store=</a>
+    
+    <li ><a href="#method-i-type">#type</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-RDoc::MethodAttr">
+  <h1 id="class-RDoc::MethodAttr" class="class">
+    class RDoc::MethodAttr
+  </h1>
+
+  <section class="description">
+    
+<p>Abstract class representing either a method or an attribute.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-c-add_line_numbers" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">add_line_numbers</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Allows controlling whether <code>#markup_code</code> adds line numbers to
+the source code.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-aliases" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">aliases</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Array of other names for this method/attribute</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-arglists" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">arglists</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The <a href="MethodAttr.html#attribute-i-call_seq">#call_seq</a> or the <a
+href="MethodAttr.html#attribute-i-param_seq">#param_seq</a> with method
+name, if there is no call_seq.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-block_params" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">block_params</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Parameters yielded by the called block</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-call_seq" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">call_seq</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Different ways to call this method</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-is_alias_for" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">is_alias_for</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The method/attribute we&#39;re aliasing</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-name" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">name</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Name of this method/attribute.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-param_seq" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">param_seq</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Pretty parameter list for this method</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-params" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">params</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Parameters for this method</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-singleton" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">singleton</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Is this a singleton method/attribute?</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-text" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">text</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Source file token stream</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-visibility" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">visibility</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>public, protected, private</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(text, name)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates a new <a href="MethodAttr.html">MethodAttr</a> from token stream
+<code>text</code> and method or attribute name <code>name</code>.</p>
+
+<p>Usually this is called by super from a subclass.</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="CodeObject.html#method-c-new">RDoc::CodeObject.new</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 77</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">name</span>
+  <span class="ruby-keyword">super</span>()
+
+  <span class="ruby-ivar">@text</span> = <span class="ruby-identifier">text</span>
+  <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
+
+  <span class="ruby-ivar">@aliases</span>      = []
+  <span class="ruby-ivar">@is_alias_for</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@parent_name</span>  = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@singleton</span>    = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@visibility</span>   = <span class="ruby-value">:public</span>
+  <span class="ruby-ivar">@see</span> = <span class="ruby-keyword">false</span>
+
+  <span class="ruby-ivar">@arglists</span>     = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@block_params</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@call_seq</span>     = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@param_seq</span>    = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@params</span>       = <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-3C-3D-3E" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">&lt;=&gt;</span><span
+            class="method-args">(other)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Order by <a href="MethodAttr.html#attribute-i-singleton">singleton</a> then
+<a href="MethodAttr.html#attribute-i-name">name</a></p>
+          
+          
+
+          
+          <div class="method-source-code" id="3C-3D-3E-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 112</span>
+<span class="ruby-keyword">def</span> <span class="ruby-operator">&lt;=&gt;</span>(<span class="ruby-identifier">other</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:singleton</span>) <span class="ruby-operator">&amp;&amp;</span>
+                <span class="ruby-identifier">other</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:name</span>)
+
+  [     <span class="ruby-ivar">@singleton</span> <span class="ruby-operator">?</span> <span class="ruby-value">0</span> <span class="ruby-operator">:</span> <span class="ruby-value">1</span>,       <span class="ruby-identifier">name</span>] <span class="ruby-operator">&lt;=&gt;</span>
+  [<span class="ruby-identifier">other</span>.<span class="ruby-identifier">singleton</span> <span class="ruby-operator">?</span> <span class="ruby-value">0</span> <span class="ruby-operator">:</span> <span class="ruby-value">1</span>, <span class="ruby-identifier">other</span>.<span class="ruby-identifier">name</span>]
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-add_alias" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_alias</span><span
+            class="method-args">(an_alias, context)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Abstract method. Contexts in their building phase call this to register a
+new alias for this known method/attribute.</p>
+<ul><li>
+<p>creates a new AnyMethod/Attribute named <code>an_alias.new_name</code>;</p>
+</li><li>
+<p>adds <code>self</code> as an alias for the new method or attribute</p>
+</li><li>
+<p>adds the method or attribute to <a
+href="MethodAttr.html#attribute-i-aliases">aliases</a></p>
+</li><li>
+<p>adds the method or attribute to <code>context</code>.</p>
+</li></ul>
+          
+          
+
+          
+          <div class="method-source-code" id="add_alias-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 208</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_alias</span>(<span class="ruby-identifier">an_alias</span>, <span class="ruby-identifier">context</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">NotImplementedError</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-add_line_numbers" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_line_numbers</span><span
+            class="method-args">(src)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Prepend <code>src</code> with line numbers.  Relies on the first line of a
+source code listing having:</p>
+
+<pre class="ruby"><span class="ruby-comment"># File xxxxx, line dddd</span>
+</pre>
+
+<p>If it has this comment then line numbers are added to <code>src</code> and
+the <code>, line dddd</code> portion of the comment is removed.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="add_line_numbers-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 86</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_line_numbers</span>(<span class="ruby-identifier">src</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">src</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/\A(.*)(, line (\d+))/</span>, <span class="ruby-string">&#39;\1&#39;</span>)
+  <span class="ruby-identifier">first</span> = <span class="ruby-node">$3</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
+  <span class="ruby-identifier">last</span>  = <span class="ruby-identifier">first</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">src</span>.<span class="ruby-identifier">count</span>(<span class="ruby-string">&quot;\n&quot;</span>)
+  <span class="ruby-identifier">size</span> = <span class="ruby-identifier">last</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">length</span>
+
+  <span class="ruby-identifier">line</span> = <span class="ruby-identifier">first</span>
+  <span class="ruby-identifier">src</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/^/</span>) <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">res</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">line</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">first</span> <span class="ruby-keyword">then</span>
+            <span class="ruby-string">&quot; &quot;</span> <span class="ruby-operator">*</span> (<span class="ruby-identifier">size</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>)
+          <span class="ruby-keyword">else</span>
+            <span class="ruby-string">&quot;&lt;span class=\&quot;line-num\&quot;&gt;%2$*1$d&lt;/span&gt; &quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">size</span>, <span class="ruby-identifier">line</span>]
+          <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">line</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+    <span class="ruby-identifier">res</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-aref" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">aref</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>HTML fragment reference for this method</p>
+          
+          
+
+          
+          <div class="method-source-code" id="aref-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 215</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">aref</span>
+  <span class="ruby-identifier">type</span> = <span class="ruby-identifier">singleton</span> <span class="ruby-operator">?</span> <span class="ruby-string">&#39;c&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;i&#39;</span>
+  <span class="ruby-comment"># % characters are not allowed in html names =&gt; dash instead</span>
+  <span class="ruby-node">&quot;#{aref_prefix}-#{type}-#{html_name}&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-aref_prefix" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">aref_prefix</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Prefix for <code>aref</code>, defined by subclasses.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="aref_prefix-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 224</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">aref_prefix</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">NotImplementedError</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-block_params-3D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">block_params=</span><span
+            class="method-args">(value)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Attempts to sanitize the content passed by the Ruby parser: remove outer
+parentheses, etc.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="block_params-3D-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 232</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">block_params=</span>(<span class="ruby-identifier">value</span>)
+  <span class="ruby-comment"># &#39;yield.to_s&#39; or &#39;assert yield, msg&#39;</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@block_params</span> = <span class="ruby-string">&#39;&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^[\.,]/</span>
+
+  <span class="ruby-comment"># remove trailing &#39;if/unless ...&#39;</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@block_params</span> = <span class="ruby-string">&#39;&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^(if|unless)\s/</span>
+
+  <span class="ruby-identifier">value</span> = <span class="ruby-node">$1</span>.<span class="ruby-identifier">strip</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^(.+)\s(if|unless)\s/</span>
+
+  <span class="ruby-comment"># outer parentheses</span>
+  <span class="ruby-identifier">value</span> = <span class="ruby-node">$1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^\s*\((.*)\)\s*$/</span>
+  <span class="ruby-identifier">value</span> = <span class="ruby-identifier">value</span>.<span class="ruby-identifier">strip</span>
+
+  <span class="ruby-comment"># proc/lambda</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@block_params</span> = <span class="ruby-node">$1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^(proc|lambda)(\s*\{|\sdo)/</span>
+
+  <span class="ruby-comment"># surrounding +...+ or [...]</span>
+  <span class="ruby-identifier">value</span> = <span class="ruby-node">$1</span>.<span class="ruby-identifier">strip</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^\+(.*)\+$/</span>
+  <span class="ruby-identifier">value</span> = <span class="ruby-node">$1</span>.<span class="ruby-identifier">strip</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^\[(.*)\]$/</span>
+
+  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@block_params</span> = <span class="ruby-string">&#39;&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">empty?</span>
+
+  <span class="ruby-comment"># global variable</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@block_params</span> = <span class="ruby-string">&#39;str&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^\$[&amp;0-9]$/</span>
+
+  <span class="ruby-comment"># wipe out array/hash indices</span>
+  <span class="ruby-identifier">value</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/(\w)\[[^\[]+\]/</span>, <span class="ruby-string">&#39;\1&#39;</span>)
+
+  <span class="ruby-comment"># remove @ from class/instance variables</span>
+  <span class="ruby-identifier">value</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/@@?([a-z0-9_]+)/</span>, <span class="ruby-string">&#39;\1&#39;</span>)
+
+  <span class="ruby-comment"># method calls =&gt; method name</span>
+  <span class="ruby-identifier">value</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/([A-Z:a-z0-9_]+)\.([a-z0-9_]+)(\s*\(\s*[a-z0-9_.,\s]*\s*\)\s*)?/</span>) <span class="ruby-keyword">do</span>
+    <span class="ruby-keyword">case</span> <span class="ruby-node">$2</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;to_s&#39;</span>      <span class="ruby-keyword">then</span> <span class="ruby-node">$1</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;const_get&#39;</span> <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;const&#39;</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;new&#39;</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-node">$1</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;::&#39;</span>).<span class="ruby-identifier">last</span>.  <span class="ruby-comment"># ClassName =&gt; class_name</span>
+        <span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/([A-Z]+)([A-Z][a-z])/</span>,<span class="ruby-string">&#39;\1_\2&#39;</span>).
+        <span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/([a-z\d])([A-Z])/</span>,<span class="ruby-string">&#39;\1_\2&#39;</span>).
+        <span class="ruby-identifier">downcase</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-node">$2</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># class prefixes</span>
+  <span class="ruby-identifier">value</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/[A-Za-z0-9_:]+::/</span>, <span class="ruby-string">&#39;&#39;</span>)
+
+  <span class="ruby-comment"># simple expressions</span>
+  <span class="ruby-identifier">value</span> = <span class="ruby-node">$1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^([a-z0-9_]+)\s*[-*+\/]/</span>
+
+  <span class="ruby-ivar">@block_params</span> = <span class="ruby-identifier">value</span>.<span class="ruby-identifier">strip</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-documented-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">documented?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>A method/attribute is documented if any of the following is true:</p>
+<ul><li>
+<p>it was marked with :nodoc:;</p>
+</li><li>
+<p>it has a comment;</p>
+</li><li>
+<p>it is an alias for a documented method;</p>
+</li><li>
+<p>it has a <code>#see</code> method that is documented.</p>
+</li></ul>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="CodeObject.html#method-i-documented-3F">RDoc::CodeObject#documented?</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="documented-3F-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 131</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">documented?</span>
+  <span class="ruby-keyword">super</span> <span class="ruby-keyword">or</span>
+    (<span class="ruby-identifier">is_alias_for</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">is_alias_for</span>.<span class="ruby-identifier">documented?</span>) <span class="ruby-keyword">or</span>
+    (<span class="ruby-identifier">see</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">see</span>.<span class="ruby-identifier">documented?</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-full_name" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">full_name</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Full method/attribute name including namespace</p>
+          
+          
+
+          
+          <div class="method-source-code" id="full_name-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 299</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">full_name</span>
+  <span class="ruby-ivar">@full_name</span> <span class="ruby-operator">||=</span> <span class="ruby-node">&quot;#{parent_name}#{pretty_name}&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-html_name" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">html_name</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>HTML id-friendly method/attribute name</p>
+          
+          
+
+          
+          <div class="method-source-code" id="html_name-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 290</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">html_name</span>
+  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;cgi&#39;</span>
+
+  <span class="ruby-constant">CGI</span>.<span class="ruby-identifier">escape</span>(<span class="ruby-ivar">@name</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;-&#39;</span>, <span class="ruby-string">&#39;-2D&#39;</span>)).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;%&#39;</span>,<span class="ruby-string">&#39;-&#39;</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^-/</span>, <span class="ruby-string">&#39;&#39;</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-markup_code" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">markup_code</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Turns the method&#39;s token stream into HTML.</p>
+
+<p>Prepends line numbers if <code>add_line_numbers</code> is true.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="markup_code-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 110</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">markup_code</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-string">&#39;&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@token_stream</span>
+
+  <span class="ruby-identifier">src</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">TokenStream</span>.<span class="ruby-identifier">to_html</span> <span class="ruby-ivar">@token_stream</span>
+
+  <span class="ruby-comment"># dedent the source</span>
+  <span class="ruby-identifier">indent</span> = <span class="ruby-identifier">src</span>.<span class="ruby-identifier">length</span>
+  <span class="ruby-identifier">lines</span> = <span class="ruby-identifier">src</span>.<span class="ruby-identifier">lines</span>.<span class="ruby-identifier">to_a</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">shift</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">src</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/\A.*#\ *File/i</span> <span class="ruby-comment"># remove &#39;# File&#39; comment</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">line</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^ *(?=\S)/</span>
+      <span class="ruby-identifier">n</span> = <span class="ruby-node">$&amp;</span>.<span class="ruby-identifier">length</span>
+      <span class="ruby-identifier">indent</span> = <span class="ruby-identifier">n</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">indent</span>
+      <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">src</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-node">/^#{&#39; &#39; * indent}/</span>, <span class="ruby-string">&#39;&#39;</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">indent</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+
+  <span class="ruby-identifier">add_line_numbers</span>(<span class="ruby-identifier">src</span>) <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">MethodAttr</span>.<span class="ruby-identifier">add_line_numbers</span>
+
+  <span class="ruby-identifier">src</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-name_prefix" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">name_prefix</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>&#39;::&#39; for a class method/attribute, &#39;#&#39; for an instance
+method.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="name_prefix-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 318</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">name_prefix</span>
+  <span class="ruby-ivar">@singleton</span> <span class="ruby-operator">?</span> <span class="ruby-string">&#39;::&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;#&#39;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-output_name" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">output_name</span><span
+            class="method-args">(context)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Name for output to HTML.  For class methods the full name with a “.” is
+used like <code>SomeClass.method_name</code>.  For instance methods the
+class name is used if <code>context</code> does not match the parent.</p>
+<dl class="rdoc-list note-list"><dt>This is to help prevent people from using 
+<dd>
+<p>to call class methods.</p>
+</dd></dl>
+          
+          
+
+          
+          <div class="method-source-code" id="output_name-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 329</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">output_name</span> <span class="ruby-identifier">context</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;#{name_prefix}#{@name}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">context</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">parent</span>
+
+  <span class="ruby-node">&quot;#{parent_name}#{@singleton ? &#39;.&#39; : &#39;#&#39;}#{@name}&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-parent_name" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">parent_name</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Name of our parent with special handling for un-marshaled methods</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="CodeObject.html#method-i-parent_name">RDoc::CodeObject#parent_name</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="parent_name-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 359</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">parent_name</span>
+  <span class="ruby-ivar">@parent_name</span> <span class="ruby-operator">||</span> <span class="ruby-keyword">super</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-path" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">path</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Path to this method for use with HTML generator output.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="path-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 352</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">path</span>
+  <span class="ruby-node">&quot;#{@parent.path}##{aref}&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-pretty_name" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">pretty_name</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Method/attribute name with class/instance indicator</p>
+          
+          
+
+          
+          <div class="method-source-code" id="pretty_name-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 338</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">pretty_name</span>
+  <span class="ruby-node">&quot;#{name_prefix}#{@name}&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-search_record" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">search_record</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Used by <a href="Generator/JsonIndex.html">RDoc::Generator::JsonIndex</a>
+to create a record for the search engine.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="search_record-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 397</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">search_record</span>
+  [
+    <span class="ruby-ivar">@name</span>,
+    <span class="ruby-identifier">full_name</span>,
+    <span class="ruby-ivar">@name</span>,
+    <span class="ruby-ivar">@parent</span>.<span class="ruby-identifier">full_name</span>,
+    <span class="ruby-identifier">path</span>,
+    <span class="ruby-identifier">params</span>,
+    <span class="ruby-identifier">snippet</span>(<span class="ruby-ivar">@comment</span>),
+  ]
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-see" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">see</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>A method/attribute to look at, in particular if this method/attribute has
+no documentation.</p>
+
+<p>It can be a method/attribute of the superclass or of an included module,
+including the Kernel module, which is always appended to the included
+modules.</p>
+
+<p>Returns <code>nil</code> if there is no such method/attribute. The
+<code>#is_alias_for</code> method/attribute, if any, is not included.</p>
+
+<p>Templates may generate a “see also …” if this method/attribute has
+documentation, and “see …” if it does not.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="see-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 151</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">see</span>
+  <span class="ruby-ivar">@see</span> = <span class="ruby-identifier">find_see</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@see</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-ivar">@see</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-store-3D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">store=</span><span
+            class="method-args">(store)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Sets the store for this class or module and its contained code objects.</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              <a href="CodeObject.html#method-i-store-3D">RDoc::CodeObject#store=</a>
+            </div>
+          
+
+          
+          <div class="method-source-code" id="store-3D-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 159</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">store=</span> <span class="ruby-identifier">store</span>
+  <span class="ruby-keyword">super</span>
+
+  <span class="ruby-ivar">@file</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">add_file</span> <span class="ruby-ivar">@file</span>.<span class="ruby-identifier">full_name</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-type" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">type</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Type of method/attribute (class or instance)</p>
+          
+          
+
+          
+          <div class="method-source-code" id="type-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 345</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">type</span>
+  <span class="ruby-identifier">singleton</span> <span class="ruby-operator">?</span> <span class="ruby-string">&#39;class&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;instance&#39;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

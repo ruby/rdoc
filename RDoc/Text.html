@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module RDoc::Text - rdoc 5.0.0.beta2 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-encode_fallback">::encode_fallback</a>
+    
+    <li ><a href="#method-i-expand_tabs">#expand_tabs</a>
+    
+    <li ><a href="#method-i-flush_left">#flush_left</a>
+    
+    <li ><a href="#method-i-markup">#markup</a>
+    
+    <li ><a href="#method-i-normalize_comment">#normalize_comment</a>
+    
+    <li ><a href="#method-i-parse">#parse</a>
+    
+    <li ><a href="#method-i-snippet">#snippet</a>
+    
+    <li ><a href="#method-i-strip_hashes">#strip_hashes</a>
+    
+    <li ><a href="#method-i-strip_newlines">#strip_newlines</a>
+    
+    <li ><a href="#method-i-strip_stars">#strip_stars</a>
+    
+    <li ><a href="#method-i-to_html">#to_html</a>
+    
+    <li ><a href="#method-i-wrap">#wrap</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-RDoc::Text">
+  <h1 id="module-RDoc::Text" class="module">
+    module RDoc::Text
+  </h1>
+
+  <section class="description">
+    
+<p>Methods for manipulating comment text</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="MARKUP_FORMAT">MARKUP_FORMAT
+        
+        <dd><p>Maps markup formats to classes that can parse them.  If the format is
+unknown, “rdoc” format is used.</p>
+        
+      
+        <dt id="TO_HTML_CHARACTERS">TO_HTML_CHARACTERS
+        
+        <dd><p>Maps an encoding to a Hash of characters properly transcoded for that
+encoding.</p>
+
+<p>See also encode_fallback.</p>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-encode_fallback" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">encode_fallback</span><span
+            class="method-args">(character, encoding, fallback)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Transcodes <code>character</code> to <code>encoding</code> with a
+<code>fallback</code> character.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="encode_fallback-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 58</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">encode_fallback</span> <span class="ruby-identifier">character</span>, <span class="ruby-identifier">encoding</span>, <span class="ruby-identifier">fallback</span>
+  <span class="ruby-identifier">character</span>.<span class="ruby-identifier">encode</span>(<span class="ruby-identifier">encoding</span>, <span class="ruby-value">:fallback</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-identifier">character</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">fallback</span> },
+                   <span class="ruby-value">:undef</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:replace</span>, <span class="ruby-value">:replace</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">fallback</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-expand_tabs" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">expand_tabs</span><span
+            class="method-args">(text)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Expands tab characters in <code>text</code> to eight spaces</p>
+          
+          
+
+          
+          <div class="method-source-code" id="expand_tabs-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 66</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">expand_tabs</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-identifier">expanded</span> = []
+
+  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">each_line</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">nil</span> <span class="ruby-keyword">while</span> <span class="ruby-identifier">line</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/(?:\G|\r)((?:.{8})*?)([^\t\r\n]{0,7})\t/</span>) <span class="ruby-keyword">do</span>
+      <span class="ruby-identifier">r</span> = <span class="ruby-node">&quot;#{$1}#{$2}#{&#39; &#39; * (8 - $2.size)}&quot;</span>
+      <span class="ruby-identifier">r</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">encoding</span>
+      <span class="ruby-identifier">r</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">expanded</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">line</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">expanded</span>.<span class="ruby-identifier">join</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-flush_left" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">flush_left</span><span
+            class="method-args">(text)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Flush <code>text</code> left based on the shortest line</p>
+          
+          
+
+          
+          <div class="method-source-code" id="flush_left-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 85</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">flush_left</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-identifier">indent</span> = <span class="ruby-value">9999</span>
+
+  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">each_line</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">line_indent</span> = <span class="ruby-identifier">line</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\S/</span> <span class="ruby-operator">||</span> <span class="ruby-value">9999</span>
+    <span class="ruby-identifier">indent</span> = <span class="ruby-identifier">line_indent</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">indent</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">line_indent</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">empty</span> = <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-identifier">empty</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">encoding</span>
+
+  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-node">/^ {0,#{indent}}/</span>, <span class="ruby-identifier">empty</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-markup" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">markup</span><span
+            class="method-args">(text)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Convert a string in markup format into HTML.</p>
+
+<p>Requires the including class to implement formatter</p>
+          
+          
+
+          
+          <div class="method-source-code" id="markup-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 104</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">markup</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">options</span>
+    <span class="ruby-identifier">locale</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">options</span>.<span class="ruby-identifier">locale</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">locale</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">locale</span>
+    <span class="ruby-identifier">i18n_text</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">I18n</span><span class="ruby-operator">::</span><span class="ruby-constant">Text</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">text</span>)
+    <span class="ruby-identifier">text</span> = <span class="ruby-identifier">i18n_text</span>.<span class="ruby-identifier">translate</span>(<span class="ruby-identifier">locale</span>)
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">parse</span>(<span class="ruby-identifier">text</span>).<span class="ruby-identifier">accept</span> <span class="ruby-identifier">formatter</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-normalize_comment" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">normalize_comment</span><span
+            class="method-args">(text)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Strips hashes, expands tabs then flushes <code>text</code> to the left</p>
+          
+          
+
+          
+          <div class="method-source-code" id="normalize_comment-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 120</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">normalize_comment</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">text</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">empty?</span>
+
+  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">strip_stars</span>    <span class="ruby-identifier">text</span>
+  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">strip_hashes</span>   <span class="ruby-identifier">text</span>
+  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">expand_tabs</span>    <span class="ruby-identifier">text</span>
+  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">flush_left</span>     <span class="ruby-identifier">text</span>
+  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">strip_newlines</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-identifier">text</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-parse" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">parse</span><span
+            class="method-args">(text, format = 'rdoc')</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Normalizes <code>text</code> then builds a <a
+href="Markup/Document.html">RDoc::Markup::Document</a> from it</p>
+          
+          
+
+          
+          <div class="method-source-code" id="parse-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 134</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">format</span> = <span class="ruby-string">&#39;rdoc&#39;</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">text</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">parse</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">text</span>
+
+  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">normalize_comment</span> <span class="ruby-identifier">text</span> <span class="ruby-comment"># TODO remove, should not be necessary</span>
+
+  <span class="ruby-keyword">return</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\A\n*\z/</span>
+
+  <span class="ruby-constant">MARKUP_FORMAT</span>[<span class="ruby-identifier">format</span>].<span class="ruby-identifier">parse</span> <span class="ruby-identifier">text</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-snippet" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">snippet</span><span
+            class="method-args">(text, limit = 100)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The first <code>limit</code> characters of <code>text</code> as HTML</p>
+          
+          
+
+          
+          <div class="method-source-code" id="snippet-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 148</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">snippet</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">100</span>
+  <span class="ruby-identifier">document</span> = <span class="ruby-identifier">parse</span> <span class="ruby-identifier">text</span>
+
+  <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ToHtmlSnippet</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>, <span class="ruby-identifier">limit</span>).<span class="ruby-identifier">convert</span> <span class="ruby-identifier">document</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-strip_hashes" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">strip_hashes</span><span
+            class="method-args">(text)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Strips leading # characters from <code>text</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="strip_hashes-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 157</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">strip_hashes</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">text</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/^(?&gt;\s*)[^\#]/</span>
+
+  <span class="ruby-identifier">empty</span> = <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-identifier">empty</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">encoding</span>
+
+  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-node">/^\s*(#+)/</span>) { <span class="ruby-node">$1</span>.<span class="ruby-identifier">tr</span> <span class="ruby-string">&#39;#&#39;</span>, <span class="ruby-string">&#39; &#39;</span> }.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/^\s+$/</span>, <span class="ruby-identifier">empty</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-strip_newlines" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">strip_newlines</span><span
+            class="method-args">(text)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Strips leading and trailing n characters from <code>text</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="strip_newlines-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 169</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">strip_newlines</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/\A\n*(.*?)\n*\z/m</span>) <span class="ruby-keyword">do</span> <span class="ruby-node">$1</span> <span class="ruby-keyword">end</span> <span class="ruby-comment"># block preserves String encoding</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-strip_stars" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">strip_stars</span><span
+            class="method-args">(text)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Strips       style comments</p>
+          
+          
+
+          
+          <div class="method-source-code" id="strip_stars-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 176</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">strip_stars</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">text</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">%r%/\*.*\*/%m</span>
+
+  <span class="ruby-identifier">encoding</span> = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">encoding</span>
+
+  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">gsub</span> <span class="ruby-node">%r%Document-method:\s+[\w:.#=!?]+%</span>, <span class="ruby-string">&#39;&#39;</span>
+
+  <span class="ruby-identifier">space</span> = <span class="ruby-string">&#39; &#39;</span>
+  <span class="ruby-identifier">space</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">encoding</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">encoding</span>
+
+  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub!</span>  <span class="ruby-regexp">%r%/\*+%</span>       <span class="ruby-keyword">do</span> <span class="ruby-identifier">space</span> <span class="ruby-operator">*</span> <span class="ruby-node">$&amp;</span>.<span class="ruby-identifier">length</span> <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub!</span>  <span class="ruby-regexp">%r%\*+/%</span>       <span class="ruby-keyword">do</span> <span class="ruby-identifier">space</span> <span class="ruby-operator">*</span> <span class="ruby-node">$&amp;</span>.<span class="ruby-identifier">length</span> <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">gsub!</span> <span class="ruby-regexp">%r%^[ \t]*\*%m</span> <span class="ruby-keyword">do</span> <span class="ruby-identifier">space</span> <span class="ruby-operator">*</span> <span class="ruby-node">$&amp;</span>.<span class="ruby-identifier">length</span> <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">empty</span> = <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-identifier">empty</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">encoding</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">encoding</span>
+  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/^\s+$/</span>, <span class="ruby-identifier">empty</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-to_html" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">to_html</span><span
+            class="method-args">(text)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Converts ampersand, dashes, ellipsis, quotes, copyright and registered
+trademark symbols in <code>text</code> to properly encoded characters.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="to_html-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 199</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_html</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-identifier">html</span> = <span class="ruby-string">&#39;&#39;</span>.<span class="ruby-identifier">encode</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">encoding</span>
+
+  <span class="ruby-identifier">encoded</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Text</span><span class="ruby-operator">::</span><span class="ruby-constant">TO_HTML_CHARACTERS</span>[<span class="ruby-identifier">text</span>.<span class="ruby-identifier">encoding</span>]
+
+  <span class="ruby-identifier">s</span> = <span class="ruby-constant">StringScanner</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-identifier">insquotes</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">indquotes</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">after_word</span> = <span class="ruby-keyword">nil</span>
+
+  <span class="ruby-keyword">until</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">eos?</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-keyword">case</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/&lt;(tt|code)&gt;.*?&lt;\/\1&gt;/</span>) <span class="ruby-keyword">then</span> <span class="ruby-comment"># skip contents of tt</span>
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">matched</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;\\&#39;</span>, <span class="ruby-string">&#39;\&#39;</span>)
+    <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/&lt;(tt|code)&gt;.*?/</span>) <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;mismatched &lt;#{s[1]}&gt; tag&quot;</span> <span class="ruby-comment"># TODO signal file/line</span>
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">matched</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/&lt;[^&gt;]+\/?s*&gt;/</span>) <span class="ruby-keyword">then</span> <span class="ruby-comment"># skip HTML tags</span>
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">matched</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/\(\S)/</span>) <span class="ruby-keyword">then</span> <span class="ruby-comment"># unhandled suppressed crossref</span>
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">s</span>[<span class="ruby-value">1</span>]
+      <span class="ruby-identifier">after_word</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/\.\.\.(\.?)/</span>) <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">s</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">encoded</span>[<span class="ruby-value">:ellipsis</span>]
+      <span class="ruby-identifier">after_word</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/\(c\)/</span>) <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">encoded</span>[<span class="ruby-value">:copyright</span>]
+      <span class="ruby-identifier">after_word</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/\(r\)/</span>) <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">encoded</span>[<span class="ruby-value">:trademark</span>]
+      <span class="ruby-identifier">after_word</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/---/</span>) <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">encoded</span>[<span class="ruby-value">:em_dash</span>]
+      <span class="ruby-identifier">after_word</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/--/</span>) <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">encoded</span>[<span class="ruby-value">:en_dash</span>]
+      <span class="ruby-identifier">after_word</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/&amp;quot;|&quot;/</span>) <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">encoded</span>[<span class="ruby-identifier">indquotes</span> <span class="ruby-operator">?</span> <span class="ruby-value">:close_dquote</span> <span class="ruby-operator">:</span> <span class="ruby-value">:open_dquote</span>]
+      <span class="ruby-identifier">indquotes</span> = <span class="ruby-operator">!</span><span class="ruby-identifier">indquotes</span>
+      <span class="ruby-identifier">after_word</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/``/</span>) <span class="ruby-keyword">then</span> <span class="ruby-comment"># backtick double quote</span>
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">encoded</span>[<span class="ruby-value">:open_dquote</span>]
+      <span class="ruby-identifier">after_word</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/&#39;&#39;/</span>) <span class="ruby-keyword">then</span> <span class="ruby-comment"># tick double quote</span>
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">encoded</span>[<span class="ruby-value">:close_dquote</span>]
+      <span class="ruby-identifier">after_word</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/&#39;/</span>) <span class="ruby-keyword">then</span> <span class="ruby-comment"># single quote</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">insquotes</span>
+        <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">encoded</span>[<span class="ruby-value">:close_squote</span>]
+        <span class="ruby-identifier">insquotes</span> = <span class="ruby-keyword">false</span>
+      <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">after_word</span>
+        <span class="ruby-comment"># Mary&#39;s dog, my parents&#39; house: do not start paired quotes</span>
+        <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">encoded</span>[<span class="ruby-value">:close_squote</span>]
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">encoded</span>[<span class="ruby-value">:open_squote</span>]
+        <span class="ruby-identifier">insquotes</span> = <span class="ruby-keyword">true</span>
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-identifier">after_word</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">else</span> <span class="ruby-comment"># advance to the next potentially significant character</span>
+      <span class="ruby-identifier">match</span> = <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/.+?(?=[&lt;\.(&quot;&#39;`&amp;-])/</span>) <span class="ruby-comment">#&quot;</span>
+
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">match</span> <span class="ruby-keyword">then</span>
+        <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">match</span>
+        <span class="ruby-identifier">after_word</span> = <span class="ruby-identifier">match</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\w$/</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">rest</span>
+        <span class="ruby-keyword">break</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">html</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-wrap" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">wrap</span><span
+            class="method-args">(txt, line_len = 76)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Wraps <code>txt</code> to <code>line_len</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="wrap-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 278</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">wrap</span>(<span class="ruby-identifier">txt</span>, <span class="ruby-identifier">line_len</span> = <span class="ruby-value">76</span>)
+  <span class="ruby-identifier">res</span> = []
+  <span class="ruby-identifier">sp</span> = <span class="ruby-value">0</span>
+  <span class="ruby-identifier">ep</span> = <span class="ruby-identifier">txt</span>.<span class="ruby-identifier">length</span>
+
+  <span class="ruby-keyword">while</span> <span class="ruby-identifier">sp</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">ep</span>
+    <span class="ruby-comment"># scan back for a space</span>
+    <span class="ruby-identifier">p</span> = <span class="ruby-identifier">sp</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">line_len</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">p</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">ep</span>
+      <span class="ruby-identifier">p</span> = <span class="ruby-identifier">ep</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-keyword">while</span> <span class="ruby-identifier">p</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">sp</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">txt</span>[<span class="ruby-identifier">p</span>] <span class="ruby-operator">!=</span> <span class="ruby-value">?\</span><span class="ruby-identifier">s</span>
+        <span class="ruby-identifier">p</span> <span class="ruby-operator">-=</span> <span class="ruby-value">1</span>
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">p</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">sp</span>
+        <span class="ruby-identifier">p</span> = <span class="ruby-identifier">sp</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">line_len</span>
+        <span class="ruby-keyword">while</span> <span class="ruby-identifier">p</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">ep</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">txt</span>[<span class="ruby-identifier">p</span>] <span class="ruby-operator">!=</span> <span class="ruby-value">?\</span><span class="ruby-identifier">s</span>
+          <span class="ruby-identifier">p</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">txt</span>[<span class="ruby-identifier">sp</span><span class="ruby-operator">...</span><span class="ruby-identifier">p</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;\n&quot;</span>
+    <span class="ruby-identifier">sp</span> = <span class="ruby-identifier">p</span>
+    <span class="ruby-identifier">sp</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">while</span> <span class="ruby-identifier">sp</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">ep</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">txt</span>[<span class="ruby-identifier">sp</span>] <span class="ruby-operator">==</span> <span class="ruby-value">?\</span><span class="ruby-identifier">s</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">res</span>.<span class="ruby-identifier">join</span>.<span class="ruby-identifier">strip</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
