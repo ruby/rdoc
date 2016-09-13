@@ -1,5 +1,5 @@
 $:.unshift File.expand_path 'lib'
-require 'rdoc'
+require 'rdoc/task'
 require 'bundler/gem_tasks'
 require 'rake/testtask'
 
@@ -23,19 +23,12 @@ end
 
 task :default => :test
 
-Rake::Task['docs'].actions.clear
-task :docs do
-  $LOAD_PATH.unshift 'lib'
-  require 'rdoc'
 
-  options = RDoc::Options.new
-  options.title = "rdoc #{RDoc::VERSION} Documentation"
-  options.op_dir = 'doc'
-  options.main_page = 'README.rdoc'
-  options.files = FileList.new %w[lib *.rdoc]
-  options.setup_generator 'darkfish'
-
-  RDoc::RDoc.new.document options
+RDoc::Task.new do |doc|
+  doc.main = 'README.rdoc'
+  doc.title = "rdoc #{RDoc::VERSION} Documentation"
+  doc.rdoc_dir = 'html'
+  doc.rdoc_files = FileList.new %w[lib *.rdoc]
 end
 
 Rake::TestTask.new(:test) do |t|
