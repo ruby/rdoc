@@ -26,6 +26,15 @@ RDoc::Task.new do |doc|
   doc.rdoc_files = FileList.new %w[lib/**/*.rb *.rdoc] - PARSER_FILES
 end
 
+task ghpages: :rdoc do
+  `git checkout gh-pages`
+  require "fileutils"
+  FileUtils.rm_rf "/tmp/html"
+  FileUtils.mv "html", "/tmp"
+  FileUtils.rm_rf "*"
+  FileUtils.cp_r Dir.glob("/tmp/html/*"), "."
+end
+
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
   t.libs << "lib"
