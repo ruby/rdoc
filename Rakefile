@@ -32,7 +32,7 @@ task :docs do
   options.title = "rdoc #{RDoc::VERSION} Documentation"
   options.op_dir = 'doc'
   options.main_page = 'README.rdoc'
-  options.files = hoe.spec.extra_rdoc_files + %w[lib]
+  options.files = FileList.new %w[lib *.rdoc]
   options.setup_generator 'darkfish'
 
   RDoc::RDoc.new.document options
