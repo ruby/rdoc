@@ -17,12 +17,7 @@ PARSER_FILES = %w[
 
 $rdoc_rakefile = true
 
-def rake(*args)
-  sh $0, *args
-end
-
 task :default => :test
-
 
 RDoc::Task.new do |doc|
   doc.main = 'README.rdoc'
