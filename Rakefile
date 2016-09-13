@@ -1,5 +1,5 @@
 $:.unshift File.expand_path 'lib'
-require 'rdoc'
+require 'rdoc/task'
 require 'bundler/gem_tasks'
 require 'rake/testtask'
 
@@ -17,25 +17,22 @@ PARSER_FILES = %w[
 
 $rdoc_rakefile = true
 
-def rake(*args)
-  sh $0, *args
-end
-
 task :default => :test
 
-Rake::Task['docs'].actions.clear
-task :docs do
-  $LOAD_PATH.unshift 'lib'
-  require 'rdoc'
+RDoc::Task.new do |doc|
+  doc.main = 'README.rdoc'
+  doc.title = "rdoc #{RDoc::VERSION} Documentation"
+  doc.rdoc_dir = 'html'
+  doc.rdoc_files = FileList.new %w[lib/**/*.rb *.rdoc] - PARSER_FILES
+end
 
-  options = RDoc::Options.new
-  options.title = "rdoc #{RDoc::VERSION} Documentation"
-  options.op_dir = 'doc'
-  options.main_page = 'README.rdoc'
-  options.files = hoe.spec.extra_rdoc_files + %w[lib]
-  options.setup_generator 'darkfish'
-
-  RDoc::RDoc.new.document options
+task ghpages: :rdoc do
+  `git checkout gh-pages`
+  require "fileutils"
+  FileUtils.rm_rf "/tmp/html"
+  FileUtils.mv "html", "/tmp"
+  FileUtils.rm_rf "*"
+  FileUtils.cp_r Dir.glob("/tmp/html/*"), "."
 end
 
 Rake::TestTask.new(:test) do |t|

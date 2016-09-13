@@ -4,7 +4,7 @@
 /.rdoc
 /.rvmrc
 /TAGS
-/doc
+/html
 /lib/rdoc/rd/block_parser.rb
 /lib/rdoc/rd/inline_parser.rb
 /lib/rdoc/markdown.rb
