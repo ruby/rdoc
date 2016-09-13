@@ -23,7 +23,7 @@ RDoc::Task.new do |doc|
   doc.main = 'README.rdoc'
   doc.title = "rdoc #{RDoc::VERSION} Documentation"
   doc.rdoc_dir = 'html'
-  doc.rdoc_files = FileList.new %w[lib *.rdoc]
+  doc.rdoc_files = FileList.new %w[lib/**/*.rb *.rdoc] - PARSER_FILES
 end
 
 Rake::TestTask.new(:test) do |t|
