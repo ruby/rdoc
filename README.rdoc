@@ -1,7 +1,7 @@
 = \RDoc - Ruby Documentation System
 
 home :: https://github.com/rdoc/rdoc
-rdoc :: http://docs.seattlerb.org/rdoc
+rdoc :: https://rdoc.github.io/rdoc
 bugs :: https://github.com/rdoc/rdoc/issues
 build status :: {<img src="https://travis-ci.org/rdoc/rdoc.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/rdoc/rdoc]
 code quality :: {<img src="https://codeclimate.com/badge.png" alt="code climate">}[https://codeclimate.com/github/rdoc/rdoc]
@@ -47,7 +47,7 @@ contain just Markup-style markup (with or without leading '#' comment
 markers).  If directory names are passed to RDoc, they are scanned
 recursively for C and Ruby source files only.
 
-To generate documentation using +rake+ see RDoc::Task[http://docs.seattlerb.org/rdoc/RDocTask.html].
+To generate documentation using +rake+ see RDoc::Task[https://rdoc.github.io/rdoc/RDocTask.html].
 
 To generate documentation programmatically:
 

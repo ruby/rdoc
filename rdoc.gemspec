@@ -46,7 +46,7 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
   # files from .gitignore
   s.files << "lib/rdoc/rd/block_parser.rb" << "lib/rdoc/rd/inline_parser.rb" << "lib/rdoc/markdown.rb"
 
-  s.homepage = "http://docs.seattlerb.org/rdoc"
+  s.homepage = "https://rdoc.github.io/rdoc"
   s.licenses = ["Ruby"]
 
   s.rdoc_options = ["--main", "README.rdoc"]
