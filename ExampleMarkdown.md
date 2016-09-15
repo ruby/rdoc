@@ -1,7 +1,7 @@
 This document contains example output to show RDoc styling.  This file was
 created from a Markdown file.
 
-For the following styles, see ExampleRDoc.rdoc for style examples:
+See also ExampleOutput.rdoc for examples of the following styles:
 
 * Headings
 * Paragraphs
@@ -10,16 +10,14 @@ For the following styles, see ExampleRDoc.rdoc for style examples:
 * Ordered lists
 * Unordered lists
 
-These items all use the same styles as RDoc format files.
-
 ## Footnotes
 
 Footnotes are rendered at the bottom of the documentation section[^1].  For
 pages this will be at the bottom of the page.  For method documentation this
-will be at the end of the current method.
+will be at the end of the current documentation entry.
 
 [^1]: Here is the footnote content.  As you can see it is at the bottom of the
-page.
+documentation section.
 
 ## Blockquotes
 
