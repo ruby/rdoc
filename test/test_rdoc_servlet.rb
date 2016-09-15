@@ -204,7 +204,7 @@ class TestRDocServlet < RDoc::TestCase
     @s.documentation_page store, generator, 'Klass::Sub.html', @req, @res
 
     assert_match %r%<title>class Klass::Sub - </title>%,            @res.body
-    assert_match %r%<body id="top" role="document" class="class">%, @res.body
+    assert_match %r%<body id="top" class="class">%, @res.body
   end
 
   def test_documentation_page_not_found
