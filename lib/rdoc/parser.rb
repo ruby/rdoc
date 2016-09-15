@@ -1,4 +1,5 @@
 # -*- coding: us-ascii -*-
+# frozen_string_literal: false
 
 ##
 # A parser is simple a class that subclasses RDoc::Parser and implements #scan
@@ -75,25 +76,15 @@ class RDoc::Parser
 
     s = File.read(file, 1024) or return false
 
-    have_encoding = s.respond_to? :encoding
-
     return true if s[0, 2] == Marshal.dump('')[0, 2] or s.index("\x00")
 
-    if have_encoding then
-      mode = "r"
-      s.sub!(/\A#!.*\n/, '')     # assume shebang line isn't longer than 1024.
-      encoding = s[/^\s*\#\s*(?:-\*-\s*)?(?:en)?coding:\s*([^\s;]+?)(?:-\*-|[\s;])/, 1]
-      mode = "r:#{encoding}" if encoding
-      s = File.open(file, mode) {|f| f.gets(nil, 1024)}
+    mode = "r"
+    s.sub!(/\A#!.*\n/, '')     # assume shebang line isn't longer than 1024.
+    encoding = s[/^\s*\#\s*(?:-\*-\s*)?(?:en)?coding:\s*([^\s;]+?)(?:-\*-|[\s;])/, 1]
+    mode = "rb:#{encoding}" if encoding
+    s = File.open(file, mode) {|f| f.gets(nil, 1024)}
 
-      not s.valid_encoding?
-    else
-      if 0.respond_to? :fdiv then
-        s.count("\x00-\x7F", "^ -~\t\r\n").fdiv(s.size) > 0.3
-      else # HACK 1.8.6
-        (s.count("\x00-\x7F", "^ -~\t\r\n").to_f / s.size) > 0.3
-      end
-    end
+    not s.valid_encoding?
   end
 
   ##
@@ -268,9 +259,11 @@ class RDoc::Parser
 
     markup = Regexp.escape markup
 
-    RDoc::Parser.parsers.find do |_, parser|
+    _, selected = RDoc::Parser.parsers.find do |_, parser|
       /^#{markup}$/i =~ parser.name.sub(/.*:/, '')
-    end.last
+    end
+
+    selected
   end
 
   ##
@@ -305,4 +298,3 @@ require 'rdoc/parser/changelog'
 require 'rdoc/parser/markdown'
 require 'rdoc/parser/rd'
 require 'rdoc/parser/ruby'
-

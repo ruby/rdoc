@@ -1,4 +1,4 @@
-require 'rubygems'
+# frozen_string_literal: false
 require 'rubygems/test_case'
 require 'rdoc/rubygems_hook'
 
@@ -10,7 +10,7 @@ class TestRDocRubygemsHook < Gem::TestCase
     skip 'requires RubyGems 1.9+' unless
       Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.9')
 
-    @a = quick_spec 'a' do |s|
+    @a = util_spec 'a', 2 do |s|
       s.rdoc_options = %w[--main MyTitle]
       s.extra_rdoc_files = %w[README]
     end
@@ -138,9 +138,6 @@ class TestRDocRubygemsHook < Gem::TestCase
     @a.loaded_from =
       File.join Gem::Specification.default_specifications_dir, 'a.gemspec'
 
-    FileUtils.mkdir_p @a.doc_dir
-    FileUtils.mkdir_p File.join(@a.gem_dir, 'lib')
-
     @hook.generate
 
     refute @hook.rdoc_installed?
@@ -251,4 +248,3 @@ class TestRDocRubygemsHook < Gem::TestCase
   end
 
 end
-

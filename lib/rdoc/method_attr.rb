@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 ##
 # Abstract class representing either a method or an attribute.
 
@@ -101,16 +102,24 @@ class RDoc::MethodAttr < RDoc::CodeObject
     @full_name = nil
   end
 
+  def initialize_visibility # :nodoc:
+    super
+    @see = nil
+  end
+
   ##
   # Order by #singleton then #name
 
   def <=>(other)
+    return unless other.respond_to?(:singleton) &&
+                  other.respond_to?(:name)
+
     [     @singleton ? 0 : 1,       name] <=>
     [other.singleton ? 0 : 1, other.name]
   end
 
   def == other # :nodoc:
-    super or self.class == other.class and full_name == other.full_name
+    equal?(other) or self.class == other.class and full_name == other.full_name
   end
 
   ##
@@ -176,8 +185,8 @@ class RDoc::MethodAttr < RDoc::CodeObject
       parent != kernel && !searched.include?(kernel)
 
     searched.each do |ancestor|
-      next if parent == ancestor
       next if String === ancestor
+      next if parent == ancestor
 
       other = ancestor.find_method_named('#' << name) ||
               ancestor.find_attribute_named(name)
@@ -218,7 +227,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
   end
 
   ##
-  # Attempts to sanitize the content passed by the ruby parser:
+  # Attempts to sanitize the content passed by the Ruby parser:
   # remove outer parentheses, etc.
 
   def block_params=(value)
@@ -353,7 +362,12 @@ class RDoc::MethodAttr < RDoc::CodeObject
   end
 
   def pretty_print q # :nodoc:
-    alias_for = @is_alias_for ? "alias for #{@is_alias_for.name}" : nil
+    alias_for =
+      if @is_alias_for.respond_to? :name then
+        "alias for #{@is_alias_for.name}"
+      elsif Array === @is_alias_for then
+        "alias for #{@is_alias_for.last}"
+      end
 
     q.group 2, "[#{self.class.name} #{full_name} #{visibility}", "]" do
       if alias_for then

@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require 'tsort'
 
 ##
@@ -123,7 +124,7 @@ class RDoc::Parser::C < RDoc::Parser
   include RDoc::Text
 
   ##
-  # Maps C variable names to names of ruby classes or modules
+  # Maps C variable names to names of Ruby classes or modules
 
   attr_reader :classes
 
@@ -139,7 +140,7 @@ class RDoc::Parser::C < RDoc::Parser
   attr_reader :enclosure_dependencies
 
   ##
-  # Maps C variable names to names of ruby classes (and singleton classes)
+  # Maps C variable names to names of Ruby classes (and singleton classes)
 
   attr_reader :known_classes
 
@@ -150,7 +151,7 @@ class RDoc::Parser::C < RDoc::Parser
   attr_reader :missing_dependencies
 
   ##
-  # Maps C variable names to names of ruby singleton classes
+  # Maps C variable names to names of Ruby singleton classes
 
   attr_reader :singleton_classes
 
@@ -228,17 +229,23 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  def deduplicate_method_name class_obj, method_name
+  ##
+  # If two ruby methods share a C implementation (and comment) this
+  # deduplicates the examples in the call_seq for the method to reduce
+  # confusion in the output.
+
+  def deduplicate_method_name class_obj, method_name # :nodoc:
     return unless
       method = class_obj.method_list.find { |m| m.name == method_name }
     return unless call_seq = method.call_seq
 
-    method_name = method_name[0, 1] unless method_name =~ /\A\w/
+    method_name = method_name[0, 1] if method_name =~ /\A\[/
 
-      entries = call_seq.split "\n"
+    entries = call_seq.split "\n"
 
     matching = entries.select do |entry|
-      entry =~ /^\w*\.?#{Regexp.escape method_name}/
+      entry =~ /^\w*\.?#{Regexp.escape method_name}/ or
+        entry =~ /\s#{Regexp.escape method_name}\s/
     end
 
     method.call_seq = matching.join "\n"
@@ -588,9 +595,10 @@ class RDoc::Parser::C < RDoc::Parser
                                             \s*#{attr_name}\s*,
                                             #{rw},.*?\)\s*;%xm then
                 $1
-              elsif @content =~ %r%Document-attr:\s#{attr_name}\s*?\n
-                                   ((?>.*?\*/))%xm then
-                $1
+              elsif @content =~ %r%(/\*.*?(?:\s*\*\s*)?)
+                                   Document-attr:\s#{attr_name}\s*?\n
+                                   ((?>(.|\n)*?\*/))%x then
+                "#{$1}\n#{$2}"
               else
                 ''
               end
@@ -599,17 +607,45 @@ class RDoc::Parser::C < RDoc::Parser
   end
 
   ##
+  # Generate a Ruby-method table
+
+  def gen_body_table file_content
+    table = {}
+    file_content.scan(%r{
+      ((?>/\*.*?\*/\s*)?)
+      ((?:(?:\w+)\s+)?
+        (?:intern\s+)?VALUE\s+(\w+)
+        \s*(?:\([^)]*\))(?:[^;]|$))
+    | ((?>/\*.*?\*/\s*))^\s*(\#\s*define\s+(\w+)\s+(\w+))
+    | ^\s*\#\s*define\s+(\w+)\s+(\w+)
+    }xm) do
+      case
+      when $1
+        table[$3] = [:func_def, $1, $2, $~.offset(2)] if !table[$3] || table[$3][0] != :func_def
+      when $4
+        table[$6] = [:macro_def, $4, $5, $~.offset(5), $7] if !table[$6] || table[$6][0] == :macro_alias
+      when $8
+        table[$8] ||= [:macro_alias, $9]
+      end
+    end
+    table
+  end
+
+  ##
   # Find the C code corresponding to a Ruby method
 
   def find_body class_name, meth_name, meth_obj, file_content, quiet = false
-    case file_content
-    when %r%((?>/\*.*?\*/\s*)?)
-            ((?:(?:static|SWIGINTERN)\s+)?
-             (?:intern\s+)?VALUE\s+#{meth_name}
-             \s*(\([^)]*\))([^;]|$))%xm then
-      comment = RDoc::Comment.new $1, @top_level
-      body = $2
-      offset, = $~.offset(2)
+    if file_content
+      @body_table ||= {}
+      @body_table[file_content] ||= gen_body_table file_content
+      type, *args = @body_table[file_content][meth_name]
+    end
+
+    case type
+    when :func_def
+      comment = RDoc::Comment.new args[0], @top_level
+      body = args[1]
+      offset, = args[2]
 
       comment.remove_private if comment
 
@@ -638,12 +674,12 @@ class RDoc::Parser::C < RDoc::Parser
       meth_obj.line    = file_content[0, offset].count("\n") + 1
 
       body
-    when %r%((?>/\*.*?\*/\s*))^\s*(\#\s*define\s+#{meth_name}\s+(\w+))%m then
-      comment = RDoc::Comment.new $1, @top_level
-      body = $2
-      offset = $~.offset(2).first
+    when :macro_def
+      comment = RDoc::Comment.new args[0], @top_level
+      body = args[1]
+      offset, = args[2]
 
-      find_body class_name, $3, meth_obj, file_content, true
+      find_body class_name, args[3], meth_obj, file_content, true
 
       comment.normalize
       find_modifiers comment, meth_obj
@@ -657,11 +693,11 @@ class RDoc::Parser::C < RDoc::Parser
       meth_obj.line    = file_content[0, offset].count("\n") + 1
 
       body
-    when %r%^\s*\#\s*define\s+#{meth_name}\s+(\w+)%m then
+    when :macro_alias
       # with no comment we hope the aliased definition has it and use it's
       # definition
 
-      body = find_body(class_name, $1, meth_obj, file_content, true)
+      body = find_body(class_name, args[0], meth_obj, file_content, true)
 
       return body if body
 
@@ -738,11 +774,11 @@ class RDoc::Parser::C < RDoc::Parser
     elsif @content =~ %r%Document-(?:class|module):\s+#{class_name}\s*?
                          (?:<\s+[:,\w]+)?\n((?>.*?\*/))%xm then
       comment = "/*\n#{$1}"
-    elsif @content =~ %r%.*((?>/\*.*?\*/\s+))
-                         ([\w\.\s]+\s* = \s+)?rb_define_(class|module).*?"(#{class_name})"%xm then
+    elsif @content =~ %r%((?>/\*.*?\*/\s+))
+                         ([\w\.\s]+\s* = \s+)?rb_define_(class|module)[\t (]*?"(#{class_name})"%xm then
       comment = $1
-    elsif @content =~ %r%.*((?>/\*.*?\*/\s+))
-                         ([\w\.\s]+\s* = \s+)?rb_define_(class|module)_under.*?"(#{class_name.split('::').last})"%xm then
+    elsif @content =~ %r%((?>/\*.*?\*/\s+))
+                         ([\w\. \t]+ = \s+)?rb_define_(class|module)_under[\t\w, (]*?"(#{class_name.split('::').last})"%xm then
       comment = $1
     else
       comment = ''
@@ -757,27 +793,41 @@ class RDoc::Parser::C < RDoc::Parser
   end
 
   ##
+  # Generate a const table
+
+  def gen_const_table file_content
+    table = {}
+    @content.scan(%r{
+      ((?>^\s*/\*.*?\*/\s+))
+        rb_define_(\w+)\((?:\s*(?:\w+),)?\s*
+                           "(\w+)"\s*,
+                           .*?\)\s*;
+    | Document-(?:const|global|variable):\s
+        ((?:\w+::)*\w+)
+        \s*?\n((?>.*?\*/))
+    }mxi) do
+      case
+      when $1 then table[[$2, $3]] = $1
+      when $4 then table[$4] = "/*\n" + $5
+      end
+    end
+    table
+  end
+
+  ##
   # Finds a comment matching +type+ and +const_name+ either above the
   # comment or in the matching Document- section.
 
   def find_const_comment(type, const_name, class_name = nil)
-    comment = if @content =~ %r%((?>^\s*/\*.*?\*/\s+))
-                             rb_define_#{type}\((?:\s*(\w+),)?\s*
-                                                "#{const_name}"\s*,
-                                                .*?\)\s*;%xmi then
-                $1
-              elsif class_name and
-                    @content =~ %r%Document-(?:const|global|variable):\s
-                                   #{class_name}::#{const_name}
-                                   \s*?\n((?>.*?\*/))%xm then
-                "/*\n#{$1}"
-              elsif @content =~ %r%Document-(?:const|global|variable):
-                                   \s#{const_name}
-                                   \s*?\n((?>.*?\*/))%xm then
-                "/*\n#{$1}"
-              else
-                ''
-              end
+    @const_table ||= {}
+    @const_table[@content] ||= gen_const_table @content
+    table = @const_table[@content]
+
+    comment =
+      table[[type, const_name]] ||
+      (class_name && table[class_name + "::" + const_name]) ||
+      table[const_name] ||
+      ''
 
     RDoc::Comment.new comment, @top_level
   end
@@ -833,7 +883,7 @@ class RDoc::Parser::C < RDoc::Parser
     comment = find_attr_comment var_name, attr_name
     comment.normalize
 
-    name = attr_name.gsub(/rb_intern\("([^"]+)"\)/, '\1')
+    name = attr_name.gsub(/rb_intern(?:_const)?\("([^"]+)"\)/, '\1')
 
     attr = RDoc::Attr.new '', name, rw, comment
 
@@ -1179,7 +1229,6 @@ class RDoc::Parser::C < RDoc::Parser
 
     if hash then
       args << "p#{position} = {}"
-      position += 1
     end
 
     args << '&block' if block

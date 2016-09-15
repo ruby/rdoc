@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require File.expand_path '../xref_test_case', __FILE__
 
 class TestRDocNormalModule < XrefTestCase
@@ -21,6 +22,11 @@ class TestRDocNormalModule < XrefTestCase
     inc2 = RDoc::Include.new 'Inc2', ''
     mod.add_include inc2
     assert_equal [mod2, incl.name], mod.ancestors
+  end
+
+  def test_aref
+    assert_equal 'module-M1',     @m1.aref
+    assert_equal 'module-M1::M2', @m1_m2.aref
   end
 
   def test_definition

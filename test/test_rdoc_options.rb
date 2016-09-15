@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require 'rdoc/test_case'
 
 class TestRDocOptions < RDoc::TestCase
@@ -59,7 +60,7 @@ class TestRDocOptions < RDoc::TestCase
 
     @options.encode_with coder
 
-    encoding = Object.const_defined?(:Encoding) ? 'UTF-8' : nil
+    encoding = 'UTF-8'
 
     expected = {
       'charset'              => 'UTF-8',
@@ -67,6 +68,9 @@ class TestRDocOptions < RDoc::TestCase
       'exclude'              => [],
       'hyperlink_all'        => false,
       'line_numbers'         => false,
+      'locale'               => nil,
+      'locale_dir'           => 'locale',
+      'locale_name'          => nil,
       'main_page'            => nil,
       'markup'               => 'rdoc',
       'output_decoration'    => true,
@@ -118,8 +122,6 @@ class TestRDocOptions < RDoc::TestCase
   end
 
   def test_encoding_default
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
     assert_equal Encoding::UTF_8, @options.encoding
   end
 
@@ -138,7 +140,6 @@ class TestRDocOptions < RDoc::TestCase
   end
 
   def test_init_with_encoding
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
     RDoc.load_yaml
 
     @options.encoding = Encoding::IBM437
@@ -269,8 +270,6 @@ rdoc_include:
   end
 
   def test_parse_encoding
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
     @options.parse %w[--encoding Big5]
 
     assert_equal Encoding::Big5, @options.encoding
@@ -278,8 +277,6 @@ rdoc_include:
   end
 
   def test_parse_encoding_invalid
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
     out, err = capture_io do
       @options.parse %w[--encoding invalid]
     end
@@ -332,6 +329,18 @@ rdoc_include:
 
     assert_equal 'invalid option: -R generator already set to darkfish',
                  e.message
+  end
+
+  def test_parse_h
+    out, = capture_io do
+      begin
+        @options.parse %w[-h]
+      rescue SystemExit
+      end
+    end
+
+    assert_equal 1, out.scan(/HTML generator options:/).length
+    assert_equal 1, out.scan(/ri generator options:/).  length
   end
 
   def test_parse_help
@@ -528,6 +537,27 @@ rdoc_include:
     assert_empty err
 
     assert_equal Pathname(Dir.tmpdir), @options.root
+    assert_includes @options.rdoc_include, @options.root.to_s
+  end
+
+  def test_parse_tab_width
+    @options.parse %w[--tab-width=1]
+    assert_equal 1, @options.tab_width
+
+    @options.parse %w[-w2]
+    assert_equal 2, @options.tab_width
+
+    _, err = capture_io do
+      @options.parse %w[-w=2]
+    end
+
+    assert_match 'invalid options', err
+
+    _, err = capture_io do
+      @options.parse %w[-w0]
+    end
+
+    assert_match 'invalid options', err
   end
 
   def test_parse_template
@@ -579,6 +609,20 @@ rdoc_include:
     assert_equal template_dir, @options.template_dir
   ensure
     $LOAD_PATH.replace orig_LOAD_PATH
+  end
+
+  def test_parse_visibility
+    @options.parse %w[--visibility=public]
+    assert_equal :public, @options.visibility
+
+    @options.parse %w[--visibility=protected]
+    assert_equal :protected, @options.visibility
+
+    @options.parse %w[--visibility=private]
+    assert_equal :private, @options.visibility
+
+    @options.parse %w[--visibility=nodoc]
+    assert_equal :nodoc, @options.visibility
   end
 
   def test_parse_write_options
@@ -708,5 +752,8 @@ rdoc_include:
     assert out.include?(RDoc::VERSION)
   end
 
+  def test_visibility
+    @options.visibility = :all
+    assert_equal :private, @options.visibility
+  end
 end
-

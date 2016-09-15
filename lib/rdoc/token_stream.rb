@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 ##
 # A TokenStream is a list of tokens, gathered during the parse of some entity
 # (say a method). Entities populate these streams by being registered with the
@@ -88,7 +89,7 @@ module RDoc::TokenStream
   # Returns a string representation of the token stream
 
   def tokens_to_s
-    token_stream.map { |token| token.text }.join ''
+    token_stream.compact.map { |token| token.text }.join ''
   end
 
 end

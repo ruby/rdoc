@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require 'rdoc/test_case'
 
 class TestRDocParserMarkdown < RDoc::TestCase
@@ -19,7 +20,7 @@ class TestRDocParserMarkdown < RDoc::TestCase
   def teardown
     super
 
-    @tempfile.close
+    @tempfile.close!
   end
 
   def test_file

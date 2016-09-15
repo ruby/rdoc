@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require File.expand_path '../xref_test_case', __FILE__
 
 class TestRDocContext < XrefTestCase
@@ -39,6 +40,14 @@ class TestRDocContext < XrefTestCase
 
     assert_equal [as], @context.external_aliases
     assert_equal [as], @context.unmatched_alias_lists['#old_name']
+  end
+
+  def test_add
+    @context.add RDoc::Extend,  'Ext', 'comment'
+    @context.add RDoc::Include, 'Incl', 'comment'
+
+    refute_empty @context.extends
+    refute_empty @context.includes
   end
 
   def test_add_alias_method_attr
@@ -408,7 +417,7 @@ class TestRDocContext < XrefTestCase
   def bench_add_include
     cm = RDoc::ClassModule.new 'Klass'
 
-    assert_performance_linear 0.9 do |count|
+    assert_performance_linear 0.5 do |count|
       count.times do |i|
         cm.add_include RDoc::Include.new("N::M#{i}", nil)
       end
@@ -613,6 +622,8 @@ class TestRDocContext < XrefTestCase
 
     assert_equal 1,  @c2_c3.<=>(@c2)
     assert_equal(-1, @c2_c3.<=>(@c3))
+
+    assert_nil @c2.<=>(Gem.loaded_specs.values.first)
   end
 
   def test_methods_by_type
@@ -686,6 +697,15 @@ class TestRDocContext < XrefTestCase
     util_visibilities
 
     @vis.remove_invisible :private
+
+    assert_equal [@pub, @prot, @priv], @vis.method_list
+    assert_equal [@apub, @aprot, @apriv], @vis.attributes
+  end
+
+  def test_remove_invisible_nodoc
+    util_visibilities
+
+    @vis.remove_invisible :nodoc
 
     assert_equal [@pub, @prot, @priv], @vis.method_list
     assert_equal [@apub, @aprot, @apriv], @vis.attributes

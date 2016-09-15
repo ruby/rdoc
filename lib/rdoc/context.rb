@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require 'cgi'
 
 ##
@@ -164,7 +165,27 @@ class RDoc::Context < RDoc::CodeObject
   # Contexts are sorted by full_name
 
   def <=>(other)
+    return nil unless RDoc::CodeObject === other
+
     full_name <=> other.full_name
+  end
+
+  ##
+  # Adds an item of type +klass+ with the given +name+ and +comment+ to the
+  # context.
+  #
+  # Currently only RDoc::Extend and RDoc::Include are supported.
+
+  def add klass, name, comment
+    if RDoc::Extend == klass then
+      ext = RDoc::Extend.new name, comment
+      add_extend ext
+    elsif RDoc::Include == klass then
+      incl = RDoc::Include.new name, comment
+      add_include incl
+    else
+      raise NotImplementedError, "adding a #{klass} is not implemented"
+    end
   end
 
   ##
@@ -303,10 +324,11 @@ class RDoc::Context < RDoc::CodeObject
     end
 
     # fix up superclass
-    superclass = nil if full_name == 'BasicObject'
-    superclass = nil if full_name == 'Object' and defined?(::BasicObject)
-    superclass = '::BasicObject' if
-      defined?(::BasicObject) and full_name == 'Object'
+    if full_name == 'BasicObject' then
+      superclass = nil
+    elsif full_name == 'Object' then
+      superclass = defined?(::BasicObject) ? '::BasicObject' : nil
+    end
 
     # find the superclass full name
     if superclass then
@@ -767,7 +789,9 @@ class RDoc::Context < RDoc::CodeObject
   # Finds a constant with +name+ in this context
 
   def find_constant_named(name)
-    @constants.find {|m| m.name == name}
+    @constants.find do |m|
+      m.name == name || m.full_name == name
+    end
   end
 
   ##
@@ -1041,8 +1065,8 @@ class RDoc::Context < RDoc::CodeObject
   #--
   # TODO mark the visibility of attributes in the template (if not public?)
 
-  def remove_invisible(min_visibility)
-    return if min_visibility == :private
+  def remove_invisible min_visibility
+    return if [:private, :nodoc].include? min_visibility
     remove_invisible_in @method_list, min_visibility
     remove_invisible_in @attributes, min_visibility
   end

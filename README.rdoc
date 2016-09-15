@@ -1,9 +1,10 @@
 = \RDoc - Ruby Documentation System
 
 home :: https://github.com/rdoc/rdoc
-rdoc :: http://docs.seattlerb.org/rdoc
+rdoc :: https://rdoc.github.io/rdoc
 bugs :: https://github.com/rdoc/rdoc/issues
-code quality :: {<img src="https://codeclimate.com/badge.png" />}[https://codeclimate.com/github/rdoc/rdoc]
+build status :: {<img src="https://travis-ci.org/rdoc/rdoc.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/rdoc/rdoc]
+code quality :: {<img src="https://codeclimate.com/badge.png" alt="code climate">}[https://codeclimate.com/github/rdoc/rdoc]
 
 == Description
 
@@ -46,7 +47,7 @@ contain just Markup-style markup (with or without leading '#' comment
 markers).  If directory names are passed to RDoc, they are scanned
 recursively for C and Ruby source files only.
 
-To generate documentation using +rake+ see RDoc::Task.
+To generate documentation using +rake+ see RDoc::Task[https://rdoc.github.io/rdoc/RDocTask.html].
 
 To generate documentation programmatically:
 
@@ -108,10 +109,10 @@ names in the documentation coverage report.
 
 == Bugs
 
-See DEVELOPERS@Bugs for information on filing a bug report.  It's OK to file a
-bug report for anything you're having a problem with.  If you can't figure out
-how to make RDoc produce the output you like that is probably a documentation
-bug.
+See CONTRIBUTING@Bugs for information on filing a bug report.  It's OK to file
+a bug report for anything you're having a problem with.  If you can't figure
+out how to make RDoc produce the output you like that is probably a
+documentation bug.
 
 == License
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 ##
 # A normal class, neither singleton nor anonymous
 
@@ -18,6 +19,10 @@ class RDoc::NormalClass < RDoc::ClassModule
     else
       super
     end
+  end
+
+  def aref_prefix # :nodoc:
+    'class'
   end
 
   ##

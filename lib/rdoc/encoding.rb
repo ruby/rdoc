@@ -1,4 +1,5 @@
 # coding: US-ASCII
+# frozen_string_literal: false
 
 ##
 # This class is a wrapper around File IO and Encoding that helps RDoc load
@@ -24,41 +25,41 @@ module RDoc::Encoding
 
     RDoc::Encoding.set_encoding content
 
-    if Object.const_defined? :Encoding then
-      begin
-        encoding ||= Encoding.default_external
-        orig_encoding = content.encoding
+    begin
+      encoding ||= Encoding.default_external
+      orig_encoding = content.encoding
 
-        if utf8 then
-          content.force_encoding Encoding::UTF_8
-          content.encode! encoding
-        else
-          # assume the content is in our output encoding
-          content.force_encoding encoding
-        end
+      if not orig_encoding.ascii_compatible? then
+        content.encode! encoding
+      elsif utf8 then
+        content.force_encoding Encoding::UTF_8
+        content.encode! encoding
+      else
+        # assume the content is in our output encoding
+        content.force_encoding encoding
+      end
 
-        unless content.valid_encoding? then
-          # revert and try to transcode
-          content.force_encoding orig_encoding
-          content.encode! encoding
-        end
+      unless content.valid_encoding? then
+        # revert and try to transcode
+        content.force_encoding orig_encoding
+        content.encode! encoding
+      end
 
-        unless content.valid_encoding? then
-          warn "unable to convert #{filename} to #{encoding}, skipping"
-          content = nil
-        end
-      rescue Encoding::InvalidByteSequenceError,
-             Encoding::UndefinedConversionError => e
-        if force_transcode then
-          content.force_encoding orig_encoding
-          content.encode!(encoding,
-                          :invalid => :replace, :undef => :replace,
-                          :replace => '?')
-          return content
-        else
-          warn "unable to convert #{e.message} for #{filename}, skipping"
-          return nil
-        end
+      unless content.valid_encoding? then
+        warn "unable to convert #{filename} to #{encoding}, skipping"
+        content = nil
+      end
+    rescue Encoding::InvalidByteSequenceError,
+           Encoding::UndefinedConversionError => e
+      if force_transcode then
+        content.force_encoding orig_encoding
+        content.encode!(encoding,
+                        :invalid => :replace, :undef => :replace,
+                        :replace => '?')
+        return content
+      else
+        warn "unable to convert #{e.message} for #{filename}, skipping"
+        return nil
       end
     end
 
@@ -71,10 +72,21 @@ module RDoc::Encoding
     nil
   end
 
+  def self.remove_frozen_string_literal string
+    string =~ /\A(?:#!.*\n)?(.*\n)/
+    first_line = $1
+
+    if first_line =~ /\A# +frozen[-_]string[-_]literal[=:].+$/i
+      string.sub! first_line, ''
+    end
+  end
+
   ##
   # Sets the encoding of +string+ based on the magic comment
 
   def self.set_encoding string
+    remove_frozen_string_literal string
+
     string =~ /\A(?:#!.*\n)?(.*\n)/
 
     first_line = $1
@@ -87,11 +99,10 @@ module RDoc::Encoding
 
     string.sub! first_line, ''
 
-    return unless Object.const_defined? :Encoding
+    remove_frozen_string_literal string
 
     enc = Encoding.find name
     string.force_encoding enc if enc
   end
 
 end
-

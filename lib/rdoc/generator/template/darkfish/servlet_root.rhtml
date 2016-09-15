@@ -1,11 +1,19 @@
-<body>
-<nav id="metadata">
-<%= render '_sidebar_search.rhtml' %>
+<body role="document">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" class="nav-section">
+      <h2>
+        <a href="<%= rel_prefix %>/" rel="home">Home</a>
+      </h2>
+    </div>
+
+    <%= render '_sidebar_search.rhtml' %>
+  </div>
 
 <%= render '_sidebar_installed.rhtml' %>
 </nav>
 
-<div id="documentation" class="description">
+<main role="main">
   <h1>Local RDoc Documentation</h1>
 
   <p>Here you can browse local documentation from the ruby standard library and
@@ -51,6 +59,5 @@
   <% end %>
   </ul>
 <% end %>
-
-</div>
+</main>
 

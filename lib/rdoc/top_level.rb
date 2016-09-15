@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 ##
 # A TopLevel context is a representation of the contents of a single file
 
@@ -30,7 +31,7 @@ class RDoc::TopLevel < RDoc::Context
   attr_accessor :diagram # :nodoc:
 
   ##
-  # The parser that processed this file
+  # The parser class that processed this file
 
   attr_accessor :parser
 
@@ -98,7 +99,7 @@ class RDoc::TopLevel < RDoc::Context
 
   ##
   # Adds class or module +mod+. Used in the building phase
-  # by the ruby parser.
+  # by the Ruby parser.
 
   def add_to_classes_or_modules mod
     @classes_or_modules << mod

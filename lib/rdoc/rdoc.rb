@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require 'rdoc'
 
 require 'find'
@@ -305,6 +306,9 @@ option)
       when "directory" then
         next if rel_file_name == "CVS" || rel_file_name == ".svn"
 
+        created_rid = File.join rel_file_name, "created.rid"
+        next if File.file? created_rid
+
         dot_doc = File.join rel_file_name, RDoc::DOT_DOC_FILENAME
 
         if File.file? dot_doc then
@@ -336,10 +340,8 @@ option)
   # Parses +filename+ and returns an RDoc::TopLevel
 
   def parse_file filename
-    if defined?(Encoding) then
-      encoding = @options.encoding
-      filename = filename.encode encoding
-    end
+    encoding = @options.encoding
+    filename = filename.encode encoding
 
     @stats.add_file filename
 
@@ -350,7 +352,11 @@ option)
     return unless content
 
     filename_path = Pathname(filename).expand_path
-    relative_path = filename_path.relative_path_from @options.root
+    begin
+      relative_path = filename_path.relative_path_from @options.root
+    rescue ArgumentError
+      relative_path = filename_path
+    end
 
     if @options.page_dir and
        relative_path.to_s.start_with? @options.page_dir.to_s then
@@ -411,8 +417,6 @@ The internal error was:
 
     return [] if file_list.empty?
 
-    file_info = []
-
     @stats.begin_adding
 
     file_info = file_list.map do |filename|
@@ -431,7 +435,7 @@ The internal error was:
 
   def remove_unparseable files
     files.reject do |file|
-      file =~ /\.(?:class|eps|erb|scpt\.txt|ttf|yml)$/i or
+      file =~ /\.(?:class|eps|erb|scpt\.txt|svg|ttf|yml)$/i or
         (file =~ /tags$/i and
          open(file, 'rb') { |io|
            io.read(100) =~ /\A(\f\n[^,]+,\d+$|!_TAG_)/
@@ -475,7 +479,7 @@ The internal error was:
       @last_modified = setup_output_dir @options.op_dir, @options.force_update
     end
 
-    @store.encoding = @options.encoding if @options.respond_to? :encoding
+    @store.encoding = @options.encoding
     @store.dry_run  = @options.dry_run
     @store.main     = @options.main_page
     @store.title    = @options.title
@@ -547,16 +551,14 @@ end
 begin
   require 'rubygems'
 
-  if Gem.respond_to? :find_files then
-    rdoc_extensions = Gem.find_files 'rdoc/discover'
+  rdoc_extensions = Gem.find_files 'rdoc/discover'
 
-    rdoc_extensions.each do |extension|
-      begin
-        load extension
-      rescue => e
-        warn "error loading #{extension.inspect}: #{e.message} (#{e.class})"
-        warn "\t#{e.backtrace.join "\n\t"}" if $DEBUG
-      end
+  rdoc_extensions.each do |extension|
+    begin
+      load extension
+    rescue => e
+      warn "error loading #{extension.inspect}: #{e.message} (#{e.class})"
+      warn "\t#{e.backtrace.join "\n\t"}" if $DEBUG
     end
   end
 rescue LoadError
@@ -565,4 +567,4 @@ end
 # require built-in generators after discovery in case they've been replaced
 require 'rdoc/generator/darkfish'
 require 'rdoc/generator/ri'
-
+require 'rdoc/generator/pot'

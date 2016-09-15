@@ -1,10 +1,7 @@
 # coding: UTF-8
+# frozen_string_literal: false
 
-require 'rubygems'
-require 'minitest/autorun'
-require 'pp'
-
-require 'rdoc'
+require 'rdoc/test_case'
 require 'rdoc/markup/block_quote'
 require 'rdoc/markdown'
 
@@ -14,6 +11,8 @@ class TestRDocMarkdown < RDoc::TestCase
     @RM = RDoc::Markup
 
     @parser = RDoc::Markdown.new
+
+    @to_html = RDoc::Markup::ToHtml.new(RDoc::Options.new, nil)
   end
 
   def test_class_parse
@@ -432,7 +431,19 @@ heading
   def test_parse_image
     doc = parse "image ![alt text](path/to/image.jpg)"
 
-    expected = doc(para("image {alt text}[path/to/image.jpg]"))
+    expected = doc(para("image rdoc-image:path/to/image.jpg"))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_image_link
+    @parser.html = true
+
+    doc = parse "[![alt text](path/to/image.jpg)](http://example.com)"
+
+    expected =
+      doc(
+        para('{rdoc-image:path/to/image.jpg}[http://example.com]'))
 
     assert_equal expected, doc
   end

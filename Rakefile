@@ -1,6 +1,7 @@
 $:.unshift File.expand_path 'lib'
-require 'rdoc'
-require 'hoe'
+require 'rdoc/task'
+require 'bundler/gem_tasks'
+require 'rake/testtask'
 
 ENV['BENCHMARK'] = 'yes'
 
@@ -8,102 +9,75 @@ task :docs    => :generate
 task :test    => :generate
 
 PARSER_FILES = %w[
-  lib/rdoc/rd/block_parser.rb
-  lib/rdoc/rd/inline_parser.rb
-  lib/rdoc/markdown.rb
-  lib/rdoc/markdown/literals_1_8.rb
-  lib/rdoc/markdown/literals_1_9.rb
+  lib/rdoc/rd/block_parser.ry
+  lib/rdoc/rd/inline_parser.ry
+  lib/rdoc/markdown.kpeg
+  lib/rdoc/markdown/literals.kpeg
 ]
-
-Hoe.plugin :git
-Hoe.plugin :kpeg
-Hoe.plugin :minitest
-Hoe.plugin :travis
 
 $rdoc_rakefile = true
 
-hoe = Hoe.spec 'rdoc' do
-  developer 'Eric Hodel', 'drbrain@segment7.net'
-  developer 'Dave Thomas', ''
-  developer 'Phil Hagelberg', 'technomancy@gmail.com'
-  developer 'Tony Strauss', 'tony.strauss@designingpatterns.com'
+task :default => :test
 
-  self.rsync_args = '-avz'
-  rdoc_locations << 'docs.seattlerb.org:/data/www/docs.seattlerb.org/rdoc/'
-  rdoc_locations << 'drbrain@rubyforge.org:/var/www/gforge-projects/rdoc/'
-
-  spec_extras[:post_install_message] = <<-MESSAGE
-Depending on your version of ruby, you may need to install ruby rdoc/ri data:
-
-<= 1.8.6 : unsupported
- = 1.8.7 : gem install rdoc-data; rdoc-data --install
- = 1.9.1 : gem install rdoc-data; rdoc-data --install
->= 1.9.2 : nothing to do! Yay!
-  MESSAGE
-
-  self.licenses << 'Ruby'
-  self.readme_file  = 'README.rdoc'
-  self.history_file = 'History.rdoc'
-  self.testlib = :minitest
-  self.extra_rdoc_files += %w[
-    DEVELOPERS.rdoc
-    CVE-2013-0256.rdoc
-    History.rdoc
-    LICENSE.rdoc
-    LEGAL.rdoc
-    README.rdoc
-    RI.rdoc
-    TODO.rdoc
-  ]
-
-  self.clean_globs += PARSER_FILES
-  self.kpeg_flags = '-fsv' if self.respond_to? :kpeg_flags= # no plugin
-
-  require_ruby_version '>= 1.8.7'
-  extra_deps     << ['json',     '~> 1.4']
-  extra_dev_deps << ['racc',     '~> 1.4']
-  extra_dev_deps << ['minitest', '~> 4']
-  extra_dev_deps << ['ZenTest',  '~> 4']
-
-  extra_rdoc_files << 'Rakefile'
-  spec_extras['required_rubygems_version'] = '>= 1.3'
-  spec_extras['homepage'] = 'http://docs.seattlerb.org/rdoc'
+RDoc::Task.new do |doc|
+  doc.main = 'README.rdoc'
+  doc.title = "rdoc #{RDoc::VERSION} Documentation"
+  doc.rdoc_dir = 'html'
+  doc.rdoc_files = FileList.new %w[lib/**/*.rb *.rdoc] - PARSER_FILES
 end
 
-def rake(*args)
-  sh $0, *args
+task ghpages: :rdoc do
+  `git checkout gh-pages`
+  require "fileutils"
+  FileUtils.rm_rf "/tmp/html"
+  FileUtils.mv "html", "/tmp"
+  FileUtils.rm_rf "*"
+  FileUtils.cp_r Dir.glob("/tmp/html/*"), "."
 end
 
-if PARSER_FILES.any? {|file| not File.exist?(file)}
-  Rake::Task["default"].prerequisites.clear
-  task :default do
-    rake "install_plugins"
-    rake "newb"
-  end
+Rake::TestTask.new(:test) do |t|
+  t.libs << "test"
+  t.libs << "lib"
+  t.test_files = FileList['test/**/test_*.rb']
 end
 
-# requires ruby 1.8 and ruby 1.8 to build
-hoe.clean_globs -= PARSER_FILES.grep(/literals_/)
-
-task :generate => :isolate
-task :generate => PARSER_FILES
-task :check_manifest => :generate
-
-rule '.rb' => '.ry' do |t|
-  racc = Gem.bin_path 'racc', 'racc'
-
-  ruby "-rubygems #{racc} -l -o #{t.name} #{t.source}"
-end
-
-path = "pkg/#{hoe.spec.full_name}"
+path = "pkg/#{Bundler::GemHelper.gemspec.full_name}"
 
 package_parser_files = PARSER_FILES.map do |parser_file|
-  package_parser_file = "#{path}/#{parser_file}"
-  file package_parser_file => parser_file # ensure copy runs before racc
+  name = File.basename(parser_file, File.extname(parser_file))
+  _path = File.dirname(parser_file)
+  package_parser_file = "#{path}/#{name}.rb"
+  parsed_file = "#{_path}/#{name}.rb"
+
+  file package_parser_file => parsed_file # ensure copy runs before racc
+
   package_parser_file
 end
 
+parsed_files = PARSER_FILES.map do |parser_file|
+  name = File.basename(parser_file, File.extname(parser_file))
+  _path = File.dirname(parser_file)
+  parsed_file = "#{_path}/#{name}.rb"
+
+  file parsed_file do |t|
+    puts "Generating #{parsed_file}..."
+    if parser_file =~ /\.ry\z/ # need racc
+      racc = Gem.bin_path 'racc', 'racc'
+      rb_file = parser_file.gsub(/\.ry\z/, ".rb")
+      ruby "-rubygems #{racc} -l -o #{rb_file} #{parser_file}"
+    elsif parser_file =~ /\.kpeg\z/ # need kpeg
+      kpeg = Gem.bin_path 'kpeg', 'kpeg'
+      rb_file = parser_file.gsub(/\.kpeg\z/, ".rb")
+      ruby "-rubygems #{kpeg} -fsv -o #{rb_file} #{parser_file}"
+    end
+  end
+
+  parsed_file
+end
+
 task "#{path}.gem" => package_parser_files
+task :generate => parsed_files
+task :check_manifest => :generate
 
 # These tasks expect to have the following directory structure:
 #
@@ -155,4 +129,3 @@ task :diff_rubinius do
   sh "diff #{diff_options} lib/rdoc #{rubinius_dir}/lib/rdoc; true"
   sh "diff #{diff_options} test #{rubinius_dir}/test/rdoc; true"
 end
-

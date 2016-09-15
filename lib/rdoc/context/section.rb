@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 ##
 # A section of documentation like:
 #
@@ -56,6 +57,8 @@ class RDoc::Context::Section
   def == other
     self.class === other and @title == other.title
   end
+
+  alias eql? ==
 
   ##
   # Adds +comment+ to this section
@@ -125,6 +128,10 @@ class RDoc::Context::Section
 
   def inspect # :nodoc:
     "#<%s:0x%x %p>" % [self.class, object_id, title]
+  end
+
+  def hash # :nodoc:
+    @title.hash
   end
 
   ##

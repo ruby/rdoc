@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require 'rdoc/test_case'
 
 class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
@@ -309,7 +310,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
   end
 
   def accept_verbatim
-    assert_equal "\n<pre>hi\n  world</pre>\n", @to.res.join
+    assert_equal "\n<pre class=\"ruby\"><span class=\"ruby-identifier\">hi</span>\n  <span class=\"ruby-identifier\">world</span>\n</pre>\n", @to.res.join
     assert_equal 10, @to.characters
   end
 
@@ -427,8 +428,7 @@ class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
 
     expected = <<-EXPECTED
 
-<pre>#{inner}
-</pre>
+<pre>#{inner}</pre>
     EXPECTED
 
     assert_equal expected, @to.res.join
@@ -495,7 +495,7 @@ be guessed, raises an error if +name+ couldn't be guessed.
 = \RDoc - Ruby Documentation System
 
 * {RDoc Project Page}[https://github.com/rdoc/rdoc/]
-* {RDoc Documentation}[http://docs.seattlerb.org/rdoc]
+* {RDoc Documentation}[https://rdoc.github.io/rdoc]
 * {RDoc Bug Tracker}[https://github.com/rdoc/rdoc/issues]
 
 == DESCRIPTION:
@@ -588,8 +588,9 @@ This routine modifies its +comment+ parameter.
     expected = <<-EXPECTED
 <p>Look for directives in a normal comment block:
 
-<pre># :stopdoc:
-#{inner}</pre>
+<pre class=\"ruby\"><span class=\"ruby-comment\"># :stopdoc:</span>
+<span class=\"ruby-comment\">#{inner}</span>
+</pre>
     EXPECTED
 
     actual = @to.convert rdoc
@@ -665,8 +666,9 @@ This routine modifies its +comment+ parameter.
     expected = <<-EXPECTED
 <p>one
 
-<pre>verb1
-verb2</pre>
+<pre class=\"ruby\"><span class=\"ruby-identifier\">verb1</span>
+<span class=\"ruby-identifier\">verb2</span>
+</pre>
 <p>two
 
     EXPECTED
@@ -707,4 +709,3 @@ verb2</pre>
   end
 
 end
-

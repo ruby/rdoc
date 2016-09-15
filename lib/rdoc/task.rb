@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 #--
 # Copyright (c) 2003, 2004 Jim Weirich, 2009 Eric Hodel
 #
@@ -21,7 +22,6 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-require 'rubygems'
 begin
   gem 'rdoc'
 rescue Gem::LoadError
@@ -291,7 +291,7 @@ class RDoc::Task < Rake::TaskLib
   private
 
   def rdoc_target
-    "#{rdoc_dir}/index.html"
+    "#{rdoc_dir}/created.rid"
   end
 
   def rdoc_task_name
@@ -327,4 +327,3 @@ module Rake
 
 end
 # :startdoc:
-

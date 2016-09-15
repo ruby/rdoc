@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 ##
 # Manages changes of attributes in a block of text
 
@@ -130,7 +131,7 @@ class RDoc::Markup::AttributeManager
     # first do matching ones
     tags = @matching_word_pairs.keys.join("")
 
-    re = /(^|\W)([#{tags}])([#:\\]?[\w.\/-]+?\S?)\2(\W|$)/
+    re = /(^|\W)([#{tags}])([#\\]?[\w:.\/-]+?\S?)\2(\W|$)/
 
     1 while str.gsub!(re) do
       attr = @matching_word_pairs[$2]
@@ -186,8 +187,9 @@ class RDoc::Markup::AttributeManager
     # protect __send__, __FILE__, etc.
     @str.gsub!(/__([a-z]+)__/i,
       "_#{PROTECT_ATTR}_#{PROTECT_ATTR}\\1_#{PROTECT_ATTR}_#{PROTECT_ATTR}")
-    @str.gsub!(/\\([#{Regexp.escape @protectable.join('')}])/,
-               "\\1#{PROTECT_ATTR}")
+    @str.gsub!(/(\A|[^\\])\\([#{Regexp.escape @protectable.join}])/m,
+               "\\1\\2#{PROTECT_ATTR}")
+    @str.gsub!(/\\(\\[#{Regexp.escape @protectable.join}])/m, "\\1")
   end
 
   ##

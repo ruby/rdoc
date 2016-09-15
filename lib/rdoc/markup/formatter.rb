@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 ##
 # Base class for RDoc markup formatters
 #
@@ -80,7 +81,7 @@ class RDoc::Markup::Formatter
   # Adds a special for links of the form rdoc-...:
 
   def add_special_RDOCLINK
-    @markup.add_special(/rdoc-[a-z]+:\S+/, :RDOCLINK)
+    @markup.add_special(/rdoc-[a-z]+:[^\s\]]+/, :RDOCLINK)
   end
 
   ##
@@ -88,7 +89,7 @@ class RDoc::Markup::Formatter
 
   def add_special_TIDYLINK
     @markup.add_special(/(?:
-                          \{.*?\} |   # multi-word label
+                          \{.*?\} |    # multi-word label
                           \b[^\s{}]+? # single-word label
                          )
 
@@ -239,7 +240,7 @@ class RDoc::Markup::Formatter
     else
       scheme = 'http'
       path   = url
-      url    = "http://#{url}"
+      url    = url
     end
 
     if scheme == 'link' then

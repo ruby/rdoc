@@ -1,4 +1,4 @@
-require 'rubygems'
+# frozen_string_literal: false
 require 'minitest/autorun'
 require 'pp'
 
@@ -1881,4 +1881,3 @@ foo
   end
 
 end
-

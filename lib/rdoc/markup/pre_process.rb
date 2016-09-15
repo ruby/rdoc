@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 ##
 # Handle common directives that can occur in a block of text:
 #
@@ -151,7 +152,7 @@ class RDoc::Markup::PreProcess
 
     case directive
     when 'arg', 'args' then
-      return blankline unless code_object
+      return "#{prefix}:#{directive}: #{param}\n" unless code_object
 
       code_object.params = param
 

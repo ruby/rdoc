@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require File.expand_path '../xref_test_case', __FILE__
 
 class TestRDocClassModule < XrefTestCase
@@ -282,6 +283,7 @@ class TestRDocClassModule < XrefTestCase
     assert_empty loaded.extends
     assert_empty loaded.method_list
   end
+
   def test_marshal_load_version_0
     tl = @store.add_file 'file.rb'
     ns = tl.add_module RDoc::NormalModule, 'Namespace'
@@ -1447,7 +1449,7 @@ class TestRDocClassModule < XrefTestCase
 
     @c1.update_extends
 
-    assert_equal [a, c], @c1.extends
+    assert_equal [a, b, c], @c1.extends
   end
 
   def test_update_extends_trim

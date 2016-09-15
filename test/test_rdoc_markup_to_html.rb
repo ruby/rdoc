@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require 'rdoc/test_case'
 
 class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
@@ -24,7 +25,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
 
   def accept_heading
     links = '<span><a href="#label-Hello">&para;</a> ' +
-            '<a href="#documentation">&uarr;</a></span>'
+            '<a href="#top">&uarr;</a></span>'
     expected = "\n<h5 id=\"label-Hello\">Hello#{links}</h5>\n"
 
     assert_equal expected, @to.res.join
@@ -32,35 +33,35 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
 
   def accept_heading_1
     links = '<span><a href="#label-Hello">&para;</a> ' +
-            '<a href="#documentation">&uarr;</a></span>'
+            '<a href="#top">&uarr;</a></span>'
 
     assert_equal "\n<h1 id=\"label-Hello\">Hello#{links}</h1>\n", @to.res.join
   end
 
   def accept_heading_2
     links = '<span><a href="#label-Hello">&para;</a> ' +
-            '<a href="#documentation">&uarr;</a></span>'
+            '<a href="#top">&uarr;</a></span>'
 
     assert_equal "\n<h2 id=\"label-Hello\">Hello#{links}</h2>\n", @to.res.join
   end
 
   def accept_heading_3
     links = '<span><a href="#label-Hello">&para;</a> ' +
-            '<a href="#documentation">&uarr;</a></span>'
+            '<a href="#top">&uarr;</a></span>'
 
     assert_equal "\n<h3 id=\"label-Hello\">Hello#{links}</h3>\n", @to.res.join
   end
 
   def accept_heading_4
     links = '<span><a href="#label-Hello">&para;</a> ' +
-            '<a href="#documentation">&uarr;</a></span>'
+            '<a href="#top">&uarr;</a></span>'
 
     assert_equal "\n<h4 id=\"label-Hello\">Hello#{links}</h4>\n", @to.res.join
   end
 
   def accept_heading_b
     links = '<span><a href="#label-Hello">&para;</a> ' +
-            '<a href="#documentation">&uarr;</a></span>'
+            '<a href="#top">&uarr;</a></span>'
     inner = "<strong>Hello</strong>"
 
     assert_equal "\n<h1 id=\"label-Hello\">#{inner}#{links}</h1>\n",
@@ -69,7 +70,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
 
   def accept_heading_suppressed_crossref
     links = '<span><a href="#label-Hello">&para;</a> ' +
-            '<a href="#documentation">&uarr;</a></span>'
+            '<a href="#top">&uarr;</a></span>'
 
     assert_equal "\n<h1 id=\"label-Hello\">Hello#{links}</h1>\n", @to.res.join
   end
@@ -292,7 +293,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def accept_verbatim
-    assert_equal "\n<pre>hi\n  world</pre>\n", @to.res.join
+    assert_equal "\n<pre class=\"ruby\"><span class=\"ruby-identifier\">hi</span>\n  <span class=\"ruby-identifier\">world</span>\n</pre>\n", @to.res.join
   end
 
   def end_accepting
@@ -348,7 +349,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     @to.accept_heading @RM::Heading.new(7, 'Hello')
 
     links = '<span><a href="#label-Hello">&para;</a> ' +
-            '<a href="#documentation">&uarr;</a></span>'
+            '<a href="#top">&uarr;</a></span>'
 
     assert_equal "\n<h6 id=\"label-Hello\">Hello#{links}</h6>\n", @to.res.join
   end
@@ -357,12 +358,12 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     @to.code_object = RDoc::NormalClass.new 'Foo'
     @to.start_accepting
 
-    @to.accept_heading @RM::Heading.new(1, 'Hello')
+    @to.accept_heading head(1, 'Hello')
 
-    links = '<span><a href="#label-Hello">&para;</a> ' +
-            '<a href="#documentation">&uarr;</a></span>'
+    links = '<span><a href="#class-Foo-label-Hello">&para;</a> ' +
+            '<a href="#top">&uarr;</a></span>'
 
-    assert_equal "\n<h1 id=\"label-Hello\">Hello#{links}</h1>\n",
+    assert_equal "\n<h1 id=\"class-Foo-label-Hello\">Hello#{links}</h1>\n",
                  @to.res.join
   end
 
@@ -373,7 +374,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     @to.accept_heading @RM::Heading.new(1, 'Hello')
 
     links = '<span><a href="#method-i-foo-label-Hello">&para;</a> ' +
-            '<a href="#documentation">&uarr;</a></span>'
+            '<a href="#top">&uarr;</a></span>'
 
     assert_equal "\n<h1 id=\"method-i-foo-label-Hello\">Hello#{links}</h1>\n",
                  @to.res.join
@@ -404,7 +405,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
 
     @to.accept_heading @RM::Heading.new(1, 'Hello')
 
-    assert_equal "\n<h1>Hello<span><a href=\"#label-Hello\">&para;</a> <a href=\"#documentation\">&uarr;</a></span></h1>\n", @to.res.join
+    assert_equal "\n<h1>Hello<span><a href=\"#label-Hello\">&para;</a> <a href=\"#top\">&uarr;</a></span></h1>\n", @to.res.join
   end
 
   def test_accept_heading_output_decoration_with_pipe
@@ -444,8 +445,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
 
     expected = <<-EXPECTED
 
-<pre>#{inner}
-</pre>
+<pre>#{inner}</pre>
     EXPECTED
 
     assert_equal expected, @to.res.join
@@ -522,7 +522,28 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   def test_convert_TIDYLINK_footnote
     result = @to.convert 'text{*1}[rdoc-label:foottext-1:footmark-1]'
 
-    assert_equal "\n<p>text<a id=\"footmark-1\" href=\"#foottext-1\">1</a></p>\n", result
+    assert_equal "\n<p>text<sup><a id=\"footmark-1\" href=\"#foottext-1\">1</a></sup></p>\n", result
+  end
+
+  def test_convert_TIDYLINK_multiple
+    result = @to.convert '{a}[http://example] {b}[http://example]'
+
+    expected = <<-EXPECTED
+
+<p><a href=\"http://example\">a</a> <a href=\"http://example\">b</a></p>
+    EXPECTED
+
+    assert_equal expected, result
+  end
+
+  def test_convert_TIDYLINK_image
+    result =
+      @to.convert '{rdoc-image:path/to/image.jpg}[http://example.com]'
+
+    expected =
+      "\n<p><a href=\"http://example.com\"><img src=\"path/to/image.jpg\"></a></p>\n"
+
+    assert_equal expected, result
   end
 
   def test_convert_TIDYLINK_rdoc_label
@@ -548,7 +569,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
   end
 
   def test_gen_url_rdoc_label_id
-    assert_equal '<a id="footmark-1" href="#foottext-1">example</a>',
+    assert_equal '<sup><a id="footmark-1" href="#foottext-1">example</a></sup>',
                  @to.gen_url('rdoc-label:foottext-1:footmark-1', 'example')
   end
 
@@ -583,8 +604,9 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
 <ul><li>
 <p>one</p>
 
-<pre>verb1
-verb2</pre>
+<pre class=\"ruby\"><span class=\"ruby-identifier\">verb1</span>
+<span class=\"ruby-identifier\">verb2</span>
+</pre>
 </li><li>
 <p>two</p>
 </li></ul>
@@ -594,16 +616,35 @@ verb2</pre>
   end
 
   def test_parseable_eh
-    assert @to.parseable?('def x() end'),      'def'
-    assert @to.parseable?('class C end'),      'class'
-    assert @to.parseable?('module M end'),     'module'
-    assert @to.parseable?('a # => blah'),      '=>'
-    assert @to.parseable?('x { |y| ... }'),    '{ |x|'
-    assert @to.parseable?('x do |y| ... end'), 'do |x|'
-    refute @to.parseable?('* 1'),              '* 1'
-    refute @to.parseable?('# only a comment'), '# only a comment'
-    refute @to.parseable?('<% require "foo" %>'),    'ERB'
-    refute @to.parseable?('class="foo"'),      'HTML class'
+    valid_syntax = [
+      'def x() end',
+      'def x; end',
+      'class C; end',
+      "module M end",
+      'a # => blah',
+      'x { |y| nil }',
+      'x do |y| nil end',
+      '# only a comment',
+      'require "foo"',
+      'cls="foo"'
+    ]
+    invalid_syntax = [
+      'def x end',
+      'class C < end',
+      'module M < C end',
+      'a=># blah',
+      'x { |y| ... }',
+      'x do |y| ... end',
+      '// only a comment',
+      '<% require "foo" %>',
+      'class="foo"'
+    ]
+    valid_syntax.each do |t|
+      assert @to.parseable?(t), "valid syntax considered invalid: #{t}"
+    end
+    invalid_syntax.each do |t|
+      refute @to.parseable?(t), "invalid syntax considered valid: #{t}"
+    end
   end
 
   def test_to_html
@@ -619,4 +660,3 @@ verb2</pre>
   end
 
 end
-

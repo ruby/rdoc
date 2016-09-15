@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require 'optparse'
 require 'pathname'
 
@@ -214,6 +215,16 @@ class RDoc::Options
   attr_accessor :line_numbers
 
   ##
+  # The output locale.
+
+  attr_accessor :locale
+
+  ##
+  # The directory where locale data live.
+
+  attr_accessor :locale_dir
+
+  ##
   # Name of the file, class or module to display in the initial index page (if
   # not specified the first file we encounter is used)
 
@@ -318,11 +329,14 @@ class RDoc::Options
   attr_accessor :webcvs
 
   ##
-  # Minimum visibility of a documented method. One of +:public+,
-  # +:protected+, +:private+. May be overridden on a per-method
-  # basis with the :doc: directive.
+  # Minimum visibility of a documented method. One of +:public+, +:protected+,
+  # +:private+ or +:nodoc+.
+  #
+  # The +:nodoc+ visibility ignores all directives related to visibility.  The
+  # other visibilities may be overridden on a per-method basis with the :doc:
+  # directive.
 
-  attr_accessor :visibility
+  attr_reader :visibility
 
   def initialize # :nodoc:
     init_ivars
@@ -340,6 +354,9 @@ class RDoc::Options
     @generators = RDoc::RDoc::GENERATORS
     @hyperlink_all = false
     @line_numbers = false
+    @locale = nil
+    @locale_name = nil
+    @locale_dir = 'locale'
     @main_page = nil
     @markup = 'rdoc'
     @coverage_report = false
@@ -362,29 +379,23 @@ class RDoc::Options
     @visibility = :protected
     @webcvs = nil
     @write_options = false
-
-    if Object.const_defined? :Encoding then
-      @encoding = Encoding::UTF_8
-      @charset = @encoding.name
-    else
-      @encoding = nil
-      @charset = 'UTF-8'
-    end
+    @encoding = Encoding::UTF_8
+    @charset = @encoding.name
   end
 
   def init_with map # :nodoc:
     init_ivars
 
     encoding = map['encoding']
-    @encoding = if Object.const_defined? :Encoding then
-                  encoding ? Encoding.find(encoding) : encoding
-                end
+    @encoding = encoding ? Encoding.find(encoding) : encoding
 
     @charset        = map['charset']
     @exclude        = map['exclude']
     @generator_name = map['generator_name']
     @hyperlink_all  = map['hyperlink_all']
     @line_numbers   = map['line_numbers']
+    @locale_name    = map['locale_name']
+    @locale_dir     = map['locale_dir']
     @main_page      = map['main_page']
     @markup         = map['markup']
     @op_dir         = map['op_dir']
@@ -409,6 +420,8 @@ class RDoc::Options
       @generator_name == other.generator_name and
       @hyperlink_all  == other.hyperlink_all  and
       @line_numbers   == other.line_numbers   and
+      @locale         == other.locale         and
+      @locale_dir     == other.locale_dir and
       @main_page      == other.main_page      and
       @markup         == other.markup         and
       @op_dir         == other.op_dir         and
@@ -489,6 +502,8 @@ class RDoc::Options
     @op_dir ||= 'doc'
 
     @rdoc_include << "." if @rdoc_include.empty?
+    root = @root.to_s
+    @rdoc_include << root unless @rdoc_include.include?(root)
 
     if @exclude.nil? or Regexp === @exclude then
       # done, #finish is being re-run
@@ -508,6 +523,13 @@ class RDoc::Options
     unless @template then
       @template     = @generator_name
       @template_dir = template_dir_for @template
+    end
+
+    if @locale_name
+      @locale = RDoc::I18n::Locale[@locale_name]
+      @locale.load(@locale_dir)
+    else
+      @locale = nil
     end
 
     self
@@ -659,18 +681,28 @@ Usage: #{opt.program_name} [options] [names...]
       opt.separator "Parsing options:"
       opt.separator nil
 
-      if Object.const_defined? :Encoding then
-        opt.on("--encoding=ENCODING", "-e", Encoding.list.map { |e| e.name },
-               "Specifies the output encoding.  All files",
-               "read will be converted to this encoding.",
-               "The default encoding is UTF-8.",
-               "--encoding is preferred over --charset") do |value|
-                 @encoding = Encoding.find value
-                 @charset = @encoding.name # may not be valid value
-               end
+      opt.on("--encoding=ENCODING", "-e", Encoding.list.map { |e| e.name },
+             "Specifies the output encoding.  All files",
+             "read will be converted to this encoding.",
+             "The default encoding is UTF-8.",
+             "--encoding is preferred over --charset") do |value|
+               @encoding = Encoding.find value
+               @charset = @encoding.name # may not be valid value
+             end
 
-        opt.separator nil
+      opt.separator nil
+
+      opt.on("--locale=NAME",
+             "Specifies the output locale.") do |value|
+        @locale_name = value
       end
+
+      opt.on("--locale-data-dir=DIR",
+             "Specifies the directory where locale data live.") do |value|
+        @locale_dir = value
+      end
+
+      opt.separator nil
 
       opt.on("--all", "-a",
              "Synonym for --visibility=private.") do |value|
@@ -719,17 +751,19 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--tab-width=WIDTH", "-w", OptionParser::DecimalInteger,
+      opt.on("--tab-width=WIDTH", "-w", Integer,
              "Set the width of tab characters.") do |value|
+        raise OptionParser::InvalidArgument,
+              "#{value} is an invalid tab width" if value <= 0
         @tab_width = value
       end
 
       opt.separator nil
 
-      opt.on("--visibility=VISIBILITY", "-V", RDoc::VISIBILITIES,
+      opt.on("--visibility=VISIBILITY", "-V", RDoc::VISIBILITIES + [:nodoc],
              "Minimum visibility to document a method.",
-             "One of 'public', 'protected' (the default)",
-             "or 'private'. Can be abbreviated.") do |value|
+             "One of 'public', 'protected' (the default),",
+             "'private' or 'nodoc' (show everything)") do |value|
         @visibility = value
       end
 
@@ -1009,8 +1043,7 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--help",
-             "Display this help") do
+      opt.on("--help", "-h", "Display this help") do
         RDoc::RDoc::GENERATORS.each_key do |generator|
           setup_generator generator
         end
@@ -1167,6 +1200,22 @@ Usage: #{opt.program_name} [options] [names...]
     end
   end
 
+  # Sets the minimum visibility of a documented method.
+  #
+  # Accepts +:public+, +:protected+, +:private+, +:nodoc+, or +:all+.
+  #
+  # When +:all+ is passed, visibility is set to +:private+, similarly to
+  # RDOCOPT="--all", see #visibility for more information.
+
+  def visibility= visibility
+    case visibility
+    when :all
+      @visibility = :private
+    else
+      @visibility = visibility
+    end
+  end
+
   ##
   # Displays a warning using Kernel#warn if we're being verbose
 
@@ -1182,11 +1231,10 @@ Usage: #{opt.program_name} [options] [names...]
     RDoc.load_yaml
 
     open '.rdoc_options', 'w' do |io|
-      io.set_encoding Encoding::UTF_8 if Object.const_defined? :Encoding
+      io.set_encoding Encoding::UTF_8
 
       YAML.dump self, io
     end
   end
 
 end
-

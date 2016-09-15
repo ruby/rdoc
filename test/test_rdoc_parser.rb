@@ -1,4 +1,5 @@
 # -*- coding: us-ascii -*-
+# frozen_string_literal: false
 
 require 'rdoc/test_case'
 
@@ -13,6 +14,19 @@ class TestRDocParser < RDoc::TestCase
     @fn = 'file.rb'
     @top_level = RDoc::TopLevel.new @fn
     @options = RDoc::Options.new
+  end
+
+  def test_class_binary_eh_ISO_2022_JP
+    iso_2022_jp = File.join Dir.tmpdir, "test_rdoc_parser_#{$$}.rd"
+
+    open iso_2022_jp, 'wb' do |io|
+      io.write "# coding: ISO-2022-JP\n"
+      io.write ":\e$B%3%^%s%I\e(B:\n"
+    end
+
+    refute @RP.binary? iso_2022_jp
+  ensure
+    File.unlink iso_2022_jp
   end
 
   def test_class_binary_eh_marshal
@@ -33,8 +47,6 @@ class TestRDocParser < RDoc::TestCase
   end
 
   def test_class_binary_large_japanese_rdoc
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
     capture_io do
       begin
         extenc, Encoding.default_external =
@@ -48,8 +60,6 @@ class TestRDocParser < RDoc::TestCase
   end
 
   def test_class_binary_japanese_rdoc
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
     file_name = File.expand_path '../test.ja.rdoc', __FILE__
     refute @RP.binary?(file_name)
   end
@@ -96,7 +106,7 @@ class TestRDocParser < RDoc::TestCase
   def test_class_for_forbidden
     skip 'chmod not supported' if Gem.win_platform?
 
-    Tempfile.open 'forbidden' do |io|
+    tf = Tempfile.open 'forbidden' do |io|
       begin
         File.chmod 0000, io.path
         forbidden = @store.add_file io.path
@@ -107,7 +117,9 @@ class TestRDocParser < RDoc::TestCase
       ensure
         File.chmod 0400, io.path
       end
+      io
     end
+    tf.close!
   end
 
   def test_class_for_modeline
@@ -292,6 +304,16 @@ class TestRDocParser < RDoc::TestCase
     assert_nil parser
   end
 
+  def test_class_use_markup_unknown
+    content = <<-CONTENT
+# :markup: RDoc
+    CONTENT
+
+    parser = @RP.use_markup content
+
+    assert_nil parser
+  end
+
   def test_initialize
     @RP.new @top_level, @fn, '', @options, nil
 
@@ -299,4 +321,3 @@ class TestRDocParser < RDoc::TestCase
   end
 
 end
-

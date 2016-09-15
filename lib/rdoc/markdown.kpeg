@@ -11,6 +11,16 @@
 # RDoc::Options@Saved+Options for instructions on setting up a `.doc_options`
 # file to store your project default.
 #
+# ## Usage
+#
+# Here is a brief example of using this parse to read a markdown file by hand.
+#
+#     data = File.read("README.md")
+#     formatter = RDoc::Markup::ToHtml.new(RDoc::Options.new, nil)
+#     html = RDoc::Markdown.parse(data).accept(formatter)
+#
+#     # do something with html
+#
 # ## Extensions
 #
 # The following markdown extensions are supported by the parser, but not all
@@ -123,7 +133,6 @@
 # ## Limitations
 #
 # * Link titles are not used
-# * Image links are not generated correctly
 # * Footnotes are collapsed into a single paragraph
 #
 # ## Author
@@ -165,16 +174,11 @@
 
 %% {
 
-  require 'rubygems'
   require 'rdoc'
   require 'rdoc/markup/to_joined_paragraph'
   require 'rdoc/markdown/entities'
 
-  if RUBY_VERSION > '1.9' then
-    require 'rdoc/markdown/literals_1_9'
-  else
-    require 'rdoc/markdown/literals_1_8'
-  end
+  require 'rdoc/markdown/literals'
 
   ##
   # Supported extensions
@@ -593,6 +597,10 @@ ListBlockLine = !@BlankLine
 # Parsers for different kinds of block-level HTML content.
 # This is repetitive due to constraints of PEG grammar.
 
+HtmlOpenAnchor = "<" Spnl ("a" | "A") Spnl HtmlAttribute* ">"
+HtmlCloseAnchor = "<" Spnl "/" ("a" | "A") Spnl ">"
+HtmlAnchor = HtmlOpenAnchor (HtmlAnchor | !HtmlCloseAnchor .)* HtmlCloseAnchor
+
 HtmlBlockOpenAddress = "<" Spnl ("address" | "ADDRESS") Spnl HtmlAttribute* ">"
 HtmlBlockCloseAddress = "<" Spnl "/" ("address" | "ADDRESS") Spnl ">"
 HtmlBlockAddress = HtmlBlockOpenAddress (HtmlBlockAddress | !HtmlBlockCloseAddress .)* HtmlBlockCloseAddress
@@ -726,7 +734,8 @@ HtmlBlockCloseScript = "<" Spnl "/" ("script" | "SCRIPT") Spnl ">"
 HtmlBlockScript = HtmlBlockOpenScript (!HtmlBlockCloseScript .)* HtmlBlockCloseScript
 
 
-HtmlBlockInTags = HtmlBlockAddress
+HtmlBlockInTags = HtmlAnchor
+                | HtmlBlockAddress
                 | HtmlBlockBlockquote
                 | HtmlBlockCenter
                 | HtmlBlockDir
@@ -948,9 +957,9 @@ StrongUl =  TwoUlOpen
             TwoUlClose:l { a << l }
             { strong a.join }
 
-# TODO image link support
+# TODO alt text support
 Image = "!" ( ExplicitLink | ReferenceLink ):a
-        { a }
+        { "rdoc-image:#{a[/\[(.*)\]/, 1]}" }
 
 Link =  ExplicitLink | ReferenceLink | AutoLink
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 ##
 # Subclass of the RDoc::Markup::ToHtml class that supports looking up method
 # names, classes, etc to create links.  RDoc::CrossReference is used to
@@ -145,6 +146,9 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
       if path =~ /#/ then
         path << "-label-#{label}"
+      elsif ref.sections and
+            ref.sections.any? { |section| label == section.title } then
+        path << "##{label}"
       else
         path << "#label-#{label}"
       end if label

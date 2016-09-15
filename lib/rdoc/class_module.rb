@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 ##
 # ClassModule is the base class for objects representing either a class or a
 # module.
@@ -169,13 +170,25 @@ class RDoc::ClassModule < RDoc::Context
     includes.map { |i| i.module }.reverse
   end
 
+  def aref_prefix # :nodoc:
+    raise NotImplementedError, "missing aref_prefix for #{self.class}"
+  end
+
+  ##
+  # HTML fragment reference for this module or class.  See
+  # RDoc::NormalClass#aref and RDoc::NormalModule#aref
+
+  def aref
+    "#{aref_prefix}-#{full_name}"
+  end
+
   ##
   # Ancestors of this class or module only
 
   alias direct_ancestors ancestors
 
   ##
-  # Clears the comment. Used by the ruby parser.
+  # Clears the comment. Used by the Ruby parser.
 
   def clear_comment
     @comment = ''

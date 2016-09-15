@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require 'time'
 
 ##
@@ -101,9 +102,11 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
   # Groups +entries+ by date.
 
   def group_entries entries
+    @time_cache ||= {}
     entries.group_by do |title, _|
       begin
-        Time.parse(title).strftime '%Y-%m-%d'
+        time = @time_cache[title]
+        (time || Time.parse(title)).strftime '%Y-%m-%d'
       rescue NoMethodError, ArgumentError
         time, = title.split '  ', 2
         Time.parse(time).strftime '%Y-%m-%d'
@@ -127,6 +130,7 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
   #        'README.EXT.ja:  ditto']]
 
   def parse_entries
+    @time_cache ||= {}
     entries = []
     entry_name = nil
     entry_body = []
@@ -142,13 +146,18 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
 
         begin
           time = Time.parse entry_name
+          @time_cache[entry_name] = time
           # HACK Ruby 1.8 does not raise ArgumentError for Time.parse "Other"
           entry_name = nil unless entry_name =~ /#{time.year}/
         rescue NoMethodError
-          time, = entry_name.split '  ', 2
-          time = Time.parse time
+          # HACK Ruby 2.1.2 and earlier raises NoMethodError if time part is absent
+          entry_name.split '  ', 2
         rescue ArgumentError
-          entry_name = nil
+          if /out of range/ =~ $!.message
+            Time.parse(entry_name.split('  ', 2)[0]) rescue entry_name = nil
+          else
+            entry_name = nil
+          end
         end
 
         entry_body = []
@@ -180,6 +189,7 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
   # Converts the ChangeLog into an RDoc::Markup::Document
 
   def scan
+    @time_cache = {}
     entries = parse_entries
     grouped_entries = group_entries entries
 

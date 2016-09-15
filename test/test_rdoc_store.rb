@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require File.expand_path '../xref_test_case', __FILE__
 
 class TestRDocStore < XrefTestCase
@@ -9,6 +10,7 @@ class TestRDocStore < XrefTestCase
 
     @tmpdir = File.join Dir.tmpdir, "test_rdoc_ri_store_#{$$}"
     @s = RDoc::RI::Store.new @tmpdir
+    @s.rdoc = @rdoc
 
     @top_level = @s.add_file 'file.rb'
 
@@ -230,6 +232,16 @@ class TestRDocStore < XrefTestCase
     refute_empty a1.aliases
   end
 
+  def test_complete_nodoc
+    c_nodoc = @top_level.add_class RDoc::NormalClass, 'Nodoc'
+    c_nodoc.record_location @top_level
+    c_nodoc.document_self = nil
+
+    @s.complete :nodoc
+
+    assert_includes @s.classes_hash.keys, 'Nodoc'
+  end
+
   def test_find_c_enclosure
     assert_nil @s.find_c_enclosure 'cC1'
 
@@ -417,8 +429,6 @@ class TestRDocStore < XrefTestCase
   end
 
   def test_load_cache_encoding_differs
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
     cache = {
       :c_class_variables           => {},
       :c_singleton_class_variables => {},
@@ -979,4 +989,3 @@ class TestRDocStore < XrefTestCase
   end
 
 end
-

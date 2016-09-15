@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 ##
 # A heading with a level (1-6) and text
 
@@ -45,6 +46,19 @@ RDoc::Markup::Heading =
 
   def aref
     "label-#{self.class.to_label.convert text.dup}"
+  end
+
+  ##
+  # Creates a fully-qualified label which will include the label from
+  # +context+.  This helps keep ids unique in HTML.
+
+  def label context = nil
+    label = aref
+
+    label = [context.aref, label].compact.join '-' if
+      context and context.respond_to? :aref
+
+    label
   end
 
   ##

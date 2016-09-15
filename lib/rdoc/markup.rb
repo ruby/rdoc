@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 ##
 # RDoc::Markup parses plain text documents and attempts to decompose them into
 # their constituent parts.  Some of these parts are high-level: paragraphs,
@@ -84,7 +85,7 @@
 #
 #   markup.add_special(/\b([A-Z][a-z]+[A-Z]\w+)/, :WIKIWORD)
 #
-#   wh = WikiHtml.new markup
+#   wh = WikiHtml.new RDoc::Options.new, markup
 #   wh.add_tag(:STRIKE, "<strike>", "</strike>")
 #
 #   puts "<body>#{wh.convert ARGF.read}</body>"
@@ -127,7 +128,7 @@
 # left, so the amount of indentation of verbatim text is unimportant.
 #
 # For HTML output RDoc makes a small effort to determine if a verbatim section
-# contains ruby source code.  If so, the verbatim block will be marked up as
+# contains Ruby source code.  If so, the verbatim block will be marked up as
 # HTML.  Triggers include "def", "class", "module", "require", the "hash
 # rocket"# (=>) or a block call with a parameter.
 #
@@ -163,7 +164,7 @@
 #
 # The header's id would be:
 #
-#   <h1 id="method-i-do_fun_things-label-Example">Example</h3>
+#   <h1 id="method-i-do_fun_things-label-Example">Example</h1>
 #
 # The label can be linked-to using <tt>SomeClass@Headers</tt>.  See
 # {Links}[RDoc::Markup@Links] for further details.
@@ -347,11 +348,17 @@
 # with <tt>+</tt> like <tt>RDoc::Markup@Escaping+Text+Markup</tt>.
 # Punctuation and other special characters must be escaped like CGI.escape.
 #
+# The <tt>@</tt> can also be used to link to sections.  If a section and a
+# heading share the same name the section is preferred for the link.
+#
 # Links can also be of the form <tt>label[url]</tt>, in which case +label+ is
 # used in the displayed text, and +url+ is used as the target.  If +label+
 # contains multiple words, put it in braces: <tt>{multi word label}[url]</tt>.
 # The +url+ may be an +http:+-type link or a cross-reference to a class,
 # module or method with a label.
+#
+# Links with the <code>rdoc-image:</code> scheme will create an image tag for
+# HTML output.  Only fully-qualified URLs are supported.
 #
 # Links with the <tt>rdoc-ref:</tt> scheme will link to the referenced class,
 # module, method, file, etc.  If the referenced item is does not exist
@@ -674,7 +681,7 @@
 #
 # [+:markup:+ _type_]
 #   Overrides the default markup type for this comment with the specified
-#   markup type.  For ruby files, if the first comment contains this directive
+#   markup type.  For Ruby files, if the first comment contains this directive
 #   it is applied automatically to all comments in the file.
 #
 #   Unless you are converting between markup formats you should use a
@@ -704,7 +711,7 @@
 #     def some_method
 #       # ...
 #
-#   See Markup@DEVELOPERS for instructions on adding a new markup format.
+#   See Markup@CONTRIBUTING for instructions on adding a new markup format.
 #
 # [+:include:+ _filename_]
 #   Include the contents of the named file at this point. This directive

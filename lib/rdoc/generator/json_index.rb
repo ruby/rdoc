@@ -1,4 +1,9 @@
+# frozen_string_literal: false
 require 'json'
+begin
+  require 'zlib'
+rescue LoadError
+end
 
 ##
 # The JsonIndex generator is designed to complement an HTML generator and
@@ -137,7 +142,7 @@ class RDoc::Generator::JsonIndex
     FileUtils.mkdir_p index_file.dirname, :verbose => $DEBUG_RDOC
 
     index_file.open 'w', 0644 do |io|
-      io.set_encoding Encoding::UTF_8 if Object.const_defined? :Encoding
+      io.set_encoding Encoding::UTF_8
       io.write 'var search_data = '
 
       JSON.dump data, io, 0
@@ -148,6 +153,51 @@ class RDoc::Generator::JsonIndex
         dest = File.join out_dir, source
 
         FileUtils.install source, dest, :mode => 0644, :verbose => $DEBUG_RDOC
+      end
+    end
+  end
+
+  ##
+  # Compress the search_index.js file using gzip
+
+  def generate_gzipped
+    return unless defined?(Zlib)
+
+    debug_msg "Compressing generated JSON index"
+    out_dir = @base_dir + @options.op_dir
+
+    search_index_file = out_dir + SEARCH_INDEX_FILE
+    outfile           = out_dir + "#{search_index_file}.gz"
+
+    debug_msg "Reading the JSON index file from %s" % search_index_file
+    search_index = search_index_file.read
+
+    debug_msg "Writing gzipped search index to %s" % outfile
+
+    Zlib::GzipWriter.open(outfile) do |gz|
+      gz.mtime = File.mtime(search_index_file)
+      gz.orig_name = search_index_file.basename.to_s
+      gz.write search_index
+      gz.close
+    end
+
+    # GZip the rest of the js files
+    Dir.chdir @template_dir do
+      Dir['**/*.js'].each do |source|
+        dest = out_dir + source
+        outfile = out_dir + "#{dest}.gz"
+
+        debug_msg "Reading the original js file from %s" % dest
+        data = dest.read
+
+        debug_msg "Writing gzipped file to %s" % outfile
+
+        Zlib::GzipWriter.open(outfile) do |gz|
+          gz.mtime = File.mtime(dest)
+          gz.orig_name = dest.basename.to_s
+          gz.write data
+          gz.close
+        end
       end
     end
   end
@@ -245,4 +295,3 @@ class RDoc::Generator::JsonIndex
   end
 
 end
-

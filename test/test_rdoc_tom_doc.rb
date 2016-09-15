@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require 'rdoc/test_case'
 
 class TestRDocTomDoc < RDoc::TestCase
@@ -128,6 +129,17 @@ here - something
     assert_equal expected, @TD.parse(text)
   end
 
+  def test_parse_multiline_paragraph
+    text = "Public: Do some stuff\n"
+    text << "On a new line\n"
+
+    expected =
+      doc(
+        para('Do some stuff', ' ', 'On a new line'))
+
+    assert_equal expected, @TD.parse(text)
+  end
+
   def test_parse_arguments
     text = <<-TEXT
 Create new Arg object.
@@ -181,7 +193,7 @@ foo - A comment goes here
         blank_line,
         list(:NOTE,
           item(%w[foo],
-            para('A comment goes here', 'and is more than one line'))))
+            para('A comment goes here', ' ', 'and is more than one line'))))
 
     assert_equal expected, @TD.parse(text)
   end
@@ -272,13 +284,19 @@ Signature
 Do some stuff
 
 Returns a thing
+
+Returns another thing
     TEXT
 
     expected =
-      @RM::Document.new(
-        @RM::Paragraph.new('Do some stuff'),
-        @RM::BlankLine.new,
-        @RM::Paragraph.new('Returns a thing'))
+      doc(
+        para('Do some stuff'),
+        blank_line,
+        head(3, 'Returns'),
+        blank_line,
+        para('Returns a thing'),
+        blank_line,
+        para('Returns another thing'))
 
     assert_equal expected, @TD.parse(text)
   end
@@ -292,10 +310,12 @@ Returns a thing
     TEXT
 
     expected =
-      @RM::Document.new(
-        @RM::Paragraph.new('Do some stuff'),
-        @RM::BlankLine.new,
-        @RM::Paragraph.new('Returns a thing', 'that is multiline'))
+      doc(
+        para('Do some stuff'),
+        blank_line,
+        head(3, 'Returns'),
+        blank_line,
+        para('Returns a thing', ' ', 'that is multiline'))
 
     assert_equal expected, @TD.parse(text)
   end
@@ -326,6 +346,22 @@ Signature
     expected = [
       [:TEXT,    "Do some stuff",  0, 0],
       [:NEWLINE, "\n",            13, 0],
+    ]
+
+    assert_equal expected, @td.tokens
+  end
+
+  def test_tokenize_multiline_paragraph
+    text = "Public: Do some stuff\n"
+    text << "On a new line\n"
+
+    @td.tokenize text
+
+    expected = [
+      [:TEXT,     "Do some stuff",   0, 0],
+      [:NEWLINE,  "\n",             13, 0],
+      [:TEXT,     "On a new line",   0, 1],
+      [:NEWLINE,  "\n",             13, 1]
     ]
 
     assert_equal expected, @td.tokens

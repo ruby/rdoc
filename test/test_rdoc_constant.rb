@@ -1,3 +1,4 @@
+# frozen_string_literal: false
 require File.expand_path '../xref_test_case', __FILE__
 
 class TestRDocConstant < XrefTestCase
@@ -6,6 +7,36 @@ class TestRDocConstant < XrefTestCase
     super
 
     @const = @c1.constants.first
+  end
+
+  def test_documented_eh
+    top_level = @store.add_file 'file.rb'
+
+    const = RDoc::Constant.new 'CONST', nil, nil
+    top_level.add_constant const
+
+    refute const.documented?
+
+    const.comment = comment 'comment'
+
+    assert const.documented?
+  end
+
+  def test_documented_eh_alias
+    top_level = @store.add_file 'file.rb'
+
+    const = RDoc::Constant.new 'CONST', nil, nil
+    top_level.add_constant const
+
+    refute const.documented?
+
+    const.is_alias_for = 'C1'
+
+    refute const.documented?
+
+    @c1.add_comment comment('comment'), @top_level
+
+    assert const.documented?
   end
 
   def test_full_name

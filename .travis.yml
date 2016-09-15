@@ -1,16 +1,23 @@
 ---
-after_script:
-- rake travis:after -t
-before_script:
-- gem install hoe-travis --no-rdoc --no-ri
-- rake travis:before -t
+before_install:
+  - gem install bundler --no-document
 language: ruby
 notifications:
   email:
-  - drbrain@segment7.net
+  - mail@zzak.io
 rvm:
-- 1.8.7
-- 1.9.2
-- 1.9.3
-- 2.0.0
-script: rake travis
+  - 1.9.3
+  - 2.0.0
+  - 2.1.10
+  - 2.2.5
+  - 2.3.1
+  - ruby-head
+  - rbx-2
+  - jruby-1.7.25
+  - jruby-9.1.0.0
+script: rake
+matrix:
+  allow_failures:
+    - rvm: jruby-1.7.25
+    - rvm: jruby-9.1.0.0
+    - rvm: rbx-2

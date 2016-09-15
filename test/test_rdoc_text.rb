@@ -1,4 +1,5 @@
 # coding: utf-8
+# frozen_string_literal: false
 
 require 'rdoc/test_case'
 
@@ -15,8 +16,6 @@ class TestRDocText < RDoc::TestCase
   end
 
   def test_self_encode_fallback
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
     assert_equal '…',
                  RDoc::Text::encode_fallback('…', Encoding::UTF_8,    '...')
     assert_equal '...',
@@ -56,11 +55,12 @@ class TestRDocText < RDoc::TestCase
 
     assert_equal('.               .',
                  expand_tabs(".\t\t."), 'dot tab tab dot')
+
+    assert_equal('a       a',
+                 Timeout.timeout(1) {expand_tabs("\ra\ta")}, "carriage return")
   end
 
   def test_expand_tabs_encoding
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
     inn = "hello\ns\tdave"
     inn.force_encoding Encoding::BINARY
 
@@ -89,8 +89,6 @@ The comments associated with
   end
 
   def test_flush_left_encoding
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
     text = <<-TEXT
 
   we don't worry too much.
@@ -299,8 +297,6 @@ paragraph will be cut off …
   end
 
   def test_strip_hashes_encoding
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
     text = <<-TEXT
 ##
 # we don't worry too much.
@@ -334,8 +330,6 @@ paragraph will be cut off …
   end
 
   def test_strip_newlines_encoding
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
     assert_equal Encoding::UTF_8, ''.encoding, 'Encoding sanity check'
 
     text = " \n"
@@ -385,8 +379,6 @@ paragraph will be cut off …
   end
 
   def test_strip_stars_encoding
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
     text = <<-TEXT
 /*
  * * we don't worry too much.
@@ -411,8 +403,6 @@ paragraph will be cut off …
   end
 
   def test_strip_stars_encoding2
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
     text = <<-TEXT
 /*
  * * we don't worry too much.
@@ -507,8 +497,6 @@ The comments associated with
   end
 
   def test_to_html_encoding
-    skip "Encoding not implemented" unless Object.const_defined? :Encoding
-
     s = '...(c)'.encode Encoding::Shift_JIS
 
     html = to_html s
@@ -551,4 +539,3 @@ The comments associated with
   end
 
 end
-

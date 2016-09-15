@@ -1,4 +1,5 @@
 # coding: US-ASCII
+# frozen_string_literal: false
 
 #--
 #   irb/ruby-lex.rb - ruby lexcal analyzer
@@ -42,8 +43,8 @@ class RDoc::RubyLex
   include RDoc::RubyToken
   include IRB
 
-  attr_reader :continue
-  attr_reader :lex_state
+  attr_accessor :continue
+  attr_accessor :lex_state
   attr_reader :reader
 
   class << self
@@ -101,13 +102,13 @@ class RDoc::RubyLex
     @exp_line_no = @line_no = 1
     @here_readed = []
     @readed = []
+    @current_readed = @readed
     @rests = []
     @seek = 0
 
-    @here_header = false
     @indent = 0
     @indent_stack = []
-    @lex_state = EXPR_BEG
+    @lex_state = :EXPR_BEG
     @space_seen = false
 
     @continue = false
@@ -160,7 +161,7 @@ class RDoc::RubyLex
     end
 
     readed = @readed.join("")
-    @readed = []
+    @readed.clear
     readed
   end
 
@@ -170,13 +171,9 @@ class RDoc::RubyLex
       @rests.push nil unless buf_input
     end
     c = @rests.shift
-    if @here_header
-      @here_readed.push c
-    else
-      @readed.push c
-    end
+    @current_readed.push c
     @seek += 1
-    if c == "\n"
+    if c == "\n".freeze
       @line_no += 1
       @char_no = 0
     else
@@ -280,9 +277,9 @@ class RDoc::RubyLex
     @quoted = nil
     @indent = 0
     @indent_stack = []
-    @lex_state = EXPR_BEG
+    @lex_state = :EXPR_BEG
     @space_seen = false
-    @here_header = false
+    @current_readed = @readed
 
     @continue = false
     prompt
@@ -434,7 +431,7 @@ class RDoc::RubyLex
       |op, io|
       @ltype = "="
       res = ''
-      nil until (ch = getc) == "\n"
+      nil until getc == "\n"
 
       until ( peek_equal?("=end") && peek(4) =~ /\s/ ) do
         (ch = getc)
@@ -450,19 +447,19 @@ class RDoc::RubyLex
     @OP.def_rule("\n") do |op, io|
       print "\\n\n" if RDoc::RubyLex.debug?
       case @lex_state
-      when EXPR_BEG, EXPR_FNAME, EXPR_DOT
+      when :EXPR_BEG, :EXPR_FNAME, :EXPR_DOT
         @continue = true
       else
         @continue = false
-        @lex_state = EXPR_BEG
+        @lex_state = :EXPR_BEG
         until (@indent_stack.empty? ||
                [TkLPAREN, TkLBRACK, TkLBRACE,
                  TkfLPAREN, TkfLBRACK, TkfLBRACE].include?(@indent_stack.last))
           @indent_stack.pop
         end
       end
-      @here_header = false
-      @here_readed = []
+      @current_readed = @readed
+      @here_readed.clear
       Token(TkNL)
     end
 
@@ -473,25 +470,25 @@ class RDoc::RubyLex
                   ">", ">=", ">>") do
       |op, io|
       case @lex_state
-      when EXPR_FNAME, EXPR_DOT
-        @lex_state = EXPR_ARG
+      when :EXPR_FNAME, :EXPR_DOT
+        @lex_state = :EXPR_ARG
       else
-        @lex_state = EXPR_BEG
+        @lex_state = :EXPR_BEG
       end
       Token(op)
     end
 
     @OP.def_rules("!", "!=", "!~") do
       |op, io|
-      @lex_state = EXPR_BEG
+      @lex_state = :EXPR_BEG
       Token(op)
     end
 
     @OP.def_rules("<<") do
       |op, io|
       tk = nil
-      if @lex_state != EXPR_END && @lex_state != EXPR_CLASS &&
-         (@lex_state != EXPR_ARG || @space_seen)
+      if @lex_state != :EXPR_END && @lex_state != :EXPR_CLASS &&
+         (@lex_state != :EXPR_ARG || @space_seen)
         c = peek(0)
         if /\S/ =~ c && (/["'`]/ =~ c || /\w/ =~ c || c == "-")
           tk = identify_here_document
@@ -500,10 +497,10 @@ class RDoc::RubyLex
       unless tk
         tk = Token(op)
         case @lex_state
-        when EXPR_FNAME, EXPR_DOT
-          @lex_state = EXPR_ARG
+        when :EXPR_FNAME, :EXPR_DOT
+          @lex_state = :EXPR_ARG
         else
-          @lex_state = EXPR_BEG
+          @lex_state = :EXPR_BEG
         end
       end
       tk
@@ -516,8 +513,8 @@ class RDoc::RubyLex
 
     @OP.def_rules("`") do
       |op, io|
-      if @lex_state == EXPR_FNAME
-        @lex_state = EXPR_END
+      if @lex_state == :EXPR_FNAME
+        @lex_state = :EXPR_END
         Token(op)
       else
         identify_string(op)
@@ -526,17 +523,17 @@ class RDoc::RubyLex
 
     @OP.def_rules('?') do
       |op, io|
-      if @lex_state == EXPR_END
-        @lex_state = EXPR_BEG
+      if @lex_state == :EXPR_END
+        @lex_state = :EXPR_BEG
         Token(TkQUESTION)
       else
         ch = getc
-        if @lex_state == EXPR_ARG && ch =~ /\s/
+        if @lex_state == :EXPR_ARG && ch =~ /\s/
           ungetc
-          @lex_state = EXPR_BEG;
+          @lex_state = :EXPR_BEG;
           Token(TkQUESTION)
         else
-          @lex_state = EXPR_END
+          @lex_state = :EXPR_END
           Token(TkCHAR, "?#{ch}")
         end
       end
@@ -544,43 +541,43 @@ class RDoc::RubyLex
 
     @OP.def_rules("&", "&&", "|", "||") do
       |op, io|
-      @lex_state = EXPR_BEG
+      @lex_state = :EXPR_BEG
       Token(op)
     end
 
     @OP.def_rules("+=", "-=", "*=", "**=",
                   "&=", "|=", "^=", "<<=", ">>=", "||=", "&&=") do
       |op, io|
-      @lex_state = EXPR_BEG
+      @lex_state = :EXPR_BEG
       op =~ /^(.*)=$/
       Token(TkOPASGN, $1)
     end
 
-    @OP.def_rule("+@", proc{|op, io| @lex_state == EXPR_FNAME}) do
+    @OP.def_rule("+@", proc{|op, io| @lex_state == :EXPR_FNAME}) do
       |op, io|
-      @lex_state = EXPR_ARG
+      @lex_state = :EXPR_ARG
       Token(op)
     end
 
-    @OP.def_rule("-@", proc{|op, io| @lex_state == EXPR_FNAME}) do
+    @OP.def_rule("-@", proc{|op, io| @lex_state == :EXPR_FNAME}) do
       |op, io|
-      @lex_state = EXPR_ARG
+      @lex_state = :EXPR_ARG
       Token(op)
     end
 
     @OP.def_rules("+", "-") do
       |op, io|
       catch(:RET) do
-        if @lex_state == EXPR_ARG
+        if @lex_state == :EXPR_ARG
           if @space_seen and peek(0) =~ /[0-9]/
             throw :RET, identify_number(op)
           else
-            @lex_state = EXPR_BEG
+            @lex_state = :EXPR_BEG
           end
-        elsif @lex_state != EXPR_END and peek(0) =~ /[0-9]/
+        elsif @lex_state != :EXPR_END and peek(0) =~ /[0-9]/
           throw :RET, identify_number(op)
         else
-          @lex_state = EXPR_BEG
+          @lex_state = :EXPR_BEG
         end
         Token(op)
       end
@@ -588,20 +585,20 @@ class RDoc::RubyLex
 
     @OP.def_rule(".") do
       |op, io|
-      @lex_state = EXPR_BEG
+      @lex_state = :EXPR_BEG
       if peek(0) =~ /[0-9]/
         ungetc
         identify_number
       else
         # for "obj.if" etc.
-        @lex_state = EXPR_DOT
+        @lex_state = :EXPR_DOT
         Token(TkDOT)
       end
     end
 
     @OP.def_rules("..", "...") do
       |op, io|
-      @lex_state = EXPR_BEG
+      @lex_state = :EXPR_BEG
       Token(op)
     end
 
@@ -611,7 +608,7 @@ class RDoc::RubyLex
   def lex_int2
     @OP.def_rules("]", "}", ")") do
       |op, io|
-      @lex_state = EXPR_END
+      @lex_state = :EXPR_END
       @indent -= 1
       @indent_stack.pop
       Token(op)
@@ -619,11 +616,11 @@ class RDoc::RubyLex
 
     @OP.def_rule(":") do
       |op, io|
-      if @lex_state == EXPR_END || peek(0) =~ /\s/
-        @lex_state = EXPR_BEG
+      if @lex_state == :EXPR_END || peek(0) =~ /\s/
+        @lex_state = :EXPR_BEG
         Token(TkCOLON)
       else
-        @lex_state = EXPR_FNAME;
+        @lex_state = :EXPR_FNAME;
         Token(TkSYMBEG)
       end
     end
@@ -631,51 +628,51 @@ class RDoc::RubyLex
     @OP.def_rule("::") do
       |op, io|
       #      p @lex_state.id2name, @space_seen
-      if @lex_state == EXPR_BEG or @lex_state == EXPR_ARG && @space_seen
-        @lex_state = EXPR_BEG
+      if @lex_state == :EXPR_BEG or @lex_state == :EXPR_ARG && @space_seen
+        @lex_state = :EXPR_BEG
         Token(TkCOLON3)
       else
-        @lex_state = EXPR_DOT
+        @lex_state = :EXPR_DOT
         Token(TkCOLON2)
       end
     end
 
     @OP.def_rule("/") do
       |op, io|
-      if @lex_state == EXPR_BEG || @lex_state == EXPR_MID
+      if @lex_state == :EXPR_BEG || @lex_state == :EXPR_MID
         identify_string(op)
       elsif peek(0) == '='
         getc
-        @lex_state = EXPR_BEG
+        @lex_state = :EXPR_BEG
         Token(TkOPASGN, "/") #/)
-      elsif @lex_state == EXPR_ARG and @space_seen and peek(0) !~ /\s/
+      elsif @lex_state == :EXPR_ARG and @space_seen and peek(0) !~ /\s/
         identify_string(op)
       else
-        @lex_state = EXPR_BEG
+        @lex_state = :EXPR_BEG
         Token("/") #/)
       end
     end
 
     @OP.def_rules("^") do
       |op, io|
-      @lex_state = EXPR_BEG
+      @lex_state = :EXPR_BEG
       Token("^")
     end
 
     #       @OP.def_rules("^=") do
-    # 	@lex_state = EXPR_BEG
+    # 	@lex_state = :EXPR_BEG
     # 	Token(OP_ASGN, :^)
     #       end
 
     @OP.def_rules(",") do
       |op, io|
-      @lex_state = EXPR_BEG
+      @lex_state = :EXPR_BEG
       Token(op)
     end
 
     @OP.def_rules(";") do
       |op, io|
-      @lex_state = EXPR_BEG
+      @lex_state = :EXPR_BEG
       until (@indent_stack.empty? ||
              [TkLPAREN, TkLBRACK, TkLBRACE,
                TkfLPAREN, TkfLBRACK, TkfLBRACE].include?(@indent_stack.last))
@@ -686,56 +683,56 @@ class RDoc::RubyLex
 
     @OP.def_rule("~") do
       |op, io|
-      @lex_state = EXPR_BEG
+      @lex_state = :EXPR_BEG
       Token("~")
     end
 
-    @OP.def_rule("~@", proc{|op, io| @lex_state == EXPR_FNAME}) do
+    @OP.def_rule("~@", proc{|op, io| @lex_state == :EXPR_FNAME}) do
       |op, io|
-      @lex_state = EXPR_BEG
+      @lex_state = :EXPR_BEG
       Token("~")
     end
 
     @OP.def_rule("(") do
       |op, io|
       @indent += 1
-      if @lex_state == EXPR_BEG || @lex_state == EXPR_MID
-        @lex_state = EXPR_BEG
+      if @lex_state == :EXPR_BEG || @lex_state == :EXPR_MID
+        @lex_state = :EXPR_BEG
         tk_c = TkfLPAREN
       else
-        @lex_state = EXPR_BEG
+        @lex_state = :EXPR_BEG
         tk_c = TkLPAREN
       end
       @indent_stack.push tk_c
       Token tk_c
     end
 
-    @OP.def_rule("[]", proc{|op, io| @lex_state == EXPR_FNAME}) do
+    @OP.def_rule("[]", proc{|op, io| @lex_state == :EXPR_FNAME}) do
       |op, io|
-      @lex_state = EXPR_ARG
+      @lex_state = :EXPR_ARG
       Token("[]")
     end
 
-    @OP.def_rule("[]=", proc{|op, io| @lex_state == EXPR_FNAME}) do
+    @OP.def_rule("[]=", proc{|op, io| @lex_state == :EXPR_FNAME}) do
       |op, io|
-      @lex_state = EXPR_ARG
+      @lex_state = :EXPR_ARG
       Token("[]=")
     end
 
     @OP.def_rule("[") do
       |op, io|
       @indent += 1
-      if @lex_state == EXPR_FNAME
+      if @lex_state == :EXPR_FNAME
         tk_c = TkfLBRACK
       else
-        if @lex_state == EXPR_BEG || @lex_state == EXPR_MID
+        if @lex_state == :EXPR_BEG || @lex_state == :EXPR_MID
           tk_c = TkLBRACK
-        elsif @lex_state == EXPR_ARG && @space_seen
+        elsif @lex_state == :EXPR_ARG && @space_seen
           tk_c = TkLBRACK
         else
           tk_c = TkfLBRACK
         end
-        @lex_state = EXPR_BEG
+        @lex_state = :EXPR_BEG
       end
       @indent_stack.push tk_c
       Token(tk_c)
@@ -744,12 +741,12 @@ class RDoc::RubyLex
     @OP.def_rule("{") do
       |op, io|
       @indent += 1
-      if @lex_state != EXPR_END && @lex_state != EXPR_ARG
+      if @lex_state != :EXPR_END && @lex_state != :EXPR_ARG
         tk_c = TkLBRACE
       else
         tk_c = TkfLBRACE
       end
-      @lex_state = EXPR_BEG
+      @lex_state = :EXPR_BEG
       @indent_stack.push tk_c
       Token(tk_c)
     end
@@ -768,15 +765,15 @@ class RDoc::RubyLex
 
     @OP.def_rule('%') do
       |op, io|
-      if @lex_state == EXPR_BEG || @lex_state == EXPR_MID
+      if @lex_state == :EXPR_BEG || @lex_state == :EXPR_MID
         identify_quotation
       elsif peek(0) == '='
         getc
         Token(TkOPASGN, :%)
-      elsif @lex_state == EXPR_ARG and @space_seen and peek(0) !~ /\s/
+      elsif @lex_state == :EXPR_ARG and @space_seen and peek(0) !~ /\s/
         identify_quotation
       else
-        @lex_state = EXPR_BEG
+        @lex_state = :EXPR_BEG
         Token("%") #))
       end
     end
@@ -799,15 +796,15 @@ class RDoc::RubyLex
     #       @OP.def_rule("def", proc{|op, io| /\s/ =~ io.peek(0)}) do
     # 	|op, io|
     # 	@indent += 1
-    # 	@lex_state = EXPR_FNAME
-    # #	@lex_state = EXPR_END
+    # 	@lex_state = :EXPR_FNAME
+    # #	@lex_state = :EXPR_END
     # #	until @rests[0] == "\n" or @rests[0] == ";"
     # #	  rests.shift
     # #	end
     #       end
 
     @OP.def_rule("_") do
-      if peek_match?(/_END__/) and @lex_state == EXPR_BEG then
+      if peek_match?(/_END__/) and @lex_state == :EXPR_BEG then
         6.times { getc }
         Token(TkEND_OF_SCRIPT, '__END__')
       else
@@ -832,7 +829,7 @@ class RDoc::RubyLex
   end
 
   def identify_gvar
-    @lex_state = EXPR_END
+    @lex_state = :EXPR_END
 
     case ch = getc
     when /[~_*$?!@\/\\;,=:<>".]/   #"
@@ -888,32 +885,33 @@ class RDoc::RubyLex
     when /^\$/
       return Token(TkGVAR, token)
     when /^\@\@/
-      @lex_state = EXPR_END
+      @lex_state = :EXPR_END
       # p Token(TkCVAR, token)
       return Token(TkCVAR, token)
     when /^\@/
-      @lex_state = EXPR_END
+      @lex_state = :EXPR_END
       return Token(TkIVAR, token)
     end
 
-    if @lex_state != EXPR_DOT
+    if @lex_state != :EXPR_DOT
       print token, "\n" if RDoc::RubyLex.debug?
 
       token_c, *trans = TkReading2Token[token]
       if token_c
         # reserved word?
 
-        if (@lex_state != EXPR_BEG &&
-            @lex_state != EXPR_FNAME &&
+        if (@lex_state != :EXPR_BEG &&
+            @lex_state != :EXPR_FNAME &&
             trans[1])
           # modifiers
           token_c = TkSymbol2Token[trans[1]]
           @lex_state = trans[0]
         else
-          if @lex_state != EXPR_FNAME
+          if @lex_state != :EXPR_FNAME
             if ENINDENT_CLAUSE.include?(token)
+              valid = peek(0) != ':'
+
               # check for ``class = val'' etc.
-              valid = true
               case token
               when "class"
                 valid = false unless peek_match?(/^\s*(<<|\w|::)/)
@@ -925,7 +923,8 @@ class RDoc::RubyLex
                 valid = false if peek_match?(/^\s*([+-\/*]?=|\*|<|>|\&|\|)/)
               else
                 # no nothing
-              end
+              end if valid
+
               if valid
                 if token == "do"
                   if ![TkFOR, TkWHILE, TkUNTIL].include?(@indent_stack.last)
@@ -946,23 +945,23 @@ class RDoc::RubyLex
             end
             @lex_state = trans[0]
           else
-            @lex_state = EXPR_END
+            @lex_state = :EXPR_END
           end
         end
         return Token(token_c, token)
       end
     end
 
-    if @lex_state == EXPR_FNAME
-      @lex_state = EXPR_END
+    if @lex_state == :EXPR_FNAME
+      @lex_state = :EXPR_END
       if peek(0) == '='
         token.concat getc
       end
-    elsif @lex_state == EXPR_BEG || @lex_state == EXPR_DOT ||
-          @lex_state == EXPR_ARG
-      @lex_state = EXPR_ARG
+    elsif @lex_state == :EXPR_BEG || @lex_state == :EXPR_DOT ||
+          @lex_state == :EXPR_ARG
+      @lex_state = :EXPR_ARG
     else
-      @lex_state = EXPR_END
+      @lex_state = :EXPR_END
     end
 
     if token[0, 1] =~ /[A-Z]/
@@ -1018,7 +1017,7 @@ class RDoc::RubyLex
       doc = '"'
     end
 
-    @here_header = false
+    @current_readed = @readed
     while l = gets
       l = l.sub(/(:?\r)?\n\z/, "\n")
       if (indent ? l.strip : l.chomp) == quoted
@@ -1035,7 +1034,7 @@ class RDoc::RubyLex
       doc << '"'
     end
 
-    @here_header = true
+    @current_readed = @here_readed
     @here_readed.concat reserve
     while ch = reserve.pop
       ungetc ch
@@ -1043,7 +1042,7 @@ class RDoc::RubyLex
 
     token_class = output_heredoc ? RDoc::RubyLex::TkHEREDOC : Ltype2Token[lt]
     @ltype = ltback
-    @lex_state = EXPR_END
+    @lex_state = :EXPR_END
     Token(token_class, doc)
   end
 
@@ -1067,7 +1066,7 @@ class RDoc::RubyLex
   end
 
   def identify_number(op = "")
-    @lex_state = EXPR_END
+    @lex_state = :EXPR_END
 
     num = op
 
@@ -1181,10 +1180,8 @@ class RDoc::RubyLex
 
     str = if ltype == quoted and %w[" ' /].include? ltype then
             ltype.dup
-          elsif RUBY_VERSION > '1.9' then
-            "%#{type or PERCENT_LTYPE.key ltype}#{PERCENT_PAREN_REV[quoted]}"
           else
-            "%#{type or PERCENT_LTYPE.index ltype}#{PERCENT_PAREN_REV[quoted]}"
+            "%#{type or PERCENT_LTYPE.key ltype}#{PERCENT_PAREN_REV[quoted]||quoted}"
           end
 
     subtype = nil
@@ -1229,8 +1226,8 @@ class RDoc::RubyLex
       end
 
       if @ltype == "/"
-        if peek(0) =~ /i|m|x|o|e|s|u|n/
-          getc
+        while peek(0) =~ /i|m|x|o|e|s|u|n/
+          str << getc
         end
       end
 
@@ -1242,7 +1239,7 @@ class RDoc::RubyLex
     ensure
       @ltype = nil
       @quoted = nil
-      @lex_state = EXPR_END
+      @lex_state = :EXPR_END
     end
   end
 
@@ -1285,18 +1282,19 @@ class RDoc::RubyLex
   def read_escape
     escape = ''
     ch = getc
-    escape << ch
 
     case ch
     when "\n", "\r", "\f"
+      escape << ch
     when "\\", "n", "t", "r", "f", "v", "a", "e", "b", "s" #"
+      escape << ch
     when /[0-7]/
       ungetc ch
       3.times do
         ch = getc
-        escape << ch
         case ch
         when /[0-7]/
+          escape << ch
         when nil
           break
         else
@@ -1306,11 +1304,13 @@ class RDoc::RubyLex
       end
 
     when "x"
+      escape << ch
+
       2.times do
         ch = getc
-        escape << ch
         case ch
         when /[0-9a-fA-F]/
+          escape << ch
         when nil
           break
         else
@@ -1320,26 +1320,44 @@ class RDoc::RubyLex
       end
 
     when "M"
-      ch = getc
       escape << ch
+
+      ch = getc
       if ch != '-'
         ungetc
       else
-        ch = getc
         escape << ch
+
+        ch = getc
         if ch == "\\" #"
+          ungetc
           escape << read_escape
+        else
+          escape << ch
         end
       end
 
     when "C", "c" #, "^"
-      if ch == "C" and (ch = getc) != "-"
-        escape << ch
-        ungetc
+      escape << ch
+
+      if ch == "C"
+        ch = getc
+
+        if ch == "-"
+          escape << ch
+          ch = getc
+          escape << ch
+
+          escape << read_escape if ch == "\\"
+        else
+          ungetc
+        end
       elsif (ch = getc) == "\\" #"
         escape << ch << read_escape
       end
     else
+      escape << ch
+
       # other characters
     end
 
@@ -1351,4 +1369,3 @@ class RDoc::RubyLex
 end
 
 #RDoc::RubyLex.debug_level = 1
-
