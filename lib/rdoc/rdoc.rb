@@ -417,6 +417,7 @@ The internal error was:
 
     return [] if file_list.empty?
 
+    original_options = @options.dup
     @stats.begin_adding
 
     file_info = file_list.map do |filename|
@@ -425,6 +426,7 @@ The internal error was:
     end.compact
 
     @stats.done_adding
+    @options = original_options
 
     file_info
   end
