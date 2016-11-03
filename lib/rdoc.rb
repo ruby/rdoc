@@ -64,7 +64,7 @@ module RDoc
   ##
   # RDoc version you are using
 
-  VERSION = '4.2.2'
+  VERSION = '4.3.0'
 
   ##
   # Method visibilities
@@ -184,4 +184,3 @@ module RDoc
   autoload :Require,        'rdoc/require'
 
 end
-
