@@ -61,7 +61,7 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   self.clean_globs += PARSER_FILES
   self.kpeg_flags = '-fsv' if self.respond_to? :kpeg_flags= # no plugin
 
-  require_ruby_version '>= 1.8.7'
+  require_ruby_version '>= 1.9.3'
   extra_dev_deps << ['racc',     '~> 1.4', '> 1.4.10']
   extra_dev_deps << ['minitest', '~> 4']
 
