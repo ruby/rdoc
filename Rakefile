@@ -62,7 +62,6 @@ Depending on your version of ruby, you may need to install ruby rdoc/ri data:
   self.kpeg_flags = '-fsv' if self.respond_to? :kpeg_flags= # no plugin
 
   require_ruby_version '>= 1.8.7'
-  extra_deps     << ['json',     '~> 1.4']
   extra_dev_deps << ['racc',     '~> 1.4', '> 1.4.10']
   extra_dev_deps << ['minitest', '~> 4']
 
@@ -180,4 +179,3 @@ task :diff_rubinius do
   sh "diff #{diff_options} lib/rdoc #{rubinius_dir}/lib/rdoc; true"
   sh "diff #{diff_options} test #{rubinius_dir}/test/rdoc; true"
 end
-
