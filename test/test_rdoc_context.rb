@@ -8,7 +8,6 @@ class TestRDocContext < XrefTestCase
 
     @context = RDoc::Context.new
     @context.store = @store
-    @enumerator = Enumerator
   end
 
   def test_initialize
@@ -451,7 +450,7 @@ class TestRDocContext < XrefTestCase
   end
 
   def test_each_method_enumerator
-    assert_kind_of @enumerator, @c1.each_method
+    assert_kind_of Enumerator, @c1.each_method
   end
 
   def test_each_section
@@ -483,7 +482,7 @@ class TestRDocContext < XrefTestCase
   end
 
   def test_each_section_enumerator
-    assert_kind_of @enumerator, @c1.each_section
+    assert_kind_of Enumerator, @c1.each_section
   end
 
   def test_find_attribute_named
