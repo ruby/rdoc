@@ -130,13 +130,11 @@ class TestRDocContext < XrefTestCase
   end
 
   def test_add_class_object
-    root_class = 'BasicObject'
-
     @xref_data.add_class RDoc::NormalClass, 'Object'
 
     object = @xref_data.find_module_named 'Object'
 
-    assert_equal root_class, object.superclass
+    assert_equal 'BasicObject', object.superclass
 
     @c1.add_class RDoc::NormalClass, 'Object'
 
