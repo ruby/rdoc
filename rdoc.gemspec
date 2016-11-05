@@ -21,7 +21,7 @@ RDoc produces HTML and command-line documentation for Ruby projects.
 RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentation from the command-line.
   DESCRIPTION
 
-  s.email = ["drbrain@segment7.net", "mail@zzak.io", "hsbt@ruby-lang.org"]
+  s.email = ["drbrain@segment7.net", "", "", "", "mail@zzak.io", "hsbt@ruby-lang.org"]
 
   s.bindir = "exe"
   s.executables = ["rdoc", "ri"]
