@@ -1,4 +1,4 @@
-=== 5.0.0 / 2016-??-??
+=== 5.0.0 / 2016-11-05
 
 * Major enhancements
   * Cleanup deprecated code targeted Ruby 1.8
