@@ -161,15 +161,9 @@ class RDoc::RDoc
 
     RDoc.load_yaml
 
-    parse_error = if Object.const_defined? :Psych then
-                    Psych::SyntaxError
-                  else
-                    ArgumentError
-                  end
-
     begin
       options = YAML.load_file '.rdoc_options'
-    rescue *parse_error
+    rescue Psych::SyntaxError
     end
 
     raise RDoc::Error, "#{options_file} is not a valid rdoc options file" unless
