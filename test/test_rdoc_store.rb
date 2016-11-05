@@ -3,7 +3,7 @@ require File.expand_path '../xref_test_case', __FILE__
 
 class TestRDocStore < XrefTestCase
 
-  OBJECT_ANCESTORS = defined?(::BasicObject) ? %w[BasicObject] : []
+  OBJECT_ANCESTORS = %w[BasicObject]
 
   def setup
     super

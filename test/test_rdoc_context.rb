@@ -116,8 +116,6 @@ class TestRDocContext < XrefTestCase
   end
 
   def test_add_class_basic_object
-    skip 'BasicObject is 1.9 only' unless defined?(BasicObject)
-
     @xref_data.add_class RDoc::NormalClass, 'BasicObject'
 
     basic = @xref_data.find_module_named 'BasicObject'
@@ -132,7 +130,7 @@ class TestRDocContext < XrefTestCase
   end
 
   def test_add_class_object
-    root_class = defined?(BasicObject) ? 'BasicObject' : nil
+    root_class = 'BasicObject'
 
     @xref_data.add_class RDoc::NormalClass, 'Object'
 
