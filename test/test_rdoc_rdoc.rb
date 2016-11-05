@@ -133,7 +133,7 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_normalized_file_list_non_file_directory
-    dev = defined?(File::NULL) ? File::NULL : '/dev/stdin'
+    dev = File::NULL
     skip "#{dev} is not a character special" unless
       File.chardev? dev
 
