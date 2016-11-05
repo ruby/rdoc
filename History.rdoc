@@ -1,7 +1,7 @@
 === 5.0.0 / 2016-??-??
 
 * Major enhancements
-  * Drop to support Ruby 1.8
+  * Cleanup deprecated code targeted Ruby 1.8
 
 * Bug fixes
   * Ensure badge data is included in result of JsonIndex template.
@@ -14,6 +14,12 @@
 * Minor enhancements
   * Improve class name expansion/resolution in ri.  PR #400 by NARUSE, Yui
   * Improve performance of document generation. PR #397 by Yusuke Endoh.
+
+=== 4.3.0 / 2016-11-04
+
+* Minor enhancements
+  * Removed json dependency for Ruby 2.4.0
+  * End to support Ruby 1.8.x
 
 === 4.2.2 / 2016-02-09
 
