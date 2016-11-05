@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markdown - rdoc 5.0.0.beta2 Documentation</title>
+<title>class RDoc::Markdown - rdoc 5.0.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -401,7 +401,7 @@ text down at the bottom</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 611</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 610</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">extensions</span> = <span class="ruby-constant">DEFAULT_EXTENSIONS</span>, <span class="ruby-identifier">debug</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-ivar">@debug</span>      = <span class="ruby-identifier">debug</span>
   <span class="ruby-ivar">@formatter</span>  = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ToJoinedParagraph</span>.<span class="ruby-identifier">new</span>
@@ -447,7 +447,7 @@ default extensions.</p>
 
           
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 599</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 598</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parse</span> <span class="ruby-identifier">markdown</span>
   <span class="ruby-identifier">parser</span> = <span class="ruby-identifier">new</span>
 
@@ -490,7 +490,7 @@ default extensions.</p>
 
           
           <div class="method-source-code" id="emphasis-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 626</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 625</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">emphasis</span> <span class="ruby-identifier">text</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\A[a-z\d.\/]+\z/i</span> <span class="ruby-keyword">then</span>
     <span class="ruby-node">&quot;_#{text}_&quot;</span>
@@ -530,7 +530,7 @@ are reconstructed with the linking <code>text</code> (usually whitespace).</p>
 
           
           <div class="method-source-code" id="link_to-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 680</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 679</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">link_to</span> <span class="ruby-identifier">content</span>, <span class="ruby-identifier">label</span> = <span class="ruby-identifier">content</span>, <span class="ruby-identifier">text</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-string">&#39;enable notes extension&#39;</span> <span class="ruby-keyword">if</span>
     <span class="ruby-identifier">content</span>.<span class="ruby-identifier">start_with?</span> <span class="ruby-string">&#39;^&#39;</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">label</span>.<span class="ruby-identifier">equal?</span> <span class="ruby-identifier">content</span>
@@ -573,7 +573,7 @@ parsing the <code>unparsed</code> content from the first parsing pass.</p>
 
           
           <div class="method-source-code" id="list_item_from-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 697</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 696</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">list_item_from</span> <span class="ruby-identifier">unparsed</span>
   <span class="ruby-identifier">parsed</span> = <span class="ruby-identifier">inner_parse</span> <span class="ruby-identifier">unparsed</span>.<span class="ruby-identifier">join</span>
   <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ListItem</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">nil</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">parsed</span>
@@ -608,7 +608,7 @@ references.</p>
 
           
           <div class="method-source-code" id="note-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 705</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 704</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">note</span> <span class="ruby-identifier">label</span>
   <span class="ruby-comment">#foottext = &quot;rdoc-label:foottext-#{label}:footmark-#{label}&quot;</span>
 
@@ -649,7 +649,7 @@ document.</p>
 
           
           <div class="method-source-code" id="note_for-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 719</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 718</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">note_for</span> <span class="ruby-identifier">ref</span>
   <span class="ruby-ivar">@note_order</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">ref</span>
 
@@ -715,7 +715,7 @@ document.</p>
 
           
           <div class="method-source-code" id="paragraph-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 736</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 735</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">paragraph</span> <span class="ruby-identifier">parts</span>
   <span class="ruby-identifier">parts</span> = <span class="ruby-identifier">parts</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">part</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">if</span> <span class="ruby-string">&quot;\n&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">part</span> <span class="ruby-keyword">then</span>
@@ -756,7 +756,7 @@ document.</p>
 
           
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 751</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 750</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse</span> <span class="ruby-identifier">markdown</span>
   <span class="ruby-ivar">@references</span>          = {}
   <span class="ruby-ivar">@unlinked_references</span> = {}
@@ -861,7 +861,7 @@ previously unknown link references.</p>
 
           
           <div class="method-source-code" id="reference-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 798</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 797</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">reference</span> <span class="ruby-identifier">label</span>, <span class="ruby-identifier">link</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">ref</span> = <span class="ruby-ivar">@unlinked_references</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">label</span>) <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">ref</span>.<span class="ruby-identifier">replace</span> <span class="ruby-identifier">link</span>
@@ -898,7 +898,7 @@ previously unknown link references.</p>
 
           
           <div class="method-source-code" id="strong-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 809</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 808</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">strong</span> <span class="ruby-identifier">text</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\A[a-z\d.\/-]+\z/i</span> <span class="ruby-keyword">then</span>
     <span class="ruby-node">&quot;*#{text}*&quot;</span>
@@ -967,7 +967,7 @@ disable the extension and to query if they are active.</p>
 
           
           <div class="method-source-code" id="extension-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 551</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 550</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">extension</span> <span class="ruby-identifier">name</span>
   <span class="ruby-constant">EXTENSIONS</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">name</span>
 
@@ -1016,7 +1016,7 @@ disable the extension and to query if they are active.</p>
 
           
           <div class="method-source-code" id="break_on_newline-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 566</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 565</span>
 <span class="ruby-identifier">extension</span> <span class="ruby-value">:break_on_newline</span>
 </pre>
           </div>
@@ -1048,7 +1048,7 @@ disable the extension and to query if they are active.</p>
 
           
           <div class="method-source-code" id="css-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 571</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 570</span>
 <span class="ruby-identifier">extension</span> <span class="ruby-value">:css</span>
 </pre>
           </div>
@@ -1081,7 +1081,7 @@ lists</p>
 
           
           <div class="method-source-code" id="definition_lists-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 576</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 575</span>
 <span class="ruby-identifier">extension</span> <span class="ruby-value">:definition_lists</span>
 </pre>
           </div>
@@ -1113,7 +1113,7 @@ lists</p>
 
           
           <div class="method-source-code" id="extension-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 648</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 647</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">extension</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">enable</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">enable</span> <span class="ruby-keyword">then</span>
     <span class="ruby-ivar">@extensions</span> <span class="ruby-operator">|=</span> [<span class="ruby-identifier">name</span>]
@@ -1150,7 +1150,7 @@ lists</p>
 
           
           <div class="method-source-code" id="extension-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 639</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 638</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">extension?</span> <span class="ruby-identifier">name</span>
   <span class="ruby-ivar">@extensions</span>.<span class="ruby-identifier">include?</span> <span class="ruby-identifier">name</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1183,7 +1183,7 @@ lists</p>
 
           
           <div class="method-source-code" id="github-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 581</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 580</span>
 <span class="ruby-identifier">extension</span> <span class="ruby-value">:github</span>
 </pre>
           </div>
@@ -1215,7 +1215,7 @@ lists</p>
 
           
           <div class="method-source-code" id="html-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 586</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 585</span>
 <span class="ruby-identifier">extension</span> <span class="ruby-value">:html</span>
 </pre>
           </div>
@@ -1247,7 +1247,7 @@ lists</p>
 
           
           <div class="method-source-code" id="notes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 591</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markdown.rb, line 590</span>
 <span class="ruby-identifier">extension</span> <span class="ruby-value">:notes</span>
 </pre>
           </div>
@@ -1268,7 +1268,7 @@ lists</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 5.0.0.beta2.
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
