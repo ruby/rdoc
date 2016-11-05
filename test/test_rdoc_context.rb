@@ -8,9 +8,7 @@ class TestRDocContext < XrefTestCase
 
     @context = RDoc::Context.new
     @context.store = @store
-
-    @enumerator = # 1.8 vs 1.9
-      Object.const_defined?(:Enumerator) ? Enumerator : Enumerable::Enumerator
+    @enumerator = Enumerator
   end
 
   def test_initialize
@@ -899,4 +897,3 @@ class TestRDocContext < XrefTestCase
   end
 
 end
-
