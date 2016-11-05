@@ -134,7 +134,6 @@ class TestRDocRubygemsHook < Gem::TestCase
   end
 
   def test_generate_default_gem
-    skip 'RubyGems 2 required' unless @a.respond_to? :default_gem?
     @a.loaded_from =
       File.join Gem::Specification.default_specifications_dir, 'a.gemspec'
 
