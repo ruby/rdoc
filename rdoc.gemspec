@@ -6,8 +6,6 @@ Gem::Specification.new do |s|
   s.name = "rdoc"
   s.version = RDoc::VERSION
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 1.3")
-
   s.require_paths = ["lib"]
   s.authors = [
     "Eric Hodel",
@@ -51,6 +49,7 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
 
   s.rdoc_options = ["--main", "README.rdoc"]
   s.required_ruby_version = Gem::Requirement.new(">= 1.9.3")
+  s.required_rubygems_version = Gem::Requirement.new(">= 2.2")
   s.rubygems_version = "2.5.2"
   s.summary = "RDoc produces HTML and command-line documentation for Ruby projects"
 
