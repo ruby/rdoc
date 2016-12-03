@@ -170,7 +170,7 @@ class RDoc::Generator::JsonIndex
     outfile           = out_dir + "#{search_index_file}.gz"
 
     debug_msg "Reading the JSON index file from %s" % search_index_file
-    search_index = open(search_index_file, 'r:utf-8', &:read)
+    search_index = search_index_file.read(mode: 'r:utf-8')
 
     debug_msg "Writing gzipped search index to %s" % outfile
 
