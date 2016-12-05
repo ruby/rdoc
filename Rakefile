@@ -129,3 +129,5 @@ task :diff_rubinius do
   sh "diff #{diff_options} lib/rdoc #{rubinius_dir}/lib/rdoc; true"
   sh "diff #{diff_options} test #{rubinius_dir}/test/rdoc; true"
 end
+
+task :build => [:generate]
