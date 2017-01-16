@@ -4,7 +4,7 @@ home :: https://github.com/rdoc/rdoc
 rdoc :: https://rdoc.github.io/rdoc
 bugs :: https://github.com/rdoc/rdoc/issues
 build status :: {<img src="https://travis-ci.org/rdoc/rdoc.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/rdoc/rdoc]
-code quality :: {<img src="https://codeclimate.com/badge.png" alt="code climate">}[https://codeclimate.com/github/rdoc/rdoc]
+code quality :: {<img src="https://codeclimate.com/github/rdoc/rdoc/badges/gpa.svg" alt="Code Climate">}[https://codeclimate.com/github/rdoc/rdoc]
 
 == Description
 
