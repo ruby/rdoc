@@ -1,12 +1,12 @@
 === 5.1.0 / 2017-02-24
 
 * Bug fixes
- * Fix an issue that rdoc fails when running on Windows with RUBYOPT=-U.
-   PR #430 by Toshihiko Ichida
+  * Fix an issue that rdoc fails when running on Windows with RUBYOPT=-U.
+    PR #430 by Toshihiko Ichida
 
 * Minor enhancements
- * Parse ruby 2.1 <visibility> def. PR #436 by Akira Matsuda.
- * Suppress warnings in eval. PR #440 by Nobuyoshi Nakada.
+  * Parse ruby 2.1 <visibility> def. PR #436 by Akira Matsuda.
+  * Suppress warnings in eval. PR #440 by Nobuyoshi Nakada.
 
 === 5.0.0 / 2016-11-05
 
