@@ -182,7 +182,7 @@ class RDoc::Parser
     type.downcase
   rescue ArgumentError
   rescue Encoding::InvalidByteSequenceError # invalid byte sequence
-  
+
   end
 
   ##
