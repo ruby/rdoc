@@ -1031,6 +1031,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def parse_comment_tomdoc container, tk, comment
     return unless signature = RDoc::TomDoc.signature(comment)
+    column  = tk.char_no
     offset  = tk.seek
     line_no = tk.line_no
 
@@ -1043,7 +1044,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     meth.start_collecting_tokens
     indent = TkSPACE.new 0, 1, 1
-    indent.set_text " " * offset
+    indent.set_text " " * column
 
     position_comment = TkCOMMENT.new 0, line_no, 1
     position_comment.set_text "# File #{@top_level.relative_name}, line #{line_no}"
