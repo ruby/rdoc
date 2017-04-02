@@ -3,7 +3,7 @@ require 'rdoc/task'
 require 'bundler/gem_tasks'
 require 'rake/testtask'
 
-ENV['BENCHMARK'] = 'yes'
+ENV['BENCHMARK'] ||= 'yes'
 
 task :docs    => :generate
 task :test    => :generate
