@@ -297,7 +297,6 @@ class C; end
     assert_equal klass,      alas.parent
     assert_equal 'comment',  alas.comment
     assert_equal @top_level, alas.file
-    assert_equal 0,          alas.offset
     assert_equal 1,          alas.line
   end
 
@@ -365,7 +364,6 @@ class C; end
     assert_equal 'foo', foo.name
     assert_equal 'my attr', foo.comment.text
     assert_equal @top_level, foo.file
-    assert_equal 0, foo.offset
     assert_equal 1, foo.line
   end
 
@@ -404,7 +402,6 @@ class C; end
     assert_equal 'RW', foo.rw
     assert_equal 'my attr', foo.comment.text
     assert_equal @top_level, foo.file
-    assert_equal 0, foo.offset
     assert_equal 1, foo.line
 
     bar = klass.attributes.last
@@ -617,7 +614,6 @@ class C; end
     assert_equal 'Foo', foo.full_name
     assert_equal 'my class', foo.comment.text
     assert_equal [@top_level], foo.in_files
-    assert_equal 0, foo.offset
     assert_equal 1, foo.line
   end
 
@@ -637,7 +633,6 @@ end
 
     c = @top_level.classes.first
     assert_equal 'C', c.full_name
-    assert_equal 0, c.offset
     assert_equal 1, c.line
   end
 
@@ -727,7 +722,6 @@ end
     assert_equal 'Foo', foo.full_name
     assert_empty foo.comment
     assert_equal [@top_level], foo.in_files
-    assert_equal 0, foo.offset
     assert_equal 1, foo.line
   end
 
@@ -920,7 +914,6 @@ end
     assert_equal %w[A::B A::d], modules.map { |c| c.full_name }
 
     b = modules.first
-    assert_equal 10, b.offset
     assert_equal 2,  b.line
 
     # make sure method/alias was not added to enclosing class/module
@@ -1083,7 +1076,6 @@ EOF
     assert_equal 'RW',       foo.rw
     assert_equal 'my attr',  foo.comment.text
     assert_equal @top_level, foo.file
-    assert_equal 0,          foo.offset
     assert_equal 1,          foo.line
 
     assert_equal nil,        foo.viewer
@@ -1147,7 +1139,6 @@ EOF
     assert_equal 'foo',       foo.name
     assert_equal 'my method', foo.comment.text
     assert_equal @top_level,  foo.file
-    assert_equal 0,           foo.offset
     assert_equal 1,           foo.line
 
     assert_equal [],        foo.aliases
@@ -1223,7 +1214,6 @@ EOF
 
     assert_equal 'A', foo.name
     assert_equal @top_level, foo.file
-    assert_equal 0, foo.offset
     assert_equal 1, foo.line
   end
 
@@ -1389,7 +1379,6 @@ A::B::C = 1
     assert_equal 'foo',       foo.name
     assert_equal 'my method', foo.comment.text
     assert_equal @top_level,  foo.file
-    assert_equal 0,           foo.offset
     assert_equal 1,           foo.line
 
     assert_equal [],      foo.aliases
@@ -1587,7 +1576,6 @@ end
     assert_equal 'foo',       foo.name
     assert_equal 'my method', foo.comment.text
     assert_equal @top_level,  foo.file
-    assert_equal 0,           foo.offset
     assert_equal 1,           foo.line
 
     assert_equal [],        foo.aliases
