@@ -1569,7 +1569,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def parse_module container, single, tk, comment
     container, name_t, = get_class_or_module container
 
-    name = name_t.name
+    name = name_t[:text]
 
     mod = container.add_module RDoc::NormalModule, name
     mod.ignore unless container.document_children
