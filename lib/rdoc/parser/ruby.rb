@@ -232,29 +232,29 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def collect_first_comment
     skip_tkspace
     comment = ''
-    comment.force_encoding @encoding if @encoding
+    #comment.force_encoding @encoding if @encoding
     first_line = true
-    first_comment_tk_class = nil
+    first_comment_tk_kind = nil
 
     tk = get_tk
 
-    while TkCOMMENT === tk
-      if first_line and tk.text =~ /\A#!/ then
+    while :on_comment == tk[:kind]
+      if first_line and tk[:text] =~ /\A#!/ then
         skip_tkspace
         tk = get_tk
-      elsif first_line and tk.text =~ /\A#\s*-\*-/ then
+      elsif first_line and tk[:text] =~ /\A#\s*-\*-/ then
         first_line = false
         skip_tkspace
         tk = get_tk
       else
-        break if first_comment_tk_class and not first_comment_tk_class === tk
-        first_comment_tk_class = tk.class
+        break if first_comment_tk_kind and not first_comment_tk_kind === tk[:kind]
+        first_comment_tk_kind = tk[:kind]
 
         first_line = false
-        comment << tk.text << "\n"
+        comment << tk[:text] << "\n"
         tk = get_tk
 
-        if TkNL === tk then
+        if :on_nl === tk then
           skip_tkspace false
           tk = get_tk
         end
