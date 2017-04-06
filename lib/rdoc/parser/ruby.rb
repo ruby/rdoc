@@ -1977,11 +1977,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
     while tk = get_tk do
       tokens << tk
 
-      case tk
-      when TkNL, TkDEF then
+      if :on_nl == tk[:kind] or (:tk_kw == tk[:kind] && 'def' == tk[:text]) then
         return
-      when TkCOMMENT then
-        return unless tk.text =~ /\s*:?([\w-]+):\s*(.*)/
+      elsif :on_comment == tk[:kind] then
+        return unless tk[:text] =~ /\s*:?([\w-]+):\s*(.*)/
 
         directive = $1.downcase
 
@@ -1991,7 +1990,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
     end
   ensure
-    unless tokens.length == 1 and TkCOMMENT === tokens.first then
+    unless tokens.length == 1 and :on_comment == tokens.first[:kind] then
       tokens.reverse_each do |token|
         unget_tk token
       end
