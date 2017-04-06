@@ -339,24 +339,23 @@ class RDoc::Parser::Ruby < RDoc::Parser
     given_name = ''
 
     # class ::A -> A is in the top level
-    case name_t
-    when TkCOLON2, TkCOLON3 then # bug
+    if :on_op == name_t[:kind] and '::' == name_t[:text] then # bug
       name_t = get_tk
       container = @top_level
       given_name << '::'
     end
 
     skip_tkspace false
-    given_name << name_t.name
+    given_name << name_t[:text]
 
-    while TkCOLON2 === peek_tk do
+    while (tk = peek_tk) and :on_op == tk[:kind] and '::' == tk[:text] do
       prev_container = container
-      container = container.find_module_named name_t.name
+      container = container.find_module_named name_t[:text]
       container ||=
         if ignore_constants then
           RDoc::Context.new
         else
-          c = prev_container.add_module RDoc::NormalModule, name_t.name
+          c = prev_container.add_module RDoc::NormalModule, name_t[:text]
           c.ignore unless prev_container.document_children
           @top_level.add_to_classes_or_modules c
           c
@@ -367,7 +366,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       get_tk
       skip_tkspace false
       name_t = get_tk
-      given_name << '::' << name_t.name
+      given_name << '::' << name_t[:text]
     end
 
     skip_tkspace false
