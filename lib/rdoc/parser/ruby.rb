@@ -140,11 +140,12 @@ $TOKEN_DEBUG ||= nil
 # Note that by default, the :method: directive will be ignored if there is a
 # standard rdocable item following it.
 
+require 'ripper'
+
 class RDoc::Parser::Ruby < RDoc::Parser
 
   parse_files_matching(/\.rbw?$/)
 
-  include RDoc::RubyToken
   include RDoc::TokenStream
   include RDoc::Parser::RubyTools
 
@@ -166,8 +167,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     @size = 0
     @token_listeners = nil
-    @scanner = RDoc::RubyLex.new content, @options
-    @scanner.exception_on_syntax_error = false
+    @scanner = Ripper.lex(content).map { |tk|
+      {
+        :line_no => tk[0][0],
+        :char_no => tk[0][1],
+        :kind => tk[1],
+        :text => tk[2]
+      }
+    }
     @prev_seek = nil
     @markup = @options.markup
     @track_visibility = :nodoc != @options.visibility
