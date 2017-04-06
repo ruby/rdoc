@@ -270,7 +270,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Consumes trailing whitespace from the token stream
 
   def consume_trailing_spaces # :nodoc:
-    get_tkread
     skip_tkspace false
   end
 
@@ -2043,8 +2042,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Scans this Ruby file for Ruby constructs
 
   def scan
-    reset
-
     catch :eof do
       begin
         parse_top_level_statements @top_level
