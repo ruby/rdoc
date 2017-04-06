@@ -1650,14 +1650,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
       keep_comment = false
       try_parse_comment = false
 
-      non_comment_seen = true unless TkCOMMENT === tk
+      non_comment_seen = true unless :on_comment == tk[:kind]
 
-      case tk
-      when TkNL then
+      case tk[:kind]
+      when :on_nl, :on_ignored_nl then
         skip_tkspace
         tk = get_tk
 
-        if TkCOMMENT === tk then
+        if tk and :on_comment == tk[:kind] then
           if non_comment_seen then
             # Look for RDoc in a comment about to be thrown away
             non_comment_seen = parse_comment container, tk, comment unless
@@ -1667,12 +1667,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
             comment.force_encoding @encoding if @encoding
           end
 
-          while TkCOMMENT === tk do
-            comment << tk.text << "\n"
+          while :on_comment == tk[:kind] do
+            comment << tk[:text] << "\n"
 
             tk = get_tk
 
-            if TkNL === tk then
+            if :on_nl == tk[:kind] then
               skip_tkspace false # leading spaces
               tk = get_tk
             end
@@ -1698,59 +1698,73 @@ class RDoc::Parser::Ruby < RDoc::Parser
         keep_comment = true
         container.current_line_visibility = nil
 
-      when TkCLASS then
-        parse_class container, single, tk, comment
+      when :on_kw then
+        case tk[:text]
+        when 'class' then
+          parse_class container, single, tk, comment
 
-      when TkMODULE then
-        parse_module container, single, tk, comment
+        when 'module' then
+          parse_module container, single, tk, comment
 
-      when TkDEF then
-        parse_method container, single, tk, comment
+        when 'def' then
+          parse_method container, single, tk, comment
 
-      when TkCONSTANT then
+        when 'alias' then
+          parse_alias container, single, tk, comment unless current_method
+
+        when 'yield' then
+          if current_method.nil? then
+            warn "Warning: yield outside of method" if container.document_self
+          else
+            parse_yield container, single, tk, current_method
+          end
+
+        when 'until', 'while' then
+          nest += 1
+          skip_optional_do_after_expression
+
+        # Until and While can have a 'do', which shouldn't increase the nesting.
+        # We can't solve the general case, but we can handle most occurrences by
+        # ignoring a do at the end of a line.
+
+        # 'for' is trickier
+        when 'for' then
+          nest += 1
+          skip_for_variable
+          skip_optional_do_after_expression
+
+        when 'case', 'do', 'if', 'unless', 'begin' then
+          nest += 1
+
+        when 'super' then
+          current_method.calls_super = true if current_method
+
+        when 'rescue' then
+          parse_rescue
+
+        when 'end' then
+          nest -= 1
+          if nest == 0 then
+            read_documentation_modifiers container, RDoc::CLASS_MODIFIERS
+            container.ongoing_visibility = save_visibility
+
+            parse_comment container, tk, comment unless comment.empty?
+
+            return
+          end
+        end
+
+      when :on_const then
         unless parse_constant container, tk, comment, current_method then
           try_parse_comment = true
         end
 
-      when TkALIAS then
-        parse_alias container, single, tk, comment unless current_method
-
-      when TkYIELD then
-        if current_method.nil? then
-          warn "Warning: yield outside of method" if container.document_self
-        else
-          parse_yield container, single, tk, current_method
-        end
-
-      # Until and While can have a 'do', which shouldn't increase the nesting.
-      # We can't solve the general case, but we can handle most occurrences by
-      # ignoring a do at the end of a line.
-
-      when TkUNTIL, TkWHILE then
-        nest += 1
-        skip_optional_do_after_expression
-
-      # 'for' is trickier
-      when TkFOR then
-        nest += 1
-        skip_for_variable
-        skip_optional_do_after_expression
-
-      when TkCASE, TkDO, TkIF, TkUNLESS, TkBEGIN then
-        nest += 1
-
-      when TkSUPER then
-        current_method.calls_super = true if current_method
-
-      when TkRESCUE then
-        parse_rescue
-
-      when TkIDENTIFIER then
+      when :on_ident then
         if nest == 1 and current_method.nil? then
           keep_comment = parse_identifier container, single, tk, comment
         end
 
-        case tk.name
+        case tk[:text]
         when "require" then
           parse_require container, comment
         when "include" then
@@ -1759,15 +1773,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
           parse_extend_or_include RDoc::Extend, container, comment
         end
 
-      when TkEND then
-        nest -= 1
-        if nest == 0 then
-          container.ongoing_visibility = save_visibility
-
-          parse_comment container, tk, comment unless comment.empty?
-
-          return
-        end
       else
         try_parse_comment = nest == 1
       end
