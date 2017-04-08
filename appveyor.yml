@@ -8,6 +8,7 @@ test_script:
   - rake
 deploy: off
 environment:
+  NOBENCHMARK: 1
   matrix:
     - ruby_version: "193"
     - ruby_version: "200"
