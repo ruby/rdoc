@@ -16,6 +16,9 @@ rvm:
   - rbx-2
   - jruby-1.7.25
   - jruby-9.1.0.0
+env:
+  global:
+    NOBENCHMARK=1
 script: rake
 matrix:
   allow_failures:
