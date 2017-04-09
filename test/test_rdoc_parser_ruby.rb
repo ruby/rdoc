@@ -84,7 +84,7 @@ class C; end
     cont, name_t, given_name = util_parser('A')    .get_class_or_module ctxt
 
     assert_equal ctxt, cont
-    assert_equal 'A', name_t.text
+    assert_equal 'A', name_t[:text]
     assert_equal 'A', given_name
 
     cont, name_t, given_name = util_parser('B::C') .get_class_or_module ctxt
@@ -92,13 +92,13 @@ class C; end
     b = @store.find_module_named('B')
     assert_equal b, cont
     assert_equal [@top_level], b.in_files
-    assert_equal 'C', name_t.text
+    assert_equal 'C', name_t[:text]
     assert_equal 'B::C', given_name
 
     cont, name_t, given_name = util_parser('D:: E').get_class_or_module ctxt
 
     assert_equal @store.find_module_named('D'), cont
-    assert_equal 'E', name_t.text
+    assert_equal 'E', name_t[:text]
     assert_equal 'D::E', given_name
 
     assert_raises NoMethodError do
