@@ -1053,6 +1053,13 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.separator nil
+
+      opt.on("--version", "-v", "print the version") do
+        puts opt.version
+        exit
+      end
+
+      opt.separator nil
     end
 
     setup_generator 'darkfish' if
