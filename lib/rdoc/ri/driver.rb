@@ -243,6 +243,22 @@ or the PAGER environment variable.
       end
 
       opt.separator nil
+
+      opt.on("--help", "-h",
+             "Show help and exit.") do
+        puts opts
+        exit
+      end
+
+      opt.separator nil
+
+      opt.on("--version", "-v",
+             "Output version information and exit.") do
+        puts "#{opts.program_name} #{opts.version}"
+        exit
+      end
+
+      opt.separator nil
       opt.separator "Data source options:"
       opt.separator nil
 
