@@ -80,7 +80,6 @@ class RDoc::RI::Driver
     options[:interactive] = false
     options[:profile]     = false
     options[:show_all]    = false
-    options[:use_cache]   = true
     options[:use_stdout]  = !$stdout.tty?
     options[:width]       = 72
 
