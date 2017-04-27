@@ -48,9 +48,8 @@ class RDoc::Mixin < RDoc::CodeObject
   end
 
   def inspect # :nodoc:
-    "#<%s:0x%x %s.%s %s>" % [
-      self.class,
-      object_id,
+    "%s %s.%s %s>" % [
+      super[0..-2],
       parent_name, self.class.name.downcase, @name,
     ]
   end

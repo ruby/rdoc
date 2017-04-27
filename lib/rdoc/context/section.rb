@@ -127,7 +127,7 @@ class RDoc::Context::Section
   end
 
   def inspect # :nodoc:
-    "#<%s:0x%x %p>" % [self.class, object_id, title]
+    "%s %p>" % [super[0..-2], title]
   end
 
   def hash # :nodoc:

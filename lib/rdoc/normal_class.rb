@@ -38,8 +38,8 @@ class RDoc::NormalClass < RDoc::ClassModule
 
   def inspect # :nodoc:
     superclass = @superclass ? " < #{@superclass}" : nil
-    "<%s:0x%x class %s%s includes: %p extends: %p attributes: %p methods: %p aliases: %p>" % [
-      self.class, object_id,
+    "%s class %s%s includes: %p extends: %p attributes: %p methods: %p aliases: %p>" % [
+      super[0..-2],
       full_name, superclass, @includes, @extends, @attributes, @method_list, @aliases
     ]
   end

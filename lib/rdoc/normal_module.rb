@@ -9,8 +9,8 @@ class RDoc::NormalModule < RDoc::ClassModule
   end
 
   def inspect # :nodoc:
-    "#<%s:0x%x module %s includes: %p extends: %p attributes: %p methods: %p aliases: %p>" % [
-      self.class, object_id,
+    "%s module %s includes: %p extends: %p attributes: %p methods: %p aliases: %p>" % [
+      super[0..-2],
       full_name, @includes, @extends, @attributes, @method_list, @aliases
     ]
   end
