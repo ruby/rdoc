@@ -20,9 +20,8 @@ class RDoc::Require < RDoc::CodeObject
   end
 
   def inspect # :nodoc:
-    "#<%s:0x%x require '%s' in %s>" % [
-      self.class,
-      object_id,
+    "%s require '%s' in %s>" % [
+      super[0..-2],
       @name,
       parent_file_name,
     ]

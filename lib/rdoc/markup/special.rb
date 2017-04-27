@@ -29,8 +29,8 @@ class RDoc::Markup::Special
   end
 
   def inspect # :nodoc:
-    "#<RDoc::Markup::Special:0x%x @type=%p, @text=%p>" % [
-      object_id, @type, text.dump]
+    "%s @type=%p, @text=%p>" % [
+      super[0..-2], @type, text.dump]
   end
 
   def to_s # :nodoc:
