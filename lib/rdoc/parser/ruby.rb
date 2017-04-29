@@ -455,13 +455,19 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # won't catch all cases (such as "a = yield + 1"
 
   def get_end_token tk # :nodoc:
-    case tk
-    when TkLPAREN, TkfLPAREN
-      TkRPAREN
-    when TkRPAREN
+    case tk[:text]
+    when :on_lparen
+      {
+        :kind => :on_rparen,
+        :text => ')'
+      }
+    when :on_rparen
       nil
     else
-      TkNL
+      {
+        :kind => :on_nl,
+        :text => "\n"
+      }
     end
   end
 
@@ -1311,27 +1317,29 @@ class RDoc::Parser::Ruby < RDoc::Parser
     singleton = nil
     added_container = false
     name = nil
-    column  = tk.char_no
-    line_no = tk.line_no
+    column  = tk[:char_no]
+    line_no = tk[:line_no]
 
-    start_collecting_tokens
-    add_token tk
+#    start_collecting_tokens # @token_stream = []
+#    add_token tk
 
-    token_listener self do
+#    token_listener self do # @token_listeners << obj
       prev_container = container
       name, container, singleton = parse_method_name container
       added_container = container != prev_container
-    end
+#    end
 
     return unless name
 
-    meth = RDoc::AnyMethod.new get_tkread, name
+    #meth = RDoc::AnyMethod.new get_tkread, name
+    meth = RDoc::AnyMethod.new '', name
     meth.singleton = single == SINGLE ? true : singleton
 
     record_location meth
     meth.line   = line_no
 
-    meth.start_collecting_tokens
+=begin
+    meth.start_collecting_tokens # @token_stream = []
     indent = TkSPACE.new 0, 1, 1
     indent.set_text " " * column
 
@@ -1339,6 +1347,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     token.set_text "# File #{@top_level.relative_name}, line #{line_no}"
     meth.add_tokens [token, NEWLINE_TOKEN, indent]
     meth.add_tokens @token_stream
+=end
 
     parse_method_params_and_body container, single, meth, added_container
 
@@ -1357,8 +1366,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Parses the parameters and body of +meth+
 
   def parse_method_params_and_body container, single, meth, added_container
-    token_listener meth do
-      @scanner.continue = false
+#    token_listener meth do
+#      @scanner.continue = false
       parse_method_parameters meth
 
       if meth.document_self or not @track_visibility then
@@ -1381,7 +1390,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
 
       parse_statements container, single, meth
-    end
+#    end
   end
 
   ##
@@ -1401,15 +1410,15 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # it is a singleton or regular method.
 
   def parse_method_name container # :nodoc:
-    @scanner.lex_state = :EXPR_FNAME
+#    @scanner.lex_state = :EXPR_FNAME
 
     skip_tkspace
     name_t = get_tk
     back_tk = skip_tkspace
     singleton = false
 
-    case dot = get_tk
-    when TkDOT, TkCOLON2 then
+    dot = get_tk
+    if dot[:kind] == :on_period || (dot[:kind] == :on_op && dot[:text] == '::') then
       singleton = true
 
       name, container = parse_method_name_singleton container, name_t
@@ -1430,16 +1439,15 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # is parsed from the token stream for a regular method.
 
   def parse_method_name_regular container, name_t # :nodoc:
-    case name_t
-    when TkSTAR, TkAMPER then
-      name_t.text
+    if name_t[:kind] == :on_op && (name_t[:text] == '*' || name_t[:text] == '&') then
+      name_t[:text]
     else
-      unless name_t.respond_to? :name then
+      unless [:on_kw, :on_const, :on_ident].include?(name_t[:kind]) then
         warn "expected method name token, . or ::, got #{name_t.inspect}"
         skip_method container
         return
       end
-      name_t.name
+      name_t[:text]
     end
   end
 
@@ -1506,38 +1514,36 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     nest = 0
 
-    loop do
-      case tk
-      when TkSEMICOLON then
+    while tk != nil do
+      case tk[:kind]
+      when :on_semicolon then
         break if nest == 0
-      when TkLBRACE, TkfLBRACE then
+      when :on_lbrace then
         nest += 1
-      when TkRBRACE then
+      when :on_rbrace then
         nest -= 1
         if nest <= 0
           # we might have a.each { |i| yield i }
           unget_tk(tk) if nest < 0
           break
         end
-      when TkLPAREN, TkfLPAREN then
+      when :on_lparen then
         nest += 1
       when end_token then
-        if end_token == TkRPAREN
+        if end_token[:kind] == :on_rparen
           nest -= 1
           break if nest <= 0
         else
           break unless @scanner.continue
         end
-      when TkRPAREN then
+      when :on_rparen then
         nest -= 1
-      when method && method.block_params.nil? && TkCOMMENT then
+      when method && method.block_params.nil? && :on_comment then
         unget_tk tk
         read_documentation_modifiers method, modifiers
         @read.pop
-      when TkCOMMENT then
+      when :on_comment then
         @read.pop
-      when nil then
-        break
       end
       tk = get_tk
     end
