@@ -5,8 +5,6 @@
 
 module RDoc::Parser::RubyTools
 
-  include RDoc::RubyToken
-
   ##
   # Adds a token listener +obj+, but you should probably use token_listener
 
@@ -23,11 +21,10 @@ module RDoc::Parser::RubyTools
 
     if @tokens.empty? then
       if @scanner_point >= @scanner.size
-        nil
+        return nil
       else
         tk = @scanner[@scanner_point]
         @scanner_point += 1
-        tk = @scanner.token
         @read.push tk[:text]
         puts "get_tk1 => #{tk.inspect}" if $TOKEN_DEBUG
       end
@@ -37,7 +34,38 @@ module RDoc::Parser::RubyTools
       puts "get_tk2 => #{tk.inspect}" if $TOKEN_DEBUG
     end
 
-    tk = nil if TkEND_OF_SCRIPT === tk
+    tk = nil if tk[:kind] == :on___end__
+
+    if tk[:kind] == :on_symbeg then
+      prev_line_no = tk[:line_no]
+      prev_char_no = tk[:char_no]
+
+      is_symbol = true
+      symbol_tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => :on_symbol }
+      case (tk1 = get_tk)[:kind]
+      when :on_ident
+        symbol_tk[:text] = ":#{tk1[:text]}"
+      when :on_tstring_content
+        symbol_tk[:text] = ":#{tk1[:text]}"
+        get_tk # skip :on_tstring_end
+      when :on_tstring_end
+        symbol_tk[:text] = ":#{tk1[:text]}"
+      when :on_op
+        symbol_tk[:text] = ":#{tk1[:text]}"
+      #when :on_symbols_beg
+      #when :on_qsymbols_beg
+      else
+        is_symbol = false
+        tk = tk1
+      end
+      if is_symbol
+        tk = symbol_tk
+        # remove the identifier we just read to replace it with a symbol
+        @token_listeners.each do |obj|
+          obj.pop_token
+        end if @token_listeners
+      end
+    end
 
     # inform any listeners of our shiny new token
     @token_listeners.each do |obj|

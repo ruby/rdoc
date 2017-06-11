@@ -1658,22 +1658,20 @@ end
     assert_equal klass.current_section, foo.section
 
     stream = [
-      tk(:COMMENT,     0, 1, 1,  nil,
-         "# File #{@top_level.relative_name}, line 1"),
-      RDoc::Parser::Ruby::NEWLINE_TOKEN,
-      tk(:SPACE,       0, 1, 1,  nil,   ''),
-      tk(:DEF,         0, 1, 0,  'def', 'def'),
-      tk(:SPACE,       3, 1, 3,  nil,   ' '),
-      tk(:IDENTIFIER,  4, 1, 4,  'foo', 'foo'),
-      tk(:LPAREN,      7, 1, 7,  nil,   '('),
-      tk(:RPAREN,      8, 1, 8,  nil,   ')'),
-      tk(:SPACE,       9, 1, 9,  nil,   ' '),
-      tk(:COLON,      10, 1, 10, nil,   ':'),
-      tk(:IDENTIFIER, 11, 1, 11, 'bar', 'bar'),
-      tk(:SPACE,      14, 1, 14, nil,   ' '),
-      tk(:END,        15, 1, 15, 'end', 'end'),
-    ]
-
+      {
+        :line_no => 1, :char_no => 1, :kind => :on_comment,
+        :text => "# File #{@top_level.relative_name}, line 1" },
+      { :line_no => 0, :char_no => 0, :kind => :on_nl, :text => "\n" },
+      { :line_no => 1, :char_no => 1, :kind => :on_sp, :text => '' },
+      { :line_no => 1, :char_no => 0, :kind => :on_kw, :text => 'def' },
+      { :line_no => 1, :char_no => 3, :kind => :on_sp, :text => ' ' },
+      { :line_no => 1, :char_no => 4, :kind => :on_ident, :text => 'foo' },
+      { :line_no => 1, :char_no => 7, :kind => :on_lparen, :text => '(' },
+      { :line_no => 1, :char_no => 8, :kind => :on_rparen, :text => ')' },
+      { :line_no => 1, :char_no => 9, :kind => :on_sp, :text => ' ' },
+      { :line_no => 1, :char_no => 10, :kind => :on_symbol, :text => ':bar' },
+      { :line_no => 1, :char_no => 14, :kind => :on_sp, :text => ' ' },
+      { :line_no => 1, :char_no => 15, :kind => :on_kw, :text => 'end' }]
     assert_equal stream, foo.token_stream
   end
 
