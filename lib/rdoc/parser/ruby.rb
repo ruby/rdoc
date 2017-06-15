@@ -2059,7 +2059,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
       rescue StandardError => e
         bytes = ''
 
-        now_line_no = peek_tk[:line_no]
+        if @scanner_point >= @scanner.size
+          now_line_no = @scanner[@scanner.size - 1][:line_no]
+        else
+          now_line_no = peek_tk[:line_no]
+        end
 
         $stderr.puts <<-EOF
 
