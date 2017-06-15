@@ -34,9 +34,11 @@ module RDoc::Parser::RubyTools
       puts "get_tk2 => #{tk.inspect}" if $TOKEN_DEBUG
     end
 
-    tk = nil if tk[:kind] == :on___end__
+    if tk == nil || :on___end__ == tk[:kind]
+      tk = nil
+    end
 
-    if tk[:kind] == :on_symbeg then
+    if tk && :on_symbeg == tk[:kind] then
       prev_line_no = tk[:line_no]
       prev_char_no = tk[:char_no]
 

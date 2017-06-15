@@ -524,23 +524,23 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def get_symbol_or_name
     tk = get_tk
-    case tk
-    when TkSYMBOL then
-      text = tk.text.sub(/^:/, '')
+    case tk[:kind]
+    when :on_symbol then
+      text = tk[:text].sub(/^:/, '')
 
-      if TkASSIGN === peek_tk then
+      next_tk = peek_tk
+      if next_tk && :on_op == next_tk[:kind] && '=' == next_tk[:text] then
         get_tk
         text << '='
       end
 
       text
-    when TkId, TkOp then
-      tk.name
-    when TkAMPER,
-         TkDSTRING,
-         TkSTAR,
-         TkSTRING then
-      tk.text
+    when :on_ident, :on_op then
+      tk[:text]
+    when :on_tstring_beg then
+      tk = get_tk # :on_tstring_content
+      get_tk # skip :on_tstring_end
+      tk[:text]
     else
       raise RDoc::Error, "Name or symbol expected (got #{tk})"
     end
@@ -667,21 +667,19 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Parses an +alias+ in +context+ with +comment+
 
   def parse_alias(context, single, tk, comment)
-    line_no = tk.line_no
+    line_no = tk[:line_no]
 
     skip_tkspace
 
-    if TkLPAREN === peek_tk then
+    if :on_lparen === peek_tk[:kind] then
       get_tk
       skip_tkspace
     end
 
     new_name = get_symbol_or_name
 
-    @scanner.lex_state = :EXPR_FNAME
-
     skip_tkspace
-    if TkCOMMA === peek_tk then
+    if :on_comma === peek_tk[:kind] then
       get_tk
       skip_tkspace
     end
