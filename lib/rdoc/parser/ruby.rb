@@ -256,7 +256,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         first_comment_tk_kind = tk[:kind]
 
         first_line = false
-        comment << tk[:text] << "\n"
+        comment << tk[:text]
         tk = get_tk
 
         if :on_nl === tk then
