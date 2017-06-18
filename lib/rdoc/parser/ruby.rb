@@ -1538,6 +1538,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
         @read.pop
       when :on_comment then
         @read.pop
+      when :on_kw
+        unget_tk tk
+        break
       end
       tk = get_tk
     end
