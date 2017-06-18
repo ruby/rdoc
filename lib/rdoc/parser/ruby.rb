@@ -1526,7 +1526,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           nest -= 1
           break if nest <= 0
         else
-          break unless @scanner.continue
+          break
         end
       when :on_rparen then
         nest -= 1
