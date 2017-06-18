@@ -481,11 +481,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def get_method_container container, name_t # :nodoc:
     prev_container = container
-    container = container.find_module_named(name_t.name)
+    container = container.find_module_named(name_t[:text])
 
     unless container then
       constant = prev_container.constants.find do |const|
-        const.name == name_t.name
+        const.name == name_t[:text]
       end
 
       if constant then
