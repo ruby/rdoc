@@ -1026,12 +1026,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
     record_location meth
 
     meth.start_collecting_tokens
-    indent = TkSPACE.new 0, 1, 1
-    indent.set_text " " * column
-
-    position_comment = TkCOMMENT.new 0, line_no, 1
-    position_comment.set_text "# File #{@top_level.relative_name}, line #{line_no}"
-    meth.add_tokens [position_comment, NEWLINE_TOKEN, indent]
+    indent = { :line_no => 1, :char_no => 1, :kind => :on_sp, :text => ' ' * column }
+    position_comment = { :line_no => line_no, :char_no => 1, :kind => :on_comment }
+    position_comment[:text] = "# File #{@top_level.relative_name}, line #{line_no}"
+    newline = { :line_no => 0, :char_no => 0, :kind => :on_nl, :text => "\n" }
+    meth.add_tokens [position_comment, newline, indent]
 
     meth.params =
       if text.sub!(/^#\s+:?args?:\s*(.*?)\s*$/i, '') then
@@ -1672,13 +1671,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
             comment << tk[:text]
             comment << "\n" unless "\n" == tk[:text].chars.last
 
-            prev_tk = tk
-            tk = get_tk
-
-            if :on_nl == tk[:kind] || "\n" == prev_tk[:text].chars.last then
+            if tk[:text].size > 1 && "\n" == tk[:text].chars.last then
               skip_tkspace false # leading spaces
-              tk = get_tk
             end
+            tk = get_tk
           end
 
           comment = new_comment comment
