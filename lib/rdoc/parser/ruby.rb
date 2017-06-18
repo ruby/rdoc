@@ -1215,8 +1215,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Parses a meta-programmed method
 
   def parse_meta_method(container, single, tk, comment)
-    column  = tk.char_no
-    line_no = tk.line_no
+    column  = tk[:char_no]
+    line_no = tk[:line_no]
 
     start_collecting_tokens
     add_token tk
@@ -1238,12 +1238,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
     remove_token_listener self
 
     meth.start_collecting_tokens
-    indent = TkSPACE.new 0, 1, 1
-    indent.set_text " " * column
-
-    position_comment = TkCOMMENT.new 0, line_no, 1
-    position_comment.value = "# File #{@top_level.relative_name}, line #{line_no}"
-    meth.add_tokens [position_comment, NEWLINE_TOKEN, indent]
+    indent = { :line_no => 1, :char_no => 1, :kind => :on_sp, :text => ' ' * column }
+    position_comment = { :line_no => line_no, :char_no => 1, :kind => :on_comment }
+    position_comment[:text] = "# File #{@top_level.relative_name}, line #{line_no}"
+    newline = { :line_no => 0, :char_no => 0, :kind => :on_nl, :text => "\n" }
+    meth.add_tokens [position_comment, newline, indent]
     meth.add_tokens @token_stream
 
     parse_meta_method_params container, single, meth, tk, comment
@@ -1297,14 +1296,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
       last_tk = tk
 
       while tk = get_tk do
-        case tk
-        when TkSEMICOLON then
+        if :on_semicolon == tk[:kind] then
           break
-        when TkNL then
-          break unless last_tk and TkCOMMA === last_tk
-        when TkSPACE then
+        elsif :on_nl == tk[:kind] then
+          break unless last_tk and :on_comma == last_tk[:kind]
+        elsif :on_sp == tk[:kind] then
           # expression continues
-        when TkDO then
+        elsif :on_op == tk[:kind] && 'do' == tk[:text] then
           parse_statements container, single, meth
           break
         else
