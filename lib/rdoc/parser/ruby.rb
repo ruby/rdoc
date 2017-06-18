@@ -1266,17 +1266,18 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     name_t = get_tk
 
-    case name_t
-    when TkSYMBOL then
-      name_t.text[1..-1]
-    when TkSTRING then
-      name_t.value[1..-2]
-    when TkASSIGN then # ignore
+    if :on_symbol == name_t[:kind] then
+      name_t[:text][1..-1]
+    elsif :on_tstring_beg then
+      name_t = get_tk # :on_tstring_content
+      get_tk # skip :on_tstring_end
+      name_t[:text]
+    elsif :on_op == name_t[:kind] && '=' == name_t[:text] then # ignore
       remove_token_listener self
 
       nil
     else
-      warn "unknown name token #{name_t.inspect} for meta-method '#{tk.name}'"
+      warn "unknown name token #{name_t.inspect} for meta-method '#{tk[:text]}'"
       'unknown'
     end
   end
