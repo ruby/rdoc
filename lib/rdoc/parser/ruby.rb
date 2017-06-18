@@ -498,21 +498,21 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     unless container then
       # TODO seems broken, should starting at Object in @store
-      obj = name_t.name.split("::").inject(Object) do |state, item|
+      obj = name_t[:text].split("::").inject(Object) do |state, item|
         state.const_get(item)
       end rescue nil
 
       type = obj.class == Class ? RDoc::NormalClass : RDoc::NormalModule
 
       unless [Class, Module].include?(obj.class) then
-        warn("Couldn't find #{name_t.name}. Assuming it's a module")
+        warn("Couldn't find #{name_t[:text]}. Assuming it's a module")
       end
 
       if type == RDoc::NormalClass then
         sclass = obj.superclass ? obj.superclass.name : nil
-        container = prev_container.add_class type, name_t.name, sclass
+        container = prev_container.add_class type, name_t[:text], sclass
       else
-        container = prev_container.add_module type, name_t.name
+        container = prev_container.add_module type, name_t[:text]
       end
 
       record_location container
@@ -592,7 +592,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def make_message message
     prefix = "#{@file_name}:"
 
-    prefix << "#{@scanner.line_no}:#{@scanner.char_no}:" if @scanner
+    tk = peek_tk
+    prefix << "#{tk[:line_no]}:#{tk[:char_no]}:" if tk
 
     "#{prefix} #{message}"
   end
