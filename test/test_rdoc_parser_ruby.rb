@@ -1461,17 +1461,19 @@ end
     assert_equal klass.current_section, foo.section
 
     stream = [
-      tk(:COMMENT,     0, 1, 1,  nil,
-         "# File #{@top_level.relative_name}, line 1"),
-      RDoc::Parser::Ruby::NEWLINE_TOKEN,
-      tk(:SPACE,       0, 1, 1,  nil, ''),
-      tk(:IDENTIFIER,  0, 1, 0,  'add_my_method', 'add_my_method'),
-      tk(:SPACE,       0, 1, 13, nil, ' '),
-      tk(:SYMBOL,      0, 1, 14, nil, ':foo'),
-      tk(:COMMA,       0, 1, 18, nil, ','),
-      tk(:SPACE,       0, 1, 19, nil, ' '),
-      tk(:SYMBOL,      0, 1, 20, nil, ':bar'),
-      tk(:NL,          0, 1, 24, nil, "\n"),
+      {
+        :line_no => 1, :char_no => 1, :kind => :on_comment,
+        :text => "# File #{@top_level.relative_name}, line 1"
+      },
+      { :line_no => 0, :char_no => 0, :kind => :on_nl, :text => "\n" },
+      { :line_no => 1, :char_no => 1, :kind => :on_sp, :text => '' },
+      { :line_no => 1, :char_no => 0, :kind => :on_ident, :text => 'add_my_method' },
+      { :line_no => 1, :char_no => 13, :kind => :on_sp, :text => ' ' },
+      { :line_no => 1, :char_no => 14, :kind => :on_symbol, :text => ':foo' },
+      { :line_no => 1, :char_no => 18, :kind => :on_comma, :text => ',' },
+      { :line_no => 1, :char_no => 19, :kind => :on_sp, :text => ' ' },
+      { :line_no => 1, :char_no => 20, :kind => :on_symbol, :text => ':bar' },
+      { :line_no => 1, :char_no => 24, :kind => :on_nl, :text => "\n" }
     ]
 
     assert_equal stream, foo.token_stream
