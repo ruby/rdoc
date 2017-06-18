@@ -385,9 +385,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Return a superclass, which can be either a constant of an expression
 
   def get_class_specification
-    case peek_tk
-    when TkSELF then return 'self'
-    when TkGVAR then return ''
+    tk = peek_tk
+    if :on_kw == tk[:kind] && 'self' == tk[:text]
+      return 'self'
+    elsif :on_gvar == tk[:kind]
+      return ''
     end
 
     res = get_constant
@@ -398,8 +400,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     tk = get_tk
 
-    case tk
-    when TkNL, TkCOMMENT, TkSEMICOLON then
+    case tk[:kind]
+    when :on_nl, :on_comment, :on_semicolon then
       unget_tk(tk)
       return res
     end
