@@ -1454,47 +1454,43 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # for a singleton method.
 
   def parse_method_name_singleton container, name_t # :nodoc:
-    @scanner.lex_state = :EXPR_FNAME
     skip_tkspace
     name_t2 = get_tk
 
-    name =
-      case name_t
-      when TkSELF, TkMOD then
-        case name_t2
-          # NOTE: work around '[' being consumed early and not being re-tokenized
-          # as a TkAREF
-        when TkfLBRACK then
-          get_tk
-          '[]'
-        else
-          name_t2.name
-        end
-      when TkCONSTANT then
-        name = name_t2.name
-
-        container = get_method_container container, name_t
-
-        return unless container
-
-        name
-      when TkIDENTIFIER, TkIVAR, TkGVAR then
-        parse_method_dummy container
-
-        nil
-      when TkTRUE, TkFALSE, TkNIL then
-        klass_name = "#{name_t.name.capitalize}Class"
-        container = @store.find_class_named klass_name
-        container ||= @top_level.add_class RDoc::NormalClass, klass_name
-
-        name_t2.name
+    if (:on_kw == name_t[:kind] && 'self' == name_t[:text]) || (:on_op == name_t[:kind] && '%' == name_t[:text]) then
+      # NOTE: work around '[' being consumed early and not being re-tokenized
+      # as a TkAREF
+      if :on_lbracket == name_t2[:kind]
+        get_tk
+        name = '[]'
       else
-        warn "unexpected method name token #{name_t.inspect}"
-        # break
-        skip_method container
-
-        nil
+        name = name_t2[:text]
       end
+    elsif :on_const == name_t[:kind] then
+      name = name_t2[:text]
+
+      container = get_method_container container, name_t
+
+      return unless container
+
+      name
+    elsif :on_ident == name_t[:kind] || :on_ivar == name_t[:kind] || :on_gvar == name_t[:kind] then
+      parse_method_dummy container
+
+      name = nil
+    elsif (:on_kw == name_t[:kind]) && ('true' == name_t[:text] || 'false' == name_t[:text] || 'nil' == name_t[:text]) then
+      klass_name = "#{name_t[:text].capitalize}Class"
+      container = @store.find_class_named klass_name
+      container ||= @top_level.add_class RDoc::NormalClass, klass_name
+
+      name = name_t2[:text]
+    else
+      warn "unexpected method name token #{name_t.inspect}"
+      # break
+      skip_method container
+
+      name = nil
+    end
 
     return name, container
   end
