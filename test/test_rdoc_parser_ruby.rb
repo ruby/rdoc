@@ -2116,19 +2116,23 @@ end
     assert_equal 2, x.method_list.length
     a = x.method_list.first
 
+
     expected = [
-      tk(:COMMENT,     0, 2, 1, nil,   "# File #{@filename}, line 2"),
-      tk(:NL,          0, 0, 0, nil,   "\n"),
-      tk(:SPACE,       0, 1, 1, nil,   ''),
-      tk(:DEF,         8, 2, 0, 'def', 'def'),
-      tk(:SPACE,      11, 2, 3, nil,   ' '),
-      tk(:IDENTIFIER, 12, 2, 4, 'a',   'a'),
-      tk(:NL,         13, 2, 5, nil,   "\n"),
-      tk(:REGEXP,     14, 3, 0, nil,   '%r{#}'),
-      tk(:NL,         19, 3, 5, nil,   "\n"),
-      tk(:DREGEXP,    20, 4, 0, nil,   '%r{#{}}'),
-      tk(:NL,         27, 4, 7, nil,   "\n"),
-      tk(:END,        28, 5, 0, 'end', 'end'),
+      {
+        :line_no => 2, :char_no => 1, :kind => :on_comment,
+        :text => "# File #{@filename}, line 2"
+      },
+      { :line_no => 0, :char_no => 0, :kind => :on_nl, :text => "\n" },
+      { :line_no => 1, :char_no => 1, :kind => :on_sp, :text => '' },
+      { :line_no => 2, :char_no => 0, :kind => :on_kw, :text => 'def' },
+      { :line_no => 2, :char_no => 3, :kind => :on_sp, :text => ' ' },
+      { :line_no => 2, :char_no => 4, :kind => :on_ident, :text => 'a' },
+      { :line_no => 2, :char_no => 5, :kind => :on_nl, :text => "\n" },
+      { :line_no => 3, :char_no => 0, :kind => :on_regexp_beg, :text => '%r{' },
+      { :line_no => 3, :char_no => 3, :kind => :on_tstring_content, :text => '#' },
+      { :line_no => 3, :char_no => 4, :kind => :on_regexp_end, :text => '}' },
+      { :line_no => 3, :char_no => 5, :kind => :on_nl, :text => "\n" },
+      { :line_no => 4, :char_no => 0, :kind => :on_kw, :text => 'end' }
     ]
 
     assert_equal expected, a.token_stream
