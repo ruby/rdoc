@@ -1303,7 +1303,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           break unless last_tk and :on_comma == last_tk[:kind]
         elsif :on_sp == tk[:kind] then
           # expression continues
-        elsif :on_op == tk[:kind] && 'do' == tk[:text] then
+        elsif :on_kw == tk[:kind] && 'do' == tk[:text] then
           parse_statements container, single, meth
           break
         else

@@ -1497,7 +1497,8 @@ end
 
     @parser.parse_meta_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
 
-    assert_equal tk(:NL, 0, 3, 3, 3, "\n"), @parser.get_tk
+    rest = { :line_no => 3, :char_no => 3, :kind => :on_nl, :text => "\n" }
+    assert_equal rest, @parser.get_tk
   end
 
   def test_parse_meta_method_define_method
