@@ -1268,7 +1268,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     if :on_symbol == name_t[:kind] then
       name_t[:text][1..-1]
-    elsif :on_tstring_beg then
+    elsif :on_tstring_beg == name_t[:kind] then
       name_t = get_tk # :on_tstring_content
       get_tk # skip :on_tstring_end
       name_t[:text]
