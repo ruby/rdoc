@@ -13,6 +13,10 @@ module RDoc::Parser::RubyTools
     @token_listeners << obj
   end
 
+  def lex_end?
+    @scanner_point >= @scanner.size
+  end
+
   ##
   # Fetches the next token from the scanner
 

@@ -419,8 +419,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
     skip_tkspace false
     tk = get_tk
 
-    while TkCOLON2 === tk or TkCOLON3 === tk or TkCONSTANT === tk do
-      res += tk.name
+    while (:on_op == tk[:kind] && '::' == tk[:text]) || :on_const == tk[:kind] do
+      res += tk[:text]
       tk = get_tk
     end
 
@@ -709,34 +709,38 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Extracts call parameters from the token stream.
 
   def parse_call_parameters(tk)
-    end_token = case tk
-                when TkLPAREN, TkfLPAREN
-                  TkRPAREN
-                when TkRPAREN
+    end_token = case tk[:kind]
+                when :on_lparen
+                  :on_rparen
+                when :on_rparen
                   return ""
                 else
-                  TkNL
+                  :on_nl
                 end
     nest = 0
 
     loop do
-      case tk
-      when TkSEMICOLON
+      break if tk.nil?
+      case tk[:kind]
+      when :on_semicolon
         break
-      when TkLPAREN, TkfLPAREN
+      when :on_lparen
         nest += 1
       when end_token
-        if end_token == TkRPAREN
+        if end_token == :on_rparen
           nest -= 1
-          break if @scanner.lex_state == :EXPR_END and nest <= 0
+          break if lex_end? and nest <= 0
         else
-          break unless @scanner.continue
+          break if lex_end?
         end
-      when TkCOMMENT, TkASSIGN, TkOPASGN
+      when :on_comment
         unget_tk(tk)
         break
-      when nil then
-        break
+      when :on_op
+        if tk[:text] =~ /^(.{1,2})?=$/
+          unget_tk(tk)
+          break
+        end
       end
       tk = get_tk
     end
@@ -860,49 +864,33 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # true, no found constants will be added to RDoc.
 
   def parse_constant container, tk, comment, ignore_constants = false
-    line_no = tk.line_no
+    line_no = tk[:line_no]
 
-    name = tk.name
+    name = tk[:text]
     skip_tkspace false
 
     return unless name =~ /^\w+$/
 
     eq_tk = get_tk
 
-    if TkCOLON2 === eq_tk then
+    if :on_op == eq_tk[:kind] && '::' == eq_tk[:text] then
       unget_tk eq_tk
       unget_tk tk
 
       container, name_t, = get_class_or_module container, ignore_constants
 
-      name = name_t.name
+      name = name_t[:text]
 
       eq_tk = get_tk
     end
 
-    is_array_or_hash = false
-    if TkfLBRACK === eq_tk
-      nest = 1
-      while bracket_tk = get_tk
-        case bracket_tk
-        when TkfLBRACK, TkLBRACK
-          nest += 1
-        when TkRBRACK
-          nest -= 1
-          break if nest == 0
-        end
-      end
-      skip_tkspace false
-      eq_tk = get_tk
-      is_array_or_hash = true
-    end
-
-    unless TkASSIGN === eq_tk then
+    unless :on_op == eq_tk[:kind] && '=' == eq_tk[:text] then
       unget_tk eq_tk
       return false
     end
 
-    if TkGT === peek_tk then
+    check_tk = peek_tk
+    if :on_op == check_tk[:kind] && '>' == check_tk[:text] then
       unget_tk eq_tk
       return
     end
