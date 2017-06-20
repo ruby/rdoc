@@ -1848,7 +1848,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       skip_tkspace false
 
       tk1 = get_tk
-      unless TkCOMMA === tk1 then
+      if tk1.nil? || :on_comma != tk1[:kind] then
         unget_tk tk1
         break
       end
@@ -1867,12 +1867,16 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Returns symbol text from the next token
 
   def parse_symbol_in_arg
-    case tk = get_tk
-    when TkSYMBOL
-      tk.text.sub(/^:/, '')
-    when TkSTRING
-      eval @read[-1]
-    when TkDSTRING, TkIDENTIFIER then
+    tk = get_tk
+    if :on_symbol == tk[:kind]
+      tk[:text].sub(/^:/, '')
+    #elsif TkSTRING
+    #  eval @read[-1]
+    elsif :on_ident == tk[:kind] then
+      nil # ignore
+    elsif :on_tstring_beg == tk[:kind] then
+      get_tk # skip :on_tstring_content
+      get_tk # skip :on_tstring_end
       nil # ignore
     else
       warn("Expected symbol or string, got #{tk.inspect}") if $DEBUG_RDOC
@@ -2133,8 +2137,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def skip_tkspace_comment(skip_nl = true)
     loop do
       skip_tkspace skip_nl
-      return unless @scanner[@scanner_point][:kind] == :on_comment
-      @scanner_point += 1
+      next_tk = peek_tk
+      return if next_tk.nil? || next_tk[:kind] != :on_comment
+      get_tk
     end
   end
 
