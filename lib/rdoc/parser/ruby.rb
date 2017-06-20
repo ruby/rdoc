@@ -352,7 +352,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
     skip_tkspace false
     given_name << name_t[:text]
 
-    while (tk = peek_tk) and :on_op == tk[:kind] and '::' == tk[:text] do
+    is_self = name_t[:kind] == :on_op && name_t[:text] == '<<'
+    while !is_self && (tk = peek_tk) and :on_op == tk[:kind] and '::' == tk[:text] do
       prev_container = container
       container = container.find_module_named name_t[:text]
       container ||=
