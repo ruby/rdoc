@@ -321,10 +321,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def get_bool
     skip_tkspace
     tk = get_tk
-    case tk
-    when TkTRUE
+    if :on_kw == tk[:kind] && 'true' == tk[:text]
       true
-    when TkFALSE, TkNIL
+    elsif :on_kw == tk[:kind] && ('false' == tk[:text] || 'nil' == tk[:text])
       false
     else
       unget_tk tk
@@ -622,7 +621,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       skip_tkspace false
       tk = get_tk
 
-      if TkCOMMA === tk then
+      if :on_comma == tk[:kind] then
         rw = "RW" if get_bool
       else
         unget_tk tk
@@ -642,7 +641,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # comment for each to +comment+.
 
   def parse_attr_accessor(context, single, tk, comment)
-    line_no = tk.line_no
+    line_no = tk[:line_no]
 
     args = parse_symbol_arg
     rw = "?"
@@ -653,7 +652,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     # and add found items appropriately but here we do not.  I'm not sure why.
     return if @track_visibility and not tmp.document_self
 
-    case tk.name
+    case tk[:text]
     when "attr_reader"   then rw = "R"
     when "attr_writer"   then rw = "W"
     when "attr_accessor" then rw = "RW"
