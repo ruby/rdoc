@@ -925,15 +925,16 @@ class RDoc::Parser::Ruby < RDoc::Parser
     tk = get_tk
 
     loop do
-      case tk
-      when TkSEMICOLON then
+      break if tk.nil?
+      if :on_semicolon == tk[:kind] then
         break if nest <= 0
-      when TkLPAREN, TkfLPAREN, TkLBRACE, TkfLBRACE, TkLBRACK, TkfLBRACK,
-           TkDO, TkIF, TkUNLESS, TkCASE, TkDEF, TkBEGIN then
+      elsif [:on_lparen, :on_lbrace, :on_lbracket].include?(tk[:kind]) ||
+            (:on_kw == tk[:kind] && %w{do if unless case def begin}.include?(tk[:text])) then
         nest += 1
-      when TkRPAREN, TkRBRACE, TkRBRACK, TkEND then
+      elsif [:on_rparen, :on_rbrace, :on_rbracket].include?(tk[:kind]) ||
+            :on_kw == tk[:kind] && 'end' == tk[:text] then
         nest -= 1
-      when TkCOMMENT then
+      elsif :on_comment == tk[:kind] then
         if nest <= 0 and stop_at_EXPR_END then
           unget_tk tk
           break
@@ -941,24 +942,21 @@ class RDoc::Parser::Ruby < RDoc::Parser
           unget_tk tk
           read_documentation_modifiers constant, RDoc::CONSTANT_MODIFIERS
         end
-      when TkCONSTANT then
-        rhs_name << tk.name
+      elsif :on_const == tk[:kind] then
+        rhs_name << tk[:text]
 
-        if nest <= 0 and TkNL === peek_tk then
-          create_module_alias container, constant, rhs_name unless is_array_or_hash
+        next_tk = peek_tk
+        if nest <= 0 and (next_tk.nil? || :on_nl == next_tk[:kind]) then
+          create_module_alias container, constant, rhs_name
           break
         end
-      when TkNL then
+      elsif :on_nl == tk[:kind] then
         if nest <= 0 and stop_at_EXPR_END then
           unget_tk tk
           break
         end
-      when TkCOLON2, TkCOLON3 then
+      elsif :on_op == tk[:kind] && '::' == tk[:text]
         rhs_name << '::'
-      when TkBACKSLASH then
-        get_tk if TkNL === peek_tk
-      when nil then
-        break
       end
       tk = get_tk
     end
