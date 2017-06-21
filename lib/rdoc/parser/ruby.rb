@@ -1591,10 +1591,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
       tk = get_tk
     end
 
-    if :on_tstring_beg == tk[:kind] then
-      tk = get_tk # :on_tstring_content
-      get_tk # skip :on_tstring_end
-      name = tk[:text]
+    if :on_tstring == tk[:kind] then
+      name = eval tk[:text]
     end
 
     if name then
