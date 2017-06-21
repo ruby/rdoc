@@ -419,7 +419,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     skip_tkspace false
     tk = get_tk
 
-    while (:on_op == tk[:kind] && '::' == tk[:text]) || :on_const == tk[:kind] do
+    while tk && ((:on_op == tk[:kind] && '::' == tk[:text]) || :on_const == tk[:kind]) do
       res += tk[:text]
       tk = get_tk
     end
@@ -1092,7 +1092,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         record_location obj
       end
 
-      return unless :on_comma == peek_tk[:kind]
+      return if peek_tk.nil? || :on_comma != peek_tk[:kind]
 
       get_tk
     end
