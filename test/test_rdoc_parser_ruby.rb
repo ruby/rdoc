@@ -3016,10 +3016,10 @@ end
 
   def test_sanity_integer
     util_parser '1'
-    assert_equal '1', @parser.get_tk.text
+    assert_equal '1', @parser.get_tk[:text]
 
     util_parser '1.0'
-    assert_equal '1.0', @parser.get_tk.text
+    assert_equal '1.0', @parser.get_tk[:text]
   end
 
   def test_sanity_interpolation

@@ -207,7 +207,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # methods.
 
   def get_visibility_information tk, single # :nodoc:
-    vis_type  = tk.name
+    vis_type  = tk[:text]
     singleton = single == SINGLE
 
     vis =
@@ -436,7 +436,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     nest = 0
 
-    while TkLPAREN === (tk = peek_tk) or TkfLPAREN === tk do
+    while :on_lparen == (tk = peek_tk)[:kind] do
       get_tk
       skip_tkspace
       nest += 1
@@ -447,7 +447,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     while nest > 0
       skip_tkspace
       tk = get_tk
-      nest -= 1 if TkRPAREN === tk
+      nest -= 1 if :on_rparen == tk[:kind]
     end
 
     name
@@ -1093,7 +1093,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         record_location obj
       end
 
-      return unless TkCOMMA === peek_tk
+      return unless :on_comma == peek_tk[:kind]
 
       get_tk
     end
@@ -1584,12 +1584,16 @@ class RDoc::Parser::Ruby < RDoc::Parser
     skip_tkspace_comment
     tk = get_tk
 
-    if TkLPAREN === tk then
+    if :on_lparen == tk[:kind] then
       skip_tkspace_comment
       tk = get_tk
     end
 
-    name = tk.text if TkSTRING === tk
+    if :on_tstring_beg == tk[:kind] then
+      tk = get_tk # :on_tstring_content
+      get_tk # skip :on_tstring_end
+      name = tk[:text]
+    end
 
     if name then
       @top_level.add_require RDoc::Require.new(name, comment)
@@ -1909,15 +1913,15 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     skip_tkspace_comment false
 
-    case peek_tk
-      # Ryan Davis suggested the extension to ignore modifiers, because he
-      # often writes
-      #
-      #   protected unless $TESTING
-      #
-    when TkNL, TkUNLESS_MOD, TkIF_MOD, TkSEMICOLON then
+    ptk = peek_tk
+    # Ryan Davis suggested the extension to ignore modifiers, because he
+    # often writes
+    #
+    #   protected unless $TESTING
+    #
+    if [:on_nl, :on_semicolon].include?(ptk[:kind]) || (:on_kw == ptk[:kind] && (['if', 'unless'].include?(ptk[:text]))) then
       container.ongoing_visibility = vis
-    when TkDEF
+    elsif :on_kw == ptk[:kind] && 'def' == ptk[:text]
       container.current_line_visibility = vis
     else
       update_visibility container, vis_type, vis, singleton
