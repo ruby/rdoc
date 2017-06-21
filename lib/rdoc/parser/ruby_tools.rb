@@ -42,7 +42,9 @@ module RDoc::Parser::RubyTools
       tk = nil
     end
 
-    if tk && :on_symbeg == tk[:kind] then
+    return nil unless tk
+
+    if :on_symbeg == tk[:kind] then
       prev_line_no = tk[:line_no]
       prev_char_no = tk[:char_no]
 
