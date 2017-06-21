@@ -243,7 +243,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     tk = get_tk
 
-    while :on_comment == tk[:kind]
+    while tk && :on_comment == tk[:kind]
       if first_line and tk[:text] =~ /\A#!/ then
         skip_tkspace
         tk = get_tk
