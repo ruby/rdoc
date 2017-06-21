@@ -2081,7 +2081,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     b_nest = 0
     nest = 0
-    @scanner.continue = false
 
     loop do
       case tk
