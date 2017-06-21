@@ -1048,8 +1048,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def parse_comment_tomdoc container, tk, comment
     return unless signature = RDoc::TomDoc.signature(comment)
-    column  = tk.char_no
-    line_no = tk.line_no
+    column  = tk[:char_no]
+    line_no = tk[:line_no]
 
     name, = signature.split %r%[ \(]%, 2
 
@@ -1058,12 +1058,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.line      = line_no
 
     meth.start_collecting_tokens
-    indent = TkSPACE.new 0, 1, 1
-    indent.set_text " " * column
-
-    position_comment = TkCOMMENT.new 0, line_no, 1
-    position_comment.set_text "# File #{@top_level.relative_name}, line #{line_no}"
-    meth.add_tokens [position_comment, NEWLINE_TOKEN, indent]
+    indent = { :line_no => 1, :char_no => 1, :kind => :on_sp, :text => ' ' * column }
+    position_comment = { :line_no => line_no, :char_no => 1, :kind => :on_comment }
+    position_comment[:text] = "# File #{@top_level.relative_name}, line #{line_no}"
+    newline = { :line_no => 0, :char_no => 0, :kind => :on_nl, :text => "\n" }
+    meth.add_tokens [position_comment, newline, indent]
 
     meth.call_seq = signature
 
