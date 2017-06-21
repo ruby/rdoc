@@ -1609,18 +1609,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     nest = 0
     while tk = get_tk
-      case tk
-      when TkNL, TkSEMICOLON then
+      case tk[:kind]
+      when :on_nl, :on_semicolon then
         break
-      when TkCOMMA then
+      when :on_comma then
         skip_tkspace false
 
-        get_tk if TkNL === peek_tk
-      when TkLPAREN, TkfLPAREN then
-        nest += 1
-      when TkRPAREN then
-        nest -= 1
-        break if nest < 0
+        get_tk if :on_nl == peek_tk[:kind]
       end
 
       skip_tkspace false
