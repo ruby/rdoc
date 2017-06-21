@@ -2964,7 +2964,7 @@ end
   end
 
   def test_read_directive_one_liner
-    parser = util_parser '; end # :category: test'
+    parser = util_parser '; def foo; end # :category: test'
 
     directive, value = parser.read_directive %w[category]
 
