@@ -1656,7 +1656,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
             comment.force_encoding @encoding if @encoding
           end
 
-          while :on_comment == tk[:kind] do
+          while tk and :on_comment == tk[:kind] do
             comment << tk[:text]
             comment << "\n" unless "\n" == tk[:text].chars.last
 
