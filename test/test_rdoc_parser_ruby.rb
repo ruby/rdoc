@@ -2812,17 +2812,21 @@ RUBY
   end
 
   def test_parse_symbol_in_arg
-    util_parser ':blah "blah" "#{blah}" blah'
+    util_parser '[:blah, "blah", "#{blah}", blah]'
+    @parser.get_tk # skip '['
 
     assert_equal 'blah', @parser.parse_symbol_in_arg
+    @parser.get_tk # skip ','
 
     @parser.skip_tkspace
 
     assert_equal 'blah', @parser.parse_symbol_in_arg
+    @parser.get_tk # skip ','
 
     @parser.skip_tkspace
 
     assert_equal nil, @parser.parse_symbol_in_arg
+    @parser.get_tk # skip ','
 
     @parser.skip_tkspace
 

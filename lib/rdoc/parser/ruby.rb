@@ -1870,8 +1870,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
     tk = get_tk
     if :on_symbol == tk[:kind]
       tk[:text].sub(/^:/, '')
-    #elsif TkSTRING
-    #  eval @read[-1]
+    elsif :on_tstring == tk[:kind]
+      begin
+        eval tk[:text]
+      rescue
+        nil
+      end
     elsif :on_ident == tk[:kind] then
       nil # ignore
     elsif :on_tstring_beg == tk[:kind] then
