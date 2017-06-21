@@ -1194,10 +1194,12 @@ EOF
     assert_equal klass.current_section, foo.section
 
     stream = [
-      tk(:COMMENT, 0, 1, 1, nil,
-         "# File #{@top_level.relative_name}, line 1"),
-      RDoc::Parser::Ruby::NEWLINE_TOKEN,
-      tk(:SPACE,   0, 1, 1, nil, ''),
+      {
+        :line_no => 1, :char_no => 1, :kind => :on_comment,
+        :text => "# File #{@top_level.relative_name}, line 1"
+      },
+      { :line_no => 0, :char_no => 0, :kind => :on_nl, :text => "\n" },
+      { :line_no => 1, :char_no => 1, :kind => :on_sp, :text => '' }
     ]
 
     assert_equal stream, foo.token_stream
