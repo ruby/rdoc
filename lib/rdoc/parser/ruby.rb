@@ -386,7 +386,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def get_class_specification
     tk = peek_tk
-    if :on_kw == tk[:kind] && 'self' == tk[:text]
+    if tk.nil?
+      return ''
+    elsif :on_kw == tk[:kind] && 'self' == tk[:text]
       return 'self'
     elsif :on_gvar == tk[:kind]
       return ''
@@ -399,6 +401,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     get_tkread # empty out read buffer
 
     tk = get_tk
+    return res unless tk
 
     case tk[:kind]
     when :on_nl, :on_comment, :on_semicolon then
