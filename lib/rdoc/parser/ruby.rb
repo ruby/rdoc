@@ -1945,7 +1945,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     return if method.block_params
 
     get_tkread
-    @scanner.continue = false
     method.block_params = parse_method_or_yield_parameters
   end
 
@@ -2083,28 +2082,36 @@ class RDoc::Parser::Ruby < RDoc::Parser
     nest = 0
 
     loop do
-      case tk
-      when TkSEMICOLON, TkNL then
+      break unless tk
+      case tk[:kind]
+      when :on_semicolon then
         break if b_nest.zero?
-      when TkLPAREN, TkfLPAREN then
+      when :on_lparen then
         nest += 1
-      when TkRPAREN then
-        nest -= 1
-      when TkBEGIN then
-        b_nest += 1
-      when TkEND then
-        b_nest -= 1
-      when TkDO
-        break if nest.zero?
-      when nil then
-        break
+      when :on_kw then
+        case tk[:text]
+        when 'begin'
+          b_nest += 1
+        when 'end'
+          b_nest -= 1
+        when 'do'
+          break if nest.zero?
+        end
+      when end_token[:kind] then
+        if end_token == :on_rparen
+          nest -= 1
+          break if @scanner.lex_state == :EXPR_END and nest.zero?
+        else
+          break
+          #break unless @scanner.continue
+        end
       end
       tk = get_tk
     end
 
     skip_tkspace false
 
-    get_tk if TkDO === peek_tk
+    get_tk if peek_tk && :on_kw == peek_tk[:kind] && 'do' == peek_tk[:text]
   end
 
   ##
