@@ -3036,15 +3036,15 @@ end
   def test_sanity_interpolation_crazy
     util_parser '"#{"#{"a")}" if b}"'
 
-    assert_equal '"#{"#{"a")}" if b}"', @parser.get_tk.text
-    assert_equal RDoc::RubyToken::TkNL, @parser.get_tk.class
+    assert_equal '"#{"#{"a")}" if b}"', @parser.get_tk[:text]
+    assert_equal nil, @parser.get_tk
   end
 
   def test_sanity_interpolation_curly
     util_parser '%{ #{} }'
 
-    assert_equal '%{ #{} }', @parser.get_tk.text
-    assert_equal RDoc::RubyToken::TkNL, @parser.get_tk.class
+    assert_equal '%{ #{} }', @parser.get_tk[:text]
+    assert_equal nil, @parser.get_tk
   end
 
   def test_sanity_interpolation_format

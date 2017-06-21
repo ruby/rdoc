@@ -73,6 +73,20 @@ module RDoc::Parser::RubyTools
           obj.pop_token
         end if @token_listeners
       end
+    elsif :on_tstring_beg == tk[:kind] then
+      string = tk[:text]
+      loop do
+        inner_str_tk = get_tk
+        if inner_str_tk.nil?
+          break
+        elsif :on_tstring_end == inner_str_tk[:kind]
+          string = string + inner_str_tk[:text]
+          break
+        else
+          string = string + inner_str_tk[:text]
+        end
+      end
+      tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => :on_tstring, :text => string }
     end
 
     # inform any listeners of our shiny new token
