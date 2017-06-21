@@ -3028,7 +3028,7 @@ end
 
     while tk = @parser.get_tk do last_tk = tk end
 
-    assert_equal "\n", last_tk.text
+    assert_equal 'end', last_tk[:text]
   end
 
   # If you're writing code like this you're doing it wrong
