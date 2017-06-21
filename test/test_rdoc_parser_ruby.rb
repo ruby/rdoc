@@ -2930,7 +2930,7 @@ end
     assert_equal 'category', directive
     assert_equal 'test', value
 
-    assert_kind_of RDoc::RubyToken::TkNL, parser.get_tk
+    assert_equal nil, parser.get_tk
   end
 
   def test_read_directive_allow
