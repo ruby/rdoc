@@ -87,6 +87,12 @@ module RDoc::Parser::RubyTools
         end
       end
       tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => :on_tstring, :text => string }
+    elsif :on_embdoc_beg == tk[:kind] then
+      string = ''
+      until :on_embdoc_end == (embdoc_tk = get_tk)[:kind] do
+        string = string + embdoc_tk[:text]
+      end
+      tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => :on_comment, :text => string }
     end
 
     # inform any listeners of our shiny new token
