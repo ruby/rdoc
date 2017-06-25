@@ -892,12 +892,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
       return false
     end
 
-    check_tk = peek_tk
-    if :on_op == check_tk[:kind] && '>' == check_tk[:text] then
-      unget_tk eq_tk
-      return
-    end
-
     value = ''
     con = RDoc::Constant.new name, value, comment
 
