@@ -1477,8 +1477,16 @@ end
       { :line_no => 1, :char_no => 20, :kind => :on_symbol, :text => ':bar' },
       { :line_no => 1, :char_no => 24, :kind => :on_nl, :text => "\n" }
     ]
+    parsed_stream = foo.token_stream.map { |tk|
+      {
+        :line_no => tk[:line_no],
+        :char_no => tk[:char_no],
+        :kind => tk[:kind],
+        :text => tk[:text]
+      }
+    }
 
-    assert_equal stream, foo.token_stream
+    assert_equal stream, parsed_stream
   end
 
   def test_parse_meta_method_block
@@ -1500,7 +1508,9 @@ end
     @parser.parse_meta_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
 
     rest = { :line_no => 3, :char_no => 3, :kind => :on_nl, :text => "\n" }
-    assert_equal rest, @parser.get_tk
+    tk = @parser.get_tk
+    tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => tk[:kind], :text => tk[:text] }
+    assert_equal rest, tk
   end
 
   def test_parse_meta_method_define_method
@@ -1676,8 +1686,17 @@ end
       { :line_no => 1, :char_no => 9, :kind => :on_sp, :text => ' ' },
       { :line_no => 1, :char_no => 10, :kind => :on_symbol, :text => ':bar' },
       { :line_no => 1, :char_no => 14, :kind => :on_sp, :text => ' ' },
-      { :line_no => 1, :char_no => 15, :kind => :on_kw, :text => 'end' }]
-    assert_equal stream, foo.token_stream
+      { :line_no => 1, :char_no => 15, :kind => :on_kw, :text => 'end' }
+    ]
+    parsed_stream = foo.token_stream.map { |tk|
+      {
+        :line_no => tk[:line_no],
+        :char_no => tk[:char_no],
+        :kind => tk[:kind],
+        :text => tk[:text]
+      }
+    }
+    assert_equal stream, parsed_stream
   end
 
   def test_parse_redefinable_methods
@@ -2139,8 +2158,16 @@ end
       { :line_no => 3, :char_no => 5, :kind => :on_nl, :text => "\n" },
       { :line_no => 4, :char_no => 0, :kind => :on_kw, :text => 'end' }
     ]
+    parsed_stream = a.token_stream.map { |tk|
+      {
+        :line_no => tk[:line_no],
+        :char_no => tk[:char_no],
+        :kind => tk[:kind],
+        :text => tk[:text]
+      }
+    }
 
-    assert_equal expected, a.token_stream
+    assert_equal expected, parsed_stream
   end
 
   def test_parse_statements_encoding
