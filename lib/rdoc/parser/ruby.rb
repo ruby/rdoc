@@ -1378,8 +1378,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # it is a singleton or regular method.
 
   def parse_method_name container # :nodoc:
-#    @scanner.lex_state = :EXPR_FNAME
-
     skip_tkspace
     name_t = get_tk
     back_tk = skip_tkspace
