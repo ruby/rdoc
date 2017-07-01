@@ -231,13 +231,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def collect_first_comment
     skip_tkspace
     comment = ''
-    #comment.force_encoding @encoding if @encoding
+    comment.force_encoding @encoding if @encoding
     first_line = true
     first_comment_tk_kind = nil
 
     tk = get_tk
 
-    while tk && :on_comment == tk[:kind]
+    while tk && (:on_comment == tk[:kind] or :on_embdoc == tk[:kind])
       if first_line and tk[:text] =~ /\A#!/ then
         skip_tkspace
         tk = get_tk
@@ -398,7 +398,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     return res unless tk
 
     case tk[:kind]
-    when :on_nl, :on_comment, :on_semicolon then
+    when :on_nl, :on_comment, :on_embdoc, :on_semicolon then
       unget_tk(tk)
       return res
     end
@@ -726,7 +726,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         else
           break if (tk[:state] & RipperStateLex::EXPR_END)
         end
-      when :on_comment
+      when :on_comment, :on_embdoc
         unget_tk(tk)
         break
       when :on_op
@@ -920,7 +920,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       elsif [:on_rparen, :on_rbrace, :on_rbracket].include?(tk[:kind]) ||
             :on_kw == tk[:kind] && 'end' == tk[:text] then
         nest -= 1
-      elsif :on_comment == tk[:kind] then
+      elsif (:on_comment == tk[:kind] or :on_embdoc == tk[:kind]) then
         if nest <= 0 and (tk[:state] & RipperStateLex::EXPR_END) then
           unget_tk tk
           break
@@ -1240,10 +1240,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     if :on_symbol == name_t[:kind] then
       name_t[:text][1..-1]
-    elsif :on_tstring_beg == name_t[:kind] then
-      name_t = get_tk # :on_tstring_content
-      get_tk # skip :on_tstring_end
-      name_t[:text]
+    elsif :on_tstring == name_t[:kind] then
+      name_t[:text][1..-2]
     elsif :on_op == name_t[:kind] && '=' == name_t[:text] then # ignore
       remove_token_listener self
 
@@ -1504,11 +1502,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
         end
       when :on_rparen then
         nest -= 1
-      when method && method.block_params.nil? && :on_comment then
-        unget_tk tk
-        read_documentation_modifiers method, modifiers
-        @read.pop
-      when :on_comment then
+      when :on_comment, :on_embdoc then
+        if method && method.block_params.nil? then
+          unget_tk tk
+          read_documentation_modifiers method, modifiers
+        end
         @read.pop
       when :on_kw
         unget_tk tk
@@ -1624,14 +1622,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
       keep_comment = false
       try_parse_comment = false
 
-      non_comment_seen = true unless :on_comment == tk[:kind]
+      non_comment_seen = true unless (:on_comment == tk[:kind] or :on_embdoc == tk[:kind])
 
       case tk[:kind]
       when :on_nl, :on_ignored_nl then
         skip_tkspace
         tk = get_tk
 
-        if tk and :on_comment == tk[:kind] then
+        if tk and (:on_comment == tk[:kind] or :on_embdoc == tk[:kind]) then
           if non_comment_seen then
             # Look for RDoc in a comment about to be thrown away
             non_comment_seen = parse_comment container, tk, comment unless
@@ -1641,7 +1639,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
             comment.force_encoding @encoding if @encoding
           end
 
-          while tk and :on_comment == tk[:kind] do
+          while tk and (:on_comment == tk[:kind] or :on_embdoc == tk[:kind]) do
             comment << tk[:text]
             comment << "\n" unless "\n" == tk[:text].chars.last
 
@@ -1959,7 +1957,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       if :on_nl == tk[:kind] or (:tk_kw == tk[:kind] && 'def' == tk[:text]) then
         return
-      elsif :on_comment == tk[:kind] then
+      elsif :on_comment == tk[:kind] or :on_embdoc == tk[:kind] then
         return unless tk[:text] =~ /\s*:?([\w-]+):\s*(.*)/
 
         directive = $1.downcase
@@ -1970,7 +1968,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
     end
   ensure
-    unless tokens.length == 1 and :on_comment == tokens.first[:kind] then
+    unless tokens.length == 1 and (:on_comment == tokens.first[:kind] or :on_embdoc == tokens.first[:kind]) then
       tokens.reverse_each do |token|
         unget_tk token
       end
@@ -2130,7 +2128,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     loop do
       skip_tkspace skip_nl
       next_tk = peek_tk
-      return if next_tk.nil? || next_tk[:kind] != :on_comment
+      return if next_tk.nil? || (:on_comment != next_tk[:kind] and :on_embdoc != next_tk[:kind])
       get_tk
     end
   end

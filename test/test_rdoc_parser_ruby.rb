@@ -74,7 +74,7 @@ class C; end
 
     comment = parser.collect_first_comment
 
-    assert_equal RDoc::Comment.new("=begin\nfirst\n=end\n\n", @top_level), comment
+    assert_equal RDoc::Comment.new("first\n", @top_level), comment
   end
 
   def test_get_class_or_module
