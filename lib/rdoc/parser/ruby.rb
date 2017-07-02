@@ -722,9 +722,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when end_token
         if end_token == :on_rparen
           nest -= 1
-          break if (tk[:state] & RipperStateLex::EXPR_END) and nest <= 0
+          break if RipperStateLex.end?(tk) and nest <= 0
         else
-          break if (tk[:state] & RipperStateLex::EXPR_END)
+          break if RipperStateLex.end?(tk)
         end
       when :on_comment, :on_embdoc
         unget_tk(tk)
@@ -921,7 +921,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
             :on_kw == tk[:kind] && 'end' == tk[:text] then
         nest -= 1
       elsif (:on_comment == tk[:kind] or :on_embdoc == tk[:kind]) then
-        if nest <= 0 and (tk[:state] & RipperStateLex::EXPR_END) then
+        if nest <= 0 and RipperStateLex.end?(tk) then
           unget_tk tk
           break
         else
@@ -937,7 +937,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           break
         end
       elsif :on_nl == tk[:kind] then
-        if nest <= 0 and (tk[:state] & RipperStateLex::EXPR_END) then
+        if nest <= 0 and RipperStateLex.end?(tk) then
           unget_tk tk
           break
         end

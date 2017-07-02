@@ -289,4 +289,8 @@ class RipperStateLex
     end
     tokens
   end
+
+  def self.end?(token)
+    (token[:state] & EXPR_END)
+  end
 end
