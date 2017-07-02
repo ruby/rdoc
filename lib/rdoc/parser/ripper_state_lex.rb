@@ -201,9 +201,6 @@ class RipperStateLex
     tk = @inner_lex.next
     case tk[:kind]
     when :on_symbeg then
-      prev_line_no = tk[:line_no]
-      prev_char_no = tk[:char_no]
-
       is_symbol = true
       symbol_tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => :on_symbol }
       case (tk1 = get_squashed_tk)[:kind]

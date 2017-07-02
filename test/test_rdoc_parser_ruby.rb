@@ -1477,12 +1477,12 @@ end
       { :line_no => 1, :char_no => 20, :kind => :on_symbol, :text => ':bar' },
       { :line_no => 1, :char_no => 24, :kind => :on_nl, :text => "\n" }
     ]
-    parsed_stream = foo.token_stream.map { |tk|
+    parsed_stream = foo.token_stream.map { |t|
       {
-        :line_no => tk[:line_no],
-        :char_no => tk[:char_no],
-        :kind => tk[:kind],
-        :text => tk[:text]
+        :line_no => t[:line_no],
+        :char_no => t[:char_no],
+        :kind => t[:kind],
+        :text => t[:text]
       }
     }
 
@@ -1688,12 +1688,12 @@ end
       { :line_no => 1, :char_no => 14, :kind => :on_sp, :text => ' ' },
       { :line_no => 1, :char_no => 15, :kind => :on_kw, :text => 'end' }
     ]
-    parsed_stream = foo.token_stream.map { |tk|
+    parsed_stream = foo.token_stream.map { |t|
       {
-        :line_no => tk[:line_no],
-        :char_no => tk[:char_no],
-        :kind => tk[:kind],
-        :text => tk[:text]
+        :line_no => t[:line_no],
+        :char_no => t[:char_no],
+        :kind => t[:kind],
+        :text => t[:text]
       }
     }
     assert_equal stream, parsed_stream
