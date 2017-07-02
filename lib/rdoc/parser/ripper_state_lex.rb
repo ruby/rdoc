@@ -76,6 +76,8 @@ class RipperStateLex
            '|', '||', '+=', '-=', '*=', '**=',
            '&=', '|=', '^=', '<<=', '>>=', '||=', '&&='
         @lex_state = EXPR_BEG
+      when ')', ']', '}'
+        @lex_state = EXPR_END
       else
         case @lex_state
         when EXPR_FNAME, EXPR_DOT
