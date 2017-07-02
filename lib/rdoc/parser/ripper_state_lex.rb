@@ -1,6 +1,6 @@
 require 'ripper'
 
-class RipperStateLex < Ripper::Filter
+class RipperStateLex
   EXPR_NONE = 0
   EXPR_BEG = 1
   EXPR_END = 2
@@ -20,173 +20,271 @@ class RipperStateLex < Ripper::Filter
   EXPR_ARG_ANY  =  (EXPR_ARG | EXPR_CMDARG)
   EXPR_END_ANY  =  (EXPR_END | EXPR_ENDARG | EXPR_ENDFN)
 
-  def initialize(code)
-    @lex_state = EXPR_BEG
-    @in_fname = false
-    @continue = false
-    reset
-    super(code)
-  end
+  class InnerStateLex < Ripper::Filter
+    include Enumerable
 
-  def reset
-    @command_start = false
-    @cmd_state = @command_start
-  end
-
-  def on_nl(tok, data)
-    case @lex_state
-    when EXPR_FNAME, EXPR_DOT
-      @continue = true
-    else
-      @continue = false
+    def initialize(code)
       @lex_state = EXPR_BEG
-    end
-    data.push({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
-  end
-
-  def on_ignored_nl(tok, data)
-    case @lex_state
-    when EXPR_FNAME, EXPR_DOT
-      @continue = true
-    else
-      @continue = false
-      @lex_state = EXPR_BEG
-    end
-    data.push({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
-  end
-
-  def on_op(tok, data)
-    case tok
-    when '!', '!=', '!~'
-      @lex_state = EXPR_BEG
-    when '<<'
-      # TODO next token?
-      case @lex_state
-      when EXPR_FNAME, EXPR_DOT
-        @lex_state = EXPR_ARG
-      else
-        @lex_state = EXPR_BEG
-      end
-    when '?'
-      @lex_state = :EXPR_BEG
-    when '&', '&&',
-         '|', '||', '+=', '-=', '*=', '**=',
-         '&=', '|=', '^=', '<<=', '>>=', '||=', '&&='
-      @lex_state = EXPR_BEG
-    else
-      case @lex_state
-      when EXPR_FNAME, EXPR_DOT
-        @lex_state = EXPR_ARG
-      else
-        @lex_state = EXPR_BEG
-      end
-    end
-    data.push({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
-  end
-
-  def on_kw(tok, data)
-    case tok
-    when 'class'
-      @lex_state = EXPR_CLASS
-      @in_fname = true
-    when 'def'
-      @lex_state = EXPR_FNAME
-      @continue = true
-      @in_fname = true
-    when 'if'
-      @lex_state = EXPR_BEG
-    else
-      if @lex_state == EXPR_FNAME
-        @lex_state = EXPR_END
-      else
-        @lex_state = EXPR_END
-      end
-    end
-    data.push({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
-  end
-
-  def on_tstring_beg(tok, data)
-    @lex_state = EXPR_BEG
-    data.push({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
-  end
-
-  def on_tstring_end(tok, data)
-    @lex_state = EXPR_END
-    data.push({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
-  end
-
-  def on_CHAR(tok, data)
-    @lex_state = EXPR_END
-    data.push({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
-  end
-
-  def on_period(tok, data)
-    @lex_state = EXPR_DOT
-    data.push({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
-  end
-
-  def on_int(tok, data)
-    @lex_state = EXPR_END | EXPR_ENDARG
-    data.push({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
-  end
-
-  def on_symbeg(tok, data)
-    @lex_state = EXPR_FNAME
-    @continue = true
-    data.push({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
-  end
-
-  def on_ident(tok, data)
-    if @in_fname
-      @lex_state = EXPR_ENDFN
       @in_fname = false
       @continue = false
-    elsif @continue
+      reset
+      super(code)
+    end
+
+    def reset
+      @command_start = false
+      @cmd_state = @command_start
+    end
+
+    def on_nl(tok, data)
       case @lex_state
-      when EXPR_DOT
+      when EXPR_FNAME, EXPR_DOT
+        @continue = true
+      else
+        @continue = false
+        @lex_state = EXPR_BEG
+      end
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_ignored_nl(tok, data)
+      case @lex_state
+      when EXPR_FNAME, EXPR_DOT
+        @continue = true
+      else
+        @continue = false
+        @lex_state = EXPR_BEG
+      end
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_op(tok, data)
+      case tok
+      when '!', '!=', '!~'
+        @lex_state = EXPR_BEG
+      when '<<'
+        # TODO next token?
+        case @lex_state
+        when EXPR_FNAME, EXPR_DOT
+          @lex_state = EXPR_ARG
+        else
+          @lex_state = EXPR_BEG
+        end
+      when '?'
+        @lex_state = :EXPR_BEG
+      when '&', '&&',
+           '|', '||', '+=', '-=', '*=', '**=',
+           '&=', '|=', '^=', '<<=', '>>=', '||=', '&&='
+        @lex_state = EXPR_BEG
+      else
+        case @lex_state
+        when EXPR_FNAME, EXPR_DOT
+          @lex_state = EXPR_ARG
+        else
+          @lex_state = EXPR_BEG
+        end
+      end
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_kw(tok, data)
+      case tok
+      when 'class'
+        @lex_state = EXPR_CLASS
+        @in_fname = true
+      when 'def'
+        @lex_state = EXPR_FNAME
+        @continue = true
+        @in_fname = true
+      when 'if'
+        @lex_state = EXPR_BEG
+      else
+        if @lex_state == EXPR_FNAME
+          @lex_state = EXPR_END
+        else
+          @lex_state = EXPR_END
+        end
+      end
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_tstring_beg(tok, data)
+      @lex_state = EXPR_BEG
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_tstring_end(tok, data)
+      @lex_state = EXPR_END
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_CHAR(tok, data)
+      @lex_state = EXPR_END
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_period(tok, data)
+      @lex_state = EXPR_DOT
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_int(tok, data)
+      @lex_state = EXPR_END | EXPR_ENDARG
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_symbeg(tok, data)
+      @lex_state = EXPR_FNAME
+      @continue = true
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_ident(tok, data)
+      if @in_fname
+        @lex_state = EXPR_ENDFN
+        @in_fname = false
+        @continue = false
+      elsif @continue
+        case @lex_state
+        when EXPR_DOT
+          @lex_state = EXPR_ARG
+        else
+          @lex_state = EXPR_ENDFN
+          @continue = false
+        end
+      else
+        @lex_state = EXPR_CMDARG
+      end
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_lparen(tok, data)
+      @lex_state = EXPR_LABEL | EXPR_BEG
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_rparen(tok, data)
+      @lex_state = EXPR_ENDFN
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_const(tok, data)
+      case @lex_state
+      when EXPR_FNAME
+        @lex_state = EXPR_ENDFN
+      when EXPR_CLASS
         @lex_state = EXPR_ARG
       else
-        @lex_state = EXPR_ENDFN
-        @continue = false
+        @lex_state = EXPR_CMDARG
       end
-    else
-      @lex_state = EXPR_CMDARG
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
     end
-    data.push({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
-  end
 
-  def on_lparen(tok, data)
-    @lex_state = EXPR_LABEL | EXPR_BEG
-    data.push({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
-  end
-
-  def on_rparen(tok, data)
-    @lex_state = EXPR_ENDFN
-    data.push({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
-  end
-
-  def on_const(tok, data)
-    case @lex_state
-    when EXPR_FNAME
-      @lex_state = EXPR_ENDFN
-    when EXPR_CLASS
-      @lex_state = EXPR_ARG
-    else
-      @lex_state = EXPR_CMDARG
+    def on_sp(tok, data)
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
     end
-    data.push({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+
+    def on_default(event, tok, data)
+      reset
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => event, :text => tok, :state => @lex_state})
+    end
+
+    def each(&block)
+      @callback = block
+      parse
+    end
   end
 
-  def on_sp(tok, data)
-    data.push({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+  def get_squashed_tk
+    tk = @inner_lex.next
+    case tk[:kind]
+    when :on_symbeg then
+      prev_line_no = tk[:line_no]
+      prev_char_no = tk[:char_no]
+
+      is_symbol = true
+      symbol_tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => :on_symbol }
+      case (tk1 = get_squashed_tk)[:kind]
+      when :on_ident
+        symbol_tk[:text] = ":#{tk1[:text]}"
+        symbol_tk[:state] = tk1[:state]
+      when :on_tstring_content
+        symbol_tk[:text] = ":#{tk1[:text]}"
+        symbol_tk[:state] = get_squashed_tk[:state] # skip :on_tstring_end
+      when :on_tstring_end
+        symbol_tk[:text] = ":#{tk1[:text]}"
+        symbol_tk[:state] = tk1[:state]
+      when :on_op
+        symbol_tk[:text] = ":#{tk1[:text]}"
+        symbol_tk[:state] = tk1[:state]
+      #when :on_symbols_beg
+      #when :on_qsymbols_beg
+      else
+        is_symbol = false
+        tk = tk1
+      end
+      if is_symbol
+        tk = symbol_tk
+      end
+    when :on_tstring_beg then
+      string = tk[:text]
+      state = nil
+      loop do
+        inner_str_tk = get_squashed_tk
+        if inner_str_tk.nil?
+          break
+        elsif :on_tstring_end == inner_str_tk[:kind]
+          string = string + inner_str_tk[:text]
+          state = inner_str_tk[:state]
+          break
+        else
+          string = string + inner_str_tk[:text]
+        end
+      end
+      tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => :on_tstring, :text => string, :state => state }
+    when :on_regexp_beg then
+      string = tk[:text]
+      state = nil
+      loop do
+        inner_str_tk = get_squashed_tk
+        if inner_str_tk.nil?
+          break
+        elsif :on_regexp_end == inner_str_tk[:kind]
+          string = string + inner_str_tk[:text]
+          state = inner_str_tk[:state]
+          break
+        else
+          string = string + inner_str_tk[:text]
+        end
+      end
+      tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => :on_regexp, :text => string, :state => state }
+    when :on_embdoc_beg then
+      string = ''
+      until :on_embdoc_end == (embdoc_tk = get_squashed_tk)[:kind] do
+        string = string + embdoc_tk[:text]
+      end
+      tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => :on_embdoc, :text => string, :state => embdoc_tk[:state] }
+    end
+    tk
   end
 
-  def on_default(event, tok, data)
-    reset
-    data.push({ :line_no => lineno, :char_no => column, :kind => event, :text => tok, :state => @lex_state})
+  def initialize(code)
+    @inner_lex = Enumerator.new do |y|
+      InnerStateLex.new(code).each do |tk|
+        y << tk
+      end
+    end
   end
 
   def self.parse(code)
-    self.new(code).parse([])
+    lex = RipperStateLex.new(code)
+    tokens = []
+    begin
+      while tk = lex.get_squashed_tk
+        tokens.push tk
+      end
+    rescue StopIteration
+    end
+    tokens
   end
 end
