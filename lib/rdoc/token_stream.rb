@@ -30,21 +30,26 @@ module RDoc::TokenStream
     token_stream.map do |t|
       next unless t
 
-      style = case t
-              when RDoc::RubyToken::TkCONSTANT then 'ruby-constant'
-              when RDoc::RubyToken::TkKW       then 'ruby-keyword'
-              when RDoc::RubyToken::TkIVAR     then 'ruby-ivar'
-              when RDoc::RubyToken::TkOp       then 'ruby-operator'
-              when RDoc::RubyToken::TkId       then 'ruby-identifier'
-              when RDoc::RubyToken::TkREGEXP   then 'ruby-regexp'
-              when RDoc::RubyToken::TkDREGEXP  then 'ruby-regexp'
-              when RDoc::RubyToken::TkNode     then 'ruby-node'
-              when RDoc::RubyToken::TkCOMMENT  then 'ruby-comment'
-              when RDoc::RubyToken::TkXSTRING  then 'ruby-string'
-              when RDoc::RubyToken::TkSTRING   then 'ruby-string'
-              when RDoc::RubyToken::TkVal      then 'ruby-value'
+      style = case t[:kind]
+              when :on_const   then 'ruby-constant'
+              when :on_kw      then 'ruby-keyword'
+              when :on_ivar    then 'ruby-ivar'
+              when :on_op      then 'ruby-operator'
+              when :on_ident   then 'ruby-identifier'
+              when :on_backref then 'ruby-node'
+              when :on_comment then 'ruby-comment'
+              when :on_regexp  then 'ruby-regexp'
+              when :on_tstring then 'ruby-string'
+              when :on_int, :on_float,
+                   :on_embdoc,
+                   :on_symbol, :on_CHAR then 'ruby-value'
               end
 
+      comment_with_nl = false
+      if :on_comment == t[:kind]
+        comment_with_nl = true if t[:text] =~ /\n$/
+        t[:text] = t[:text].rstrip
+      end
       text = CGI.escapeHTML t[:text]
 
       if style then

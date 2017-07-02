@@ -1,5 +1,6 @@
 # frozen_string_literal: false
 require 'cgi'
+require 'rdoc/parser/ripper_state_lex'
 
 ##
 # Outputs RDoc markup as HTML.
@@ -200,10 +201,11 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
     content = if verbatim.ruby? or parseable? text then
                 begin
-                  tokens = RDoc::RubyLex.tokenize text, @options
+                  tokens = RipperStateLex.parse text
                   klass  = ' class="ruby"'
 
-                  RDoc::TokenStream.to_html tokens
+                  result = RDoc::TokenStream.to_html tokens
+                  result + "\n"
                 rescue RDoc::RubyLex::Error
                   CGI.escapeHTML text
                 end
@@ -212,7 +214,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
               end
 
     if @options.pipe then
-      @res << "\n<pre><code>#{CGI.escapeHTML text}</code></pre>\n"
+      @res << "\n<pre><code>#{CGI.escapeHTML text}\n</code></pre>\n"
     else
       @res << "\n<pre#{klass}>#{content}</pre>\n"
     end
