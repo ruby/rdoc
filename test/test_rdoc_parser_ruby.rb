@@ -2152,9 +2152,7 @@ end
       { :line_no => 2, :char_no => 3, :kind => :on_sp, :text => ' ' },
       { :line_no => 2, :char_no => 4, :kind => :on_ident, :text => 'a' },
       { :line_no => 2, :char_no => 5, :kind => :on_nl, :text => "\n" },
-      { :line_no => 3, :char_no => 0, :kind => :on_regexp_beg, :text => '%r{' },
-      { :line_no => 3, :char_no => 3, :kind => :on_tstring_content, :text => '#' },
-      { :line_no => 3, :char_no => 4, :kind => :on_regexp_end, :text => '}' },
+      { :line_no => 3, :char_no => 0, :kind => :on_regexp, :text => '%r{#}' },
       { :line_no => 3, :char_no => 5, :kind => :on_nl, :text => "\n" },
       { :line_no => 4, :char_no => 0, :kind => :on_kw, :text => 'end' }
     ]
