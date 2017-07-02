@@ -1639,9 +1639,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
           while tk and (:on_comment == tk[:kind] or :on_embdoc == tk[:kind]) do
             comment << tk[:text]
-            comment << "\n" unless "\n" == tk[:text].chars.last
+            comment << "\n" unless "\n" == tk[:text].chars.to_a.last
 
-            if tk[:text].size > 1 && "\n" == tk[:text].chars.last then
+            if tk[:text].size > 1 && "\n" == tk[:text].chars.to_a.last then
               skip_tkspace false # leading spaces
             end
             tk = get_tk
