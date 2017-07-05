@@ -282,6 +282,31 @@ class C; end
     assert_equal 'blah', @top_level.metadata['unhandled']
   end
 
+  def test_parse_for_in
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = RDoc::Comment.new '', @top_level
+
+    util_parser <<ruby
+def sum(n)
+  result = 0
+  for i in 1..n do
+    result += i
+  end
+  result
+end
+ruby
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    sum = klass.method_list.first
+    assert_equal 'sum',      sum.name
+    assert_equal @top_level, sum.file
+  end
+
   def test_parse_alias
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
@@ -2490,6 +2515,25 @@ end
 
     assert_equal 'A#a', m_a.full_name
     assert_equal 'A#b', m_b.full_name
+  end
+
+
+  def test_parse_symbol_in_paren_arg
+    util_parser <<RUBY
+class Foo
+  def blah
+  end
+  private(:blah)
+end
+RUBY
+
+    @parser.scan
+
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+
+    blah = foo.method_list.first
+    assert_equal :private, blah.visibility
   end
 
   def test_parse_symbol_in_arg
