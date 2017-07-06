@@ -1796,10 +1796,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
 
       skip_tkspace_comment
-      case tk2 = get_tk
-      when TkRPAREN
+      case (tk2 = get_tk)[:kind]
+      when :on_rparen
         break
-      when TkCOMMA
+      when :on_comma
       else
         warn("unexpected token: '#{tk2.inspect}'") if $DEBUG_RDOC
         break
