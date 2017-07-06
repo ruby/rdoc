@@ -2107,7 +2107,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     get_tk
     skip_tkspace false
     tk = get_tk
-    unget_tk(tk) unless TkIN === tk
+    unget_tk(tk) unless :on_kw == tk[:kind] and 'in' == tk[:text]
   end
 
   ##
