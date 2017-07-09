@@ -98,8 +98,12 @@ class RipperStateLex
         @lex_state = EXPR_FNAME
         @continue = true
         @in_fname = true
-      when 'if'
-        @lex_state = EXPR_BEG
+      when 'if', 'unless'
+        if ((EXPR_ENDARG | EXPR_ENDFN | EXPR_CMDARG) & @lex_state) != 0 # postfix if
+          @lex_state = EXPR_BEG | EXPR_LABEL
+        else
+          @lex_state = EXPR_BEG
+        end
       else
         if @lex_state == EXPR_FNAME
           @lex_state = EXPR_END
@@ -116,7 +120,7 @@ class RipperStateLex
     end
 
     def on_tstring_end(tok, data)
-      @lex_state = EXPR_END
+      @lex_state = EXPR_END | EXPR_ENDARG
       @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
     end
 
@@ -138,6 +142,7 @@ class RipperStateLex
     def on_symbeg(tok, data)
       @lex_state = EXPR_FNAME
       @continue = true
+      @in_fname = true
       @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
     end
 
