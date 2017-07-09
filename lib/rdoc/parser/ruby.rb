@@ -364,7 +364,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       get_tk
       skip_tkspace false
       name_t = get_tk
-      if name_t[:kind] != :on_const
+      unless :on_const == name_t[:kind] || :on_ident == name_t[:kind]
         raise RDoc::Error, "Invalid class or module definition: #{given_name}"
       end
       given_name << '::' << name_t[:text]
