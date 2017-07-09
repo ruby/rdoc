@@ -1703,7 +1703,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
           skip_optional_do_after_expression
 
         when 'case', 'do', 'if', 'unless', 'begin' then
-          nest += 1
+          if (RipperStateLex::EXPR_LABEL & tk[:state]) == 0
+            nest += 1
+          end
 
         when 'super' then
           current_method.calls_super = true if current_method
