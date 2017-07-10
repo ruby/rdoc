@@ -777,6 +777,16 @@ end
     assert_empty @top_level.classes.first.comment
   end
 
+  def test_parse_class_lower_name_warning
+    @options.verbosity = 2
+    out, err = capture_io do
+      util_parser "class foo\nend"
+      tk = @parser.get_tk
+      @parser.parse_class @top_level, RDoc::Parser::Ruby::NORMAL, tk, @comment
+    end
+    assert_match /Expected class name or '<<'\. Got/, err
+  end
+
   def test_parse_multi_ghost_methods
     util_parser <<-'CLASS'
 class Foo
