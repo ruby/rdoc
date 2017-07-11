@@ -3287,6 +3287,33 @@ end
     assert c_b.singleton
   end
 
+  def test_scan_visibility_count
+    util_parser <<-RUBY
+class C < Original::Base
+  class C2 < Original::Base
+    def m0() end
+    def m1() end
+
+    private
+
+    def m2() end
+    def m3() end
+    def m4() end
+  end
+end
+    RUBY
+
+    @parser.scan
+
+    c = @store.find_class_named 'C::C2'
+
+    private_method_count = c.method_list.count { |m| :private == m.visibility }
+    assert_equal 3, private_method_count
+
+    public_method_count = c.method_list.count { |m| :public == m.visibility }
+    assert_equal 2, public_method_count
+  end
+
   def test_singleton_method_via_eigenclass
     util_parser <<-RUBY
 class C
