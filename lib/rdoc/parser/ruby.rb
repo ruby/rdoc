@@ -536,10 +536,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
       text
     when :on_ident, :on_op then
       tk[:text]
-    when :on_tstring_beg then
-      tk = get_tk # :on_tstring_content
-      get_tk # skip :on_tstring_end
-      tk[:text]
+    when :on_tstring, :on_dstring then
+      tk[:text][1..-2]
     else
       raise RDoc::Error, "Name or symbol expected (got #{tk})"
     end
@@ -1571,9 +1569,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       tk = get_tk
     end
 
-    if :on_tstring == tk[:kind] then
-      name = eval tk[:text]
-    end
+    name = tk[:text][1..-2] if :on_tstring == tk[:kind]
 
     if name then
       @top_level.add_require RDoc::Require.new(name, comment)
@@ -1848,19 +1844,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def parse_symbol_in_arg
     tk = get_tk
-    if :on_symbol == tk[:kind]
+    if :on_symbol == tk[:kind] then
       tk[:text].sub(/^:/, '')
-    elsif :on_tstring == tk[:kind]
-      begin
-        eval tk[:text]
-      rescue
-        nil
-      end
-    elsif :on_ident == tk[:kind] then
-      nil # ignore
-    elsif :on_tstring_beg == tk[:kind] then
-      get_tk # skip :on_tstring_content
-      get_tk # skip :on_tstring_end
+    elsif :on_tstring == tk[:kind] then
+      tk[:text][1..-2]
+    elsif :on_dstring == tk[:kind] or :on_ident == tk[:kind] then
       nil # ignore
     else
       warn("Expected symbol or string, got #{tk.inspect}") if $DEBUG_RDOC

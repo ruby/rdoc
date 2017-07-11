@@ -233,6 +233,7 @@ class RipperStateLex
     when :on_tstring_beg then
       string = tk[:text]
       state = nil
+      expanded = false
       loop do
         inner_str_tk = get_squashed_tk
         if inner_str_tk.nil?
@@ -243,9 +244,12 @@ class RipperStateLex
           break
         else
           string = string + inner_str_tk[:text]
+          if :on_tstring_content != inner_str_tk[:kind] then
+            expanded = true
+          end
         end
       end
-      tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => :on_tstring, :text => string, :state => state }
+      tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => expanded ? :on_dstring : :on_tstring, :text => string, :state => state }
     when :on_regexp_beg then
       string = tk[:text]
       state = nil
