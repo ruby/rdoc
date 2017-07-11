@@ -534,7 +534,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
 
       text
-    when :on_ident, :on_op then
+    when :on_ident, :on_const, :on_gvar, :on_cvar, :on_ivar, :on_op then
       tk[:text]
     when :on_tstring, :on_dstring then
       tk[:text][1..-2]
