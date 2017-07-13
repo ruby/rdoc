@@ -760,7 +760,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         cls = parse_class_singleton container, name, comment
       end
     else
-      warn "Expected class name or '<<'. Got #{name_t.class}: #{name_t.text.inspect}"
+      warn "Expected class name or '<<'. Got #{name_t[:kind]}: #{name_t[:text].inspect}"
       return
     end
 
