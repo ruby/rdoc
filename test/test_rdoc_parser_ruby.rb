@@ -2400,6 +2400,20 @@ end
     assert_equal :private, date_time_now.visibility, date_time_now.full_name
   end
 
+  def test_parse_require_dynamic_string
+    content = <<-RUBY
+prefix = 'path'
+require "\#{prefix}/a_library"
+require 'test'
+RUBY
+
+    util_parser content
+
+    @parser.parse_statements @top_level
+
+    assert_equal 1, @top_level.requires.length
+  end
+
   def test_parse_statements_identifier_require
     content = "require 'bar'"
 
