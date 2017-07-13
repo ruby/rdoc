@@ -1587,7 +1587,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     nest = 0
     while tk = get_tk
       case tk[:kind]
-      when :on_nl, :on_semicolon then
+      when :on_nl, :on_semicolon, :on_comment then
         break
       when :on_comma then
         skip_tkspace false
