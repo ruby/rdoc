@@ -255,10 +255,14 @@ class RipperStateLex
       if is_symbol
         tk = symbol_tk
       end
-    when :on_tstring_beg then
+    when :on_tstring_beg, :on_backtick then
       string = tk[:text]
       state = nil
-      expanded = false
+      if :on_backtick == tk[:kind]
+        expanded = true
+      else
+        expanded = false
+      end
       loop do
         inner_str_tk = get_squashed_tk
         if inner_str_tk.nil?

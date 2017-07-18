@@ -36,7 +36,8 @@ module RDoc::TokenStream
               when :on_ivar    then 'ruby-ivar'
               when :on_op      then 'ruby-operator'
               when :on_ident   then 'ruby-identifier'
-              when :on_backref then 'ruby-node'
+              when :on_backref, :on_dstring
+                               then 'ruby-node'
               when :on_comment then 'ruby-comment'
               when :on_regexp  then 'ruby-regexp'
               when :on_tstring then 'ruby-string'
