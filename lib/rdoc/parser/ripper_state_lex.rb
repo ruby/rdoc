@@ -99,7 +99,7 @@ class RipperStateLex
         @continue = true
         @in_fname = true
       when 'if', 'unless'
-        if ((EXPR_ENDARG | EXPR_ENDFN | EXPR_CMDARG) & @lex_state) != 0 # postfix if
+        if ((EXPR_END | EXPR_ENDARG | EXPR_ENDFN | EXPR_CMDARG) & @lex_state) != 0 # postfix if
           @lex_state = EXPR_BEG | EXPR_LABEL
         else
           @lex_state = EXPR_BEG
