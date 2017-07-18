@@ -146,7 +146,7 @@ class RipperStateLex
       @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
     end
 
-    def on_ident(tok, data)
+    private def on_variables(event, tok, data)
       if @in_fname
         @lex_state = EXPR_ENDFN
         @in_fname = false
@@ -162,7 +162,23 @@ class RipperStateLex
       else
         @lex_state = EXPR_CMDARG
       end
-      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => event, :text => tok, :state => @lex_state})
+    end
+
+    def on_ident(tok, data)
+      on_variables(__method__, tok, data)
+    end
+
+    def on_ivar(tok, data)
+      on_variables(__method__, tok, data)
+    end
+
+    def on_cvar(tok, data)
+      on_variables(__method__, tok, data)
+    end
+
+    def on_gvar(tok, data)
+      on_variables(__method__, tok, data)
     end
 
     def on_lparen(tok, data)
