@@ -224,7 +224,11 @@ class RipperStateLex
   end
 
   def get_squashed_tk
-    tk = @inner_lex.next
+    if @buf.empty?
+      tk = @inner_lex.next
+    else
+      tk = @buf.shift
+    end
     case tk[:kind]
     when :on_symbeg then
       is_symbol = true
@@ -293,11 +297,24 @@ class RipperStateLex
         string = string + embdoc_tk[:text]
       end
       tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => :on_embdoc, :text => string, :state => embdoc_tk[:state] }
+    when :on_op then
+      if tk[:text] =~ /^[-+]$/ then
+        tk_ahead = get_squashed_tk
+        case tk_ahead[:kind]
+        when :on_int, :on_float, :on_rational, :on_imaginary
+          tk[:text] += tk_ahead[:text]
+          tk[:kind] = tk_ahead[:kind]
+          tk[:state] = tk_ahead[:state]
+        else
+          @buf.unshift tk_ahead
+        end
+      end
     end
     tk
   end
 
   def initialize(code)
+    @buf = []
     @inner_lex = Enumerator.new do |y|
       InnerStateLex.new(code).each do |tk|
         y << tk
