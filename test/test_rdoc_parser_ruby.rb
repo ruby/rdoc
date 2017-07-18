@@ -1650,6 +1650,28 @@ end
     assert_equal stream, foo.token_stream
   end
 
+  def test_parse_method_bracket
+    util_parser <<-RUBY
+class C
+  def [] end
+  def self.[] end
+  def []= end
+  def self.[]= end
+end
+    RUBY
+
+    @parser.scan
+
+    c = @store.find_class_named 'C'
+
+    assert_equal 4, c.method_list.size
+    assert_equal 'C#[]', c.method_list[0].full_name
+    assert_equal 'C::[]', c.method_list[1].full_name
+    assert_equal 'C#[]=', c.method_list[2].full_name
+    assert_equal 'C::[]=', c.method_list[3].full_name
+    assert c.aliases.empty?
+  end
+
   def test_parse_method_alias
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
