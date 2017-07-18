@@ -418,5 +418,24 @@ U
     assert_equal("-0.1", ruby_lex.token.value)
   end
 
+  def test_rational_imaginary_tokenize
+    tokens = RDoc::RubyLex.tokenize '1.11r + 2.34i + 5.55ri', nil
+
+    expected = [
+      @TK::TkRATIONAL .new( 0, 1,  0, '1.11r'),
+      @TK::TkSPACE    .new( 5, 1,  5, ' '),
+      @TK::TkPLUS     .new( 6, 1,  6, '+'),
+      @TK::TkSPACE    .new( 7, 1,  7, ' '),
+      @TK::TkIMAGINARY.new( 8, 1,  8, '2.34i'),
+      @TK::TkSPACE    .new(13, 1, 13, ' '),
+      @TK::TkPLUS     .new(14, 1, 14, '+'),
+      @TK::TkSPACE    .new(15, 1, 15, ' '),
+      @TK::TkIMAGINARY.new(16, 1, 16, '5.55ri'),
+      @TK::TkNL       .new(22, 1, 22, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
 end
 

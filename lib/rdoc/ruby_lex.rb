@@ -1125,6 +1125,7 @@ class RDoc::RubyLex
     type = TkINTEGER
     allow_point = true
     allow_e = true
+    allow_ri = true
     non_digit = false
     while ch = getc
       num << ch
@@ -1154,8 +1155,25 @@ class RDoc::RubyLex
           num << getc
         end
         allow_e = false
+        allow_ri = false
         allow_point = false
         non_digit = ch
+      when allow_ri && "r"
+        if non_digit
+          raise Error, "trailing `#{non_digit}' in number"
+        end
+        type = TkRATIONAL
+        if peek(0) == 'i'
+          type = TkIMAGINARY
+          num << getc
+        end
+        break
+      when allow_ri && "i"
+        if non_digit && non_digit != "r"
+          raise Error, "trailing `#{non_digit}' in number"
+        end
+        type = TkIMAGINARY
+        break
       else
         if non_digit
           raise Error, "trailing `#{non_digit}' in number"
