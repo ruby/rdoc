@@ -2023,6 +2023,30 @@ end
     assert_equal 'Foo#blah', methods.first.full_name
   end
 
+  def test_parse_statements_postfix_if_unless
+    util_parser <<-CODE
+class C
+  def foo
+    1 if nil
+  end
+
+  def bar
+    2 unless nil
+  end
+end
+    CODE
+
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil
+
+    c = @top_level.classes.first
+    assert_equal 'C', c.full_name, 'class C'
+
+    methods = c.method_list
+    assert_equal 2, methods.length
+    assert_equal 'C#foo', methods[0].full_name
+    assert_equal 'C#bar', methods[1].full_name
+  end
+
   def test_parse_statements_class_nested
     comment = RDoc::Comment.new "##\n# my method\n", @top_level
 
