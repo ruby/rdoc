@@ -81,8 +81,7 @@ end
       @TK::TkLBRACE    .new( 0, 1,  0, '{'),
       @TK::TkSPACE     .new( 1, 1,  1, ' '),
       @TK::TkIDENTIFIER.new( 2, 1,  2, 'class'),
-      @TK::TkSYMBEG    .new( 7, 1,  7, ':'),
-      @TK::TkSTRING    .new( 8, 1,  8, '"foo"'),
+      @TK::TkSYMBOL    .new( 7, 1,  7, ':"foo"'),
       @TK::TkSPACE     .new(13, 1, 13, ' '),
       @TK::TkRBRACE    .new(14, 1, 14, '}'),
       @TK::TkNL        .new(15, 1, 15, "\n"),
@@ -393,8 +392,7 @@ U
       @TK::TkIDENTIFIER.new( 6, 1,  6, 'module'),
       @TK::TkCOLON     .new(12, 1, 12, ':'),
       @TK::TkSPACE     .new(13, 1, 13, ' '),
-      @TK::TkSYMBEG    .new(14, 1, 14, ':'),
-      @TK::TkIDENTIFIER.new(15, 1, 15, 'v1'),
+      @TK::TkSYMBOL    .new(14, 1, 14, ':v1'),
       @TK::TkNL        .new(17, 1, 17, "\n"),
     ]
 

@@ -361,6 +361,22 @@ class RDoc::RubyLex
     if @readed_auto_clean_up
       get_readed
     end
+
+    if TkSYMBEG === tk then
+      tk1 = token
+      set_token_position tk.line_no, tk.char_no
+
+      case tk1
+      when TkId, TkOp, TkSTRING, TkDSTRING, TkSTAR, TkAMPER then
+        if tk1.respond_to?(:name) then
+          tk = Token(TkSYMBOL, ":" + tk1.name)
+        else
+          tk = Token(TkSYMBOL, ":" + tk1.text)
+        end
+      else
+        tk = tk1
+      end
+    end
     #      Tracer.off
     tk
   end
