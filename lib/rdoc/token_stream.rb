@@ -34,7 +34,8 @@ module RDoc::TokenStream
               when :on_const   then 'ruby-constant'
               when :on_kw      then 'ruby-keyword'
               when :on_ivar    then 'ruby-ivar'
-              when :on_op      then 'ruby-operator'
+              when '=' != t[:text] && :on_op
+                               then 'ruby-operator'
               when :on_ident   then 'ruby-identifier'
               when :on_backref, :on_dstring
                                then 'ruby-node'
