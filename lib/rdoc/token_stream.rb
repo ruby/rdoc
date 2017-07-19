@@ -43,6 +43,7 @@ module RDoc::TokenStream
               when :on_regexp  then 'ruby-regexp'
               when :on_tstring then 'ruby-string'
               when :on_int, :on_float,
+                   :on_rational, :on_imaginary,
                    :on_embdoc,
                    :on_symbol, :on_CHAR then 'ruby-value'
               end
