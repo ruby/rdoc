@@ -1402,7 +1402,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # is parsed from the token stream for a regular method.
 
   def parse_method_name_regular container, name_t # :nodoc:
-    if name_t[:kind] == :on_op && (name_t[:text] == '*' || name_t[:text] == '&') then
+    if :on_op == name_t[:kind] && (%w{* & [] []= <<}.include?(name_t[:text])) then
       name_t[:text]
     else
       unless [:on_kw, :on_const, :on_ident].include?(name_t[:kind]) then
