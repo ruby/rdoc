@@ -1,6 +1,6 @@
 require 'ripper'
 
-class RipperStateLex
+class RDoc::RipperStateLex
   EXPR_NONE = 0
   EXPR_BEG = 1
   EXPR_END = 2
@@ -327,7 +327,7 @@ class RipperStateLex
   end
 
   def self.parse(code)
-    lex = RipperStateLex.new(code)
+    lex = self.new(code)
     tokens = []
     begin
       while tk = lex.get_squashed_tk

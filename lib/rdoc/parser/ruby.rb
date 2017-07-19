@@ -141,7 +141,6 @@ $TOKEN_DEBUG ||= nil
 # standard rdocable item following it.
 
 require 'ripper'
-require_relative 'ripper_state_lex'
 
 class RDoc::Parser::Ruby < RDoc::Parser
 
@@ -168,7 +167,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     @size = 0
     @token_listeners = nil
-    @scanner = RipperStateLex.parse(content)
+    @scanner = RDoc::RipperStateLex.parse(content)
     @scanner_point = 0
     @prev_seek = nil
     @markup = @options.markup
@@ -720,9 +719,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when end_token
         if end_token == :on_rparen
           nest -= 1
-          break if RipperStateLex.end?(tk) and nest <= 0
+          break if RDoc::RipperStateLex.end?(tk) and nest <= 0
         else
-          break if RipperStateLex.end?(tk)
+          break if RDoc::RipperStateLex.end?(tk)
         end
       when :on_comment, :on_embdoc
         unget_tk(tk)
@@ -919,7 +918,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
             :on_kw == tk[:kind] && 'end' == tk[:text] then
         nest -= 1
       elsif (:on_comment == tk[:kind] or :on_embdoc == tk[:kind]) then
-        if nest <= 0 and RipperStateLex.end?(tk) then
+        if nest <= 0 and RDoc::RipperStateLex.end?(tk) then
           unget_tk tk
           break
         else
@@ -935,7 +934,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           break
         end
       elsif :on_nl == tk[:kind] then
-        if nest <= 0 and RipperStateLex.end?(tk) then
+        if nest <= 0 and RDoc::RipperStateLex.end?(tk) then
           unget_tk tk
           break
         end
@@ -1699,7 +1698,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           skip_optional_do_after_expression
 
         when 'case', 'do', 'if', 'unless', 'begin' then
-          if (RipperStateLex::EXPR_LABEL & tk[:state]) == 0
+          if (RDoc::RipperStateLex::EXPR_LABEL & tk[:state]) == 0
             nest += 1
           end
 

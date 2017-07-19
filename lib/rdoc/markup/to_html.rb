@@ -1,6 +1,5 @@
 # frozen_string_literal: false
 require 'cgi'
-require 'rdoc/parser/ripper_state_lex'
 
 ##
 # Outputs RDoc markup as HTML.
@@ -201,7 +200,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
     content = if verbatim.ruby? or parseable? text then
                 begin
-                  tokens = RipperStateLex.parse text
+                  tokens = RDoc::RipperStateLex.parse text
                   klass  = ' class="ruby"'
 
                   result = RDoc::TokenStream.to_html tokens
