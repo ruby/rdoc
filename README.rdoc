@@ -1,10 +1,10 @@
 = \RDoc - Ruby Documentation System
 
-home :: https://github.com/rdoc/rdoc
-rdoc :: https://rdoc.github.io/rdoc
-bugs :: https://github.com/rdoc/rdoc/issues
-build status :: {<img src="https://travis-ci.org/rdoc/rdoc.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/rdoc/rdoc]
-code quality :: {<img src="https://codeclimate.com/github/rdoc/rdoc/badges/gpa.svg" alt="Code Climate">}[https://codeclimate.com/github/rdoc/rdoc]
+home :: https://github.com/ruby/rdoc
+rdoc :: https://ruby.github.io/rdoc
+bugs :: https://github.com/ruby/rdoc/issues
+build status :: {<img src="https://travis-ci.org/ruby/rdoc.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/ruby/rdoc]
+code quality :: {<img src="https://codeclimate.com/github/ruby/rdoc/badges/gpa.svg" alt="Code Climate">}[https://codeclimate.com/github/ruby/rdoc]
 
 == Description
 
