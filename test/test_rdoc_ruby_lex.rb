@@ -90,6 +90,25 @@ end
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_hash_rocket
+    tokens = RDoc::RubyLex.tokenize '{ :class => "foo" }', nil
+
+    expected = [
+      @TK::TkLBRACE    .new( 0, 1,  0, '{'),
+      @TK::TkSPACE     .new( 1, 1,  1, ' '),
+      @TK::TkSYMBOL    .new( 2, 1,  2, ':class'),
+      @TK::TkSPACE     .new( 8, 1,  8, ' '),
+      @TK::TkHASHROCKET.new( 9, 1,  9, '=>'),
+      @TK::TkSPACE     .new(11, 1, 11, ' '),
+      @TK::TkSTRING    .new(12, 1, 12, '"foo"'),
+      @TK::TkSPACE     .new(17, 1, 17, ' '),
+      @TK::TkRBRACE    .new(18, 1, 18, '}'),
+      @TK::TkNL        .new(19, 1, 19, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_heredoc_CR_NL
     tokens = RDoc::RubyLex.tokenize <<-RUBY, nil
 string = <<-STRING\r
