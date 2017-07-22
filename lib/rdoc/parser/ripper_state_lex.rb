@@ -304,7 +304,7 @@ class RDoc::RipperStateLex
     when :on_qwords_beg then
       string_array = []
       start_token = tk[:text]
-      start_quote = tk[:text][-1]
+      start_quote = tk[:text].rstrip[-1]
       line_no = tk[:line_no]
       char_no = tk[:char_no]
       state = tk[:state]
@@ -316,17 +316,20 @@ class RDoc::RipperStateLex
         when ?< then ?>
         else start_quote
         end
+      end_token = nil
       loop do
         tk = get_squashed_tk
         if tk.nil?
+          end_token = end_quote
           break
         elsif :on_tstring_content == tk[:kind] then
           string_array << tk[:text]
-        elsif :on_words_sep == tk[:kind] and end_quote == tk[:text] then
+        elsif :on_words_sep == tk[:kind] and end_quote == tk[:text].strip then
+          end_token = tk[:text]
           break
         end
       end
-      text = "#{start_token}#{string_array.join(' ')}#{end_quote}"
+      text = "#{start_token}#{string_array.join(' ')}#{end_token}"
       tk = { :line_no => line_no, :char_no => char_no, :kind => :on_dstring, :text => text, :state => state }
     when :on_op then
       if tk[:text] =~ /^[-+]$/ then
