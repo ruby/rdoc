@@ -301,6 +301,33 @@ class RDoc::RipperStateLex
         string = string + embdoc_tk[:text]
       end
       tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => :on_embdoc, :text => string, :state => embdoc_tk[:state] }
+    when :on_qwords_beg then
+      string_array = []
+      start_token = tk[:text]
+      start_quote = tk[:text][-1]
+      line_no = tk[:line_no]
+      char_no = tk[:char_no]
+      state = tk[:state]
+      end_quote =
+        case start_quote
+        when ?( then ?)
+        when ?[ then ?]
+        when ?{ then ?}
+        when ?< then ?>
+        else start_quote
+        end
+      loop do
+        tk = get_squashed_tk
+        if tk.nil?
+          break
+        elsif :on_tstring_content == tk[:kind] then
+          string_array << tk[:text]
+        elsif :on_words_sep == tk[:kind] and end_quote == tk[:text] then
+          break
+        end
+      end
+      text = "#{start_token}#{string_array.join(' ')}#{end_quote}"
+      tk = { :line_no => line_no, :char_no => char_no, :kind => :on_dstring, :text => text, :state => state }
     when :on_op then
       if tk[:text] =~ /^[-+]$/ then
         tk_ahead = get_squashed_tk
