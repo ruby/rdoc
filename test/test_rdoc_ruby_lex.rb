@@ -78,13 +78,13 @@ end
     tokens = RDoc::RubyLex.tokenize '{ class:"foo" }', nil
 
     expected = [
-      @TK::TkLBRACE    .new( 0, 1,  0, '{'),
-      @TK::TkSPACE     .new( 1, 1,  1, ' '),
-      @TK::TkIDENTIFIER.new( 2, 1,  2, 'class'),
-      @TK::TkSYMBOL    .new( 7, 1,  7, ':"foo"'),
-      @TK::TkSPACE     .new(13, 1, 13, ' '),
-      @TK::TkRBRACE    .new(14, 1, 14, '}'),
-      @TK::TkNL        .new(15, 1, 15, "\n"),
+      @TK::TkLBRACE.new( 0, 1,  0, '{'),
+      @TK::TkSPACE .new( 1, 1,  1, ' '),
+      @TK::TkSYMBOL.new( 2, 1,  2, 'class:'),
+      @TK::TkSTRING.new( 8, 1,  8, '"foo"'),
+      @TK::TkSPACE .new(13, 1, 13, ' '),
+      @TK::TkRBRACE.new(14, 1, 14, '}'),
+      @TK::TkNL    .new(15, 1, 15, "\n"),
     ]
 
     assert_equal expected, tokens
