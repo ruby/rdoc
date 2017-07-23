@@ -302,7 +302,7 @@ class RDoc::RipperStateLex
       end
       tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => :on_embdoc, :text => string, :state => embdoc_tk[:state] }
     when :on_qwords_beg then
-      string_array = []
+      string = ''
       start_token = tk[:text]
       start_quote = tk[:text].rstrip[-1]
       line_no = tk[:line_no]
@@ -323,13 +323,17 @@ class RDoc::RipperStateLex
           end_token = end_quote
           break
         elsif :on_tstring_content == tk[:kind] then
-          string_array << tk[:text]
-        elsif :on_words_sep == tk[:kind] and end_quote == tk[:text].strip then
-          end_token = tk[:text]
-          break
+          string += tk[:text]
+        elsif :on_words_sep == tk[:kind] then
+          if end_quote == tk[:text].strip then
+            end_token = tk[:text]
+            break
+          else
+            string += tk[:text]
+          end
         end
       end
-      text = "#{start_token}#{string_array.join(' ')}#{end_token}"
+      text = "#{start_token}#{string}#{end_token}"
       tk = { :line_no => line_no, :char_no => char_no, :kind => :on_dstring, :text => text, :state => state }
     when :on_op then
       if tk[:text] =~ /^[-+]$/ then
