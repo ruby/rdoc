@@ -435,5 +435,24 @@ U
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_square_bracket_as_method
+    tokens = RDoc::RubyLex.tokenize "Array.[](1, 2)", nil
+
+    expected = [
+      @TK::TkCONSTANT  .new(0,  1,  0, "Array"),
+      @TK::TkDOT       .new(5,  1,  5, "."),
+      @TK::TkIDENTIFIER.new(6,  1,  6, "[]"),
+      @TK::TkfLPAREN   .new(8,  1,  8, "("),
+      @TK::TkINTEGER   .new(9,  1,  9, "1"),
+      @TK::TkCOMMA     .new(10, 1, 10, ","),
+      @TK::TkSPACE     .new(11, 1, 11, " "),
+      @TK::TkINTEGER   .new(12, 1, 12, "2"),
+      @TK::TkRPAREN    .new(13, 1, 13, ")"),
+      @TK::TkNL        .new(14, 1, 14, "\n")
+    ]
+
+    assert_equal expected, tokens
+  end
+
 end
 
