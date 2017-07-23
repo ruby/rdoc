@@ -90,6 +90,21 @@ end
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_double_colon_is_not_hash_symbol
+    tokens = RDoc::RubyLex.tokenize 'self.class::Row', nil
+
+    expected = [
+      @TK::TkSELF      .new( 0, 1,  0, "self"),
+      @TK::TkDOT       .new( 4, 1,  4, "."),
+      @TK::TkIDENTIFIER.new( 5, 1,  5, "class"),
+      @TK::TkCOLON2    .new(10, 1, 10, "::"),
+      @TK::TkCONSTANT  .new(12, 1, 12, "Row"),
+      @TK::TkNL        .new(15, 1, 15, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_heredoc_CR_NL
     tokens = RDoc::RubyLex.tokenize <<-RUBY, nil
 string = <<-STRING\r
