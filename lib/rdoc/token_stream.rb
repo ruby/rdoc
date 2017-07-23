@@ -41,6 +41,7 @@ module RDoc::TokenStream
                                     'ruby-operator'
                 end
               when :on_ident   then 'ruby-identifier'
+              when :on_label   then 'ruby-value'
               when :on_backref, :on_dstring
                                then 'ruby-node'
               when :on_comment then 'ruby-comment'
