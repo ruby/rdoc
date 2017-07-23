@@ -34,6 +34,7 @@ module RDoc::TokenStream
               when :on_const   then 'ruby-constant'
               when :on_kw      then 'ruby-keyword'
               when :on_ivar    then 'ruby-ivar'
+              when :on_gvar    then 'ruby-identifier'
               when '=' != t[:text] && :on_op then
                 if RDoc::RipperStateLex::EXPR_ARG == t[:state] then
                                     'ruby-identifier'
