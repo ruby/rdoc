@@ -389,8 +389,7 @@ U
     expected = [
       @TK::TkIDENTIFIER.new( 0, 1,  0, 'scope'),
       @TK::TkSPACE     .new( 5, 1,  5, ' '),
-      @TK::TkIDENTIFIER.new( 6, 1,  6, 'module'),
-      @TK::TkCOLON     .new(12, 1, 12, ':'),
+      @TK::TkSYMBOL    .new( 6, 1,  6, 'module:'),
       @TK::TkSPACE     .new(13, 1, 13, ' '),
       @TK::TkSYMBOL    .new(14, 1, 14, ':v1'),
       @TK::TkNL        .new(17, 1, 17, "\n"),
