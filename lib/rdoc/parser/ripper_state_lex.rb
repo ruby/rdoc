@@ -274,6 +274,15 @@ class RDoc::RipperStateLex
     when :on_op
       symbol_tk[:text] = ":#{tk1[:text]}"
       symbol_tk[:state] = tk1[:state]
+    when :on_ivar
+      symbol_tk[:text] = ":#{tk1[:text]}"
+      symbol_tk[:state] = tk1[:state]
+    when :on_cvar
+      symbol_tk[:text] = ":#{tk1[:text]}"
+      symbol_tk[:state] = tk1[:state]
+    when :on_gvar
+      symbol_tk[:text] = ":#{tk1[:text]}"
+      symbol_tk[:state] = tk1[:state]
     #when :on_symbols_beg
     #when :on_qsymbols_beg
     else
