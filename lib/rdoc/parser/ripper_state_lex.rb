@@ -231,121 +231,177 @@ class RDoc::RipperStateLex
     end
     case tk[:kind]
     when :on_symbeg then
-      is_symbol = true
-      symbol_tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => :on_symbol }
-      case (tk1 = get_squashed_tk)[:kind]
-      when :on_ident
-        symbol_tk[:text] = ":#{tk1[:text]}"
-        symbol_tk[:state] = tk1[:state]
-      when :on_tstring_content
-        symbol_tk[:text] = ":#{tk1[:text]}"
-        symbol_tk[:state] = get_squashed_tk[:state] # skip :on_tstring_end
-      when :on_tstring_end
-        symbol_tk[:text] = ":#{tk1[:text]}"
-        symbol_tk[:state] = tk1[:state]
-      when :on_op
-        symbol_tk[:text] = ":#{tk1[:text]}"
-        symbol_tk[:state] = tk1[:state]
-      #when :on_symbols_beg
-      #when :on_qsymbols_beg
-      else
-        is_symbol = false
-        tk = tk1
-      end
-      if is_symbol
-        tk = symbol_tk
-      end
+      tk = get_symbol_tk(tk)
     when :on_tstring_beg, :on_backtick then
-      string = tk[:text]
-      state = nil
-      if :on_backtick == tk[:kind]
-        expanded = true
-      else
-        expanded = false
-      end
-      loop do
-        inner_str_tk = get_squashed_tk
-        if inner_str_tk.nil?
-          break
-        elsif :on_tstring_end == inner_str_tk[:kind]
-          string = string + inner_str_tk[:text]
-          state = inner_str_tk[:state]
-          break
-        else
-          string = string + inner_str_tk[:text]
-          if :on_tstring_content != inner_str_tk[:kind] then
-            expanded = true
-          end
-        end
-      end
-      tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => expanded ? :on_dstring : :on_tstring, :text => string, :state => state }
+      tk = get_string_tk(tk)
+      tk = get_string_tk(tk)
     when :on_regexp_beg then
-      string = tk[:text]
-      state = nil
-      loop do
-        inner_str_tk = get_squashed_tk
-        if inner_str_tk.nil?
-          break
-        elsif :on_regexp_end == inner_str_tk[:kind]
-          string = string + inner_str_tk[:text]
-          state = inner_str_tk[:state]
-          break
-        else
-          string = string + inner_str_tk[:text]
-        end
-      end
-      tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => :on_regexp, :text => string, :state => state }
+      tk = get_regexp_tk(tk)
     when :on_embdoc_beg then
-      string = ''
-      until :on_embdoc_end == (embdoc_tk = get_squashed_tk)[:kind] do
-        string = string + embdoc_tk[:text]
-      end
-      tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => :on_embdoc, :text => string, :state => embdoc_tk[:state] }
+      tk = get_embdoc_tk(tk)
     when :on_qwords_beg then
-      string = ''
-      start_token = tk[:text]
-      start_quote = tk[:text].rstrip[-1]
-      line_no = tk[:line_no]
-      char_no = tk[:char_no]
-      state = tk[:state]
-      end_quote =
-        case start_quote
-        when ?( then ?)
-        when ?[ then ?]
-        when ?{ then ?}
-        when ?< then ?>
-        else start_quote
-        end
-      end_token = nil
-      loop do
-        tk = get_squashed_tk
-        if tk.nil?
-          end_token = end_quote
-          break
-        elsif :on_tstring_content == tk[:kind] then
-          string += tk[:text]
-        elsif :on_words_sep == tk[:kind] then
-          if end_quote == tk[:text].strip then
-            end_token = tk[:text]
-            break
-          else
-            string += tk[:text]
-          end
+      tk = get_qwords_tk(tk)
+    when :on_op then
+      tk = get_op_tk(tk)
+    end
+    tk
+  end
+
+  private def get_symbol_tk(tk)
+    is_symbol = true
+    symbol_tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => :on_symbol }
+    case (tk1 = get_squashed_tk)[:kind]
+    when :on_ident
+      symbol_tk[:text] = ":#{tk1[:text]}"
+      symbol_tk[:state] = tk1[:state]
+    when :on_tstring_content
+      symbol_tk[:text] = ":#{tk1[:text]}"
+      symbol_tk[:state] = get_squashed_tk[:state] # skip :on_tstring_end
+    when :on_tstring_end
+      symbol_tk[:text] = ":#{tk1[:text]}"
+      symbol_tk[:state] = tk1[:state]
+    when :on_op
+      symbol_tk[:text] = ":#{tk1[:text]}"
+      symbol_tk[:state] = tk1[:state]
+    #when :on_symbols_beg
+    #when :on_qsymbols_beg
+    else
+      is_symbol = false
+      tk = tk1
+    end
+    if is_symbol
+      tk = symbol_tk
+    end
+    tk
+  end
+
+  private def get_string_tk(tk)
+    string = tk[:text]
+    state = nil
+    if :on_backtick == tk[:kind]
+      expanded = true
+    else
+      expanded = false
+    end
+    loop do
+      inner_str_tk = get_squashed_tk
+      if inner_str_tk.nil?
+        break
+      elsif :on_tstring_end == inner_str_tk[:kind]
+        string = string + inner_str_tk[:text]
+        state = inner_str_tk[:state]
+        break
+      else
+        string = string + inner_str_tk[:text]
+        if :on_tstring_content != inner_str_tk[:kind] then
+          expanded = true
         end
       end
-      text = "#{start_token}#{string}#{end_token}"
-      tk = { :line_no => line_no, :char_no => char_no, :kind => :on_dstring, :text => text, :state => state }
-    when :on_op then
-      if tk[:text] =~ /^[-+]$/ then
-        tk_ahead = get_squashed_tk
-        case tk_ahead[:kind]
-        when :on_int, :on_float, :on_rational, :on_imaginary
-          tk[:text] += tk_ahead[:text]
-          tk[:kind] = tk_ahead[:kind]
-          tk[:state] = tk_ahead[:state]
+    end
+    {
+      :line_no => tk[:line_no],
+      :char_no => tk[:char_no],
+      :kind => expanded ? :on_dstring : :on_tstring,
+      :text => string,
+      :state => state
+    }
+  end
+
+  private def get_regexp_tk(tk)
+    string = tk[:text]
+    state = nil
+    loop do
+      inner_str_tk = get_squashed_tk
+      if inner_str_tk.nil?
+        break
+      elsif :on_regexp_end == inner_str_tk[:kind]
+        string = string + inner_str_tk[:text]
+        state = inner_str_tk[:state]
+        break
+      else
+        string = string + inner_str_tk[:text]
+      end
+    end
+    {
+      :line_no => tk[:line_no],
+      :char_no => tk[:char_no],
+      :kind => :on_regexp,
+      :text => string,
+      :state => state
+    }
+  end
+
+  private def get_embdoc_tk(tk)
+    string = ''
+    until :on_embdoc_end == (embdoc_tk = get_squashed_tk)[:kind] do
+      string = string + embdoc_tk[:text]
+    end
+    {
+      :line_no => tk[:line_no],
+      :char_no => tk[:char_no],
+      :kind => :on_embdoc,
+      :text => string,
+      :state => embdoc_tk[:state]
+    }
+  end
+
+  private def get_qwords_tk(tk)
+    string = ''
+    start_token = tk[:text]
+    start_quote = tk[:text].rstrip[-1]
+    line_no = tk[:line_no]
+    char_no = tk[:char_no]
+    state = tk[:state]
+    end_quote =
+      case start_quote
+      when ?( then ?)
+      when ?[ then ?]
+      when ?{ then ?}
+      when ?< then ?>
+      else start_quote
+      end
+    end_token = nil
+    loop do
+      tk = get_squashed_tk
+      if tk.nil?
+        end_token = end_quote
+        break
+      elsif :on_tstring_content == tk[:kind] then
+        string += tk[:text]
+      elsif :on_words_sep == tk[:kind] then
+        if end_quote == tk[:text].strip then
+          end_token = tk[:text]
+          break
         else
-          @buf.unshift tk_ahead
+          string += tk[:text]
         end
+      end
+    end
+    text = "#{start_token}#{string}#{end_token}"
+    {
+      :line_no => line_no,
+      :char_no => char_no,
+      :kind => :on_dstring,
+      :text => text,
+      :state => state
+    }
+  end
+
+  private def get_op_tk(tk)
+    redefinable_operators = %w[! != !~ % & * ** + +@ - -@ / < << <= <=> == === =~ > >= >> [] []= ^ ` | ~]
+    if redefinable_operators.include?(tk[:text]) and EXPR_ARG == tk[:state] then
+      @lex_state = EXPR_ARG
+      tk[:kind] = :on_ident
+      tk[:state] = @lex_state
+    elsif tk[:text] =~ /^[-+]$/ then
+      tk_ahead = get_squashed_tk
+      case tk_ahead[:kind]
+      when :on_int, :on_float, :on_rational, :on_imaginary then
+        tk[:text] += tk_ahead[:text]
+        tk[:kind] = tk_ahead[:kind]
+        tk[:state] = tk_ahead[:state]
+      else
+        @buf.unshift tk_ahead
       end
     end
     tk
