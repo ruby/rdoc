@@ -60,8 +60,13 @@ class RDoc::RipperStateLex
 
     def on_op(tok, data)
       case tok
-      when '!', '!=', '!~'
-        @lex_state = EXPR_BEG
+      when '&', '|', '!', '!=', '!~'
+        case @lex_state
+        when EXPR_FNAME, EXPR_DOT
+          @lex_state = EXPR_ARG
+        else
+          @lex_state = EXPR_BEG
+        end
       when '<<'
         # TODO next token?
         case @lex_state
@@ -71,9 +76,8 @@ class RDoc::RipperStateLex
           @lex_state = EXPR_BEG
         end
       when '?'
-        @lex_state = :EXPR_BEG
-      when '&', '&&',
-           '|', '||', '+=', '-=', '*=', '**=',
+        @lex_state = EXPR_BEG
+      when '&&', '||', '+=', '-=', '*=', '**=',
            '&=', '|=', '^=', '<<=', '>>=', '||=', '&&='
         @lex_state = EXPR_BEG
       when ')', ']', '}'
@@ -232,9 +236,16 @@ class RDoc::RipperStateLex
     case tk[:kind]
     when :on_symbeg then
       tk = get_symbol_tk(tk)
-    when :on_tstring_beg, :on_backtick then
+    when :on_tstring_beg then
       tk = get_string_tk(tk)
-      tk = get_string_tk(tk)
+    when :on_backtick then
+      if (EXPR_FNAME & tk[:state]) != 0
+        @lex_state = EXPR_ARG
+        tk[:kind] = :on_ident
+        tk[:state] = @lex_state
+      else
+        tk = get_string_tk(tk)
+      end
     when :on_regexp_beg then
       tk = get_regexp_tk(tk)
     when :on_embdoc_beg then
