@@ -36,9 +36,10 @@ module RDoc::TokenStream
               when RDoc::RubyToken::TkIVAR     then 'ruby-ivar'
               when RDoc::RubyToken::TkOp       then 'ruby-operator'
               when RDoc::RubyToken::TkId       then 'ruby-identifier'
+              when RDoc::RubyToken::TkREGEXP   then 'ruby-regexp'
+              when RDoc::RubyToken::TkDREGEXP  then 'ruby-regexp'
               when RDoc::RubyToken::TkNode     then 'ruby-node'
               when RDoc::RubyToken::TkCOMMENT  then 'ruby-comment'
-              when RDoc::RubyToken::TkREGEXP   then 'ruby-regexp'
               when RDoc::RubyToken::TkSTRING   then 'ruby-string'
               when RDoc::RubyToken::TkVal      then 'ruby-value'
               end
