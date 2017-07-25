@@ -355,6 +355,7 @@ module RDoc::RubyToken
     [:TkNEQ,        TkOp,   "!="],
     [:TkGEQ,        TkOp,   ">="],
     [:TkLEQ,        TkOp,   "<="],
+    [:TkHASHROCKET, TkOp,   "=>"],
     [:TkANDOP,      TkOp,   "&&"],
     [:TkOROP,       TkOp,   "||"],
     [:TkMATCH,      TkOp,   "=~"],

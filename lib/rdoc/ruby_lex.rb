@@ -483,7 +483,7 @@ class RDoc::RubyLex
                   "=", "==", "===",
                   "=~", "<=>",
                   "<", "<=",
-                  ">", ">=", ">>") do
+                  ">", ">=", ">>", "=>") do
       |op, io|
       case @lex_state
       when :EXPR_FNAME, :EXPR_DOT
