@@ -26,7 +26,8 @@ module RDoc::RubyToken
     Symbol = Integer
   end
 
-  def set_token_position(line, char)
+  def set_token_position(seek, line, char)
+    @prev_seek = seek
     @prev_line_no = line
     @prev_char_no = char
   end

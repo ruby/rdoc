@@ -9,6 +9,31 @@ class TestRDocRubyLex < RDoc::TestCase
     @TK = RDoc::RubyToken
   end
 
+  def test_token_position
+    tokens = RDoc::RubyLex.tokenize '[ 1, :a, nil ]', nil
+
+    assert_equal '[', tokens[0].text
+    assert_equal 0, tokens[0].seek
+    assert_equal 1, tokens[0].line_no
+    assert_equal 0, tokens[0].char_no
+    assert_equal '1', tokens[2].text
+    assert_equal 2, tokens[2].seek
+    assert_equal 1, tokens[2].line_no
+    assert_equal 2, tokens[2].char_no
+    assert_equal ':a', tokens[5].text
+    assert_equal 5, tokens[5].seek
+    assert_equal 1, tokens[5].line_no
+    assert_equal 5, tokens[5].char_no
+    assert_equal 'nil', tokens[8].text
+    assert_equal 9, tokens[8].seek
+    assert_equal 1, tokens[8].line_no
+    assert_equal 9, tokens[8].char_no
+    assert_equal ']', tokens[10].text
+    assert_equal 13, tokens[10].seek
+    assert_equal 1, tokens[10].line_no
+    assert_equal 13, tokens[10].char_no
+  end
+
   def test_class_tokenize
     tokens = RDoc::RubyLex.tokenize "def x() end", nil
 

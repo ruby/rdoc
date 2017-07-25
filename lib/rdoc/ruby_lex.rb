@@ -364,7 +364,7 @@ class RDoc::RubyLex
 
     if TkSYMBEG === tk then
       tk1 = token
-      set_token_position tk.line_no, tk.char_no
+      set_token_position tk.seek, tk.line_no, tk.char_no
 
       case tk1
       when TkId, TkOp, TkSTRING, TkDSTRING, TkSTAR, TkAMPER then
