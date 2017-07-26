@@ -376,6 +376,10 @@ class RDoc::RubyLex
       else
         tk = tk1
       end
+    elsif (TkPLUS === tk or TkMINUS === tk) and peek(0) =~ /\d/ then
+      tk1 = token
+      set_token_position tk.seek, tk.line_no, tk.char_no
+      tk = Token(tk1.class, tk.text + tk1.text)
     end
     #      Tracer.off
     tk
