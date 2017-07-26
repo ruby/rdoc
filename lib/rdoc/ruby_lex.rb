@@ -1235,7 +1235,7 @@ class RDoc::RubyLex
         elsif ch == '\\'
           if %w[' /].include? @ltype then
             case ch = getc
-            when "\\", "\n", "'"
+            when "\n", "'"
             when @ltype
               str << ch
             else
