@@ -396,7 +396,9 @@ class RDoc::RubyLex
     "r" => "/",
     "w" => "]",
     "W" => "]",
-    "s" => ":"
+    "s" => ":",
+    "i" => "]",
+    "I" => "]"
   }
 
   PERCENT_PAREN = {
