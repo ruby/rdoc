@@ -289,6 +289,9 @@ class RDoc::RipperStateLex
     when :on_gvar
       symbol_tk[:text] = ":#{tk1[:text]}"
       symbol_tk[:state] = tk1[:state]
+    when :on_const
+      symbol_tk[:text] = ":#{tk1[:text]}"
+      symbol_tk[:state] = tk1[:state]
     else
       is_symbol = false
       tk = tk1
