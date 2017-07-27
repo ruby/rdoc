@@ -911,9 +911,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
       break if tk.nil?
       if :on_semicolon == tk[:kind] then
         break if nest <= 0
-      elsif [:on_lparen, :on_lbrace, :on_lbracket].include?(tk[:kind]) ||
-            (:on_kw == tk[:kind] && %w{do if unless case def begin}.include?(tk[:text])) then
+      elsif [:on_lparen, :on_lbrace, :on_lbracket].include?(tk[:kind]) then
         nest += 1
+      elsif (:on_kw == tk[:kind] && 'def' == tk[:text]) then
+        nest += 1
+      elsif (:on_kw == tk[:kind] && %w{do if unless case begin}.include?(tk[:text])) then
+        if (RDoc::RipperStateLex::EXPR_LABEL & tk[:state]) == 0
+          nest += 1
+        end
       elsif [:on_rparen, :on_rbrace, :on_rbracket].include?(tk[:kind]) ||
             :on_kw == tk[:kind] && 'end' == tk[:text] then
         nest -= 1
