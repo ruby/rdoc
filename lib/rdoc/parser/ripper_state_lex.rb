@@ -395,7 +395,7 @@ class RDoc::RipperStateLex
         break
       elsif :on_tstring_content == tk[:kind] then
         string += tk[:text]
-      elsif :on_words_sep == tk[:kind] then
+      elsif :on_words_sep == tk[:kind] or :on_tstring_end == tk[:kind] then
         if end_quote == tk[:text].strip then
           end_token = tk[:text]
           break
