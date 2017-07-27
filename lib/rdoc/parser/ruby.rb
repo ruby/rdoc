@@ -1503,13 +1503,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when :on_rparen then
         nest -= 1
       when :on_comment, :on_embdoc then
-        if :on_nl == end_token[:kind] and "\n" == tk[:text][-1] then
-          break
-        elsif method && method.block_params.nil? then
-          unget_tk tk
-          read_documentation_modifiers method, modifiers
-        end
         @read.pop
+        if :on_nl == end_token[:kind] and "\n" == tk[:text][-1] then
+          if method && method.block_params.nil? then
+            unget_tk tk
+            read_documentation_modifiers method, modifiers
+          end
+          break if nest <= 0
+        end
       end
       tk = get_tk
     end
