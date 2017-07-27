@@ -80,8 +80,6 @@ class RDoc::RipperStateLex
       when '&&', '||', '+=', '-=', '*=', '**=',
            '&=', '|=', '^=', '<<=', '>>=', '||=', '&&='
         @lex_state = EXPR_BEG
-      when ')', ']', '}'
-        @lex_state = EXPR_END
       else
         case @lex_state
         when EXPR_FNAME, EXPR_DOT
@@ -192,6 +190,26 @@ class RDoc::RipperStateLex
 
     def on_rparen(tok, data)
       @lex_state = EXPR_ENDFN
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_lbrace(tok, data)
+      @lex_state = EXPR_LABEL | EXPR_BEG
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_rbrace(tok, data)
+      @lex_state = EXPR_ENDARG
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_lbracket(tok, data)
+      @lex_state = EXPR_LABEL | EXPR_BEG
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_rbracket(tok, data)
+      @lex_state = EXPR_ENDARG
       @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
     end
 
