@@ -250,8 +250,14 @@ class RDoc::RipperStateLex
       tk = get_regexp_tk(tk)
     when :on_embdoc_beg then
       tk = get_embdoc_tk(tk)
+    when :on_words_beg then
+      tk = get_words_tk(tk)
     when :on_qwords_beg then
-      tk = get_qwords_tk(tk)
+      tk = get_words_tk(tk)
+    when :on_symbols_beg then
+      tk = get_words_tk(tk)
+    when :on_qsymbols_beg then
+      tk = get_words_tk(tk)
     when :on_op then
       tk = get_op_tk(tk)
     end
@@ -283,8 +289,6 @@ class RDoc::RipperStateLex
     when :on_gvar
       symbol_tk[:text] = ":#{tk1[:text]}"
       symbol_tk[:state] = tk1[:state]
-    #when :on_symbols_beg
-    #when :on_qsymbols_beg
     else
       is_symbol = false
       tk = tk1
@@ -365,7 +369,7 @@ class RDoc::RipperStateLex
     }
   end
 
-  private def get_qwords_tk(tk)
+  private def get_words_tk(tk)
     string = ''
     start_token = tk[:text]
     start_quote = tk[:text].rstrip[-1]
