@@ -769,14 +769,11 @@ class RDoc::RubyLex
 
     @OP.def_rule('\\') do
       |op, io|
-      if getc == "\n"
+      if peek(0) == "\n"
         @space_seen = true
         @continue = true
-        Token(TkSPACE)
-      else
-        ungetc
-        Token("\\")
       end
+      Token("\\")
     end
 
     @OP.def_rule('%') do
