@@ -1689,8 +1689,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
           end
 
         when 'until', 'while' then
-          nest += 1
-          skip_optional_do_after_expression
+          if (RDoc::RipperStateLex::EXPR_LABEL & tk[:state]) == 0
+            nest += 1
+            skip_optional_do_after_expression
+          end
 
         # Until and While can have a 'do', which shouldn't increase the nesting.
         # We can't solve the general case, but we can handle most occurrences by
