@@ -1477,6 +1477,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     return '' unless end_token
 
     nest = 0
+    continue = false
 
     while tk != nil do
       case tk[:kind]
@@ -1504,13 +1505,18 @@ class RDoc::Parser::Ruby < RDoc::Parser
         nest -= 1
       when :on_comment, :on_embdoc then
         @read.pop
-        if :on_nl == end_token[:kind] and "\n" == tk[:text][-1] then
+        if :on_nl == end_token[:kind] and "\n" == tk[:text][-1] and
+          (!continue or (RDoc::RipperStateLex::EXPR_LABEL & tk[:state]) != 0) then
           if method && method.block_params.nil? then
             unget_tk tk
             read_documentation_modifiers method, modifiers
           end
           break if nest <= 0
         end
+      when :on_comma then
+        continue = true
+      when :on_ident then
+        continue = false if continue
       end
       tk = get_tk
     end
