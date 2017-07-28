@@ -451,6 +451,22 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal expected, @to.res.join
   end
 
+  def test_accept_verbatim_nl_after_backslash
+    verb = @RM::Verbatim.new("a = 1 if first_flag_var and \\\n", "  this_is_flag_var\n")
+
+    @to.start_accepting
+    @to.accept_verbatim verb
+
+    expected = <<-EXPECTED
+
+<pre class="ruby"><span class="ruby-identifier">a</span> = <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">first_flag_var</span> <span class="ruby-keyword">and</span> \\
+  <span class="ruby-identifier">this_is_flag_var</span>
+</pre>
+    EXPECTED
+
+    assert_equal expected, @to.res.join
+  end
+
   def test_accept_verbatim_pipe
     @options.pipe = true
 
