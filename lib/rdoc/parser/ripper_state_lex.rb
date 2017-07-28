@@ -268,6 +268,19 @@ class RDoc::RipperStateLex
       tk = get_regexp_tk(tk)
     when :on_embdoc_beg then
       tk = get_embdoc_tk(tk)
+    when :on_heredoc_beg then
+      tk = get_heredoc_tk(tk)
+      if "\n" == tk[:text][-1]
+        tk[:text] = tk[:text][0..-2]
+        nl_tk = {
+          :line_no => tk[:line_no] + tk[:text].count("\n"),
+          :char_no => tk[:text].split("\n")[-1].size,
+          :kind => :on_nl,
+          :text => "\n",
+          :state => tk[:state]
+        }
+        @buf.unshift nl_tk
+      end
     when :on_words_beg then
       tk = get_words_tk(tk)
     when :on_qwords_beg then
@@ -387,6 +400,21 @@ class RDoc::RipperStateLex
       :kind => :on_embdoc,
       :text => string,
       :state => embdoc_tk[:state]
+    }
+  end
+
+  private def get_heredoc_tk(tk)
+    string = tk[:text]
+    until :on_heredoc_end == (heredoc_tk = get_squashed_tk)[:kind] do
+      string = string + heredoc_tk[:text]
+    end
+    string = string + heredoc_tk[:text]
+    {
+      :line_no => tk[:line_no],
+      :char_no => tk[:char_no],
+      :kind => :on_embdoc,
+      :text => string,
+      :state => heredoc_tk[:state]
     }
   end
 
