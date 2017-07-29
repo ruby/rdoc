@@ -40,6 +40,7 @@ module RDoc::TokenStream
               when RDoc::RubyToken::TkDREGEXP  then 'ruby-regexp'
               when RDoc::RubyToken::TkNode     then 'ruby-node'
               when RDoc::RubyToken::TkCOMMENT  then 'ruby-comment'
+              when RDoc::RubyToken::TkXSTRING  then 'ruby-string'
               when RDoc::RubyToken::TkSTRING   then 'ruby-string'
               when RDoc::RubyToken::TkVal      then 'ruby-value'
               end
