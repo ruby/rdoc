@@ -186,6 +186,11 @@ class RDoc::RipperStateLex
       on_variables(__method__, tok, data)
     end
 
+    def on_backref(tok, data)
+      @lex_state = EXPR_END
+      on_variables(__method__, tok, data)
+    end
+
     def on_lparen(tok, data)
       @lex_state = EXPR_LABEL | EXPR_BEG
       @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
