@@ -42,6 +42,7 @@ module RDoc::TokenStream
                 else
                                     'ruby-operator'
                 end
+              when :on_tlambda then 'ruby-operator'
               when :on_ident   then 'ruby-identifier'
               when :on_label   then 'ruby-value'
               when :on_backref, :on_dstring
