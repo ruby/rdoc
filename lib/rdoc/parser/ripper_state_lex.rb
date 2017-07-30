@@ -336,11 +336,7 @@ class RDoc::RipperStateLex
   private def get_string_tk(tk)
     string = tk[:text]
     state = nil
-    if :on_backtick == tk[:kind]
-      expanded = true
-    else
-      expanded = false
-    end
+    expanded = false
     loop do
       inner_str_tk = get_squashed_tk
       if inner_str_tk.nil?
