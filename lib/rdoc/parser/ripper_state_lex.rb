@@ -172,14 +172,17 @@ class RDoc::RipperStateLex
     end
 
     def on_ivar(tok, data)
+      @lex_state = EXPR_END
       on_variables(__method__, tok, data)
     end
 
     def on_cvar(tok, data)
+      @lex_state = EXPR_END
       on_variables(__method__, tok, data)
     end
 
     def on_gvar(tok, data)
+      @lex_state = EXPR_END
       on_variables(__method__, tok, data)
     end
 
