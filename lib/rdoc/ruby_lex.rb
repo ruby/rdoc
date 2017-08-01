@@ -739,6 +739,7 @@ class RDoc::RubyLex
 
     @OP.def_rule("[") do
       |op, io|
+      text = nil
       @indent += 1
       if @lex_state == :EXPR_FNAME
         tk_c = TkfLBRACK
@@ -747,13 +748,25 @@ class RDoc::RubyLex
           tk_c = TkLBRACK
         elsif @lex_state == :EXPR_ARG && @space_seen
           tk_c = TkLBRACK
+        elsif @lex_state == :EXPR_DOT
+          if peek(0) == "]"
+            tk_c = TkIDENTIFIER
+            getc
+            if peek(0) == "="
+              text = "[]="
+            else
+              text = "[]"
+            end
+          else
+            tk_c = TkOp
+          end
         else
           tk_c = TkfLBRACK
         end
         @lex_state = :EXPR_BEG
       end
       @indent_stack.push tk_c
-      Token(tk_c)
+      Token(tk_c, text)
     end
 
     @OP.def_rule("{") do
