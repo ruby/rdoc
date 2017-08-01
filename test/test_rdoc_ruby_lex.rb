@@ -103,12 +103,27 @@ end
     tokens = RDoc::RubyLex.tokenize '{ class:"foo" }', nil
 
     expected = [
-      @TK::TkLBRACE    .new( 0, 1,  0, '{'),
-      @TK::TkSPACE     .new( 1, 1,  1, ' '),
-      @TK::TkIDENTIFIER.new( 2, 1,  2, 'class'),
-      @TK::TkSYMBOL    .new( 7, 1,  7, ':"foo"'),
-      @TK::TkSPACE     .new(13, 1, 13, ' '),
-      @TK::TkRBRACE    .new(14, 1, 14, '}'),
+      @TK::TkLBRACE.new( 0, 1,  0, '{'),
+      @TK::TkSPACE .new( 1, 1,  1, ' '),
+      @TK::TkSYMBOL.new( 2, 1,  2, 'class:'),
+      @TK::TkSTRING.new( 8, 1,  8, '"foo"'),
+      @TK::TkSPACE .new(13, 1, 13, ' '),
+      @TK::TkRBRACE.new(14, 1, 14, '}'),
+      @TK::TkNL    .new(15, 1, 15, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
+  def test_class_tokenize_double_colon_is_not_hash_symbol
+    tokens = RDoc::RubyLex.tokenize 'self.class::Row', nil
+
+    expected = [
+      @TK::TkSELF      .new( 0, 1,  0, "self"),
+      @TK::TkDOT       .new( 4, 1,  4, "."),
+      @TK::TkIDENTIFIER.new( 5, 1,  5, "class"),
+      @TK::TkCOLON2    .new(10, 1, 10, "::"),
+      @TK::TkCONSTANT  .new(12, 1, 12, "Row"),
       @TK::TkNL        .new(15, 1, 15, "\n"),
     ]
 
@@ -444,8 +459,7 @@ U
     expected = [
       @TK::TkIDENTIFIER.new( 0, 1,  0, 'scope'),
       @TK::TkSPACE     .new( 5, 1,  5, ' '),
-      @TK::TkIDENTIFIER.new( 6, 1,  6, 'module'),
-      @TK::TkCOLON     .new(12, 1, 12, ':'),
+      @TK::TkSYMBOL    .new( 6, 1,  6, 'module:'),
       @TK::TkSPACE     .new(13, 1, 13, ' '),
       @TK::TkSYMBOL    .new(14, 1, 14, ':v1'),
       @TK::TkNL        .new(17, 1, 17, "\n"),

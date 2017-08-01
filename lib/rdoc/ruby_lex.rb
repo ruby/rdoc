@@ -963,7 +963,12 @@ class RDoc::RubyLex
                   @indent_stack.push token_c
                 end
               else
-                token_c = TkIDENTIFIER
+                if peek(0) == ':' and !peek_match?(/^::/)
+                  token.concat getc
+                  token_c = TkSYMBOL
+                else
+                  token_c = TkIDENTIFIER
+                end
               end
 
             elsif DEINDENT_CLAUSE.include?(token)
@@ -996,7 +1001,12 @@ class RDoc::RubyLex
     elsif token[token.size - 1, 1] =~ /[!?]/
       return Token(TkFID, token)
     else
-      return Token(TkIDENTIFIER, token)
+      if peek(0) == ':' and !peek_match?(/^::/)
+        token.concat getc
+        return Token(TkSYMBOL, token)
+      else
+        return Token(TkIDENTIFIER, token)
+      end
     end
   end
 
