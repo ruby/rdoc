@@ -339,6 +339,17 @@ U
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_regexp_continuing_backslash
+    tokens = RDoc::RubyLex.tokenize "/(?<!\\\\)\\n\z/", nil
+
+    expected = [
+      @TK::TkREGEXP.new( 0, 1,  0, "/(?<!\\\\)\\n\z/"),
+      @TK::TkNL    .new(12, 1, 12, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_string
     tokens = RDoc::RubyLex.tokenize "'hi'", nil
 
