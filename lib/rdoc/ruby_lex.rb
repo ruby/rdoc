@@ -494,6 +494,12 @@ class RDoc::RubyLex
       Token(op)
     end
 
+    @OP.def_rules("->") do
+      |op, io|
+      @lex_state = :EXPR_ENDFN
+      Token(op)
+    end
+
     @OP.def_rules("!", "!=", "!~") do
       |op, io|
       @lex_state = :EXPR_BEG
