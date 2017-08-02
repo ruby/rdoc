@@ -238,6 +238,36 @@ U
     assert_equal expected, tokens.first
   end
 
+  def test_class_tokenize_lambda
+    tokens = RDoc::RubyLex.tokenize 'a = -> x, y { x + y }', nil
+
+    expected = [
+      @TK::TkIDENTIFIER.new( 0, 1,  0, 'a'),
+      @TK::TkSPACE     .new( 1, 1,  1, ' '),
+      @TK::TkASSIGN    .new( 2, 1,  2, '='),
+      @TK::TkSPACE     .new( 3, 1,  3, ' '),
+      @TK::TkLAMBDA    .new( 4, 1,  4, '->'),
+      @TK::TkSPACE     .new( 6, 1,  6, ' '),
+      @TK::TkIDENTIFIER.new( 7, 1,  7, 'x'),
+      @TK::TkCOMMA     .new( 8, 1,  8, ','),
+      @TK::TkSPACE     .new( 9, 1,  9, ' '),
+      @TK::TkIDENTIFIER.new(10, 1, 10, 'y'),
+      @TK::TkSPACE     .new(11, 1, 11, ' '),
+      @TK::TkfLBRACE   .new(12, 1, 12, '{'),
+      @TK::TkSPACE     .new(13, 1, 13, ' '),
+      @TK::TkIDENTIFIER.new(14, 1, 14, 'x'),
+      @TK::TkSPACE     .new(15, 1, 15, ' '),
+      @TK::TkPLUS      .new(16, 1, 16, '+'),
+      @TK::TkSPACE     .new(17, 1, 17, ' '),
+      @TK::TkIDENTIFIER.new(18, 1, 18, 'y'),
+      @TK::TkSPACE     .new(19, 1, 19, ' '),
+      @TK::TkRBRACE    .new(20, 1, 20, '}'),
+      @TK::TkNL        .new(21, 1, 21, "\n")
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_percent_1
     tokens = RDoc::RubyLex.tokenize 'v%10==10', nil
 
