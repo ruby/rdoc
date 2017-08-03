@@ -242,6 +242,11 @@ class RDoc::RipperStateLex
       @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
     end
 
+    def on_ignored_sp(tok, data)
+      @lex_state = EXPR_BEG
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
     def on_default(event, tok, data)
       reset
       @callback.call({ :line_no => lineno, :char_no => column, :kind => event, :text => tok, :state => @lex_state})
@@ -277,17 +282,10 @@ class RDoc::RipperStateLex
     when :on_embdoc_beg then
       tk = get_embdoc_tk(tk)
     when :on_heredoc_beg then
-      tk = get_heredoc_tk(tk)
-      if "\n" == tk[:text][-1]
-        tk[:text] = tk[:text][0..-2]
-        nl_tk = {
-          :line_no => tk[:line_no] + tk[:text].count("\n"),
-          :char_no => tk[:text].split("\n")[-1].size,
-          :kind => :on_nl,
-          :text => "\n",
-          :state => tk[:state]
-        }
-        @buf.unshift nl_tk
+      @heredoc_queue << retrieve_heredoc_info(tk)
+    when :on_nl, :on_ignored_nl, :on_comment then
+      unless @heredoc_queue.empty?
+        get_heredoc_tk(*@heredoc_queue.shift)
       end
     when :on_words_beg then
       tk = get_words_tk(tk)
@@ -407,19 +405,46 @@ class RDoc::RipperStateLex
     }
   end
 
-  private def get_heredoc_tk(tk)
-    string = tk[:text]
-    until :on_heredoc_end == (heredoc_tk = get_squashed_tk)[:kind] do
-      string = string + heredoc_tk[:text]
+  private def get_heredoc_tk(heredoc_name, indent)
+    string = ''
+    start_tk = nil
+    prev_tk = nil
+    until heredoc_end?(heredoc_name, indent, tk = @inner_lex.next) do
+      start_tk = tk unless start_tk
+      if (prev_tk.nil? or "\n" == prev_tk[:text][-1]) and 0 != tk[:char_no]
+        string = string + (' ' * tk[:char_no])
+      end
+      string = string + tk[:text]
+      prev_tk = tk
     end
-    string = string + heredoc_tk[:text]
-    {
-      :line_no => tk[:line_no],
-      :char_no => tk[:char_no],
-      :kind => :on_embdoc,
+    start_tk = tk unless start_tk
+    prev_tk = tk unless prev_tk
+    @buf.unshift tk # closing heredoc
+    heredoc_tk = {
+      :line_no => start_tk[:line_no],
+      :char_no => start_tk[:char_no],
+      :kind => :on_heredoc,
       :text => string,
-      :state => heredoc_tk[:state]
+      :state => prev_tk[:state]
     }
+    @buf.unshift heredoc_tk
+  end
+
+  private def retrieve_heredoc_info(tk)
+    name = tk[:text].gsub(/\A<<[-~]?['"`]?(\w+)['"`]?\z/, '\1')
+    indent = tk[:text].match?(/\A<<[-~]/)
+    [name, indent]
+  end
+
+  private def heredoc_end?(name, indent, tk)
+    result = false
+    if :on_heredoc_end == tk[:kind] then
+      tk_name = (indent ? tk[:text].gsub(/\A *(\w+)\n\z/, '\1') : tk[:text].gsub(/\n\z/, ''))
+      if name == tk_name
+        result = true
+      end
+    end
+    result
   end
 
   private def get_words_tk(tk)
@@ -486,6 +511,7 @@ class RDoc::RipperStateLex
 
   def initialize(code)
     @buf = []
+    @heredoc_queue = []
     @inner_lex = Enumerator.new do |y|
       InnerStateLex.new(code).each do |tk|
         y << tk

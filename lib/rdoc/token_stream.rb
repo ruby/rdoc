@@ -52,8 +52,10 @@ module RDoc::TokenStream
               when :on_tstring then 'ruby-string'
               when :on_int, :on_float,
                    :on_rational, :on_imaginary,
-                   :on_embdoc,
+                   :on_embdoc, :on_heredoc,
                    :on_symbol, :on_CHAR then 'ruby-value'
+              when :on_heredoc_beg, :on_heredoc_end
+                               then 'ruby-identifier'
               end
 
       comment_with_nl = false
