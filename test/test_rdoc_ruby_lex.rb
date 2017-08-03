@@ -417,6 +417,17 @@ U
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_single_quote_escape
+    tokens = RDoc::RubyLex.tokenize %q{'\\\\ \\' \\&'}, nil
+
+    expected = [
+      @TK::TkSTRING.new( 0, 1,  0, %q{'\\\\ \\' \\&'}),
+      @TK::TkNL    .new(10, 1, 10, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_string
     tokens = RDoc::RubyLex.tokenize "'hi'", nil
 
