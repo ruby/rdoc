@@ -1337,7 +1337,7 @@ class RDoc::RubyLex
             when @ltype
               str << ch
             else
-              ungetc
+              str << ch
             end
           else
             str << read_escape
