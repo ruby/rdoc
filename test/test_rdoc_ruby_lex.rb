@@ -286,6 +286,17 @@ U
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_percent_sign_quote
+    tokens = RDoc::RubyLex.tokenize '%%hi%', nil
+
+    expected = [
+      @TK::TkSTRING.new( 0, 1, 0, '%%hi%'),
+      @TK::TkNL    .new( 5, 1, 5, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_regexp
     tokens = RDoc::RubyLex.tokenize "/hay/", nil
 
