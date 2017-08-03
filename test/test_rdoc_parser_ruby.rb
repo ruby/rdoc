@@ -2838,7 +2838,7 @@ end
   def test_sanity_interpolation_curly
     util_parser '%{ #{} }'
 
-    assert_equal '%Q{ #{} }', @parser.get_tk.text
+    assert_equal '%{ #{} }', @parser.get_tk.text
     assert_equal RDoc::RubyToken::TkNL, @parser.get_tk.class
   end
 
