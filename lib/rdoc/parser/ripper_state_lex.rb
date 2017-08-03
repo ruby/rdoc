@@ -355,7 +355,7 @@ class RDoc::RipperStateLex
         break
       else
         string = string + inner_str_tk[:text]
-        if :on_tstring_content != inner_str_tk[:kind] then
+        if :on_embexpr_beg == inner_str_tk[:kind] then
           expanded = true
         end
       end
