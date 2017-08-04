@@ -1233,13 +1233,14 @@ class RDoc::RubyLex
             ungetc
           end
         elsif ch == '\\'
-          if %w[' /].include? @ltype then
+          case @ltype
+          when "'" then
             case ch = getc
-            when "\\", "\n", "'"
-            when @ltype
+            when "'", '\\' then
               str << ch
             else
-              ungetc
+              str << '\\'
+              str << ch
             end
           else
             str << read_escape
