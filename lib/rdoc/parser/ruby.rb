@@ -2081,10 +2081,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
     loop do
       break unless tk
       case tk[:kind]
-      when :on_semicolon then
+      when :on_semicolon, :on_nl, :on_ignored_nl then
         break if b_nest.zero?
       when :on_lparen then
         nest += 1
+      when :on_rparen then
+        nest -= 1
       when :on_kw then
         case tk[:text]
         when 'begin'
@@ -2094,16 +2096,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
         when 'do'
           break if nest.zero?
         end
-      when end_token[:kind] then
-        if end_token == :on_rparen
-          nest -= 1
-          break if @scanner.lex_state == :EXPR_END and nest.zero?
-        else
-          break
-          #break unless @scanner.continue
-        end
       when :on_comment, :on_embdoc then
-        if :on_nl == end_token[:kind] and "\n" == tk[:text][-1] then
+        if b_nest.zero? and "\n" == tk[:text][-1] then
           break
         end
       end
