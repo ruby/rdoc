@@ -21,7 +21,7 @@ class RDoc::RipperStateLex
   EXPR_END_ANY  =  (EXPR_END | EXPR_ENDARG | EXPR_ENDFN)
 
   class InnerStateLex < Ripper::Filter
-    include Enumerable
+    attr_accessor :lex_state
 
     def initialize(code)
       @lex_state = EXPR_BEG
@@ -260,7 +260,7 @@ class RDoc::RipperStateLex
 
   def get_squashed_tk
     if @buf.empty?
-      tk = @inner_lex.next
+      tk = @inner_lex_enumerator.next
     else
       tk = @buf.shift
     end
@@ -271,9 +271,9 @@ class RDoc::RipperStateLex
       tk = get_string_tk(tk)
     when :on_backtick then
       if (EXPR_FNAME & tk[:state]) != 0
-        @lex_state = EXPR_ARG
+        @inner_lex.lex_state = EXPR_ARG
         tk[:kind] = :on_ident
-        tk[:state] = @lex_state
+        tk[:state] = @inner_lex.lex_state
       else
         tk = get_string_tk(tk)
       end
@@ -283,6 +283,7 @@ class RDoc::RipperStateLex
       tk = get_embdoc_tk(tk)
     when :on_heredoc_beg then
       @heredoc_queue << retrieve_heredoc_info(tk)
+      @inner_lex.lex_state = EXPR_END
     when :on_nl, :on_ignored_nl, :on_comment then
       unless @heredoc_queue.empty?
         get_heredoc_tk(*@heredoc_queue.shift)
@@ -409,7 +410,7 @@ class RDoc::RipperStateLex
     string = ''
     start_tk = nil
     prev_tk = nil
-    until heredoc_end?(heredoc_name, indent, tk = @inner_lex.next) do
+    until heredoc_end?(heredoc_name, indent, tk = @inner_lex_enumerator.next) do
       start_tk = tk unless start_tk
       if (prev_tk.nil? or "\n" == prev_tk[:text][-1]) and 0 != tk[:char_no]
         string = string + (' ' * tk[:char_no])
@@ -492,9 +493,9 @@ class RDoc::RipperStateLex
   private def get_op_tk(tk)
     redefinable_operators = %w[! != !~ % & * ** + +@ - -@ / < << <= <=> == === =~ > >= >> [] []= ^ ` | ~]
     if redefinable_operators.include?(tk[:text]) and EXPR_ARG == tk[:state] then
-      @lex_state = EXPR_ARG
+      @inner_lex.lex_state = EXPR_ARG
       tk[:kind] = :on_ident
-      tk[:state] = @lex_state
+      tk[:state] = @inner_lex.lex_state
     elsif tk[:text] =~ /^[-+]$/ then
       tk_ahead = get_squashed_tk
       case tk_ahead[:kind]
@@ -512,8 +513,9 @@ class RDoc::RipperStateLex
   def initialize(code)
     @buf = []
     @heredoc_queue = []
-    @inner_lex = Enumerator.new do |y|
-      InnerStateLex.new(code).each do |tk|
+    @inner_lex = InnerStateLex.new(code)
+    @inner_lex_enumerator = Enumerator.new do |y|
+      @inner_lex.each do |tk|
         y << tk
       end
     end
