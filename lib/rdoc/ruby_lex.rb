@@ -1132,7 +1132,7 @@ class RDoc::RubyLex
       indent: indent,
       started: false
     }
-    @lex_state = :EXPR_BEG
+    @lex_state = :EXPR_END
     Token(RDoc::RubyLex::TkHEREDOCBEG, start_token)
   end
 
