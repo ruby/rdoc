@@ -1639,7 +1639,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       non_comment_seen = true unless (:on_comment == tk[:kind] or :on_embdoc == tk[:kind])
 
       case tk[:kind]
-      when :on_nl, :on_ignored_nl then
+      when :on_nl, :on_ignored_nl, :on_comment, :on_embdoc then
         skip_tkspace
         tk = get_tk
 
