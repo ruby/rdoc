@@ -1965,7 +1965,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     while tk = get_tk do
       tokens << tk
 
-      if :on_nl == tk[:kind] or (:tk_kw == tk[:kind] && 'def' == tk[:text]) then
+      if :on_nl == tk[:kind] or (:on_kw == tk[:kind] && 'def' == tk[:text]) then
         return
       elsif :on_comment == tk[:kind] or :on_embdoc == tk[:kind] then
         return unless tk[:text] =~ /\s*:?([\w-]+):\s*(.*)/
