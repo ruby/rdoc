@@ -305,34 +305,40 @@ class RDoc::RipperStateLex
   private def get_symbol_tk(tk)
     is_symbol = true
     symbol_tk = { :line_no => tk[:line_no], :char_no => tk[:char_no], :kind => :on_symbol }
-    case (tk1 = get_squashed_tk)[:kind]
-    when :on_ident
-      symbol_tk[:text] = ":#{tk1[:text]}"
-      symbol_tk[:state] = tk1[:state]
-    when :on_tstring_content
-      symbol_tk[:text] = ":#{tk1[:text]}"
-      symbol_tk[:state] = get_squashed_tk[:state] # skip :on_tstring_end
-    when :on_tstring_end
-      symbol_tk[:text] = ":#{tk1[:text]}"
-      symbol_tk[:state] = tk1[:state]
-    when :on_op
-      symbol_tk[:text] = ":#{tk1[:text]}"
-      symbol_tk[:state] = tk1[:state]
-    when :on_ivar
-      symbol_tk[:text] = ":#{tk1[:text]}"
-      symbol_tk[:state] = tk1[:state]
-    when :on_cvar
-      symbol_tk[:text] = ":#{tk1[:text]}"
-      symbol_tk[:state] = tk1[:state]
-    when :on_gvar
-      symbol_tk[:text] = ":#{tk1[:text]}"
-      symbol_tk[:state] = tk1[:state]
-    when :on_const
-      symbol_tk[:text] = ":#{tk1[:text]}"
+    if ":'" == tk[:text] or ':"' == tk[:text]
+      tk1 = get_string_tk(tk)
+      symbol_tk[:text] = tk1[:text]
       symbol_tk[:state] = tk1[:state]
     else
-      is_symbol = false
-      tk = tk1
+      case (tk1 = get_squashed_tk)[:kind]
+      when :on_ident
+        symbol_tk[:text] = ":#{tk1[:text]}"
+        symbol_tk[:state] = tk1[:state]
+      when :on_tstring_content
+        symbol_tk[:text] = ":#{tk1[:text]}"
+        symbol_tk[:state] = get_squashed_tk[:state] # skip :on_tstring_end
+      when :on_tstring_end
+        symbol_tk[:text] = ":#{tk1[:text]}"
+        symbol_tk[:state] = tk1[:state]
+      when :on_op
+        symbol_tk[:text] = ":#{tk1[:text]}"
+        symbol_tk[:state] = tk1[:state]
+      when :on_ivar
+        symbol_tk[:text] = ":#{tk1[:text]}"
+        symbol_tk[:state] = tk1[:state]
+      when :on_cvar
+        symbol_tk[:text] = ":#{tk1[:text]}"
+        symbol_tk[:state] = tk1[:state]
+      when :on_gvar
+        symbol_tk[:text] = ":#{tk1[:text]}"
+        symbol_tk[:state] = tk1[:state]
+      when :on_const
+        symbol_tk[:text] = ":#{tk1[:text]}"
+        symbol_tk[:state] = tk1[:state]
+      else
+        is_symbol = false
+        tk = tk1
+      end
     end
     if is_symbol
       tk = symbol_tk
