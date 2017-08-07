@@ -112,6 +112,7 @@ class RDoc::RubyLex
     @indent_stack = []
     @lex_state = :EXPR_BEG
     @space_seen = false
+    @escaped_nl = false
 
     @continue = false
     @line = ""
@@ -491,7 +492,7 @@ class RDoc::RubyLex
           @continue = true
         else
           @continue = false
-          @lex_state = :EXPR_BEG
+          @lex_state = :EXPR_BEG unless @escaped_nl
           until (@indent_stack.empty? ||
                  [TkLPAREN, TkLBRACK, TkLBRACE,
                    TkfLPAREN, TkfLBRACK, TkfLBRACE].include?(@indent_stack.last))
@@ -502,6 +503,7 @@ class RDoc::RubyLex
         @here_readed.clear
         tk = Token(TkNL)
       end
+      @escaped_nl = false
       tk
     end
 
@@ -870,6 +872,7 @@ class RDoc::RubyLex
       if peek(0) == "\n"
         @space_seen = true
         @continue = true
+        @escaped_nl = true
       end
       Token("\\")
     end
