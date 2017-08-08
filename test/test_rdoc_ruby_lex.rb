@@ -103,12 +103,27 @@ end
     tokens = RDoc::RubyLex.tokenize '{ class:"foo" }', nil
 
     expected = [
-      @TK::TkLBRACE    .new( 0, 1,  0, '{'),
-      @TK::TkSPACE     .new( 1, 1,  1, ' '),
-      @TK::TkIDENTIFIER.new( 2, 1,  2, 'class'),
-      @TK::TkSYMBOL    .new( 7, 1,  7, ':"foo"'),
-      @TK::TkSPACE     .new(13, 1, 13, ' '),
-      @TK::TkRBRACE    .new(14, 1, 14, '}'),
+      @TK::TkLBRACE.new( 0, 1,  0, '{'),
+      @TK::TkSPACE .new( 1, 1,  1, ' '),
+      @TK::TkSYMBOL.new( 2, 1,  2, 'class:'),
+      @TK::TkSTRING.new( 8, 1,  8, '"foo"'),
+      @TK::TkSPACE .new(13, 1, 13, ' '),
+      @TK::TkRBRACE.new(14, 1, 14, '}'),
+      @TK::TkNL    .new(15, 1, 15, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
+  def test_class_tokenize_double_colon_is_not_hash_symbol
+    tokens = RDoc::RubyLex.tokenize 'self.class::Row', nil
+
+    expected = [
+      @TK::TkSELF      .new( 0, 1,  0, "self"),
+      @TK::TkDOT       .new( 4, 1,  4, "."),
+      @TK::TkIDENTIFIER.new( 5, 1,  5, "class"),
+      @TK::TkCOLON2    .new(10, 1, 10, "::"),
+      @TK::TkCONSTANT  .new(12, 1, 12, "Row"),
       @TK::TkNL        .new(15, 1, 15, "\n"),
     ]
 
@@ -238,6 +253,36 @@ U
     assert_equal expected, tokens.first
   end
 
+  def test_class_tokenize_lambda
+    tokens = RDoc::RubyLex.tokenize 'a = -> x, y { x + y }', nil
+
+    expected = [
+      @TK::TkIDENTIFIER.new( 0, 1,  0, 'a'),
+      @TK::TkSPACE     .new( 1, 1,  1, ' '),
+      @TK::TkASSIGN    .new( 2, 1,  2, '='),
+      @TK::TkSPACE     .new( 3, 1,  3, ' '),
+      @TK::TkLAMBDA    .new( 4, 1,  4, '->'),
+      @TK::TkSPACE     .new( 6, 1,  6, ' '),
+      @TK::TkIDENTIFIER.new( 7, 1,  7, 'x'),
+      @TK::TkCOMMA     .new( 8, 1,  8, ','),
+      @TK::TkSPACE     .new( 9, 1,  9, ' '),
+      @TK::TkIDENTIFIER.new(10, 1, 10, 'y'),
+      @TK::TkSPACE     .new(11, 1, 11, ' '),
+      @TK::TkfLBRACE   .new(12, 1, 12, '{'),
+      @TK::TkSPACE     .new(13, 1, 13, ' '),
+      @TK::TkIDENTIFIER.new(14, 1, 14, 'x'),
+      @TK::TkSPACE     .new(15, 1, 15, ' '),
+      @TK::TkPLUS      .new(16, 1, 16, '+'),
+      @TK::TkSPACE     .new(17, 1, 17, ' '),
+      @TK::TkIDENTIFIER.new(18, 1, 18, 'y'),
+      @TK::TkSPACE     .new(19, 1, 19, ' '),
+      @TK::TkRBRACE    .new(20, 1, 20, '}'),
+      @TK::TkNL        .new(21, 1, 21, "\n")
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_percent_1
     tokens = RDoc::RubyLex.tokenize 'v%10==10', nil
 
@@ -304,6 +349,17 @@ U
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_percent_sign_quote
+    tokens = RDoc::RubyLex.tokenize '%%hi%', nil
+
+    expected = [
+      @TK::TkSTRING.new( 0, 1, 0, '%%hi%'),
+      @TK::TkNL    .new( 5, 1, 5, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_regexp
     tokens = RDoc::RubyLex.tokenize "/hay/", nil
 
@@ -352,6 +408,17 @@ U
     expected = [
       @TK::TkREGEXP.new( 0, 1,  0, "/\\//"),
       @TK::TkNL    .new( 4, 1,  4, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
+  def test_class_tokenize_regexp_continuing_backslash
+    tokens = RDoc::RubyLex.tokenize "/(?<!\\\\)\\n\z/", nil
+
+    expected = [
+      @TK::TkREGEXP.new( 0, 1,  0, "/(?<!\\\\)\\n\z/"),
+      @TK::TkNL    .new(12, 1, 12, "\n"),
     ]
 
     assert_equal expected, tokens
@@ -451,8 +518,7 @@ U
     expected = [
       @TK::TkIDENTIFIER.new( 0, 1,  0, 'scope'),
       @TK::TkSPACE     .new( 5, 1,  5, ' '),
-      @TK::TkIDENTIFIER.new( 6, 1,  6, 'module'),
-      @TK::TkCOLON     .new(12, 1, 12, ':'),
+      @TK::TkSYMBOL    .new( 6, 1,  6, 'module:'),
       @TK::TkSPACE     .new(13, 1, 13, ' '),
       @TK::TkSYMBOL    .new(14, 1, 14, ':v1'),
       @TK::TkNL        .new(17, 1, 17, "\n"),
@@ -492,6 +558,41 @@ U
       @TK::TkSPACE    .new(15, 1, 15, ' '),
       @TK::TkIMAGINARY.new(16, 1, 16, '5.55ri'),
       @TK::TkNL       .new(22, 1, 22, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
+  def test_class_tokenize_square_bracket_as_method
+    tokens = RDoc::RubyLex.tokenize "Array.[](1, 2)", nil
+
+    expected = [
+      @TK::TkCONSTANT  .new(0,  1,  0, "Array"),
+      @TK::TkDOT       .new(5,  1,  5, "."),
+      @TK::TkIDENTIFIER.new(6,  1,  6, "[]"),
+      @TK::TkfLPAREN   .new(8,  1,  8, "("),
+      @TK::TkINTEGER   .new(9,  1,  9, "1"),
+      @TK::TkCOMMA     .new(10, 1, 10, ","),
+      @TK::TkSPACE     .new(11, 1, 11, " "),
+      @TK::TkINTEGER   .new(12, 1, 12, "2"),
+      @TK::TkRPAREN    .new(13, 1, 13, ")"),
+      @TK::TkNL        .new(14, 1, 14, "\n")
+    ]
+
+    assert_equal expected, tokens
+  end
+
+  def test_class_tokenize_constant_with_exclamation
+    tokens = RDoc::RubyLex.tokenize "Hello there, Dave!", nil
+
+    expected = [
+      @TK::TkCONSTANT  .new( 0, 1,  0, "Hello"),
+      @TK::TkSPACE     .new( 5, 1,  5, " "),
+      @TK::TkIDENTIFIER.new( 6, 1,  6, "there"),
+      @TK::TkCOMMA     .new(11, 1, 11, ","),
+      @TK::TkSPACE     .new(12, 1, 12, " "),
+      @TK::TkIDENTIFIER.new(13, 1, 13, "Dave!"),
+      @TK::TkNL        .new(18, 1, 18, "\n")
     ]
 
     assert_equal expected, tokens

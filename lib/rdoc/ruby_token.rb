@@ -371,6 +371,7 @@ module RDoc::RubyToken
     [:TkCOLON3,     TkOp,   '::'],
     #[:OPASGN,       TkOp],               # +=, -=  etc. #
     [:TkASSOC,      TkOp,   "=>"],
+    [:TkLAMBDA,     TkOp,   "->"],
     [:TkQUESTION,   TkOp,   "?"], #?
     [:TkCOLON,      TkOp,   ":"],        #:
 
