@@ -523,5 +523,21 @@ U
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_constant_with_exclamation
+    tokens = RDoc::RubyLex.tokenize "Hello there, Dave!", nil
+
+    expected = [
+      @TK::TkCONSTANT  .new( 0, 1,  0, "Hello"),
+      @TK::TkSPACE     .new( 5, 1,  5, " "),
+      @TK::TkIDENTIFIER.new( 6, 1,  6, "there"),
+      @TK::TkCOMMA     .new(11, 1, 11, ","),
+      @TK::TkSPACE     .new(12, 1, 12, " "),
+      @TK::TkIDENTIFIER.new(13, 1, 13, "Dave!"),
+      @TK::TkNL        .new(18, 1, 18, "\n")
+    ]
+
+    assert_equal expected, tokens
+  end
+
 end
 
