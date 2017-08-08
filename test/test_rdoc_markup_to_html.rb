@@ -485,6 +485,36 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal expected, @to.res.join
   end
 
+  def test_accept_verbatim_redefinable_operators
+    functions = %w[| ^ & <=> == === =~ > >= < <= << >> + - * / % ** ~ +@ -@ [] []= ` !  != !~].map { |redefinable_op|
+      ["def #{redefinable_op}\n", "end\n"]
+    }.flatten
+
+    verb = @RM::Verbatim.new(*functions)
+
+    @to.start_accepting
+    @to.accept_verbatim verb
+
+    expected = <<-EXPECTED
+
+<pre class="ruby">
+    EXPECTED
+    expected = expected.rstrip
+
+    %w[| ^ &amp; &lt;=&gt; == === =~ &gt; &gt;= &lt; &lt;= &lt;&lt; &gt;&gt; + - * / % ** ~ +@ -@ [] []= ` !  != !~].each do |html_escaped_op|
+      expected += <<-EXPECTED
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">#{html_escaped_op}</span>
+<span class="ruby-keyword">end</span>
+      EXPECTED
+    end
+
+    expected += <<-EXPECTED
+</pre>
+EXPECTED
+
+    assert_equal expected, @to.res.join
+  end
+
   def test_convert_string
     assert_equal '&lt;&gt;', @to.convert_string('<>')
   end

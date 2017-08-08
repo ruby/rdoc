@@ -1650,6 +1650,25 @@ end
     assert_equal stream, foo.token_stream
   end
 
+  def test_parse_redefinable_methods
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = RDoc::Comment.new "", @top_level
+
+    redefinable_ops = %w[| ^ & <=> == === =~ > >= < <= << >> + - * / % ** ~ +@ -@ [] []= ` !  != !~]
+    redefinable_ops.each do |redefinable_op|
+      util_parser "def #{redefinable_op}\nend\n"
+      tk = @parser.get_tk
+      @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+    end
+
+    klass.method_list.each do |method|
+      assert_kind_of RDoc::RubyToken::TkId, method.token_stream[5]
+      assert_includes redefinable_ops, method.token_stream[5].text
+    end
+  end
+
   def test_parse_method_bracket
     util_parser <<-RUBY
 class C

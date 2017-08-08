@@ -481,11 +481,7 @@ class RDoc::RubyLex
       Token(TkNL)
     end
 
-    @OP.def_rules("*", "**",
-                  "=", "==", "===",
-                  "=~", "<=>",
-                  "<", "<=",
-                  ">", ">=", ">>", "=>") do
+    @OP.def_rules("=") do
       |op, io|
       case @lex_state
       when :EXPR_FNAME, :EXPR_DOT
@@ -496,10 +492,33 @@ class RDoc::RubyLex
       Token(op)
     end
 
+    @OP.def_rules("*", "**",
+                  "==", "===",
+                  "=~", "<=>",
+                  "<", "<=",
+                  ">", ">=", ">>", "=>") do
+      |op, io|
+      case @lex_state
+      when :EXPR_FNAME, :EXPR_DOT
+        tk = Token(TkId, op)
+        @lex_state = :EXPR_ARG
+      else
+        tk = Token(op)
+        @lex_state = :EXPR_BEG
+      end
+      tk
+    end
+
     @OP.def_rules("!", "!=", "!~") do
       |op, io|
-      @lex_state = :EXPR_BEG
-      Token(op)
+      case @lex_state
+      when :EXPR_FNAME, :EXPR_DOT
+        @lex_state = :EXPR_ARG
+        Token(TkId, op)
+      else
+        @lex_state = :EXPR_BEG
+        Token(op)
+      end
     end
 
     @OP.def_rules("<<") do
@@ -513,11 +532,12 @@ class RDoc::RubyLex
         end
       end
       unless tk
-        tk = Token(op)
         case @lex_state
         when :EXPR_FNAME, :EXPR_DOT
+          tk = Token(TkId, op)
           @lex_state = :EXPR_ARG
         else
+          tk = Token(op)
           @lex_state = :EXPR_BEG
         end
       end
@@ -531,9 +551,9 @@ class RDoc::RubyLex
 
     @OP.def_rules("`") do
       |op, io|
-      if @lex_state == :EXPR_FNAME
-        @lex_state = :EXPR_END
-        Token(op)
+      if :EXPR_FNAME == @lex_state or :EXPR_DOT == @lex_state
+        @lex_state = :EXPR_ARG
+        Token(TkId, op)
       else
         identify_string(op)
       end
@@ -557,10 +577,23 @@ class RDoc::RubyLex
       end
     end
 
-    @OP.def_rules("&", "&&", "|", "||") do
+    @OP.def_rules("&&", "||") do
       |op, io|
       @lex_state = :EXPR_BEG
       Token(op)
+    end
+
+    @OP.def_rules("&", "|") do
+      |op, io|
+      case @lex_state
+      when :EXPR_FNAME, :EXPR_DOT
+        tk = Token(TkId, op)
+        @lex_state = :EXPR_ARG
+      else
+        tk = Token(op)
+        @lex_state = :EXPR_BEG
+      end
+      tk
     end
 
     @OP.def_rules("+=", "-=", "*=", "**=",
@@ -574,19 +607,22 @@ class RDoc::RubyLex
     @OP.def_rule("+@", proc{|op, io| @lex_state == :EXPR_FNAME}) do
       |op, io|
       @lex_state = :EXPR_ARG
-      Token(op)
+      Token(TkId, op)
     end
 
     @OP.def_rule("-@", proc{|op, io| @lex_state == :EXPR_FNAME}) do
       |op, io|
       @lex_state = :EXPR_ARG
-      Token(op)
+      Token(TkId, op)
     end
 
     @OP.def_rules("+", "-") do
       |op, io|
       catch(:RET) do
-        if @lex_state == :EXPR_ARG
+        if :EXPR_FNAME == @lex_state or :EXPR_DOT == @lex_state
+          tk = Token(TkId, op)
+          @lex_state = :EXPR_ARG
+        elsif @lex_state == :EXPR_ARG
           if @space_seen and peek(0) =~ /[0-9]/
             throw :RET, identify_number(op)
           else
@@ -597,7 +633,8 @@ class RDoc::RubyLex
         else
           @lex_state = :EXPR_BEG
         end
-        Token(op)
+        tk = Token(op) unless tk
+        tk
       end
     end
 
@@ -657,7 +694,10 @@ class RDoc::RubyLex
 
     @OP.def_rule("/") do
       |op, io|
-      if @lex_state == :EXPR_BEG || @lex_state == :EXPR_MID
+      if :EXPR_FNAME == @lex_state or :EXPR_DOT == @lex_state
+        @lex_state = :EXPR_ARG
+        Token(TkId, op)
+      elsif @lex_state == :EXPR_BEG || @lex_state == :EXPR_MID
         identify_string(op)
       elsif peek(0) == '='
         getc
@@ -673,8 +713,15 @@ class RDoc::RubyLex
 
     @OP.def_rules("^") do
       |op, io|
-      @lex_state = :EXPR_BEG
-      Token("^")
+      case @lex_state
+      when :EXPR_FNAME, :EXPR_DOT
+        tk = Token(TkId, op)
+        @lex_state = :EXPR_ARG
+      else
+        tk = Token(op)
+        @lex_state = :EXPR_BEG
+      end
+      tk
     end
 
     #       @OP.def_rules("^=") do
@@ -701,8 +748,14 @@ class RDoc::RubyLex
 
     @OP.def_rule("~") do
       |op, io|
-      @lex_state = :EXPR_BEG
-      Token("~")
+      case @lex_state
+      when :EXPR_FNAME, :EXPR_DOT
+        @lex_state = :EXPR_ARG
+        Token(TkId, op)
+      else
+        @lex_state = :EXPR_BEG
+        Token(op)
+      end
     end
 
     @OP.def_rule("~@", proc{|op, io| @lex_state == :EXPR_FNAME}) do
@@ -728,13 +781,13 @@ class RDoc::RubyLex
     @OP.def_rule("[]", proc{|op, io| @lex_state == :EXPR_FNAME}) do
       |op, io|
       @lex_state = :EXPR_ARG
-      Token("[]")
+      Token(TkId, op)
     end
 
     @OP.def_rule("[]=", proc{|op, io| @lex_state == :EXPR_FNAME}) do
       |op, io|
       @lex_state = :EXPR_ARG
-      Token("[]=")
+      Token(TkId, op)
     end
 
     @OP.def_rule("[") do
@@ -796,7 +849,10 @@ class RDoc::RubyLex
 
     @OP.def_rule('%') do
       |op, io|
-      if @lex_state == :EXPR_BEG || @lex_state == :EXPR_MID
+      if :EXPR_FNAME == @lex_state or :EXPR_DOT == @lex_state
+        @lex_state = :EXPR_ARG
+        Token(TkId, op)
+      elsif @lex_state == :EXPR_BEG || @lex_state == :EXPR_MID
         identify_quotation
       elsif peek(0) == '='
         getc
