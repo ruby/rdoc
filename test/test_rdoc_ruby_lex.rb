@@ -527,7 +527,7 @@ U
   end
 
   def test_rational_imaginary_tokenize
-    tokens = RDoc::RubyLex.tokenize '1.11r + 2.34i + 5.55ri', nil
+    tokens = RDoc::RubyLex.tokenize '1.11r + 2.34i + 5.55ri + 0i', nil
 
     expected = [
       @TK::TkRATIONAL .new( 0, 1,  0, '1.11r'),
@@ -539,7 +539,11 @@ U
       @TK::TkPLUS     .new(14, 1, 14, '+'),
       @TK::TkSPACE    .new(15, 1, 15, ' '),
       @TK::TkIMAGINARY.new(16, 1, 16, '5.55ri'),
-      @TK::TkNL       .new(22, 1, 22, "\n"),
+      @TK::TkSPACE    .new(22, 1, 22, ' '),
+      @TK::TkPLUS     .new(23, 1, 23, '+'),
+      @TK::TkSPACE    .new(24, 1, 24, ' '),
+      @TK::TkIMAGINARY.new(25, 1, 25, '0i'),
+      @TK::TkNL       .new(27, 1, 27, "\n"),
     ]
 
     assert_equal expected, tokens
