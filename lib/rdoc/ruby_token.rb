@@ -329,6 +329,8 @@ module RDoc::RubyToken
     [:TkCVAR,       TkId],
     [:TkIVAR,       TkId],
     [:TkCONSTANT,   TkId],
+    [:TkHEREDOCBEG, TkId],
+    [:TkHEREDOCEND, TkId],
 
     [:TkINTEGER,    TkVal],
     [:TkFLOAT,      TkVal],

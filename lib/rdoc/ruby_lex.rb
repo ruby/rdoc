@@ -106,6 +106,8 @@ class RDoc::RubyLex
     @rests = []
     @seek = 0
 
+    @heredoc_queue = []
+
     @indent = 0
     @indent_stack = []
     @lex_state = :EXPR_BEG
@@ -464,21 +466,43 @@ class RDoc::RubyLex
 
     @OP.def_rule("\n") do |op, io|
       print "\\n\n" if RDoc::RubyLex.debug?
-      case @lex_state
-      when :EXPR_BEG, :EXPR_FNAME, :EXPR_DOT
-        @continue = true
-      else
-        @continue = false
-        @lex_state = :EXPR_BEG
-        until (@indent_stack.empty? ||
-               [TkLPAREN, TkLBRACK, TkLBRACE,
-                 TkfLPAREN, TkfLBRACK, TkfLBRACE].include?(@indent_stack.last))
-          @indent_stack.pop
+      unless @heredoc_queue.empty?
+        info = @heredoc_queue[0]
+        if !info[:started] # "\n"
+          info[:started] = true
+          ungetc "\n"
+        elsif info[:heredoc_end].nil? # heredoc body
+          tk, heredoc_end = identify_here_document_body(info[:quoted], info[:lt], info[:indent])
+          info[:heredoc_end] = heredoc_end
+          ungetc "\n"
+        else # heredoc end
+          @heredoc_queue.shift
+          @lex_state = :EXPR_BEG
+          tk = Token(TkHEREDOCEND, info[:heredoc_end])
+          if !@heredoc_queue.empty?
+            @heredoc_queue[0][:started] = true
+            ungetc "\n"
+          end
         end
       end
-      @current_readed = @readed
-      @here_readed.clear
-      Token(TkNL)
+      unless tk
+        case @lex_state
+        when :EXPR_BEG, :EXPR_FNAME, :EXPR_DOT
+          @continue = true
+        else
+          @continue = false
+          @lex_state = :EXPR_BEG
+          until (@indent_stack.empty? ||
+                 [TkLPAREN, TkLBRACK, TkLBRACE,
+                   TkfLPAREN, TkfLBRACK, TkfLBRACE].include?(@indent_stack.last))
+            @indent_stack.pop
+          end
+        end
+        @current_readed = @readed
+        @here_readed.clear
+        tk = Token(TkNL)
+      end
+      tk
     end
 
     @OP.def_rules("=") do
@@ -533,8 +557,8 @@ class RDoc::RubyLex
       if @lex_state != :EXPR_END && @lex_state != :EXPR_CLASS &&
          (@lex_state != :EXPR_ARG || @space_seen)
         c = peek(0)
-        if /\S/ =~ c && (/["'`]/ =~ c || /\w/ =~ c || c == "-")
-          tk = identify_here_document
+        if /\S/ =~ c && (/["'`]/ =~ c || /\w/ =~ c || c == "-" || c == "~")
+          tk = identify_here_document(op)
         end
       end
       unless tk
@@ -1073,19 +1097,24 @@ class RDoc::RubyLex
     end
   end
 
-  def identify_here_document
+  def identify_here_document(op)
     ch = getc
+    start_token = op
     #    if lt = PERCENT_LTYPE[ch]
-    if ch == "-"
+    if ch == "-" or ch == "~"
+      start_token.concat ch
       ch = getc
       indent = true
     end
     if /['"`]/ =~ ch
+      start_token.concat ch
       user_quote = lt = ch
       quoted = ""
       while (c = getc) && c != lt
         quoted.concat c
       end
+      start_token.concat quoted
+      start_token.concat lt
     else
       user_quote = nil
       lt = '"'
@@ -1093,57 +1122,38 @@ class RDoc::RubyLex
       while (c = getc) && c =~ /\w/
         quoted.concat c
       end
+      start_token.concat quoted
       ungetc
     end
 
+    @heredoc_queue << {
+      quoted: quoted,
+      lt: lt,
+      indent: indent,
+      started: false
+    }
+    @lex_state = :EXPR_BEG
+    Token(RDoc::RubyLex::TkHEREDOCBEG, start_token)
+  end
+
+  def identify_here_document_body(quoted, lt, indent)
     ltback, @ltype = @ltype, lt
-    reserve = []
-    while ch = getc
-      reserve.push ch
-      if ch == "\\"
-        reserve.push ch = getc
-      elsif ch == "\n"
-        break
-      end
-    end
 
-    output_heredoc = reserve.join =~ /\A\r?\n\z/
-
-    if output_heredoc then
-      doc = '<<'
-      doc << '-' if indent
-      doc << "#{user_quote}#{quoted}#{user_quote}\n"
-    else
-      doc = '"'
-    end
-
-    @current_readed = @readed
+    doc = ""
+    heredoc_end = nil
     while l = gets
       l = l.sub(/(:?\r)?\n\z/, "\n")
       if (indent ? l.strip : l.chomp) == quoted
+        heredoc_end = l
         break
       end
       doc << l
     end
+    raise Error, "Missing terminating #{quoted} for string" unless heredoc_end
 
-    if output_heredoc then
-      raise Error, "Missing terminating #{quoted} for string" unless l
-
-      doc << l.chomp
-    else
-      doc << '"'
-    end
-
-    @current_readed = @here_readed
-    @here_readed.concat reserve
-    while ch = reserve.pop
-      ungetc ch
-    end
-
-    token_class = output_heredoc ? RDoc::RubyLex::TkHEREDOC : Ltype2Token[lt]
     @ltype = ltback
-    @lex_state = :EXPR_END
-    Token(token_class, doc)
+    @lex_state = :EXPR_BEG
+    [Token(RDoc::RubyLex::TkHEREDOC, doc), heredoc_end]
   end
 
   def identify_quotation
