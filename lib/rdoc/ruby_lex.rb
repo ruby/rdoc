@@ -997,7 +997,11 @@ class RDoc::RubyLex
     end
 
     if token[0, 1] =~ /[A-Z]/
-      return Token(TkCONSTANT, token)
+      if token[-1] =~ /[!?]/
+        return Token(TkIDENTIFIER, token)
+      else
+        return Token(TkCONSTANT, token)
+      end
     elsif token[token.size - 1, 1] =~ /[!?]/
       return Token(TkFID, token)
     else
