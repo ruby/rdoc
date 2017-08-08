@@ -1392,7 +1392,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def parse_method_name container # :nodoc:
     skip_tkspace
     name_t = get_tk
-    back_tk = skip_tkspace
+    back_tk = skip_tkspace(false)
     singleton = false
 
     dot = get_tk
