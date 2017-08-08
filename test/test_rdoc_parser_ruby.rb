@@ -2467,6 +2467,38 @@ end
     assert_equal :private, date_time_now.visibility, date_time_now.full_name
   end
 
+  def test_parse_statements_complex_condition_in_for
+    util_parser <<RUBY
+class Foo
+  def blah()
+    for i in (k)...n do
+    end
+    for i in (k)...n
+    end
+  end
+end
+RUBY
+
+    expected = <<EXPTECTED
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">blah</span>()
+  <span class="ruby-keyword">for</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword">in</span> (<span class="ruby-identifier">k</span>)<span class="ruby-operator">...</span><span class="ruby-identifier">n</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">for</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword">in</span> (<span class="ruby-identifier">k</span>)<span class="ruby-operator">...</span><span class="ruby-identifier">n</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span>
+EXPTECTED
+    expected = expected.rstrip
+
+    @parser.scan
+
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+
+    blah = foo.method_list.first
+    markup_code = blah.markup_code.sub(/^.*\n/, '')
+    assert_equal markup_code, expected
+  end
+
   def test_parse_require_dynamic_string
     content = <<-RUBY
 prefix = 'path'
