@@ -1107,7 +1107,7 @@ class RDoc::RubyLex
 
     num = op
 
-    if peek(0) == "0" && peek(1) !~ /[.eE]/
+    if peek(0) == "0" && peek(1) !~ /[.eEri]/
       num << getc
 
       case peek(0)
