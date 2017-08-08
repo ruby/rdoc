@@ -1299,7 +1299,7 @@ class RDoc::RubyLex
     str = if ltype == quoted and %w[" ' /].include? ltype then
             ltype.dup
           else
-            "%#{type or PERCENT_LTYPE.key ltype}#{PERCENT_PAREN_REV[quoted]||quoted}"
+            "%#{type}#{PERCENT_PAREN_REV[quoted]||quoted}"
           end
 
     subtype = nil
