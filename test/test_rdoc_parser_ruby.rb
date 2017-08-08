@@ -2063,7 +2063,7 @@ end
   end
 
   def test_parse_statements_def_percent_string_pound
-    util_parser "class C\ndef a\n%r{#}\nend\ndef b() end\nend"
+    util_parser "class C\ndef a\n%r{#}\n%r{\#{}}\nend\ndef b() end\nend"
 
     @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL
 
@@ -2080,9 +2080,11 @@ end
       tk(:SPACE,      11, 2, 3, nil,   ' '),
       tk(:IDENTIFIER, 12, 2, 4, 'a',   'a'),
       tk(:NL,         13, 2, 5, nil,   "\n"),
-      tk(:DREGEXP,    14, 3, 0, nil,   '%r{#}'),
+      tk(:REGEXP,     14, 3, 0, nil,   '%r{#}'),
       tk(:NL,         19, 3, 5, nil,   "\n"),
-      tk(:END,        20, 4, 0, 'end', 'end'),
+      tk(:DREGEXP,    20, 4, 0, nil,   '%r{#{}}'),
+      tk(:NL,         27, 4, 7, nil,   "\n"),
+      tk(:END,        28, 5, 0, 'end', 'end'),
     ]
 
     assert_equal expected, a.token_stream

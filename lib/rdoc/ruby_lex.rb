@@ -1250,8 +1250,8 @@ class RDoc::RubyLex
           break
         elsif @ltype != "'" && @ltype != "]" && @ltype != ":" and ch == "#"
           ch = getc
-          subtype = true
           if ch == "{" then
+            subtype = true
             str << ch << skip_inner_expression
             next
           else
