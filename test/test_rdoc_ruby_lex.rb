@@ -89,9 +89,11 @@ end
       @TK::TkIDENTIFIER.new( 4, 1,  4, 'x'),
       @TK::TkNL        .new( 5, 1,  5, "\n"),
       @TK::TkSPACE     .new( 6, 2,  0, '  '),
-      @TK::TkHEREDOC   .new( 8, 2,  2,
-                            %Q{<<E\nLine 1\nLine 2\nE}),
-      @TK::TkNL        .new(27, 5, 28, "\n"),
+
+      @TK::TkHEREDOCBEG.new( 8, 2,  2, '<<E'),
+      @TK::TkNL        .new(11, 2,  6, "\n"),
+      @TK::TkHEREDOC   .new(11, 2,  6, "Line 1\nLine 2\n"),
+      @TK::TkHEREDOCEND.new(27, 5, 26, "E\n"),
       @TK::TkEND       .new(28, 6,  0, 'end'),
       @TK::TkNL        .new(31, 6, 28, "\n"),
     ]
@@ -162,10 +164,12 @@ Line 2\r
       @TK::TkSPACE     .new( 6, 1,  6, ' '),
       @TK::TkASSIGN    .new( 7, 1,  7, '='),
       @TK::TkSPACE     .new( 8, 1,  8, ' '),
-      @TK::TkHEREDOC   .new( 9, 1,  9,
-                            %Q{<<-STRING\nLine 1\nLine 2\n  STRING}),
-      @TK::TkSPACE     .new(44, 4, 45, "\r"),
-      @TK::TkNL        .new(45, 4, 46, "\n"),
+      @TK::TkHEREDOCBEG.new( 9, 1,  9, '<<-STRING'),
+      @TK::TkSPACE     .new(18, 1, 18, "\r"),
+      @TK::TkNL        .new(19, 1, 19, "\n"),
+      @TK::TkHEREDOC   .new(19, 1, 19,
+                            %Q{Line 1\nLine 2\n}),
+      @TK::TkHEREDOCEND.new(45, 4, 36, "  STRING\n"),
     ]
 
     assert_equal expected, tokens
@@ -184,10 +188,12 @@ Line 2
       @TK::TkSPACE     .new( 6, 1,  6, ' '),
       @TK::TkASSIGN    .new( 7, 1,  7, '='),
       @TK::TkSPACE     .new( 8, 1,  8, ' '),
-      @TK::TkSTRING    .new( 9, 1,  9, %Q{"Line 1\nLine 2\n"}),
-      @TK::TkDOT       .new(41, 4, 42, '.'),
-      @TK::TkIDENTIFIER.new(42, 4, 43, 'chomp'),
-      @TK::TkNL        .new(47, 4, 48, "\n"),
+      @TK::TkHEREDOCBEG.new( 9, 1,  9, '<<-STRING'),
+      @TK::TkDOT       .new(18, 1, 18, '.'),
+      @TK::TkIDENTIFIER.new(19, 1, 19, 'chomp'),
+      @TK::TkNL        .new(24, 1, 24, "\n"),
+      @TK::TkHEREDOC   .new(24, 1, 24, "Line 1\nLine 2\n"),
+      @TK::TkHEREDOCEND.new(47, 4, 39, "  STRING\n"),
     ]
 
     assert_equal expected, tokens
@@ -206,9 +212,12 @@ Line 2
       @TK::TkSPACE     .new( 6, 1,  6, ' '),
       @TK::TkASSIGN    .new( 7, 1,  7, '='),
       @TK::TkSPACE     .new( 8, 1,  8, ' '),
-      @TK::TkHEREDOC   .new( 9, 1,  9,
-                            %Q{<<-STRING\nLine 1\nLine 2\n  STRING}),
-      @TK::TkNL        .new(41, 4, 42, "\n"),
+
+
+      @TK::TkHEREDOCBEG.new( 9, 1,  9, '<<-STRING'),
+      @TK::TkNL        .new(18, 1, 18, "\n"),
+      @TK::TkHEREDOC   .new(18, 1, 18, "Line 1\nLine 2\n"),
+      @TK::TkHEREDOCEND.new(41, 4, 33, "  STRING\n")
     ]
 
     assert_equal expected, tokens
@@ -238,8 +247,10 @@ U
       @TK::TkSPACE     .new( 1, 1,  1, ' '),
       @TK::TkIDENTIFIER.new( 2, 1,  2, 'b'),
       @TK::TkSPACE     .new( 3, 1,  3, ' '),
-      @TK::TkHEREDOC   .new( 4, 1,  4, %Q{<<-U\n%N\nU}),
-      @TK::TkNL        .new(13, 3, 14, "\n"),
+      @TK::TkHEREDOCBEG.new( 4, 1,  4, '<<-U'),
+      @TK::TkNL        .new( 8, 1,  8, "\n"),
+      @TK::TkHEREDOC   .new( 8, 1,  8, "%N\n"),
+      @TK::TkHEREDOCEND.new(13, 3, 12, "U\n")
     ]
 
     assert_equal expected, tokens
@@ -251,6 +262,36 @@ U
     expected = @TK::TkIDENTIFIER.new(0, 1, 0, '𝖒')
 
     assert_equal expected, tokens.first
+  end
+
+  def test_class_tokenize_lambda
+    tokens = RDoc::RubyLex.tokenize 'a = -> x, y { x + y }', nil
+
+    expected = [
+      @TK::TkIDENTIFIER.new( 0, 1,  0, 'a'),
+      @TK::TkSPACE     .new( 1, 1,  1, ' '),
+      @TK::TkASSIGN    .new( 2, 1,  2, '='),
+      @TK::TkSPACE     .new( 3, 1,  3, ' '),
+      @TK::TkLAMBDA    .new( 4, 1,  4, '->'),
+      @TK::TkSPACE     .new( 6, 1,  6, ' '),
+      @TK::TkIDENTIFIER.new( 7, 1,  7, 'x'),
+      @TK::TkCOMMA     .new( 8, 1,  8, ','),
+      @TK::TkSPACE     .new( 9, 1,  9, ' '),
+      @TK::TkIDENTIFIER.new(10, 1, 10, 'y'),
+      @TK::TkSPACE     .new(11, 1, 11, ' '),
+      @TK::TkfLBRACE   .new(12, 1, 12, '{'),
+      @TK::TkSPACE     .new(13, 1, 13, ' '),
+      @TK::TkIDENTIFIER.new(14, 1, 14, 'x'),
+      @TK::TkSPACE     .new(15, 1, 15, ' '),
+      @TK::TkPLUS      .new(16, 1, 16, '+'),
+      @TK::TkSPACE     .new(17, 1, 17, ' '),
+      @TK::TkIDENTIFIER.new(18, 1, 18, 'y'),
+      @TK::TkSPACE     .new(19, 1, 19, ' '),
+      @TK::TkRBRACE    .new(20, 1, 20, '}'),
+      @TK::TkNL        .new(21, 1, 21, "\n")
+    ]
+
+    assert_equal expected, tokens
   end
 
   def test_class_tokenize_percent_1
@@ -296,6 +337,17 @@ U
     expected = [
       @TK::TkDSTRING.new( 0, 1,  0, '%w"hi"'),
       @TK::TkNL     .new( 6, 1, 6, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
+  def test_class_tokenize_percent_sign_quote
+    tokens = RDoc::RubyLex.tokenize '%%hi%', nil
+
+    expected = [
+      @TK::TkSTRING.new( 0, 1, 0, '%%hi%'),
+      @TK::TkNL    .new( 5, 1, 5, "\n"),
     ]
 
     assert_equal expected, tokens
@@ -581,7 +633,7 @@ RUBY
   end
 
   def test_rational_imaginary_tokenize
-    tokens = RDoc::RubyLex.tokenize '1.11r + 2.34i + 5.55ri', nil
+    tokens = RDoc::RubyLex.tokenize '1.11r + 2.34i + 5.55ri + 0i', nil
 
     expected = [
       @TK::TkRATIONAL .new( 0, 1,  0, '1.11r'),
@@ -593,7 +645,11 @@ RUBY
       @TK::TkPLUS     .new(14, 1, 14, '+'),
       @TK::TkSPACE    .new(15, 1, 15, ' '),
       @TK::TkIMAGINARY.new(16, 1, 16, '5.55ri'),
-      @TK::TkNL       .new(22, 1, 22, "\n"),
+      @TK::TkSPACE    .new(22, 1, 22, ' '),
+      @TK::TkPLUS     .new(23, 1, 23, '+'),
+      @TK::TkSPACE    .new(24, 1, 24, ' '),
+      @TK::TkIMAGINARY.new(25, 1, 25, '0i'),
+      @TK::TkNL       .new(27, 1, 27, "\n"),
     ]
 
     assert_equal expected, tokens
@@ -613,6 +669,22 @@ RUBY
       @TK::TkINTEGER   .new(12, 1, 12, "2"),
       @TK::TkRPAREN    .new(13, 1, 13, ")"),
       @TK::TkNL        .new(14, 1, 14, "\n")
+    ]
+
+    assert_equal expected, tokens
+  end
+
+  def test_class_tokenize_constant_with_exclamation
+    tokens = RDoc::RubyLex.tokenize "Hello there, Dave!", nil
+
+    expected = [
+      @TK::TkCONSTANT  .new( 0, 1,  0, "Hello"),
+      @TK::TkSPACE     .new( 5, 1,  5, " "),
+      @TK::TkIDENTIFIER.new( 6, 1,  6, "there"),
+      @TK::TkCOMMA     .new(11, 1, 11, ","),
+      @TK::TkSPACE     .new(12, 1, 12, " "),
+      @TK::TkIDENTIFIER.new(13, 1, 13, "Dave!"),
+      @TK::TkNL        .new(18, 1, 18, "\n")
     ]
 
     assert_equal expected, tokens
