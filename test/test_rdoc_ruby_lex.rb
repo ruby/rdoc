@@ -175,6 +175,100 @@ Line 2\r
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_opassign
+    tokens = RDoc::RubyLex.tokenize <<'RUBY', nil
+a %= b
+a /= b
+a -= b
+a += b
+a |= b
+a &= b
+a >>= b
+a <<= b
+a *= b
+a &&= b
+a ||= b
+a **= b
+RUBY
+
+    expected = [
+      @TK::TkIDENTIFIER.new( 0, 1, 0, "a"),
+      @TK::TkSPACE     .new( 1, 1, 1, " "),
+      @TK::TkOPASGN    .new( 2, 1, 2, "%"),
+      @TK::TkSPACE     .new( 4, 1, 4, " "),
+      @TK::TkIDENTIFIER.new( 5, 1, 5, "b"),
+      @TK::TkNL        .new( 6, 1, 6, "\n"),
+      @TK::TkIDENTIFIER.new( 7, 2, 0, "a"),
+      @TK::TkSPACE     .new( 8, 2, 1, " "),
+      @TK::TkOPASGN    .new( 9, 2, 2, "/"),
+      @TK::TkSPACE     .new( 11, 2, 4, " "),
+      @TK::TkIDENTIFIER.new( 12, 2, 5, "b"),
+      @TK::TkNL        .new( 13, 2, 7, "\n"),
+      @TK::TkIDENTIFIER.new( 14, 3, 0, "a"),
+      @TK::TkSPACE     .new( 15, 3, 1, " "),
+      @TK::TkOPASGN    .new( 16, 3, 2, "-"),
+      @TK::TkSPACE     .new( 18, 3, 4, " "),
+      @TK::TkIDENTIFIER.new( 19, 3, 5, "b"),
+      @TK::TkNL        .new( 20, 3, 14, "\n"),
+      @TK::TkIDENTIFIER.new( 21, 4, 0, "a"),
+      @TK::TkSPACE     .new( 22, 4, 1, " "),
+      @TK::TkOPASGN    .new( 23, 4, 2, "+"),
+      @TK::TkSPACE     .new( 25, 4, 4, " "),
+      @TK::TkIDENTIFIER.new( 26, 4, 5, "b"),
+      @TK::TkNL        .new( 27, 4, 21, "\n"),
+      @TK::TkIDENTIFIER.new( 28, 5, 0, "a"),
+      @TK::TkSPACE     .new( 29, 5, 1, " "),
+      @TK::TkOPASGN    .new( 30, 5, 2, "|"),
+      @TK::TkSPACE     .new( 32, 5, 4, " "),
+      @TK::TkIDENTIFIER.new( 33, 5, 5, "b"),
+      @TK::TkNL        .new( 34, 5, 28, "\n"),
+      @TK::TkIDENTIFIER.new( 35, 6, 0, "a"),
+      @TK::TkSPACE     .new( 36, 6, 1, " "),
+      @TK::TkOPASGN    .new( 37, 6, 2, "&"),
+      @TK::TkSPACE     .new( 39, 6, 4, " "),
+      @TK::TkIDENTIFIER.new( 40, 6, 5, "b"),
+      @TK::TkNL        .new( 41, 6, 35, "\n"),
+      @TK::TkIDENTIFIER.new( 42, 7, 0, "a"),
+      @TK::TkSPACE     .new( 43, 7, 1, " "),
+      @TK::TkOPASGN    .new( 44, 7, 2, ">>"),
+      @TK::TkSPACE     .new( 47, 7, 5, " "),
+      @TK::TkIDENTIFIER.new( 48, 7, 6, "b"),
+      @TK::TkNL        .new( 49, 7, 42, "\n"),
+      @TK::TkIDENTIFIER.new( 50, 8, 0, "a"),
+      @TK::TkSPACE     .new( 51, 8, 1, " "),
+      @TK::TkOPASGN    .new( 52, 8, 2, "<<"),
+      @TK::TkSPACE     .new( 55, 8, 5, " "),
+      @TK::TkIDENTIFIER.new( 56, 8, 6, "b"),
+      @TK::TkNL        .new( 57, 8, 50, "\n"),
+      @TK::TkIDENTIFIER.new( 58, 9, 0, "a"),
+      @TK::TkSPACE     .new( 59, 9, 1, " "),
+      @TK::TkOPASGN    .new( 60, 9, 2, "*"),
+      @TK::TkSPACE     .new( 62, 9, 4, " "),
+      @TK::TkIDENTIFIER.new( 63, 9, 5, "b"),
+      @TK::TkNL        .new( 64, 9, 58, "\n"),
+      @TK::TkIDENTIFIER.new( 65, 10, 0, "a"),
+      @TK::TkSPACE     .new( 66, 10, 1, " "),
+      @TK::TkOPASGN    .new( 67, 10, 2, "&&"),
+      @TK::TkSPACE     .new( 70, 10, 5, " "),
+      @TK::TkIDENTIFIER.new( 71, 10, 6, "b"),
+      @TK::TkNL        .new( 72, 10, 65, "\n"),
+      @TK::TkIDENTIFIER.new( 73, 11, 0, "a"),
+      @TK::TkSPACE     .new( 74, 11, 1, " "),
+      @TK::TkOPASGN    .new( 75, 11, 2, "||"),
+      @TK::TkSPACE     .new( 78, 11, 5, " "),
+      @TK::TkIDENTIFIER.new( 79, 11, 6, "b"),
+      @TK::TkNL        .new( 80, 11, 73, "\n"),
+      @TK::TkIDENTIFIER.new( 81, 12, 0, "a"),
+      @TK::TkSPACE     .new( 82, 12, 1, " "),
+      @TK::TkOPASGN    .new( 83, 12, 2, "**"),
+      @TK::TkSPACE     .new( 86, 12, 5, " "),
+      @TK::TkIDENTIFIER.new( 87, 12, 6, "b"),
+      @TK::TkNL        .new( 88, 12, 81, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_heredoc_call
     tokens = RDoc::RubyLex.tokenize <<-'RUBY', nil
 string = <<-STRING.chomp
