@@ -985,7 +985,7 @@ class RDoc::RubyLex
 
     ungetc
 
-    if (ch == "!" || ch == "?") && token[0,1] =~ /\w/ && peek(0) != "="
+    if ((ch == "!" && peek(1) != "=") || ch == "?") && token[0,1] =~ /\w/
       token.concat getc
     end
 
