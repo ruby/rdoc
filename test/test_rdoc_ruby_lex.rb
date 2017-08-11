@@ -132,6 +132,19 @@ end
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_safe_nav_operator
+    tokens = RDoc::RubyLex.tokenize 'receiver&.meth', nil
+
+    expected = [
+      @TK::TkIDENTIFIER.new( 0, 1,  0, "receiver"),
+      @TK::TkSAFENAV   .new( 8, 1,  8, "&."),
+      @TK::TkIDENTIFIER.new(10, 1, 10, "meth"),
+      @TK::TkNL        .new(14, 1, 14, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_hash_rocket
     tokens = RDoc::RubyLex.tokenize '{ :class => "foo" }', nil
 
