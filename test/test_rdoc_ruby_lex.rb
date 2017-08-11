@@ -520,6 +520,33 @@ U
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_particular_kind_of_symbols
+    tokens = RDoc::RubyLex.tokenize '{ Thomas: :Thomas, Dave!: :Dave!, undef: :undef }', nil
+
+    expected = [
+      @TK::TkLBRACE.new( 0, 1,  0, "{"),
+      @TK::TkSPACE .new( 1, 1,  1, " "),
+      @TK::TkSYMBOL.new( 2, 1,  2, "Thomas:"),
+      @TK::TkSPACE .new( 9, 1,  9, " "),
+      @TK::TkSYMBOL.new(10, 1, 10, ":Thomas"),
+      @TK::TkCOMMA .new(17, 1, 17, ","),
+      @TK::TkSPACE .new(18, 1, 18, " "),
+      @TK::TkSYMBOL.new(19, 1, 19, "Dave!:"),
+      @TK::TkSPACE .new(25, 1, 25, " "),
+      @TK::TkSYMBOL.new(26, 1, 26, ":Dave!"),
+      @TK::TkCOMMA .new(32, 1, 32, ","),
+      @TK::TkSPACE .new(33, 1, 33, " "),
+      @TK::TkSYMBOL.new(34, 1, 34, "undef:"),
+      @TK::TkSPACE .new(40, 1, 40, " "),
+      @TK::TkSYMBOL.new(41, 1, 41, ":undef"),
+      @TK::TkSPACE .new(47, 1, 47, " "),
+      @TK::TkRBRACE.new(48, 1, 48, "}"),
+      @TK::TkNL    .new(49, 1, 49, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_unary_minus
     ruby_lex = RDoc::RubyLex.new("-1", nil)
     assert_equal("-1", ruby_lex.token.value)
