@@ -297,7 +297,11 @@ class RDoc::RipperStateLex
     when :on_qsymbols_beg then
       tk = get_words_tk(tk)
     when :on_op then
-      tk = get_op_tk(tk)
+      if '&.' == tk[:text]
+        tk[:kind] = :on_period
+      else
+        tk = get_op_tk(tk)
+      end
     end
     tk
   end
