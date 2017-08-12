@@ -42,7 +42,7 @@ class RDoc::RipperStateLex
         @continue = true
       else
         @continue = false
-        @lex_state = EXPR_BEG
+        @lex_state = EXPR_BEG unless (EXPR_LABEL & @lex_state) != 0
       end
       @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
     end
@@ -53,7 +53,7 @@ class RDoc::RipperStateLex
         @continue = true
       else
         @continue = false
-        @lex_state = EXPR_BEG
+        @lex_state = EXPR_BEG unless (EXPR_LABEL & @lex_state) != 0
       end
       @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
     end
@@ -237,13 +237,18 @@ class RDoc::RipperStateLex
       @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
     end
 
+    def on_comma(tok, data)
+      @lex_state = EXPR_BEG | EXPR_LABEL if (EXPR_ARG_ANY & @lex_state) != 0
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
     def on_comment(tok, data)
-      @lex_state = EXPR_BEG
+      @lex_state = EXPR_BEG unless (EXPR_LABEL & @lex_state) != 0
       @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
     end
 
     def on_ignored_sp(tok, data)
-      @lex_state = EXPR_BEG
+      @lex_state = EXPR_BEG unless (EXPR_LABEL & @lex_state) != 0
       @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
     end
 
