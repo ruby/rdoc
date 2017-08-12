@@ -498,6 +498,8 @@ class RDoc::RipperStateLex
         else
           string += tk[:text]
         end
+      else
+        string += tk[:text]
       end
     end
     text = "#{start_token}#{string}#{end_token}"
