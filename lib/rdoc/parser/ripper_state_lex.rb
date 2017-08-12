@@ -106,6 +106,8 @@ class RDoc::RipperStateLex
         else
           @lex_state = EXPR_BEG
         end
+      when 'begin'
+        @lex_state = EXPR_BEG
       else
         if @lex_state == EXPR_FNAME
           @lex_state = EXPR_END
