@@ -73,6 +73,17 @@ class TestRDocRubyLex < RDoc::TestCase
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_character_literal_with_escape
+    tokens = RDoc::RubyLex.tokenize "?\\s", nil
+
+    expected = [
+      @TK::TkCHAR.new( 0, 1,  0, "?\\s"),
+      @TK::TkNL  .new( 3, 1,  3, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_def_heredoc
     tokens = RDoc::RubyLex.tokenize <<-'RUBY', nil
 def x
