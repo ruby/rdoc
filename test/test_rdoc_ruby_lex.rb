@@ -63,10 +63,10 @@ class TestRDocRubyLex < RDoc::TestCase
   end
 
   def test_class_tokenize_character_literal
-    tokens = RDoc::RubyLex.tokenize "?\\", nil
+    tokens = RDoc::RubyLex.tokenize "?c", nil
 
     expected = [
-      @TK::TkCHAR.new( 0, 1,  0, "?\\"),
+      @TK::TkCHAR.new( 0, 1,  0, "?c"),
       @TK::TkNL  .new( 2, 1,  2, "\n"),
     ]
 
