@@ -101,6 +101,31 @@ end
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_reserved_keyword_with_args
+    tokens = RDoc::RubyLex.tokenize <<-'RUBY', nil
+yield :foo
+super :bar
+defined? :baz
+    RUBY
+
+    expected = [
+      @TK::TkYIELD  .new( 0, 1,  0, "yield"),
+      @TK::TkSPACE  .new( 5, 1,  5, " "),
+      @TK::TkSYMBOL .new( 6, 1,  6, ":foo"),
+      @TK::TkNL     .new(10, 1, 10,  "\n"),
+      @TK::TkSUPER  .new(11, 2,  0, "super"),
+      @TK::TkSPACE  .new(16, 2,  5, " "),
+      @TK::TkSYMBOL .new(17, 2,  6, ":bar"),
+      @TK::TkNL     .new(21, 2, 11,  "\n"),
+      @TK::TkDEFINED.new(22, 3,  0, "defined?"),
+      @TK::TkSPACE  .new(30, 3,  8, " "),
+      @TK::TkSYMBOL .new(31, 3,  9, ":baz"),
+      @TK::TkNL     .new(35, 3, 22,  "\n")
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_hash_symbol
     tokens = RDoc::RubyLex.tokenize '{ class:"foo" }', nil
 
