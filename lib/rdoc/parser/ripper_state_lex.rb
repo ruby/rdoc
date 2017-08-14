@@ -413,10 +413,11 @@ class RDoc::RipperStateLex
   end
 
   private def get_embdoc_tk(tk)
-    string = ''
+    string = tk[:text]
     until :on_embdoc_end == (embdoc_tk = get_squashed_tk)[:kind] do
       string = string + embdoc_tk[:text]
     end
+    string = string + embdoc_tk[:text]
     {
       :line_no => tk[:line_no],
       :char_no => tk[:char_no],
