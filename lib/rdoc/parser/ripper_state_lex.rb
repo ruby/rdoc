@@ -291,7 +291,7 @@ class RDoc::RipperStateLex
     when :on_heredoc_beg then
       @heredoc_queue << retrieve_heredoc_info(tk)
       @inner_lex.lex_state = EXPR_END
-    when :on_nl, :on_ignored_nl, :on_comment then
+    when :on_nl, :on_ignored_nl, :on_comment, :on_heredoc_end then
       unless @heredoc_queue.empty?
         get_heredoc_tk(*@heredoc_queue.shift)
       end

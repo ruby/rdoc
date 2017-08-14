@@ -172,7 +172,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           ' ' * (tab_width*$&.length - $`.length % tab_width)
         }  && $~
         line
-      end.join("\n").gsub(/(?<!\n)\z/, "\n")
+      end.join("\n")
     end
 
     @size = 0

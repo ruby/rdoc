@@ -59,11 +59,13 @@ module RDoc::TokenStream
               end
 
       comment_with_nl = false
-      if :on_comment == t[:kind]
-        comment_with_nl = true if t[:text] =~ /\n$/
-        t[:text] = t[:text].rstrip
+      if :on_comment == t[:kind] or :on_embdoc == t[:kind]
+        comment_with_nl = true if "\n" == t[:text][-1]
+        text = t[:text].rstrip
+      else
+        text = t[:text]
       end
-      text = CGI.escapeHTML t[:text]
+      text = CGI.escapeHTML text
 
       if style then
         "<span class=\"#{style}\">#{text}</span>#{"\n" if comment_with_nl}"
