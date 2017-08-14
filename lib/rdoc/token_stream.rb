@@ -48,11 +48,12 @@ module RDoc::TokenStream
               when :on_backref, :on_dstring
                                then 'ruby-node'
               when :on_comment then 'ruby-comment'
+              when :on_embdoc  then 'ruby-comment'
               when :on_regexp  then 'ruby-regexp'
               when :on_tstring then 'ruby-string'
               when :on_int, :on_float,
                    :on_rational, :on_imaginary,
-                   :on_embdoc, :on_heredoc,
+                   :on_heredoc,
                    :on_symbol, :on_CHAR then 'ruby-value'
               when :on_heredoc_beg, :on_heredoc_end
                                then 'ruby-identifier'
