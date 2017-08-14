@@ -884,7 +884,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       eq_tk = get_tk
     end
 
-    unless :on_op == eq_tk[:kind] && '=' == eq_tk[:text] then
+    unless eq_tk && :on_op == eq_tk[:kind] && '=' == eq_tk[:text] then
       unget_tk eq_tk
       return false
     end
