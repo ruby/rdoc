@@ -453,7 +453,7 @@ class RDoc::RipperStateLex
   end
 
   private def retrieve_heredoc_info(tk)
-    name = tk[:text].gsub(/\A<<[-~]?['"`]?(\w+)['"`]?\z/, '\1')
+    name = tk[:text].gsub(/\A<<[-~]?(['"`]?)(.+)\1\z/, '\2')
     indent = tk[:text].match?(/\A<<[-~]/)
     [name, indent]
   end
@@ -461,7 +461,7 @@ class RDoc::RipperStateLex
   private def heredoc_end?(name, indent, tk)
     result = false
     if :on_heredoc_end == tk[:kind] then
-      tk_name = (indent ? tk[:text].gsub(/\A *(\w+)\n\z/, '\1') : tk[:text].gsub(/\n\z/, ''))
+      tk_name = (indent ? tk[:text].gsub(/\A *(.+)\n\z/, '\1') : tk[:text].gsub(/\n\z/, ''))
       if name == tk_name
         result = true
       end
