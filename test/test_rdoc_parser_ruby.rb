@@ -2528,6 +2528,40 @@ EXPTECTED
     assert_equal markup_code, expected
   end
 
+  def test_parse_statements_embdoc_in_document
+    @filename = 'file.rb'
+    util_parser <<RUBY
+class Foo
+  # doc
+  #
+  #   =begin
+  #   test embdoc
+  #   =end
+  #
+  def blah
+  end
+end
+RUBY
+
+    expected = <<EXPTECTED
+<p>doc
+
+<pre class="ruby"><span class="ruby-comment">=begin
+test embdoc
+=end</span>
+</pre>
+EXPTECTED
+
+    @parser.scan
+
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+
+    blah = foo.method_list.first
+    markup_comment = blah.search_record[6]
+    assert_equal markup_comment, expected
+  end
+
   def test_parse_require_dynamic_string
     content = <<-RUBY
 prefix = 'path'
