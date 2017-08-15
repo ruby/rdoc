@@ -401,6 +401,7 @@ module RDoc::RubyToken
 
     [:TkASSIGN,     Token,  "="],
     [:TkDOT,        Token,  "."],
+    [:TkSAFENAV,    Token,  "&."],
     [:TkLPAREN,     Token,  "("],  #(exp)
     [:TkLBRACK,     Token,  "["],  #[arry]
     [:TkLBRACE,     Token,  "{"],  #{hash}
