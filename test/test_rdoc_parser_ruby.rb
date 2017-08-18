@@ -2499,6 +2499,28 @@ EXPTECTED
     assert_equal markup_code, expected
   end
 
+  def test_parse_statements_method_oneliner_with_regexp
+    util_parser <<RUBY
+class Foo
+  def blah() /bar/ end
+end
+RUBY
+
+    expected = <<EXPTECTED
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">blah</span>() <span class="ruby-regexp">/bar/</span> <span class="ruby-keyword">end</span>
+EXPTECTED
+    expected = expected.rstrip
+
+    @parser.scan
+
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+
+    blah = foo.method_list.first
+    markup_code = blah.markup_code.sub(/^.*\n/, '')
+    assert_equal expected, markup_code
+  end
+
   def test_parse_require_dynamic_string
     content = <<-RUBY
 prefix = 'path'
