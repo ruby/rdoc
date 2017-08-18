@@ -2513,6 +2513,31 @@ RUBY
     assert_equal 1, @top_level.requires.length
   end
 
+  def test_parse_postfix_nodoc
+    util_parser <<-RUBY
+class A
+end # :nodoc:
+
+class B
+  def a
+  end # :nodoc:
+
+  def b
+  end
+end
+RUBY
+
+    @parser.parse_statements @top_level
+
+    c_a = @top_level.classes.select(&:document_self).first
+    assert_equal 'B', c_a.full_name
+
+    assert_equal 2, @top_level.classes.length
+    assert_equal 1, @top_level.classes.count(&:document_self)
+    assert_equal 1, c_a.method_list.length
+    assert_equal 'B#b', c_a.method_list.first.full_name
+  end
+
   def test_parse_statements_identifier_require
     content = "require 'bar'"
 
