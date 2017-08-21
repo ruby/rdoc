@@ -763,6 +763,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     elsif name_t[:kind] == :on_op && name_t[:text] == '<<'
       case name = get_class_specification
       when 'self', container.name
+        read_documentation_modifiers cls, RDoc::CLASS_MODIFIERS
         parse_statements container, SINGLE
         return # don't update line
       else
