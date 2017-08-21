@@ -1769,7 +1769,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
         when 'end' then
           nest -= 1
           if nest == 0 then
-            read_documentation_modifiers container, RDoc::CLASS_MODIFIERS
             container.ongoing_visibility = save_visibility
 
             parse_comment container, tk, comment unless comment.empty?
@@ -2027,6 +2026,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # See also RDoc::Markup::PreProcess#handle_directive
 
   def read_documentation_modifiers context, allowed
+    skip_tkspace(false)
     directive, value = read_directive allowed
 
     return unless directive
