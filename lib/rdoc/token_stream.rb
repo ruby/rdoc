@@ -60,7 +60,7 @@ module RDoc::TokenStream
               end
 
       comment_with_nl = false
-      if :on_comment == t[:kind] or :on_embdoc == t[:kind]
+      if :on_comment == t[:kind] or :on_embdoc == t[:kind] or :on_heredoc_end == t[:kind]
         comment_with_nl = true if "\n" == t[:text][-1]
         text = t[:text].rstrip
       else

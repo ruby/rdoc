@@ -1657,8 +1657,26 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       case tk[:kind]
       when :on_nl, :on_ignored_nl, :on_comment, :on_embdoc then
-        skip_tkspace
-        tk = get_tk
+        if :on_nl == tk[:kind] or :on_ignored_nl == tk[:kind]
+          skip_tkspace
+          tk = get_tk
+        else
+          past_tokens = @read.size > 1 ? @read[0..-2] : []
+          nl_position = 0
+          past_tokens.reverse.each_with_index do |read_tk, i|
+            if read_tk.match?(/^\n$/) then
+              nl_position = (past_tokens.size - 1) - i
+              break
+            elsif read_tk.match?(/^#.*\n$/) then
+              nl_position = ((past_tokens.size - 1) - i) + 1
+              break
+            end
+          end
+          comment_only_line = past_tokens[nl_position..-1].all?{ |c| c.match?(/^\s+$/) }
+          unless comment_only_line then
+            tk = get_tk
+          end
+        end
 
         if tk and (:on_comment == tk[:kind] or :on_embdoc == tk[:kind]) then
           if non_comment_seen then
