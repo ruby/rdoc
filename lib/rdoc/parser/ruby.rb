@@ -884,6 +884,23 @@ class RDoc::Parser::Ruby < RDoc::Parser
       eq_tk = get_tk
     end
 
+    is_array_or_hash = false
+    if eq_tk && :on_lbracket == eq_tk[:kind]
+      nest = 1
+      while bracket_tk = get_tk
+        case bracket_tk[:kind]
+        when :on_lbracket
+          nest += 1
+        when :on_rbracket
+          nest -= 1
+          break if nest == 0
+        end
+      end
+      skip_tkspace false
+      eq_tk = get_tk
+      is_array_or_hash = true
+    end
+
     unless eq_tk && :on_op == eq_tk[:kind] && '=' == eq_tk[:text] then
       unget_tk eq_tk
       return false
@@ -945,7 +962,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
         next_tk = peek_tk
         if nest <= 0 and (next_tk.nil? || :on_nl == next_tk[:kind]) then
-          create_module_alias container, constant, rhs_name
+          create_module_alias container, constant, rhs_name unless is_array_or_hash
           break
         end
       elsif :on_nl == tk[:kind] then
