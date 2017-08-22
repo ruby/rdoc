@@ -773,5 +773,22 @@ RUBY
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_identifer_not_equal
+    tokens = RDoc::RubyLex.tokenize "foo!=bar\nfoo?=bar", nil
+
+    expected = [
+      @TK::TkIDENTIFIER.new( 0, 1, 0, "foo"),
+      @TK::TkNEQ       .new( 3, 1, 3, "!="),
+      @TK::TkIDENTIFIER.new( 5, 1, 5, "bar"),
+      @TK::TkNL        .new( 8, 1, 8, "\n"),
+      @TK::TkFID       .new( 9, 2, 0, "foo?"),
+      @TK::TkASSIGN    .new(13, 2, 4, "="),
+      @TK::TkIDENTIFIER.new(14, 2, 5, "bar"),
+      @TK::TkNL        .new(17, 2, 9, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
 end
 
