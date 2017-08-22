@@ -606,6 +606,7 @@ class RDoc::RubyLex
           Token(TkQUESTION)
         else
           @lex_state = :EXPR_END
+          ch << getc if "\\" == ch
           Token(TkCHAR, "?#{ch}")
         end
       end
