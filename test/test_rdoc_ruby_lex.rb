@@ -556,6 +556,19 @@ U
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_number_with_sign_character
+    tokens = RDoc::RubyLex.tokenize "+3--3r", nil
+
+    expected = [
+      @TK::TkINTEGER .new(0, 1, 0, "+3"),
+      @TK::TkMINUS   .new(2, 1, 2, "-"),
+      @TK::TkRATIONAL.new(3, 1, 3, "-3r"),
+      @TK::TkNL      .new(6, 1, 6, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_regexp_continuing_backslash
     tokens = RDoc::RubyLex.tokenize "/(?<!\\\\)\\n\z/", nil
 
