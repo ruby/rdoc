@@ -668,16 +668,16 @@ class RDoc::RubyLex
       end
     end
 
-    @OP.def_rule(".") do
+    @OP.def_rules(".", "&.") do
       |op, io|
       @lex_state = :EXPR_BEG
       if peek(0) =~ /[0-9]/
         ungetc
         identify_number
       else
-        # for "obj.if" etc.
+        # for "obj.if" or "obj&.if" etc.
         @lex_state = :EXPR_DOT
-        Token(TkDOT)
+        Token(op)
       end
     end
 
@@ -1331,10 +1331,10 @@ class RDoc::RubyLex
             ungetc
           end
         elsif ch == '\\'
-          if %w[' /].include? @ltype then
+          case @ltype
+          when "'" then
             case ch = getc
-            when "\n", "'"
-            when @ltype
+            when "'", '\\' then
               str << ch
             else
               str << ch
