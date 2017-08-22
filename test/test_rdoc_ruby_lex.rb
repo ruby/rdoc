@@ -466,6 +466,101 @@ U
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_string_with_escape
+    tokens = RDoc::RubyLex.tokenize <<'RUBY', nil
+[
+  '\\',
+  '\'',
+  "'",
+  "\'\"\`",
+  "\#",
+  "\#{}",
+  "#",
+  "#{}",
+  /'"/,
+  /\'\"/,
+  /\//,
+  /\\/,
+  /\#/,
+  /\#{}/,
+  /#/,
+  /#{}/
+]
+RUBY
+
+    expected = [
+      @TK::TkLBRACK .new(  0,  1,   0, "["),
+      @TK::TkNL     .new(  1,  1,   1, "\n"),
+      @TK::TkSPACE  .new(  2,  2,   0, "  "),
+      @TK::TkSTRING .new(  4,  2,   2, "'\\\\'"),
+      @TK::TkCOMMA  .new(  8,  2,   6, ","),
+      @TK::TkNL     .new(  9,  2,   2, "\n"),
+      @TK::TkSPACE  .new( 10,  3,   0, "  "),
+      @TK::TkSTRING .new( 12,  3,   2, "'\\''"),
+      @TK::TkCOMMA  .new( 16,  3,   6, ","),
+      @TK::TkNL     .new( 17,  3,  10, "\n"),
+      @TK::TkSPACE  .new( 18,  4,   0, "  "),
+      @TK::TkSTRING .new( 20,  4,   2, "\"'\""),
+      @TK::TkCOMMA  .new( 23,  4,   5, ","),
+      @TK::TkNL     .new( 24,  4,  18, "\n"),
+      @TK::TkSPACE  .new( 25,  5,   0, "  "),
+      @TK::TkSTRING .new( 27,  5,   2, "\"\\'\\\"\\`\""),
+      @TK::TkCOMMA  .new( 35,  5,  10, ","),
+      @TK::TkNL     .new( 36,  5,  25, "\n"),
+      @TK::TkSPACE  .new( 37,  6,   0, "  "),
+      @TK::TkSTRING .new( 39,  6,   2, "\"\\#\""),
+      @TK::TkCOMMA  .new( 43,  6,   6, ","),
+      @TK::TkNL     .new( 44,  6,  37, "\n"),
+      @TK::TkSPACE  .new( 45,  7,   0, "  "),
+      @TK::TkSTRING .new( 47,  7,   2, "\"\\\#{}\""),
+      @TK::TkCOMMA  .new( 53,  7,   8, ","),
+      @TK::TkNL     .new( 54,  7,  45, "\n"),
+      @TK::TkSPACE  .new( 55,  8,   0, "  "),
+      @TK::TkSTRING .new( 57,  8,   2, "\"#\""),
+      @TK::TkCOMMA  .new( 60,  8,   5, ","),
+      @TK::TkNL     .new( 61,  8,  55, "\n"),
+      @TK::TkSPACE  .new( 62,  9,   0, "  "),
+      @TK::TkDSTRING.new( 64,  9,   2, "\"\#{}\""),
+      @TK::TkCOMMA  .new( 69,  9,   7, ","),
+      @TK::TkNL     .new( 70,  9,  62, "\n"),
+      @TK::TkSPACE  .new( 71, 10,   0, "  "),
+      @TK::TkREGEXP .new( 73, 10,   2, "/'\"/"),
+      @TK::TkCOMMA  .new( 77, 10,   6, ","),
+      @TK::TkNL     .new( 78, 10,  71, "\n"),
+      @TK::TkSPACE  .new( 79, 11,   0, "  "),
+      @TK::TkREGEXP .new( 81, 11,   2, "/\\'\\\"/"),
+      @TK::TkCOMMA  .new( 87, 11,   8, ","),
+      @TK::TkNL     .new( 88, 11,  79, "\n"),
+      @TK::TkSPACE  .new( 89, 12,   0, "  "),
+      @TK::TkREGEXP .new( 91, 12,   2, "/\\//"),
+      @TK::TkCOMMA  .new( 95, 12,   6, ","),
+      @TK::TkNL     .new( 96, 12,  89, "\n"),
+      @TK::TkSPACE  .new( 97, 13,   0, "  "),
+      @TK::TkREGEXP .new( 99, 13,   2, "/\\\\/"),
+      @TK::TkCOMMA  .new(103, 13,   6, ","),
+      @TK::TkNL     .new(104, 13,  97, "\n"),
+      @TK::TkSPACE  .new(105, 14,   0, "  "),
+      @TK::TkREGEXP .new(107, 14,   2, "/\\#/"),
+      @TK::TkCOMMA  .new(111, 14,   6, ","),
+      @TK::TkNL     .new(112, 14, 105, "\n"),
+      @TK::TkSPACE  .new(113, 15,   0, "  "),
+      @TK::TkREGEXP .new(115, 15,   2, "/\\\#{}/"),
+      @TK::TkCOMMA  .new(121, 15,   8, ","),
+      @TK::TkNL     .new(122, 15, 113, "\n"),
+      @TK::TkSPACE  .new(123, 16,   0, "  "),
+      @TK::TkREGEXP .new(125, 16,   2, "/#/"),
+      @TK::TkCOMMA  .new(128, 16,   5, ","),
+      @TK::TkNL     .new(129, 16, 123, "\n"),
+      @TK::TkSPACE  .new(130, 17,   0, "  "),
+      @TK::TkDREGEXP.new(132, 17,   2, "/\#{}/"),
+      @TK::TkNL     .new(137, 17,   7, "\n"),
+      @TK::TkRBRACK .new(138, 18,   0, "]"),
+      @TK::TkNL     .new(139, 18, 138, "\n")
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_string_escape
     tokens = RDoc::RubyLex.tokenize '"\\n"', nil
     assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\n\""), tokens.first
