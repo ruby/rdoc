@@ -2499,6 +2499,35 @@ EXPTECTED
     assert_equal markup_code, expected
   end
 
+  def test_parse_statements_postfix_if_after_heredocbeg
+    @filename = 'file.rb'
+    util_parser <<RUBY
+class Foo
+  def blah()
+    <<~EOM if true
+    EOM
+  end
+end
+RUBY
+
+    expected = <<EXPTECTED
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">blah</span>()
+    <span class="ruby-identifier">&lt;&lt;~EOM</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">true</span>
+<span class="ruby-value"></span><span class="ruby-identifier">    EOM
+</span>  <span class="ruby-keyword">end</span>
+EXPTECTED
+    expected = expected.rstrip
+
+    @parser.scan
+
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+
+    blah = foo.method_list.first
+    markup_code = blah.markup_code.sub(/^.*\n/, '')
+    assert_equal markup_code, expected
+  end
+
   def test_parse_require_dynamic_string
     content = <<-RUBY
 prefix = 'path'
