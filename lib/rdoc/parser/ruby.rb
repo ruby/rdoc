@@ -752,6 +752,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     cls.line   = line_no
 
+    # after end modifiers
+    read_documentation_modifiers cls, RDoc::CLASS_MODIFIERS
+
     cls
   end
 
@@ -1311,6 +1314,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     meth.comment = comment
 
+    # after end modifiers
+    read_documentation_modifiers meth, RDoc::METHOD_MODIFIERS
+
     @stats.add_method meth
   end
 
@@ -1542,6 +1548,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     mod.add_comment comment, @top_level
     parse_statements mod
 
+    # after end modifiers
+    read_documentation_modifiers mod, RDoc::CLASS_MODIFIERS
+
     @stats.add_module mod
   end
 
@@ -1715,7 +1724,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when TkEND then
         nest -= 1
         if nest == 0 then
-          read_documentation_modifiers container, RDoc::CLASS_MODIFIERS
           container.ongoing_visibility = save_visibility
 
           parse_comment container, tk, comment unless comment.empty?
