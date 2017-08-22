@@ -466,7 +466,7 @@ class RDoc::RipperStateLex
   private def heredoc_end?(name, indent, tk)
     result = false
     if :on_heredoc_end == tk[:kind] then
-      tk_name = (indent ? tk[:text].gsub(/\A *(.+)\n\z/, '\1') : tk[:text].gsub(/\n\z/, ''))
+      tk_name = (indent ? tk[:text].gsub(/^ *(.+)\n?$/, '\1') : tk[:text].gsub(/\n\z/, ''))
       if name == tk_name
         result = true
       end
