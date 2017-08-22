@@ -1342,7 +1342,6 @@ class RDoc::RubyLex
             when "'", '\\' then
               str << ch
             else
-              str << '\\'
               str << ch
             end
           else
