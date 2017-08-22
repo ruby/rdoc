@@ -303,8 +303,8 @@ module RDoc::RubyToken
     [:TkIN,         TkKW,  "in",     :EXPR_BEG],
     [:TkDO,         TkKW,  "do",     :EXPR_BEG],
     [:TkRETURN,     TkKW,  "return", :EXPR_MID],
-    [:TkYIELD,      TkKW,  "yield",  :EXPR_END],
-    [:TkSUPER,      TkKW,  "super",  :EXPR_END],
+    [:TkYIELD,      TkKW,  "yield",  :EXPR_ARG],
+    [:TkSUPER,      TkKW,  "super",  :EXPR_ARG],
     [:TkSELF,       TkKW,  "self",   :EXPR_END],
     [:TkNIL,        TkKW,  "nil",    :EXPR_END],
     [:TkTRUE,       TkKW,  "true",   :EXPR_END],
@@ -317,7 +317,7 @@ module RDoc::RubyToken
     [:TkWHILE_MOD,  TkKW],
     [:TkUNTIL_MOD,  TkKW],
     [:TkALIAS,      TkKW,  "alias",    :EXPR_FNAME],
-    [:TkDEFINED,    TkKW,  "defined?", :EXPR_END],
+    [:TkDEFINED,    TkKW,  "defined?", :EXPR_ARG],
     [:TklBEGIN,     TkKW,  "BEGIN",    :EXPR_END],
     [:TklEND,       TkKW,  "END",      :EXPR_END],
     [:Tk__LINE__,   TkKW,  "__LINE__", :EXPR_END],
@@ -401,6 +401,7 @@ module RDoc::RubyToken
 
     [:TkASSIGN,     Token,  "="],
     [:TkDOT,        Token,  "."],
+    [:TkSAFENAV,    Token,  "&."],
     [:TkLPAREN,     Token,  "("],  #(exp)
     [:TkLBRACK,     Token,  "["],  #[arry]
     [:TkLBRACE,     Token,  "{"],  #{hash}
