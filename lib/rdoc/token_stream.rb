@@ -44,10 +44,18 @@ module RDoc::TokenStream
               when RDoc::RubyToken::TkVal      then 'ruby-value'
               end
 
-      text = CGI.escapeHTML t.text
+      comment_with_nl = false
+      case t
+      when RDoc::RubyToken::TkRD_COMMENT, RDoc::RubyToken::TkHEREDOCEND
+        comment_with_nl = true if t.text =~ /\n$/
+        text = t.text.rstrip
+      else
+        text = t.text
+      end
+      text = CGI.escapeHTML text
 
       if style then
-        "<span class=\"#{style}\">#{text}</span>"
+        "<span class=\"#{style}\">#{text}</span>#{"\n" if comment_with_nl}"
       else
         text
       end

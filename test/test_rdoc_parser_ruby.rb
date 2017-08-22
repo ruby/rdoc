@@ -74,7 +74,7 @@ class C; end
 
     comment = parser.collect_first_comment
 
-    assert_equal RDoc::Comment.new("first\n\n", @top_level), comment
+    assert_equal RDoc::Comment.new("=begin\nfirst\n=end\n\n", @top_level), comment
   end
 
   def test_get_class_or_module
@@ -2499,6 +2499,69 @@ EXPTECTED
     assert_equal markup_code, expected
   end
 
+  def test_parse_statements_postfix_if_after_heredocbeg
+    @filename = 'file.rb'
+    util_parser <<RUBY
+class Foo
+  def blah()
+    <<~EOM if true
+    EOM
+  end
+end
+RUBY
+
+    expected = <<EXPTECTED
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">blah</span>()
+    <span class="ruby-identifier">&lt;&lt;~EOM</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">true</span>
+<span class="ruby-value"></span><span class="ruby-identifier">    EOM</span>
+  <span class="ruby-keyword">end</span>
+EXPTECTED
+    expected = expected.rstrip
+
+    @parser.scan
+
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+
+    blah = foo.method_list.first
+    markup_code = blah.markup_code.sub(/^.*\n/, '')
+    assert_equal markup_code, expected
+  end
+
+  def test_parse_statements_embdoc_in_document
+    @filename = 'file.rb'
+    util_parser <<RUBY
+class Foo
+  # doc
+  #
+  #   =begin
+  #   test embdoc
+  #   =end
+  #
+  def blah
+  end
+end
+RUBY
+
+    expected = <<EXPTECTED
+<p>doc
+
+<pre class="ruby"><span class="ruby-comment">=begin
+test embdoc
+=end</span>
+</pre>
+EXPTECTED
+
+    @parser.scan
+
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+
+    blah = foo.method_list.first
+    markup_comment = blah.search_record[6]
+    assert_equal markup_comment, expected
+  end
+
   def test_parse_require_dynamic_string
     content = <<-RUBY
 prefix = 'path'
@@ -2511,6 +2574,31 @@ RUBY
     @parser.parse_statements @top_level
 
     assert_equal 1, @top_level.requires.length
+  end
+
+  def test_parse_postfix_nodoc
+    util_parser <<-RUBY
+class A
+end # :nodoc:
+
+class B
+  def a
+  end # :nodoc:
+
+  def b
+  end
+end
+RUBY
+
+    @parser.parse_statements @top_level
+
+    c_a = @top_level.classes.select(&:document_self).first
+    assert_equal 'B', c_a.full_name
+
+    assert_equal 2, @top_level.classes.length
+    assert_equal 1, @top_level.classes.count(&:document_self)
+    assert_equal 1, c_a.method_list.length
+    assert_equal 'B#b', c_a.method_list.first.full_name
   end
 
   def test_parse_statements_identifier_require
@@ -2948,11 +3036,11 @@ end
 
     foo = @top_level.classes.first
 
-    assert_equal 'Foo comment', foo.comment.text
+    assert_equal "=begin rdoc\nFoo comment\n=end", foo.comment.text
 
     m = foo.method_list.first
 
-    assert_equal 'm comment', m.comment.text
+    assert_equal "=begin\nm comment\n=end", m.comment.text
   end
 
   def test_scan_block_comment_nested # Issue #41
@@ -2974,7 +3062,7 @@ end
     foo = @top_level.modules.first
 
     assert_equal 'Foo', foo.full_name
-    assert_equal 'findmeindoc', foo.comment.text
+    assert_equal "=begin rdoc\nfindmeindoc\n=end", foo.comment.text
 
     bar = foo.classes.first
 
@@ -3021,12 +3109,12 @@ end
 
     foo = @top_level.classes.first
 
-    assert_equal "= DESCRIPTION\n\nThis is a simple test class\n\n= RUMPUS\n\nIs a silly word",
+    assert_equal "=begin rdoc\n\n= DESCRIPTION\n\nThis is a simple test class\n\n= RUMPUS\n\nIs a silly word\n\n=end",
       foo.comment.text
 
     m = foo.method_list.first
 
-    assert_equal 'A nice girl', m.comment.text
+    assert_equal "=begin rdoc\nA nice girl\n=end", m.comment.text
   end
 
   def test_scan_class_nested_nodoc
