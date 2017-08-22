@@ -380,6 +380,24 @@ U
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_hash_rocket
+    tokens = RDoc::RubyLex.tokenize "{ :foo=> 1 }", nil
+
+    expected = [
+      @TK::TkLBRACE    .new( 0, 1,  0, '{'),
+      @TK::TkSPACE     .new( 1, 1,  1, ' '),
+      @TK::TkSYMBOL    .new( 2, 1,  2, ':foo'),
+      @TK::TkHASHROCKET.new( 6, 1,  6, '=>'),
+      @TK::TkSPACE     .new( 8, 1,  8, ' '),
+      @TK::TkINTEGER   .new( 9, 1,  9, '1'),
+      @TK::TkSPACE     .new(10, 1, 10, ' '),
+      @TK::TkRBRACE    .new(11, 1, 11, '}'),
+      @TK::TkNL        .new(12, 1, 12, "\n")
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_percent_sign_quote
     tokens = RDoc::RubyLex.tokenize '%%hi%', nil
 

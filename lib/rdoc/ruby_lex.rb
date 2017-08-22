@@ -1069,7 +1069,7 @@ class RDoc::RubyLex
 
     if @lex_state == :EXPR_FNAME
       @lex_state = :EXPR_END
-      if peek(0) == '='
+      if peek(0) == '=' and peek(1) != '>'
         token.concat getc
       end
     elsif @lex_state == :EXPR_BEG || @lex_state == :EXPR_DOT ||
