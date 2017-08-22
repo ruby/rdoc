@@ -883,7 +883,8 @@ class RDoc::RubyLex
         identify_quotation
       elsif peek(0) == '='
         getc
-        Token(TkOPASGN, :%)
+        @lex_state = :EXPR_BEG
+        Token(TkOPASGN, '%')
       elsif @lex_state == :EXPR_ARG and @space_seen and peek(0) !~ /\s/
         identify_quotation
       else
