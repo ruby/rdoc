@@ -363,7 +363,7 @@ class RDoc::RipperStateLex
   private def get_string_tk(tk)
     string = tk[:text]
     state = nil
-    expanded = false
+    kind = :on_tstring
     loop do
       inner_str_tk = get_squashed_tk
       if inner_str_tk.nil?
@@ -372,17 +372,22 @@ class RDoc::RipperStateLex
         string = string + inner_str_tk[:text]
         state = inner_str_tk[:state]
         break
+      elsif :on_label_end == inner_str_tk[:kind]
+        string = string + inner_str_tk[:text]
+        state = inner_str_tk[:state]
+        kind = :on_symbol
+        break
       else
         string = string + inner_str_tk[:text]
         if :on_embexpr_beg == inner_str_tk[:kind] then
-          expanded = true
+          kind = :on_dstring if :on_tstring == kind
         end
       end
     end
     {
       :line_no => tk[:line_no],
       :char_no => tk[:char_no],
-      :kind => expanded ? :on_dstring : :on_tstring,
+      :kind => kind,
       :text => string,
       :state => state
     }
