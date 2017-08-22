@@ -2022,7 +2022,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def skip_optional_do_after_expression
     skip_tkspace false
     tk = get_tk
-    end_token = get_end_token tk
 
     b_nest = 0
     nest = 0
@@ -2030,23 +2029,18 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     loop do
       case tk
-      when TkSEMICOLON then
+      when TkSEMICOLON, TkNL then
         break if b_nest.zero?
       when TkLPAREN, TkfLPAREN then
         nest += 1
+      when TkRPAREN then
+        nest -= 1
       when TkBEGIN then
         b_nest += 1
       when TkEND then
         b_nest -= 1
       when TkDO
         break if nest.zero?
-      when end_token then
-        if end_token == TkRPAREN
-          nest -= 1
-          break if @scanner.lex_state == :EXPR_END and nest.zero?
-        else
-          break unless @scanner.continue
-        end
       when nil then
         break
       end

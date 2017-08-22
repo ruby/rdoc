@@ -1650,6 +1650,25 @@ end
     assert_equal stream, foo.token_stream
   end
 
+  def test_parse_redefinable_methods
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = RDoc::Comment.new "", @top_level
+
+    redefinable_ops = %w[| ^ & <=> == === =~ > >= < <= << >> + - * / % ** ~ +@ -@ [] []= ` !  != !~]
+    redefinable_ops.each do |redefinable_op|
+      util_parser "def #{redefinable_op}\nend\n"
+      tk = @parser.get_tk
+      @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+    end
+
+    klass.method_list.each do |method|
+      assert_kind_of RDoc::RubyToken::TkId, method.token_stream[5]
+      assert_includes redefinable_ops, method.token_stream[5].text
+    end
+  end
+
   def test_parse_method_bracket
     util_parser <<-RUBY
 class C
@@ -2063,7 +2082,7 @@ end
   end
 
   def test_parse_statements_def_percent_string_pound
-    util_parser "class C\ndef a\n%r{#}\nend\ndef b() end\nend"
+    util_parser "class C\ndef a\n%r{#}\n%r{\#{}}\nend\ndef b() end\nend"
 
     @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL
 
@@ -2080,9 +2099,11 @@ end
       tk(:SPACE,      11, 2, 3, nil,   ' '),
       tk(:IDENTIFIER, 12, 2, 4, 'a',   'a'),
       tk(:NL,         13, 2, 5, nil,   "\n"),
-      tk(:DREGEXP,    14, 3, 0, nil,   '%r{#}'),
+      tk(:REGEXP,     14, 3, 0, nil,   '%r{#}'),
       tk(:NL,         19, 3, 5, nil,   "\n"),
-      tk(:END,        20, 4, 0, 'end', 'end'),
+      tk(:DREGEXP,    20, 4, 0, nil,   '%r{#{}}'),
+      tk(:NL,         27, 4, 7, nil,   "\n"),
+      tk(:END,        28, 5, 0, 'end', 'end'),
     ]
 
     assert_equal expected, a.token_stream
@@ -2444,6 +2465,38 @@ end
 
     assert_equal :public,  date_now.visibility,      date_now.full_name
     assert_equal :private, date_time_now.visibility, date_time_now.full_name
+  end
+
+  def test_parse_statements_complex_condition_in_for
+    util_parser <<RUBY
+class Foo
+  def blah()
+    for i in (k)...n do
+    end
+    for i in (k)...n
+    end
+  end
+end
+RUBY
+
+    expected = <<EXPTECTED
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">blah</span>()
+  <span class="ruby-keyword">for</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword">in</span> (<span class="ruby-identifier">k</span>)<span class="ruby-operator">...</span><span class="ruby-identifier">n</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">for</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword">in</span> (<span class="ruby-identifier">k</span>)<span class="ruby-operator">...</span><span class="ruby-identifier">n</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span>
+EXPTECTED
+    expected = expected.rstrip
+
+    @parser.scan
+
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+
+    blah = foo.method_list.first
+    markup_code = blah.markup_code.sub(/^.*\n/, '')
+    assert_equal markup_code, expected
   end
 
   def test_parse_require_dynamic_string
@@ -2838,7 +2891,7 @@ end
   def test_sanity_interpolation_curly
     util_parser '%{ #{} }'
 
-    assert_equal '%Q{ #{} }', @parser.get_tk.text
+    assert_equal '%{ #{} }', @parser.get_tk.text
     assert_equal RDoc::RubyToken::TkNL, @parser.get_tk.class
   end
 

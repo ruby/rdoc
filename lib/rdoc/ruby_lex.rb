@@ -106,6 +106,8 @@ class RDoc::RubyLex
     @rests = []
     @seek = 0
 
+    @heredoc_queue = []
+
     @indent = 0
     @indent_stack = []
     @lex_state = :EXPR_BEG
@@ -400,7 +402,9 @@ class RDoc::RubyLex
     "r" => "/",
     "w" => "]",
     "W" => "]",
-    "s" => ":"
+    "s" => ":",
+    "i" => "]",
+    "I" => "]"
   }
 
   PERCENT_PAREN = {
@@ -466,28 +470,46 @@ class RDoc::RubyLex
 
     @OP.def_rule("\n") do |op, io|
       print "\\n\n" if RDoc::RubyLex.debug?
-      case @lex_state
-      when :EXPR_BEG, :EXPR_FNAME, :EXPR_DOT
-        @continue = true
-      else
-        @continue = false
-        @lex_state = :EXPR_BEG
-        until (@indent_stack.empty? ||
-               [TkLPAREN, TkLBRACK, TkLBRACE,
-                 TkfLPAREN, TkfLBRACK, TkfLBRACE].include?(@indent_stack.last))
-          @indent_stack.pop
+      unless @heredoc_queue.empty?
+        info = @heredoc_queue[0]
+        if !info[:started] # "\n"
+          info[:started] = true
+          ungetc "\n"
+        elsif info[:heredoc_end].nil? # heredoc body
+          tk, heredoc_end = identify_here_document_body(info[:quoted], info[:lt], info[:indent])
+          info[:heredoc_end] = heredoc_end
+          ungetc "\n"
+        else # heredoc end
+          @heredoc_queue.shift
+          @lex_state = :EXPR_BEG
+          tk = Token(TkHEREDOCEND, info[:heredoc_end])
+          if !@heredoc_queue.empty?
+            @heredoc_queue[0][:started] = true
+            ungetc "\n"
+          end
         end
       end
-      @current_readed = @readed
-      @here_readed.clear
-      Token(TkNL)
+      unless tk
+        case @lex_state
+        when :EXPR_BEG, :EXPR_FNAME, :EXPR_DOT
+          @continue = true
+        else
+          @continue = false
+          @lex_state = :EXPR_BEG
+          until (@indent_stack.empty? ||
+                 [TkLPAREN, TkLBRACK, TkLBRACE,
+                   TkfLPAREN, TkfLBRACK, TkfLBRACE].include?(@indent_stack.last))
+            @indent_stack.pop
+          end
+        end
+        @current_readed = @readed
+        @here_readed.clear
+        tk = Token(TkNL)
+      end
+      tk
     end
 
-    @OP.def_rules("*", "**",
-                  "=", "==", "===",
-                  "=~", "<=>",
-                  "<", "<=",
-                  ">", ">=", ">>", "=>") do
+    @OP.def_rules("=") do
       |op, io|
       case @lex_state
       when :EXPR_FNAME, :EXPR_DOT
@@ -498,10 +520,39 @@ class RDoc::RubyLex
       Token(op)
     end
 
+    @OP.def_rules("*", "**",
+                  "==", "===",
+                  "=~", "<=>",
+                  "<", "<=",
+                  ">", ">=", ">>", "=>") do
+      |op, io|
+      case @lex_state
+      when :EXPR_FNAME, :EXPR_DOT
+        tk = Token(TkId, op)
+        @lex_state = :EXPR_ARG
+      else
+        tk = Token(op)
+        @lex_state = :EXPR_BEG
+      end
+      tk
+    end
+
+    @OP.def_rules("->") do
+      |op, io|
+      @lex_state = :EXPR_ENDFN
+      Token(op)
+    end
+
     @OP.def_rules("!", "!=", "!~") do
       |op, io|
-      @lex_state = :EXPR_BEG
-      Token(op)
+      case @lex_state
+      when :EXPR_FNAME, :EXPR_DOT
+        @lex_state = :EXPR_ARG
+        Token(TkId, op)
+      else
+        @lex_state = :EXPR_BEG
+        Token(op)
+      end
     end
 
     @OP.def_rules("<<") do
@@ -510,16 +561,17 @@ class RDoc::RubyLex
       if @lex_state != :EXPR_END && @lex_state != :EXPR_CLASS &&
          (@lex_state != :EXPR_ARG || @space_seen)
         c = peek(0)
-        if /\S/ =~ c && (/["'`]/ =~ c || /\w/ =~ c || c == "-")
-          tk = identify_here_document
+        if /\S/ =~ c && (/["'`]/ =~ c || /\w/ =~ c || c == "-" || c == "~")
+          tk = identify_here_document(op)
         end
       end
       unless tk
-        tk = Token(op)
         case @lex_state
         when :EXPR_FNAME, :EXPR_DOT
+          tk = Token(TkId, op)
           @lex_state = :EXPR_ARG
         else
+          tk = Token(op)
           @lex_state = :EXPR_BEG
         end
       end
@@ -533,9 +585,9 @@ class RDoc::RubyLex
 
     @OP.def_rules("`") do
       |op, io|
-      if @lex_state == :EXPR_FNAME
-        @lex_state = :EXPR_END
-        Token(op)
+      if :EXPR_FNAME == @lex_state or :EXPR_DOT == @lex_state
+        @lex_state = :EXPR_ARG
+        Token(TkId, op)
       else
         identify_string(op)
       end
@@ -559,10 +611,23 @@ class RDoc::RubyLex
       end
     end
 
-    @OP.def_rules("&", "&&", "|", "||") do
+    @OP.def_rules("&&", "||") do
       |op, io|
       @lex_state = :EXPR_BEG
       Token(op)
+    end
+
+    @OP.def_rules("&", "|") do
+      |op, io|
+      case @lex_state
+      when :EXPR_FNAME, :EXPR_DOT
+        tk = Token(TkId, op)
+        @lex_state = :EXPR_ARG
+      else
+        tk = Token(op)
+        @lex_state = :EXPR_BEG
+      end
+      tk
     end
 
     @OP.def_rules("+=", "-=", "*=", "**=",
@@ -576,19 +641,22 @@ class RDoc::RubyLex
     @OP.def_rule("+@", proc{|op, io| @lex_state == :EXPR_FNAME}) do
       |op, io|
       @lex_state = :EXPR_ARG
-      Token(op)
+      Token(TkId, op)
     end
 
     @OP.def_rule("-@", proc{|op, io| @lex_state == :EXPR_FNAME}) do
       |op, io|
       @lex_state = :EXPR_ARG
-      Token(op)
+      Token(TkId, op)
     end
 
     @OP.def_rules("+", "-") do
       |op, io|
       catch(:RET) do
-        if @lex_state == :EXPR_ARG
+        if :EXPR_FNAME == @lex_state or :EXPR_DOT == @lex_state
+          tk = Token(TkId, op)
+          @lex_state = :EXPR_ARG
+        elsif @lex_state == :EXPR_ARG
           if @space_seen and peek(0) =~ /[0-9]/
             throw :RET, identify_number(op)
           else
@@ -599,20 +667,21 @@ class RDoc::RubyLex
         else
           @lex_state = :EXPR_BEG
         end
-        Token(op)
+        tk = Token(op) unless tk
+        tk
       end
     end
 
-    @OP.def_rule(".") do
+    @OP.def_rules(".", "&.") do
       |op, io|
       @lex_state = :EXPR_BEG
       if peek(0) =~ /[0-9]/
         ungetc
         identify_number
       else
-        # for "obj.if" etc.
+        # for "obj.if" or "obj&.if" etc.
         @lex_state = :EXPR_DOT
-        Token(TkDOT)
+        Token(op)
       end
     end
 
@@ -659,7 +728,10 @@ class RDoc::RubyLex
 
     @OP.def_rule("/") do
       |op, io|
-      if @lex_state == :EXPR_BEG || @lex_state == :EXPR_MID
+      if :EXPR_FNAME == @lex_state or :EXPR_DOT == @lex_state
+        @lex_state = :EXPR_ARG
+        Token(TkId, op)
+      elsif @lex_state == :EXPR_BEG || @lex_state == :EXPR_MID
         identify_string(op)
       elsif peek(0) == '='
         getc
@@ -675,8 +747,15 @@ class RDoc::RubyLex
 
     @OP.def_rules("^") do
       |op, io|
-      @lex_state = :EXPR_BEG
-      Token("^")
+      case @lex_state
+      when :EXPR_FNAME, :EXPR_DOT
+        tk = Token(TkId, op)
+        @lex_state = :EXPR_ARG
+      else
+        tk = Token(op)
+        @lex_state = :EXPR_BEG
+      end
+      tk
     end
 
     #       @OP.def_rules("^=") do
@@ -703,8 +782,14 @@ class RDoc::RubyLex
 
     @OP.def_rule("~") do
       |op, io|
-      @lex_state = :EXPR_BEG
-      Token("~")
+      case @lex_state
+      when :EXPR_FNAME, :EXPR_DOT
+        @lex_state = :EXPR_ARG
+        Token(TkId, op)
+      else
+        @lex_state = :EXPR_BEG
+        Token(op)
+      end
     end
 
     @OP.def_rule("~@", proc{|op, io| @lex_state == :EXPR_FNAME}) do
@@ -730,17 +815,18 @@ class RDoc::RubyLex
     @OP.def_rule("[]", proc{|op, io| @lex_state == :EXPR_FNAME}) do
       |op, io|
       @lex_state = :EXPR_ARG
-      Token("[]")
+      Token(TkId, op)
     end
 
     @OP.def_rule("[]=", proc{|op, io| @lex_state == :EXPR_FNAME}) do
       |op, io|
       @lex_state = :EXPR_ARG
-      Token("[]=")
+      Token(TkId, op)
     end
 
     @OP.def_rule("[") do
       |op, io|
+      text = nil
       @indent += 1
       if @lex_state == :EXPR_FNAME
         tk_c = TkfLBRACK
@@ -749,13 +835,25 @@ class RDoc::RubyLex
           tk_c = TkLBRACK
         elsif @lex_state == :EXPR_ARG && @space_seen
           tk_c = TkLBRACK
+        elsif @lex_state == :EXPR_DOT
+          if peek(0) == "]"
+            tk_c = TkIDENTIFIER
+            getc
+            if peek(0) == "="
+              text = "[]="
+            else
+              text = "[]"
+            end
+          else
+            tk_c = TkOp
+          end
         else
           tk_c = TkfLBRACK
         end
         @lex_state = :EXPR_BEG
       end
       @indent_stack.push tk_c
-      Token(tk_c)
+      Token(tk_c, text)
     end
 
     @OP.def_rule("{") do
@@ -773,19 +871,19 @@ class RDoc::RubyLex
 
     @OP.def_rule('\\') do
       |op, io|
-      if getc == "\n"
+      if peek(0) == "\n"
         @space_seen = true
         @continue = true
-        Token(TkSPACE)
-      else
-        ungetc
-        Token("\\")
       end
+      Token("\\")
     end
 
     @OP.def_rule('%') do
       |op, io|
-      if @lex_state == :EXPR_BEG || @lex_state == :EXPR_MID
+      if :EXPR_FNAME == @lex_state or :EXPR_DOT == @lex_state
+        @lex_state = :EXPR_ARG
+        Token(TkId, op)
+      elsif @lex_state == :EXPR_BEG || @lex_state == :EXPR_MID
         identify_quotation
       elsif peek(0) == '='
         getc
@@ -952,7 +1050,12 @@ class RDoc::RubyLex
                   @indent_stack.push token_c
                 end
               else
-                token_c = TkIDENTIFIER
+                if peek(0) == ':' and !peek_match?(/^::/)
+                  token.concat getc
+                  token_c = TkSYMBOL
+                else
+                  token_c = TkIDENTIFIER
+                end
               end
 
             elsif DEINDENT_CLAUSE.include?(token)
@@ -981,27 +1084,41 @@ class RDoc::RubyLex
     end
 
     if token[0, 1] =~ /[A-Z]/
-      return Token(TkCONSTANT, token)
+      if token[-1] =~ /[!?]/
+        return Token(TkIDENTIFIER, token)
+      else
+        return Token(TkCONSTANT, token)
+      end
     elsif token[token.size - 1, 1] =~ /[!?]/
       return Token(TkFID, token)
     else
-      return Token(TkIDENTIFIER, token)
+      if peek(0) == ':' and !peek_match?(/^::/)
+        token.concat getc
+        return Token(TkSYMBOL, token)
+      else
+        return Token(TkIDENTIFIER, token)
+      end
     end
   end
 
-  def identify_here_document
+  def identify_here_document(op)
     ch = getc
+    start_token = op
     #    if lt = PERCENT_LTYPE[ch]
-    if ch == "-"
+    if ch == "-" or ch == "~"
+      start_token.concat ch
       ch = getc
       indent = true
     end
     if /['"`]/ =~ ch
+      start_token.concat ch
       user_quote = lt = ch
       quoted = ""
       while (c = getc) && c != lt
         quoted.concat c
       end
+      start_token.concat quoted
+      start_token.concat lt
     else
       user_quote = nil
       lt = '"'
@@ -1009,57 +1126,38 @@ class RDoc::RubyLex
       while (c = getc) && c =~ /\w/
         quoted.concat c
       end
+      start_token.concat quoted
       ungetc
     end
 
+    @heredoc_queue << {
+      quoted: quoted,
+      lt: lt,
+      indent: indent,
+      started: false
+    }
+    @lex_state = :EXPR_BEG
+    Token(RDoc::RubyLex::TkHEREDOCBEG, start_token)
+  end
+
+  def identify_here_document_body(quoted, lt, indent)
     ltback, @ltype = @ltype, lt
-    reserve = []
-    while ch = getc
-      reserve.push ch
-      if ch == "\\"
-        reserve.push ch = getc
-      elsif ch == "\n"
-        break
-      end
-    end
 
-    output_heredoc = reserve.join =~ /\A\r?\n\z/
-
-    if output_heredoc then
-      doc = '<<'
-      doc << '-' if indent
-      doc << "#{user_quote}#{quoted}#{user_quote}\n"
-    else
-      doc = '"'
-    end
-
-    @current_readed = @readed
+    doc = ""
+    heredoc_end = nil
     while l = gets
       l = l.sub(/(:?\r)?\n\z/, "\n")
       if (indent ? l.strip : l.chomp) == quoted
+        heredoc_end = l
         break
       end
       doc << l
     end
+    raise Error, "Missing terminating #{quoted} for string" unless heredoc_end
 
-    if output_heredoc then
-      raise Error, "Missing terminating #{quoted} for string" unless l
-
-      doc << l.chomp
-    else
-      doc << '"'
-    end
-
-    @current_readed = @here_readed
-    @here_readed.concat reserve
-    while ch = reserve.pop
-      ungetc ch
-    end
-
-    token_class = output_heredoc ? RDoc::RubyLex::TkHEREDOC : Ltype2Token[lt]
     @ltype = ltback
-    @lex_state = :EXPR_END
-    Token(token_class, doc)
+    @lex_state = :EXPR_BEG
+    [Token(RDoc::RubyLex::TkHEREDOC, doc), heredoc_end]
   end
 
   def identify_quotation
@@ -1086,7 +1184,7 @@ class RDoc::RubyLex
 
     num = op
 
-    if peek(0) == "0" && peek(1) !~ /[.eE]/
+    if peek(0) == "0" && peek(1) !~ /[.eEri]/
       num << getc
 
       case peek(0)
@@ -1215,7 +1313,7 @@ class RDoc::RubyLex
     str = if ltype == quoted and %w[" ' /].include? ltype then
             ltype.dup
           else
-            "%#{type or PERCENT_LTYPE.key ltype}#{PERCENT_PAREN_REV[quoted]||quoted}"
+            "%#{type}#{PERCENT_PAREN_REV[quoted]||quoted}"
           end
 
     subtype = nil
@@ -1229,8 +1327,8 @@ class RDoc::RubyLex
           break
         elsif @ltype != "'" && @ltype != "]" && @ltype != ":" and ch == "#"
           ch = getc
-          subtype = true
           if ch == "{" then
+            subtype = true
             str << ch << skip_inner_expression
             next
           else
@@ -1239,7 +1337,7 @@ class RDoc::RubyLex
         elsif ch == '\\'
           if %w[' /].include? @ltype then
             case ch = getc
-            when "\\", "\n", "'"
+            when "\n", "'"
             when @ltype
               str << ch
             else
