@@ -454,15 +454,18 @@ class RDoc::RubyLex
                  proc{|op, io| @prev_char_no == 0 && peek(0) =~ /\s/}) do
       |op, io|
       @ltype = "="
-      res = ''
-      nil until getc == "\n"
+      res = op
+      until (ch = getc) == "\n" do
+        res << ch
+      end
+      res << ch
 
       until ( peek_equal?("=end") && peek(4) =~ /\s/ ) do
         (ch = getc)
         res << ch
       end
 
-      gets # consume =end
+      res << gets # consume =end
 
       @ltype = nil
       Token(TkRD_COMMENT, res)
