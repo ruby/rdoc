@@ -62,6 +62,17 @@ class TestRDocRubyLex < RDoc::TestCase
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize___ENCODING__
+    tokens = RDoc::RubyLex.tokenize '__ENCODING__', nil
+
+    expected = [
+      @TK::Tk__ENCODING__.new( 0, 1,  0, '__ENCODING__'),
+      @TK::TkNL          .new(12, 1, 12, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_character_literal
     tokens = RDoc::RubyLex.tokenize "?c", nil
 
@@ -822,6 +833,36 @@ RUBY
       @TK::TkSPACE .new(47, 1, 47, " "),
       @TK::TkRBRACE.new(48, 1, 48, "}"),
       @TK::TkNL    .new(49, 1, 49, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
+  def test_class_tokenize_symbol_with_quote
+    tokens = RDoc::RubyLex.tokenize <<RUBY, nil
+a.include?()?"a":"b"
+{"t":1,'t2':2}
+RUBY
+
+    expected = [
+      @TK::TkIDENTIFIER.new( 0, 1,  0, "a"),
+      @TK::TkDOT       .new( 1, 1,  1, "."),
+      @TK::TkFID       .new( 2, 1,  2, "include?"),
+      @TK::TkLPAREN    .new(10, 1, 10, "("),
+      @TK::TkRPAREN    .new(11, 1, 11, ")"),
+      @TK::TkQUESTION  .new(12, 1, 12, "?"),
+      @TK::TkSTRING    .new(13, 1, 13, "\"a\""),
+      @TK::TkCOLON     .new(16, 1, 16, ":"),
+      @TK::TkSTRING    .new(17, 1, 17, "\"b\""),
+      @TK::TkNL        .new(20, 1, 20, "\n"),
+      @TK::TkLBRACE    .new(21, 2,  0, "{"),
+      @TK::TkSYMBOL    .new(22, 2,  1, "\"t\":"),
+      @TK::TkINTEGER   .new(26, 2,  5, "1"),
+      @TK::TkCOMMA     .new(27, 2,  6, ","),
+      @TK::TkSYMBOL    .new(28, 2,  7, "'t2':"),
+      @TK::TkINTEGER   .new(33, 2, 12, "2"),
+      @TK::TkRBRACE    .new(34, 2, 13, "}"),
+      @TK::TkNL        .new(35, 2, 21, "\n"),
     ]
 
     assert_equal expected, tokens
