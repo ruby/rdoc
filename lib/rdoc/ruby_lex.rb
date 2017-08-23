@@ -112,6 +112,7 @@ class RDoc::RubyLex
     @indent_stack = []
     @lex_state = :EXPR_BEG
     @space_seen = false
+    @after_question = false
 
     @continue = false
     @line = ""
@@ -383,6 +384,8 @@ class RDoc::RubyLex
       set_token_position tk.seek, tk.line_no, tk.char_no
       tk = Token(tk1.class, tk.text + tk1.text)
     end
+    @after_question = false if @after_question and !(TkQUESTION === tk)
+
     #      Tracer.off
     tk
   end
@@ -600,6 +603,7 @@ class RDoc::RubyLex
       |op, io|
       if @lex_state == :EXPR_END
         @lex_state = :EXPR_BEG
+        @after_question = true
         Token(TkQUESTION)
       else
         ch = getc
@@ -1368,7 +1372,10 @@ class RDoc::RubyLex
         end
       end
 
-      if subtype
+      if peek(0) == ':' and !peek_match?(/^::/) and :EXPR_BEG == @lex_state and !@after_question
+        str.concat getc
+        return Token(TkSYMBOL, str)
+      elsif subtype
         Token(DLtype2Token[ltype], str)
       else
         Token(Ltype2Token[ltype], str)
