@@ -62,6 +62,17 @@ class TestRDocRubyLex < RDoc::TestCase
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize___ENCODING__
+    tokens = RDoc::RubyLex.tokenize '__ENCODING__', nil
+
+    expected = [
+      @TK::Tk__ENCODING__.new( 0, 1,  0, '__ENCODING__'),
+      @TK::TkNL          .new(12, 1, 12, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_character_literal
     tokens = RDoc::RubyLex.tokenize "?c", nil
 
