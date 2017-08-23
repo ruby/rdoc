@@ -322,6 +322,7 @@ module RDoc::RubyToken
     [:TklEND,       TkKW,  "END",      :EXPR_END],
     [:Tk__LINE__,   TkKW,  "__LINE__", :EXPR_END],
     [:Tk__FILE__,   TkKW,  "__FILE__", :EXPR_END],
+    [:Tk__ENCODING__,TkKW, "__ENCODING__", :EXPR_END],
 
     [:TkIDENTIFIER, TkId],
     [:TkFID,        TkId],
