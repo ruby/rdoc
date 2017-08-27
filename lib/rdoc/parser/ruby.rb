@@ -951,12 +951,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
             (:on_kw == tk[:kind] && 'end' == tk[:text]) then
         nest -= 1
       elsif (:on_comment == tk[:kind] or :on_embdoc == tk[:kind]) then
+        unget_tk tk
+        read_documentation_modifiers constant, RDoc::CONSTANT_MODIFIERS
         if nest <= 0 and RDoc::RipperStateLex.end?(tk) then
-          unget_tk tk
           break
-        else
-          unget_tk tk
-          read_documentation_modifiers constant, RDoc::CONSTANT_MODIFIERS
         end
       elsif :on_const == tk[:kind] then
         rhs_name << tk[:text]
