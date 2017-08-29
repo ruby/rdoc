@@ -45,6 +45,7 @@ class RDoc::RubyLex
 
   attr_accessor :continue
   attr_accessor :lex_state
+  attr_accessor :first_in_method_statement
   attr_reader :reader
 
   class << self
@@ -113,6 +114,7 @@ class RDoc::RubyLex
     @lex_state = :EXPR_BEG
     @space_seen = false
     @escaped_nl = false
+    @first_in_method_statement = false
     @after_question = false
 
     @continue = false
@@ -354,6 +356,7 @@ class RDoc::RubyLex
       begin
         tk = @OP.match(self)
         @space_seen = tk.kind_of?(TkSPACE)
+        @first_in_method_statement = false if !@space_seen && @first_in_method_statement
       rescue SyntaxError => e
         raise Error, "syntax error: #{e.message}" if
           @exception_on_syntax_error
@@ -741,7 +744,7 @@ class RDoc::RubyLex
       if :EXPR_FNAME == @lex_state or :EXPR_DOT == @lex_state
         @lex_state = :EXPR_ARG
         Token(TkId, op)
-      elsif @lex_state == :EXPR_BEG || @lex_state == :EXPR_MID
+      elsif @lex_state == :EXPR_BEG || @lex_state == :EXPR_MID || @first_in_method_statement
         identify_string(op)
       elsif peek(0) == '='
         getc
