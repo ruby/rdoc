@@ -485,6 +485,106 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
     assert_equal expected, @to.res.join
   end
 
+  def test_accept_verbatim_escape_in_string
+    code = <<-'RUBY'
+def foo
+  [
+    '\\',
+    '\'',
+    "'",
+    "\'\"\`",
+    "\#",
+    "\#{}",
+    "#",
+    "#{}",
+    /'"/,
+    /\'\"/,
+    /\//,
+    /\\/,
+    /\#/,
+    /\#{}/,
+    /#/,
+    /#{}/
+  ]
+end
+def bar
+end
+    RUBY
+    verb = @RM::Verbatim.new(*code.split(/(?<=\n)/))
+
+    @to.start_accepting
+    @to.accept_verbatim verb
+
+    expected = <<-'EXPECTED'
+
+<pre class="ruby"><span class="ruby-keyword">def</span> <span class="ruby-identifier">foo</span>
+  [
+    <span class="ruby-string">&#39;\\&#39;</span>,
+    <span class="ruby-string">&#39;\&#39;&#39;</span>,
+    <span class="ruby-string">&quot;&#39;&quot;</span>,
+    <span class="ruby-string">&quot;\&#39;\&quot;\`&quot;</span>,
+    <span class="ruby-string">&quot;\#&quot;</span>,
+    <span class="ruby-string">&quot;\#{}&quot;</span>,
+    <span class="ruby-string">&quot;#&quot;</span>,
+    <span class="ruby-node">&quot;#{}&quot;</span>,
+    <span class="ruby-regexp">/&#39;&quot;/</span>,
+    <span class="ruby-regexp">/\&#39;\&quot;/</span>,
+    <span class="ruby-regexp">/\//</span>,
+    <span class="ruby-regexp">/\\/</span>,
+    <span class="ruby-regexp">/\#/</span>,
+    <span class="ruby-regexp">/\#{}/</span>,
+    <span class="ruby-regexp">/#/</span>,
+    <span class="ruby-regexp">/#{}/</span>
+  ]
+<span class="ruby-keyword">end</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">bar</span>
+<span class="ruby-keyword">end</span>
+</pre>
+    EXPECTED
+
+    assert_equal expected, @to.res.join
+  end
+
+  def test_accept_verbatim_escape_in_backtick
+    code = <<-'RUBY'
+def foo
+  [
+    `\\`,
+    `\'\"\``,
+    `\#`,
+    `\#{}`,
+    `#`,
+    `#{}`
+  ]
+end
+def bar
+end
+    RUBY
+    verb = @RM::Verbatim.new(*code.split(/(?<=\n)/))
+
+    @to.start_accepting
+    @to.accept_verbatim verb
+
+    expected = <<-'EXPECTED'
+
+<pre class="ruby"><span class="ruby-keyword">def</span> <span class="ruby-identifier">foo</span>
+  [
+    <span class="ruby-string">`\\`</span>,
+    <span class="ruby-string">`\&#39;\&quot;\``</span>,
+    <span class="ruby-string">`\#`</span>,
+    <span class="ruby-string">`\#{}`</span>,
+    <span class="ruby-string">`#`</span>,
+    <span class="ruby-node">`#{}`</span>
+  ]
+<span class="ruby-keyword">end</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">bar</span>
+<span class="ruby-keyword">end</span>
+</pre>
+    EXPECTED
+
+    assert_equal expected, @to.res.join
+  end
+
   def test_accept_verbatim_ruby
     verb = @RM::Verbatim.new("1 + 1\n")
     verb.format = :ruby
