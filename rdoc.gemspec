@@ -1,6 +1,4 @@
-# -*- encoding: utf-8 -*-
-$:.unshift File.expand_path("../lib", __FILE__)
-require 'rdoc'
+require_relative "lib/rdoc"
 
 Gem::Specification.new do |s|
   s.name = "rdoc"
