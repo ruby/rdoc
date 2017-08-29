@@ -1085,7 +1085,7 @@ class RDoc::RubyLex
         token.concat getc
       end
     elsif @lex_state == :EXPR_BEG || @lex_state == :EXPR_DOT ||
-          @lex_state == :EXPR_ARG
+          @lex_state == :EXPR_ARG || @lex_state == :EXPR_MID
       @lex_state = :EXPR_ARG
     else
       @lex_state = :EXPR_END

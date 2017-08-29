@@ -883,6 +883,21 @@ RUBY
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_symbol_for_nested_method
+    tokens = RDoc::RubyLex.tokenize 'return untrace_var :name', nil
+
+    expected = [
+      @TK::TkRETURN    .new( 0, 1,  0, "return"),
+      @TK::TkSPACE     .new( 6, 1,  6, " "),
+      @TK::TkIDENTIFIER.new( 7, 1,  7, "untrace_var"),
+      @TK::TkSPACE     .new(18, 1, 18, " "),
+      @TK::TkSYMBOL    .new(19, 1, 19, ":name"),
+      @TK::TkNL        .new(24, 1, 24, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_symbol_with_quote
     tokens = RDoc::RubyLex.tokenize <<RUBY, nil
 a.include?()?"a":"b"
