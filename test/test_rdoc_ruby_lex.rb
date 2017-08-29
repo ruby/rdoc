@@ -719,6 +719,44 @@ RUBY
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_postfix_if_after_escaped_newline
+    tokens = RDoc::RubyLex.tokenize <<'RUBY', nil
+def a
+  1 if true
+  1 \
+    if true
+end
+RUBY
+
+    expected = [
+      @TK::TkDEF       .new( 0, 1, 0,  "def"),
+      @TK::TkSPACE     .new( 3, 1, 3,  " "),
+      @TK::TkIDENTIFIER.new( 4, 1, 4,  "a"),
+      @TK::TkNL        .new( 5, 1, 5,  "\n"),
+      @TK::TkSPACE     .new( 6, 2, 0,  "  "),
+      @TK::TkINTEGER   .new( 8, 2, 2,  "1"),
+      @TK::TkSPACE     .new( 9, 2, 3,  " "),
+      @TK::TkIF_MOD    .new(10, 2, 4,  "if"),
+      @TK::TkSPACE     .new(12, 2, 6,  " "),
+      @TK::TkTRUE      .new(13, 2, 7,  "true"),
+      @TK::TkNL        .new(17, 2, 6,  "\n"),
+      @TK::TkSPACE     .new(18, 3, 0,  "  "),
+      @TK::TkINTEGER   .new(20, 3, 2,  "1"),
+      @TK::TkSPACE     .new(21, 3, 3,  " "),
+      @TK::TkBACKSLASH .new(22, 3, 4,  "\\"),
+      @TK::TkNL        .new(23, 3, 18, "\n"),
+      @TK::TkSPACE     .new(24, 4, 0,  "    "),
+      @TK::TkIF_MOD    .new(28, 4, 4,  "if"),
+      @TK::TkSPACE     .new(30, 4, 6,  " "),
+      @TK::TkTRUE      .new(31, 4, 7,  "true"),
+      @TK::TkNL        .new(35, 4, 24, "\n"),
+      @TK::TkEND       .new(36, 5, 0,  "end"),
+      @TK::TkNL        .new(39, 5, 36, "\n")
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_backtick_with_escape
     tokens = RDoc::RubyLex.tokenize <<'RUBY', nil
 [
