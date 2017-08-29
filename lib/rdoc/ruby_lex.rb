@@ -1325,7 +1325,7 @@ class RDoc::RubyLex
     @ltype = ltype
     @quoted = quoted
 
-    str = if ltype == quoted and %w[" ' / `].include? ltype then
+    str = if ltype == quoted and %w[" ' / `].include? ltype and type.nil? then
             ltype.dup
           else
             "%#{type}#{PERCENT_PAREN_REV[quoted]||quoted}"

@@ -474,6 +474,39 @@ U
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_percent_r_with_slash
+    tokens = RDoc::RubyLex.tokenize '%r/hi/', nil
+
+    expected = [
+      @TK::TkREGEXP.new( 0, 1,  0, '%r/hi/'),
+      @TK::TkNL    .new( 6, 1, 6, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
+  def test_class_tokenize_percent_large_q
+    tokens = RDoc::RubyLex.tokenize '%Q/hi/', nil
+
+    expected = [
+      @TK::TkSTRING.new( 0, 1,  0, '%Q/hi/'),
+      @TK::TkNL    .new( 6, 1, 6, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
+  def test_class_tokenize_percent_large_q_with_double_quote
+    tokens = RDoc::RubyLex.tokenize '%Q"hi"', nil
+
+    expected = [
+      @TK::TkSTRING.new( 0, 1,  0, '%Q"hi"'),
+      @TK::TkNL    .new( 6, 1, 6, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_percent_w
     tokens = RDoc::RubyLex.tokenize '%w[hi]', nil
 
