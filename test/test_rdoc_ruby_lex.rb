@@ -757,6 +757,51 @@ RUBY
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_backtick_with_escape
+    tokens = RDoc::RubyLex.tokenize <<'RUBY', nil
+[
+  `\\`,
+  `\'\"\``,
+  `\#`,
+  `\#{}`,
+  `#`,
+  `#{}`
+]
+RUBY
+
+    expected = [
+      @TK::TkLBRACK  .new( 0, 1,  0, "["),
+      @TK::TkNL      .new( 1, 1,  1, "\n"),
+      @TK::TkSPACE   .new( 2, 2,  0, "  "),
+      @TK::TkXSTRING .new( 4, 2,  2, "`\\\\`"),
+      @TK::TkCOMMA   .new( 8, 2,  6, ","),
+      @TK::TkNL      .new( 9, 2,  2, "\n"),
+      @TK::TkSPACE   .new(10, 3,  0, "  "),
+      @TK::TkXSTRING .new(12, 3,  2, "`\\'\\\"\\``"),
+      @TK::TkCOMMA   .new(20, 3, 10, ","),
+      @TK::TkNL      .new(21, 3, 10, "\n"),
+      @TK::TkSPACE   .new(22, 4,  0, "  "),
+      @TK::TkXSTRING .new(24, 4,  2, "`\\#`"),
+      @TK::TkCOMMA   .new(28, 4,  6, ","),
+      @TK::TkNL      .new(29, 4, 22, "\n"),
+      @TK::TkSPACE   .new(30, 5,  0, "  "),
+      @TK::TkXSTRING .new(32, 5,  2, "`\\\#{}`"),
+      @TK::TkCOMMA   .new(38, 5,  8, ","),
+      @TK::TkNL      .new(39, 5, 30, "\n"),
+      @TK::TkSPACE   .new(40, 6,  0, "  "),
+      @TK::TkXSTRING .new(42, 6,  2, "`#`"),
+      @TK::TkCOMMA   .new(45, 6,  5, ","),
+      @TK::TkNL      .new(46, 6, 40, "\n"),
+      @TK::TkSPACE   .new(47, 7,  0, "  "),
+      @TK::TkDXSTRING.new(49, 7,  2, "`\#{}`"),
+      @TK::TkNL      .new(54, 7,  7, "\n"),
+      @TK::TkRBRACK  .new(55, 8,  0, "]"),
+      @TK::TkNL      .new(56, 8, 55, "\n")
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_string_escape
     tokens = RDoc::RubyLex.tokenize '"\\n"', nil
     assert_equal @TK::TkSTRING.new( 0, 1,  0, "\"\\n\""), tokens.first
@@ -871,6 +916,21 @@ RUBY
       @TK::TkSPACE .new(47, 1, 47, " "),
       @TK::TkRBRACE.new(48, 1, 48, "}"),
       @TK::TkNL    .new(49, 1, 49, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
+  def test_class_tokenize_symbol_for_nested_method
+    tokens = RDoc::RubyLex.tokenize 'return untrace_var :name', nil
+
+    expected = [
+      @TK::TkRETURN    .new( 0, 1,  0, "return"),
+      @TK::TkSPACE     .new( 6, 1,  6, " "),
+      @TK::TkIDENTIFIER.new( 7, 1,  7, "untrace_var"),
+      @TK::TkSPACE     .new(18, 1, 18, " "),
+      @TK::TkSYMBOL    .new(19, 1, 19, ":name"),
+      @TK::TkNL        .new(24, 1, 24, "\n"),
     ]
 
     assert_equal expected, tokens

@@ -1088,7 +1088,7 @@ class RDoc::RubyLex
         token.concat getc
       end
     elsif @lex_state == :EXPR_BEG || @lex_state == :EXPR_DOT ||
-          @lex_state == :EXPR_ARG
+          @lex_state == :EXPR_ARG || @lex_state == :EXPR_MID
       @lex_state = :EXPR_ARG
     else
       @lex_state = :EXPR_END
@@ -1322,7 +1322,7 @@ class RDoc::RubyLex
     @ltype = ltype
     @quoted = quoted
 
-    str = if ltype == quoted and %w[" ' /].include? ltype then
+    str = if ltype == quoted and %w[" ' / `].include? ltype then
             ltype.dup
           else
             "%#{type}#{PERCENT_PAREN_REV[quoted]||quoted}"
