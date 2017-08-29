@@ -24,6 +24,7 @@ $TOKEN_DEBUG ||= nil
 # * aliases
 # * private, public, protected
 # * private_class_function, public_class_function
+# * private_constant, public_constant
 # * module_function
 # * attr, attr_reader, attr_writer, attr_accessor
 # * extra accessors given on the command line
@@ -1084,6 +1085,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
          'public_class_method', 'module_function' then
       parse_visibility container, single, tk
       return true
+    when 'private_constant', 'public_constant'
+      parse_constant_visibility container, single, tk
+      return true
     when 'attr' then
       parse_attr container, single, tk, comment
     when /^attr_(reader|writer|accessor)$/ then
@@ -1886,6 +1890,22 @@ class RDoc::Parser::Ruby < RDoc::Parser
     else
       update_visibility container, vis_type, vis, singleton
     end
+  end
+
+  ##
+  # Parses a Module#private_constant or Module#public_constant call from +tk+.
+
+  def parse_constant_visibility(container, single, tk)
+    args = parse_symbol_arg
+    case tk.name
+    when 'private_constant'
+      vis = :private
+    when 'public_constant'
+      vis = :public
+    else
+      raise RDoc::Error, 'Unreachable'
+    end
+    container.set_constant_visibility_for args, vis
   end
 
   ##

@@ -3537,6 +3537,34 @@ end
     assert_equal 2, public_method_count
   end
 
+  def test_scan_constant_visibility
+    util_parser <<-RUBY
+class C
+   CONST_A = 123
+
+   CONST_B = 234
+   private_constant :CONST_B
+
+   CONST_C = 345
+   public_constant :CONST_C
+end
+    RUBY
+
+    @parser.scan
+
+    c = @store.find_class_named 'C'
+    const_a, const_b, const_c, const_d = c.constants.sort_by(&:name)
+
+    assert_equal 'CONST_A', const_a.name
+    assert_equal :public, const_a.visibility
+
+    assert_equal 'CONST_B', const_b.name
+    assert_equal :private, const_b.visibility
+
+    assert_equal 'CONST_C', const_c.name
+    assert_equal :public, const_c.visibility
+  end
+
   def test_singleton_method_via_eigenclass
     util_parser <<-RUBY
 class C
