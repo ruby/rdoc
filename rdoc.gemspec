@@ -1,6 +1,4 @@
-# -*- encoding: utf-8 -*-
-$:.unshift File.expand_path("../lib", __FILE__)
-require 'rdoc'
+require_relative "lib/rdoc"
 
 Gem::Specification.new do |s|
   s.name = "rdoc"
@@ -54,4 +52,5 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
   s.add_development_dependency("racc", "> 1.4.10")
   s.add_development_dependency("kpeg")
   s.add_development_dependency("minitest", "~> 4")
+  s.add_development_dependency("json")
 end
