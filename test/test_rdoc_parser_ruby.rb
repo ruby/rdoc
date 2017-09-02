@@ -2286,6 +2286,9 @@ class Foo
   SIXTH_CONSTANT = #{sixth_constant}
 
   SEVENTH_CONSTANT = proc { |i| begin i end }
+
+  EIGHTH_CONSTANT = "a" \\
+                    "b"
 end
 EOF
 
@@ -2330,6 +2333,11 @@ EOF
     constant = constants[6]
     assert_equal 'SEVENTH_CONSTANT', constant.name
     assert_equal "proc { |i| begin i end }", constant.value
+    assert_equal @top_level, constant.file
+
+    constant = constants[7]
+    assert_equal 'EIGHTH_CONSTANT', constant.name
+    assert_equal "\"a\" \\\n\"b\"", constant.value
     assert_equal @top_level, constant.file
   end
 

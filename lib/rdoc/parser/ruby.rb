@@ -928,6 +928,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
         end
       when TkCOLON2, TkCOLON3 then
         rhs_name << '::'
+      when TkBACKSLASH then
+        get_tk if TkNL === peek_tk
       when nil then
         break
       end
