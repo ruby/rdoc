@@ -1588,6 +1588,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def parse_rescue
     skip_tkspace false
 
+    nest = 0
     while tk = get_tk
       case tk
       when TkNL, TkSEMICOLON then
@@ -1596,6 +1597,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
         skip_tkspace false
 
         get_tk if TkNL === peek_tk
+      when TkLPAREN, TkfLPAREN then
+        nest += 1
+      when TkRPAREN then
+        nest -= 1
+        break if nest < 0
       end
 
       skip_tkspace false
