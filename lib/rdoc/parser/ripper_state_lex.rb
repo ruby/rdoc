@@ -143,6 +143,21 @@ class RDoc::RipperStateLex
       @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
     end
 
+    def on_float(tok, data)
+      @lex_state = EXPR_END | EXPR_ENDARG
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_rational(tok, data)
+      @lex_state = EXPR_END | EXPR_ENDARG
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
+    def on_imaginary(tok, data)
+      @lex_state = EXPR_END | EXPR_ENDARG
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+    end
+
     def on_symbeg(tok, data)
       @lex_state = EXPR_FNAME
       @continue = true
