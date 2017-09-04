@@ -1957,7 +1957,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def parse_constant_visibility(container, single, tk)
     args = parse_symbol_arg
-    case tk.name
+    case tk[:text]
     when 'private_constant'
       vis = :private
     when 'public_constant'
