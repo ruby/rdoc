@@ -269,6 +269,11 @@ class RDoc::RipperStateLex
       @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
     end
 
+    def on_heredoc_end(tok, data)
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => __method__, :text => tok, :state => @lex_state})
+      @lex_state = EXPR_BEG
+    end
+
     def on_default(event, tok, data)
       reset
       @callback.call({ :line_no => lineno, :char_no => column, :kind => event, :text => tok, :state => @lex_state})
