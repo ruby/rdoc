@@ -2993,14 +2993,14 @@ end
   end
 
   def test_read_directive_one_liner
-    parser = util_parser '; def foo; end # :category: test'
+    parser = util_parser 'AAA = 1 # :category: test'
 
     directive, value = parser.read_directive %w[category]
 
     assert_equal 'category', directive
     assert_equal 'test', value
 
-    assert_equal :on_semicolon, parser.get_tk[:kind]
+    assert_equal :on_const, parser.get_tk[:kind]
   end
 
   def test_read_documentation_modifiers
