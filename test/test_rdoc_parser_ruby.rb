@@ -3600,6 +3600,25 @@ end
     assert_equal :public, const_c.visibility
   end
 
+  def test_document_after_rescue_inside_paren
+    util_parser <<-RUBY
+class C
+  attr_accessor :sample if (1.inexistent_method rescue false)
+  # first
+  # second
+  def a
+  end
+end
+    RUBY
+
+    @parser.scan
+
+    c = @store.find_class_named 'C'
+
+    c_a = c.find_method_named 'a'
+    assert_equal "first\nsecond", c_a.comment.text
+  end
+
   def test_singleton_method_via_eigenclass
     util_parser <<-RUBY
 class C
