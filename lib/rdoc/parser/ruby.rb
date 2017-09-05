@@ -1541,7 +1541,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
             unget_tk tk
             read_documentation_modifiers method, modifiers
           end
-          break if nest <= 0
+          break if !continue and nest <= 0
         end
       when :on_comma then
         continue = true
