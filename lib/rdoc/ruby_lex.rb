@@ -1380,16 +1380,18 @@ class RDoc::RubyLex
 
       if peek(0) == ':' and !peek_match?(/^::/) and :EXPR_BEG == @lex_state and !@after_question
         str.concat getc
-        return Token(TkSYMBOL, str)
+        @lex_state = :EXPR_ARG if peek_match?(/\s*:/)
+        Token(TkSYMBOL, str)
       elsif subtype
+        @lex_state = :EXPR_END
         Token(DLtype2Token[ltype], str)
       else
+        @lex_state = :EXPR_END
         Token(Ltype2Token[ltype], str)
       end
     ensure
       @ltype = nil
       @quoted = nil
-      @lex_state = :EXPR_END
     end
   end
 
