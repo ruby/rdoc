@@ -927,6 +927,22 @@ RUBY
     assert_equal expected, tokens
   end
 
+  def test_class_tokenize_symbol_for_method
+    tokens = RDoc::RubyLex.tokenize 'meth("key": :val)', nil
+
+    expected = [
+      @TK::TkIDENTIFIER.new( 0, 1,  0, 'meth'),
+      @TK::TkLPAREN    .new( 4, 1,  4, '('),
+      @TK::TkSYMBOL    .new( 5, 1,  5, '"key":'),
+      @TK::TkSPACE     .new(11, 1, 11, ' '),
+      @TK::TkSYMBOL    .new(12, 1, 12, ':val'),
+      @TK::TkRPAREN    .new(16, 1, 16, ')'),
+      @TK::TkNL        .new(17, 1, 17, "\n"),
+    ]
+
+    assert_equal expected, tokens
+  end
+
   def test_class_tokenize_particular_kind_of_symbols
     tokens = RDoc::RubyLex.tokenize '{ Thomas: :Thomas, Dave!: :Dave!, undef: :undef }', nil
 
