@@ -861,6 +861,23 @@ class RDoc::Parser::Ruby < RDoc::Parser
       eq_tk = get_tk
     end
 
+    is_array_or_hash = false
+    if TkfLBRACK === eq_tk
+      nest = 1
+      while bracket_tk = get_tk
+        case bracket_tk
+        when TkfLBRACK, TkLBRACK
+          nest += 1
+        when TkRBRACK
+          nest -= 1
+          break if nest == 0
+        end
+      end
+      skip_tkspace false
+      eq_tk = get_tk
+      is_array_or_hash = true
+    end
+
     unless TkASSIGN === eq_tk then
       unget_tk eq_tk
       return false
@@ -874,7 +891,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     value = ''
     con = RDoc::Constant.new name, value, comment
 
-    body = parse_constant_body container, con
+    body = parse_constant_body container, con, is_array_or_hash
 
     return unless body
 
@@ -883,13 +900,15 @@ class RDoc::Parser::Ruby < RDoc::Parser
     con.line   = line_no
     read_documentation_modifiers con, RDoc::CONSTANT_MODIFIERS
 
+    return if is_array_or_hash
+
     @stats.add_constant con
     container.add_constant con
 
     true
   end
 
-  def parse_constant_body container, constant # :nodoc:
+  def parse_constant_body container, constant, is_array_or_hash # :nodoc:
     nest     = 0
     rhs_name = ''
 
@@ -918,7 +937,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         rhs_name << tk.name
 
         if nest <= 0 and TkNL === peek_tk then
-          create_module_alias container, constant, rhs_name
+          create_module_alias container, constant, rhs_name unless is_array_or_hash
           break
         end
       when TkNL then

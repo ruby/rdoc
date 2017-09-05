@@ -1358,6 +1358,33 @@ A::B::C = 1
     assert_equal 'comment', c.comment
   end
 
+  def test_parse_constant_with_bracket
+    util_parser <<-RUBY
+class Klass
+end
+
+class Klass2
+  CONSTANT = Klass
+end
+
+class Klass3
+  CONSTANT_2 = {}
+  CONSTANT_2[1] = Klass
+end
+    RUBY
+
+    @parser.scan
+
+    klass = @store.find_class_named 'Klass'
+    klass2 = @store.find_class_named 'Klass2'
+    klass3 = @store.find_class_named 'Klass3'
+    constant = klass2.find_module_named 'CONSTANT'
+    constant2 = klass3.find_module_named 'CONSTANT_2'
+    assert_equal klass, klass2.constants.first.is_alias_for
+    refute_equal klass, klass3.constants.first.is_alias_for
+    assert_nil klass3.find_module_named 'CONSTANT_2'
+  end
+
   def test_parse_extend_or_include_extend
     klass = RDoc::NormalClass.new 'C'
     klass.parent = @top_level
