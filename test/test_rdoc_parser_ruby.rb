@@ -1958,6 +1958,20 @@ end
     assert_equal '(arg1, arg2, arg3)', foo.params
   end
 
+  def test_parse_method_parameters_with_paren_comment_continue
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    util_parser "def foo(arg1, arg2, # some useful comment\narg3)\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, @comment
+
+    foo = klass.method_list.first
+    assert_equal '(arg1, arg2, arg3)', foo.params
+  end
+
   def test_parse_method_star
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
