@@ -479,7 +479,7 @@ class RDoc::RipperStateLex
 
   private def retrieve_heredoc_info(tk)
     name = tk[:text].gsub(/\A<<[-~]?(['"`]?)(.+)\1\z/, '\2')
-    indent = tk[:text].match?(/\A<<[-~]/)
+    indent = tk[:text] =~ /\A<<[-~]/
     [name, indent]
   end
 

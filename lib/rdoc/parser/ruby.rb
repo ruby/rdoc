@@ -1666,15 +1666,15 @@ class RDoc::Parser::Ruby < RDoc::Parser
           past_tokens = @read.size > 1 ? @read[0..-2] : []
           nl_position = 0
           past_tokens.reverse.each_with_index do |read_tk, i|
-            if read_tk.match?(/^\n$/) then
+            if read_tk =~ /^\n$/ then
               nl_position = (past_tokens.size - 1) - i
               break
-            elsif read_tk.match?(/^#.*\n$/) then
+            elsif read_tk =~ /^#.*\n$/ then
               nl_position = ((past_tokens.size - 1) - i) + 1
               break
             end
           end
-          comment_only_line = past_tokens[nl_position..-1].all?{ |c| c.match?(/^\s+$/) }
+          comment_only_line = past_tokens[nl_position..-1].all?{ |c| c =~ /^\s+$/ }
           unless comment_only_line then
             tk = get_tk
           end
