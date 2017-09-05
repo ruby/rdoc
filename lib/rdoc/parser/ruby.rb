@@ -1550,7 +1550,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
       tk = get_tk
     end
-    @scanner.first_in_method_statement = true
 
     get_tkread_clean(/\s+/, ' ')
   end
