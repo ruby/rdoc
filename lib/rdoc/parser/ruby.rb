@@ -935,6 +935,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     tk = get_tk
 
+    body = nil
     loop do
       break if tk.nil?
       if :on_semicolon == tk[:kind] then
@@ -952,9 +953,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
         nest -= 1
       elsif (:on_comment == tk[:kind] or :on_embdoc == tk[:kind]) then
         unget_tk tk
-        read_documentation_modifiers constant, RDoc::CONSTANT_MODIFIERS
         if nest <= 0 and RDoc::RipperStateLex.end?(tk) then
+          body = get_tkread_clean(/^[ \t]+/, '')
+          read_documentation_modifiers constant, RDoc::CONSTANT_MODIFIERS
           break
+        else
+          read_documentation_modifiers constant, RDoc::CONSTANT_MODIFIERS
         end
       elsif :on_const == tk[:kind] then
         rhs_name << tk[:text]
@@ -975,7 +979,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       tk = get_tk
     end
 
-    get_tkread_clean(/^[ \t]+/, '')
+    body ? body : get_tkread_clean(/^[ \t]+/, '')
   end
 
   ##
