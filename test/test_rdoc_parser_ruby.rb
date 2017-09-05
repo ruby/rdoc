@@ -74,7 +74,7 @@ class C; end
 
     comment = parser.collect_first_comment
 
-    assert_equal RDoc::Comment.new("first\n", @top_level), comment
+    assert_equal RDoc::Comment.new("=begin\nfirst\n=end\n", @top_level), comment
   end
 
   def test_get_class_or_module
@@ -2154,7 +2154,9 @@ end
       { :line_no => 2, :char_no => 5, :kind => :on_nl, :text => "\n" },
       { :line_no => 3, :char_no => 0, :kind => :on_regexp, :text => '%r{#}' },
       { :line_no => 3, :char_no => 5, :kind => :on_nl, :text => "\n" },
-      { :line_no => 4, :char_no => 0, :kind => :on_kw, :text => 'end' }
+      { :line_no => 4, :char_no => 0, :kind => :on_regexp, :text => '%r{#{}}' },
+      { :line_no => 4, :char_no => 7, :kind => :on_nl, :text => "\n" },
+      { :line_no => 5, :char_no => 0, :kind => :on_kw, :text => 'end' }
     ]
     parsed_stream = a.token_stream.map { |tk|
       {
