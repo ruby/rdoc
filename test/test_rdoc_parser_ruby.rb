@@ -1713,8 +1713,8 @@ end
     end
 
     klass.method_list.each do |method|
-      assert_kind_of RDoc::RubyToken::TkId, method.token_stream[5]
-      assert_includes redefinable_ops, method.token_stream[5].text
+      assert_equal :on_ident, method.token_stream[5][:kind]
+      assert_includes redefinable_ops, method.token_stream[5][:text]
     end
   end
 
