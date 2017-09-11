@@ -14,7 +14,4 @@ rvm:
 env:
   global:
     NOBENCHMARK=1
-script: rake
-matrix:
-  allow_failures:
-    - rvm: jruby-9.1.13.0
+script: bundle exec rake
