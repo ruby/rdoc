@@ -148,7 +148,7 @@ class RDoc::Comment
   def inspect # :nodoc:
     location = @location ? @location.relative_name : '(unknown)'
 
-    "#<%s:%x %s %p>" % [self.class, object_id, location, @text]
+    "%s %s %p>" % [super[0..-2], location, @text]
   end
 
   ##

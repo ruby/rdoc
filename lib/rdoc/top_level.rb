@@ -171,8 +171,8 @@ class RDoc::TopLevel < RDoc::Context
   end
 
   def inspect # :nodoc:
-    "#<%s:0x%x %p modules: %p classes: %p>" % [
-      self.class, object_id,
+    "%s %p modules: %p classes: %p>" % [
+      super[0..-2],
       base_name,
       @modules.map { |n,m| m },
       @classes.map { |n,c| c }

@@ -87,8 +87,8 @@ class RDoc::Attr < RDoc::MethodAttr
     alias_for = @is_alias_for ? " (alias for #{@is_alias_for.name})" : nil
     visibility = self.visibility
     visibility = "forced #{visibility}" if force_documentation
-    "#<%s:0x%x %s %s (%s)%s>" % [
-      self.class, object_id,
+    "%s %s %s (%s)%s>" % [
+      super[0..-2],
       full_name,
       rw,
       visibility,

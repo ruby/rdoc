@@ -132,8 +132,8 @@ class RDoc::RubyLex
   # :stopdoc:
 
   def inspect # :nodoc:
-    "#<%s:0x%x pos %d lex_state %p space_seen %p>" % [
-      self.class, object_id,
+    "%s pos %d lex_state %p space_seen %p>" % [
+      super[0..-2],
       @io.pos, @lex_state, @space_seen,
     ]
   end

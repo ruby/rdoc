@@ -97,8 +97,8 @@ class RDoc::Constant < RDoc::CodeObject
   end
 
   def inspect # :nodoc:
-    "#<%s:0x%x %s::%s>" % [
-      self.class, object_id,
+    "%s %s::%s>" % [
+      super[0..-2],
       parent_name, @name,
     ]
   end

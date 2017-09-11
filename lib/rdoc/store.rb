@@ -474,7 +474,7 @@ class RDoc::Store
   end
 
   def inspect # :nodoc:
-    "#<%s:0x%x %s %p>" % [self.class, object_id, @path, module_names.sort]
+    "%s %s %p>" % [super[0..-2], @path, module_names.sort]
   end
 
   ##
