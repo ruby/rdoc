@@ -2,9 +2,6 @@
 before_install:
   - gem install bundler --no-document
 language: ruby
-notifications:
-  email:
-  - mail@zzak.io
 rvm:
   - 2.2.7
   - 2.3.4
