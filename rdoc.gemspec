@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 begin
   require_relative "lib/rdoc"
 rescue LoadError
