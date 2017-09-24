@@ -2562,14 +2562,14 @@ class Foo
 end
 RUBY
 
-    expected = <<EXPTECTED
+    expected = <<EXPECTED
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">blah</span>()
   <span class="ruby-keyword">for</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword">in</span> (<span class="ruby-identifier">k</span>)<span class="ruby-operator">...</span><span class="ruby-identifier">n</span> <span class="ruby-keyword">do</span>
   <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">for</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword">in</span> (<span class="ruby-identifier">k</span>)<span class="ruby-operator">...</span><span class="ruby-identifier">n</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
-EXPTECTED
+EXPECTED
     expected = expected.rstrip
 
     @parser.scan
@@ -2593,12 +2593,12 @@ class Foo
 end
 RUBY
 
-    expected = <<EXPTECTED
+    expected = <<EXPECTED
   <span class="ruby-keyword">def</span> <span class="ruby-identifier">blah</span>()
     <span class="ruby-identifier">&lt;&lt;-EOM</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">true</span>
 <span class="ruby-value"></span><span class="ruby-identifier">    EOM</span>
   <span class="ruby-keyword">end</span>
-EXPTECTED
+EXPECTED
     expected = expected.rstrip
 
     @parser.scan
@@ -2618,9 +2618,9 @@ class Foo
 end
 RUBY
 
-    expected = <<EXPTECTED
+    expected = <<EXPECTED
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">blah</span>() <span class="ruby-regexp">/bar/</span> <span class="ruby-keyword">end</span>
-EXPTECTED
+EXPECTED
     expected = expected.rstrip
 
     @parser.scan
@@ -2648,14 +2648,14 @@ class Foo
 end
 RUBY
 
-    expected = <<EXPTECTED
+    expected = <<EXPECTED
 <p>doc
 
 <pre class="ruby"><span class="ruby-comment">=begin
 test embdoc
 =end</span>
 </pre>
-EXPTECTED
+EXPECTED
 
     @parser.scan
 
