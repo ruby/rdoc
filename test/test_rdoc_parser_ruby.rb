@@ -2579,7 +2579,7 @@ EXPECTED
 
     blah = foo.method_list.first
     markup_code = blah.markup_code.sub(/^.*\n/, '')
-    assert_equal markup_code, expected
+    assert_equal expected, markup_code
   end
 
   def test_parse_statements_postfix_if_after_heredocbeg
@@ -2664,7 +2664,7 @@ EXPECTED
 
     blah = foo.method_list.first
     markup_comment = blah.search_record[6]
-    assert_equal markup_comment, expected
+    assert_equal expected, markup_comment
   end
 
   def test_parse_require_dynamic_string
