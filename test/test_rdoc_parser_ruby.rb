@@ -1360,6 +1360,23 @@ A::B::C = 1
     assert_equal 'comment', c.comment
   end
 
+  def test_parse_class_the_same_of_outside
+    util_parser <<-RUBY
+module A
+  class A::B
+  end
+end
+    RUBY
+
+    @parser.scan
+
+    assert_includes @store.modules_hash, 'A'
+    module_a = @store.find_module_named 'A'
+    refute_empty module_a.classes_hash
+    assert_includes module_a.classes_hash, 'B'
+    refute_includes module_a.classes_hash, 'A'
+  end
+
   def test_parse_constant_with_bracket
     util_parser <<-RUBY
 class Klass
