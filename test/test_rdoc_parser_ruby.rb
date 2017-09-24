@@ -1377,6 +1377,35 @@ end
     refute_includes module_a.classes_hash, 'A'
   end
 
+  def test_parse_constant_the_same_of_outside
+    util_parser <<-RUBY
+module A
+  class B
+    class C
+    end
+  end
+
+  def self.foo
+    A::B::C
+  end
+end
+    RUBY
+
+    expected = <<EXPECTED
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">foo</span>
+  <span class="ruby-constant">A</span><span class="ruby-operator">::</span><span class="ruby-constant">B</span><span class="ruby-operator">::</span><span class="ruby-constant">C</span>
+<span class="ruby-keyword">end</span>
+EXPECTED
+    expected = expected.rstrip
+
+    @parser.scan
+
+    module_a = @store.find_module_named 'A'
+    foo = module_a.method_list.first
+    markup_code = foo.markup_code.sub(/^.*\n/, '')
+    assert_equal expected, markup_code
+  end
+
   def test_parse_constant_with_bracket
     util_parser <<-RUBY
 class Klass
