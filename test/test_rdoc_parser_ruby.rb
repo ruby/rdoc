@@ -778,12 +778,13 @@ end
 
   def test_parse_class_lower_name_warning
     @options.verbosity = 2
-    out, err = capture_io do
+    stds = capture_io do
       util_parser "class foo\nend"
       tk = @parser.get_tk
       @parser.parse_class @top_level, RDoc::Parser::Ruby::NORMAL, tk, @comment
     end
-    assert_match /Expected class name or '<<'\. Got/, err
+    err = stds[1]
+    assert_match(/Expected class name or '<<'\. Got/, err)
   end
 
   def test_parse_multi_ghost_methods
@@ -1379,8 +1380,6 @@ end
     klass = @store.find_class_named 'Klass'
     klass2 = @store.find_class_named 'Klass2'
     klass3 = @store.find_class_named 'Klass3'
-    constant = klass2.find_module_named 'CONSTANT'
-    constant2 = klass3.find_module_named 'CONSTANT_2'
     assert_equal klass, klass2.constants.first.is_alias_for
     refute_equal klass, klass3.constants.first.is_alias_for
     assert_nil klass3.find_module_named 'CONSTANT_2'
@@ -3639,7 +3638,7 @@ end
     @parser.scan
 
     c = @store.find_class_named 'C'
-    const_a, const_b, const_c, const_d = c.constants.sort_by(&:name)
+    const_a, const_b, const_c = c.constants.sort_by(&:name)
 
     assert_equal 'CONST_A', const_a.name
     assert_equal :public, const_a.visibility
