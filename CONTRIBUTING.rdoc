@@ -8,7 +8,7 @@ classes for each feature.
 == Bugs
 
 If you think you found a bug, file a ticket on the {issues
-tracker}[https://github.com/rdoc/rdoc/issues] on github.
+tracker}[https://github.com/ruby/rdoc/issues] on github.
 
 If your bug involves an error RDoc produced please include a sample file that
 illustrates the problem or link to the repository or gem that is associated
@@ -17,8 +17,8 @@ with the bug.
 Please include steps to reproduce the issue.  Here are some examples of good
 issues:
 
-* https://github.com/rdoc/rdoc/issues/55
-* https://github.com/rdoc/rdoc/issues/61
+* https://github.com/ruby/rdoc/issues/55
+* https://github.com/ruby/rdoc/issues/61
 
 == Developer Quick Start
 
@@ -35,7 +35,7 @@ This will install all the necessary dependencies for development with rake,
 generate documentation and run the tests for the first time.
 
 If the tests don't pass on the first run check the {Travis CI page for
-RDoc}[https://travis-ci.org/rdoc/rdoc] to see if there are any known failures
+RDoc}[https://travis-ci.org/ruby/rdoc] to see if there are any known failures
 (there shouldn't be).
 
 You can now use `rake` and `autotest` to run the tests.
