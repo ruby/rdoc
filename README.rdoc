@@ -47,7 +47,7 @@ contain just Markup-style markup (with or without leading '#' comment
 markers).  If directory names are passed to RDoc, they are scanned
 recursively for C and Ruby source files only.
 
-To generate documentation using +rake+ see RDoc::Task[https://rdoc.github.io/rdoc/RDocTask.html].
+To generate documentation using +rake+ see RDoc::Task[https://ruby.github.io/rdoc/RDocTask.html].
 
 To generate documentation programmatically:
 
