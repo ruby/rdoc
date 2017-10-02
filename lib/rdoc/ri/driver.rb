@@ -939,7 +939,7 @@ or the PAGER environment variable.
         else
           false
         end
-      rescue
+      rescue LoadError
         false
       end
     end
