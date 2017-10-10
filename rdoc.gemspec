@@ -16,9 +16,10 @@ Gem::Specification.new do |s|
     "Phil Hagelberg",
     "Tony Strauss",
     "Zachary Scott",
-    "Hiroshi SHIBATA"
+    "Hiroshi SHIBATA",
+    "ITOYANAGI Sakura"
   ]
-  s.email = ["drbrain@segment7.net", "", "", "", "mail@zzak.io", "hsbt@ruby-lang.org"]
+  s.email = ["drbrain@segment7.net", "", "", "", "mail@zzak.io", "hsbt@ruby-lang.org", "aycabta@gmail.com"]
 
   s.summary = "RDoc produces HTML and command-line documentation for Ruby projects"
   s.description = <<-DESCRIPTION
