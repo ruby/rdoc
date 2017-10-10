@@ -62,11 +62,11 @@ parsed_files = PARSER_FILES.map do |parser_file|
     if parser_file =~ /\.ry\z/ # need racc
       racc = Gem.bin_path 'racc', 'racc'
       rb_file = parser_file.gsub(/\.ry\z/, ".rb")
-      ruby "-rrubygems #{racc} -l -o #{rb_file} #{parser_file}"
+      ruby "#{racc} -l -o #{rb_file} #{parser_file}"
     elsif parser_file =~ /\.kpeg\z/ # need kpeg
       kpeg = Gem.bin_path 'kpeg', 'kpeg'
       rb_file = parser_file.gsub(/\.kpeg\z/, ".rb")
-      ruby "-rrubygems #{kpeg} -fsv -o #{rb_file} #{parser_file}"
+      ruby "#{kpeg} -fsv -o #{rb_file} #{parser_file}"
     end
   end
 
