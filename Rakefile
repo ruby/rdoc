@@ -74,8 +74,10 @@ parsed_files = PARSER_FILES.map do |parser_file|
 end
 
 task "#{path}.gem" => package_parser_files
-task :generate => parsed_files
 task :check_manifest => :generate
+
+desc "Genrate all files used racc and kpeg"
+task :generate => parsed_files
 
 # These tasks expect to have the following directory structure:
 #
