@@ -1161,7 +1161,7 @@ CodeFence = &{ github? }
               @Newline
             )+ > Ticks3 @Sp @Newline*
             { verbatim = RDoc::Markup::Verbatim.new text
-              verbatim.format = format.intern if format
+              verbatim.format = format.intern if format.instance_of?(String)
               verbatim
             }
 
