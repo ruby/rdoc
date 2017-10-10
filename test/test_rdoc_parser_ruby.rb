@@ -3758,21 +3758,6 @@ end
     assert_equal 'there', baz.comment.text
   end
 
-  def tk klass, scan, line, char, name, text
-    klass = RDoc::RubyToken.const_get "Tk#{klass.to_s.upcase}"
-
-    token = if klass.instance_method(:initialize).arity == 3 then
-              raise ArgumentError, "name not used for #{klass}" if name
-              klass.new scan, line, char
-            else
-              klass.new scan, line, char, name
-            end
-
-    token.set_text text
-
-    token
-  end
-
   def util_parser(content)
     @parser = RDoc::Parser::Ruby.new @top_level, @filename, content, @options,
                                      @stats
