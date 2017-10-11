@@ -574,14 +574,15 @@ class RDoc::Parser::Ruby < RDoc::Parser
   #
   # This routine modifies its +comment+ parameter.
 
-  def look_for_directives_in context, comment
-    @preprocess.handle comment, context do |directive, param|
+  def look_for_directives_in container, comment
+    @preprocess.handle comment, container do |directive, param|
       case directive
       when 'method', 'singleton-method',
            'attr', 'attr_accessor', 'attr_reader', 'attr_writer' then
         false # handled elsewhere
       when 'section' then
-        context.set_current_section param, comment.dup
+        break unless container.kind_of?(RDoc::Context)
+        container.set_current_section param, comment.dup
         comment.text = ''
         break
       end
@@ -1290,6 +1291,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     token_listener meth do
       meth.params = ''
 
+      look_for_directives_in meth, comment
       comment.normalize
       comment.extract_call_seq meth
 
@@ -1336,6 +1338,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     return unless name
 
     meth = RDoc::AnyMethod.new get_tkread, name
+    look_for_directives_in meth, comment
     meth.singleton = single == SINGLE ? true : singleton
 
     record_location meth

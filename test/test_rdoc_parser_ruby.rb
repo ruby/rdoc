@@ -1762,6 +1762,28 @@ end
     end
   end
 
+  def test_parse_method_with_args_directive
+    util_parser <<-RUBY
+class C
+  def meth_with_args_after # :args: a, b, c
+  end
+
+  ##
+  # :args: d, e, f
+  def meth_with_args_before
+end
+    RUBY
+
+    @parser.scan
+
+    c = @store.find_class_named 'C'
+
+    assert_equal 'C#meth_with_args_after', c.method_list[0].full_name
+    assert_equal 'a, b, c', c.method_list[0].params
+    assert_equal 'C#meth_with_args_before', c.method_list[1].full_name
+    assert_equal 'd, e, f', c.method_list[1].params
+  end
+
   def test_parse_method_bracket
     util_parser <<-RUBY
 class C
