@@ -136,7 +136,9 @@ class RDoc::ClassModule < RDoc::Context
                 normalize_comment comment
               end
 
-    @comment_location.delete_if { |(_, l)| l == location }
+    if location.parser == RDoc::Parser::C
+      @comment_location.delete_if { |(_, l)| l == location }
+    end
 
     @comment_location << [comment, location]
 

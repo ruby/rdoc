@@ -681,6 +681,32 @@ end
     assert_equal @top_level, blah.file
   end
 
+  def test_parse_class_in_a_file_repeatedly
+    @filename = 'a.rb'
+    comment_a = RDoc::Comment.new "# aaa\n", @top_level
+    util_parser "class Foo\nend"
+    tk = @parser.get_tk
+    @parser.parse_class @top_level, RDoc::Parser::Ruby::NORMAL, tk, comment_a
+    comment_b = RDoc::Comment.new "# bbb\n", @top_level
+    util_parser "class Foo\nend"
+    tk = @parser.get_tk
+    @parser.parse_class @top_level, RDoc::Parser::Ruby::NORMAL, tk, comment_b
+
+    @filename = 'b.rb'
+    comment_c = RDoc::Comment.new "# ccc\n", @top_level
+    util_parser "class Foo\nend"
+    tk = @parser.get_tk
+    @parser.parse_class @top_level, RDoc::Parser::Ruby::NORMAL, tk, comment_c
+
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+    assert_equal [[comment_a, @top_level],
+                  [comment_b, @top_level],
+                  [comment_c, @top_level]], foo.comment_location
+    assert_equal [@top_level], foo.in_files
+    assert_equal 1, foo.line
+  end
+
   def test_parse_class_ghost_method_yields
     util_parser <<-CLASS
 class Foo
@@ -3393,6 +3419,7 @@ end
     foo = @top_level.modules.first
 
     expected = [
+      RDoc::Comment.new('comment a', @top_level),
       RDoc::Comment.new('comment b', @top_level)
     ]
 
