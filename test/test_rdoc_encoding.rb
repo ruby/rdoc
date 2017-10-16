@@ -145,13 +145,11 @@ class TestRDocEncoding < RDoc::TestCase
     assert_equal Encoding::UTF_8, s.encoding
 
     s = "<?xml version='1.0' encoding='UTF-8'?>\n"
-    expected = s.encoding
     RDoc::Encoding.set_encoding s
 
     assert_equal Encoding::UTF_8, s.encoding
 
     s = "<?xml version='1.0' encoding=\"UTF-8\"?>\n"
-    expected = s.encoding
     RDoc::Encoding.set_encoding s
 
     assert_equal Encoding::UTF_8, s.encoding
