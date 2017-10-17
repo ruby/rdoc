@@ -642,6 +642,7 @@ void Init_Blah(void) {
       klass = util_get_class content, 'cDate'
     end
 
+    assert_equal 'Date', klass.full_name
     assert_match ' blah.c ', err
   end
 
@@ -664,6 +665,7 @@ void Init_Blah(void) {
       klass = util_get_class content, 'cDate'
     end
 
+    assert_equal 'Date', klass.full_name
     assert_match ' blah.cpp ', err
   end
 
@@ -686,6 +688,7 @@ void Init_Blah(void) {
       klass = util_get_class content, 'cDate'
     end
 
+    assert_equal 'Date', klass.full_name
     assert_match ' blah.y ', err
   end
 
