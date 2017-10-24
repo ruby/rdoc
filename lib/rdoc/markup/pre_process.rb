@@ -150,7 +150,7 @@ class RDoc::Markup::PreProcess
 
     case directive
     when 'arg', 'args' then
-      return "#{prefix}:#{directive}: #{param}\n" unless code_object
+      return "#{prefix}:#{directive}: #{param}\n" unless code_object && code_object.kind_of?(RDoc::AnyMethod)
 
       code_object.params = param
 
