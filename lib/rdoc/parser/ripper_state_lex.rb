@@ -2,7 +2,7 @@ require 'ripper'
 
 class RDoc::RipperStateLex
   # TODO: Remove this constants after Ruby 2.4 EOL
-  RIPPER_HAS_LEX_STATE = (RUBY_VERSION >= '2.5.0')
+  RIPPER_HAS_LEX_STATE = Ripper::Filter.method_defined?(:state)
 
   EXPR_NONE = 0
   EXPR_BEG = 1
