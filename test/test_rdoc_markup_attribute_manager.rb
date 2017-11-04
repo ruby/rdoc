@@ -171,21 +171,21 @@ class TestRDocMarkupAttributeManager < RDoc::TestCase
   end
 
   def test_convert_attrs
-    str = '+foo+'
+    str = '+foo+'.dup
     attrs = RDoc::Markup::AttrSpan.new str.length
 
     @am.convert_attrs str, attrs
 
     assert_equal "\000foo\000", str
 
-    str = '+:foo:+'
+    str = '+:foo:+'.dup
     attrs = RDoc::Markup::AttrSpan.new str.length
 
     @am.convert_attrs str, attrs
 
     assert_equal "\000:foo:\000", str
 
-    str = '+x-y+'
+    str = '+x-y+'.dup
     attrs = RDoc::Markup::AttrSpan.new str.length
 
     @am.convert_attrs str, attrs
@@ -299,17 +299,17 @@ class TestRDocMarkupAttributeManager < RDoc::TestCase
     def @am.str()     @str       end
     def @am.str=(str) @str = str end
 
-    @am.str = '<code>foo</code>'
+    @am.str = '<code>foo</code>'.dup
     @am.mask_protected_sequences
 
     assert_equal "<code>foo</code>",       @am.str
 
-    @am.str = '<code>foo\\</code>'
+    @am.str = '<code>foo\\</code>'.dup
     @am.mask_protected_sequences
 
     assert_equal "<code>foo<\x04/code>", @am.str, 'escaped close'
 
-    @am.str = '<code>foo\\\\</code>'
+    @am.str = '<code>foo\\\\</code>'.dup
     @am.mask_protected_sequences
 
     assert_equal "<code>foo\\</code>",     @am.str, 'escaped backslash'

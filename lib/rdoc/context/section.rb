@@ -43,7 +43,7 @@ class RDoc::Context::Section
     @parent = parent
     @title = title ? title.strip : title
 
-    @@sequence.succ!
+    @@sequence = @@sequence.succ
     @sequence = @@sequence.dup
 
     @comments = []

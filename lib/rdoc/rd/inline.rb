@@ -50,11 +50,11 @@ class RDoc::RD::Inline
   def append more
     case more
     when String then
-      @reference << more
-      @rdoc      << more
+      @reference += more
+      @rdoc      += more
     when RDoc::RD::Inline then
-      @reference << more.reference
-      @rdoc      << more.rdoc
+      @reference += more.reference
+      @rdoc      += more.rdoc
     else
       raise "unknown thingy #{more}"
     end

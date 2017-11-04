@@ -12,7 +12,7 @@ class TestRDocMarkupFormatter < RDoc::TestCase
     end
 
     def accept_paragraph paragraph
-      @res << attributes(paragraph.text)
+      @res += attributes(paragraph.text)
     end
 
     def attributes text

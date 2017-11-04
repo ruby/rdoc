@@ -19,7 +19,7 @@ class RDoc::Parser::Simple < RDoc::Parser
 
     preprocess = RDoc::Markup::PreProcess.new @file_name, @options.rdoc_include
 
-    preprocess.handle @content, @top_level
+    @content = preprocess.handle @content, @top_level
   end
 
   ##
@@ -52,7 +52,7 @@ class RDoc::Parser::Simple < RDoc::Parser
   def remove_private_comment comment
     # Workaround for gsub encoding for Ruby 1.9.2 and earlier
     empty = ''
-    empty.force_encoding comment.encoding
+    empty = RDoc::Encoding.change_encoding empty, comment.encoding
 
     comment = comment.gsub(%r%^--\n.*?^\+\+\n?%m, empty)
     comment.sub(%r%^--\n.*%m, empty)

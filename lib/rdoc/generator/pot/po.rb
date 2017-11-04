@@ -29,8 +29,8 @@ class RDoc::Generator::POT::PO
   def to_s
     po = ''
     sort_entries.each do |entry|
-      po << "\n" unless po.empty?
-      po << entry.to_s
+      po += "\n" unless po.empty?
+      po += entry.to_s
     end
     po
   end
