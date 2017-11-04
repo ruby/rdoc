@@ -1,5 +1,5 @@
 # coding: UTF-8
-# frozen_string_literal: false
+# frozen_string_literal: true
 
 require 'rdoc/test_case'
 require 'rdoc/markup/block_quote'

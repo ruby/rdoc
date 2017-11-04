@@ -1,5 +1,5 @@
 # coding: US-ASCII
-# frozen_string_literal: false
+# frozen_string_literal: true
 
 ##
 # This class is a wrapper around File IO and Encoding that helps RDoc load
