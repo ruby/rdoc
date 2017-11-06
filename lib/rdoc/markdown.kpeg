@@ -1137,8 +1137,7 @@ InlineNote = &{ notes? }
              @StartList:a
              ( !"]" Inline:l { a << l } )+
              "]"
-             {
-               ref = [:inline, @note_order.length]
+             { ref = [:inline, @note_order.length]
                @footnotes[ref] = paragraph a
 
                note_for ref
