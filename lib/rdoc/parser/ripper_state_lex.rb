@@ -1,6 +1,9 @@
 require 'ripper'
 
 class RDoc::RipperStateLex
+  # TODO: Remove this constants after Ruby 2.4 EOL
+  RIPPER_HAS_LEX_STATE = Ripper::Filter.method_defined?(:state)
+
   EXPR_NONE = 0
   EXPR_BEG = 1
   EXPR_END = 2
@@ -283,7 +286,22 @@ class RDoc::RipperStateLex
       @callback = block
       parse
     end
-  end
+  end unless RIPPER_HAS_LEX_STATE
+
+  class InnerStateLex < Ripper::Filter
+    def initialize(code)
+      super(code)
+    end
+
+    def on_default(event, tok, data)
+      @callback.call({ :line_no => lineno, :char_no => column, :kind => event, :text => tok, :state => state})
+    end
+
+    def each(&block)
+      @callback = block
+      parse
+    end
+  end if RIPPER_HAS_LEX_STATE
 
   def get_squashed_tk
     if @buf.empty?
@@ -297,10 +315,10 @@ class RDoc::RipperStateLex
     when :on_tstring_beg then
       tk = get_string_tk(tk)
     when :on_backtick then
-      if (EXPR_FNAME & tk[:state]) != 0
-        @inner_lex.lex_state = EXPR_ARG
+      if ((EXPR_FNAME | EXPR_ENDFN) & tk[:state]) != 0
+        @inner_lex.lex_state = EXPR_ARG unless RIPPER_HAS_LEX_STATE
         tk[:kind] = :on_ident
-        tk[:state] = @inner_lex.lex_state
+        tk[:state] = EXPR_ARG
       else
         tk = get_string_tk(tk)
       end
@@ -310,7 +328,7 @@ class RDoc::RipperStateLex
       tk = get_embdoc_tk(tk)
     when :on_heredoc_beg then
       @heredoc_queue << retrieve_heredoc_info(tk)
-      @inner_lex.lex_state = EXPR_END
+      @inner_lex.lex_state = EXPR_END unless RIPPER_HAS_LEX_STATE
     when :on_nl, :on_ignored_nl, :on_comment, :on_heredoc_end then
       unless @heredoc_queue.empty?
         get_heredoc_tk(*@heredoc_queue.shift)
@@ -541,9 +559,9 @@ class RDoc::RipperStateLex
   private def get_op_tk(tk)
     redefinable_operators = %w[! != !~ % & * ** + +@ - -@ / < << <= <=> == === =~ > >= >> [] []= ^ ` | ~]
     if redefinable_operators.include?(tk[:text]) and EXPR_ARG == tk[:state] then
-      @inner_lex.lex_state = EXPR_ARG
+      @inner_lex.lex_state = EXPR_ARG unless RIPPER_HAS_LEX_STATE
+      tk[:state] = EXPR_ARG
       tk[:kind] = :on_ident
-      tk[:state] = @inner_lex.lex_state
     elsif tk[:text] =~ /^[-+]$/ then
       tk_ahead = get_squashed_tk
       case tk_ahead[:kind]
