@@ -442,7 +442,6 @@ class RDoc::Generator::Darkfish
       @title += " - #{@options.title}"
       template_file ||= filepage_file
 
-      putes template_file.inspect
       render_template template_file, out_file do |io|
         here = binding
         # suppress 1.9.3 warning
