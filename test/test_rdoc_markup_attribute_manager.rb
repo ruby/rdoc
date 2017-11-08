@@ -332,6 +332,14 @@ class TestRDocMarkupAttributeManager < RDoc::TestCase
                   @am.flow("\\_cat_<i>dog</i>"))
   end
 
+  def test_lost_tag_for_the_second_time
+    str = "cat <tt>dog</tt>"
+    assert_equal(["cat ", @tt_on, "dog", @tt_off],
+                 @am.flow(str))
+    assert_equal(["cat ", @tt_on, "dog", @tt_off],
+                 @am.flow(str))
+  end
+
   def test_special
     @am.add_special(RDoc::CrossReference::CROSSREF_REGEXP, :CROSSREF)
 
