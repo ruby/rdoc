@@ -315,10 +315,10 @@ class RDoc::RipperStateLex
     when :on_tstring_beg then
       tk = get_string_tk(tk)
     when :on_backtick then
-      if ((EXPR_FNAME | EXPR_ENDFN) & tk[:state]) != 0
+      if (tk[:state] & (EXPR_FNAME | EXPR_ENDFN)) != 0
         @inner_lex.lex_state = EXPR_ARG unless RIPPER_HAS_LEX_STATE
         tk[:kind] = :on_ident
-        tk[:state] = EXPR_ARG
+        tk[:state] = Ripper::Lexer.const_defined?(:State) ? Ripper::Lexer::State.new(EXPR_ARG) : EXPR_ARG
       else
         tk = get_string_tk(tk)
       end
@@ -558,9 +558,9 @@ class RDoc::RipperStateLex
 
   private def get_op_tk(tk)
     redefinable_operators = %w[! != !~ % & * ** + +@ - -@ / < << <= <=> == === =~ > >= >> [] []= ^ ` | ~]
-    if redefinable_operators.include?(tk[:text]) and EXPR_ARG == tk[:state] then
+    if redefinable_operators.include?(tk[:text]) and tk[:state] == EXPR_ARG then
       @inner_lex.lex_state = EXPR_ARG unless RIPPER_HAS_LEX_STATE
-      tk[:state] = EXPR_ARG
+      tk[:state] = Ripper::Lexer.const_defined?(:State) ? Ripper::Lexer::State.new(EXPR_ARG) : EXPR_ARG
       tk[:kind] = :on_ident
     elsif tk[:text] =~ /^[-+]$/ then
       tk_ahead = get_squashed_tk
