@@ -246,7 +246,7 @@ class RDoc::Markup::AttributeManager
   # Processes +str+ converting attributes, HTML and specials
 
   def flow str
-    @str = str
+    @str = str.dup
 
     mask_protected_sequences
 
