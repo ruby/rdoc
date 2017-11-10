@@ -23,12 +23,8 @@ module RDoc::TokenStream
               when :on_ivar    then 'ruby-ivar'
               when :on_cvar    then 'ruby-identifier'
               when :on_gvar    then 'ruby-identifier'
-              when '=' != t[:text] && :on_op then
-                if RDoc::RipperStateLex::EXPR_ARG == t[:state] then
-                                    'ruby-identifier'
-                else
-                                    'ruby-operator'
-                end
+              when '=' != t[:text] && :on_op
+                               then 'ruby-operator'
               when :on_tlambda then 'ruby-operator'
               when :on_ident   then 'ruby-identifier'
               when :on_label   then 'ruby-value'
