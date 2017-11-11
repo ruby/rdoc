@@ -517,7 +517,7 @@ end
 
     expected = <<-'EXPECTED'
 
-<pre class="ruby"><span class="ruby-keyword">def</span> <span class="ruby-identifier">foo</span>
+<pre class="ruby"><span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">foo</span>
   [
     <span class="ruby-string">&#39;\\&#39;</span>,
     <span class="ruby-string">&#39;\&#39;&#39;</span>,
@@ -537,7 +537,7 @@ end
     <span class="ruby-regexp">/#{}/</span>
   ]
 <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">bar</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">bar</span>
 <span class="ruby-keyword">end</span>
 </pre>
     EXPECTED
@@ -567,7 +567,7 @@ end
 
     expected = <<-'EXPECTED'
 
-<pre class="ruby"><span class="ruby-keyword">def</span> <span class="ruby-identifier">foo</span>
+<pre class="ruby"><span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">foo</span>
   [
     <span class="ruby-string">`\\`</span>,
     <span class="ruby-string">`\&#39;\&quot;\``</span>,
@@ -577,7 +577,7 @@ end
     <span class="ruby-node">`#{}`</span>
   ]
 <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">bar</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">bar</span>
 <span class="ruby-keyword">end</span>
 </pre>
     EXPECTED
@@ -619,7 +619,7 @@ end
 
     %w[| ^ &amp; &lt;=&gt; == === =~ &gt; &gt;= &lt; &lt;= &lt;&lt; &gt;&gt; + - * / % ** ~ +@ -@ [] []= ` !  != !~].each do |html_escaped_op|
       expected += <<-EXPECTED
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">#{html_escaped_op}</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">#{html_escaped_op}</span>
 <span class="ruby-keyword">end</span>
       EXPECTED
     end
