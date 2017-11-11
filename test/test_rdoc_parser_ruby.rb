@@ -2826,7 +2826,7 @@ RUBY
     assert_nil m.params, 'Module parameter not removed'
   end
 
-  def test_parse_statements_stopdoc_TkALIAS
+  def test_parse_statements_stopdoc_alias
     klass = @top_level.add_class RDoc::NormalClass, 'Foo'
 
     util_parser "\n# :stopdoc:\nalias old new"
@@ -2837,7 +2837,7 @@ RUBY
     assert_empty klass.unmatched_alias_lists
   end
 
-  def test_parse_statements_stopdoc_TkIDENTIFIER_alias_method
+  def test_parse_statements_stopdoc_identifier_alias_method
     klass = @top_level.add_class RDoc::NormalClass, 'Foo'
 
     util_parser "\n# :stopdoc:\nalias_method :old :new"
@@ -2848,7 +2848,7 @@ RUBY
     assert_empty klass.unmatched_alias_lists
   end
 
-  def test_parse_statements_stopdoc_TkIDENTIFIER_metaprogrammed
+  def test_parse_statements_stopdoc_identifier_metaprogrammed
     klass = @top_level.add_class RDoc::NormalClass, 'Foo'
 
     util_parser "\n# :stopdoc:\n# attr :meta"
@@ -2859,7 +2859,7 @@ RUBY
     assert_empty klass.attributes
   end
 
-  def test_parse_statements_stopdoc_TkCONSTANT
+  def test_parse_statements_stopdoc_constant
     klass = @top_level.add_class RDoc::NormalClass, 'Foo'
 
     util_parser "\n# :stopdoc:\nA = v"
@@ -2869,7 +2869,7 @@ RUBY
     assert_empty klass.constants
   end
 
-  def test_parse_statements_stopdoc_TkDEF
+  def test_parse_statements_stopdoc_def
     klass = @top_level.add_class RDoc::NormalClass, 'Foo'
 
     util_parser "\n# :stopdoc:\ndef m\n end"
