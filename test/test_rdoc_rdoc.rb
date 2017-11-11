@@ -40,6 +40,24 @@ class TestRDocRDoc < RDoc::TestCase
     assert_equal 'title',          store.title
   end
 
+  def test_document_with_dry_run # functional test
+    options = RDoc::Options.new
+    options.files = [File.expand_path('../xref_data.rb', __FILE__)]
+    options.setup_generator 'darkfish'
+    options.main_page = 'MAIN_PAGE.rdoc'
+    options.root      = Pathname File.expand_path('..', __FILE__)
+    options.title     = 'title'
+    options.dry_run = true
+
+    rdoc = RDoc::RDoc.new
+
+    temp_dir do
+      capture_io do
+        rdoc.document options
+      end
+    end
+  end
+
   def test_gather_files
     a = File.expand_path __FILE__
     b = File.expand_path '../test_rdoc_text.rb', __FILE__
