@@ -971,7 +971,7 @@ ReferenceLinkDouble = Label:content < Spnl > !"[]" Label:label
 ReferenceLinkSingle = Label:content < (Spnl "[]")? >
                       { link_to content, content, text }
 
-ExplicitLink =  Label:l Spnl "(" @Sp Source:s Spnl Title @Sp ")"
+ExplicitLink =  Label:l "(" @Sp Source:s Spnl Title @Sp ")"
                 { "{#{l}}[#{s}]" }
 
 Source  = ( "<" < SourceContents > ">" | < SourceContents > )
