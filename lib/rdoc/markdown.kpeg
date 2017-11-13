@@ -205,6 +205,7 @@
     :github,
     :html,
     :notes,
+    :strike,
   ]
 
   # :section: Extensions
@@ -254,6 +255,11 @@
   # Enables the notes extension
 
   extension :notes
+
+  ##
+  # Enables the strike extension
+
+  extension :strike
 
   # :section:
 
@@ -983,10 +989,11 @@ StrongUl =  TwoUlOpen
             TwoUlClose:l { a << l }
             { strong a.join }
 
-TwoTildeOpen =  !TildeLine "~~" !@Spacechar !@Newline
-TwoTildeClose = !@Spacechar !@Newline Inline:a "~~" { a }
+TwoTildeOpen =  &{ strike? } !TildeLine "~~" !@Spacechar !@Newline
+TwoTildeClose = &{ strike? } !@Spacechar !@Newline Inline:a "~~" { a }
 
-Strike = TwoTildeOpen
+Strike = &{ strike? }
+         TwoTildeOpen
          @StartList:a
          ( !TwoTildeClose Inline:i { a << i } )*
          TwoTildeClose:l { a << l }

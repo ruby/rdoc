@@ -948,6 +948,17 @@ and an extra note.[^2]
     assert_equal expected, doc
   end
 
+  def test_parse_strike_tilde_no
+    @parser.strike = false
+
+    doc = parse "it ~~works fine~~\n"
+
+    expected = @RM::Document.new(
+      @RM::Paragraph.new("it ~~works fine~~"))
+
+    assert_equal expected, doc
+  end
+
   def test_parse_style
     @parser.css = true
 
