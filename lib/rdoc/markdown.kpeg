@@ -84,6 +84,18 @@
 # :   A little insect that is known
 # to enjoy picnics
 #
+# ### Strike
+#
+# Example:
+#
+# ```
+# This is ~~striked~~.
+# ```
+#
+# Produces:
+#
+# This is ~~striked~~.
+#
 # ### Github
 #
 # The #github extension enables a partial set of [Github Flavored Markdown]
@@ -464,6 +476,17 @@
       "*#{text}*"
     else
       "<b>#{text}</b>"
+    end
+  end
+
+  ##
+  # Wraps `text` in strike markup for rdoc inline formatting
+
+  def strike text
+    if text =~ /\A[a-z\d.\/-]+\z/i then
+      "~#{text}~"
+    else
+      "<s>#{text}</s>"
     end
   end
 }
@@ -871,6 +894,7 @@ Inline  = Str
         | @Space
         | Strong
         | Emph
+        | Strike
         | Image
         | Link
         | NoteReference
@@ -913,6 +937,8 @@ StarLine = < /\*{4,}/ > { text } |
            < @Spacechar /\*+/ &@Spacechar > { text }
 UlLine   = < /_{4,}/ > { text } |
            < @Spacechar /_+/ &@Spacechar > { text }
+TildeLine = < /~{4,}/ > { text } |
+            < @Spacechar /~+/ &@Spacechar > { text }
 
 Emph =      EmphStar | EmphUl
 
@@ -956,6 +982,15 @@ StrongUl =  TwoUlOpen
             ( !TwoUlClose Inline:i { a << i } )*
             TwoUlClose:l { a << l }
             { strong a.join }
+
+TwoTildeOpen =  !TildeLine "~~" !@Spacechar !@Newline
+TwoTildeClose = !@Spacechar !@Newline Inline:a "~~" { a }
+
+Strike = TwoTildeOpen
+         @StartList:a
+         ( !TwoTildeClose Inline:i { a << i } )*
+         TwoTildeClose:l { a << l }
+         { strike a.join }
 
 # TODO alt text support
 Image = "!" ( ExplicitLink | ReferenceLink ):a
@@ -1068,7 +1103,7 @@ Eof =           !.
 Nonspacechar =  !@Spacechar !@Newline .
 Sp =            @Spacechar*
 Spnl =          @Sp (@Newline @Sp)?
-SpecialChar =   /[*_`&\[\]()<!#\\'"]/ | @ExtendedSpecialChar
+SpecialChar =   /[~*_`&\[\]()<!#\\'"]/ | @ExtendedSpecialChar
 NormalChar =    !( @SpecialChar | @Spacechar | @Newline ) .
 Digit = [0-9]
 
