@@ -943,8 +943,6 @@ StarLine = < /\*{4,}/ > { text } |
            < @Spacechar /\*+/ &@Spacechar > { text }
 UlLine   = < /_{4,}/ > { text } |
            < @Spacechar /_+/ &@Spacechar > { text }
-TildeLine = < /~{4,}/ > { text } |
-            < @Spacechar /~+/ &@Spacechar > { text }
 
 Emph =      EmphStar | EmphUl
 
@@ -980,14 +978,11 @@ StrongUl   =    "__" !@Whitespace
                 "__"
                 { strong a.join }
 
-TwoTildeOpen =  &{ strike? } !TildeLine "~~" !@Spacechar !@Newline
-TwoTildeClose = &{ strike? } !@Spacechar !@Newline Inline:a "~~" { a }
-
 Strike = &{ strike? }
-         TwoTildeOpen
+         "~~" !@Whitespace
          @StartList:a
-         ( !TwoTildeClose Inline:i { a << i } )*
-         TwoTildeClose:l { a << l }
+         ( !"~~" Inline:b { a << b } )+
+         "~~"
          { strike a.join }
 
 # TODO alt text support
