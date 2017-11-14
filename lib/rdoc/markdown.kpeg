@@ -948,7 +948,9 @@ TildeLine = < /~{4,}/ > { text } |
 
 Emph =      EmphStar | EmphUl
 
-EmphStar =  "*" &Nonspacechar
+Whitespace = @Spacechar | @Newline
+
+EmphStar =  "*" !@Whitespace
             @StartList:a
             ( !"*" Inline:b { a << b }
             | StrongStar:b  { a << b }
@@ -956,7 +958,7 @@ EmphStar =  "*" &Nonspacechar
             "*"
             { emphasis a.join }
 
-EmphUl =    "_" &Nonspacechar
+EmphUl =    "_" !@Whitespace
             @StartList:a
             ( !"_" Inline:b { a << b }
             | StrongUl:b  { a << b }
@@ -966,13 +968,13 @@ EmphUl =    "_" &Nonspacechar
 
 Strong = StrongStar | StrongUl
 
-StrongStar =    "**" &Nonspacechar
+StrongStar =    "**" !@Whitespace
                 @StartList:a
                 ( !"**" Inline:b { a << b } )+
                 "**"
                 { strong a.join }
 
-StrongUl   =    "__" &Nonspacechar
+StrongUl   =    "__" !@Whitespace
                 @StartList:a
                 ( !"__" Inline:b { a << b } )+
                 "__"
