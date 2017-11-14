@@ -946,27 +946,19 @@ UlLine   = < /_{4,}/ > { text } |
 TildeLine = < /~{4,}/ > { text } |
             < @Spacechar /~+/ &@Spacechar > { text }
 
-SpaceInline = @StartList:a
-              ( (Space:b | Endline:b) { a << b } )+
-              Inline:c { a << c; a }
-
-NonspaceInline = !@Spacechar !@Newline Inline
-
 Emph =      EmphStar | EmphUl
 
-EmphStar =  "*"
+EmphStar =  "*" &Nonspacechar
             @StartList:a
-            ( !"*" NonspaceInline:b { a << b }
-            | SpaceInline:b { a << b }
+            ( !"*" Inline:b { a << b }
             | StrongStar:b  { a << b }
             )+
             "*"
             { emphasis a.join }
 
-EmphUl =    "_"
+EmphUl =    "_" &Nonspacechar
             @StartList:a
-            ( !"_" NonspaceInline:b { a << b }
-            | SpaceInline:b { a << b }
+            ( !"_" Inline:b { a << b }
             | StrongUl:b  { a << b }
             )+
             "_"
@@ -974,19 +966,15 @@ EmphUl =    "_"
 
 Strong = StrongStar | StrongUl
 
-StrongStar =    "**"
+StrongStar =    "**" &Nonspacechar
                 @StartList:a
-                ( !"**" NonspaceInline:b { a << b }
-                | SpaceInline:b { a << b }
-                )+
+                ( !"**" Inline:b { a << b } )+
                 "**"
                 { strong a.join }
 
-StrongUl   =    "__"
+StrongUl   =    "__" &Nonspacechar
                 @StartList:a
-                ( !"__" NonspaceInline:b { a << b }
-                | SpaceInline:b { a << b }
-                )+
+                ( !"__" Inline:b { a << b } )+
                 "__"
                 { strong a.join }
 
