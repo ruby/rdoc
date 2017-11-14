@@ -946,48 +946,49 @@ UlLine   = < /_{4,}/ > { text } |
 TildeLine = < /~{4,}/ > { text } |
             < @Spacechar /~+/ &@Spacechar > { text }
 
+SpaceInline = @StartList:a
+              ( (Space:b | Endline:b) { a << b } )+
+              Inline:c { a << c; a }
+
+NonspaceInline = !@Spacechar !@Newline Inline
+
 Emph =      EmphStar | EmphUl
 
-OneStarOpen  =  !StarLine "*" !@Spacechar !@Newline
-OneStarClose =  !@Spacechar !@Newline Inline:a "*"
-                { a }
-
-EmphStar =  OneStarOpen
+EmphStar =  "*"
             @StartList:a
-            ( !OneStarClose Inline:l { a << l } )*
-            OneStarClose:l { a << l }
+            ( !"*" NonspaceInline:b { a << b }
+            | SpaceInline:b { a << b }
+            | StrongStar:b  { a << b }
+            )+
+            "*"
             { emphasis a.join }
 
-OneUlOpen  =  !UlLine "_" !@Spacechar !@Newline
-OneUlClose =  !@Spacechar !@Newline Inline:a "_" # !Alphanumeric # TODO check
-              { a }
-
-EmphUl =    OneUlOpen
+EmphUl =    "_"
             @StartList:a
-            ( !OneUlClose Inline:l { a << l } )*
-            OneUlClose:l { a << l }
+            ( !"_" NonspaceInline:b { a << b }
+            | SpaceInline:b { a << b }
+            | StrongUl:b  { a << b }
+            )+
+            "_"
             { emphasis a.join }
 
 Strong = StrongStar | StrongUl
 
-TwoStarOpen =   !StarLine "**" !@Spacechar !@Newline
-TwoStarClose =  !@Spacechar !@Newline Inline:a "**" { a }
-
-StrongStar =    TwoStarOpen
+StrongStar =    "**"
                 @StartList:a
-                ( !TwoStarClose Inline:l { a << l } )*
-                TwoStarClose:l { a << l }
+                ( !"**" NonspaceInline:b { a << b }
+                | SpaceInline:b { a << b }
+                )+
+                "**"
                 { strong a.join }
 
-TwoUlOpen =     !UlLine "__" !@Spacechar !@Newline
-TwoUlClose =    !@Spacechar !@Newline Inline:a "__" # !Alphanumeric # TODO check
-                { a }
-
-StrongUl =  TwoUlOpen
-            @StartList:a
-            ( !TwoUlClose Inline:i { a << i } )*
-            TwoUlClose:l { a << l }
-            { strong a.join }
+StrongUl   =    "__"
+                @StartList:a
+                ( !"__" NonspaceInline:b { a << b }
+                | SpaceInline:b { a << b }
+                )+
+                "__"
+                { strong a.join }
 
 TwoTildeOpen =  &{ strike? } !TildeLine "~~" !@Spacechar !@Newline
 TwoTildeClose = &{ strike? } !@Spacechar !@Newline Inline:a "~~" { a }
