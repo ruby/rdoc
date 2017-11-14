@@ -926,7 +926,7 @@ Entity =    ( HexEntity | DecEntity | CharEntity ):a { a }
 Endline =   @LineBreak | @TerminalEndline | @NormalEndline
 
 NormalEndline =   @Sp @Newline !@BlankLine !">" !AtxStart
-                  !(Line /={3,}|-{3,}=/ @Newline)
+                  !(Line /={1,}|-{1,}=/ @Newline)
                   { "\n" }
 
 TerminalEndline = @Sp @Newline @Eof
