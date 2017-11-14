@@ -1009,7 +1009,6 @@ Source  = ( "<" < SourceContents > ">" | < SourceContents > )
           { text }
 
 SourceContents = ( ( !"(" !")" !">" Nonspacechar )+ | "(" SourceContents ")")*
-                 | ""
 
 Title = ( TitleSingle | TitleDouble | "" ):a
         { a }
