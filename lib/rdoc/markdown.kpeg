@@ -1120,7 +1120,6 @@ Alphanumeric      = %literals.Alphanumeric
 AlphanumericAscii = %literals.AlphanumericAscii
 BOM               = %literals.BOM
 Newline           = %literals.Newline
-NonAlphanumeric   = %literals.NonAlphanumeric
 Spacechar         = %literals.Spacechar
 
 HexEntity  = /&#x/i < /[0-9a-fA-F]+/ > ";"
