@@ -533,9 +533,9 @@ AtxHeading = AtxStart:s @Sp? AtxInline+:a (@Sp? /#*/ @Sp)?  @Newline
 
 SetextHeading = SetextHeading1 | SetextHeading2
 
-SetextBottom1 = /={3,}/ @Newline
+SetextBottom1 = /={1,}/ @Newline
 
-SetextBottom2 = /-{3,}/ @Newline
+SetextBottom2 = /-{1,}/ @Newline
 
 SetextHeading1 =  &(@RawLine SetextBottom1)
                   @StartList:a ( !@Endline Inline:b { a << b } )+ @Sp? @Newline
