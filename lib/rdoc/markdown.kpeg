@@ -762,6 +762,9 @@ HtmlBlockOpenScript = "<" Spnl ("script" | "SCRIPT") Spnl HtmlAttribute* ">"
 HtmlBlockCloseScript = "<" Spnl "/" ("script" | "SCRIPT") Spnl ">"
 HtmlBlockScript = HtmlBlockOpenScript (!HtmlBlockCloseScript .)* HtmlBlockCloseScript
 
+HtmlBlockOpenHead = "<" Spnl ("head" | "HEAD") Spnl HtmlAttribute* ">"
+HtmlBlockCloseHead = "<" Spnl "/" ("head" | "HEAD") Spnl ">"
+HtmlBlockHead = HtmlBlockOpenHead (!HtmlBlockCloseHead .)* HtmlBlockCloseHead
 
 HtmlBlockInTags = HtmlAnchor
                 | HtmlBlockAddress
@@ -797,6 +800,7 @@ HtmlBlockInTags = HtmlAnchor
                 | HtmlBlockThead
                 | HtmlBlockTr
                 | HtmlBlockScript
+                | HtmlBlockHead
 
 HtmlBlock = < ( HtmlBlockInTags | HtmlComment | HtmlBlockSelfClosing | HtmlUnclosed) >
             @BlankLine+
