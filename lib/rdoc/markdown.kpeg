@@ -523,12 +523,12 @@ Para =      @NonindentSpace Inlines:a @BlankLine+
 Plain =     Inlines:a
             { paragraph a }
 
-AtxInline = !@Newline !(@Sp? /#*/ @Sp @Newline) Inline
+AtxInline = !@Newline !(@Sp /#*/ @Sp @Newline) Inline
 
 AtxStart =  < /\#{1,6}/ >
             { text.length }
 
-AtxHeading = AtxStart:s @Sp? AtxInline+:a (@Sp? /#*/ @Sp)?  @Newline
+AtxHeading = AtxStart:s @Sp AtxInline+:a (@Sp /#*/ @Sp)?  @Newline
             { RDoc::Markup::Heading.new(s, a.join) }
 
 SetextHeading = SetextHeading1 | SetextHeading2
@@ -538,12 +538,12 @@ SetextBottom1 = /={1,}/ @Newline
 SetextBottom2 = /-{1,}/ @Newline
 
 SetextHeading1 =  &(@RawLine SetextBottom1)
-                  @StartList:a ( !@Endline Inline:b { a << b } )+ @Sp? @Newline
+                  @StartList:a ( !@Endline Inline:b { a << b } )+ @Sp @Newline
                   SetextBottom1
                   { RDoc::Markup::Heading.new(1, a.join) }
 
 SetextHeading2 =  &(@RawLine SetextBottom2)
-                  @StartList:a ( !@Endline Inline:b { a << b })+ @Sp? @Newline
+                  @StartList:a ( !@Endline Inline:b { a << b })+ @Sp @Newline
                   SetextBottom2
                   { RDoc::Markup::Heading.new(2, a.join) }
 
