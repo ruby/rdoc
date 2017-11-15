@@ -84,6 +84,18 @@
 # :   A little insect that is known
 # to enjoy picnics
 #
+# ### Strike
+#
+# Example:
+#
+# ```
+# This is ~~striked~~.
+# ```
+#
+# Produces:
+#
+# This is ~~striked~~.
+#
 # ### Github
 #
 # The #github extension enables a partial set of [Github Flavored Markdown]
@@ -193,6 +205,7 @@
     :github,
     :html,
     :notes,
+    :strike,
   ]
 
   # :section: Extensions
@@ -242,6 +255,11 @@
   # Enables the notes extension
 
   extension :notes
+
+  ##
+  # Enables the strike extension
+
+  extension :strike
 
   # :section:
 
@@ -466,6 +484,17 @@
       "<b>#{text}</b>"
     end
   end
+
+  ##
+  # Wraps `text` in strike markup for rdoc inline formatting
+
+  def strike text
+    if text =~ /\A[a-z\d.\/-]+\z/i then
+      "~#{text}~"
+    else
+      "<s>#{text}</s>"
+    end
+  end
 }
 
 root = Doc
@@ -494,27 +523,27 @@ Para =      @NonindentSpace Inlines:a @BlankLine+
 Plain =     Inlines:a
             { paragraph a }
 
-AtxInline = !@Newline !(@Sp? /#*/ @Sp @Newline) Inline
+AtxInline = !@Newline !(@Sp /#*/ @Sp @Newline) Inline
 
 AtxStart =  < /\#{1,6}/ >
             { text.length }
 
-AtxHeading = AtxStart:s @Sp? AtxInline+:a (@Sp? /#*/ @Sp)?  @Newline
+AtxHeading = AtxStart:s @Sp AtxInline+:a (@Sp /#*/ @Sp)?  @Newline
             { RDoc::Markup::Heading.new(s, a.join) }
 
 SetextHeading = SetextHeading1 | SetextHeading2
 
-SetextBottom1 = /={3,}/ @Newline
+SetextBottom1 = /={1,}/ @Newline
 
-SetextBottom2 = /-{3,}/ @Newline
+SetextBottom2 = /-{1,}/ @Newline
 
 SetextHeading1 =  &(@RawLine SetextBottom1)
-                  @StartList:a ( !@Endline Inline:b { a << b } )+ @Sp? @Newline
+                  @StartList:a ( !@Endline Inline:b { a << b } )+ @Sp @Newline
                   SetextBottom1
                   { RDoc::Markup::Heading.new(1, a.join) }
 
 SetextHeading2 =  &(@RawLine SetextBottom2)
-                  @StartList:a ( !@Endline Inline:b { a << b })+ @Sp? @Newline
+                  @StartList:a ( !@Endline Inline:b { a << b })+ @Sp @Newline
                   SetextBottom2
                   { RDoc::Markup::Heading.new(2, a.join) }
 
@@ -733,6 +762,9 @@ HtmlBlockOpenScript = "<" Spnl ("script" | "SCRIPT") Spnl HtmlAttribute* ">"
 HtmlBlockCloseScript = "<" Spnl "/" ("script" | "SCRIPT") Spnl ">"
 HtmlBlockScript = HtmlBlockOpenScript (!HtmlBlockCloseScript .)* HtmlBlockCloseScript
 
+HtmlBlockOpenHead = "<" Spnl ("head" | "HEAD") Spnl HtmlAttribute* ">"
+HtmlBlockCloseHead = "<" Spnl "/" ("head" | "HEAD") Spnl ">"
+HtmlBlockHead = HtmlBlockOpenHead (!HtmlBlockCloseHead .)* HtmlBlockCloseHead
 
 HtmlBlockInTags = HtmlAnchor
                 | HtmlBlockAddress
@@ -768,6 +800,7 @@ HtmlBlockInTags = HtmlAnchor
                 | HtmlBlockThead
                 | HtmlBlockTr
                 | HtmlBlockScript
+                | HtmlBlockHead
 
 HtmlBlock = < ( HtmlBlockInTags | HtmlComment | HtmlBlockSelfClosing | HtmlUnclosed) >
             @BlankLine+
@@ -871,6 +904,7 @@ Inline  = Str
         | @Space
         | Strong
         | Emph
+        | Strike
         | Image
         | Link
         | NoteReference
@@ -896,7 +930,7 @@ Entity =    ( HexEntity | DecEntity | CharEntity ):a { a }
 Endline =   @LineBreak | @TerminalEndline | @NormalEndline
 
 NormalEndline =   @Sp @Newline !@BlankLine !">" !AtxStart
-                  !(Line /={3,}|-{3,}=/ @Newline)
+                  !(Line /={1,}|-{1,}/ @Newline)
                   { "\n" }
 
 TerminalEndline = @Sp @Newline @Eof
@@ -916,46 +950,44 @@ UlLine   = < /_{4,}/ > { text } |
 
 Emph =      EmphStar | EmphUl
 
-OneStarOpen  =  !StarLine "*" !@Spacechar !@Newline
-OneStarClose =  !@Spacechar !@Newline Inline:a "*"
-                { a }
+Whitespace = @Spacechar | @Newline
 
-EmphStar =  OneStarOpen
+EmphStar =  "*" !@Whitespace
             @StartList:a
-            ( !OneStarClose Inline:l { a << l } )*
-            OneStarClose:l { a << l }
+            ( !"*" Inline:b { a << b }
+            | StrongStar:b  { a << b }
+            )+
+            "*"
             { emphasis a.join }
 
-OneUlOpen  =  !UlLine "_" !@Spacechar !@Newline
-OneUlClose =  !@Spacechar !@Newline Inline:a "_" # !Alphanumeric # TODO check
-              { a }
-
-EmphUl =    OneUlOpen
+EmphUl =    "_" !@Whitespace
             @StartList:a
-            ( !OneUlClose Inline:l { a << l } )*
-            OneUlClose:l { a << l }
+            ( !"_" Inline:b { a << b }
+            | StrongUl:b  { a << b }
+            )+
+            "_"
             { emphasis a.join }
 
 Strong = StrongStar | StrongUl
 
-TwoStarOpen =   !StarLine "**" !@Spacechar !@Newline
-TwoStarClose =  !@Spacechar !@Newline Inline:a "**" { a }
-
-StrongStar =    TwoStarOpen
+StrongStar =    "**" !@Whitespace
                 @StartList:a
-                ( !TwoStarClose Inline:l { a << l } )*
-                TwoStarClose:l { a << l }
+                ( !"**" Inline:b { a << b } )+
+                "**"
                 { strong a.join }
 
-TwoUlOpen =     !UlLine "__" !@Spacechar !@Newline
-TwoUlClose =    !@Spacechar !@Newline Inline:a "__" # !Alphanumeric # TODO check
-                { a }
+StrongUl   =    "__" !@Whitespace
+                @StartList:a
+                ( !"__" Inline:b { a << b } )+
+                "__"
+                { strong a.join }
 
-StrongUl =  TwoUlOpen
-            @StartList:a
-            ( !TwoUlClose Inline:i { a << i } )*
-            TwoUlClose:l { a << l }
-            { strong a.join }
+Strike = &{ strike? }
+         "~~" !@Whitespace
+         @StartList:a
+         ( !"~~" Inline:b { a << b } )+
+         "~~"
+         { strike a.join }
 
 # TODO alt text support
 Image = "!" ( ExplicitLink | ReferenceLink ):a
@@ -971,14 +1003,13 @@ ReferenceLinkDouble = Label:content < Spnl > !"[]" Label:label
 ReferenceLinkSingle = Label:content < (Spnl "[]")? >
                       { link_to content, content, text }
 
-ExplicitLink =  Label:l Spnl "(" @Sp Source:s Spnl Title @Sp ")"
+ExplicitLink =  Label:l "(" @Sp Source:s Spnl Title @Sp ")"
                 { "{#{l}}[#{s}]" }
 
 Source  = ( "<" < SourceContents > ">" | < SourceContents > )
           { text }
 
 SourceContents = ( ( !"(" !")" !">" Nonspacechar )+ | "(" SourceContents ")")*
-                 | ""
 
 Title = ( TitleSingle | TitleDouble | "" ):a
         { a }
@@ -1068,7 +1099,7 @@ Eof =           !.
 Nonspacechar =  !@Spacechar !@Newline .
 Sp =            @Spacechar*
 Spnl =          @Sp (@Newline @Sp)?
-SpecialChar =   /[*_`&\[\]()<!#\\'"]/ | @ExtendedSpecialChar
+SpecialChar =   /[~*_`&\[\]()<!#\\'"]/ | @ExtendedSpecialChar
 NormalChar =    !( @SpecialChar | @Spacechar | @Newline ) .
 Digit = [0-9]
 
@@ -1077,7 +1108,6 @@ Alphanumeric      = %literals.Alphanumeric
 AlphanumericAscii = %literals.AlphanumericAscii
 BOM               = %literals.BOM
 Newline           = %literals.Newline
-NonAlphanumeric   = %literals.NonAlphanumeric
 Spacechar         = %literals.Spacechar
 
 HexEntity  = /&#x/i < /[0-9a-fA-F]+/ > ";"
