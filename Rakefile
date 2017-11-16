@@ -104,8 +104,6 @@ end
 
 desc "Diffs Ruby HEAD with the currently checked-out copy of RDoc."
 task :diff_ruby do
-  options = "-urpN --exclude '*svn*' --exclude '*swp' --exclude '*rbc'"
-
   sh "diff #{diff_options} bin/rdoc #{ruby_dir}/bin/rdoc; true"
   sh "diff #{diff_options} bin/ri #{ruby_dir}/bin/ri; true"
   sh "diff #{diff_options} lib/rdoc.rb #{ruby_dir}/lib/rdoc.rb; true"
