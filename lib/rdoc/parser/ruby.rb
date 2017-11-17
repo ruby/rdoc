@@ -318,8 +318,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
-  # Looks for a true or false token.  Returns false if TkFALSE or TkNIL are
-  # found.
+  # Looks for a true or false token.
 
   def get_bool
     skip_tkspace
@@ -1461,8 +1460,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     name_t2 = get_tk
 
     if (:on_kw == name_t[:kind] && 'self' == name_t[:text]) || (:on_op == name_t[:kind] && '%' == name_t[:text]) then
-      # NOTE: work around '[' being consumed early and not being re-tokenized
-      # as a TkAREF
+      # NOTE: work around '[' being consumed early
       if :on_lbracket == name_t2[:kind]
         get_tk
         name = '[]'
