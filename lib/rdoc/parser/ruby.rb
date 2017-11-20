@@ -587,7 +587,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
     end
 
-    remove_private_comments comment
+    comment.remove_private
   end
 
   ##
@@ -2052,15 +2052,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     container.record_location @top_level
-  end
-
-  ##
-  # Removes private comments from +comment+
-  #--
-  # TODO remove
-
-  def remove_private_comments comment
-    comment.remove_private
   end
 
   ##
