@@ -349,7 +349,7 @@
   # with the linking `text` (usually whitespace).
 
   def link_to content, label = content, text = nil
-    raise 'enable notes extension' if
+    raise ParseError, 'enable notes extension' if
       content.start_with? '^' and label.equal? content
 
     if ref = @references[label] then
