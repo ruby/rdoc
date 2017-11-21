@@ -51,11 +51,21 @@ class TestRDocRDoc < RDoc::TestCase
 
     rdoc = RDoc::RDoc.new
 
+    out = nil
     temp_dir do
-      capture_io do
+      out, = capture_io do
         rdoc.document options
       end
+
+      refute File.directory? 'doc'
+      assert_equal rdoc, rdoc.store.rdoc
     end
+    assert_includes out, '100%'
+
+    store = rdoc.store
+
+    assert_equal 'MAIN_PAGE.rdoc', store.main
+    assert_equal 'title',          store.title
   end
 
   def test_gather_files
