@@ -717,7 +717,7 @@ Some text. ^[With a footnote]
   def test_parse_note_no_notes
     @parser.notes = false
 
-    assert_raises RuntimeError do # TODO use a real error
+    assert_raises RDoc::Markdown::ParseError do
       parse "Some text.[^1]"
     end
   end
