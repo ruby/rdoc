@@ -2674,6 +2674,29 @@ EXPECTED
     assert_equal expected, markup_code
   end
 
+  def test_parse_instance_operation_method
+    util_parser <<-RUBY
+class Foo
+  def self.& end
+end
+    RUBY
+
+    expected = <<EXPECTED
+  <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">&amp;</span> <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span>
+EXPECTED
+    expected = expected.rstrip
+
+    @parser.scan
+
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+
+    blah = foo.method_list.first
+    markup_code = blah.markup_code.sub(/^.*\n/, '')
+    assert_equal expected, markup_code
+  end
+
   def test_parse_statements_postfix_if_after_heredocbeg
     @filename = 'file.rb'
     util_parser <<RUBY
