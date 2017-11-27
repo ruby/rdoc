@@ -1,4 +1,4 @@
-# frozen_string_literal: false
+# frozen_string_literal: true
 ##
 # This file contains stuff stolen outright from:
 #
@@ -239,8 +239,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def collect_first_comment
     skip_tkspace
-    comment = ''
-    comment.force_encoding @encoding if @encoding
+    comment = ''.dup
+    comment = RDoc::Encoding.change_encoding comment, @encoding if @encoding
     first_line = true
     first_comment_tk_kind = nil
 
@@ -341,7 +341,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def get_class_or_module container, ignore_constants = false
     skip_tkspace
     name_t = get_tk
-    given_name = ''
+    given_name = ''.dup
 
     # class ::A -> A is in the top level
     if :on_op == name_t[:kind] and '::' == name_t[:text] then # bug
@@ -378,7 +378,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       if prev_container == container and !ignore_constants
         given_name = name_t[:text]
       else
-        given_name << '::' << name_t[:text]
+        given_name << '::' + name_t[:text]
       end
     end
 
@@ -594,7 +594,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Adds useful info about the parser to +message+
 
   def make_message message
-    prefix = "#{@file_name}:"
+    prefix = "#{@file_name}:".dup
 
     tk = peek_tk
     prefix << "#{tk[:line_no]}:#{tk[:char_no]}:" if tk
@@ -913,7 +913,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     return unless body
 
-    value.replace body
+    con.value = body
     record_location con
     con.line   = line_no
     read_documentation_modifiers con, RDoc::CONSTANT_MODIFIERS
@@ -928,7 +928,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def parse_constant_body container, constant, is_array_or_hash # :nodoc:
     nest     = 0
-    rhs_name = ''
+    rhs_name = ''.dup
 
     get_tkread
 
@@ -990,14 +990,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
     column  = tk[:char_no]
     line_no = tk[:line_no]
 
-    text = comment.text
-
-    singleton = !!text.sub!(/(^# +:?)(singleton-)(method:)/, '\1\3')
+    comment.text = comment.text.sub(/(^# +:?)(singleton-)(method:)/, '\1\3')
+    singleton = !!$~
 
     co =
-      if text.sub!(/^# +:?method: *(\S*).*?\n/i, '') then
-        parse_comment_ghost container, text, $1, column, line_no, comment
-      elsif text.sub!(/# +:?(attr(_reader|_writer|_accessor)?): *(\S*).*?\n/i, '') then
+      if (comment.text = comment.text.sub(/^# +:?method: *(\S*).*?\n/i, '')) && !!$~ then
+        parse_comment_ghost container, comment.text, $1, column, line_no, comment
+      elsif (comment.text = comment.text.sub(/# +:?(attr(_reader|_writer|_accessor)?): *(\S*).*?\n/i, '')) && !!$~ then
         parse_comment_attr container, $1, $3, comment
       end
 
@@ -1194,7 +1193,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     tmp = RDoc::CodeObject.new
     read_documentation_modifiers tmp, RDoc::ATTR_MODIFIERS
 
-    if comment.text.sub!(/^# +:?(attr(_reader|_writer|_accessor)?): *(\S*).*?\n/i, '') then
+    regexp = /^# +:?(attr(_reader|_writer|_accessor)?): *(\S*).*?\n/i
+    if regexp =~ comment.text then
+      comment.text = comment.text.sub(regexp, '')
       rw = case $1
            when 'attr_reader' then 'R'
            when 'attr_writer' then 'W'
@@ -1227,7 +1228,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     skip_tkspace false
 
-    singleton = !!comment.text.sub!(/(^# +:?)(singleton-)(method:)/, '\1\3')
+    comment.text = comment.text.sub(/(^# +:?)(singleton-)(method:)/, '\1\3')
+    singleton = !!$~
 
     name = parse_meta_method_name comment, tk
 
@@ -1643,7 +1645,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def parse_statements(container, single = NORMAL, current_method = nil,
                        comment = new_comment(''))
     raise 'no' unless RDoc::Comment === comment
-    comment.force_encoding @encoding if @encoding
+    comment = RDoc::Encoding.change_encoding comment, @encoding if @encoding
 
     nest = 1
     save_visibility = container.visibility
@@ -1686,12 +1688,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
               comment.empty?
 
             comment = ''
-            comment.force_encoding @encoding if @encoding
+            comment = RDoc::Encoding.change_encoding comment, @encoding if @encoding
           end
 
           while tk and (:on_comment == tk[:kind] or :on_embdoc == tk[:kind]) do
-            comment << tk[:text]
-            comment << "\n" unless "\n" == tk[:text].chars.to_a.last
+            comment += tk[:text]
+            comment += "\n" unless "\n" == tk[:text].chars.to_a.last
 
             if tk[:text].size > 1 && "\n" == tk[:text].chars.to_a.last then
               skip_tkspace false # leading spaces
@@ -1810,7 +1812,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       unless keep_comment then
         comment = new_comment ''
-        comment.force_encoding @encoding if @encoding
+        comment = RDoc::Encoding.change_encoding comment, @encoding if @encoding
         container.params = nil
         container.block_params = nil
       end

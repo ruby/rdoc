@@ -63,6 +63,11 @@ parsed_files = PARSER_FILES.map do |parser_file|
       racc = Gem.bin_path 'racc', 'racc'
       rb_file = parser_file.gsub(/\.ry\z/, ".rb")
       ruby "#{racc} -l -o #{rb_file} #{parser_file}"
+      open(rb_file, 'r+') do |f|
+        newtext = "# frozen_string_literal: true\n#{f.read}"
+        f.rewind
+        f.write newtext
+      end
     elsif parser_file =~ /\.kpeg\z/ # need kpeg
       kpeg = Gem.bin_path 'kpeg', 'kpeg'
       rb_file = parser_file.gsub(/\.kpeg\z/, ".rb")
