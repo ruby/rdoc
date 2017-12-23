@@ -2074,13 +2074,16 @@ class RDoc::Parser::Ruby < RDoc::Parser
           $stderr.puts @file_name
           return
         end
-        bytes = ''
 
         if @scanner_point >= @scanner.size
           now_line_no = @scanner[@scanner.size - 1][:line_no]
         else
           now_line_no = peek_tk[:line_no]
         end
+        first_tk_index = @scanner.find_index { |tk| tk[:line_no] == now_line_no }
+        last_tk_index = @scanner.find_index { |tk| tk[:line_no] == now_line_no + 1 }
+        last_tk_index = last_tk_index ? last_tk_index - 1 : @scanner.size - 1
+        code = @scanner[first_tk_index..last_tk_index].map{ |t| t[:text] }.join
 
         $stderr.puts <<-EOF
 
@@ -2089,12 +2092,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
         EOF
 
-        unless bytes.empty? then
+        unless code.empty? then
+          $stderr.puts code
           $stderr.puts
-          now_line_no = peek_tk[:line_no]
-          start_index = @scanner.find_index { |tk| tk[:line_no] == now_line_no }
-          end_index = @scanner.find_index { |tk| tk[:line_no] == now_line_no + 1 } - 1
-          $stderr.puts @scanner[start_index..end_index].join
         end
 
         raise e
