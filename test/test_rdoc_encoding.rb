@@ -65,7 +65,7 @@ class TestRDocEncoding < RDoc::TestCase
 
   def test_class_read_file_encoding_fancy
     expected = "# -*- coding: utf-8; fill-column: 74 -*-\nhi everybody"
-    exptected = RDoc::Encoding.change_encoding expected, Encoding::UTF_8
+    expected = RDoc::Encoding.change_encoding expected, Encoding::UTF_8
 
     @tempfile.write expected
     @tempfile.flush
