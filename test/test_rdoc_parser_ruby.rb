@@ -306,6 +306,37 @@ ruby
     assert_equal @top_level, sum.file
   end
 
+  def test_parse_redefined_op_with_constant
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = RDoc::Comment.new '', @top_level
+
+    util_parser <<ruby
+def meth
+  Integer::**()
+  return Integer::**()
+  break Integer::**()
+  case Integer::**()
+  when Integer::**()
+  end
+  while Integer::**()
+  end
+  yield Integer::**()
+  defined? Integer::**()
+  if Integer::**()
+  end
+end
+ruby
+
+    tk = @parser.get_tk
+
+    @parser.parse_method klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    meth = klass.method_list.first
+    assert_equal 'meth',     meth.name
+  end
+
   def test_parse_alias
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level

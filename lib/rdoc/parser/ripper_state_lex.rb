@@ -83,6 +83,15 @@ class RDoc::RipperStateLex
       when '&&', '||', '+=', '-=', '*=', '**=',
            '&=', '|=', '^=', '<<=', '>>=', '||=', '&&='
         @lex_state = EXPR_BEG
+      when '::'
+        case @lex_state
+        when EXPR_ARG, EXPR_CMDARG
+          @lex_state = EXPR_DOT
+        when EXPR_FNAME, EXPR_DOT
+          @lex_state = EXPR_ARG
+        else
+          @lex_state = EXPR_BEG
+        end
       else
         case @lex_state
         when EXPR_FNAME, EXPR_DOT
@@ -109,8 +118,10 @@ class RDoc::RipperStateLex
         else
           @lex_state = EXPR_BEG
         end
-      when 'begin'
+      when 'begin', 'case', 'when'
         @lex_state = EXPR_BEG
+      when 'return', 'break'
+        @lex_state = EXPR_MID
       else
         if @lex_state == EXPR_FNAME
           @lex_state = EXPR_END
@@ -245,7 +256,7 @@ class RDoc::RipperStateLex
       case @lex_state
       when EXPR_FNAME
         @lex_state = EXPR_ENDFN
-      when EXPR_CLASS
+      when EXPR_CLASS, EXPR_CMDARG, EXPR_MID
         @lex_state = EXPR_ARG
       else
         @lex_state = EXPR_CMDARG
