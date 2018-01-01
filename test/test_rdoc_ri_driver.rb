@@ -348,6 +348,22 @@ class TestRDocRIDriver < RDoc::TestCase
     assert_equal expected, out
   end
 
+  def test_output_width
+    @options[:width] = 10
+    driver = RDoc::RI::Driver.new @options
+
+    doc = @RM::Document.new
+    doc << @RM::IndentedParagraph.new(0, 'new, parse, foo, bar, baz')
+
+    out, = capture_io do
+      driver.display doc
+    end
+
+    expected = "new, parse, foo,\nbar, baz\n"
+
+    assert_equal expected, out
+  end
+
   def test_add_method_list_interative
     @options[:interactive] = true
     driver = RDoc::RI::Driver.new @options

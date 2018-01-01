@@ -425,6 +425,7 @@ or the PAGER environment variable.
     @server      = options[:server]
     @use_stdout  = options[:use_stdout]
     @show_all    = options[:show_all]
+    @width       = options[:width]
 
     # pager process for jruby
     @jruby_pager_process = nil
@@ -795,7 +796,9 @@ or the PAGER environment variable.
 
   def display document
     page do |io|
-      text = document.accept formatter(io)
+      f = formatter(io)
+      f.width = @width if @width and f.respond_to?(:width)
+      text = document.accept f
 
       io.write text
     end
