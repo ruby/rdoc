@@ -23,7 +23,8 @@ module RDoc::Encoding
 
     utf8 = content.sub!(/\A\xef\xbb\xbf/, '')
 
-    content = RDoc::Encoding.set_encoding content
+    enc = RDoc::Encoding.detect_encoding content
+    content = RDoc::Encoding.change_encoding content, enc if enc
 
     begin
       encoding ||= Encoding.default_external
@@ -85,29 +86,23 @@ module RDoc::Encoding
   end
 
   ##
-  # Sets the encoding of +string+ based on the magic comment
+  # Detects the encoding of +string+ based on the magic comment
 
-  def self.set_encoding string
-    string = remove_frozen_string_literal string
+  def self.detect_encoding string
+    result = /
+      (?:
+        \A\#!.*\n
+        |
+        ^\#\s+frozen[-_]string[-_]literal[=:].+$
+        |
+        ^\#[^\n]+\b(?:en)?coding[=:]\s*(?<name>[^\s;]+).*$
+        |
+        <\?xml[^?]*encoding=(?<quote>["'])(?<name>.*?)\k<quote>
+      )+
+    /xi.match(string)
+    name = result && result[:name]
 
-    string =~ /\A(?:#!.*\n)?(.*\n)/
-
-    first_line = $1
-
-    name = case first_line
-           when /^<\?xml[^?]*encoding=(["'])(.*?)\1/ then $2
-           when /\b(?:en)?coding[=:]\s*([^\s;]+)/i   then $1
-           else                                           return string
-           end
-
-    string = string.sub first_line, ''
-
-    string = remove_frozen_string_literal string
-
-    enc = Encoding.find name
-    string = RDoc::Encoding.change_encoding string, enc if enc
-
-    string
+    name ? Encoding.find(name) : nil
   end
 
   ##
