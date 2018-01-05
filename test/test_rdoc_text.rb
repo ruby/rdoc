@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rdoc/test_case'
+require 'timeout'
 
 class TestRDocText < RDoc::TestCase
 
