@@ -110,7 +110,7 @@ class RDoc::RI::Driver
   def self.dump data_path
     require 'pp'
 
-    open data_path, 'rb' do |io|
+    File.open data_path, 'rb' do |io|
       pp Marshal.load(io.read)
     end
   end

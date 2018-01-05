@@ -539,7 +539,7 @@ class RDoc::Store
   def load_cache
     #orig_enc = @encoding
 
-    open cache_path, 'rb' do |io|
+    File.open cache_path, 'rb' do |io|
       @cache = Marshal.load io.read
     end
 
@@ -596,7 +596,7 @@ class RDoc::Store
   def load_class_data klass_name
     file = class_file klass_name
 
-    open file, 'rb' do |io|
+    File.open file, 'rb' do |io|
       Marshal.load io.read
     end
   rescue Errno::ENOENT => e
@@ -611,7 +611,7 @@ class RDoc::Store
   def load_method klass_name, method_name
     file = method_file klass_name, method_name
 
-    open file, 'rb' do |io|
+    File.open file, 'rb' do |io|
       obj = Marshal.load io.read
       obj.store = self
       obj.parent =
@@ -631,7 +631,7 @@ class RDoc::Store
   def load_page page_name
     file = page_file page_name
 
-    open file, 'rb' do |io|
+    File.open file, 'rb' do |io|
       obj = Marshal.load io.read
       obj.store = self
       obj
@@ -778,7 +778,7 @@ class RDoc::Store
 
     marshal = Marshal.dump @cache
 
-    open cache_path, 'wb' do |io|
+    File.open cache_path, 'wb' do |io|
       io.write marshal
     end
   end
@@ -854,7 +854,7 @@ class RDoc::Store
 
     marshal = Marshal.dump klass
 
-    open path, 'wb' do |io|
+    File.open path, 'wb' do |io|
       io.write marshal
     end
   end
@@ -879,7 +879,7 @@ class RDoc::Store
 
     marshal = Marshal.dump method
 
-    open method_file(full_name, method.full_name), 'wb' do |io|
+    File.open method_file(full_name, method.full_name), 'wb' do |io|
       io.write marshal
     end
   end
@@ -901,7 +901,7 @@ class RDoc::Store
 
     marshal = Marshal.dump page
 
-    open path, 'wb' do |io|
+    File.open path, 'wb' do |io|
       io.write marshal
     end
   end

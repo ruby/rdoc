@@ -188,7 +188,7 @@ class RDoc::RDoc
       error "#{dir} exists and is not a directory" unless File.directory? dir
 
       begin
-        open flag_file do |io|
+        File.open flag_file do |io|
           unless force then
             Time.parse io.gets
 
@@ -233,7 +233,7 @@ option)
   def update_output_dir(op_dir, time, last = {})
     return if @options.dry_run or not @options.update_output_dir
 
-    open output_flag_file(op_dir), "w" do |f|
+    File.open output_flag_file(op_dir), "w" do |f|
       f.puts time.rfc2822
       last.each do |n, t|
         f.puts "#{n}\t#{t.rfc2822}"

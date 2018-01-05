@@ -69,7 +69,7 @@ class TestRDocServlet < RDoc::TestCase
       FileUtils.mkdir 'css'
 
       now = Time.now
-      open 'css/rdoc.css', 'w' do |io| io.write 'h1 { color: red }' end
+      File.open 'css/rdoc.css', 'w' do |io| io.write 'h1 { color: red }' end
       File.utime now, now, 'css/rdoc.css'
 
       @s.asset_dirs[:darkfish] = '.'
