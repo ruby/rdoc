@@ -115,7 +115,7 @@ class TestRDocRDoc < RDoc::TestCase
 
   def test_load_options_invalid
     temp_dir do
-      open '.rdoc_options', 'w' do |io|
+      File.open '.rdoc_options', 'w' do |io|
         io.write "a: !ruby.yaml.org,2002:str |\nfoo"
       end
 
@@ -187,7 +187,7 @@ class TestRDocRDoc < RDoc::TestCase
     temp_dir do |dir|
       @rdoc.options.root = Pathname(Dir.pwd)
 
-      open 'test.txt', 'w' do |io|
+      File.open 'test.txt', 'w' do |io|
         io.puts 'hi'
       end
 
@@ -223,7 +223,7 @@ class TestRDocRDoc < RDoc::TestCase
     temp_dir do |dir|
       @rdoc.options.parse %W[--root #{test_path}]
 
-      open 'include.txt', 'w' do |io|
+      File.open 'include.txt', 'w' do |io|
         io.puts ':include: test.txt'
       end
 
@@ -244,7 +244,7 @@ class TestRDocRDoc < RDoc::TestCase
       @rdoc.options.page_dir = Pathname('pages')
       @rdoc.options.root = Pathname(Dir.pwd)
 
-      open 'pages/test.txt', 'w' do |io|
+      File.open 'pages/test.txt', 'w' do |io|
         io.puts 'hi'
       end
 
@@ -263,7 +263,7 @@ class TestRDocRDoc < RDoc::TestCase
     temp_dir do |dir|
       @rdoc.options.root = Pathname(dir)
 
-      open 'test.txt', 'w' do |io|
+      File.open 'test.txt', 'w' do |io|
         io.puts 'hi'
       end
 
@@ -339,7 +339,7 @@ class TestRDocRDoc < RDoc::TestCase
 
   def test_remove_unparseable_tags_emacs
     temp_dir do
-      open 'TAGS', 'wb' do |io| # emacs
+      File.open 'TAGS', 'wb' do |io| # emacs
         io.write "\f\nlib/foo.rb,43\n"
       end
 
@@ -353,7 +353,7 @@ class TestRDocRDoc < RDoc::TestCase
 
   def test_remove_unparseable_tags_vim
     temp_dir do
-      open 'TAGS', 'w' do |io| # emacs
+      File.open 'TAGS', 'w' do |io| # emacs
         io.write "!_TAG_"
       end
 
@@ -392,7 +392,7 @@ class TestRDocRDoc < RDoc::TestCase
 
   def test_setup_output_dir_exists
     Dir.mktmpdir {|path|
-      open @rdoc.output_flag_file(path), 'w' do |io|
+      File.open @rdoc.output_flag_file(path), 'w' do |io|
         io.puts Time.at 0
         io.puts "./lib/rdoc.rb\t#{Time.at 86400}"
       end
@@ -406,7 +406,7 @@ class TestRDocRDoc < RDoc::TestCase
 
   def test_setup_output_dir_exists_empty_created_rid
     Dir.mktmpdir {|path|
-      open @rdoc.output_flag_file(path), 'w' do end
+      File.open @rdoc.output_flag_file(path), 'w' do end
 
       e = assert_raises RDoc::Error do
         @rdoc.setup_output_dir path, false

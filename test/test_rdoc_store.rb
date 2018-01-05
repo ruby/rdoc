@@ -407,7 +407,7 @@ class TestRDocStore < XrefTestCase
 
     Dir.mkdir @tmpdir
 
-    open File.join(@tmpdir, 'cache.ri'), 'wb' do |io|
+    File.open File.join(@tmpdir, 'cache.ri'), 'wb' do |io|
       Marshal.dump cache, io
     end
 
@@ -441,7 +441,7 @@ class TestRDocStore < XrefTestCase
 
     Dir.mkdir @tmpdir
 
-    open File.join(@tmpdir, 'cache.ri'), 'wb' do |io|
+    File.open File.join(@tmpdir, 'cache.ri'), 'wb' do |io|
       Marshal.dump cache, io
     end
 
@@ -490,7 +490,7 @@ class TestRDocStore < XrefTestCase
 
     Dir.mkdir @tmpdir
 
-    open File.join(@tmpdir, 'cache.ri'), 'wb' do |io|
+    File.open File.join(@tmpdir, 'cache.ri'), 'wb' do |io|
       Marshal.dump cache, io
     end
 
@@ -538,7 +538,7 @@ class TestRDocStore < XrefTestCase
 
     file = @s.method_file @klass.full_name, @meth.full_name
 
-    open file, 'wb' do |io|
+    File.open file, 'wb' do |io|
       io.write "\x04\bU:\x14RDoc::AnyMethod[\x0Fi\x00I" +
                "\"\vmethod\x06:\x06EF\"\x11Klass#method0:\vpublic" +
                "o:\eRDoc::Markup::Document\x06:\v@parts[\x06" +
@@ -633,7 +633,7 @@ class TestRDocStore < XrefTestCase
 
     expected[:ancestors]['Object'] = %w[BasicObject]
 
-    open File.join(@tmpdir, 'cache.ri'), 'rb' do |io|
+    File.open File.join(@tmpdir, 'cache.ri'), 'rb' do |io|
       cache = Marshal.load io.read
 
       assert_equal expected, cache
@@ -701,7 +701,7 @@ class TestRDocStore < XrefTestCase
 
     expected[:ancestors]['Object'] = %w[BasicObject]
 
-    open File.join(@tmpdir, 'cache.ri'), 'rb' do |io|
+    File.open File.join(@tmpdir, 'cache.ri'), 'rb' do |io|
       cache = Marshal.load io.read
 
       assert_equal expected, cache
