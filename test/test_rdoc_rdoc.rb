@@ -467,6 +467,25 @@ class TestRDocRDoc < RDoc::TestCase
     end
   end
 
+  def test_update_output_dir_with_reproducible_time
+    Dir.mktmpdir do |d|
+      backup_epoch = ENV['SOURCE_DATE_EPOCH']
+      ruby_birthday = Time.parse 'Wed, 24 Feb 1993 21:00:00 +0900'
+      ENV['SOURCE_DATE_EPOCH'] = ruby_birthday.to_i.to_s
+
+      @rdoc.update_output_dir d, Time.now, {}
+
+      assert File.exist? "#{d}/created.rid"
+
+      f = File.open("#{d}/created.rid", 'r')
+      head_timestamp = Time.parse f.gets.chomp
+      f.close
+      assert_equal ruby_birthday, head_timestamp
+
+      ENV['SOURCE_DATE_EPOCH'] = backup_epoch
+    end
+  end
+
   def test_normalized_file_list_removes_created_rid_dir
     temp_dir do |d|
       FileUtils.mkdir "doc"
