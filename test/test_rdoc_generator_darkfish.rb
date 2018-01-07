@@ -135,7 +135,7 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
   end
 
   def test_install_rdoc_static_file
-    src = Pathname(__FILE__)
+    src = Pathname File.expand_path(__FILE__, @pwd)
     dst = File.join @tmpdir, File.basename(src)
     options = {}
 
