@@ -378,6 +378,32 @@ paragraph will be cut off …
     assert_equal expected, strip_stars(text)
   end
 
+  def test_strip_stars_document_method_special
+    text = <<-TEXT
+/*
+ * Document-method: Zlib::GzipFile#mtime=
+ * Document-method: []
+ * Document-method: `
+ * Document-method: |
+ * Document-method: &
+ * Document-method: <=>
+ * Document-method: =~
+ * Document-method: +
+ * Document-method: -
+ * Document-method: +@
+ *
+ * A comment
+ */
+    TEXT
+
+    expected = <<-EXPECTED
+
+   A comment
+    EXPECTED
+
+    assert_equal expected, strip_stars(text)
+  end
+
   def test_strip_stars_encoding
     text = <<-TEXT
 /*
