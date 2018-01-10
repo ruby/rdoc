@@ -7,6 +7,18 @@
 
 module RDoc::Encoding
 
+  HEADER_REGEXP = /^
+    (?:
+      \A\#!.*\n
+      |
+      ^\#\s+frozen[-_]string[-_]literal[=:].+\n
+      |
+      ^\#[^\n]+\b(?:en)?coding[=:]\s*(?<name>[^\s;]+).*\n
+      |
+      <\?xml[^?]*encoding=(?<quote>["'])(?<name>.*?)\k<quote>.*\n
+    )+
+  /xi # :nodoc:
+
   ##
   # Reads the contents of +filename+ and handles any encoding directives in
   # the file.
@@ -89,20 +101,19 @@ module RDoc::Encoding
   # Detects the encoding of +string+ based on the magic comment
 
   def self.detect_encoding string
-    result = /
-      (?:
-        \A\#!.*\n
-        |
-        ^\#\s+frozen[-_]string[-_]literal[=:].+$
-        |
-        ^\#[^\n]+\b(?:en)?coding[=:]\s*(?<name>[^\s;]+).*$
-        |
-        <\?xml[^?]*encoding=(?<quote>["'])(?<name>.*?)\k<quote>
-      )+
-    /xi.match(string)
+    result = HEADER_REGEXP.match string
     name = result && result[:name]
 
     name ? Encoding.find(name) : nil
+  end
+
+  ##
+  # Removes magic comments and shebang
+
+  def self.remove_magic_comment string
+    string.sub HEADER_REGEXP do |s|
+      s.gsub(/[^\n]/, '')
+    end
   end
 
   ##
