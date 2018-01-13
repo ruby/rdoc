@@ -177,6 +177,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     @size = 0
     @token_listeners = nil
+    content = RDoc::Encoding.remove_magic_comment content
     @scanner = RDoc::RipperStateLex.parse(content)
     @content = content
     @scanner_point = 0
