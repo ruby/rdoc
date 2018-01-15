@@ -306,6 +306,36 @@ ruby
     assert_equal @top_level, sum.file
   end
 
+  def test_parse_on_ignored_nl_with_nil_text
+    util_parser <<ruby
+class Foo
+  def meth
+    variable # comment
+      .chain
+  end
+end
+ruby
+
+    expected = <<EXPECTED
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">meth</span>
+  <span class="ruby-identifier">variable</span> <span class="ruby-comment"># comment</span>
+    .<span class="ruby-identifier">chain</span>
+<span class="ruby-keyword">end</span>
+EXPECTED
+    expected = expected.rstrip
+
+    @parser.scan
+
+    foo = @store.find_class_named 'Foo'
+    meth = foo.method_list.first
+
+    assert_equal 'meth',     meth.name
+    assert_equal @top_level, meth.file
+
+    markup_code = meth.markup_code.sub(/^.*\n/, '')
+    assert_equal expected, markup_code
+  end
+
   def test_parse_redefined_op_with_constant
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
