@@ -341,8 +341,10 @@ class RDoc::RipperStateLex
       @heredoc_queue << retrieve_heredoc_info(tk)
       @inner_lex.lex_state = EXPR_END unless RIPPER_HAS_LEX_STATE
     when :on_nl, :on_ignored_nl, :on_comment, :on_heredoc_end then
-      unless @heredoc_queue.empty?
+      if !@heredoc_queue.empty?
         get_heredoc_tk(*@heredoc_queue.shift)
+      elsif tk[:text].nil? # :on_ignored_nl sometimes gives nil
+        tk[:text] = ''
       end
     when :on_words_beg then
       tk = get_words_tk(tk)
