@@ -162,7 +162,7 @@ class TestRDocStore < XrefTestCase
 
   def test_all_classes_and_modules
     expected = %w[
-      C1 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1 C6 C7
+      C1 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1 C6 C7 C8 C8::S1
       Child
       M1 M1::M2
       Parent
@@ -213,7 +213,7 @@ class TestRDocStore < XrefTestCase
 
   def test_classes
     expected = %w[
-      C1 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1 C6 C7
+      C1 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1 C6 C7 C8 C8::S1
       Child
       Parent
     ]
@@ -522,6 +522,15 @@ class TestRDocStore < XrefTestCase
     assert_equal @klass, @s.load_class('Object')
 
     assert_includes @s.classes_hash, 'Object'
+  end
+
+  def test_load_single_class
+    @s.save_class @c8_s1
+    @s.classes_hash.clear
+
+    assert_equal @c8_s1, @s.load_class('C8::S1')
+
+    assert_includes @s.classes_hash, 'C8::S1'
   end
 
   def test_load_method

@@ -585,6 +585,8 @@ class RDoc::Store
     case obj
     when RDoc::NormalClass then
       @classes_hash[klass_name] = obj
+    when RDoc::SingleClass then
+      @classes_hash[klass_name] = obj
     when RDoc::NormalModule then
       @modules_hash[klass_name] = obj
     end
