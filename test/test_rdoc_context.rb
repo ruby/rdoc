@@ -559,6 +559,14 @@ class TestRDocContext < XrefTestCase
     assert_equal @c2_c3,     @c2.find_local_symbol('C3')
   end
 
+  def test_find_method
+    loaded_c2 = Marshal.load Marshal.dump @c2
+    assert_equal @c2_a, loaded_c2.find_method('a', false)
+    assert_equal @c2_b, loaded_c2.find_method('b', false)
+    assert_equal @c2_a, loaded_c2.find_method('a', nil)
+    assert_equal @c2_b, loaded_c2.find_method('b', nil)
+  end
+
   def test_find_method_named
     assert_equal true, @c1.find_method_named('m').singleton
   end

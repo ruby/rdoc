@@ -863,7 +863,13 @@ class RDoc::Context < RDoc::CodeObject
   # Finds a method named +name+ with singleton value +singleton+.
 
   def find_method(name, singleton)
-    @method_list.find { |m| m.name == name && m.singleton == singleton }
+    @method_list.find { |m|
+      if m.singleton
+        m.name == name && m.singleton == singleton
+      else
+        m.name == name && !m.singleton && !singleton
+      end
+    }
   end
 
   ##

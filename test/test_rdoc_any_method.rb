@@ -151,6 +151,19 @@ method(a, b) { |c, d| ... }
     assert                aliased_method.display?
   end
 
+  def test_marshal_load_aliased_method_with_nil_singleton
+    aliased_method = Marshal.load Marshal.dump(@c2_a)
+
+    aliased_method.store = @store
+    aliased_method.is_alias_for = ["C2", nil, "b"]
+
+    assert_equal 'C2#a',  aliased_method.full_name
+    assert_equal 'C2',    aliased_method.parent_name
+    assert_equal '()',    aliased_method.params
+    assert_equal @c2_b,   aliased_method.is_alias_for, 'is_alias_for'
+    assert                aliased_method.display?
+  end
+
   def test_marshal_load_class_method
     class_method = Marshal.load Marshal.dump(@c1.method_list.first)
 
