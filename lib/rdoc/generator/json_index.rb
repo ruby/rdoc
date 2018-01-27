@@ -147,12 +147,15 @@ class RDoc::Generator::JsonIndex
 
       JSON.dump data, io, 0
     end
+    unless ENV['SOURCE_DATE_EPOCH'].nil?
+      index_file.utime index_file.atime, Time.at(ENV['SOURCE_DATE_EPOCH'].to_i).gmtime
+    end
 
     Dir.chdir @template_dir do
       Dir['**/*.js'].each do |source|
         dest = File.join out_dir, source
 
-        FileUtils.install source, dest, :mode => 0644, :verbose => $DEBUG_RDOC
+        FileUtils.install source, dest, :mode => 0644, :preserve => true, :verbose => $DEBUG_RDOC
       end
     end
   end
@@ -175,7 +178,7 @@ class RDoc::Generator::JsonIndex
     debug_msg "Writing gzipped search index to %s" % outfile
 
     Zlib::GzipWriter.open(outfile) do |gz|
-      gz.mtime = 1 # make output reproducible
+      gz.mtime = File.mtime(search_index_file)
       gz.orig_name = search_index_file.basename.to_s
       gz.write search_index
       gz.close
@@ -193,7 +196,7 @@ class RDoc::Generator::JsonIndex
         debug_msg "Writing gzipped file to %s" % outfile
 
         Zlib::GzipWriter.open(outfile) do |gz|
-          gz.mtime = 1 # make output reproducible
+          gz.mtime = File.mtime(dest)
           gz.orig_name = dest.basename.to_s
           gz.write data
           gz.close
