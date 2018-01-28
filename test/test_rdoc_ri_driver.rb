@@ -243,6 +243,32 @@ class TestRDocRIDriver < RDoc::TestCase
     assert_equal expected, out
   end
 
+  def test_add_method_that_is_alias_for_original
+    util_store
+
+    out = doc
+
+    @driver.add_method out, 'Qux#aliased'
+
+    expected =
+      doc(
+        head(1, 'Qux#aliased'),
+        blank_line,
+        para('(from ~/.rdoc)'),
+        rule(1),
+        blank_line,
+        para('alias comment'),
+        blank_line,
+        blank_line,
+        para('(this method is alias for Qux#original)'),
+        blank_line,
+        para('original comment'),
+        blank_line,
+        blank_line)
+
+    assert_equal expected, out
+  end
+
   def test_add_method_attribute
     util_store
 
@@ -406,6 +432,7 @@ class TestRDocRIDriver < RDoc::TestCase
       'Foo::Bar'  => [@store1],
       'Foo::Baz'  => [@store1, @store2],
       'Inc'       => [@store1],
+      'Qux'       => [@store1],
     }
 
     classes = @driver.classes
@@ -939,6 +966,7 @@ Foo::Bar#bother
       [@store1, 'Foo::Bar',  'Foo::Bar',  :both, 'blah'],
       [@store1, 'Foo::Baz',  'Foo::Baz',  :both, 'blah'],
       [@store1, 'Inc',       'Inc',       :both, 'blah'],
+      [@store1, 'Qux',       'Qux',       :both, 'blah'],
     ]
 
     assert_equal expected, items
@@ -1072,7 +1100,7 @@ Foo::Bar#bother
       @driver.list_known_classes
     end
 
-    assert_equal "Ambiguous\nExt\nFoo\nFoo::Bar\nFoo::Baz\nInc\n", out
+    assert_equal "Ambiguous\nExt\nFoo\nFoo::Bar\nFoo::Baz\nInc\nQux\n", out
   end
 
   def test_list_known_classes_name
@@ -1496,6 +1524,15 @@ Foo::Bar#bother
     @overridden = @cFoo.add_method RDoc::AnyMethod.new(nil, 'override')
     @overridden.comment = 'must not be displayed in Bar#override'
     @overridden.record_location @top_level
+
+    @cQux = @top_level.add_class RDoc::NormalClass, 'Qux'
+
+    @original = @cQux.add_method RDoc::AnyMethod.new(nil, 'original')
+    @original.comment = 'original comment'
+    @original.record_location @top_level
+
+    @aliased = @original.add_alias RDoc::Alias.new(nil, 'original', 'aliased', 'alias comment'), @cQux
+    @aliased.record_location @top_level
 
     @store1.save
 

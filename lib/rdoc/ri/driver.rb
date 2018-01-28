@@ -1443,7 +1443,13 @@ or the PAGER environment variable.
 
     render_method_arguments out, method.arglists
     render_method_superclass out, method
-    render_method_comment out, method
+    if method.is_alias_for
+      al = method.is_alias_for
+      alias_for = store.load_method al.parent_name, "#{al.name_prefix}#{al.name}"
+      render_method_comment out, method, alias_for
+    else
+      render_method_comment out, method
+    end
   end
 
   def render_method_arguments out, arglists # :nodoc:
@@ -1455,10 +1461,22 @@ or the PAGER environment variable.
     out << RDoc::Markup::Rule.new(1)
   end
 
-  def render_method_comment out, method # :nodoc:
-    out << RDoc::Markup::BlankLine.new
-    out << method.comment
-    out << RDoc::Markup::BlankLine.new
+  def render_method_comment out, method, alias_for = nil# :nodoc:
+    if alias_for
+      unless method.comment.nil? or method.comment.empty?
+        out << RDoc::Markup::BlankLine.new
+        out << method.comment
+      end
+      out << RDoc::Markup::BlankLine.new
+      out << RDoc::Markup::Paragraph.new("(this method is alias for #{alias_for.full_name})")
+      out << RDoc::Markup::BlankLine.new
+      out << alias_for.comment
+      out << RDoc::Markup::BlankLine.new
+    else
+      out << RDoc::Markup::BlankLine.new
+      out << method.comment
+      out << RDoc::Markup::BlankLine.new
+    end
   end
 
   def render_method_superclass out, method # :nodoc:
