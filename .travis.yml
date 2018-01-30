@@ -11,4 +11,4 @@ rvm:
 env:
   global:
     NOBENCHMARK=1
-script: bundle exec rake
+script: rake
