@@ -874,6 +874,31 @@ end
     assert_match(/Expected class name or '<<'\. Got/, err)
   end
 
+  def test_parse_syntax_error_code
+    @options.verbosity = 2
+    stds = capture_io do
+      begin
+        util_parser <<INVALID_CODE
+# invalid class name
+class Invalid::@@Code
+end
+INVALID_CODE
+        @parser.scan
+      rescue
+      end
+    end
+    err = stds[1]
+
+    expected = <<EXPECTED
+RDoc::Parser::Ruby failure around line 2 of
+#{@filename}
+
+class Invalid::@@Code
+EXPECTED
+
+    assert_match(expected, err)
+  end
+
   def test_parse_multi_ghost_methods
     util_parser <<-'CLASS'
 class Foo
