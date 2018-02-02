@@ -153,7 +153,7 @@ module RDoc
 
   autoload :Comment,        'rdoc/comment'
 
-  autoload :I18n,           'rdoc/i18n'
+  require 'rdoc/i18n'
 
   # code objects
   #
