@@ -1,7 +1,7 @@
 # coding: utf-8
 # frozen_string_literal: true
 
-require 'rdoc/test_case'
+require 'minitest_helper'
 
 class TestRDocMarkupParser < RDoc::TestCase
 
