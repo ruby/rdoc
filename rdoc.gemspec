@@ -5,6 +5,7 @@ rescue LoadError
     # for Ruby repository
     require_relative "../rdoc"
   rescue LoadError
+    # for JRuby
     $LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
     require "rdoc"
   end
