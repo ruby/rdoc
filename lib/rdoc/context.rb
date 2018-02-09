@@ -407,6 +407,7 @@ class RDoc::Context < RDoc::CodeObject
     mod.section = current_section # TODO declaring context? something is
                                   # wrong here...
     mod.parent = self
+    mod.full_name = nil
     mod.store = @store
 
     unless @done_documenting then
@@ -507,6 +508,13 @@ class RDoc::Context < RDoc::CodeObject
     full_name = child_name name
     mod = @store.modules_hash[full_name] || class_type.new(name)
 
+    add_class_or_module mod, @modules, @store.modules_hash
+  end
+
+  ##
+  # Adds a module by +RDoc::NormalModule+ instance. See also #add_module.
+
+  def add_module_by_normal_module(mod)
     add_class_or_module mod, @modules, @store.modules_hash
   end
 

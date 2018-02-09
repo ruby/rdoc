@@ -356,12 +356,15 @@ class RDoc::Parser::Ruby < RDoc::Parser
     given_name << name_t[:text]
 
     is_self = name_t[:kind] == :on_op && name_t[:text] == '<<'
+    new_modules = []
     while !is_self && (tk = peek_tk) and :on_op == tk[:kind] and '::' == tk[:text] do
       prev_container = container
       container = container.find_module_named name_t[:text]
       container ||=
         if ignore_constants then
-          RDoc::Context.new
+          c = RDoc::NormalModule.new name_t[:text]
+          new_modules << [prev_container, c]
+          c
         else
           c = prev_container.add_module RDoc::NormalModule, name_t[:text]
           c.ignore unless prev_container.document_children
@@ -386,7 +389,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     skip_tkspace false
 
-    return [container, name_t, given_name]
+    return [container, name_t, given_name, new_modules]
   end
 
   ##
@@ -761,7 +764,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     line_no = tk[:line_no]
 
     declaration_context = container
-    container, name_t, given_name = get_class_or_module container
+    container, name_t, given_name, = get_class_or_module container
 
     if name_t[:kind] == :on_const
       cls = parse_class_regular container, declaration_context, single,
@@ -878,10 +881,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     return unless name =~ /^\w+$/
 
+    new_modules = []
     if :on_op == peek_tk[:kind] && '::' == peek_tk[:text] then
       unget_tk tk
 
-      container, name_t, = get_class_or_module container, ignore_constants
+      container, name_t, _, new_modules = get_class_or_module container, true
 
       name = name_t[:text]
     end
@@ -907,6 +911,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
       return false
     end
     get_tk
+
+    unless ignore_constants
+      new_modules.each do |prev_c, new_module|
+        prev_c.add_module_by_normal_module new_module
+        new_module.ignore unless prev_c.document_children
+        @top_level.add_to_classes_or_modules new_module
+      end
+    end
 
     value = ''
     con = RDoc::Constant.new name, value, comment

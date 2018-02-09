@@ -3928,4 +3928,29 @@ end
                                       second_file_content, @options, @stats
   end
 
+  def test_parse_const_third_party
+    util_parser <<-CLASS
+class A
+  true if B
+  true if B::C
+  true if B::C::D
+
+  module B
+  end
+end
+    CLASS
+
+    tk = @parser.get_tk
+
+    @parser.parse_class @top_level, RDoc::Parser::Ruby::NORMAL, tk, @comment
+
+    a = @top_level.classes.first
+    assert_equal 'A', a.full_name
+
+    visible = @store.all_modules.reject { |mod| mod.suppressed? }
+    visible = visible.map { |mod| mod.full_name }
+
+    assert_equal ['A::B'], visible
+  end
+
 end
