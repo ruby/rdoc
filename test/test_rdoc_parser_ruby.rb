@@ -1388,6 +1388,9 @@ EOF
 
     @parser.parse_constant klass, tk, @comment
 
+    assert_equal [], klass.modules.map(&:full_name)
+    assert_equal ['Foo::B', 'Foo::A'], klass.classes.map(&:full_name)
+    assert_equal ['Foo::A'], klass.constants.map(&:full_name)
     assert_equal 'Foo::A', klass.find_module_named('A').full_name
   end
 
