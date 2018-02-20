@@ -222,7 +222,8 @@ class TestRDocStore < XrefTestCase
   end
 
   def test_complete
-    @c2.add_module_alias @c2_c3, 'A1', @top_level
+    a1 = RDoc::Constant.new 'A1', '', ''
+    @c2.add_module_alias @c2_c3, @c2_c3.name, a1, @top_level
 
     @store.complete :public
 

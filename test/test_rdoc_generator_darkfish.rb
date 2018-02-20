@@ -39,7 +39,7 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
 
     @top_level.add_constant @alias_constant
 
-    @klass.add_module_alias @klass, 'A', @top_level
+    @klass.add_module_alias @klass, @klass.name, @alias_constant, @top_level
 
     @meth = RDoc::AnyMethod.new nil, 'method'
     @meth_bang = RDoc::AnyMethod.new nil, 'method!'

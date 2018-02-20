@@ -415,6 +415,10 @@ class RDoc::Context < RDoc::CodeObject
       # this must be done AFTER adding mod to its parent, so that the full
       # name is correct:
       all_hash[mod.full_name] = mod
+      if @store.unmatched_constant_alias[mod.full_name] then
+        to, file = @store.unmatched_constant_alias[mod.full_name]
+        add_module_alias mod, mod.name, to, file
+      end
     end
 
     mod
@@ -522,37 +526,42 @@ class RDoc::Context < RDoc::CodeObject
   # Adds an alias from +from+ (a class or module) to +name+ which was defined
   # in +file+.
 
-  def add_module_alias from, name, file
+  def add_module_alias from, from_name, to, file
     return from if @done_documenting
 
-    to_name = child_name name
+    to_full_name = child_name to.name
 
     # if we already know this name, don't register an alias:
     # see the metaprogramming in lib/active_support/basic_object.rb,
     # where we already know BasicObject is a class when we find
     # BasicObject = BlankSlate
-    return from if @store.find_class_or_module to_name
+    return from if @store.find_class_or_module to_full_name
 
-    to = from.dup
-    to.name = name
-    to.full_name = nil
+    unless from
+      @store.unmatched_constant_alias[child_name(from_name)] = [to, file]
+      return to
+    end
 
-    if to.module? then
-      @store.modules_hash[to_name] = to
-      @modules[name] = to
+    new_to = from.dup
+    new_to.name = to.name
+    new_to.full_name = nil
+
+    if new_to.module? then
+      @store.modules_hash[to_full_name] = new_to
+      @modules[to.name] = new_to
     else
-      @store.classes_hash[to_name] = to
-      @classes[name] = to
+      @store.classes_hash[to_full_name] = new_to
+      @classes[to.name] = new_to
     end
 
     # Registers a constant for this alias.  The constant value and comment
     # will be updated later, when the Ruby parser adds the constant
-    const = RDoc::Constant.new name, nil, to.comment
+    const = RDoc::Constant.new to.name, nil, new_to.comment
     const.record_location file
     const.is_alias_for = from
     add_constant const
 
-    to
+    new_to
   end
 
   ##

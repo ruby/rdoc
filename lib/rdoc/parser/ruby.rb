@@ -307,7 +307,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
             container.find_module_named rhs_name
           end
 
-    container.add_module_alias mod, constant.name, @top_level if mod
+    container.add_module_alias mod, rhs_name, constant, @top_level
   end
 
   ##
