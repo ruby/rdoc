@@ -117,6 +117,11 @@ class RDoc::Store
   attr_accessor :encoding
 
   ##
+  # The lazy constants alias will be discovered in passing
+
+  attr_reader :unmatched_constant_alias
+
+  ##
   # Creates a new Store of +type+ that will load or save to +path+
 
   def initialize path = nil, type = nil
@@ -152,6 +157,8 @@ class RDoc::Store
 
     @unique_classes = nil
     @unique_modules = nil
+
+    @unmatched_constant_alias = {}
   end
 
   ##

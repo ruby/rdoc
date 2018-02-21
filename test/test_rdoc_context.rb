@@ -280,7 +280,8 @@ class TestRDocContext < XrefTestCase
   def test_add_module_alias
     tl = @store.add_file 'file.rb'
 
-    c3_c4 = @c2.add_module_alias @c2_c3, 'C4', tl
+    c4 = RDoc::Constant.new 'C4', '', ''
+    c3_c4 = @c2.add_module_alias @c2_c3, @c2_c3.name, c4, tl
 
     alias_constant = @c2.constants.first
 
@@ -298,7 +299,8 @@ class TestRDocContext < XrefTestCase
 
     object = top_level.add_class RDoc::NormalClass, 'Object'
 
-    top_level.add_module_alias klass, 'A', top_level
+    a = RDoc::Constant.new 'A', '', ''
+    top_level.add_module_alias klass, klass.name, a, top_level
 
     refute_empty object.constants
 
