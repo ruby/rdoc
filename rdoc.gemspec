@@ -14,7 +14,6 @@ end
 Gem::Specification.new do |s|
   s.name = "rdoc"
   s.version = RDoc::VERSION
-  s.date = "2017-12-24"
 
   s.authors = [
     "Eric Hodel",
