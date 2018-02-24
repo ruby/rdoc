@@ -181,6 +181,60 @@ class TestRDocRDoc < RDoc::TestCase
     assert_match %r"#{dev}$",           err
   end
 
+  def test_normalized_file_list_with_dot_doc
+    expected_files = []
+    files = temp_dir do |dir|
+      a = File.expand_path('a.rb')
+      b = File.expand_path('b.rb')
+      c = File.expand_path('c.rb')
+      FileUtils.touch a
+      FileUtils.touch b
+      FileUtils.touch c
+
+      dot_doc = File.expand_path('.document')
+      FileUtils.touch dot_doc
+      open(dot_doc, 'w') do |f|
+        f.puts 'a.rb'
+        f.puts 'b.rb'
+      end
+      expected_files << a
+      expected_files << b
+
+      @rdoc.normalized_file_list [dir]
+    end
+
+    files = files.map { |file| File.expand_path file }
+
+    assert_equal expected_files, files
+  end
+
+  def test_normalized_file_list_with_dot_doc_overridden_by_exclude_option
+    expected_files = []
+    files = temp_dir do |dir|
+      a = File.expand_path('a.rb')
+      b = File.expand_path('b.rb')
+      c = File.expand_path('c.rb')
+      FileUtils.touch a
+      FileUtils.touch b
+      FileUtils.touch c
+
+      dot_doc = File.expand_path('.document')
+      FileUtils.touch dot_doc
+      open(dot_doc, 'w') do |f|
+        f.puts 'a.rb'
+        f.puts 'b.rb'
+      end
+      expected_files << a
+
+      @rdoc.options.exclude = Regexp.new(['b.rb'].join('|'))
+      @rdoc.normalized_file_list [dir]
+    end
+
+    files = files.map { |file| File.expand_path file }
+
+    assert_equal expected_files, files
+  end
+
   def test_parse_file
     @rdoc.store = RDoc::Store.new
 

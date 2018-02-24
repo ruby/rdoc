@@ -258,7 +258,7 @@ option)
 
     patterns.split.each do |patt|
       candidates = Dir.glob(File.join(in_dir, patt))
-      result.concat normalized_file_list(candidates)
+      result.concat normalized_file_list(candidates, false, @options.exclude)
     end
 
     result
