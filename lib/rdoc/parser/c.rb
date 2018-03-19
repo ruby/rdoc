@@ -487,7 +487,9 @@ class RDoc::Parser::C < RDoc::Parser
                              \s*(-?\w+)\s*\)
                 (?:;\s*/[*/]\s+in\s+(\w+?\.[cy]))?
                 %xm) do |meth_name, function, param_count, source_file|
-      handle_method("method", "rb_mKernel", meth_name, function, param_count,
+      handle_method("private_method", "rb_mKernel", meth_name, function, param_count,
+                    source_file)
+      handle_method("singleton_method", "rb_mKernel", meth_name, function, param_count,
                     source_file)
     end
 
