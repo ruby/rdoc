@@ -96,7 +96,13 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
     assert_file 'js/navigation.js'
     assert_file 'js/search_index.js'
 
-    orig_file = Pathname(File.join @pwd, 'lib/rdoc/generator/template/json_index/js/navigation.js')
+    srcdir = File.expand_path("../../lib/rdoc", __FILE__)
+    if !File.directory? srcdir
+      # for Ruby core repository
+      srcdir = File.expand_path("../../../lib/rdoc", __FILE__)
+    end
+
+    orig_file = Pathname(File.join srcdir, 'generator/template/json_index/js/navigation.js')
     generated_file = Pathname(File.join @tmpdir, 'js/navigation.js')
 
     # This is dirty hack on JRuby for MiniTest 4
