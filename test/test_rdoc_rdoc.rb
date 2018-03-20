@@ -200,7 +200,7 @@ class TestRDocRDoc < RDoc::TestCase
       expected_files << a
       expected_files << b
 
-      @rdoc.normalized_file_list [dir]
+      @rdoc.normalized_file_list [File.realpath(dir)]
     end
 
     files = files.map { |file| File.expand_path file }
@@ -227,7 +227,7 @@ class TestRDocRDoc < RDoc::TestCase
       expected_files << a
 
       @rdoc.options.exclude = Regexp.new(['b.rb'].join('|'))
-      @rdoc.normalized_file_list [dir]
+      @rdoc.normalized_file_list [File.realpath(dir)]
     end
 
     files = files.map { |file| File.expand_path file }
