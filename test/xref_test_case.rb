@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 ENV['RDOC_TEST'] = 'yes'
 
-require 'rdoc'
+require 'minitest_helper'
 require File.expand_path '../xref_data', __FILE__
 
 class XrefTestCase < RDoc::TestCase

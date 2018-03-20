@@ -125,8 +125,6 @@ module RDoc
 
   autoload :RDoc,           'rdoc/rdoc'
 
-  autoload :TestCase,       'rdoc/test_case'
-
   autoload :CrossReference, 'rdoc/cross_reference'
   autoload :ERBIO,          'rdoc/erbio'
   autoload :ERBPartial,     'rdoc/erb_partial'
