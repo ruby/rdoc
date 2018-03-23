@@ -77,7 +77,7 @@ call-seq:
 
     comment.extract_call_seq m
 
-    assert_equal nil, m.call_seq
+    assert_nil m.call_seq
   end
 
   def test_extract_call_seq_no_blank

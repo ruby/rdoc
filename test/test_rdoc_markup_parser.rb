@@ -1068,7 +1068,7 @@ the time
 
     assert_equal [:NEWLINE, "\n", 9, 0], parser.peek_token
 
-    assert_equal nil, parser.skip(:NONE, false)
+    assert_nil parser.skip(:NONE, false)
 
     assert_equal [:NEWLINE, "\n", 9, 0], parser.peek_token
   end

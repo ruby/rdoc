@@ -231,8 +231,8 @@ class C; end
     @parser.look_for_directives_in @top_level, comment
 
     section = @top_level.current_section
-    assert_equal nil, section.title
-    assert_equal nil, section.comment
+    assert_nil   section.title
+    assert_nil   section.comment
 
     assert_equal "# how to make a section:\n# # :section: new section\n",
                  comment.text
@@ -1225,7 +1225,7 @@ EOF
     assert_equal @top_level, foo.file
     assert_equal 1,          foo.line
 
-    assert_equal nil,        foo.viewer
+    assert_nil               foo.viewer
     assert_equal true,       foo.document_children
     assert_equal true,       foo.document_self
     assert_equal false,      foo.done_documenting
@@ -1288,21 +1288,21 @@ EOF
     assert_equal @top_level,  foo.file
     assert_equal 1,           foo.line
 
-    assert_equal [],        foo.aliases
-    assert_equal nil,       foo.block_params
-    assert_equal nil,       foo.call_seq
-    assert_equal nil,       foo.is_alias_for
-    assert_equal nil,       foo.viewer
-    assert_equal true,      foo.document_children
-    assert_equal true,      foo.document_self
-    assert_equal '',        foo.params
-    assert_equal false,     foo.done_documenting
-    assert_equal false,     foo.dont_rename_initialize
-    assert_equal false,     foo.force_documentation
-    assert_equal klass,     foo.parent
-    assert_equal false,     foo.singleton
-    assert_equal :public,   foo.visibility
-    assert_equal "\n",      foo.text
+    assert_equal [],          foo.aliases
+    assert_nil                foo.block_params
+    assert_nil                foo.call_seq
+    assert_nil                foo.is_alias_for
+    assert_nil                foo.viewer
+    assert_equal true,        foo.document_children
+    assert_equal true,        foo.document_self
+    assert_equal '',          foo.params
+    assert_equal false,       foo.done_documenting
+    assert_equal false,       foo.dont_rename_initialize
+    assert_equal false,       foo.force_documentation
+    assert_equal klass,       foo.parent
+    assert_equal false,       foo.singleton
+    assert_equal :public,     foo.visibility
+    assert_equal "\n",        foo.text
     assert_equal klass.current_section, foo.section
 
     stream = [
@@ -1605,19 +1605,19 @@ end
     assert_equal 1,           foo.line
 
     assert_equal [],      foo.aliases
-    assert_equal nil,     foo.block_params
-    assert_equal nil,     foo.call_seq
+    assert_nil            foo.block_params
+    assert_nil            foo.call_seq
     assert_equal true,    foo.document_children
     assert_equal true,    foo.document_self
     assert_equal false,   foo.done_documenting
     assert_equal false,   foo.dont_rename_initialize
     assert_equal false,   foo.force_documentation
-    assert_equal nil,     foo.is_alias_for
+    assert_nil            foo.is_alias_for
     assert_equal '',      foo.params
     assert_equal klass,   foo.parent
     assert_equal false,   foo.singleton
     assert_equal 'add_my_method :foo', foo.text
-    assert_equal nil,     foo.viewer
+    assert_nil            foo.viewer
     assert_equal :public, foo.visibility
     assert_equal klass.current_section, foo.section
 
@@ -1815,10 +1815,10 @@ end
     assert_equal 1,           foo.line
 
     assert_equal [],        foo.aliases
-    assert_equal nil,       foo.block_params
-    assert_equal nil,       foo.call_seq
-    assert_equal nil,       foo.is_alias_for
-    assert_equal nil,       foo.viewer
+    assert_nil              foo.block_params
+    assert_nil              foo.call_seq
+    assert_nil              foo.is_alias_for
+    assert_nil              foo.viewer
     assert_equal true,      foo.document_children
     assert_equal true,      foo.document_self
     assert_equal '()',      foo.params
@@ -3070,12 +3070,12 @@ RUBY
 
     @parser.skip_tkspace
 
-    assert_equal nil, @parser.parse_symbol_in_arg
+    assert_nil @parser.parse_symbol_in_arg
     @parser.get_tk # skip ','
 
     @parser.skip_tkspace
 
-    assert_equal nil, @parser.parse_symbol_in_arg
+    assert_nil @parser.parse_symbol_in_arg
   end
 
   def test_parse_statements_alias_method
@@ -3179,7 +3179,7 @@ end
     assert_equal 'category', directive
     assert_equal 'test', value
 
-    assert_equal nil, parser.get_tk
+    assert_nil parser.get_tk
   end
 
   def test_read_directive_allow
@@ -3189,7 +3189,7 @@ end
 
     assert_nil directive
 
-    assert_equal nil, parser.get_tk
+    assert_nil parser.get_tk
   end
 
   def test_read_directive_empty
@@ -3199,7 +3199,7 @@ end
 
     assert_nil directive
 
-    assert_equal nil, parser.get_tk
+    assert_nil parser.get_tk
   end
 
   def test_read_directive_no_comment
@@ -3209,7 +3209,7 @@ end
 
     assert_nil directive
 
-    assert_equal nil, parser.get_tk
+    assert_nil parser.get_tk
   end
 
   def test_read_directive_one_liner
@@ -3286,14 +3286,14 @@ end
     util_parser '"#{"#{"a")}" if b}"'
 
     assert_equal '"#{"#{"a")}" if b}"', @parser.get_tk[:text]
-    assert_equal nil, @parser.get_tk
+    assert_nil @parser.get_tk
   end
 
   def test_sanity_interpolation_curly
     util_parser '%{ #{} }'
 
     assert_equal '%{ #{} }', @parser.get_tk[:text]
-    assert_equal nil, @parser.get_tk
+    assert_nil @parser.get_tk
   end
 
   def test_sanity_interpolation_format

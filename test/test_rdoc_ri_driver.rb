@@ -1171,7 +1171,7 @@ Foo::Bar#bother
     method = @driver.load_method(@store2, :instance_methods, 'Bar', '#',
                                  'inherit')
 
-    assert_equal nil, method
+    assert_nil method
   end
 
   def test_load_methods_matching
@@ -1276,7 +1276,7 @@ Foo::Bar#bother
 
     assert_equal 'ruby',   klass, 'ruby project'
     assert_equal ':',      type,  'ruby type'
-    assert_equal nil,      meth,  'ruby page'
+    assert_nil             meth,  'ruby page'
   end
 
   def test_parse_name_page_extenson
@@ -1291,26 +1291,26 @@ Foo::Bar#bother
     klass, type, meth = @driver.parse_name 'Foo'
 
     assert_equal 'Foo', klass, 'Foo class'
-    assert_equal nil,   type,  'Foo type'
-    assert_equal nil,   meth,  'Foo method'
+    assert_nil          type,  'Foo type'
+    assert_nil          meth,  'Foo method'
 
     klass, type, meth = @driver.parse_name 'Foo#'
 
     assert_equal 'Foo', klass, 'Foo# class'
     assert_equal '#',   type,  'Foo# type'
-    assert_equal nil,   meth,  'Foo# method'
+    assert_nil          meth,  'Foo# method'
 
     klass, type, meth = @driver.parse_name 'Foo::'
 
     assert_equal 'Foo', klass, 'Foo:: class'
     assert_equal '::',  type,  'Foo:: type'
-    assert_equal nil,   meth,  'Foo:: method'
+    assert_nil          meth,  'Foo:: method'
 
     klass, type, meth = @driver.parse_name 'Foo.'
 
     assert_equal 'Foo', klass, 'Foo. class'
     assert_equal '.',   type,  'Foo. type'
-    assert_equal nil,   meth,  'Foo. method'
+    assert_nil          meth,  'Foo. method'
 
     klass, type, meth = @driver.parse_name 'Foo#Bar'
 
@@ -1335,14 +1335,14 @@ Foo::Bar#bother
     klass, type, meth = @driver.parse_name 'Foo::Bar'
 
     assert_equal 'Foo::Bar', klass, 'Foo::Bar class'
-    assert_equal nil,        type,  'Foo::Bar type'
-    assert_equal nil,        meth,  'Foo::Bar method'
+    assert_nil               type,  'Foo::Bar type'
+    assert_nil               meth,  'Foo::Bar method'
 
     klass, type, meth = @driver.parse_name 'Foo::Bar#'
 
     assert_equal 'Foo::Bar', klass, 'Foo::Bar# class'
     assert_equal '#',        type,  'Foo::Bar# type'
-    assert_equal nil,        meth,  'Foo::Bar# method'
+    assert_nil               meth,  'Foo::Bar# method'
 
     klass, type, meth = @driver.parse_name 'Foo::Bar#baz'
 

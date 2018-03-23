@@ -14,10 +14,10 @@ class TestRDocContext < XrefTestCase
     assert_empty @context.in_files
     assert_equal 'unknown', @context.name
     assert_equal '', @context.comment
-    assert_equal nil, @context.parent
+    assert_nil   @context.parent
     assert_equal :public, @context.visibility
     assert_equal 1, @context.sections.length
-    assert_equal nil, @context.temporary_section
+    assert_nil   @context.temporary_section
 
     assert_empty @context.classes_hash
     assert_empty @context.modules_hash
@@ -514,7 +514,7 @@ class TestRDocContext < XrefTestCase
   end
 
   def test_find_attribute_named
-    assert_equal nil,  @c1.find_attribute_named('none')
+    assert_nil         @c1.find_attribute_named('none')
     assert_equal 'R',  @c1.find_attribute_named('attr').rw
     assert_equal 'R',  @c1.find_attribute_named('attr_reader').rw
     assert_equal 'W',  @c1.find_attribute_named('attr_writer').rw
@@ -522,7 +522,7 @@ class TestRDocContext < XrefTestCase
   end
 
   def test_find_class_method_named
-    assert_equal nil, @c1.find_class_method_named('none')
+    assert_nil @c1.find_class_method_named('none')
 
     m = @c1.find_class_method_named('m')
     assert_instance_of RDoc::AnyMethod, m
@@ -530,23 +530,23 @@ class TestRDocContext < XrefTestCase
   end
 
   def test_find_constant_named
-    assert_equal nil,      @c1.find_constant_named('NONE')
+    assert_nil             @c1.find_constant_named('NONE')
     assert_equal ':const', @c1.find_constant_named('CONST').value
   end
 
   def test_find_enclosing_module_named
-    assert_equal nil, @c2_c3.find_enclosing_module_named('NONE')
+    assert_nil        @c2_c3.find_enclosing_module_named('NONE')
     assert_equal @c1, @c2_c3.find_enclosing_module_named('C1')
     assert_equal @c2, @c2_c3.find_enclosing_module_named('C2')
   end
 
   def test_find_file_named
-    assert_equal nil,        @c1.find_file_named('nonexistent.rb')
+    assert_nil               @c1.find_file_named('nonexistent.rb')
     assert_equal @xref_data, @c1.find_file_named(@file_name)
   end
 
   def test_find_instance_method_named
-    assert_equal nil, @c1.find_instance_method_named('none')
+    assert_nil @c1.find_instance_method_named('none')
 
     m = @c1.find_instance_method_named('m')
     assert_instance_of RDoc::AnyMethod, m
