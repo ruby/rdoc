@@ -159,17 +159,17 @@ class TestRDocEncoding < RDoc::TestCase
     s = ""
     encoding = RDoc::Encoding.detect_encoding s
 
-    assert_equal nil, encoding
+    assert_nil encoding
 
     s = "# vim:set fileencoding=utf-8:\n"
     encoding = RDoc::Encoding.detect_encoding s
 
-    assert_equal nil, encoding
+    assert_nil encoding
 
     s = "# vim:set fileencoding=utf-8:\n"
     encoding = RDoc::Encoding.detect_encoding s
 
-    assert_equal nil, encoding
+    assert_nil encoding
 
     assert_raises ArgumentError do
       s = RDoc::Encoding.detect_encoding "# -*- encoding: undecided -*-\n"

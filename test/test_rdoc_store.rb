@@ -573,7 +573,7 @@ class TestRDocStore < XrefTestCase
   end
 
   def test_main
-    assert_equal nil, @s.main
+    assert_nil @s.main
 
     @s.main = 'README.txt'
 
@@ -991,7 +991,7 @@ class TestRDocStore < XrefTestCase
   end
 
   def test_title
-    assert_equal nil, @s.title
+    assert_nil @s.title
 
     @s.title = 'rdoc'
 
