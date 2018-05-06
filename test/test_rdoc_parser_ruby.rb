@@ -3386,9 +3386,10 @@ end
   def test_scan_block_comment_notflush
   ##
   #
-  # The previous test assumes that between the =begin/=end blocs that there is
-  # only one line, or minima formatting directives. This test tests for those
-  # who use the =begin bloc with longer / more advanced formatting within.
+  # The previous test assumes that between the =begin/=end blocks that there
+  # is only one line, or minima formatting directives. This test tests for
+  # those who use the =begin bloc with longer / more advanced formatting
+  # within.
   #
   ##
     content = <<-CONTENT
