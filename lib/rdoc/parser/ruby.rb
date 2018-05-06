@@ -141,6 +141,7 @@ $TOKEN_DEBUG ||= nil
 # standard rdocable item following it.
 
 require 'ripper'
+require_relative 'ripper_state_lex'
 
 class RDoc::Parser::Ruby < RDoc::Parser
 
