@@ -249,10 +249,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
     tk = get_tk
 
     while tk && (:on_comment == tk[:kind] or :on_embdoc == tk[:kind])
-      if first_line and tk[:text] =~ /\A#!/ then
+      comment_body = retrieve_comment_body(tk)
+      if first_line and comment_body =~ /\A#!/ then
         skip_tkspace
         tk = get_tk
-      elsif first_line and tk[:text] =~ /\A#\s*-\*-/ then
+      elsif first_line and comment_body =~ /\A#\s*-\*-/ then
         first_line = false
         skip_tkspace
         tk = get_tk
@@ -261,7 +262,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         first_comment_tk_kind = tk[:kind]
 
         first_line = false
-        comment << tk[:text]
+        comment << comment_body
         tk = get_tk
 
         if :on_nl === tk then
@@ -1655,6 +1656,17 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
+  # Retrieve comment body without =begin/=end
+
+  def retrieve_comment_body(tk)
+    if :on_embdoc == tk[:kind]
+      tk[:text].gsub(/\A=begin.*\n/, '').gsub(/=end\n?\z/, '')
+    else
+      tk[:text]
+    end
+  end
+
+  ##
   # The core of the Ruby parser.
 
   def parse_statements(container, single = NORMAL, current_method = nil,
@@ -1707,10 +1719,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
           end
 
           while tk and (:on_comment == tk[:kind] or :on_embdoc == tk[:kind]) do
-            comment += tk[:text]
-            comment += "\n" unless "\n" == tk[:text].chars.to_a.last
+            comment_body = retrieve_comment_body(tk)
+            comment += comment_body
+            comment += "\n" unless "\n" == comment_body.chars.to_a.last
 
-            if tk[:text].size > 1 && "\n" == tk[:text].chars.to_a.last then
+            if comment_body.size > 1 && "\n" == comment_body.chars.to_a.last then
               skip_tkspace false # leading spaces
             end
             tk = get_tk

@@ -73,7 +73,7 @@ class C; end
 
     comment = parser.collect_first_comment
 
-    assert_equal RDoc::Comment.new("=begin\nfirst\n=end\n", @top_level), comment
+    assert_equal RDoc::Comment.new("first\n", @top_level), comment
   end
 
   def test_get_class_or_module
@@ -3349,11 +3349,11 @@ end
 
     foo = @top_level.classes.first
 
-    assert_equal "=begin rdoc\nFoo comment\n=end", foo.comment.text
+    assert_equal 'Foo comment', foo.comment.text
 
     m = foo.method_list.first
 
-    assert_equal "=begin\nm comment\n=end", m.comment.text
+    assert_equal 'm comment', m.comment.text
   end
 
   def test_scan_block_comment_nested # Issue #41
@@ -3375,7 +3375,7 @@ end
     foo = @top_level.modules.first
 
     assert_equal 'Foo', foo.full_name
-    assert_equal "=begin rdoc\nfindmeindoc\n=end", foo.comment.text
+    assert_equal 'findmeindoc', foo.comment.text
 
     bar = foo.classes.first
 
@@ -3423,12 +3423,12 @@ end
 
     foo = @top_level.classes.first
 
-    assert_equal "=begin rdoc\n\n= DESCRIPTION\n\nThis is a simple test class\n\n= RUMPUS\n\nIs a silly word\n\n=end",
+    assert_equal "= DESCRIPTION\n\nThis is a simple test class\n\n= RUMPUS\n\nIs a silly word",
       foo.comment.text
 
     m = foo.method_list.first
 
-    assert_equal "=begin rdoc\nA nice girl\n=end", m.comment.text
+    assert_equal 'A nice girl', m.comment.text
   end
 
   def test_scan_class_nested_nodoc
