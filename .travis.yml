@@ -9,11 +9,11 @@ rvm:
   - 2.4.3
   - 2.5.0
   - ruby-head
-  - jruby-9.1.16.0
+  - jruby-9.1.17.0
 env:
   global:
     NOBENCHMARK=1
 script: rake
 matrix:
   allow_failures:
-    - rvm: jruby-9.1.16.0
+    - rvm: jruby-9.1.17.0
