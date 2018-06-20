@@ -14,3 +14,6 @@ env:
   global:
     NOBENCHMARK=1
 script: rake
+matrix:
+  allow_failures:
+    - rvm: jruby-9.1.17.0
