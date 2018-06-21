@@ -56,6 +56,14 @@ class XrefTestCase < RDoc::TestCase
     @c8    = @xref_data.find_module_named 'C8'
     @c8_s1 = @xref_data.find_module_named 'C8::S1'
 
+    @c9         = @xref_data.find_module_named 'C9'
+    @c9_a       = @xref_data.find_module_named 'C9::A'
+    @c9_a_i_foo = @c9_a.method_list.first
+    @c9_a_c_bar = @c9_a.method_list.last
+    @c9_b       = @xref_data.find_module_named 'C9::B'
+    @c9_b_c_foo = @c9_b.method_list.first
+    @c9_b_i_bar = @c9_b.method_list.last
+
     @m1    = @xref_data.find_module_named 'M1'
     @m1_m  = @m1.method_list.first
 

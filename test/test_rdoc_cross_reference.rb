@@ -139,6 +139,15 @@ class TestRDocCrossReference < XrefTestCase
     assert_ref @c2_c3_m, '::C2::C3#m(*)'
   end
 
+  def test_resolve_the_same_name_in_instance_and_class_method
+    assert_ref @c9_a_i_foo, 'C9::A#foo'
+    assert_ref @c9_a_c_bar, 'C9::A::bar'
+    assert_ref @c9_b_c_foo, 'C9::B::foo'
+    assert_ref @c9_b_i_bar, 'C9::B#bar'
+    assert_ref @c9_b_c_foo, 'C9::B.foo'
+    assert_ref @c9_a_c_bar, 'C9::B.bar'
+  end
+
   def test_resolve_method_equals3
     m = RDoc::AnyMethod.new '', '==='
     @c1.add_method m
