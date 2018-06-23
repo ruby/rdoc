@@ -179,7 +179,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     @size = 0
     @token_listeners = nil
     content = RDoc::Encoding.remove_magic_comment content
-    @scanner = RDoc::RipperStateLex.parse(content)
+    @scanner = RDoc::Parser::RipperStateLex.parse(content)
     @content = content
     @scanner_point = 0
     @prev_seek = nil
@@ -741,9 +741,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when end_token
         if end_token == :on_rparen
           nest -= 1
-          break if RDoc::RipperStateLex.end?(tk) and nest <= 0
+          break if RDoc::Parser::RipperStateLex.end?(tk) and nest <= 0
         else
-          break if RDoc::RipperStateLex.end?(tk)
+          break if RDoc::Parser::RipperStateLex.end?(tk)
         end
       when :on_comment, :on_embdoc
         unget_tk(tk)
@@ -961,7 +961,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       elsif (:on_kw == tk[:kind] && 'def' == tk[:text]) then
         nest += 1
       elsif (:on_kw == tk[:kind] && %w{do if unless case begin}.include?(tk[:text])) then
-        if (tk[:state] & RDoc::RipperStateLex::EXPR_LABEL) == 0
+        if (tk[:state] & RDoc::Parser::RipperStateLex::EXPR_LABEL) == 0
           nest += 1
         end
       elsif [:on_rparen, :on_rbrace, :on_rbracket].include?(tk[:kind]) ||
@@ -969,7 +969,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         nest -= 1
       elsif (:on_comment == tk[:kind] or :on_embdoc == tk[:kind]) then
         unget_tk tk
-        if nest <= 0 and RDoc::RipperStateLex.end?(tk) then
+        if nest <= 0 and RDoc::Parser::RipperStateLex.end?(tk) then
           body = get_tkread_clean(/^[ \t]+/, '')
           read_documentation_modifiers constant, RDoc::CONSTANT_MODIFIERS
           break
@@ -985,7 +985,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           break
         end
       elsif :on_nl == tk[:kind] then
-        if nest <= 0 and RDoc::RipperStateLex.end?(tk) then
+        if nest <= 0 and RDoc::Parser::RipperStateLex.end?(tk) then
           unget_tk tk
           break
         end
@@ -1555,7 +1555,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when :on_comment, :on_embdoc then
         @read.pop
         if :on_nl == end_token[:kind] and "\n" == tk[:text][-1] and
-          (!continue or (tk[:state] & RDoc::RipperStateLex::EXPR_LABEL) != 0) then
+          (!continue or (tk[:state] & RDoc::Parser::RipperStateLex::EXPR_LABEL) != 0) then
           if method && method.block_params.nil? then
             unget_tk tk
             read_documentation_modifiers method, modifiers
@@ -1772,7 +1772,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           end
 
         when 'until', 'while' then
-          if (tk[:state] & RDoc::RipperStateLex::EXPR_LABEL) == 0
+          if (tk[:state] & RDoc::Parser::RipperStateLex::EXPR_LABEL) == 0
             nest += 1
             skip_optional_do_after_expression
           end
@@ -1788,7 +1788,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
           skip_optional_do_after_expression
 
         when 'case', 'do', 'if', 'unless', 'begin' then
-          if (tk[:state] & RDoc::RipperStateLex::EXPR_LABEL) == 0
+          if (tk[:state] & RDoc::Parser::RipperStateLex::EXPR_LABEL) == 0
             nest += 1
           end
 

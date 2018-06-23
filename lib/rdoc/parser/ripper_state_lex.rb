@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'ripper'
 
-class RDoc::RipperStateLex
+class RDoc::Parser::RipperStateLex
   # TODO: Remove this constants after Ruby 2.4 EOL
   RIPPER_HAS_LEX_STATE = Ripper::Filter.method_defined?(:state)
 
