@@ -31,9 +31,10 @@ class XrefTestCase < RDoc::TestCase
     @rdoc.options = @options
     @rdoc.generator = generator
 
-    @c1    = @xref_data.find_module_named 'C1'
-    @c1_m  = @c1.method_list.last  # C1#m
-    @c1__m = @c1.method_list.first # C1::m
+    @c1       = @xref_data.find_module_named 'C1'
+    @c1__m    = @c1.find_class_method_named 'm' # C1::m
+    @c1_m     = @c1.find_instance_method_named 'm'  # C1#m
+    @c1_plus  = @c1.find_instance_method_named '+'
 
     @c2    = @xref_data.find_module_named 'C2'
     @c2_a  = @c2.method_list.last

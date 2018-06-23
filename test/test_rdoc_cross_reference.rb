@@ -107,17 +107,23 @@ class TestRDocCrossReference < XrefTestCase
   end
 
   def test_resolve_method
-    assert_ref @c1__m, 'm'
-    assert_ref @c1_m,  '#m'
-    assert_ref @c1__m, '::m'
+    assert_ref @c1__m,    'm'
+    assert_ref @c1__m,    '::m'
+    assert_ref @c1_m,     '#m'
+    assert_ref @c1_plus,  '#+'
 
-    assert_ref @c1_m,  'C1#m'
-    assert_ref @c1__m, 'C1.m'
-    assert_ref @c1__m, 'C1::m'
+    assert_ref @c1_m,     'C1#m'
+    assert_ref @c1_plus,  'C1#+'
+    assert_ref @c1__m,    'C1.m'
+    assert_ref @c1__m,    'C1::m'
 
     assert_ref @c1_m, 'C1#m'
     assert_ref @c1_m, 'C1#m()'
     assert_ref @c1_m, 'C1#m(*)'
+
+    assert_ref @c1_plus, 'C1#+'
+    assert_ref @c1_plus, 'C1#+()'
+    assert_ref @c1_plus, 'C1#+(*)'
 
     assert_ref @c1__m, 'C1.m'
     assert_ref @c1__m, 'C1.m()'
