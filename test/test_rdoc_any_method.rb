@@ -165,7 +165,7 @@ method(a, b) { |c, d| ... }
   end
 
   def test_marshal_load_class_method
-    class_method = Marshal.load Marshal.dump(@c1.method_list.first)
+    class_method = Marshal.load Marshal.dump(@c1.find_class_method_named 'm')
 
     assert_equal 'C1::m', class_method.full_name
     assert_equal 'C1',    class_method.parent_name
@@ -174,7 +174,7 @@ method(a, b) { |c, d| ... }
   end
 
   def test_marshal_load_instance_method
-    instance_method = Marshal.load Marshal.dump(@c1.method_list.last)
+    instance_method = Marshal.load Marshal.dump(@c1.find_instance_method_named 'm')
 
     assert_equal 'C1#m',  instance_method.full_name
     assert_equal 'C1',    instance_method.parent_name

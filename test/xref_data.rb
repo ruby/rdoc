@@ -20,6 +20,8 @@ class C1
   def m foo
   end
 
+  def +
+  end
 end
 
 class C2
