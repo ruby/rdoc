@@ -699,6 +699,12 @@ class TestRDocRIDriver < RDoc::TestCase
     refute_match %r%must not be displayed%, out
   end
 
+  def test_display_name
+    util_store
+
+    assert_equal true, @driver.display_name('home:README.rdoc')
+  end
+
   def test_display_name_not_found_class
     util_store
 
