@@ -2310,6 +2310,31 @@ end
     assert_equal 'C#bar', methods[1].full_name
   end
 
+  def test_parse_statements_postfix_if_unless_with_expr_mid
+    util_parser <<-CODE
+class A
+  class B
+    def foo
+      return if nil
+    end
+  end
+
+  class C
+  end
+end
+    CODE
+
+    @parser.parse_statements @top_level, RDoc::Parser::Ruby::NORMAL, nil
+
+    a = @top_level.classes.first
+    assert_equal 'A', a.full_name, 'class A'
+    assert_equal 2, a.classes.length
+    b = a.classes[0]
+    assert_equal 'A::B', b.full_name, 'class A::B'
+    c = a.classes[1]
+    assert_equal 'A::C', c.full_name, 'class A::C'
+  end
+
   def test_parse_statements_class_nested
     comment = RDoc::Comment.new "##\n# my method\n", @top_level
 
