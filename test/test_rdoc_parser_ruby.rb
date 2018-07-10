@@ -4044,4 +4044,155 @@ end
     assert_equal ['A', 'B', 'B::C'], visible
   end
 
+  def test_parse_include_by_dynamic_definition
+    util_parser <<-CLASS
+module A
+  class B
+    include(Module.new do
+      def e(m)
+      end
+    end)
+  end
+
+  class C
+  end
+
+  class D
+  end
+end
+    CLASS
+
+    @parser.scan
+
+    a = @store.find_module_named 'A'
+    assert_equal 'A', a.full_name
+    a_b = a.find_class_named 'B'
+    assert_equal 'A::B', a_b.full_name
+    a_c = a.find_class_named 'C'
+    assert_equal 'A::C', a_c.full_name
+    a_d = a.find_class_named 'D'
+    assert_equal 'A::D', a_d.full_name
+  end
+
+  def test_parse_include_by_dynamic_definition_without_paren
+    util_parser <<-CLASS
+module A
+  class B
+    include(Module.new do
+      def e m 
+      end
+    end)
+  end
+
+  class C
+  end
+
+  class D
+  end
+end
+    CLASS
+
+    @parser.scan
+
+    a = @store.find_module_named 'A'
+    assert_equal 'A', a.full_name
+    a_b = a.find_class_named 'B'
+    assert_equal 'A::B', a_b.full_name
+    a_c = a.find_class_named 'C'
+    assert_equal 'A::C', a_c.full_name
+    a_d = a.find_class_named 'D'
+    assert_equal 'A::D', a_d.full_name
+  end
+
+  def test_parse_include_by_dynamic_definition_via_variable
+    util_parser <<-CLASS
+module A
+  class B
+    m = Module.new do
+      def e(m)
+      end
+    end
+    include m
+  end
+
+  class C
+  end
+
+  class D
+  end
+end
+    CLASS
+
+    @parser.scan
+
+    a = @store.find_module_named 'A'
+    assert_equal 'A', a.full_name
+    a_b = a.find_class_named 'B'
+    assert_equal 'A::B', a_b.full_name
+    a_c = a.find_class_named 'C'
+    assert_equal 'A::C', a_c.full_name
+    a_d = a.find_class_named 'D'
+    assert_equal 'A::D', a_d.full_name
+  end
+
+  def test_parse_include_by_dynamic_definition_with_brace
+    util_parser <<-CLASS
+module A
+  class B
+    extend(e {
+      def f(g)
+      end
+    })
+  end
+
+  class C
+  end
+
+  class D
+  end
+end
+    CLASS
+
+    @parser.scan
+
+    a = @store.find_module_named 'A'
+    assert_equal 'A', a.full_name
+    a_b = a.find_class_named 'B'
+    assert_equal 'A::B', a_b.full_name
+    a_c = a.find_class_named 'C'
+    assert_equal 'A::C', a_c.full_name
+    a_d = a.find_class_named 'D'
+    assert_equal 'A::D', a_d.full_name
+  end
+
+  def test_parse_include_by_dynamic_definition_directly
+    util_parser <<-CLASS
+module A
+  class B
+    include Module.new do
+      def e m
+      end
+    end
+  end
+
+  class C
+  end
+
+  class D
+  end
+end
+    CLASS
+
+    @parser.scan
+
+    a = @store.find_module_named 'A'
+    assert_equal 'A', a.full_name
+    a_b = a.find_class_named 'B'
+    assert_equal 'A::B', a_b.full_name
+    a_c = a.find_class_named 'C'
+    assert_equal 'A::C', a_c.full_name
+    a_d = a.find_class_named 'D'
+    assert_equal 'A::D', a_d.full_name
+  end
+
 end
