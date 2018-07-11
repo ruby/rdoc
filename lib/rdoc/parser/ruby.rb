@@ -446,28 +446,83 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
-  # Get a constant that may be surrounded by parens
+  # Get an included module that may be surrounded by parens
 
-  def get_constant_with_optional_parens
+  def get_included_module_with_optional_parens
     skip_tkspace false
+    get_tkread
+    tk = get_tk
+    end_token = get_end_token tk
+    return '' unless end_token
 
     nest = 0
+    continue = false
+    only_constant = true
 
-    while :on_lparen == (tk = peek_tk)[:kind] do
-      get_tk
-      skip_tkspace
-      nest += 1
-    end
-
-    name = get_constant
-
-    while nest > 0
-      skip_tkspace
+    while tk != nil do
+      is_element_of_constant = false
+      case tk[:kind]
+      when :on_semicolon then
+        break if nest == 0
+      when :on_lbracket then
+        nest += 1
+      when :on_rbracket then
+        nest -= 1
+      when :on_lbrace then
+        nest += 1
+      when :on_rbrace then
+        nest -= 1
+        if nest <= 0
+          # we might have a.each { |i| yield i }
+          unget_tk(tk) if nest < 0
+          break
+        end
+      when :on_lparen then
+        nest += 1
+      when end_token[:kind] then
+        if end_token[:kind] == :on_rparen
+          nest -= 1
+          break if nest <= 0
+        else
+          break if nest <= 0
+        end
+      when :on_rparen then
+        nest -= 1
+      when :on_comment, :on_embdoc then
+        @read.pop
+        if :on_nl == end_token[:kind] and "\n" == tk[:text][-1] and
+          (!continue or (tk[:state] & RDoc::Parser::RipperStateLex::EXPR_LABEL) != 0) then
+          break if !continue and nest <= 0
+        end
+      when :on_comma then
+        continue = true
+      when :on_ident then
+        continue = false if continue
+      when :on_kw then
+        case tk[:text]
+        when 'def', 'do', 'case', 'for', 'begin', 'class', 'module'
+          nest += 1
+        when 'if', 'unless', 'while', 'until', 'rescue'
+          # postfix if/unless/while/until/rescue must be EXPR_LABEL
+          nest += 1 unless (tk[:state] & RDoc::Parser::RipperStateLex::EXPR_LABEL) != 0
+        when 'end'
+          nest -= 1
+          break if nest == 0
+        end
+      when :on_const then
+        is_element_of_constant = true
+      when :on_op then
+        is_element_of_constant = true if '::' == tk[:text]
+      end
+      only_constant = false unless is_element_of_constant
       tk = get_tk
-      nest -= 1 if :on_rparen == tk[:kind]
     end
 
-    name
+    if only_constant
+      get_tkread_clean(/\s+/, ' ')
+    else
+      ''
+    end
   end
 
   ##
@@ -1119,7 +1174,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     loop do
       skip_tkspace_comment
 
-      name = get_constant_with_optional_parens
+      name = get_included_module_with_optional_parens
 
       unless name.empty? then
         obj = container.add klass, name, comment
