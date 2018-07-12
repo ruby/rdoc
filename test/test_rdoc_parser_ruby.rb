@@ -1313,8 +1313,16 @@ EOF
       { :line_no => 0, :char_no => 0, :kind => :on_nl, :text => "\n" },
       { :line_no => 1, :char_no => 1, :kind => :on_sp, :text => '' }
     ]
+    parsed_stream = foo.token_stream.map { |t|
+      {
+        :line_no => t[:line_no],
+        :char_no => t[:char_no],
+        :kind => t[:kind],
+        :text => t[:text]
+      }
+    }
 
-    assert_equal stream, foo.token_stream
+    assert_equal stream, parsed_stream
   end
 
   def test_parse_comment_method_args
