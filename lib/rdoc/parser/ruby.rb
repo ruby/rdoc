@@ -1587,6 +1587,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
       case tk[:kind]
       when :on_semicolon then
         break if nest == 0
+      when :on_lbracket then
+        nest += 1
+      when :on_rbracket then
+        nest -= 1
       when :on_lbrace then
         nest += 1
       when :on_rbrace then
