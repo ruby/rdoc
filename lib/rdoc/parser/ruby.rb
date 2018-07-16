@@ -536,17 +536,17 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def get_end_token tk # :nodoc:
     case tk[:kind]
     when :on_lparen
-      {
-        :kind => :on_rparen,
-        :text => ')'
-      }
+      token = RDoc::Parser::RipperStateLex::Token.new
+      token[:kind] = :on_rparen
+      token[:text] = ')'
+      token
     when :on_rparen
       nil
     else
-      {
-        :kind => :on_nl,
-        :text => "\n"
-      }
+      token = RDoc::Parser::RipperStateLex::Token.new
+      token[:kind] = :on_nl
+      token[:text] = "\n"
+      token
     end
   end
 
@@ -1104,10 +1104,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
     record_location meth
 
     meth.start_collecting_tokens
-    indent = { :line_no => 1, :char_no => 1, :kind => :on_sp, :text => ' ' * column }
-    position_comment = { :line_no => line_no, :char_no => 1, :kind => :on_comment }
+    indent = RDoc::Parser::RipperStateLex::Token.new(1, 1, :on_sp, ' ' * column)
+    position_comment = RDoc::Parser::RipperStateLex::Token.new(line_no, 1, :on_comment)
     position_comment[:text] = "# File #{@top_level.relative_name}, line #{line_no}"
-    newline = { :line_no => 0, :char_no => 0, :kind => :on_nl, :text => "\n" }
+    newline = RDoc::Parser::RipperStateLex::Token.new(0, 0, :on_nl, "\n")
     meth.add_tokens [position_comment, newline, indent]
 
     meth.params =
@@ -1147,10 +1147,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.line      = line_no
 
     meth.start_collecting_tokens
-    indent = { :line_no => 1, :char_no => 1, :kind => :on_sp, :text => ' ' * column }
-    position_comment = { :line_no => line_no, :char_no => 1, :kind => :on_comment }
+    indent = RDoc::Parser::RipperStateLex::Token.new(1, 1, :on_sp, ' ' * column)
+    position_comment = RDoc::Parser::RipperStateLex::Token.new(line_no, 1, :on_comment)
     position_comment[:text] = "# File #{@top_level.relative_name}, line #{line_no}"
-    newline = { :line_no => 0, :char_no => 0, :kind => :on_nl, :text => "\n" }
+    newline = RDoc::Parser::RipperStateLex::Token.new(0, 0, :on_nl, "\n")
     meth.add_tokens [position_comment, newline, indent]
 
     meth.call_seq = signature
@@ -1315,10 +1315,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
     remove_token_listener self
 
     meth.start_collecting_tokens
-    indent = { :line_no => 1, :char_no => 1, :kind => :on_sp, :text => ' ' * column }
-    position_comment = { :line_no => line_no, :char_no => 1, :kind => :on_comment }
+    indent = RDoc::Parser::RipperStateLex::Token.new(1, 1, :on_sp, ' ' * column)
+    position_comment = RDoc::Parser::RipperStateLex::Token.new(line_no, 1, :on_comment)
     position_comment[:text] = "# File #{@top_level.relative_name}, line #{line_no}"
-    newline = { :line_no => 0, :char_no => 0, :kind => :on_nl, :text => "\n" }
+    newline = RDoc::Parser::RipperStateLex::Token.new(0, 0, :on_nl, "\n")
     meth.add_tokens [position_comment, newline, indent]
     meth.add_tokens @token_stream
 
@@ -1418,10 +1418,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.line   = line_no
 
     meth.start_collecting_tokens
-    indent = { :line_no => 1, :char_no => 1, :kind => :on_sp, :text => ' ' * column }
-    token = { :line_no => line_no, :char_no => 1, :kind => :on_comment }
+    indent = RDoc::Parser::RipperStateLex::Token.new(1, 1, :on_sp, ' ' * column)
+    token = RDoc::Parser::RipperStateLex::Token.new(line_no, 1, :on_comment)
     token[:text] = "# File #{@top_level.relative_name}, line #{line_no}"
-    newline = { :line_no => 0, :char_no => 0, :kind => :on_nl, :text => "\n" }
+    newline = RDoc::Parser::RipperStateLex::Token.new(0, 0, :on_nl, "\n")
     meth.add_tokens [token, newline, indent]
     meth.add_tokens @token_stream
 
