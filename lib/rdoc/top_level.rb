@@ -272,7 +272,7 @@ class RDoc::TopLevel < RDoc::Context
   # Is this TopLevel from a text file instead of a source code file?
 
   def text?
-    @parser and @parser.ancestors.include? RDoc::Parser::Text
+    @parser and @parser.include? RDoc::Parser::Text
   end
 
   def to_s # :nodoc:
