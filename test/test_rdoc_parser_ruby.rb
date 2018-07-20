@@ -495,6 +495,43 @@ ruby
     assert_equal 'my attr', bar.comment.text
   end
 
+  def test_parse_attr_accessor_with_newline
+    klass = RDoc::NormalClass.new 'Foo'
+    klass.parent = @top_level
+
+    comment = RDoc::Comment.new "##\n# my attr\n", @top_level
+
+    util_parser "attr_accessor :foo, :bar,\n  :baz,\n  :qux"
+
+    tk = @parser.get_tk
+
+    @parser.parse_attr_accessor klass, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    assert_equal 4, klass.attributes.length
+
+    foo = klass.attributes[0]
+    assert_equal 'foo', foo.name
+    assert_equal 'RW', foo.rw
+    assert_equal 'my attr', foo.comment.text
+    assert_equal @top_level, foo.file
+    assert_equal 1, foo.line
+
+    bar = klass.attributes[1]
+    assert_equal 'bar', bar.name
+    assert_equal 'RW', bar.rw
+    assert_equal 'my attr', bar.comment.text
+
+    bar = klass.attributes[2]
+    assert_equal 'baz', bar.name
+    assert_equal 'RW', bar.rw
+    assert_equal 'my attr', bar.comment.text
+
+    bar = klass.attributes[3]
+    assert_equal 'qux', bar.name
+    assert_equal 'RW', bar.rw
+    assert_equal 'my attr', bar.comment.text
+  end
+
   def test_parse_attr_accessor_nodoc
     klass = RDoc::NormalClass.new 'Foo'
     klass.parent = @top_level
