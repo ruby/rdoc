@@ -71,7 +71,7 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
 
     text = paragraph.text @hard_break
 
-    @res << "#{para}#{wrap to_html text}\n"
+    @res << "#{para}#{to_html text}\n"
 
     add_paragraph
   end

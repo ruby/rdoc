@@ -395,7 +395,7 @@ class TestRDocMarkupToHtml < RDoc::Markup::FormatterTestCase
 
     @to.accept_paragraph para("hello\n", "world\n")
 
-    assert_equal "\n<p>hello world</p>\n", @to.res.join
+    assert_equal "\n<p>hello world </p>\n", @to.res.join
   end
 
   def test_accept_heading_output_decoration
