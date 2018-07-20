@@ -25,12 +25,10 @@ module RDoc::Parser::RubyTools
         tk = @scanner[@scanner_point]
         @scanner_point += 1
         @read.push tk[:text]
-        puts "get_tk1 => #{tk.inspect}" if $TOKEN_DEBUG
       end
     else
       @read.push @unget_read.shift
       tk = @tokens.shift
-      puts "get_tk2 => #{tk.inspect}" if $TOKEN_DEBUG
     end
 
     if tk == nil || :on___end__ == tk[:kind]

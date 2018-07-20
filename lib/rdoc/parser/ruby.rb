@@ -8,8 +8,6 @@
 #       by Keiju ISHITSUKA (Nippon Rational Inc.)
 #
 
-$TOKEN_DEBUG ||= nil
-
 ##
 # Extracts code elements from a source file returning a TopLevel object
 # containing the constituent file elements.
