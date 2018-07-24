@@ -555,6 +555,10 @@ class RDoc::Parser::RipperStateLex
         tk[:text] += tk_ahead[:text]
         tk[:kind] = tk_ahead[:kind]
         tk[:state] = tk_ahead[:state]
+      when :on_heredoc_beg, :on_tstring, :on_dstring # frozen/non-frozen string literal
+        tk[:text] += tk_ahead[:text]
+        tk[:kind] = tk_ahead[:kind]
+        tk[:state] = tk_ahead[:state]
       else
         @buf.unshift tk_ahead
       end
