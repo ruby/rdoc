@@ -62,10 +62,7 @@ module RDoc
 
   class Error < RuntimeError; end
 
-  ##
-  # RDoc version you are using
-
-  VERSION = '6.0.4'
+  require 'rdoc/version'
 
   ##
   # Method visibilities
