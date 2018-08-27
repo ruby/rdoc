@@ -702,7 +702,16 @@ class TestRDocRIDriver < RDoc::TestCase
   def test_display_name
     util_store
 
-    assert_equal true, @driver.display_name('home:README.rdoc')
+    out, = capture_io do
+      assert_equal true, @driver.display_name('home:README.rdoc')
+    end
+
+    expected = <<-EXPECTED
+= README
+This is a README
+    EXPECTED
+
+    assert_equal expected, out
   end
 
   def test_display_name_not_found_class
