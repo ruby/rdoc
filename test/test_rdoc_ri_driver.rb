@@ -709,7 +709,7 @@ class TestRDocRIDriver < RDoc::TestCase
     expected = <<-EXPECTED
 = README
 This is a README
-      EXPECTED
+    EXPECTED
 
     assert_equal expected, out
   end
