@@ -652,10 +652,10 @@ This routine modifies its +comment+ parameter.
     assert_equal 3, @to.characters
   end
 
-  def test_handle_special_HYPERLINK_link
-    special = RDoc::Markup::Special.new 0, 'link:README.txt'
+  def test_handle_regexp_HYPERLINK_link
+    target = RDoc::Markup::RegexpHandling.new 0, 'link:README.txt'
 
-    link = @to.handle_special_HYPERLINK special
+    link = @to.handle_regexp_HYPERLINK target
 
     assert_equal 'README.txt', link
   end
