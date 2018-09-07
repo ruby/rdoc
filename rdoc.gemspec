@@ -58,4 +58,5 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
   s.add_development_dependency("racc", "> 1.4.10")
   s.add_development_dependency("kpeg")
   s.add_development_dependency("minitest", "~> 5")
+  s.add_development_dependency("rubocop")
 end
