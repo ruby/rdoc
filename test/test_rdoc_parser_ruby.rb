@@ -2848,6 +2848,35 @@ EXPECTED
     assert_equal expected, markup_code
   end
 
+  def test_parse_mutable_heredocbeg
+    @filename = 'file.rb'
+    util_parser <<RUBY
+class Foo
+  def blah()
+    @str = -<<-EOM
+    EOM
+  end
+end
+RUBY
+
+    expected = <<EXPECTED
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">blah</span>()
+    <span class="ruby-ivar">@str</span> = <span class="ruby-identifier">-&lt;&lt;-EOM</span>
+<span class="ruby-value"></span><span class="ruby-identifier">    EOM</span>
+  <span class="ruby-keyword">end</span>
+EXPECTED
+    expected = expected.rstrip
+
+    @parser.scan
+
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+
+    blah = foo.method_list.first
+    markup_code = blah.markup_code.sub(/^.*\n/, '')
+    assert_equal expected, markup_code
+  end
+
   def test_parse_statements_method_oneliner_with_regexp
     util_parser <<RUBY
 class Foo
