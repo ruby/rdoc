@@ -458,8 +458,7 @@ So there you have it
 
     expected = <<-EXPECTED
 <p>Hello
-<p>This is some text, it <strong>will</strong> be cut off after 100 characters
-and an ellipsis must follow
+<p>This is some text, it <strong>will</strong> be cut off after 100 characters and an ellipsis must follow
 <p>So there you #{@ellipsis}
     EXPECTED
 
@@ -563,8 +562,7 @@ NOTE: Given Foo::Bar, Bar is considered a class even though it may be a
     RDOC
 
     expected = <<-EXPECTED
-<p>Extracts the class, selector and method name parts from <code>name</code>
-like Foo::Bar#baz.
+<p>Extracts the class, selector and method name parts from <code>name</code> like Foo::Bar#baz.
 <p>NOTE: Given Foo::Bar, #{@ellipsis}
     EXPECTED
 
