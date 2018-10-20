@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::ToHtmlCrossref - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Markup::ToHtmlCrossref - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -106,8 +106,6 @@ those links based on the current context.</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -186,8 +184,8 @@ or &#39;::&#39; are linked, unless <code>hyperlink_all</code> is true.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 31</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">options</span>, <span class="ruby-identifier">from_path</span>, <span class="ruby-identifier">context</span>, <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 32</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">options</span>, <span class="ruby-identifier">from_path</span>, <span class="ruby-identifier">context</span>, <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&#39;from_path cannot be nil&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">from_path</span>.<span class="ruby-identifier">nil?</span>
 
   <span class="ruby-keyword">super</span> <span class="ruby-identifier">options</span>, <span class="ruby-identifier">markup</span>
@@ -241,13 +239,13 @@ or &#39;::&#39; are linked, unless <code>hyperlink_all</code> is true.</p>
 
           
           <div class="method-source-code" id="cross_reference-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 51</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">cross_reference</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">text</span> = <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 52</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">cross_reference</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">text</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">lookup</span> = <span class="ruby-identifier">name</span>
 
   <span class="ruby-identifier">name</span> = <span class="ruby-identifier">name</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>] <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@show_hash</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span>[<span class="ruby-value">0</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&#39;#&#39;</span>
 
-  <span class="ruby-identifier">name</span> = <span class="ruby-node">&quot;#{CGI.unescape $&#39;} at #{$1}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/(.*[^#:])@/</span>
+  <span class="ruby-identifier">name</span> = <span class="ruby-node">&quot;#{CGI.unescape $&#39;} at #{$1}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/(.*[^#:])@/</span>
 
   <span class="ruby-identifier">text</span> = <span class="ruby-identifier">name</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">text</span>
 
@@ -288,8 +286,8 @@ href="ToHtml.html">RDoc::Markup::ToHtml</a> to handle other schemes.</p>
 
           
           <div class="method-source-code" id="gen_url-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 118</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">gen_url</span> <span class="ruby-identifier">url</span>, <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 119</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">gen_url</span> <span class="ruby-identifier">url</span>, <span class="ruby-identifier">text</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">super</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">url</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\Ardoc-ref:/</span>
 
   <span class="ruby-identifier">cross_reference</span> <span class="ruby-node">$&#39;</span>, <span class="ruby-identifier">text</span>
@@ -328,8 +326,8 @@ first.</p>
 
           
           <div class="method-source-code" id="handle_special_CROSSREF-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 70</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_special_CROSSREF</span>(<span class="ruby-identifier">special</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 71</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_special_CROSSREF</span>(<span class="ruby-identifier">special</span>)
   <span class="ruby-identifier">name</span> = <span class="ruby-identifier">special</span>.<span class="ruby-identifier">text</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">name</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/@[\w-]+\.[\w-]/</span> <span class="ruby-comment"># labels that look like emails</span>
@@ -378,8 +376,8 @@ href="ToHtml.html">RDoc::Markup::ToHtml</a> to handle other schemes.</p>
 
           
           <div class="method-source-code" id="handle_special_HYPERLINK-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 89</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_special_HYPERLINK</span> <span class="ruby-identifier">special</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 90</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_special_HYPERLINK</span> <span class="ruby-identifier">special</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">cross_reference</span> <span class="ruby-node">$&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">special</span>.<span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\Ardoc-ref:/</span>
 
   <span class="ruby-keyword">super</span>
@@ -423,8 +421,8 @@ href="ToHtml.html#method-i-handle_special_RDOCLINK">the superclass</a></p>
 
           
           <div class="method-source-code" id="handle_special_RDOCLINK-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 103</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_special_RDOCLINK</span> <span class="ruby-identifier">special</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 104</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_special_RDOCLINK</span> <span class="ruby-identifier">special</span>
   <span class="ruby-identifier">url</span> = <span class="ruby-identifier">special</span>.<span class="ruby-identifier">text</span>
 
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">url</span>
@@ -463,11 +461,11 @@ href="ToHtml.html#method-i-handle_special_RDOCLINK">the superclass</a></p>
 
           
           <div class="method-source-code" id="link-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 127</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">link</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_crossref.rb, line 128</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">link</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">text</span>
   <span class="ruby-identifier">original_name</span> = <span class="ruby-identifier">name</span>
 
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/(.*[^#:])@/</span> <span class="ruby-keyword">then</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/(.*[^#:])@/</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">name</span> = <span class="ruby-node">$1</span>
     <span class="ruby-identifier">label</span> = <span class="ruby-node">$&#39;</span>
   <span class="ruby-keyword">end</span>
@@ -483,7 +481,7 @@ href="ToHtml.html#method-i-handle_special_RDOCLINK">the superclass</a></p>
   <span class="ruby-keyword">else</span>
     <span class="ruby-identifier">path</span> = <span class="ruby-identifier">ref</span>.<span class="ruby-identifier">as_href</span> <span class="ruby-ivar">@from_path</span>
 
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">path</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/#/</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">path</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/#/</span> <span class="ruby-keyword">then</span>
       <span class="ruby-identifier">path</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;-label-#{label}&quot;</span>
     <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">ref</span>.<span class="ruby-identifier">sections</span> <span class="ruby-keyword">and</span>
           <span class="ruby-identifier">ref</span>.<span class="ruby-identifier">sections</span>.<span class="ruby-identifier">any?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">section</span><span class="ruby-operator">|</span> <span class="ruby-identifier">label</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">section</span>.<span class="ruby-identifier">title</span> } <span class="ruby-keyword">then</span>
@@ -512,8 +510,8 @@ href="ToHtml.html#method-i-handle_special_RDOCLINK">the superclass</a></p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

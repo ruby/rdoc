@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::CodeObject - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::CodeObject - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -198,8 +198,6 @@ subclasses:</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -320,20 +318,6 @@ href="CodeObject.html">CodeObject</a></p>
         </div>
       </div>
       
-      <div id="attribute-i-offset" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">offset</span><span
-            class="attribute-access-type">[RW]</span>
-        </div>
-
-        <div class="method-description">
-        
-        <p>Offset in <a href="CodeObject.html#attribute-i-file">file</a> where this <a
-href="CodeObject.html">CodeObject</a> was defined</p>
-        
-        </div>
-      </div>
-      
       <div id="attribute-i-parent" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">parent</span><span
@@ -431,8 +415,8 @@ itself and its children</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 108</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 102</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>
   <span class="ruby-ivar">@metadata</span>         = {}
   <span class="ruby-ivar">@comment</span>          = <span class="ruby-string">&#39;&#39;</span>
   <span class="ruby-ivar">@parent</span>           = <span class="ruby-keyword">nil</span>
@@ -484,8 +468,8 @@ itself and its children</p>
 
           
           <div class="method-source-code" id="comment-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 141</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">comment=</span>(<span class="ruby-identifier">comment</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 135</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">comment=</span>(<span class="ruby-identifier">comment</span>)
   <span class="ruby-ivar">@comment</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">comment</span>
              <span class="ruby-keyword">when</span> <span class="ruby-constant">NilClass</span>               <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;&#39;</span>
              <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span> <span class="ruby-keyword">then</span> <span class="ruby-identifier">comment</span>
@@ -497,7 +481,7 @@ itself and its children</p>
                  <span class="ruby-comment"># HACK correct fix is to have #initialize create @comment</span>
                  <span class="ruby-comment">#      with the correct encoding</span>
                  <span class="ruby-keyword">if</span> <span class="ruby-constant">String</span> <span class="ruby-operator">===</span> <span class="ruby-ivar">@comment</span> <span class="ruby-keyword">and</span> <span class="ruby-ivar">@comment</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
-                   <span class="ruby-ivar">@comment</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">encoding</span>
+                   <span class="ruby-ivar">@comment</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Encoding</span>.<span class="ruby-identifier">change_encoding</span> <span class="ruby-ivar">@comment</span>, <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">encoding</span>
                  <span class="ruby-keyword">end</span>
                  <span class="ruby-ivar">@comment</span>
                <span class="ruby-keyword">end</span>
@@ -543,8 +527,8 @@ nodoc</p>
 
           
           <div class="method-source-code" id="display-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 169</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">display?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 163</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">display?</span>
   <span class="ruby-ivar">@document_self</span> <span class="ruby-keyword">and</span> <span class="ruby-keyword">not</span> <span class="ruby-ivar">@ignored</span> <span class="ruby-keyword">and</span>
     (<span class="ruby-identifier">documented?</span> <span class="ruby-keyword">or</span> <span class="ruby-keyword">not</span> <span class="ruby-ivar">@suppressed</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -578,8 +562,8 @@ it has been turned off by :enddoc:</p>
 
           
           <div class="method-source-code" id="document_children-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 178</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">document_children=</span>(<span class="ruby-identifier">document_children</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 172</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">document_children=</span>(<span class="ruby-identifier">document_children</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@track_visibility</span>
 
   <span class="ruby-ivar">@document_children</span> = <span class="ruby-identifier">document_children</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@done_documenting</span>
@@ -616,8 +600,8 @@ is turned off by <code>:nodoc:</code>.</p>
 
           
           <div class="method-source-code" id="document_self-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 189</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">document_self=</span>(<span class="ruby-identifier">document_self</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 183</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">document_self=</span>(<span class="ruby-identifier">document_self</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@track_visibility</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@done_documenting</span>
 
@@ -654,8 +638,8 @@ href="CodeObject.html#attribute-i-received_nodoc">received_nodoc</a> true?</p>
 
           
           <div class="method-source-code" id="documented-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 200</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">documented?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 194</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">documented?</span>
   <span class="ruby-ivar">@received_nodoc</span> <span class="ruby-keyword">or</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@comment</span>.<span class="ruby-identifier">empty?</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -696,8 +680,8 @@ no effect in the current file.</p>
 
           
           <div class="method-source-code" id="done_documenting-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 213</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">done_documenting=</span>(<span class="ruby-identifier">value</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 207</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">done_documenting=</span>(<span class="ruby-identifier">value</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@track_visibility</span>
   <span class="ruby-ivar">@done_documenting</span>  = <span class="ruby-identifier">value</span>
   <span class="ruby-ivar">@document_self</span>     = <span class="ruby-operator">!</span><span class="ruby-identifier">value</span>
@@ -734,8 +718,8 @@ href="ClassModule.html#method-i-each_ancestor">RDoc::ClassModule#each_ancestor</
 
           
           <div class="method-source-code" id="each_parent-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 224</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">each_parent</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 218</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_parent</span>
   <span class="ruby-identifier">code_object</span> = <span class="ruby-keyword">self</span>
 
   <span class="ruby-keyword">while</span> <span class="ruby-identifier">code_object</span> = <span class="ruby-identifier">code_object</span>.<span class="ruby-identifier">parent</span> <span class="ruby-keyword">do</span>
@@ -776,8 +760,8 @@ href="Context.html#attribute-i-in_files">RDoc::Context#in_files</a></p>
 
           
           <div class="method-source-code" id="file_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 239</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">file_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 233</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">file_name</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@file</span>
 
   <span class="ruby-ivar">@file</span>.<span class="ruby-identifier">absolute_name</span>
@@ -812,8 +796,8 @@ off by :enddoc:</p>
 
           
           <div class="method-source-code" id="force_documentation-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 251</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">force_documentation=</span>(<span class="ruby-identifier">value</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 245</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">force_documentation=</span>(<span class="ruby-identifier">value</span>)
   <span class="ruby-ivar">@force_documentation</span> = <span class="ruby-identifier">value</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@done_documenting</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -847,8 +831,8 @@ off by :enddoc:</p>
 
           
           <div class="method-source-code" id="full_name-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 260</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">full_name=</span> <span class="ruby-identifier">full_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 254</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">full_name=</span> <span class="ruby-identifier">full_name</span>
   <span class="ruby-ivar">@full_name</span> = <span class="ruby-identifier">full_name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -893,8 +877,8 @@ reopened it should not be displayed.  The ignore flag allows this to occur.</p>
 
           
           <div class="method-source-code" id="ignore-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 280</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">ignore</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 274</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">ignore</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@track_visibility</span>
 
   <span class="ruby-ivar">@ignored</span> = <span class="ruby-keyword">true</span>
@@ -932,8 +916,8 @@ reopened it should not be displayed.  The ignore flag allows this to occur.</p>
 
           
           <div class="method-source-code" id="ignored-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 293</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">ignored?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 287</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">ignored?</span>
   <span class="ruby-ivar">@ignored</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -969,8 +953,8 @@ instance if the <a href="CodeObject.html">CodeObject</a> is not attached.</p>
 
           
           <div class="method-source-code" id="options-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 303</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">options</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 297</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">options</span>
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@store</span> <span class="ruby-keyword">and</span> <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">rdoc</span> <span class="ruby-keyword">then</span>
     <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">options</span>
   <span class="ruby-keyword">else</span>
@@ -1008,8 +992,8 @@ data stores.</p>
 
           
           <div class="method-source-code" id="parent-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 315</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">parent</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 309</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parent</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@parent</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@parent</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@parent_name</span>
 
@@ -1056,8 +1040,8 @@ data stores.</p>
 
           
           <div class="method-source-code" id="parent_file_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 337</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">parent_file_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 331</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parent_file_name</span>
   <span class="ruby-ivar">@parent</span> <span class="ruby-operator">?</span> <span class="ruby-ivar">@parent</span>.<span class="ruby-identifier">base_name</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;(unknown)&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1089,8 +1073,8 @@ data stores.</p>
 
           
           <div class="method-source-code" id="parent_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 344</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">parent_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 338</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parent_name</span>
   <span class="ruby-ivar">@parent</span> <span class="ruby-operator">?</span> <span class="ruby-ivar">@parent</span>.<span class="ruby-identifier">full_name</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;(unknown)&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1123,8 +1107,8 @@ code object was defined</p>
 
           
           <div class="method-source-code" id="record_location-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 351</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">record_location</span> <span class="ruby-identifier">top_level</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 345</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">record_location</span> <span class="ruby-identifier">top_level</span>
   <span class="ruby-ivar">@ignored</span>    = <span class="ruby-keyword">false</span>
   <span class="ruby-ivar">@suppressed</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-ivar">@file</span>       = <span class="ruby-identifier">top_level</span>
@@ -1160,8 +1144,8 @@ module.</p>
 
           
           <div class="method-source-code" id="section-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 361</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">section</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 355</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">section</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@section</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@section</span>
 
   <span class="ruby-ivar">@section</span> = <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">add_section</span> <span class="ruby-ivar">@section_title</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">parent</span>
@@ -1196,8 +1180,8 @@ module.</p>
 
           
           <div class="method-source-code" id="start_doc-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 371</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">start_doc</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 365</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">start_doc</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@done_documenting</span>
 
   <span class="ruby-ivar">@document_self</span> = <span class="ruby-keyword">true</span>
@@ -1234,8 +1218,8 @@ module.</p>
 
           
           <div class="method-source-code" id="stop_doc-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 383</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">stop_doc</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 377</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">stop_doc</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@track_visibility</span>
 
   <span class="ruby-ivar">@document_self</span> = <span class="ruby-keyword">false</span>
@@ -1271,8 +1255,8 @@ href="CodeObject.html">CodeObject</a></p>
 
           
           <div class="method-source-code" id="store-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 393</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">store=</span> <span class="ruby-identifier">store</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 387</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">store=</span> <span class="ruby-identifier">store</span>
   <span class="ruby-ivar">@store</span> = <span class="ruby-identifier">store</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@track_visibility</span>
@@ -1314,8 +1298,8 @@ item with documentation may not be displayed.</p>
 
           
           <div class="method-source-code" id="suppress-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 410</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">suppress</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 404</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">suppress</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@track_visibility</span>
 
   <span class="ruby-ivar">@suppressed</span> = <span class="ruby-keyword">true</span>
@@ -1353,8 +1337,8 @@ item with documentation may not be displayed.</p>
 
           
           <div class="method-source-code" id="suppressed-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 423</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">suppressed?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 417</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">suppressed?</span>
   <span class="ruby-ivar">@suppressed</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1374,8 +1358,8 @@ item with documentation may not be displayed.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

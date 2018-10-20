@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::ClassModule - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::ClassModule - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -152,8 +152,6 @@ representing either a class or a module.</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -240,8 +238,8 @@ to promote modules to classes.</p>
 
           
           <div class="method-source-code" id="from_module-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 49</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">from_module</span> <span class="ruby-identifier">class_type</span>, <span class="ruby-identifier">mod</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 50</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">from_module</span> <span class="ruby-identifier">class_type</span>, <span class="ruby-identifier">mod</span>
   <span class="ruby-identifier">klass</span> = <span class="ruby-identifier">class_type</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">mod</span>.<span class="ruby-identifier">name</span>
 
   <span class="ruby-identifier">mod</span>.<span class="ruby-identifier">comment_location</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">comment</span>, <span class="ruby-identifier">location</span><span class="ruby-operator">|</span>
@@ -333,8 +331,8 @@ to promote modules to classes.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 110</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">superclass</span> = <span class="ruby-keyword">nil</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 111</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">superclass</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-ivar">@constant_aliases</span> = []
   <span class="ruby-ivar">@diagram</span>          = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@is_alias_for</span>     = <span class="ruby-keyword">nil</span>
@@ -384,8 +382,8 @@ data to be updated across multiple runs.</p>
 
           
           <div class="method-source-code" id="add_comment-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 126</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_comment</span> <span class="ruby-identifier">comment</span>, <span class="ruby-identifier">location</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 127</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_comment</span> <span class="ruby-identifier">comment</span>, <span class="ruby-identifier">location</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">document_self</span>
 
   <span class="ruby-identifier">original</span> = <span class="ruby-identifier">comment</span>
@@ -397,7 +395,9 @@ data to be updated across multiple runs.</p>
               <span class="ruby-identifier">normalize_comment</span> <span class="ruby-identifier">comment</span>
             <span class="ruby-keyword">end</span>
 
-  <span class="ruby-ivar">@comment_location</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span>(<span class="ruby-identifier">_</span>, <span class="ruby-identifier">l</span>)<span class="ruby-operator">|</span> <span class="ruby-identifier">l</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">location</span> }
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">location</span>.<span class="ruby-identifier">parser</span> <span class="ruby-operator">==</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">C</span>
+    <span class="ruby-ivar">@comment_location</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span>(<span class="ruby-identifier">_</span>, <span class="ruby-identifier">l</span>)<span class="ruby-operator">|</span> <span class="ruby-identifier">l</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">location</span> }
+  <span class="ruby-keyword">end</span>
 
   <span class="ruby-ivar">@comment_location</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">comment</span>, <span class="ruby-identifier">location</span>]
 
@@ -442,8 +442,8 @@ superclass, if any, comes last.</p>
 
           
           <div class="method-source-code" id="ancestors-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 168</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">ancestors</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 171</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">ancestors</span>
   <span class="ruby-identifier">includes</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">i</span>.<span class="ruby-identifier">module</span> }.<span class="ruby-identifier">reverse</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -481,8 +481,8 @@ href="ClassModule.html#method-i-aref">#aref</a></p>
 
           
           <div class="method-source-code" id="aref-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 180</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">aref</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 183</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">aref</span>
   <span class="ruby-node">&quot;#{aref_prefix}-#{full_name}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -514,8 +514,8 @@ href="ClassModule.html#method-i-aref">#aref</a></p>
 
           
           <div class="method-source-code" id="clear_comment-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 192</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">clear_comment</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 195</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">clear_comment</span>
   <span class="ruby-ivar">@comment</span> = <span class="ruby-string">&#39;&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -550,8 +550,8 @@ generator.</p>
 
           
           <div class="method-source-code" id="complete-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 220</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">complete</span> <span class="ruby-identifier">min_visibility</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 223</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">complete</span> <span class="ruby-identifier">min_visibility</span>
   <span class="ruby-identifier">update_aliases</span>
   <span class="ruby-identifier">remove_nodoc_children</span>
   <span class="ruby-identifier">update_includes</span>
@@ -586,8 +586,8 @@ generator.</p>
 
           
           <div class="method-source-code" id="description-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 140</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">description</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 141</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">description</span>
   <span class="ruby-identifier">markup</span> <span class="ruby-ivar">@comment_location</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -648,8 +648,8 @@ have document_self set?</p>
 
           
           <div class="method-source-code" id="document_self_or_methods-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 230</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">document_self_or_methods</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 233</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">document_self_or_methods</span>
   <span class="ruby-identifier">document_self</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">method_list</span>.<span class="ruby-identifier">any?</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">document_self</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -682,8 +682,8 @@ href="CodeObject.html#attribute-i-received_nodoc">received_nodoc</a> true?</p>
 
           
           <div class="method-source-code" id="documented-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 238</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">documented?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 241</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">documented?</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@received_nodoc</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@comment_location</span>.<span class="ruby-identifier">empty?</span>
   <span class="ruby-ivar">@comment_location</span>.<span class="ruby-identifier">any?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">comment</span>, <span class="ruby-identifier">_</span><span class="ruby-operator">|</span> <span class="ruby-keyword">not</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">empty?</span> }
@@ -718,8 +718,8 @@ href="ClassModule.html">RDoc::ClassModule</a> exists.</p>
 
           
           <div class="method-source-code" id="each_ancestor-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 248</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">each_ancestor</span> <span class="ruby-comment"># :yields: module</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 251</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_ancestor</span> <span class="ruby-comment"># :yields: module</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">enum_for</span> <span class="ruby-identifier">__method__</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">block_given?</span>
 
   <span class="ruby-identifier">ancestors</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">mod</span><span class="ruby-operator">|</span>
@@ -759,8 +759,8 @@ Context#find_local_symbol.</p>
 
           
           <div class="method-source-code" id="find_ancestor_local_symbol-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 261</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_ancestor_local_symbol</span> <span class="ruby-identifier">symbol</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 264</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_ancestor_local_symbol</span> <span class="ruby-identifier">symbol</span>
   <span class="ruby-identifier">each_ancestor</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">res</span> = <span class="ruby-identifier">m</span>.<span class="ruby-identifier">find_local_symbol</span>(<span class="ruby-identifier">symbol</span>)
     <span class="ruby-keyword">return</span> <span class="ruby-identifier">res</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">res</span>
@@ -798,8 +798,8 @@ descendants</p>
 
           
           <div class="method-source-code" id="find_class_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 273</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_class_named</span> <span class="ruby-identifier">name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 276</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_class_named</span> <span class="ruby-identifier">name</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">full_name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span>
 
@@ -837,8 +837,8 @@ descendants</p>
 
           
           <div class="method-source-code" id="full_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 286</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">full_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 289</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">full_name</span>
   <span class="ruby-ivar">@full_name</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">ClassModule</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">parent</span> <span class="ruby-keyword">then</span>
                    <span class="ruby-node">&quot;#{parent.full_name}::#{@name}&quot;</span>
                  <span class="ruby-keyword">else</span>
@@ -877,8 +877,8 @@ href="ClassModule.html">ClassModule</a>.</p>
 
           
           <div class="method-source-code" id="merge-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 432</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">merge</span> <span class="ruby-identifier">class_module</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 435</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">merge</span> <span class="ruby-identifier">class_module</span>
   <span class="ruby-ivar">@parent</span>      = <span class="ruby-identifier">class_module</span>.<span class="ruby-identifier">parent</span>
   <span class="ruby-ivar">@parent_name</span> = <span class="ruby-identifier">class_module</span>.<span class="ruby-identifier">parent_name</span>
 
@@ -975,8 +975,8 @@ href="ClassModule.html">ClassModule</a>.</p>
 
           
           <div class="method-source-code" id="module-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 567</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">module?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 570</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">module?</span>
   <span class="ruby-keyword">false</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1010,8 +1010,8 @@ href="ClassModule.html">ClassModule</a>.</p>
 
           
           <div class="method-source-code" id="name-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 576</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">name=</span> <span class="ruby-identifier">new_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 579</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">name=</span> <span class="ruby-identifier">new_name</span>
   <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">new_name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1044,8 +1044,8 @@ another module or class return the name of the latter.</p>
 
           
           <div class="method-source-code" id="name_for_path-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 619</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">name_for_path</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 622</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">name_for_path</span>
   <span class="ruby-identifier">is_alias_for</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">is_alias_for</span>.<span class="ruby-identifier">full_name</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">full_name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1078,8 +1078,8 @@ class or module. For use by formatters only (caches its result).</p>
 
           
           <div class="method-source-code" id="non_aliases-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 628</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">non_aliases</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 631</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">non_aliases</span>
   <span class="ruby-ivar">@non_aliases</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">classes_and_modules</span>.<span class="ruby-identifier">reject</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">cm</span><span class="ruby-operator">|</span> <span class="ruby-identifier">cm</span>.<span class="ruby-identifier">is_alias_for</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1118,8 +1118,8 @@ RDoc::Markup::Documents with their file set.</p>
 
           
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 584</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse</span> <span class="ruby-identifier">comment_location</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 587</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse</span> <span class="ruby-identifier">comment_location</span>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">comment_location</span>
   <span class="ruby-keyword">when</span> <span class="ruby-constant">String</span> <span class="ruby-keyword">then</span>
     <span class="ruby-keyword">super</span>
@@ -1170,8 +1170,8 @@ RDoc::Markup::Documents with their file set.</p>
 
           
           <div class="method-source-code" id="path-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 610</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">path</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 613</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">path</span>
   <span class="ruby-identifier">http_url</span> <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">generator</span>.<span class="ruby-identifier">class_dir</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1208,8 +1208,8 @@ deleting the ones that have been removed from the documentation.</p>
 
           
           <div class="method-source-code" id="remove_nodoc_children-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 640</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">remove_nodoc_children</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 643</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_nodoc_children</span>
   <span class="ruby-identifier">prefix</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">full_name</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;::&#39;</span>
 
   <span class="ruby-identifier">modules_hash</span>.<span class="ruby-identifier">each_key</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span>
@@ -1252,8 +1252,8 @@ href="Generator/JsonIndex.html">RDoc::Generator::JsonIndex</a></p>
 
           
           <div class="method-source-code" id="search_record-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 669</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">search_record</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 672</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">search_record</span>
   [
     <span class="ruby-identifier">name</span>,
     <span class="ruby-identifier">full_name</span>,
@@ -1298,8 +1298,8 @@ href="Generator/JsonIndex.html">RDoc::Generator::JsonIndex</a></p>
 
           
           <div class="method-source-code" id="store-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 684</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">store=</span> <span class="ruby-identifier">store</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 687</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">store=</span> <span class="ruby-identifier">store</span>
   <span class="ruby-keyword">super</span>
 
   <span class="ruby-ivar">@attributes</span> .<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">attr</span><span class="ruby-operator">|</span>  <span class="ruby-identifier">attr</span>.<span class="ruby-identifier">store</span>  = <span class="ruby-identifier">store</span> <span class="ruby-keyword">end</span>
@@ -1338,8 +1338,8 @@ object, returns the name if it is not known.</p>
 
           
           <div class="method-source-code" id="superclass-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 698</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">superclass</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 701</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">superclass</span>
   <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">find_class_named</span>(<span class="ruby-ivar">@superclass</span>) <span class="ruby-operator">||</span> <span class="ruby-ivar">@superclass</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1371,8 +1371,8 @@ object, returns the name if it is not known.</p>
 
           
           <div class="method-source-code" id="superclass-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 705</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">superclass=</span>(<span class="ruby-identifier">superclass</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 708</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">superclass=</span>(<span class="ruby-identifier">superclass</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoMethodError</span>, <span class="ruby-node">&quot;#{full_name} is a module&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">module?</span>
   <span class="ruby-ivar">@superclass</span> = <span class="ruby-identifier">superclass</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1405,8 +1405,8 @@ object, returns the name if it is not known.</p>
 
           
           <div class="method-source-code" id="type-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 721</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">type</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 724</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">type</span>
   <span class="ruby-identifier">module?</span> <span class="ruby-operator">?</span> <span class="ruby-string">&#39;module&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;class&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1452,8 +1452,8 @@ class/module, that are listed separately.</p>
 
           
           <div class="method-source-code" id="update_aliases-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 740</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_aliases</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 743</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">update_aliases</span>
   <span class="ruby-identifier">constants</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">const</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">next</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">cm</span> = <span class="ruby-identifier">const</span>.<span class="ruby-identifier">is_alias_for</span>
     <span class="ruby-identifier">cm_alias</span> = <span class="ruby-identifier">cm</span>.<span class="ruby-identifier">dup</span>
@@ -1509,8 +1509,8 @@ whose module has been removed from the documentation.</p>
 
           
           <div class="method-source-code" id="update_extends-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 788</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_extends</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 791</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">update_extends</span>
   <span class="ruby-identifier">extends</span>.<span class="ruby-identifier">reject!</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ext</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">mod</span> = <span class="ruby-identifier">ext</span>.<span class="ruby-identifier">module</span>
 
@@ -1549,8 +1549,8 @@ whose module has been removed from the documentation.</p>
 
           
           <div class="method-source-code" id="update_includes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 773</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_includes</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/class_module.rb, line 776</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">update_includes</span>
   <span class="ruby-identifier">includes</span>.<span class="ruby-identifier">reject!</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">include</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">mod</span> = <span class="ruby-identifier">include</span>.<span class="ruby-identifier">module</span>
     <span class="ruby-operator">!</span>(<span class="ruby-constant">String</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">mod</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">modules_hash</span>[<span class="ruby-identifier">mod</span>.<span class="ruby-identifier">full_name</span>].<span class="ruby-identifier">nil?</span>
@@ -1575,8 +1575,8 @@ whose module has been removed from the documentation.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Servlet - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Servlet - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -127,7 +127,7 @@ server:</p>
 
 <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;webrick&#39;</span>
 
-<span class="ruby-identifier">server</span> = <span class="ruby-constant">WEBrick</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTPServer</span>.<span class="ruby-identifier">new</span> <span class="ruby-constant">Port</span><span class="ruby-operator">:</span> <span class="ruby-value">8000</span>
+<span class="ruby-identifier">server</span> = <span class="ruby-constant">WEBrick</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTPServer</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">Port:</span> <span class="ruby-value">8000</span>
 
 <span class="ruby-identifier">server</span>.<span class="ruby-identifier">mount</span> <span class="ruby-string">&#39;/&#39;</span>, <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Servlet</span>
 </pre>
@@ -140,8 +140,6 @@ the base path when mounting:</p>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -227,8 +225,8 @@ the servlet.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 62</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">server</span>, <span class="ruby-identifier">stores</span>, <span class="ruby-identifier">cache</span>, <span class="ruby-identifier">mount_path</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">extra_doc_dirs</span> = []
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 64</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">server</span>, <span class="ruby-identifier">stores</span>, <span class="ruby-identifier">cache</span>, <span class="ruby-identifier">mount_path</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">extra_doc_dirs</span> = []
   <span class="ruby-keyword">super</span> <span class="ruby-identifier">server</span>
 
   <span class="ruby-ivar">@cache</span>      = <span class="ruby-identifier">cache</span>
@@ -250,8 +248,8 @@ the servlet.</p>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-ivar">@asset_dirs</span> = {
-    <span class="ruby-value">:darkfish</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">darkfish_dir</span>,
-    <span class="ruby-value">:json_index</span> =<span class="ruby-operator">&gt;</span>
+    <span class="ruby-value">:darkfish</span>   <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">darkfish_dir</span>,
+    <span class="ruby-value">:json_index</span> <span class="ruby-operator">=&gt;</span>
       <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-string">&#39;../generator/template/json_index/&#39;</span>, <span class="ruby-keyword">__FILE__</span>),
   }
 <span class="ruby-keyword">end</span></pre>
@@ -293,8 +291,8 @@ the servlet.</p>
 
           
           <div class="method-source-code" id="asset-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 93</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">asset</span> <span class="ruby-identifier">generator_name</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 95</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">asset</span> <span class="ruby-identifier">generator_name</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
   <span class="ruby-identifier">asset_dir</span> = <span class="ruby-ivar">@asset_dirs</span>[<span class="ruby-identifier">generator_name</span>]
 
   <span class="ruby-identifier">asset_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span> <span class="ruby-identifier">asset_dir</span>, <span class="ruby-identifier">req</span>.<span class="ruby-identifier">path</span>
@@ -339,9 +337,9 @@ the servlet.</p>
 
           
           <div class="method-source-code" id="do_GET-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 112</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">do_GET</span> <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
-  <span class="ruby-identifier">req</span>.<span class="ruby-identifier">path</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-node">/^#{Regexp.escape @mount_path}/o</span>, <span class="ruby-string">&#39;&#39;</span>) <span class="ruby-keyword">if</span> <span class="ruby-ivar">@mount_path</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 114</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_GET</span> <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
+  <span class="ruby-identifier">req</span>.<span class="ruby-identifier">path</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/^#{Regexp.escape @mount_path}/o</span>, <span class="ruby-string">&#39;&#39;</span>) <span class="ruby-keyword">if</span> <span class="ruby-ivar">@mount_path</span>
 
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">req</span>.<span class="ruby-identifier">path</span>
   <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;/&#39;</span> <span class="ruby-keyword">then</span>
@@ -356,13 +354,13 @@ the servlet.</p>
   <span class="ruby-keyword">else</span>
     <span class="ruby-identifier">show_documentation</span> <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
   <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">rescue</span> <span class="ruby-constant">WEBrick</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTPStatus</span><span class="ruby-operator">::</span><span class="ruby-constant">NotFound</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">WEBrick</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTPStatus</span><span class="ruby-operator">::</span><span class="ruby-constant">NotFound</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
   <span class="ruby-identifier">generator</span> = <span class="ruby-identifier">generator_for</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Store</span>.<span class="ruby-identifier">new</span>
 
   <span class="ruby-identifier">not_found</span> <span class="ruby-identifier">generator</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>, <span class="ruby-identifier">e</span>.<span class="ruby-identifier">message</span>
 <span class="ruby-keyword">rescue</span> <span class="ruby-constant">WEBrick</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTPStatus</span><span class="ruby-operator">::</span><span class="ruby-constant">Status</span>
   <span class="ruby-identifier">raise</span>
-<span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
   <span class="ruby-identifier">error</span> <span class="ruby-identifier">e</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -400,8 +398,8 @@ create the page.</p>
 
           
           <div class="method-source-code" id="documentation_page-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 145</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">documentation_page</span> <span class="ruby-identifier">store</span>, <span class="ruby-identifier">generator</span>, <span class="ruby-identifier">path</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 147</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">documentation_page</span> <span class="ruby-identifier">store</span>, <span class="ruby-identifier">generator</span>, <span class="ruby-identifier">path</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
   <span class="ruby-identifier">name</span> = <span class="ruby-identifier">path</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/.html$/</span>, <span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">gsub</span> <span class="ruby-string">&#39;/&#39;</span>, <span class="ruby-string">&#39;::&#39;</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">klass</span> = <span class="ruby-identifier">store</span>.<span class="ruby-identifier">find_class_or_module</span>(<span class="ruby-identifier">name</span>) <span class="ruby-keyword">then</span>
@@ -443,8 +441,8 @@ build.  <code>req</code> is ignored.</p>
 
           
           <div class="method-source-code" id="documentation_search-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 161</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">documentation_search</span> <span class="ruby-identifier">store</span>, <span class="ruby-identifier">generator</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 163</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">documentation_search</span> <span class="ruby-identifier">store</span>, <span class="ruby-identifier">generator</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
   <span class="ruby-identifier">json_index</span> = <span class="ruby-ivar">@cache</span>[<span class="ruby-identifier">store</span>].<span class="ruby-identifier">fetch</span> <span class="ruby-value">:json_index</span> <span class="ruby-keyword">do</span>
     <span class="ruby-ivar">@cache</span>[<span class="ruby-identifier">store</span>][<span class="ruby-value">:json_index</span>] =
       <span class="ruby-constant">JSON</span>.<span class="ruby-identifier">dump</span> <span class="ruby-identifier">generator</span>.<span class="ruby-identifier">json_index</span>.<span class="ruby-identifier">build_index</span>
@@ -483,8 +481,8 @@ build.  <code>req</code> is ignored.</p>
 
           
           <div class="method-source-code" id="documentation_source-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 175</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">documentation_source</span> <span class="ruby-identifier">path</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 177</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">documentation_source</span> <span class="ruby-identifier">path</span>
   <span class="ruby-identifier">_</span>, <span class="ruby-identifier">source_name</span>, <span class="ruby-identifier">path</span> = <span class="ruby-identifier">path</span>.<span class="ruby-identifier">split</span> <span class="ruby-string">&#39;/&#39;</span>, <span class="ruby-value">3</span>
 
   <span class="ruby-identifier">store</span> = <span class="ruby-ivar">@stores</span>[<span class="ruby-identifier">source_name</span>]
@@ -528,14 +526,14 @@ build.  <code>req</code> is ignored.</p>
 
           
           <div class="method-source-code" id="error-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 193</span>
-  <span class="ruby-keyword">def</span> <span class="ruby-identifier">error</span> <span class="ruby-identifier">exception</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 195</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">error</span> <span class="ruby-identifier">exception</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
     <span class="ruby-identifier">backtrace</span> = <span class="ruby-identifier">exception</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">join</span> <span class="ruby-string">&quot;\n&quot;</span>
 
     <span class="ruby-identifier">res</span>.<span class="ruby-identifier">content_type</span> = <span class="ruby-string">&#39;text/html&#39;</span>
     <span class="ruby-identifier">res</span>.<span class="ruby-identifier">status</span> = <span class="ruby-value">500</span>
-    <span class="ruby-identifier">res</span>.<span class="ruby-identifier">body</span> = <span class="ruby-value">&lt;&lt;-BODY
-&lt;!DOCTYPE html&gt;
+    <span class="ruby-identifier">res</span>.<span class="ruby-identifier">body</span> = <span class="ruby-identifier">&lt;&lt;-BODY</span>
+<span class="ruby-value">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
 &lt;meta content=&quot;text/html; charset=UTF-8&quot; http-equiv=&quot;Content-Type&quot;&gt;
@@ -555,7 +553,7 @@ exception:
 &lt;pre&gt;#{ERB::Util.html_escape exception.message}&lt;/pre&gt;
 
 &lt;p&gt;Please report this to the
-&lt;a href=&quot;https://github.com/rdoc/rdoc/issues&quot;&gt;RDoc issues tracker&lt;/a&gt;.  Please
+&lt;a href=&quot;https://github.com/ruby/rdoc/issues&quot;&gt;RDoc issues tracker&lt;/a&gt;.  Please
 include the RDoc version, the URI above and exception class, message and
 backtrace.  If you&#39;re viewing a gem&#39;s documentation, include the gem name and
 version.  If you&#39;re viewing Ruby&#39;s documentation, include the version of ruby.
@@ -566,7 +564,7 @@ version.  If you&#39;re viewing Ruby&#39;s documentation, include the version of
 
 &lt;/body&gt;
 &lt;/html&gt;
-    BODY</span>
+</span><span class="ruby-identifier">    BODY</span>
   <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -597,8 +595,8 @@ version.  If you&#39;re viewing Ruby&#39;s documentation, include the version of
 
           
           <div class="method-source-code" id="generator_for-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 236</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">generator_for</span> <span class="ruby-identifier">store</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 238</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generator_for</span> <span class="ruby-identifier">store</span>
   <span class="ruby-identifier">generator</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Generator</span><span class="ruby-operator">::</span><span class="ruby-constant">Darkfish</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">store</span>, <span class="ruby-ivar">@options</span>
   <span class="ruby-identifier">generator</span>.<span class="ruby-identifier">file_output</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-identifier">generator</span>.<span class="ruby-identifier">asset_rel_path</span> = <span class="ruby-string">&#39;..&#39;</span>
@@ -645,8 +643,8 @@ is added to <code>res</code>.</p>
 
           
           <div class="method-source-code" id="if_modified_since-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 257</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">if_modified_since</span> <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>, <span class="ruby-identifier">path</span> = <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 259</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">if_modified_since</span> <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>, <span class="ruby-identifier">path</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">last_modified</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">stat</span>(<span class="ruby-identifier">path</span>).<span class="ruby-identifier">mtime</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">path</span>
 
   <span class="ruby-identifier">res</span>[<span class="ruby-string">&#39;last-modified&#39;</span>] = <span class="ruby-identifier">last_modified</span>.<span class="ruby-identifier">httpdate</span>
@@ -695,8 +693,8 @@ href="Store.html">RDoc::Store</a> for the documentation.</p>
 
           
           <div class="method-source-code" id="installed_docs-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 280</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">installed_docs</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 282</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">installed_docs</span>
   <span class="ruby-identifier">extra_counter</span> = <span class="ruby-value">0</span>
   <span class="ruby-identifier">ri_paths</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">path</span>, <span class="ruby-identifier">type</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">store</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Store</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">path</span>, <span class="ruby-identifier">type</span>
@@ -750,8 +748,8 @@ href="Store.html">RDoc::Store</a> for the documentation.</p>
 
           
           <div class="method-source-code" id="not_found-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 308</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">not_found</span> <span class="ruby-identifier">generator</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>, <span class="ruby-identifier">message</span> = <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 310</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">not_found</span> <span class="ruby-identifier">generator</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>, <span class="ruby-identifier">message</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">message</span> <span class="ruby-operator">||=</span> <span class="ruby-node">&quot;The page &lt;kbd&gt;#{ERB::Util.h req.path}&lt;/kbd&gt; was not found&quot;</span>
   <span class="ruby-identifier">res</span>.<span class="ruby-identifier">body</span> = <span class="ruby-identifier">generator</span>.<span class="ruby-identifier">generate_servlet_not_found</span> <span class="ruby-identifier">message</span>
   <span class="ruby-identifier">res</span>.<span class="ruby-identifier">status</span> = <span class="ruby-value">404</span>
@@ -770,7 +768,7 @@ href="Store.html">RDoc::Store</a> for the documentation.</p>
         
         <div class="method-heading">
           <span class="method-name">ri_paths</span><span
-            class="method-args">(&block)</span>
+            class="method-args">(&amp;block)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -785,8 +783,8 @@ href="Store.html">RDoc::Store</a> for the documentation.</p>
 
           
           <div class="method-source-code" id="ri_paths-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 317</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">ri_paths</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 319</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">ri_paths</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>
   <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RI</span><span class="ruby-operator">::</span><span class="ruby-constant">Paths</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">true</span>, <span class="ruby-keyword">true</span>, <span class="ruby-keyword">true</span>, <span class="ruby-value">:all</span>, <span class="ruby-operator">*</span><span class="ruby-ivar">@extra_doc_dirs</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span> <span class="ruby-comment">#TODO: pass extra_dirs</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -818,8 +816,8 @@ href="Store.html">RDoc::Store</a> for the documentation.</p>
 
           
           <div class="method-source-code" id="root-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 324</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">root</span> <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 326</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">root</span> <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
   <span class="ruby-identifier">generator</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Generator</span><span class="ruby-operator">::</span><span class="ruby-constant">Darkfish</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">nil</span>, <span class="ruby-ivar">@options</span>
 
   <span class="ruby-identifier">res</span>.<span class="ruby-identifier">body</span> = <span class="ruby-identifier">generator</span>.<span class="ruby-identifier">generate_servlet_root</span> <span class="ruby-identifier">installed_docs</span>
@@ -856,8 +854,8 @@ href="Store.html">RDoc::Store</a> for the documentation.</p>
 
           
           <div class="method-source-code" id="root_search-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 335</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">root_search</span> <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 337</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">root_search</span> <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
   <span class="ruby-identifier">search_index</span> = []
   <span class="ruby-identifier">info</span>         = []
 
@@ -892,10 +890,10 @@ href="Store.html">RDoc::Store</a> for the documentation.</p>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">index</span> = {
-    <span class="ruby-value">:index</span> =<span class="ruby-operator">&gt;</span> {
-      <span class="ruby-value">:searchIndex</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">search_index</span>,
-      <span class="ruby-value">:longSearchIndex</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">search_index</span>,
-      <span class="ruby-value">:info</span>            =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">info</span>,
+    <span class="ruby-value">:index</span> <span class="ruby-operator">=&gt;</span> {
+      <span class="ruby-value">:searchIndex</span>     <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">search_index</span>,
+      <span class="ruby-value">:longSearchIndex</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">search_index</span>,
+      <span class="ruby-value">:info</span>            <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">info</span>,
     }
   }
 
@@ -932,8 +930,8 @@ that be HTML or some asset.</p>
 
           
           <div class="method-source-code" id="show_documentation-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 385</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">show_documentation</span> <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 387</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">show_documentation</span> <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
   <span class="ruby-identifier">store</span>, <span class="ruby-identifier">path</span> = <span class="ruby-identifier">documentation_source</span> <span class="ruby-identifier">req</span>.<span class="ruby-identifier">path</span>
 
   <span class="ruby-identifier">if_modified_since</span> <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>, <span class="ruby-identifier">store</span>.<span class="ruby-identifier">cache_path</span>
@@ -983,8 +981,8 @@ that be HTML or some asset.</p>
 
           
           <div class="method-source-code" id="store_for-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 409</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">store_for</span> <span class="ruby-identifier">source_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 411</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">store_for</span> <span class="ruby-identifier">source_name</span>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">source_name</span>
   <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;home&#39;</span> <span class="ruby-keyword">then</span>
     <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Store</span>.<span class="ruby-identifier">new</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RI</span><span class="ruby-operator">::</span><span class="ruby-constant">Paths</span>.<span class="ruby-identifier">home_dir</span>, <span class="ruby-value">:home</span>
@@ -1004,14 +1002,14 @@ that be HTML or some asset.</p>
     <span class="ruby-keyword">end</span>
 
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">WEBrick</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTPStatus</span><span class="ruby-operator">::</span><span class="ruby-constant">NotFound</span>,
-          <span class="ruby-node">&quot;Could not find gem \&quot;#{source_name}\&quot;. Are you sure you installed it?&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">ri_dir</span>
+          <span class="ruby-node">&quot;Could not find gem \&quot;#{ERB::Util.html_escape(source_name)}\&quot;. Are you sure you installed it?&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">ri_dir</span>
 
     <span class="ruby-identifier">store</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Store</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">ri_dir</span>, <span class="ruby-identifier">type</span>
 
     <span class="ruby-keyword">return</span> <span class="ruby-identifier">store</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span> <span class="ruby-identifier">store</span>.<span class="ruby-identifier">cache_path</span>
 
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">WEBrick</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTPStatus</span><span class="ruby-operator">::</span><span class="ruby-constant">NotFound</span>,
-          <span class="ruby-node">&quot;Could not find documentation for \&quot;#{source_name}\&quot;. Please run `gem rdoc --ri gem_name`&quot;</span>
+          <span class="ruby-node">&quot;Could not find documentation for \&quot;#{ERB::Util.html_escape(source_name)}\&quot;. Please run `gem rdoc --ri gem_name`&quot;</span>
 
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1032,8 +1030,8 @@ that be HTML or some asset.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

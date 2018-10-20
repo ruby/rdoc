@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::RubygemsHook - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::RubygemsHook - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -134,8 +134,6 @@ ri data for installed gems upon gem installation.</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -233,8 +231,8 @@ href="RubygemsHook.html#method-c-load_rdoc">::load_rdoc</a></p>
 
           
           <div class="method-source-code" id="generation_hook-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 47</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">generation_hook</span> <span class="ruby-identifier">installer</span>, <span class="ruby-identifier">specs</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 48</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">generation_hook</span> <span class="ruby-identifier">installer</span>, <span class="ruby-identifier">specs</span>
   <span class="ruby-identifier">start</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
   <span class="ruby-identifier">types</span> = <span class="ruby-identifier">installer</span>.<span class="ruby-identifier">document</span>
 
@@ -281,8 +279,8 @@ href="RubygemsHook.html#method-c-load_rdoc">::load_rdoc</a></p>
 
           
           <div class="method-source-code" id="load_rdoc-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 69</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">load_rdoc</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 70</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">load_rdoc</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@rdoc_version</span>
 
   <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;rdoc/rdoc&#39;</span>
@@ -323,8 +321,8 @@ respectively.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 84</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">spec</span>, <span class="ruby-identifier">generate_rdoc</span> = <span class="ruby-keyword">false</span>, <span class="ruby-identifier">generate_ri</span> = <span class="ruby-keyword">true</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 85</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">spec</span>, <span class="ruby-identifier">generate_rdoc</span> = <span class="ruby-keyword">false</span>, <span class="ruby-identifier">generate_ri</span> = <span class="ruby-keyword">true</span>
   <span class="ruby-ivar">@doc_dir</span>   = <span class="ruby-identifier">spec</span>.<span class="ruby-identifier">doc_dir</span>
   <span class="ruby-ivar">@force</span>     = <span class="ruby-keyword">false</span>
   <span class="ruby-ivar">@rdoc</span>      = <span class="ruby-keyword">nil</span>
@@ -373,8 +371,8 @@ respectively.</p>
 
           
           <div class="method-source-code" id="delete_legacy_args-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 102</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">delete_legacy_args</span> <span class="ruby-identifier">args</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 103</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">delete_legacy_args</span> <span class="ruby-identifier">args</span>
   <span class="ruby-identifier">args</span>.<span class="ruby-identifier">delete</span> <span class="ruby-string">&#39;--inline-source&#39;</span>
   <span class="ruby-identifier">args</span>.<span class="ruby-identifier">delete</span> <span class="ruby-string">&#39;--promiscuous&#39;</span>
   <span class="ruby-identifier">args</span>.<span class="ruby-identifier">delete</span> <span class="ruby-string">&#39;-p&#39;</span>
@@ -412,8 +410,8 @@ or “ri”) and following the given <code>options</code>.</p>
 
           
           <div class="method-source-code" id="document-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 115</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">document</span> <span class="ruby-identifier">generator</span>, <span class="ruby-identifier">options</span>, <span class="ruby-identifier">destination</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 116</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">document</span> <span class="ruby-identifier">generator</span>, <span class="ruby-identifier">options</span>, <span class="ruby-identifier">destination</span>
   <span class="ruby-identifier">generator_name</span> = <span class="ruby-identifier">generator</span>
 
   <span class="ruby-identifier">options</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">dup</span>
@@ -469,8 +467,8 @@ or “ri”) and following the given <code>options</code>.</p>
 
           
           <div class="method-source-code" id="generate-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 146</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 147</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@spec</span>.<span class="ruby-identifier">default_gem?</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@generate_ri</span> <span class="ruby-keyword">or</span> <span class="ruby-ivar">@generate_rdoc</span>
 
@@ -551,8 +549,8 @@ or “ri”) and following the given <code>options</code>.</p>
 
           
           <div class="method-source-code" id="rdoc_installed-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 210</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">rdoc_installed?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 211</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rdoc_installed?</span>
   <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span> <span class="ruby-ivar">@rdoc_dir</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -584,8 +582,8 @@ or “ri”) and following the given <code>options</code>.</p>
 
           
           <div class="method-source-code" id="remove-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 217</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">remove</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 218</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove</span>
   <span class="ruby-identifier">base_dir</span> = <span class="ruby-ivar">@spec</span>.<span class="ruby-identifier">base_dir</span>
 
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">Gem</span><span class="ruby-operator">::</span><span class="ruby-constant">FilePermissionError</span>, <span class="ruby-identifier">base_dir</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">writable?</span> <span class="ruby-identifier">base_dir</span>
@@ -622,8 +620,8 @@ or “ri”) and following the given <code>options</code>.</p>
 
           
           <div class="method-source-code" id="ri_installed-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 229</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">ri_installed?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 230</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">ri_installed?</span>
   <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span> <span class="ruby-ivar">@ri_dir</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -655,8 +653,8 @@ or “ri”) and following the given <code>options</code>.</p>
 
           
           <div class="method-source-code" id="setup-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 236</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">setup</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rubygems_hook.rb, line 237</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">setup</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">load_rdoc</span>
 
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">Gem</span><span class="ruby-operator">::</span><span class="ruby-constant">FilePermissionError</span>, <span class="ruby-ivar">@doc_dir</span> <span class="ruby-keyword">if</span>
@@ -681,8 +679,8 @@ or “ri”) and following the given <code>options</code>.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

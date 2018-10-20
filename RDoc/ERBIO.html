@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::ERBIO - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::ERBIO - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -95,7 +95,7 @@ and Masatoshi SEKI.</p>
 
 <pre class="ruby"><span class="ruby-identifier">erbio</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">ERBIO</span>.<span class="ruby-identifier">new</span> <span class="ruby-string">&#39;&lt;%= &quot;hello world&quot; %&gt;&#39;</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-keyword">nil</span>
 
-<span class="ruby-identifier">open</span> <span class="ruby-string">&#39;hello.txt&#39;</span>, <span class="ruby-string">&#39;w&#39;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+<span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span> <span class="ruby-string">&#39;hello.txt&#39;</span>, <span class="ruby-string">&#39;w&#39;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">erbio</span>.<span class="ruby-identifier">result</span> <span class="ruby-identifier">binding</span>
 <span class="ruby-keyword">end</span>
 </pre>
@@ -104,8 +104,6 @@ and Masatoshi SEKI.</p>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -127,7 +125,7 @@ and Masatoshi SEKI.</p>
         
         <div class="method-heading">
           <span class="method-name">new</span><span
-            class="method-args">(str, safe_level = nil, trim_mode = nil, eoutvar = 'io')</span>
+            class="method-args">(str, safe_level = nil, trim_mode = nil, eoutvar = &#39;io&#39;)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -148,9 +146,13 @@ ERB&#39;s initialize</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/erbio.rb, line 22</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">str</span>, <span class="ruby-identifier">safe_level</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">trim_mode</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">eoutvar</span> = <span class="ruby-string">&#39;io&#39;</span>
-  <span class="ruby-keyword">super</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/erbio.rb, line 23</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">str</span>, <span class="ruby-identifier">safe_level</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">trim_mode</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">eoutvar</span> = <span class="ruby-string">&#39;io&#39;</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">RUBY_VERSION</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">&#39;2.6&#39;</span>
+    <span class="ruby-keyword">super</span>(<span class="ruby-identifier">str</span>, <span class="ruby-value">trim_mode:</span> <span class="ruby-identifier">trim_mode</span>, <span class="ruby-value">eoutvar:</span> <span class="ruby-identifier">eoutvar</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">super</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -189,8 +191,8 @@ ERB&#39;s initialize</p>
 
           
           <div class="method-source-code" id="set_eoutvar-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/erbio.rb, line 29</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">set_eoutvar</span> <span class="ruby-identifier">compiler</span>, <span class="ruby-identifier">io_variable</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/erbio.rb, line 34</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_eoutvar</span> <span class="ruby-identifier">compiler</span>, <span class="ruby-identifier">io_variable</span>
   <span class="ruby-identifier">compiler</span>.<span class="ruby-identifier">put_cmd</span>    = <span class="ruby-node">&quot;#{io_variable}.write&quot;</span>
   <span class="ruby-identifier">compiler</span>.<span class="ruby-identifier">insert_cmd</span> = <span class="ruby-node">&quot;#{io_variable}.write&quot;</span>
   <span class="ruby-identifier">compiler</span>.<span class="ruby-identifier">pre_cmd</span>    = []
@@ -213,8 +215,8 @@ ERB&#39;s initialize</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

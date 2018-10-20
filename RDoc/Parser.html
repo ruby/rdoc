@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Parser - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Parser - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -87,8 +87,6 @@
     
     <li ><a href="#method-c-parse_files_matching">::parse_files_matching</a>
     
-    <li ><a href="#method-c-process_directive">::process_directive</a>
-    
     <li ><a href="#method-c-remove_modeline">::remove_modeline</a>
     
     <li ><a href="#method-c-use_markup">::use_markup</a>
@@ -130,13 +128,13 @@ to register extensions.</p>
 <span class="ruby-keyword">class</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">Xyz</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span>
   <span class="ruby-identifier">parse_files_matching</span> <span class="ruby-regexp">/\.xyz$/</span>
 
-  <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">top_level</span>, <span class="ruby-identifier">file_name</span>, <span class="ruby-identifier">content</span>, <span class="ruby-identifier">options</span>, <span class="ruby-identifier">stats</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">top_level</span>, <span class="ruby-identifier">file_name</span>, <span class="ruby-identifier">content</span>, <span class="ruby-identifier">options</span>, <span class="ruby-identifier">stats</span>
     <span class="ruby-keyword">super</span>
 
     <span class="ruby-comment"># extra initialization if needed</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">def</span> <span class="ruby-identifier">scan</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">scan</span>
     <span class="ruby-comment"># parse file and fill in @top_level</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
@@ -144,8 +142,6 @@ to register extensions.</p>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -222,15 +218,15 @@ to register a parser&#39;s file extensions.</p>
 
           
           <div class="method-source-code" id="alias_extension-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 56</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">alias_extension</span>(<span class="ruby-identifier">old_ext</span>, <span class="ruby-identifier">new_ext</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 57</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">alias_extension</span>(<span class="ruby-identifier">old_ext</span>, <span class="ruby-identifier">new_ext</span>)
   <span class="ruby-identifier">old_ext</span> = <span class="ruby-identifier">old_ext</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^\.(.*)/</span>, <span class="ruby-string">&#39;\1&#39;</span>)
   <span class="ruby-identifier">new_ext</span> = <span class="ruby-identifier">new_ext</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^\.(.*)/</span>, <span class="ruby-string">&#39;\1&#39;</span>)
 
   <span class="ruby-identifier">parser</span> = <span class="ruby-identifier">can_parse_by_name</span> <span class="ruby-node">&quot;xxx.#{old_ext}&quot;</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">parser</span>
 
-  <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span>.<span class="ruby-identifier">parsers</span>.<span class="ruby-identifier">unshift</span> [<span class="ruby-node">/\.#{new_ext}$/</span>, <span class="ruby-identifier">parser</span>]
+  <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span>.<span class="ruby-identifier">parsers</span>.<span class="ruby-identifier">unshift</span> [<span class="ruby-regexp">/\.#{new_ext}$/</span>, <span class="ruby-identifier">parser</span>]
 
   <span class="ruby-keyword">true</span>
 <span class="ruby-keyword">end</span></pre>
@@ -265,17 +261,17 @@ consume.</p>
 
           
           <div class="method-source-code" id="binary-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 72</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">binary?</span>(<span class="ruby-identifier">file</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 73</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">binary?</span>(<span class="ruby-identifier">file</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">file</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\.(rdoc|txt)$/</span>
 
   <span class="ruby-identifier">s</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">file</span>, <span class="ruby-value">1024</span>) <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">s</span>[<span class="ruby-value">0</span>, <span class="ruby-value">2</span>] <span class="ruby-operator">==</span> <span class="ruby-constant">Marshal</span>.<span class="ruby-identifier">dump</span>(<span class="ruby-string">&#39;&#39;</span>)[<span class="ruby-value">0</span>, <span class="ruby-value">2</span>] <span class="ruby-keyword">or</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&quot;\x00&quot;</span>)
 
-  <span class="ruby-identifier">mode</span> = <span class="ruby-string">&quot;r&quot;</span>
-  <span class="ruby-identifier">s</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-node">/\A#!.*\n/</span>, <span class="ruby-string">&#39;&#39;</span>)     <span class="ruby-comment"># assume shebang line isn&#39;t longer than 1024.</span>
-  <span class="ruby-identifier">encoding</span> = <span class="ruby-identifier">s</span>[<span class="ruby-node">/^\s*\#\s*(?:-\*-\s*)?(?:en)?coding:\s*([^\s;]+?)(?:-\*-|[\s;])/</span>, <span class="ruby-value">1</span>]
+  <span class="ruby-identifier">mode</span> = <span class="ruby-string">&#39;r:utf-8&#39;</span> <span class="ruby-comment"># default source encoding has been chagened to utf-8</span>
+  <span class="ruby-identifier">s</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/\A#!.*\n/</span>, <span class="ruby-string">&#39;&#39;</span>)     <span class="ruby-comment"># assume shebang line isn&#39;t longer than 1024.</span>
+  <span class="ruby-identifier">encoding</span> = <span class="ruby-identifier">s</span>[<span class="ruby-regexp">/^\s*\#\s*(?:-\*-\s*)?(?:en)?coding:\s*([^\s;]+?)(?:-\*-|[\s;])/</span>, <span class="ruby-value">1</span>]
   <span class="ruby-identifier">mode</span> = <span class="ruby-node">&quot;rb:#{encoding}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">encoding</span>
   <span class="ruby-identifier">s</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">file</span>, <span class="ruby-identifier">mode</span>) {<span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span> <span class="ruby-identifier">f</span>.<span class="ruby-identifier">gets</span>(<span class="ruby-keyword">nil</span>, <span class="ruby-value">1024</span>)}
 
@@ -310,8 +306,8 @@ consume.</p>
 
           
           <div class="method-source-code" id="can_parse-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 130</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">can_parse</span> <span class="ruby-identifier">file_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 106</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">can_parse</span> <span class="ruby-identifier">file_name</span>
   <span class="ruby-identifier">parser</span> = <span class="ruby-identifier">can_parse_by_name</span> <span class="ruby-identifier">file_name</span>
 
   <span class="ruby-comment"># HACK Selenium hides a jar file using a .txt extension</span>
@@ -349,8 +345,8 @@ This does not depend upon the file being readable.</p>
 
           
           <div class="method-source-code" id="can_parse_by_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 143</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">can_parse_by_name</span> <span class="ruby-identifier">file_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 119</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">can_parse_by_name</span> <span class="ruby-identifier">file_name</span>
   <span class="ruby-identifier">_</span>, <span class="ruby-identifier">parser</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span>.<span class="ruby-identifier">parsers</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">regexp</span>,<span class="ruby-operator">|</span> <span class="ruby-identifier">regexp</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">file_name</span> }
 
   <span class="ruby-comment"># The default parser must not parse binary files</span>
@@ -396,9 +392,9 @@ This does not depend upon the file being readable.</p>
 
           
           <div class="method-source-code" id="check_modeline-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 164</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">check_modeline</span> <span class="ruby-identifier">file_name</span>
-  <span class="ruby-identifier">line</span> = <span class="ruby-identifier">open</span> <span class="ruby-identifier">file_name</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 140</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">check_modeline</span> <span class="ruby-identifier">file_name</span>
+  <span class="ruby-identifier">line</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span> <span class="ruby-identifier">file_name</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">io</span>.<span class="ruby-identifier">gets</span>
   <span class="ruby-keyword">end</span>
 
@@ -414,7 +410,9 @@ This does not depend upon the file being readable.</p>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">if</span> <span class="ruby-regexp">/coding:/i</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">type</span>
 
   <span class="ruby-identifier">type</span>.<span class="ruby-identifier">downcase</span>
-<span class="ruby-keyword">rescue</span> <span class="ruby-constant">ArgumentError</span> <span class="ruby-comment"># invalid byte sequence, etc.</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">ArgumentError</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">Encoding</span><span class="ruby-operator">::</span><span class="ruby-constant">InvalidByteSequenceError</span> <span class="ruby-comment"># invalid byte sequence</span>
+
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -446,8 +444,8 @@ This does not depend upon the file being readable.</p>
 
           
           <div class="method-source-code" id="for-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 188</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-keyword">for</span> <span class="ruby-identifier">top_level</span>, <span class="ruby-identifier">file_name</span>, <span class="ruby-identifier">content</span>, <span class="ruby-identifier">options</span>, <span class="ruby-identifier">stats</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 166</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-keyword">for</span> <span class="ruby-identifier ruby-title">top_level</span>, <span class="ruby-identifier">file_name</span>, <span class="ruby-identifier">content</span>, <span class="ruby-identifier">options</span>, <span class="ruby-identifier">stats</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">binary?</span> <span class="ruby-identifier">file_name</span>
 
   <span class="ruby-identifier">parser</span> = <span class="ruby-identifier">use_markup</span> <span class="ruby-identifier">content</span>
@@ -456,7 +454,7 @@ This does not depend upon the file being readable.</p>
     <span class="ruby-identifier">parse_name</span> = <span class="ruby-identifier">file_name</span>
 
     <span class="ruby-comment"># If no extension, look for shebang</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">file_name</span> <span class="ruby-operator">!~</span> <span class="ruby-regexp">/\.\w+$/</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">content</span> <span class="ruby-operator">=~</span> <span class="ruby-node">%r{\A#!(.+)}</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">file_name</span> <span class="ruby-operator">!~</span> <span class="ruby-regexp">/\.\w+$/</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">content</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">%r{\A#!(.+)}</span> <span class="ruby-keyword">then</span>
       <span class="ruby-identifier">shebang</span> = <span class="ruby-node">$1</span>
       <span class="ruby-keyword">case</span> <span class="ruby-identifier">shebang</span>
       <span class="ruby-keyword">when</span> <span class="ruby-regexp">%r{env\s+ruby}</span>, <span class="ruby-regexp">%r{/ruby}</span>
@@ -509,8 +507,8 @@ created which allows processing of directives.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 273</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">top_level</span>, <span class="ruby-identifier">file_name</span>, <span class="ruby-identifier">content</span>, <span class="ruby-identifier">options</span>, <span class="ruby-identifier">stats</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 251</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">top_level</span>, <span class="ruby-identifier">file_name</span>, <span class="ruby-identifier">content</span>, <span class="ruby-identifier">options</span>, <span class="ruby-identifier">stats</span>
   <span class="ruby-ivar">@top_level</span> = <span class="ruby-identifier">top_level</span>
   <span class="ruby-ivar">@top_level</span>.<span class="ruby-identifier">parser</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>
   <span class="ruby-ivar">@store</span> = <span class="ruby-ivar">@top_level</span>.<span class="ruby-identifier">store</span>
@@ -554,62 +552,9 @@ created which allows processing of directives.</p>
 
           
           <div class="method-source-code" id="parse_files_matching-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 222</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parse_files_matching</span>(<span class="ruby-identifier">regexp</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 200</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">parse_files_matching</span>(<span class="ruby-identifier">regexp</span>)
   <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span>.<span class="ruby-identifier">parsers</span>.<span class="ruby-identifier">unshift</span> [<span class="ruby-identifier">regexp</span>, <span class="ruby-keyword">self</span>]
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-      <div id="method-c-process_directive" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">process_directive</span><span
-            class="method-args">(code_object, directive, value)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>Processes common directives for CodeObjects for the <a
-href="Parser/C.html">C</a> and <a href="Parser/Ruby.html">Ruby</a> parsers.</p>
-
-<p>Applies <code>directive</code>&#39;s <code>value</code> to
-<code>code_object</code>, if appropriate</p>
-          
-          
-
-          
-          <div class="method-source-code" id="process_directive-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 93</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">process_directive</span> <span class="ruby-identifier">code_object</span>, <span class="ruby-identifier">directive</span>, <span class="ruby-identifier">value</span>
-  <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;RDoc::Parser::process_directive is deprecated and wil be removed in RDoc 4.  Use RDoc::Markup::PreProcess#handle_directive instead&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">$-w</span>
-
-  <span class="ruby-keyword">case</span> <span class="ruby-identifier">directive</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;nodoc&#39;</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-identifier">code_object</span>.<span class="ruby-identifier">document_self</span> = <span class="ruby-keyword">nil</span> <span class="ruby-comment"># notify nodoc</span>
-    <span class="ruby-identifier">code_object</span>.<span class="ruby-identifier">document_children</span> = <span class="ruby-identifier">value</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">!=</span> <span class="ruby-string">&#39;all&#39;</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;doc&#39;</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-identifier">code_object</span>.<span class="ruby-identifier">document_self</span> = <span class="ruby-keyword">true</span>
-    <span class="ruby-identifier">code_object</span>.<span class="ruby-identifier">force_documentation</span> = <span class="ruby-keyword">true</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;yield&#39;</span>, <span class="ruby-string">&#39;yields&#39;</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-comment"># remove parameter &amp;block</span>
-    <span class="ruby-identifier">code_object</span>.<span class="ruby-identifier">params</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/,?\s*&amp;\w+/</span>, <span class="ruby-string">&#39;&#39;</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">code_object</span>.<span class="ruby-identifier">params</span>
-
-    <span class="ruby-identifier">code_object</span>.<span class="ruby-identifier">block_params</span> = <span class="ruby-identifier">value</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;arg&#39;</span>, <span class="ruby-string">&#39;args&#39;</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-identifier">code_object</span>.<span class="ruby-identifier">params</span> = <span class="ruby-identifier">value</span>
-  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -640,8 +585,8 @@ href="Parser/C.html">C</a> and <a href="Parser/Ruby.html">Ruby</a> parsers.</p>
 
           
           <div class="method-source-code" id="remove_modeline-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 229</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">remove_modeline</span> <span class="ruby-identifier">content</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 207</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">remove_modeline</span> <span class="ruby-identifier">content</span>
   <span class="ruby-identifier">content</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\A.*-\*-\s*(.*?\S)\s*-\*-.*\r?\n/</span>, <span class="ruby-string">&#39;&#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -688,8 +633,8 @@ on the second or third line.</p>
 
           
           <div class="method-source-code" id="use_markup-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 250</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">use_markup</span> <span class="ruby-identifier">content</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 228</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">use_markup</span> <span class="ruby-identifier">content</span>
   <span class="ruby-identifier">markup</span> = <span class="ruby-identifier">content</span>.<span class="ruby-identifier">lines</span>.<span class="ruby-identifier">first</span>(<span class="ruby-value">3</span>).<span class="ruby-identifier">grep</span>(<span class="ruby-regexp">/markup:\s+(\w+)/</span>) { <span class="ruby-node">$1</span> }.<span class="ruby-identifier">first</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">markup</span>
@@ -700,7 +645,7 @@ on the second or third line.</p>
   <span class="ruby-identifier">markup</span> = <span class="ruby-constant">Regexp</span>.<span class="ruby-identifier">escape</span> <span class="ruby-identifier">markup</span>
 
   <span class="ruby-identifier">_</span>, <span class="ruby-identifier">selected</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span>.<span class="ruby-identifier">parsers</span>.<span class="ruby-identifier">find</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">_</span>, <span class="ruby-identifier">parser</span><span class="ruby-operator">|</span>
-    <span class="ruby-node">/^#{markup}$/i</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">parser</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/.*:/</span>, <span class="ruby-string">&#39;&#39;</span>)
+    <span class="ruby-regexp">/^#{markup}$/i</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">parser</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/.*:/</span>, <span class="ruby-string">&#39;&#39;</span>)
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">selected</span>
@@ -735,8 +680,8 @@ href="http://www.garykessler.net/library/file_sigs.html">www.garykessler.net/lib
 
           
           <div class="method-source-code" id="zip-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 117</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">zip?</span> <span class="ruby-identifier">file</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser.rb, line 93</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">zip?</span> <span class="ruby-identifier">file</span>
   <span class="ruby-identifier">zip_signature</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span> <span class="ruby-identifier">file</span>, <span class="ruby-value">4</span>
 
   <span class="ruby-identifier">zip_signature</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;PK\x03\x04&quot;</span> <span class="ruby-keyword">or</span>
@@ -762,8 +707,8 @@ href="http://www.garykessler.net/library/file_sigs.html">www.garykessler.net/lib
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

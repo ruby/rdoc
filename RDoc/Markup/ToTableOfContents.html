@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::ToTableOfContents - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Markup::ToTableOfContents - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -103,8 +103,6 @@ contents</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -174,8 +172,8 @@ contents</p>
 
           
           <div class="method-source-code" id="to_toc-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_table_of_contents.rb, line 12</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">to_toc</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_table_of_contents.rb, line 13</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">to_toc</span>
   <span class="ruby-ivar">@to_toc</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">new</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -221,8 +219,8 @@ present</p>
 
           
           <div class="method-source-code" id="accept_document-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_table_of_contents.rb, line 35</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_document</span> <span class="ruby-identifier">document</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_table_of_contents.rb, line 36</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_document</span> <span class="ruby-identifier">document</span>
   <span class="ruby-ivar">@omit_headings_below</span> = <span class="ruby-identifier">document</span>.<span class="ruby-identifier">omit_headings_below</span>
 
   <span class="ruby-keyword">super</span>
@@ -256,8 +254,8 @@ present</p>
 
           
           <div class="method-source-code" id="accept_heading-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_table_of_contents.rb, line 44</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_heading</span> <span class="ruby-identifier">heading</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_table_of_contents.rb, line 45</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_heading</span> <span class="ruby-identifier">heading</span>
   <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">heading</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">suppressed?</span> <span class="ruby-identifier">heading</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -289,8 +287,8 @@ present</p>
 
           
           <div class="method-source-code" id="end_accepting-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_table_of_contents.rb, line 51</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">end_accepting</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_table_of_contents.rb, line 52</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">end_accepting</span>
   <span class="ruby-ivar">@res</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -322,8 +320,8 @@ present</p>
 
           
           <div class="method-source-code" id="start_accepting-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_table_of_contents.rb, line 58</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">start_accepting</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_table_of_contents.rb, line 59</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">start_accepting</span>
   <span class="ruby-ivar">@omit_headings_below</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@res</span> = []
 <span class="ruby-keyword">end</span></pre>
@@ -356,8 +354,8 @@ present</p>
 
           
           <div class="method-source-code" id="suppressed-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_table_of_contents.rb, line 66</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">suppressed?</span> <span class="ruby-identifier">heading</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_table_of_contents.rb, line 67</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">suppressed?</span> <span class="ruby-identifier">heading</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@omit_headings_below</span>
 
   <span class="ruby-identifier">heading</span>.<span class="ruby-identifier">level</span> <span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@omit_headings_below</span>
@@ -379,8 +377,8 @@ present</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

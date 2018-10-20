@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::ToMarkdown - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Markup::ToMarkdown - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -115,8 +115,6 @@
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -157,8 +155,8 @@
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 11</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 12</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">super</span>
 
   <span class="ruby-ivar">@headings</span>[<span class="ruby-value">1</span>] = [<span class="ruby-string">&#39;# &#39;</span>,      <span class="ruby-string">&#39;&#39;</span>]
@@ -215,8 +213,8 @@
 
           
           <div class="method-source-code" id="accept_list_end-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 46</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_list_end</span> <span class="ruby-identifier">list</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 47</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_list_end</span> <span class="ruby-identifier">list</span>
   <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;\n&quot;</span>
 
   <span class="ruby-keyword">super</span>
@@ -250,8 +248,8 @@
 
           
           <div class="method-source-code" id="accept_list_item_end-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 55</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_list_item_end</span> <span class="ruby-identifier">list_item</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 56</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_list_item_end</span> <span class="ruby-identifier">list_item</span>
   <span class="ruby-identifier">width</span> = <span class="ruby-keyword">case</span> <span class="ruby-ivar">@list_type</span>.<span class="ruby-identifier">last</span>
           <span class="ruby-keyword">when</span> <span class="ruby-value">:BULLET</span> <span class="ruby-keyword">then</span>
             <span class="ruby-value">4</span>
@@ -295,8 +293,8 @@
 
           
           <div class="method-source-code" id="accept_list_item_start-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 74</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-identifier">list_item</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 75</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_list_item_start</span> <span class="ruby-identifier">list_item</span>
   <span class="ruby-identifier">type</span> = <span class="ruby-ivar">@list_type</span>.<span class="ruby-identifier">last</span>
 
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">type</span>
@@ -346,8 +344,8 @@
 
           
           <div class="method-source-code" id="accept_list_start-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 99</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_list_start</span> <span class="ruby-identifier">list</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 100</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_list_start</span> <span class="ruby-identifier">list</span>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">list</span>.<span class="ruby-identifier">type</span>
   <span class="ruby-keyword">when</span> <span class="ruby-value">:BULLET</span>, <span class="ruby-value">:LABEL</span>, <span class="ruby-value">:NOTE</span> <span class="ruby-keyword">then</span>
     <span class="ruby-ivar">@list_index</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-keyword">nil</span>
@@ -389,8 +387,8 @@
 
           
           <div class="method-source-code" id="accept_rule-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 116</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_rule</span> <span class="ruby-identifier">rule</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 117</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_rule</span> <span class="ruby-identifier">rule</span>
   <span class="ruby-identifier">use_prefix</span> <span class="ruby-keyword">or</span> <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@indent</span>
   <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;-&#39;</span> <span class="ruby-operator">*</span> <span class="ruby-value">3</span>
   <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;\n&quot;</span>
@@ -424,8 +422,8 @@
 
           
           <div class="method-source-code" id="accept_verbatim-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 125</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_verbatim</span> <span class="ruby-identifier">verbatim</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 126</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_verbatim</span> <span class="ruby-identifier">verbatim</span>
   <span class="ruby-identifier">indent</span> = <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">*</span> (<span class="ruby-ivar">@indent</span> <span class="ruby-operator">+</span> <span class="ruby-value">4</span>)
 
   <span class="ruby-identifier">verbatim</span>.<span class="ruby-identifier">parts</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">part</span><span class="ruby-operator">|</span>
@@ -464,8 +462,8 @@
 
           
           <div class="method-source-code" id="gen_url-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 139</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">gen_url</span> <span class="ruby-identifier">url</span>, <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 140</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">gen_url</span> <span class="ruby-identifier">url</span>, <span class="ruby-identifier">text</span>
   <span class="ruby-identifier">scheme</span>, <span class="ruby-identifier">url</span>, = <span class="ruby-identifier">parse_url</span> <span class="ruby-identifier">url</span>
 
   <span class="ruby-node">&quot;[#{text.sub(%r{^#{scheme}:/*}i, &#39;&#39;)}](#{url})&quot;</span>
@@ -499,8 +497,8 @@
 
           
           <div class="method-source-code" id="handle_rdoc_link-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 148</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_rdoc_link</span> <span class="ruby-identifier">url</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 149</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_rdoc_link</span> <span class="ruby-identifier">url</span>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">url</span>
   <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^rdoc-ref:/</span> <span class="ruby-keyword">then</span>
     <span class="ruby-node">$&#39;</span>
@@ -545,8 +543,8 @@
 
           
           <div class="method-source-code" id="handle_special_HARD_BREAK-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 39</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_special_HARD_BREAK</span> <span class="ruby-identifier">special</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 40</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_special_HARD_BREAK</span> <span class="ruby-identifier">special</span>
   <span class="ruby-string">&quot;  \n&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -578,8 +576,8 @@
 
           
           <div class="method-source-code" id="handle_special_RDOCLINK-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 186</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_special_RDOCLINK</span> <span class="ruby-identifier">special</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 187</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_special_RDOCLINK</span> <span class="ruby-identifier">special</span>
   <span class="ruby-identifier">handle_rdoc_link</span> <span class="ruby-identifier">special</span>.<span class="ruby-identifier">text</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -612,8 +610,8 @@ Markdown.style link.</p>
 
           
           <div class="method-source-code" id="handle_special_TIDYLINK-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 168</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_special_TIDYLINK</span> <span class="ruby-identifier">special</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 169</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_special_TIDYLINK</span> <span class="ruby-identifier">special</span>
   <span class="ruby-identifier">text</span> = <span class="ruby-identifier">special</span>.<span class="ruby-identifier">text</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">text</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\{(.*?)\}\[(.*?)\]/</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/(\S+)\[(.*?)\]/</span>
@@ -656,8 +654,8 @@ Markdown.style link.</p>
 
           
           <div class="method-source-code" id="init_tags-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 30</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">init_tags</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_markdown.rb, line 31</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">init_tags</span>
   <span class="ruby-identifier">add_tag</span> <span class="ruby-value">:BOLD</span>, <span class="ruby-string">&#39;**&#39;</span>, <span class="ruby-string">&#39;**&#39;</span>
   <span class="ruby-identifier">add_tag</span> <span class="ruby-value">:EM</span>,   <span class="ruby-string">&#39;*&#39;</span>,  <span class="ruby-string">&#39;*&#39;</span>
   <span class="ruby-identifier">add_tag</span> <span class="ruby-value">:TT</span>,   <span class="ruby-string">&#39;`&#39;</span>,  <span class="ruby-string">&#39;`&#39;</span>
@@ -679,8 +677,8 @@ Markdown.style link.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

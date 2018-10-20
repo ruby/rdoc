@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::MethodAttr - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::MethodAttr - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -139,8 +139,6 @@
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -352,8 +350,8 @@ name, if there is no call_seq.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 77</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 78</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">name</span>
   <span class="ruby-keyword">super</span>()
 
   <span class="ruby-ivar">@text</span> = <span class="ruby-identifier">text</span>
@@ -410,8 +408,8 @@ name, if there is no call_seq.</p>
 
           
           <div class="method-source-code" id="3C-3D-3E-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 112</span>
-<span class="ruby-keyword">def</span> <span class="ruby-operator">&lt;=&gt;</span>(<span class="ruby-identifier">other</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 113</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">&lt;=&gt;</span>(<span class="ruby-identifier">other</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:singleton</span>) <span class="ruby-operator">&amp;&amp;</span>
                 <span class="ruby-identifier">other</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:name</span>)
 
@@ -458,8 +456,8 @@ href="MethodAttr.html#attribute-i-aliases">aliases</a></p>
 
           
           <div class="method-source-code" id="add_alias-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 208</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_alias</span>(<span class="ruby-identifier">an_alias</span>, <span class="ruby-identifier">context</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 209</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_alias</span>(<span class="ruby-identifier">an_alias</span>, <span class="ruby-identifier">context</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">NotImplementedError</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -498,8 +496,8 @@ the <code>, line dddd</code> portion of the comment is removed.</p>
 
           
           <div class="method-source-code" id="add_line_numbers-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 86</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_line_numbers</span>(<span class="ruby-identifier">src</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 87</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_line_numbers</span>(<span class="ruby-identifier">src</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">src</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/\A(.*)(, line (\d+))/</span>, <span class="ruby-string">&#39;\1&#39;</span>)
   <span class="ruby-identifier">first</span> = <span class="ruby-node">$3</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
   <span class="ruby-identifier">last</span>  = <span class="ruby-identifier">first</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">src</span>.<span class="ruby-identifier">count</span>(<span class="ruby-string">&quot;\n&quot;</span>)
@@ -546,8 +544,8 @@ the <code>, line dddd</code> portion of the comment is removed.</p>
 
           
           <div class="method-source-code" id="aref-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 215</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">aref</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 216</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">aref</span>
   <span class="ruby-identifier">type</span> = <span class="ruby-identifier">singleton</span> <span class="ruby-operator">?</span> <span class="ruby-string">&#39;c&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;i&#39;</span>
   <span class="ruby-comment"># % characters are not allowed in html names =&gt; dash instead</span>
   <span class="ruby-node">&quot;#{aref_prefix}-#{type}-#{html_name}&quot;</span>
@@ -581,8 +579,8 @@ the <code>, line dddd</code> portion of the comment is removed.</p>
 
           
           <div class="method-source-code" id="aref_prefix-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 224</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">aref_prefix</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 225</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">aref_prefix</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">NotImplementedError</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -615,8 +613,8 @@ parentheses, etc.</p>
 
           
           <div class="method-source-code" id="block_params-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 232</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">block_params=</span>(<span class="ruby-identifier">value</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 233</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">block_params=</span>(<span class="ruby-identifier">value</span>)
   <span class="ruby-comment"># &#39;yield.to_s&#39; or &#39;assert yield, msg&#39;</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@block_params</span> = <span class="ruby-string">&#39;&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^[\.,]/</span>
 
@@ -713,8 +711,8 @@ parentheses, etc.</p>
 
           
           <div class="method-source-code" id="documented-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 131</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">documented?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 132</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">documented?</span>
   <span class="ruby-keyword">super</span> <span class="ruby-keyword">or</span>
     (<span class="ruby-identifier">is_alias_for</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">is_alias_for</span>.<span class="ruby-identifier">documented?</span>) <span class="ruby-keyword">or</span>
     (<span class="ruby-identifier">see</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">see</span>.<span class="ruby-identifier">documented?</span>)
@@ -748,8 +746,8 @@ parentheses, etc.</p>
 
           
           <div class="method-source-code" id="full_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 299</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">full_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 300</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">full_name</span>
   <span class="ruby-ivar">@full_name</span> <span class="ruby-operator">||=</span> <span class="ruby-node">&quot;#{parent_name}#{pretty_name}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -781,8 +779,8 @@ parentheses, etc.</p>
 
           
           <div class="method-source-code" id="html_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 290</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">html_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 291</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">html_name</span>
   <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;cgi&#39;</span>
 
   <span class="ruby-constant">CGI</span>.<span class="ruby-identifier">escape</span>(<span class="ruby-ivar">@name</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;-&#39;</span>, <span class="ruby-string">&#39;-2D&#39;</span>)).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;%&#39;</span>,<span class="ruby-string">&#39;-&#39;</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^-/</span>, <span class="ruby-string">&#39;&#39;</span>)
@@ -818,8 +816,8 @@ parentheses, etc.</p>
 
           
           <div class="method-source-code" id="markup_code-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 110</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">markup_code</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 111</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">markup_code</span>
   <span class="ruby-keyword">return</span> <span class="ruby-string">&#39;&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@token_stream</span>
 
   <span class="ruby-identifier">src</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">TokenStream</span>.<span class="ruby-identifier">to_html</span> <span class="ruby-ivar">@token_stream</span>
@@ -827,7 +825,7 @@ parentheses, etc.</p>
   <span class="ruby-comment"># dedent the source</span>
   <span class="ruby-identifier">indent</span> = <span class="ruby-identifier">src</span>.<span class="ruby-identifier">length</span>
   <span class="ruby-identifier">lines</span> = <span class="ruby-identifier">src</span>.<span class="ruby-identifier">lines</span>.<span class="ruby-identifier">to_a</span>
-  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">shift</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">src</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/\A.*#\ *File/i</span> <span class="ruby-comment"># remove &#39;# File&#39; comment</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">shift</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">src</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\A.*#\ *File/i</span> <span class="ruby-comment"># remove &#39;# File&#39; comment</span>
   <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">line</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^ *(?=\S)/</span>
       <span class="ruby-identifier">n</span> = <span class="ruby-node">$&amp;</span>.<span class="ruby-identifier">length</span>
@@ -835,7 +833,7 @@ parentheses, etc.</p>
       <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
-  <span class="ruby-identifier">src</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-node">/^#{&#39; &#39; * indent}/</span>, <span class="ruby-string">&#39;&#39;</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">indent</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+  <span class="ruby-identifier">src</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/^#{&#39; &#39; * indent}/</span>, <span class="ruby-string">&#39;&#39;</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">indent</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
 
   <span class="ruby-identifier">add_line_numbers</span>(<span class="ruby-identifier">src</span>) <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">MethodAttr</span>.<span class="ruby-identifier">add_line_numbers</span>
 
@@ -871,8 +869,8 @@ method.</p>
 
           
           <div class="method-source-code" id="name_prefix-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 318</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">name_prefix</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 319</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">name_prefix</span>
   <span class="ruby-ivar">@singleton</span> <span class="ruby-operator">?</span> <span class="ruby-string">&#39;::&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;#&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -910,8 +908,8 @@ class name is used if <code>context</code> does not match the parent.</p>
 
           
           <div class="method-source-code" id="output_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 329</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">output_name</span> <span class="ruby-identifier">context</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 330</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">output_name</span> <span class="ruby-identifier">context</span>
   <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;#{name_prefix}#{@name}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">context</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">parent</span>
 
   <span class="ruby-node">&quot;#{parent_name}#{@singleton ? &#39;.&#39; : &#39;#&#39;}#{@name}&quot;</span>
@@ -950,8 +948,8 @@ class name is used if <code>context</code> does not match the parent.</p>
 
           
           <div class="method-source-code" id="parent_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 359</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">parent_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 360</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parent_name</span>
   <span class="ruby-ivar">@parent_name</span> <span class="ruby-operator">||</span> <span class="ruby-keyword">super</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -983,8 +981,8 @@ class name is used if <code>context</code> does not match the parent.</p>
 
           
           <div class="method-source-code" id="path-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 352</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">path</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 353</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">path</span>
   <span class="ruby-node">&quot;#{@parent.path}##{aref}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1016,8 +1014,8 @@ class name is used if <code>context</code> does not match the parent.</p>
 
           
           <div class="method-source-code" id="pretty_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 338</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">pretty_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 339</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pretty_name</span>
   <span class="ruby-node">&quot;#{name_prefix}#{@name}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1050,8 +1048,8 @@ to create a record for the search engine.</p>
 
           
           <div class="method-source-code" id="search_record-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 397</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">search_record</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 398</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">search_record</span>
   [
     <span class="ruby-ivar">@name</span>,
     <span class="ruby-identifier">full_name</span>,
@@ -1102,8 +1100,8 @@ documentation, and “see …” if it does not.</p>
 
           
           <div class="method-source-code" id="see-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 151</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">see</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 152</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">see</span>
   <span class="ruby-ivar">@see</span> = <span class="ruby-identifier">find_see</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@see</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>
   <span class="ruby-ivar">@see</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1141,8 +1139,8 @@ documentation, and “see …” if it does not.</p>
 
           
           <div class="method-source-code" id="store-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 159</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">store=</span> <span class="ruby-identifier">store</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 160</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">store=</span> <span class="ruby-identifier">store</span>
   <span class="ruby-keyword">super</span>
 
   <span class="ruby-ivar">@file</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">add_file</span> <span class="ruby-ivar">@file</span>.<span class="ruby-identifier">full_name</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file</span>
@@ -1176,8 +1174,8 @@ documentation, and “see …” if it does not.</p>
 
           
           <div class="method-source-code" id="type-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 345</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">type</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/method_attr.rb, line 346</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">type</span>
   <span class="ruby-identifier">singleton</span> <span class="ruby-operator">?</span> <span class="ruby-string">&#39;class&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;instance&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1197,8 +1195,8 @@ documentation, and “see …” if it does not.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::ToLabel - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Markup::ToLabel - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -99,8 +99,6 @@ marks removed (\SomeClass is converted to SomeClass).</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -141,8 +139,8 @@ marks removed (\SomeClass is converted to SomeClass).</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_label.rb, line 15</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_label.rb, line 16</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">super</span> <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">markup</span>
 
   <span class="ruby-ivar">@markup</span>.<span class="ruby-identifier">add_special</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">CrossReference</span><span class="ruby-operator">::</span><span class="ruby-constant">CROSSREF_REGEXP</span>, <span class="ruby-value">:CROSSREF</span>
@@ -191,8 +189,8 @@ marks removed (\SomeClass is converted to SomeClass).</p>
 
           
           <div class="method-source-code" id="convert-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_label.rb, line 31</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">convert</span> <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_label.rb, line 32</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert</span> <span class="ruby-identifier">text</span>
   <span class="ruby-identifier">label</span> = <span class="ruby-identifier">convert_flow</span> <span class="ruby-ivar">@am</span>.<span class="ruby-identifier">flow</span> <span class="ruby-identifier">text</span>
 
   <span class="ruby-constant">CGI</span>.<span class="ruby-identifier">escape</span>(<span class="ruby-identifier">label</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;%&#39;</span>, <span class="ruby-string">&#39;-&#39;</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^-/</span>, <span class="ruby-string">&#39;&#39;</span>)
@@ -227,11 +225,11 @@ suppression marker, if any</p>
 
           
           <div class="method-source-code" id="handle_special_CROSSREF-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_label.rb, line 41</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_special_CROSSREF</span> <span class="ruby-identifier">special</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_label.rb, line 42</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_special_CROSSREF</span> <span class="ruby-identifier">special</span>
   <span class="ruby-identifier">text</span> = <span class="ruby-identifier">special</span>.<span class="ruby-identifier">text</span>
 
-  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^\/</span>, <span class="ruby-string">&#39;&#39;</span>)
+  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^\\/</span>, <span class="ruby-string">&#39;&#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -262,8 +260,8 @@ suppression marker, if any</p>
 
           
           <div class="method-source-code" id="handle_special_TIDYLINK-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_label.rb, line 50</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_special_TIDYLINK</span> <span class="ruby-identifier">special</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_label.rb, line 51</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_special_TIDYLINK</span> <span class="ruby-identifier">special</span>
   <span class="ruby-identifier">text</span> = <span class="ruby-identifier">special</span>.<span class="ruby-identifier">text</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">text</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\{(.*?)\}\[(.*?)\]/</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/(\S+)\[(.*?)\]/</span>
@@ -287,8 +285,8 @@ suppression marker, if any</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

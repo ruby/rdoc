@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::TextFormatterTestCase - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Markup::TextFormatterTestCase - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -100,7 +100,7 @@
 
   <section class="description">
     
-<p><a href="../../Test.html">Test</a> case for creating new plain-text <a
+<p>Test case for creating new plain-text <a
 href="../Markup.html">RDoc::Markup</a> formatters.  See also <a
 href="FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a></p>
 
@@ -113,14 +113,14 @@ href="FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a></p>
   <span class="ruby-identifier">add_visitor_tests</span>
   <span class="ruby-identifier">add_text_tests</span>
 
-  <span class="ruby-keyword">def</span> <span class="ruby-identifier">setup</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">setup</span>
     <span class="ruby-keyword">super</span>
 
     <span class="ruby-ivar">@to</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ToNewTextFormat</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_blank_line</span>
-    <span class="ruby-identifier">assert_equal</span> :<span class="ruby-identifier">junk</span>, <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">res</span>.<span class="ruby-identifier">join</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_blank_line</span>
+    <span class="ruby-identifier">assert_equal</span> <span class="ruby-value">:junk</span>, <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">res</span>.<span class="ruby-identifier">join</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-comment"># ...</span>
@@ -130,8 +130,6 @@ href="FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a></p>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -168,14 +166,14 @@ href="FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a></p>
 
           
           <div class="method-source-code" id="add_text_tests-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/text_formatter_test_case.rb, line 33</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">add_text_tests</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/text_formatter_test_case.rb, line 34</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">add_text_tests</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class_eval</span> <span class="ruby-keyword">do</span>
 
     <span class="ruby-comment">##</span>
     <span class="ruby-comment"># Test case that calls &lt;tt&gt;@to.accept_heading&lt;/tt&gt;</span>
 
-    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_heading_indent</span>
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">test_accept_heading_indent</span>
       <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
       <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">indent</span> = <span class="ruby-value">3</span>
       <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_heading</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Heading</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, <span class="ruby-string">&#39;Hello&#39;</span>)
@@ -186,7 +184,7 @@ href="FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a></p>
     <span class="ruby-comment">##</span>
     <span class="ruby-comment"># Test case that calls &lt;tt&gt;@to.accept_rule&lt;/tt&gt;</span>
 
-    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_rule_indent</span>
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">test_accept_rule_indent</span>
       <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
       <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">indent</span> = <span class="ruby-value">3</span>
       <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_rule</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Rule</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>)
@@ -197,7 +195,7 @@ href="FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a></p>
     <span class="ruby-comment">##</span>
     <span class="ruby-comment"># Test case that calls &lt;tt&gt;@to.accept_verbatim&lt;/tt&gt;</span>
 
-    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_verbatim_indent</span>
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">test_accept_verbatim_indent</span>
       <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
       <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">indent</span> = <span class="ruby-value">2</span>
       <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_verbatim</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Verbatim</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;hi\n&quot;</span>, <span class="ruby-string">&quot; world\n&quot;</span>)
@@ -208,7 +206,7 @@ href="FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a></p>
     <span class="ruby-comment">##</span>
     <span class="ruby-comment"># Test case that calls &lt;tt&gt;@to.accept_verbatim&lt;/tt&gt; with a big indent</span>
 
-    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_verbatim_big_indent</span>
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">test_accept_verbatim_big_indent</span>
       <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
       <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">indent</span> = <span class="ruby-value">2</span>
       <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_verbatim</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Verbatim</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;hi\n&quot;</span>, <span class="ruby-string">&quot;world\n&quot;</span>)
@@ -219,7 +217,7 @@ href="FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a></p>
     <span class="ruby-comment">##</span>
     <span class="ruby-comment"># Test case that calls &lt;tt&gt;@to.accept_paragraph&lt;/tt&gt; with an indent</span>
 
-    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph_indent</span>
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">test_accept_paragraph_indent</span>
       <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
       <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">indent</span> = <span class="ruby-value">3</span>
       <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>((<span class="ruby-string">&#39;words &#39;</span> <span class="ruby-operator">*</span> <span class="ruby-value">30</span>).<span class="ruby-identifier">strip</span>)
@@ -230,7 +228,7 @@ href="FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a></p>
     <span class="ruby-comment">##</span>
     <span class="ruby-comment"># Test case that calls &lt;tt&gt;@to.accept_paragraph&lt;/tt&gt; with a long line</span>
 
-    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph_wrap</span>
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">test_accept_paragraph_wrap</span>
       <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
       <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>((<span class="ruby-string">&#39;words &#39;</span> <span class="ruby-operator">*</span> <span class="ruby-value">30</span>).<span class="ruby-identifier">strip</span>)
 
@@ -242,7 +240,7 @@ href="FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a></p>
     <span class="ruby-comment"># cross-reference.  If this test doesn&#39;t pass something may be very</span>
     <span class="ruby-comment"># wrong.</span>
 
-    <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_attributes</span>
+    <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">test_attributes</span>
       <span class="ruby-identifier">assert_equal</span> <span class="ruby-string">&#39;Dog&#39;</span>, <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">attributes</span>(<span class="ruby-string">&quot;\\Dog&quot;</span>)
     <span class="ruby-keyword">end</span>
 
@@ -279,15 +277,14 @@ href="FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a></p>
 
         <div class="method-description">
           
-          <p><a href="../../Test.html">Test</a> case that calls
-<code>@to.accept_heading</code></p>
+          <p>Test case that calls <code>@to.accept_heading</code></p>
           
           
 
           
           <div class="method-source-code" id="test_accept_heading_indent-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/text_formatter_test_case.rb, line 39</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_heading_indent</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/text_formatter_test_case.rb, line 40</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">test_accept_heading_indent</span>
   <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
   <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">indent</span> = <span class="ruby-value">3</span>
   <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_heading</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Heading</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, <span class="ruby-string">&#39;Hello&#39;</span>)
@@ -317,15 +314,14 @@ href="FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a></p>
 
         <div class="method-description">
           
-          <p><a href="../../Test.html">Test</a> case that calls
-<code>@to.accept_paragraph</code> with an indent</p>
+          <p>Test case that calls <code>@to.accept_paragraph</code> with an indent</p>
           
           
 
           
           <div class="method-source-code" id="test_accept_paragraph_indent-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/text_formatter_test_case.rb, line 83</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph_indent</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/text_formatter_test_case.rb, line 84</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">test_accept_paragraph_indent</span>
   <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
   <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">indent</span> = <span class="ruby-value">3</span>
   <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>((<span class="ruby-string">&#39;words &#39;</span> <span class="ruby-operator">*</span> <span class="ruby-value">30</span>).<span class="ruby-identifier">strip</span>)
@@ -355,15 +351,14 @@ href="FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a></p>
 
         <div class="method-description">
           
-          <p><a href="../../Test.html">Test</a> case that calls
-<code>@to.accept_paragraph</code> with a long line</p>
+          <p>Test case that calls <code>@to.accept_paragraph</code> with a long line</p>
           
           
 
           
           <div class="method-source-code" id="test_accept_paragraph_wrap-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/text_formatter_test_case.rb, line 94</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_paragraph_wrap</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/text_formatter_test_case.rb, line 95</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">test_accept_paragraph_wrap</span>
   <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
   <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_paragraph</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>((<span class="ruby-string">&#39;words &#39;</span> <span class="ruby-operator">*</span> <span class="ruby-value">30</span>).<span class="ruby-identifier">strip</span>)
 
@@ -392,15 +387,14 @@ href="FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a></p>
 
         <div class="method-description">
           
-          <p><a href="../../Test.html">Test</a> case that calls
-<code>@to.accept_rule</code></p>
+          <p>Test case that calls <code>@to.accept_rule</code></p>
           
           
 
           
           <div class="method-source-code" id="test_accept_rule_indent-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/text_formatter_test_case.rb, line 50</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_rule_indent</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/text_formatter_test_case.rb, line 51</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">test_accept_rule_indent</span>
   <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
   <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">indent</span> = <span class="ruby-value">3</span>
   <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_rule</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Rule</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>)
@@ -430,15 +424,14 @@ href="FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a></p>
 
         <div class="method-description">
           
-          <p><a href="../../Test.html">Test</a> case that calls
-<code>@to.accept_verbatim</code> with a big indent</p>
+          <p>Test case that calls <code>@to.accept_verbatim</code> with a big indent</p>
           
           
 
           
           <div class="method-source-code" id="test_accept_verbatim_big_indent-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/text_formatter_test_case.rb, line 72</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_verbatim_big_indent</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/text_formatter_test_case.rb, line 73</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">test_accept_verbatim_big_indent</span>
   <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
   <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">indent</span> = <span class="ruby-value">2</span>
   <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_verbatim</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Verbatim</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;hi\n&quot;</span>, <span class="ruby-string">&quot;world\n&quot;</span>)
@@ -468,15 +461,14 @@ href="FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a></p>
 
         <div class="method-description">
           
-          <p><a href="../../Test.html">Test</a> case that calls
-<code>@to.accept_verbatim</code></p>
+          <p>Test case that calls <code>@to.accept_verbatim</code></p>
           
           
 
           
           <div class="method-source-code" id="test_accept_verbatim_indent-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/text_formatter_test_case.rb, line 61</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_accept_verbatim_indent</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/text_formatter_test_case.rb, line 62</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">test_accept_verbatim_indent</span>
   <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">start_accepting</span>
   <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">indent</span> = <span class="ruby-value">2</span>
   <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">accept_verbatim</span> <span class="ruby-ivar">@RM</span><span class="ruby-operator">::</span><span class="ruby-constant">Verbatim</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;hi\n&quot;</span>, <span class="ruby-string">&quot; world\n&quot;</span>)
@@ -506,16 +498,16 @@ href="FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a></p>
 
         <div class="method-description">
           
-          <p><a href="../../Test.html">Test</a> case that calls
-<code>@to.attributes</code> with an escaped cross-reference.  If this test
-doesn&#39;t pass something may be very wrong.</p>
+          <p>Test case that calls <code>@to.attributes</code> with an escaped
+cross-reference.  If this test doesn&#39;t pass something may be very
+wrong.</p>
           
           
 
           
           <div class="method-source-code" id="test_attributes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/text_formatter_test_case.rb, line 106</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_attributes</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/text_formatter_test_case.rb, line 107</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">test_attributes</span>
   <span class="ruby-identifier">assert_equal</span> <span class="ruby-string">&#39;Dog&#39;</span>, <span class="ruby-ivar">@to</span>.<span class="ruby-identifier">attributes</span>(<span class="ruby-string">&quot;\\Dog&quot;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -535,8 +527,8 @@ doesn&#39;t pass something may be very wrong.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

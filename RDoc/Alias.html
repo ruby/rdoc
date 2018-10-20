@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Alias - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Alias - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -107,8 +107,6 @@ particular context</p>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -226,8 +224,8 @@ particular context</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 36</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">text</span>, <span class="ruby-identifier">old_name</span>, <span class="ruby-identifier">new_name</span>, <span class="ruby-identifier">comment</span>, <span class="ruby-identifier">singleton</span> = <span class="ruby-keyword">false</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 37</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">text</span>, <span class="ruby-identifier">old_name</span>, <span class="ruby-identifier">new_name</span>, <span class="ruby-identifier">comment</span>, <span class="ruby-identifier">singleton</span> = <span class="ruby-keyword">false</span>)
   <span class="ruby-keyword">super</span>()
 
   <span class="ruby-ivar">@text</span> = <span class="ruby-identifier">text</span>
@@ -274,8 +272,8 @@ href="Alias.html#attribute-i-new_name">new_name</a></p>
 
           
           <div class="method-source-code" id="3C-3D-3E-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 49</span>
-<span class="ruby-keyword">def</span> <span class="ruby-operator">&lt;=&gt;</span>(<span class="ruby-identifier">other</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 50</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">&lt;=&gt;</span>(<span class="ruby-identifier">other</span>)
   [<span class="ruby-ivar">@singleton</span> <span class="ruby-operator">?</span> <span class="ruby-value">0</span> <span class="ruby-operator">:</span> <span class="ruby-value">1</span>, <span class="ruby-identifier">new_name</span>] <span class="ruby-operator">&lt;=&gt;</span> [<span class="ruby-identifier">other</span>.<span class="ruby-identifier">singleton</span> <span class="ruby-operator">?</span> <span class="ruby-value">0</span> <span class="ruby-operator">:</span> <span class="ruby-value">1</span>, <span class="ruby-identifier">other</span>.<span class="ruby-identifier">new_name</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -307,8 +305,8 @@ href="Alias.html#attribute-i-new_name">new_name</a></p>
 
           
           <div class="method-source-code" id="aref-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 56</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">aref</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 57</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">aref</span>
   <span class="ruby-identifier">type</span> = <span class="ruby-identifier">singleton</span> <span class="ruby-operator">?</span> <span class="ruby-string">&#39;c&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;i&#39;</span>
   <span class="ruby-node">&quot;#alias-#{type}-#{html_name}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -341,8 +339,8 @@ href="Alias.html#attribute-i-new_name">new_name</a></p>
 
           
           <div class="method-source-code" id="full_old_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 64</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">full_old_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 65</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">full_old_name</span>
   <span class="ruby-ivar">@full_name</span> <span class="ruby-operator">||</span> <span class="ruby-node">&quot;#{parent.name}#{pretty_old_name}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -374,8 +372,8 @@ href="Alias.html#attribute-i-new_name">new_name</a></p>
 
           
           <div class="method-source-code" id="html_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 71</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">html_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 72</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">html_name</span>
   <span class="ruby-constant">CGI</span>.<span class="ruby-identifier">escape</span>(<span class="ruby-ivar">@new_name</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;-&#39;</span>, <span class="ruby-string">&#39;-2D&#39;</span>)).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;%&#39;</span>,<span class="ruby-string">&#39;-&#39;</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^-/</span>, <span class="ruby-string">&#39;&#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -408,8 +406,8 @@ instance-level.</p>
 
           
           <div class="method-source-code" id="name_prefix-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 86</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">name_prefix</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 87</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">name_prefix</span>
   <span class="ruby-identifier">singleton</span> <span class="ruby-operator">?</span> <span class="ruby-string">&#39;::&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;#&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -469,8 +467,8 @@ instance-level.</p>
 
           
           <div class="method-source-code" id="pretty_new_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 100</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">pretty_new_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 101</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pretty_new_name</span>
   <span class="ruby-node">&quot;#{singleton ? &#39;::&#39; : &#39;#&#39;}#{@new_name}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -506,8 +504,8 @@ instance-level.</p>
 
           
           <div class="method-source-code" id="pretty_old_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 93</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">pretty_old_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 94</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pretty_old_name</span>
   <span class="ruby-node">&quot;#{singleton ? &#39;::&#39; : &#39;#&#39;}#{@old_name}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -527,8 +525,8 @@ instance-level.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module RDoc::Text - rdoc 5.0.0 Documentation</title>
+<title>module RDoc::Text - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -106,8 +106,6 @@
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -167,10 +165,10 @@ encoding.</p>
 
           
           <div class="method-source-code" id="encode_fallback-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 58</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">encode_fallback</span> <span class="ruby-identifier">character</span>, <span class="ruby-identifier">encoding</span>, <span class="ruby-identifier">fallback</span>
-  <span class="ruby-identifier">character</span>.<span class="ruby-identifier">encode</span>(<span class="ruby-identifier">encoding</span>, <span class="ruby-value">:fallback</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-identifier">character</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">fallback</span> },
-                   <span class="ruby-value">:undef</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:replace</span>, <span class="ruby-value">:replace</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">fallback</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 49</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">encode_fallback</span> <span class="ruby-identifier">character</span>, <span class="ruby-identifier">encoding</span>, <span class="ruby-identifier">fallback</span>
+  <span class="ruby-identifier">character</span>.<span class="ruby-identifier">encode</span>(<span class="ruby-identifier">encoding</span>, <span class="ruby-value">:fallback</span> <span class="ruby-operator">=&gt;</span> { <span class="ruby-identifier">character</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">fallback</span> },
+                   <span class="ruby-value">:undef</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">:replace</span>, <span class="ruby-value">:replace</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">fallback</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -209,14 +207,14 @@ encoding.</p>
 
           
           <div class="method-source-code" id="expand_tabs-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 66</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">expand_tabs</span> <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 57</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">expand_tabs</span> <span class="ruby-identifier">text</span>
   <span class="ruby-identifier">expanded</span> = []
 
   <span class="ruby-identifier">text</span>.<span class="ruby-identifier">each_line</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">nil</span> <span class="ruby-keyword">while</span> <span class="ruby-identifier">line</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/(?:\G|\r)((?:.{8})*?)([^\t\r\n]{0,7})\t/</span>) <span class="ruby-keyword">do</span>
       <span class="ruby-identifier">r</span> = <span class="ruby-node">&quot;#{$1}#{$2}#{&#39; &#39; * (8 - $2.size)}&quot;</span>
-      <span class="ruby-identifier">r</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">encoding</span>
+      <span class="ruby-identifier">r</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Encoding</span>.<span class="ruby-identifier">change_encoding</span> <span class="ruby-identifier">r</span>, <span class="ruby-identifier">text</span>.<span class="ruby-identifier">encoding</span>
       <span class="ruby-identifier">r</span>
     <span class="ruby-keyword">end</span>
 
@@ -254,8 +252,8 @@ encoding.</p>
 
           
           <div class="method-source-code" id="flush_left-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 85</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">flush_left</span> <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 76</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">flush_left</span> <span class="ruby-identifier">text</span>
   <span class="ruby-identifier">indent</span> = <span class="ruby-value">9999</span>
 
   <span class="ruby-identifier">text</span>.<span class="ruby-identifier">each_line</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>
@@ -264,9 +262,9 @@ encoding.</p>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">empty</span> = <span class="ruby-string">&#39;&#39;</span>
-  <span class="ruby-identifier">empty</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">encoding</span>
+  <span class="ruby-identifier">empty</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Encoding</span>.<span class="ruby-identifier">change_encoding</span> <span class="ruby-identifier">empty</span>, <span class="ruby-identifier">text</span>.<span class="ruby-identifier">encoding</span>
 
-  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-node">/^ {0,#{indent}}/</span>, <span class="ruby-identifier">empty</span>)
+  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/^ {0,#{indent}}/</span>, <span class="ruby-identifier">empty</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -299,8 +297,8 @@ encoding.</p>
 
           
           <div class="method-source-code" id="markup-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 104</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">markup</span> <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 95</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">markup</span> <span class="ruby-identifier">text</span>
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">options</span>
     <span class="ruby-identifier">locale</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">options</span>.<span class="ruby-identifier">locale</span>
   <span class="ruby-keyword">else</span>
@@ -341,8 +339,8 @@ encoding.</p>
 
           
           <div class="method-source-code" id="normalize_comment-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 120</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">normalize_comment</span> <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 111</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">normalize_comment</span> <span class="ruby-identifier">text</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">text</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">empty?</span>
 
   <span class="ruby-identifier">text</span> = <span class="ruby-identifier">strip_stars</span>    <span class="ruby-identifier">text</span>
@@ -366,7 +364,7 @@ encoding.</p>
         
         <div class="method-heading">
           <span class="method-name">parse</span><span
-            class="method-args">(text, format = 'rdoc')</span>
+            class="method-args">(text, format = &#39;rdoc&#39;)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -382,8 +380,8 @@ href="Markup/Document.html">RDoc::Markup::Document</a> from it</p>
 
           
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 134</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">format</span> = <span class="ruby-string">&#39;rdoc&#39;</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 125</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">format</span> = <span class="ruby-string">&#39;rdoc&#39;</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">text</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">text</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">parse</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">text</span>
 
@@ -422,8 +420,8 @@ href="Markup/Document.html">RDoc::Markup::Document</a> from it</p>
 
           
           <div class="method-source-code" id="snippet-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 148</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">snippet</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">100</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 139</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">snippet</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-value">100</span>
   <span class="ruby-identifier">document</span> = <span class="ruby-identifier">parse</span> <span class="ruby-identifier">text</span>
 
   <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ToHtmlSnippet</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>, <span class="ruby-identifier">limit</span>).<span class="ruby-identifier">convert</span> <span class="ruby-identifier">document</span>
@@ -457,14 +455,14 @@ href="Markup/Document.html">RDoc::Markup::Document</a> from it</p>
 
           
           <div class="method-source-code" id="strip_hashes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 157</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">strip_hashes</span> <span class="ruby-identifier">text</span>
-  <span class="ruby-keyword">return</span> <span class="ruby-identifier">text</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/^(?&gt;\s*)[^\#]/</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 148</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">strip_hashes</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">text</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^(?&gt;\s*)[^\#]/</span>
 
   <span class="ruby-identifier">empty</span> = <span class="ruby-string">&#39;&#39;</span>
-  <span class="ruby-identifier">empty</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">encoding</span>
+  <span class="ruby-identifier">empty</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Encoding</span>.<span class="ruby-identifier">change_encoding</span> <span class="ruby-identifier">empty</span>, <span class="ruby-identifier">text</span>.<span class="ruby-identifier">encoding</span>
 
-  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-node">/^\s*(#+)/</span>) { <span class="ruby-node">$1</span>.<span class="ruby-identifier">tr</span> <span class="ruby-string">&#39;#&#39;</span>, <span class="ruby-string">&#39; &#39;</span> }.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/^\s+$/</span>, <span class="ruby-identifier">empty</span>)
+  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/^\s*(#+)/</span>) { <span class="ruby-node">$1</span>.<span class="ruby-identifier">tr</span> <span class="ruby-string">&#39;#&#39;</span>, <span class="ruby-string">&#39; &#39;</span> }.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/^\s+$/</span>, <span class="ruby-identifier">empty</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -495,8 +493,8 @@ href="Markup/Document.html">RDoc::Markup::Document</a> from it</p>
 
           
           <div class="method-source-code" id="strip_newlines-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 169</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">strip_newlines</span> <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 160</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">strip_newlines</span> <span class="ruby-identifier">text</span>
   <span class="ruby-identifier">text</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/\A\n*(.*?)\n*\z/m</span>) <span class="ruby-keyword">do</span> <span class="ruby-node">$1</span> <span class="ruby-keyword">end</span> <span class="ruby-comment"># block preserves String encoding</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -528,23 +526,23 @@ href="Markup/Document.html">RDoc::Markup::Document</a> from it</p>
 
           
           <div class="method-source-code" id="strip_stars-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 176</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">strip_stars</span> <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 167</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">strip_stars</span> <span class="ruby-identifier">text</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">text</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">%r%/\*.*\*/%m</span>
 
   <span class="ruby-identifier">encoding</span> = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">encoding</span>
 
-  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">gsub</span> <span class="ruby-node">%r%Document-method:\s+[\w:.#=!?]+%</span>, <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">gsub</span> <span class="ruby-regexp">%r%Document-method:\s+[\w:.#=!?|^&amp;&lt;&gt;~+\-/*\%@`\[\]]+%</span>, <span class="ruby-string">&#39;&#39;</span>
 
   <span class="ruby-identifier">space</span> = <span class="ruby-string">&#39; &#39;</span>
-  <span class="ruby-identifier">space</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">encoding</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">encoding</span>
+  <span class="ruby-identifier">space</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Encoding</span>.<span class="ruby-identifier">change_encoding</span> <span class="ruby-identifier">space</span>, <span class="ruby-identifier">encoding</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">encoding</span>
 
   <span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub!</span>  <span class="ruby-regexp">%r%/\*+%</span>       <span class="ruby-keyword">do</span> <span class="ruby-identifier">space</span> <span class="ruby-operator">*</span> <span class="ruby-node">$&amp;</span>.<span class="ruby-identifier">length</span> <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub!</span>  <span class="ruby-regexp">%r%\*+/%</span>       <span class="ruby-keyword">do</span> <span class="ruby-identifier">space</span> <span class="ruby-operator">*</span> <span class="ruby-node">$&amp;</span>.<span class="ruby-identifier">length</span> <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">text</span>.<span class="ruby-identifier">gsub!</span> <span class="ruby-regexp">%r%^[ \t]*\*%m</span> <span class="ruby-keyword">do</span> <span class="ruby-identifier">space</span> <span class="ruby-operator">*</span> <span class="ruby-node">$&amp;</span>.<span class="ruby-identifier">length</span> <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">empty</span> = <span class="ruby-string">&#39;&#39;</span>
-  <span class="ruby-identifier">empty</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">encoding</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">encoding</span>
+  <span class="ruby-identifier">empty</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Encoding</span>.<span class="ruby-identifier">change_encoding</span> <span class="ruby-identifier">empty</span>, <span class="ruby-identifier">encoding</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">encoding</span>
   <span class="ruby-identifier">text</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/^\s+$/</span>, <span class="ruby-identifier">empty</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -577,9 +575,9 @@ trademark symbols in <code>text</code> to properly encoded characters.</p>
 
           
           <div class="method-source-code" id="to_html-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 199</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_html</span> <span class="ruby-identifier">text</span>
-  <span class="ruby-identifier">html</span> = <span class="ruby-string">&#39;&#39;</span>.<span class="ruby-identifier">encode</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">encoding</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 190</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_html</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-identifier">html</span> = (<span class="ruby-string">&#39;&#39;</span>.<span class="ruby-identifier">encode</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">encoding</span>).<span class="ruby-identifier">dup</span>
 
   <span class="ruby-identifier">encoded</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Text</span><span class="ruby-operator">::</span><span class="ruby-constant">TO_HTML_CHARACTERS</span>[<span class="ruby-identifier">text</span>.<span class="ruby-identifier">encoding</span>]
 
@@ -591,13 +589,13 @@ trademark symbols in <code>text</code> to properly encoded characters.</p>
   <span class="ruby-keyword">until</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">eos?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-keyword">case</span>
     <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/&lt;(tt|code)&gt;.*?&lt;\/\1&gt;/</span>) <span class="ruby-keyword">then</span> <span class="ruby-comment"># skip contents of tt</span>
-      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">matched</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;\\&#39;</span>, <span class="ruby-string">&#39;\&#39;</span>)
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">matched</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;\\\\&#39;</span>, <span class="ruby-string">&#39;\\&#39;</span>)
     <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/&lt;(tt|code)&gt;.*?/</span>) <span class="ruby-keyword">then</span>
       <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;mismatched &lt;#{s[1]}&gt; tag&quot;</span> <span class="ruby-comment"># TODO signal file/line</span>
       <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">matched</span>
     <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/&lt;[^&gt;]+\/?s*&gt;/</span>) <span class="ruby-keyword">then</span> <span class="ruby-comment"># skip HTML tags</span>
       <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">matched</span>
-    <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/\(\S)/</span>) <span class="ruby-keyword">then</span> <span class="ruby-comment"># unhandled suppressed crossref</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/\\(\S)/</span>) <span class="ruby-keyword">then</span> <span class="ruby-comment"># unhandled suppressed crossref</span>
       <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">s</span>[<span class="ruby-value">1</span>]
       <span class="ruby-identifier">after_word</span> = <span class="ruby-keyword">nil</span>
     <span class="ruby-keyword">when</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/\.\.\.(\.?)/</span>) <span class="ruby-keyword">then</span>
@@ -639,7 +637,7 @@ trademark symbols in <code>text</code> to properly encoded characters.</p>
 
       <span class="ruby-identifier">after_word</span> = <span class="ruby-keyword">nil</span>
     <span class="ruby-keyword">else</span> <span class="ruby-comment"># advance to the next potentially significant character</span>
-      <span class="ruby-identifier">match</span> = <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/.+?(?=[&lt;\.(&quot;&#39;`&amp;-])/</span>) <span class="ruby-comment">#&quot;</span>
+      <span class="ruby-identifier">match</span> = <span class="ruby-identifier">s</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/.+?(?=[&lt;\\.(&quot;&#39;`&amp;-])/</span>) <span class="ruby-comment">#&quot;</span>
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">match</span> <span class="ruby-keyword">then</span>
         <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">match</span>
@@ -682,8 +680,8 @@ trademark symbols in <code>text</code> to properly encoded characters.</p>
 
           
           <div class="method-source-code" id="wrap-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 278</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">wrap</span>(<span class="ruby-identifier">txt</span>, <span class="ruby-identifier">line_len</span> = <span class="ruby-value">76</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/text.rb, line 269</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">wrap</span>(<span class="ruby-identifier">txt</span>, <span class="ruby-identifier">line_len</span> = <span class="ruby-value">76</span>)
   <span class="ruby-identifier">res</span> = []
   <span class="ruby-identifier">sp</span> = <span class="ruby-value">0</span>
   <span class="ruby-identifier">ep</span> = <span class="ruby-identifier">txt</span>.<span class="ruby-identifier">length</span>
@@ -694,19 +692,19 @@ trademark symbols in <code>text</code> to properly encoded characters.</p>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">p</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">ep</span>
       <span class="ruby-identifier">p</span> = <span class="ruby-identifier">ep</span>
     <span class="ruby-keyword">else</span>
-      <span class="ruby-keyword">while</span> <span class="ruby-identifier">p</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">sp</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">txt</span>[<span class="ruby-identifier">p</span>] <span class="ruby-operator">!=</span> <span class="ruby-value">?\</span><span class="ruby-identifier">s</span>
+      <span class="ruby-keyword">while</span> <span class="ruby-identifier">p</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">sp</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">txt</span>[<span class="ruby-identifier">p</span>] <span class="ruby-operator">!=</span> <span class="ruby-value">?\s</span>
         <span class="ruby-identifier">p</span> <span class="ruby-operator">-=</span> <span class="ruby-value">1</span>
       <span class="ruby-keyword">end</span>
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">p</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">sp</span>
         <span class="ruby-identifier">p</span> = <span class="ruby-identifier">sp</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">line_len</span>
-        <span class="ruby-keyword">while</span> <span class="ruby-identifier">p</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">ep</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">txt</span>[<span class="ruby-identifier">p</span>] <span class="ruby-operator">!=</span> <span class="ruby-value">?\</span><span class="ruby-identifier">s</span>
+        <span class="ruby-keyword">while</span> <span class="ruby-identifier">p</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">ep</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">txt</span>[<span class="ruby-identifier">p</span>] <span class="ruby-operator">!=</span> <span class="ruby-value">?\s</span>
           <span class="ruby-identifier">p</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
         <span class="ruby-keyword">end</span>
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
     <span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">txt</span>[<span class="ruby-identifier">sp</span><span class="ruby-operator">...</span><span class="ruby-identifier">p</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;\n&quot;</span>
     <span class="ruby-identifier">sp</span> = <span class="ruby-identifier">p</span>
-    <span class="ruby-identifier">sp</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">while</span> <span class="ruby-identifier">sp</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">ep</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">txt</span>[<span class="ruby-identifier">sp</span>] <span class="ruby-operator">==</span> <span class="ruby-value">?\</span><span class="ruby-identifier">s</span>
+    <span class="ruby-identifier">sp</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">while</span> <span class="ruby-identifier">sp</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">ep</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">txt</span>[<span class="ruby-identifier">sp</span>] <span class="ruby-operator">==</span> <span class="ruby-value">?\s</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">res</span>.<span class="ruby-identifier">join</span>.<span class="ruby-identifier">strip</span>
@@ -728,8 +726,8 @@ trademark symbols in <code>text</code> to properly encoded characters.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

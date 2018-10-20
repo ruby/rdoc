@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::Formatter - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Markup::Formatter - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -135,8 +135,6 @@ which provides extra test cases.</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -187,8 +185,8 @@ which provides extra test cases.</p>
 
           
           <div class="method-source-code" id="gen_relative_url-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 23</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">gen_relative_url</span> <span class="ruby-identifier">path</span>, <span class="ruby-identifier">target</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 24</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">gen_relative_url</span> <span class="ruby-identifier">path</span>, <span class="ruby-identifier">target</span>
   <span class="ruby-identifier">from</span>        = <span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span> <span class="ruby-identifier">path</span>
   <span class="ruby-identifier">to</span>, <span class="ruby-identifier">to_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">split</span> <span class="ruby-identifier">target</span>
 
@@ -237,8 +235,8 @@ which provides extra test cases.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 47</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">options</span>, <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 48</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">options</span>, <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>
 
   <span class="ruby-ivar">@markup</span> = <span class="ruby-identifier">markup</span> <span class="ruby-operator">||</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span>.<span class="ruby-identifier">new</span>
@@ -292,8 +290,8 @@ which provides extra test cases.</p>
 
           
           <div class="method-source-code" id="accept_document-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 68</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_document</span> <span class="ruby-identifier">document</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 69</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_document</span> <span class="ruby-identifier">document</span>
   <span class="ruby-identifier">document</span>.<span class="ruby-identifier">parts</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">item</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">case</span> <span class="ruby-identifier">item</span>
     <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span> <span class="ruby-keyword">then</span> <span class="ruby-comment"># HACK</span>
@@ -332,8 +330,8 @@ which provides extra test cases.</p>
 
           
           <div class="method-source-code" id="add_special_RDOCLINK-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 82</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_special_RDOCLINK</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 83</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_special_RDOCLINK</span>
   <span class="ruby-ivar">@markup</span>.<span class="ruby-identifier">add_special</span>(<span class="ruby-regexp">/rdoc-[a-z]+:[^\s\]]+/</span>, <span class="ruby-value">:RDOCLINK</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -366,9 +364,9 @@ href="<url>”>word></a></p>
 
           
           <div class="method-source-code" id="add_special_TIDYLINK-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 89</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_special_TIDYLINK</span>
-  <span class="ruby-ivar">@markup</span>.<span class="ruby-identifier">add_special</span>(<span class="ruby-node">/(?:
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 90</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_special_TIDYLINK</span>
+  <span class="ruby-ivar">@markup</span>.<span class="ruby-identifier">add_special</span>(<span class="ruby-regexp">/(?:
                         \{.*?\} |    # multi-word label
                         \b[^\s{}]+? # single-word label
                        )
@@ -406,8 +404,8 @@ tags for flexibility</p>
 
           
           <div class="method-source-code" id="add_tag-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 103</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_tag</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">start</span>, <span class="ruby-identifier">stop</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 104</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_tag</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">start</span>, <span class="ruby-identifier">stop</span>)
   <span class="ruby-identifier">attr</span> = <span class="ruby-ivar">@attributes</span>.<span class="ruby-identifier">bitmap_for</span> <span class="ruby-identifier">name</span>
   <span class="ruby-ivar">@attr_tags</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">InlineTag</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">attr</span>, <span class="ruby-identifier">start</span>, <span class="ruby-identifier">stop</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -440,8 +438,8 @@ tags for flexibility</p>
 
           
           <div class="method-source-code" id="annotate-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 111</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">annotate</span>(<span class="ruby-identifier">tag</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 112</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">annotate</span>(<span class="ruby-identifier">tag</span>)
   <span class="ruby-identifier">tag</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -473,8 +471,8 @@ tags for flexibility</p>
 
           
           <div class="method-source-code" id="convert-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 118</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">convert</span> <span class="ruby-identifier">content</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 119</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert</span> <span class="ruby-identifier">content</span>
   <span class="ruby-ivar">@markup</span>.<span class="ruby-identifier">convert</span> <span class="ruby-identifier">content</span>, <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -506,8 +504,8 @@ tags for flexibility</p>
 
           
           <div class="method-source-code" id="convert_flow-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 125</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">convert_flow</span>(<span class="ruby-identifier">flow</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 126</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert_flow</span>(<span class="ruby-identifier">flow</span>)
   <span class="ruby-identifier">res</span> = []
 
   <span class="ruby-identifier">flow</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">item</span><span class="ruby-operator">|</span>
@@ -556,8 +554,8 @@ href="../Markup.html#method-i-add_special">RDoc::Markup#add_special</a></p>
 
           
           <div class="method-source-code" id="convert_special-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 148</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">convert_special</span> <span class="ruby-identifier">special</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 149</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert_special</span> <span class="ruby-identifier">special</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">special</span>.<span class="ruby-identifier">text</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">in_tt?</span>
 
   <span class="ruby-identifier">handled</span> = <span class="ruby-keyword">false</span>
@@ -608,8 +606,8 @@ href="../Markup.html#method-i-add_special">RDoc::Markup#add_special</a></p>
 
           
           <div class="method-source-code" id="convert_string-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 174</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">convert_string</span> <span class="ruby-identifier">string</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 175</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert_string</span> <span class="ruby-identifier">string</span>
   <span class="ruby-identifier">string</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -647,8 +645,8 @@ href="../Markup.html#method-i-add_special">RDoc::Markup#add_special</a></p>
 
           
           <div class="method-source-code" id="ignore-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 186</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">ignore</span> <span class="ruby-operator">*</span><span class="ruby-identifier">node</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 187</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">ignore</span> <span class="ruby-operator">*</span><span class="ruby-identifier">node</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -679,8 +677,8 @@ href="../Markup.html#method-i-add_special">RDoc::Markup#add_special</a></p>
 
           
           <div class="method-source-code" id="in_tt-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 192</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">in_tt?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 193</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">in_tt?</span>
   <span class="ruby-ivar">@in_tt</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -712,8 +710,8 @@ href="../Markup.html#method-i-add_special">RDoc::Markup#add_special</a></p>
 
           
           <div class="method-source-code" id="off_tags-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 214</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">off_tags</span> <span class="ruby-identifier">res</span>, <span class="ruby-identifier">item</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 215</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">off_tags</span> <span class="ruby-identifier">res</span>, <span class="ruby-identifier">item</span>
   <span class="ruby-identifier">attr_mask</span> = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">turn_off</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">attr_mask</span>.<span class="ruby-identifier">zero?</span>
 
@@ -753,8 +751,8 @@ href="../Markup.html#method-i-add_special">RDoc::Markup#add_special</a></p>
 
           
           <div class="method-source-code" id="on_tags-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 199</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">on_tags</span> <span class="ruby-identifier">res</span>, <span class="ruby-identifier">item</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 200</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_tags</span> <span class="ruby-identifier">res</span>, <span class="ruby-identifier">item</span>
   <span class="ruby-identifier">attr_mask</span> = <span class="ruby-identifier">item</span>.<span class="ruby-identifier">turn_on</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">attr_mask</span>.<span class="ruby-identifier">zero?</span>
 
@@ -795,8 +793,8 @@ returns them.</p>
 
           
           <div class="method-source-code" id="parse_url-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 229</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_url</span> <span class="ruby-identifier">url</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 230</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_url</span> <span class="ruby-identifier">url</span>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">url</span>
   <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^rdoc-label:([^:]*)(?::(.*))?/</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">scheme</span> = <span class="ruby-string">&#39;link&#39;</span>
@@ -805,7 +803,7 @@ returns them.</p>
   <span class="ruby-keyword">when</span> <span class="ruby-regexp">/([A-Za-z]+):(.*)/</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">scheme</span> = <span class="ruby-node">$1</span>.<span class="ruby-identifier">downcase</span>
     <span class="ruby-identifier">path</span>   = <span class="ruby-node">$2</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-node">/^#/</span> <span class="ruby-keyword">then</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^#/</span> <span class="ruby-keyword">then</span>
   <span class="ruby-keyword">else</span>
     <span class="ruby-identifier">scheme</span> = <span class="ruby-string">&#39;http&#39;</span>
     <span class="ruby-identifier">path</span>   = <span class="ruby-identifier">url</span>
@@ -851,8 +849,8 @@ returns them.</p>
 
           
           <div class="method-source-code" id="tt-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 259</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">tt?</span> <span class="ruby-identifier">tag</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/formatter.rb, line 260</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tt?</span> <span class="ruby-identifier">tag</span>
   <span class="ruby-identifier">tag</span>.<span class="ruby-identifier">bit</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@tt_bit</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -872,8 +870,8 @@ returns them.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

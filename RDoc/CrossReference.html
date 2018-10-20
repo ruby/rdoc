@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::CrossReference - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::CrossReference - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -93,8 +93,6 @@ create cross references for names.</p>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -198,8 +196,8 @@ is triggered.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/cross_reference.rb, line 110</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">context</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/cross_reference.rb, line 111</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">context</span>
   <span class="ruby-ivar">@context</span> = <span class="ruby-identifier">context</span>
   <span class="ruby-ivar">@store</span>   = <span class="ruby-identifier">context</span>.<span class="ruby-identifier">store</span>
 
@@ -247,16 +245,16 @@ is triggered.</p>
 
           
           <div class="method-source-code" id="resolve-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/cross_reference.rb, line 124</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">resolve</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/cross_reference.rb, line 125</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">resolve</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">text</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@seen</span>[<span class="ruby-identifier">name</span>] <span class="ruby-keyword">if</span> <span class="ruby-ivar">@seen</span>.<span class="ruby-identifier">include?</span> <span class="ruby-identifier">name</span>
 
-  <span class="ruby-keyword">if</span> <span class="ruby-node">/#{CLASS_REGEXP_STR}([.#]|::)#{METHOD_REGEXP_STR}/o</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">name</span> <span class="ruby-keyword">then</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-regexp">/#{CLASS_REGEXP_STR}([.#]|::)#{METHOD_REGEXP_STR}/o</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">name</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">type</span> = <span class="ruby-node">$2</span>
     <span class="ruby-identifier">type</span> = <span class="ruby-string">&#39;&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;.&#39;</span>  <span class="ruby-comment"># will find either #method or ::method</span>
     <span class="ruby-identifier">method</span> = <span class="ruby-node">&quot;#{type}#{$3}&quot;</span>
     <span class="ruby-identifier">container</span> = <span class="ruby-ivar">@context</span>.<span class="ruby-identifier">find_symbol_module</span>(<span class="ruby-node">$1</span>)
-  <span class="ruby-keyword">elsif</span> <span class="ruby-node">/^([.#]|::)#{METHOD_REGEXP_STR}/o</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">name</span> <span class="ruby-keyword">then</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-regexp">/^([.#]|::)#{METHOD_REGEXP_STR}/o</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">name</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">type</span> = <span class="ruby-node">$1</span>
     <span class="ruby-identifier">type</span> = <span class="ruby-string">&#39;&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;.&#39;</span>
     <span class="ruby-identifier">method</span> = <span class="ruby-node">&quot;#{type}#{$2}&quot;</span>
@@ -274,7 +272,7 @@ is triggered.</p>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">ref</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">name</span>
-        <span class="ruby-keyword">when</span> <span class="ruby-node">/^\(#{CLASS_REGEXP_STR})$/o</span> <span class="ruby-keyword">then</span>
+        <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^\\(#{CLASS_REGEXP_STR})$/o</span> <span class="ruby-keyword">then</span>
           <span class="ruby-ivar">@context</span>.<span class="ruby-identifier">find_symbol</span> <span class="ruby-node">$1</span>
         <span class="ruby-keyword">else</span>
           <span class="ruby-ivar">@context</span>.<span class="ruby-identifier">find_symbol</span> <span class="ruby-identifier">name</span>
@@ -285,9 +283,9 @@ is triggered.</p>
 
   <span class="ruby-identifier">ref</span> = <span class="ruby-keyword">nil</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Alias</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">ref</span> <span class="ruby-comment"># external alias, can&#39;t link to it</span>
 
-  <span class="ruby-identifier">out</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;\&#39;</span> <span class="ruby-keyword">then</span>
+  <span class="ruby-identifier">out</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;\\&#39;</span> <span class="ruby-keyword">then</span>
           <span class="ruby-identifier">name</span>
-        <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^\/</span> <span class="ruby-keyword">then</span>
+        <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^\\/</span> <span class="ruby-keyword">then</span>
           <span class="ruby-comment"># we remove the \ only in front of what we know:</span>
           <span class="ruby-comment"># other backslashes are treated later, only outside of &lt;tt&gt;</span>
           <span class="ruby-identifier">ref</span> <span class="ruby-operator">?</span> <span class="ruby-node">$&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">name</span>
@@ -322,8 +320,8 @@ is triggered.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

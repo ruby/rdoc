@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::ToAnsi - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Markup::ToAnsi - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -99,8 +99,6 @@
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -142,8 +140,8 @@ output vibrant ANSI color!</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_ansi.rb, line 9</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_ansi.rb, line 10</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">super</span>
 
   <span class="ruby-ivar">@headings</span>.<span class="ruby-identifier">clear</span>
@@ -188,8 +186,8 @@ output vibrant ANSI color!</p>
 
           
           <div class="method-source-code" id="accept_list_item_end-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_ansi.rb, line 30</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_list_item_end</span> <span class="ruby-identifier">list_item</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_ansi.rb, line 31</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_list_item_end</span> <span class="ruby-identifier">list_item</span>
   <span class="ruby-identifier">width</span> = <span class="ruby-keyword">case</span> <span class="ruby-ivar">@list_type</span>.<span class="ruby-identifier">last</span>
           <span class="ruby-keyword">when</span> <span class="ruby-value">:BULLET</span> <span class="ruby-keyword">then</span>
             <span class="ruby-value">2</span>
@@ -238,8 +236,8 @@ output vibrant ANSI color!</p>
 
           
           <div class="method-source-code" id="accept_list_item_start-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_ansi.rb, line 54</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-identifier">list_item</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_ansi.rb, line 55</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_list_item_start</span> <span class="ruby-identifier">list_item</span>
   <span class="ruby-identifier">bullet</span> = <span class="ruby-keyword">case</span> <span class="ruby-ivar">@list_type</span>.<span class="ruby-identifier">last</span>
            <span class="ruby-keyword">when</span> <span class="ruby-value">:BULLET</span> <span class="ruby-keyword">then</span>
              <span class="ruby-string">&#39;*&#39;</span>
@@ -296,8 +294,8 @@ output vibrant ANSI color!</p>
 
           
           <div class="method-source-code" id="init_tags-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_ansi.rb, line 21</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">init_tags</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_ansi.rb, line 22</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">init_tags</span>
   <span class="ruby-identifier">add_tag</span> <span class="ruby-value">:BOLD</span>, <span class="ruby-string">&quot;\e[1m&quot;</span>, <span class="ruby-string">&quot;\e[m&quot;</span>
   <span class="ruby-identifier">add_tag</span> <span class="ruby-value">:TT</span>,   <span class="ruby-string">&quot;\e[7m&quot;</span>, <span class="ruby-string">&quot;\e[m&quot;</span>
   <span class="ruby-identifier">add_tag</span> <span class="ruby-value">:EM</span>,   <span class="ruby-string">&quot;\e[4m&quot;</span>, <span class="ruby-string">&quot;\e[m&quot;</span>
@@ -336,8 +334,8 @@ output vibrant ANSI color!</p>
 
           
           <div class="method-source-code" id="start_accepting-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_ansi.rb, line 86</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">start_accepting</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_ansi.rb, line 87</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">start_accepting</span>
   <span class="ruby-keyword">super</span>
 
   <span class="ruby-ivar">@res</span> = [<span class="ruby-string">&quot;\e[0m&quot;</span>]
@@ -359,8 +357,8 @@ output vibrant ANSI color!</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::Document - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Markup::Document - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -123,8 +123,6 @@ paragraphs, etc.</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -209,8 +207,8 @@ href="Document.html#method-i-table_of_contents">#table_of_contents</a></p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 28</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-operator">*</span><span class="ruby-identifier">parts</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 29</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-operator">*</span><span class="ruby-identifier">parts</span>
   <span class="ruby-ivar">@parts</span> = []
   <span class="ruby-ivar">@parts</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">parts</span>
 
@@ -254,8 +252,8 @@ href="Document.html#method-i-table_of_contents">#table_of_contents</a></p>
 
           
           <div class="method-source-code" id="3C-3C-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 39</span>
-<span class="ruby-keyword">def</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">part</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 40</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">&lt;&lt;</span> <span class="ruby-identifier">part</span>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">part</span>
   <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span> <span class="ruby-keyword">then</span>
     <span class="ruby-keyword">unless</span> <span class="ruby-identifier">part</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
@@ -299,8 +297,8 @@ href="Document.html#method-i-table_of_contents">#table_of_contents</a></p>
 
           
           <div class="method-source-code" id="accept-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 64</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept</span> <span class="ruby-identifier">visitor</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 65</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept</span> <span class="ruby-identifier">visitor</span>
   <span class="ruby-identifier">visitor</span>.<span class="ruby-identifier">start_accepting</span>
 
   <span class="ruby-identifier">visitor</span>.<span class="ruby-identifier">accept_document</span> <span class="ruby-keyword">self</span>
@@ -336,8 +334,8 @@ href="Document.html#method-i-table_of_contents">#table_of_contents</a></p>
 
           
           <div class="method-source-code" id="concat-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 75</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">concat</span> <span class="ruby-identifier">parts</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 76</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">concat</span> <span class="ruby-identifier">parts</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parts</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">parts</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -354,7 +352,7 @@ href="Document.html#method-i-table_of_contents">#table_of_contents</a></p>
         
         <div class="method-heading">
           <span class="method-name">each</span><span
-            class="method-args">(&block)</span>
+            class="method-args">(&amp;block)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -369,8 +367,8 @@ href="Document.html#method-i-table_of_contents">#table_of_contents</a></p>
 
           
           <div class="method-source-code" id="each-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 82</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">each</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 83</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>
   <span class="ruby-ivar">@parts</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -402,8 +400,8 @@ href="Document.html#method-i-table_of_contents">#table_of_contents</a></p>
 
           
           <div class="method-source-code" id="empty-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 89</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">empty?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 90</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">empty?</span>
   <span class="ruby-ivar">@parts</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">or</span> (<span class="ruby-ivar">@parts</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">merged?</span> <span class="ruby-keyword">and</span> <span class="ruby-ivar">@parts</span>.<span class="ruby-identifier">first</span>.<span class="ruby-identifier">empty?</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -435,8 +433,8 @@ href="Document.html#method-i-table_of_contents">#table_of_contents</a></p>
 
           
           <div class="method-source-code" id="file-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 96</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">file=</span> <span class="ruby-identifier">location</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 97</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">file=</span> <span class="ruby-identifier">location</span>
   <span class="ruby-ivar">@file</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">location</span>
           <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">TopLevel</span> <span class="ruby-keyword">then</span>
             <span class="ruby-identifier">location</span>.<span class="ruby-identifier">relative_name</span>
@@ -479,8 +477,8 @@ documents from <code>other</code> when the files do not.</p>
 
           
           <div class="method-source-code" id="merge-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 113</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">merge</span> <span class="ruby-identifier">other</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 114</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">merge</span> <span class="ruby-identifier">other</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
     <span class="ruby-ivar">@parts</span> = <span class="ruby-identifier">other</span>.<span class="ruby-identifier">parts</span>
     <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>
@@ -525,8 +523,8 @@ documents from <code>other</code> when the files do not.</p>
 
           
           <div class="method-source-code" id="merged-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 133</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">merged?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 134</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">merged?</span>
   <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span> <span class="ruby-operator">===</span> <span class="ruby-ivar">@parts</span>.<span class="ruby-identifier">first</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -558,8 +556,8 @@ documents from <code>other</code> when the files do not.</p>
 
           
           <div class="method-source-code" id="push-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 150</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">push</span> <span class="ruby-operator">*</span><span class="ruby-identifier">parts</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 151</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">push</span> <span class="ruby-operator">*</span><span class="ruby-identifier">parts</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parts</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">parts</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -593,8 +591,8 @@ documents from <code>other</code> when the files do not.</p>
 
           
           <div class="method-source-code" id="table_of_contents-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 159</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">table_of_contents</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 160</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">table_of_contents</span>
   <span class="ruby-identifier">accept</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ToTableOfContents</span>.<span class="ruby-identifier">to_toc</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -614,8 +612,8 @@ documents from <code>other</code> when the files do not.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

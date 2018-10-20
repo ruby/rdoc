@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Context::Section - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Context::Section - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -137,8 +137,6 @@ single section.</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -234,12 +232,12 @@ single section.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 41</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">parent</span>, <span class="ruby-identifier">title</span>, <span class="ruby-identifier">comment</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 42</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">parent</span>, <span class="ruby-identifier">title</span>, <span class="ruby-identifier">comment</span>
   <span class="ruby-ivar">@parent</span> = <span class="ruby-identifier">parent</span>
   <span class="ruby-ivar">@title</span> = <span class="ruby-identifier">title</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">title</span>.<span class="ruby-identifier">strip</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">title</span>
 
-  <span class="ruby-identifier">@@sequence</span>.<span class="ruby-identifier">succ!</span>
+  <span class="ruby-identifier">@@sequence</span> = <span class="ruby-identifier">@@sequence</span>.<span class="ruby-identifier">succ</span>
   <span class="ruby-ivar">@sequence</span> = <span class="ruby-identifier">@@sequence</span>.<span class="ruby-identifier">dup</span>
 
   <span class="ruby-ivar">@comments</span> = []
@@ -284,8 +282,8 @@ href="Section.html#attribute-i-title">title</a></p>
 
           
           <div class="method-source-code" id="3D-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 56</span>
-<span class="ruby-keyword">def</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 57</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">==</span> <span class="ruby-identifier">other</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">other</span> <span class="ruby-keyword">and</span> <span class="ruby-ivar">@title</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">title</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -321,8 +319,8 @@ href="Section.html#attribute-i-title">title</a></p>
 
           
           <div class="method-source-code" id="add_comment-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 65</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_comment</span> <span class="ruby-identifier">comment</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 66</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_comment</span> <span class="ruby-identifier">comment</span>
   <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">extract_comment</span> <span class="ruby-identifier">comment</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">empty?</span>
@@ -367,8 +365,8 @@ href="Section.html#attribute-i-title">title</a></p>
 
           
           <div class="method-source-code" id="aref-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 85</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">aref</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 86</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">aref</span>
   <span class="ruby-identifier">title</span> = <span class="ruby-ivar">@title</span> <span class="ruby-operator">||</span> <span class="ruby-string">&#39;[untitled]&#39;</span>
 
   <span class="ruby-constant">CGI</span>.<span class="ruby-identifier">escape</span>(<span class="ruby-identifier">title</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;%&#39;</span>, <span class="ruby-string">&#39;-&#39;</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^-/</span>, <span class="ruby-string">&#39;&#39;</span>)
@@ -437,8 +435,8 @@ again at the end and remove them. This lets us write</p>
 
           
           <div class="method-source-code" id="extract_comment-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 100</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">extract_comment</span> <span class="ruby-identifier">comment</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 101</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_comment</span> <span class="ruby-identifier">comment</span>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">comment</span>
   <span class="ruby-keyword">when</span> <span class="ruby-constant">Array</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span>
@@ -447,14 +445,14 @@ again at the end and remove them. This lets us write</p>
   <span class="ruby-keyword">when</span> <span class="ruby-keyword">nil</span>
     <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span>.<span class="ruby-identifier">new</span> <span class="ruby-string">&#39;&#39;</span>
   <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/^#[ \t]*:section:.*\n/</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^#[ \t]*:section:.*\n/</span> <span class="ruby-keyword">then</span>
       <span class="ruby-identifier">start</span> = <span class="ruby-node">$`</span>
       <span class="ruby-identifier">rest</span> = <span class="ruby-node">$&#39;</span>
 
       <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">text</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">start</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
                        <span class="ruby-identifier">rest</span>
                      <span class="ruby-keyword">else</span>
-                       <span class="ruby-identifier">rest</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-node">/#{start.chomp}\Z/</span>, <span class="ruby-string">&#39;&#39;</span>)
+                       <span class="ruby-identifier">rest</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/#{start.chomp}\Z/</span>, <span class="ruby-string">&#39;&#39;</span>)
                      <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
 
@@ -494,8 +492,8 @@ again at the end and remove them. This lets us write</p>
 
           
           <div class="method-source-code" id="in_files-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 139</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">in_files</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 140</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">in_files</span>
   <span class="ruby-keyword">return</span> [] <span class="ruby-keyword">if</span> <span class="ruby-ivar">@comments</span>.<span class="ruby-identifier">empty?</span>
 
   <span class="ruby-keyword">case</span> <span class="ruby-ivar">@comments</span>
@@ -542,8 +540,8 @@ manually.</p>
 
           
           <div class="method-source-code" id="marshal_dump-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 160</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">marshal_dump</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 161</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">marshal_dump</span>
   [
     <span class="ruby-constant">MARSHAL_VERSION</span>,
     <span class="ruby-ivar">@title</span>,
@@ -580,8 +578,8 @@ must be restored manually.</p>
 
           
           <div class="method-source-code" id="marshal_load-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 171</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">marshal_load</span> <span class="ruby-identifier">array</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 172</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">marshal_load</span> <span class="ruby-identifier">array</span>
   <span class="ruby-ivar">@parent</span>  = <span class="ruby-keyword">nil</span>
 
   <span class="ruby-ivar">@title</span>    = <span class="ruby-identifier">array</span>[<span class="ruby-value">1</span>]
@@ -623,8 +621,8 @@ multiple RDoc::Markup::Documents with their file set.</p>
 
           
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 182</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 183</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse</span>
   <span class="ruby-keyword">case</span> <span class="ruby-ivar">@comments</span>
   <span class="ruby-keyword">when</span> <span class="ruby-constant">String</span> <span class="ruby-keyword">then</span>
     <span class="ruby-keyword">super</span>
@@ -677,8 +675,8 @@ multiple RDoc::Markup::Documents with their file set.</p>
 
           
           <div class="method-source-code" id="plain_html-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 210</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">plain_html</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 211</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">plain_html</span>
   <span class="ruby-ivar">@title</span> <span class="ruby-operator">||</span> <span class="ruby-string">&#39;Top Section&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -711,8 +709,8 @@ multiple RDoc::Markup::Documents with their file set.</p>
 
           
           <div class="method-source-code" id="remove_comment-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 218</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">remove_comment</span> <span class="ruby-identifier">comment</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 219</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_comment</span> <span class="ruby-identifier">comment</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@comments</span>.<span class="ruby-identifier">empty?</span>
 
   <span class="ruby-keyword">case</span> <span class="ruby-ivar">@comments</span>
@@ -757,9 +755,9 @@ multiple RDoc::Markup::Documents with their file set.</p>
 
           
           <div class="method-source-code" id="sequence-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 238</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">sequence</span>
-  <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;RDoc::Context::Section#sequence is deprecated, use #aref&quot;</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context/section.rb, line 239</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">sequence</span>
+  <span class="ruby-identifier">warn</span> <span class="ruby-string">&quot;RDoc::Context::Section#sequence is deprecated, use #aref&quot;</span>
   <span class="ruby-ivar">@sequence</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -779,8 +777,8 @@ multiple RDoc::Markup::Documents with their file set.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Generator::POT::POEntry - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Generator::POT::POEntry - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../../";
@@ -94,8 +94,6 @@
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -219,8 +217,8 @@
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/pot/po_entry.rb, line 28</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">msgid</span>, <span class="ruby-identifier">options</span> = {}
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/pot/po_entry.rb, line 29</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">msgid</span>, <span class="ruby-identifier">options</span> = {}
   <span class="ruby-ivar">@msgid</span> = <span class="ruby-identifier">msgid</span>
   <span class="ruby-ivar">@msgstr</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:msgstr</span>] <span class="ruby-operator">||</span> <span class="ruby-string">&quot;&quot;</span>
   <span class="ruby-ivar">@translator_comment</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:translator_comment</span>]
@@ -265,16 +263,16 @@
 
           
           <div class="method-source-code" id="merge-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/pot/po_entry.rb, line 55</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">merge</span> <span class="ruby-identifier">other_entry</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/pot/po_entry.rb, line 56</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">merge</span> <span class="ruby-identifier">other_entry</span>
   <span class="ruby-identifier">options</span> = {
-    <span class="ruby-value">:extracted_comment</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">merge_string</span>(<span class="ruby-ivar">@extracted_comment</span>,
+    <span class="ruby-value">:extracted_comment</span>  <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">merge_string</span>(<span class="ruby-ivar">@extracted_comment</span>,
                                         <span class="ruby-identifier">other_entry</span>.<span class="ruby-identifier">extracted_comment</span>),
-    <span class="ruby-value">:translator_comment</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">merge_string</span>(<span class="ruby-ivar">@translator_comment</span>,
+    <span class="ruby-value">:translator_comment</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">merge_string</span>(<span class="ruby-ivar">@translator_comment</span>,
                                         <span class="ruby-identifier">other_entry</span>.<span class="ruby-identifier">translator_comment</span>),
-    <span class="ruby-value">:references</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">merge_array</span>(<span class="ruby-ivar">@references</span>,
+    <span class="ruby-value">:references</span>         <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">merge_array</span>(<span class="ruby-ivar">@references</span>,
                                        <span class="ruby-identifier">other_entry</span>.<span class="ruby-identifier">references</span>),
-    <span class="ruby-value">:flags</span>              =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">merge_array</span>(<span class="ruby-ivar">@flags</span>,
+    <span class="ruby-value">:flags</span>              <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">merge_array</span>(<span class="ruby-ivar">@flags</span>,
                                        <span class="ruby-identifier">other_entry</span>.<span class="ruby-identifier">flags</span>),
   }
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@msgid</span>, <span class="ruby-identifier">options</span>)
@@ -308,17 +306,17 @@
 
           
           <div class="method-source-code" id="to_s-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/pot/po_entry.rb, line 40</span>
-  <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/pot/po_entry.rb, line 41</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_s</span>
     <span class="ruby-identifier">entry</span> = <span class="ruby-string">&#39;&#39;</span>
-    <span class="ruby-identifier">entry</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">format_translator_comment</span>
-    <span class="ruby-identifier">entry</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">format_extracted_comment</span>
-    <span class="ruby-identifier">entry</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">format_references</span>
-    <span class="ruby-identifier">entry</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">format_flags</span>
-    <span class="ruby-identifier">entry</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value">&lt;&lt;-ENTRY
-msgid #{format_message(@msgid)}
+    <span class="ruby-identifier">entry</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">format_translator_comment</span>
+    <span class="ruby-identifier">entry</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">format_extracted_comment</span>
+    <span class="ruby-identifier">entry</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">format_references</span>
+    <span class="ruby-identifier">entry</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">format_flags</span>
+    <span class="ruby-identifier">entry</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">&lt;&lt;-ENTRY</span>
+<span class="ruby-value">msgid #{format_message(@msgid)}
 msgstr #{format_message(@msgstr)}
-    ENTRY</span>
+</span><span class="ruby-identifier">    ENTRY</span>
   <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -337,8 +335,8 @@ msgstr #{format_message(@msgstr)}
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

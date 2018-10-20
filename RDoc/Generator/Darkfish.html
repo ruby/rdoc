@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Generator::Darkfish - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Generator::Darkfish - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -212,8 +212,6 @@ James.</p>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -439,8 +437,8 @@ generated content</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 157</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">store</span>, <span class="ruby-identifier">options</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 159</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">store</span>, <span class="ruby-identifier">options</span>
   <span class="ruby-ivar">@store</span>   = <span class="ruby-identifier">store</span>
   <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>
 
@@ -499,16 +497,16 @@ the body is used directly.</p>
 
           
           <div class="method-source-code" id="assemble_template-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 646</span>
-  <span class="ruby-keyword">def</span> <span class="ruby-identifier">assemble_template</span> <span class="ruby-identifier">body_file</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 675</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">assemble_template</span> <span class="ruby-identifier">body_file</span>
     <span class="ruby-identifier">body</span> = <span class="ruby-identifier">body_file</span>.<span class="ruby-identifier">read</span>
     <span class="ruby-keyword">return</span> <span class="ruby-identifier">body</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">body</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/&lt;html/</span>
 
     <span class="ruby-identifier">head_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;_head.rhtml&#39;</span>
     <span class="ruby-identifier">footer_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;_footer.rhtml&#39;</span>
 
-    <span class="ruby-value">&lt;&lt;-TEMPLATE
-&lt;!DOCTYPE html&gt;
+    <span class="ruby-identifier">&lt;&lt;-TEMPLATE</span>
+<span class="ruby-value">&lt;!DOCTYPE html&gt;
 
 &lt;html&gt;
 &lt;head&gt;
@@ -517,7 +515,7 @@ the body is used directly.</p>
 #{body}
 
 #{footer_file.read}
-    TEMPLATE</span>
+</span><span class="ruby-identifier">    TEMPLATE</span>
   <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -548,8 +546,8 @@ the body is used directly.</p>
 
           
           <div class="method-source-code" id="class_dir-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 189</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">class_dir</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 191</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">class_dir</span>
   <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -581,15 +579,15 @@ the body is used directly.</p>
 
           
           <div class="method-source-code" id="copy_static-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 263</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">copy_static</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 265</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">copy_static</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">static_path</span>.<span class="ruby-identifier">empty?</span>
 
-  <span class="ruby-identifier">fu_options</span> = { <span class="ruby-value">:verbose</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">$DEBUG_RDOC</span>, <span class="ruby-value">:noop</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@dry_run</span> }
+  <span class="ruby-identifier">fu_options</span> = { <span class="ruby-value">:verbose</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">$DEBUG_RDOC</span>, <span class="ruby-value">:noop</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-ivar">@dry_run</span> }
 
   <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">static_path</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">path</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-identifier">path</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">install</span> <span class="ruby-identifier">path</span>, <span class="ruby-ivar">@outputdir</span>, <span class="ruby-identifier">fu_options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-value">:mode</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0644</span>)
+      <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">install</span> <span class="ruby-identifier">path</span>, <span class="ruby-ivar">@outputdir</span>, <span class="ruby-identifier">fu_options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-value">:mode</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0644</span>)
       <span class="ruby-keyword">next</span>
     <span class="ruby-keyword">end</span>
 
@@ -600,7 +598,7 @@ the body is used directly.</p>
         <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-identifier">entry</span> <span class="ruby-keyword">then</span>
           <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">mkdir_p</span> <span class="ruby-identifier">entry</span>, <span class="ruby-identifier">fu_options</span>
         <span class="ruby-keyword">else</span>
-          <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">install</span> <span class="ruby-identifier">entry</span>, <span class="ruby-identifier">dest_file</span>, <span class="ruby-identifier">fu_options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-value">:mode</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0644</span>)
+          <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">install</span> <span class="ruby-identifier">entry</span>, <span class="ruby-identifier">dest_file</span>, <span class="ruby-identifier">fu_options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-value">:mode</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0644</span>)
         <span class="ruby-keyword">end</span>
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
@@ -635,8 +633,8 @@ the body is used directly.</p>
 
           
           <div class="method-source-code" id="debug_msg-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 180</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">debug_msg</span> <span class="ruby-operator">*</span><span class="ruby-identifier">msg</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 182</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">debug_msg</span> <span class="ruby-operator">*</span><span class="ruby-identifier">msg</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">$DEBUG_RDOC</span>
   <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">msg</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -669,8 +667,8 @@ the body is used directly.</p>
 
           
           <div class="method-source-code" id="file_dir-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 197</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">file_dir</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 199</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">file_dir</span>
   <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -703,8 +701,8 @@ already exist.</p>
 
           
           <div class="method-source-code" id="gen_sub_directories-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 205</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">gen_sub_directories</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 207</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">gen_sub_directories</span>
   <span class="ruby-ivar">@outputdir</span>.<span class="ruby-identifier">mkpath</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -737,8 +735,8 @@ objects containing the extracted information.</p>
 
           
           <div class="method-source-code" id="generate-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 239</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 241</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate</span>
   <span class="ruby-identifier">setup</span>
 
   <span class="ruby-identifier">write_style_sheet</span>
@@ -751,7 +749,7 @@ objects containing the extracted information.</p>
 
   <span class="ruby-identifier">copy_static</span>
 
-<span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
   <span class="ruby-identifier">debug_msg</span> <span class="ruby-string">&quot;%s: %s\n  %s&quot;</span> <span class="ruby-operator">%</span> [
     <span class="ruby-identifier">e</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">name</span>, <span class="ruby-identifier">e</span>.<span class="ruby-identifier">message</span>, <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;\n  &quot;</span>)
   ]
@@ -787,8 +785,8 @@ objects containing the extracted information.</p>
 
           
           <div class="method-source-code" id="generate_class-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 331</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_class</span> <span class="ruby-identifier">klass</span>, <span class="ruby-identifier">template_file</span> = <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 337</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_class</span> <span class="ruby-identifier">klass</span>, <span class="ruby-identifier">template_file</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">setup</span>
 
   <span class="ruby-identifier">current</span> = <span class="ruby-identifier">klass</span>
@@ -801,14 +799,19 @@ objects containing the extracted information.</p>
   <span class="ruby-identifier">search_index_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span>
   <span class="ruby-identifier">search_index_rel_prefix</span> <span class="ruby-operator">+=</span> <span class="ruby-ivar">@asset_rel_path</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file_output</span>
 
-  <span class="ruby-comment"># suppress 1.9.3 warning</span>
-  <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@asset_rel_path</span>
-  <span class="ruby-identifier">svninfo</span>          = <span class="ruby-identifier">svninfo</span>          = <span class="ruby-identifier">get_svninfo</span>(<span class="ruby-identifier">current</span>)
+  <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@asset_rel_path</span>
+  <span class="ruby-identifier">svninfo</span>          = <span class="ruby-identifier">get_svninfo</span>(<span class="ruby-identifier">current</span>)
 
   <span class="ruby-ivar">@title</span> = <span class="ruby-node">&quot;#{klass.type} #{klass.full_name} - #{@options.title}&quot;</span>
 
   <span class="ruby-identifier">debug_msg</span> <span class="ruby-node">&quot;  rendering #{out_file}&quot;</span>
-  <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binding</span> <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">here</span> = <span class="ruby-identifier">binding</span>
+    <span class="ruby-comment"># suppress 1.9.3 warning</span>
+    <span class="ruby-identifier">here</span>.<span class="ruby-identifier">local_variable_set</span>(<span class="ruby-value">:asset_rel_prefix</span>, <span class="ruby-identifier">asset_rel_prefix</span>)
+    <span class="ruby-identifier">here</span>.<span class="ruby-identifier">local_variable_set</span>(<span class="ruby-value">:svninfo</span>, <span class="ruby-identifier">svninfo</span>)
+    <span class="ruby-identifier">here</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -839,8 +842,8 @@ objects containing the extracted information.</p>
 
           
           <div class="method-source-code" id="generate_class_files-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 357</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_class_files</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 368</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_class_files</span>
   <span class="ruby-identifier">setup</span>
 
   <span class="ruby-identifier">template_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;class.rhtml&#39;</span>
@@ -856,8 +859,9 @@ objects containing the extracted information.</p>
 
     <span class="ruby-identifier">generate_class</span> <span class="ruby-identifier">klass</span>, <span class="ruby-identifier">template_file</span>
   <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
-  <span class="ruby-identifier">error</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span>        <span class="ruby-node">&quot;error generating #{current.path}: #{e.message} (#{e.class})&quot;</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
+  <span class="ruby-identifier">error</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span> \
+    <span class="ruby-node">&quot;error generating #{current.path}: #{e.message} (#{e.class})&quot;</span>
   <span class="ruby-identifier">error</span>.<span class="ruby-identifier">set_backtrace</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
 
   <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
@@ -891,8 +895,8 @@ objects containing the extracted information.</p>
 
           
           <div class="method-source-code" id="generate_file_files-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 384</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_file_files</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 395</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_file_files</span>
   <span class="ruby-identifier">setup</span>
 
   <span class="ruby-identifier">page_file</span>     = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;page.rhtml&#39;</span>
@@ -925,8 +929,7 @@ objects containing the extracted information.</p>
     <span class="ruby-identifier">search_index_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span>
     <span class="ruby-identifier">search_index_rel_prefix</span> <span class="ruby-operator">+=</span> <span class="ruby-ivar">@asset_rel_path</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file_output</span>
 
-    <span class="ruby-comment"># suppress 1.9.3 warning</span>
-    <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@asset_rel_path</span>
+    <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@asset_rel_path</span>
 
     <span class="ruby-keyword">unless</span> <span class="ruby-identifier">filepage_file</span> <span class="ruby-keyword">then</span>
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">file</span>.<span class="ruby-identifier">text?</span> <span class="ruby-keyword">then</span>
@@ -943,9 +946,15 @@ objects containing the extracted information.</p>
     <span class="ruby-ivar">@title</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot; - #{@options.title}&quot;</span>
     <span class="ruby-identifier">template_file</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">filepage_file</span>
 
-    <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binding</span> <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">here</span> = <span class="ruby-identifier">binding</span>
+      <span class="ruby-comment"># suppress 1.9.3 warning</span>
+      <span class="ruby-identifier">here</span>.<span class="ruby-identifier">local_variable_set</span>(<span class="ruby-value">:asset_rel_prefix</span>, <span class="ruby-identifier">asset_rel_prefix</span>)
+      <span class="ruby-identifier">here</span>.<span class="ruby-identifier">local_variable_set</span>(<span class="ruby-value">:current</span>, <span class="ruby-identifier">current</span>)
+      <span class="ruby-identifier">here</span>
+    <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
   <span class="ruby-identifier">error</span> =
     <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span> <span class="ruby-node">&quot;error generating #{out_file}: #{e.message} (#{e.class})&quot;</span>
   <span class="ruby-identifier">error</span>.<span class="ruby-identifier">set_backtrace</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
@@ -981,8 +990,8 @@ objects containing the extracted information.</p>
 
           
           <div class="method-source-code" id="generate_index-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 301</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_index</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 303</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_index</span>
   <span class="ruby-identifier">setup</span>
 
   <span class="ruby-identifier">template_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;index.rhtml&#39;</span>
@@ -995,14 +1004,19 @@ objects containing the extracted information.</p>
   <span class="ruby-identifier">search_index_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span>
   <span class="ruby-identifier">search_index_rel_prefix</span> <span class="ruby-operator">+=</span> <span class="ruby-ivar">@asset_rel_path</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file_output</span>
 
-  <span class="ruby-comment"># suppress 1.9.3 warning</span>
-  <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@asset_rel_path</span>
+  <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@asset_rel_path</span>
 
   <span class="ruby-ivar">@title</span> = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">title</span>
 
-  <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binding</span> <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
-  <span class="ruby-identifier">error</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span>        <span class="ruby-node">&quot;error generating index.html: #{e.message} (#{e.class})&quot;</span>
+  <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">here</span> = <span class="ruby-identifier">binding</span>
+    <span class="ruby-comment"># suppress 1.9.3 warning</span>
+    <span class="ruby-identifier">here</span>.<span class="ruby-identifier">local_variable_set</span>(<span class="ruby-value">:asset_rel_prefix</span>, <span class="ruby-identifier">asset_rel_prefix</span>)
+    <span class="ruby-identifier">here</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
+  <span class="ruby-identifier">error</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span> \
+    <span class="ruby-node">&quot;error generating index.html: #{e.message} (#{e.class})&quot;</span>
   <span class="ruby-identifier">error</span>.<span class="ruby-identifier">set_backtrace</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
 
   <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
@@ -1036,8 +1050,8 @@ objects containing the extracted information.</p>
 
           
           <div class="method-source-code" id="generate_page-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 448</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_page</span> <span class="ruby-identifier">file</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 464</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_page</span> <span class="ruby-identifier">file</span>
   <span class="ruby-identifier">setup</span>
 
   <span class="ruby-identifier">template_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;page.rhtml&#39;</span>
@@ -1048,14 +1062,19 @@ objects containing the extracted information.</p>
   <span class="ruby-identifier">search_index_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span>
   <span class="ruby-identifier">search_index_rel_prefix</span> <span class="ruby-operator">+=</span> <span class="ruby-ivar">@asset_rel_path</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file_output</span>
 
-  <span class="ruby-comment"># suppress 1.9.3 warning</span>
-  <span class="ruby-identifier">current</span>          = <span class="ruby-identifier">current</span>          = <span class="ruby-identifier">file</span>
-  <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@asset_rel_path</span>
+  <span class="ruby-identifier">current</span>          = <span class="ruby-identifier">file</span>
+  <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@asset_rel_path</span>
 
   <span class="ruby-ivar">@title</span> = <span class="ruby-node">&quot;#{file.page_name} - #{@options.title}&quot;</span>
 
   <span class="ruby-identifier">debug_msg</span> <span class="ruby-node">&quot;  rendering #{out_file}&quot;</span>
-  <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binding</span> <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">here</span> = <span class="ruby-identifier">binding</span>
+    <span class="ruby-comment"># suppress 1.9.3 warning</span>
+    <span class="ruby-identifier">here</span>.<span class="ruby-identifier">local_variable_set</span>(<span class="ruby-value">:current</span>, <span class="ruby-identifier">current</span>)
+    <span class="ruby-identifier">here</span>.<span class="ruby-identifier">local_variable_set</span>(<span class="ruby-value">:asset_rel_prefix</span>, <span class="ruby-identifier">asset_rel_prefix</span>)
+    <span class="ruby-identifier">here</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -1086,8 +1105,8 @@ objects containing the extracted information.</p>
 
           
           <div class="method-source-code" id="generate_servlet_not_found-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 472</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_servlet_not_found</span> <span class="ruby-identifier">message</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 493</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_servlet_not_found</span> <span class="ruby-identifier">message</span>
   <span class="ruby-identifier">setup</span>
 
   <span class="ruby-identifier">template_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;servlet_not_found.rhtml&#39;</span>
@@ -1099,14 +1118,19 @@ objects containing the extracted information.</p>
   <span class="ruby-identifier">search_index_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span>
   <span class="ruby-identifier">search_index_rel_prefix</span> <span class="ruby-operator">+=</span> <span class="ruby-ivar">@asset_rel_path</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file_output</span>
 
-  <span class="ruby-comment"># suppress 1.9.3 warning</span>
-  <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-string">&#39;&#39;</span>
 
   <span class="ruby-ivar">@title</span> = <span class="ruby-string">&#39;Not Found&#39;</span>
 
-  <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binding</span> <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
-  <span class="ruby-identifier">error</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span>        <span class="ruby-node">&quot;error generating servlet_not_found: #{e.message} (#{e.class})&quot;</span>
+  <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">here</span> = <span class="ruby-identifier">binding</span>
+    <span class="ruby-comment"># suppress 1.9.3 warning</span>
+    <span class="ruby-identifier">here</span>.<span class="ruby-identifier">local_variable_set</span>(<span class="ruby-value">:asset_rel_prefix</span>, <span class="ruby-identifier">asset_rel_prefix</span>)
+    <span class="ruby-identifier">here</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
+  <span class="ruby-identifier">error</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span> \
+    <span class="ruby-node">&quot;error generating servlet_not_found: #{e.message} (#{e.class})&quot;</span>
   <span class="ruby-identifier">error</span>.<span class="ruby-identifier">set_backtrace</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
 
   <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
@@ -1141,8 +1165,8 @@ servlet</p>
 
           
           <div class="method-source-code" id="generate_servlet_root-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 501</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_servlet_root</span> <span class="ruby-identifier">installed</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 526</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_servlet_root</span> <span class="ruby-identifier">installed</span>
   <span class="ruby-identifier">setup</span>
 
   <span class="ruby-identifier">template_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;servlet_root.rhtml&#39;</span>
@@ -1158,8 +1182,9 @@ servlet</p>
   <span class="ruby-ivar">@title</span> = <span class="ruby-string">&#39;Local RDoc Documentation&#39;</span>
 
   <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binding</span> <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
-  <span class="ruby-identifier">error</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span>        <span class="ruby-node">&quot;error generating servlet_root: #{e.message} (#{e.class})&quot;</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
+  <span class="ruby-identifier">error</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span> \
+    <span class="ruby-node">&quot;error generating servlet_root: #{e.message} (#{e.class})&quot;</span>
   <span class="ruby-identifier">error</span>.<span class="ruby-identifier">set_backtrace</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
 
   <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
@@ -1193,8 +1218,8 @@ servlet</p>
 
           
           <div class="method-source-code" id="generate_table_of_contents-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 528</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_table_of_contents</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 553</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_table_of_contents</span>
   <span class="ruby-identifier">setup</span>
 
   <span class="ruby-identifier">template_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;table_of_contents.rhtml&#39;</span>
@@ -1207,14 +1232,19 @@ servlet</p>
   <span class="ruby-identifier">search_index_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span>
   <span class="ruby-identifier">search_index_rel_prefix</span> <span class="ruby-operator">+=</span> <span class="ruby-ivar">@asset_rel_path</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file_output</span>
 
-  <span class="ruby-comment"># suppress 1.9.3 warning</span>
-  <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@asset_rel_path</span>
+  <span class="ruby-identifier">asset_rel_prefix</span> = <span class="ruby-identifier">rel_prefix</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@asset_rel_path</span>
 
   <span class="ruby-ivar">@title</span> = <span class="ruby-node">&quot;Table of Contents - #{@options.title}&quot;</span>
 
-  <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span> <span class="ruby-identifier">binding</span> <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
-  <span class="ruby-identifier">error</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span>        <span class="ruby-node">&quot;error generating table_of_contents.html: #{e.message} (#{e.class})&quot;</span>
+  <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">here</span> = <span class="ruby-identifier">binding</span>
+    <span class="ruby-comment"># suppress 1.9.3 warning</span>
+    <span class="ruby-identifier">here</span>.<span class="ruby-identifier">local_variable_set</span>(<span class="ruby-value">:asset_rel_prefix</span>, <span class="ruby-identifier">asset_rel_prefix</span>)
+    <span class="ruby-identifier">here</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
+  <span class="ruby-identifier">error</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span> \
+    <span class="ruby-node">&quot;error generating table_of_contents.html: #{e.message} (#{e.class})&quot;</span>
   <span class="ruby-identifier">error</span>.<span class="ruby-identifier">set_backtrace</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
 
   <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
@@ -1249,8 +1279,8 @@ name.</p>
 
           
           <div class="method-source-code" id="get_sorted_module_list-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 292</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_sorted_module_list</span> <span class="ruby-identifier">classes</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 294</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_sorted_module_list</span> <span class="ruby-identifier">classes</span>
   <span class="ruby-identifier">classes</span>.<span class="ruby-identifier">select</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">klass</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">display?</span>
   <span class="ruby-keyword">end</span>.<span class="ruby-identifier">sort</span>
@@ -1286,8 +1316,8 @@ hash is returned.</p>
 
           
           <div class="method-source-code" id="get_svninfo-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 623</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_svninfo</span> <span class="ruby-identifier">klass</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 652</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_svninfo</span> <span class="ruby-identifier">klass</span>
   <span class="ruby-identifier">constants</span> = <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">constants</span> <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span> {}
 
   <span class="ruby-identifier">constants</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">value</span> <span class="ruby-operator">=~</span> <span class="ruby-constant">SVNID_PATTERN</span> } <span class="ruby-keyword">or</span> <span class="ruby-keyword">return</span> {}
@@ -1296,11 +1326,11 @@ hash is returned.</p>
   <span class="ruby-identifier">commitdate</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">parse</span> <span class="ruby-node">&quot;#{date} #{time}&quot;</span>
 
   <span class="ruby-keyword">return</span> {
-    <span class="ruby-value">:filename</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">filename</span>,
-    <span class="ruby-value">:rev</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">rev</span>),
-    <span class="ruby-value">:commitdate</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">commitdate</span>,
-    <span class="ruby-value">:commitdelta</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">time_delta_string</span>(<span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">commitdate</span>),
-    <span class="ruby-value">:committer</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">committer</span>,
+    <span class="ruby-value">:filename</span>    <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">filename</span>,
+    <span class="ruby-value">:rev</span>         <span class="ruby-operator">=&gt;</span> <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">rev</span>),
+    <span class="ruby-value">:commitdate</span>  <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">commitdate</span>,
+    <span class="ruby-value">:commitdelta</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">time_delta_string</span>(<span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">commitdate</span>),
+    <span class="ruby-value">:committer</span>   <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">committer</span>,
   }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1333,8 +1363,8 @@ template directory and returns the result based on the current context.</p>
 
           
           <div class="method-source-code" id="render-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 670</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">render</span> <span class="ruby-identifier">file_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 699</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">render</span> <span class="ruby-identifier">file_name</span>
   <span class="ruby-identifier">template_file</span> = <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">file_name</span>
 
   <span class="ruby-identifier">template</span> = <span class="ruby-identifier">template_for</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-keyword">false</span>, <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">ERBPartial</span>
@@ -1378,8 +1408,8 @@ Pathname-like objects.</p>
 
           
           <div class="method-source-code" id="render_template-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 688</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> = <span class="ruby-keyword">nil</span> <span class="ruby-comment"># :yield: io</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 717</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> = <span class="ruby-keyword">nil</span> <span class="ruby-comment"># :yield: io</span>
   <span class="ruby-identifier">io_output</span> = <span class="ruby-identifier">out_file</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@dry_run</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@file_output</span>
   <span class="ruby-identifier">erb_klass</span> = <span class="ruby-identifier">io_output</span> <span class="ruby-operator">?</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">ERBIO</span> <span class="ruby-operator">:</span> <span class="ruby-constant">ERB</span>
 
@@ -1437,8 +1467,8 @@ Pathname-like objects.</p>
 
           
           <div class="method-source-code" id="setup-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 575</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">setup</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 604</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">setup</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">instance_variable_defined?</span> <span class="ruby-value">:@outputdir</span>
 
   <span class="ruby-ivar">@outputdir</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@options</span>.<span class="ruby-identifier">op_dir</span>).<span class="ruby-identifier">expand_path</span> <span class="ruby-ivar">@base_dir</span>
@@ -1480,8 +1510,8 @@ cache.</p>
 
           
           <div class="method-source-code" id="template_for-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 735</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">template_for</span> <span class="ruby-identifier">file</span>, <span class="ruby-identifier">page</span> = <span class="ruby-keyword">true</span>, <span class="ruby-identifier">klass</span> = <span class="ruby-constant">ERB</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 764</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">template_for</span> <span class="ruby-identifier">file</span>, <span class="ruby-identifier">page</span> = <span class="ruby-keyword">true</span>, <span class="ruby-identifier">klass</span> = <span class="ruby-constant">ERB</span>
   <span class="ruby-identifier">template</span> = <span class="ruby-ivar">@template_cache</span>[<span class="ruby-identifier">file</span>]
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">template</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">template</span>
@@ -1498,7 +1528,11 @@ cache.</p>
     <span class="ruby-identifier">erbout</span> = <span class="ruby-node">&quot;_erbout_#{file_var}&quot;</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">template</span> = <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">template</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-string">&#39;&lt;&gt;&#39;</span>, <span class="ruby-identifier">erbout</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">RUBY_VERSION</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">&#39;2.6&#39;</span>
+    <span class="ruby-identifier">template</span> = <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">template</span>, <span class="ruby-value">trim_mode:</span> <span class="ruby-string">&#39;&lt;&gt;&#39;</span>, <span class="ruby-value">eoutvar:</span> <span class="ruby-identifier">erbout</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">template</span> = <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">template</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-string">&#39;&lt;&gt;&#39;</span>, <span class="ruby-identifier">erbout</span>
+  <span class="ruby-keyword">end</span>
   <span class="ruby-ivar">@template_cache</span>[<span class="ruby-identifier">file</span>] = <span class="ruby-identifier">template</span>
   <span class="ruby-identifier">template</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1533,11 +1567,11 @@ file where the error occurred.</p>
 
           
           <div class="method-source-code" id="template_result-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 722</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">template_result</span> <span class="ruby-identifier">template</span>, <span class="ruby-identifier">context</span>, <span class="ruby-identifier">template_file</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 751</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">template_result</span> <span class="ruby-identifier">template</span>, <span class="ruby-identifier">context</span>, <span class="ruby-identifier">template_file</span>
   <span class="ruby-identifier">template</span>.<span class="ruby-identifier">filename</span> = <span class="ruby-identifier">template_file</span>.<span class="ruby-identifier">to_s</span>
   <span class="ruby-identifier">template</span>.<span class="ruby-identifier">result</span> <span class="ruby-identifier">context</span>
-<span class="ruby-keyword">rescue</span> <span class="ruby-constant">NoMethodError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">NoMethodError</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-string">&quot;Error while evaluating %s: %s&quot;</span> <span class="ruby-operator">%</span> [
     <span class="ruby-identifier">template_file</span>.<span class="ruby-identifier">expand_path</span>,
     <span class="ruby-identifier">e</span>.<span class="ruby-identifier">message</span>,
@@ -1573,8 +1607,8 @@ seconds in terms a human can understand easily.</p>
 
           
           <div class="method-source-code" id="time_delta_string-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 592</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">time_delta_string</span> <span class="ruby-identifier">seconds</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 621</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">time_delta_string</span> <span class="ruby-identifier">seconds</span>
   <span class="ruby-keyword">return</span> <span class="ruby-string">&#39;less than a minute&#39;</span>          <span class="ruby-keyword">if</span> <span class="ruby-identifier">seconds</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">60</span>
   <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;#{seconds / 60} minute#{seconds / 60 == 1 ? &#39;&#39; : &#39;s&#39;}&quot;</span> <span class="ruby-keyword">if</span>
                                           <span class="ruby-identifier">seconds</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">3000</span>     <span class="ruby-comment"># 50 minutes</span>
@@ -1618,10 +1652,10 @@ directory.</p>
 
           
           <div class="method-source-code" id="write_style_sheet-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 213</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">write_style_sheet</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 215</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">write_style_sheet</span>
   <span class="ruby-identifier">debug_msg</span> <span class="ruby-string">&quot;Copying static files&quot;</span>
-  <span class="ruby-identifier">options</span> = { <span class="ruby-value">:verbose</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">$DEBUG_RDOC</span>, <span class="ruby-value">:noop</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@dry_run</span> }
+  <span class="ruby-identifier">options</span> = { <span class="ruby-value">:verbose</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">$DEBUG_RDOC</span>, <span class="ruby-value">:noop</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-ivar">@dry_run</span> }
 
   <span class="ruby-constant">BUILTIN_STYLE_ITEMS</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">item</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">install_rdoc_static_file</span> <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">item</span>, <span class="ruby-node">&quot;./#{item}&quot;</span>, <span class="ruby-identifier">options</span>
@@ -1657,8 +1691,8 @@ directory.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

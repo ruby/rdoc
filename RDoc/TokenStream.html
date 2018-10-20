@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module RDoc::TokenStream - rdoc 5.0.0 Documentation</title>
+<title>module RDoc::TokenStream - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -105,8 +105,6 @@ href="TokenStream.html#method-i-add_token">#add_token</a> and pop_token.</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -137,68 +135,66 @@ href="TokenStream.html#method-i-add_token">#add_token</a> and pop_token.</p>
         <div class="method-description">
           
           <p>Converts <code>token_stream</code> to HTML wrapping various tokens with
-<code>&lt;span&gt;</code> elements.  The following tokens types are wrapped
-in spans with the given class names:</p>
-<dl class="rdoc-list note-list"><dt>TkCONSTANT 
-<dd>
-<p>&#39;ruby-constant&#39;</p>
-</dd><dt>TkKW       
-<dd>
-<p>&#39;ruby-keyword&#39;</p>
-</dd><dt>TkIVAR     
-<dd>
-<p>&#39;ruby-ivar&#39;</p>
-</dd><dt>TkOp       
-<dd>
-<p>&#39;ruby-operator&#39;</p>
-</dd><dt>TkId       
-<dd>
-<p>&#39;ruby-identifier&#39;</p>
-</dd><dt>TkNode     
-<dd>
-<p>&#39;ruby-node&#39;</p>
-</dd><dt>TkCOMMENT  
-<dd>
-<p>&#39;ruby-comment&#39;</p>
-</dd><dt>TkREGEXP   
-<dd>
-<p>&#39;ruby-regexp&#39;</p>
-</dd><dt>TkSTRING   
-<dd>
-<p>&#39;ruby-string&#39;</p>
-</dd><dt>TkVal      
-<dd>
-<p>&#39;ruby-value&#39;</p>
-</dd></dl>
-
-<p>Other token types are not wrapped in spans.</p>
+<code>&lt;span&gt;</code> elements. Some tokens types are wrapped in spans
+with the given class names. Other token types are not wrapped in spans.</p>
           
           
 
           
           <div class="method-source-code" id="to_html-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 28</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">to_html</span> <span class="ruby-identifier">token_stream</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 16</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">to_html</span> <span class="ruby-identifier">token_stream</span>
+  <span class="ruby-identifier">starting_title</span> = <span class="ruby-keyword">false</span>
+
   <span class="ruby-identifier">token_stream</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">next</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">t</span>
 
-    <span class="ruby-identifier">style</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">t</span>
-            <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RubyToken</span><span class="ruby-operator">::</span><span class="ruby-constant">TkCONSTANT</span> <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-constant&#39;</span>
-            <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RubyToken</span><span class="ruby-operator">::</span><span class="ruby-constant">TkKW</span>       <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-keyword&#39;</span>
-            <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RubyToken</span><span class="ruby-operator">::</span><span class="ruby-constant">TkIVAR</span>     <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-ivar&#39;</span>
-            <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RubyToken</span><span class="ruby-operator">::</span><span class="ruby-constant">TkOp</span>       <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-operator&#39;</span>
-            <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RubyToken</span><span class="ruby-operator">::</span><span class="ruby-constant">TkId</span>       <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-identifier&#39;</span>
-            <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RubyToken</span><span class="ruby-operator">::</span><span class="ruby-constant">TkNode</span>     <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-node&#39;</span>
-            <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RubyToken</span><span class="ruby-operator">::</span><span class="ruby-constant">TkCOMMENT</span>  <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-comment&#39;</span>
-            <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RubyToken</span><span class="ruby-operator">::</span><span class="ruby-constant">TkREGEXP</span>   <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-regexp&#39;</span>
-            <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RubyToken</span><span class="ruby-operator">::</span><span class="ruby-constant">TkSTRING</span>   <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-string&#39;</span>
-            <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RubyToken</span><span class="ruby-operator">::</span><span class="ruby-constant">TkVal</span>      <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-value&#39;</span>
+    <span class="ruby-identifier">style</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">t</span>[<span class="ruby-value">:kind</span>]
+            <span class="ruby-keyword">when</span> <span class="ruby-value">:on_const</span>   <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-constant&#39;</span>
+            <span class="ruby-keyword">when</span> <span class="ruby-value">:on_kw</span>      <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-keyword&#39;</span>
+            <span class="ruby-keyword">when</span> <span class="ruby-value">:on_ivar</span>    <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-ivar&#39;</span>
+            <span class="ruby-keyword">when</span> <span class="ruby-value">:on_cvar</span>    <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-identifier&#39;</span>
+            <span class="ruby-keyword">when</span> <span class="ruby-value">:on_gvar</span>    <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-identifier&#39;</span>
+            <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;=&#39;</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">t</span>[<span class="ruby-value">:text</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-value">:on_op</span>
+                             <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-operator&#39;</span>
+            <span class="ruby-keyword">when</span> <span class="ruby-value">:on_tlambda</span> <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-operator&#39;</span>
+            <span class="ruby-keyword">when</span> <span class="ruby-value">:on_ident</span>   <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-identifier&#39;</span>
+            <span class="ruby-keyword">when</span> <span class="ruby-value">:on_label</span>   <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-value&#39;</span>
+            <span class="ruby-keyword">when</span> <span class="ruby-value">:on_backref</span>, <span class="ruby-value">:on_dstring</span>
+                             <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-node&#39;</span>
+            <span class="ruby-keyword">when</span> <span class="ruby-value">:on_comment</span> <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-comment&#39;</span>
+            <span class="ruby-keyword">when</span> <span class="ruby-value">:on_embdoc</span>  <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-comment&#39;</span>
+            <span class="ruby-keyword">when</span> <span class="ruby-value">:on_regexp</span>  <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-regexp&#39;</span>
+            <span class="ruby-keyword">when</span> <span class="ruby-value">:on_tstring</span> <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-string&#39;</span>
+            <span class="ruby-keyword">when</span> <span class="ruby-value">:on_int</span>, <span class="ruby-value">:on_float</span>,
+                 <span class="ruby-value">:on_rational</span>, <span class="ruby-value">:on_imaginary</span>,
+                 <span class="ruby-value">:on_heredoc</span>,
+                 <span class="ruby-value">:on_symbol</span>, <span class="ruby-value">:on_CHAR</span> <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-value&#39;</span>
+            <span class="ruby-keyword">when</span> <span class="ruby-value">:on_heredoc_beg</span>, <span class="ruby-value">:on_heredoc_end</span>
+                             <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;ruby-identifier&#39;</span>
             <span class="ruby-keyword">end</span>
 
-    <span class="ruby-identifier">text</span> = <span class="ruby-constant">CGI</span>.<span class="ruby-identifier">escapeHTML</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">text</span>
+    <span class="ruby-identifier">comment_with_nl</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-value">:on_comment</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">t</span>[<span class="ruby-value">:kind</span>] <span class="ruby-keyword">or</span> <span class="ruby-value">:on_embdoc</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">t</span>[<span class="ruby-value">:kind</span>] <span class="ruby-keyword">or</span> <span class="ruby-value">:on_heredoc_end</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">t</span>[<span class="ruby-value">:kind</span>]
+      <span class="ruby-identifier">comment_with_nl</span> = <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-string">&quot;\n&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">t</span>[<span class="ruby-value">:text</span>][<span class="ruby-value">-1</span>]
+      <span class="ruby-identifier">text</span> = <span class="ruby-identifier">t</span>[<span class="ruby-value">:text</span>].<span class="ruby-identifier">rstrip</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">text</span> = <span class="ruby-identifier">t</span>[<span class="ruby-value">:text</span>]
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-value">:on_ident</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">t</span>[<span class="ruby-value">:kind</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">starting_title</span>
+      <span class="ruby-identifier">starting_title</span> = <span class="ruby-keyword">false</span>
+      <span class="ruby-identifier">style</span> = <span class="ruby-string">&#39;ruby-identifier ruby-title&#39;</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-value">:on_kw</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">t</span>[<span class="ruby-value">:kind</span>] <span class="ruby-keyword">and</span> <span class="ruby-string">&#39;def&#39;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">t</span>[<span class="ruby-value">:text</span>]
+      <span class="ruby-identifier">starting_title</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">text</span> = <span class="ruby-constant">CGI</span>.<span class="ruby-identifier">escapeHTML</span> <span class="ruby-identifier">text</span>
 
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">style</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-node">&quot;&lt;span class=\&quot;#{style}\&quot;&gt;#{text}&lt;/span&gt;&quot;</span>
+      <span class="ruby-node">&quot;&lt;span class=\&quot;#{style}\&quot;&gt;#{text}&lt;/span&gt;#{&quot;\n&quot; if comment_with_nl}&quot;</span>
     <span class="ruby-keyword">else</span>
       <span class="ruby-identifier">text</span>
     <span class="ruby-keyword">end</span>
@@ -269,8 +265,8 @@ in spans with the given class names:</p>
 
           
           <div class="method-source-code" id="add_tokens-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 58</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_tokens</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">tokens</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 77</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_tokens</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">tokens</span>)
   <span class="ruby-identifier">tokens</span>.<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">token</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@token_stream</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">token</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -306,8 +302,8 @@ in spans with the given class names:</p>
 
           
           <div class="method-source-code" id="collect_tokens-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 67</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">collect_tokens</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 86</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">collect_tokens</span>
   <span class="ruby-ivar">@token_stream</span> = []
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -343,8 +339,8 @@ in spans with the given class names:</p>
 
           
           <div class="method-source-code" id="pop_token-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 76</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">pop_token</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 95</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pop_token</span>
   <span class="ruby-ivar">@token_stream</span>.<span class="ruby-identifier">pop</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -404,8 +400,8 @@ in spans with the given class names:</p>
 
           
           <div class="method-source-code" id="token_stream-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 83</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">token_stream</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 102</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">token_stream</span>
   <span class="ruby-ivar">@token_stream</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -437,9 +433,9 @@ in spans with the given class names:</p>
 
           
           <div class="method-source-code" id="tokens_to_s-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 90</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">tokens_to_s</span>
-  <span class="ruby-identifier">token_stream</span>.<span class="ruby-identifier">compact</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">token</span><span class="ruby-operator">|</span> <span class="ruby-identifier">token</span>.<span class="ruby-identifier">text</span> }.<span class="ruby-identifier">join</span> <span class="ruby-string">&#39;&#39;</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 109</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tokens_to_s</span>
+  <span class="ruby-identifier">token_stream</span>.<span class="ruby-identifier">compact</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">token</span><span class="ruby-operator">|</span> <span class="ruby-identifier">token</span>[<span class="ruby-value">:text</span>] }.<span class="ruby-identifier">join</span> <span class="ruby-string">&#39;&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -458,8 +454,8 @@ in spans with the given class names:</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

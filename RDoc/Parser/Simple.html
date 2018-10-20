@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Parser::Simple - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Parser::Simple - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -109,8 +109,6 @@ comment.</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -151,13 +149,13 @@ comment.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/simple.rb, line 16</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">top_level</span>, <span class="ruby-identifier">file_name</span>, <span class="ruby-identifier">content</span>, <span class="ruby-identifier">options</span>, <span class="ruby-identifier">stats</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/simple.rb, line 17</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">top_level</span>, <span class="ruby-identifier">file_name</span>, <span class="ruby-identifier">content</span>, <span class="ruby-identifier">options</span>, <span class="ruby-identifier">stats</span>)
   <span class="ruby-keyword">super</span>
 
   <span class="ruby-identifier">preprocess</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">PreProcess</span>.<span class="ruby-identifier">new</span> <span class="ruby-ivar">@file_name</span>, <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">rdoc_include</span>
 
-  <span class="ruby-identifier">preprocess</span>.<span class="ruby-identifier">handle</span> <span class="ruby-ivar">@content</span>, <span class="ruby-ivar">@top_level</span>
+  <span class="ruby-ivar">@content</span> = <span class="ruby-identifier">preprocess</span>.<span class="ruby-identifier">handle</span> <span class="ruby-ivar">@content</span>, <span class="ruby-ivar">@top_level</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -196,9 +194,9 @@ comment.</p>
 
           
           <div class="method-source-code" id="remove_coding_comment-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/simple.rb, line 40</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">remove_coding_comment</span> <span class="ruby-identifier">text</span>
-  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-node">/\A# .*coding[=:].*$/</span>, <span class="ruby-string">&#39;&#39;</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/simple.rb, line 41</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_coding_comment</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\A# .*coding[=:].*$/</span>, <span class="ruby-string">&#39;&#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -234,11 +232,11 @@ Three or more dashes are considered to be a rule and ignored.</p>
 
           
           <div class="method-source-code" id="remove_private_comment-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/simple.rb, line 51</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">remove_private_comment</span> <span class="ruby-identifier">comment</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/simple.rb, line 52</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_private_comment</span> <span class="ruby-identifier">comment</span>
   <span class="ruby-comment"># Workaround for gsub encoding for Ruby 1.9.2 and earlier</span>
   <span class="ruby-identifier">empty</span> = <span class="ruby-string">&#39;&#39;</span>
-  <span class="ruby-identifier">empty</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">encoding</span>
+  <span class="ruby-identifier">empty</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Encoding</span>.<span class="ruby-identifier">change_encoding</span> <span class="ruby-identifier">empty</span>, <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">encoding</span>
 
   <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">%r%^--\n.*?^\+\+\n?%m</span>, <span class="ruby-identifier">empty</span>)
   <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">%r%^--\n.*%m</span>, <span class="ruby-identifier">empty</span>)
@@ -272,8 +270,8 @@ Three or more dashes are considered to be a rule and ignored.</p>
 
           
           <div class="method-source-code" id="scan-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/simple.rb, line 27</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">scan</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/simple.rb, line 28</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">scan</span>
   <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">remove_coding_comment</span> <span class="ruby-ivar">@content</span>
   <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">remove_private_comment</span> <span class="ruby-identifier">comment</span>
 
@@ -299,8 +297,8 @@ Three or more dashes are considered to be a rule and ignored.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

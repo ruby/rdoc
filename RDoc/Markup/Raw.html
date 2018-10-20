@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::Raw - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Markup::Raw - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -101,8 +101,6 @@
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -159,8 +157,8 @@
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/raw.rb, line 14</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-operator">*</span><span class="ruby-identifier">parts</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/raw.rb, line 15</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-operator">*</span><span class="ruby-identifier">parts</span>
   <span class="ruby-ivar">@parts</span> = []
   <span class="ruby-ivar">@parts</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">parts</span>
 <span class="ruby-keyword">end</span></pre>
@@ -201,8 +199,8 @@
 
           
           <div class="method-source-code" id="3C-3C-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/raw.rb, line 22</span>
-<span class="ruby-keyword">def</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/raw.rb, line 23</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">&lt;&lt;</span> <span class="ruby-identifier">text</span>
   <span class="ruby-ivar">@parts</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">text</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -234,8 +232,8 @@
 
           
           <div class="method-source-code" id="accept-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/raw.rb, line 33</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept</span> <span class="ruby-identifier">visitor</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/raw.rb, line 34</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept</span> <span class="ruby-identifier">visitor</span>
   <span class="ruby-identifier">visitor</span>.<span class="ruby-identifier">accept_raw</span> <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -267,8 +265,8 @@
 
           
           <div class="method-source-code" id="merge-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/raw.rb, line 40</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">merge</span> <span class="ruby-identifier">other</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/raw.rb, line 41</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">merge</span> <span class="ruby-identifier">other</span>
   <span class="ruby-ivar">@parts</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">parts</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -300,8 +298,8 @@
 
           
           <div class="method-source-code" id="push-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/raw.rb, line 57</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">push</span> <span class="ruby-operator">*</span><span class="ruby-identifier">texts</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/raw.rb, line 58</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">push</span> <span class="ruby-operator">*</span><span class="ruby-identifier">texts</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parts</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">texts</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -333,8 +331,8 @@
 
           
           <div class="method-source-code" id="text-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/raw.rb, line 64</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/raw.rb, line 65</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">text</span>
   <span class="ruby-ivar">@parts</span>.<span class="ruby-identifier">join</span> <span class="ruby-string">&#39; &#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -354,8 +352,8 @@
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::TomDoc - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::TomDoc - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -158,8 +158,6 @@ there isn&#39;t much to see here, unfortunately.</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -172,8 +170,6 @@ there isn&#39;t much to see here, unfortunately.</p>
     
   </section>
 
-  
-  
   <section id="Public" class="documentation-section">
     
     <header class="documentation-section-title">
@@ -224,8 +220,8 @@ href="Markup.html#method-c-parse">RDoc::Markup.parse</a></p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 129</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 130</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>
   <span class="ruby-keyword">super</span>
 
   <span class="ruby-ivar">@section</span>      = <span class="ruby-keyword">nil</span>
@@ -262,11 +258,11 @@ href="Markup.html#method-c-parse">RDoc::Markup.parse</a></p>
 
 <h3 id="method-c-parse-label-Examples">Examples<span><a href="#method-c-parse-label-Examples">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<pre class="ruby"><span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">TomDoc</span>.<span class="ruby-identifier">parse</span> <span class="ruby-value">&lt;&lt;-TOMDOC
-This method does some things
+<pre class="ruby"><span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">TomDoc</span>.<span class="ruby-identifier">parse</span> <span class="ruby-identifier">&lt;&lt;-TOMDOC</span>
+<span class="ruby-value">This method does some things
 
 Returns nothing.
-TOMDOC</span>
+</span><span class="ruby-identifier">TOMDOC</span>
 <span class="ruby-comment"># =&gt; #&lt;RDoc::Markup::Document:0xXXX @parts=[...], @file=nil&gt;</span>
 </pre>
 
@@ -279,8 +275,8 @@ representing the <a href="TomDoc.html">TomDoc</a> format.</p>
 
           
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 83</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parse</span> <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 84</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">parse</span> <span class="ruby-identifier">text</span>
   <span class="ruby-identifier">parser</span> = <span class="ruby-identifier">new</span>
 
   <span class="ruby-identifier">parser</span>.<span class="ruby-identifier">tokenize</span> <span class="ruby-identifier">text</span>
@@ -302,8 +298,6 @@ representing the <a href="TomDoc.html">TomDoc</a> format.</p>
   
   </section>
 
-  
-  
   <section id="Internal" class="documentation-section">
     
     <header class="documentation-section-title">
@@ -378,8 +372,8 @@ the signature extracted</p>
 
           
           <div class="method-source-code" id="signature-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 99</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">signature</span> <span class="ruby-identifier">comment</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 100</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">signature</span> <span class="ruby-identifier">comment</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">tomdoc?</span>
 
   <span class="ruby-identifier">document</span> = <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">parse</span>
@@ -456,8 +450,8 @@ the signature extracted</p>
 
           
           <div class="method-source-code" id="build_heading-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 142</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">build_heading</span> <span class="ruby-identifier">level</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 143</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">build_heading</span> <span class="ruby-identifier">level</span>
   <span class="ruby-identifier">heading</span> = <span class="ruby-keyword">super</span>
 
   <span class="ruby-ivar">@section</span> = <span class="ruby-identifier">heading</span>.<span class="ruby-identifier">text</span>
@@ -501,9 +495,9 @@ the signature extracted</p>
 
           
           <div class="method-source-code" id="build_paragraph-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 172</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">build_paragraph</span> <span class="ruby-identifier">margin</span>
-  <span class="ruby-identifier">p</span> <span class="ruby-value">:paragraph_start</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">margin</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 173</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">build_paragraph</span> <span class="ruby-identifier">margin</span>
+  <span class="ruby-identifier">p</span> <span class="ruby-value">:paragraph_start</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">margin</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
 
   <span class="ruby-identifier">paragraph</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>
 
@@ -527,7 +521,7 @@ the signature extracted</p>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">p</span> <span class="ruby-value">:paragraph_end</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">margin</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
+  <span class="ruby-identifier">p</span> <span class="ruby-value">:paragraph_end</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">margin</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
 
   <span class="ruby-identifier">paragraph</span>
 <span class="ruby-keyword">end</span></pre>
@@ -575,8 +569,8 @@ section.</p>
 
           
           <div class="method-source-code" id="build_verbatim-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 158</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">build_verbatim</span> <span class="ruby-identifier">margin</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 159</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">build_verbatim</span> <span class="ruby-identifier">margin</span>
   <span class="ruby-identifier">verbatim</span> = <span class="ruby-keyword">super</span>
 
   <span class="ruby-identifier">verbatim</span>.<span class="ruby-identifier">format</span> = <span class="ruby-value">:ruby</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@section</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;Examples&#39;</span>
@@ -620,9 +614,9 @@ section.</p>
 
           
           <div class="method-source-code" id="tokenize-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 223</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">tokenize</span> <span class="ruby-identifier">text</span>
-  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/\A(Public|Internal|Deprecated):\s+/</span>, <span class="ruby-string">&#39;&#39;</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/tom_doc.rb, line 224</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tokenize</span> <span class="ruby-identifier">text</span>
+  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\A(Public|Internal|Deprecated):\s+/</span>, <span class="ruby-string">&#39;&#39;</span>)
 
   <span class="ruby-identifier">setup_scanner</span> <span class="ruby-identifier">text</span>
 
@@ -670,8 +664,8 @@ section.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

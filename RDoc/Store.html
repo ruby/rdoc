@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Store - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Store - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -203,19 +203,17 @@ flushed using <a href="Store.html#method-i-save_cache">save_cache</a>.  The
 cache contains the following structures:</p>
 
 <pre class="ruby"><span class="ruby-ivar">@cache</span> = {
-  :<span class="ruby-identifier">ancestors</span>        =<span class="ruby-operator">&gt;</span> {}, <span class="ruby-comment"># class name =&gt; ancestor names</span>
-  :<span class="ruby-identifier">attributes</span>       =<span class="ruby-operator">&gt;</span> {}, <span class="ruby-comment"># class name =&gt; attributes</span>
-  :<span class="ruby-identifier">class_methods</span>    =<span class="ruby-operator">&gt;</span> {}, <span class="ruby-comment"># class name =&gt; class methods</span>
-  :<span class="ruby-identifier">instance_methods</span> =<span class="ruby-operator">&gt;</span> {}, <span class="ruby-comment"># class name =&gt; instance methods</span>
-  :<span class="ruby-identifier">modules</span>          =<span class="ruby-operator">&gt;</span> [], <span class="ruby-comment"># classes and modules in this store</span>
-  :<span class="ruby-identifier">pages</span>            =<span class="ruby-operator">&gt;</span> [], <span class="ruby-comment"># page names</span>
+  <span class="ruby-value">:ancestors</span>        <span class="ruby-operator">=&gt;</span> {}, <span class="ruby-comment"># class name =&gt; ancestor names</span>
+  <span class="ruby-value">:attributes</span>       <span class="ruby-operator">=&gt;</span> {}, <span class="ruby-comment"># class name =&gt; attributes</span>
+  <span class="ruby-value">:class_methods</span>    <span class="ruby-operator">=&gt;</span> {}, <span class="ruby-comment"># class name =&gt; class methods</span>
+  <span class="ruby-value">:instance_methods</span> <span class="ruby-operator">=&gt;</span> {}, <span class="ruby-comment"># class name =&gt; instance methods</span>
+  <span class="ruby-value">:modules</span>          <span class="ruby-operator">=&gt;</span> [], <span class="ruby-comment"># classes and modules in this store</span>
+  <span class="ruby-value">:pages</span>            <span class="ruby-operator">=&gt;</span> [], <span class="ruby-comment"># page names</span>
 }
 </pre>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -339,6 +337,19 @@ href="RI/Paths.html">RDoc::RI::Paths</a>.</p>
         </div>
       </div>
       
+      <div id="attribute-i-unmatched_constant_alias" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">unmatched_constant_alias</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The lazy constants alias will be discovered in passing</p>
+        
+        </div>
+      </div>
+      
     </section>
     
 
@@ -369,8 +380,8 @@ load or save to <code>path</code></p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 121</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">path</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">type</span> = <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 127</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">path</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">type</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@dry_run</span>  = <span class="ruby-keyword">false</span>
   <span class="ruby-ivar">@encoding</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@path</span>     = <span class="ruby-identifier">path</span>
@@ -378,17 +389,17 @@ load or save to <code>path</code></p>
   <span class="ruby-ivar">@type</span>     = <span class="ruby-identifier">type</span>
 
   <span class="ruby-ivar">@cache</span> = {
-    <span class="ruby-value">:ancestors</span>                   =<span class="ruby-operator">&gt;</span> {},
-    <span class="ruby-value">:attributes</span>                  =<span class="ruby-operator">&gt;</span> {},
-    <span class="ruby-value">:class_methods</span>               =<span class="ruby-operator">&gt;</span> {},
-    <span class="ruby-value">:c_class_variables</span>           =<span class="ruby-operator">&gt;</span> {},
-    <span class="ruby-value">:c_singleton_class_variables</span> =<span class="ruby-operator">&gt;</span> {},
-    <span class="ruby-value">:encoding</span>                    =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@encoding</span>,
-    <span class="ruby-value">:instance_methods</span>            =<span class="ruby-operator">&gt;</span> {},
-    <span class="ruby-value">:main</span>                        =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">nil</span>,
-    <span class="ruby-value">:modules</span>                     =<span class="ruby-operator">&gt;</span> [],
-    <span class="ruby-value">:pages</span>                       =<span class="ruby-operator">&gt;</span> [],
-    <span class="ruby-value">:title</span>                       =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">nil</span>,
+    <span class="ruby-value">:ancestors</span>                   <span class="ruby-operator">=&gt;</span> {},
+    <span class="ruby-value">:attributes</span>                  <span class="ruby-operator">=&gt;</span> {},
+    <span class="ruby-value">:class_methods</span>               <span class="ruby-operator">=&gt;</span> {},
+    <span class="ruby-value">:c_class_variables</span>           <span class="ruby-operator">=&gt;</span> {},
+    <span class="ruby-value">:c_singleton_class_variables</span> <span class="ruby-operator">=&gt;</span> {},
+    <span class="ruby-value">:encoding</span>                    <span class="ruby-operator">=&gt;</span> <span class="ruby-ivar">@encoding</span>,
+    <span class="ruby-value">:instance_methods</span>            <span class="ruby-operator">=&gt;</span> {},
+    <span class="ruby-value">:main</span>                        <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">nil</span>,
+    <span class="ruby-value">:modules</span>                     <span class="ruby-operator">=&gt;</span> [],
+    <span class="ruby-value">:pages</span>                       <span class="ruby-operator">=&gt;</span> [],
+    <span class="ruby-value">:title</span>                       <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">nil</span>,
   }
 
   <span class="ruby-ivar">@classes_hash</span> = {}
@@ -403,6 +414,8 @@ load or save to <code>path</code></p>
 
   <span class="ruby-ivar">@unique_classes</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@unique_modules</span> = <span class="ruby-keyword">nil</span>
+
+  <span class="ruby-ivar">@unmatched_constant_alias</span> = {}
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -442,8 +455,8 @@ load or save to <code>path</code></p>
 
           
           <div class="method-source-code" id="add_c_enclosure-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 160</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_c_enclosure</span> <span class="ruby-identifier">variable</span>, <span class="ruby-identifier">namespace</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 168</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_c_enclosure</span> <span class="ruby-identifier">variable</span>, <span class="ruby-identifier">namespace</span>
   <span class="ruby-ivar">@c_enclosure_classes</span>[<span class="ruby-identifier">variable</span>] = <span class="ruby-identifier">namespace</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -475,8 +488,8 @@ load or save to <code>path</code></p>
 
           
           <div class="method-source-code" id="add_c_variables-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 167</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_c_variables</span> <span class="ruby-identifier">c_parser</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 175</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_c_variables</span> <span class="ruby-identifier">c_parser</span>
   <span class="ruby-identifier">filename</span> = <span class="ruby-identifier">c_parser</span>.<span class="ruby-identifier">top_level</span>.<span class="ruby-identifier">relative_name</span>
 
   <span class="ruby-ivar">@c_class_variables</span>[<span class="ruby-identifier">filename</span>] = <span class="ruby-identifier">make_variable_map</span> <span class="ruby-identifier">c_parser</span>.<span class="ruby-identifier">classes</span>
@@ -514,8 +527,8 @@ href="TopLevel.html">RDoc::TopLevel</a> to the store.  Returns the created
 
           
           <div class="method-source-code" id="add_file-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 179</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_file</span> <span class="ruby-identifier">absolute_name</span>, <span class="ruby-identifier">relative_name</span> = <span class="ruby-identifier">absolute_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 187</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_file</span> <span class="ruby-identifier">absolute_name</span>, <span class="ruby-identifier">relative_name</span> = <span class="ruby-identifier">absolute_name</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">top_level</span> = <span class="ruby-ivar">@files_hash</span>[<span class="ruby-identifier">relative_name</span>] <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">top_level</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">TopLevel</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">absolute_name</span>, <span class="ruby-identifier">relative_name</span>
     <span class="ruby-identifier">top_level</span>.<span class="ruby-identifier">store</span> = <span class="ruby-keyword">self</span>
@@ -553,8 +566,8 @@ href="TopLevel.html">RDoc::TopLevel</a> to the store.  Returns the created
 
           
           <div class="method-source-code" id="all_classes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 192</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">all_classes</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 200</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">all_classes</span>
   <span class="ruby-ivar">@classes_hash</span>.<span class="ruby-identifier">values</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -587,8 +600,8 @@ href="../RDoc.html">RDoc</a></p>
 
           
           <div class="method-source-code" id="all_classes_and_modules-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 199</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">all_classes_and_modules</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 207</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">all_classes_and_modules</span>
   <span class="ruby-ivar">@classes_hash</span>.<span class="ruby-identifier">values</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@modules_hash</span>.<span class="ruby-identifier">values</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -620,8 +633,8 @@ href="../RDoc.html">RDoc</a></p>
 
           
           <div class="method-source-code" id="all_files-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 206</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">all_files</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 214</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">all_files</span>
   <span class="ruby-ivar">@files_hash</span>.<span class="ruby-identifier">values</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -653,8 +666,8 @@ href="../RDoc.html">RDoc</a></p>
 
           
           <div class="method-source-code" id="all_modules-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 213</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">all_modules</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 221</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">all_modules</span>
   <span class="ruby-identifier">modules_hash</span>.<span class="ruby-identifier">values</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -688,8 +701,8 @@ be listed (it will be included from ruby&#39;s ri store).</p>
 
           
           <div class="method-source-code" id="ancestors-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 222</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">ancestors</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 230</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">ancestors</span>
   <span class="ruby-ivar">@cache</span>[<span class="ruby-value">:ancestors</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -721,8 +734,8 @@ be listed (it will be included from ruby&#39;s ri store).</p>
 
           
           <div class="method-source-code" id="attributes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 229</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">attributes</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 237</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">attributes</span>
   <span class="ruby-ivar">@cache</span>[<span class="ruby-value">:attributes</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -754,8 +767,8 @@ be listed (it will be included from ruby&#39;s ri store).</p>
 
           
           <div class="method-source-code" id="cache_path-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 236</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">cache_path</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 244</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">cache_path</span>
   <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span> <span class="ruby-ivar">@path</span>, <span class="ruby-string">&#39;cache.ri&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -787,8 +800,8 @@ be listed (it will be included from ruby&#39;s ri store).</p>
 
           
           <div class="method-source-code" id="class_file-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 243</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">class_file</span> <span class="ruby-identifier">klass_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 251</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">class_file</span> <span class="ruby-identifier">klass_name</span>
   <span class="ruby-identifier">name</span> = <span class="ruby-identifier">klass_name</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;::&#39;</span>).<span class="ruby-identifier">last</span>
   <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span> <span class="ruby-identifier">class_path</span>(<span class="ruby-identifier">klass_name</span>), <span class="ruby-node">&quot;cdesc-#{name}.ri&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -822,8 +835,8 @@ methods (not full name).</p>
 
           
           <div class="method-source-code" id="class_methods-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 252</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">class_methods</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 260</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">class_methods</span>
   <span class="ruby-ivar">@cache</span>[<span class="ruby-value">:class_methods</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -856,8 +869,8 @@ class data)</p>
 
           
           <div class="method-source-code" id="class_path-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 259</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">class_path</span> <span class="ruby-identifier">klass_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 267</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">class_path</span> <span class="ruby-identifier">klass_name</span>
   <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span> <span class="ruby-ivar">@path</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">klass_name</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;::&#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -889,8 +902,8 @@ class data)</p>
 
           
           <div class="method-source-code" id="classes_hash-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 266</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">classes_hash</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 274</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">classes_hash</span>
   <span class="ruby-ivar">@classes_hash</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -939,8 +952,8 @@ href="Context.html#method-i-remove_from_documentation-3F">RDoc::Context#remove_f
 
           
           <div class="method-source-code" id="complete-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 302</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">complete</span> <span class="ruby-identifier">min_visibility</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 310</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">complete</span> <span class="ruby-identifier">min_visibility</span>
   <span class="ruby-identifier">fix_basic_object_inheritance</span>
 
   <span class="ruby-comment"># cache included modules before they are removed from the documentation</span>
@@ -1005,8 +1018,8 @@ href="Context.html#method-i-remove_from_documentation-3F">RDoc::Context#remove_f
 
           
           <div class="method-source-code" id="files_hash-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 342</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">files_hash</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 350</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">files_hash</span>
   <span class="ruby-ivar">@files_hash</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1038,8 +1051,8 @@ href="Context.html#method-i-remove_from_documentation-3F">RDoc::Context#remove_f
 
           
           <div class="method-source-code" id="find_c_enclosure-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 349</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_c_enclosure</span> <span class="ruby-identifier">variable</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 357</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_c_enclosure</span> <span class="ruby-identifier">variable</span>
   <span class="ruby-ivar">@c_enclosure_classes</span>.<span class="ruby-identifier">fetch</span> <span class="ruby-identifier">variable</span> <span class="ruby-keyword">do</span>
     <span class="ruby-keyword">break</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">name</span> = <span class="ruby-ivar">@c_enclosure_names</span>[<span class="ruby-identifier">variable</span>]
 
@@ -1089,8 +1102,8 @@ href="Context.html#method-i-remove_from_documentation-3F">RDoc::Context#remove_f
 
           
           <div class="method-source-code" id="find_class_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 374</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_class_named</span> <span class="ruby-identifier">name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 382</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_class_named</span> <span class="ruby-identifier">name</span>
   <span class="ruby-ivar">@classes_hash</span>[<span class="ruby-identifier">name</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1123,8 +1136,8 @@ href="Context.html#method-i-remove_from_documentation-3F">RDoc::Context#remove_f
 
           
           <div class="method-source-code" id="find_class_named_from-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 381</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_class_named_from</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">from</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 389</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_class_named_from</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">from</span>
   <span class="ruby-identifier">from</span> = <span class="ruby-identifier">find_class_named</span> <span class="ruby-identifier">from</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Context</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">from</span>
 
   <span class="ruby-keyword">until</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">TopLevel</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">from</span> <span class="ruby-keyword">do</span>
@@ -1167,8 +1180,8 @@ href="Context.html#method-i-remove_from_documentation-3F">RDoc::Context#remove_f
 
           
           <div class="method-source-code" id="find_class_or_module-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 399</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_class_or_module</span> <span class="ruby-identifier">name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 407</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_class_or_module</span> <span class="ruby-identifier">name</span>
   <span class="ruby-identifier">name</span> = <span class="ruby-node">$&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^::/</span>
   <span class="ruby-ivar">@classes_hash</span>[<span class="ruby-identifier">name</span>] <span class="ruby-operator">||</span> <span class="ruby-ivar">@modules_hash</span>[<span class="ruby-identifier">name</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -1201,8 +1214,8 @@ href="Context.html#method-i-remove_from_documentation-3F">RDoc::Context#remove_f
 
           
           <div class="method-source-code" id="find_file_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 407</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_file_named</span> <span class="ruby-identifier">name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 415</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_file_named</span> <span class="ruby-identifier">name</span>
   <span class="ruby-ivar">@files_hash</span>[<span class="ruby-identifier">name</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1234,8 +1247,8 @@ href="Context.html#method-i-remove_from_documentation-3F">RDoc::Context#remove_f
 
           
           <div class="method-source-code" id="find_module_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 414</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_module_named</span> <span class="ruby-identifier">name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 422</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_module_named</span> <span class="ruby-identifier">name</span>
   <span class="ruby-ivar">@modules_hash</span>[<span class="ruby-identifier">name</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1268,8 +1281,8 @@ and has the given <code>file_name</code></p>
 
           
           <div class="method-source-code" id="find_text_page-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 422</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_text_page</span> <span class="ruby-identifier">file_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 430</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_text_page</span> <span class="ruby-identifier">file_name</span>
   <span class="ruby-ivar">@files_hash</span>.<span class="ruby-identifier">each_value</span>.<span class="ruby-identifier">find</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">file</span>.<span class="ruby-identifier">text?</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">file</span>.<span class="ruby-identifier">full_name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">file_name</span>
   <span class="ruby-keyword">end</span>
@@ -1305,8 +1318,8 @@ them as an array. Performs the alias updates in <code>all_hash</code>: see
 
           
           <div class="method-source-code" id="find_unique-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 435</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_unique</span> <span class="ruby-identifier">all_hash</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 443</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_unique</span> <span class="ruby-identifier">all_hash</span>
   <span class="ruby-identifier">unique</span> = []
 
   <span class="ruby-identifier">all_hash</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">full_name</span>, <span class="ruby-identifier">cm</span><span class="ruby-operator">|</span>
@@ -1350,8 +1363,8 @@ Object, we have the above wrong inheritance.</p>
 
           
           <div class="method-source-code" id="fix_basic_object_inheritance-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 454</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">fix_basic_object_inheritance</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 462</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">fix_basic_object_inheritance</span>
   <span class="ruby-identifier">basic</span> = <span class="ruby-identifier">classes_hash</span>[<span class="ruby-string">&#39;BasicObject&#39;</span>]
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">basic</span>
   <span class="ruby-identifier">basic</span>.<span class="ruby-identifier">superclass</span> = <span class="ruby-keyword">nil</span>
@@ -1385,8 +1398,8 @@ Object, we have the above wrong inheritance.</p>
 
           
           <div class="method-source-code" id="friendly_path-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 463</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">friendly_path</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 471</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">friendly_path</span>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">type</span>
   <span class="ruby-keyword">when</span> <span class="ruby-value">:gem</span>    <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">parent</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span> <span class="ruby-string">&#39;..&#39;</span>, <span class="ruby-ivar">@path</span>
@@ -1427,8 +1440,8 @@ methods (not full name).</p>
 
           
           <div class="method-source-code" id="instance_methods-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 483</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">instance_methods</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 491</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">instance_methods</span>
   <span class="ruby-ivar">@cache</span>[<span class="ruby-value">:instance_methods</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1461,8 +1474,8 @@ documentation tree for use by a generator</p>
 
           
           <div class="method-source-code" id="load_all-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 491</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">load_all</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 499</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">load_all</span>
   <span class="ruby-identifier">load_cache</span>
 
   <span class="ruby-identifier">module_names</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">module_name</span><span class="ruby-operator">|</span>
@@ -1484,7 +1497,7 @@ documentation tree for use by a generator</p>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">all_classes_and_modules</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">mod</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">descendent_re</span> = <span class="ruby-node">/^#{mod.full_name}::[^:]+$/</span>
+    <span class="ruby-identifier">descendent_re</span> = <span class="ruby-regexp">/^#{mod.full_name}::[^:]+$/</span>
 
     <span class="ruby-identifier">module_names</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span>
       <span class="ruby-keyword">next</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">descendent_re</span>
@@ -1534,11 +1547,11 @@ documentation tree for use by a generator</p>
 
           
           <div class="method-source-code" id="load_cache-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 538</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">load_cache</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 546</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">load_cache</span>
   <span class="ruby-comment">#orig_enc = @encoding</span>
 
-  <span class="ruby-identifier">open</span> <span class="ruby-identifier">cache_path</span>, <span class="ruby-string">&#39;rb&#39;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+  <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span> <span class="ruby-identifier">cache_path</span>, <span class="ruby-string">&#39;rb&#39;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
     <span class="ruby-ivar">@cache</span> = <span class="ruby-constant">Marshal</span>.<span class="ruby-identifier">load</span> <span class="ruby-identifier">io</span>.<span class="ruby-identifier">read</span>
   <span class="ruby-keyword">end</span>
 
@@ -1601,14 +1614,16 @@ documentation tree for use by a generator</p>
 
           
           <div class="method-source-code" id="load_class-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 579</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">load_class</span> <span class="ruby-identifier">klass_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 587</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">load_class</span> <span class="ruby-identifier">klass_name</span>
   <span class="ruby-identifier">obj</span> = <span class="ruby-identifier">load_class_data</span> <span class="ruby-identifier">klass_name</span>
 
   <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">store</span> = <span class="ruby-keyword">self</span>
 
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">obj</span>
   <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">NormalClass</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-ivar">@classes_hash</span>[<span class="ruby-identifier">klass_name</span>] = <span class="ruby-identifier">obj</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">SingleClass</span> <span class="ruby-keyword">then</span>
     <span class="ruby-ivar">@classes_hash</span>[<span class="ruby-identifier">klass_name</span>] = <span class="ruby-identifier">obj</span>
   <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">NormalModule</span> <span class="ruby-keyword">then</span>
     <span class="ruby-ivar">@modules_hash</span>[<span class="ruby-identifier">klass_name</span>] = <span class="ruby-identifier">obj</span>
@@ -1643,14 +1658,14 @@ documentation tree for use by a generator</p>
 
           
           <div class="method-source-code" id="load_class_data-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 595</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">load_class_data</span> <span class="ruby-identifier">klass_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 605</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">load_class_data</span> <span class="ruby-identifier">klass_name</span>
   <span class="ruby-identifier">file</span> = <span class="ruby-identifier">class_file</span> <span class="ruby-identifier">klass_name</span>
 
-  <span class="ruby-identifier">open</span> <span class="ruby-identifier">file</span>, <span class="ruby-string">&#39;rb&#39;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+  <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span> <span class="ruby-identifier">file</span>, <span class="ruby-string">&#39;rb&#39;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
     <span class="ruby-constant">Marshal</span>.<span class="ruby-identifier">load</span> <span class="ruby-identifier">io</span>.<span class="ruby-identifier">read</span>
   <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">rescue</span> <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">ENOENT</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">ENOENT</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
   <span class="ruby-identifier">error</span> = <span class="ruby-constant">MissingFileError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">file</span>, <span class="ruby-identifier">klass_name</span>)
   <span class="ruby-identifier">error</span>.<span class="ruby-identifier">set_backtrace</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
@@ -1684,11 +1699,11 @@ documentation tree for use by a generator</p>
 
           
           <div class="method-source-code" id="load_method-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 610</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">load_method</span> <span class="ruby-identifier">klass_name</span>, <span class="ruby-identifier">method_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 620</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">load_method</span> <span class="ruby-identifier">klass_name</span>, <span class="ruby-identifier">method_name</span>
   <span class="ruby-identifier">file</span> = <span class="ruby-identifier">method_file</span> <span class="ruby-identifier">klass_name</span>, <span class="ruby-identifier">method_name</span>
 
-  <span class="ruby-identifier">open</span> <span class="ruby-identifier">file</span>, <span class="ruby-string">&#39;rb&#39;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+  <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span> <span class="ruby-identifier">file</span>, <span class="ruby-string">&#39;rb&#39;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">obj</span> = <span class="ruby-constant">Marshal</span>.<span class="ruby-identifier">load</span> <span class="ruby-identifier">io</span>.<span class="ruby-identifier">read</span>
     <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">store</span> = <span class="ruby-keyword">self</span>
     <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">parent</span> =
@@ -1696,7 +1711,7 @@ documentation tree for use by a generator</p>
         <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">parent</span>
     <span class="ruby-identifier">obj</span>
   <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">rescue</span> <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">ENOENT</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">ENOENT</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
   <span class="ruby-identifier">error</span> = <span class="ruby-constant">MissingFileError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">file</span>, <span class="ruby-identifier">klass_name</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">method_name</span>)
   <span class="ruby-identifier">error</span>.<span class="ruby-identifier">set_backtrace</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
@@ -1730,16 +1745,16 @@ documentation tree for use by a generator</p>
 
           
           <div class="method-source-code" id="load_page-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 630</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">load_page</span> <span class="ruby-identifier">page_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 640</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">load_page</span> <span class="ruby-identifier">page_name</span>
   <span class="ruby-identifier">file</span> = <span class="ruby-identifier">page_file</span> <span class="ruby-identifier">page_name</span>
 
-  <span class="ruby-identifier">open</span> <span class="ruby-identifier">file</span>, <span class="ruby-string">&#39;rb&#39;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+  <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span> <span class="ruby-identifier">file</span>, <span class="ruby-string">&#39;rb&#39;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">obj</span> = <span class="ruby-constant">Marshal</span>.<span class="ruby-identifier">load</span> <span class="ruby-identifier">io</span>.<span class="ruby-identifier">read</span>
     <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">store</span> = <span class="ruby-keyword">self</span>
     <span class="ruby-identifier">obj</span>
   <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">rescue</span> <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">ENOENT</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">ENOENT</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
   <span class="ruby-identifier">error</span> = <span class="ruby-constant">MissingFileError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">file</span>, <span class="ruby-identifier">page_name</span>)
   <span class="ruby-identifier">error</span>.<span class="ruby-identifier">set_backtrace</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
@@ -1774,8 +1789,8 @@ page is used as the root of the <a href="../RDoc.html">RDoc</a> server.</p>
 
           
           <div class="method-source-code" id="main-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 648</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">main</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 658</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">main</span>
   <span class="ruby-ivar">@cache</span>[<span class="ruby-value">:main</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1807,8 +1822,8 @@ page is used as the root of the <a href="../RDoc.html">RDoc</a> server.</p>
 
           
           <div class="method-source-code" id="main-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 655</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">main=</span> <span class="ruby-identifier">page</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 665</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">main=</span> <span class="ruby-identifier">page</span>
   <span class="ruby-ivar">@cache</span>[<span class="ruby-value">:main</span>] = <span class="ruby-identifier">page</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1841,8 +1856,8 @@ parser into a variable =&gt; class name map.</p>
 
           
           <div class="method-source-code" id="make_variable_map-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 663</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">make_variable_map</span> <span class="ruby-identifier">variables</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 673</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">make_variable_map</span> <span class="ruby-identifier">variables</span>
   <span class="ruby-identifier">map</span> = {}
 
   <span class="ruby-identifier">variables</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">variable</span>, <span class="ruby-identifier">class_module</span><span class="ruby-operator">|</span>
@@ -1880,10 +1895,10 @@ parser into a variable =&gt; class name map.</p>
 
           
           <div class="method-source-code" id="method_file-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 676</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">method_file</span> <span class="ruby-identifier">klass_name</span>, <span class="ruby-identifier">method_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 686</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">method_file</span> <span class="ruby-identifier">klass_name</span>, <span class="ruby-identifier">method_name</span>
   <span class="ruby-identifier">method_name</span> = <span class="ruby-identifier">method_name</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;::&#39;</span>).<span class="ruby-identifier">last</span>
-  <span class="ruby-identifier">method_name</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/#(.*)/</span>
+  <span class="ruby-identifier">method_name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/#(.*)/</span>
   <span class="ruby-identifier">method_type</span> = <span class="ruby-node">$1</span> <span class="ruby-operator">?</span> <span class="ruby-string">&#39;i&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;c&#39;</span>
   <span class="ruby-identifier">method_name</span> = <span class="ruby-node">$1</span> <span class="ruby-keyword">if</span> <span class="ruby-node">$1</span>
   <span class="ruby-identifier">method_name</span> = <span class="ruby-identifier">method_name</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/\W/</span>) { <span class="ruby-string">&quot;%%%02x&quot;</span> <span class="ruby-operator">%</span> <span class="ruby-node">$&amp;</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">ord</span> }
@@ -1920,8 +1935,8 @@ the store.</p>
 
           
           <div class="method-source-code" id="module_names-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 690</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">module_names</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 700</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">module_names</span>
   <span class="ruby-ivar">@cache</span>[<span class="ruby-value">:modules</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1953,8 +1968,8 @@ the store.</p>
 
           
           <div class="method-source-code" id="modules_hash-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 697</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">modules_hash</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 707</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">modules_hash</span>
   <span class="ruby-ivar">@modules_hash</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1987,8 +2002,8 @@ and has the given <code>name</code></p>
 
           
           <div class="method-source-code" id="page-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 704</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">page</span> <span class="ruby-identifier">name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 714</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">page</span> <span class="ruby-identifier">name</span>
   <span class="ruby-ivar">@files_hash</span>.<span class="ruby-identifier">each_value</span>.<span class="ruby-identifier">find</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">file</span>.<span class="ruby-identifier">text?</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">file</span>.<span class="ruby-identifier">page_name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span>
   <span class="ruby-keyword">end</span>
@@ -2022,8 +2037,8 @@ and has the given <code>name</code></p>
 
           
           <div class="method-source-code" id="page_file-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 713</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">page_file</span> <span class="ruby-identifier">page_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 723</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">page_file</span> <span class="ruby-identifier">page_name</span>
   <span class="ruby-identifier">file_name</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-identifier">page_name</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;.&#39;</span>, <span class="ruby-string">&#39;_&#39;</span>)
 
   <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span> <span class="ruby-ivar">@path</span>, <span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-identifier">page_name</span>), <span class="ruby-node">&quot;page-#{file_name}.ri&quot;</span>
@@ -2061,8 +2076,8 @@ href="Context.html#method-i-remove_from_documentation-3F">RDoc::Context#remove_f
 
           
           <div class="method-source-code" id="remove_nodoc-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 724</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">remove_nodoc</span> <span class="ruby-identifier">all_hash</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 734</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_nodoc</span> <span class="ruby-identifier">all_hash</span>
   <span class="ruby-identifier">all_hash</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">context</span> = <span class="ruby-identifier">all_hash</span>[<span class="ruby-identifier">name</span>]
     <span class="ruby-identifier">all_hash</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">name</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">context</span>.<span class="ruby-identifier">remove_from_documentation?</span>
@@ -2097,8 +2112,8 @@ href="Context.html#method-i-remove_from_documentation-3F">RDoc::Context#remove_f
 
           
           <div class="method-source-code" id="save-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 734</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">save</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 744</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">save</span>
   <span class="ruby-identifier">load_cache</span>
 
   <span class="ruby-identifier">all_classes_and_modules</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">klass</span><span class="ruby-operator">|</span>
@@ -2148,8 +2163,8 @@ href="Context.html#method-i-remove_from_documentation-3F">RDoc::Context#remove_f
 
           
           <div class="method-source-code" id="save_cache-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 759</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">save_cache</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 769</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">save_cache</span>
   <span class="ruby-identifier">clean_cache_collection</span> <span class="ruby-ivar">@cache</span>[<span class="ruby-value">:ancestors</span>]
   <span class="ruby-identifier">clean_cache_collection</span> <span class="ruby-ivar">@cache</span>[<span class="ruby-value">:attributes</span>]
   <span class="ruby-identifier">clean_cache_collection</span> <span class="ruby-ivar">@cache</span>[<span class="ruby-value">:class_methods</span>]
@@ -2170,7 +2185,7 @@ href="Context.html#method-i-remove_from_documentation-3F">RDoc::Context#remove_f
 
   <span class="ruby-identifier">marshal</span> = <span class="ruby-constant">Marshal</span>.<span class="ruby-identifier">dump</span> <span class="ruby-ivar">@cache</span>
 
-  <span class="ruby-identifier">open</span> <span class="ruby-identifier">cache_path</span>, <span class="ruby-string">&#39;wb&#39;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+  <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span> <span class="ruby-identifier">cache_path</span>, <span class="ruby-string">&#39;wb&#39;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">io</span>.<span class="ruby-identifier">write</span> <span class="ruby-identifier">marshal</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
@@ -2203,8 +2218,8 @@ href="Context.html#method-i-remove_from_documentation-3F">RDoc::Context#remove_f
 
           
           <div class="method-source-code" id="save_class-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 788</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">save_class</span> <span class="ruby-identifier">klass</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 798</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">save_class</span> <span class="ruby-identifier">klass</span>
   <span class="ruby-identifier">full_name</span> = <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">full_name</span>
 
   <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">mkdir_p</span> <span class="ruby-identifier">class_path</span>(<span class="ruby-identifier">full_name</span>) <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@dry_run</span>
@@ -2272,7 +2287,7 @@ href="Context.html#method-i-remove_from_documentation-3F">RDoc::Context#remove_f
 
   <span class="ruby-identifier">marshal</span> = <span class="ruby-constant">Marshal</span>.<span class="ruby-identifier">dump</span> <span class="ruby-identifier">klass</span>
 
-  <span class="ruby-identifier">open</span> <span class="ruby-identifier">path</span>, <span class="ruby-string">&#39;wb&#39;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+  <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span> <span class="ruby-identifier">path</span>, <span class="ruby-string">&#39;wb&#39;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">io</span>.<span class="ruby-identifier">write</span> <span class="ruby-identifier">marshal</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
@@ -2305,8 +2320,8 @@ href="Context.html#method-i-remove_from_documentation-3F">RDoc::Context#remove_f
 
           
           <div class="method-source-code" id="save_method-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 864</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">save_method</span> <span class="ruby-identifier">klass</span>, <span class="ruby-identifier">method</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 874</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">save_method</span> <span class="ruby-identifier">klass</span>, <span class="ruby-identifier">method</span>
   <span class="ruby-identifier">full_name</span> = <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">full_name</span>
 
   <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">mkdir_p</span> <span class="ruby-identifier">class_path</span>(<span class="ruby-identifier">full_name</span>) <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@dry_run</span>
@@ -2323,7 +2338,7 @@ href="Context.html#method-i-remove_from_documentation-3F">RDoc::Context#remove_f
 
   <span class="ruby-identifier">marshal</span> = <span class="ruby-constant">Marshal</span>.<span class="ruby-identifier">dump</span> <span class="ruby-identifier">method</span>
 
-  <span class="ruby-identifier">open</span> <span class="ruby-identifier">method_file</span>(<span class="ruby-identifier">full_name</span>, <span class="ruby-identifier">method</span>.<span class="ruby-identifier">full_name</span>), <span class="ruby-string">&#39;wb&#39;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+  <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span> <span class="ruby-identifier">method_file</span>(<span class="ruby-identifier">full_name</span>, <span class="ruby-identifier">method</span>.<span class="ruby-identifier">full_name</span>), <span class="ruby-string">&#39;wb&#39;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">io</span>.<span class="ruby-identifier">write</span> <span class="ruby-identifier">marshal</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
@@ -2356,8 +2371,8 @@ href="Context.html#method-i-remove_from_documentation-3F">RDoc::Context#remove_f
 
           
           <div class="method-source-code" id="save_page-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 889</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">save_page</span> <span class="ruby-identifier">page</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 899</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">save_page</span> <span class="ruby-identifier">page</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">page</span>.<span class="ruby-identifier">text?</span>
 
   <span class="ruby-identifier">path</span> = <span class="ruby-identifier">page_file</span> <span class="ruby-identifier">page</span>.<span class="ruby-identifier">full_name</span>
@@ -2371,7 +2386,7 @@ href="Context.html#method-i-remove_from_documentation-3F">RDoc::Context#remove_f
 
   <span class="ruby-identifier">marshal</span> = <span class="ruby-constant">Marshal</span>.<span class="ruby-identifier">dump</span> <span class="ruby-identifier">page</span>
 
-  <span class="ruby-identifier">open</span> <span class="ruby-identifier">path</span>, <span class="ruby-string">&#39;wb&#39;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+  <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span> <span class="ruby-identifier">path</span>, <span class="ruby-string">&#39;wb&#39;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">io</span>.<span class="ruby-identifier">write</span> <span class="ruby-identifier">marshal</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
@@ -2410,8 +2425,8 @@ href="Store.html#attribute-i-path">path</a>.</p>
 
           
           <div class="method-source-code" id="source-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 917</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">source</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 927</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">source</span>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">type</span>
   <span class="ruby-keyword">when</span> <span class="ruby-value">:gem</span>    <span class="ruby-keyword">then</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span> <span class="ruby-string">&#39;..&#39;</span>, <span class="ruby-ivar">@path</span>
   <span class="ruby-keyword">when</span> <span class="ruby-value">:home</span>   <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;home&#39;</span>
@@ -2451,8 +2466,8 @@ server</p>
 
           
           <div class="method-source-code" id="title-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 931</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">title</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 941</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">title</span>
   <span class="ruby-ivar">@cache</span>[<span class="ruby-value">:title</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -2484,8 +2499,8 @@ server</p>
 
           
           <div class="method-source-code" id="title-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 938</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">title=</span> <span class="ruby-identifier">title</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 948</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">title=</span> <span class="ruby-identifier">title</span>
   <span class="ruby-ivar">@cache</span>[<span class="ruby-value">:title</span>] = <span class="ruby-identifier">title</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -2519,8 +2534,8 @@ server</p>
 
           
           <div class="method-source-code" id="unique_classes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 947</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">unique_classes</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 957</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">unique_classes</span>
   <span class="ruby-ivar">@unique_classes</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -2554,8 +2569,8 @@ using this method.</p>
 
           
           <div class="method-source-code" id="unique_classes_and_modules-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 955</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">unique_classes_and_modules</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 965</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">unique_classes_and_modules</span>
   <span class="ruby-ivar">@unique_classes</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@unique_modules</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -2588,8 +2603,8 @@ using this method.</p>
 
           
           <div class="method-source-code" id="unique_modules-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 963</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">unique_modules</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/store.rb, line 973</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">unique_modules</span>
   <span class="ruby-ivar">@unique_modules</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -2609,8 +2624,8 @@ using this method.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

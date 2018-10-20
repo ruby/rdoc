@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::ToRdoc - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Markup::ToRdoc - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -131,8 +131,6 @@ href="../../RDoc.html">RDoc</a> markup! (mostly)</p>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -274,11 +272,11 @@ href="ToRdoc.html#method-i-use_prefix">use_prefix</a></p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 44</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 45</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">super</span> <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">markup</span>
 
-  <span class="ruby-ivar">@markup</span>.<span class="ruby-identifier">add_special</span>(<span class="ruby-regexp">/\\S/</span>, <span class="ruby-value">:SUPPRESSED_CROSSREF</span>)
+  <span class="ruby-ivar">@markup</span>.<span class="ruby-identifier">add_special</span>(<span class="ruby-regexp">/\\\S/</span>, <span class="ruby-value">:SUPPRESSED_CROSSREF</span>)
   <span class="ruby-ivar">@width</span> = <span class="ruby-value">78</span>
   <span class="ruby-identifier">init_tags</span>
 
@@ -331,8 +329,8 @@ href="ToRdoc.html#method-i-use_prefix">use_prefix</a></p>
 
           
           <div class="method-source-code" id="accept_blank_line-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 76</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_blank_line</span> <span class="ruby-identifier">blank_line</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 77</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_blank_line</span> <span class="ruby-identifier">blank_line</span>
   <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;\n&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -364,8 +362,8 @@ href="ToRdoc.html#method-i-use_prefix">use_prefix</a></p>
 
           
           <div class="method-source-code" id="accept_block_quote-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 83</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_block_quote</span> <span class="ruby-identifier">block_quote</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 84</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_block_quote</span> <span class="ruby-identifier">block_quote</span>
   <span class="ruby-ivar">@indent</span> <span class="ruby-operator">+=</span> <span class="ruby-value">2</span>
 
   <span class="ruby-identifier">block_quote</span>.<span class="ruby-identifier">parts</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">part</span><span class="ruby-operator">|</span>
@@ -405,8 +403,8 @@ href="ToRdoc.html#method-i-use_prefix">use_prefix</a></p>
 
           
           <div class="method-source-code" id="accept_heading-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 98</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_heading</span> <span class="ruby-identifier">heading</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 99</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_heading</span> <span class="ruby-identifier">heading</span>
   <span class="ruby-identifier">use_prefix</span> <span class="ruby-keyword">or</span> <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@indent</span>
   <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-ivar">@headings</span>[<span class="ruby-identifier">heading</span>.<span class="ruby-identifier">level</span>][<span class="ruby-value">0</span>]
   <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">attributes</span>(<span class="ruby-identifier">heading</span>.<span class="ruby-identifier">text</span>)
@@ -442,8 +440,8 @@ href="ToRdoc.html#method-i-use_prefix">use_prefix</a></p>
 
           
           <div class="method-source-code" id="accept_indented_paragraph-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 202</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_indented_paragraph</span> <span class="ruby-identifier">paragraph</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 203</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_indented_paragraph</span> <span class="ruby-identifier">paragraph</span>
   <span class="ruby-ivar">@indent</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">paragraph</span>.<span class="ruby-identifier">indent</span>
   <span class="ruby-identifier">text</span> = <span class="ruby-identifier">paragraph</span>.<span class="ruby-identifier">text</span> <span class="ruby-ivar">@hard_break</span>
   <span class="ruby-identifier">wrap</span> <span class="ruby-identifier">attributes</span> <span class="ruby-identifier">text</span>
@@ -478,8 +476,8 @@ href="ToRdoc.html#method-i-use_prefix">use_prefix</a></p>
 
           
           <div class="method-source-code" id="accept_list_end-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 109</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_list_end</span> <span class="ruby-identifier">list</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 110</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_list_end</span> <span class="ruby-identifier">list</span>
   <span class="ruby-ivar">@list_index</span>.<span class="ruby-identifier">pop</span>
   <span class="ruby-ivar">@list_type</span>.<span class="ruby-identifier">pop</span>
   <span class="ruby-ivar">@list_width</span>.<span class="ruby-identifier">pop</span>
@@ -513,8 +511,8 @@ href="ToRdoc.html#method-i-use_prefix">use_prefix</a></p>
 
           
           <div class="method-source-code" id="accept_list_item_end-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 118</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_list_item_end</span> <span class="ruby-identifier">list_item</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 119</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_list_item_end</span> <span class="ruby-identifier">list_item</span>
   <span class="ruby-identifier">width</span> = <span class="ruby-keyword">case</span> <span class="ruby-ivar">@list_type</span>.<span class="ruby-identifier">last</span>
           <span class="ruby-keyword">when</span> <span class="ruby-value">:BULLET</span> <span class="ruby-keyword">then</span>
             <span class="ruby-value">2</span>
@@ -563,8 +561,8 @@ href="ToRdoc.html#method-i-use_prefix">use_prefix</a></p>
 
           
           <div class="method-source-code" id="accept_list_item_start-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 142</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-identifier">list_item</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 143</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_list_item_start</span> <span class="ruby-identifier">list_item</span>
   <span class="ruby-identifier">type</span> = <span class="ruby-ivar">@list_type</span>.<span class="ruby-identifier">last</span>
 
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">type</span>
@@ -614,8 +612,8 @@ href="ToRdoc.html#method-i-use_prefix">use_prefix</a></p>
 
           
           <div class="method-source-code" id="accept_list_start-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 167</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_list_start</span> <span class="ruby-identifier">list</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 168</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_list_start</span> <span class="ruby-identifier">list</span>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">list</span>.<span class="ruby-identifier">type</span>
   <span class="ruby-keyword">when</span> <span class="ruby-value">:BULLET</span> <span class="ruby-keyword">then</span>
     <span class="ruby-ivar">@list_index</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-keyword">nil</span>
@@ -667,8 +665,8 @@ href="ToRdoc.html#method-i-use_prefix">use_prefix</a></p>
 
           
           <div class="method-source-code" id="accept_paragraph-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 194</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_paragraph</span> <span class="ruby-identifier">paragraph</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 195</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_paragraph</span> <span class="ruby-identifier">paragraph</span>
   <span class="ruby-identifier">text</span> = <span class="ruby-identifier">paragraph</span>.<span class="ruby-identifier">text</span> <span class="ruby-ivar">@hard_break</span>
   <span class="ruby-identifier">wrap</span> <span class="ruby-identifier">attributes</span> <span class="ruby-identifier">text</span>
 <span class="ruby-keyword">end</span></pre>
@@ -701,8 +699,8 @@ href="ToRdoc.html#method-i-use_prefix">use_prefix</a></p>
 
           
           <div class="method-source-code" id="accept_raw-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 212</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_raw</span> <span class="ruby-identifier">raw</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 213</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_raw</span> <span class="ruby-identifier">raw</span>
   <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">raw</span>.<span class="ruby-identifier">parts</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;\n&quot;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -734,8 +732,8 @@ href="ToRdoc.html#method-i-use_prefix">use_prefix</a></p>
 
           
           <div class="method-source-code" id="accept_rule-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 219</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_rule</span> <span class="ruby-identifier">rule</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 220</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_rule</span> <span class="ruby-identifier">rule</span>
   <span class="ruby-identifier">use_prefix</span> <span class="ruby-keyword">or</span> <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@indent</span>
   <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;-&#39;</span> <span class="ruby-operator">*</span> (<span class="ruby-ivar">@width</span> <span class="ruby-operator">-</span> <span class="ruby-ivar">@indent</span>)
   <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;\n&quot;</span>
@@ -769,8 +767,8 @@ href="ToRdoc.html#method-i-use_prefix">use_prefix</a></p>
 
           
           <div class="method-source-code" id="accept_verbatim-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 228</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_verbatim</span> <span class="ruby-identifier">verbatim</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 229</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_verbatim</span> <span class="ruby-identifier">verbatim</span>
   <span class="ruby-identifier">indent</span> = <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">*</span> (<span class="ruby-ivar">@indent</span> <span class="ruby-operator">+</span> <span class="ruby-value">2</span>)
 
   <span class="ruby-identifier">verbatim</span>.<span class="ruby-identifier">parts</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">part</span><span class="ruby-operator">|</span>
@@ -810,8 +808,8 @@ RDoc::AttributeManager</p>
 
           
           <div class="method-source-code" id="attributes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 242</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">attributes</span> <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 243</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">attributes</span> <span class="ruby-identifier">text</span>
   <span class="ruby-identifier">flow</span> = <span class="ruby-ivar">@am</span>.<span class="ruby-identifier">flow</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">dup</span>
   <span class="ruby-identifier">convert_flow</span> <span class="ruby-identifier">flow</span>
 <span class="ruby-keyword">end</span></pre>
@@ -844,8 +842,8 @@ RDoc::AttributeManager</p>
 
           
           <div class="method-source-code" id="end_accepting-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 250</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">end_accepting</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 251</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">end_accepting</span>
   <span class="ruby-ivar">@res</span>.<span class="ruby-identifier">join</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -877,8 +875,8 @@ RDoc::AttributeManager</p>
 
           
           <div class="method-source-code" id="handle_special_HARD_BREAK-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 266</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_special_HARD_BREAK</span> <span class="ruby-identifier">special</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 267</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_special_HARD_BREAK</span> <span class="ruby-identifier">special</span>
   <span class="ruby-string">&quot;\n&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -910,10 +908,10 @@ RDoc::AttributeManager</p>
 
           
           <div class="method-source-code" id="handle_special_SUPPRESSED_CROSSREF-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 257</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_special_SUPPRESSED_CROSSREF</span> <span class="ruby-identifier">special</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 258</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_special_SUPPRESSED_CROSSREF</span> <span class="ruby-identifier">special</span>
   <span class="ruby-identifier">text</span> = <span class="ruby-identifier">special</span>.<span class="ruby-identifier">text</span>
-  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-string">&#39;\&#39;</span>, <span class="ruby-string">&#39;&#39;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">in_tt?</span>
+  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-string">&#39;\\&#39;</span>, <span class="ruby-string">&#39;&#39;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">in_tt?</span>
   <span class="ruby-identifier">text</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -945,8 +943,8 @@ RDoc::AttributeManager</p>
 
           
           <div class="method-source-code" id="init_tags-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 67</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">init_tags</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 68</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">init_tags</span>
   <span class="ruby-identifier">add_tag</span> <span class="ruby-value">:BOLD</span>, <span class="ruby-string">&quot;&lt;b&gt;&quot;</span>, <span class="ruby-string">&quot;&lt;/b&gt;&quot;</span>
   <span class="ruby-identifier">add_tag</span> <span class="ruby-value">:TT</span>,   <span class="ruby-string">&quot;&lt;tt&gt;&quot;</span>, <span class="ruby-string">&quot;&lt;/tt&gt;&quot;</span>
   <span class="ruby-identifier">add_tag</span> <span class="ruby-value">:EM</span>,   <span class="ruby-string">&quot;&lt;em&gt;&quot;</span>, <span class="ruby-string">&quot;&lt;/em&gt;&quot;</span>
@@ -980,8 +978,8 @@ RDoc::AttributeManager</p>
 
           
           <div class="method-source-code" id="start_accepting-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 273</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">start_accepting</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 274</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">start_accepting</span>
   <span class="ruby-ivar">@res</span> = [<span class="ruby-string">&quot;&quot;</span>]
   <span class="ruby-ivar">@indent</span> = <span class="ruby-value">0</span>
   <span class="ruby-ivar">@prefix</span> = <span class="ruby-keyword">nil</span>
@@ -1020,8 +1018,8 @@ output and clears it.  Lists generate a prefix for later consumption.</p>
 
           
           <div class="method-source-code" id="use_prefix-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 287</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">use_prefix</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 288</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">use_prefix</span>
   <span class="ruby-identifier">prefix</span>, <span class="ruby-ivar">@prefix</span> = <span class="ruby-ivar">@prefix</span>, <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">prefix</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">prefix</span>
 
@@ -1057,15 +1055,15 @@ href="ToRdoc.html#attribute-i-width">width</a></p>
 
           
           <div class="method-source-code" id="wrap-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 297</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">wrap</span> <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_rdoc.rb, line 298</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">wrap</span> <span class="ruby-identifier">text</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">text</span>.<span class="ruby-identifier">empty?</span>
 
   <span class="ruby-identifier">text_len</span> = <span class="ruby-ivar">@width</span> <span class="ruby-operator">-</span> <span class="ruby-ivar">@indent</span>
 
   <span class="ruby-identifier">text_len</span> = <span class="ruby-value">20</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">text_len</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">20</span>
 
-  <span class="ruby-identifier">re</span> = <span class="ruby-node">/^(.{0,#{text_len}})[ \n]/</span>
+  <span class="ruby-identifier">re</span> = <span class="ruby-regexp">/^(.{0,#{text_len}})[ \n]/</span>
   <span class="ruby-identifier">next_prefix</span> = <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@indent</span>
 
   <span class="ruby-identifier">prefix</span> = <span class="ruby-ivar">@prefix</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">next_prefix</span>
@@ -1109,8 +1107,8 @@ href="ToRdoc.html#attribute-i-width">width</a></p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

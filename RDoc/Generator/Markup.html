@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module RDoc::Generator::Markup - rdoc 5.0.0 Documentation</title>
+<title>module RDoc::Generator::Markup - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -97,8 +97,6 @@ code to improve startup time for <code>ri</code>.</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -135,8 +133,8 @@ code to improve startup time for <code>ri</code>.</p>
 
           
           <div class="method-source-code" id="aref_to-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 12</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">aref_to</span>(<span class="ruby-identifier">target_path</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 13</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">aref_to</span>(<span class="ruby-identifier">target_path</span>)
   <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ToHtml</span>.<span class="ruby-identifier">gen_relative_url</span> <span class="ruby-identifier">path</span>, <span class="ruby-identifier">target_path</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -169,8 +167,8 @@ path</p>
 
           
           <div class="method-source-code" id="as_href-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 19</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">as_href</span>(<span class="ruby-identifier">from_path</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 20</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">as_href</span>(<span class="ruby-identifier">from_path</span>)
   <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ToHtml</span>.<span class="ruby-identifier">gen_relative_url</span> <span class="ruby-identifier">from_path</span>, <span class="ruby-identifier">path</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -205,8 +203,8 @@ replace the %s using sprintf on the <code>url</code>.</p>
 
           
           <div class="method-source-code" id="cvs_url-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 49</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">cvs_url</span>(<span class="ruby-identifier">url</span>, <span class="ruby-identifier">full_path</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 50</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">cvs_url</span>(<span class="ruby-identifier">url</span>, <span class="ruby-identifier">full_path</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-regexp">/%s/</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">url</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">sprintf</span> <span class="ruby-identifier">url</span>, <span class="ruby-identifier">full_path</span>
   <span class="ruby-keyword">else</span>
@@ -242,8 +240,8 @@ replace the %s using sprintf on the <code>url</code>.</p>
 
           
           <div class="method-source-code" id="description-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 26</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">description</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 27</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">description</span>
   <span class="ruby-identifier">markup</span> <span class="ruby-ivar">@comment</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -277,8 +275,8 @@ formatter</p>
 
           
           <div class="method-source-code" id="formatter-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 33</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">formatter</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 34</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">formatter</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@formatter</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span> <span class="ruby-ivar">@formatter</span>
 
   <span class="ruby-identifier">options</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">options</span>
@@ -305,8 +303,8 @@ formatter</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

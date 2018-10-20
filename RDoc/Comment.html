@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Comment - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Comment - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -86,9 +86,9 @@
     
     <li ><a href="#method-i-empty-3F">#empty?</a>
     
-    <li ><a href="#method-i-extract_call_seq">#extract_call_seq</a>
+    <li ><a href="#method-i-encode-21">#encode!</a>
     
-    <li ><a href="#method-i-force_encoding">#force_encoding</a>
+    <li ><a href="#method-i-extract_call_seq">#extract_call_seq</a>
     
     <li ><a href="#method-i-format-3D">#format=</a>
     
@@ -130,8 +130,6 @@ RDoc::Markup</a> for instructions on adding an alternate format.</p>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -245,10 +243,10 @@ href="TopLevel.html">RDoc::TopLevel</a> <code>location</code>.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 45</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">text</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">location</span> = <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 46</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">text</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">location</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@location</span> = <span class="ruby-identifier">location</span>
-  <span class="ruby-ivar">@text</span>     = <span class="ruby-identifier">text</span>
+  <span class="ruby-ivar">@text</span>     = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">dup</span>
 
   <span class="ruby-ivar">@document</span>   = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@format</span>     = <span class="ruby-string">&#39;rdoc&#39;</span>
@@ -291,9 +289,48 @@ href="TopLevel.html">RDoc::TopLevel</a> <code>location</code>.</p>
 
           
           <div class="method-source-code" id="empty-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 128</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">empty?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 133</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">empty?</span>
   <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">empty?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-encode-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">encode!</span><span
+            class="method-args">(encoding)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>HACK dubious</p>
+          
+          
+
+          
+          <div class="method-source-code" id="encode-21-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 140</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">encode!</span> <span class="ruby-identifier">encoding</span>
+  <span class="ruby-comment"># TODO: Remove this condition after Ruby 2.2 EOL</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">RUBY_VERSION</span> <span class="ruby-operator">&lt;</span> <span class="ruby-string">&#39;2.3.0&#39;</span>
+    <span class="ruby-ivar">@text</span> = <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">encoding</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@text</span> = <span class="ruby-constant">String</span>.<span class="ruby-identifier">new</span> <span class="ruby-ivar">@text</span>, <span class="ruby-value">encoding:</span> <span class="ruby-identifier">encoding</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -338,8 +375,8 @@ lines of the same indentation level and prefix are consumed.</p>
 
           
           <div class="method-source-code" id="extract_call_seq-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 83</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">extract_call_seq</span> <span class="ruby-identifier">method</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 84</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_call_seq</span> <span class="ruby-identifier">method</span>
   <span class="ruby-comment"># we must handle situations like the above followed by an unindented first</span>
   <span class="ruby-comment"># comment.  The difficulty is to make sure not to match lines starting</span>
   <span class="ruby-comment"># with ARGF at the same indent, but that are after the first description</span>
@@ -352,7 +389,7 @@ lines of the same indentation level and prefix are consumed.</p>
     <span class="ruby-comment"># same indent, even if they have blank lines before</span>
     <span class="ruby-keyword">if</span> <span class="ruby-node">$1</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/(^\s*\n)+^(\s*\w+)/m</span> <span class="ruby-keyword">then</span>
       <span class="ruby-identifier">leading</span> = <span class="ruby-node">$2</span> <span class="ruby-comment"># &#39; *    ARGF&#39; in the example above</span>
-      <span class="ruby-identifier">re</span> = <span class="ruby-node">%r%
+      <span class="ruby-identifier">re</span> = <span class="ruby-regexp">%r%
         \A(
            (^\s*\n)+
            (^#{Regexp.escape leading}.*?\n)+
@@ -372,46 +409,17 @@ lines of the same indentation level and prefix are consumed.</p>
 
     <span class="ruby-identifier">method</span>.<span class="ruby-identifier">call_seq</span> = <span class="ruby-identifier">seq</span>.<span class="ruby-identifier">chomp</span>
 
-  <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/^\s*:?call-seq:(.*?)(^\s*$|\z)/m</span>, <span class="ruby-string">&#39;&#39;</span>) <span class="ruby-keyword">then</span>
-    <span class="ruby-identifier">seq</span> = <span class="ruby-node">$1</span>
-    <span class="ruby-identifier">seq</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/^\s*/</span>, <span class="ruby-string">&#39;&#39;</span>)
-    <span class="ruby-identifier">method</span>.<span class="ruby-identifier">call_seq</span> = <span class="ruby-identifier">seq</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">regexp</span> = <span class="ruby-regexp">/^\s*:?call-seq:(.*?)(^\s*$|\z)/m</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">regexp</span> <span class="ruby-operator">=~</span> <span class="ruby-ivar">@text</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-ivar">@text</span> = <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-identifier">regexp</span>, <span class="ruby-string">&#39;&#39;</span>)
+      <span class="ruby-identifier">seq</span> = <span class="ruby-node">$1</span>
+      <span class="ruby-identifier">seq</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/^\s*/</span>, <span class="ruby-string">&#39;&#39;</span>)
+      <span class="ruby-identifier">method</span>.<span class="ruby-identifier">call_seq</span> = <span class="ruby-identifier">seq</span>
+    <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">method</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-      <div id="method-i-force_encoding" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">force_encoding</span><span
-            class="method-args">(encoding)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>HACK dubious</p>
-          
-          
-
-          
-          <div class="method-source-code" id="force_encoding-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 135</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">encoding</span>
-  <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-identifier">encoding</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -442,8 +450,8 @@ lines of the same indentation level and prefix are consumed.</p>
 
           
           <div class="method-source-code" id="format-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 142</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">format=</span> <span class="ruby-identifier">format</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 153</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">format=</span> <span class="ruby-identifier">format</span>
   <span class="ruby-ivar">@format</span> = <span class="ruby-identifier">format</span>
   <span class="ruby-ivar">@document</span> = <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -478,8 +486,8 @@ for details</p>
 
           
           <div class="method-source-code" id="normalize-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 156</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">normalize</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 167</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">normalize</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@text</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@normalized</span> <span class="ruby-comment"># TODO eliminate duplicate normalization</span>
 
@@ -525,8 +533,8 @@ document is cached until the text is changed.</p>
 
           
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 178</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 189</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@document</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@document</span>
 
   <span class="ruby-ivar">@document</span> = <span class="ruby-keyword">super</span> <span class="ruby-ivar">@text</span>, <span class="ruby-ivar">@format</span>
@@ -570,14 +578,14 @@ the opening of the comment.</p>
 
           
           <div class="method-source-code" id="remove_private-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 199</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">remove_private</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 210</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_private</span>
   <span class="ruby-comment"># Workaround for gsub encoding for Ruby 1.9.2 and earlier</span>
   <span class="ruby-identifier">empty</span> = <span class="ruby-string">&#39;&#39;</span>
-  <span class="ruby-identifier">empty</span>.<span class="ruby-identifier">force_encoding</span> <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">encoding</span>
+  <span class="ruby-identifier">empty</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Encoding</span>.<span class="ruby-identifier">change_encoding</span> <span class="ruby-identifier">empty</span>, <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">encoding</span>
 
-  <span class="ruby-ivar">@text</span> = <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-node">%r%^\s*([#*]?)--.*?^\s*(\1)\+\+\n?%m</span>, <span class="ruby-identifier">empty</span>)
-  <span class="ruby-ivar">@text</span> = <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-node">%r%^\s*[#*]?--.*%m</span>, <span class="ruby-string">&#39;&#39;</span>)
+  <span class="ruby-ivar">@text</span> = <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">%r%^\s*([#*]?)--.*?^\s*(\1)\+\+\n?%m</span>, <span class="ruby-identifier">empty</span>)
+  <span class="ruby-ivar">@text</span> = <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">%r%^\s*[#*]?--.*%m</span>, <span class="ruby-string">&#39;&#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -611,13 +619,13 @@ parsed document.</p>
 
           
           <div class="method-source-code" id="text-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 213</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">text=</span> <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 224</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">text=</span> <span class="ruby-identifier">text</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-string">&#39;replacing document-only comment is not allowed&#39;</span> <span class="ruby-keyword">if</span>
     <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">and</span> <span class="ruby-ivar">@document</span>
 
   <span class="ruby-ivar">@document</span> = <span class="ruby-keyword">nil</span>
-  <span class="ruby-ivar">@text</span> = <span class="ruby-identifier">text</span>
+  <span class="ruby-ivar">@text</span> = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">dup</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -648,8 +656,8 @@ parsed document.</p>
 
           
           <div class="method-source-code" id="tomdoc-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 224</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">tomdoc?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 235</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tomdoc?</span>
   <span class="ruby-ivar">@format</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;tomdoc&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -669,8 +677,8 @@ parsed document.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Constant - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Constant - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -109,8 +109,6 @@
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -212,15 +210,15 @@
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 31</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">value</span>, <span class="ruby-identifier">comment</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 32</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">value</span>, <span class="ruby-identifier">comment</span>)
   <span class="ruby-keyword">super</span>()
 
   <span class="ruby-ivar">@name</span>  = <span class="ruby-identifier">name</span>
   <span class="ruby-ivar">@value</span> = <span class="ruby-identifier">value</span>
 
   <span class="ruby-ivar">@is_alias_for</span> = <span class="ruby-keyword">nil</span>
-  <span class="ruby-ivar">@visibility</span>   = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@visibility</span>   = <span class="ruby-value">:public</span>
 
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">comment</span> = <span class="ruby-identifier">comment</span>
 <span class="ruby-keyword">end</span></pre>
@@ -261,8 +259,8 @@
 
           
           <div class="method-source-code" id="3C-3D-3E-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 46</span>
-<span class="ruby-keyword">def</span> <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">other</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 47</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">&lt;=&gt;</span> <span class="ruby-identifier">other</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">other</span>
 
   [<span class="ruby-identifier">parent_name</span>, <span class="ruby-identifier">name</span>] <span class="ruby-operator">&lt;=&gt;</span> [<span class="ruby-identifier">other</span>.<span class="ruby-identifier">parent_name</span>, <span class="ruby-identifier">other</span>.<span class="ruby-identifier">name</span>]
@@ -298,8 +296,8 @@ href="Constant.html#attribute-i-name">name</a> is the same</p>
 
           
           <div class="method-source-code" id="3D-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 55</span>
-<span class="ruby-keyword">def</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 56</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">==</span> <span class="ruby-identifier">other</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">class</span> <span class="ruby-keyword">and</span>
     <span class="ruby-ivar">@parent</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">parent</span> <span class="ruby-keyword">and</span>
     <span class="ruby-ivar">@name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">name</span>
@@ -339,8 +337,8 @@ documented class or module.</p>
 
           
           <div class="method-source-code" id="documented-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 65</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">documented?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 66</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">documented?</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">super</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@is_alias_for</span>
   <span class="ruby-keyword">case</span> <span class="ruby-ivar">@is_alias_for</span>
@@ -380,8 +378,8 @@ documented class or module.</p>
 
           
           <div class="method-source-code" id="full_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 80</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">full_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 81</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">full_name</span>
   <span class="ruby-ivar">@full_name</span> <span class="ruby-operator">||=</span> <span class="ruby-node">&quot;#{parent_name}::#{@name}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -413,8 +411,8 @@ documented class or module.</p>
 
           
           <div class="method-source-code" id="is_alias_for-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 87</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">is_alias_for</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 88</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">is_alias_for</span>
   <span class="ruby-keyword">case</span> <span class="ruby-ivar">@is_alias_for</span>
   <span class="ruby-keyword">when</span> <span class="ruby-constant">String</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">found</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">find_class_or_module</span> <span class="ruby-ivar">@is_alias_for</span>
@@ -454,8 +452,8 @@ href="Constant.html#method-i-marshal_load">marshal_load</a></p>
 
           
           <div class="method-source-code" id="marshal_dump-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 108</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">marshal_dump</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 109</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">marshal_dump</span>
   <span class="ruby-identifier">alias_name</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">found</span> = <span class="ruby-identifier">is_alias_for</span>
                <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">CodeObject</span> <span class="ruby-keyword">then</span> <span class="ruby-identifier">found</span>.<span class="ruby-identifier">full_name</span>
                <span class="ruby-keyword">else</span>                       <span class="ruby-identifier">found</span>
@@ -509,12 +507,12 @@ will return cached values:</p>
 
           
           <div class="method-source-code" id="marshal_load-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 134</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">marshal_load</span> <span class="ruby-identifier">array</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 135</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">marshal_load</span> <span class="ruby-identifier">array</span>
   <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">array</span>[<span class="ruby-value">1</span>], <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">array</span>[<span class="ruby-value">5</span>]
 
   <span class="ruby-ivar">@full_name</span>     = <span class="ruby-identifier">array</span>[<span class="ruby-value">2</span>]
-  <span class="ruby-ivar">@visibility</span>    = <span class="ruby-identifier">array</span>[<span class="ruby-value">3</span>]
+  <span class="ruby-ivar">@visibility</span>    = <span class="ruby-identifier">array</span>[<span class="ruby-value">3</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:public</span>
   <span class="ruby-ivar">@is_alias_for</span>  = <span class="ruby-identifier">array</span>[<span class="ruby-value">4</span>]
   <span class="ruby-comment">#                      5 handled above</span>
   <span class="ruby-comment">#                      6 handled below</span>
@@ -553,8 +551,8 @@ will return cached values:</p>
 
           
           <div class="method-source-code" id="path-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 152</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">path</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 153</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">path</span>
   <span class="ruby-node">&quot;#{@parent.path}##{@name}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -591,8 +589,8 @@ will return cached values:</p>
 
           
           <div class="method-source-code" id="store-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 170</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">store=</span> <span class="ruby-identifier">store</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 171</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">store=</span> <span class="ruby-identifier">store</span>
   <span class="ruby-keyword">super</span>
 
   <span class="ruby-ivar">@file</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">add_file</span> <span class="ruby-ivar">@file</span>.<span class="ruby-identifier">full_name</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file</span>
@@ -614,8 +612,8 @@ will return cached values:</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

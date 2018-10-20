@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Task - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Task - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -138,7 +138,7 @@ development set of documentation including private methods:</p>
 
 <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;rdoc/task&#39;</span>
 
-<span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Task</span>.<span class="ruby-identifier">new</span> :<span class="ruby-identifier">rdoc_dev</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">rdoc</span><span class="ruby-operator">|</span>
+<span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Task</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:rdoc_dev</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">rdoc</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">main</span> = <span class="ruby-string">&quot;README.doc&quot;</span>
   <span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">rdoc_files</span>.<span class="ruby-identifier">include</span>(<span class="ruby-string">&quot;README.rdoc&quot;</span>, <span class="ruby-string">&quot;lib/   *.rb&quot;</span>)
   <span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">options</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;--all&quot;</span>
@@ -157,8 +157,8 @@ liking.</p>
 
 <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;rdoc/task&#39;</span>
 
-<span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Task</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">rdoc</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;rdoc&quot;</span>, :<span class="ruby-identifier">clobber_rdoc</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;rdoc:clean&quot;</span>,
-               :<span class="ruby-identifier">rerdoc</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;rdoc:force&quot;</span>)
+<span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Task</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:rdoc</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;rdoc&quot;</span>, <span class="ruby-value">:clobber_rdoc</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;rdoc:clean&quot;</span>,
+               <span class="ruby-value">:rerdoc</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;rdoc:force&quot;</span>)
 </pre>
 
 <p>This will create the tasks <code>:rdoc</code>, <code>:rdoc:clean</code> and
@@ -166,8 +166,6 @@ liking.</p>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -347,8 +345,8 @@ rdoc&#39;s default)</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 154</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">name</span> = <span class="ruby-value">:rdoc</span> <span class="ruby-comment"># :yield: self</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 155</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">name</span> = <span class="ruby-value">:rdoc</span> <span class="ruby-comment"># :yield: self</span>
   <span class="ruby-identifier">defaults</span>
 
   <span class="ruby-identifier">check_names</span> <span class="ruby-identifier">name</span>
@@ -381,7 +379,7 @@ rdoc&#39;s default)</p>
         
         <div class="method-heading">
           <span class="method-name">before_running_rdoc</span><span
-            class="method-args">(&block)</span>
+            class="method-args">(&amp;block)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -398,8 +396,8 @@ href="Task.html">RDoc::Task</a> attributes inside the block.</p>
 
           
           <div class="method-source-code" id="before_running_rdoc-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 272</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">before_running_rdoc</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 273</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">before_running_rdoc</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-ivar">@before_running_rdoc</span> = <span class="ruby-identifier">block</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -433,8 +431,8 @@ raised.</p>
 
           
           <div class="method-source-code" id="check_names-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 170</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">check_names</span> <span class="ruby-identifier">names</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 171</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">check_names</span> <span class="ruby-identifier">names</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">Hash</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">names</span>
 
   <span class="ruby-identifier">invalid_options</span> =
@@ -474,8 +472,8 @@ renamed equivalent</p>
 
           
           <div class="method-source-code" id="clobber_task_description-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 184</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">clobber_task_description</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 185</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">clobber_task_description</span>
   <span class="ruby-string">&quot;Remove RDoc HTML files&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -507,8 +505,8 @@ renamed equivalent</p>
 
           
           <div class="method-source-code" id="defaults-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 191</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">defaults</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 192</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">defaults</span>
   <span class="ruby-ivar">@name</span> = <span class="ruby-value">:rdoc</span>
   <span class="ruby-ivar">@rdoc_files</span> = <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">FileList</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@rdoc_dir</span> = <span class="ruby-string">&#39;html&#39;</span>
@@ -547,20 +545,20 @@ renamed equivalent</p>
 
           
           <div class="method-source-code" id="define-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 220</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">define</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 221</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">define</span>
   <span class="ruby-identifier">desc</span> <span class="ruby-identifier">rdoc_task_description</span>
   <span class="ruby-identifier">task</span> <span class="ruby-identifier">rdoc_task_name</span>
 
   <span class="ruby-identifier">desc</span> <span class="ruby-identifier">rerdoc_task_description</span>
-  <span class="ruby-identifier">task</span> <span class="ruby-identifier">rerdoc_task_name</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-identifier">clobber_task_name</span>, <span class="ruby-identifier">rdoc_task_name</span>]
+  <span class="ruby-identifier">task</span> <span class="ruby-identifier">rerdoc_task_name</span> <span class="ruby-operator">=&gt;</span> [<span class="ruby-identifier">clobber_task_name</span>, <span class="ruby-identifier">rdoc_task_name</span>]
 
   <span class="ruby-identifier">desc</span> <span class="ruby-identifier">clobber_task_description</span>
   <span class="ruby-identifier">task</span> <span class="ruby-identifier">clobber_task_name</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">rm_r</span> <span class="ruby-ivar">@rdoc_dir</span> <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">task</span> <span class="ruby-value">:clobber</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-identifier">clobber_task_name</span>]
+  <span class="ruby-identifier">task</span> <span class="ruby-value">:clobber</span> <span class="ruby-operator">=&gt;</span> [<span class="ruby-identifier">clobber_task_name</span>]
 
   <span class="ruby-identifier">directory</span> <span class="ruby-ivar">@rdoc_dir</span>
 
@@ -569,8 +567,8 @@ renamed equivalent</p>
     <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span>.<span class="ruby-identifier">rakefile</span>
   ].<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">compact</span>
 
-  <span class="ruby-identifier">task</span> <span class="ruby-identifier">rdoc_task_name</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-identifier">rdoc_target</span>]
-  <span class="ruby-identifier">file</span> <span class="ruby-identifier">rdoc_target</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">rdoc_target_deps</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">task</span> <span class="ruby-identifier">rdoc_task_name</span> <span class="ruby-operator">=&gt;</span> [<span class="ruby-identifier">rdoc_target</span>]
+  <span class="ruby-identifier">file</span> <span class="ruby-identifier">rdoc_target</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">rdoc_target_deps</span> <span class="ruby-keyword">do</span>
     <span class="ruby-ivar">@before_running_rdoc</span>.<span class="ruby-identifier">call</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@before_running_rdoc</span>
     <span class="ruby-identifier">args</span> = <span class="ruby-identifier">option_list</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@rdoc_files</span>
 
@@ -609,8 +607,8 @@ renamed equivalent</p>
 
           
           <div class="method-source-code" id="option_list-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 256</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">option_list</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 257</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">option_list</span>
   <span class="ruby-identifier">result</span> = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">dup</span>
   <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;-o&quot;</span>       <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-ivar">@rdoc_dir</span>
   <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;--main&quot;</span>   <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">main</span>      <span class="ruby-keyword">if</span> <span class="ruby-identifier">main</span>
@@ -650,8 +648,8 @@ equivalent</p>
 
           
           <div class="method-source-code" id="rdoc_task_description-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 279</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">rdoc_task_description</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 280</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rdoc_task_description</span>
   <span class="ruby-string">&#39;Build RDoc HTML files&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -684,8 +682,8 @@ description</p>
 
           
           <div class="method-source-code" id="rerdoc_task_description-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 286</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">rerdoc_task_description</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 287</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rerdoc_task_description</span>
   <span class="ruby-string">&quot;Rebuild RDoc HTML files&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -705,8 +703,8 @@ description</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

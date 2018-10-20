@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::ToHtmlSnippet - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Markup::ToHtmlSnippet - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -128,8 +128,6 @@ markup only.</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -233,8 +231,8 @@ encountered.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 36</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">options</span>, <span class="ruby-identifier">characters</span> = <span class="ruby-value">100</span>, <span class="ruby-identifier">paragraphs</span> = <span class="ruby-value">3</span>, <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 37</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">options</span>, <span class="ruby-identifier">characters</span> = <span class="ruby-value">100</span>, <span class="ruby-identifier">paragraphs</span> = <span class="ruby-value">3</span>, <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">super</span> <span class="ruby-identifier">options</span>, <span class="ruby-identifier">markup</span>
 
   <span class="ruby-ivar">@character_limit</span> = <span class="ruby-identifier">characters</span>
@@ -283,8 +281,8 @@ encountered.</p>
 
           
           <div class="method-source-code" id="accept_heading-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 52</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_heading</span> <span class="ruby-identifier">heading</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 53</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_heading</span> <span class="ruby-identifier">heading</span>
   <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;&lt;p&gt;#{to_html heading.text}\n&quot;</span>
 
   <span class="ruby-identifier">add_paragraph</span>
@@ -318,8 +316,8 @@ encountered.</p>
 
           
           <div class="method-source-code" id="accept_list_item_end-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 81</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_list_item_end</span> <span class="ruby-identifier">list_item</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 82</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_list_item_end</span> <span class="ruby-identifier">list_item</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -350,8 +348,8 @@ encountered.</p>
 
           
           <div class="method-source-code" id="accept_list_item_start-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 87</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_list_item_start</span> <span class="ruby-identifier">list_item</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 88</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_list_item_start</span> <span class="ruby-identifier">list_item</span>
   <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">list_item_start</span>(<span class="ruby-identifier">list_item</span>, <span class="ruby-ivar">@list</span>.<span class="ruby-identifier">last</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -383,8 +381,8 @@ encountered.</p>
 
           
           <div class="method-source-code" id="accept_list_start-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 94</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_list_start</span> <span class="ruby-identifier">list</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 95</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_list_start</span> <span class="ruby-identifier">list</span>
   <span class="ruby-ivar">@list</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">list</span>.<span class="ruby-identifier">type</span>
   <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">html_list_name</span>(<span class="ruby-identifier">list</span>.<span class="ruby-identifier">type</span>, <span class="ruby-keyword">true</span>)
   <span class="ruby-ivar">@in_list_entry</span>.<span class="ruby-identifier">push</span> <span class="ruby-string">&#39;&#39;</span>
@@ -418,8 +416,8 @@ encountered.</p>
 
           
           <div class="method-source-code" id="accept_paragraph-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 68</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_paragraph</span> <span class="ruby-identifier">paragraph</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 69</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_paragraph</span> <span class="ruby-identifier">paragraph</span>
   <span class="ruby-identifier">para</span> = <span class="ruby-ivar">@in_list_entry</span>.<span class="ruby-identifier">last</span> <span class="ruby-operator">||</span> <span class="ruby-string">&quot;&lt;p&gt;&quot;</span>
 
   <span class="ruby-identifier">text</span> = <span class="ruby-identifier">paragraph</span>.<span class="ruby-identifier">text</span> <span class="ruby-ivar">@hard_break</span>
@@ -462,8 +460,8 @@ encountered.</p>
 
           
           <div class="method-source-code" id="accept_verbatim-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 103</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_verbatim</span> <span class="ruby-identifier">verbatim</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 104</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_verbatim</span> <span class="ruby-identifier">verbatim</span>
   <span class="ruby-identifier">throw</span> <span class="ruby-value">:done</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@characters</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-ivar">@character_limit</span>
   <span class="ruby-identifier">input</span> = <span class="ruby-identifier">verbatim</span>.<span class="ruby-identifier">text</span>.<span class="ruby-identifier">rstrip</span>
 
@@ -505,8 +503,8 @@ paragraphs have been encountered</p>
 
           
           <div class="method-source-code" id="add_paragraph-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 194</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_paragraph</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 195</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_paragraph</span>
   <span class="ruby-ivar">@paragraphs</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
 
   <span class="ruby-identifier">throw</span> <span class="ruby-value">:done</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@paragraphs</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-ivar">@paragraph_limit</span>
@@ -545,8 +543,8 @@ paragraphs have been encountered</p>
 
           
           <div class="method-source-code" id="convert-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 203</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">convert</span> <span class="ruby-identifier">content</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 204</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert</span> <span class="ruby-identifier">content</span>
   <span class="ruby-identifier">catch</span> <span class="ruby-value">:done</span> <span class="ruby-keyword">do</span>
     <span class="ruby-keyword">return</span> <span class="ruby-keyword">super</span>
   <span class="ruby-keyword">end</span>
@@ -582,8 +580,8 @@ paragraphs have been encountered</p>
 
           
           <div class="method-source-code" id="convert_flow-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 214</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">convert_flow</span> <span class="ruby-identifier">flow</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 215</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert_flow</span> <span class="ruby-identifier">flow</span>
   <span class="ruby-identifier">throw</span> <span class="ruby-value">:done</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@characters</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-ivar">@character_limit</span>
 
   <span class="ruby-identifier">res</span> = []
@@ -644,8 +642,8 @@ to determine the link type.</p>
 
           
           <div class="method-source-code" id="gen_url-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 167</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">gen_url</span> <span class="ruby-identifier">url</span>, <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 168</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">gen_url</span> <span class="ruby-identifier">url</span>, <span class="ruby-identifier">text</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">url</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^rdoc-label:([^:]*)(?::(.*))?/</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">type</span> = <span class="ruby-string">&quot;link&quot;</span>
   <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">url</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/([A-Za-z]+):(.*)/</span> <span class="ruby-keyword">then</span>
@@ -658,7 +656,7 @@ to determine the link type.</p>
      <span class="ruby-identifier">url</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\.(gif|png|jpg|jpeg|bmp)$/</span> <span class="ruby-keyword">then</span>
     <span class="ruby-string">&#39;&#39;</span>
   <span class="ruby-keyword">else</span>
-    <span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-node">%r%^#{type}:/*%</span>, <span class="ruby-string">&#39;&#39;</span>)
+    <span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">%r%^#{type}:/*%</span>, <span class="ruby-string">&#39;&#39;</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -690,9 +688,9 @@ to determine the link type.</p>
 
           
           <div class="method-source-code" id="handle_special_CROSSREF-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 127</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_special_CROSSREF</span> <span class="ruby-identifier">special</span>
-  <span class="ruby-identifier">special</span>.<span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\A\/</span>, <span class="ruby-string">&#39;&#39;</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 128</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_special_CROSSREF</span> <span class="ruby-identifier">special</span>
+  <span class="ruby-identifier">special</span>.<span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\A\\/</span>, <span class="ruby-string">&#39;&#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -723,8 +721,8 @@ to determine the link type.</p>
 
           
           <div class="method-source-code" id="handle_special_HARD_BREAK-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 134</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_special_HARD_BREAK</span> <span class="ruby-identifier">special</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 135</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_special_HARD_BREAK</span> <span class="ruby-identifier">special</span>
   <span class="ruby-ivar">@characters</span> <span class="ruby-operator">-=</span> <span class="ruby-value">4</span>
   <span class="ruby-string">&#39;&lt;br&gt;&#39;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -757,8 +755,8 @@ to determine the link type.</p>
 
           
           <div class="method-source-code" id="html_list_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 187</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">html_list_name</span> <span class="ruby-identifier">list_type</span>, <span class="ruby-identifier">open_tag</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 188</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">html_list_name</span> <span class="ruby-identifier">list_type</span>, <span class="ruby-identifier">open_tag</span>
   <span class="ruby-string">&#39;&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -790,8 +788,8 @@ to determine the link type.</p>
 
           
           <div class="method-source-code" id="list_item_start-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 142</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">list_item_start</span> <span class="ruby-identifier">list_item</span>, <span class="ruby-identifier">list_type</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 143</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">list_item_start</span> <span class="ruby-identifier">list_item</span>, <span class="ruby-identifier">list_type</span>
   <span class="ruby-identifier">throw</span> <span class="ruby-value">:done</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@characters</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-ivar">@character_limit</span>
 
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">list_type</span>
@@ -846,8 +844,8 @@ href="Formatter.html">RDoc::Markup::Formatter</a>.</p>
 
           
           <div class="method-source-code" id="off_tags-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 260</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">off_tags</span> <span class="ruby-identifier">res</span>, <span class="ruby-identifier">item</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 261</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">off_tags</span> <span class="ruby-identifier">res</span>, <span class="ruby-identifier">item</span>
   <span class="ruby-ivar">@mask</span> <span class="ruby-operator">^=</span> <span class="ruby-identifier">item</span>.<span class="ruby-identifier">turn_off</span>
 
   <span class="ruby-keyword">super</span>
@@ -887,8 +885,8 @@ href="Formatter.html">RDoc::Markup::Formatter</a>.</p>
 
           
           <div class="method-source-code" id="on_tags-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 250</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">on_tags</span> <span class="ruby-identifier">res</span>, <span class="ruby-identifier">item</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 251</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_tags</span> <span class="ruby-identifier">res</span>, <span class="ruby-identifier">item</span>
   <span class="ruby-ivar">@mask</span> <span class="ruby-operator">^=</span> <span class="ruby-identifier">item</span>.<span class="ruby-identifier">turn_on</span>
 
   <span class="ruby-keyword">super</span>
@@ -927,8 +925,8 @@ href="Formatter.html">RDoc::Markup::Formatter</a>.</p>
 
           
           <div class="method-source-code" id="start_accepting-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 118</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">start_accepting</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 119</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">start_accepting</span>
   <span class="ruby-keyword">super</span>
 
   <span class="ruby-ivar">@characters</span> = <span class="ruby-value">0</span>
@@ -963,8 +961,8 @@ character_limit.</p>
 
           
           <div class="method-source-code" id="truncate-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 269</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">truncate</span> <span class="ruby-identifier">text</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_html_snippet.rb, line 270</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">truncate</span> <span class="ruby-identifier">text</span>
   <span class="ruby-identifier">length</span> = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">length</span>
   <span class="ruby-identifier">characters</span> = <span class="ruby-ivar">@characters</span>
   <span class="ruby-ivar">@characters</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">length</span>
@@ -973,7 +971,7 @@ character_limit.</p>
 
   <span class="ruby-identifier">remaining</span> = <span class="ruby-ivar">@character_limit</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">characters</span>
 
-  <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/\A(.{#{remaining},}?)(\s|$)/m</span> <span class="ruby-comment"># TODO word-break instead of \s?</span>
+  <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\A(.{#{remaining},}?)(\s|$)/m</span> <span class="ruby-comment"># TODO word-break instead of \s?</span>
 
   <span class="ruby-node">$1</span>
 <span class="ruby-keyword">end</span></pre>
@@ -994,8 +992,8 @@ character_limit.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

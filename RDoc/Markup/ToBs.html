@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::ToBs - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Markup::ToBs - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -104,8 +104,6 @@ action!  You will probably need a pager to use this output format.</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -147,8 +145,8 @@ action!</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_bs.rb, line 12</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_bs.rb, line 13</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">super</span>
 
   <span class="ruby-ivar">@in_b</span>  = <span class="ruby-keyword">false</span>
@@ -191,8 +189,8 @@ action!</p>
 
           
           <div class="method-source-code" id="accept_heading-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_bs.rb, line 32</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">accept_heading</span> <span class="ruby-identifier">heading</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_bs.rb, line 33</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_heading</span> <span class="ruby-identifier">heading</span>
   <span class="ruby-identifier">use_prefix</span> <span class="ruby-keyword">or</span> <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@indent</span>
   <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-ivar">@headings</span>[<span class="ruby-identifier">heading</span>.<span class="ruby-identifier">level</span>][<span class="ruby-value">0</span>]
   <span class="ruby-ivar">@in_b</span> = <span class="ruby-keyword">true</span>
@@ -230,8 +228,8 @@ action!</p>
 
           
           <div class="method-source-code" id="annotate-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_bs.rb, line 45</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">annotate</span> <span class="ruby-identifier">tag</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_bs.rb, line 46</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">annotate</span> <span class="ruby-identifier">tag</span>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">tag</span>
   <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;+b&#39;</span> <span class="ruby-keyword">then</span> <span class="ruby-ivar">@in_b</span> = <span class="ruby-keyword">true</span>
   <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;-b&#39;</span> <span class="ruby-keyword">then</span> <span class="ruby-ivar">@in_b</span> = <span class="ruby-keyword">false</span>
@@ -276,8 +274,8 @@ href="ToBs.html#method-i-convert_special">#convert_special</a></p>
 
           
           <div class="method-source-code" id="convert_special-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_bs.rb, line 58</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">convert_special</span> <span class="ruby-identifier">special</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_bs.rb, line 59</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert_special</span> <span class="ruby-identifier">special</span>
   <span class="ruby-identifier">convert_string</span> <span class="ruby-keyword">super</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -309,8 +307,8 @@ href="ToBs.html#method-i-convert_special">#convert_special</a></p>
 
           
           <div class="method-source-code" id="convert_string-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_bs.rb, line 65</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">convert_string</span> <span class="ruby-identifier">string</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_bs.rb, line 66</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert_string</span> <span class="ruby-identifier">string</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">string</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@in_b</span> <span class="ruby-keyword">or</span> <span class="ruby-ivar">@in_em</span>
   <span class="ruby-identifier">chars</span> = <span class="ruby-keyword">if</span> <span class="ruby-ivar">@in_b</span> <span class="ruby-keyword">then</span>
             <span class="ruby-identifier">string</span>.<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">char</span><span class="ruby-operator">|</span> <span class="ruby-node">&quot;#{char}\b#{char}&quot;</span> <span class="ruby-keyword">end</span>
@@ -351,8 +349,8 @@ href="ToBs.html#method-i-convert_string">convert_string</a></p>
 
           
           <div class="method-source-code" id="init_tags-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_bs.rb, line 23</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">init_tags</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/to_bs.rb, line 24</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">init_tags</span>
   <span class="ruby-identifier">add_tag</span> <span class="ruby-value">:BOLD</span>, <span class="ruby-string">&#39;+b&#39;</span>, <span class="ruby-string">&#39;-b&#39;</span>
   <span class="ruby-identifier">add_tag</span> <span class="ruby-value">:EM</span>,   <span class="ruby-string">&#39;+_&#39;</span>, <span class="ruby-string">&#39;-_&#39;</span>
   <span class="ruby-identifier">add_tag</span> <span class="ruby-value">:TT</span>,   <span class="ruby-string">&#39;&#39;</span>  , <span class="ruby-string">&#39;&#39;</span>   <span class="ruby-comment"># we need in_tt information maintained</span>
@@ -374,8 +372,8 @@ href="ToBs.html#method-i-convert_string">convert_string</a></p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Stats::Normal - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Stats::Normal - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -92,8 +92,6 @@ bar</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -129,8 +127,8 @@ bar</p>
 
           
           <div class="method-source-code" id="print_file-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/stats/normal.rb, line 17</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">print_file</span> <span class="ruby-identifier">files_so_far</span>, <span class="ruby-identifier">filename</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/stats/normal.rb, line 23</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">print_file</span> <span class="ruby-identifier">files_so_far</span>, <span class="ruby-identifier">filename</span>
   <span class="ruby-identifier">progress_bar</span> = <span class="ruby-identifier">sprintf</span>(<span class="ruby-string">&quot;%3d%% [%2d/%2d]  &quot;</span>,
                          <span class="ruby-value">100</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">files_so_far</span> <span class="ruby-operator">/</span> <span class="ruby-ivar">@num_files</span>,
                          <span class="ruby-identifier">files_so_far</span>,
@@ -138,7 +136,8 @@ bar</p>
 
   <span class="ruby-comment"># Print a progress bar, but make sure it fits on a single line. Filename</span>
   <span class="ruby-comment"># will be truncated if necessary.</span>
-  <span class="ruby-identifier">terminal_width</span> = <span class="ruby-constant">IO</span>.<span class="ruby-identifier">console_size</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_i</span>.<span class="ruby-identifier">nonzero?</span> <span class="ruby-operator">||</span> <span class="ruby-value">80</span>
+  <span class="ruby-identifier">size</span> = <span class="ruby-constant">IO</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:console_size</span>) <span class="ruby-operator">?</span> <span class="ruby-constant">IO</span>.<span class="ruby-identifier">console_size</span> <span class="ruby-operator">:</span> <span class="ruby-constant">IO</span>.<span class="ruby-identifier">console</span>.<span class="ruby-identifier">winsize</span>
+  <span class="ruby-identifier">terminal_width</span> = <span class="ruby-identifier">size</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_i</span>.<span class="ruby-identifier">nonzero?</span> <span class="ruby-operator">||</span> <span class="ruby-value">80</span>
   <span class="ruby-identifier">max_filename_size</span> = <span class="ruby-identifier">terminal_width</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">progress_bar</span>.<span class="ruby-identifier">size</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">filename</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">max_filename_size</span> <span class="ruby-keyword">then</span>
@@ -151,7 +150,7 @@ bar</p>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">tty?</span>
     <span class="ruby-comment"># Clean the line with whitespaces so that leftover output from the</span>
     <span class="ruby-comment"># previous line doesn&#39;t show up.</span>
-    <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">print</span>(<span class="ruby-string">&quot;\r&quot;</span> <span class="ruby-operator">&lt;&lt;</span> (<span class="ruby-string">&quot; &quot;</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@last_width</span>) <span class="ruby-operator">&lt;&lt;</span> (<span class="ruby-string">&quot;\b&quot;</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@last_width</span>) <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;\r&quot;</span>) <span class="ruby-keyword">if</span> <span class="ruby-ivar">@last_width</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@last_width</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">print</span>(<span class="ruby-string">&quot;\r&quot;</span> <span class="ruby-operator">+</span> (<span class="ruby-string">&quot; &quot;</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@last_width</span>) <span class="ruby-operator">+</span> (<span class="ruby-string">&quot;\b&quot;</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@last_width</span>) <span class="ruby-operator">+</span> <span class="ruby-string">&quot;\r&quot;</span>) <span class="ruby-keyword">if</span> <span class="ruby-ivar">@last_width</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@last_width</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
     <span class="ruby-ivar">@last_width</span> = <span class="ruby-identifier">line</span>.<span class="ruby-identifier">size</span>
     <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">print</span>(<span class="ruby-node">&quot;#{line}\r&quot;</span>)
   <span class="ruby-keyword">else</span>
@@ -176,8 +175,8 @@ bar</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

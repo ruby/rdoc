@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Context - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Context - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -107,6 +107,8 @@
     <li ><a href="#method-i-add_module">#add_module</a>
     
     <li ><a href="#method-i-add_module_alias">#add_module_alias</a>
+    
+    <li ><a href="#method-i-add_module_by_normal_module">#add_module_by_normal_module</a>
     
     <li ><a href="#method-i-add_require">#add_require</a>
     
@@ -212,6 +214,8 @@
     
     <li ><a href="#method-i-sections">#sections</a>
     
+    <li ><a href="#method-i-set_constant_visibility_for">#set_constant_visibility_for</a>
+    
     <li ><a href="#method-i-set_current_section">#set_current_section</a>
     
     <li ><a href="#method-i-set_visibility_for">#set_visibility_for</a>
@@ -241,8 +245,6 @@ modules, and files are all Contexts.</p>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -333,6 +335,19 @@ modules, and files are all Contexts.</p>
         <div class="method-description">
         
         <p>Hash of registered constants.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-current_line_visibility" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">current_line_visibility</span><span
+            class="attribute-access-type">[W]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Current visibility of this line</p>
         
         </div>
       </div>
@@ -544,8 +559,8 @@ aliases of the context.)</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 119</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 125</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>
   <span class="ruby-keyword">super</span>
 
   <span class="ruby-ivar">@in_files</span> = []
@@ -555,7 +570,7 @@ aliases of the context.)</p>
   <span class="ruby-ivar">@visibility</span> = <span class="ruby-value">:public</span>
 
   <span class="ruby-ivar">@current_section</span> = <span class="ruby-constant">Section</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">self</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-keyword">nil</span>
-  <span class="ruby-ivar">@sections</span> = { <span class="ruby-keyword">nil</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@current_section</span> }
+  <span class="ruby-ivar">@sections</span> = { <span class="ruby-keyword">nil</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-ivar">@current_section</span> }
   <span class="ruby-ivar">@temporary_section</span> = <span class="ruby-keyword">nil</span>
 
   <span class="ruby-ivar">@classes</span> = {}
@@ -601,8 +616,8 @@ href="Context.html#method-i-full_name">#full_name</a></p>
 
           
           <div class="method-source-code" id="3C-3D-3E-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 166</span>
-<span class="ruby-keyword">def</span> <span class="ruby-operator">&lt;=&gt;</span>(<span class="ruby-identifier">other</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 173</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">&lt;=&gt;</span>(<span class="ruby-identifier">other</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">CodeObject</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">other</span>
 
   <span class="ruby-identifier">full_name</span> <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">full_name</span>
@@ -640,8 +655,8 @@ href="Include.html">RDoc::Include</a> are supported.</p>
 
           
           <div class="method-source-code" id="add-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 178</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add</span> <span class="ruby-identifier">klass</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">comment</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 185</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add</span> <span class="ruby-identifier">klass</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">comment</span>
   <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Extend</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">klass</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">ext</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Extend</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">comment</span>
     <span class="ruby-identifier">add_extend</span> <span class="ruby-identifier">ext</span>
@@ -681,8 +696,8 @@ href="Include.html">RDoc::Include</a> are supported.</p>
 
           
           <div class="method-source-code" id="add_alias-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 193</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_alias</span> <span class="ruby-identifier">an_alias</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 200</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_alias</span> <span class="ruby-identifier">an_alias</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">an_alias</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@document_self</span>
 
   <span class="ruby-identifier">method_attr</span> = <span class="ruby-identifier">find_method</span>(<span class="ruby-identifier">an_alias</span>.<span class="ruby-identifier">old_name</span>, <span class="ruby-identifier">an_alias</span>.<span class="ruby-identifier">singleton</span>) <span class="ruby-operator">||</span>
@@ -735,8 +750,8 @@ not.</p>
 
           
           <div class="method-source-code" id="add_attribute-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 220</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_attribute</span> <span class="ruby-identifier">attribute</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 227</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_attribute</span> <span class="ruby-identifier">attribute</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">attribute</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@document_self</span>
 
   <span class="ruby-comment"># mainly to check for redefinition of an attribute as a method</span>
@@ -751,7 +766,7 @@ not.</p>
 
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">known</span> <span class="ruby-keyword">then</span>
       <span class="ruby-identifier">known</span>.<span class="ruby-identifier">comment</span> = <span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">comment</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">known</span>.<span class="ruby-identifier">comment</span>.<span class="ruby-identifier">empty?</span>
-    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">registered</span> = <span class="ruby-ivar">@methods_hash</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">pretty_name</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;=&#39;</span>] <span class="ruby-keyword">and</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">registered</span> = <span class="ruby-ivar">@methods_hash</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">pretty_name</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;=&#39;</span>] <span class="ruby-keyword">and</span>
           <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Attr</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">registered</span> <span class="ruby-keyword">then</span>
       <span class="ruby-identifier">registered</span>.<span class="ruby-identifier">rw</span> = <span class="ruby-string">&#39;RW&#39;</span>
     <span class="ruby-keyword">else</span>
@@ -761,7 +776,7 @@ not.</p>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">rw</span>.<span class="ruby-identifier">index</span> <span class="ruby-string">&#39;W&#39;</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-identifier">key</span> = <span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">pretty_name</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;=&#39;</span>
+    <span class="ruby-identifier">key</span> = <span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">pretty_name</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;=&#39;</span>
     <span class="ruby-identifier">known</span> = <span class="ruby-ivar">@methods_hash</span>[<span class="ruby-identifier">key</span>]
 
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">known</span> <span class="ruby-keyword">then</span>
@@ -797,7 +812,7 @@ not.</p>
         
         <div class="method-heading">
           <span class="method-name">add_class</span><span
-            class="method-args">(class_type, given_name, superclass = '::Object')</span>
+            class="method-args">(class_type, given_name, superclass = &#39;::Object&#39;)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -826,8 +841,8 @@ Container</code>.  <code>add_class</code> automatically upgrades
 
           
           <div class="method-source-code" id="add_class-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 283</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_class</span> <span class="ruby-identifier">class_type</span>, <span class="ruby-identifier">given_name</span>, <span class="ruby-identifier">superclass</span> = <span class="ruby-string">&#39;::Object&#39;</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 290</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_class</span> <span class="ruby-identifier">class_type</span>, <span class="ruby-identifier">given_name</span>, <span class="ruby-identifier">superclass</span> = <span class="ruby-string">&#39;::Object&#39;</span>
   <span class="ruby-comment"># superclass +nil+ is passed by the C parser in the following cases:</span>
   <span class="ruby-comment"># - registering Object in 1.8 (correct)</span>
   <span class="ruby-comment"># - registering BasicObject in 1.9 (correct)</span>
@@ -974,11 +989,12 @@ href="Context.html#method-i-current_section">current_section</a>. Returns
 
           
           <div class="method-source-code" id="add_class_or_module-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 399</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_class_or_module</span> <span class="ruby-identifier">mod</span>, <span class="ruby-identifier">self_hash</span>, <span class="ruby-identifier">all_hash</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 406</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_class_or_module</span> <span class="ruby-identifier">mod</span>, <span class="ruby-identifier">self_hash</span>, <span class="ruby-identifier">all_hash</span>
   <span class="ruby-identifier">mod</span>.<span class="ruby-identifier">section</span> = <span class="ruby-identifier">current_section</span> <span class="ruby-comment"># TODO declaring context? something is</span>
                                 <span class="ruby-comment"># wrong here...</span>
   <span class="ruby-identifier">mod</span>.<span class="ruby-identifier">parent</span> = <span class="ruby-keyword">self</span>
+  <span class="ruby-identifier">mod</span>.<span class="ruby-identifier">full_name</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">mod</span>.<span class="ruby-identifier">store</span> = <span class="ruby-ivar">@store</span>
 
   <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@done_documenting</span> <span class="ruby-keyword">then</span>
@@ -986,6 +1002,10 @@ href="Context.html#method-i-current_section">current_section</a>. Returns
     <span class="ruby-comment"># this must be done AFTER adding mod to its parent, so that the full</span>
     <span class="ruby-comment"># name is correct:</span>
     <span class="ruby-identifier">all_hash</span>[<span class="ruby-identifier">mod</span>.<span class="ruby-identifier">full_name</span>] = <span class="ruby-identifier">mod</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">unmatched_constant_alias</span>[<span class="ruby-identifier">mod</span>.<span class="ruby-identifier">full_name</span>] <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">to</span>, <span class="ruby-identifier">file</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">unmatched_constant_alias</span>[<span class="ruby-identifier">mod</span>.<span class="ruby-identifier">full_name</span>]
+      <span class="ruby-identifier">add_module_alias</span> <span class="ruby-identifier">mod</span>, <span class="ruby-identifier">mod</span>.<span class="ruby-identifier">name</span>, <span class="ruby-identifier">to</span>, <span class="ruby-identifier">file</span>
+    <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">mod</span>
@@ -1021,8 +1041,8 @@ empty/nil.</p>
 
           
           <div class="method-source-code" id="add_constant-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 419</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_constant</span> <span class="ruby-identifier">constant</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 431</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_constant</span> <span class="ruby-identifier">constant</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">constant</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@document_self</span>
 
   <span class="ruby-comment"># HACK: avoid duplicate &#39;PI&#39; &amp; &#39;E&#39; in math.c (1.8.7 source code)</span>
@@ -1073,8 +1093,8 @@ href="Extend.html">RDoc::Extend</a></p>
 
           
           <div class="method-source-code" id="add_extend-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 453</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_extend</span> <span class="ruby-identifier">ext</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 465</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_extend</span> <span class="ruby-identifier">ext</span>
   <span class="ruby-identifier">add_to</span> <span class="ruby-ivar">@extends</span>, <span class="ruby-identifier">ext</span>
 
   <span class="ruby-identifier">ext</span>
@@ -1109,8 +1129,8 @@ href="Include.html">RDoc::Include</a></p>
 
           
           <div class="method-source-code" id="add_include-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 444</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_include</span> <span class="ruby-identifier">include</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 456</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_include</span> <span class="ruby-identifier">include</span>
   <span class="ruby-identifier">add_to</span> <span class="ruby-ivar">@includes</span>, <span class="ruby-identifier">include</span>
 
   <span class="ruby-identifier">include</span>
@@ -1145,8 +1165,8 @@ attribute), updates the comment if it was empty.</p>
 
           
           <div class="method-source-code" id="add_method-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 463</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_method</span> <span class="ruby-identifier">method</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 475</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_method</span> <span class="ruby-identifier">method</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">method</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@document_self</span>
 
   <span class="ruby-comment"># HACK: avoid duplicate &#39;new&#39; in io.c &amp; struct.c (1.8.7 source code)</span>
@@ -1158,11 +1178,16 @@ attribute), updates the comment if it was empty.</p>
       <span class="ruby-identifier">known</span>.<span class="ruby-identifier">comment</span> = <span class="ruby-identifier">method</span>.<span class="ruby-identifier">comment</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">known</span>.<span class="ruby-identifier">comment</span>.<span class="ruby-identifier">empty?</span>
       <span class="ruby-identifier">previously</span> = <span class="ruby-node">&quot;, previously in #{known.file}&quot;</span> <span class="ruby-keyword">unless</span>
         <span class="ruby-identifier">method</span>.<span class="ruby-identifier">file</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">known</span>.<span class="ruby-identifier">file</span>
-      <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">options</span>.<span class="ruby-identifier">warn</span>            <span class="ruby-node">&quot;Duplicate method #{known.full_name} in #{method.file}#{previously}&quot;</span>
+      <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">options</span>.<span class="ruby-identifier">warn</span> \
+        <span class="ruby-node">&quot;Duplicate method #{known.full_name} in #{method.file}#{previously}&quot;</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">else</span>
     <span class="ruby-ivar">@methods_hash</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">method</span>
-    <span class="ruby-identifier">method</span>.<span class="ruby-identifier">visibility</span> = <span class="ruby-ivar">@visibility</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@current_line_visibility</span>
+      <span class="ruby-identifier">method</span>.<span class="ruby-identifier">visibility</span>, <span class="ruby-ivar">@current_line_visibility</span> = <span class="ruby-ivar">@current_line_visibility</span>, <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">method</span>.<span class="ruby-identifier">visibility</span> = <span class="ruby-ivar">@visibility</span>
+    <span class="ruby-keyword">end</span>
     <span class="ruby-identifier">add_to</span> <span class="ruby-ivar">@method_list</span>, <span class="ruby-identifier">method</span>
     <span class="ruby-identifier">resolve_aliases</span> <span class="ruby-identifier">method</span>
   <span class="ruby-keyword">end</span>
@@ -1200,8 +1225,8 @@ instead.  See also <a href="Context.html#method-i-add_class">add_class</a>.</p>
 
           
           <div class="method-source-code" id="add_module-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 492</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_module</span>(<span class="ruby-identifier">class_type</span>, <span class="ruby-identifier">name</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 508</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_module</span>(<span class="ruby-identifier">class_type</span>, <span class="ruby-identifier">name</span>)
   <span class="ruby-identifier">mod</span> = <span class="ruby-ivar">@classes</span>[<span class="ruby-identifier">name</span>] <span class="ruby-operator">||</span> <span class="ruby-ivar">@modules</span>[<span class="ruby-identifier">name</span>]
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">mod</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">mod</span>
 
@@ -1224,7 +1249,7 @@ instead.  See also <a href="Context.html#method-i-add_class">add_class</a>.</p>
         
         <div class="method-heading">
           <span class="method-name">add_module_alias</span><span
-            class="method-args">(from, name, file)</span>
+            class="method-args">(from, from_name, to, file)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -1240,38 +1265,77 @@ instead.  See also <a href="Context.html#method-i-add_class">add_class</a>.</p>
 
           
           <div class="method-source-code" id="add_module_alias-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 506</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_module_alias</span> <span class="ruby-identifier">from</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">file</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 529</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_module_alias</span> <span class="ruby-identifier">from</span>, <span class="ruby-identifier">from_name</span>, <span class="ruby-identifier">to</span>, <span class="ruby-identifier">file</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">from</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@done_documenting</span>
 
-  <span class="ruby-identifier">to_name</span> = <span class="ruby-identifier">child_name</span> <span class="ruby-identifier">name</span>
+  <span class="ruby-identifier">to_full_name</span> = <span class="ruby-identifier">child_name</span> <span class="ruby-identifier">to</span>.<span class="ruby-identifier">name</span>
 
   <span class="ruby-comment"># if we already know this name, don&#39;t register an alias:</span>
   <span class="ruby-comment"># see the metaprogramming in lib/active_support/basic_object.rb,</span>
   <span class="ruby-comment"># where we already know BasicObject is a class when we find</span>
   <span class="ruby-comment"># BasicObject = BlankSlate</span>
-  <span class="ruby-keyword">return</span> <span class="ruby-identifier">from</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">find_class_or_module</span> <span class="ruby-identifier">to_name</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">from</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">find_class_or_module</span> <span class="ruby-identifier">to_full_name</span>
 
-  <span class="ruby-identifier">to</span> = <span class="ruby-identifier">from</span>.<span class="ruby-identifier">dup</span>
-  <span class="ruby-identifier">to</span>.<span class="ruby-identifier">name</span> = <span class="ruby-identifier">name</span>
-  <span class="ruby-identifier">to</span>.<span class="ruby-identifier">full_name</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">from</span>
+    <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">unmatched_constant_alias</span>[<span class="ruby-identifier">child_name</span>(<span class="ruby-identifier">from_name</span>)] = [<span class="ruby-identifier">to</span>, <span class="ruby-identifier">file</span>]
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">to</span>
+  <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">to</span>.<span class="ruby-identifier">module?</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">modules_hash</span>[<span class="ruby-identifier">to_name</span>] = <span class="ruby-identifier">to</span>
-    <span class="ruby-ivar">@modules</span>[<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">to</span>
+  <span class="ruby-identifier">new_to</span> = <span class="ruby-identifier">from</span>.<span class="ruby-identifier">dup</span>
+  <span class="ruby-identifier">new_to</span>.<span class="ruby-identifier">name</span> = <span class="ruby-identifier">to</span>.<span class="ruby-identifier">name</span>
+  <span class="ruby-identifier">new_to</span>.<span class="ruby-identifier">full_name</span> = <span class="ruby-keyword">nil</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">new_to</span>.<span class="ruby-identifier">module?</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">modules_hash</span>[<span class="ruby-identifier">to_full_name</span>] = <span class="ruby-identifier">new_to</span>
+    <span class="ruby-ivar">@modules</span>[<span class="ruby-identifier">to</span>.<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">new_to</span>
   <span class="ruby-keyword">else</span>
-    <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">classes_hash</span>[<span class="ruby-identifier">to_name</span>] = <span class="ruby-identifier">to</span>
-    <span class="ruby-ivar">@classes</span>[<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">to</span>
+    <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">classes_hash</span>[<span class="ruby-identifier">to_full_name</span>] = <span class="ruby-identifier">new_to</span>
+    <span class="ruby-ivar">@classes</span>[<span class="ruby-identifier">to</span>.<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">new_to</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-comment"># Registers a constant for this alias.  The constant value and comment</span>
   <span class="ruby-comment"># will be updated later, when the Ruby parser adds the constant</span>
-  <span class="ruby-identifier">const</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Constant</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">name</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">to</span>.<span class="ruby-identifier">comment</span>
+  <span class="ruby-identifier">const</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Constant</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">to</span>.<span class="ruby-identifier">name</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">new_to</span>.<span class="ruby-identifier">comment</span>
   <span class="ruby-identifier">const</span>.<span class="ruby-identifier">record_location</span> <span class="ruby-identifier">file</span>
   <span class="ruby-identifier">const</span>.<span class="ruby-identifier">is_alias_for</span> = <span class="ruby-identifier">from</span>
   <span class="ruby-identifier">add_constant</span> <span class="ruby-identifier">const</span>
 
-  <span class="ruby-identifier">to</span>
+  <span class="ruby-identifier">new_to</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-add_module_by_normal_module" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_module_by_normal_module</span><span
+            class="method-args">(mod)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Adds a module by <code>RDoc::NormalModule</code> instance. See also <a
+href="Context.html#method-i-add_module">add_module</a>.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="add_module_by_normal_module-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 521</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_module_by_normal_module</span>(<span class="ruby-identifier">mod</span>)
+  <span class="ruby-identifier">add_class_or_module</span> <span class="ruby-identifier">mod</span>, <span class="ruby-ivar">@modules</span>, <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">modules_hash</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -1302,8 +1366,8 @@ instead.  See also <a href="Context.html#method-i-add_class">add_class</a>.</p>
 
           
           <div class="method-source-code" id="add_require-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 542</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_require</span>(<span class="ruby-identifier">require</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 570</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_require</span>(<span class="ruby-identifier">require</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">require</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@document_self</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">TopLevel</span> <span class="ruby-operator">===</span> <span class="ruby-keyword">self</span> <span class="ruby-keyword">then</span>
@@ -1348,8 +1412,8 @@ default section.</p>
 
           
           <div class="method-source-code" id="add_section-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 560</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_section</span> <span class="ruby-identifier">title</span>, <span class="ruby-identifier">comment</span> = <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 588</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_section</span> <span class="ruby-identifier">title</span>, <span class="ruby-identifier">comment</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">section</span> = <span class="ruby-ivar">@sections</span>[<span class="ruby-identifier">title</span>] <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">section</span>.<span class="ruby-identifier">add_comment</span> <span class="ruby-identifier">comment</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">comment</span>
   <span class="ruby-keyword">else</span>
@@ -1388,8 +1452,8 @@ default section.</p>
 
           
           <div class="method-source-code" id="add_to-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 574</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_to</span> <span class="ruby-identifier">array</span>, <span class="ruby-identifier">thing</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 602</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_to</span> <span class="ruby-identifier">array</span>, <span class="ruby-identifier">thing</span>
   <span class="ruby-identifier">array</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">thing</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@document_self</span>
 
   <span class="ruby-identifier">thing</span>.<span class="ruby-identifier">parent</span>  = <span class="ruby-keyword">self</span>
@@ -1431,8 +1495,8 @@ false</code>.</p>
 
           
           <div class="method-source-code" id="any_content-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 590</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">any_content</span>(<span class="ruby-identifier">includes</span> = <span class="ruby-keyword">true</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 618</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">any_content</span>(<span class="ruby-identifier">includes</span> = <span class="ruby-keyword">true</span>)
   <span class="ruby-ivar">@any_content</span> <span class="ruby-operator">||=</span> <span class="ruby-operator">!</span>(
     <span class="ruby-ivar">@comment</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">&amp;&amp;</span>
     <span class="ruby-ivar">@method_list</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">&amp;&amp;</span>
@@ -1473,8 +1537,8 @@ false</code>.</p>
 
           
           <div class="method-source-code" id="child_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 606</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">child_name</span> <span class="ruby-identifier">name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 634</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">child_name</span> <span class="ruby-identifier">name</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^:+/</span>
     <span class="ruby-node">$&#39;</span>  <span class="ruby-comment">#&#39;</span>
   <span class="ruby-keyword">elsif</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">TopLevel</span> <span class="ruby-operator">===</span> <span class="ruby-keyword">self</span> <span class="ruby-keyword">then</span>
@@ -1512,8 +1576,8 @@ false</code>.</p>
 
           
           <div class="method-source-code" id="class_attributes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 619</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">class_attributes</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 647</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">class_attributes</span>
   <span class="ruby-ivar">@class_attributes</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">attributes</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">singleton</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1545,8 +1609,8 @@ false</code>.</p>
 
           
           <div class="method-source-code" id="class_method_list-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 626</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">class_method_list</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 654</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">class_method_list</span>
   <span class="ruby-ivar">@class_method_list</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">method_list</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">singleton</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1578,8 +1642,8 @@ false</code>.</p>
 
           
           <div class="method-source-code" id="classes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 633</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">classes</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 661</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">classes</span>
   <span class="ruby-ivar">@classes</span>.<span class="ruby-identifier">values</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1611,8 +1675,8 @@ false</code>.</p>
 
           
           <div class="method-source-code" id="classes_and_modules-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 640</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">classes_and_modules</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 668</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">classes_and_modules</span>
   <span class="ruby-identifier">classes</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">modules</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1644,8 +1708,8 @@ false</code>.</p>
 
           
           <div class="method-source-code" id="classes_hash-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 647</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">classes_hash</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 675</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">classes_hash</span>
   <span class="ruby-ivar">@classes</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1679,8 +1743,8 @@ available it will be used.</p>
 
           
           <div class="method-source-code" id="current_section-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 655</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">current_section</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 683</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">current_section</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">section</span> = <span class="ruby-ivar">@temporary_section</span> <span class="ruby-keyword">then</span>
     <span class="ruby-ivar">@temporary_section</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">else</span>
@@ -1718,8 +1782,8 @@ available it will be used.</p>
 
           
           <div class="method-source-code" id="defined_in-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 668</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">defined_in?</span>(<span class="ruby-identifier">file</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 696</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">defined_in?</span>(<span class="ruby-identifier">file</span>)
   <span class="ruby-ivar">@in_files</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">file</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1751,8 +1815,8 @@ available it will be used.</p>
 
           
           <div class="method-source-code" id="each_attribute-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 693</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">each_attribute</span> <span class="ruby-comment"># :yields: attribute</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 721</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_attribute</span> <span class="ruby-comment"># :yields: attribute</span>
   <span class="ruby-ivar">@attributes</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-keyword">yield</span> <span class="ruby-identifier">a</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1784,8 +1848,8 @@ available it will be used.</p>
 
           
           <div class="method-source-code" id="each_classmodule-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 700</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">each_classmodule</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>) <span class="ruby-comment"># :yields: module</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 728</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_classmodule</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>) <span class="ruby-comment"># :yields: module</span>
   <span class="ruby-identifier">classes_and_modules</span>.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1817,8 +1881,8 @@ available it will be used.</p>
 
           
           <div class="method-source-code" id="each_constant-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 707</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">each_constant</span> <span class="ruby-comment"># :yields: constant</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 735</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_constant</span> <span class="ruby-comment"># :yields: constant</span>
   <span class="ruby-ivar">@constants</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-keyword">yield</span> <span class="ruby-identifier">c</span>}
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1850,8 +1914,8 @@ available it will be used.</p>
 
           
           <div class="method-source-code" id="each_extend-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 721</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">each_extend</span> <span class="ruby-comment"># :yields: extend</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 749</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_extend</span> <span class="ruby-comment"># :yields: extend</span>
   <span class="ruby-ivar">@extends</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-keyword">yield</span> <span class="ruby-identifier">e</span> <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1883,8 +1947,8 @@ available it will be used.</p>
 
           
           <div class="method-source-code" id="each_include-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 714</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">each_include</span> <span class="ruby-comment"># :yields: include</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 742</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_include</span> <span class="ruby-comment"># :yields: include</span>
   <span class="ruby-ivar">@includes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-keyword">yield</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1916,8 +1980,8 @@ available it will be used.</p>
 
           
           <div class="method-source-code" id="each_method-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 728</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">each_method</span> <span class="ruby-comment"># :yields: method</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 756</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_method</span> <span class="ruby-comment"># :yields: method</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">enum_for</span> <span class="ruby-identifier">__method__</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">block_given?</span>
 
   <span class="ruby-ivar">@method_list</span>.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-keyword">yield</span> <span class="ruby-identifier">m</span> }
@@ -1960,8 +2024,8 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="each_section-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 744</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">each_section</span> <span class="ruby-comment"># :yields: section, constants, attributes</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 772</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_section</span> <span class="ruby-comment"># :yields: section, constants, attributes</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">enum_for</span> <span class="ruby-identifier">__method__</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">block_given?</span>
 
   <span class="ruby-identifier">constants</span>  = <span class="ruby-ivar">@constants</span>.<span class="ruby-identifier">group_by</span>  <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">constant</span><span class="ruby-operator">|</span>  <span class="ruby-identifier">constant</span>.<span class="ruby-identifier">section</span> <span class="ruby-keyword">end</span>
@@ -1971,7 +2035,7 @@ optional <code>section</code> parameter.</p>
   <span class="ruby-identifier">attributes</span>.<span class="ruby-identifier">default</span> = []
 
   <span class="ruby-identifier">sort_sections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">section</span><span class="ruby-operator">|</span>
-    <span class="ruby-keyword">yield</span> <span class="ruby-identifier">section</span>, <span class="ruby-identifier">constants</span>[<span class="ruby-identifier">section</span>].<span class="ruby-identifier">sort</span>, <span class="ruby-identifier">attributes</span>[<span class="ruby-identifier">section</span>].<span class="ruby-identifier">sort</span>
+    <span class="ruby-keyword">yield</span> <span class="ruby-identifier">section</span>, <span class="ruby-identifier">constants</span>[<span class="ruby-identifier">section</span>].<span class="ruby-identifier">select</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:display?</span>).<span class="ruby-identifier">sort</span>, <span class="ruby-identifier">attributes</span>[<span class="ruby-identifier">section</span>].<span class="ruby-identifier">select</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:display?</span>).<span class="ruby-identifier">sort</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -2004,8 +2068,8 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="find_attribute-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 761</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_attribute</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">singleton</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 789</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_attribute</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">singleton</span>)
   <span class="ruby-identifier">name</span> = <span class="ruby-node">$1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^(.*)=$/</span>
   <span class="ruby-ivar">@attributes</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">singleton</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">singleton</span> }
 <span class="ruby-keyword">end</span></pre>
@@ -2038,10 +2102,10 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="find_attribute_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 769</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_attribute_named</span>(<span class="ruby-identifier">name</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 797</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_attribute_named</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">name</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-node">/\A#/</span> <span class="ruby-keyword">then</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/\A#/</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">find_attribute</span> <span class="ruby-identifier">name</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>], <span class="ruby-keyword">false</span>
   <span class="ruby-keyword">when</span> <span class="ruby-regexp">/\A::/</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">find_attribute</span> <span class="ruby-identifier">name</span>[<span class="ruby-value">2</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>], <span class="ruby-keyword">true</span>
@@ -2078,8 +2142,8 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="find_class_method_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 783</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_class_method_named</span>(<span class="ruby-identifier">name</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 811</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_class_method_named</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-ivar">@method_list</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">meth</span><span class="ruby-operator">|</span> <span class="ruby-identifier">meth</span>.<span class="ruby-identifier">singleton</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">meth</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -2111,8 +2175,8 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="find_constant_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 790</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_constant_named</span>(<span class="ruby-identifier">name</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 818</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_constant_named</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-ivar">@constants</span>.<span class="ruby-identifier">find</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">m</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">full_name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span>
   <span class="ruby-keyword">end</span>
@@ -2146,8 +2210,8 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="find_enclosing_module_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 799</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_enclosing_module_named</span>(<span class="ruby-identifier">name</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 827</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_enclosing_module_named</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-identifier">parent</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">find_module_named</span>(<span class="ruby-identifier">name</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -2180,8 +2244,8 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="find_external_alias-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 806</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_external_alias</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">singleton</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 834</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_external_alias</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">singleton</span>)
   <span class="ruby-ivar">@external_aliases</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">singleton</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">singleton</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -2213,10 +2277,10 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="find_external_alias_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 813</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_external_alias_named</span>(<span class="ruby-identifier">name</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 841</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_external_alias_named</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">name</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-node">/\A#/</span> <span class="ruby-keyword">then</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/\A#/</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">find_external_alias</span> <span class="ruby-identifier">name</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>], <span class="ruby-keyword">false</span>
   <span class="ruby-keyword">when</span> <span class="ruby-regexp">/\A::/</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">find_external_alias</span> <span class="ruby-identifier">name</span>[<span class="ruby-value">2</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>], <span class="ruby-keyword">true</span>
@@ -2253,8 +2317,8 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="find_file_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 827</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_file_named</span> <span class="ruby-identifier">name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 855</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_file_named</span> <span class="ruby-identifier">name</span>
   <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">find_file_named</span> <span class="ruby-identifier">name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -2286,8 +2350,8 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="find_instance_method_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 834</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_instance_method_named</span>(<span class="ruby-identifier">name</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 862</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_instance_method_named</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-ivar">@method_list</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">meth</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span><span class="ruby-identifier">meth</span>.<span class="ruby-identifier">singleton</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">meth</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -2320,8 +2384,8 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="find_local_symbol-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 842</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_local_symbol</span>(<span class="ruby-identifier">symbol</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 870</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_local_symbol</span>(<span class="ruby-identifier">symbol</span>)
   <span class="ruby-identifier">find_method_named</span>(<span class="ruby-identifier">symbol</span>) <span class="ruby-keyword">or</span>
   <span class="ruby-identifier">find_constant_named</span>(<span class="ruby-identifier">symbol</span>) <span class="ruby-keyword">or</span>
   <span class="ruby-identifier">find_attribute_named</span>(<span class="ruby-identifier">symbol</span>) <span class="ruby-keyword">or</span>
@@ -2359,9 +2423,15 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="find_method-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 854</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_method</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">singleton</span>)
-  <span class="ruby-ivar">@method_list</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">singleton</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">singleton</span> }
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 882</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_method</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">singleton</span>)
+  <span class="ruby-ivar">@method_list</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">singleton</span>
+      <span class="ruby-identifier">m</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">singleton</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">singleton</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">m</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">m</span>.<span class="ruby-identifier">singleton</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">singleton</span>
+    <span class="ruby-keyword">end</span>
+  }
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -2392,10 +2462,10 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="find_method_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 861</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_method_named</span>(<span class="ruby-identifier">name</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 895</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_method_named</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">name</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-node">/\A#/</span> <span class="ruby-keyword">then</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/\A#/</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">find_method</span> <span class="ruby-identifier">name</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>], <span class="ruby-keyword">false</span>
   <span class="ruby-keyword">when</span> <span class="ruby-regexp">/\A::/</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">find_method</span> <span class="ruby-identifier">name</span>[<span class="ruby-value">2</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>], <span class="ruby-keyword">true</span>
@@ -2432,8 +2502,8 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="find_module_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 875</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_module_named</span>(<span class="ruby-identifier">name</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 909</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_module_named</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-identifier">res</span> = <span class="ruby-ivar">@modules</span>[<span class="ruby-identifier">name</span>] <span class="ruby-operator">||</span> <span class="ruby-ivar">@classes</span>[<span class="ruby-identifier">name</span>]
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">res</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">res</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span>
@@ -2468,8 +2538,8 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="find_symbol-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 885</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_symbol</span>(<span class="ruby-identifier">symbol</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 919</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_symbol</span>(<span class="ruby-identifier">symbol</span>)
   <span class="ruby-identifier">find_symbol_module</span>(<span class="ruby-identifier">symbol</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">find_local_symbol</span>(<span class="ruby-identifier">symbol</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -2501,8 +2571,8 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="find_symbol_module-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 892</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_symbol_module</span>(<span class="ruby-identifier">symbol</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 926</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_symbol_module</span>(<span class="ruby-identifier">symbol</span>)
   <span class="ruby-identifier">result</span> = <span class="ruby-keyword">nil</span>
 
   <span class="ruby-comment"># look for a class or module &#39;symbol&#39;</span>
@@ -2560,8 +2630,8 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="full_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 925</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">full_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 959</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">full_name</span>
   <span class="ruby-string">&#39;(unknown)&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -2595,8 +2665,8 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="fully_documented-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 934</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">fully_documented?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 968</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">fully_documented?</span>
   <span class="ruby-identifier">documented?</span> <span class="ruby-keyword">and</span>
     <span class="ruby-identifier">attributes</span>.<span class="ruby-identifier">all?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">documented?</span> } <span class="ruby-keyword">and</span>
     <span class="ruby-identifier">method_list</span>.<span class="ruby-identifier">all?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">documented?</span> } <span class="ruby-keyword">and</span>
@@ -2631,8 +2701,8 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="http_url-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 944</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">http_url</span>(<span class="ruby-identifier">prefix</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 978</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">http_url</span>(<span class="ruby-identifier">prefix</span>)
   <span class="ruby-identifier">path</span> = <span class="ruby-identifier">name_for_path</span>
   <span class="ruby-identifier">path</span> = <span class="ruby-identifier">path</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/&lt;&lt;\s*(\w*)/</span>, <span class="ruby-string">&#39;from-\1&#39;</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">path</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/&lt;&lt;/</span>
   <span class="ruby-identifier">path</span> = [<span class="ruby-identifier">prefix</span>] <span class="ruby-operator">+</span> <span class="ruby-identifier">path</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;::&#39;</span>)
@@ -2668,8 +2738,8 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="initialize_methods_etc-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 141</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize_methods_etc</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 147</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize_methods_etc</span>
   <span class="ruby-ivar">@method_list</span> = []
   <span class="ruby-ivar">@attributes</span>  = []
   <span class="ruby-ivar">@aliases</span>     = []
@@ -2678,6 +2748,7 @@ optional <code>section</code> parameter.</p>
   <span class="ruby-ivar">@extends</span>     = []
   <span class="ruby-ivar">@constants</span>   = []
   <span class="ruby-ivar">@external_aliases</span> = []
+  <span class="ruby-ivar">@current_line_visibility</span> = <span class="ruby-keyword">nil</span>
 
   <span class="ruby-comment"># This Hash maps a method name to a list of unmatched aliases (aliases of</span>
   <span class="ruby-comment"># a method not yet encountered).</span>
@@ -2719,8 +2790,8 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="instance_attributes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 955</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">instance_attributes</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 989</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">instance_attributes</span>
   <span class="ruby-ivar">@instance_attributes</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">attributes</span>.<span class="ruby-identifier">reject</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">singleton</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -2752,8 +2823,8 @@ optional <code>section</code> parameter.</p>
 
           
           <div class="method-source-code" id="instance_method_list-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 964</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">instance_method_list</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 998</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">instance_method_list</span>
   <span class="ruby-ivar">@instance_method_list</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">method_list</span>.<span class="ruby-identifier">reject</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">singleton</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -2791,8 +2862,8 @@ href="Context/Section.html">RDoc::Context::Section</a> will be returned.</p>
 
           
           <div class="method-source-code" id="methods_by_type-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 975</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">methods_by_type</span> <span class="ruby-identifier">section</span> = <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1009</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">methods_by_type</span> <span class="ruby-identifier">section</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">methods</span> = {}
 
   <span class="ruby-constant">TYPES</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">type</span><span class="ruby-operator">|</span>
@@ -2841,8 +2912,8 @@ href="Context/Section.html">RDoc::Context::Section</a> will be returned.</p>
 
           
           <div class="method-source-code" id="methods_matching-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 998</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">methods_matching</span>(<span class="ruby-identifier">methods</span>, <span class="ruby-identifier">singleton</span> = <span class="ruby-keyword">false</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1032</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">methods_matching</span>(<span class="ruby-identifier">methods</span>, <span class="ruby-identifier">singleton</span> = <span class="ruby-keyword">false</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   (<span class="ruby-ivar">@method_list</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@attributes</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">yield</span> <span class="ruby-identifier">m</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">methods</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">m</span>.<span class="ruby-identifier">name</span>) <span class="ruby-keyword">and</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">singleton</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">singleton</span>
   <span class="ruby-keyword">end</span>
@@ -2880,8 +2951,8 @@ href="Context/Section.html">RDoc::Context::Section</a> will be returned.</p>
 
           
           <div class="method-source-code" id="modules-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1011</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">modules</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1045</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">modules</span>
   <span class="ruby-ivar">@modules</span>.<span class="ruby-identifier">values</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -2913,8 +2984,8 @@ href="Context/Section.html">RDoc::Context::Section</a> will be returned.</p>
 
           
           <div class="method-source-code" id="modules_hash-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1018</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">modules_hash</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1052</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">modules_hash</span>
   <span class="ruby-ivar">@modules</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -2946,8 +3017,8 @@ href="Context/Section.html">RDoc::Context::Section</a> will be returned.</p>
 
           
           <div class="method-source-code" id="name_for_path-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1026</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">name_for_path</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1060</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">name_for_path</span>
   <span class="ruby-identifier">full_name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -2979,8 +3050,8 @@ href="Context/Section.html">RDoc::Context::Section</a> will be returned.</p>
 
           
           <div class="method-source-code" id="ongoing_visibility-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1033</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">ongoing_visibility=</span>(<span class="ruby-identifier">visibility</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1067</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">ongoing_visibility=</span>(<span class="ruby-identifier">visibility</span>)
   <span class="ruby-ivar">@visibility</span> = <span class="ruby-identifier">visibility</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -3012,8 +3083,8 @@ href="Context/Section.html">RDoc::Context::Section</a> will be returned.</p>
 
           
           <div class="method-source-code" id="record_location-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1040</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">record_location</span>(<span class="ruby-identifier">top_level</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1074</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">record_location</span>(<span class="ruby-identifier">top_level</span>)
   <span class="ruby-ivar">@in_files</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">top_level</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@in_files</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">top_level</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -3061,8 +3132,8 @@ true</code></p>
 
           
           <div class="method-source-code" id="remove_from_documentation-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1054</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">remove_from_documentation?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1088</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_from_documentation?</span>
   <span class="ruby-ivar">@remove_from_documentation</span> <span class="ruby-operator">||=</span>
     <span class="ruby-ivar">@received_nodoc</span> <span class="ruby-operator">&amp;&amp;</span>
     <span class="ruby-operator">!</span><span class="ruby-identifier">any_content</span>(<span class="ruby-keyword">false</span>) <span class="ruby-operator">&amp;&amp;</span>
@@ -3099,11 +3170,12 @@ true</code></p>
 
           
           <div class="method-source-code" id="remove_invisible-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1067</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">remove_invisible</span> <span class="ruby-identifier">min_visibility</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1101</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_invisible</span> <span class="ruby-identifier">min_visibility</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> [<span class="ruby-value">:private</span>, <span class="ruby-value">:nodoc</span>].<span class="ruby-identifier">include?</span> <span class="ruby-identifier">min_visibility</span>
   <span class="ruby-identifier">remove_invisible_in</span> <span class="ruby-ivar">@method_list</span>, <span class="ruby-identifier">min_visibility</span>
   <span class="ruby-identifier">remove_invisible_in</span> <span class="ruby-ivar">@attributes</span>, <span class="ruby-identifier">min_visibility</span>
+  <span class="ruby-identifier">remove_invisible_in</span> <span class="ruby-ivar">@constants</span>, <span class="ruby-identifier">min_visibility</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -3135,8 +3207,8 @@ added.</p>
 
           
           <div class="method-source-code" id="resolve_aliases-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1092</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">resolve_aliases</span> <span class="ruby-identifier">added</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1127</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">resolve_aliases</span> <span class="ruby-identifier">added</span>
   <span class="ruby-comment"># resolve any pending unmatched aliases</span>
   <span class="ruby-identifier">key</span> = <span class="ruby-identifier">added</span>.<span class="ruby-identifier">pretty_name</span>
   <span class="ruby-identifier">unmatched_alias_list</span> = <span class="ruby-ivar">@unmatched_alias_lists</span>[<span class="ruby-identifier">key</span>]
@@ -3177,8 +3249,8 @@ referenced in this context for use in a table of contents.</p>
 
           
           <div class="method-source-code" id="section_contents-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1108</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">section_contents</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1143</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">section_contents</span>
   <span class="ruby-identifier">used_sections</span> = {}
 
   <span class="ruby-identifier">each_method</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">method</span><span class="ruby-operator">|</span>
@@ -3227,9 +3299,46 @@ referenced in this context for use in a table of contents.</p>
 
           
           <div class="method-source-code" id="sections-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1132</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">sections</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1167</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">sections</span>
   <span class="ruby-ivar">@sections</span>.<span class="ruby-identifier">values</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-set_constant_visibility_for" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">set_constant_visibility_for</span><span
+            class="method-args">(names, visibility)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Given an array <code>names</code> of constants, set the visibility of each
+constant to <code>visibility</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="set_constant_visibility_for-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1196</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_constant_visibility_for</span>(<span class="ruby-identifier">names</span>, <span class="ruby-identifier">visibility</span>)
+  <span class="ruby-identifier">names</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">constant</span> = <span class="ruby-ivar">@constants_hash</span>[<span class="ruby-identifier">name</span>] <span class="ruby-keyword">or</span> <span class="ruby-keyword">next</span>
+    <span class="ruby-identifier">constant</span>.<span class="ruby-identifier">visibility</span> = <span class="ruby-identifier">visibility</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -3261,8 +3370,8 @@ href="Context.html#method-i-add_section">add_section</a></p>
 
           
           <div class="method-source-code" id="set_current_section-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1143</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">set_current_section</span> <span class="ruby-identifier">title</span>, <span class="ruby-identifier">comment</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1178</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_current_section</span> <span class="ruby-identifier">title</span>, <span class="ruby-identifier">comment</span>
   <span class="ruby-ivar">@current_section</span> = <span class="ruby-identifier">add_section</span> <span class="ruby-identifier">title</span>, <span class="ruby-identifier">comment</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -3295,8 +3404,8 @@ each to <code>visibility</code></p>
 
           
           <div class="method-source-code" id="set_visibility_for-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1151</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">set_visibility_for</span>(<span class="ruby-identifier">methods</span>, <span class="ruby-identifier">visibility</span>, <span class="ruby-identifier">singleton</span> = <span class="ruby-keyword">false</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1186</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_visibility_for</span>(<span class="ruby-identifier">methods</span>, <span class="ruby-identifier">visibility</span>, <span class="ruby-identifier">singleton</span> = <span class="ruby-keyword">false</span>)
   <span class="ruby-identifier">methods_matching</span> <span class="ruby-identifier">methods</span>, <span class="ruby-identifier">singleton</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">m</span>.<span class="ruby-identifier">visibility</span> = <span class="ruby-identifier">visibility</span>
   <span class="ruby-keyword">end</span>
@@ -3331,8 +3440,8 @@ Internal, Deprecated)</p>
 
           
           <div class="method-source-code" id="sort_sections-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1161</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">sort_sections</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1207</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">sort_sections</span>
   <span class="ruby-identifier">titles</span> = <span class="ruby-ivar">@sections</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">title</span>, <span class="ruby-identifier">_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">title</span> }
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">titles</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span> <span class="ruby-keyword">and</span>
@@ -3376,8 +3485,8 @@ Internal, Deprecated)</p>
 
           
           <div class="method-source-code" id="top_level-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1187</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">top_level</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1233</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">top_level</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@top_level</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span> <span class="ruby-ivar">@top_level</span>
   <span class="ruby-ivar">@top_level</span> = <span class="ruby-keyword">self</span>
   <span class="ruby-ivar">@top_level</span> = <span class="ruby-ivar">@top_level</span>.<span class="ruby-identifier">parent</span> <span class="ruby-keyword">until</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">TopLevel</span> <span class="ruby-operator">===</span> <span class="ruby-ivar">@top_level</span>
@@ -3413,8 +3522,8 @@ Internal, Deprecated)</p>
 
           
           <div class="method-source-code" id="upgrade_to_class-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1197</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">upgrade_to_class</span> <span class="ruby-identifier">mod</span>, <span class="ruby-identifier">class_type</span>, <span class="ruby-identifier">enclosing</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1243</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">upgrade_to_class</span> <span class="ruby-identifier">mod</span>, <span class="ruby-identifier">class_type</span>, <span class="ruby-identifier">enclosing</span>
   <span class="ruby-identifier">enclosing</span>.<span class="ruby-identifier">modules_hash</span>.<span class="ruby-identifier">delete</span> <span class="ruby-identifier">mod</span>.<span class="ruby-identifier">name</span>
 
   <span class="ruby-identifier">klass</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">ClassModule</span>.<span class="ruby-identifier">from_module</span> <span class="ruby-identifier">class_type</span>, <span class="ruby-identifier">mod</span>
@@ -3443,8 +3552,8 @@ Internal, Deprecated)</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

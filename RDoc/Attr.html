@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Attr - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Attr - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -103,8 +103,6 @@
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -170,8 +168,8 @@ attribute.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 24</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">text</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">rw</span>, <span class="ruby-identifier">comment</span>, <span class="ruby-identifier">singleton</span> = <span class="ruby-keyword">false</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 25</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">text</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">rw</span>, <span class="ruby-identifier">comment</span>, <span class="ruby-identifier">singleton</span> = <span class="ruby-keyword">false</span>)
   <span class="ruby-keyword">super</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">name</span>
 
   <span class="ruby-ivar">@rw</span> = <span class="ruby-identifier">rw</span>
@@ -215,8 +213,8 @@ attribute.</p>
 
           
           <div class="method-source-code" id="3D-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 35</span>
-<span class="ruby-keyword">def</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 36</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">==</span> <span class="ruby-identifier">other</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">class</span> <span class="ruby-keyword">and</span>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">name</span> <span class="ruby-keyword">and</span>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">rw</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">rw</span> <span class="ruby-keyword">and</span>
@@ -251,8 +249,8 @@ attribute.</p>
 
           
           <div class="method-source-code" id="add_alias-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 45</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_alias</span>(<span class="ruby-identifier">an_alias</span>, <span class="ruby-identifier">context</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 46</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_alias</span>(<span class="ruby-identifier">an_alias</span>, <span class="ruby-identifier">context</span>)
   <span class="ruby-identifier">new_attr</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">text</span>, <span class="ruby-identifier">an_alias</span>.<span class="ruby-identifier">new_name</span>, <span class="ruby-keyword">self</span>.<span class="ruby-identifier">rw</span>,
                             <span class="ruby-keyword">self</span>.<span class="ruby-identifier">comment</span>, <span class="ruby-keyword">self</span>.<span class="ruby-identifier">singleton</span>)
 
@@ -292,8 +290,8 @@ attribute.</p>
 
           
           <div class="method-source-code" id="aref_prefix-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 60</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">aref_prefix</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 61</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">aref_prefix</span>
   <span class="ruby-string">&#39;attribute&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -325,8 +323,8 @@ attribute.</p>
 
           
           <div class="method-source-code" id="definition-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 77</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">definition</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 78</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">definition</span>
   <span class="ruby-keyword">case</span> <span class="ruby-ivar">@rw</span>
   <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;RW&#39;</span> <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;attr_accessor&#39;</span>
   <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;R&#39;</span>  <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;attr_reader&#39;</span>
@@ -363,8 +361,8 @@ href="Attr.html#method-i-marshal_load">marshal_load</a></p>
 
           
           <div class="method-source-code" id="marshal_dump-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 101</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">marshal_dump</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 102</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">marshal_dump</span>
   [ <span class="ruby-constant">MARSHAL_VERSION</span>,
     <span class="ruby-ivar">@name</span>,
     <span class="ruby-identifier">full_name</span>,
@@ -414,8 +412,8 @@ cached values:</p>
 
           
           <div class="method-source-code" id="marshal_load-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 123</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">marshal_load</span> <span class="ruby-identifier">array</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 124</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">marshal_load</span> <span class="ruby-identifier">array</span>
   <span class="ruby-identifier">initialize_visibility</span>
 
   <span class="ruby-ivar">@aliases</span>      = []
@@ -458,8 +456,8 @@ cached values:</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

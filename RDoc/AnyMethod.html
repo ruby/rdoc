@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::AnyMethod - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::AnyMethod - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -125,8 +125,6 @@ representing methods</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -241,8 +239,8 @@ representing methods</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 48</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 49</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">name</span>
   <span class="ruby-keyword">super</span>
 
   <span class="ruby-ivar">@c_function</span> = <span class="ruby-keyword">nil</span>
@@ -289,8 +287,8 @@ representing methods</p>
 
           
           <div class="method-source-code" id="add_alias-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 61</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_alias</span> <span class="ruby-identifier">an_alias</span>, <span class="ruby-identifier">context</span> = <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 62</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_alias</span> <span class="ruby-identifier">an_alias</span>, <span class="ruby-identifier">context</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">method</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">an_alias</span>.<span class="ruby-identifier">text</span>, <span class="ruby-identifier">an_alias</span>.<span class="ruby-identifier">new_name</span>
 
   <span class="ruby-identifier">method</span>.<span class="ruby-identifier">record_location</span> <span class="ruby-identifier">an_alias</span>.<span class="ruby-identifier">file</span>
@@ -332,8 +330,8 @@ representing methods</p>
 
           
           <div class="method-source-code" id="aref_prefix-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 78</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">aref_prefix</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 79</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">aref_prefix</span>
   <span class="ruby-string">&#39;method&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -369,8 +367,8 @@ if there is no call_seq.</p>
 
           
           <div class="method-source-code" id="arglists-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 87</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">arglists</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 88</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">arglists</span>
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@call_seq</span> <span class="ruby-keyword">then</span>
     <span class="ruby-ivar">@call_seq</span>
   <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@params</span> <span class="ruby-keyword">then</span>
@@ -409,8 +407,8 @@ if there is no call_seq.</p>
 
           
           <div class="method-source-code" id="call_seq-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 101</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">call_seq=</span> <span class="ruby-identifier">call_seq</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 102</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">call_seq=</span> <span class="ruby-identifier">call_seq</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">call_seq</span>.<span class="ruby-identifier">empty?</span>
 
   <span class="ruby-ivar">@call_seq</span> = <span class="ruby-identifier">call_seq</span>
@@ -445,8 +443,8 @@ if there is no call_seq.</p>
 
           
           <div class="method-source-code" id="marshal_dump-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 129</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">marshal_dump</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 130</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">marshal_dump</span>
   <span class="ruby-identifier">aliases</span> = <span class="ruby-ivar">@aliases</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span>
     [<span class="ruby-identifier">a</span>.<span class="ruby-identifier">name</span>, <span class="ruby-identifier">parse</span>(<span class="ruby-identifier">a</span>.<span class="ruby-identifier">comment</span>)]
   <span class="ruby-keyword">end</span>
@@ -511,8 +509,8 @@ will return cached values:</p>
 
           
           <div class="method-source-code" id="marshal_load-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 166</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">marshal_load</span> <span class="ruby-identifier">array</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 167</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">marshal_load</span> <span class="ruby-identifier">array</span>
   <span class="ruby-identifier">initialize_visibility</span>
 
   <span class="ruby-ivar">@dont_rename_initialize</span> = <span class="ruby-keyword">nil</span>
@@ -545,7 +543,7 @@ will return cached values:</p>
     <span class="ruby-identifier">add_alias</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Alias</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">nil</span>, <span class="ruby-ivar">@name</span>, <span class="ruby-identifier">new_name</span>, <span class="ruby-identifier">comment</span>, <span class="ruby-ivar">@singleton</span>)
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-ivar">@parent_name</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@full_name</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/#/</span> <span class="ruby-keyword">then</span>
+  <span class="ruby-ivar">@parent_name</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@full_name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/#/</span> <span class="ruby-keyword">then</span>
                      <span class="ruby-node">$`</span>
                    <span class="ruby-keyword">else</span>
                      <span class="ruby-identifier">name</span> = <span class="ruby-ivar">@full_name</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;::&#39;</span>)
@@ -587,8 +585,8 @@ href="AnyMethod.html#attribute-i-call_seq">call_seq</a>.</p>
 
           
           <div class="method-source-code" id="name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 215</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 216</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">name</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@name</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@name</span>
 
   <span class="ruby-ivar">@name</span> =
@@ -627,8 +625,8 @@ params.</p>
 
           
           <div class="method-source-code" id="param_list-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 228</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">param_list</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 229</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">param_list</span>
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@call_seq</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">params</span> = <span class="ruby-ivar">@call_seq</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&quot;\n&quot;</span>).<span class="ruby-identifier">last</span>
     <span class="ruby-identifier">params</span> = <span class="ruby-identifier">params</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/.*?\((.*)\)/</span>, <span class="ruby-string">&#39;\1&#39;</span>)
@@ -646,9 +644,9 @@ params.</p>
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@block_params</span> <span class="ruby-keyword">then</span>
     <span class="ruby-comment"># If this method has explicit block parameters, remove any explicit</span>
     <span class="ruby-comment"># &amp;block</span>
-    <span class="ruby-identifier">params</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/,?\s*&amp;\w+/</span>, <span class="ruby-string">&#39;&#39;</span>)
+    <span class="ruby-identifier">params</span> = <span class="ruby-identifier">params</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/,?\s*&amp;\w+/</span>, <span class="ruby-string">&#39;&#39;</span>)
   <span class="ruby-keyword">else</span>
-    <span class="ruby-identifier">params</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/\&amp;(\w+)/</span>, <span class="ruby-string">&#39;\1&#39;</span>)
+    <span class="ruby-identifier">params</span> = <span class="ruby-identifier">params</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\&amp;(\w+)/</span>, <span class="ruby-string">&#39;\1&#39;</span>)
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">params</span> = <span class="ruby-identifier">params</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/\s+/</span>, <span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;,&#39;</span>).<span class="ruby-identifier">reject</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:empty?</span>)
@@ -685,15 +683,15 @@ given by <code>call-seq</code> it is preferred over the parsed values.</p>
 
           
           <div class="method-source-code" id="param_seq-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 260</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">param_seq</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 261</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">param_seq</span>
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@call_seq</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">params</span> = <span class="ruby-ivar">@call_seq</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&quot;\n&quot;</span>).<span class="ruby-identifier">last</span>
     <span class="ruby-identifier">params</span> = <span class="ruby-identifier">params</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/[^( ]+/</span>, <span class="ruby-string">&#39;&#39;</span>)
     <span class="ruby-identifier">params</span> = <span class="ruby-identifier">params</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/(\|[^|]+\|)\s*\.\.\.\s*(end|\})/</span>, <span class="ruby-string">&#39;\1 \2&#39;</span>)
   <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@params</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-identifier">params</span> = <span class="ruby-ivar">@params</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-node">/\s*\#.*/</span>, <span class="ruby-string">&#39;&#39;</span>)
-    <span class="ruby-identifier">params</span> = <span class="ruby-identifier">params</span>.<span class="ruby-identifier">tr</span>(<span class="ruby-string">&quot;\n&quot;</span>, <span class="ruby-string">&quot; &quot;</span>).<span class="ruby-identifier">squeeze</span>(<span class="ruby-string">&quot; &quot;</span>)
+    <span class="ruby-identifier">params</span> = <span class="ruby-ivar">@params</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/\s*\#.*/</span>, <span class="ruby-string">&#39;&#39;</span>)
+    <span class="ruby-identifier">params</span> = <span class="ruby-identifier">params</span>.<span class="ruby-identifier">tr_s</span>(<span class="ruby-string">&quot;\n &quot;</span>, <span class="ruby-string">&quot; &quot;</span>)
     <span class="ruby-identifier">params</span> = <span class="ruby-node">&quot;(#{params})&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">==</span> <span class="ruby-value">?(</span>
   <span class="ruby-keyword">else</span>
     <span class="ruby-identifier">params</span> = <span class="ruby-string">&#39;&#39;</span>
@@ -702,12 +700,11 @@ given by <code>call-seq</code> it is preferred over the parsed values.</p>
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@block_params</span> <span class="ruby-keyword">then</span>
     <span class="ruby-comment"># If this method has explicit block parameters, remove any explicit</span>
     <span class="ruby-comment"># &amp;block</span>
-    <span class="ruby-identifier">params</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/,?\s*&amp;\w+/</span>, <span class="ruby-string">&#39;&#39;</span>)
+    <span class="ruby-identifier">params</span> = <span class="ruby-identifier">params</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/,?\s*&amp;\w+/</span>, <span class="ruby-string">&#39;&#39;</span>)
 
-    <span class="ruby-identifier">block</span> = <span class="ruby-ivar">@block_params</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-node">/\s*\#.*/</span>, <span class="ruby-string">&#39;&#39;</span>)
-    <span class="ruby-identifier">block</span> = <span class="ruby-identifier">block</span>.<span class="ruby-identifier">tr</span>(<span class="ruby-string">&quot;\n&quot;</span>, <span class="ruby-string">&quot; &quot;</span>).<span class="ruby-identifier">squeeze</span>(<span class="ruby-string">&quot; &quot;</span>)
+    <span class="ruby-identifier">block</span> = <span class="ruby-ivar">@block_params</span>.<span class="ruby-identifier">tr_s</span>(<span class="ruby-string">&quot;\n &quot;</span>, <span class="ruby-string">&quot; &quot;</span>)
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">block</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">==</span> <span class="ruby-value">?(</span>
-      <span class="ruby-identifier">block</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/^\(/</span>, <span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/\)/</span>, <span class="ruby-string">&#39;&#39;</span>)
+      <span class="ruby-identifier">block</span> = <span class="ruby-identifier">block</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^\(/</span>, <span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\)/</span>, <span class="ruby-string">&#39;&#39;</span>)
     <span class="ruby-keyword">end</span>
     <span class="ruby-identifier">params</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot; { |#{block}| ... }&quot;</span>
   <span class="ruby-keyword">end</span>
@@ -749,7 +746,7 @@ given by <code>call-seq</code> it is preferred over the parsed values.</p>
           
           <div class="method-source-code" id="store-3D-source">
             <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 292</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">store=</span> <span class="ruby-identifier">store</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">store=</span> <span class="ruby-identifier">store</span>
   <span class="ruby-keyword">super</span>
 
   <span class="ruby-ivar">@file</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">add_file</span> <span class="ruby-ivar">@file</span>.<span class="ruby-identifier">full_name</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file</span>
@@ -785,7 +782,7 @@ be called.</p>
           
           <div class="method-source-code" id="superclass_method-source">
             <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 301</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">superclass_method</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">superclass_method</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@calls_super</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@superclass_method</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@superclass_method</span>
 
@@ -815,8 +812,8 @@ be called.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

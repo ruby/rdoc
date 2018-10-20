@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Markup - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -218,19 +218,19 @@ deal with these:</p>
 <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;rdoc&#39;</span>
 
 <span class="ruby-keyword">class</span> <span class="ruby-constant">WikiHtml</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ToHtml</span>
-  <span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_special_WIKIWORD</span>(<span class="ruby-identifier">special</span>)
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_special_WIKIWORD</span>(<span class="ruby-identifier">special</span>)
     <span class="ruby-string">&quot;&lt;font color=red&gt;&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">special</span>.<span class="ruby-identifier">text</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;&lt;/font&gt;&quot;</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-identifier">markup</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span>.<span class="ruby-identifier">new</span>
-<span class="ruby-identifier">markup</span>.<span class="ruby-identifier">add_word_pair</span>(<span class="ruby-string">&quot;{&quot;</span>, <span class="ruby-string">&quot;}&quot;</span>, :<span class="ruby-constant">STRIKE</span>)
-<span class="ruby-identifier">markup</span>.<span class="ruby-identifier">add_html</span>(<span class="ruby-string">&quot;no&quot;</span>, :<span class="ruby-constant">STRIKE</span>)
+<span class="ruby-identifier">markup</span>.<span class="ruby-identifier">add_word_pair</span>(<span class="ruby-string">&quot;{&quot;</span>, <span class="ruby-string">&quot;}&quot;</span>, <span class="ruby-value">:STRIKE</span>)
+<span class="ruby-identifier">markup</span>.<span class="ruby-identifier">add_html</span>(<span class="ruby-string">&quot;no&quot;</span>, <span class="ruby-value">:STRIKE</span>)
 
-<span class="ruby-identifier">markup</span>.<span class="ruby-identifier">add_special</span>(<span class="ruby-regexp">/\b([A-Z][a-z]+[A-Z]\w+)/</span>, :<span class="ruby-constant">WIKIWORD</span>)
+<span class="ruby-identifier">markup</span>.<span class="ruby-identifier">add_special</span>(<span class="ruby-regexp">/\b([A-Z][a-z]+[A-Z]\w+)/</span>, <span class="ruby-value">:WIKIWORD</span>)
 
 <span class="ruby-identifier">wh</span> = <span class="ruby-constant">WikiHtml</span>.<span class="ruby-identifier">new</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Options</span>.<span class="ruby-identifier">new</span>, <span class="ruby-identifier">markup</span>
-<span class="ruby-identifier">wh</span>.<span class="ruby-identifier">add_tag</span>(:<span class="ruby-constant">STRIKE</span>, <span class="ruby-string">&quot;&lt;strike&gt;&quot;</span>, <span class="ruby-string">&quot;&lt;/strike&gt;&quot;</span>)
+<span class="ruby-identifier">wh</span>.<span class="ruby-identifier">add_tag</span>(<span class="ruby-value">:STRIKE</span>, <span class="ruby-string">&quot;&lt;strike&gt;&quot;</span>, <span class="ruby-string">&quot;&lt;/strike&gt;&quot;</span>)
 
 <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;&lt;body&gt;#{wh.convert ARGF.read}&lt;/body&gt;&quot;</span>
 </pre>
@@ -306,7 +306,7 @@ method such as:</p>
 <span class="ruby-comment">#</span>
 <span class="ruby-comment">#   Example of fun things goes here ...</span>
 
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">do_fun_things</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_fun_things</span>
 <span class="ruby-keyword">end</span>
 </pre>
 
@@ -554,7 +554,7 @@ href="../RDoc.html">RDoc</a> generators.</p>
 
 <p>Example links:</p>
 
-<pre>https://github.com/rdoc/rdoc
+<pre>https://github.com/ruby/rdoc
 mailto:user@example.com
 {RDoc Documentation}[http://rdoc.rubyforge.org]
 {RDoc Markup}[rdoc-ref:RDoc::Markup]</pre>
@@ -639,10 +639,12 @@ on successive lines of the comment, or by including the comment in a
 the <code>=begin</code> line <em>must</em> be flagged with an
 <code>rdoc</code> tag:</p>
 
-<pre class="ruby"><span class="ruby-comment">Documentation to be processed by RDoc.
+<pre class="ruby"><span class="ruby-comment">=begin rdoc
+Documentation to be processed by RDoc.
 
 ...
-</span></pre>
+=end</span>
+</pre>
 
 <p><a href="../RDoc.html">RDoc</a> stops processing comments if it finds a
 comment line starting with <code>--</code> right after the <code>#</code>
@@ -659,7 +661,7 @@ Commenting can be turned back on with a line that starts with
 <span class="ruby-comment">#++</span>
 <span class="ruby-comment"># The DOB is returned as a Time object.</span>
 
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_dob</span>(<span class="ruby-identifier">person</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_dob</span>(<span class="ruby-identifier">person</span>)
   <span class="ruby-comment"># ...</span>
 <span class="ruby-keyword">end</span>
 </pre>
@@ -781,7 +783,7 @@ unless you use the <code>-a</code> command line option.</p>
 <pre class="ruby"><span class="ruby-comment">##</span>
 <span class="ruby-comment">#  :args: a, b</span>
 
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">some_method</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">a</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">some_method</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">a</span>)
 <span class="ruby-keyword">end</span>
 </pre>
 </dd><dt><code>:yield:</code> or <code>:yields:</code> <em>parameters</em>
@@ -791,7 +793,7 @@ unless you use the <code>-a</code> command line option.</p>
 <pre class="ruby"><span class="ruby-comment">##</span>
 <span class="ruby-comment"># :yields: key, value</span>
 
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">each_thing</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_thing</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>
   <span class="ruby-ivar">@things</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span>
 </pre>
@@ -834,7 +836,7 @@ href="../RDoc.html">RDoc</a> output while maintaining a sensible ordering
 <span class="ruby-comment">#</span>
 <span class="ruby-comment"># CGI escapes +text+</span>
 
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">convert_string</span> <span class="ruby-identifier">text</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert_string</span> <span class="ruby-identifier">text</span>
   <span class="ruby-constant">CGI</span>.<span class="ruby-identifier">escapeHTML</span> <span class="ruby-identifier">text</span>
 <span class="ruby-keyword">end</span>
 </pre>
@@ -845,7 +847,7 @@ href="../RDoc.html">RDoc</a> output while maintaining a sensible ordering
 <span class="ruby-comment">#</span>
 <span class="ruby-comment"># This method is in the default category</span>
 
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">some_method</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">some_method</span>
   <span class="ruby-comment"># ...</span>
 <span class="ruby-keyword">end</span>
 </pre>
@@ -885,7 +887,7 @@ section.</p>
 <span class="ruby-comment">##</span>
 <span class="ruby-comment"># Comment for some_method</span>
 
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">some_method</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">some_method</span>
   <span class="ruby-comment"># ...</span>
 <span class="ruby-keyword">end</span>
 </pre>
@@ -953,8 +955,6 @@ directive in the source).</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -1014,8 +1014,8 @@ significant chunks.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup.rb, line 777</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">attribute_manager</span> = <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup.rb, line 778</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">attribute_manager</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@attribute_manager</span> = <span class="ruby-identifier">attribute_manager</span> <span class="ruby-operator">||</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">AttributeManager</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@output</span> = <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1049,12 +1049,12 @@ href="Markup/Document.html">RDoc::Markup::Document</a>.</p>
 
           
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup.rb, line 747</span>
-  <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parse</span> <span class="ruby-identifier">str</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup.rb, line 748</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">parse</span> <span class="ruby-identifier">str</span>
     <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span>.<span class="ruby-identifier">parse</span> <span class="ruby-identifier">str</span>
-  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
-    <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value">&lt;&lt;-EOF
-While parsing markup, RDoc encountered a #{e.class}:
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">e</span>
+    <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span> <span class="ruby-identifier">&lt;&lt;-EOF</span>
+<span class="ruby-value">While parsing markup, RDoc encountered a #{e.class}:
 
 #{e}
 \tfrom #{e.backtrace.join &quot;\n\tfrom &quot;}
@@ -1069,9 +1069,9 @@ Ruby #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL} #{RUBY_RELEASE_DATE}
 
 Please file a bug report with the above information at:
 
-https://github.com/rdoc/rdoc/issues
+https://github.com/ruby/rdoc/issues
 
-    EOF</span>
+</span><span class="ruby-identifier">    EOF</span>
     <span class="ruby-identifier">raise</span>
   <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1111,8 +1111,8 @@ https://github.com/rdoc/rdoc/issues
 
           
           <div class="method-source-code" id="add_html-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup.rb, line 794</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_html</span>(<span class="ruby-identifier">tag</span>, <span class="ruby-identifier">name</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/markup.rb, line 795</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_html</span>(<span class="ruby-identifier">tag</span>, <span class="ruby-identifier">name</span>)
   <span class="ruby-ivar">@attribute_manager</span>.<span class="ruby-identifier">add_html</span>(<span class="ruby-identifier">tag</span>, <span class="ruby-identifier">name</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1141,7 +1141,7 @@ https://github.com/rdoc/rdoc/issues
           <p>Add to other inline sequences.  For example, we could add WikiWords using
 something like:</p>
 
-<pre class="ruby"><span class="ruby-identifier">parser</span>.<span class="ruby-identifier">add_special</span>(<span class="ruby-regexp">/\b([A-Z][a-z]+[A-Z]\w+)/</span>, :<span class="ruby-constant">WIKIWORD</span>)
+<pre class="ruby"><span class="ruby-identifier">parser</span>.<span class="ruby-identifier">add_special</span>(<span class="ruby-regexp">/\b([A-Z][a-z]+[A-Z]\w+)/</span>, <span class="ruby-value">:WIKIWORD</span>)
 </pre>
 
 <p>Each wiki word will be presented to the output formatter via the
@@ -1151,8 +1151,8 @@ accept_special method.</p>
 
           
           <div class="method-source-code" id="add_special-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup.rb, line 807</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_special</span>(<span class="ruby-identifier">pattern</span>, <span class="ruby-identifier">name</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/markup.rb, line 808</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_special</span>(<span class="ruby-identifier">pattern</span>, <span class="ruby-identifier">name</span>)
   <span class="ruby-ivar">@attribute_manager</span>.<span class="ruby-identifier">add_special</span>(<span class="ruby-identifier">pattern</span>, <span class="ruby-identifier">name</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1186,8 +1186,8 @@ output formatters can recognize by their <code>name</code>.</p>
 
           
           <div class="method-source-code" id="add_word_pair-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup.rb, line 787</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_word_pair</span>(<span class="ruby-identifier">start</span>, <span class="ruby-identifier">stop</span>, <span class="ruby-identifier">name</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/markup.rb, line 788</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_word_pair</span>(<span class="ruby-identifier">start</span>, <span class="ruby-identifier">stop</span>, <span class="ruby-identifier">name</span>)
   <span class="ruby-ivar">@attribute_manager</span>.<span class="ruby-identifier">add_word_pair</span>(<span class="ruby-identifier">start</span>, <span class="ruby-identifier">stop</span>, <span class="ruby-identifier">name</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1220,8 +1220,8 @@ output formatters can recognize by their <code>name</code>.</p>
 
           
           <div class="method-source-code" id="convert-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup.rb, line 815</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">convert</span> <span class="ruby-identifier">input</span>, <span class="ruby-identifier">formatter</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup.rb, line 816</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert</span> <span class="ruby-identifier">input</span>, <span class="ruby-identifier">formatter</span>
   <span class="ruby-identifier">document</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">input</span>
              <span class="ruby-keyword">when</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span> <span class="ruby-keyword">then</span>
                <span class="ruby-identifier">input</span>
@@ -1248,8 +1248,8 @@ output formatters can recognize by their <code>name</code>.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::PreProcess - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Markup::PreProcess - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -123,8 +123,6 @@ the list of built-in directives.</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -183,8 +181,8 @@ for included files in <code>include_path</code></p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 77</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">input_file_name</span>, <span class="ruby-identifier">include_path</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 78</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">input_file_name</span>, <span class="ruby-identifier">include_path</span>)
   <span class="ruby-ivar">@input_file_name</span> = <span class="ruby-identifier">input_file_name</span>
   <span class="ruby-ivar">@include_path</span> = <span class="ruby-identifier">include_path</span>
   <span class="ruby-ivar">@options</span> = <span class="ruby-keyword">nil</span>
@@ -203,7 +201,7 @@ for included files in <code>include_path</code></p>
         
         <div class="method-heading">
           <span class="method-name">post_process</span><span
-            class="method-args">(&block)</span>
+            class="method-args">(&amp;block)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -220,8 +218,8 @@ String) and the code object for the comment (if any).</p>
 
           
           <div class="method-source-code" id="post_process-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 29</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">post_process</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 30</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">post_process</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>
   <span class="ruby-ivar">@post_processors</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">block</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -253,8 +251,8 @@ String) and the code object for the comment (if any).</p>
 
           
           <div class="method-source-code" id="post_processors-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 36</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">post_processors</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 37</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">post_processors</span>
   <span class="ruby-ivar">@post_processors</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -271,7 +269,7 @@ String) and the code object for the comment (if any).</p>
         
         <div class="method-heading">
           <span class="method-name">register</span><span
-            class="method-args">(directive, &block)</span>
+            class="method-args">(directive, &amp;block)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -297,8 +295,8 @@ parameter:</p>
 
           
           <div class="method-source-code" id="register-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 52</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">register</span> <span class="ruby-identifier">directive</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 53</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">register</span> <span class="ruby-identifier">directive</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>
   <span class="ruby-ivar">@registered</span>[<span class="ruby-identifier">directive</span>] = <span class="ruby-identifier">block</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -330,8 +328,8 @@ parameter:</p>
 
           
           <div class="method-source-code" id="registered-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 59</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">registered</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 60</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">registered</span>
   <span class="ruby-ivar">@registered</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -363,8 +361,8 @@ parameter:</p>
 
           
           <div class="method-source-code" id="reset-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 66</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">reset</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 67</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">reset</span>
   <span class="ruby-ivar">@post_processors</span> = []
   <span class="ruby-ivar">@registered</span> = {}
 <span class="ruby-keyword">end</span></pre>
@@ -406,8 +404,8 @@ then in each of the directories specified in the RDOC_INCLUDE path</p>
 
           
           <div class="method-source-code" id="find_include_file-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 280</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_include_file</span>(<span class="ruby-identifier">name</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 286</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_include_file</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-identifier">to_search</span> = [<span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-ivar">@input_file_name</span>)].<span class="ruby-identifier">concat</span> <span class="ruby-ivar">@include_path</span>
   <span class="ruby-identifier">to_search</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">dir</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">full_name</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">dir</span>, <span class="ruby-identifier">name</span>)
@@ -430,7 +428,7 @@ then in each of the directories specified in the RDOC_INCLUDE path</p>
         
         <div class="method-heading">
           <span class="method-name">handle</span><span
-            class="method-args">(text, code_object = nil, &block)</span>
+            class="method-args">(text, code_object = nil, &amp;block)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -460,8 +458,8 @@ for details.</p>
 
           
           <div class="method-source-code" id="handle-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 98</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">code_object</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 99</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">code_object</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>
   <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">text</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">text</span>
     <span class="ruby-identifier">text</span> = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">text</span>
@@ -470,12 +468,12 @@ for details.</p>
   <span class="ruby-comment"># regexp helper (square brackets for optional)</span>
   <span class="ruby-comment"># $1      $2  $3        $4      $5</span>
   <span class="ruby-comment"># [prefix][\]:directive:[spaces][param]newline</span>
-  <span class="ruby-identifier">text</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-node">/^([ \t]*(?:#|\/?\*)?[ \t]*)(\?):(\w+):([ \t]*)(.+)?(\r?\n|$)/</span>) <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/^([ \t]*(?:#|\/?\*)?[ \t]*)(\\?):(\w+):([ \t]*)(.+)?(\r?\n|$)/</span>) <span class="ruby-keyword">do</span>
     <span class="ruby-comment"># skip something like &#39;:toto::&#39;</span>
     <span class="ruby-keyword">next</span> <span class="ruby-node">$&amp;</span> <span class="ruby-keyword">if</span> <span class="ruby-node">$4</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">and</span> <span class="ruby-node">$5</span> <span class="ruby-keyword">and</span> <span class="ruby-node">$5</span>[<span class="ruby-value">0</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&#39;:&#39;</span>
 
     <span class="ruby-comment"># skip if escaped</span>
-    <span class="ruby-keyword">next</span> <span class="ruby-node">&quot;#$1:#$3:#$4#$5\n&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-node">$2</span>.<span class="ruby-identifier">empty?</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-string">&quot;#$1:#$3:#$4#$5\n&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-node">$2</span>.<span class="ruby-identifier">empty?</span>
 
     <span class="ruby-comment"># This is not in handle_directive because I didn&#39;t want to pass another</span>
     <span class="ruby-comment"># argument into it</span>
@@ -488,7 +486,11 @@ for details.</p>
     <span class="ruby-identifier">handle_directive</span> <span class="ruby-node">$1</span>, <span class="ruby-node">$3</span>, <span class="ruby-node">$5</span>, <span class="ruby-identifier">code_object</span>, <span class="ruby-identifier">text</span>.<span class="ruby-identifier">encoding</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">text</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">comment</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">comment</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">text</span> = <span class="ruby-identifier">text</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">text</span>
+  <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">post_processors</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">handler</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">handler</span>.<span class="ruby-identifier">call</span> <span class="ruby-identifier">comment</span>, <span class="ruby-identifier">code_object</span>
@@ -534,15 +536,15 @@ href="../Markup.html">RDoc::Markup</a>.</p>
 
           
           <div class="method-source-code" id="handle_directive-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 145</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">handle_directive</span> <span class="ruby-identifier">prefix</span>, <span class="ruby-identifier">directive</span>, <span class="ruby-identifier">param</span>, <span class="ruby-identifier">code_object</span> = <span class="ruby-keyword">nil</span>,
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 150</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_directive</span> <span class="ruby-identifier">prefix</span>, <span class="ruby-identifier">directive</span>, <span class="ruby-identifier">param</span>, <span class="ruby-identifier">code_object</span> = <span class="ruby-keyword">nil</span>,
                      <span class="ruby-identifier">encoding</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">blankline</span> = <span class="ruby-node">&quot;#{prefix.strip}\n&quot;</span>
   <span class="ruby-identifier">directive</span> = <span class="ruby-identifier">directive</span>.<span class="ruby-identifier">downcase</span>
 
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">directive</span>
   <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;arg&#39;</span>, <span class="ruby-string">&#39;args&#39;</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;#{prefix}:#{directive}: #{param}\n&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">code_object</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;#{prefix}:#{directive}: #{param}\n&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">code_object</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">code_object</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">AnyMethod</span>)
 
     <span class="ruby-identifier">code_object</span>.<span class="ruby-identifier">params</span> = <span class="ruby-identifier">param</span>
 
@@ -604,7 +606,7 @@ href="../Markup.html">RDoc::Markup</a>.</p>
   <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;yield&#39;</span>, <span class="ruby-string">&#39;yields&#39;</span> <span class="ruby-keyword">then</span>
     <span class="ruby-keyword">return</span> <span class="ruby-identifier">blankline</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">code_object</span>
     <span class="ruby-comment"># remove parameter &amp;block</span>
-    <span class="ruby-identifier">code_object</span>.<span class="ruby-identifier">params</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/,?\s*&amp;\w+/</span>, <span class="ruby-string">&#39;&#39;</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">code_object</span>.<span class="ruby-identifier">params</span>
+    <span class="ruby-identifier">code_object</span>.<span class="ruby-identifier">params</span> = <span class="ruby-identifier">code_object</span>.<span class="ruby-identifier">params</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/,?\s*&amp;\w+/</span>, <span class="ruby-string">&#39;&#39;</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">code_object</span>.<span class="ruby-identifier">params</span>
 
     <span class="ruby-identifier">code_object</span>.<span class="ruby-identifier">block_params</span> = <span class="ruby-identifier">param</span>
 
@@ -666,8 +668,8 @@ like the <code>:include:</code> directive.</p>
 
           
           <div class="method-source-code" id="include_file-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 255</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">include_file</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">indent</span>, <span class="ruby-identifier">encoding</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/pre_process.rb, line 260</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">include_file</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">indent</span>, <span class="ruby-identifier">encoding</span>
   <span class="ruby-identifier">full_name</span> = <span class="ruby-identifier">find_include_file</span> <span class="ruby-identifier">name</span>
 
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">full_name</span> <span class="ruby-keyword">then</span>
@@ -676,15 +678,16 @@ like the <code>:include:</code> directive.</p>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">content</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Encoding</span>.<span class="ruby-identifier">read_file</span> <span class="ruby-identifier">full_name</span>, <span class="ruby-identifier">encoding</span>, <span class="ruby-keyword">true</span>
+  <span class="ruby-identifier">content</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Encoding</span>.<span class="ruby-identifier">remove_magic_comment</span> <span class="ruby-identifier">content</span>
 
   <span class="ruby-comment"># strip magic comment</span>
-  <span class="ruby-identifier">content</span> = <span class="ruby-identifier">content</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-node">/\A# .*coding[=:].*$/</span>, <span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">lstrip</span>
+  <span class="ruby-identifier">content</span> = <span class="ruby-identifier">content</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\A# .*coding[=:].*$/</span>, <span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">lstrip</span>
 
   <span class="ruby-comment"># strip leading &#39;#&#39;s, but only if all lines start with them</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">content</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/^[^#]/</span> <span class="ruby-keyword">then</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">content</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^[^#]/</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">content</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/^/</span>, <span class="ruby-identifier">indent</span>)
   <span class="ruby-keyword">else</span>
-    <span class="ruby-identifier">content</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-node">/^#?/</span>, <span class="ruby-identifier">indent</span>)
+    <span class="ruby-identifier">content</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/^#?/</span>, <span class="ruby-identifier">indent</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -704,8 +707,8 @@ like the <code>:include:</code> directive.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

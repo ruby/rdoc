@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::TopLevel - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::TopLevel - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -140,8 +140,6 @@ contents of a single file</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -260,8 +258,8 @@ directory.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 42</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">absolute_name</span>, <span class="ruby-identifier">relative_name</span> = <span class="ruby-identifier">absolute_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 43</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">absolute_name</span>, <span class="ruby-identifier">relative_name</span> = <span class="ruby-identifier">absolute_name</span>
   <span class="ruby-keyword">super</span>()
   <span class="ruby-ivar">@name</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@absolute_name</span> = <span class="ruby-identifier">absolute_name</span>
@@ -310,8 +308,8 @@ same <a href="TopLevel.html#attribute-i-relative_name">#relative_name</a></p>
 
           
           <div class="method-source-code" id="3D-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 57</span>
-<span class="ruby-keyword">def</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 58</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">==</span> <span class="ruby-identifier">other</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">other</span> <span class="ruby-keyword">and</span> <span class="ruby-ivar">@relative_name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">relative_name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -348,8 +346,8 @@ same <a href="TopLevel.html#attribute-i-relative_name">#relative_name</a></p>
 
           
           <div class="method-source-code" id="add_alias-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 66</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_alias</span>(<span class="ruby-identifier">an_alias</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 67</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_alias</span>(<span class="ruby-identifier">an_alias</span>)
   <span class="ruby-identifier">object_class</span>.<span class="ruby-identifier">record_location</span> <span class="ruby-keyword">self</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">an_alias</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@document_self</span>
   <span class="ruby-identifier">object_class</span>.<span class="ruby-identifier">add_alias</span> <span class="ruby-identifier">an_alias</span>
@@ -384,8 +382,8 @@ same <a href="TopLevel.html#attribute-i-relative_name">#relative_name</a></p>
 
           
           <div class="method-source-code" id="add_constant-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 75</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_constant</span> <span class="ruby-identifier">constant</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 76</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_constant</span> <span class="ruby-identifier">constant</span>
   <span class="ruby-identifier">object_class</span>.<span class="ruby-identifier">record_location</span> <span class="ruby-keyword">self</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">constant</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@document_self</span>
   <span class="ruby-identifier">object_class</span>.<span class="ruby-identifier">add_constant</span> <span class="ruby-identifier">constant</span>
@@ -420,8 +418,8 @@ same <a href="TopLevel.html#attribute-i-relative_name">#relative_name</a></p>
 
           
           <div class="method-source-code" id="add_include-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 84</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_include</span>(<span class="ruby-identifier">include</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 85</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_include</span>(<span class="ruby-identifier">include</span>)
   <span class="ruby-identifier">object_class</span>.<span class="ruby-identifier">record_location</span> <span class="ruby-keyword">self</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">include</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@document_self</span>
   <span class="ruby-identifier">object_class</span>.<span class="ruby-identifier">add_include</span> <span class="ruby-identifier">include</span>
@@ -456,8 +454,8 @@ same <a href="TopLevel.html#attribute-i-relative_name">#relative_name</a></p>
 
           
           <div class="method-source-code" id="add_method-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 93</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_method</span>(<span class="ruby-identifier">method</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 94</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_method</span>(<span class="ruby-identifier">method</span>)
   <span class="ruby-identifier">object_class</span>.<span class="ruby-identifier">record_location</span> <span class="ruby-keyword">self</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">method</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@document_self</span>
   <span class="ruby-identifier">object_class</span>.<span class="ruby-identifier">add_method</span> <span class="ruby-identifier">method</span>
@@ -492,8 +490,8 @@ Ruby parser.</p>
 
           
           <div class="method-source-code" id="add_to_classes_or_modules-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 103</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_to_classes_or_modules</span> <span class="ruby-identifier">mod</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 104</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_to_classes_or_modules</span> <span class="ruby-identifier">mod</span>
   <span class="ruby-ivar">@classes_or_modules</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">mod</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -525,8 +523,8 @@ Ruby parser.</p>
 
           
           <div class="method-source-code" id="base_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 110</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">base_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 111</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">base_name</span>
   <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span> <span class="ruby-ivar">@relative_name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -563,8 +561,8 @@ command line option to set.</p>
 
           
           <div class="method-source-code" id="cvs_url-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 158</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">cvs_url</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/generator/markup.rb, line 159</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">cvs_url</span>
   <span class="ruby-identifier">url</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">options</span>.<span class="ruby-identifier">webcvs</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-regexp">/%s/</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">url</span> <span class="ruby-keyword">then</span>
@@ -609,8 +607,8 @@ href="CodeObject.html#method-i-display-3F">RDoc::CodeObject#display?</a></p>
 
           
           <div class="method-source-code" id="display-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 120</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">display?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 121</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">display?</span>
   <span class="ruby-identifier">text?</span> <span class="ruby-keyword">and</span> <span class="ruby-keyword">super</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -670,8 +668,8 @@ href="CodeObject.html#method-i-display-3F">RDoc::CodeObject#display?</a></p>
 
           
           <div class="method-source-code" id="find_class_or_module-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 130</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_class_or_module</span> <span class="ruby-identifier">name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 131</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_class_or_module</span> <span class="ruby-identifier">name</span>
   <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">find_class_or_module</span> <span class="ruby-identifier">name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -708,8 +706,8 @@ href="CodeObject.html#method-i-display-3F">RDoc::CodeObject#display?</a></p>
 
           
           <div class="method-source-code" id="find_local_symbol-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 137</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_local_symbol</span>(<span class="ruby-identifier">symbol</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 138</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_local_symbol</span>(<span class="ruby-identifier">symbol</span>)
   <span class="ruby-identifier">find_class_or_module</span>(<span class="ruby-identifier">symbol</span>) <span class="ruby-operator">||</span> <span class="ruby-keyword">super</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -741,8 +739,8 @@ href="CodeObject.html#method-i-display-3F">RDoc::CodeObject#display?</a></p>
 
           
           <div class="method-source-code" id="find_module_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 144</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">find_module_named</span>(<span class="ruby-identifier">name</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 145</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_module_named</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-identifier">find_class_or_module</span>(<span class="ruby-identifier">name</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -774,8 +772,8 @@ href="CodeObject.html#method-i-display-3F">RDoc::CodeObject#display?</a></p>
 
           
           <div class="method-source-code" id="full_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 151</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">full_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 152</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">full_name</span>
   <span class="ruby-ivar">@relative_name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -809,8 +807,8 @@ href="TopLevel.html#attribute-i-relative_name">#relative_name</a></p>
 
           
           <div class="method-source-code" id="hash-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 159</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">hash</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 160</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">hash</span>
   <span class="ruby-ivar">@relative_name</span>.<span class="ruby-identifier">hash</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -842,8 +840,8 @@ href="TopLevel.html#attribute-i-relative_name">#relative_name</a></p>
 
           
           <div class="method-source-code" id="http_url-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 166</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">http_url</span>(<span class="ruby-identifier">prefix</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 167</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">http_url</span>(<span class="ruby-identifier">prefix</span>)
   <span class="ruby-identifier">path</span> = [<span class="ruby-identifier">prefix</span>, <span class="ruby-ivar">@relative_name</span>.<span class="ruby-identifier">tr</span>(<span class="ruby-string">&#39;.&#39;</span>, <span class="ruby-string">&#39;_&#39;</span>)]
 
   <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">path</span>.<span class="ruby-identifier">compact</span>) <span class="ruby-operator">+</span> <span class="ruby-string">&#39;.html&#39;</span>
@@ -877,8 +875,8 @@ href="TopLevel.html#attribute-i-relative_name">#relative_name</a></p>
 
           
           <div class="method-source-code" id="last_modified-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 184</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">last_modified</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 185</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">last_modified</span>
   <span class="ruby-ivar">@file_stat</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">file_stat</span>.<span class="ruby-identifier">mtime</span> <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -911,8 +909,8 @@ marshal_load</p>
 
           
           <div class="method-source-code" id="marshal_dump-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 191</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">marshal_dump</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 192</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">marshal_dump</span>
   [
     <span class="ruby-constant">MARSHAL_VERSION</span>,
     <span class="ruby-ivar">@relative_name</span>,
@@ -979,8 +977,8 @@ marshal_load</p>
 
           
           <div class="method-source-code" id="object_class-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 217</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">object_class</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 218</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">object_class</span>
   <span class="ruby-ivar">@object_class</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">begin</span>
     <span class="ruby-identifier">oc</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">find_class_named</span>(<span class="ruby-string">&#39;Object&#39;</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">add_class</span>(<span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">NormalClass</span>, <span class="ruby-string">&#39;Object&#39;</span>)
     <span class="ruby-identifier">oc</span>.<span class="ruby-identifier">record_location</span> <span class="ruby-keyword">self</span>
@@ -1016,8 +1014,8 @@ marshal_load</p>
 
           
           <div class="method-source-code" id="page_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 228</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">page_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 229</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">page_name</span>
   <span class="ruby-identifier">basename</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span> <span class="ruby-ivar">@relative_name</span>
   <span class="ruby-identifier">basename</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\.(rb|rdoc|txt|md)$/i</span>
 
@@ -1052,8 +1050,8 @@ marshal_load</p>
 
           
           <div class="method-source-code" id="path-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 238</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">path</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 239</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">path</span>
   <span class="ruby-identifier">http_url</span> <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">generator</span>.<span class="ruby-identifier">file_dir</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1086,8 +1084,8 @@ href="Generator/JsonIndex.html">RDoc::Generator::JsonIndex</a></p>
 
           
           <div class="method-source-code" id="search_record-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 256</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">search_record</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 257</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">search_record</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@parser</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">Text</span>
 
   [
@@ -1130,8 +1128,8 @@ source code file?</p>
 
           
           <div class="method-source-code" id="text-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 273</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">text?</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/top_level.rb, line 274</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">text?</span>
   <span class="ruby-ivar">@parser</span> <span class="ruby-keyword">and</span> <span class="ruby-ivar">@parser</span>.<span class="ruby-identifier">ancestors</span>.<span class="ruby-identifier">include?</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">Text</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1151,8 +1149,8 @@ source code file?</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

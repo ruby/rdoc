@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::Parser - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Markup::Parser - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
@@ -146,8 +146,6 @@ href="../../RDoc.html">RDoc</a> markup to format text in your program read
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -232,8 +230,8 @@ href="Parser.html#method-c-parse">::parse</a></p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 77</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 78</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>
   <span class="ruby-ivar">@binary_input</span>   = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@current_token</span>  = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@debug</span>          = <span class="ruby-keyword">false</span>
@@ -275,8 +273,8 @@ href="Parser.html#method-c-parse">::parse</a></p>
 
           
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 58</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parse</span> <span class="ruby-identifier">str</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 59</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">parse</span> <span class="ruby-identifier">str</span>
   <span class="ruby-identifier">parser</span> = <span class="ruby-identifier">new</span>
   <span class="ruby-identifier">parser</span>.<span class="ruby-identifier">tokenize</span> <span class="ruby-identifier">str</span>
   <span class="ruby-identifier">doc</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span>
@@ -311,8 +309,8 @@ href="Parser.html#method-c-parse">::parse</a></p>
 
           
           <div class="method-source-code" id="tokenize-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 68</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">tokenize</span> <span class="ruby-identifier">str</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 69</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">tokenize</span> <span class="ruby-identifier">str</span>
   <span class="ruby-identifier">parser</span> = <span class="ruby-identifier">new</span>
   <span class="ruby-identifier">parser</span>.<span class="ruby-identifier">tokenize</span> <span class="ruby-identifier">str</span>
   <span class="ruby-identifier">parser</span>.<span class="ruby-identifier">tokens</span>
@@ -354,8 +352,8 @@ href="Parser.html#method-c-parse">::parse</a></p>
 
           
           <div class="method-source-code" id="build_heading-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 92</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">build_heading</span> <span class="ruby-identifier">level</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 93</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">build_heading</span> <span class="ruby-identifier">level</span>
   <span class="ruby-identifier">type</span>, <span class="ruby-identifier">text</span>, = <span class="ruby-identifier">get</span>
 
   <span class="ruby-identifier">text</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">type</span>
@@ -398,9 +396,9 @@ href="Parser.html#method-c-parse">::parse</a></p>
 
           
           <div class="method-source-code" id="build_list-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 110</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">build_list</span> <span class="ruby-identifier">margin</span>
-  <span class="ruby-identifier">p</span> <span class="ruby-value">:list_start</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">margin</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 111</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">build_list</span> <span class="ruby-identifier">margin</span>
+  <span class="ruby-identifier">p</span> <span class="ruby-value">:list_start</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">margin</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
 
   <span class="ruby-identifier">list</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">List</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-identifier">label</span> = <span class="ruby-keyword">nil</span>
@@ -483,7 +481,7 @@ href="Parser.html#method-c-parse">::parse</a></p>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">p</span> <span class="ruby-value">:list_end</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">margin</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
+  <span class="ruby-identifier">p</span> <span class="ruby-value">:list_end</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">margin</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">list</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
     <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">label</span>
@@ -524,9 +522,9 @@ href="Parser.html#method-c-parse">::parse</a></p>
 
           
           <div class="method-source-code" id="build_paragraph-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 210</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">build_paragraph</span> <span class="ruby-identifier">margin</span>
-  <span class="ruby-identifier">p</span> <span class="ruby-value">:paragraph_start</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">margin</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 211</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">build_paragraph</span> <span class="ruby-identifier">margin</span>
+  <span class="ruby-identifier">p</span> <span class="ruby-value">:paragraph_start</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">margin</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
 
   <span class="ruby-identifier">paragraph</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>
 
@@ -547,7 +545,7 @@ href="Parser.html#method-c-parse">::parse</a></p>
 
   <span class="ruby-identifier">paragraph</span>.<span class="ruby-identifier">parts</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/ \z/</span>, <span class="ruby-string">&#39;&#39;</span>) <span class="ruby-comment"># cleanup</span>
 
-  <span class="ruby-identifier">p</span> <span class="ruby-value">:paragraph_end</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">margin</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
+  <span class="ruby-identifier">p</span> <span class="ruby-value">:paragraph_end</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">margin</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
 
   <span class="ruby-identifier">paragraph</span>
 <span class="ruby-keyword">end</span></pre>
@@ -585,14 +583,14 @@ character, and there is never a single newline at the end of the verbatim.</p>
 
           
           <div class="method-source-code" id="build_verbatim-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 245</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">build_verbatim</span> <span class="ruby-identifier">margin</span>
-  <span class="ruby-identifier">p</span> <span class="ruby-value">:verbatim_begin</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">margin</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 246</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">build_verbatim</span> <span class="ruby-identifier">margin</span>
+  <span class="ruby-identifier">p</span> <span class="ruby-value">:verbatim_begin</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">margin</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
   <span class="ruby-identifier">verbatim</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Verbatim</span>.<span class="ruby-identifier">new</span>
 
   <span class="ruby-identifier">min_indent</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">generate_leading_spaces</span> = <span class="ruby-keyword">true</span>
-  <span class="ruby-identifier">line</span> = <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-identifier">line</span> = <span class="ruby-string">&#39;&#39;</span>.<span class="ruby-identifier">dup</span>
 
   <span class="ruby-keyword">until</span> <span class="ruby-ivar">@tokens</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">type</span>, <span class="ruby-identifier">data</span>, <span class="ruby-identifier">column</span>, = <span class="ruby-identifier">get</span>
@@ -600,7 +598,7 @@ character, and there is never a single newline at the end of the verbatim.</p>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-value">:NEWLINE</span> <span class="ruby-keyword">then</span>
       <span class="ruby-identifier">line</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">data</span>
       <span class="ruby-identifier">verbatim</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">line</span>
-      <span class="ruby-identifier">line</span> = <span class="ruby-string">&#39;&#39;</span>
+      <span class="ruby-identifier">line</span> = <span class="ruby-string">&#39;&#39;</span>.<span class="ruby-identifier">dup</span>
       <span class="ruby-identifier">generate_leading_spaces</span> = <span class="ruby-keyword">true</span>
       <span class="ruby-keyword">next</span>
     <span class="ruby-keyword">end</span>
@@ -656,7 +654,7 @@ character, and there is never a single newline at the end of the verbatim.</p>
   <span class="ruby-identifier">verbatim</span>.<span class="ruby-identifier">parts</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span> <span class="ruby-identifier">p</span>.<span class="ruby-identifier">slice!</span>(<span class="ruby-value">0</span>, <span class="ruby-identifier">min_indent</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">p</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;\n&quot;</span> } <span class="ruby-keyword">if</span> <span class="ruby-identifier">min_indent</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
   <span class="ruby-identifier">verbatim</span>.<span class="ruby-identifier">normalize</span>
 
-  <span class="ruby-identifier">p</span> <span class="ruby-value">:verbatim_end</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">margin</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
+  <span class="ruby-identifier">p</span> <span class="ruby-value">:verbatim_end</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">margin</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
 
   <span class="ruby-identifier">verbatim</span>
 <span class="ruby-keyword">end</span></pre>
@@ -690,8 +688,8 @@ character, and there is never a single newline at the end of the verbatim.</p>
 
           
           <div class="method-source-code" id="char_pos-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 323</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">char_pos</span> <span class="ruby-identifier">byte_offset</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 324</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">char_pos</span> <span class="ruby-identifier">byte_offset</span>
   <span class="ruby-ivar">@input</span>.<span class="ruby-identifier">byteslice</span>(<span class="ruby-value">0</span>, <span class="ruby-identifier">byte_offset</span>).<span class="ruby-identifier">length</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -723,10 +721,10 @@ character, and there is never a single newline at the end of the verbatim.</p>
 
           
           <div class="method-source-code" id="get-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 330</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">get</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 331</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get</span>
   <span class="ruby-ivar">@current_token</span> = <span class="ruby-ivar">@tokens</span>.<span class="ruby-identifier">shift</span>
-  <span class="ruby-identifier">p</span> <span class="ruby-value">:get</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@current_token</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
+  <span class="ruby-identifier">p</span> <span class="ruby-value">:get</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-ivar">@current_token</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
   <span class="ruby-ivar">@current_token</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -764,9 +762,9 @@ column less than <code>indent</code> (unless it is a NEWLINE).</p>
 
           
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 345</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse</span> <span class="ruby-identifier">parent</span>, <span class="ruby-identifier">indent</span> = <span class="ruby-value">0</span>
-  <span class="ruby-identifier">p</span> <span class="ruby-value">:parse_start</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">indent</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 346</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse</span> <span class="ruby-identifier">parent</span>, <span class="ruby-identifier">indent</span> = <span class="ruby-value">0</span>
+  <span class="ruby-identifier">p</span> <span class="ruby-value">:parse_start</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">indent</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
 
   <span class="ruby-keyword">until</span> <span class="ruby-ivar">@tokens</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">type</span>, <span class="ruby-identifier">data</span>, <span class="ruby-identifier">column</span>, = <span class="ruby-identifier">get</span>
@@ -812,7 +810,7 @@ column less than <code>indent</code> (unless it is a NEWLINE).</p>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">p</span> <span class="ruby-value">:parse_end</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">indent</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
+  <span class="ruby-identifier">p</span> <span class="ruby-value">:parse_end</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">indent</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
 
   <span class="ruby-identifier">parent</span>
 
@@ -846,10 +844,10 @@ column less than <code>indent</code> (unless it is a NEWLINE).</p>
 
           
           <div class="method-source-code" id="peek_token-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 408</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">peek_token</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 409</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">peek_token</span>
   <span class="ruby-identifier">token</span> = <span class="ruby-ivar">@tokens</span>.<span class="ruby-identifier">first</span> <span class="ruby-operator">||</span> []
-  <span class="ruby-identifier">p</span> <span class="ruby-value">:peek</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">token</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
+  <span class="ruby-identifier">p</span> <span class="ruby-value">:peek</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">token</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
   <span class="ruby-identifier">token</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -881,8 +879,8 @@ column less than <code>indent</code> (unless it is a NEWLINE).</p>
 
           
           <div class="method-source-code" id="setup_scanner-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 417</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">setup_scanner</span> <span class="ruby-identifier">input</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 418</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">setup_scanner</span> <span class="ruby-identifier">input</span>
   <span class="ruby-ivar">@line</span>     = <span class="ruby-value">0</span>
   <span class="ruby-ivar">@line_pos</span> = <span class="ruby-value">0</span>
   <span class="ruby-ivar">@input</span>    = <span class="ruby-identifier">input</span>.<span class="ruby-identifier">dup</span>
@@ -920,8 +918,8 @@ column less than <code>indent</code> (unless it is a NEWLINE).</p>
 
           
           <div class="method-source-code" id="skip-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 430</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">skip</span> <span class="ruby-identifier">token_type</span>, <span class="ruby-identifier">error</span> = <span class="ruby-keyword">true</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 431</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">skip</span> <span class="ruby-identifier">token_type</span>, <span class="ruby-identifier">error</span> = <span class="ruby-keyword">true</span>
   <span class="ruby-identifier">type</span>, = <span class="ruby-identifier">get</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">type</span> <span class="ruby-comment"># end of stream</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@current_token</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">token_type</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">type</span>
@@ -958,8 +956,8 @@ column less than <code>indent</code> (unless it is a NEWLINE).</p>
 
           
           <div class="method-source-code" id="token_pos-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 526</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">token_pos</span> <span class="ruby-identifier">byte_offset</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 527</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">token_pos</span> <span class="ruby-identifier">byte_offset</span>
   <span class="ruby-identifier">offset</span> = <span class="ruby-identifier">char_pos</span> <span class="ruby-identifier">byte_offset</span>
 
   [<span class="ruby-identifier">offset</span> <span class="ruby-operator">-</span> <span class="ruby-ivar">@line_pos</span>, <span class="ruby-ivar">@line</span>]
@@ -993,8 +991,8 @@ column less than <code>indent</code> (unless it is a NEWLINE).</p>
 
           
           <div class="method-source-code" id="tokenize-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 441</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">tokenize</span> <span class="ruby-identifier">input</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 442</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tokenize</span> <span class="ruby-identifier">input</span>
   <span class="ruby-identifier">setup_scanner</span> <span class="ruby-identifier">input</span>
 
   <span class="ruby-keyword">until</span> <span class="ruby-ivar">@s</span>.<span class="ruby-identifier">eos?</span> <span class="ruby-keyword">do</span>
@@ -1103,10 +1101,10 @@ column less than <code>indent</code> (unless it is a NEWLINE).</p>
 
           
           <div class="method-source-code" id="unget-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 535</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">unget</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/markup/parser.rb, line 536</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">unget</span>
   <span class="ruby-identifier">token</span> = <span class="ruby-ivar">@current_token</span>
-  <span class="ruby-identifier">p</span> <span class="ruby-value">:unget</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">token</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
+  <span class="ruby-identifier">p</span> <span class="ruby-value">:unget</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">token</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@debug</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span>, <span class="ruby-string">&#39;too many #ungets&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">token</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@tokens</span>.<span class="ruby-identifier">first</span>
   <span class="ruby-ivar">@tokens</span>.<span class="ruby-identifier">unshift</span> <span class="ruby-identifier">token</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">token</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1127,8 +1125,8 @@ column less than <code>indent</code> (unless it is a NEWLINE).</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

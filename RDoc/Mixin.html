@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Mixin - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::Mixin - rdoc 6.0.4 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -101,8 +101,6 @@ href="Extend.html">RDoc::Extend</a> are both mixins.</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -165,8 +163,8 @@ href="Extend.html">RDoc::Extend</a> are both mixins.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/mixin.rb, line 15</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">comment</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/mixin.rb, line 16</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">comment</span>)
   <span class="ruby-keyword">super</span>()
   <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">comment</span> = <span class="ruby-identifier">comment</span>
@@ -209,8 +207,8 @@ href="Extend.html">RDoc::Extend</a> are both mixins.</p>
 
           
           <div class="method-source-code" id="3C-3D-3E-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/mixin.rb, line 25</span>
-<span class="ruby-keyword">def</span> <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">other</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/mixin.rb, line 26</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">&lt;=&gt;</span> <span class="ruby-identifier">other</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">other</span>
 
   <span class="ruby-identifier">name</span> <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">name</span>
@@ -244,8 +242,8 @@ href="Extend.html">RDoc::Extend</a> are both mixins.</p>
 
           
           <div class="method-source-code" id="full_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/mixin.rb, line 40</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">full_name</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/mixin.rb, line 41</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">full_name</span>
   <span class="ruby-identifier">m</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">module</span>
   <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">ClassModule</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">m</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">full_name</span> <span class="ruby-operator">:</span> <span class="ruby-ivar">@name</span>
 <span class="ruby-keyword">end</span></pre>
@@ -296,12 +294,12 @@ parsed.  This behavior is due to ruby&#39;s constant lookup behavior.</p>
 
           
           <div class="method-source-code" id="module-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/mixin.rb, line 74</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/mixin.rb, line 75</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">module</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@module</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@module</span>
 
   <span class="ruby-comment"># search the current context</span>
-  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@name</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">parent</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-ivar">@name</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier ruby-title">parent</span>
   <span class="ruby-identifier">full_name</span> = <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">child_name</span>(<span class="ruby-ivar">@name</span>)
   <span class="ruby-ivar">@module</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">modules_hash</span>[<span class="ruby-identifier">full_name</span>]
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@module</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@module</span>
@@ -362,8 +360,8 @@ parsed.  This behavior is due to ruby&#39;s constant lookup behavior.</p>
 
           
           <div class="method-source-code" id="store-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/mixin.rb, line 109</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">store=</span> <span class="ruby-identifier">store</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/mixin.rb, line 110</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">store=</span> <span class="ruby-identifier">store</span>
   <span class="ruby-keyword">super</span>
 
   <span class="ruby-ivar">@file</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">add_file</span> <span class="ruby-ivar">@file</span>.<span class="ruby-identifier">full_name</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file</span>
@@ -385,8 +383,8 @@ parsed.  This behavior is due to ruby&#39;s constant lookup behavior.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
