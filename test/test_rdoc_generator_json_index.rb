@@ -96,7 +96,7 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
     assert_file 'js/navigation.js'
     assert_file 'js/search_index.js'
 
-    srcdir = File.expand_path("../../lib/rdoc", __FILE__)
+    srcdir = File.expand_path('lib/rdoc', @pwd)
     if !File.directory? srcdir
       # for Ruby core repository
       srcdir = File.expand_path("../../../lib/rdoc", __FILE__)
