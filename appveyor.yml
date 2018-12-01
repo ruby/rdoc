@@ -1,5 +1,7 @@
 ---
 init:
+  # Set UTF-8 to use Unicode property because the defualt encoding on AppVeyor is Encoding::IBM437
+  - set RUBYOPT=-EUTF-8
   # To avoid duplicated executables in PATH, see https://github.com/ruby/spec/pull/468
   - set PATH=C:\ruby%RUBY_VERSION%\bin;C:\msys64\usr\bin;C:\Program Files\7-Zip;C:\Program Files\AppVeyor\BuildAgent;C:\Program Files\Git\cmd;C:\Windows\system32;C:\Program Files;C:\Windows
   # Loads trunk build and updates MSYS2 / MinGW to most recent gcc compiler
