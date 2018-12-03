@@ -3,7 +3,7 @@
 home :: https://github.com/ruby/rdoc
 rdoc :: https://ruby.github.io/rdoc
 bugs :: https://github.com/ruby/rdoc/issues
-build status :: {<img src="https://travis-ci.org/ruby/rdoc.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/ruby/rdoc]
+build status :: {<img src="https://travis-ci.org/ruby/rdoc.svg?branch=master" alt="Build Status on Travis CI" />}[https://travis-ci.org/ruby/rdoc] {<img src="https://ci.appveyor.com/api/projects/status/github/ruby/rdoc?branch=master&svg=true" alt="Build Status on AppVeyor" />}[https://ci.appveyor.com/project/ruby/rdoc]
 code quality :: {<img src="https://codeclimate.com/github/ruby/rdoc/badges/gpa.svg" alt="Code Climate">}[https://codeclimate.com/github/ruby/rdoc]
 
 == Description
