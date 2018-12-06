@@ -505,7 +505,8 @@ class RDoc::Markup::Parser
                  when @s.scan(/(.*?)::( +|\r?$)/) then
                    [:NOTE, @s[1], *token_pos(pos)]
                  # anything else: :TEXT
-                 else @s.scan(/(.*?)(  )?\r?$/)
+                 else
+                   @s.scan(/(.*?)(  )?\r?$/)
                    token = [:TEXT, @s[1], *token_pos(pos)]
 
                    if @s[2] then
