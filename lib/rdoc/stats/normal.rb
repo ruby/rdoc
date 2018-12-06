@@ -31,7 +31,7 @@ class RDoc::Stats::Normal < RDoc::Stats::Quiet
       # will be truncated if necessary.
       size = IO.respond_to?(:console_size) ? IO.console_size : IO.console.winsize
       terminal_width = size[1].to_i.nonzero? || 80
-      max_filename_size = terminal_width - progress_bar.size
+      max_filename_size = (terminal_width - progress_bar.size) - 1
 
       if filename.size > max_filename_size then
         # Turn "some_long_filename.rb" to "...ong_filename.rb"
