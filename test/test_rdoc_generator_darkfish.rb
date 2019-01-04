@@ -202,6 +202,13 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
     assert_same template, @g.send(:template_for, partial)
   end
 
+  def test_erb_partial_with_frozen_string_literal
+    erb = RDoc::ERBPartial.new('<%= "ruby/rdoc#683" %>')
+    # It's the same behavior of RUBYOPT=--enable=frozen-string-literal.
+    result = eval("# frozen_string_literal: true\n#{erb.src}")
+    assert_kind_of String, result
+  end
+
   def test_generated_method_with_html_tag_yield
     top_level = @store.add_file 'file.rb'
     top_level.add_class @klass.class, @klass.name
