@@ -17,6 +17,5 @@ env:
 script: rake
 matrix:
   allow_failures:
-    - rvm: ruby-head
     - rvm: jruby-9.1.17.0
     - rvm: jruby-9.2.4.1
