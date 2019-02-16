@@ -1,5 +1,6 @@
 *.rbc
 *.swp
+/coverage
 .DS_Store
 /.rdoc
 /.rvmrc
