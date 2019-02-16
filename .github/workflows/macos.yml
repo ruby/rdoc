@@ -12,4 +12,4 @@ jobs:
         gem install bundler --no-document
         bundle install
     - name: Run test
-      run: rake
+      run: rake && RUBYOPT=--enable-frozen_string_literal rake
