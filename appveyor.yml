@@ -10,6 +10,7 @@ init:
       7z x C:\ruby_trunk.7z -oC:\ruby_trunk)
 
 install:
+  - gem install bundler --force
   - bundle install
 
 build: off
