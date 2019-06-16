@@ -55,6 +55,12 @@ class RDoc::Mixin < RDoc::CodeObject
     ]
   end
 
+  def module
+    return @memoized_module if instance_variable_defined?(:@memoized_module)
+
+    @memoized_module = lookup_module
+  end
+
   ##
   # Attempts to locate the included module object.  Returns the name if not
   # known.
@@ -72,7 +78,7 @@ class RDoc::Mixin < RDoc::CodeObject
   #
   # As of the beginning of October, 2011, no gem includes nonexistent modules.
 
-  def module
+  def lookup_module
     return @module if @module
 
     # search the current context
