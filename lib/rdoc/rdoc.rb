@@ -281,6 +281,7 @@ option)
         end
       when "directory" then
         next if rel_file_name == "CVS" || rel_file_name == ".svn"
+        next if options.skip_tests && %w[spec test].include?(File.basename(rel_file_name))
 
         created_rid = File.join rel_file_name, "created.rid"
         next if File.file? created_rid
