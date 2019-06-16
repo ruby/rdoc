@@ -341,7 +341,7 @@ class RDoc::Options
 
   ##
   # Indicates if files of test suites should be skipped
-  attr_reader :skip_tests
+  attr_accessor :skip_tests
 
   def initialize loaded_options = nil # :nodoc:
     init_ivars
