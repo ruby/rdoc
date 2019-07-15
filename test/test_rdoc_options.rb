@@ -84,6 +84,7 @@ class TestRDocOptions < RDoc::TestCase
       'title'                => nil,
       'visibility'           => :protected,
       'webcvs'               => nil,
+      'skip_tests'           => true
     }
 
     assert_equal expected, coder
@@ -756,5 +757,15 @@ rdoc_include:
   def test_visibility
     @options.visibility = :all
     assert_equal :private, @options.visibility
+  end
+
+  def test_skip_test_default_value
+    @options.parse %w[]
+    assert_equal true, @options.skip_tests
+  end
+
+  def test_no_skip_test_value
+    @options.parse %w[--no-skipping-tests]
+    assert_equal false, @options.skip_tests
   end
 end
