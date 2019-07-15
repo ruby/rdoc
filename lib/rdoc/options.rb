@@ -106,6 +106,7 @@ class RDoc::Options
     generator_options
     generators
     op_dir
+    load_ri_dir
     option_parser
     pipe
     rdoc_include
@@ -247,6 +248,11 @@ class RDoc::Options
   attr_accessor :op_dir
 
   ##
+  # The loading ri directory to generate other format
+
+  attr_accessor :load_ri_dir
+
+  ##
   # The OptionParser for this instance
 
   attr_accessor :option_parser
@@ -364,6 +370,7 @@ class RDoc::Options
     @markup = 'rdoc'
     @coverage_report = false
     @op_dir = nil
+    @load_ri_dir = nil
     @page_dir = nil
     @pipe = false
     @output_decoration = true
@@ -402,6 +409,7 @@ class RDoc::Options
     @main_page      = map['main_page']
     @markup         = map['markup']
     @op_dir         = map['op_dir']
+    @load_ri_dir    = map['load_ri_dir']
     @show_hash      = map['show_hash']
     @tab_width      = map['tab_width']
     @template_dir   = map['template_dir']
@@ -424,10 +432,11 @@ class RDoc::Options
       @hyperlink_all  == other.hyperlink_all  and
       @line_numbers   == other.line_numbers   and
       @locale         == other.locale         and
-      @locale_dir     == other.locale_dir and
+      @locale_dir     == other.locale_dir     and
       @main_page      == other.main_page      and
       @markup         == other.markup         and
       @op_dir         == other.op_dir         and
+      @load_ri_dir    == other.load_ri_dir    and
       @rdoc_include   == other.rdoc_include   and
       @show_hash      == other.show_hash      and
       @static_path    == other.static_path    and
@@ -524,9 +533,10 @@ class RDoc::Options
 
     @exclude = self.exclude
 
-    finish_page_dir
-
-    check_files
+    unless @load_ri_dir
+      finish_page_dir
+      check_files
+    end
 
     # If no template was specified, use the default template for the output
     # formatter
@@ -861,6 +871,14 @@ Usage: #{opt.program_name} [options] [names...]
       opt.on("--output=DIR", "--op", "-o",
              "Set the output directory.") do |value|
         @op_dir = value
+      end
+
+      opt.separator nil
+
+      opt.on("--load-ri-dir=DIR", Path,
+             "Specify a ri data directory to generate",
+             "other format.") do |value|
+        @load_ri_dir = value
       end
 
       opt.separator nil
