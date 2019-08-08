@@ -132,7 +132,7 @@ class TestRDocRubygemsHook < Gem::TestCase
 
   def test_generate_default_gem
     @a.loaded_from =
-      File.join Gem::Specification.default_specifications_dir, 'a.gemspec'
+      File.join Gem.default_specifications_dir, 'a.gemspec'
 
     @hook.generate
 
