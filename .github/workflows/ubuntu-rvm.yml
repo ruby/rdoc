@@ -1,0 +1,29 @@
+name: ubuntu-rvm
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby: [ 'jruby-9.2.6.0', 'jruby-9.1.17.0', 'ruby-head' ]
+    steps:
+    - uses: actions/checkout@master
+    - name: Set up RVM
+      run: |
+        curl -sSL https://get.rvm.io | bash
+    - name: Set up Ruby
+      run: |
+        source $HOME/.rvm/scripts/rvm
+        rvm install ${{ matrix.ruby }} --binary
+        rvm --default use ${{ matrix.ruby }}
+    - name: Install dependencies
+      run: |
+        source $HOME/.rvm/scripts/rvm
+        gem install bundler
+        bundle install
+    - name: Run test
+      run: |
+        source $HOME/.rvm/scripts/rvm
+        rake
