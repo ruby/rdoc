@@ -6,6 +6,6 @@ group :development do
   gem "rake"
   gem "racc", "> 1.4.10"
   gem "kpeg"
-  gem "minitest", "~> 5"
+  gem "test-unit"
   gem "rubocop"
 end
