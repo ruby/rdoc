@@ -191,7 +191,7 @@ class RDoc::TestCase < Test::Unit::TestCase
   ##
   # run capture_io with setting $VERBOSE = true
 
-  def verbose_capture_io
+  def verbose_capture_output
     capture_output do
       begin
         orig_verbose = $VERBOSE
