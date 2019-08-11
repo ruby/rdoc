@@ -6,8 +6,7 @@ rescue NoMethodError, Gem::LoadError, Bundler::GemfileNotFound
   # for ruby tests
 end
 
-require 'test-unit'
-# require 'minitest/benchmark' unless ENV['NOBENCHMARK']
+require 'test/unit'
 
 require 'fileutils'
 require 'pp'
@@ -191,7 +190,7 @@ class RDoc::TestCase < Test::Unit::TestCase
   ##
   # run capture_io with setting $VERBOSE = true
 
-  def verbose_capture_io
+  def verbose_capture_output
     capture_output do
       begin
         orig_verbose = $VERBOSE
@@ -202,7 +201,4 @@ class RDoc::TestCase < Test::Unit::TestCase
       end
     end
   end
-
-  alias capture_io capture_output
-  alias skip omit
 end
