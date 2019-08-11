@@ -323,6 +323,8 @@ class RDoc::Markup::Parser
   # The character offset for the input string at the given +byte_offset+
 
   def char_pos byte_offset
+    return byte_offset if @input.length == @input.bytesize
+
     @input.byteslice(0, byte_offset).length
   end
 
