@@ -700,7 +700,6 @@ B. l2
 
   def test_parse_trailing_cr
     expected = [ @RM::Paragraph.new('Text') ]
-    # FIXME hangs the parser:
     assert_equal expected, @RMP.parse("Text\r").parts
   end
 
