@@ -8,6 +8,7 @@ jobs:
     strategy:
       matrix:
         ruby: [ 'jruby-9.2.6.0', 'jruby-9.1.17.0', 'ruby-head' ]
+      fail-fast: false
     steps:
     - uses: actions/checkout@master
     - name: Set up RVM
