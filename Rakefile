@@ -5,7 +5,7 @@ require 'rake/testtask'
 require 'rubocop/rake_task'
 
 task :docs    => :generate
-task :test    => :generate
+task :test    => [:normal_test, :rubygems_test, :generate]
 
 PARSER_FILES = %w[
   lib/rdoc/rd/block_parser.ry
@@ -34,10 +34,16 @@ task ghpages: :rdoc do
   FileUtils.cp_r Dir.glob("/tmp/html/*"), "."
 end
 
-Rake::TestTask.new(:test) do |t|
+Rake::TestTask.new(:normal_test) do |t|
   t.libs << "test/rdoc"
   t.verbose = true
-  t.test_files = FileList['test/**/test_*.rb']
+  t.test_files = FileList["test/**/test_*.rb"].exclude("test/rdoc/test_rdoc_rubygems_hook.rb")
+end
+
+Rake::TestTask.new(:rubygems_test) do |t|
+  t.libs << "test/rdoc"
+  t.verbose = true
+  t.pattern = "test/rdoc/test_rdoc_rubygems_hook.rb"
 end
 
 path = "pkg/#{Bundler::GemHelper.gemspec.full_name}"
