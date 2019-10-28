@@ -190,6 +190,10 @@ class TestRDocRDoc < RDoc::TestCase
       FileUtils.touch a
       FileUtils.touch b
       FileUtils.touch c
+      # Use Dir.glob to convert short path of Dir.tmpdir to long path.
+      a = Dir.glob(a).first
+      b = Dir.glob(b).first
+      c = Dir.glob(c).first
 
       dot_doc = File.expand_path('.document')
       FileUtils.touch dot_doc
@@ -217,6 +221,10 @@ class TestRDocRDoc < RDoc::TestCase
       FileUtils.touch a
       FileUtils.touch b
       FileUtils.touch c
+      # Use Dir.glob to convert short path of Dir.tmpdir to long path.
+      a = Dir.glob(a).first
+      b = Dir.glob(b).first
+      c = Dir.glob(c).first
 
       dot_doc = File.expand_path('.document')
       FileUtils.touch dot_doc
