@@ -17,8 +17,8 @@ class TestRDocOptions < RDoc::TestCase
   end
 
   def test_check_files
-    skip "assumes UNIX permission model" if /mswin|mingw/ =~ RUBY_PLATFORM
-    skip "assumes that euid is not root" if Process.euid == 0
+    omit "assumes UNIX permission model" if /mswin|mingw/ =~ RUBY_PLATFORM
+    omit "assumes that euid is not root" if Process.euid == 0
 
     out, err = capture_output do
       temp_dir do
@@ -493,8 +493,14 @@ rdoc_include:
     assert_empty out
     assert_empty err
 
-    expected =
-      Pathname(Dir.tmpdir).expand_path.relative_path_from @options.root
+    expected = nil
+    begin
+      expected =
+        Pathname(Dir.tmpdir).expand_path.relative_path_from @options.root
+    rescue ArgumentError
+      # On Windows, sometimes crosses different drive letters.
+      expected = Pathname(Dir.tmpdir).expand_path
+    end
 
     assert_equal expected,     @options.page_dir
     assert_equal [Dir.tmpdir], @options.files

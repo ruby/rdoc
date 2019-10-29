@@ -163,7 +163,7 @@ class TestRDocRDoc < RDoc::TestCase
 
   def test_normalized_file_list_non_file_directory
     dev = File::NULL
-    skip "#{dev} is not a character special" unless
+    omit "#{dev} is not a character special" unless
       File.chardev? dev
 
     files = nil
@@ -190,6 +190,10 @@ class TestRDocRDoc < RDoc::TestCase
       FileUtils.touch a
       FileUtils.touch b
       FileUtils.touch c
+      # Use Dir.glob to convert short path of Dir.tmpdir to long path.
+      a = Dir.glob(a).first
+      b = Dir.glob(b).first
+      c = Dir.glob(c).first
 
       dot_doc = File.expand_path('.document')
       FileUtils.touch dot_doc
@@ -217,6 +221,10 @@ class TestRDocRDoc < RDoc::TestCase
       FileUtils.touch a
       FileUtils.touch b
       FileUtils.touch c
+      # Use Dir.glob to convert short path of Dir.tmpdir to long path.
+      a = Dir.glob(a).first
+      b = Dir.glob(b).first
+      c = Dir.glob(c).first
 
       dot_doc = File.expand_path('.document')
       FileUtils.touch dot_doc
@@ -349,8 +357,8 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_parse_file_forbidden
-    skip 'chmod not supported' if Gem.win_platform?
-    skip "assumes that euid is not root" if Process.euid == 0
+    omit 'chmod not supported' if Gem.win_platform?
+    omit "assumes that euid is not root" if Process.euid == 0
 
     @rdoc.store = RDoc::Store.new
 
