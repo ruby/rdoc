@@ -436,7 +436,7 @@ end
 def parse inline
   @inline = inline
   @src = StringScanner.new inline
-  @pre = ""
+  @pre = "".dup
   @yydebug = true
   do_parse.to_s
 end

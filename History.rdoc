@@ -1,7 +1,17 @@
-=== 5.0.0 / 2016-??-??
+=== 5.1.0 / 2017-02-24
+
+* Bug fixes
+  * Fix an issue that rdoc fails when running on Windows with RUBYOPT=-U.
+    PR #430 by Toshihiko Ichida
+
+* Minor enhancements
+  * Parse ruby 2.1 <visibility> def. PR #436 by Akira Matsuda.
+  * Suppress warnings in eval. PR #440 by Nobuyoshi Nakada.
+
+=== 5.0.0 / 2016-11-05
 
 * Major enhancements
-  * Drop to support Ruby 1.8
+  * Cleanup deprecated code targeted Ruby 1.8
 
 * Bug fixes
   * Ensure badge data is included in result of JsonIndex template.
@@ -14,6 +24,12 @@
 * Minor enhancements
   * Improve class name expansion/resolution in ri.  PR #400 by NARUSE, Yui
   * Improve performance of document generation. PR #397 by Yusuke Endoh.
+
+=== 4.3.0 / 2016-11-04
+
+* Minor enhancements
+  * Removed json dependency for Ruby 2.4.0
+  * End to support Ruby 1.8.x
 
 === 4.2.2 / 2016-02-09
 
@@ -61,7 +77,7 @@
 * Bug fixes
   * Fixed HTML labels for cross-browser compatibility.  This breaks existing
     links but enables cross-browser compatibility.  Pull request #330 by Jens
-    Wille.
+    Will.
   * RDoc handles ASCII-incompatible encodings now.  An encoding hint may need
     to be added to the file for RDoc to produce correct output, though.
     Issue #288 by Manuel Meurer.

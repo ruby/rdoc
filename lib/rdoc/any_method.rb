@@ -1,4 +1,4 @@
-# frozen_string_literal: false
+# frozen_string_literal: true
 ##
 # AnyMethod is the base class for objects representing methods
 
@@ -26,12 +26,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
 
   attr_accessor :c_function
 
-  ##
-  # Different ways to call this method
-
-  attr_reader :call_seq
-
-  ##
   # Parameters for this method
 
   attr_accessor :params
@@ -91,6 +85,19 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     elsif @params then
       "#{name}#{param_seq}"
     end
+  end
+
+  ##
+  # Different ways to call this method
+
+  def call_seq
+    unless call_seq = _call_seq
+      call_seq = is_alias_for._call_seq if is_alias_for
+    end
+
+    return unless call_seq
+
+    deduplicate_call_seq(call_seq)
   end
 
   ##
@@ -244,9 +251,9 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     if @block_params then
       # If this method has explicit block parameters, remove any explicit
       # &block
-      params.sub!(/,?\s*&\w+/, '')
+      params = params.sub(/,?\s*&\w+/, '')
     else
-      params.sub!(/\&(\w+)/, '\1')
+      params = params.sub(/\&(\w+)/, '\1')
     end
 
     params = params.gsub(/\s+/, '').split(',').reject(&:empty?)
@@ -265,7 +272,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       params = params.sub(/(\|[^|]+\|)\s*\.\.\.\s*(end|\})/, '\1 \2')
     elsif @params then
       params = @params.gsub(/\s*\#.*/, '')
-      params = params.tr("\n", " ").squeeze(" ")
+      params = params.tr_s("\n ", " ")
       params = "(#{params})" unless params[0] == ?(
     else
       params = ''
@@ -274,12 +281,11 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     if @block_params then
       # If this method has explicit block parameters, remove any explicit
       # &block
-      params.sub!(/,?\s*&\w+/, '')
+      params = params.sub(/,?\s*&\w+/, '')
 
-      block = @block_params.gsub(/\s*\#.*/, '')
-      block = block.tr("\n", " ").squeeze(" ")
+      block = @block_params.tr_s("\n ", " ")
       if block[0] == ?(
-        block.sub!(/^\(/, '').sub!(/\)/, '')
+        block = block.sub(/^\(/, '').sub(/\)/, '')
       end
       params << " { |#{block}| ... }"
     end
@@ -313,5 +319,43 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @superclass_method
   end
 
-end
+  protected
 
+  ##
+  # call_seq without deduplication and alias lookup.
+
+  def _call_seq
+    @call_seq if defined?(@call_seq) && @call_seq
+  end
+
+  private
+
+  ##
+  # call_seq with alias examples information removed, if this
+  # method is an alias method.
+
+  def deduplicate_call_seq(call_seq)
+    return call_seq unless is_alias_for || !aliases.empty?
+
+    method_name = self.name
+    method_name = method_name[0, 1] if method_name =~ /\A\[/
+
+    entries = call_seq.split "\n"
+
+    ignore = aliases.map(&:name)
+    if is_alias_for
+      ignore << is_alias_for.name
+      ignore.concat is_alias_for.aliases.map(&:name)
+    end
+    ignore.map! { |n| n =~ /\A\[/ ? n[0, 1] : n}
+    ignore.delete(method_name)
+    ignore = Regexp.union(ignore)
+
+    matching = entries.reject do |entry|
+      entry =~ /^\w*\.?#{ignore}/ or
+        entry =~ /\s#{ignore}\s/
+    end
+
+    matching.join "\n"
+  end
+end

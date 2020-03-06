@@ -420,7 +420,7 @@ def next_token # :nodoc:
       if @in_verbatim
         [:STRINGLINE, line]
       else
-        @indent_stack.push("\s" << newIndent)
+        @indent_stack.push("\s" + newIndent)
         [:ITEMLISTLINE, rest]
       end
     end
@@ -432,7 +432,7 @@ def next_token # :nodoc:
       if @in_verbatim
         [:STRINGLINE, line]
       else
-        @indent_stack.push("\s" * mark.size << newIndent)
+        @indent_stack.push("\s" * mark.size + newIndent)
         [:ENUMLISTLINE, rest]
       end
     end
@@ -466,7 +466,7 @@ def next_token # :nodoc:
       [:STRINGLINE, line]
     end
   else
-    raise "[BUG] parsing error may occured."
+    raise "[BUG] parsing error may occurred."
   end
 end
 
