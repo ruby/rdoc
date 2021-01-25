@@ -506,6 +506,7 @@ Block =     @BlankLine*
             ( BlockQuote
             | Verbatim
             | CodeFence
+            | Table
             | Note
             | Reference
             | HorizontalRule
@@ -1194,6 +1195,23 @@ CodeFence = &{ github? }
               verbatim.format = format.intern if format.instance_of?(String)
               verbatim
             }
+
+Table = &{ github? }
+        TableRow:header TableLine:line TableRow+:body
+        { table = RDoc::Markup::Table.new(header, line, body) }
+
+TableRow = < TableItem+:row > "|" @Newline
+           { row }
+TableItem = "|" < (!"|" !@Newline .)+ >
+            { text.strip }
+
+TableLine = TableColumn+:line "|" @Newline
+            { line }
+TableColumn = "|" < ( "-"+ ":"? | ":" "-"* ) >
+              {
+                text.start_with?(":") ? :left :
+                text.end_with?(":") ? :right : nil
+              }
 
 DefinitionList = &{ definition_lists? }
                  ( DefinitionListItem+:list )
