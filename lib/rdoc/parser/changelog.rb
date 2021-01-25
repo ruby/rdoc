@@ -118,11 +118,11 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
 
   def parse_date(date)
     case date
-    when /\A\s*(\d+)-(\d+)-(\d+)(?: (\d+):(\d+):(\d+) *([-+]\d\d)(\d\d))?\b/
+    when /\A\s*(\d+)-(\d+)-(\d+)(?:[ T](\d+):(\d+):(\d+) *([-+]\d\d):?(\d\d))?\b/
       Time.new($1, $2, $3, $4, $5, $6, ("#{$7}:#{$8}" if $7))
-    when /\A\s*\w{3}, +(\d+) (\w{3}) (\d+) (\d+):(\d+):(\d+) *(?:([-+]\d\d)(\d\d))\b/
+    when /\A\s*\w{3}, +(\d+) (\w{3}) (\d+) (\d+):(\d+):(\d+) *(?:([-+]\d\d):?(\d\d))\b/
       Time.new($3, $2, $1, $4, $5, $6, ("#{$7}:#{$8}" if $7))
-    when /\A\s*\w{3} (\w{3}) +(\d+) (\d+) (\d+):(\d+):(\d+) *(?:([-+]\d\d)(\d\d))\b/
+    when /\A\s*\w{3} (\w{3}) +(\d+) (\d+) (\d+):(\d+):(\d+) *(?:([-+]\d\d):?(\d\d))\b/
       Time.new($3, $1, $2, $4, $5, $6, ("#{$7}:#{$8}" if $7))
     when /\A\s*\w{3} (\w{3}) +(\d+) (\d+):(\d+):(\d+) (\d+)\b/
       Time.new($6, $1, $2, $3, $4, $5)
@@ -231,13 +231,13 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
         # date = header["CommitDate"] || header["Date"]
         date = header[/^ *(?:Author)?Date: +(.*)/, 1]
         author = header[/^ *Author: +(.*)/, 1]
-        if /(\d+)-(\d+)-(\d+) (\d+):(\d+):(\d+) *([-+]\d\d)(\d\d)/ =~
-           (header[/^ *CommitDate: +(.*)/, 1] || date)
-          time = Time.new($1, $2, $3, $4, $5, $6, "#{$7}:#{$8}")
+        begin
+          time = parse_date(header[/^ *CommitDate: +(.*)/, 1] || date)
           @time_cache[entry_name] = time
           author.sub!(/\s*<(.*)>/, '')
           email = $1
           entries << [entry_name, [author, email, date, entry_body]]
+        rescue ArgumentError
         end
       end
 
