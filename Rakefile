@@ -61,13 +61,13 @@ package_parser_files = PARSER_FILES.map do |parser_file|
 end
 
 parsed_files = PARSER_FILES.map do |parser_file|
-  name = File.basename(parser_file, File.extname(parser_file))
-  _path = File.dirname(parser_file)
-  parsed_file = "#{_path}/#{name}.rb"
+  ext = File.extname(parser_file)
+  parsed_file = "#{parser_file.chomp(ext)}.rb"
 
   file parsed_file => parser_file do |t|
     puts "Generating #{parsed_file}..."
-    if parser_file =~ /\.ry\z/ # need racc
+    case ext
+    when '.ry' # need racc
       racc = Gem.bin_path 'racc', 'racc'
       rb_file = parser_file.gsub(/\.ry\z/, ".rb")
       ruby "#{racc} -l -o #{rb_file} #{parser_file}"
@@ -76,7 +76,7 @@ parsed_files = PARSER_FILES.map do |parser_file|
         f.rewind
         f.write newtext
       end
-    elsif parser_file =~ /\.kpeg\z/ # need kpeg
+    when '.kpeg' # need kpeg
       kpeg = Gem.bin_path 'kpeg', 'kpeg'
       rb_file = parser_file.gsub(/\.kpeg\z/, ".rb")
       ruby "#{kpeg} -fsv -o #{rb_file} #{parser_file}"
