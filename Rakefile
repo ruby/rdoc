@@ -2,7 +2,6 @@ $:.unshift File.expand_path 'lib'
 require 'rdoc/task'
 require 'bundler/gem_tasks'
 require 'rake/testtask'
-require 'rubocop/rake_task'
 
 task :docs    => :generate
 task :test    => [:normal_test, :rubygems_test]
@@ -88,12 +87,15 @@ parsed_files = PARSER_FILES.map do |parser_file|
 end
 
 task "#{path}.gem" => package_parser_files
-
-RuboCop::RakeTask.new(:rubocop) do |t|
-  t.options = [*parsed_files]
-end
-
 desc "Genrate all files used racc and kpeg"
 task :generate => parsed_files
 
-task :build => [:generate, "rubocop:auto_correct"]
+begin
+  require 'rubocop/rake_task'
+rescue LoadError
+else
+  RuboCop::RakeTask.new(:rubocop) do |t|
+    t.options = [*parsed_files]
+  end
+  task :build => [:generate, "rubocop:auto_correct"]
+end
