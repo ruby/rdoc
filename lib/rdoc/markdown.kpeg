@@ -896,7 +896,8 @@ StyleBlock =    < InStyleTags >
                   end }
 
 Inlines  =  ( !@Endline Inline:i { i }
-            | @Endline:c &Inline { c } )+:chunks @Endline?
+            | @Endline:c !( &{ github? } Ticks3 /[^`\n]*$/ )
+	      &Inline { c } )+:chunks @Endline?
             { chunks }
 
 Inline  = Str
