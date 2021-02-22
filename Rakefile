@@ -65,7 +65,7 @@ parsed_files = PARSER_FILES.map do |parser_file|
   _path = File.dirname(parser_file)
   parsed_file = "#{_path}/#{name}.rb"
 
-  file parsed_file do |t|
+  file parsed_file => parser_file do |t|
     puts "Generating #{parsed_file}..."
     if parser_file =~ /\.ry\z/ # need racc
       racc = Gem.bin_path 'racc', 'racc'
