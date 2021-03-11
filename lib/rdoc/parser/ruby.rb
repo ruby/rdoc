@@ -1867,11 +1867,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
         when 'end' then
           nest -= 1
+          container.ongoing_visibility = save_visibility
+
+          parse_comment container, tk, comment unless comment.empty?
+
           if nest == 0 then
-            container.ongoing_visibility = save_visibility
-
-            parse_comment container, tk, comment unless comment.empty?
-
             return
           end
         end
@@ -1882,7 +1882,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         end
 
       when :on_ident then
-        if nest == 1 and current_method.nil? then
+        if current_method.nil? then
           keep_comment = parse_identifier container, single, tk, comment
         end
 
