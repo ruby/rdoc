@@ -1201,7 +1201,7 @@ Table = &{ github? }
         TableRow:header TableLine:line TableRow+:body
         { table = RDoc::Markup::Table.new(header, line, body) }
 
-TableRow = < TableItem+:row > "|" @Newline
+TableRow = TableItem+:row "|" @Newline
            { row }
 TableItem = "|" < (!"|" !@Newline .)+ >
             { text.strip }
