@@ -1209,8 +1209,7 @@ TableItem = "|" < (!"|" !@Newline .)+ >
 TableLine = TableColumn+:line "|" @Newline
             { line }
 TableColumn = "|" < ( "-"+ ":"? | ":" "-"* ) >
-              {
-                text.start_with?(":") ? :left :
+              { text.start_with?(":") ? :left :
                 text.end_with?(":") ? :right : nil
               }
 
