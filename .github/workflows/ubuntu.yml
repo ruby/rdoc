@@ -9,7 +9,7 @@ jobs:
       matrix:
         ruby: [ 'jruby-9.2.17.0', 'head', '3.0', '2.7', '2.6', '2.5', '2.4' ]
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
