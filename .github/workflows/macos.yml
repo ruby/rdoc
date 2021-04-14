@@ -8,8 +8,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
-      run: |
-        gem install bundler --no-document
-        bundle install
+      run: bundle install
     - name: Run test
       run: rake && RUBYOPT=--enable-frozen_string_literal rake
