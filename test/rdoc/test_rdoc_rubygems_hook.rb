@@ -217,7 +217,7 @@ class TestRDocRubygemsHook < Gem::TestCase
     FileUtils.mkdir_p @a.base_dir
     FileUtils.chmod 0, @a.base_dir
 
-    e = assert_raises Gem::FilePermissionError do
+    e = assert_raise Gem::FilePermissionError do
       @hook.remove
     end
 
@@ -247,7 +247,7 @@ class TestRDocRubygemsHook < Gem::TestCase
     FileUtils.mkdir_p @a.doc_dir
     FileUtils.chmod 0, @a.doc_dir
 
-    e = assert_raises Gem::FilePermissionError do
+    e = assert_raise Gem::FilePermissionError do
       @hook.setup
     end
 
