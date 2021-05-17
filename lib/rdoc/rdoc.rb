@@ -161,12 +161,14 @@ class RDoc::RDoc
 
     RDoc.load_yaml
 
+    load_options = (RDoc.instance_variable_get(:@YAML_LOAD_NEEDS_PERMITTED_CLASSES) ?
+      {permitted_classes: [RDoc::Options, Symbol]} : {})
     begin
-      options = YAML.load_file '.rdoc_options'
+      options = YAML.load_file '.rdoc_options', **load_options
     rescue Psych::SyntaxError
+    else
+      return RDoc::Options.new unless options # Allow empty file.
     end
-
-    return RDoc::Options.new if options == false # Allow empty file.
 
     raise RDoc::Error, "#{options_file} is not a valid rdoc options file" unless
       RDoc::Options === options or Hash === options

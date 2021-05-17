@@ -118,6 +118,8 @@ module RDoc
     ensure
       require 'yaml'
     end
+
+    @YAML_LOAD_NEEDS_PERMITTED_CLASSES = YAML.method(:load).parameters.any? {|_, arg| arg == :permitted_classes}
   end
 
   def self.home
