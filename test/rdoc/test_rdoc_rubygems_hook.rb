@@ -1,40 +1,46 @@
 # frozen_string_literal: true
-require 'rubygems/test_case'
+require "rubygems"
+require "fileutils"
+require "tmpdir"
 require 'rdoc/rubygems_hook'
+require "test/unit"
 
-class TestRDocRubygemsHook < Gem::TestCase
-  unless method_defined?(:assert_path_exist)
-    alias assert_path_exist assert_path_exists
-  end
-  unless method_defined?(:assert_path_not_exist)
-    alias assert_path_not_exist refute_path_exists
-  end
-  unless method_defined?(:assert_raise)
-    alias assert_raise assert_raises
-  end
-
+class TestRDocRubygemsHook < Test::Unit::TestCase
   def setup
-    super
+    FileUtils.mkdir_p File.expand_path("tmp")
 
-    @a = util_spec 'a', 2 do |s|
+    @a = Gem::Specification.new do |s|
+      s.platform    = Gem::Platform::RUBY
+      s.name        = "a"
+      s.version     = 2
       s.rdoc_options = %w[--main MyTitle]
       s.extra_rdoc_files = %w[README]
     end
+    @tempdir = Dir.mktmpdir("test_rubygems_", File.expand_path("tmp"))
 
-    write_file File.join(@tempdir, 'lib', 'a.rb')
-    write_file File.join(@tempdir, 'README')
+    @a.instance_variable_set(:@doc_dir, File.join(@tempdir, "doc"))
+    @a.instance_variable_set(:@gem_dir, File.join(@tempdir, "a-2"))
+    @a.instance_variable_set(:@full_gem_path, File.join(@tempdir, "a-2"))
+    @a.loaded_from = File.join(@tempdir, 'a-2', 'a-2.gemspec')
 
-    install_gem @a
+    FileUtils.mkdir_p File.join(@tempdir, 'a-2', 'lib')
+    FileUtils.touch   File.join(@tempdir, 'a-2', 'lib', 'a.rb')
+    FileUtils.touch   File.join(@tempdir, 'a-2', 'README')
 
     @hook = RDoc::RubygemsHook.new @a
 
     begin
       RDoc::RubygemsHook.load_rdoc
     rescue Gem::DocumentError => e
-      skip e.message
+      pend e.message
     end
+    @old_ui = Gem::DefaultUserInteraction.ui
+    Gem::DefaultUserInteraction.ui = Gem::SilentUI.new
+  end
 
-    Gem.configuration[:rdoc] = nil
+  def teardown
+    Gem::DefaultUserInteraction.ui = @old_ui
+    FileUtils.rm_rf File.expand_path("tmp")
   end
 
   def test_initialize
@@ -214,8 +220,8 @@ class TestRDocRubygemsHook < Gem::TestCase
   end
 
   def test_remove_unwritable
-    skip 'chmod not supported' if Gem.win_platform?
-    skip "assumes that euid is not root" if Process.euid == 0
+    pend 'chmod not supported' if Gem.win_platform?
+    pend "assumes that euid is not root" if Process.euid == 0
 
     FileUtils.mkdir_p @a.base_dir
     FileUtils.chmod 0, @a.base_dir
@@ -244,8 +250,8 @@ class TestRDocRubygemsHook < Gem::TestCase
   end
 
   def test_setup_unwritable
-    skip 'chmod not supported' if Gem.win_platform?
-    skip "assumes that euid is not root" if Process.euid == 0
+    pend 'chmod not supported' if Gem.win_platform?
+    pend "assumes that euid is not root" if Process.euid == 0
 
     FileUtils.mkdir_p @a.doc_dir
     FileUtils.chmod 0, @a.doc_dir
