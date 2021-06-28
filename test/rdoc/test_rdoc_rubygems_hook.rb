@@ -32,7 +32,7 @@ class TestRDocRubygemsHook < Test::Unit::TestCase
     begin
       RDoc::RubygemsHook.load_rdoc
     rescue Gem::DocumentError => e
-      pend e.message
+      omit e.message
     end
     @old_ui = Gem::DefaultUserInteraction.ui
     Gem::DefaultUserInteraction.ui = Gem::SilentUI.new
@@ -220,8 +220,8 @@ class TestRDocRubygemsHook < Test::Unit::TestCase
   end
 
   def test_remove_unwritable
-    pend 'chmod not supported' if Gem.win_platform?
-    pend "assumes that euid is not root" if Process.euid == 0
+    omit 'chmod not supported' if Gem.win_platform?
+    omit "assumes that euid is not root" if Process.euid == 0
 
     FileUtils.mkdir_p @a.base_dir
     FileUtils.chmod 0, @a.base_dir
@@ -250,8 +250,8 @@ class TestRDocRubygemsHook < Test::Unit::TestCase
   end
 
   def test_setup_unwritable
-    pend 'chmod not supported' if Gem.win_platform?
-    pend "assumes that euid is not root" if Process.euid == 0
+    omit 'chmod not supported' if Gem.win_platform?
+    omit "assumes that euid is not root" if Process.euid == 0
 
     FileUtils.mkdir_p @a.doc_dir
     FileUtils.chmod 0, @a.doc_dir
