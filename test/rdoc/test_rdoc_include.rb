@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require File.expand_path '../xref_test_case', __FILE__
+require_relative 'xref_test_case'
 
 class TestRDocInclude < XrefTestCase
 
@@ -106,4 +106,3 @@ class TestRDocInclude < XrefTestCase
   end
 
 end
-
