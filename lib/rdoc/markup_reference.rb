@@ -1,7 +1,7 @@
 # \Class \RDoc::MarkupReference exists only to provide a suitable home
 # for a reference document for \RDoc markup.
 #
-# All objects defined here -- classes, modules, methods, aliases,
+# All objects defined in this class -- classes, modules, methods, aliases,
 # attributes, and constants -- are solely for illustrating \RDoc markup,
 # and have no other legitimate use.
 #
@@ -55,19 +55,18 @@
 # A paragraph consists of one or more non-empty lines of ordinary text,
 # each beginning at the current margin.
 #
-# Note::  Here, <em>ordinary text</em> means text that is <em>not identified</em>
-#         as some different kind of block.
-#         The identifier usually involves indentation,
-#         or one or more leading or embedded characters.
-#         See below.
+# Note: Here, <em>ordinary text</em> means text that is <em>not identified</em>
+# as some different kind of block.
+# The identifier usually involves indentation,
+# or one or more leading or embedded characters. See below.
 #
 # Paragraphs are separated by one or more empty lines
 # beginning at the current margin.
 #
 # Input:
 #
-#   RDoc produces HTML and command-line documentation for Ruby projects.
-#   RDoc includes the rdoc and ri tools for generating and displaying
+#   \RDoc produces HTML and command-line documentation for Ruby projects.
+#   \RDoc includes the rdoc and ri tools for generating and displaying
 #   documentation from the command-line.
 #
 #   You'll love it.
@@ -75,8 +74,8 @@
 # Rendered HTML (everything between the two horizontal rules):
 #
 # ---
-# RDoc produces HTML and command-line documentation for Ruby projects.
-# RDoc includes the rdoc and ri tools for generating and displaying
+# \RDoc produces HTML and command-line documentation for Ruby projects.
+# \RDoc includes the rdoc and ri tools for generating and displaying
 # documentation from the command-line.
 #
 # You'll love it.
@@ -481,142 +480,187 @@
 #
 # ==== Links
 #
-# ===== Auto-Links
-#
-#
-# Certain strings are automatically converted to links.
-# Any such auto-link may be suppressed,
+# Certain strings in \RDoc text are converted to links.
+# Any such linking may be suppressed,
 # either by prefixing a backslash or omitting a prefix.
+#
+# This section shows how to link to (or suppress linking to) various
+# targets.
 #
 # [Class]
 #
-#   - On-page: <tt>DummyClass</tt> is linked to as DummyClass.
+#   - On-page: <tt>DummyClass</tt> is linked to DummyClass.
 #   - Suppressed: <tt>\DummyClass</tt> is not linked to \DummyClass.
-#   - Off-page: <tt>RDoc::Markup</tt> is linked as RDoc::Markup.
+#   - Off-page: <tt>RDoc::Markup</tt> is linked to RDoc::Markup.
 #   - Suppressed: <tt>\RDoc::Markup</tt> is not linked to \RDoc::Markup.
 #
 # [Module]
 #
-#   - On-page: <tt>DummyModule</tt> is linked as DummyModule.
+#   - On-page: <tt>DummyModule</tt> is linked to DummyModule.
 #   - Suppressed: <tt>\DummyModule</tt> is not linked to \DummyModule.
-#   - Off-page: <tt>RDoc</tt> is linked as RDoc.
+#   - Off-page: <tt>RDoc</tt> is linked to RDoc.
 #   - Suppressed: <tt>\RDoc</tt> is not linked to \RDoc.
 #
 # [Constant]
 #
-#   - On-page: <tt>DUMMY_CONSTANT</tt> is linked as DUMMY_CONSTANT.
+#   - On-page: <tt>DUMMY_CONSTANT</tt> is linked to DUMMY_CONSTANT.
 #   - Suppressed: <tt>\DUMMY_CONSTANT</tt> is not linked to \DUMMY_CONSTANT.
-#   - Off-page: <tt>RDoc::Text::MARKUP_FORMAT</tt> is linked as RDoc::Text::MARKUP_FORMAT.
+#   - Off-page: <tt>RDoc::Text::MARKUP_FORMAT</tt> is linked to RDoc::Text::MARKUP_FORMAT.
 #   - Suppressed:  <tt>\RDoc::Text::MARKUP_FORMAT</tt> is not linked
 #     to \RDoc::Text::MARKUP_FORMAT.
 #
+#   [Reviewers note: the off-page link does not work. Should it?]
+#
 # [Singleton method]
 #
-#   - On-page: <tt>::dummy_singleton_method</tt> is linked as ::dummy_singleton_method.
+#   - On-page: <tt>::dummy_singleton_method</tt> is linked to ::dummy_singleton_method.
 #   - Suppressed: <tt>dummy_singleton_method</tt> is not linked to dummy_singleton_method.
-#   - Off-page<tt>RDoc::TokenStream::to_html</tt> is linked as RDoc::TokenStream::to_html.
+#   - Off-page<tt>RDoc::TokenStream::to_html</tt> is linked to RDoc::TokenStream::to_html.
 #   - Suppressed: <tt>\RDoc::TokenStream::to_html</tt> is not linked
 #     to \RDoc::TokenStream::to_html.
 #
+#   Note: Occasionally \RDoc does not link to a method whose name
+#   has only special characters. Check whether the links you were expecting
+#   are actually there.  If not, you'll need to put in a labelled link;
+#   see below.
+#
+#   Pro tip: The link to any method is available in the alphabetical table of contents
+#   at the top left of the page for the class or module.
+#
 # [Instance method]
 #
-#   - On-page: <tt>#dummy_instance_method</tt> is linked as #dummy_instance_method.
+#   - On-page: <tt>#dummy_instance_method</tt> is linked to #dummy_instance_method.
 #   - Suppressed: <tt>dummy_instance_method</tt> is not linked to dummy_instance_method.
-#   - Off-page: <tt>RDoc::Alias#html_name</tt> is linked as RDoc::Alias#html_name.
+#   - Off-page: <tt>RDoc::Alias#html_name</tt> is linked to RDoc::Alias#html_name.
 #   - Suppressed:  <tt>\RDoc::Alias#html_name</tt> is not linked
 #     to \RDoc::Alias#html_name.
 #
+#     See the Note and Pro Tip immediately above.
+#
 # [Attribute]
 #
-#   - On-page: <tt>#dummy_attribute</tt> is linked as #dummy_attribute.
+#   - On-page: <tt>#dummy_attribute</tt> is linked to #dummy_attribute.
 #   - Suppressed: <tt>dummy_attribute</tt> is not linked to dummy_attribute.
-#   - Off-page: <tt>RDoc::Alias#name</tt> is linked as RDoc::Alias#name.
+#   - Off-page: <tt>RDoc::Alias#name</tt> is linked to RDoc::Alias#name.
 #   - Suppressed: <tt>\RDoc::Alias#name</tt> is not linked to \RDoc::Alias#name.
 #
 # [Alias]
 #
-#   - On-page: <tt>#dummy_alias</tt> is linked as #dummy_alias.
+#   - On-page: <tt>#dummy_alias</tt> is linked to #dummy_alias.
 #   - Suppressed: <tt>dummy_alias</tt> is not linked to dummy_alias.
-#   - Off-page: <tt>RDoc::Alias#new_name</tt> is linked as RDoc::Alias#new_name.
+#   - Off-page: <tt>RDoc::Alias#new_name</tt> is linked to RDoc::Alias#new_name.
 #   - Suppressed: <tt>\RDoc::Alias#new_name</tt> is not linked to \RDoc::Alias#new_name.
 #
 # [Protocol +http+]
 #
-#   - Linked: <tt>http://yahoo.com</tt> is linked as http://yahoo.com.
+#   - Linked: <tt>http://yahoo.com</tt> is linked to http://yahoo.com.
 #   - Suppressed: <tt>\http://yahoo.com</tt> is not linked to \http://yahoo.com.
 #
 # [Protocol +https+]
 #
-#   - Linked: <tt>https://github.com</tt> is linked as https://github.com.
+#   - Linked: <tt>https://github.com</tt> is linked to https://github.com.
 #   - Suppressed: <tt>\https://github.com</tt> is not linked to \https://github.com.
 #
 # [Protocol +www+]
 #
-#   - Linked: <tt>www.yahoo.com</tt> is linked as www.yahoo.com.
+#   - Linked: <tt>www.yahoo.com</tt> is linked to www.yahoo.com.
 #   - Suppressed: <tt>\www.yahoo.com</tt> is not linked to \www.yahoo.com.
 #
 # [Protocol +ftp+]
 #
-#   - Linked: <tt>ftp://nosuch.site</tt> is linked as ftp://nosuch.site.
+#   - Linked: <tt>ftp://nosuch.site</tt> is linked to ftp://nosuch.site.
 #   - Suppressed: <tt>\ftp://nosuch.site</tt> is not linked to \ftp://nosuch.site.
 #
 # [Protocol +mailto+]
 #
-#   - Linked:  <tt>mailto:/foo@bar.com</tt> is linked as mailto://foo@bar.com.
+#   - Linked:  <tt>mailto:/foo@bar.com</tt> is linked to mailto://foo@bar.com.
 #   - Suppressed:  <tt>\mailto:/foo@bar.com</tt> is not linked to \mailto://foo@bar.com.
 #
 # [Protocol +irc+]
 #
-#   - link: <tt>irc://irc.freenode.net/ruby</tt> is linked as irc://irc.freenode.net/ruby.
+#   - link: <tt>irc://irc.freenode.net/ruby</tt> is linked to irc://irc.freenode.net/ruby.
 #   - Suppressed: <tt>\irc://irc.freenode.net/ruby</tt> is not linked
 #     to \irc://irc.freenode.net/ruby.
 #
-# [Image file extensions]
+# [Image file extension]
 #
-#   - Link: <tt>https://sample-videos.com/img/Sample-jpg-image-50kb.jpg</tt> is
+#   - Link: <tt>https://www.ruby-lang.org/images/header-ruby-logo@2x.png</tt> is
 #     converted to an in-line HTML +img+ tag, which displays the image in the HTML:
-#     https://sample-videos.com/img/Sample-jpg-image-50kb.jpg.
 #
-#     Also works for +bmp+, +gif+, +jpeg+, and +png+ files.
+#     https://www.ruby-lang.org/images/header-ruby-logo@2x.png
 #
-#   - Suppressed: <tt>\https://sample-videos.com/img/Sample-jpg-image-50kb.jpg</tt>
-#     does not link to \https://sample-videos.com/img/Sample-jpg-image-50kb.jpg.
+#     Also works for +bmp+, +gif+, +jpeg+, and +jpg+ files.
+#
+#     Note: Works only for a fully qualified URL.
+#
+#   - Suppressed: <tt>\https://www.ruby-lang.org/images/header-ruby-logo@2x.png</tt>
+#     does not link to \https://www.ruby-lang.org/images/header-ruby-logo@2x.png.
+#
+# [Image link]
+#
+#   Use the <tt>rdoc-image</tt> scheme to create an image that is also a link:
+#
+#     {rdoc-image:path/to/image}[link_target]
+#
+#   - Link: <tt>{rdoc-image:https://www.ruby-lang.org/images/header-ruby-logo@2x.png}[https://www.ruby-lang.org]</tt>
+#     displays image <tt>https://www.ruby-lang.org/images/header-ruby-logo@2x.png</tt>
+#     as a link to <tt>https://www.ruby-lang.org</tt>.
+#
+#     {rdoc-image:https://www.ruby-lang.org/images/header-ruby-logo@2x.png}[https://www.ruby-lang.org]
+#
+#   - Suppressed: <tt>\{rdoc-image:https://www.ruby-lang.org/images/header-ruby-logo@2x.png}[https://www.ruby-lang.org]</tt> creates no link.
+#
+#     \{rdoc-image:https://www.ruby-lang.org/images/header-ruby-logo@2x.png}[https://www.ruby-lang.org]
+#
+#   A relative path as the target also works:
+#
+#   - Link: <tt>{rdoc-image:https://www.ruby-lang.org/images/header-ruby-logo@2x.png}[./Alias.html]</tt> links to <tt>./Alias.html</tt>
+#
+#     {rdoc-image:https://www.ruby-lang.org/images/header-ruby-logo@2x.png}[./Alias.html]
 #
 # [Heading]
 #
-#   - Link: <tt>RDoc::Generator@Registering+a+Generator</tt> links to
-#     RDoc::Generator@Registering+a+Generator.
+#   - Link: <tt>RDoc::Markup@Links</tt> links to RDoc::Markup@Links.
 #
-#     Note that spaces in the actual heading are represented by <tt>+</tt> characters
-#     in the linkable text.
-#     Punctuation and other special characters must be escaped like CGI.escape.
+#   - Suppressed: <tt>\RDoc::Markup@Links</tt> does not link to \RDoc::Markup@Links.
 #
-#   - Suppressed: <tt>\RDoc::Generator@Registering+a+Generator</tt> does not link \
-#     to RDoc::Generator@Registering+a+Generator\.
+#   Note that spaces in the actual heading are represented by <tt>+</tt> characters
+#   in the linkable text.
+#
+#   - Link: <tt>RDoc::Markup@Escaping+Text+Markup</tt>
+#     links to RDoc::Markup@Escaping+Text+Markup.
+#
+#   Punctuation and other special characters must be escaped like CGI.escape.
+#
+#   Pro tip: The link to any heading is available in the alphabetical table of contents
+#   at the top left of the page for the class or module.
 #
 # [Section]
 #
-#   See [Directives for Categorizing Documentation]{#label-Directives+for+Categorizing }
-#   - Link: <tt>RDoc::Markup::ToHtml@Visitor</tt> links to RDoc::Markup::ToHtml@Visitor.
+#   See {Directives for Categorizing Documentation}[#class-RDOC::MarkupReference-label-Directives+for+Categorizing+Documentation].
 #
-#     If a section and a heading share the same name, the link leads to the section.
+#   - Link: <tt>RDoc::Markup::ToHtml@Visitor</tt> links to RDoc::Markup::ToHtml@Visitor.
 #
 #   - Suppressed: <tt>\RDoc::Markup::ToHtml@Visitor</tt> does not link
 #     to \RDoc::Markup::ToHtml@Visitor.
 #
-# ===== Explicit Links
+#   If a section and a heading share the same name, the link target is the section.
 #
+# [Labeled link]
 #
-# ===== Labeled Links
+# [Multi-word labeled link]
 #
-# ===== Links to RDoc
+# [Labeled link to label]
 #
-# ===== Links to Web Pages
+#   rdoc-label:label_name
 #
-# ===== Links to Images
+# [Labeled link with return link]
 #
-# ===== Links to RDoc Headings
+#   rdoc-label:label-other:label-mine
 #
+# rdoc-ref
+#
+# link:
 #
 # === Directives
 #
@@ -698,7 +742,6 @@
 #
 #
 # class, a module, a method, an alias, a constant, or an attribute
-#--
 
 class RDOC::MarkupReference
 
@@ -707,7 +750,7 @@ class RDOC::MarkupReference
   def self.dummy_singleton_method; end
   def dummy_instance_method; end;
   alias dummy_alias dummy_instance_method
-  attr_accessor :dummy_attribute\
+  attr_accessor :dummy_attribute
   DUMMY_CONSTANT = ''
 
 end
