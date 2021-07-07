@@ -694,8 +694,15 @@
 # Directives for method documentation:
 #
 # - [<tt>:call-seq:</tt>]
-# - [<tt>:arg: _arg_name_</tt> or <tt>:args: _arg_names_</tt>]
-# - [<tt>:yield:</tt> or <tt>:yields: _arg_names_</tt>]
+#   For the given method, specifies the calling sequence to be reported in the HTML,
+#   overriding the actual calling sequence in the Ruby code.
+#   See #call_seq.
+# - [<tt>:arg: _arg_name_</tt>]
+#   For the given method, specifies the single argument to be reported in the HTML,
+#   overriding the actual arguments in the Ruby code.
+# - [<tt>:args: _arg_names_</tt>]
+# - [<tt>:yield:</tt>]
+# - [<tt>:yields: _arg_names_</tt>]
 #
 # ==== Directives for Categorizing Documentation
 #
@@ -752,5 +759,54 @@ class RDOC::MarkupReference
   alias dummy_alias dummy_instance_method
   attr_accessor :dummy_attribute
   DUMMY_CONSTANT = ''
+
+  # :call-seq:
+  #   Can be anything -> bar
+  #   Also anything more -> baz or bat
+  #
+  # The <tt>:call-seq:</tt> directive overrides the actual calling sequence
+  # found in the Ruby code.
+  #
+  # - It can specify anything at all.
+  # - It can have multiple calling sequences.
+  #
+  # This one includes <tt>Can be anything -> foo</tt>, which is nonsense.
+  #
+  # Note that the "arrow" is two characters, hyphen and right angle-bracket,
+  # which is made into a single character in the HTML.
+  #
+  # Here is the actual code for this method:
+  #
+  #   def call_seq(foo)
+  #     nil
+  #   end
+  #
+  # And here is the <tt>:call-seq:</t> directive given for the method:
+  #
+  #   :call-seq:
+  #     Can be anything -> bar
+  #     Also anything more -> baz or bat
+  #
+  def call_seq(foo)
+    nil
+  end
+
+  # :arg: baz
+  #
+  # The <tt>:arg:</tt> directive overrides the actual arguments found in the Ruby code.
+  #
+  # Here is the actual code for this method:
+  #
+  #   def arg(foo, bar)
+  #     nil
+  #   end
+  #
+  # And here is the <tt>:arg:</tt> directive given for the method:
+  #
+  #   :arg: baz
+  #
+  def arg(foo, bar)
+    nil
+  end
 
 end
