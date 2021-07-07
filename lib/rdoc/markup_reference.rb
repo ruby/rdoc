@@ -696,13 +696,15 @@
 # - [<tt>:call-seq:</tt>]
 #   For the given method, specifies the calling sequence to be reported in the HTML,
 #   overriding the actual calling sequence in the Ruby code.
-#   See #call_seq.
-# - [<tt>:arg: _arg_name_</tt>]
-#   For the given method, specifies the single argument to be reported in the HTML,
+#   See #call_seq_directive.
+# - [<tt>:args: _arg_names_</tt> (aliased as <tt>:arg</tt>)]
+#   For the given method, specifies the arguments to be reported in the HTML,
 #   overriding the actual arguments in the Ruby code.
-# - [<tt>:args: _arg_names_</tt>]
-# - [<tt>:yield:</tt>]
-# - [<tt>:yields: _arg_names_</tt>]
+#   See #args_directive.
+# - [<tt>:yields: _arg_names_</tt> (aliased as <tt>:yield:</tt>)]
+#   For the given method, specifies the yield arguments to be reported in the HTML,
+#   overriding the actual yield in the Ruby code.
+#   See #yields_directive.
 #
 # ==== Directives for Categorizing Documentation
 #
@@ -747,20 +749,77 @@
 #
 # == Documentation Derived from Ruby Code
 #
+# [Class]
 #
-# class, a module, a method, an alias, a constant, or an attribute
-
+#   By default, \RDoc documents:
+#
+#   - \Class name.
+#   - Parent class.
+#   - Singleton methods.
+#   - Instance methods.
+#   - Aliases.
+#   - Constants.
+#   - Attributes.
+#
+# [Module]
+#
+#   By default, \RDoc documents:
+#
+#   - \Module name.
+#   - \Singleton methods.
+#   - Instance methods.
+#   - Aliases.
+#   - Constants.
+#   - Attributes.
+#
+# [Method]
+#
+#   By default, \RDoc documents:
+#
+#   - \Method name.
+#   - Arguments.
+#   - Yielded values.
+#
+#   See #method.
+#
+# [Alias]
+#
+#   By default, \RDoc documents:
+#
+#   - Alias name.
+#   - Aliased name.
+#
+#   See #dummy_alias and #dummy_instance_method.
+#
+# [Constant]
+#
+#   By default, \RDoc documents:
+#
+#   - \Constant name.
+#
+#   See DUMMY_CONSTANT.
+#
+# [Attribute]
+#
+#   By default, \RDoc documents:
+#
+#   - Attribute name.
+#   - Attribute type (<tt>[R]</tt>, <tt>[W]</tt>, or <tt>[RW]</tt>)
+#
+#   See #dummy_attribute.
+#
 class RDOC::MarkupReference
 
   class DummyClass; end
   module DummyModule; end
-  def self.dummy_singleton_method; end
-  def dummy_instance_method; end;
+  def self.dummy_singleton_method(foo, bar); end
+  def dummy_instance_method(foo, bar); end;
   alias dummy_alias dummy_instance_method
   attr_accessor :dummy_attribute
   DUMMY_CONSTANT = ''
 
   # :call-seq:
+  #   call_seq_directive(foo, bar)
   #   Can be anything -> bar
   #   Also anything more -> baz or bat
   #
@@ -775,38 +834,53 @@ class RDOC::MarkupReference
   # Note that the "arrow" is two characters, hyphen and right angle-bracket,
   # which is made into a single character in the HTML.
   #
-  # Here is the actual code for this method:
+  # Click on the calling sequence to see the code.
   #
-  #   def call_seq(foo)
-  #     nil
-  #   end
+  # Here is the <tt>:call-seq:</tt> directive given for the method:
   #
-  # And here is the <tt>:call-seq:</t> directive given for the method:
+  #   # :call-seq:
+  #   #   call_seq_directive(foo, bar)
+  #   #   Can be anything -> bar
+  #   #   Also anything more -> baz or bat
   #
-  #   :call-seq:
-  #     Can be anything -> bar
-  #     Also anything more -> baz or bat
-  #
-  def call_seq(foo)
+  def call_seq_directive
     nil
   end
 
-  # :arg: baz
+  # :args: baz
   #
-  # The <tt>:arg:</tt> directive overrides the actual arguments found in the Ruby code.
+  # The <tt>:args:</tt> directive overrides the actual arguments found in the Ruby code.
   #
-  # Here is the actual code for this method:
+  # Click on the calling sequence to see the code.
   #
-  #   def arg(foo, bar)
-  #     nil
-  #   end
+  # Here is the <tt>:args:</tt> directive given for the method:
   #
-  # And here is the <tt>:arg:</tt> directive given for the method:
+  #   # :args: baz
   #
-  #   :arg: baz
-  #
-  def arg(foo, bar)
+  def args_directive(foo, bar)
     nil
+  end
+
+  # :yields: 'bat'
+  #
+  # The <tt>:yields:</tt> directive overrides the actual yield found in the Ruby code.
+  #
+  # Click on the calling sequence to see the code.
+  #
+  # Here is the <tt>:yields:</tt> directive given for the method:
+  #
+  #   # :yields: 'bat'
+  #
+  def yields_directive(foo, bar)
+    yield 'baz'
+  end
+
+  # This method is documented only by \RDoc, except for these comments.
+  #
+  # Click on the calling sequence to see the code.
+  #
+  def method(foo, bar)
+    yield 'baz'
   end
 
 end
