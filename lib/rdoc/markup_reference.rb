@@ -1,5 +1,5 @@
-#
-#
+require 'rdoc'
+
 # \Class \RDoc::MarkupReference exists only to provide a suitable home
 # for a reference document for \RDoc markup.
 #
@@ -512,7 +512,7 @@
 #   - Suppressed:  <tt>\RDoc::Text::MARKUP_FORMAT</tt> is not linked
 #     to \RDoc::Text::MARKUP_FORMAT.
 #
-# [Singleton method]
+# [Singleton Method]
 #
 #   - On-page: <tt>::dummy_singleton_method</tt> is linked to ::dummy_singleton_method.
 #   - Suppressed: <tt>dummy_singleton_method</tt> is not linked to dummy_singleton_method.
@@ -528,7 +528,7 @@
 #   Pro tip: The link to any method is available in the alphabetical table of contents
 #   at the top left of the page for the class or module.
 #
-# [Instance method]
+# [Instance Method]
 #
 #   - On-page: <tt>#dummy_instance_method</tt> is linked to #dummy_instance_method.
 #   - Suppressed: <tt>dummy_instance_method</tt> is not linked to dummy_instance_method.
@@ -547,8 +547,8 @@
 #
 # [Alias]
 #
-#   - On-page: <tt>#dummy_alias</tt> is linked to #dummy_alias.
-#   - Suppressed: <tt>dummy_alias</tt> is not linked to dummy_alias.
+#   - On-page: <tt>#dummy_instance_alias</tt> is linked to #dummy_instance_alias.
+#   - Suppressed: <tt>dummy_instance_alias</tt> is not linked to dummy_instance_alias.
 #   - Off-page: <tt>RDoc::Alias#new_name</tt> is linked to RDoc::Alias#new_name.
 #   - Suppressed: <tt>\RDoc::Alias#new_name</tt> is not linked to \RDoc::Alias#new_name.
 #
@@ -584,7 +584,7 @@
 #   - Suppressed: <tt>\irc://irc.freenode.net/ruby</tt> is not linked
 #     to \irc://irc.freenode.net/ruby.
 #
-# [Image file extension]
+# [Image Filename Extensions]
 #
 #   - Link: <tt>https://www.ruby-lang.org/images/header-ruby-logo@2x.png</tt> is
 #     converted to an in-line HTML +img+ tag, which displays the image in the HTML:
@@ -617,7 +617,7 @@
 #
 # [Section]
 #
-#   See {Directives for Categorizing Documentation}[#class-RDoc::MarkupReference-label-Directives+for+Categorizing+Documentation].
+#   See {Directives for Organizing Documentation}[#class-RDoc::MarkupReference-label-Directives+for+Organizing+Documentation].
 #
 #   - Link: <tt>RDoc::Markup::ToHtml@Visitor</tt> links to RDoc::Markup::ToHtml@Visitor.
 #   - Suppressed: <tt>\RDoc::Markup::ToHtml@Visitor</tt> does not link
@@ -625,22 +625,24 @@
 #
 #   If a section and a heading share the same name, the link target is the section.
 #
-# [Text link]
+# [Single-Word Text Link]
 #
 #   Use square brackets to create single-word text link:
 #
 #   - <tt>GitHub[https://github.com]</tt> links to GitHub[https://github.com].
 #
-# [Multi-word text link]
+# [Multi-Word Text Link]
 #
 #   Use square brackets and curly braces to create a multi-word text link.
 #
-#   - <tt>{GitHub home page}[https://github.com]</tt> links to {GitHub home page}[https://github.com].
+#   - <tt>{GitHub home page}[https://github.com]</tt> links to
+#     {GitHub home page}[https://github.com].
 #
-# [<tt>rdoc-ref</tt> scheme]
+# [<tt>rdoc-ref</tt> Scheme]
 #
 #   A link with the <tt>rdoc-ref:</tt> scheme links to the referenced item,
-#   if that item exists.  The referenced item may be a class, module, method, file, etc.
+#   if that item exists.
+#   The referenced item may be a class, module, method, file, etc.
 #
 #   - Class: <tt>Alias[rdoc-ref:RDoc::Alias]</tt> links to Alias[rdoc-ref:RDoc::Alias].
 #   - Module: <tt>RDoc[rdoc-ref:RDoc]</tt> links to RDoc[rdoc-ref:RDoc].
@@ -651,8 +653,8 @@
 #     [Reviewers: This link not did work. Should it?]
 #   - Attribute: <tt>baz[rdoc-ref:RDoc::Markup::ToHtml#code_object]</tt>
 #     links to baz[rdoc-ref:RDoc::Markup::ToHtml#code_object].
-#   - Alias: <tt>bad[rdoc-ref:RDoc::MarkupReference#dummy_alias]</tt> links to
-#     bad[rdoc-ref:RDoc::MarkupReference#dummy_alias].
+#   - Alias: <tt>bad[rdoc-ref:RDoc::MarkupReference#dummy_instance_alias]</tt> links to
+#     bad[rdoc-ref:RDoc::MarkupReference#dummy_instance_alias].
 #   - File: ???.
 #     [Reviewers: What file reference would work?]
 #
@@ -664,20 +666,22 @@
 #     Nosuch[rdoc-ref:RDoc::Nosuch].
 #
 #
-# [<tt>rdoc-label</tt> scheme]
+# [<tt>rdoc-label</tt> Scheme]
 #
 #   [Simple]
-#     Foo
+#     [Reviewers: I have not been able to craft an example that works.]
 #
-#   [With return]
-#     Bar
+#   [With Return]
+#     [Reviewers: I have not been able to craft an example that works.]
 #
-#   [Footnote]
-#     Baz
+#   [foottext, footmark]
+#     [Reviewers: I have not been able to craft an example that works.]
 #
-# link:
+# [<tt>link:</tt> Scheme]
 #
-# [<tt>rdoc-image</tt> scheme]
+#   - <tt>link:README_rdoc.html</tt> links to link:README_rdoc.html.
+#
+# [<tt>rdoc-image</tt> Scheme]
 #
 #   Use the <tt>rdoc-image</tt> scheme to display an image that is also a link:
 #
@@ -701,58 +705,103 @@
 #
 # === Directives
 #
-# Certain directives are used in the same way as other \RDoc blocks.
-# Each directive described in this section appears on a line by itself.
+# [Directives for Allowing or Suppressing Documentation]
 #
-# Directives for allowing or suppressing documentation:
+#   Each directive described in this section must appear on a line by itself.
 #
-# - [<tt>:stopdoc:</tt>]
-#   Specifies that \RDoc should ignore markup
-#   until next <tt>:startdoc:</tt> directive or end-of-file.
-# - [<tt>:startdoc:</tt>]
-#   Specifies that \RDoc should resume parsing markup.
-# - [<tt>:enddoc:</tt>]
-#   Specifies that \RDoc should ignore markup to end-of-file
-#   regardless of other directives.
+#   - [<tt>:stopdoc:</tt>]
+#     Specifies that \RDoc should ignore markup
+#     until next <tt>:startdoc:</tt> directive or end-of-file.
+#   - [<tt>:startdoc:</tt>]
+#     Specifies that \RDoc should resume parsing markup.
+#   - [<tt>:enddoc:</tt>]
+#     Specifies that \RDoc should ignore markup to end-of-file
+#     regardless of other directives.
 #
-# Directive for specifying \RDoc input format:
+# [Directive for Specifying \RDoc Source Format]
 #
-# - [<tt>:markup: _type_</tt>]
-#   Specifies the format for the \RDoc input.
-#   Parameter +type+ is one of +markdown+, +rd+, +rdoc+, +tomcat+.
+#   This directive described must appear on a line by itself.
 #
-# Directives for HTML output:
+#   - [<tt>:markup: _type_</tt>]
+#     Specifies the format for the \RDoc input.
+#     Parameter +type+ is one of +markdown+, +rd+, +rdoc+, +tomcat+.
 #
-# - [<tt>:title: _text_</tt>]
-#   Specifies the title for the HTML output.
-# - [<tt>:main: _file_name_</tt>]
-#   Specifies the HTML file to be displayed first.
+# [Directives for HTML Output]
 #
-# Directives for method documentation:
+#   Each directive described in this section must appear on a line by itself.
+#
+#   - [<tt>:title: _text_</tt>]
+#     Specifies the title for the HTML output.
+#   - [<tt>:main: _file_name_</tt>]
+#     Specifies the HTML file to be displayed first.
+#
+# [Directives for Method Documentation]
 #
 # - [<tt>:call-seq:</tt>]
 #   For the given method, specifies the calling sequence to be reported in the HTML,
 #   overriding the actual calling sequence in the Ruby code.
-#   See #call_seq_directive.
+#   See method #call_seq_directive.
 # - [<tt>:args: _arg_names_</tt> (aliased as <tt>:arg</tt>)]
 #   For the given method, specifies the arguments to be reported in the HTML,
 #   overriding the actual arguments in the Ruby code.
-#   See #args_directive.
+#   See method #args_directive.
 # - [<tt>:yields: _arg_names_</tt> (aliased as <tt>:yield:</tt>)]
 #   For the given method, specifies the yield arguments to be reported in the HTML,
 #   overriding the actual yield in the Ruby code.
-#   See #yields_directive.
+#   See method #yields_directive.
 #
-# ==== Directives for Categorizing Documentation
+# [Directives for Organizing Documentation]
 #
-# Directives for categorizing documentation:
+#   By default, \RDoc groups:
 #
-# - [<tt>:category: _section_</tt>]
-# - [<tt>:section: _title_</tt>]
+#   - Singleton methods together in alphabetical order.
+#   - Instance methods and their aliases together in alphabetical order.
+#   - Attributes and their aliases together in alphabetical order.
 #
-# Directive for including another file:
+#   You can use directive <tt>:section:</tt> to define sections
+#   that group methods differently:
 #
-# - [<tt>:include: _filename_</tt>]
+#   - Directive <tt>:section: <em>section_title</em></tt> specifies that
+#     following methods are to be grouped into a section
+#     with the given <em>section_title</em> as its heading.
+#     This directive remains in effect until another such directive is given,
+#     but may be temporarily overridden by directive <tt>:category:</tt>.
+#     See below.
+#   - Directive <tt>:section:</tt> with no title reverts to the default section.
+#   - The comment block containing this directive:
+#     - Must be separated by a blank line from the documentation for the next item.
+#     - May have one or more lines preceding the directive.
+#       These will be removed, along with any trailing lines that match them.
+#       Such lines may be visually helpful.
+#     - Lines of text that are not so removed become the descriptive text
+#       for the section.
+#
+#   Example:
+#
+#     # ----------------------------------------
+#     # :section: My Section
+#     # This is the section that I wrote.
+#     # See it glisten in the noon-day sun.
+#     # ----------------------------------------
+#
+#     ##
+#     # Comment for some_method
+#     def some_method
+#       # ...
+#     end
+#
+#   You can use directive <tt>:category:</tt> to temporarily
+#   override the current section.
+#
+#   - Directive <tt>:category: <em>section_title</em></tt> specifies that
+#     just one following method is to be included in the given section.
+#     Subsequent methods are to be grouped into the current section.
+#   - Directive <tt>:category:</tt> with no title specifies that just one
+#     following method is to be included in the default section.
+#
+# [Directive for Including a File]
+#
+#   - [<tt>:include: _filename_</tt>]
 #
 # == Markup in Code
 #
@@ -826,7 +875,7 @@
 #   - Alias name.
 #   - Aliased name.
 #
-#   See #dummy_alias and #dummy_instance_method.
+#   See #dummy_instance_alias and #dummy_instance_method.
 #
 # [Constant]
 #
@@ -851,8 +900,9 @@ class RDoc::MarkupReference
   module DummyModule; end
   def self.dummy_singleton_method(foo, bar); end
   def dummy_instance_method(foo, bar); end;
-  alias dummy_alias dummy_instance_method
+  alias dummy_instance_alias dummy_instance_method
   attr_accessor :dummy_attribute
+  alias dummy_attribute_alias dummy_attribute
   DUMMY_CONSTANT = ''
 
   # :call-seq:
