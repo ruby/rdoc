@@ -737,18 +737,18 @@ require 'rdoc'
 #
 # [Directives for Method Documentation]
 #
-# - [<tt>:call-seq:</tt>]
-#   For the given method, specifies the calling sequence to be reported in the HTML,
-#   overriding the actual calling sequence in the Ruby code.
-#   See method #call_seq_directive.
-# - [<tt>:args: _arg_names_</tt> (aliased as <tt>:arg</tt>)]
-#   For the given method, specifies the arguments to be reported in the HTML,
-#   overriding the actual arguments in the Ruby code.
-#   See method #args_directive.
-# - [<tt>:yields: _arg_names_</tt> (aliased as <tt>:yield:</tt>)]
-#   For the given method, specifies the yield arguments to be reported in the HTML,
-#   overriding the actual yield in the Ruby code.
-#   See method #yields_directive.
+#   - [<tt>:call-seq:</tt>]
+#     For the given method, specifies the calling sequence to be reported in the HTML,
+#     overriding the actual calling sequence in the Ruby code.
+#     See method #call_seq_directive.
+#   - [<tt>:args: _arg_names_</tt> (aliased as <tt>:arg</tt>)]
+#     For the given method, specifies the arguments to be reported in the HTML,
+#     overriding the actual arguments in the Ruby code.
+#     See method #args_directive.
+#   - [<tt>:yields: _arg_names_</tt> (aliased as <tt>:yield:</tt>)]
+#     For the given method, specifies the yield arguments to be reported in the HTML,
+#     overriding the actual yield in the Ruby code.
+#     See method #yields_directive.
 #
 # [Directives for Organizing Documentation]
 #
