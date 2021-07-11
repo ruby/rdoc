@@ -1,3 +1,5 @@
+#
+#
 # \Class \RDoc::MarkupReference exists only to provide a suitable home
 # for a reference document for \RDoc markup.
 #
@@ -491,8 +493,8 @@
 #
 #   - On-page: <tt>DummyClass</tt> is linked to DummyClass.
 #   - Suppressed: <tt>\DummyClass</tt> is not linked to \DummyClass.
-#   - Off-page: <tt>RDoc::Markup</tt> is linked to RDoc::Markup.
-#   - Suppressed: <tt>\RDoc::Markup</tt> is not linked to \RDoc::Markup.
+#   - Off-page: <tt>RDoc::Alias</tt> is linked to RDoc::Alias.
+#   - Suppressed: <tt>\RDoc::Alias</tt> is not linked to \RDoc::Alias.
 #
 # [Module]
 #
@@ -506,10 +508,9 @@
 #   - On-page: <tt>DUMMY_CONSTANT</tt> is linked to DUMMY_CONSTANT.
 #   - Suppressed: <tt>\DUMMY_CONSTANT</tt> is not linked to \DUMMY_CONSTANT.
 #   - Off-page: <tt>RDoc::Text::MARKUP_FORMAT</tt> is linked to RDoc::Text::MARKUP_FORMAT.
+#     [Reviewers: This link did not work. Should it?]
 #   - Suppressed:  <tt>\RDoc::Text::MARKUP_FORMAT</tt> is not linked
 #     to \RDoc::Text::MARKUP_FORMAT.
-#
-#   [Reviewers note: the off-page link does not work. Should it?]
 #
 # [Singleton method]
 #
@@ -564,6 +565,7 @@
 # [Protocol +www+]
 #
 #   - Linked: <tt>www.yahoo.com</tt> is linked to www.yahoo.com.
+#     [Reviewers: This link did not work. Should it?]
 #   - Suppressed: <tt>\www.yahoo.com</tt> is not linked to \www.yahoo.com.
 #
 # [Protocol +ftp+]
@@ -596,9 +598,88 @@
 #   - Suppressed: <tt>\https://www.ruby-lang.org/images/header-ruby-logo@2x.png</tt>
 #     does not link to \https://www.ruby-lang.org/images/header-ruby-logo@2x.png.
 #
-# [Image link]
+# [Heading]
 #
-#   Use the <tt>rdoc-image</tt> scheme to create an image that is also a link:
+#   - Link: <tt>RDoc::RD@LICENSE</tt> links to RDoc::RDoc::RD@LICENSE.
+#     [Reviewers: This link did not work. Should it?]
+#   - Suppressed: <tt>\RDoc::RD@LICENSE</tt> does not link to \RDoc::RD@LICENSE.
+#
+#   Note that spaces in the actual heading are represented by <tt>+</tt> characters
+#   in the linkable text.
+#
+#   - Link: <tt>RDoc::Options@Saved+Options</tt>
+#     links to RDoc::Options@Saved+Options.
+#
+#   Punctuation and other special characters must be escaped like CGI.escape.
+#
+#   Pro tip: The link to any heading is available in the alphabetical table of contents
+#   at the top left of the page for the class or module.
+#
+# [Section]
+#
+#   See {Directives for Categorizing Documentation}[#class-RDoc::MarkupReference-label-Directives+for+Categorizing+Documentation].
+#
+#   - Link: <tt>RDoc::Markup::ToHtml@Visitor</tt> links to RDoc::Markup::ToHtml@Visitor.
+#   - Suppressed: <tt>\RDoc::Markup::ToHtml@Visitor</tt> does not link
+#     to \RDoc::Markup::ToHtml@Visitor.
+#
+#   If a section and a heading share the same name, the link target is the section.
+#
+# [Text link]
+#
+#   Use square brackets to create single-word text link:
+#
+#   - <tt>GitHub[https://github.com]</tt> links to GitHub[https://github.com].
+#
+# [Multi-word text link]
+#
+#   Use square brackets and curly braces to create a multi-word text link.
+#
+#   - <tt>{GitHub home page}[https://github.com]</tt> links to {GitHub home page}[https://github.com].
+#
+# [<tt>rdoc-ref</tt> scheme]
+#
+#   A link with the <tt>rdoc-ref:</tt> scheme links to the referenced item,
+#   if that item exists.  The referenced item may be a class, module, method, file, etc.
+#
+#   - Class: <tt>Alias[rdoc-ref:RDoc::Alias]</tt> links to Alias[rdoc-ref:RDoc::Alias].
+#   - Module: <tt>RDoc[rdoc-ref:RDoc]</tt> links to RDoc[rdoc-ref:RDoc].
+#   - Method: <tt>foo[rdoc-ref:RDoc::Markup::ToHtml#handle_regexp_RDOCLINK]</tt>
+#     links to foo[rdoc-ref:RDoc::Markup::ToHtml#handle_regexp_RDOCLINK].
+#   - Constant: <tt>bar[rdoc-ref:RDoc::Markup::ToHtml::LIST_TYPE_TO_HTML]</tt>
+#     links to bar[rdoc-ref:RDoc::Markup::ToHtml::LIST_TYPE_TO_HTML].
+#     [Reviewers: This link not did work. Should it?]
+#   - Attribute: <tt>baz[rdoc-ref:RDoc::Markup::ToHtml#code_object]</tt>
+#     links to baz[rdoc-ref:RDoc::Markup::ToHtml#code_object].
+#   - Alias: <tt>bad[rdoc-ref:RDoc::MarkupReference#dummy_alias]</tt> links to
+#     bad[rdoc-ref:RDoc::MarkupReference#dummy_alias].
+#   - File: ???.
+#     [Reviewers: What file reference would work?]
+#
+#   If the referenced item does not exist, no link is generated
+#   and entire <tt>rdoc-ref:</tt> square-brakceted clause is removed
+#   from the resulting text.
+#
+#   - <tt>Nosuch[rdoc-ref:RDoc::Nosuch]</tt> is rendered as
+#     Nosuch[rdoc-ref:RDoc::Nosuch].
+#
+#
+# [<tt>rdoc-label</tt> scheme]
+#
+#   [Simple]
+#     Foo
+#
+#   [With return]
+#     Bar
+#
+#   [Footnote]
+#     Baz
+#
+# link:
+#
+# [<tt>rdoc-image</tt> scheme]
+#
+#   Use the <tt>rdoc-image</tt> scheme to display an image that is also a link:
 #
 #     {rdoc-image:path/to/image}[link_target]
 #
@@ -617,50 +698,6 @@
 #   - Link: <tt>{rdoc-image:https://www.ruby-lang.org/images/header-ruby-logo@2x.png}[./Alias.html]</tt> links to <tt>./Alias.html</tt>
 #
 #     {rdoc-image:https://www.ruby-lang.org/images/header-ruby-logo@2x.png}[./Alias.html]
-#
-# [Heading]
-#
-#   - Link: <tt>RDoc::Markup@Links</tt> links to RDoc::Markup@Links.
-#
-#   - Suppressed: <tt>\RDoc::Markup@Links</tt> does not link to \RDoc::Markup@Links.
-#
-#   Note that spaces in the actual heading are represented by <tt>+</tt> characters
-#   in the linkable text.
-#
-#   - Link: <tt>RDoc::Markup@Escaping+Text+Markup</tt>
-#     links to RDoc::Markup@Escaping+Text+Markup.
-#
-#   Punctuation and other special characters must be escaped like CGI.escape.
-#
-#   Pro tip: The link to any heading is available in the alphabetical table of contents
-#   at the top left of the page for the class or module.
-#
-# [Section]
-#
-#   See {Directives for Categorizing Documentation}[#class-RDOC::MarkupReference-label-Directives+for+Categorizing+Documentation].
-#
-#   - Link: <tt>RDoc::Markup::ToHtml@Visitor</tt> links to RDoc::Markup::ToHtml@Visitor.
-#
-#   - Suppressed: <tt>\RDoc::Markup::ToHtml@Visitor</tt> does not link
-#     to \RDoc::Markup::ToHtml@Visitor.
-#
-#   If a section and a heading share the same name, the link target is the section.
-#
-# [Labeled link]
-#
-# [Multi-word labeled link]
-#
-# [Labeled link to label]
-#
-#   rdoc-label:label_name
-#
-# [Labeled link with return link]
-#
-#   rdoc-label:label-other:label-mine
-#
-# rdoc-ref
-#
-# link:
 #
 # === Directives
 #
@@ -808,7 +845,7 @@
 #
 #   See #dummy_attribute.
 #
-class RDOC::MarkupReference
+class RDoc::MarkupReference
 
   class DummyClass; end
   module DummyModule; end
@@ -847,31 +884,19 @@ class RDOC::MarkupReference
     nil
   end
 
-  # :args: baz
-  #
   # The <tt>:args:</tt> directive overrides the actual arguments found in the Ruby code.
   #
   # Click on the calling sequence to see the code.
   #
-  # Here is the <tt>:args:</tt> directive given for the method:
-  #
-  #   # :args: baz
-  #
-  def args_directive(foo, bar)
+  def args_directive(foo, bar) # :args: baz
     nil
   end
 
-  # :yields: 'bat'
-  #
   # The <tt>:yields:</tt> directive overrides the actual yield found in the Ruby code.
   #
   # Click on the calling sequence to see the code.
   #
-  # Here is the <tt>:yields:</tt> directive given for the method:
-  #
-  #   # :yields: 'bat'
-  #
-  def yields_directive(foo, bar)
+  def yields_directive(foo, bar) # :yields: 'bat'
     yield 'baz'
   end
 
