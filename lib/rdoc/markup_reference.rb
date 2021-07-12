@@ -73,15 +73,13 @@ require 'rdoc'
 #
 #   You'll love it.
 #
-# Rendered HTML (everything between the two horizontal rules):
+# Rendered HTML:
 #
-# ---
 # \RDoc produces HTML and command-line documentation for Ruby projects.
 # \RDoc includes the rdoc and ri tools for generating and displaying
 # documentation from the command-line.
 #
 # You'll love it.
-# ---
 #
 # A paragraph may contain nested blocks, including:
 #
@@ -108,15 +106,13 @@ require 'rdoc'
 #
 #   This is still the same verbatim text block.
 #
-# Rendered HTML (everything between the two horizontal rules):
+# Rendered HTML:
 #
-# ---
-# This is some verbatim text.
-#   Whitespace is honored.     # See?
+#   This is some verbatim text.
 #     Whitespace is honored.     # See?
+#       Whitespace is honored.     # See?
 #
-#  This is still the same verbatim text block.
-# ---
+#   This is still the same verbatim text block.
 #
 # ==== Code Blocks
 #
@@ -275,7 +271,7 @@ require 'rdoc'
 # A heading begins with up to six equal-signs, followed by heading text.
 # Whitespace between those and the heading text is optional.
 #
-# Input:
+# Examples:
 #
 #   = Section 1
 #   == Section 1.1
@@ -292,25 +288,6 @@ require 'rdoc'
 #   ============Still a Heading (Level 6)
 #   \== Not a Heading
 #
-# Rendered HTML (everything between the two horizontal rules):
-#
-# ---
-# = Section 1
-# == Section 1.1
-# === Section 1.1.1
-# === Section 1.1.2
-# == Section 1.2
-# = Section 2
-# = Foo
-# == Bar
-# === Baz
-# ==== Bam
-# ===== Bat
-# ====== Bad
-# ============Still a Heading (Level 6)
-# \== Not a Heading
-# ---
-#
 # ==== Horizontal Rules
 #
 # A horizontal rule begins with three or more hyphens.
@@ -320,9 +297,9 @@ require 'rdoc'
 #   ---
 #   Stuff between.
 #
-#   \-- Not a horizontal rule.
+#   \--- Not a horizontal rule.
 #
-#   -- Also not a horizontal rule (actually a list item beginning with a hyphen).
+#   -- Also not a horizontal rule.
 #
 #   ----
 #
@@ -331,9 +308,9 @@ require 'rdoc'
 # ---
 # Stuff between.
 #
-# \-- Not a horizontal rule.
+# \--- Not a horizontal rule.
 #
-# -- Also not a horizontal rule (actually a list item beginning with a hyphen).
+# -- Also not a horizontal rule.
 #
 # ----
 #
@@ -346,7 +323,7 @@ require 'rdoc'
 #
 # A single word may be italicized by prefixed and suffixed underscores.
 #
-# Input:
+# Examples:
 #
 #   _Word_ in paragraph.
 #   - _Word_ in bullet list item.
@@ -355,20 +332,9 @@ require 'rdoc'
 #   [_word_] _Word_ in labeled list item.
 #   ====== _Word_ in heading
 #
-# Rendered HTML (everything between the two horizontal rules):
-#
-# ---
-# _Word_ in paragraph.
-# - _Word_ in bullet list item.
-# 1. _Word_ in numbered list item.
-# a. _Word_ in lettered list item.
-# [_word_] _Word_ in labeled list item.
-# ====== _Word_ in heading
-# ---
-#
 # Any text may be italicized via HTML tag +i+ or +em+.
 #
-# Input:
+# Examples:
 #
 #   <i>Two words</i> in paragraph.
 #   - <i>Two words</i> in bullet list item.
@@ -377,22 +343,11 @@ require 'rdoc'
 #   [<i>Two words</i>] <i>Two words</i> in labeled list item.
 #   ====== <i>Two words</i> in heading
 #
-# Rendered HTML (everything between the two horizontal rules):
-#
-# ---
-# <i>Two words</i> in paragraph.
-# - <i>Two words</i> in bullet list item.
-# 1. <i>Two words</i> in numbered list item.
-# a. <i>Two words</i> in lettered list item.
-# [<i>Two words</i>] <i>Two words</i> in labeled list item.
-# ====== <i>Two words</i> in heading
-# ---
-#
 # ==== Bold
 #
 # A single word may be made bold by prefixed and suffixed asterisks.
 #
-# Input:
+# Examples:
 #
 #   *Word* in paragraph.
 #   - *Word* in bullet list item.
@@ -401,20 +356,9 @@ require 'rdoc'
 #   [*word*] *Word* in labeled list item.
 #   ====== *Word* in heading
 #
-# Rendered HTML (everything between the two horizontal rules):
-#
-# ---
-# *Word* in paragraph.
-# - *Word* in bullet list item.
-# 1. *Word* in numbered list item.
-# a. *Word* in lettered list item.
-# [*word*] *Word* in labeled list item.
-# ====== *Word* in heading
-# ---
-#
 # Any text may be made bold via HTML tag +b+.
 #
-# Input:
+# Examples:
 #
 #   <b>Two words</b> in paragraph.
 #   - <b>Two words</b> in bullet list item.
@@ -423,22 +367,11 @@ require 'rdoc'
 #   [<b>Two words</b>] <b>Two words</b> in labeled list item.
 #   ====== <b>Two words</b> in heading
 #
-# Rendered HTML (everything between the two horizontal rules):
-#
-# ---
-# <b>Two words</b> in paragraph.
-# - <b>Two words</b> in bullet list item.
-# 1. <b>Two words</b> in numbered list item.
-# a. <b>Two words</b> in lettered list item.
-# [<b>Two words</b>] <b>Two words</b> in labeled list item.
-# ====== <b>Two words</b> in heading
-# ---
-#
 # ==== Monofont
 #
 # A single word may be made monofont by prefixed and suffixed plus-signs.
 #
-# Input:
+# Examples:
 #
 #   +Word+ in paragraph.
 #   - +Word+ in bullet list item.
@@ -447,20 +380,9 @@ require 'rdoc'
 #   [+word+] +Word+ in labeled list item.
 #   ====== +Word+ in heading
 #
-# Rendered HTML (everything between the two horizontal rules):
+# Any text may be made monofont via HTML tag +tt+ or +code+.
 #
-# ---
-# +Word+ in paragraph.
-# - +Word+ in bullet list item.
-# 1. +Word+ in numbered list item.
-# a. +Word+ in lettered list item.
-# [+word+] +Word+ in labeled list item.
-# ====== +Word+ in heading
-# ---
-#
-# Any text may be italicized via HTML tag +tt+ or +code+.
-#
-# Input:
+# Examples:
 #
 #   <tt>Two words</tt> in paragraph.
 #   - <tt>Two words</tt> in bullet list item.
@@ -468,17 +390,6 @@ require 'rdoc'
 #   a. <tt>Two words</tt> in lettered list item.
 #   [<tt>Two words</tt>] <tt>Two words</tt> in labeled list item.
 #   ====== <tt>Two words</tt> in heading
-#
-# Rendered HTML (everything between the two horizontal rules):
-#
-# ---
-# <tt>Two words</tt> in paragraph.
-# - <tt>Two words</tt> in bullet list item.
-# 1. <tt>Two words</tt> in numbered list item.
-# a. <tt>Two words</tt> in lettered list item.
-# [<tt>Two words</tt>] <tt>Two words</tt> in labeled list item.
-# ====== <tt>Two words</tt> in heading
-# ---
 #
 # ==== Links
 #
