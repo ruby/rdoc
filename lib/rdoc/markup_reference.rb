@@ -35,13 +35,12 @@ require 'rdoc'
 # which becomes the <em>base margin</em> for the comment
 # and is the initial <em>current margin</em> for for the comment.
 #
-# The current margin can change, and does so, for example,
-# in a list.
+# The current margin can change, and does so, for example in a list.
 #
 # === Blocks
 #
 # It's convenient to think of markup input as a sequence of _blocks_,
-# each of which is one of:
+# each of which may be one of:
 #
 # - Paragraph
 # - Verbatim text block
@@ -54,8 +53,8 @@ require 'rdoc'
 # - Horizontal rule
 # - Directive
 #
-# All of these except a paragraph block are specially marked,
-# usually by indentation or a special beginning.
+# All of these except a paragraph block are distinguished
+# by indentation, or by unusual initial or embedded characters.
 #
 # ==== Paragraphs
 #
@@ -63,14 +62,12 @@ require 'rdoc'
 # each beginning at the current margin.
 #
 # Note: Here, <em>ordinary text</em> means text that is <em>not identified</em>
-# as some different kind of block.
-# The identifier usually involves indentation,
-# or one or more leading or embedded characters. See below.
+# by indentation, or by unusual initial or embedded characters.
+# See below.
 #
-# Paragraphs are separated by one or more empty lines
-# beginning at the current margin.
+# Paragraphs are separated by one or more empty lines.
 #
-# Input:
+# Example input:
 #
 #   # \RDoc produces HTML and command-line documentation for Ruby projects.
 #   # \RDoc includes the rdoc and ri tools for generating and displaying
@@ -103,7 +100,7 @@ require 'rdoc'
 #
 # The verbatim text block ends at the first line beginning at the current margin.
 #
-# Input:
+# Example input:
 #
 #   # This is not verbatim text.
 #   #
@@ -112,6 +109,8 @@ require 'rdoc'
 #   #       Whitespace is honored.     # See?
 #   #
 #   #   This is still the same verbatim text block.
+#   #
+#   # This is not verbatim text.
 #
 # Rendered HTML:
 #
@@ -123,6 +122,7 @@ require 'rdoc'
 #
 #   This is still the same verbatim text block.
 #
+# This is not verbatim text.
 # ==== Code Blocks
 #
 # A special case of verbatim text is the <em>code block</em>,
@@ -141,17 +141,17 @@ require 'rdoc'
 #     @value = value
 #   end
 #
-# Pro tip:  If your indented Ruby text does not get highlighted,
+# Pro tip:  If your indented Ruby code does not get highlighted,
 # it may contain a syntax error.
 #
 # ==== Lists
 #
 # Each type of list item is marked by a special beginning:
 #
-# - Bullet list item :: Begins with a hyphen or asterisk.
-# - Numbered list item :: Begins with digits and a period.
-# - Lettered list item :: Begins with an alphabetic character and a period.
-# - Labeled list item :: Begins with one of:
+# - Bullet list item: Begins with a hyphen or asterisk.
+# - Numbered list item: Begins with digits and a period.
+# - Lettered list item: Begins with an alphabetic character and a period.
+# - Labeled list item: Begins with one of:
 #   - Square-bracketed text.
 #   - A word followed by two colons.
 #
@@ -169,7 +169,7 @@ require 'rdoc'
 #
 # A bullet list item begins with a hyphen or asterisk.
 #
-# Input:
+# Example input:
 #
 #   # - An item.
 #   # - Another.
@@ -195,7 +195,7 @@ require 'rdoc'
 #
 # The items are automatically re-numbered.
 #
-# Input:
+# Example input:
 #
 #   # 100. An item.
 #   # 10. Another.
@@ -221,7 +221,7 @@ require 'rdoc'
 #
 # The items are automatically "re-lettered."
 #
-# Input:
+# Example input:
 #
 #   # z. An item.
 #   # y. Another.
@@ -246,7 +246,7 @@ require 'rdoc'
 # - Square-bracketed text: the label and text are on two lines.
 # - A word followed by two colons: the label and text are on the same line.
 #
-# Input:
+# Example input:
 #
 #   # [foo] An item.
 #   # bat:: Another.
@@ -301,7 +301,7 @@ require 'rdoc'
 #
 # A horizontal rule begins with three or more hyphens.
 #
-# Input:
+# Example input:
 #
 #   # ------
 #   # Stuff between.
@@ -378,7 +378,8 @@ require 'rdoc'
 #
 # ==== Monofont
 #
-# A single word may be made monofont by prefixed and suffixed plus-signs.
+# A single word may be made monofont -- sometimes called "typewriter font" --
+# by prefixed and suffixed plus-signs.
 #
 # Examples:
 #
@@ -432,36 +433,36 @@ require 'rdoc'
 #
 # [Class]
 #
-#   - On-page: <tt>DummyClass</tt> is linked to DummyClass.
+#   - On-page: <tt>DummyClass</tt> links to DummyClass.
 #   - Suppressed: <tt>\DummyClass</tt> is not linked to \DummyClass.
-#   - Off-page: <tt>RDoc::Alias</tt> is linked to RDoc::Alias.
+#   - Off-page: <tt>RDoc::Alias</tt> links to RDoc::Alias.
 #   - Suppressed: <tt>\RDoc::Alias</tt> is not linked to \RDoc::Alias.
 #
 # [Module]
 #
-#   - On-page: <tt>DummyModule</tt> is linked to DummyModule.
+#   - On-page: <tt>DummyModule</tt> links to DummyModule.
 #   - Suppressed: <tt>\DummyModule</tt> is not linked to \DummyModule.
-#   - Off-page: <tt>RDoc</tt> is linked to RDoc.
+#   - Off-page: <tt>RDoc</tt> links to RDoc.
 #   - Suppressed: <tt>\RDoc</tt> is not linked to \RDoc.
 #
 # [Constant]
 #
-#   - On-page: <tt>DUMMY_CONSTANT</tt> is linked to DUMMY_CONSTANT.
+#   - On-page: <tt>DUMMY_CONSTANT</tt> links to DUMMY_CONSTANT.
 #   - Suppressed: <tt>\DUMMY_CONSTANT</tt> is not linked to \DUMMY_CONSTANT.
-#   - Off-page: <tt>RDoc::Text::MARKUP_FORMAT</tt> is linked to RDoc::Text::MARKUP_FORMAT.
+#   - Off-page: <tt>RDoc::Text::MARKUP_FORMAT</tt> links to RDoc::Text::MARKUP_FORMAT.
 #     [Reviewers: This link did not work. Should it?]
 #   - Suppressed:  <tt>\RDoc::Text::MARKUP_FORMAT</tt> is not linked
 #     to \RDoc::Text::MARKUP_FORMAT.
 #
 # [Singleton Method]
 #
-#   - On-page: <tt>::dummy_singleton_method</tt> is linked to ::dummy_singleton_method.
+#   - On-page: <tt>::dummy_singleton_method</tt> links to ::dummy_singleton_method.
 #   - Suppressed: <tt>dummy_singleton_method</tt> is not linked to dummy_singleton_method.
-#   - Off-page<tt>RDoc::TokenStream::to_html</tt> is linked to RDoc::TokenStream::to_html.
+#   - Off-page<tt>RDoc::TokenStream::to_html</tt> links to RDoc::TokenStream::to_html.
 #   - Suppressed: <tt>\RDoc::TokenStream::to_html</tt> is not linked
 #     to \RDoc::TokenStream::to_html.
 #
-#   Note: Occasionally \RDoc does not link to a method whose name
+#   Note: Occasionally \RDoc is not linked to a method whose name
 #   has only special characters. Check whether the links you were expecting
 #   are actually there.  If not, you'll need to put in a labelled link;
 #   see below.
@@ -471,9 +472,9 @@ require 'rdoc'
 #
 # [Instance Method]
 #
-#   - On-page: <tt>#dummy_instance_method</tt> is linked to #dummy_instance_method.
+#   - On-page: <tt>#dummy_instance_method</tt> links to #dummy_instance_method.
 #   - Suppressed: <tt>dummy_instance_method</tt> is not linked to dummy_instance_method.
-#   - Off-page: <tt>RDoc::Alias#html_name</tt> is linked to RDoc::Alias#html_name.
+#   - Off-page: <tt>RDoc::Alias#html_name</tt> links to RDoc::Alias#html_name.
 #   - Suppressed:  <tt>\RDoc::Alias#html_name</tt> is not linked
 #     to \RDoc::Alias#html_name.
 #
@@ -481,47 +482,47 @@ require 'rdoc'
 #
 # [Attribute]
 #
-#   - On-page: <tt>#dummy_attribute</tt> is linked to #dummy_attribute.
+#   - On-page: <tt>#dummy_attribute</tt> links to #dummy_attribute.
 #   - Suppressed: <tt>dummy_attribute</tt> is not linked to dummy_attribute.
-#   - Off-page: <tt>RDoc::Alias#name</tt> is linked to RDoc::Alias#name.
+#   - Off-page: <tt>RDoc::Alias#name</tt> links to RDoc::Alias#name.
 #   - Suppressed: <tt>\RDoc::Alias#name</tt> is not linked to \RDoc::Alias#name.
 #
 # [Alias]
 #
-#   - On-page: <tt>#dummy_instance_alias</tt> is linked to #dummy_instance_alias.
+#   - On-page: <tt>#dummy_instance_alias</tt> links to #dummy_instance_alias.
 #   - Suppressed: <tt>dummy_instance_alias</tt> is not linked to dummy_instance_alias.
-#   - Off-page: <tt>RDoc::Alias#new_name</tt> is linked to RDoc::Alias#new_name.
+#   - Off-page: <tt>RDoc::Alias#new_name</tt> links to RDoc::Alias#new_name.
 #   - Suppressed: <tt>\RDoc::Alias#new_name</tt> is not linked to \RDoc::Alias#new_name.
 #
 # [Protocol +http+]
 #
-#   - Linked: <tt>http://yahoo.com</tt> is linked to http://yahoo.com.
+#   - Linked: <tt>http://yahoo.com</tt> links to http://yahoo.com.
 #   - Suppressed: <tt>\http://yahoo.com</tt> is not linked to \http://yahoo.com.
 #
 # [Protocol +https+]
 #
-#   - Linked: <tt>https://github.com</tt> is linked to https://github.com.
+#   - Linked: <tt>https://github.com</tt> links to https://github.com.
 #   - Suppressed: <tt>\https://github.com</tt> is not linked to \https://github.com.
 #
 # [Protocol +www+]
 #
-#   - Linked: <tt>www.yahoo.com</tt> is linked to www.yahoo.com.
+#   - Linked: <tt>www.yahoo.com</tt> links to www.yahoo.com.
 #     [Reviewers: This link did not work. Should it?]
 #   - Suppressed: <tt>\www.yahoo.com</tt> is not linked to \www.yahoo.com.
 #
 # [Protocol +ftp+]
 #
-#   - Linked: <tt>ftp://nosuch.site</tt> is linked to ftp://nosuch.site.
+#   - Linked: <tt>ftp://nosuch.site</tt> links to ftp://nosuch.site.
 #   - Suppressed: <tt>\ftp://nosuch.site</tt> is not linked to \ftp://nosuch.site.
 #
 # [Protocol +mailto+]
 #
-#   - Linked:  <tt>mailto:/foo@bar.com</tt> is linked to mailto://foo@bar.com.
+#   - Linked:  <tt>mailto:/foo@bar.com</tt> links to mailto://foo@bar.com.
 #   - Suppressed:  <tt>\mailto:/foo@bar.com</tt> is not linked to \mailto://foo@bar.com.
 #
 # [Protocol +irc+]
 #
-#   - link: <tt>irc://irc.freenode.net/ruby</tt> is linked to irc://irc.freenode.net/ruby.
+#   - link: <tt>irc://irc.freenode.net/ruby</tt> links to irc://irc.freenode.net/ruby.
 #   - Suppressed: <tt>\irc://irc.freenode.net/ruby</tt> is not linked
 #     to \irc://irc.freenode.net/ruby.
 #
@@ -537,13 +538,13 @@ require 'rdoc'
 #     Note: Works only for a fully qualified URL.
 #
 #   - Suppressed: <tt>\https://www.ruby-lang.org/images/header-ruby-logo@2x.png</tt>
-#     does not link to \https://www.ruby-lang.org/images/header-ruby-logo@2x.png.
+#     is not linked to \https://www.ruby-lang.org/images/header-ruby-logo@2x.png.
 #
 # [Heading]
 #
 #   - Link: <tt>RDoc::RD@LICENSE</tt> links to RDoc::RDoc::RD@LICENSE.
 #     [Reviewers: This link did not work. Should it?]
-#   - Suppressed: <tt>\RDoc::RD@LICENSE</tt> does not link to \RDoc::RD@LICENSE.
+#   - Suppressed: <tt>\RDoc::RD@LICENSE</tt> is not linked to \RDoc::RD@LICENSE.
 #
 #   Note that spaces in the actual heading are represented by <tt>+</tt> characters
 #   in the linkable text.
