@@ -9,6 +9,11 @@ require 'rdoc'
 #
 # = \RDoc Markup Reference
 #
+# [Note]
+#
+#   Examples in this reference are Ruby code and comments.
+#   Certain differences among the sources are noted.
+#
 # \RDoc-generated documentation is derived from and controlled by:
 #
 # - Single-line or multi-line comments that precede certain definitions.
@@ -67,11 +72,11 @@ require 'rdoc'
 #
 # Input:
 #
-#   \RDoc produces HTML and command-line documentation for Ruby projects.
-#   \RDoc includes the rdoc and ri tools for generating and displaying
-#   documentation from the command-line.
-#
-#   You'll love it.
+#   # \RDoc produces HTML and command-line documentation for Ruby projects.
+#   # \RDoc includes the rdoc and ri tools for generating and displaying
+#   # documentation from the command-line.
+#   #
+#   # You'll love it.
 #
 # Rendered HTML:
 #
@@ -100,15 +105,19 @@ require 'rdoc'
 #
 # Input:
 #
-#   This is some verbatim text.
-#     Whitespace is honored.     # See?
-#       Whitespace is honored.     # See?
-#
-#   This is still the same verbatim text block.
+#   # This is not verbatim text.
+#   #
+#   #   This is verbatim text.
+#   #     Whitespace is honored.     # See?
+#   #       Whitespace is honored.     # See?
+#   #
+#   #   This is still the same verbatim text block.
 #
 # Rendered HTML:
 #
-#   This is some verbatim text.
+# This is not verbatim text.
+#
+#   This is verbatim text.
 #     Whitespace is honored.     # See?
 #       Whitespace is honored.     # See?
 #
@@ -162,13 +171,13 @@ require 'rdoc'
 #
 # Input:
 #
-#   - An item.
-#   - Another.
-#   - An item spanning
-#     multiple lines.
-#
-#   * Yet another.
-#   - Last one.
+#   # - An item.
+#   # - Another.
+#   # - An item spanning
+#   #   multiple lines.
+#   #
+#   # * Yet another.
+#   # - Last one.
 #
 # Rendered HTML:
 #
@@ -188,13 +197,13 @@ require 'rdoc'
 #
 # Input:
 #
-#   100. An item.
-#   10. Another.
-#   1. An item spanning
-#      multiple lines.
-#
-#   1. Yet another.
-#   1000. Last one.
+#   # 100. An item.
+#   # 10. Another.
+#   # 1. An item spanning
+#   #    multiple lines.
+#   #
+#   # 1. Yet another.
+#   # 1000. Last one.
 #
 # Rendered HTML:
 #
@@ -214,13 +223,13 @@ require 'rdoc'
 #
 # Input:
 #
-#   z. An item.
-#   y. Another.
-#   x. An item spanning
-#      multiple lines.
-#
-#   x. Yet another.
-#   a. Last one.
+#   # z. An item.
+#   # y. Another.
+#   # x. An item spanning
+#   #    multiple lines.
+#   #
+#   # x. Yet another.
+#   # a. Last one.
 #
 # Rendered HTML:
 #
@@ -239,13 +248,13 @@ require 'rdoc'
 #
 # Input:
 #
-#   [foo] An item.
-#   bat:: Another.
-#   [bag] An item spanning
-#         multiple lines.
-#
-#   [bar baz] Yet another.
-#   bam:: Last one.
+#   # [foo] An item.
+#   # bat:: Another.
+#   # [bag] An item spanning
+#   #       multiple lines.
+#   #
+#   # [bar baz] Yet another.
+#   # bam:: Last one.
 #
 # Rendered HTML:
 #
@@ -273,20 +282,20 @@ require 'rdoc'
 #
 # Examples:
 #
-#   = Section 1
-#   == Section 1.1
-#   === Section 1.1.1
-#   === Section 1.1.2
-#   == Section 1.2
-#   = Section 2
-#   = Foo
-#   == Bar
-#   === Baz
-#   ==== Bam
-#   ===== Bat
-#   ====== Bad
-#   ============Still a Heading (Level 6)
-#   \== Not a Heading
+#   # = Section 1
+#   # == Section 1.1
+#   # === Section 1.1.1
+#   # === Section 1.1.2
+#   # == Section 1.2
+#   # = Section 2
+#   # = Foo
+#   # == Bar
+#   # === Baz
+#   # ==== Bam
+#   # ===== Bat
+#   # ====== Bad
+#   # ============Still a Heading (Level 6)
+#   # \== Not a Heading
 #
 # ==== Horizontal Rules
 #
@@ -294,25 +303,25 @@ require 'rdoc'
 #
 # Input:
 #
-#   ---
-#   Stuff between.
-#
-#   \--- Not a horizontal rule.
-#
-#   -- Also not a horizontal rule.
-#
-#   ----
+#   # ------
+#   # Stuff between.
+#   #
+#   # \--- Not a horizontal rule.
+#   #
+#   # -- Also not a horizontal rule.
+#   #
+#   # ---
 #
 # Rendered HTML:
 #
-# ---
+# ------
 # Stuff between.
 #
 # \--- Not a horizontal rule.
 #
 # -- Also not a horizontal rule.
 #
-# ----
+# ---
 #
 # === Text Markup
 #
@@ -325,23 +334,23 @@ require 'rdoc'
 #
 # Examples:
 #
-#   _Word_ in paragraph.
-#   - _Word_ in bullet list item.
-#   1. _Word_ in numbered list item.
-#   a. _Word_ in lettered list item.
-#   [_word_] _Word_ in labeled list item.
-#   ====== _Word_ in heading
+#   # _Word_ in paragraph.
+#   # - _Word_ in bullet list item.
+#   # 1. _Word_ in numbered list item.
+#   # a. _Word_ in lettered list item.
+#   # [_word_] _Word_ in labeled list item.
+#   # ====== _Word_ in heading
 #
 # Any text may be italicized via HTML tag +i+ or +em+.
 #
 # Examples:
 #
-#   <i>Two words</i> in paragraph.
-#   - <i>Two words</i> in bullet list item.
-#   1. <i>Two words</i> in numbered list item.
-#   a. <i>Two words</i> in lettered list item.
-#   [<i>Two words</i>] <i>Two words</i> in labeled list item.
-#   ====== <i>Two words</i> in heading
+#   # <i>Two words</i> in paragraph.
+#   # - <i>Two words</i> in bullet list item.
+#   # 1. <i>Two words</i> in numbered list item.
+#   # a. <i>Two words</i> in lettered list item.
+#   # [<i>Two words</i>] <i>Two words</i> in labeled list item.
+#   # ====== <i>Two words</i> in heading
 #
 # ==== Bold
 #
@@ -349,23 +358,23 @@ require 'rdoc'
 #
 # Examples:
 #
-#   *Word* in paragraph.
-#   - *Word* in bullet list item.
-#   1. *Word* in numbered list item.
-#   a. *Word* in lettered list item.
-#   [*word*] *Word* in labeled list item.
-#   ====== *Word* in heading
+#   # *Word* in paragraph.
+#   # - *Word* in bullet list item.
+#   # 1. *Word* in numbered list item.
+#   # a. *Word* in lettered list item.
+#   # [*word*] *Word* in labeled list item.
+#   # ====== *Word* in heading
 #
 # Any text may be made bold via HTML tag +b+.
 #
 # Examples:
 #
-#   <b>Two words</b> in paragraph.
-#   - <b>Two words</b> in bullet list item.
-#   1. <b>Two words</b> in numbered list item.
-#   a. <b>Two words</b> in lettered list item.
-#   [<b>Two words</b>] <b>Two words</b> in labeled list item.
-#   ====== <b>Two words</b> in heading
+#   # <b>Two words</b> in paragraph.
+#   # - <b>Two words</b> in bullet list item.
+#   # 1. <b>Two words</b> in numbered list item.
+#   # a. <b>Two words</b> in lettered list item.
+#   # [<b>Two words</b>] <b>Two words</b> in labeled list item.
+#   # ====== <b>Two words</b> in heading
 #
 # ==== Monofont
 #
@@ -373,23 +382,44 @@ require 'rdoc'
 #
 # Examples:
 #
-#   +Word+ in paragraph.
-#   - +Word+ in bullet list item.
-#   1. +Word+ in numbered list item.
-#   a. +Word+ in lettered list item.
-#   [+word+] +Word+ in labeled list item.
-#   ====== +Word+ in heading
+#   # +Word+ in paragraph.
+#   # - +Word+ in bullet list item.
+#   # 1. +Word+ in numbered list item.
+#   # a. +Word+ in lettered list item.
+#   # [+word+] +Word+ in labeled list item.
+#   # ====== +Word+ in heading
 #
 # Any text may be made monofont via HTML tag +tt+ or +code+.
 #
 # Examples:
 #
-#   <tt>Two words</tt> in paragraph.
-#   - <tt>Two words</tt> in bullet list item.
-#   1. <tt>Two words</tt> in numbered list item.
-#   a. <tt>Two words</tt> in lettered list item.
-#   [<tt>Two words</tt>] <tt>Two words</tt> in labeled list item.
-#   ====== <tt>Two words</tt> in heading
+#   # <tt>Two words</tt> in paragraph.
+#   # - <tt>Two words</tt> in bullet list item.
+#   # 1. <tt>Two words</tt> in numbered list item.
+#   # a. <tt>Two words</tt> in lettered list item.
+#   # [<tt>Two words</tt>] <tt>Two words</tt> in labeled list item.
+#   # ====== <tt>Two words</tt> in heading
+#
+# ==== Character Conversions
+#
+# Certain combinations of characters may be converted to special characters;
+# whether the conversion occurs depends on whether the special character
+# is available in the current encoding.
+#
+# - <tt>(c)</tt> converts to (c) (copyright character); must be lowercase.
+#
+# - <tt>(r)</tt> converts to (r) (registered trademark character); must be lowercase.
+#
+#  - <tt>'foo'</tt> converts to 'foo' (smart single-quotes).
+#    [Reviewers: This did not work; should it?]
+#
+#  - <tt>"foo"</tt> converts to "foo" (smart double-quotes).
+#
+#  - <tt>foo ... bar</tt> converts to foo ... bar (1-character ellipsis).
+#
+#  - <tt>foo -- bar</tt> converts to foo -- bar (1-character en-dash).
+#
+#  - <tt>foo --- bar</tt> converts to foo --- bar (1-character em-dash).
 #
 # ==== Links
 #
@@ -596,7 +626,7 @@ require 'rdoc'
 #
 #   Use the <tt>rdoc-image</tt> scheme to display an image that is also a link:
 #
-#     {rdoc-image:path/to/image}[link_target]
+#     # {rdoc-image:path/to/image}[link_target]
 #
 #   - Link: <tt>{rdoc-image:https://www.ruby-lang.org/images/header-ruby-logo@2x.png}[https://www.ruby-lang.org]</tt>
 #     displays image <tt>https://www.ruby-lang.org/images/header-ruby-logo@2x.png</tt>
@@ -628,6 +658,15 @@ require 'rdoc'
 #   - [<tt>:enddoc:</tt>]
 #     Specifies that \RDoc should ignore markup to end-of-file
 #     regardless of other directives.
+#
+#   For Ruby code, but not for other \RDoc sources,
+#   there is a shorthand for [<tt>:stopdoc:</tt>] and [<tt>:startdoc:</tt>]:
+#
+#     # Documented.
+#     #--
+#     # Not documented.
+#     #++
+#     # Documented.
 #
 # [Directive for Specifying \RDoc Source Format]
 #
@@ -661,6 +700,14 @@ require 'rdoc'
 #     overriding the actual yield in the Ruby code.
 #     See method #yields_directive.
 #
+#   Note that \RDoc can build the calling sequence for a Ruby-coded method,
+#   but not for other languages.
+#   You may want to override that by explicitly giving a <tt>:call-seq:</tt>
+#   directive if you want to include:
+#
+#   - A return type, which is not automatically inferred.
+#   - Multiple calling sequences.
+#
 # [Directives for Organizing Documentation]
 #
 #   By default, \RDoc groups:
@@ -680,6 +727,7 @@ require 'rdoc'
 #     See below.
 #   - Directive <tt>:section:</tt> with no title reverts to the default section.
 #   - The comment block containing this directive:
+#
 #     - Must be separated by a blank line from the documentation for the next item.
 #     - May have one or more lines preceding the directive.
 #       These will be removed, along with any trailing lines that match them.
@@ -713,6 +761,16 @@ require 'rdoc'
 # [Directive for Including a File]
 #
 #   - [<tt>:include: _filename_</tt>]
+#
+#     Include the contents of the named file at this point.
+#     This directive must appear alone on one line, possibly preceded by spaces.
+#     In this position, it can be escaped with a backslash in front of the first colon.
+#
+#     The file is searched for in the directories
+#     given with the <tt>--include</tt> command-line option,
+#     or in the current directory by default.
+#     The file content is shifted to have the same indentation as the colon
+#     at the start of the directive.
 #
 # == Markup in Code
 #
