@@ -21,7 +21,7 @@ RDoc::Task.new do |doc|
   doc.main = 'README.rdoc'
   doc.title = "rdoc #{RDoc::VERSION} Documentation"
   doc.rdoc_dir = 'html'
-  doc.rdoc_files = FileList.new %w[lib/**/*.rb *.rdoc] - PARSER_FILES
+  doc.rdoc_files = FileList.new %w[lib/**/*.rb *.rdoc doc/markup_reference.rb] - PARSER_FILES
 end
 
 task ghpages: :rdoc do
