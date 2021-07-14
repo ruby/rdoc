@@ -425,46 +425,35 @@ require 'rdoc'
 # ==== Links
 #
 # Certain strings in \RDoc text are converted to links.
-# Any such linking may be suppressed,
-# either by prefixing a backslash or omitting a prefix.
-#
-# This section shows how to link to (or suppress linking to) various
+# Any such link may be suppressed by prefixing a backslash.
+# This section shows how to link to various
 # targets.
 #
 # [Class]
 #
 #   - On-page: <tt>DummyClass</tt> links to DummyClass.
-#   - Suppressed: <tt>\DummyClass</tt> is not linked to \DummyClass.
 #   - Off-page: <tt>RDoc::Alias</tt> links to RDoc::Alias.
-#   - Suppressed: <tt>\RDoc::Alias</tt> is not linked to \RDoc::Alias.
 #
 # [Module]
 #
 #   - On-page: <tt>DummyModule</tt> links to DummyModule.
-#   - Suppressed: <tt>\DummyModule</tt> is not linked to \DummyModule.
 #   - Off-page: <tt>RDoc</tt> links to RDoc.
-#   - Suppressed: <tt>\RDoc</tt> is not linked to \RDoc.
 #
 # [Constant]
 #
 #   - On-page: <tt>DUMMY_CONSTANT</tt> links to DUMMY_CONSTANT.
-#   - Suppressed: <tt>\DUMMY_CONSTANT</tt> is not linked to \DUMMY_CONSTANT.
 #   - Off-page: <tt>RDoc::Text::MARKUP_FORMAT</tt> links to RDoc::Text::MARKUP_FORMAT.
 #     [Reviewers: This link did not work. Should it?]
-#   - Suppressed:  <tt>\RDoc::Text::MARKUP_FORMAT</tt> is not linked
-#     to \RDoc::Text::MARKUP_FORMAT.
 #
 # [Singleton Method]
 #
 #   - On-page: <tt>::dummy_singleton_method</tt> links to ::dummy_singleton_method.
-#   - Suppressed: <tt>dummy_singleton_method</tt> is not linked to dummy_singleton_method.
 #   - Off-page<tt>RDoc::TokenStream::to_html</tt> links to RDoc::TokenStream::to_html.
-#   - Suppressed: <tt>\RDoc::TokenStream::to_html</tt> is not linked
 #     to \RDoc::TokenStream::to_html.
 #
 #   Note: Occasionally \RDoc is not linked to a method whose name
 #   has only special characters. Check whether the links you were expecting
-#   are actually there.  If not, you'll need to put in a labelled link;
+#   are actually there.  If not, you'll need to put in an explicit link;
 #   see below.
 #
 #   Pro tip: The link to any method is available in the alphabetical table of contents
@@ -473,58 +462,44 @@ require 'rdoc'
 # [Instance Method]
 #
 #   - On-page: <tt>#dummy_instance_method</tt> links to #dummy_instance_method.
-#   - Suppressed: <tt>dummy_instance_method</tt> is not linked to dummy_instance_method.
 #   - Off-page: <tt>RDoc::Alias#html_name</tt> links to RDoc::Alias#html_name.
-#   - Suppressed:  <tt>\RDoc::Alias#html_name</tt> is not linked
-#     to \RDoc::Alias#html_name.
 #
 #     See the Note and Pro Tip immediately above.
 #
 # [Attribute]
 #
 #   - On-page: <tt>#dummy_attribute</tt> links to #dummy_attribute.
-#   - Suppressed: <tt>dummy_attribute</tt> is not linked to dummy_attribute.
 #   - Off-page: <tt>RDoc::Alias#name</tt> links to RDoc::Alias#name.
-#   - Suppressed: <tt>\RDoc::Alias#name</tt> is not linked to \RDoc::Alias#name.
 #
 # [Alias]
 #
 #   - On-page: <tt>#dummy_instance_alias</tt> links to #dummy_instance_alias.
-#   - Suppressed: <tt>dummy_instance_alias</tt> is not linked to dummy_instance_alias.
 #   - Off-page: <tt>RDoc::Alias#new_name</tt> links to RDoc::Alias#new_name.
-#   - Suppressed: <tt>\RDoc::Alias#new_name</tt> is not linked to \RDoc::Alias#new_name.
 #
 # [Protocol +http+]
 #
 #   - Linked: <tt>http://yahoo.com</tt> links to http://yahoo.com.
-#   - Suppressed: <tt>\http://yahoo.com</tt> is not linked to \http://yahoo.com.
 #
 # [Protocol +https+]
 #
 #   - Linked: <tt>https://github.com</tt> links to https://github.com.
-#   - Suppressed: <tt>\https://github.com</tt> is not linked to \https://github.com.
 #
 # [Protocol +www+]
 #
 #   - Linked: <tt>www.yahoo.com</tt> links to www.yahoo.com.
 #     [Reviewers: This link did not work. Should it?]
-#   - Suppressed: <tt>\www.yahoo.com</tt> is not linked to \www.yahoo.com.
 #
 # [Protocol +ftp+]
 #
 #   - Linked: <tt>ftp://nosuch.site</tt> links to ftp://nosuch.site.
-#   - Suppressed: <tt>\ftp://nosuch.site</tt> is not linked to \ftp://nosuch.site.
 #
 # [Protocol +mailto+]
 #
 #   - Linked:  <tt>mailto:/foo@bar.com</tt> links to mailto://foo@bar.com.
-#   - Suppressed:  <tt>\mailto:/foo@bar.com</tt> is not linked to \mailto://foo@bar.com.
 #
 # [Protocol +irc+]
 #
 #   - link: <tt>irc://irc.freenode.net/ruby</tt> links to irc://irc.freenode.net/ruby.
-#   - Suppressed: <tt>\irc://irc.freenode.net/ruby</tt> is not linked
-#     to \irc://irc.freenode.net/ruby.
 #
 # [Image Filename Extensions]
 #
@@ -537,14 +512,10 @@ require 'rdoc'
 #
 #     Note: Works only for a fully qualified URL.
 #
-#   - Suppressed: <tt>\https://www.ruby-lang.org/images/header-ruby-logo@2x.png</tt>
-#     is not linked to \https://www.ruby-lang.org/images/header-ruby-logo@2x.png.
-#
 # [Heading]
 #
 #   - Link: <tt>RDoc::RD@LICENSE</tt> links to RDoc::RDoc::RD@LICENSE.
 #     [Reviewers: This link did not work. Should it?]
-#   - Suppressed: <tt>\RDoc::RD@LICENSE</tt> is not linked to \RDoc::RD@LICENSE.
 #
 #   Note that spaces in the actual heading are represented by <tt>+</tt> characters
 #   in the linkable text.
@@ -562,8 +533,6 @@ require 'rdoc'
 #   See {Directives for Organizing Documentation}[#class-RDoc::MarkupReference-label-Directives+for+Organizing+Documentation].
 #
 #   - Link: <tt>RDoc::Markup::ToHtml@Visitor</tt> links to RDoc::Markup::ToHtml@Visitor.
-#   - Suppressed: <tt>\RDoc::Markup::ToHtml@Visitor</tt> does not link
-#     to \RDoc::Markup::ToHtml@Visitor.
 #
 #   If a section and a heading share the same name, the link target is the section.
 #
@@ -634,10 +603,6 @@ require 'rdoc'
 #     as a link to <tt>https://www.ruby-lang.org</tt>.
 #
 #     {rdoc-image:https://www.ruby-lang.org/images/header-ruby-logo@2x.png}[https://www.ruby-lang.org]
-#
-#   - Suppressed: <tt>\{rdoc-image:https://www.ruby-lang.org/images/header-ruby-logo@2x.png}[https://www.ruby-lang.org]</tt> creates no link.
-#
-#     \{rdoc-image:https://www.ruby-lang.org/images/header-ruby-logo@2x.png}[https://www.ruby-lang.org]
 #
 #   A relative path as the target also works:
 #
