@@ -581,17 +581,16 @@ require 'rdoc'
 #
 #   [Simple]
 #
-#     [Reviewers:]
+#     You can specify a link target using this form,
+#     where the second part cites the id of an HTML element.
 #
-#       Each header id on the generated html for this page begins
-#       <tt>class-RDoc::MarkupReference</tt>.
-#       Example: <tt>class-RDoc::MarkupReference-label-Bullet+Lists</tt>.
+#     This link refers to the constant +DUMMY_CONSTANT+ on this page:
 #
-#       In the rdoc-label idiom, the parser lops off the target id
-#       at the first colon, so that it becomes <tt>class-RDoc</tt>.
+#     - <tt>{DUMMY_CONSTANT}[rdoc-label:DUMMY_CONSTANT]</tt>
 #
-#       So I don't seem to be able to do rdoc-label to a local header,
-#       and possibly not to one off-page either.
+#     Thus:
+#
+#     {DUMMY_CONSTANT}[rdoc-label:DUMMY_CONSTANT]
 #
 #   [With Return]
 #
