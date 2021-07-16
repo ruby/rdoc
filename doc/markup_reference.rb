@@ -580,13 +580,35 @@ require 'rdoc'
 # [<tt>rdoc-label</tt> Scheme]
 #
 #   [Simple]
-#     [Reviewers: I have not been able to craft an example that works.]
+#
+#     [Reviewers:]
+#
+#       Each header id on the generated html for this page begins
+#       <tt>class-RDoc::MarkupReference</tt>.
+#       Example: <tt>class-RDoc::MarkupReference-label-Bullet+Lists</tt>.
+#
+#       In the rdoc-label idiom, the parser lops off the target id
+#       at the first colon, so that it becomes <tt>class-RDoc</tt>.
+#
+#       So I don't seem to be able to do rdoc-label to a local header,
+#       and possibly not to one off-page either.
 #
 #   [With Return]
-#     [Reviewers: I have not been able to craft an example that works.]
 #
-#   [foottext, footmark]
-#     [Reviewers: I have not been able to craft an example that works.]
+#     You can specify both a link target and a local label
+#     that can be used as the target for a return link.
+#     These two links refer to each other:
+#
+#     - <tt>{go to addressee}[rdoc-label:addressee:sender]</tt>
+#     - <tt>{return to sender}[rdoc-label:sender:addressee]</tt>
+#
+#     Thus:
+#
+#     {go to addressee}[rdoc-label:addressee:sender]
+#
+#     Some text.
+#
+#     {return to sender}[rdoc-label:sender:addressee]
 #
 # [<tt>link:</tt> Scheme]
 #
