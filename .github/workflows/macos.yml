@@ -10,4 +10,4 @@ jobs:
     - name: Install dependencies
       run: bundle install
     - name: Run test
-      run: rake && RUBYOPT=--enable-frozen_string_literal rake
+      run: bundle exec rake && RUBYOPT=--enable-frozen_string_literal bundle exec rake
