@@ -411,16 +411,15 @@ require 'rdoc'
 #
 # - <tt>(r)</tt> converts to (r) (registered trademark character); must be lowercase.
 #
-#  - <tt>'foo'</tt> converts to 'foo' (smart single-quotes).
-#    [Reviewers: This did not work; should it?]
+# - <tt>'foo'</tt> converts to 'foo' (smart single-quotes).
 #
-#  - <tt>"foo"</tt> converts to "foo" (smart double-quotes).
+# - <tt>"foo"</tt> converts to "foo" (smart double-quotes).
 #
-#  - <tt>foo ... bar</tt> converts to foo ... bar (1-character ellipsis).
+# - <tt>foo ... bar</tt> converts to foo ... bar (1-character ellipsis).
 #
-#  - <tt>foo -- bar</tt> converts to foo -- bar (1-character en-dash).
+# - <tt>foo -- bar</tt> converts to foo -- bar (1-character en-dash).
 #
-#  - <tt>foo --- bar</tt> converts to foo --- bar (1-character em-dash).
+# - <tt>foo --- bar</tt> converts to foo --- bar (1-character em-dash).
 #
 # ==== Links
 #
@@ -443,7 +442,6 @@ require 'rdoc'
 #
 #   - On-page: <tt>DUMMY_CONSTANT</tt> links to DUMMY_CONSTANT.
 #   - Off-page: <tt>RDoc::Text::MARKUP_FORMAT</tt> links to RDoc::Text::MARKUP_FORMAT.
-#     [Reviewers: This link did not work. Should it?]
 #
 # [Singleton Method]
 #
@@ -487,7 +485,6 @@ require 'rdoc'
 # [Protocol +www+]
 #
 #   - Linked: <tt>www.yahoo.com</tt> links to www.yahoo.com.
-#     [Reviewers: This link did not work. Should it?]
 #
 # [Protocol +ftp+]
 #
@@ -515,7 +512,6 @@ require 'rdoc'
 # [Heading]
 #
 #   - Link: <tt>RDoc::RD@LICENSE</tt> links to RDoc::RDoc::RD@LICENSE.
-#     [Reviewers: This link did not work. Should it?]
 #
 #   Note that spaces in the actual heading are represented by <tt>+</tt> characters
 #   in the linkable text.
@@ -561,16 +557,13 @@ require 'rdoc'
 #     links to foo[rdoc-ref:RDoc::Markup::ToHtml#handle_regexp_RDOCLINK].
 #   - Constant: <tt>bar[rdoc-ref:RDoc::Markup::ToHtml::LIST_TYPE_TO_HTML]</tt>
 #     links to bar[rdoc-ref:RDoc::Markup::ToHtml::LIST_TYPE_TO_HTML].
-#     [Reviewers: This link not did work. Should it?]
 #   - Attribute: <tt>baz[rdoc-ref:RDoc::Markup::ToHtml#code_object]</tt>
 #     links to baz[rdoc-ref:RDoc::Markup::ToHtml#code_object].
 #   - Alias: <tt>bad[rdoc-ref:RDoc::MarkupReference#dummy_instance_alias]</tt> links to
 #     bad[rdoc-ref:RDoc::MarkupReference#dummy_instance_alias].
-#   - File: ???.
-#     [Reviewers: What file reference would work?]
 #
 #   If the referenced item does not exist, no link is generated
-#   and entire <tt>rdoc-ref:</tt> square-brakceted clause is removed
+#   and entire <tt>rdoc-ref:</tt> square-bracketed clause is removed
 #   from the resulting text.
 #
 #   - <tt>Nosuch[rdoc-ref:RDoc::Nosuch]</tt> is rendered as
