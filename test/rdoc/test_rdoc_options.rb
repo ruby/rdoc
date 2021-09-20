@@ -145,7 +145,7 @@ class TestRDocOptions < RDoc::TestCase
 
     @options.encoding = Encoding::IBM437
 
-    options = YAML.safe_load(YAML.dump(@options), permitted_classes: [RDoc::Options, Symbol])
+    options = YAML.safe_load(YAML.dump(@options), permitted_classes: RDoc::Options::PERMITTED_CLASSES)
 
     assert_equal Encoding::IBM437, options.encoding
   end
@@ -161,7 +161,7 @@ rdoc_include:
 - /etc
     YAML
 
-    options = YAML.safe_load(yaml, permitted_classes: [RDoc::Options, Symbol])
+    options = YAML.safe_load(yaml, permitted_classes: RDoc::Options::PERMITTED_CLASSES)
 
     assert_empty options.rdoc_include
     assert_empty options.static_path
@@ -764,7 +764,7 @@ rdoc_include:
 
       assert File.exist? '.rdoc_options'
 
-      assert_equal @options, YAML.safe_load(File.read('.rdoc_options'), permitted_classes: [RDoc::Options, Symbol])
+      assert_equal @options, YAML.safe_load(File.read('.rdoc_options'), permitted_classes: RDoc::Options::PERMITTED_CLASSES)
     end
   end
 

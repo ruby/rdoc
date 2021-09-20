@@ -120,6 +120,10 @@ class RDoc::Options
   ]
 
   ##
+  # Classes that are permitted to be loaded by load_options
+  PERMITTED_CLASSES = [RDoc::Options, Symbol]
+
+  ##
   # Option validator for OptionParser that matches a directory that exists on
   # the filesystem.
 
@@ -1293,7 +1297,7 @@ Usage: #{opt.program_name} [options] [names...]
     RDoc.load_yaml
 
     begin
-      options = YAML.safe_load File.read('.rdoc_options'), permitted_classes: [RDoc::Options, Symbol]
+      options = YAML.safe_load File.read('.rdoc_options'), permitted_classes: PERMITTED_CLASSES
     rescue Psych::SyntaxError
       raise RDoc::Error, "#{options_file} is not a valid rdoc options file"
     end
