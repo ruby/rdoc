@@ -760,11 +760,22 @@ rdoc_include:
 
   def test_write_options
     temp_dir do |dir|
+      @options.files = []
+      @options.template = ""
+      @options.tab_width = 42
+      @options.finish
       @options.write_options
 
       assert File.exist? '.rdoc_options'
 
-      assert_equal @options, YAML.safe_load(File.read('.rdoc_options'), permitted_classes: RDoc::Options::PERMITTED_CLASSES)
+      options = RDoc::Options.load_options
+
+      %i[charset encoding exclude hyperlink_all line_numbers locale locale_dir main_page markup
+         output_decoration page_dir show_hash tab_width template_stylesheets title visibility
+         webcvs
+        ].each do |attr|
+        assert_equal(@options.send(attr), options.send(attr), "expected #{attr} to be equal")
+      end
     end
   end
 

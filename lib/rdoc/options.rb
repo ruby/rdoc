@@ -121,7 +121,7 @@ class RDoc::Options
 
   ##
   # Classes that are permitted to be loaded by load_options
-  PERMITTED_CLASSES = [RDoc::Options, Symbol]
+  PERMITTED_CLASSES = [RDoc::Options, Symbol, Regexp]
 
   ##
   # Option validator for OptionParser that matches a directory that exists on
