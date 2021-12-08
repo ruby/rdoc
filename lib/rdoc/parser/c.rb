@@ -1025,7 +1025,8 @@ class RDoc::Parser::C < RDoc::Parser
                           elsif p_count == -1 then # argc, argv
                             rb_scan_args body
                           else
-                            "(#{(1..p_count).map { |i| "p#{i}" }.join ', '})"
+                            args = (1..p_count).map { |i| "p#{i}" }
+                            "(#{args.join ', '})"
                           end
 
 
