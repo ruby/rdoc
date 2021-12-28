@@ -1135,7 +1135,7 @@ StartList = &.
             { [] }
 
 Line =  @RawLine:a { a }
-RawLine = ( < (!"\r" !"\n" .)* @Newline >
+RawLine = ( < /[^\r\n]*/ @Newline >
         | < .+ > @Eof ) { text }
 
 SkipBlock = HtmlBlock
