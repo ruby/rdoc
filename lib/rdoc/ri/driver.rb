@@ -1150,7 +1150,15 @@ or the PAGER environment variable.
   # Is +file+ in ENV['PATH']?
 
   def in_path? file
-    return true if file =~ %r%\A/% and File.exist? file
+    if File.respond_to?(:absolute_path?)
+      return true if File.absolute_path?(file) and File.exist?(file)
+    else
+      if RbConfig::CONFIG['target_os'] =~ /mswin|mingw/
+        return true if file =~ %r%\A[A-Za-z]:[/\\]% and File.exist? file
+      else
+        return true if file =~ %r%\A/% and File.exist? file
+      end
+    end
 
     ENV['PATH'].split(File::PATH_SEPARATOR).any? do |path|
       File.exist? File.join(path, file)
@@ -1526,7 +1534,11 @@ or the PAGER environment variable.
     pagers.compact.uniq.each do |pager|
       next unless pager
 
-      pager_cmd = pager.split(' ').first
+      if RbConfig::CONFIG['target_os'] =~ /mswin|mingw/
+        pager_cmd = pager.sub('Program Files', "\0").split(' ').first.sub("\0", 'Program Files').gsub('"', '')
+      else
+        pager_cmd = pager.split(' ').first
+      end
 
       next unless in_path? pager_cmd
 
