@@ -1534,11 +1534,7 @@ or the PAGER environment variable.
     pagers.compact.uniq.each do |pager|
       next unless pager
 
-      if RbConfig::CONFIG['target_os'] =~ /mswin|mingw/
-        pager_cmd = pager.sub('Program Files', "\0").split(' ').first.sub("\0", 'Program Files').gsub('"', '')
-      else
-        pager_cmd = pager.split(' ').first
-      end
+      pager_cmd = pager[/\A\s*(?:"\K[^"]+(?=")|\K\S+)/]}
 
       next unless in_path? pager_cmd
 
