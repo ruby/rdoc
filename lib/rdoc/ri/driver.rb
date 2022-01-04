@@ -1534,7 +1534,7 @@ or the PAGER environment variable.
     pagers.compact.uniq.each do |pager|
       next unless pager
 
-      pager_cmd = pager[/\A\s*(?:"\K[^"]+(?=")|\K\S+)/]}
+      pager_cmd = pager[/\A\s*(?:"\K[^"]+(?=")|\K\S+)/]
 
       next unless in_path? pager_cmd
 
