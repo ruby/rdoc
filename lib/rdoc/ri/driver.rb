@@ -1150,19 +1150,34 @@ or the PAGER environment variable.
   # Is +file+ in ENV['PATH']?
 
   def in_path? file
-    if File.respond_to?(:absolute_path?)
-      return true if File.absolute_path?(file) and File.exist?(file)
+    extensions = [''].concat((windows? ? ENV['PATHEXT']&.split(File::PATH_SEPARATOR) : nil).to_a)
+    if absolute_path?(file)
+      extensions.any? do |ext|
+        File.exist?(file + ext)
+      end
     else
-      if RbConfig::CONFIG['target_os'] =~ /mswin|mingw/
-        return true if file =~ %r%\A[A-Za-z]:[/\\]% and File.exist? file
-      else
-        return true if file =~ %r%\A/% and File.exist? file
+      ENV['PATH'].split(File::PATH_SEPARATOR).any? do |path|
+        extensions.any? do |ext|
+          File.exist? File.join(path, file + ext)
+        end
       end
     end
+  end
 
-    ENV['PATH'].split(File::PATH_SEPARATOR).any? do |path|
-      File.exist? File.join(path, file)
+  private def absolute_path? file
+    if File.respond_to?(:absolute_path?)
+      File.absolute_path?(file)
+    else
+      if windows?
+        file =~ %r%\A[A-Za-z]:[/\\]%
+      else
+        file =~ %r%\A/%
+      end
     end
+  end
+
+  private def windows?
+    RbConfig::CONFIG['target_os'] =~ /mswin|mingw/
   end
 
   ##
