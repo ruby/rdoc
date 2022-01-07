@@ -1150,7 +1150,7 @@ or the PAGER environment variable.
   # Is +file+ in ENV['PATH']?
 
   def in_path? file
-    extensions = [''].concat((windows? ? ENV['PATHEXT']&.split(File::PATH_SEPARATOR) : nil).to_a)
+    extensions = [''].union(RbConfig::CONFIG["EXECUTABLE_EXTS"]&.split || RbConfig::CONFIG["EXEEXT"].to_a)
     if absolute_path?(file)
       extensions.any? do |ext|
         File.exist?(file + ext)
