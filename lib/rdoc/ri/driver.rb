@@ -1544,7 +1544,7 @@ or the PAGER environment variable.
 
     jruby = RUBY_ENGINE == 'jruby'
 
-    pagers = [ENV['RI_PAGER'], ENV['PAGER'], 'pager', 'less', 'more', 'more.com']
+    pagers = [ENV['RI_PAGER'], ENV['PAGER'], 'pager', 'less', 'more']
 
     pagers.compact.uniq.each do |pager|
       next unless pager
