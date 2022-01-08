@@ -713,6 +713,7 @@ EXPECTED
   def test_convert_underscore_adjacent_to_code
     assert_equal "\n<p><code>aaa</code>_</p>\n", @to.convert(%q{+aaa+_})
     assert_equal "\n<p>\u{2018}<code>i386-mswin32_</code><em>MSRTVERSION</em>\u{2019}</p>\n", @to.convert(%q{`+i386-mswin32_+_MSRTVERSION_'})
+    assert_equal "\n<p>\u{2018}<code>i386-mswin32_</code><em>MSRTVERSION</em>\u{2019}</p>\n", @to.convert(%q{`+i386-mswin32_+_MSRTVERSION_`})
   end
 
   def test_gen_url

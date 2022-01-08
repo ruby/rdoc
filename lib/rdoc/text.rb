@@ -241,12 +241,15 @@ module RDoc::Text
         html << encoded[:close_dquote]
         after_word = nil
       when s.scan(/`/) then # backtick
-        if insquotes or after_word
+        if insquotes == :backtick
+          html << encoded[:close_squote]
+          insquotes = false
+        elsif insquotes or after_word
           html << '`'
           after_word = false
         else
           html << encoded[:open_squote]
-          insquotes = true
+          insquotes = :backtick
         end
       when s.scan(/&#39;|'/) then # single quote
         if insquotes
