@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+$:.unshift File.expand_path('lib', __dir__) # default template dir
+
 require_relative 'lib/rdoc/task'
 require 'bundler/gem_tasks'
 require 'rake/testtask'
