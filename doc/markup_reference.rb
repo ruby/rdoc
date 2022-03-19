@@ -626,131 +626,131 @@ require 'rdoc'
 #
 # === Directives
 #
-# [Directives for Allowing or Suppressing Documentation]
+# ==== Directives for Allowing or Suppressing Documentation
 #
-#   Each directive described in this section must appear on a line by itself.
+# Each directive described in this section must appear on a line by itself.
 #
-#   - [<tt>:stopdoc:</tt>]
-#     Specifies that \RDoc should ignore markup
-#     until next <tt>:startdoc:</tt> directive or end-of-file.
-#   - [<tt>:startdoc:</tt>]
-#     Specifies that \RDoc should resume parsing markup.
-#   - [<tt>:enddoc:</tt>]
-#     Specifies that \RDoc should ignore markup to end-of-file
-#     regardless of other directives.
+# - [<tt>:stopdoc:</tt>]
+# Specifies that \RDoc should ignore markup
+# until next <tt>:startdoc:</tt> directive or end-of-file.
+# - [<tt>:startdoc:</tt>]
+#   Specifies that \RDoc should resume parsing markup.
+# - [<tt>:enddoc:</tt>]
+#   Specifies that \RDoc should ignore markup to end-of-file
+#   regardless of other directives.
 #
-#   For Ruby code, but not for other \RDoc sources,
-#   there is a shorthand for [<tt>:stopdoc:</tt>] and [<tt>:startdoc:</tt>]:
+# For Ruby code, but not for other \RDoc sources,
+# there is a shorthand for [<tt>:stopdoc:</tt>] and [<tt>:startdoc:</tt>]:
 #
-#     # Documented.
-#     #--
-#     # Not documented.
-#     #++
-#     # Documented.
+#   # Documented.
+#   #--
+#   # Not documented.
+#   #++
+#   # Documented.
 #
-# [Directive for Specifying \RDoc Source Format]
+# ==== Directive for Specifying \RDoc Source Format
 #
-#   This directive described must appear on a line by itself.
+# This directive described must appear on a line by itself.
 #
-#   - [<tt>:markup: _type_</tt>]
-#     Specifies the format for the \RDoc input.
-#     Parameter +type+ is one of +markdown+, +rd+, +rdoc+, +tomcat+.
+# - [<tt>:markup: _type_</tt>]
+#   Specifies the format for the \RDoc input.
+#   Parameter +type+ is one of +markdown+, +rd+, +rdoc+, +tomcat+.
 #
-# [Directives for HTML Output]
+# ==== Directives for HTML Output
 #
-#   Each directive described in this section must appear on a line by itself.
+# Each directive described in this section must appear on a line by itself.
 #
-#   - [<tt>:title: _text_</tt>]
-#     Specifies the title for the HTML output.
-#   - [<tt>:main: _file_name_</tt>]
-#     Specifies the HTML file to be displayed first.
+# - [<tt>:title: _text_</tt>]
+#   Specifies the title for the HTML output.
+# - [<tt>:main: _file_name_</tt>]
+#   Specifies the HTML file to be displayed first.
 #
-# [Directives for Method Documentation]
+# ==== Directives for Method Documentation
 #
-#   - [<tt>:call-seq:</tt>]
-#     For the given method, specifies the calling sequence to be reported in the HTML,
-#     overriding the actual calling sequence in the Ruby code.
-#     See method #call_seq_directive.
-#   - [<tt>:args: _arg_names_</tt> (aliased as <tt>:arg</tt>)]
-#     For the given method, specifies the arguments to be reported in the HTML,
-#     overriding the actual arguments in the Ruby code.
-#     See method #args_directive.
-#   - [<tt>:yields: _arg_names_</tt> (aliased as <tt>:yield:</tt>)]
-#     For the given method, specifies the yield arguments to be reported in the HTML,
-#     overriding the actual yield in the Ruby code.
-#     See method #yields_directive.
+# - [<tt>:call-seq:</tt>]
+#   For the given method, specifies the calling sequence to be reported in the HTML,
+#   overriding the actual calling sequence in the Ruby code.
+#   See method #call_seq_directive.
+# - [<tt>:args: _arg_names_</tt> (aliased as <tt>:arg</tt>)]
+#   For the given method, specifies the arguments to be reported in the HTML,
+#   overriding the actual arguments in the Ruby code.
+#   See method #args_directive.
+# - [<tt>:yields: _arg_names_</tt> (aliased as <tt>:yield:</tt>)]
+#   For the given method, specifies the yield arguments to be reported in the HTML,
+#   overriding the actual yield in the Ruby code.
+#   See method #yields_directive.
 #
-#   Note that \RDoc can build the calling sequence for a Ruby-coded method,
-#   but not for other languages.
-#   You may want to override that by explicitly giving a <tt>:call-seq:</tt>
-#   directive if you want to include:
+# Note that \RDoc can build the calling sequence for a Ruby-coded method,
+# but not for other languages.
+# You may want to override that by explicitly giving a <tt>:call-seq:</tt>
+# directive if you want to include:
 #
-#   - A return type, which is not automatically inferred.
-#   - Multiple calling sequences.
+# - A return type, which is not automatically inferred.
+# - Multiple calling sequences.
 #
-# [Directives for Organizing Documentation]
+# ==== Directives for Organizing Documentation
 #
-#   By default, \RDoc groups:
+# By default, \RDoc groups:
 #
-#   - Singleton methods together in alphabetical order.
-#   - Instance methods and their aliases together in alphabetical order.
-#   - Attributes and their aliases together in alphabetical order.
+# - Singleton methods together in alphabetical order.
+# - Instance methods and their aliases together in alphabetical order.
+# - Attributes and their aliases together in alphabetical order.
 #
-#   You can use directive <tt>:section:</tt> to define sections
-#   that group methods differently:
+# You can use directive <tt>:section:</tt> to define sections
+# that group methods differently:
 #
-#   - Directive <tt>:section: <em>section_title</em></tt> specifies that
-#     following methods are to be grouped into a section
-#     with the given <em>section_title</em> as its heading.
-#     This directive remains in effect until another such directive is given,
-#     but may be temporarily overridden by directive <tt>:category:</tt>.
-#     See below.
-#   - Directive <tt>:section:</tt> with no title reverts to the default section.
-#   - The comment block containing this directive:
+# - Directive <tt>:section: <em>section_title</em></tt> specifies that
+#   following methods are to be grouped into a section
+#   with the given <em>section_title</em> as its heading.
+#   This directive remains in effect until another such directive is given,
+#   but may be temporarily overridden by directive <tt>:category:</tt>.
+#   See below.
+# - Directive <tt>:section:</tt> with no title reverts to the default section.
+# - The comment block containing this directive:
 #
-#     - Must be separated by a blank line from the documentation for the next item.
-#     - May have one or more lines preceding the directive.
-#       These will be removed, along with any trailing lines that match them.
-#       Such lines may be visually helpful.
-#     - Lines of text that are not so removed become the descriptive text
-#       for the section.
+# - Must be separated by a blank line from the documentation for the next item.
+#   - May have one or more lines preceding the directive.
+#     These will be removed, along with any trailing lines that match them.
+#     Such lines may be visually helpful.
+#   - Lines of text that are not so removed become the descriptive text
+#     for the section.
 #
-#   Example:
+# Example:
 #
-#     # ----------------------------------------
-#     # :section: My Section
-#     # This is the section that I wrote.
-#     # See it glisten in the noon-day sun.
-#     # ----------------------------------------
+#   # ----------------------------------------
+#   # :section: My Section
+#   # This is the section that I wrote.
+#   # See it glisten in the noon-day sun.
+#   # ----------------------------------------
 #
-#     ##
-#     # Comment for some_method
-#     def some_method
-#       # ...
-#     end
+#   ##
+#   # Comment for some_method
+#   def some_method
+#     # ...
+#   end
 #
-#   You can use directive <tt>:category:</tt> to temporarily
-#   override the current section.
+# You can use directive <tt>:category:</tt> to temporarily
+# override the current section.
 #
-#   - Directive <tt>:category: <em>section_title</em></tt> specifies that
-#     just one following method is to be included in the given section.
-#     Subsequent methods are to be grouped into the current section.
-#   - Directive <tt>:category:</tt> with no title specifies that just one
-#     following method is to be included in the default section.
+# - Directive <tt>:category: <em>section_title</em></tt> specifies that
+#   just one following method is to be included in the given section.
+#   Subsequent methods are to be grouped into the current section.
+# - Directive <tt>:category:</tt> with no title specifies that just one
+#   following method is to be included in the default section.
 #
-# [Directive for Including a File]
+# ==== Directive for Including a File
 #
-#   - [<tt>:include: _filename_</tt>]
+# - [<tt>:include: _filename_</tt>]
 #
-#     Include the contents of the named file at this point.
-#     This directive must appear alone on one line, possibly preceded by spaces.
-#     In this position, it can be escaped with a backslash in front of the first colon.
+#   Include the contents of the named file at this point.
+#   This directive must appear alone on one line, possibly preceded by spaces.
+#   In this position, it can be escaped with a backslash in front of the first colon.
 #
-#     The file is searched for in the directories
-#     given with the <tt>--include</tt> command-line option,
-#     or in the current directory by default.
-#     The file content is shifted to have the same indentation as the colon
-#     at the start of the directive.
+#   The file is searched for in the directories
+#   given with the <tt>--include</tt> command-line option,
+#   or in the current directory by default.
+#   The file content is shifted to have the same indentation as the colon
+#   at the start of the directive.
 #
 # == Markup in Code
 #
