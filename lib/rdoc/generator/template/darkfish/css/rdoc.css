@@ -502,7 +502,7 @@ details[open] > summary:after {
 
 main .method-source-code {
   max-height: 0;
-  overflow: hidden;
+  overflow: auto;
   transition-duration: 200ms;
   transition-delay: 0ms;
   transition-property: all;
