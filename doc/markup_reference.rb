@@ -696,46 +696,52 @@ require 'rdoc'
 # - Instance methods and their aliases together in alphabetical order.
 # - Attributes and their aliases together in alphabetical order.
 #
-# You can use directive <tt>:section:</tt> to define sections
-# that group methods differently:
+# You can use directives to modify those behaviors.
 #
-# - Directive <tt>:section: <em>section_title</em></tt> specifies that
+# - [<tt>:section: _section_title_</tt>]
+#
+#   Directive <tt>:section: <em>section_title</em></tt> specifies that
 #   following methods are to be grouped into a section
 #   with the given <em>section_title</em> as its heading.
 #   This directive remains in effect until another such directive is given,
 #   but may be temporarily overridden by directive <tt>:category:</tt>.
 #   See below.
-# - Directive <tt>:section:</tt> with no title reverts to the default section.
-# - The comment block containing this directive:
 #
-# - Must be separated by a blank line from the documentation for the next item.
+#   Directive <tt>:section:</tt> with no title reverts to the default section.
+#
+#   The comment block containing this directive:
+#
+#   - Must be separated by a blank line from the documentation for the next item.
 #   - May have one or more lines preceding the directive.
 #     These will be removed, along with any trailing lines that match them.
 #     Such lines may be visually helpful.
 #   - Lines of text that are not so removed become the descriptive text
 #     for the section.
 #
-# Example:
+#   Example:
 #
-#   # ----------------------------------------
-#   # :section: My Section
-#   # This is the section that I wrote.
-#   # See it glisten in the noon-day sun.
-#   # ----------------------------------------
+#     # ----------------------------------------
+#     # :section: My Section
+#     # This is the section that I wrote.
+#     # See it glisten in the noon-day sun.
+#     # ----------------------------------------
 #
-#   ##
-#   # Comment for some_method
-#   def some_method
-#     # ...
-#   end
+#     ##
+#     # Comment for some_method
+#     def some_method
+#       # ...
+#     end
 #
-# You can use directive <tt>:category:</tt> to temporarily
-# override the current section.
+#   You can use directive <tt>:category:</tt> to temporarily
+#   override the current section.
 #
-# - Directive <tt>:category: <em>section_title</em></tt> specifies that
+# - [<tt>:category: _section_title_</tt>]
+#
+#   Directive <tt>:category: <em>section_title</em></tt> specifies that
 #   just one following method is to be included in the given section.
 #   Subsequent methods are to be grouped into the current section.
-# - Directive <tt>:category:</tt> with no title specifies that just one
+# 
+#   Directive <tt>:category:</tt> with no title specifies that just one
 #   following method is to be included in the default section.
 #
 # ==== Directive for Including a File
