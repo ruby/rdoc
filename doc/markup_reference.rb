@@ -654,7 +654,7 @@ require 'rdoc'
 #
 # - [<tt>:markup: _type_</tt>]
 #   Specifies the format for the \RDoc input.
-#   Parameter +type+ is one of +markdown+, +rd+, +rdoc+, +tomcat+.
+#   Parameter +type+ is one of +markdown+, +rd+, +rdoc+, +tomdoc+.
 #
 # ==== Directives for HTML Output
 #
