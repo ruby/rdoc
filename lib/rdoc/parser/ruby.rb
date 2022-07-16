@@ -1470,9 +1470,26 @@ class RDoc::Parser::Ruby < RDoc::Parser
         end
       end
 
+      coerce_call_seq(meth)
+
       parse_statements container, single, meth
     end
   end
+
+  # Coerce calling sequence if the given method is an operator method.
+  def coerce_call_seq(meth)
+    # Ignore if multiple arguments.
+    return if meth.arglists.include?(',')
+    # Ignore if singleton method.
+    return if meth.singleton
+    # Only coerce certain methods.
+    return unless OPERATOR_METHOD_NAMES.include?(meth.name)
+    call_seq = "self #{meth.arglists}".sub('(', ' ').sub(')', '')
+    meth.call_seq = call_seq
+  end
+
+  # Names of operator methods.
+  OPERATOR_METHOD_NAMES = %w[ ! != !~ % & * ** + - / < << <= <=> == === =~ > >= >> ^ | ~ ]
 
   ##
   # Parses a method that needs to be ignored.
