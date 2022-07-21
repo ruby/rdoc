@@ -4297,4 +4297,39 @@ end
     assert_equal 'A::D', a_d.full_name
   end
 
+  COERCIBLE_OPERATORS = %w[ ! != !~ % & * ** + - / < << <= <=> == === =~ > >= >> ^ | ~ ]
+
+  def test_coerce_call_seq
+    util_parser('')
+    def coercible?(op)
+      COERCIBLE_OPERATORS.include?(op)
+    end
+    def _test_coercion(op, single_arg: true, singleton: false)
+      args = single_arg ? 'arg' : 'arg0, arg1'
+      call_seq = "#{op}(#{args})"
+      text = "def #{call_seq}; end"
+      meth = RDoc::AnyMethod.new(text, op)
+      meth.call_seq = call_seq
+      meth.singleton = singleton
+      @parser.coerce_call_seq(meth)
+      expected = if coercible?(op) && single_arg && !singleton
+        "self #{op} arg"
+      else
+        call_seq
+      end
+      assert_equal(expected, meth.call_seq)
+    end
+    COERCIBLE_OPERATORS.each do |op|
+      _test_coercion(op)
+    end
+    # Operator not coercible.
+    %w[ # $ = [] []= ].each do |op|
+      _test_coercion(op)
+    end
+    # Multiple arguments not coerced.
+    _test_coercion('===', single_arg: false)
+    # Singleton method not coerced.
+    _test_coercion('===', singleton: true)
+  end
+
 end
