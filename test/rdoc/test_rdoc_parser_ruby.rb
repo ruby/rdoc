@@ -4302,13 +4302,15 @@ end
       %w[  !=  !~  **  <<  <=  ==  =~  >=  >>  ] +
       %w[  <=>  ===  ]
 
-  def test_coerce_call_seq
-    util_parser('')
+  def test_coerce_call_seq_binary_operators
     # Check for method names not handled here.
     unhandled = RDoc::Parser::Ruby::BINARY_OPERATOR_METHOD_NAMES -
       BINARY_OPERATOR_METHOD_NAMES
     assert_equal([], unhandled)
-    # Binary operator methods are coerced.
+  end
+
+  def test_coerce_call_seq_each_binary_operator
+    util_parser('')
     BINARY_OPERATOR_METHOD_NAMES.each do |op|
       call_seq = "#{op}(arg)"
       text = "def #{call_seq}; end"
@@ -4317,7 +4319,10 @@ end
       @parser.coerce_call_seq(meth)
       assert_equal("self #{op} arg", meth.call_seq)
     end
-    # Other methods are not coerced.
+  end
+
+  def test_coerce_call_seq_not_binary_operator
+    util_parser('')
     %w[ ! ~ [] []= ].each do |op|
       call_seq = "#{op}(arg)"
       text = "def #{call_seq}; end"
@@ -4326,7 +4331,10 @@ end
       @parser.coerce_call_seq(meth)
       assert_equal(call_seq, meth.call_seq)
     end
-    # Multiple-argument method is not coerced.
+  end
+
+  def test_coerce_call_seq_multiple_args
+    util_parser('')
     op = BINARY_OPERATOR_METHOD_NAMES.first
     call_seq = "#{op}(arg0, arg1)"
     text = "def #{call_seq}; end"
@@ -4334,7 +4342,10 @@ end
     meth.call_seq = call_seq
     @parser.coerce_call_seq(meth)
     assert_equal(call_seq, meth.call_seq)
-    # Singleton method not coerced.
+  end
+
+  def test_coerce_call_seq_singleton
+    util_parser('')
     op = BINARY_OPERATOR_METHOD_NAMES.first
     call_seq = "#{op}(arg)"
     text = "def #{call_seq}; end"
