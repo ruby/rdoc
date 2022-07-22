@@ -4297,39 +4297,50 @@ end
     assert_equal 'A::D', a_d.full_name
   end
 
-  COERCIBLE_OPERATORS = %w[ ! != !~ % & * ** + - / < << <= <=> == === =~ > >= >> ^ | ~ ]
+  BINARY_OPERATOR_METHOD_NAMES =
+    %w[ != !~ % & * ** + - / < << <= <=> == === =~ > >= >> ^ | ~ ]
 
   def test_coerce_call_seq
     util_parser('')
-    def coercible?(op)
-      COERCIBLE_OPERATORS.include?(op)
-    end
-    def _test_coercion(op, single_arg: true, singleton: false)
-      args = single_arg ? 'arg' : 'arg0, arg1'
-      call_seq = "#{op}(#{args})"
+    # Check for method names not handled here.
+    unhandled = RDoc::Parser::Ruby::BINARY_OPERATOR_METHOD_NAMES -
+      BINARY_OPERATOR_METHOD_NAMES
+    assert_equal([], unhandled)
+    # Binary operator methods are coerced.
+    BINARY_OPERATOR_METHOD_NAMES.each do |op|
+      call_seq = "#{op}(arg)"
       text = "def #{call_seq}; end"
       meth = RDoc::AnyMethod.new(text, op)
       meth.call_seq = call_seq
-      meth.singleton = singleton
       @parser.coerce_call_seq(meth)
-      expected = if coercible?(op) && single_arg && !singleton
-        "self #{op} arg"
-      else
-        call_seq
-      end
-      assert_equal(expected, meth.call_seq)
+      assert_equal("self #{op} arg", meth.call_seq)
     end
-    COERCIBLE_OPERATORS.each do |op|
-      _test_coercion(op)
+    # Other methods are not coerced.
+    %w[ ! [] []= ].each do |op|
+      call_seq = "#{op}(arg)"
+      text = "def #{call_seq}; end"
+      meth = RDoc::AnyMethod.new(text, op)
+      meth.call_seq = call_seq
+      @parser.coerce_call_seq(meth)
+      assert_equal(call_seq, meth.call_seq)
     end
-    # Operator not coercible.
-    %w[ # $ = [] []= ].each do |op|
-      _test_coercion(op)
-    end
-    # Multiple arguments not coerced.
-    _test_coercion('===', single_arg: false)
+    # Multiple-argument method is not coerced.
+    op = BINARY_OPERATOR_METHOD_NAMES.first
+    call_seq = "#{op}(arg0, arg1)"
+    text = "def #{call_seq}; end"
+    meth = RDoc::AnyMethod.new(text, op)
+    meth.call_seq = call_seq
+    @parser.coerce_call_seq(meth)
+    assert_equal(call_seq, meth.call_seq)
     # Singleton method not coerced.
-    _test_coercion('===', singleton: true)
+    op = BINARY_OPERATOR_METHOD_NAMES.first
+    call_seq = "#{op}(arg)"
+    text = "def #{call_seq}; end"
+    meth = RDoc::AnyMethod.new(text, op)
+    meth.call_seq = call_seq
+    meth.singleton = true
+    @parser.coerce_call_seq(meth)
+    assert_equal(call_seq, meth.call_seq)
   end
 
 end

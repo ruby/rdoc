@@ -1476,10 +1476,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
   end
 
-  # Coerce calling sequence if the given method is an operator method.
+  # Coerce calling sequence if the given method is a binary operator method.
   def coerce_call_seq(meth)
     # Only coerce certain methods.
-    return unless OPERATOR_METHOD_NAMES.include?(meth.name)
+    return unless BINARY_OPERATOR_METHOD_NAMES.include?(meth.name)
     # Ignore if singleton method.
     return if meth.singleton
     # Ignore if multiple arguments.
@@ -1489,7 +1489,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   # Names of operator methods.
-  OPERATOR_METHOD_NAMES = %w[ ! != !~ % & * ** + - / < << <= <=> == === =~ > >= >> ^ | ~ ]
+  BINARY_OPERATOR_METHOD_NAMES =
+    %w[ != !~ % & * ** + - / < << <= <=> == === =~ > >= >> ^ | ~ ]
 
   ##
   # Parses a method that needs to be ignored.
