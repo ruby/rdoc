@@ -1489,8 +1489,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   # Names of operator methods.
-  BINARY_OPERATOR_METHOD_NAMES =
-    %w[ != !~ % & * ** + - / < << <= <=> == === =~ > >= >> ^ | ~ ]
+  BINARY_OPERATOR_METHOD_NAMES = %w[] +
+    %w[  %  &  *  +  -  /  <  ^  >  |  ] +
+    %w[  !=  !~  **  <<  <=  ==  =~  >=  >>  ] +
+    %w[  <=>  ===  ]
 
   ##
   # Parses a method that needs to be ignored.

@@ -4297,8 +4297,10 @@ end
     assert_equal 'A::D', a_d.full_name
   end
 
-  BINARY_OPERATOR_METHOD_NAMES =
-    %w[ != !~ % & * ** + - / < << <= <=> == === =~ > >= >> ^ | ~ ]
+  BINARY_OPERATOR_METHOD_NAMES = %w[] +
+      %w[  %  &  *  +  -  /  <  ^  >  |  ] +
+      %w[  !=  !~  **  <<  <=  ==  =~  >=  >>  ] +
+      %w[  <=>  ===  ]
 
   def test_coerce_call_seq
     util_parser('')
@@ -4316,7 +4318,7 @@ end
       assert_equal("self #{op} arg", meth.call_seq)
     end
     # Other methods are not coerced.
-    %w[ ! [] []= ].each do |op|
+    %w[ ! ~ [] []= ].each do |op|
       call_seq = "#{op}(arg)"
       text = "def #{call_seq}; end"
       meth = RDoc::AnyMethod.new(text, op)
