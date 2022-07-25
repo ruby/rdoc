@@ -44,6 +44,7 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
     "README.rdoc",
     "RI.rdoc",
     "TODO.rdoc",
+    "doc/markup_reference.rb",
     "exe/rdoc",
     "exe/ri",
     "lib/rdoc.rb",
