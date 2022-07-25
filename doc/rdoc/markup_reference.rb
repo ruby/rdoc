@@ -40,21 +40,21 @@ require 'rdoc'
 # === Blocks
 #
 # It's convenient to think of markup input as a sequence of _blocks_,
-# each of which may be one of:
+# such as:
 #
-# - Paragraph
-# - Verbatim text block
-# - Code block
-# - Bullet list
-# - Numbered list
-# - Lettered list
-# - Labeled list
-# - Heading
-# - Horizontal rule
-# - Directive
+# - {Paragraphs}[rdoc-ref:RDoc::MarkupReference@Paragraphs].
+# - {Verbatim text blocks}[rdoc-ref:RDoc::MarkupReference@Verbatim+Text+Blocks].
+# - {Code blocks}[rdoc-ref:RDoc::MarkupReference@Code+Blocks].
+# - {Bullet lists}[rdoc-ref:RDoc::MarkupReference@Bullet+Lists].
+# - {Numbered lists}[rdoc-ref:RDoc::MarkupReference@Numbered+Lists].
+# - {Lettered lists}[rdoc-ref:RDoc::MarkupReference@Lettered+Lists].
+# - {Labeled lists}[rdoc-ref:RDoc::MarkupReference@Labeled+Lists].
+# - {Headings}[rdoc-ref:RDoc::MarkupReference@Headings].
+# - {Horizontal rules}[rdoc-ref:RDoc::MarkupReference@Horizontal+Rules].
+# - {Directives}[rdoc-ref:RDoc::MarkupReference@Directives].
 #
-# All of these except a paragraph block are distinguished
-# by indentation, or by unusual initial or embedded characters.
+# All of these except paragraph blocks are distinguished by indentation,
+# or by unusual initial or embedded characters.
 #
 # ==== Paragraphs
 #
@@ -740,7 +740,7 @@ require 'rdoc'
 #   Directive <tt>:category: <em>section_title</em></tt> specifies that
 #   just one following method is to be included in the given section.
 #   Subsequent methods are to be grouped into the current section.
-# 
+#
 #   Directive <tt>:category:</tt> with no title specifies that just one
 #   following method is to be included in the default section.
 #
