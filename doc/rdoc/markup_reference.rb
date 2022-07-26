@@ -16,9 +16,14 @@ require 'rdoc'
 #
 # \RDoc-generated documentation is derived from and controlled by:
 #
-# - Single-line or multi-line comments that precede certain definitions.
-# - \RDoc directives in trailing comments (on the same line as code).
+# - Single-line or multi-line comments that precede certain definitions;
+#   see {Markup in Comments}[rdoc-ref:RDoc::MarkupReference@Markup+in+Comments].
+# - \RDoc directives in trailing comments (on the same line as code);
+#   see <tt>:nodoc:</tt>, <tt>:doc:</tt>, and <tt>:notnew</tt>.
+# - \RDoc directives in single-line comments;
+#   see other {Directives}[rdoc-ref:RDoc::MarkupReference@Directives].
 # - The Ruby code itself.
+#   see {Documentation Derived from Ruby Code}[rdoc-ref:RDoc::MarkupReference@Documentation+Derived+from+Ruby+Code]
 #
 # == Markup in Comments
 #
