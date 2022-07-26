@@ -9,10 +9,18 @@ require 'rdoc'
 #
 # = \RDoc Markup Reference
 #
-# [Note]
+# Notes:
 #
-#   Examples in this reference are Ruby code and comments.
-#   Certain differences among the sources are noted.
+# - Examples in this reference are Ruby code and comments;
+#   certain differences from other sources
+#   (such as C code and comments) are noted.
+# - An example that shows rendered HTML output
+#   delimits that output with beginning and ending markers:
+#
+#     >>> Rendered HTML >>>
+#     ...
+#     <<<<<<
+#
 #
 # \RDoc-generated documentation is derived from and controlled by:
 #
@@ -80,13 +88,15 @@ require 'rdoc'
 #   #
 #   # You'll love it.
 #
-# Rendered HTML:
+# >>> Rendered HTML >>>
 #
 # \RDoc produces HTML and command-line documentation for Ruby projects.
 # \RDoc includes the rdoc and ri tools for generating and displaying
 # documentation from the command-line.
 #
 # You'll love it.
+#
+# <<<<<<
 #
 # A paragraph may contain nested blocks, including:
 #
@@ -117,7 +127,7 @@ require 'rdoc'
 #   #
 #   # This is not verbatim text.
 #
-# Rendered HTML:
+# >>> Rendered HTML >>>
 #
 # This is not verbatim text.
 #
@@ -128,6 +138,9 @@ require 'rdoc'
 #   This is still the same verbatim text block.
 #
 # This is not verbatim text.
+#
+# <<<<<<
+#
 # ==== Code Blocks
 #
 # A special case of verbatim text is the <em>code block</em>,
@@ -139,12 +152,26 @@ require 'rdoc'
 # - Has a contrasting background color.
 # - Has syntax highlighting.
 #
-# Example:
+# Example input:
+#
+#   Consider this method:
+#
+#     def foo(name = '', value = 0)
+#       @name = name      # Whitespace is still honored.
+#       @value = value
+#     end
+#
+#
+# >>> Rendered HTML >>>
+#
+# Consider this method:
 #
 #   def foo(name = '', value = 0)
 #     @name = name      # Whitespace is still honored.
 #     @value = value
 #   end
+#
+# <<<<<<
 #
 # Pro tip:  If your indented Ruby code does not get highlighted,
 # it may contain a syntax error.
@@ -184,7 +211,7 @@ require 'rdoc'
 #   # * Yet another.
 #   # - Last one.
 #
-# Rendered HTML:
+# >>> Rendered HTML >>>
 #
 # - An item.
 # - Another.
@@ -193,6 +220,8 @@ require 'rdoc'
 #
 # * Yet another.
 # - Last one.
+#
+# <<<<<<
 #
 # ===== Numbered Lists
 #
@@ -210,7 +239,7 @@ require 'rdoc'
 #   # 1. Yet another.
 #   # 1000. Last one.
 #
-# Rendered HTML:
+# >>> Rendered HTML >>>
 #
 # 100. An item.
 # 10. Another.
@@ -219,6 +248,8 @@ require 'rdoc'
 #
 # 1. Yet another.
 # 1000. Last one.
+#
+# <<<<<<
 #
 # ===== Lettered Lists
 #
@@ -236,13 +267,15 @@ require 'rdoc'
 #   # x. Yet another.
 #   # a. Last one.
 #
-# Rendered HTML:
+# >>> Rendered HTML >>>
 #
 # z. An item.
 # y. Another.
 #
 # x. Yet another.
 # a. Last one.
+#
+# <<<<<<
 #
 # ===== Labeled Lists
 #
@@ -261,7 +294,7 @@ require 'rdoc'
 #   # [bar baz] Yet another.
 #   # bam:: Last one.
 #
-# Rendered HTML:
+# >>> Rendered HTML >>>
 #
 # [foo] An item.
 # bat:: Another.
@@ -270,6 +303,8 @@ require 'rdoc'
 #
 # [bar baz] Yet another.
 # bam:: Last one.
+#
+# <<<<<<
 #
 # ===== Blocks Nested in Lists
 #
@@ -317,7 +352,7 @@ require 'rdoc'
 #   #
 #   # ---
 #
-# Rendered HTML:
+# >>> Rendered HTML >>>
 #
 # ------
 # Stuff between.
@@ -327,6 +362,8 @@ require 'rdoc'
 # -- Also not a horizontal rule.
 #
 # ---
+#
+# <<<<<<
 #
 # ==== Directives
 #
