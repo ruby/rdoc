@@ -426,6 +426,8 @@ require 'rdoc'
 #   - A return type, which is not automatically inferred.
 #   - Multiple calling sequences.
 #
+#   For C code, the directive may appear in a stand-alone comment.
+#
 # - <tt># :args: _arg_names_</tt> (aliased as <tt>:arg:</tt>):
 #
 #   - Appears on a line by itself.
