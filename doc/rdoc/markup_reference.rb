@@ -15,12 +15,11 @@ require 'rdoc'
 #   certain differences from other sources
 #   (such as C code and comments) are noted.
 # - An example that shows rendered HTML output
-#   delimits that output with beginning and ending markers:
+#   displays that output in a blockquote:
 #
-#     >>> Rendered HTML >>>
-#     ...
-#     <<<<<<
-#
+#   Rendered HTML:
+#   >>>
+#     Some stuff
 #
 # \RDoc-generated documentation is derived from and controlled by:
 #
@@ -88,15 +87,13 @@ require 'rdoc'
 #   #
 #   # You'll love it.
 #
-# >>> Rendered HTML >>>
+# Rendered HTML:
+# >>>
+#   \RDoc produces HTML and command-line documentation for Ruby projects.
+#   \RDoc includes the rdoc and ri tools for generating and displaying
+#   documentation from the command-line.
 #
-# \RDoc produces HTML and command-line documentation for Ruby projects.
-# \RDoc includes the rdoc and ri tools for generating and displaying
-# documentation from the command-line.
-#
-# You'll love it.
-#
-# <<<<<<
+#   You'll love it.
 #
 # A paragraph may contain nested blocks, including:
 #
@@ -127,19 +124,17 @@ require 'rdoc'
 #   #
 #   # This is not verbatim text.
 #
-# >>> Rendered HTML >>>
+# Rendered HTML:
+# >>>
+#   This is not verbatim text.
 #
-# This is not verbatim text.
-#
-#   This is verbatim text.
-#     Whitespace is honored.     # See?
+#     This is verbatim text.
 #       Whitespace is honored.     # See?
+#         Whitespace is honored.     # See?
 #
-#   This is still the same verbatim text block.
+#     This is still the same verbatim text block.
 #
-# This is not verbatim text.
-#
-# <<<<<<
+#   This is not verbatim text.
 #
 # ==== Code Blocks
 #
@@ -162,16 +157,14 @@ require 'rdoc'
 #     end
 #
 #
-# >>> Rendered HTML >>>
+# Rendered HTML:
+# >>>
+#   Consider this method:
 #
-# Consider this method:
-#
-#   def foo(name = '', value = 0)
-#     @name = name      # Whitespace is still honored.
-#     @value = value
-#   end
-#
-# <<<<<<
+#     def foo(name = '', value = 0)
+#       @name = name      # Whitespace is still honored.
+#       @value = value
+#     end
 #
 # Pro tip:  If your indented Ruby code does not get highlighted,
 # it may contain a syntax error.
@@ -211,17 +204,15 @@ require 'rdoc'
 #   # * Yet another.
 #   # - Last one.
 #
-# >>> Rendered HTML >>>
+# Rendered HTML
+# >>>
+#   - An item.
+#   - Another.
+#   - An item spanning
+#     multiple lines.
 #
-# - An item.
-# - Another.
-# - An item spanning
-#   multiple lines.
-#
-# * Yet another.
-# - Last one.
-#
-# <<<<<<
+#   * Yet another.
+#   - Last one.
 #
 # ===== Numbered Lists
 #
@@ -239,17 +230,15 @@ require 'rdoc'
 #   # 1. Yet another.
 #   # 1000. Last one.
 #
-# >>> Rendered HTML >>>
+# Rendered HTML:
+# >>>
+#   100. An item.
+#   10. Another.
+#   1. An item spanning
+#      multiple lines.
 #
-# 100. An item.
-# 10. Another.
-# 1. An item spanning
-#    multiple lines.
-#
-# 1. Yet another.
-# 1000. Last one.
-#
-# <<<<<<
+#   1. Yet another.
+#   1000. Last one.
 #
 # ===== Lettered Lists
 #
@@ -267,15 +256,13 @@ require 'rdoc'
 #   # x. Yet another.
 #   # a. Last one.
 #
-# >>> Rendered HTML >>>
+# Rendered HTML:
+# >>>
+#   z. An item.
+#   y. Another.
 #
-# z. An item.
-# y. Another.
-#
-# x. Yet another.
-# a. Last one.
-#
-# <<<<<<
+#   x. Yet another.
+#   a. Last one.
 #
 # ===== Labeled Lists
 #
@@ -294,17 +281,15 @@ require 'rdoc'
 #   # [bar baz] Yet another.
 #   # bam:: Last one.
 #
-# >>> Rendered HTML >>>
+# Rendered HTML:
+# >>>
+#   [foo] An item.
+#   bat:: Another.
+#   [bag] An item spanning
+#         multiple lines.
 #
-# [foo] An item.
-# bat:: Another.
-# [bag] An item spanning
-#       multiple lines.
-#
-# [bar baz] Yet another.
-# bam:: Last one.
-#
-# <<<<<<
+#   [bar baz] Yet another.
+#   bam:: Last one.
 #
 # ===== Blocks Nested in Lists
 #
@@ -352,18 +337,16 @@ require 'rdoc'
 #   #
 #   # ---
 #
-# >>> Rendered HTML >>>
+# Rendered HTML:
+# >>>
+#   ------
+#   Stuff between.
 #
-# ------
-# Stuff between.
+#   \--- Not a horizontal rule.
 #
-# \--- Not a horizontal rule.
+#   -- Also not a horizontal rule.
 #
-# -- Also not a horizontal rule.
-#
-# ---
-#
-# <<<<<<
+#   ---
 #
 # ==== Directives
 #
