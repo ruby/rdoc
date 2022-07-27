@@ -29,7 +29,7 @@ require 'rdoc'
 #   see <tt>:nodoc:</tt>, <tt>:doc:</tt>, and <tt>:notnew</tt>.
 # - \RDoc directives in single-line comments;
 #   see other {Directives}[rdoc-ref:RDoc::MarkupReference@Directives].
-# - The Ruby code itself.
+# - The Ruby code itself;
 #   see {Documentation Derived from Ruby Code}[rdoc-ref:RDoc::MarkupReference@Documentation+Derived+from+Ruby+Code]
 #
 # == Markup in Comments
@@ -204,7 +204,7 @@ require 'rdoc'
 #   # * Yet another.
 #   # - Last one.
 #
-# Rendered HTML
+# Rendered HTML:
 # >>>
 #   - An item.
 #   - Another.
