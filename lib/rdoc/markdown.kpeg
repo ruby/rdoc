@@ -449,7 +449,7 @@
 
       @note_order.each_with_index do |ref, index|
         label = index + 1
-        note = @footnotes[ref]
+        note = @footnotes[ref] or raise ParseError, "footnote [^#{ref}] not found"
 
         link = "{^#{label}}[rdoc-label:footmark-#{label}:foottext-#{label}] "
         note.parts.unshift link
@@ -1179,7 +1179,7 @@ InlineNote = &{ notes? }
 Notes = ( Note | SkipBlock )*
 
 RawNoteBlock = @StartList:a
-               ( !@BlankLine OptionallyIndentedLine:l { a << l } )+
+               ( !@BlankLine !RawNoteReference OptionallyIndentedLine:l { a << l } )+
                ( < @BlankLine* > { a << text } )
                { a }
 
