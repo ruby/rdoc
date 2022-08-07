@@ -238,12 +238,10 @@ require 'rdoc'
 # - {Paragraphs}[rdoc-ref:RDoc::MarkupReference@Paragraphs].
 # - {Verbatim text blocks}[rdoc-ref:RDoc::MarkupReference@Verbatim+Text+Blocks].
 # - {Code blocks}[rdoc-ref:RDoc::MarkupReference@Code+Blocks].
-# - {Lists}[rdoc-ref:RDoc::MarkupReference@Lists]:
-#   bullet, numbered, lettered, labeled.
+# - {Lists}[rdoc-ref:RDoc::MarkupReference@Lists].
 # - {Headings}[rdoc-ref:RDoc::MarkupReference@Headings].
 # - {Horizontal rules}[rdoc-ref:RDoc::MarkupReference@Horizontal+Rules].
-# - {Text Markup}[rdoc-ref:RDoc:MarkupReference@Text+Markup]:
-#   italic, bold, monofont.
+# - {Text Markup}[rdoc-ref:RDoc:MarkupReference@Text+Markup].
 #
 # ==== Lists
 #
@@ -288,7 +286,7 @@ require 'rdoc'
 #   # - Another.
 #   # - An item spanning
 #   #   multiple lines.
-#
+#   #
 #   # * Yet another.
 #   # - Last one.
 #
