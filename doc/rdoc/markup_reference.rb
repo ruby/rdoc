@@ -30,7 +30,7 @@ require 'rdoc'
 # - \RDoc directives in single-line comments;
 #   see other {Directives}[rdoc-ref:RDoc::MarkupReference@Directives].
 # - The Ruby code itself (but not from C code);
-#   see {Documentation Derived from Ruby Code}[rdoc-ref:RDoc::MarkupReference@Documentation+Derived+from+Ruby+Code]
+#   see {Documentation Derived from Ruby Code}[rdoc-ref:RDoc::MarkupReference@Documentation+Derived+from+Ruby+Code].
 #
 # == Markup in Comments
 #
