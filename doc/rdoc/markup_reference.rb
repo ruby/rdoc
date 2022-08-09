@@ -36,10 +36,8 @@ require 'rdoc'
 #
 # The treatment of markup in comments varies according to the type of file:
 #
-# - <tt>.rb</tt> (Ruby code file): markup is parsed from Ruby comments;
-#   see {Code Comments}[rdoc-ref:doc/syntax/comments.rdoc].
-# - <tt>.c</tt> (C code file): markup is parsed from C comments;
-#   see {C Comments}[https://www.w3schools.com/c/c_comments.php].
+# - <tt>.rb</tt> (Ruby code file): markup is parsed from Ruby comments.
+# - <tt>.c</tt> (C code file): markup is parsed from C comments.
 # - <tt>.rdoc</tt> (RDoc text file): markup is parsed from the entire file.
 #
 # In Ruby or C file, a comment that immediately precedes the definition
