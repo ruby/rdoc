@@ -40,10 +40,17 @@ require 'rdoc'
 # - <tt>.c</tt> (C code file): markup is parsed from C comments.
 # - <tt>.rdoc</tt> (RDoc text file): markup is parsed from the entire file.
 #
-# In Ruby or C file, a comment that immediately precedes the definition
-# of a Ruby class, module, method, alias, constant, or attribute
-# becomes the documentation for that defined object.
-# \RDoc ignores other such comments that do not precede object definitions.
+# The comment associated with
+# o Ruby class, module, method, alias, constant, or attribute
+# becomes the documentation for that defined object:
+#
+# - In a Ruby file, that comment immediately precedes
+#   the definition of the object.
+# - In a C file, that comment immediately precedes
+#   the function that implements the object.
+#
+# In either a Ruby or a C file,
+# \RDoc ignores comments that do not precede object definitions.
 #
 # In an \RDoc file, the text is not associated with any code object,
 # but may (depending on how the documentation is built),
