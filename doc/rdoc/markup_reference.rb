@@ -1092,6 +1092,8 @@ require 'rdoc'
 # Rendered HTML:
 #
 # >>>
+#   This list is about escapes; it contains:
+#
 #   - <tt>Monofont text with unescaped nested _italic_</tt>.
 #   - <tt>Monofont text with escaped nested \_italic_</tt>.
 #   - <tt>Monofont text with an escape character \ </tt>.
