@@ -18,7 +18,7 @@
 
 <main role="main" aria-labelledby="<%=h klass.aref %>">
   <h1 id="<%=h klass.aref %>" class="<%= klass.type %>">
-    <%= klass.type %> <%= klass.full_name %>
+    <%= klass.type %> <%= klass.full_name + (klass.type_parameters_to_s ? " <code>#{klass.type_parameters_to_s}</code>" : "") %>
   </h1>
 
   <section class="description">

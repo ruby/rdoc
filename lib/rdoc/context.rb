@@ -285,7 +285,7 @@ class RDoc::Context < RDoc::CodeObject
   # unless it later sees <tt>class Container</tt>.  +add_class+ automatically
   # upgrades +given_name+ to a class in this case.
 
-  def add_class class_type, given_name, superclass = '::Object'
+  def add_class class_type, given_name, superclass = '::Object', type_parameters = []
     # superclass +nil+ is passed by the C parser in the following cases:
     # - registering Object in 1.8 (correct)
     # - registering BasicObject in 1.9 (correct)
@@ -373,6 +373,7 @@ class RDoc::Context < RDoc::CodeObject
           klass.superclass = superclass
         end
       end
+      klass.type_parameters = type_parameters
     else
       # this is a new class
       mod = @store.modules_hash.delete full_name
@@ -382,10 +383,10 @@ class RDoc::Context < RDoc::CodeObject
 
         klass.superclass = superclass unless superclass.nil?
       else
-        klass = class_type.new name, superclass
+        klass = class_type.new name, superclass, type_parameters
 
         enclosing.add_class_or_module(klass, enclosing.classes_hash,
-                                      @store.classes_hash)
+                                      @store.classes_hash, type_parameters)
       end
     end
 
@@ -401,12 +402,13 @@ class RDoc::Context < RDoc::CodeObject
   # unless #done_documenting is +true+. Sets the #parent of +mod+
   # to +self+, and its #section to #current_section. Returns +mod+.
 
-  def add_class_or_module mod, self_hash, all_hash
+  def add_class_or_module mod, self_hash, all_hash, type_parameters = []
     mod.section = current_section # TODO declaring context? something is
                                   # wrong here...
     mod.parent = self
     mod.full_name = nil
     mod.store = @store
+    mod.type_parameters = type_parameters
 
     unless @done_documenting then
       self_hash[mod.name] = mod
@@ -503,14 +505,15 @@ class RDoc::Context < RDoc::CodeObject
   # Adds a module named +name+.  If RDoc already knows +name+ is a class then
   # that class is returned instead.  See also #add_class.
 
-  def add_module(class_type, name)
+  def add_module(class_type, name, type_parameters = [])
     mod = @classes[name] || @modules[name]
+    mod.type_parameters = type_parameters if mod
     return mod if mod
 
     full_name = child_name name
     mod = @store.modules_hash[full_name] || class_type.new(name)
 
-    add_class_or_module mod, @modules, @store.modules_hash
+    add_class_or_module mod, @modules, @store.modules_hash, type_parameters
   end
 
   ##
