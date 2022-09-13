@@ -342,8 +342,8 @@ class RDoc::ClassModule < RDoc::Context
         tl.relative_name
       end,
       parent.full_name,
-      parent.class,
-    ]
+      parent.class
+    ].concat(type_parameters)
   end
 
   def marshal_load array # :nodoc:
@@ -428,6 +428,7 @@ class RDoc::ClassModule < RDoc::Context
 
     @parent_name  = array[12]
     @parent_class = array[13]
+    @type_parameters = array[14] if array[14]
   end
 
   ##

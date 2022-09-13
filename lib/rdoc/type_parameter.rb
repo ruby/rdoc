@@ -2,7 +2,7 @@ module RDoc
   class TypeParameter < CodeObject
     attr_reader :name, :variance, :unchecked, :upper_bound
 
-    MARSHAL_VERSION = 3 # :nodoc:
+    MARSHAL_VERSION = 0 # :nodoc:
 
     def initialize(name, variance, unchecked = false, upper_bound = nil)
       @name = name
