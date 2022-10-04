@@ -106,5 +106,7 @@ else
   RuboCop::RakeTask.new(:rubocop) do |t|
     t.options = [*parsed_files]
   end
-  task :build => [:generate, "rubocop:auto_correct"]
+  is_newer_rubocop = RuboCop.const_defined?(:Version) && Gem::Version.new(RuboCop::Version::STRING) >= '1.31.0'
+  rubocop_task = is_newer_rubocop ? "rubocop:autocorrect" : "rubocop:auto_correct"
+  task :build => [:generate, rubocop_task]
 end
