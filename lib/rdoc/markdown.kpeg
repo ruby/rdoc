@@ -1212,8 +1212,8 @@ TableItem = < (!"|" !@Newline .)+ >
 
 TableLine = ( ( TableAlign:align1 TableAlign2*:aligns {[align1, *aligns] } ):line | TableAlign2+:line ) "|"? @Newline
 	    { line }
-TableAlign2 = "|" TableAlign
-TableAlign = < /:?-+:?/ >
+TableAlign2 = "|" @Sp TableAlign
+TableAlign = < /:?-+:?/ > @Sp
               { text.start_with?(":") ? :left :
                 text.end_with?(":") ? :right : nil
               }
