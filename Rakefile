@@ -83,6 +83,7 @@ parsed_files = PARSER_FILES.map do |parser_file|
       kpeg = Gem.bin_path 'kpeg', 'kpeg'
       rb_file = parser_file.gsub(/\.kpeg\z/, ".rb")
       ruby "#{kpeg} -fsv -o #{rb_file} #{parser_file}"
+      File.write(rb_file, File.read(rb_file).gsub(/ +$/, '')) # remove trailing spaces
     end
   end
 
