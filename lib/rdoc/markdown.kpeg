@@ -1207,8 +1207,8 @@ TableHead = TableItem2+:items "|"? @Newline
 TableRow = ( ( TableItem:item1 TableItem2*:items { [item1, *items] } ):row | TableItem2+:row ) "|"? @Newline
 	   { row }
 TableItem2 = "|" TableItem
-TableItem = < (!"|" !@Newline .)+ >
-            { text.strip }
+TableItem = < /(?:\\.|[^|\n])+/ >
+	    { text.strip.gsub(/\\(.)/, '\1')  }
 
 TableLine = ( ( TableAlign:align1 TableAlign2*:aligns {[align1, *aligns] } ):line | TableAlign2+:line ) "|"? @Newline
 	    { line }
