@@ -1214,8 +1214,10 @@ TableLine = ( ( TableAlign:align1 TableAlign2*:aligns {[align1, *aligns] } ):lin
 	    { line }
 TableAlign2 = "|" @Sp TableAlign
 TableAlign = < /:?-+:?/ > @Sp
-              { text.start_with?(":") ? :left :
-                text.end_with?(":") ? :right : nil
+              {
+                text.start_with?(":") ?
+                (text.end_with?(":") ? :center : :left) :
+                (text.end_with?(":") ? :right : nil)
               }
 
 DefinitionList = &{ definition_lists? }
