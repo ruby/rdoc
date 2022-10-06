@@ -1198,19 +1198,26 @@ CodeFence = &{ github? }
             }
 
 Table = &{ github? }
-        TableRow:header TableLine:line TableRow+:body
+        TableHead:header TableLine:line TableRow+:body
         { table = RDoc::Markup::Table.new(header, line, body) }
 
-TableRow = TableItem+:row "|" @Newline
-           { row }
-TableItem = "|" < (!"|" !@Newline .)+ >
-            { text.strip }
+TableHead = TableItem2+:items "|"? @Newline
+            { items }
 
-TableLine = TableColumn+:line "|" @Newline
-            { line }
-TableColumn = "|" < ( "-"+ ":"? | ":" "-"* ) >
-              { text.start_with?(":") ? :left :
-                text.end_with?(":") ? :right : nil
+TableRow = ( ( TableItem:item1 TableItem2*:items { [item1, *items] } ):row | TableItem2+:row ) "|"? @Newline
+	   { row }
+TableItem2 = "|" TableItem
+TableItem = < /(?:\\.|[^|\n])+/ >
+	    { text.strip.gsub(/\\(.)/, '\1')  }
+
+TableLine = ( ( TableAlign:align1 TableAlign2*:aligns {[align1, *aligns] } ):line | TableAlign2+:line ) "|"? @Newline
+	    { line }
+TableAlign2 = "|" @Sp TableAlign
+TableAlign = < /:?-+:?/ > @Sp
+              {
+                text.start_with?(":") ?
+                (text.end_with?(":") ? :center : :left) :
+                (text.end_with?(":") ? :right : nil)
               }
 
 DefinitionList = &{ definition_lists? }
