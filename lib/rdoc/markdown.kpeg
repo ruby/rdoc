@@ -1198,17 +1198,22 @@ CodeFence = &{ github? }
             }
 
 Table = &{ github? }
-        TableRow:header TableLine:line TableRow+:body
+        TableHead:header TableLine:line TableRow+:body
         { table = RDoc::Markup::Table.new(header, line, body) }
 
-TableRow = TableItem+:row "|"? @Newline
-           { row }
-TableItem = "|" < (!"|" !@Newline .)+ >
+TableHead = TableItem2+:items "|"? @Newline
+            { items }
+
+TableRow = ( ( TableItem:item1 TableItem2*:items { [item1, *items] } ):row | TableItem2+:row ) "|"? @Newline
+	   { row }
+TableItem2 = "|" TableItem
+TableItem = < (!"|" !@Newline .)+ >
             { text.strip }
 
-TableLine = TableColumn+:line "|"? @Newline
-            { line }
-TableColumn = "|" < ( "-"+ ":"? | ":" "-"* ) >
+TableLine = ( ( TableAlign:align1 TableAlign2*:aligns {[align1, *aligns] } ):line | TableAlign2+:line ) "|"? @Newline
+	    { line }
+TableAlign2 = "|" TableAlign
+TableAlign = < /:?-+:?/ >
               { text.start_with?(":") ? :left :
                 text.end_with?(":") ? :right : nil
               }
