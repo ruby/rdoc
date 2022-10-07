@@ -665,6 +665,26 @@ EXPECTED
     assert_equal "\n<p>C</p>\n", result
   end
 
+  def test_convert_RDOCLINK_escape_image
+    assert_escaped '<script>', 'rdoc-image:"><script>alert(`rdoc-image`)</script>"'
+  end
+
+  def test_convert_RDOCLINK_escape_label_id
+    assert_escaped '<script>', 'rdoc-label::path::"><script>alert(`rdoc-label_id`)</script>"'
+  end
+
+  def test_convert_RDOCLINK_escape_label_path
+    assert_escaped '<script>', 'rdoc-label::"><script>alert(`rdoc-label_path`)</script>"'
+  end
+
+  def test_convert_RDOCLINK_escape_ref
+    assert_escaped '<script>', 'rdoc-ref:"><script>alert(`rdoc-ref`)</script>"'
+  end
+
+  def test_convert_RDOCLINK_escape_xxx
+    assert_escaped '<script>', 'rdoc-xxx:"><script>alert(`rdoc-xxx`)</script>"'
+  end
+
   def test_convert_TIDYLINK_footnote
     result = @to.convert 'text{*1}[rdoc-label:foottext-1:footmark-1]'
 
@@ -690,6 +710,11 @@ EXPECTED
       "\n<p><a href=\"http://example.com\"><img src=\"path/to/image.jpg\"></a></p>\n"
 
     assert_equal expected, result
+
+    result =
+      @to.convert '{rdoc-image:<script>alert`link text`</script>}[http://example.com]'
+
+    assert_not_include result, "<script>"
   end
 
   def test_convert_TIDYLINK_rdoc_label
@@ -702,6 +727,23 @@ EXPECTED
     result = @to.convert '{ruby-lang}[irc://irc.freenode.net/#ruby-lang]'
 
     assert_equal "\n<p><a href=\"irc://irc.freenode.net/#ruby-lang\">ruby-lang</a></p>\n", result
+  end
+
+  def test_convert_TIDYLINK_escape_text
+    assert_escaped '<script>', '{<script>alert`link text`</script>}[a]'
+    assert_escaped '<script>', 'x:/<script>alert(1);</script>[[]'
+  end
+
+  def test_convert_TIDYLINK_escape_javascript
+    assert_not_include '{click}[javascript:alert`javascript_scheme`]', '<a href="javascript:'
+  end
+
+  def test_convert_TIDYLINK_escape_onmouseover
+    assert_escaped '"/onmouseover="', '{onmouseover}[http://"/onmouseover="alert`on_mouse_link`"]'
+  end
+
+  def test_convert_TIDYLINK_escape_onerror
+    assert_escaped '"onerror="', '{link_image}[http://"onerror="alert`link_image`".png]'
   end
 
   def test_convert_with_exclude_tag
@@ -792,6 +834,11 @@ EXPECTED
     link = @to.handle_regexp_HYPERLINK target
 
     assert_equal '<a href="irc://irc.freenode.net/#ruby-lang">irc.freenode.net/#ruby-lang</a>', link
+  end
+
+  def test_handle_regexp_HYPERLINK_escape
+    code = 'irc://irc.freenode.net/"><script>alert(`irc`)</script><a"'
+    assert_escaped '<script>', code
   end
 
   def test_list_verbatim_2
@@ -902,6 +949,12 @@ EXPECTED
     assert_include(res[%r<<td[^<>]*>.*code.*</td>>], '<code>code</code>')
     assert_include(res[%r<<td[^<>]*>.*em.*</td>>], '<em>em</em>')
     assert_include(res[%r<<td[^<>]*>.*strong.*</td>>], '<strong>strong</strong>')
+  end
+
+  def assert_escaped(unexpected, code)
+    result = @to.convert(code)
+    assert_not_include result, unexpected
+    assert_include result, CGI.escapeHTML(unexpected)
   end
 end
 
