@@ -27,13 +27,43 @@ RDoc::Task.new do |doc|
   doc.rdoc_files = FileList.new %w[lib/**/*.rb *.rdoc doc/rdoc/markup_reference.rb] - PARSER_FILES
 end
 
-task ghpages: :rdoc do
-  `git checkout gh-pages`
-  require "fileutils"
-  FileUtils.rm_rf "/tmp/html"
-  FileUtils.mv "html", "/tmp"
-  FileUtils.rm_rf "*"
-  FileUtils.cp_r Dir.glob("/tmp/html/*"), "."
+task :ghpages do
+  docd  = ENV["RDOC_DOCUMENTED_BRANCH"] || "master"
+  pages = ENV["RDOC_PAGES_BRANCH"]      || "gh-pages"
+
+  version = IO.popen(%w[git describe] << docd, &:read).chomp \
+    and $?.success? && !version.empty? \
+    or abort "ERROR: could not discover version."
+
+  `git status --porcelain`.empty? or abort "ERROR: Working copy must be clean."
+
+  when_writing "Updating #{pages} branch to match #{docd} => #{version}" do
+    system(*%w[git switch], pages)      or abort "ERROR: switching to #{pages}"
+    system(*%w[git reset --hard], docd) or abort "ERROR: setting #{pages} == #{docd}"
+    system(*%w[git reset --soft @{u}])  or abort "ERROR: setting #{pages} => upstream"
+  end
+
+  when_writing "Updating #{pages} branch with documentation from #{docd}" do
+    # running inside another rake process, in case something important has
+    # changed between the invocation branch and the documented branch.
+    Bundler.with_original_env do
+      system("bundle install || bundle update kpeg") or abort "ERROR: bundler failed"
+      system(*%w[bundle exec rake])        or warn "warning: build failed"
+      system(*%w[bundle exec rake rerdoc]) or abort "ERROR: rdoc generation failed"
+    end
+    # github pages wants either / (root) or /docs.  "rm -rf docs" is safer.
+    rm_rf "docs"
+    mv    "html", "docs"
+    touch "docs/.nojekyll" # => skips default pages action build step
+    system(*%w[git add --force --all docs]) or abort "ERROR: adding docs to git"
+  end
+
+  when_writing "Committing #{pages} changes for #{version}" do
+    commit_msg = "Generated rdoc html for #{version}"
+    system(*%w[git commit -m], commit_msg)  or abort "ERROR: committing #{pages}"
+
+    puts "*** Latest changes committed.  Deploy with 'git push origin HEAD'"
+  end
 end
 
 Rake::TestTask.new(:normal_test) do |t|
