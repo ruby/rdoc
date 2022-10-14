@@ -38,7 +38,7 @@
     </header>
     <%- end -%>
 
-    <%- if section.comment then -%>
+    <%- if section.comment || section.comments.any? then -%>
     <div>
       <%= section.description %>
     </div>

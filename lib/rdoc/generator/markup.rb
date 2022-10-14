@@ -25,7 +25,7 @@ module RDoc::Generator::Markup
   # Handy wrapper for marking up this object's comment
 
   def description
-    markup @comment
+    markup @comment || @comments&.first
   end
 
   ##
