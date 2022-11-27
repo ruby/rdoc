@@ -12,7 +12,7 @@ jobs:
           - ubuntu-latest
         include:
           - { ruby: '3.1', os: 'macos-latest' }
-          - { ruby: 'jruby-9.2.19.0', os: 'ubuntu-latest' }
+          - { ruby: 'jruby-head', os: 'ubuntu-latest' }
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
