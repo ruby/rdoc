@@ -105,5 +105,5 @@ else
   RuboCop::RakeTask.new(:rubocop) do |t|
     t.options = [*parsed_files]
   end
-  task :build => [:generate, "rubocop:auto_correct"]
+  task :build => [:generate, "rubocop:autocorrect"]
 end
