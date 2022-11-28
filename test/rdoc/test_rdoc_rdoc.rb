@@ -230,7 +230,7 @@ class TestRDocRDoc < RDoc::TestCase
       @rdoc.normalized_file_list [File.realpath(dir)]
     end
 
-    files = files.map { |file| File.expand_path file }
+    files = files.map { |file, *| File.expand_path file }
     assert_equal [@a], files
   end
 
@@ -251,8 +251,8 @@ class TestRDocRDoc < RDoc::TestCase
       @rdoc.normalized_file_list [File.realpath(dir)]
     end
 
-    files = files.map { |file| File.expand_path file }
-    assert_equal [@test_file, @spec_file, @a], files
+    files = files.map { |file, *| File.expand_path file }
+    assert_equal [@a, @spec_file, @test_file], files.sort
   end
 
   def test_parse_file
