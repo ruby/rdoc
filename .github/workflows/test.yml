@@ -19,6 +19,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v3.1.0
+    # libyaml-dev is needed for psych, see https://github.com/ruby/setup-ruby/issues/409
+    - if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: sudo apt install libyaml-dev
     - name: Set up Ruby
       uses: ruby/setup-ruby@c7079efafd956afb5d823e8999c2506e1053aefa # v1.126.0
       with:
