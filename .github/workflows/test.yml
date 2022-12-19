@@ -18,7 +18,7 @@ jobs:
           - { ruby: 'jruby-head', os: 'ubuntu-latest' }
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v3.1.0
+    - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
     # libyaml-dev is needed for psych, see https://github.com/ruby/setup-ruby/issues/409
     - if: ${{ matrix.os == 'ubuntu-latest' }}
       run: sudo apt install libyaml-dev
