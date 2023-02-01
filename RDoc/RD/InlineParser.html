@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::RD::InlineParser - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::RD::InlineParser - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
   var index_rel_prefix = "../../";
 </script>
 
-<script src="../../js/jquery.js"></script>
-<script src="../../js/darkfish.js"></script>
+<script src="../../js/navigation.js" defer></script>
+<script src="../../js/search.js" defer></script>
+<script src="../../js/search_index.js" defer></script>
+<script src="../../js/searcher.js" defer></script>
+<script src="../../js/darkfish.js" defer></script>
 
 <link href="../../css/fonts.css" rel="stylesheet">
 <link href="../../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,36 +57,28 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link">Racc::Parser
-  
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-inline">#inline</a>
-    
     <li ><a href="#method-i-next_token">#next_token</a>
-    
     <li ><a href="#method-i-next_words_on_error">#next_words_on_error</a>
-    
     <li ><a href="#method-i-on_error">#on_error</a>
-    
     <li ><a href="#method-i-parse">#parse</a>
-    
     <li ><a href="#method-i-prev_words_on_error">#prev_words_on_error</a>
-    
   </ul>
 </div>
 
@@ -98,128 +92,89 @@
 
   <section class="description">
     
-<p><a href="../RD.html">RD</a> format parser for inline markup such as
-emphasis, links, footnotes, etc.</p>
+<p><a href="../RD.html"><code>RD</code></a> format parser for inline markup such as emphasis, links, footnotes, etc.</p>
 
   </section>
 
-  
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(block_parser)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(block_parser)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new parser for inline markup in the rd format.  The
-<code>block_parser</code> is used to for footnotes and labels in the inline
-text.</p>
-          
-          
+          <p>Creates a new parser for inline markup in the rd format.  The <code>block_parser</code> is used to for footnotes and labels in the inline text.</p>
 
-          
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rd/inline_parser.rb, line 89</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-identifier">block_parser</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rd/inline_parser.rb, line 90</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">block_parser</span>
   <span class="ruby-ivar">@block_parser</span> = <span class="ruby-identifier">block_parser</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-inline" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">inline</span><span
-            class="method-args">(rdoc, reference = rdoc)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">inline</span><span
+              class="method-args">(rdoc, reference = rdoc)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new <a href="Inline.html">RDoc::RD::Inline</a> for the
-<code>rdoc</code> markup and the raw <code>reference</code></p>
-          
-          
+          <p>Creates a new <a href="Inline.html"><code>RDoc::RD::Inline</code></a> for the <code>rdoc</code> markup and the raw <code>reference</code></p>
 
-          
           <div class="method-source-code" id="inline-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rd/inline_parser.rb, line 238</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">inline</span> <span class="ruby-identifier">rdoc</span>, <span class="ruby-identifier">reference</span> = <span class="ruby-identifier">rdoc</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rd/inline_parser.rb, line 239</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">inline</span> <span class="ruby-identifier">rdoc</span>, <span class="ruby-identifier">reference</span> = <span class="ruby-identifier">rdoc</span>
   <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RD</span><span class="ruby-operator">::</span><span class="ruby-constant">Inline</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">rdoc</span>, <span class="ruby-identifier">reference</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-next_token" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">next_token</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">next_token</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Returns the next token from the inline text</p>
-          
-          
 
-          
           <div class="method-source-code" id="next_token-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rd/inline_parser.rb, line 107</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">next_token</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rd/inline_parser.rb, line 108</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">next_token</span>
   <span class="ruby-keyword">return</span> [<span class="ruby-keyword">false</span>, <span class="ruby-keyword">false</span>] <span class="ruby-keyword">if</span> <span class="ruby-ivar">@src</span>.<span class="ruby-identifier">eos?</span>
 <span class="ruby-comment">#  p @src.rest if @yydebug</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">ret</span> = <span class="ruby-ivar">@src</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-constant">EM_OPEN_RE</span>)
@@ -296,179 +251,134 @@ text.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-next_words_on_error" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">next_words_on_error</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">next_words_on_error</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Returns words following an error</p>
-          
-          
 
-          
           <div class="method-source-code" id="next_words_on_error-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rd/inline_parser.rb, line 227</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">next_words_on_error</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rd/inline_parser.rb, line 228</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">next_words_on_error</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">n</span> = <span class="ruby-ivar">@src</span>.<span class="ruby-identifier">rest</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&quot;\n&quot;</span>)
-    <span class="ruby-ivar">@src</span>.<span class="ruby-identifier">rest</span>[<span class="ruby-value">0</span> <span class="ruby-operator">..</span> (<span class="ruby-identifier">n</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>)]
+    <span class="ruby-ivar">@src</span>.<span class="ruby-identifier">rest</span>[<span class="ruby-value">0</span> <span class="ruby-operator">..</span> (<span class="ruby-identifier">n</span><span class="ruby-value">-1</span>)]
   <span class="ruby-keyword">else</span>
     <span class="ruby-ivar">@src</span>.<span class="ruby-identifier">rest</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-on_error" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">on_error</span><span
-            class="method-args">(et, ev, values)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_error</span><span
+              class="method-args">(et, ev, values)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Raises a ParseError when invalid formatting is found</p>
-          
-          
 
-          
           <div class="method-source-code" id="on_error-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rd/inline_parser.rb, line 187</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">on_error</span>(<span class="ruby-identifier">et</span>, <span class="ruby-identifier">ev</span>, <span class="ruby-identifier">values</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/rd/inline_parser.rb, line 188</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_error</span>(<span class="ruby-identifier">et</span>, <span class="ruby-identifier">ev</span>, <span class="ruby-identifier">values</span>)
   <span class="ruby-identifier">lines_of_rest</span> = <span class="ruby-ivar">@src</span>.<span class="ruby-identifier">rest</span>.<span class="ruby-identifier">lines</span>.<span class="ruby-identifier">to_a</span>.<span class="ruby-identifier">length</span>
   <span class="ruby-identifier">prev_words</span> = <span class="ruby-identifier">prev_words_on_error</span>(<span class="ruby-identifier">ev</span>)
   <span class="ruby-identifier">at</span> = <span class="ruby-value">4</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">prev_words</span>.<span class="ruby-identifier">length</span>
 
-  <span class="ruby-identifier">message</span> = <span class="ruby-value">&lt;&lt;-MSG
-RD syntax error: line #{@block_parser.line_index - lines_of_rest}:
+  <span class="ruby-identifier">message</span> = <span class="ruby-identifier">&lt;&lt;-MSG</span>
+<span class="ruby-value">RD syntax error: line #{@block_parser.line_index - lines_of_rest}:
 ...#{prev_words} #{(ev||&#39;&#39;)} #{next_words_on_error()} ...
-  MSG</span>
+</span><span class="ruby-identifier">  MSG</span>
 
   <span class="ruby-identifier">message</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot; &quot;</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">at</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;^&quot;</span> <span class="ruby-operator">*</span> (<span class="ruby-identifier">ev</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">ev</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">:</span> <span class="ruby-value">0</span>) <span class="ruby-operator">+</span> <span class="ruby-string">&quot;\n&quot;</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">ParseError</span>, <span class="ruby-identifier">message</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse</span><span
-            class="method-args">(inline)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse</span><span
+              class="method-args">(inline)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Parses the <code>inline</code> text from <a href="../RD.html">RD</a> format
-into <a href="../../RDoc.html">RDoc</a> format.</p>
-          
-          
+          <p>Parses the <code>inline</code> text from <a href="../RD.html"><code>RD</code></a> format into <a href="../../RDoc.html"><code>RDoc</code></a> format.</p>
 
-          
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rd/inline_parser.rb, line 96</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse</span> <span class="ruby-identifier">inline</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rd/inline_parser.rb, line 97</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse</span> <span class="ruby-identifier">inline</span>
   <span class="ruby-ivar">@inline</span> = <span class="ruby-identifier">inline</span>
   <span class="ruby-ivar">@src</span> = <span class="ruby-constant">StringScanner</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">inline</span>
-  <span class="ruby-ivar">@pre</span> = <span class="ruby-string">&quot;&quot;</span>
+  <span class="ruby-ivar">@pre</span> = <span class="ruby-string">&quot;&quot;</span>.<span class="ruby-identifier">dup</span>
   <span class="ruby-ivar">@yydebug</span> = <span class="ruby-keyword">true</span>
   <span class="ruby-identifier">do_parse</span>.<span class="ruby-identifier">to_s</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-prev_words_on_error" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">prev_words_on_error</span><span
-            class="method-args">(ev)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">prev_words_on_error</span><span
+              class="method-args">(ev)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Returns words before the error</p>
-          
-          
 
-          
           <div class="method-source-code" id="prev_words_on_error-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rd/inline_parser.rb, line 204</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">prev_words_on_error</span>(<span class="ruby-identifier">ev</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/rd/inline_parser.rb, line 205</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">prev_words_on_error</span>(<span class="ruby-identifier">ev</span>)
   <span class="ruby-identifier">pre</span> = <span class="ruby-ivar">@pre</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">ev</span> <span class="ruby-keyword">and</span> <span class="ruby-node">/#{Regexp.quote(ev)}$/</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">pre</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">ev</span> <span class="ruby-keyword">and</span> <span class="ruby-regexp">/#{Regexp.quote(ev)}$/</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">pre</span>
     <span class="ruby-identifier">pre</span> = <span class="ruby-node">$`</span>
   <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">last_line</span>(<span class="ruby-identifier">pre</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

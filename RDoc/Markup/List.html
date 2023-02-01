@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::List - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Markup::List - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
   var index_rel_prefix = "../../";
 </script>
 
-<script src="../../js/jquery.js"></script>
-<script src="../../js/darkfish.js"></script>
+<script src="../../js/navigation.js" defer></script>
+<script src="../../js/search.js" defer></script>
+<script src="../../js/search_index.js" defer></script>
+<script src="../../js/searcher.js" defer></script>
+<script src="../../js/darkfish.js" defer></script>
 
 <link href="../../css/fonts.css" rel="stylesheet">
 <link href="../../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,34 +57,27 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
-  <p class="link">Object
-  
+  <p class="link"><a href="../../Object.html">Object</a>
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-3C-3C">#&lt;&lt;</a>
-    
     <li ><a href="#method-i-accept">#accept</a>
-    
     <li ><a href="#method-i-empty-3F">#empty?</a>
-    
     <li ><a href="#method-i-last">#last</a>
-    
     <li ><a href="#method-i-push">#push</a>
-    
   </ul>
 </div>
 
@@ -96,7 +91,7 @@
 
   <section class="description">
     
-<p>A <a href="List.html">List</a> is a homogeneous set of ListItems.</p>
+<p>A <a href="List.html"><code>List</code></a> is a homogeneous set of ListItems.</p>
 
 <p>The supported list types include:</p>
 <dl class="rdoc-list note-list"><dt>:BULLET
@@ -104,8 +99,7 @@
 <p>An unordered list</p>
 </dd><dt>:LABEL
 <dd>
-<p>An unordered definition list, but using an alternate <a
-href="../Markup.html">RDoc::Markup</a> syntax</p>
+<p>An unordered definition list, but using an alternate <a href="../Markup.html"><code>RDoc::Markup</code></a> syntax</p>
 </dd><dt>:LALPHA
 <dd>
 <p>An ordered list using increasing lowercase English letters</p>
@@ -120,28 +114,19 @@ href="../Markup.html">RDoc::Markup</a> syntax</p>
 <p>An ordered list using increasing uppercase English letters</p>
 </dd></dl>
 
-<p>Definition lists behave like HTML definition lists.  Each list item can
-describe multiple terms.  See <a
-href="ListItem.html">RDoc::Markup::ListItem</a> for how labels and
-definition are stored as list items.</p>
+<p>Definition lists behave like HTML definition lists.  Each list item can describe multiple terms.  See <a href="ListItem.html"><code>RDoc::Markup::ListItem</code></a> for how labels and definition are stored as list items.</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-items" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">items</span><span
@@ -149,12 +134,9 @@ definition are stored as list items.</p>
         </div>
 
         <div class="method-description">
-        
         <p>Items in the list</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-type" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">type</span><span
@@ -162,43 +144,29 @@ definition are stored as list items.</p>
         </div>
 
         <div class="method-description">
-        
-        <p>The list&#39;s type</p>
-        
+        <p>The list’s type</p>
         </div>
       </div>
-      
     </section>
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(type = nil, *items)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(type = nil, *items)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new list of <code>type</code> with <code>items</code>.  Valid
-list types are: <code>:BULLET</code>, <code>:LABEL</code>,
-<code>:LALPHA</code>, <code>:NOTE</code>, <code>:NUMBER</code>,
-<code>:UALPHA</code></p>
-          
-          
+          <p>Creates a new list of <code>type</code> with <code>items</code>.  Valid list types are: <code>:BULLET</code>, <code>:LABEL</code>, <code>:LALPHA</code>, <code>:NOTE</code>, <code>:NUMBER</code>, <code>:UALPHA</code></p>
 
-          
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/list.rb, line 40</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">type</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">items</span>
@@ -207,75 +175,53 @@ list types are: <code>:BULLET</code>, <code>:LABEL</code>,
   <span class="ruby-ivar">@items</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">items</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-3C-3C" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">&lt;&lt;</span><span
-            class="method-args">(item)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">&lt;&lt;</span><span
+              class="method-args">(item)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Appends <code>item</code> to the list</p>
-          
-          
 
-          
           <div class="method-source-code" id="3C-3C-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/list.rb, line 49</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">&lt;&lt;</span> <span class="ruby-identifier">item</span>
   <span class="ruby-ivar">@items</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">item</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-accept" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">accept</span><span
-            class="method-args">(visitor)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">accept</span><span
+              class="method-args">(visitor)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Runs this list and all its <a href="List.html#attribute-i-items">items</a>
-through <code>visitor</code></p>
-          
-          
+          <p>Runs this list and all its <a href="List.html#attribute-i-items"><code>items</code></a> through <code>visitor</code></p>
 
-          
           <div class="method-source-code" id="accept-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/list.rb, line 62</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept</span> <span class="ruby-identifier">visitor</span>
@@ -288,123 +234,89 @@ through <code>visitor</code></p>
   <span class="ruby-identifier">visitor</span>.<span class="ruby-identifier">accept_list_end</span> <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-empty-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">empty?</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">empty?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Is the list empty?</p>
-          
-          
 
-          
           <div class="method-source-code" id="empty-3F-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/list.rb, line 75</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">empty?</span>
   <span class="ruby-ivar">@items</span>.<span class="ruby-identifier">empty?</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-last" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">last</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">last</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Returns the last item in the list</p>
-          
-          
 
-          
           <div class="method-source-code" id="last-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/list.rb, line 82</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">last</span>
   <span class="ruby-ivar">@items</span>.<span class="ruby-identifier">last</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-push" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">push</span><span
-            class="method-args">(*items)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">push</span><span
+              class="method-args">(*items)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Appends <code>items</code> to the list</p>
-          
-          
 
-          
           <div class="method-source-code" id="push-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/list.rb, line 97</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">push</span> <span class="ruby-operator">*</span><span class="ruby-identifier">items</span>
   <span class="ruby-ivar">@items</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">items</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::AnyMethod - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::AnyMethod - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
   var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,57 +57,43 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link"><a href="MethodAttr.html">RDoc::MethodAttr</a>
-  
 </div>
 
-    <div id="includes-section" class="nav-section">
+    
+<div id="includes-section" class="nav-section">
   <h3>Included Modules</h3>
 
   <ul class="link-list">
-  
-  
     <li><a class="include" href="TokenStream.html">RDoc::TokenStream</a>
-  
-  
   </ul>
 </div>
 
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li class="calls-super" ><a href="#method-c-new">::new</a>
-    
+    <li ><a href="#method-i-_call_seq">#_call_seq</a>
     <li ><a href="#method-i-add_alias">#add_alias</a>
-    
     <li ><a href="#method-i-aref_prefix">#aref_prefix</a>
-    
     <li ><a href="#method-i-arglists">#arglists</a>
-    
+    <li ><a href="#method-i-call_seq">#call_seq</a>
     <li ><a href="#method-i-call_seq-3D">#call_seq=</a>
-    
     <li ><a href="#method-i-marshal_dump">#marshal_dump</a>
-    
     <li ><a href="#method-i-marshal_load">#marshal_load</a>
-    
     <li ><a href="#method-i-name">#name</a>
-    
     <li ><a href="#method-i-param_list">#param_list</a>
-    
     <li ><a href="#method-i-param_seq">#param_seq</a>
-    
     <li class="calls-super" ><a href="#method-i-store-3D">#store=</a>
-    
     <li ><a href="#method-i-superclass_method">#superclass_method</a>
-    
   </ul>
 </div>
 
@@ -119,26 +107,19 @@
 
   <section class="description">
     
-<p><a href="AnyMethod.html">AnyMethod</a> is the base class for objects
-representing methods</p>
+<p><a href="AnyMethod.html"><code>AnyMethod</code></a> is the base class for objects representing methods</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-c_function" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">c_function</span><span
@@ -146,25 +127,9 @@ representing methods</p>
         </div>
 
         <div class="method-description">
-        
         <p>The C function that implements this method (if it was defined in a C file)</p>
-        
         </div>
       </div>
-      
-      <div id="attribute-i-call_seq" class="method-detail">
-        <div class="method-heading attribute-method-heading">
-          <span class="method-name">call_seq</span><span
-            class="attribute-access-type">[R]</span>
-        </div>
-
-        <div class="method-description">
-        
-        <p>Different ways to call this method</p>
-        
-        </div>
-      </div>
-      
       <div id="attribute-i-calls_super" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">calls_super</span><span
@@ -172,12 +137,9 @@ representing methods</p>
         </div>
 
         <div class="method-description">
-        
         <p>If true this method uses <code>super</code> to call a superclass version</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-dont_rename_initialize" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">dont_rename_initialize</span><span
@@ -185,12 +147,9 @@ representing methods</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Don&#39;t rename #initialize to ::new</p>
-        
+        <p>Don’t rename #initialize to ::new</p>
         </div>
       </div>
-      
       <div id="attribute-i-params" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">params</span><span
@@ -198,48 +157,45 @@ representing methods</p>
         </div>
 
         <div class="method-description">
-        
         <p>Parameters for this method</p>
-        
         </div>
       </div>
-      
-    </section>
-    
+      <div id="attribute-i-section_title" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">section_title</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
 
-    
+        <div class="method-description">
+        <p>The section title of the method (if defined in a C file via <code>:category:</code>)</p>
+        </div>
+      </div>
+    </section>
+
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(text, name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(text, name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new <a href="AnyMethod.html">AnyMethod</a> with a token stream
-<code>text</code> and <code>name</code></p>
-          
-          
+          <p>Creates a new <a href="AnyMethod.html"><code>AnyMethod</code></a> with a token stream <code>text</code> and <code>name</code></p>
             <div class="method-calls-super">
               Calls superclass method
-              <a href="MethodAttr.html#method-c-new">RDoc::MethodAttr.new</a>
+              <a href="MethodAttr.html#method-c-new"><code>RDoc::MethodAttr::new</code></a>
             </div>
-          
 
-          
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 49</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 46</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">name</span>
   <span class="ruby-keyword">super</span>
 
@@ -250,44 +206,32 @@ representing methods</p>
   <span class="ruby-ivar">@superclass_method</span> = <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-add_alias" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_alias</span><span
-            class="method-args">(an_alias, context = nil)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_alias</span><span
+              class="method-args">(an_alias, context = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds <code>an_alias</code> as an alias for this method in
-<code>context</code>.</p>
-          
-          
+          <p>Adds <code>an_alias</code> as an alias for this method in <code>context</code>.</p>
 
-          
           <div class="method-source-code" id="add_alias-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 62</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 59</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_alias</span> <span class="ruby-identifier">an_alias</span>, <span class="ruby-identifier">context</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">method</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">an_alias</span>.<span class="ruby-identifier">text</span>, <span class="ruby-identifier">an_alias</span>.<span class="ruby-identifier">new_name</span>
 
@@ -302,72 +246,50 @@ representing methods</p>
   <span class="ruby-identifier">method</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-aref_prefix" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">aref_prefix</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">aref_prefix</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Prefix for <code>aref</code> is &#39;method&#39;.</p>
-          
-          
+          <p>Prefix for <code>aref</code> is ‘method’.</p>
 
-          
           <div class="method-source-code" id="aref_prefix-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 79</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 76</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">aref_prefix</span>
   <span class="ruby-string">&#39;method&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-arglists" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">arglists</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">arglists</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>The <a href="AnyMethod.html#attribute-i-call_seq">#call_seq</a> or the <a
-href="AnyMethod.html#method-i-param_seq">#param_seq</a> with method name,
-if there is no call_seq.</p>
+          <p>The <a href="AnyMethod.html#method-i-call_seq"><code>call_seq</code></a> or the <a href="AnyMethod.html#method-i-param_seq"><code>param_seq</code></a> with method name, if there is no call_seq.</p>
 
-<p>Use this for displaying a method&#39;s argument lists.</p>
-          
-          
+<p>Use this for displaying a method’s argument lists.</p>
 
-          
           <div class="method-source-code" id="arglists-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 88</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 85</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">arglists</span>
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@call_seq</span> <span class="ruby-keyword">then</span>
     <span class="ruby-ivar">@call_seq</span>
@@ -376,74 +298,81 @@ if there is no call_seq.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
-      <div id="method-i-call_seq-3D" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">call_seq=</span><span
-            class="method-args">(call_seq)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+      <div id="method-i-call_seq" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">call_seq</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Sets the different ways you can call this method.  If an empty
-<code>call_seq</code> is given nil is assumed.</p>
+          <p>Different ways to call this method</p>
 
-<p>See also <a href="AnyMethod.html#method-i-param_seq">param_seq</a></p>
-          
-          
+          <div class="method-source-code" id="call_seq-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 96</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">call_seq</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">call_seq</span> = <span class="ruby-identifier">_call_seq</span>
+    <span class="ruby-identifier">call_seq</span> = <span class="ruby-identifier">is_alias_for</span>.<span class="ruby-identifier">_call_seq</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">is_alias_for</span>
+  <span class="ruby-keyword">end</span>
 
-          
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">call_seq</span>
+
+  <span class="ruby-identifier">deduplicate_call_seq</span>(<span class="ruby-identifier">call_seq</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-call_seq-3D" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">call_seq=</span><span
+              class="method-args">(call_seq)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          <p>Sets the different ways you can call this method.  If an empty <code>call_seq</code> is given nil is assumed.</p>
+
+<p>See also <a href="AnyMethod.html#method-i-param_seq"><code>param_seq</code></a></p>
+
           <div class="method-source-code" id="call_seq-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 102</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 112</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">call_seq=</span> <span class="ruby-identifier">call_seq</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">call_seq</span>.<span class="ruby-identifier">empty?</span>
 
   <span class="ruby-ivar">@call_seq</span> = <span class="ruby-identifier">call_seq</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-marshal_dump" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">marshal_dump</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">marshal_dump</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Dumps this <a href="AnyMethod.html">AnyMethod</a> for use by ri.  See also
-<a href="AnyMethod.html#method-i-marshal_load">marshal_load</a></p>
-          
-          
+          <p>Dumps this <a href="AnyMethod.html"><code>AnyMethod</code></a> for use by ri.  See also <a href="AnyMethod.html#method-i-marshal_load"><code>marshal_load</code></a></p>
 
-          
           <div class="method-source-code" id="marshal_dump-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 130</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 140</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">marshal_dump</span>
   <span class="ruby-identifier">aliases</span> = <span class="ruby-ivar">@aliases</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span>
     [<span class="ruby-identifier">a</span>.<span class="ruby-identifier">name</span>, <span class="ruby-identifier">parse</span>(<span class="ruby-identifier">a</span>.<span class="ruby-identifier">comment</span>)]
@@ -474,42 +403,30 @@ if there is no call_seq.</p>
   ]
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-marshal_load" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">marshal_load</span><span
-            class="method-args">(array)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">marshal_load</span><span
+              class="method-args">(array)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Loads this <a href="AnyMethod.html">AnyMethod</a> from <code>array</code>. 
-For a loaded <a href="AnyMethod.html">AnyMethod</a> the following methods
-will return cached values:</p>
+          <p>Loads this <a href="AnyMethod.html"><code>AnyMethod</code></a> from <code>array</code>.  For a loaded <a href="AnyMethod.html"><code>AnyMethod</code></a> the following methods will return cached values:</p>
 <ul><li>
-<p><a href="MethodAttr.html#method-i-full_name">full_name</a></p>
+<p><a href="MethodAttr.html#method-i-full_name"><code>full_name</code></a></p>
 </li><li>
-<p><a href="MethodAttr.html#method-i-parent_name">parent_name</a></p>
+<p><a href="MethodAttr.html#method-i-parent_name"><code>parent_name</code></a></p>
 </li></ul>
-          
-          
 
-          
           <div class="method-source-code" id="marshal_load-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 167</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 177</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">marshal_load</span> <span class="ruby-identifier">array</span>
   <span class="ruby-identifier">initialize_visibility</span>
 
@@ -554,38 +471,27 @@ will return cached values:</p>
   <span class="ruby-ivar">@file</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">TopLevel</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">array</span>[<span class="ruby-value">10</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">version</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-name" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">name</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">name</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Method name</p>
 
-<p>If the method has no assigned name, it extracts it from <a
-href="AnyMethod.html#attribute-i-call_seq">call_seq</a>.</p>
-          
-          
+<p>If the method has no assigned name, it extracts it from <a href="AnyMethod.html#method-i-call_seq"><code>call_seq</code></a>.</p>
 
-          
           <div class="method-source-code" id="name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 216</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 226</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">name</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@name</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@name</span>
 
@@ -595,37 +501,25 @@ href="AnyMethod.html#attribute-i-call_seq">call_seq</a>.</p>
     <span class="ruby-ivar">@call_seq</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@call_seq</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-param_list" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">param_list</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">param_list</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>A list of this method&#39;s method and yield parameters. 
-<code>call-seq</code> params are preferred over parsed method and block
-params.</p>
-          
-          
+          <p>A list of this method’s method and yield parameters.  <code>call-seq</code> params are preferred over parsed method and block params.</p>
 
-          
           <div class="method-source-code" id="param_list-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 229</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 239</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">param_list</span>
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@call_seq</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">params</span> = <span class="ruby-ivar">@call_seq</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&quot;\n&quot;</span>).<span class="ruby-identifier">last</span>
@@ -654,36 +548,25 @@ params.</p>
   <span class="ruby-identifier">params</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">param</span><span class="ruby-operator">|</span> <span class="ruby-identifier">param</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/=.*/</span>, <span class="ruby-string">&#39;&#39;</span>) }
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-param_seq" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">param_seq</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">param_seq</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Pretty parameter list for this method.  If the method&#39;s parameters were
-given by <code>call-seq</code> it is preferred over the parsed values.</p>
-          
-          
+          <p>Pretty parameter list for this method.  If the method’s parameters were given by <code>call-seq</code> it is preferred over the parsed values.</p>
 
-          
           <div class="method-source-code" id="param_seq-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 261</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 271</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">param_seq</span>
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@call_seq</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">params</span> = <span class="ruby-ivar">@call_seq</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&quot;\n&quot;</span>).<span class="ruby-identifier">last</span>
@@ -712,76 +595,54 @@ given by <code>call-seq</code> it is preferred over the parsed values.</p>
   <span class="ruby-identifier">params</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-store-3D" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">store=</span><span
-            class="method-args">(store)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">store=</span><span
+              class="method-args">(store)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Sets the store for this method and its referenced code objects.</p>
-          
-          
             <div class="method-calls-super">
               Calls superclass method
-              <a href="MethodAttr.html#method-i-store-3D">RDoc::MethodAttr#store=</a>
+              <a href="MethodAttr.html#method-i-store-3D"><code>RDoc::MethodAttr#store=</code></a>
             </div>
-          
 
-          
           <div class="method-source-code" id="store-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 292</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 302</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">store=</span> <span class="ruby-identifier">store</span>
   <span class="ruby-keyword">super</span>
 
   <span class="ruby-ivar">@file</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">add_file</span> <span class="ruby-ivar">@file</span>.<span class="ruby-identifier">full_name</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-superclass_method" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">superclass_method</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">superclass_method</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>For methods that <code>super</code>, find the superclass method that would
-be called.</p>
-          
-          
+          <p>For methods that <code>super</code>, find the superclass method that would be called.</p>
 
-          
           <div class="method-source-code" id="superclass_method-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 301</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 311</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">superclass_method</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@calls_super</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@superclass_method</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@superclass_method</span>
@@ -796,24 +657,50 @@ be called.</p>
   <span class="ruby-ivar">@superclass_method</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
+     <section id="protected-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Protected Instance Methods</h3>
+       </header>
+
+      <div id="method-i-_call_seq" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">_call_seq</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          <p><a href="AnyMethod.html#method-i-call_seq"><code>call_seq</code></a> without deduplication and alias lookup.</p>
+
+          <div class="method-source-code" id="_call_seq-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/any_method.rb, line 330</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">_call_seq</span>
+  <span class="ruby-ivar">@call_seq</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-ivar">@call_seq</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@call_seq</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+    </section>
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::ERBIO - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::ERBIO - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
   var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,26 +57,23 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link">ERB
-  
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li class="calls-super" ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-set_eoutvar">#set_eoutvar</a>
-    
   </ul>
 </div>
 
@@ -88,8 +87,7 @@
 
   <section class="description">
     
-<p>A subclass of ERB that writes directly to an IO.  Credit to Aaron Patterson
-and Masatoshi SEKI.</p>
+<p>A subclass of ERB that writes directly to an IO.  Credit to Aaron Patterson and Masatoshi SEKI.</p>
 
 <p>To use:</p>
 
@@ -104,92 +102,67 @@ and Masatoshi SEKI.</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(str, safe_level = nil, trim_mode = nil, eoutvar = &#39;io&#39;)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(str, safe_level = nil, legacy_trim_mode = nil, legacy_eoutvar = &#39;io&#39;, trim_mode: nil, eoutvar: &#39;io&#39;)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Defaults <code>eoutvar</code> to &#39;io&#39;, otherwise is identical to
-ERB&#39;s initialize</p>
-          
-          
+          <p>Defaults <code>eoutvar</code> to ‘io’, otherwise is identical to ERB’s initialize</p>
             <div class="method-calls-super">
               Calls superclass method
               
             </div>
-          
 
-          
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/rdoc/erbio.rb, line 23</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">str</span>, <span class="ruby-identifier">safe_level</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">trim_mode</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">eoutvar</span> = <span class="ruby-string">&#39;io&#39;</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">str</span>, <span class="ruby-identifier">safe_level</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">legacy_trim_mode</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">legacy_eoutvar</span> = <span class="ruby-string">&#39;io&#39;</span>, <span class="ruby-value">trim_mode:</span> <span class="ruby-keyword">nil</span>, <span class="ruby-value">eoutvar:</span> <span class="ruby-string">&#39;io&#39;</span>
   <span class="ruby-keyword">if</span> <span class="ruby-constant">RUBY_VERSION</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">&#39;2.6&#39;</span>
     <span class="ruby-keyword">super</span>(<span class="ruby-identifier">str</span>, <span class="ruby-value">trim_mode:</span> <span class="ruby-identifier">trim_mode</span>, <span class="ruby-value">eoutvar:</span> <span class="ruby-identifier">eoutvar</span>)
   <span class="ruby-keyword">else</span>
-    <span class="ruby-keyword">super</span>
+    <span class="ruby-keyword">super</span>(<span class="ruby-identifier">str</span>, <span class="ruby-identifier">safe_level</span>, <span class="ruby-identifier">legacy_trim_mode</span>, <span class="ruby-identifier">legacy_eoutvar</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-set_eoutvar" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">set_eoutvar</span><span
-            class="method-args">(compiler, io_variable)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">set_eoutvar</span><span
+              class="method-args">(compiler, io_variable)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Instructs <code>compiler</code> how to write to <code>io_variable</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="set_eoutvar-source">
             <pre><span class="ruby-comment"># File lib/rdoc/erbio.rb, line 34</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_eoutvar</span> <span class="ruby-identifier">compiler</span>, <span class="ruby-identifier">io_variable</span>
@@ -199,24 +172,20 @@ ERB&#39;s initialize</p>
   <span class="ruby-identifier">compiler</span>.<span class="ruby-identifier">post_cmd</span>   = []
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class RDoc::Parser::RipperStateLex::InnerStateLex - rdoc 6.5.0 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../../";
+  var index_rel_prefix = "../../../";
+</script>
+
+<script src="../../../js/navigation.js" defer></script>
+<script src="../../../js/search.js" defer></script>
+<script src="../../../js/search_index.js" defer></script>
+<script src="../../../js/searcher.js" defer></script>
+<script src="../../../js/darkfish.js" defer></script>
+
+<link href="../../../css/fonts.css" rel="stylesheet">
+<link href="../../../css/rdoc.css" rel="stylesheet">
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../../table_of_contents.html#pages">Pages</a>
+    <a href="../../../table_of_contents.html#classes">Classes</a>
+    <a href="../../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    
+<div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  <p class="link">Ripper::Filter
+</div>
+
+    
+    
+    
+<!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    <li class="calls-super" ><a href="#method-c-new">::new</a>
+    <li ><a href="#method-i-on_CHAR">#on_CHAR</a>
+    <li ><a href="#method-i-on_backref">#on_backref</a>
+    <li ><a href="#method-i-on_comma">#on_comma</a>
+    <li ><a href="#method-i-on_comment">#on_comment</a>
+    <li ><a href="#method-i-on_const">#on_const</a>
+    <li ><a href="#method-i-on_cvar">#on_cvar</a>
+    <li ><a href="#method-i-on_default">#on_default</a>
+    <li ><a href="#method-i-on_float">#on_float</a>
+    <li ><a href="#method-i-on_gvar">#on_gvar</a>
+    <li ><a href="#method-i-on_heredoc_beg">#on_heredoc_beg</a>
+    <li ><a href="#method-i-on_heredoc_end">#on_heredoc_end</a>
+    <li ><a href="#method-i-on_ident">#on_ident</a>
+    <li ><a href="#method-i-on_ignored_nl">#on_ignored_nl</a>
+    <li ><a href="#method-i-on_ignored_sp">#on_ignored_sp</a>
+    <li ><a href="#method-i-on_imaginary">#on_imaginary</a>
+    <li ><a href="#method-i-on_int">#on_int</a>
+    <li ><a href="#method-i-on_ivar">#on_ivar</a>
+    <li ><a href="#method-i-on_kw">#on_kw</a>
+    <li ><a href="#method-i-on_lbrace">#on_lbrace</a>
+    <li ><a href="#method-i-on_lbracket">#on_lbracket</a>
+    <li ><a href="#method-i-on_lparen">#on_lparen</a>
+    <li ><a href="#method-i-on_nl">#on_nl</a>
+    <li ><a href="#method-i-on_op">#on_op</a>
+    <li ><a href="#method-i-on_period">#on_period</a>
+    <li ><a href="#method-i-on_rational">#on_rational</a>
+    <li ><a href="#method-i-on_rbrace">#on_rbrace</a>
+    <li ><a href="#method-i-on_rbracket">#on_rbracket</a>
+    <li ><a href="#method-i-on_rparen">#on_rparen</a>
+    <li ><a href="#method-i-on_sp">#on_sp</a>
+    <li ><a href="#method-i-on_symbeg">#on_symbeg</a>
+    <li ><a href="#method-i-on_tstring_beg">#on_tstring_beg</a>
+    <li ><a href="#method-i-on_tstring_end">#on_tstring_end</a>
+    <li ><a href="#method-i-reset">#reset</a>
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-RDoc::Parser::RipperStateLex::InnerStateLex">
+  <h1 id="class-RDoc::Parser::RipperStateLex::InnerStateLex" class="class">
+    class RDoc::Parser::RipperStateLex::InnerStateLex
+  </h1>
+
+  <section class="description">
+    
+  </section>
+
+  <section id="5Buntitled-5D" class="documentation-section">
+
+
+
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      <div id="attribute-i-lex_state" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">lex_state</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        </div>
+      </div>
+    </section>
+
+
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+      <div id="method-c-new" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(code)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              
+            </div>
+
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 32</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">code</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_BEG</span>
+  <span class="ruby-ivar">@in_fname</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-ivar">@continue</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">reset</span>
+  <span class="ruby-keyword">super</span>(<span class="ruby-identifier">code</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+    </section>
+
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+      <div id="method-i-on_CHAR" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_CHAR</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_CHAR-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 148</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_CHAR</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_END</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_backref" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_backref</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_backref-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 223</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_backref</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_END</span>
+  <span class="ruby-identifier">on_variables</span>(<span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_comma" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_comma</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_comma-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 274</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_comma</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_BEG</span> <span class="ruby-operator">|</span> <span class="ruby-constant">EXPR_LABEL</span> <span class="ruby-keyword">if</span> (<span class="ruby-constant">EXPR_ARG_ANY</span> <span class="ruby-operator">&amp;</span> <span class="ruby-ivar">@lex_state</span>) <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_comment" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_comment</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_comment-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 279</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_comment</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_BEG</span> <span class="ruby-keyword">unless</span> (<span class="ruby-constant">EXPR_LABEL</span> <span class="ruby-operator">&amp;</span> <span class="ruby-ivar">@lex_state</span>) <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_const" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_const</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_const-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 258</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_const</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-keyword">case</span> <span class="ruby-ivar">@lex_state</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">EXPR_FNAME</span>
+    <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_ENDFN</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">EXPR_CLASS</span>, <span class="ruby-constant">EXPR_CMDARG</span>, <span class="ruby-constant">EXPR_MID</span>
+    <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_ARG</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_CMDARG</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_cvar" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_cvar</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_cvar-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 213</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_cvar</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_END</span>
+  <span class="ruby-identifier">on_variables</span>(<span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_default" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_default</span><span
+              class="method-args">(event, tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_default-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 301</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_default</span>(<span class="ruby-identifier">event</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-identifier">reset</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">event</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_float" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_float</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_float-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 163</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_float</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_END</span> <span class="ruby-operator">|</span> <span class="ruby-constant">EXPR_ENDARG</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_gvar" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_gvar</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_gvar-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 218</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_gvar</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_END</span>
+  <span class="ruby-identifier">on_variables</span>(<span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_heredoc_beg" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_heredoc_beg</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_heredoc_beg-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 289</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_heredoc_beg</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_END</span>
+  <span class="ruby-identifier">data</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_heredoc_end" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_heredoc_end</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_heredoc_end-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 295</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_heredoc_end</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_BEG</span>
+  <span class="ruby-identifier">data</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_ident" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_ident</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_ident-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 204</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_ident</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-identifier">on_variables</span>(<span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_ignored_nl" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_ignored_nl</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_ignored_nl-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 56</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_ignored_nl</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-keyword">case</span> <span class="ruby-ivar">@lex_state</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">EXPR_FNAME</span>, <span class="ruby-constant">EXPR_DOT</span>
+    <span class="ruby-ivar">@continue</span> = <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@continue</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_BEG</span> <span class="ruby-keyword">unless</span> (<span class="ruby-constant">EXPR_LABEL</span> <span class="ruby-operator">&amp;</span> <span class="ruby-ivar">@lex_state</span>) <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_ignored_sp" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_ignored_sp</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_ignored_sp-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 284</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_ignored_sp</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_BEG</span> <span class="ruby-keyword">unless</span> (<span class="ruby-constant">EXPR_LABEL</span> <span class="ruby-operator">&amp;</span> <span class="ruby-ivar">@lex_state</span>) <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_imaginary" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_imaginary</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_imaginary-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 173</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_imaginary</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_END</span> <span class="ruby-operator">|</span> <span class="ruby-constant">EXPR_ENDARG</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_int" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_int</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_int-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 158</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_int</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_END</span> <span class="ruby-operator">|</span> <span class="ruby-constant">EXPR_ENDARG</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_ivar" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_ivar</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_ivar-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 208</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_ivar</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_END</span>
+  <span class="ruby-identifier">on_variables</span>(<span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_kw" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_kw</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_kw-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 109</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_kw</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">tok</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;class&#39;</span>
+    <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_CLASS</span>
+    <span class="ruby-ivar">@in_fname</span> = <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;def&#39;</span>
+    <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_FNAME</span>
+    <span class="ruby-ivar">@continue</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-ivar">@in_fname</span> = <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;if&#39;</span>, <span class="ruby-string">&#39;unless&#39;</span>, <span class="ruby-string">&#39;while&#39;</span>, <span class="ruby-string">&#39;until&#39;</span>
+    <span class="ruby-keyword">if</span> ((<span class="ruby-constant">EXPR_MID</span> <span class="ruby-operator">|</span> <span class="ruby-constant">EXPR_END</span> <span class="ruby-operator">|</span> <span class="ruby-constant">EXPR_ENDARG</span> <span class="ruby-operator">|</span> <span class="ruby-constant">EXPR_ENDFN</span> <span class="ruby-operator">|</span> <span class="ruby-constant">EXPR_ARG</span> <span class="ruby-operator">|</span> <span class="ruby-constant">EXPR_CMDARG</span>) <span class="ruby-operator">&amp;</span> <span class="ruby-ivar">@lex_state</span>) <span class="ruby-operator">!=</span> <span class="ruby-value">0</span> <span class="ruby-comment"># postfix if</span>
+      <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_BEG</span> <span class="ruby-operator">|</span> <span class="ruby-constant">EXPR_LABEL</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_BEG</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;begin&#39;</span>, <span class="ruby-string">&#39;case&#39;</span>, <span class="ruby-string">&#39;when&#39;</span>
+    <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_BEG</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;return&#39;</span>, <span class="ruby-string">&#39;break&#39;</span>
+    <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_MID</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@lex_state</span> <span class="ruby-operator">==</span> <span class="ruby-constant">EXPR_FNAME</span>
+      <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_END</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_END</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_lbrace" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_lbrace</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_lbrace-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 238</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_lbrace</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_LABEL</span> <span class="ruby-operator">|</span> <span class="ruby-constant">EXPR_BEG</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_lbracket" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_lbracket</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_lbracket-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 248</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_lbracket</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_LABEL</span> <span class="ruby-operator">|</span> <span class="ruby-constant">EXPR_BEG</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_lparen" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_lparen</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_lparen-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 228</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_lparen</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_LABEL</span> <span class="ruby-operator">|</span> <span class="ruby-constant">EXPR_BEG</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_nl" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_nl</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_nl-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 45</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_nl</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-keyword">case</span> <span class="ruby-ivar">@lex_state</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">EXPR_FNAME</span>, <span class="ruby-constant">EXPR_DOT</span>
+    <span class="ruby-ivar">@continue</span> = <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@continue</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_BEG</span> <span class="ruby-keyword">unless</span> (<span class="ruby-constant">EXPR_LABEL</span> <span class="ruby-operator">&amp;</span> <span class="ruby-ivar">@lex_state</span>) <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_op" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_op</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_op-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 67</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_op</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">tok</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;&amp;&#39;</span>, <span class="ruby-string">&#39;|&#39;</span>, <span class="ruby-string">&#39;!&#39;</span>, <span class="ruby-string">&#39;!=&#39;</span>, <span class="ruby-string">&#39;!~&#39;</span>
+    <span class="ruby-keyword">case</span> <span class="ruby-ivar">@lex_state</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-constant">EXPR_FNAME</span>, <span class="ruby-constant">EXPR_DOT</span>
+      <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_ARG</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_BEG</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;&lt;&lt;&#39;</span>
+    <span class="ruby-comment"># TODO next token?</span>
+    <span class="ruby-keyword">case</span> <span class="ruby-ivar">@lex_state</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-constant">EXPR_FNAME</span>, <span class="ruby-constant">EXPR_DOT</span>
+      <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_ARG</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_BEG</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;?&#39;</span>
+    <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_BEG</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;&amp;&amp;&#39;</span>, <span class="ruby-string">&#39;||&#39;</span>, <span class="ruby-string">&#39;+=&#39;</span>, <span class="ruby-string">&#39;-=&#39;</span>, <span class="ruby-string">&#39;*=&#39;</span>, <span class="ruby-string">&#39;**=&#39;</span>,
+       <span class="ruby-string">&#39;&amp;=&#39;</span>, <span class="ruby-string">&#39;|=&#39;</span>, <span class="ruby-string">&#39;^=&#39;</span>, <span class="ruby-string">&#39;&lt;&lt;=&#39;</span>, <span class="ruby-string">&#39;&gt;&gt;=&#39;</span>, <span class="ruby-string">&#39;||=&#39;</span>, <span class="ruby-string">&#39;&amp;&amp;=&#39;</span>
+    <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_BEG</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;::&#39;</span>
+    <span class="ruby-keyword">case</span> <span class="ruby-ivar">@lex_state</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-constant">EXPR_ARG</span>, <span class="ruby-constant">EXPR_CMDARG</span>
+      <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_DOT</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-constant">EXPR_FNAME</span>, <span class="ruby-constant">EXPR_DOT</span>
+      <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_ARG</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_BEG</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">case</span> <span class="ruby-ivar">@lex_state</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-constant">EXPR_FNAME</span>, <span class="ruby-constant">EXPR_DOT</span>
+      <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_ARG</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_BEG</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_period" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_period</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_period-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 153</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_period</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_DOT</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_rational" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_rational</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_rational-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 168</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_rational</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_END</span> <span class="ruby-operator">|</span> <span class="ruby-constant">EXPR_ENDARG</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_rbrace" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_rbrace</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_rbrace-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 243</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_rbrace</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_ENDARG</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_rbracket" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_rbracket</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_rbracket-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 253</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_rbracket</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_ENDARG</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_rparen" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_rparen</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_rparen-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 233</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_rparen</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_ENDFN</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_sp" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_sp</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_sp-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 270</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_sp</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_symbeg" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_symbeg</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_symbeg-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 178</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_symbeg</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_FNAME</span>
+  <span class="ruby-ivar">@continue</span> = <span class="ruby-keyword">true</span>
+  <span class="ruby-ivar">@in_fname</span> = <span class="ruby-keyword">true</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_tstring_beg" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_tstring_beg</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_tstring_beg-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 138</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_tstring_beg</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_BEG</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-on_tstring_end" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_tstring_end</span><span
+              class="method-args">(tok, data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="on_tstring_end-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 143</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_tstring_end</span>(<span class="ruby-identifier">tok</span>, <span class="ruby-identifier">data</span>)
+  <span class="ruby-ivar">@lex_state</span> = <span class="ruby-constant">EXPR_END</span> <span class="ruby-operator">|</span> <span class="ruby-constant">EXPR_ENDARG</span>
+  <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">lineno</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">__method__</span>, <span class="ruby-identifier">tok</span>, <span class="ruby-ivar">@lex_state</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-reset" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">reset</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="reset-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ripper_state_lex.rb, line 40</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reset</span>
+  <span class="ruby-ivar">@command_start</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-ivar">@cmd_state</span> = <span class="ruby-ivar">@command_start</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+    </section>
+
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

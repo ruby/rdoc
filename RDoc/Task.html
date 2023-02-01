@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Task - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Task - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
   var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,40 +57,30 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link">Rake::TaskLib
-  
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-before_running_rdoc">#before_running_rdoc</a>
-    
     <li ><a href="#method-i-check_names">#check_names</a>
-    
     <li ><a href="#method-i-clobber_task_description">#clobber_task_description</a>
-    
     <li ><a href="#method-i-defaults">#defaults</a>
-    
     <li ><a href="#method-i-define">#define</a>
-    
     <li ><a href="#method-i-option_list">#option_list</a>
-    
     <li ><a href="#method-i-rdoc_task_description">#rdoc_task_description</a>
-    
     <li ><a href="#method-i-rerdoc_task_description">#rerdoc_task_description</a>
-    
   </ul>
 </div>
 
@@ -102,15 +94,13 @@
 
   <section class="description">
     
-<p><a href="Task.html">RDoc::Task</a> creates the following rake tasks to
-generate and clean up <a href="../RDoc.html">RDoc</a> output:</p>
+<p><a href="Task.html"><code>RDoc::Task</code></a> creates the following rake tasks to generate and clean up <a href="../RDoc.html"><code>RDoc</code></a> output:</p>
 <dl class="rdoc-list label-list"><dt>rdoc
 <dd>
-<p>Main task for this <a href="../RDoc.html">RDoc</a> task.</p>
+<p>Main task for this <a href="../RDoc.html"><code>RDoc</code></a> task.</p>
 </dd><dt>clobber_rdoc
 <dd>
-<p>Delete all the rdoc files.  This target is automatically added to the main
-clobber target.</p>
+<p>Delete all the rdoc files.  This target is automatically added to the main clobber target.</p>
 </dd><dt>rerdoc
 <dd>
 <p>Rebuild the rdoc files from scratch, even if they are not out of date.</p>
@@ -122,36 +112,28 @@ clobber target.</p>
 
 <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Task</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">rdoc</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">main</span> = <span class="ruby-string">&quot;README.rdoc&quot;</span>
-  <span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">rdoc_files</span>.<span class="ruby-identifier">include</span>(<span class="ruby-string">&quot;README.rdoc&quot;</span>, <span class="ruby-string">&quot;lib   /*.rb&quot;</span>)
+  <span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">rdoc_files</span>.<span class="ruby-identifier">include</span>(<span class="ruby-string">&quot;README.rdoc&quot;</span>, <span class="ruby-string">&quot;lib/**/*.rb&quot;</span>)
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p>The <code>rdoc</code> object passed to the block is an <a
-href="Task.html">RDoc::Task</a> object. See the attributes list for the <a
-href="Task.html">RDoc::Task</a> class for available customization options.</p>
+<p>The <code>rdoc</code> object passed to the block is an <a href="Task.html"><code>RDoc::Task</code></a> object. See the attributes list for the <a href="Task.html"><code>RDoc::Task</code></a> class for available customization options.</p>
 
 <h2 id="class-RDoc::Task-label-Specifying+different+task+names">Specifying different task names<span><a href="#class-RDoc::Task-label-Specifying+different+task+names">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>You may wish to give the task a different name, such as if you are
-generating two sets of documentation.  For instance, if you want to have a
-development set of documentation including private methods:</p>
+<p>You may wish to give the task a different name, such as if you are generating two sets of documentation.  For instance, if you want to have a development set of documentation including private methods:</p>
 
 <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;rdoc/task&#39;</span>
 
 <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Task</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:rdoc_dev</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">rdoc</span><span class="ruby-operator">|</span>
-  <span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">main</span> = <span class="ruby-string">&quot;README.doc&quot;</span>
-  <span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">rdoc_files</span>.<span class="ruby-identifier">include</span>(<span class="ruby-string">&quot;README.rdoc&quot;</span>, <span class="ruby-string">&quot;lib/   *.rb&quot;</span>)
+  <span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">main</span> = <span class="ruby-string">&quot;README.rdoc&quot;</span>
+  <span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">rdoc_files</span>.<span class="ruby-identifier">include</span>(<span class="ruby-string">&quot;README.rdoc&quot;</span>, <span class="ruby-string">&quot;lib/**/*.rb&quot;</span>)
   <span class="ruby-identifier">rdoc</span>.<span class="ruby-identifier">options</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;--all&quot;</span>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p>The tasks would then be named :<em>rdoc_dev</em>,
-:clobber_<em>rdoc_dev</em>, and :re<em>rdoc_dev</em>.</p>
+<p>The tasks would then be named :<em>rdoc_dev</em>, :clobber_<em>rdoc_dev</em>, and :re<em>rdoc_dev</em>.</p>
 
-<p>If you wish to have completely different task names, then pass a Hash as
-first argument. With the <code>:rdoc</code>, <code>:clobber_rdoc</code> and
-<code>:rerdoc</code> options, you can customize the task names to your
-liking.</p>
+<p>If you wish to have completely different task names, then pass a Hash as first argument. With the <code>:rdoc</code>, <code>:clobber_rdoc</code> and <code>:rerdoc</code> options, you can customize the task names to your liking.</p>
 
 <p>For example:</p>
 
@@ -161,26 +143,19 @@ liking.</p>
                <span class="ruby-value">:rerdoc</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;rdoc:force&quot;</span>)
 </pre>
 
-<p>This will create the tasks <code>:rdoc</code>, <code>:rdoc:clean</code> and
-<code>:rdoc:force</code>.</p>
+<p>This will create the tasks <code>:rdoc</code>, <code>:rdoc:clean</code> and <code>:rdoc:force</code>.</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-external" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">external</span><span
@@ -188,12 +163,9 @@ liking.</p>
         </div>
 
         <div class="method-description">
-        
         <p>Whether to run the rdoc process as an external shell (default is false)</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-generator" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">generator</span><span
@@ -201,13 +173,9 @@ liking.</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Name of format generator (&lt;tt&gt;–format&lt;tt&gt;) used by rdoc.
-(defaults to rdoc&#39;s default)</p>
-        
+        <p>Name of format generator (<code>--format</code>) used by rdoc. (defaults to rdoc’s default)</p>
         </div>
       </div>
-      
       <div id="attribute-i-main" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">main</span><span
@@ -215,13 +183,9 @@ liking.</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Name of file to be used as the main, top level file of the <a
-href="../RDoc.html">RDoc</a>. (default is none)</p>
-        
+        <p>Name of file to be used as the main, top level file of the <a href="../RDoc.html"><code>RDoc</code></a>. (default is none)</p>
         </div>
       </div>
-      
       <div id="attribute-i-markup" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">markup</span><span
@@ -229,13 +193,9 @@ href="../RDoc.html">RDoc</a>. (default is none)</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Comment markup format.  rdoc, rd and tomdoc are supported.  (default is
-&#39;rdoc&#39;)</p>
-        
+        <p>Comment markup format.  rdoc, rd and tomdoc are supported.  (default is ‘rdoc’)</p>
         </div>
       </div>
-      
       <div id="attribute-i-name" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">name</span><span
@@ -243,12 +203,9 @@ href="../RDoc.html">RDoc</a>. (default is none)</p>
         </div>
 
         <div class="method-description">
-        
         <p>Name of the main, top level task.  (default is :rdoc)</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-options" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">options</span><span
@@ -256,12 +213,9 @@ href="../RDoc.html">RDoc</a>. (default is none)</p>
         </div>
 
         <div class="method-description">
-        
         <p>Additional list of options to be passed rdoc.  (default is [])</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-rdoc_dir" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">rdoc_dir</span><span
@@ -269,12 +223,9 @@ href="../RDoc.html">RDoc</a>. (default is none)</p>
         </div>
 
         <div class="method-description">
-        
         <p>Name of directory to receive the html output files. (default is “html”)</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-rdoc_files" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">rdoc_files</span><span
@@ -282,12 +233,9 @@ href="../RDoc.html">RDoc</a>. (default is none)</p>
         </div>
 
         <div class="method-description">
-        
         <p>List of files to be included in the rdoc generation. (default is [])</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-template" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">template</span><span
@@ -295,12 +243,9 @@ href="../RDoc.html">RDoc</a>. (default is none)</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Name of template to be used by rdoc. (defaults to rdoc&#39;s default)</p>
-        
+        <p>Name of template to be used by rdoc. (defaults to rdoc’s default)</p>
         </div>
       </div>
-      
       <div id="attribute-i-title" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">title</span><span
@@ -308,42 +253,29 @@ href="../RDoc.html">RDoc</a>. (default is none)</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Title of <a href="../RDoc.html">RDoc</a> documentation. (defaults to
-rdoc&#39;s default)</p>
-        
+        <p>Title of <a href="../RDoc.html"><code>RDoc</code></a> documentation. (defaults to rdoc’s default)</p>
         </div>
       </div>
-      
     </section>
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(name = :rdoc) { |self| ... }</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(name = :rdoc) { |self| ... }</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Create an <a href="../RDoc.html">RDoc</a> task with the given name. See the
-<a href="Task.html">RDoc::Task</a> class overview for documentation.</p>
-          
-          
+          <p>Create an <a href="../RDoc.html"><code>RDoc</code></a> task with the given name. See the <a href="Task.html"><code>RDoc::Task</code></a> class overview for documentation.</p>
 
-          
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 155</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">name</span> = <span class="ruby-value">:rdoc</span> <span class="ruby-comment"># :yield: self</span>
@@ -358,78 +290,53 @@ rdoc&#39;s default)</p>
   <span class="ruby-identifier">define</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-before_running_rdoc" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">before_running_rdoc</span><span
-            class="method-args">(&amp;block)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">before_running_rdoc</span><span
+              class="method-args">(&amp;block)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>The block passed to this method will be called just before running the <a
-href="../RDoc.html">RDoc</a> generator. It is allowed to modify <a
-href="Task.html">RDoc::Task</a> attributes inside the block.</p>
-          
-          
+          <p>The block passed to this method will be called just before running the <a href="../RDoc.html"><code>RDoc</code></a> generator. It is allowed to modify <a href="Task.html"><code>RDoc::Task</code></a> attributes inside the block.</p>
 
-          
           <div class="method-source-code" id="before_running_rdoc-source">
             <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 273</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">before_running_rdoc</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-ivar">@before_running_rdoc</span> = <span class="ruby-identifier">block</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-check_names" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">check_names</span><span
-            class="method-args">(names)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">check_names</span><span
+              class="method-args">(names)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Ensures that <code>names</code> only includes names for the :rdoc,
-:clobber_rdoc and :rerdoc.  If other names are given an ArgumentError is
-raised.</p>
-          
-          
+          <p>Ensures that <code>names</code> only includes names for the :rdoc, :clobber_rdoc and :rerdoc.  If other names are given an ArgumentError is raised.</p>
 
-          
           <div class="method-source-code" id="check_names-source">
             <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 171</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">check_names</span> <span class="ruby-identifier">names</span>
@@ -443,67 +350,46 @@ raised.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-clobber_task_description" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">clobber_task_description</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">clobber_task_description</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p><a href="Task.html">Task</a> description for the clobber rdoc task or its
-renamed equivalent</p>
-          
-          
+          <p><a href="Task.html"><code>Task</code></a> description for the clobber rdoc task or its renamed equivalent</p>
 
-          
           <div class="method-source-code" id="clobber_task_description-source">
             <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 185</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">clobber_task_description</span>
   <span class="ruby-string">&quot;Remove RDoc HTML files&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-defaults" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">defaults</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">defaults</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Sets default task values</p>
-          
-          
 
-          
           <div class="method-source-code" id="defaults-source">
             <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 192</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">defaults</span>
@@ -517,33 +403,23 @@ renamed equivalent</p>
   <span class="ruby-ivar">@options</span> = []
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-define" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">define</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">define</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Create the tasks defined by this task lib.</p>
-          
-          
 
-          
           <div class="method-source-code" id="define-source">
             <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 221</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">define</span>
@@ -579,33 +455,23 @@ renamed equivalent</p>
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-option_list" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">option_list</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">option_list</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>List of options that will be supplied to <a href="../RDoc.html">RDoc</a></p>
-          
-          
+          <p>List of options that will be supplied to <a href="../RDoc.html"><code>RDoc</code></a></p>
 
-          
           <div class="method-source-code" id="option_list-source">
             <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 257</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">option_list</span>
@@ -619,92 +485,66 @@ renamed equivalent</p>
   <span class="ruby-identifier">result</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-rdoc_task_description" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">rdoc_task_description</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">rdoc_task_description</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p><a href="Task.html">Task</a> description for the rdoc task or its renamed
-equivalent</p>
-          
-          
+          <p><a href="Task.html"><code>Task</code></a> description for the rdoc task or its renamed equivalent</p>
 
-          
           <div class="method-source-code" id="rdoc_task_description-source">
             <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 280</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rdoc_task_description</span>
   <span class="ruby-string">&#39;Build RDoc HTML files&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-rerdoc_task_description" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">rerdoc_task_description</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">rerdoc_task_description</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p><a href="Task.html">Task</a> description for the rerdoc task or its renamed
-description</p>
-          
-          
+          <p><a href="Task.html"><code>Task</code></a> description for the rerdoc task or its renamed description</p>
 
-          
           <div class="method-source-code" id="rerdoc_task_description-source">
             <pre><span class="ruby-comment"># File lib/rdoc/task.rb, line 287</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rerdoc_task_description</span>
   <span class="ruby-string">&quot;Rebuild RDoc HTML files&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

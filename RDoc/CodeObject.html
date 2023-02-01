@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::CodeObject - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::CodeObject - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
   var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,85 +57,54 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
-  <p class="link">Object
-  
+  <p class="link"><a href="../Object.html">Object</a>
 </div>
 
-    <div id="includes-section" class="nav-section">
+    
+<div id="includes-section" class="nav-section">
   <h3>Included Modules</h3>
 
   <ul class="link-list">
-  
-  
     <li><a class="include" href="Text.html">RDoc::Text</a>
-  
-  
-  
     <li><a class="include" href="Generator/Markup.html">RDoc::Generator::Markup</a>
-  
-  
   </ul>
 </div>
 
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-comment-3D">#comment=</a>
-    
     <li ><a href="#method-i-display-3F">#display?</a>
-    
     <li ><a href="#method-i-document_children-3D">#document_children=</a>
-    
     <li ><a href="#method-i-document_self-3D">#document_self=</a>
-    
     <li ><a href="#method-i-documented-3F">#documented?</a>
-    
     <li ><a href="#method-i-done_documenting-3D">#done_documenting=</a>
-    
     <li ><a href="#method-i-each_parent">#each_parent</a>
-    
     <li ><a href="#method-i-file_name">#file_name</a>
-    
     <li ><a href="#method-i-force_documentation-3D">#force_documentation=</a>
-    
     <li ><a href="#method-i-full_name-3D">#full_name=</a>
-    
     <li ><a href="#method-i-ignore">#ignore</a>
-    
     <li ><a href="#method-i-ignored-3F">#ignored?</a>
-    
     <li ><a href="#method-i-options">#options</a>
-    
     <li ><a href="#method-i-parent">#parent</a>
-    
     <li ><a href="#method-i-parent_file_name">#parent_file_name</a>
-    
     <li ><a href="#method-i-parent_name">#parent_name</a>
-    
     <li ><a href="#method-i-record_location">#record_location</a>
-    
     <li ><a href="#method-i-section">#section</a>
-    
     <li ><a href="#method-i-start_doc">#start_doc</a>
-    
     <li ><a href="#method-i-stop_doc">#stop_doc</a>
-    
     <li ><a href="#method-i-store-3D">#store=</a>
-    
     <li ><a href="#method-i-suppress">#suppress</a>
-    
     <li ><a href="#method-i-suppressed-3F">#suppressed?</a>
-    
   </ul>
 </div>
 
@@ -147,71 +118,63 @@
 
   <section class="description">
     
-<p>Base class for the <a href="../RDoc.html">RDoc</a> code tree.</p>
+<p>Base class for the <a href="../RDoc.html"><code>RDoc</code></a> code tree.</p>
 
-<p>We contain the common stuff for contexts (which are containers) and other
-elements (methods, attributes and so on)</p>
+<p>We contain the common stuff for contexts (which are containers) and other elements (methods, attributes and so on)</p>
 
-<p>Here&#39;s the tree of the <a href="CodeObject.html">CodeObject</a>
-subclasses:</p>
+<p>Here’s the tree of the <a href="CodeObject.html"><code>CodeObject</code></a> subclasses:</p>
 <ul><li>
-<p><a href="Context.html">RDoc::Context</a></p>
+<p><a href="Context.html"><code>RDoc::Context</code></a></p>
 <ul><li>
-<p><a href="TopLevel.html">RDoc::TopLevel</a></p>
+<p><a href="TopLevel.html"><code>RDoc::TopLevel</code></a></p>
 </li><li>
-<p><a href="ClassModule.html">RDoc::ClassModule</a></p>
+<p><a href="ClassModule.html"><code>RDoc::ClassModule</code></a></p>
 <ul><li>
-<p><a href="AnonClass.html">RDoc::AnonClass</a> (never used so far)</p>
+<p><a href="AnonClass.html"><code>RDoc::AnonClass</code></a> (never used so far)</p>
 </li><li>
-<p><a href="NormalClass.html">RDoc::NormalClass</a></p>
+<p><a href="NormalClass.html"><code>RDoc::NormalClass</code></a></p>
 </li><li>
-<p><a href="NormalModule.html">RDoc::NormalModule</a></p>
+<p><a href="NormalModule.html"><code>RDoc::NormalModule</code></a></p>
 </li><li>
-<p><a href="SingleClass.html">RDoc::SingleClass</a></p>
+<p><a href="SingleClass.html"><code>RDoc::SingleClass</code></a></p>
 </li></ul>
 </li></ul>
 </li><li>
-<p><a href="MethodAttr.html">RDoc::MethodAttr</a></p>
+<p><a href="MethodAttr.html"><code>RDoc::MethodAttr</code></a></p>
 <ul><li>
-<p><a href="Attr.html">RDoc::Attr</a></p>
+<p><a href="Attr.html"><code>RDoc::Attr</code></a></p>
 </li><li>
-<p><a href="AnyMethod.html">RDoc::AnyMethod</a></p>
+<p><a href="AnyMethod.html"><code>RDoc::AnyMethod</code></a></p>
 <ul><li>
-<p><a href="GhostMethod.html">RDoc::GhostMethod</a></p>
+<p><a href="GhostMethod.html"><code>RDoc::GhostMethod</code></a></p>
 </li><li>
-<p><a href="MetaMethod.html">RDoc::MetaMethod</a></p>
+<p><a href="MetaMethod.html"><code>RDoc::MetaMethod</code></a></p>
 </li></ul>
 </li></ul>
 </li><li>
-<p><a href="Alias.html">RDoc::Alias</a></p>
+<p><a href="Alias.html"><code>RDoc::Alias</code></a></p>
 </li><li>
-<p><a href="Constant.html">RDoc::Constant</a></p>
+<p><a href="Constant.html"><code>RDoc::Constant</code></a></p>
 </li><li>
-<p><a href="Mixin.html">RDoc::Mixin</a></p>
+<p><a href="Mixin.html"><code>RDoc::Mixin</code></a></p>
 <ul><li>
-<p><a href="Require.html">RDoc::Require</a></p>
+<p><a href="Require.html"><code>RDoc::Require</code></a></p>
 </li><li>
-<p><a href="Include.html">RDoc::Include</a></p>
+<p><a href="Include.html"><code>RDoc::Include</code></a></p>
 </li></ul>
 </li></ul>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-comment" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">comment</span><span
@@ -219,12 +182,9 @@ subclasses:</p>
         </div>
 
         <div class="method-description">
-        
         <p>Our comment</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-document_children" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">document_children</span><span
@@ -232,12 +192,9 @@ subclasses:</p>
         </div>
 
         <div class="method-description">
-        
         <p>Do we document our children?</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-document_self" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">document_self</span><span
@@ -245,12 +202,9 @@ subclasses:</p>
         </div>
 
         <div class="method-description">
-        
         <p>Do we document ourselves?</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-done_documenting" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">done_documenting</span><span
@@ -258,12 +212,9 @@ subclasses:</p>
         </div>
 
         <div class="method-description">
-        
         <p>Are we done documenting (ie, did we come across a :enddoc:)?</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-file" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">file</span><span
@@ -271,12 +222,9 @@ subclasses:</p>
         </div>
 
         <div class="method-description">
-        
         <p>Which file this code object was defined in</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-force_documentation" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">force_documentation</span><span
@@ -284,12 +232,9 @@ subclasses:</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Force documentation of this <a href="CodeObject.html">CodeObject</a></p>
-        
+        <p>Force documentation of this <a href="CodeObject.html"><code>CodeObject</code></a></p>
         </div>
       </div>
-      
       <div id="attribute-i-line" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">line</span><span
@@ -297,13 +242,9 @@ subclasses:</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Line in <a href="CodeObject.html#attribute-i-file">file</a> where this <a
-href="CodeObject.html">CodeObject</a> was defined</p>
-        
+        <p>Line in <a href="CodeObject.html#attribute-i-file"><code>file</code></a> where this <a href="CodeObject.html"><code>CodeObject</code></a> was defined</p>
         </div>
       </div>
-      
       <div id="attribute-i-metadata" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">metadata</span><span
@@ -311,13 +252,9 @@ href="CodeObject.html">CodeObject</a> was defined</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Hash of arbitrary metadata for this <a
-href="CodeObject.html">CodeObject</a></p>
-        
+        <p>Hash of arbitrary metadata for this <a href="CodeObject.html"><code>CodeObject</code></a></p>
         </div>
       </div>
-      
       <div id="attribute-i-parent" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">parent</span><span
@@ -325,12 +262,9 @@ href="CodeObject.html">CodeObject</a></p>
         </div>
 
         <div class="method-description">
-        
-        <p>Sets the parent <a href="CodeObject.html">CodeObject</a></p>
-        
+        <p>Sets the parent <a href="CodeObject.html"><code>CodeObject</code></a></p>
         </div>
       </div>
-      
       <div id="attribute-i-received_nodoc" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">received_nodoc</span><span
@@ -338,12 +272,9 @@ href="CodeObject.html">CodeObject</a></p>
         </div>
 
         <div class="method-description">
-        
         <p>Did we ever receive a <code>:nodoc:</code> directive?</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-section" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">section</span><span
@@ -351,12 +282,9 @@ href="CodeObject.html">CodeObject</a></p>
         </div>
 
         <div class="method-description">
-        
-        <p>Set the section this <a href="CodeObject.html">CodeObject</a> is in</p>
-        
+        <p>Set the section this <a href="CodeObject.html"><code>CodeObject</code></a> is in</p>
         </div>
       </div>
-      
       <div id="attribute-i-store" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">store</span><span
@@ -364,12 +292,9 @@ href="CodeObject.html">CodeObject</a></p>
         </div>
 
         <div class="method-description">
-        
-        <p>The <a href="Store.html">RDoc::Store</a> for this object.</p>
-        
+        <p>The <a href="Store.html"><code>RDoc::Store</code></a> for this object.</p>
         </div>
       </div>
-      
       <div id="attribute-i-viewer" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">viewer</span><span
@@ -377,43 +302,29 @@ href="CodeObject.html">CodeObject</a></p>
         </div>
 
         <div class="method-description">
-        
-        <p>We are the model of the code, but we know that at some point we will be
-worked on by viewers. By implementing the Viewable protocol, viewers can
-associated themselves with these objects.</p>
-        
+        <p>We are the model of the code, but we know that at some point we will be worked on by viewers. By implementing the Viewable protocol, viewers can associated themselves with these objects.</p>
         </div>
       </div>
-      
     </section>
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new <a href="CodeObject.html">CodeObject</a> that will document
-itself and its children</p>
-          
-          
+          <p>Creates a new <a href="CodeObject.html"><code>CodeObject</code></a> that will document itself and its children</p>
 
-          
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 102</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>
@@ -432,41 +343,30 @@ itself and its children</p>
   <span class="ruby-identifier">initialize_visibility</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-comment-3D" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">comment=</span><span
-            class="method-args">(comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">comment=</span><span
+              class="method-args">(comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Replaces our comment with <code>comment</code>, unless it is empty.</p>
-          
-          
 
-          
           <div class="method-source-code" id="comment-3D-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 135</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">comment=</span>(<span class="ruby-identifier">comment</span>)
@@ -488,44 +388,32 @@ itself and its children</p>
              <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-display-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">display?</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">display?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Should this <a href="CodeObject.html">CodeObject</a> be displayed in
-output?</p>
+          <p>Should this <a href="CodeObject.html"><code>CodeObject</code></a> be displayed in output?</p>
 
 <p>A code object should be displayed if:</p>
 <ul><li>
-<p>The item didn&#39;t have a nodoc or wasn&#39;t in a container that had
-nodoc</p>
+<p>The item didn’t have a nodoc or wasn’t in a container that had nodoc</p>
 </li><li>
-<p>The item wasn&#39;t ignored</p>
+<p>The item wasn’t ignored</p>
 </li><li>
 <p>The item has documentation and was not suppressed</p>
 </li></ul>
-          
-          
 
-          
           <div class="method-source-code" id="display-3F-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 163</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">display?</span>
@@ -533,34 +421,23 @@ nodoc</p>
     (<span class="ruby-identifier">documented?</span> <span class="ruby-keyword">or</span> <span class="ruby-keyword">not</span> <span class="ruby-ivar">@suppressed</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-document_children-3D" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">document_children=</span><span
-            class="method-args">(document_children)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">document_children=</span><span
+              class="method-args">(document_children)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Enables or disables documentation of this CodeObject&#39;s children unless
-it has been turned off by :enddoc:</p>
-          
-          
+          <p>Enables or disables documentation of this CodeObject’s children unless it has been turned off by :enddoc:</p>
 
-          
           <div class="method-source-code" id="document_children-3D-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 172</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">document_children=</span>(<span class="ruby-identifier">document_children</span>)
@@ -569,36 +446,23 @@ it has been turned off by :enddoc:</p>
   <span class="ruby-ivar">@document_children</span> = <span class="ruby-identifier">document_children</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@done_documenting</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-document_self-3D" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">document_self=</span><span
-            class="method-args">(document_self)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">document_self=</span><span
+              class="method-args">(document_self)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Enables or disables documentation of this <a
-href="CodeObject.html">CodeObject</a> unless it has been turned off by
-:enddoc:.  If the argument is <code>nil</code> it means the documentation
-is turned off by <code>:nodoc:</code>.</p>
-          
-          
+          <p>Enables or disables documentation of this <a href="CodeObject.html"><code>CodeObject</code></a> unless it has been turned off by :enddoc:.  If the argument is <code>nil</code> it means the documentation is turned off by <code>:nodoc:</code>.</p>
 
-          
           <div class="method-source-code" id="document_self-3D-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 183</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">document_self=</span>(<span class="ruby-identifier">document_self</span>)
@@ -609,76 +473,48 @@ is turned off by <code>:nodoc:</code>.</p>
   <span class="ruby-ivar">@received_nodoc</span> = <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">document_self</span>.<span class="ruby-identifier">nil?</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-documented-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">documented?</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">documented?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Does this object have a comment with content or is <a
-href="CodeObject.html#attribute-i-received_nodoc">received_nodoc</a> true?</p>
-          
-          
+          <p>Does this object have a comment with content or is <a href="CodeObject.html#attribute-i-received_nodoc"><code>received_nodoc</code></a> true?</p>
 
-          
           <div class="method-source-code" id="documented-3F-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 194</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">documented?</span>
   <span class="ruby-ivar">@received_nodoc</span> <span class="ruby-keyword">or</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@comment</span>.<span class="ruby-identifier">empty?</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-done_documenting-3D" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">done_documenting=</span><span
-            class="method-args">(value)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">done_documenting=</span><span
+              class="method-args">(value)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Turns documentation on/off, and turns on/off <a
-href="CodeObject.html#attribute-i-document_self">document_self</a> and <a
-href="CodeObject.html#attribute-i-document_children">document_children</a>.</p>
+          <p>Turns documentation on/off, and turns on/off <a href="CodeObject.html#attribute-i-document_self"><code>document_self</code></a> and <a href="CodeObject.html#attribute-i-document_children"><code>document_children</code></a>.</p>
 
-<p>Once documentation has been turned off (by <code>:enddoc:</code>), the
-object will refuse to turn <a
-href="CodeObject.html#attribute-i-document_self">document_self</a> or <a
-href="CodeObject.html#attribute-i-document_children">document_children</a>
-on, so <code>:doc:</code> and <code>:start_doc:</code> directives will have
-no effect in the current file.</p>
-          
-          
+<p>Once documentation has been turned off (by <code>:enddoc:</code>), the object will refuse to turn <a href="CodeObject.html#attribute-i-document_self"><code>document_self</code></a> or <a href="CodeObject.html#attribute-i-document_children"><code>document_children</code></a> on, so <code>:doc:</code> and <code>:start_doc:</code> directives will have no effect in the current file.</p>
 
-          
           <div class="method-source-code" id="done_documenting-3D-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 207</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">done_documenting=</span>(<span class="ruby-identifier">value</span>)
@@ -688,35 +524,23 @@ no effect in the current file.</p>
   <span class="ruby-ivar">@document_children</span> = <span class="ruby-ivar">@document_self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-each_parent" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">each_parent</span><span
-            class="method-args">() { |code_object| ... }</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">each_parent</span><span
+              class="method-args">() { |code_object| ... }</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Yields each parent of this <a href="CodeObject.html">CodeObject</a>.  See
-also <a
-href="ClassModule.html#method-i-each_ancestor">RDoc::ClassModule#each_ancestor</a></p>
-          
-          
+          <p>Yields each parent of this <a href="CodeObject.html"><code>CodeObject</code></a>.  See also <a href="ClassModule.html#method-i-each_ancestor"><code>RDoc::ClassModule#each_ancestor</code></a></p>
 
-          
           <div class="method-source-code" id="each_parent-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 218</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_parent</span>
@@ -729,36 +553,25 @@ href="ClassModule.html#method-i-each_ancestor">RDoc::ClassModule#each_ancestor</
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-file_name" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">file_name</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">file_name</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>File name where this <a href="CodeObject.html">CodeObject</a> was found.</p>
+          <p>File name where this <a href="CodeObject.html"><code>CodeObject</code></a> was found.</p>
 
-<p>See also <a
-href="Context.html#attribute-i-in_files">RDoc::Context#in_files</a></p>
-          
-          
+<p>See also <a href="Context.html#attribute-i-in_files"><code>RDoc::Context#in_files</code></a></p>
 
-          
           <div class="method-source-code" id="file_name-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 233</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">file_name</span>
@@ -767,115 +580,77 @@ href="Context.html#attribute-i-in_files">RDoc::Context#in_files</a></p>
   <span class="ruby-ivar">@file</span>.<span class="ruby-identifier">absolute_name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-force_documentation-3D" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">force_documentation=</span><span
-            class="method-args">(value)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">force_documentation=</span><span
+              class="method-args">(value)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Force the documentation of this object unless documentation has been turned
-off by :enddoc:</p>
-          
-          
+          <p>Force the documentation of this object unless documentation has been turned off by :enddoc:</p>
 
-          
           <div class="method-source-code" id="force_documentation-3D-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 245</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">force_documentation=</span>(<span class="ruby-identifier">value</span>)
   <span class="ruby-ivar">@force_documentation</span> = <span class="ruby-identifier">value</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@done_documenting</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-full_name-3D" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">full_name=</span><span
-            class="method-args">(full_name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">full_name=</span><span
+              class="method-args">(full_name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Sets the full_name overriding any computed full name.</p>
 
-<p>Set to <code>nil</code> to clear RDoc&#39;s cached value</p>
-          
-          
+<p>Set to <code>nil</code> to clear RDoc’s cached value</p>
 
-          
           <div class="method-source-code" id="full_name-3D-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 254</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">full_name=</span> <span class="ruby-identifier">full_name</span>
   <span class="ruby-ivar">@full_name</span> = <span class="ruby-identifier">full_name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-ignore" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">ignore</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">ignore</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Use this to ignore a <a href="CodeObject.html">CodeObject</a> and all its
-children until found again (#record_location is called).  An ignored item
-will not be displayed in documentation.</p>
+          <p>Use this to ignore a <a href="CodeObject.html"><code>CodeObject</code></a> and all its children until found again (<a href="CodeObject.html#method-i-record_location"><code>record_location</code></a> is called).  An ignored item will not be displayed in documentation.</p>
 
 <p>See github issue #55</p>
 
-<p>The ignored status is temporary in order to allow implementation details to
-be hidden.  At the end of processing a file <a href="../RDoc.html">RDoc</a>
-allows all classes and modules to add new documentation to previously
-created classes.</p>
+<p>The ignored status is temporary in order to allow implementation details to be hidden.  At the end of processing a file <a href="../RDoc.html"><code>RDoc</code></a> allows all classes and modules to add new documentation to previously created classes.</p>
 
-<p>If a class was ignored (via stopdoc) then reopened later with additional
-documentation it should be displayed.  If a class was ignored and never
-reopened it should not be displayed.  The ignore flag allows this to occur.</p>
-          
-          
+<p>If a class was ignored (via stopdoc) then reopened later with additional documentation it should be displayed.  If a class was ignored and never reopened it should not be displayed.  The ignore flag allows this to occur.</p>
 
-          
           <div class="method-source-code" id="ignore-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 274</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">ignore</span>
@@ -886,72 +661,50 @@ reopened it should not be displayed.  The ignore flag allows this to occur.</p>
   <span class="ruby-identifier">stop_doc</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-ignored-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">ignored?</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">ignored?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Has this class been ignored?</p>
 
-<p>See also <a href="CodeObject.html#method-i-ignore">ignore</a></p>
-          
-          
+<p>See also <a href="CodeObject.html#method-i-ignore"><code>ignore</code></a></p>
 
-          
           <div class="method-source-code" id="ignored-3F-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 287</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">ignored?</span>
   <span class="ruby-ivar">@ignored</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-options" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">options</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">options</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>The options instance from the store this <a
-href="CodeObject.html">CodeObject</a> is attached to, or a default options
-instance if the <a href="CodeObject.html">CodeObject</a> is not attached.</p>
+          <p>The options instance from the store this <a href="CodeObject.html"><code>CodeObject</code></a> is attached to, or a default options instance if the <a href="CodeObject.html"><code>CodeObject</code></a> is not attached.</p>
 
 <p>This is used by Text#snippet</p>
-          
-          
 
-          
           <div class="method-source-code" id="options-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 297</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">options</span>
@@ -962,35 +715,23 @@ instance if the <a href="CodeObject.html">CodeObject</a> is not attached.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parent" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parent</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parent</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Our parent <a href="CodeObject.html">CodeObject</a>.  The parent may be
-missing for classes loaded from legacy <a href="../RI_rdoc.html">RI</a>
-data stores.</p>
-          
-          
+          <p>Our parent <a href="CodeObject.html"><code>CodeObject</code></a>.  The parent may be missing for classes loaded from legacy <a href="../RI_rdoc.html">RI</a> data stores.</p>
 
-          
           <div class="method-source-code" id="parent-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 309</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parent</span>
@@ -1012,100 +753,69 @@ data stores.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parent_file_name" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parent_file_name</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parent_file_name</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>File name of our parent</p>
-          
-          
 
-          
           <div class="method-source-code" id="parent_file_name-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 331</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parent_file_name</span>
   <span class="ruby-ivar">@parent</span> <span class="ruby-operator">?</span> <span class="ruby-ivar">@parent</span>.<span class="ruby-identifier">base_name</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;(unknown)&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parent_name" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parent_name</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parent_name</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Name of our parent</p>
-          
-          
 
-          
           <div class="method-source-code" id="parent_name-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 338</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parent_name</span>
   <span class="ruby-ivar">@parent</span> <span class="ruby-operator">?</span> <span class="ruby-ivar">@parent</span>.<span class="ruby-identifier">full_name</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;(unknown)&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-record_location" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">record_location</span><span
-            class="method-args">(top_level)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">record_location</span><span
+              class="method-args">(top_level)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Records the <a href="TopLevel.html">RDoc::TopLevel</a> (file) where this
-code object was defined</p>
-          
-          
+          <p>Records the <a href="TopLevel.html"><code>RDoc::TopLevel</code></a> (file) where this code object was defined</p>
 
-          
           <div class="method-source-code" id="record_location-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 345</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">record_location</span> <span class="ruby-identifier">top_level</span>
@@ -1114,35 +824,23 @@ code object was defined</p>
   <span class="ruby-ivar">@file</span>       = <span class="ruby-identifier">top_level</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-section" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">section</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">section</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>The section this <a href="CodeObject.html">CodeObject</a> is in.  Sections
-allow grouping of constants, attributes and methods inside a class or
-module.</p>
-          
-          
+          <p>The section this <a href="CodeObject.html"><code>CodeObject</code></a> is in.  Sections allow grouping of constants, attributes and methods inside a class or module.</p>
 
-          
           <div class="method-source-code" id="section-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 355</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">section</span>
@@ -1151,34 +849,23 @@ module.</p>
   <span class="ruby-ivar">@section</span> = <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">add_section</span> <span class="ruby-ivar">@section_title</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">parent</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-start_doc" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">start_doc</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">start_doc</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Enable capture of documentation unless documentation has been turned off by
-:enddoc:</p>
-          
-          
+          <p>Enable capture of documentation unless documentation has been turned off by :enddoc:</p>
 
-          
           <div class="method-source-code" id="start_doc-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 365</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">start_doc</span>
@@ -1190,33 +877,23 @@ module.</p>
   <span class="ruby-ivar">@suppressed</span> = <span class="ruby-keyword">false</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-stop_doc" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">stop_doc</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">stop_doc</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Disable capture of documentation</p>
-          
-          
 
-          
           <div class="method-source-code" id="stop_doc-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 377</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">stop_doc</span>
@@ -1226,34 +903,23 @@ module.</p>
   <span class="ruby-ivar">@document_children</span> = <span class="ruby-keyword">false</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-store-3D" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">store=</span><span
-            class="method-args">(store)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">store=</span><span
+              class="method-args">(store)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Sets the <code>store</code> that contains this <a
-href="CodeObject.html">CodeObject</a></p>
-          
-          
+          <p>Sets the <code>store</code> that contains this <a href="CodeObject.html"><code>CodeObject</code></a></p>
 
-          
           <div class="method-source-code" id="store-3D-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 387</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">store=</span> <span class="ruby-identifier">store</span>
@@ -1267,36 +933,23 @@ href="CodeObject.html">CodeObject</a></p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-suppress" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">suppress</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">suppress</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Use this to suppress a <a href="CodeObject.html">CodeObject</a> and all its
-children until the next file it is seen in or documentation is discovered. 
-A suppressed item with documentation will be displayed while an ignored
-item with documentation may not be displayed.</p>
-          
-          
+          <p>Use this to suppress a <a href="CodeObject.html"><code>CodeObject</code></a> and all its children until the next file it is seen in or documentation is discovered.  A suppressed item with documentation will be displayed while an ignored item with documentation may not be displayed.</p>
 
-          
           <div class="method-source-code" id="suppress-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 404</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">suppress</span>
@@ -1307,59 +960,45 @@ item with documentation may not be displayed.</p>
   <span class="ruby-identifier">stop_doc</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-suppressed-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">suppressed?</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">suppressed?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Has this class been suppressed?</p>
 
-<p>See also <a href="CodeObject.html#method-i-suppress">suppress</a></p>
-          
-          
+<p>See also <a href="CodeObject.html#method-i-suppress"><code>suppress</code></a></p>
 
-          
           <div class="method-source-code" id="suppressed-3F-source">
             <pre><span class="ruby-comment"># File lib/rdoc/code_object.rb, line 417</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">suppressed?</span>
   <span class="ruby-ivar">@suppressed</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

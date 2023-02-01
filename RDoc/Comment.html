@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Comment - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Comment - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
   var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,53 +57,39 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
-  <p class="link">Object
-  
+  <p class="link"><a href="../Object.html">Object</a>
 </div>
 
-    <div id="includes-section" class="nav-section">
+    
+<div id="includes-section" class="nav-section">
   <h3>Included Modules</h3>
 
   <ul class="link-list">
-  
-  
     <li><a class="include" href="Text.html">RDoc::Text</a>
-  
-  
   </ul>
 </div>
 
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-empty-3F">#empty?</a>
-    
     <li ><a href="#method-i-encode-21">#encode!</a>
-    
     <li ><a href="#method-i-extract_call_seq">#extract_call_seq</a>
-    
     <li ><a href="#method-i-format-3D">#format=</a>
-    
     <li ><a href="#method-i-normalize">#normalize</a>
-    
     <li class="calls-super" ><a href="#method-i-parse">#parse</a>
-    
     <li ><a href="#method-i-remove_private">#remove_private</a>
-    
     <li ><a href="#method-i-text-3D">#text=</a>
-    
     <li ><a href="#method-i-tomdoc-3F">#tomdoc?</a>
-    
   </ul>
 </div>
 
@@ -115,36 +103,23 @@
 
   <section class="description">
     
-<p>A comment holds the text comment for a <a
-href="CodeObject.html">RDoc::CodeObject</a> and provides a unified way of
-cleaning it up and parsing it into an <a
-href="Markup/Document.html">RDoc::Markup::Document</a>.</p>
+<p>A comment holds the text comment for a <a href="CodeObject.html"><code>RDoc::CodeObject</code></a> and provides a unified way of cleaning it up and parsing it into an <a href="Markup/Document.html"><code>RDoc::Markup::Document</code></a>.</p>
 
-<p>Each comment may have a different markup format set by <a
-href="Comment.html#method-i-format-3D">format=</a>.  By default
-&#39;rdoc&#39; is used.  The :markup: directive tells <a
-href="../RDoc.html">RDoc</a> which format to use.</p>
+<p>Each comment may have a different markup format set by <a href="Comment.html#method-i-format-3D"><code>format=</code></a>.  By default ‘rdoc’ is used.  The :markup: directive tells <a href="../RDoc.html"><code>RDoc</code></a> which format to use.</p>
 
-<p>See <a href="Markup.html#label-Other+directives">Other directives at
-RDoc::Markup</a> for instructions on adding an alternate format.</p>
+<p>See <a href="Markup.html#class-RDoc::Markup-label-Other+directives">Other directives at <code>RDoc::Markup</code></a> for instructions on adding an alternate format.</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-document" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">document</span><span
@@ -152,14 +127,9 @@ RDoc::Markup</a> for instructions on adding an alternate format.</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Overrides the content returned by <a
-href="Comment.html#method-i-parse">parse</a>.  Use when there is no <a
-href="Comment.html#attribute-i-text">text</a> source for this comment</p>
-        
+        <p>Overrides the content returned by <a href="Comment.html#method-i-parse"><code>parse</code></a>.  Use when there is no <a href="Comment.html#attribute-i-text"><code>text</code></a> source for this comment</p>
         </div>
       </div>
-      
       <div id="attribute-i-file" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">file</span><span
@@ -167,12 +137,9 @@ href="Comment.html#attribute-i-text">text</a> source for this comment</p>
         </div>
 
         <div class="method-description">
-        
-        <p>The <a href="TopLevel.html">RDoc::TopLevel</a> this comment was found in</p>
-        
+        <p>The <a href="TopLevel.html"><code>RDoc::TopLevel</code></a> this comment was found in</p>
         </div>
       </div>
-      
       <div id="attribute-i-format" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">format</span><span
@@ -180,13 +147,19 @@ href="Comment.html#attribute-i-text">text</a> source for this comment</p>
         </div>
 
         <div class="method-description">
-        
-        <p>The format of this comment.  Defaults to <a
-href="Markup.html">RDoc::Markup</a></p>
-        
+        <p>The format of this comment.  Defaults to <a href="Markup.html"><code>RDoc::Markup</code></a></p>
         </div>
       </div>
-      
+      <div id="attribute-i-line" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">line</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        <p>Line where this <a href="Comment.html"><code>Comment</code></a> was written</p>
+        </div>
+      </div>
       <div id="attribute-i-location" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">location</span><span
@@ -194,12 +167,9 @@ href="Markup.html">RDoc::Markup</a></p>
         </div>
 
         <div class="method-description">
-        
-        <p>The <a href="TopLevel.html">RDoc::TopLevel</a> this comment was found in</p>
-        
+        <p>The <a href="TopLevel.html"><code>RDoc::TopLevel</code></a> this comment was found in</p>
         </div>
       </div>
-      
       <div id="attribute-i-text" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">text</span><span
@@ -207,122 +177,100 @@ href="Markup.html">RDoc::Markup</a></p>
         </div>
 
         <div class="method-description">
-        
         <p>The text for this comment</p>
-        
         </div>
       </div>
-      
-    </section>
-    
+      <div id="attribute-i-to_s" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">to_s</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
 
-    
+        <div class="method-description">
+        <p>The text for this comment</p>
+        </div>
+      </div>
+    </section>
+
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(text = nil, location = nil)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(text = nil, location = nil, language = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new comment with <code>text</code> that is found in the <a
-href="TopLevel.html">RDoc::TopLevel</a> <code>location</code>.</p>
-          
-          
+          <p>Creates a new comment with <code>text</code> that is found in the <a href="TopLevel.html"><code>RDoc::TopLevel</code></a> <code>location</code>.</p>
 
-          
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 46</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">text</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">location</span> = <span class="ruby-keyword">nil</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 56</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">text</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">location</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">language</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@location</span> = <span class="ruby-identifier">location</span>
   <span class="ruby-ivar">@text</span>     = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">dup</span>
+  <span class="ruby-ivar">@language</span> = <span class="ruby-identifier">language</span>
 
   <span class="ruby-ivar">@document</span>   = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@format</span>     = <span class="ruby-string">&#39;rdoc&#39;</span>
   <span class="ruby-ivar">@normalized</span> = <span class="ruby-keyword">false</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-empty-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">empty?</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">empty?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>A comment is empty if its text String is empty.</p>
-          
-          
 
-          
           <div class="method-source-code" id="empty-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 133</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 144</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">empty?</span>
   <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">empty?</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-encode-21" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">encode!</span><span
-            class="method-args">(encoding)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">encode!</span><span
+              class="method-args">(encoding)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>HACK dubious</p>
-          
-          
 
-          
           <div class="method-source-code" id="encode-21-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 140</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 151</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">encode!</span> <span class="ruby-identifier">encoding</span>
   <span class="ruby-comment"># TODO: Remove this condition after Ruby 2.2 EOL</span>
   <span class="ruby-keyword">if</span> <span class="ruby-constant">RUBY_VERSION</span> <span class="ruby-operator">&lt;</span> <span class="ruby-string">&#39;2.3.0&#39;</span>
@@ -333,31 +281,22 @@ href="TopLevel.html">RDoc::TopLevel</a> <code>location</code>.</p>
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-extract_call_seq" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">extract_call_seq</span><span
-            class="method-args">(method)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">extract_call_seq</span><span
+              class="method-args">(method)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Look for a &#39;call-seq&#39; in the comment to override the normal
-parameter handling.  The :call-seq: is indented from the baseline.  All
-lines of the same indentation level and prefix are consumed.</p>
+          <p>Look for a ‘call-seq’ in the comment to override the normal parameter handling.  The :call-seq: is indented from the baseline.  All lines of the same indentation level and prefix are consumed.</p>
 
 <p>For example, all of the following will be used as the :call-seq:</p>
 
@@ -370,12 +309,9 @@ lines of the same indentation level and prefix are consumed.</p>
 <span class="ruby-comment">#   ARGF.to_a(limit)      -&gt; array</span>
 <span class="ruby-comment">#   ARGF.to_a(sep, limit) -&gt; array</span>
 </pre>
-          
-          
 
-          
           <div class="method-source-code" id="extract_call_seq-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 84</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 95</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">extract_call_seq</span> <span class="ruby-identifier">method</span>
   <span class="ruby-comment"># we must handle situations like the above followed by an unindented first</span>
   <span class="ruby-comment"># comment.  The difficulty is to make sure not to match lines starting</span>
@@ -422,71 +358,49 @@ lines of the same indentation level and prefix are consumed.</p>
   <span class="ruby-identifier">method</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-format-3D" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">format=</span><span
-            class="method-args">(format)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">format=</span><span
+              class="method-args">(format)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Sets the format of this comment and resets any parsed document</p>
-          
-          
 
-          
           <div class="method-source-code" id="format-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 153</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 164</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">format=</span> <span class="ruby-identifier">format</span>
   <span class="ruby-ivar">@format</span> = <span class="ruby-identifier">format</span>
   <span class="ruby-ivar">@document</span> = <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-normalize" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">normalize</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">normalize</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Normalizes the text.  See <a
-href="Text.html#method-i-normalize_comment">RDoc::Text#normalize_comment</a>
-for details</p>
-          
-          
+          <p>Normalizes the text.  See <a href="Text.html#method-i-normalize_comment"><code>RDoc::Text#normalize_comment</code></a> for details</p>
 
-          
           <div class="method-source-code" id="normalize-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 167</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 178</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">normalize</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@text</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@normalized</span> <span class="ruby-comment"># TODO eliminate duplicate normalization</span>
@@ -498,42 +412,29 @@ for details</p>
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Parses the comment into an <a
-href="Markup/Document.html">RDoc::Markup::Document</a>.  The parsed
-document is cached until the text is changed.</p>
-          
-          
+          <p>Parses the comment into an <a href="Markup/Document.html"><code>RDoc::Markup::Document</code></a>.  The parsed document is cached until the text is changed.</p>
             <div class="method-calls-super">
               Calls superclass method
-              <a href="Text.html#method-i-parse">RDoc::Text#parse</a>
+              <a href="Text.html#method-i-parse"><code>RDoc::Text#parse</code></a>
             </div>
-          
 
-          
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 189</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 200</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@document</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@document</span>
 
@@ -542,43 +443,32 @@ document is cached until the text is changed.</p>
   <span class="ruby-ivar">@document</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-remove_private" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">remove_private</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">remove_private</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Removes private sections from this comment.  Private sections are flush to
-the comment marker and start with <code>--</code> and end with
-<code>++</code>. For C-style comments, a private marker may not start at
-the opening of the comment.</p>
+          <p>Removes private sections from this comment.  Private sections are flush to the comment marker and start with <code>--</code> and end with <code>++</code>. For C-style comments, a private marker may not start at the opening of the comment.</p>
 
-<pre>*--
-* private
-*++
-* public</pre>
-          
-          
+<pre>/*
+ *--
+ * private
+ *++
+ * public
+ */</pre>
 
-          
           <div class="method-source-code" id="remove_private-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 210</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 221</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_private</span>
   <span class="ruby-comment"># Workaround for gsub encoding for Ruby 1.9.2 and earlier</span>
   <span class="ruby-identifier">empty</span> = <span class="ruby-string">&#39;&#39;</span>
@@ -588,38 +478,27 @@ the opening of the comment.</p>
   <span class="ruby-ivar">@text</span> = <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">%r%^\s*[#*]?--.*%m</span>, <span class="ruby-string">&#39;&#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-text-3D" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">text=</span><span
-            class="method-args">(text)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">text=</span><span
+              class="method-args">(text)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Replaces this comment&#39;s text with <code>text</code> and resets the
-parsed document.</p>
+          <p>Replaces this comment’s text with <code>text</code> and resets the parsed document.</p>
 
 <p>An error is raised if the comment contains a document but no text.</p>
-          
-          
 
-          
           <div class="method-source-code" id="text-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 224</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 235</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">text=</span> <span class="ruby-identifier">text</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-string">&#39;replacing document-only comment is not allowed&#39;</span> <span class="ruby-keyword">if</span>
     <span class="ruby-ivar">@text</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">and</span> <span class="ruby-ivar">@document</span>
@@ -628,57 +507,43 @@ parsed document.</p>
   <span class="ruby-ivar">@text</span> = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">dup</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-tomdoc-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">tomdoc?</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">tomdoc?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Returns true if this comment is in TomDoc format.</p>
-          
-          
 
-          
           <div class="method-source-code" id="tomdoc-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 235</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/comment.rb, line 246</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tomdoc?</span>
   <span class="ruby-ivar">@format</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;tomdoc&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

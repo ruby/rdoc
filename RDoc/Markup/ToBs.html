@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::ToBs - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Markup::ToBs - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
   var index_rel_prefix = "../../";
 </script>
 
-<script src="../../js/jquery.js"></script>
-<script src="../../js/darkfish.js"></script>
+<script src="../../js/navigation.js" defer></script>
+<script src="../../js/search.js" defer></script>
+<script src="../../js/search_index.js" defer></script>
+<script src="../../js/searcher.js" defer></script>
+<script src="../../js/darkfish.js" defer></script>
 
 <link href="../../css/fonts.css" rel="stylesheet">
 <link href="../../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,34 +57,27 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link"><a href="ToRdoc.html">RDoc::Markup::ToRdoc</a>
-  
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li class="calls-super" ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-accept_heading">#accept_heading</a>
-    
     <li ><a href="#method-i-annotate">#annotate</a>
-    
-    <li class="calls-super" ><a href="#method-i-convert_special">#convert_special</a>
-    
+    <li class="calls-super" ><a href="#method-i-convert_regexp_handling">#convert_regexp_handling</a>
     <li ><a href="#method-i-convert_string">#convert_string</a>
-    
     <li ><a href="#method-i-init_tags">#init_tags</a>
-    
   </ul>
 </div>
 
@@ -96,54 +91,39 @@
 
   <section class="description">
     
-<p>Outputs <a href="../../RDoc.html">RDoc</a> markup with hot backspace
-action!  You will probably need a pager to use this output format.</p>
+<p>Outputs <a href="../../RDoc.html"><code>RDoc</code></a> markup with hot backspace action!  You will probably need a pager to use this output format.</p>
 
-<p>This formatter won&#39;t work on 1.8.6 because it lacks String#chars.</p>
+<p>This formatter won’t work on 1.8.6 because it lacks String#chars.</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(markup = nil)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(markup = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Returns a new <a href="ToBs.html">ToBs</a> that is ready for hot backspace
-action!</p>
-          
-          
+          <p>Returns a new <a href="ToBs.html"><code>ToBs</code></a> that is ready for hot backspace action!</p>
             <div class="method-calls-super">
               Calls superclass method
-              <a href="ToRdoc.html#method-c-new">RDoc::Markup::ToRdoc.new</a>
+              <a href="ToRdoc.html#method-c-new"><code>RDoc::Markup::ToRdoc::new</code></a>
             </div>
-          
 
-          
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_bs.rb, line 13</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>
@@ -153,41 +133,30 @@ action!</p>
   <span class="ruby-ivar">@in_em</span> = <span class="ruby-keyword">false</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-accept_heading" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">accept_heading</span><span
-            class="method-args">(heading)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">accept_heading</span><span
+              class="method-args">(heading)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Makes heading text bold.</p>
-          
-          
 
-          
           <div class="method-source-code" id="accept_heading-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_bs.rb, line 33</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_heading</span> <span class="ruby-identifier">heading</span>
@@ -200,33 +169,23 @@ action!</p>
   <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;\n&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-annotate" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">annotate</span><span
-            class="method-args">(tag)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">annotate</span><span
+              class="method-args">(tag)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Turns on or off special handling for <code>convert_string</code></p>
-          
-          
+          <p>Turns on or off regexp handling for <code>convert_string</code></p>
 
-          
           <div class="method-source-code" id="annotate-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_bs.rb, line 46</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">annotate</span> <span class="ruby-identifier">tag</span>
@@ -239,73 +198,50 @@ action!</p>
   <span class="ruby-string">&#39;&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
-      <div id="method-i-convert_special" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">convert_special</span><span
-            class="method-args">(special)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+      <div id="method-i-convert_regexp_handling" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">convert_regexp_handling</span><span
+              class="method-args">(target)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Calls <a href="ToBs.html#method-i-convert_string">#convert_string</a> on
-the result of <a
-href="ToBs.html#method-i-convert_special">#convert_special</a></p>
-          
-          
+          <p>Calls <a href="ToBs.html#method-i-convert_string"><code>convert_string</code></a> on the result of <a href="ToBs.html#method-i-convert_regexp_handling"><code>convert_regexp_handling</code></a></p>
             <div class="method-calls-super">
               Calls superclass method
-              <a href="Formatter.html#method-i-convert_special">RDoc::Markup::Formatter#convert_special</a>
+              <a href="Formatter.html#method-i-convert_regexp_handling"><code>RDoc::Markup::Formatter#convert_regexp_handling</code></a>
             </div>
-          
 
-          
-          <div class="method-source-code" id="convert_special-source">
+          <div class="method-source-code" id="convert_regexp_handling-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_bs.rb, line 59</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert_special</span> <span class="ruby-identifier">special</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert_regexp_handling</span> <span class="ruby-identifier">target</span>
   <span class="ruby-identifier">convert_string</span> <span class="ruby-keyword">super</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-convert_string" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">convert_string</span><span
-            class="method-args">(string)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">convert_string</span><span
+              class="method-args">(string)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Adds bold or underline mixed with backspaces</p>
-          
-          
 
-          
           <div class="method-source-code" id="convert_string-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_bs.rb, line 66</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert_string</span> <span class="ruby-identifier">string</span>
@@ -319,35 +255,23 @@ href="ToBs.html#method-i-convert_special">#convert_special</a></p>
   <span class="ruby-identifier">chars</span>.<span class="ruby-identifier">join</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-init_tags" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">init_tags</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">init_tags</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Sets a flag that is picked up by <a
-href="ToBs.html#method-i-annotate">annotate</a> to do the right thing in <a
-href="ToBs.html#method-i-convert_string">convert_string</a></p>
-          
-          
+          <p>Sets a flag that is picked up by <a href="ToBs.html#method-i-annotate"><code>annotate</code></a> to do the right thing in <a href="ToBs.html#method-i-convert_string"><code>convert_string</code></a></p>
 
-          
           <div class="method-source-code" id="init_tags-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_bs.rb, line 24</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">init_tags</span>
@@ -356,24 +280,20 @@ href="ToBs.html#method-i-convert_string">convert_string</a></p>
   <span class="ruby-identifier">add_tag</span> <span class="ruby-value">:TT</span>,   <span class="ruby-string">&#39;&#39;</span>  , <span class="ruby-string">&#39;&#39;</span>   <span class="ruby-comment"># we need in_tt information maintained</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::ListItem - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Markup::ListItem - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
   var index_rel_prefix = "../../";
 </script>
 
-<script src="../../js/jquery.js"></script>
-<script src="../../js/darkfish.js"></script>
+<script src="../../js/navigation.js" defer></script>
+<script src="../../js/search.js" defer></script>
+<script src="../../js/search_index.js" defer></script>
+<script src="../../js/searcher.js" defer></script>
+<script src="../../js/darkfish.js" defer></script>
 
 <link href="../../css/fonts.css" rel="stylesheet">
 <link href="../../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,34 +57,27 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
-  <p class="link">Object
-  
+  <p class="link"><a href="../../Object.html">Object</a>
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-3C-3C">#&lt;&lt;</a>
-    
     <li ><a href="#method-i-accept">#accept</a>
-    
     <li ><a href="#method-i-empty-3F">#empty?</a>
-    
     <li ><a href="#method-i-length">#length</a>
-    
     <li ><a href="#method-i-push">#push</a>
-    
   </ul>
 </div>
 
@@ -98,8 +93,7 @@
     
 <p>An item within a List that contains paragraphs, headings, etc.</p>
 
-<p>For BULLET, NUMBER, LALPHA and UALPHA lists, the label will always be nil.
-For NOTE and LABEL lists, the list label may contain:</p>
+<p>For BULLET, NUMBER, LALPHA and UALPHA lists, the label will always be nil. For NOTE and LABEL lists, the list label may contain:</p>
 <ul><li>
 <p>a single String for a single label</p>
 </li><li>
@@ -110,21 +104,15 @@ For NOTE and LABEL lists, the list label may contain:</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-label" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">label</span><span
@@ -132,12 +120,9 @@ For NOTE and LABEL lists, the list label may contain:</p>
         </div>
 
         <div class="method-description">
-        
-        <p>The label for the <a href="ListItem.html">ListItem</a></p>
-        
+        <p>The label for the <a href="ListItem.html"><code>ListItem</code></a></p>
         </div>
       </div>
-      
       <div id="attribute-i-parts" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">parts</span><span
@@ -145,41 +130,29 @@ For NOTE and LABEL lists, the list label may contain:</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Parts of the <a href="ListItem.html">ListItem</a></p>
-        
+        <p>Parts of the <a href="ListItem.html"><code>ListItem</code></a></p>
         </div>
       </div>
-      
     </section>
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(label = nil, *parts)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(label = nil, *parts)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new <a href="ListItem.html">ListItem</a> with an optional
-<code>label</code> containing <code>parts</code></p>
-          
-          
+          <p>Creates a new <a href="ListItem.html"><code>ListItem</code></a> with an optional <code>label</code> containing <code>parts</code></p>
 
-          
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/list_item.rb, line 27</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">label</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">parts</span>
@@ -188,76 +161,53 @@ For NOTE and LABEL lists, the list label may contain:</p>
   <span class="ruby-ivar">@parts</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">parts</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-3C-3C" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">&lt;&lt;</span><span
-            class="method-args">(part)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">&lt;&lt;</span><span
+              class="method-args">(part)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Appends <code>part</code> to the <a href="ListItem.html">ListItem</a></p>
-          
-          
+          <p>Appends <code>part</code> to the <a href="ListItem.html"><code>ListItem</code></a></p>
 
-          
           <div class="method-source-code" id="3C-3C-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/list_item.rb, line 36</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">&lt;&lt;</span> <span class="ruby-identifier">part</span>
   <span class="ruby-ivar">@parts</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">part</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-accept" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">accept</span><span
-            class="method-args">(visitor)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">accept</span><span
+              class="method-args">(visitor)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Runs this list item and all its <a
-href="ListItem.html#attribute-i-parts">parts</a> through
-<code>visitor</code></p>
-          
-          
+          <p>Runs this list item and all its <a href="ListItem.html#attribute-i-parts"><code>parts</code></a> through <code>visitor</code></p>
 
-          
           <div class="method-source-code" id="accept-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/list_item.rb, line 49</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept</span> <span class="ruby-identifier">visitor</span>
@@ -270,123 +220,89 @@ href="ListItem.html#attribute-i-parts">parts</a> through
   <span class="ruby-identifier">visitor</span>.<span class="ruby-identifier">accept_list_item_end</span> <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-empty-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">empty?</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">empty?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Is the <a href="ListItem.html">ListItem</a> empty?</p>
-          
-          
+          <p>Is the <a href="ListItem.html"><code>ListItem</code></a> empty?</p>
 
-          
           <div class="method-source-code" id="empty-3F-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/list_item.rb, line 62</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">empty?</span>
   <span class="ruby-ivar">@parts</span>.<span class="ruby-identifier">empty?</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-length" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">length</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">length</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Length of parts in the <a href="ListItem.html">ListItem</a></p>
-          
-          
+          <p>Length of parts in the <a href="ListItem.html"><code>ListItem</code></a></p>
 
-          
           <div class="method-source-code" id="length-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/list_item.rb, line 69</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">length</span>
   <span class="ruby-ivar">@parts</span>.<span class="ruby-identifier">length</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-push" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">push</span><span
-            class="method-args">(*parts)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">push</span><span
+              class="method-args">(*parts)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds <code>parts</code> to the <a href="ListItem.html">ListItem</a></p>
-          
-          
+          <p>Adds <code>parts</code> to the <a href="ListItem.html"><code>ListItem</code></a></p>
 
-          
           <div class="method-source-code" id="push-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/list_item.rb, line 95</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">push</span> <span class="ruby-operator">*</span><span class="ruby-identifier">parts</span>
   <span class="ruby-ivar">@parts</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">parts</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Generator::POT - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Generator::POT - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
   var index_rel_prefix = "../../";
 </script>
 
-<script src="../../js/jquery.js"></script>
-<script src="../../js/darkfish.js"></script>
+<script src="../../js/navigation.js" defer></script>
+<script src="../../js/search.js" defer></script>
+<script src="../../js/search_index.js" defer></script>
+<script src="../../js/searcher.js" defer></script>
+<script src="../../js/darkfish.js" defer></script>
 
 <link href="../../css/fonts.css" rel="stylesheet">
 <link href="../../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,38 +57,37 @@
 <div class="nav-section">
   <h3>Table of Contents</h3>
 
+
+
   <ul class="link-list" role="directory">
-    <li><a href="#class-RDoc::Generator::POT-label-Create+.pot">Create .pot</a>
-    <li><a href="#class-RDoc::Generator::POT-label-Create+.po">Create .po</a>
-    <li><a href="#class-RDoc::Generator::POT-label-Update+translation">Update translation</a>
+              <li>      <a href="#class-RDoc::Generator::POT-label-Create+.pot">Create .pot</a>
+          <li>      <a href="#class-RDoc::Generator::POT-label-Create+.po">Create .po</a>
+          <li>      <a href="#class-RDoc::Generator::POT-label-Update+translation">Update translation</a>
+
   </ul>
 </div>
 
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
-  <p class="link">Object
-  
+  <p class="link"><a href="../../Object.html">Object</a>
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-i-class_dir">#class_dir</a>
-    
     <li ><a href="#method-i-generate">#generate</a>
-    
     <li ><a href="#method-i-initialize">#initialize</a>
-    
   </ul>
 </div>
 
@@ -100,7 +101,7 @@
 
   <section class="description">
     
-<p>Generates a <a href="POT.html">POT</a> file.</p>
+<p>Generates a <a href="POT.html"><code>POT</code></a> file.</p>
 
 <p>Here is a translator work flow with the generator.</p>
 
@@ -114,13 +115,9 @@
 
 <h2 id="class-RDoc::Generator::POT-label-Create+.po">Create .po<span><a href="#class-RDoc::Generator::POT-label-Create+.po">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>You create .po file from doc/rdoc.pot. This operation is needed only the
-first time. This work flow assumes that you are a translator for Japanese.</p>
+<p>You create .po file from doc/rdoc.pot. This operation is needed only the first time. This work flow assumes that you are a translator for Japanese.</p>
 
-<p>You create locale/ja/rdoc.po from doc/rdoc.pot. You can use msginit
-provided by GNU gettext or rmsginit provided by gettext gem. This work flow
-uses gettext gem because it is more portable than GNU gettext for Rubyists.
-Gettext gem is implemented by pure Ruby.</p>
+<p>You create locale/ja/rdoc.po from doc/rdoc.pot. You can use msginit provided by GNU gettext or rmsginit provided by gettext gem. This work flow uses gettext gem because it is more portable than GNU gettext for Rubyists. Gettext gem is implemented by pure Ruby.</p>
 
 <pre>% gem install gettext
 % mkdir -p locale/ja
@@ -128,11 +125,7 @@ Gettext gem is implemented by pure Ruby.</p>
 
 <p>Translate messages in .po</p>
 
-<p>You translate messages in .po by a <a href="POT/PO.html">PO</a> file
-editor. po-mode.el exists for Emacs users. There are some GUI tools such as
-GTranslator. There are some Web services such as POEditor and Tansifex. You
-can edit by your favorite text editor because .po is a text file. Generate
-localized documentation</p>
+<p>You translate messages in .po by a <a href="POT/PO.html"><code>PO</code></a> file editor. po-mode.el exists for Emacs users. There are some GUI tools such as GTranslator. There are some Web services such as POEditor and Tansifex. You can edit by your favorite text editor because .po is a text file. Generate localized documentation</p>
 
 <p>You can generate localized documentation with locale/ja/rdoc.po:</p>
 
@@ -142,8 +135,7 @@ localized documentation</p>
 
 <h2 id="class-RDoc::Generator::POT-label-Update+translation">Update translation<span><a href="#class-RDoc::Generator::POT-label-Update+translation">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>You need to update translation when your application is added or modified
-messages.</p>
+<p>You need to update translation when your application is added or modified messages.</p>
 
 <p>You can update .po by the following command lines:</p>
 
@@ -154,88 +146,61 @@ messages.</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
     <section class="constants-list">
       <header>
         <h3>Constants</h3>
       </header>
       <dl>
-      
         <dt id="DESCRIPTION">DESCRIPTION
-        
         <dd><p>Description of this generator</p>
-        
-      
       </dl>
     </section>
-    
 
-    
 
-    
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-class_dir" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">class_dir</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">class_dir</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
           
-          
-          
-          
 
-          
           <div class="method-source-code" id="class_dir-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/pot.rb, line 84</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">class_dir</span>
   <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-generate" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">generate</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">generate</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Writes .pot to disk.</p>
-          
-          
 
-          
           <div class="method-source-code" id="generate-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/pot.rb, line 76</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate</span>
@@ -246,41 +211,30 @@ messages.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="protected-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Protected Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-initialize" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">initialize</span><span
-            class="method-args">(store, options)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">initialize</span><span
+              class="method-args">(store, options)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Set up a new .pot generator</p>
-          
-          
 
-          
           <div class="method-source-code" id="initialize-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/pot.rb, line 68</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">store</span>, <span class="ruby-identifier">options</span> <span class="ruby-comment">#:not-new:</span>
@@ -288,24 +242,20 @@ messages.</p>
   <span class="ruby-ivar">@store</span>      = <span class="ruby-identifier">store</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

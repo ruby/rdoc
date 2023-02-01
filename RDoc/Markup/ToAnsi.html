@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::ToAnsi - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Markup::ToAnsi - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
   var index_rel_prefix = "../../";
 </script>
 
-<script src="../../js/jquery.js"></script>
-<script src="../../js/darkfish.js"></script>
+<script src="../../js/navigation.js" defer></script>
+<script src="../../js/search.js" defer></script>
+<script src="../../js/search_index.js" defer></script>
+<script src="../../js/searcher.js" defer></script>
+<script src="../../js/darkfish.js" defer></script>
 
 <link href="../../css/fonts.css" rel="stylesheet">
 <link href="../../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,32 +57,26 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link"><a href="ToRdoc.html">RDoc::Markup::ToRdoc</a>
-  
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li class="calls-super" ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-accept_list_item_end">#accept_list_item_end</a>
-    
     <li ><a href="#method-i-accept_list_item_start">#accept_list_item_start</a>
-    
     <li ><a href="#method-i-init_tags">#init_tags</a>
-    
     <li class="calls-super" ><a href="#method-i-start_accepting">#start_accepting</a>
-    
   </ul>
 </div>
 
@@ -94,51 +90,37 @@
 
   <section class="description">
     
-<p>Outputs <a href="../../RDoc.html">RDoc</a> markup with vibrant ANSI color!</p>
+<p>Outputs <a href="../../RDoc.html"><code>RDoc</code></a> markup with vibrant ANSI color!</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(markup = nil)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(markup = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new <a href="ToAnsi.html">ToAnsi</a> visitor that is ready to
-output vibrant ANSI color!</p>
-          
-          
+          <p>Creates a new <a href="ToAnsi.html"><code>ToAnsi</code></a> visitor that is ready to output vibrant ANSI color!</p>
             <div class="method-calls-super">
               Calls superclass method
-              <a href="ToRdoc.html#method-c-new">RDoc::Markup::ToRdoc.new</a>
+              <a href="ToRdoc.html#method-c-new"><code>RDoc::Markup::ToRdoc::new</code></a>
             </div>
-          
 
-          
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_ansi.rb, line 10</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>
@@ -150,41 +132,30 @@ output vibrant ANSI color!</p>
   <span class="ruby-ivar">@headings</span>[<span class="ruby-value">3</span>] = [<span class="ruby-string">&quot;\e[32m&quot;</span>,   <span class="ruby-string">&quot;\e[m&quot;</span>] <span class="ruby-comment"># just green</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-accept_list_item_end" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">accept_list_item_end</span><span
-            class="method-args">(list_item)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">accept_list_item_end</span><span
+              class="method-args">(list_item)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Overrides indent width to ensure output lines up correctly.</p>
-          
-          
 
-          
           <div class="method-source-code" id="accept_list_item_end-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_ansi.rb, line 31</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_list_item_end</span> <span class="ruby-identifier">list_item</span>
@@ -208,33 +179,23 @@ output vibrant ANSI color!</p>
   <span class="ruby-ivar">@indent</span> <span class="ruby-operator">-=</span> <span class="ruby-identifier">width</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-accept_list_item_start" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">accept_list_item_start</span><span
-            class="method-args">(list_item)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">accept_list_item_start</span><span
+              class="method-args">(list_item)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Adds coloring to note and label list items</p>
-          
-          
 
-          
           <div class="method-source-code" id="accept_list_item_start-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_ansi.rb, line 55</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_list_item_start</span> <span class="ruby-identifier">list_item</span>
@@ -266,33 +227,23 @@ output vibrant ANSI color!</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-init_tags" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">init_tags</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">init_tags</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Maps attributes to ANSI sequences</p>
-          
-          
 
-          
           <div class="method-source-code" id="init_tags-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_ansi.rb, line 22</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">init_tags</span>
@@ -301,38 +252,27 @@ output vibrant ANSI color!</p>
   <span class="ruby-identifier">add_tag</span> <span class="ruby-value">:EM</span>,   <span class="ruby-string">&quot;\e[4m&quot;</span>, <span class="ruby-string">&quot;\e[m&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-start_accepting" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">start_accepting</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">start_accepting</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Starts accepting with a reset screen</p>
-          
-          
             <div class="method-calls-super">
               Calls superclass method
-              <a href="ToRdoc.html#method-i-start_accepting">RDoc::Markup::ToRdoc#start_accepting</a>
+              <a href="ToRdoc.html#method-i-start_accepting"><code>RDoc::Markup::ToRdoc#start_accepting</code></a>
             </div>
-          
 
-          
           <div class="method-source-code" id="start_accepting-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_ansi.rb, line 87</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">start_accepting</span>
@@ -341,24 +281,20 @@ output vibrant ANSI color!</p>
   <span class="ruby-ivar">@res</span> = [<span class="ruby-string">&quot;\e[0m&quot;</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

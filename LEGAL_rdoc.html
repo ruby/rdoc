@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>LEGAL - rdoc 6.0.4 Documentation</title>
+<title>LEGAL - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
   var index_rel_prefix = "./";
 </script>
 
-<script src="./js/jquery.js"></script>
-<script src="./js/darkfish.js"></script>
+<script src="./js/navigation.js" defer></script>
+<script src="./js/search.js" defer></script>
+<script src="./js/search_index.js" defer></script>
+<script src="./js/searcher.js" defer></script>
+<script src="./js/darkfish.js" defer></script>
 
 <link href="./css/fonts.css" rel="stylesheet">
 <link href="./css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="file">
@@ -54,29 +56,20 @@
   
 
   <div id="project-metadata">
-    <div id="fileindex-section" class="nav-section">
+    
+<div id="fileindex-section" class="nav-section">
   <h3>Pages</h3>
 
   <ul class="link-list">
-  
     <li><a href="./CONTRIBUTING_rdoc.html">CONTRIBUTING</a>
-  
     <li><a href="./CVE-2013-0256_rdoc.html">CVE-2013-0256</a>
-  
     <li><a href="./ExampleRDoc_rdoc.html">ExampleRDoc</a>
-  
     <li><a href="./History_rdoc.html">History</a>
-  
     <li><a href="./LEGAL_rdoc.html">LEGAL</a>
-  
     <li><a href="./LICENSE_rdoc.html">LICENSE</a>
-  
     <li><a href="./README_rdoc.html">README</a>
-  
     <li><a href="./RI_rdoc.html">RI</a>
-  
     <li><a href="./TODO_rdoc.html">TODO</a>
-  
   </ul>
 </div>
 
@@ -87,12 +80,10 @@
 
 <h1 id="label-Legal+Notice+Information">Legal Notice Information<span><a href="#label-Legal+Notice+Information">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>The files in this distribution are covered by the Ruby license (see <a
-href="LICENSE_rdoc.html">LICENSE</a>) except the features mentioned below:</p>
+<p>The files in this distribution are covered by the Ruby license (see <a href="LICENSE_rdoc.html">LICENSE</a>) except the features mentioned below:</p>
 <dl class="rdoc-list note-list"><dt>Darkfish
 <dd>
-<p>Darkfish was written by Michael Granger and is included under the MIT
-license.  Darkfish contains images from the Silk Icons set by Mark James.</p>
+<p>Darkfish was written by Michael Granger and is included under the BSD 3-Clause license.  Darkfish contains images from the Silk Icons set by Mark James.</p>
 
 <p>See lib/rdoc/generator/darkfish.rb for license information.</p>
 <ul><li>
@@ -104,58 +95,42 @@ license.  Darkfish contains images from the Silk Icons set by Mark James.</p>
 </li></ul>
 </dd><dt>SDoc
 <dd>
-<p>Portions of SDoc by (Володя Колесников) Vladimir Kolesnikov are included
-under the MIT license as <a
-href="RDoc/Generator/JsonIndex.html">RDoc::Generator::JsonIndex</a>.  See
-lib/rdoc/generator/json_index.rb for license information.</p>
+<p>Portions of SDoc by (Володя Колесников) Vladimir Kolesnikov are included under the MIT license as <a href="RDoc/Generator/JsonIndex.html"><code>RDoc::Generator::JsonIndex</code></a>.  See lib/rdoc/generator/json_index.rb for license information.</p>
 <ul><li>
 <p>lib/rdoc/generator/json_index.rb</p>
 </li><li>
 <p>lib/rdoc/generator/template/json_index/*</p>
 </li><li>
-<p>The <code>#search_index</code> methods on <a
-href="RDoc/CodeObject.html">RDoc::CodeObject</a> subclasses were derived
-from sdoc.</p>
+<p>The <code>#search_index</code> methods on <a href="RDoc/CodeObject.html"><code>RDoc::CodeObject</code></a> subclasses were derived from sdoc.</p>
 </li><li>
-<p><a
-href="RDoc/ClassModule.html#method-i-document_self_or_methods">RDoc::ClassModule#document_self_or_methods</a>
-comes from SDoc.</p>
+<p><a href="RDoc/ClassModule.html#method-i-document_self_or_methods"><code>RDoc::ClassModule#document_self_or_methods</code></a> comes from SDoc.</p>
 </li></ul>
 </dd><dt>peg-markdown
 <dd>
-<p>RDoc&#39;s Markdown support is derived from peg-markdown by John
-MacFarlane.  It is used under the MIT license.  See <a
-href="RDoc/Markdown.html">RDoc::Markdown</a> for license details.</p>
+<p>RDoc’s Markdown support is derived from peg-markdown by John MacFarlane.  It is used under the MIT license.  See <a href="RDoc/Markdown.html"><code>RDoc::Markdown</code></a> for license details.</p>
 </dd><dt>MarkdownTest
 <dd>
-<p>test/test_rdoc_markdown_test.rb uses MarkdownTest 1.0.3&#39;s source files
-which are included as test/MarkdownTest_1.0.3/*.text which are Copyright ©
-2004-2005 John Gruber <a
-href="http://daringfireball.net">daringfireball.net</a> and is included
-under the same terms as Perl itself.</p>
+<p>test/test_rdoc_markdown_test.rb uses MarkdownTest 1.0.3’s source files which are included as test/MarkdownTest_1.0.3/*.text which are Copyright © 2004-2005 John Gruber <a href="http://daringfireball.net">daringfireball.net</a> and is included under the same terms as Perl itself.</p>
 
-<p>See <a href="http://dev.perl.org/licenses">dev.perl.org/licenses</a>/ for
-the terms of the Perl license.</p>
+<p>See <a href="http://dev.perl.org/licenses">dev.perl.org/licenses</a>/ for the terms of the Perl license.</p>
 </dd><dt>Fonts
 <dd>
 <p>Source Code Pro is © 2010, 2012 Adobe Systems Incorporated.</p>
 
 <p>Lato is © 2010 Łukasz Dziedzic.</p>
 
-<p>Both fonts are used under the SIL Open Font License, Version 1.1.  The
-license is available at <a
-href="http://scripts.sil.org/OFL">scripts.sil.org/OFL</a></p>
+<p>Both fonts are used under the SIL Open Font License, Version 1.1.  The license is available at <a href="http://scripts.sil.org/OFL">scripts.sil.org/OFL</a></p>
 
-<p>See lib/rdoc/generator/template/darkfish/fonts.css for complete copyright
-and license information, including a copy of the OFL.</p>
+<p>See lib/rdoc/generator/template/darkfish/fonts.css for complete copyright and license information, including a copy of the OFL.</p>
 </dd></dl>
+
 </main>
 
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

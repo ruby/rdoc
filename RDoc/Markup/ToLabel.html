@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::ToLabel - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Markup::ToLabel - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
   var index_rel_prefix = "../../";
 </script>
 
-<script src="../../js/jquery.js"></script>
-<script src="../../js/darkfish.js"></script>
+<script src="../../js/navigation.js" defer></script>
+<script src="../../js/search.js" defer></script>
+<script src="../../js/search_index.js" defer></script>
+<script src="../../js/searcher.js" defer></script>
+<script src="../../js/darkfish.js" defer></script>
 
 <link href="../../css/fonts.css" rel="stylesheet">
 <link href="../../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,30 +57,25 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link"><a href="Formatter.html">RDoc::Markup::Formatter</a>
-  
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li class="calls-super" ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-convert">#convert</a>
-    
-    <li ><a href="#method-i-handle_special_CROSSREF">#handle_special_CROSSREF</a>
-    
-    <li ><a href="#method-i-handle_special_TIDYLINK">#handle_special_TIDYLINK</a>
-    
+    <li ><a href="#method-i-handle_regexp_CROSSREF">#handle_regexp_CROSSREF</a>
+    <li ><a href="#method-i-handle_regexp_TIDYLINK">#handle_regexp_TIDYLINK</a>
   </ul>
 </div>
 
@@ -92,59 +89,44 @@
 
   <section class="description">
     
-<p>Creates HTML-safe labels suitable for use in id attributes.  Tidylinks are
-converted to their link part and cross-reference links have the suppression
-marks removed (\SomeClass is converted to SomeClass).</p>
+<p>Creates HTML-safe labels suitable for use in id attributes.  Tidylinks are converted to their link part and cross-reference links have the suppression marks removed (\SomeClass is converted to SomeClass).</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(markup = nil)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(markup = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Creates a new formatter that will output HTML-safe labels</p>
-          
-          
             <div class="method-calls-super">
               Calls superclass method
-              <a href="Formatter.html#method-c-new">RDoc::Markup::Formatter.new</a>
+              <a href="Formatter.html#method-c-new"><code>RDoc::Markup::Formatter::new</code></a>
             </div>
-          
 
-          
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_label.rb, line 16</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">markup</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">super</span> <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">markup</span>
 
-  <span class="ruby-ivar">@markup</span>.<span class="ruby-identifier">add_special</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">CrossReference</span><span class="ruby-operator">::</span><span class="ruby-constant">CROSSREF_REGEXP</span>, <span class="ruby-value">:CROSSREF</span>
-  <span class="ruby-ivar">@markup</span>.<span class="ruby-identifier">add_special</span>(<span class="ruby-regexp">/(((\{.*?\})|\b\S+?)\[\S+?\])/</span>, <span class="ruby-value">:TIDYLINK</span>)
+  <span class="ruby-ivar">@markup</span>.<span class="ruby-identifier">add_regexp_handling</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">CrossReference</span><span class="ruby-operator">::</span><span class="ruby-constant">CROSSREF_REGEXP</span>, <span class="ruby-value">:CROSSREF</span>
+  <span class="ruby-ivar">@markup</span>.<span class="ruby-identifier">add_regexp_handling</span>(<span class="ruby-regexp">/(((\{.*?\})|\b\S+?)\[\S+?\])/</span>, <span class="ruby-value">:TIDYLINK</span>)
 
   <span class="ruby-identifier">add_tag</span> <span class="ruby-value">:BOLD</span>, <span class="ruby-string">&#39;&#39;</span>, <span class="ruby-string">&#39;&#39;</span>
   <span class="ruby-identifier">add_tag</span> <span class="ruby-value">:TT</span>,   <span class="ruby-string">&#39;&#39;</span>, <span class="ruby-string">&#39;&#39;</span>
@@ -153,41 +135,30 @@ marks removed (\SomeClass is converted to SomeClass).</p>
   <span class="ruby-ivar">@res</span> = []
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-convert" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">convert</span><span
-            class="method-args">(text)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">convert</span><span
+              class="method-args">(text)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Converts <code>text</code> to an HTML-safe label</p>
-          
-          
 
-          
           <div class="method-source-code" id="convert-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_label.rb, line 32</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert</span> <span class="ruby-identifier">text</span>
@@ -196,97 +167,72 @@ marks removed (\SomeClass is converted to SomeClass).</p>
   <span class="ruby-constant">CGI</span>.<span class="ruby-identifier">escape</span>(<span class="ruby-identifier">label</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;%&#39;</span>, <span class="ruby-string">&#39;-&#39;</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^-/</span>, <span class="ruby-string">&#39;&#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
-      <div id="method-i-handle_special_CROSSREF" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">handle_special_CROSSREF</span><span
-            class="method-args">(special)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+      <div id="method-i-handle_regexp_CROSSREF" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">handle_regexp_CROSSREF</span><span
+              class="method-args">(target)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Converts the CROSSREF <code>special</code> to plain text, removing the
-suppression marker, if any</p>
-          
-          
+          <p>Converts the CROSSREF <code>target</code> to plain text, removing the suppression marker, if any</p>
 
-          
-          <div class="method-source-code" id="handle_special_CROSSREF-source">
+          <div class="method-source-code" id="handle_regexp_CROSSREF-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_label.rb, line 42</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_special_CROSSREF</span> <span class="ruby-identifier">special</span>
-  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">special</span>.<span class="ruby-identifier">text</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_regexp_CROSSREF</span> <span class="ruby-identifier">target</span>
+  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">target</span>.<span class="ruby-identifier">text</span>
 
   <span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^\\/</span>, <span class="ruby-string">&#39;&#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
-      <div id="method-i-handle_special_TIDYLINK" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">handle_special_TIDYLINK</span><span
-            class="method-args">(special)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+      <div id="method-i-handle_regexp_TIDYLINK" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">handle_regexp_TIDYLINK</span><span
+              class="method-args">(target)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Converts the TIDYLINK <code>special</code> to just the text part</p>
-          
-          
+          <p>Converts the TIDYLINK <code>target</code> to just the text part</p>
 
-          
-          <div class="method-source-code" id="handle_special_TIDYLINK-source">
+          <div class="method-source-code" id="handle_regexp_TIDYLINK-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_label.rb, line 51</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_special_TIDYLINK</span> <span class="ruby-identifier">special</span>
-  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">special</span>.<span class="ruby-identifier">text</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_regexp_TIDYLINK</span> <span class="ruby-identifier">target</span>
+  <span class="ruby-identifier">text</span> = <span class="ruby-identifier">target</span>.<span class="ruby-identifier">text</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">text</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\{(.*?)\}\[(.*?)\]/</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">text</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/(\S+)\[(.*?)\]/</span>
 
   <span class="ruby-node">$1</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

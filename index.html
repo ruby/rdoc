@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>rdoc 6.0.4 Documentation</title>
+<title>rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
   var index_rel_prefix = "./";
 </script>
 
-<script src="./js/jquery.js"></script>
-<script src="./js/darkfish.js"></script>
+<script src="./js/navigation.js" defer></script>
+<script src="./js/search.js" defer></script>
+<script src="./js/search_index.js" defer></script>
+<script src="./js/searcher.js" defer></script>
+<script src="./js/darkfish.js" defer></script>
 
 <link href="./css/fonts.css" rel="stylesheet">
 <link href="./css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="file">
@@ -53,29 +55,20 @@
   </div>
 
   <div id="project-metadata">
-    <div id="fileindex-section" class="nav-section">
+    
+<div id="fileindex-section" class="nav-section">
   <h3>Pages</h3>
 
   <ul class="link-list">
-  
     <li><a href="./CONTRIBUTING_rdoc.html">CONTRIBUTING</a>
-  
     <li><a href="./CVE-2013-0256_rdoc.html">CVE-2013-0256</a>
-  
     <li><a href="./ExampleRDoc_rdoc.html">ExampleRDoc</a>
-  
     <li><a href="./History_rdoc.html">History</a>
-  
     <li><a href="./LEGAL_rdoc.html">LEGAL</a>
-  
     <li><a href="./LICENSE_rdoc.html">LICENSE</a>
-  
     <li><a href="./README_rdoc.html">README</a>
-  
     <li><a href="./RI_rdoc.html">RI</a>
-  
     <li><a href="./TODO_rdoc.html">TODO</a>
-  
   </ul>
 </div>
 
@@ -83,234 +76,160 @@
   <h3>Class and Module Index</h3>
 
   <ul class="link-list">
-  
-    <li><a href="./RDoc.html">RDoc</a>
-  
-    <li><a href="./RDoc/Alias.html">RDoc::Alias</a>
-  
-    <li><a href="./RDoc/AnonClass.html">RDoc::AnonClass</a>
-  
-    <li><a href="./RDoc/AnyMethod.html">RDoc::AnyMethod</a>
-  
-    <li><a href="./RDoc/Attr.html">RDoc::Attr</a>
-  
-    <li><a href="./RDoc/ClassModule.html">RDoc::ClassModule</a>
-  
-    <li><a href="./RDoc/CodeObject.html">RDoc::CodeObject</a>
-  
-    <li><a href="./RDoc/Comment.html">RDoc::Comment</a>
-  
-    <li><a href="./RDoc/Constant.html">RDoc::Constant</a>
-  
-    <li><a href="./RDoc/Context.html">RDoc::Context</a>
-  
-    <li><a href="./RDoc/Context/Section.html">RDoc::Context::Section</a>
-  
-    <li><a href="./RDoc/CrossReference.html">RDoc::CrossReference</a>
-  
-    <li><a href="./RDoc/ERBIO.html">RDoc::ERBIO</a>
-  
-    <li><a href="./RDoc/ERBPartial.html">RDoc::ERBPartial</a>
-  
-    <li><a href="./RDoc/Encoding.html">RDoc::Encoding</a>
-  
-    <li><a href="./RDoc/Error.html">RDoc::Error</a>
-  
-    <li><a href="./RDoc/Extend.html">RDoc::Extend</a>
-  
-    <li><a href="./RDoc/Generator.html">RDoc::Generator</a>
-  
-    <li><a href="./RDoc/Generator/Darkfish.html">RDoc::Generator::Darkfish</a>
-  
-    <li><a href="./RDoc/Generator/JsonIndex.html">RDoc::Generator::JsonIndex</a>
-  
-    <li><a href="./RDoc/Generator/Markup.html">RDoc::Generator::Markup</a>
-  
-    <li><a href="./RDoc/Generator/POT.html">RDoc::Generator::POT</a>
-  
-    <li><a href="./RDoc/Generator/POT/MessageExtractor.html">RDoc::Generator::POT::MessageExtractor</a>
-  
-    <li><a href="./RDoc/Generator/POT/PO.html">RDoc::Generator::POT::PO</a>
-  
-    <li><a href="./RDoc/Generator/POT/POEntry.html">RDoc::Generator::POT::POEntry</a>
-  
-    <li><a href="./RDoc/Generator/RI.html">RDoc::Generator::RI</a>
-  
-    <li><a href="./RDoc/GhostMethod.html">RDoc::GhostMethod</a>
-  
-    <li><a href="./RDoc/I18n.html">RDoc::I18n</a>
-  
-    <li><a href="./RDoc/I18n/Locale.html">RDoc::I18n::Locale</a>
-  
-    <li><a href="./RDoc/I18n/Text.html">RDoc::I18n::Text</a>
-  
-    <li><a href="./RDoc/Include.html">RDoc::Include</a>
-  
-    <li><a href="./RDoc/Markdown.html">RDoc::Markdown</a>
-  
-    <li><a href="./RDoc/Markup.html">RDoc::Markup</a>
-  
-    <li><a href="./RDoc/Markup/AttrChanger.html">RDoc::Markup::AttrChanger</a>
-  
-    <li><a href="./RDoc/Markup/AttrSpan.html">RDoc::Markup::AttrSpan</a>
-  
-    <li><a href="./RDoc/Markup/AttributeManager.html">RDoc::Markup::AttributeManager</a>
-  
-    <li><a href="./RDoc/Markup/Attributes.html">RDoc::Markup::Attributes</a>
-  
-    <li><a href="./RDoc/Markup/BlankLine.html">RDoc::Markup::BlankLine</a>
-  
-    <li><a href="./RDoc/Markup/BlockQuote.html">RDoc::Markup::BlockQuote</a>
-  
-    <li><a href="./RDoc/Markup/Document.html">RDoc::Markup::Document</a>
-  
-    <li><a href="./RDoc/Markup/Formatter.html">RDoc::Markup::Formatter</a>
-  
-    <li><a href="./RDoc/Markup/FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a>
-  
-    <li><a href="./RDoc/Markup/HardBreak.html">RDoc::Markup::HardBreak</a>
-  
-    <li><a href="./RDoc/Markup/Include.html">RDoc::Markup::Include</a>
-  
-    <li><a href="./RDoc/Markup/IndentedParagraph.html">RDoc::Markup::IndentedParagraph</a>
-  
-    <li><a href="./RDoc/Markup/List.html">RDoc::Markup::List</a>
-  
-    <li><a href="./RDoc/Markup/ListItem.html">RDoc::Markup::ListItem</a>
-  
-    <li><a href="./RDoc/Markup/Paragraph.html">RDoc::Markup::Paragraph</a>
-  
-    <li><a href="./RDoc/Markup/Parser.html">RDoc::Markup::Parser</a>
-  
-    <li><a href="./RDoc/Markup/Parser/Error.html">RDoc::Markup::Parser::Error</a>
-  
-    <li><a href="./RDoc/Markup/Parser/ParseError.html">RDoc::Markup::Parser::ParseError</a>
-  
-    <li><a href="./RDoc/Markup/PreProcess.html">RDoc::Markup::PreProcess</a>
-  
-    <li><a href="./RDoc/Markup/Raw.html">RDoc::Markup::Raw</a>
-  
-    <li><a href="./RDoc/Markup/Rule.html">RDoc::Markup::Rule</a>
-  
-    <li><a href="./RDoc/Markup/Special.html">RDoc::Markup::Special</a>
-  
-    <li><a href="./RDoc/Markup/TextFormatterTestCase.html">RDoc::Markup::TextFormatterTestCase</a>
-  
-    <li><a href="./RDoc/Markup/ToAnsi.html">RDoc::Markup::ToAnsi</a>
-  
-    <li><a href="./RDoc/Markup/ToBs.html">RDoc::Markup::ToBs</a>
-  
-    <li><a href="./RDoc/Markup/ToHtml.html">RDoc::Markup::ToHtml</a>
-  
-    <li><a href="./RDoc/Markup/ToHtmlCrossref.html">RDoc::Markup::ToHtmlCrossref</a>
-  
-    <li><a href="./RDoc/Markup/ToHtmlSnippet.html">RDoc::Markup::ToHtmlSnippet</a>
-  
-    <li><a href="./RDoc/Markup/ToJoinedParagraph.html">RDoc::Markup::ToJoinedParagraph</a>
-  
-    <li><a href="./RDoc/Markup/ToLabel.html">RDoc::Markup::ToLabel</a>
-  
-    <li><a href="./RDoc/Markup/ToMarkdown.html">RDoc::Markup::ToMarkdown</a>
-  
-    <li><a href="./RDoc/Markup/ToRdoc.html">RDoc::Markup::ToRdoc</a>
-  
-    <li><a href="./RDoc/Markup/ToTableOfContents.html">RDoc::Markup::ToTableOfContents</a>
-  
-    <li><a href="./RDoc/Markup/ToTest.html">RDoc::Markup::ToTest</a>
-  
-    <li><a href="./RDoc/Markup/ToTtOnly.html">RDoc::Markup::ToTtOnly</a>
-  
-    <li><a href="./RDoc/Markup/Verbatim.html">RDoc::Markup::Verbatim</a>
-  
-    <li><a href="./RDoc/MetaMethod.html">RDoc::MetaMethod</a>
-  
-    <li><a href="./RDoc/MethodAttr.html">RDoc::MethodAttr</a>
-  
-    <li><a href="./RDoc/Mixin.html">RDoc::Mixin</a>
-  
-    <li><a href="./RDoc/NormalClass.html">RDoc::NormalClass</a>
-  
-    <li><a href="./RDoc/NormalModule.html">RDoc::NormalModule</a>
-  
-    <li><a href="./RDoc/Options.html">RDoc::Options</a>
-  
-    <li><a href="./RDoc/Parser.html">RDoc::Parser</a>
-  
-    <li><a href="./RDoc/Parser/C.html">RDoc::Parser::C</a>
-  
-    <li><a href="./RDoc/Parser/ChangeLog.html">RDoc::Parser::ChangeLog</a>
-  
-    <li><a href="./RDoc/Parser/Markdown.html">RDoc::Parser::Markdown</a>
-  
-    <li><a href="./RDoc/Parser/RD.html">RDoc::Parser::RD</a>
-  
-    <li><a href="./RDoc/Parser/Ruby.html">RDoc::Parser::Ruby</a>
-  
-    <li><a href="./RDoc/Parser/RubyTools.html">RDoc::Parser::RubyTools</a>
-  
-    <li><a href="./RDoc/Parser/Simple.html">RDoc::Parser::Simple</a>
-  
-    <li><a href="./RDoc/Parser/Text.html">RDoc::Parser::Text</a>
-  
-    <li><a href="./RDoc/RD.html">RDoc::RD</a>
-  
-    <li><a href="./RDoc/RD/Inline.html">RDoc::RD::Inline</a>
-  
-    <li><a href="./RDoc/RDoc.html">RDoc::RDoc</a>
-  
-    <li><a href="./RDoc/RI.html">RDoc::RI</a>
-  
-    <li><a href="./RDoc/RI/Driver.html">RDoc::RI::Driver</a>
-  
-    <li><a href="./RDoc/RI/Driver/Error.html">RDoc::RI::Driver::Error</a>
-  
-    <li><a href="./RDoc/RI/Driver/NotFoundError.html">RDoc::RI::Driver::NotFoundError</a>
-  
-    <li><a href="./RDoc/RI/Error.html">RDoc::RI::Error</a>
-  
-    <li><a href="./RDoc/RI/Paths.html">RDoc::RI::Paths</a>
-  
-    <li><a href="./RDoc/RI/Task.html">RDoc::RI::Task</a>
-  
-    <li><a href="./RDoc/Require.html">RDoc::Require</a>
-  
-    <li><a href="./RDoc/RipperStateLex.html">RDoc::RipperStateLex</a>
-  
-    <li><a href="./RDoc/RipperStateLex/InnerStateLex.html">RDoc::RipperStateLex::InnerStateLex</a>
-  
-    <li><a href="./RDoc/RubygemsHook.html">RDoc::RubygemsHook</a>
-  
-    <li><a href="./RDoc/Servlet.html">RDoc::Servlet</a>
-  
-    <li><a href="./RDoc/SingleClass.html">RDoc::SingleClass</a>
-  
-    <li><a href="./RDoc/Stats.html">RDoc::Stats</a>
-  
-    <li><a href="./RDoc/Stats/Normal.html">RDoc::Stats::Normal</a>
-  
-    <li><a href="./RDoc/Stats/Quiet.html">RDoc::Stats::Quiet</a>
-  
-    <li><a href="./RDoc/Stats/Verbose.html">RDoc::Stats::Verbose</a>
-  
-    <li><a href="./RDoc/Store.html">RDoc::Store</a>
-  
-    <li><a href="./RDoc/Store/Error.html">RDoc::Store::Error</a>
-  
-    <li><a href="./RDoc/Store/MissingFileError.html">RDoc::Store::MissingFileError</a>
-  
-    <li><a href="./RDoc/Task.html">RDoc::Task</a>
-  
-    <li><a href="./RDoc/Text.html">RDoc::Text</a>
-  
-    <li><a href="./RDoc/TokenStream.html">RDoc::TokenStream</a>
-  
-    <li><a href="./RDoc/TomDoc.html">RDoc::TomDoc</a>
-  
-    <li><a href="./RDoc/TopLevel.html">RDoc::TopLevel</a>
-  
-    <li><a href="./RDocTask.html">RDocTask</a>
-  
-  </ul>
+  <li><code><a href="./Object.html">Object</a></code>
+  <li><details><summary><code><a href="./RDoc.html">RDoc</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./RDoc/Alias.html">Alias</a></code>
+  <li><code><a href="./RDoc/AnonClass.html">AnonClass</a></code>
+  <li><code><a href="./RDoc/AnyMethod.html">AnyMethod</a></code>
+  <li><code><a href="./RDoc/Attr.html">Attr</a></code>
+  <li><code><a href="./RDoc/ClassModule.html">ClassModule</a></code>
+  <li><code><a href="./RDoc/CodeObject.html">CodeObject</a></code>
+  <li><code><a href="./RDoc/Comment.html">Comment</a></code>
+  <li><code><a href="./RDoc/Constant.html">Constant</a></code>
+  <li><details><summary><code><a href="./RDoc/Context.html">Context</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./RDoc/Context/Section.html">Section</a></code>
+  </ul></details>
+  <li><code><a href="./RDoc/CrossReference.html">CrossReference</a></code>
+  <li><code><a href="./RDoc/ERBIO.html">ERBIO</a></code>
+  <li><code><a href="./RDoc/ERBPartial.html">ERBPartial</a></code>
+  <li><code><a href="./RDoc/Encoding.html">Encoding</a></code>
+  <li><code><a href="./RDoc/Error.html">Error</a></code>
+  <li><code><a href="./RDoc/Extend.html">Extend</a></code>
+  <li><details><summary><code><a href="./RDoc/Generator.html">Generator</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./RDoc/Generator/Darkfish.html">Darkfish</a></code>
+  <li><code><a href="./RDoc/Generator/JsonIndex.html">JsonIndex</a></code>
+  <li><code><a href="./RDoc/Generator/Markup.html">Markup</a></code>
+  <li><details><summary><code><a href="./RDoc/Generator/POT.html">POT</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./RDoc/Generator/POT/MessageExtractor.html">MessageExtractor</a></code>
+  <li><code><a href="./RDoc/Generator/POT/PO.html">PO</a></code>
+  <li><code><a href="./RDoc/Generator/POT/POEntry.html">POEntry</a></code>
+  </ul></details>
+  <li><code><a href="./RDoc/Generator/RI.html">RI</a></code>
+  </ul></details>
+  <li><code><a href="./RDoc/GhostMethod.html">GhostMethod</a></code>
+  <li><details><summary><code><a href="./RDoc/I18n.html">I18n</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./RDoc/I18n/Locale.html">Locale</a></code>
+  <li><code><a href="./RDoc/I18n/Text.html">Text</a></code>
+  </ul></details>
+  <li><code><a href="./RDoc/Include.html">Include</a></code>
+  <li><details><summary><code><a href="./RDoc/Markdown.html">Markdown</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./RDoc/Markdown/Literals.html">Literals</a></code>
+  </ul></details>
+  <li><details><summary><code><a href="./RDoc/Markup.html">Markup</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./RDoc/Markup/AttrChanger.html">AttrChanger</a></code>
+  <li><code><a href="./RDoc/Markup/AttrSpan.html">AttrSpan</a></code>
+  <li><code><a href="./RDoc/Markup/AttributeManager.html">AttributeManager</a></code>
+  <li><code><a href="./RDoc/Markup/Attributes.html">Attributes</a></code>
+  <li><code><a href="./RDoc/Markup/BlankLine.html">BlankLine</a></code>
+  <li><code><a href="./RDoc/Markup/BlockQuote.html">BlockQuote</a></code>
+  <li><code><a href="./RDoc/Markup/Document.html">Document</a></code>
+  <li><code><a href="./RDoc/Markup/Formatter.html">Formatter</a></code>
+  <li><code><a href="./RDoc/Markup/HardBreak.html">HardBreak</a></code>
+  <li><code><a href="./RDoc/Markup/Include.html">Include</a></code>
+  <li><code><a href="./RDoc/Markup/IndentedParagraph.html">IndentedParagraph</a></code>
+  <li><code><a href="./RDoc/Markup/List.html">List</a></code>
+  <li><code><a href="./RDoc/Markup/ListItem.html">ListItem</a></code>
+  <li><code><a href="./RDoc/Markup/Paragraph.html">Paragraph</a></code>
+  <li><details><summary><code><a href="./RDoc/Markup/Parser.html">Parser</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./RDoc/Markup/Parser/Error.html">Error</a></code>
+  <li><code><a href="./RDoc/Markup/Parser/MyStringScanner.html">MyStringScanner</a></code>
+  <li><code><a href="./RDoc/Markup/Parser/ParseError.html">ParseError</a></code>
+  </ul></details>
+  <li><code><a href="./RDoc/Markup/PreProcess.html">PreProcess</a></code>
+  <li><code><a href="./RDoc/Markup/Raw.html">Raw</a></code>
+  <li><code><a href="./RDoc/Markup/RegexpHandling.html">RegexpHandling</a></code>
+  <li><code><a href="./RDoc/Markup/Rule.html">Rule</a></code>
+  <li><code><a href="./RDoc/Markup/Table.html">Table</a></code>
+  <li><code><a href="./RDoc/Markup/ToAnsi.html">ToAnsi</a></code>
+  <li><code><a href="./RDoc/Markup/ToBs.html">ToBs</a></code>
+  <li><code><a href="./RDoc/Markup/ToHtml.html">ToHtml</a></code>
+  <li><code><a href="./RDoc/Markup/ToHtmlCrossref.html">ToHtmlCrossref</a></code>
+  <li><code><a href="./RDoc/Markup/ToHtmlSnippet.html">ToHtmlSnippet</a></code>
+  <li><code><a href="./RDoc/Markup/ToJoinedParagraph.html">ToJoinedParagraph</a></code>
+  <li><code><a href="./RDoc/Markup/ToLabel.html">ToLabel</a></code>
+  <li><code><a href="./RDoc/Markup/ToMarkdown.html">ToMarkdown</a></code>
+  <li><code><a href="./RDoc/Markup/ToRdoc.html">ToRdoc</a></code>
+  <li><code><a href="./RDoc/Markup/ToTableOfContents.html">ToTableOfContents</a></code>
+  <li><code><a href="./RDoc/Markup/ToTest.html">ToTest</a></code>
+  <li><code><a href="./RDoc/Markup/ToTtOnly.html">ToTtOnly</a></code>
+  <li><code><a href="./RDoc/Markup/Verbatim.html">Verbatim</a></code>
+  </ul></details>
+  <li><details><summary><code><a href="./RDoc/MarkupReference.html">MarkupReference</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./RDoc/MarkupReference/DummyClass.html">DummyClass</a></code>
+  <li><code><a href="./RDoc/MarkupReference/DummyModule.html">DummyModule</a></code>
+  </ul></details>
+  <li><code><a href="./RDoc/MetaMethod.html">MetaMethod</a></code>
+  <li><code><a href="./RDoc/MethodAttr.html">MethodAttr</a></code>
+  <li><code><a href="./RDoc/Mixin.html">Mixin</a></code>
+  <li><code><a href="./RDoc/NormalClass.html">NormalClass</a></code>
+  <li><code><a href="./RDoc/NormalModule.html">NormalModule</a></code>
+  <li><code><a href="./RDoc/Options.html">Options</a></code>
+  <li><details><summary><code><a href="./RDoc/Parser.html">Parser</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./RDoc/Parser/C.html">C</a></code>
+  <li><details><summary><code><a href="./RDoc/Parser/ChangeLog.html">ChangeLog</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./RDoc/Parser/ChangeLog/Git.html">Git</a></code>
+  </ul></details>
+  <li><code><a href="./RDoc/Parser/Markdown.html">Markdown</a></code>
+  <li><code><a href="./RDoc/Parser/RD.html">RD</a></code>
+  <li><details><summary><code><a href="./RDoc/Parser/RipperStateLex.html">RipperStateLex</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./RDoc/Parser/RipperStateLex/InnerStateLex.html">InnerStateLex</a></code>
+  </ul></details>
+  <li><code><a href="./RDoc/Parser/Ruby.html">Ruby</a></code>
+  <li><code><a href="./RDoc/Parser/RubyTools.html">RubyTools</a></code>
+  <li><code><a href="./RDoc/Parser/Simple.html">Simple</a></code>
+  <li><code><a href="./RDoc/Parser/Text.html">Text</a></code>
+  </ul></details>
+  <li><details><summary><code><a href="./RDoc/RD.html">RD</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./RDoc/RD/BlockParser.html">BlockParser</a></code>
+  <li><code><a href="./RDoc/RD/Inline.html">Inline</a></code>
+  <li><code><a href="./RDoc/RD/InlineParser.html">InlineParser</a></code>
+  </ul></details>
+  <li><code><a href="./RDoc/RDoc.html">RDoc</a></code>
+  <li><details><summary><code><a href="./RDoc/RI.html">RI</a></code></summary>
+  <ul class="link-list">
+  <li><details><summary><code><a href="./RDoc/RI/Driver.html">Driver</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./RDoc/RI/Driver/Error.html">Error</a></code>
+  <li><code><a href="./RDoc/RI/Driver/NotFoundError.html">NotFoundError</a></code>
+  </ul></details>
+  <li><code><a href="./RDoc/RI/Error.html">Error</a></code>
+  <li><code><a href="./RDoc/RI/Paths.html">Paths</a></code>
+  <li><code><a href="./RDoc/RI/Task.html">Task</a></code>
+  </ul></details>
+  <li><code><a href="./RDoc/Require.html">Require</a></code>
+  <li><code><a href="./RDoc/RubygemsHook.html">RubygemsHook</a></code>
+  <li><code><a href="./RDoc/Servlet.html">Servlet</a></code>
+  <li><code><a href="./RDoc/SingleClass.html">SingleClass</a></code>
+  <li><details><summary><code><a href="./RDoc/Stats.html">Stats</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./RDoc/Stats/Normal.html">Normal</a></code>
+  <li><code><a href="./RDoc/Stats/Quiet.html">Quiet</a></code>
+  <li><code><a href="./RDoc/Stats/Verbose.html">Verbose</a></code>
+  </ul></details>
+  <li><details><summary><code><a href="./RDoc/Store.html">Store</a></code></summary>
+  <ul class="link-list">
+  <li><code><a href="./RDoc/Store/Error.html">Error</a></code>
+  <li><code><a href="./RDoc/Store/MissingFileError.html">MissingFileError</a></code>
+  </ul></details>
+  <li><code><a href="./RDoc/Task.html">Task</a></code>
+  <li><code><a href="./RDoc/Text.html">Text</a></code>
+  <li><code><a href="./RDoc/TokenStream.html">TokenStream</a></code>
+  <li><code><a href="./RDoc/TomDoc.html">TomDoc</a></code>
+  <li><code><a href="./RDoc/TopLevel.html">TopLevel</a></code>
+  </ul></details>
 </div>
 
   </div>
@@ -328,31 +247,19 @@
 <p><a href="https://ruby.github.io/rdoc">ruby.github.io/rdoc</a></p>
 </dd><dt>bugs 
 <dd>
-<p><a
-href="https://github.com/ruby/rdoc/issues">github.com/ruby/rdoc/issues</a></p>
-</dd><dt>build status 
-<dd>
-<p><a href="https://travis-ci.org/ruby/rdoc"><img
-src="https://travis-ci.org/ruby/rdoc.svg?branch=master" alt="Build Status"
-/></a></p>
+<p><a href="https://github.com/ruby/rdoc/issues">github.com/ruby/rdoc/issues</a></p>
 </dd><dt>code quality 
 <dd>
-<p><a href="https://codeclimate.com/github/ruby/rdoc"><img
-src="https://codeclimate.com/github/ruby/rdoc/badges/gpa.svg" alt="Code
-Climate"></a></p>
+<p><a href="https://codeclimate.com/github/ruby/rdoc">&lt;img src=“https://codeclimate.com/github/ruby/rdoc/badges/gpa.svg” alt=“Code Climate”&gt;</a></p>
 </dd></dl>
 
 <h2 id="label-Description">Description<span><a href="#label-Description">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p><a href="RDoc.html">RDoc</a> produces HTML and command-line documentation
-for Ruby projects.  <a href="RDoc.html">RDoc</a> includes the
-<code>rdoc</code> and <code>ri</code> tools for generating and displaying
-documentation from the command-line.</p>
+<p><a href="RDoc.html"><code>RDoc</code></a> produces HTML and command-line documentation for Ruby projects.  <a href="RDoc.html"><code>RDoc</code></a> includes the <code>rdoc</code> and <code>ri</code> tools for generating and displaying documentation from the command-line.</p>
 
 <h2 id="label-Generating+Documentation">Generating Documentation<span><a href="#label-Generating+Documentation">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Once installed, you can create documentation using the <code>rdoc</code>
-command</p>
+<p>Once installed, you can create documentation using the <code>rdoc</code> command</p>
 
 <pre>$ rdoc [options] [names...]</pre>
 
@@ -360,35 +267,21 @@ command</p>
 
 <pre>$ rdoc --help</pre>
 
-<p>A typical use might be to generate documentation for a package of Ruby
-source (such as <a href="RDoc.html">RDoc</a> itself).</p>
+<p>A typical use might be to generate documentation for a package of Ruby source (such as <a href="RDoc.html"><code>RDoc</code></a> itself).</p>
 
 <pre>$ rdoc</pre>
 
-<p>This command generates documentation for all the Ruby and C source files in
-and below the current directory.  These will be stored in a documentation
-tree starting in the subdirectory <code>doc</code>.</p>
+<p>This command generates documentation for all the Ruby and C source files in and below the current directory.  These will be stored in a documentation tree starting in the subdirectory <code>doc</code>.</p>
 
-<p>You can make this slightly more useful for your readers by having the index
-page contain the documentation for the primary file.  In our case, we could
-type</p>
+<p>You can make this slightly more useful for your readers by having the index page contain the documentation for the primary file.  In our case, we could type</p>
 
 <pre>% rdoc --main README.rdoc</pre>
 
-<p>You&#39;ll find information on the various formatting tricks you can use in
-comment blocks in the documentation this generates.</p>
+<p>You’ll find information on the various formatting tricks you can use in comment blocks in the documentation this generates.</p>
 
-<p><a href="RDoc.html">RDoc</a> uses file extensions to determine how to
-process each file.  File names ending <code>.rb</code> and
-<code>.rbw</code> are assumed to be Ruby source.  Files ending
-<code>.c</code> are parsed as C files.  All other files are assumed to
-contain just Markup-style markup (with or without leading &#39;#&#39;
-comment markers).  If directory names are passed to <a
-href="RDoc.html">RDoc</a>, they are scanned recursively for C and Ruby
-source files only.</p>
+<p><a href="RDoc.html"><code>RDoc</code></a> uses file extensions to determine how to process each file.  File names ending <code>.rb</code> and <code>.rbw</code> are assumed to be Ruby source.  Files ending <code>.c</code> are parsed as C files.  All other files are assumed to contain just Markup-style markup (with or without leading ‘#’ comment markers).  If directory names are passed to <a href="RDoc.html"><code>RDoc</code></a>, they are scanned recursively for C and Ruby source files only.</p>
 
-<p>To generate documentation using <code>rake</code> see <a
-href="https://ruby.github.io/rdoc/RDocTask.html">RDoc::Task</a>.</p>
+<p>To generate documentation using <code>rake</code> see <a href="https://ruby.github.io/rdoc/RDocTask.html">RDoc::Task</a>.</p>
 
 <p>To generate documentation programmatically:</p>
 
@@ -405,9 +298,7 @@ href="https://ruby.github.io/rdoc/RDocTask.html">RDoc::Task</a>.</p>
 
 <h2 id="label-Writing+Documentation">Writing Documentation<span><a href="#label-Writing+Documentation">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>To write documentation for <a href="RDoc.html">RDoc</a> place a comment
-above the class, module, method, constant, or attribute you want
-documented:</p>
+<p>To write documentation for <a href="RDoc.html"><code>RDoc</code></a> place a comment above the class, module, method, constant, or attribute you want documented:</p>
 
 <pre class="ruby"><span class="ruby-comment">##</span>
 <span class="ruby-comment"># This class represents an arbitrary shape by a series of points.</span>
@@ -430,64 +321,34 @@ documented:</p>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p>The default comment markup format is the <a
-href="RDoc/Markup.html">RDoc::Markup</a> format. <a
-href="RDoc/TomDoc.html">TomDoc</a>, <a
-href="RDoc/Markdown.html">Markdown</a> and <a href="RDoc/RD.html">RD</a>
-format comments are also supported.  You can set the default comment format
-for your entire project by creating a <code>.rdoc_options</code> file.  See
-<a href="RDoc/Options.html#label-Saved+Options">Saved Options at
-RDoc::Options</a> for instructions on creating one.  You can also set the
-comment format for a single file through the <code>:markup:</code>
-directive, but this is only recommended if you wish to switch markup
-formats.  See <a href="RDoc/Markup.html#label-Other+directives">Other
-directives at RDoc::Markup</a>.</p>
+<p>The default comment markup format is the <a href="RDoc/Markup.html"><code>RDoc::Markup</code></a> format. <a href="RDoc/TomDoc.html">TomDoc</a>, <a href="RDoc/Markdown.html">Markdown</a> and <a href="RDoc/RD.html">RD</a> format comments are also supported.  You can set the default comment format for your entire project by creating a <code>.rdoc_options</code> file.  See <a href="RDoc/Options.html#class-RDoc::Options-label-Saved+Options">Saved Options at <code>RDoc::Options</code></a> for instructions on creating one.  You can also set the comment format for a single file through the <code>:markup:</code> directive, but this is only recommended if you wish to switch markup formats.  See <a href="RDoc/Markup.html#class-RDoc::Markup-label-Other+directives">Other directives at <code>RDoc::Markup</code></a>.</p>
 
-<p>Comments can contain directives that tell <a href="RDoc.html">RDoc</a>
-information that it cannot otherwise discover through parsing.  See <a
-href="RDoc/Markup.html#label-Directives">Directives at RDoc::Markup</a> to
-control what is or is not documented, to define method arguments or to
-break up methods in a class by topic.  See <a
-href="RDoc/Parser/Ruby.html">RDoc::Parser::Ruby</a> for directives used to
-teach <a href="RDoc.html">RDoc</a> about metaprogrammed methods.</p>
+<p>Comments can contain directives that tell <a href="RDoc.html"><code>RDoc</code></a> information that it cannot otherwise discover through parsing.  See <a href="RDoc/Markup.html#class-RDoc::Markup-label-Directives">Directives at <code>RDoc::Markup</code></a> to control what is or is not documented, to define method arguments or to break up methods in a class by topic.  See <a href="RDoc/Parser/Ruby.html"><code>RDoc::Parser::Ruby</code></a> for directives used to teach <a href="RDoc.html"><code>RDoc</code></a> about metaprogrammed methods.</p>
 
-<p>See <a href="RDoc/Parser/C.html">RDoc::Parser::C</a> for documenting C
-extensions with <a href="RDoc.html">RDoc</a>.</p>
+<p>See <a href="RDoc/Parser/C.html"><code>RDoc::Parser::C</code></a> for documenting C extensions with <a href="RDoc.html"><code>RDoc</code></a>.</p>
 
-<p>To determine how well your project is documented run <code>rdoc -C
-lib</code> to get a documentation coverage report.  <code>rdoc -C1
-lib</code> includes parameter names in the documentation coverage report.</p>
+<p>To determine how well your project is documented run <code>rdoc -C lib</code> to get a documentation coverage report.  <code>rdoc -C1 lib</code> includes parameter names in the documentation coverage report.</p>
 
 <h2 id="label-Bugs">Bugs<span><a href="#label-Bugs">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>See <a href="CONTRIBUTING_rdoc.html#label-Bugs">Bugs at CONTRIBUTING</a>
-for information on filing a bug report.  It&#39;s OK to file a bug report
-for anything you&#39;re having a problem with.  If you can&#39;t figure out
-how to make <a href="RDoc.html">RDoc</a> produce the output you like that
-is probably a documentation bug.</p>
+<p>See <a href="CONTRIBUTING_rdoc.html#label-Bugs">Bugs at <code>CONTRIBUTING</code></a> for information on filing a bug report.  It’s OK to file a bug report for anything you’re having a problem with.  If you can’t figure out how to make <a href="RDoc.html"><code>RDoc</code></a> produce the output you like that is probably a documentation bug.</p>
 
 <h2 id="label-License">License<span><a href="#label-License">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p><a href="RDoc.html">RDoc</a> is Copyright © 2001-2003 Dave Thomas, The
-Pragmatic Programmers. Portions © 2007-2011 Eric Hodel.  Portions copyright
-others, see individual files and <a href="LEGAL_rdoc.html">LEGAL.rdoc</a>
-for details.</p>
+<p><a href="RDoc.html"><code>RDoc</code></a> is Copyright © 2001-2003 Dave Thomas, The Pragmatic Programmers. Portions © 2007-2011 Eric Hodel.  Portions copyright others, see individual files and <a href="LEGAL_rdoc.html">LEGAL.rdoc</a> for details.</p>
 
-<p><a href="RDoc.html">RDoc</a> is free software, and may be redistributed
-under the terms specified in <a href="LICENSE_rdoc.html">LICENSE.rdoc</a>.</p>
+<p><a href="RDoc.html"><code>RDoc</code></a> is free software, and may be redistributed under the terms specified in <a href="LICENSE_rdoc.html">LICENSE.rdoc</a>.</p>
 
 <h2 id="label-Warranty">Warranty<span><a href="#label-Warranty">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>This software is provided “as is” and without any express or implied
-warranties, including, without limitation, the implied warranties of
-merchantability and fitness for a particular purpose.</p>
-</main>
+<p>This software is provided “as is” and without any express or implied warranties, including, without limitation, the implied warranties of merchantability and fitness for a particular purpose.</p>
 
+</main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

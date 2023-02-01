@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::ToTableOfContents - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Markup::ToTableOfContents - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
   var index_rel_prefix = "../../";
 </script>
 
-<script src="../../js/jquery.js"></script>
-<script src="../../js/darkfish.js"></script>
+<script src="../../js/navigation.js" defer></script>
+<script src="../../js/search.js" defer></script>
+<script src="../../js/search_index.js" defer></script>
+<script src="../../js/searcher.js" defer></script>
+<script src="../../js/darkfish.js" defer></script>
 
 <link href="../../css/fonts.css" rel="stylesheet">
 <link href="../../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,34 +57,27 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link"><a href="Formatter.html">RDoc::Markup::Formatter</a>
-  
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-c-to_toc">::to_toc</a>
-    
     <li class="calls-super" ><a href="#method-i-accept_document">#accept_document</a>
-    
     <li ><a href="#method-i-accept_heading">#accept_heading</a>
-    
     <li ><a href="#method-i-end_accepting">#end_accepting</a>
-    
     <li ><a href="#method-i-start_accepting">#start_accepting</a>
-    
     <li ><a href="#method-i-suppressed-3F">#suppressed?</a>
-    
   </ul>
 </div>
 
@@ -96,27 +91,19 @@
 
   <section class="description">
     
-<p>Extracts just the RDoc::Markup::Heading elements from a <a
-href="Document.html">RDoc::Markup::Document</a> to help build a table of
-contents</p>
+<p>Extracts just the RDoc::Markup::Heading elements from a <a href="Document.html"><code>RDoc::Markup::Document</code></a> to help build a table of contents</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-omit_headings_below" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">omit_headings_below</span><span
@@ -124,12 +111,9 @@ contents</p>
         </div>
 
         <div class="method-description">
-        
         <p>Omits headings with a level less than the given level.</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-res" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">res</span><span
@@ -137,87 +121,63 @@ contents</p>
         </div>
 
         <div class="method-description">
-        
         <p>Output accumulator</p>
-        
         </div>
       </div>
-      
     </section>
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-to_toc" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">to_toc</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">to_toc</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Singleton for table-of-contents generation</p>
-          
-          
 
-          
           <div class="method-source-code" id="to_toc-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_table_of_contents.rb, line 13</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">to_toc</span>
   <span class="ruby-ivar">@to_toc</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">new</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-accept_document" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">accept_document</span><span
-            class="method-args">(document)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">accept_document</span><span
+              class="method-args">(document)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds <code>document</code> to the output, using its heading cutoff if
-present</p>
-          
-          
+          <p>Adds <code>document</code> to the output, using its heading cutoff if present</p>
             <div class="method-calls-super">
               Calls superclass method
-              <a href="Formatter.html#method-i-accept_document">RDoc::Markup::Formatter#accept_document</a>
+              <a href="Formatter.html#method-i-accept_document"><code>RDoc::Markup::Formatter#accept_document</code></a>
             </div>
-          
 
-          
           <div class="method-source-code" id="accept_document-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_table_of_contents.rb, line 36</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_document</span> <span class="ruby-identifier">document</span>
@@ -226,99 +186,69 @@ present</p>
   <span class="ruby-keyword">super</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-accept_heading" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">accept_heading</span><span
-            class="method-args">(heading)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">accept_heading</span><span
+              class="method-args">(heading)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Adds <code>heading</code> to the table of contents</p>
-          
-          
 
-          
           <div class="method-source-code" id="accept_heading-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_table_of_contents.rb, line 45</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept_heading</span> <span class="ruby-identifier">heading</span>
   <span class="ruby-ivar">@res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">heading</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">suppressed?</span> <span class="ruby-identifier">heading</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-end_accepting" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">end_accepting</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">end_accepting</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Returns the table of contents</p>
-          
-          
 
-          
           <div class="method-source-code" id="end_accepting-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_table_of_contents.rb, line 52</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">end_accepting</span>
   <span class="ruby-ivar">@res</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-start_accepting" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">start_accepting</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">start_accepting</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Prepares the visitor for text generation</p>
-          
-          
 
-          
           <div class="method-source-code" id="start_accepting-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_table_of_contents.rb, line 59</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">start_accepting</span>
@@ -326,33 +256,23 @@ present</p>
   <span class="ruby-ivar">@res</span> = []
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-suppressed-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">suppressed?</span><span
-            class="method-args">(heading)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">suppressed?</span><span
+              class="method-args">(heading)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Returns true if <code>heading</code> is below the display threshold</p>
-          
-          
 
-          
           <div class="method-source-code" id="suppressed-3F-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/to_table_of_contents.rb, line 67</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">suppressed?</span> <span class="ruby-identifier">heading</span>
@@ -361,24 +281,20 @@ present</p>
   <span class="ruby-identifier">heading</span>.<span class="ruby-identifier">level</span> <span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@omit_headings_below</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

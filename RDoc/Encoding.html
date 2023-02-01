@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module RDoc::Encoding - rdoc 6.0.4 Documentation</title>
+<title>module RDoc::Encoding - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
   var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="module">
@@ -58,22 +60,17 @@
     
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-c-change_encoding">::change_encoding</a>
-    
     <li ><a href="#method-c-detect_encoding">::detect_encoding</a>
-    
     <li ><a href="#method-c-read_file">::read_file</a>
-    
     <li ><a href="#method-c-remove_frozen_string_literal">::remove_frozen_string_literal</a>
-    
     <li ><a href="#method-c-remove_magic_comment">::remove_magic_comment</a>
-    
   </ul>
 </div>
 
@@ -87,48 +84,33 @@
 
   <section class="description">
     
-<p>This class is a wrapper around File IO and <a
-href="Encoding.html">Encoding</a> that helps <a href="RDoc.html">RDoc</a>
-load files and convert them to the correct encoding.</p>
+<p>This class is a wrapper around File IO and <a href="Encoding.html"><code>Encoding</code></a> that helps <a href="RDoc.html"><code>RDoc</code></a> load files and convert them to the correct encoding.</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-change_encoding" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">change_encoding</span><span
-            class="method-args">(text, encoding)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">change_encoding</span><span
+              class="method-args">(text, encoding)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Changes encoding based on <code>encoding</code> without converting and
-returns new string</p>
-          
-          
+          <p>Changes encoding based on <code>encoding</code> without converting and returns new string</p>
 
-          
           <div class="method-source-code" id="change_encoding-source">
             <pre><span class="ruby-comment"># File lib/rdoc/encoding.rb, line 123</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">change_encoding</span> <span class="ruby-identifier">text</span>, <span class="ruby-identifier">encoding</span>
@@ -144,33 +126,23 @@ returns new string</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-c-detect_encoding" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">detect_encoding</span><span
-            class="method-args">(string)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">detect_encoding</span><span
+              class="method-args">(string)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Detects the encoding of <code>string</code> based on the magic comment</p>
-          
-          
 
-          
           <div class="method-source-code" id="detect_encoding-source">
             <pre><span class="ruby-comment"># File lib/rdoc/encoding.rb, line 103</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">detect_encoding</span> <span class="ruby-identifier">string</span>
@@ -180,41 +152,27 @@ returns new string</p>
   <span class="ruby-identifier">name</span> <span class="ruby-operator">?</span> <span class="ruby-constant">Encoding</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">name</span>) <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-c-read_file" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">read_file</span><span
-            class="method-args">(filename, encoding, force_transcode = false)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">read_file</span><span
+              class="method-args">(filename, encoding, force_transcode = false)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Reads the contents of <code>filename</code> and handles any encoding
-directives in the file.</p>
+          <p>Reads the contents of <code>filename</code> and handles any encoding directives in the file.</p>
 
-<p>The content will be converted to the <code>encoding</code>.  If the file
-cannot be converted a warning will be printed and nil will be returned.</p>
+<p>The content will be converted to the <code>encoding</code>.  If the file cannot be converted a warning will be printed and nil will be returned.</p>
 
-<p>If <code>force_transcode</code> is true the document will be transcoded and
-any unknown character in the target encoding will be replaced with
-&#39;?&#39;</p>
-          
-          
+<p>If <code>force_transcode</code> is true the document will be transcoded and any unknown character in the target encoding will be replaced with ‘?’</p>
 
-          
           <div class="method-source-code" id="read_file-source">
             <pre><span class="ruby-comment"># File lib/rdoc/encoding.rb, line 32</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">read_file</span> <span class="ruby-identifier">filename</span>, <span class="ruby-identifier">encoding</span>, <span class="ruby-identifier">force_transcode</span> = <span class="ruby-keyword">false</span>
@@ -274,33 +232,23 @@ any unknown character in the target encoding will be replaced with
   <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-c-remove_frozen_string_literal" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">remove_frozen_string_literal</span><span
-            class="method-args">(string)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">remove_frozen_string_literal</span><span
+              class="method-args">(string)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
           
-          
-          
-          
 
-          
           <div class="method-source-code" id="remove_frozen_string_literal-source">
             <pre><span class="ruby-comment"># File lib/rdoc/encoding.rb, line 89</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">remove_frozen_string_literal</span> <span class="ruby-identifier">string</span>
@@ -314,33 +262,23 @@ any unknown character in the target encoding will be replaced with
   <span class="ruby-identifier">string</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-c-remove_magic_comment" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">remove_magic_comment</span><span
-            class="method-args">(string)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">remove_magic_comment</span><span
+              class="method-args">(string)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Removes magic comments and shebang</p>
-          
-          
 
-          
           <div class="method-source-code" id="remove_magic_comment-source">
             <pre><span class="ruby-comment"># File lib/rdoc/encoding.rb, line 113</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">remove_magic_comment</span> <span class="ruby-identifier">string</span>
@@ -349,24 +287,20 @@ any unknown character in the target encoding will be replaced with
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

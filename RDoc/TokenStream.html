@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module RDoc::TokenStream - rdoc 6.0.4 Documentation</title>
+<title>module RDoc::TokenStream - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
   var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="module">
@@ -58,28 +60,20 @@
     
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-c-to_html">::to_html</a>
-    
     <li ><a href="#method-i-add_token">#add_token</a>
-    
     <li ><a href="#method-i-add_tokens">#add_tokens</a>
-    
     <li ><a href="#method-i-collect_tokens">#collect_tokens</a>
-    
     <li ><a href="#method-i-pop_token">#pop_token</a>
-    
     <li ><a href="#method-i-start_collecting_tokens">#start_collecting_tokens</a>
-    
     <li ><a href="#method-i-token_stream">#token_stream</a>
-    
     <li ><a href="#method-i-tokens_to_s">#tokens_to_s</a>
-    
   </ul>
 </div>
 
@@ -93,54 +87,33 @@
 
   <section class="description">
     
-<p>A <a href="TokenStream.html">TokenStream</a> is a list of tokens, gathered
-during the parse of some entity (say a method). Entities populate these
-streams by being registered with the lexer. Any class can collect tokens by
-including <a href="TokenStream.html">TokenStream</a>. From the outside, you
-use such an object by calling the <a
-href="TokenStream.html#method-i-start_collecting_tokens">#start_collecting_tokens</a>
-method, followed by calls to <a
-href="TokenStream.html#method-i-add_token">#add_token</a> and pop_token.</p>
+<p>A <a href="TokenStream.html"><code>TokenStream</code></a> is a list of tokens, gathered during the parse of some entity (say a method). Entities populate these streams by being registered with the lexer. Any class can collect tokens by including <a href="TokenStream.html"><code>TokenStream</code></a>. From the outside, you use such an object by calling the <a href="TokenStream.html#method-i-start_collecting_tokens"><code>start_collecting_tokens</code></a> method, followed by calls to <a href="TokenStream.html#method-i-add_token"><code>add_token</code></a> and pop_token.</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-to_html" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">to_html</span><span
-            class="method-args">(token_stream)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">to_html</span><span
+              class="method-args">(token_stream)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Converts <code>token_stream</code> to HTML wrapping various tokens with
-<code>&lt;span&gt;</code> elements. Some tokens types are wrapped in spans
-with the given class names. Other token types are not wrapped in spans.</p>
-          
-          
+          <p>Converts <code>token_stream</code> to HTML wrapping various tokens with <code>&lt;span&gt;</code> elements. Some tokens types are wrapped in spans with the given class names. Other token types are not wrapped in spans.</p>
 
-          
           <div class="method-source-code" id="to_html-source">
             <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 16</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">to_html</span> <span class="ruby-identifier">token_stream</span>
@@ -201,261 +174,187 @@ with the given class names. Other token types are not wrapped in spans.</p>
   <span class="ruby-keyword">end</span>.<span class="ruby-identifier">join</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
-      <div id="method-i-add_token" class="method-detail method-alias">
-        
-        <div class="method-heading">
-          <span class="method-name">add_token</span><span
-            class="method-args">(*tokens)</span>
-          
+      <div id="method-i-add_token" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_token</span><span
+              class="method-args">(token)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          
-          
-          
+          <p>Adds one <code>token</code> to the collected tokens</p>
 
-          
-        </div>
-
-        
-
-        
-        <div class="aliases">
-          Alias for: <a href="TokenStream.html#method-i-add_tokens">add_tokens</a>
-        </div>
-        
-      </div>
-
-    
-      <div id="method-i-add_tokens" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_tokens</span><span
-            class="method-args">(*tokens)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>Adds <code>tokens</code> to the collected tokens</p>
-          
-          
-
-          
-          <div class="method-source-code" id="add_tokens-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 77</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_tokens</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">tokens</span>)
-  <span class="ruby-identifier">tokens</span>.<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">token</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@token_stream</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">token</span> }
+          <div class="method-source-code" id="add_token-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 84</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_token</span>(<span class="ruby-identifier">token</span>)
+  <span class="ruby-ivar">@token_stream</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">token</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
-        <div class="aliases">
-          Also aliased as: <a href="TokenStream.html#method-i-add_token">add_token</a>
-        </div>
-        
 
-        
       </div>
 
-    
-      <div id="method-i-collect_tokens" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">collect_tokens</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+      <div id="method-i-add_tokens" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_tokens</span><span
+              class="method-args">(tokens)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Starts collecting tokens</p>
-          
-          
+          <p>Adds <code>tokens</code> to the collected tokens</p>
 
-          
+          <div class="method-source-code" id="add_tokens-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 77</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_tokens</span>(<span class="ruby-identifier">tokens</span>)
+  <span class="ruby-ivar">@token_stream</span>.<span class="ruby-identifier">concat</span>(<span class="ruby-identifier">tokens</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-collect_tokens" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">collect_tokens</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          <p>Starts collecting tokens</p>
+
           <div class="method-source-code" id="collect_tokens-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 86</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 91</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">collect_tokens</span>
   <span class="ruby-ivar">@token_stream</span> = []
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
         <div class="aliases">
           Also aliased as: <a href="TokenStream.html#method-i-start_collecting_tokens">start_collecting_tokens</a>
         </div>
-        
 
-        
       </div>
 
-    
       <div id="method-i-pop_token" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">pop_token</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">pop_token</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Remove the last token from the collected tokens</p>
-          
-          
 
-          
           <div class="method-source-code" id="pop_token-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 95</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 100</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pop_token</span>
   <span class="ruby-ivar">@token_stream</span>.<span class="ruby-identifier">pop</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-start_collecting_tokens" class="method-detail method-alias">
-        
-        <div class="method-heading">
-          <span class="method-name">start_collecting_tokens</span><span
-            class="method-args">()</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">start_collecting_tokens</span><span
+              class="method-args">()</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
           
-          
-          
-          
 
-          
         </div>
 
-        
 
-        
         <div class="aliases">
           Alias for: <a href="TokenStream.html#method-i-collect_tokens">collect_tokens</a>
         </div>
-        
       </div>
 
-    
       <div id="method-i-token_stream" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">token_stream</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">token_stream</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Current token stream</p>
-          
-          
 
-          
           <div class="method-source-code" id="token_stream-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 102</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 107</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">token_stream</span>
   <span class="ruby-ivar">@token_stream</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-tokens_to_s" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">tokens_to_s</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">tokens_to_s</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Returns a string representation of the token stream</p>
-          
-          
 
-          
           <div class="method-source-code" id="tokens_to_s-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 109</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/token_stream.rb, line 114</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tokens_to_s</span>
   <span class="ruby-identifier">token_stream</span>.<span class="ruby-identifier">compact</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">token</span><span class="ruby-operator">|</span> <span class="ruby-identifier">token</span>[<span class="ruby-value">:text</span>] }.<span class="ruby-identifier">join</span> <span class="ruby-string">&#39;&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

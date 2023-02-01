@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::RI::Driver - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::RI::Driver - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
   var index_rel_prefix = "../../";
 </script>
 
-<script src="../../js/jquery.js"></script>
-<script src="../../js/darkfish.js"></script>
+<script src="../../js/navigation.js" defer></script>
+<script src="../../js/search.js" defer></script>
+<script src="../../js/search_index.js" defer></script>
+<script src="../../js/searcher.js" defer></script>
+<script src="../../js/darkfish.js" defer></script>
 
 <link href="../../css/fonts.css" rel="stylesheet">
 <link href="../../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,120 +57,68 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
-  <p class="link">Object
-  
+  <p class="link"><a href="../../Object.html">Object</a>
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-c-default_options">::default_options</a>
-    
     <li ><a href="#method-c-dump">::dump</a>
-    
     <li ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-c-process_args">::process_args</a>
-    
     <li ><a href="#method-c-run">::run</a>
-    
     <li ><a href="#method-i-add_also_in">#add_also_in</a>
-    
     <li ><a href="#method-i-add_class">#add_class</a>
-    
     <li ><a href="#method-i-add_extends">#add_extends</a>
-    
     <li ><a href="#method-i-add_extension_modules">#add_extension_modules</a>
-    
     <li ><a href="#method-i-add_from">#add_from</a>
-    
     <li ><a href="#method-i-add_includes">#add_includes</a>
-    
     <li ><a href="#method-i-add_method">#add_method</a>
-    
     <li ><a href="#method-i-add_method_documentation">#add_method_documentation</a>
-    
     <li ><a href="#method-i-add_method_list">#add_method_list</a>
-    
     <li ><a href="#method-i-ancestors_of">#ancestors_of</a>
-    
     <li ><a href="#method-i-class_document">#class_document</a>
-    
     <li ><a href="#method-i-classes">#classes</a>
-    
     <li ><a href="#method-i-classes_and_includes_and_extends_for">#classes_and_includes_and_extends_for</a>
-    
     <li ><a href="#method-i-complete">#complete</a>
-    
     <li ><a href="#method-i-display">#display</a>
-    
     <li ><a href="#method-i-display_class">#display_class</a>
-    
     <li ><a href="#method-i-display_method">#display_method</a>
-    
     <li ><a href="#method-i-display_name">#display_name</a>
-    
     <li ><a href="#method-i-display_names">#display_names</a>
-    
     <li ><a href="#method-i-display_page">#display_page</a>
-    
     <li ><a href="#method-i-display_page_list">#display_page_list</a>
-    
     <li ><a href="#method-i-expand_class">#expand_class</a>
-    
     <li ><a href="#method-i-expand_name">#expand_name</a>
-    
     <li ><a href="#method-i-filter_methods">#filter_methods</a>
-    
     <li ><a href="#method-i-find_methods">#find_methods</a>
-    
-    <li ><a href="#method-i-find_pager_jruby">#find_pager_jruby</a>
-    
     <li ><a href="#method-i-find_store">#find_store</a>
-    
     <li ><a href="#method-i-formatter">#formatter</a>
-    
-    <li ><a href="#method-i-in_path-3F">#in_path?</a>
-    
     <li ><a href="#method-i-interactive">#interactive</a>
-    
     <li ><a href="#method-i-list_known_classes">#list_known_classes</a>
-    
     <li ><a href="#method-i-list_methods_matching">#list_methods_matching</a>
-    
     <li ><a href="#method-i-load_method">#load_method</a>
-    
     <li ><a href="#method-i-load_methods_matching">#load_methods_matching</a>
-    
     <li ><a href="#method-i-lookup_method">#lookup_method</a>
-    
     <li ><a href="#method-i-method_document">#method_document</a>
-    
     <li ><a href="#method-i-method_type">#method_type</a>
-    
     <li ><a href="#method-i-name_regexp">#name_regexp</a>
-    
     <li ><a href="#method-i-page">#page</a>
-    
     <li ><a href="#method-i-paging-3F">#paging?</a>
-    
     <li ><a href="#method-i-parse_name">#parse_name</a>
-    
     <li ><a href="#method-i-run">#run</a>
-    
     <li ><a href="#method-i-setup_pager">#setup_pager</a>
-    
     <li ><a href="#method-i-start_server">#start_server</a>
-    
   </ul>
 </div>
 
@@ -182,14 +132,13 @@
 
   <section class="description">
     
-<p>The <a href="../../RI_rdoc.html">RI</a> driver implements the command-line
-ri tool.</p>
+<p>The <a href="../../RI_rdoc.html">RI</a> driver implements the command-line ri tool.</p>
 
 <p>The driver supports:</p>
 <ul><li>
 <p>loading <a href="../../RI_rdoc.html">RI</a> data from:</p>
 <ul><li>
-<p>Ruby&#39;s standard library</p>
+<p>Ruby’s standard library</p>
 </li><li>
 <p>RubyGems</p>
 </li><li>
@@ -198,8 +147,7 @@ ri tool.</p>
 <p>A user-supplied directory</p>
 </li></ul>
 </li><li>
-<p>Paging output (uses RI_PAGER environment variable, PAGER environment
-variable or the less, more and pager programs)</p>
+<p>Paging output (uses RI_PAGER environment variable, PAGER environment variable or the less, more and pager programs)</p>
 </li><li>
 <p>Interactive mode with tab-completion</p>
 </li><li>
@@ -207,27 +155,20 @@ variable or the less, more and pager programs)</p>
 </li><li>
 <p>Colorized output</p>
 </li><li>
-<p>Merging output from multiple <a href="../../RI_rdoc.html">RI</a> data
-sources</p>
+<p>Merging output from multiple <a href="../../RI_rdoc.html">RI</a> data sources</p>
 </li></ul>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-show_all" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">show_all</span><span
@@ -235,12 +176,9 @@ sources</p>
         </div>
 
         <div class="method-description">
-        
         <p>Show all method documentation following a class or module</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-stores" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">stores</span><span
@@ -248,13 +186,9 @@ sources</p>
         </div>
 
         <div class="method-description">
-        
-        <p>An RDoc::RI::Store for each entry in the <a
-href="../../RI_rdoc.html">RI</a> path</p>
-        
+        <p>An RDoc::RI::Store for each entry in the <a href="../../RI_rdoc.html">RI</a> path</p>
         </div>
       </div>
-      
       <div id="attribute-i-use_stdout" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">use_stdout</span><span
@@ -262,42 +196,31 @@ href="../../RI_rdoc.html">RI</a> path</p>
         </div>
 
         <div class="method-description">
-        
         <p>Controls the user of the pager vs $stdout</p>
-        
         </div>
       </div>
-      
     </section>
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-default_options" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">default_options</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">default_options</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Default options for ri</p>
-          
-          
 
-          
           <div class="method-source-code" id="default_options-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 89</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 76</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">default_options</span>
   <span class="ruby-identifier">options</span> = {}
   <span class="ruby-identifier">options</span>[<span class="ruby-value">:interactive</span>] = <span class="ruby-keyword">false</span>
@@ -316,35 +239,25 @@ href="../../RI_rdoc.html">RI</a> path</p>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">options</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-c-dump" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">dump</span><span
-            class="method-args">(data_path)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">dump</span><span
+              class="method-args">(data_path)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Dump <code>data_path</code> using pp</p>
-          
-          
 
-          
           <div class="method-source-code" id="dump-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 110</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 97</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">dump</span> <span class="ruby-identifier">data_path</span>
   <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;pp&#39;</span>
 
@@ -353,36 +266,25 @@ href="../../RI_rdoc.html">RI</a> path</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(initial_options = {})</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(initial_options = {})</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new driver using <code>initial_options</code> from <a
-href="Driver.html#method-c-process_args">::process_args</a></p>
-          
-          
+          <p>Creates a new driver using <code>initial_options</code> from <a href="Driver.html#method-c-process_args"><code>::process_args</code></a></p>
 
-          
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 396</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 390</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">initial_options</span> = {}
   <span class="ruby-ivar">@paging</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-ivar">@classes</span> = <span class="ruby-keyword">nil</span>
@@ -416,40 +318,27 @@ href="Driver.html#method-c-process_args">::process_args</a></p>
   <span class="ruby-ivar">@use_stdout</span>  = <span class="ruby-identifier">options</span>[<span class="ruby-value">:use_stdout</span>]
   <span class="ruby-ivar">@show_all</span>    = <span class="ruby-identifier">options</span>[<span class="ruby-value">:show_all</span>]
   <span class="ruby-ivar">@width</span>       = <span class="ruby-identifier">options</span>[<span class="ruby-value">:width</span>]
-
-  <span class="ruby-comment"># pager process for jruby</span>
-  <span class="ruby-ivar">@jruby_pager_process</span> = <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-c-process_args" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">process_args</span><span
-            class="method-args">(argv)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">process_args</span><span
+              class="method-args">(argv)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Parses <code>argv</code> and returns a Hash of options</p>
-          
-          
 
-          
           <div class="method-source-code" id="process_args-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 121</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 108</span>
   <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">process_args</span> <span class="ruby-identifier">argv</span>
     <span class="ruby-identifier">options</span> = <span class="ruby-identifier">default_options</span>
 
@@ -474,6 +363,8 @@ Where name can be:
 
   gem_name: | gem_name:README | gem_name:History
 
+  ruby: | ruby:NEWS | ruby:globals
+
 All class names may be abbreviated to their minimum unambiguous form.
 If a name is ambiguous, all valid options will be listed.
 
@@ -485,6 +376,10 @@ they&#39;re contained in.  If the gem name is followed by a &#39;:&#39; all file
 gem will be shown.  The file name extension may be omitted where it is
 unambiguous.
 
+&#39;ruby&#39; can be used as a pseudo gem name to display files from the Ruby
+core documentation. Use &#39;ruby:&#39; by itself to get a list of all available
+core documentation files.
+
 For example:
 
     #{opt.program_name} Fil
@@ -492,6 +387,7 @@ For example:
     #{opt.program_name} File.new
     #{opt.program_name} zip
     #{opt.program_name} rdoc:README
+    #{opt.program_name} ruby:comments
 
 Note that shell quoting or escaping may be required for method names
 containing punctuation:
@@ -688,7 +584,7 @@ or the PAGER environment variable.
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
 
-    <span class="ruby-identifier">argv</span> = <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;RI&#39;</span>].<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">split</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">argv</span>
+    <span class="ruby-identifier">argv</span> = <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;RI&#39;</span>].<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39; &#39;</span>).<span class="ruby-identifier">concat</span> <span class="ruby-identifier">argv</span>
 
     <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">parse!</span> <span class="ruby-identifier">argv</span>
 
@@ -707,35 +603,25 @@ or the PAGER environment variable.
     <span class="ruby-identifier">exit</span> <span class="ruby-value">1</span>
   <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-c-run" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">run</span><span
-            class="method-args">(argv = ARGV)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">run</span><span
+              class="method-args">(argv = ARGV)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Runs the ri command line executable using <code>argv</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="run-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 381</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 375</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">run</span> <span class="ruby-identifier">argv</span> = <span class="ruby-constant">ARGV</span>
   <span class="ruby-identifier">options</span> = <span class="ruby-identifier">process_args</span> <span class="ruby-identifier">argv</span>
 
@@ -748,44 +634,32 @@ or the PAGER environment variable.
   <span class="ruby-identifier">ri</span>.<span class="ruby-identifier">run</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-add_also_in" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_also_in</span><span
-            class="method-args">(out, also_in)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_also_in</span><span
+              class="method-args">(out, also_in)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds paths for undocumented classes <code>also_in</code> to
-<code>out</code></p>
-          
-          
+          <p>Adds paths for undocumented classes <code>also_in</code> to <code>out</code></p>
 
-          
           <div class="method-source-code" id="add_also_in-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 437</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 428</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_also_in</span> <span class="ruby-identifier">out</span>, <span class="ruby-identifier">also_in</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">also_in</span>.<span class="ruby-identifier">empty?</span>
 
@@ -799,36 +673,25 @@ or the PAGER environment variable.
   <span class="ruby-identifier">out</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">paths</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_class" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_class</span><span
-            class="method-args">(out, name, classes)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_class</span><span
+              class="method-args">(out, name, classes)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds a class header to <code>out</code> for class <code>name</code> which
-is described in <code>classes</code>.</p>
-          
-          
+          <p>Adds a class header to <code>out</code> for class <code>name</code> which is described in <code>classes</code>.</p>
 
-          
           <div class="method-source-code" id="add_class-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 454</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 445</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_class</span> <span class="ruby-identifier">out</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">classes</span>
   <span class="ruby-identifier">heading</span> = <span class="ruby-keyword">if</span> <span class="ruby-identifier">classes</span>.<span class="ruby-identifier">all?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">klass</span><span class="ruby-operator">|</span> <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">module?</span> } <span class="ruby-keyword">then</span>
               <span class="ruby-identifier">name</span>
@@ -846,72 +709,48 @@ is described in <code>classes</code>.</p>
   <span class="ruby-identifier">out</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">BlankLine</span>.<span class="ruby-identifier">new</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_extends" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_extends</span><span
-            class="method-args">(out, extends)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_extends</span><span
+              class="method-args">(out, extends)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Adds <code>extends</code> to <code>out</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="add_extends-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 481</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 472</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_extends</span> <span class="ruby-identifier">out</span>, <span class="ruby-identifier">extends</span>
   <span class="ruby-identifier">add_extension_modules</span> <span class="ruby-identifier">out</span>, <span class="ruby-string">&#39;Extended by&#39;</span>, <span class="ruby-identifier">extends</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_extension_modules" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_extension_modules</span><span
-            class="method-args">(out, type, extensions)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_extension_modules</span><span
+              class="method-args">(out, type, extensions)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds a list of <code>extensions</code> to this module of the given
-<code>type</code> to <code>out</code>. <a
-href="Driver.html#method-i-add_includes">#add_includes</a> and <a
-href="Driver.html#method-i-add_extends">#add_extends</a> call this, so you
-should use those directly.</p>
-          
-          
+          <p>Adds a list of <code>extensions</code> to this module of the given <code>type</code> to <code>out</code>. <a href="Driver.html#method-i-add_includes"><code>add_includes</code></a> and <a href="Driver.html#method-i-add_extends"><code>add_extends</code></a> call this, so you should use those directly.</p>
 
-          
           <div class="method-source-code" id="add_extension_modules-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 489</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 480</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_extension_modules</span> <span class="ruby-identifier">out</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">extensions</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">extensions</span>.<span class="ruby-identifier">empty?</span>
 
@@ -927,101 +766,71 @@ should use those directly.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_from" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_from</span><span
-            class="method-args">(out, store)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_from</span><span
+              class="method-args">(out, store)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Adds “(from …)” to <code>out</code> for <code>store</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="add_from-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 474</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 465</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_from</span> <span class="ruby-identifier">out</span>, <span class="ruby-identifier">store</span>
   <span class="ruby-identifier">out</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;(from #{store.friendly_path})&quot;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_includes" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_includes</span><span
-            class="method-args">(out, includes)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_includes</span><span
+              class="method-args">(out, includes)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Adds <code>includes</code> to <code>out</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="add_includes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 548</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 539</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_includes</span> <span class="ruby-identifier">out</span>, <span class="ruby-identifier">includes</span>
   <span class="ruby-identifier">add_extension_modules</span> <span class="ruby-identifier">out</span>, <span class="ruby-string">&#39;Includes&#39;</span>, <span class="ruby-identifier">includes</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_method" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_method</span><span
-            class="method-args">(out, name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_method</span><span
+              class="method-args">(out, name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Looks up the method <code>name</code> and adds it to <code>out</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="add_method-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 555</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 546</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_method</span> <span class="ruby-identifier">out</span>, <span class="ruby-identifier">name</span>
   <span class="ruby-identifier">filtered</span>   = <span class="ruby-identifier">lookup_method</span> <span class="ruby-identifier">name</span>
 
@@ -1030,36 +839,25 @@ should use those directly.</p>
   <span class="ruby-identifier">out</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">method_out</span>.<span class="ruby-identifier">parts</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_method_documentation" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_method_documentation</span><span
-            class="method-args">(out, klass)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_method_documentation</span><span
+              class="method-args">(out, klass)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds documentation for all methods in <code>klass</code> to
-<code>out</code></p>
-          
-          
+          <p>Adds documentation for all methods in <code>klass</code> to <code>out</code></p>
 
-          
           <div class="method-source-code" id="add_method_documentation-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 566</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 557</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_method_documentation</span> <span class="ruby-identifier">out</span>, <span class="ruby-identifier">klass</span>
   <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">method_list</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">method</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">begin</span>
@@ -1070,36 +868,25 @@ should use those directly.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_method_list" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_method_list</span><span
-            class="method-args">(out, methods, name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_method_list</span><span
+              class="method-args">(out, methods, name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds a list of <code>methods</code> to <code>out</code> with a heading of
-<code>name</code></p>
-          
-          
+          <p>Adds a list of <code>methods</code> to <code>out</code> with a heading of <code>name</code></p>
 
-          
           <div class="method-source-code" id="add_method_list-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 579</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 570</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_method_list</span> <span class="ruby-identifier">out</span>, <span class="ruby-identifier">methods</span>, <span class="ruby-identifier">name</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">methods</span>.<span class="ruby-identifier">empty?</span>
 
@@ -1117,35 +904,25 @@ should use those directly.</p>
   <span class="ruby-identifier">out</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">BlankLine</span>.<span class="ruby-identifier">new</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-ancestors_of" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">ancestors_of</span><span
-            class="method-args">(klass)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">ancestors_of</span><span
+              class="method-args">(klass)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Returns ancestor classes of <code>klass</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="ancestors_of-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 599</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 590</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">ancestors_of</span> <span class="ruby-identifier">klass</span>
   <span class="ruby-identifier">ancestors</span> = []
 
@@ -1159,11 +936,11 @@ should use those directly.</p>
 
     <span class="ruby-identifier">stores</span> = <span class="ruby-identifier">classes</span>[<span class="ruby-identifier">current</span>]
 
-    <span class="ruby-keyword">break</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">stores</span> <span class="ruby-keyword">and</span> <span class="ruby-keyword">not</span> <span class="ruby-identifier">stores</span>.<span class="ruby-identifier">empty?</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">stores</span> <span class="ruby-keyword">and</span> <span class="ruby-keyword">not</span> <span class="ruby-identifier">stores</span>.<span class="ruby-identifier">empty?</span>
 
-    <span class="ruby-identifier">klasses</span> = <span class="ruby-identifier">stores</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">store</span><span class="ruby-operator">|</span>
-      <span class="ruby-identifier">store</span>.<span class="ruby-identifier">ancestors</span>[<span class="ruby-identifier">current</span>]
-    <span class="ruby-keyword">end</span>.<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">uniq</span>
+    <span class="ruby-identifier">klasses</span> = <span class="ruby-identifier">stores</span>.<span class="ruby-identifier">flat_map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">store</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">store</span>.<span class="ruby-identifier">ancestors</span>[<span class="ruby-identifier">current</span>] <span class="ruby-operator">||</span> []
+    <span class="ruby-keyword">end</span>.<span class="ruby-identifier">uniq</span>
 
     <span class="ruby-identifier">klasses</span> = <span class="ruby-identifier">klasses</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">seen</span>
 
@@ -1174,36 +951,25 @@ should use those directly.</p>
   <span class="ruby-identifier">ancestors</span>.<span class="ruby-identifier">reverse</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-class_document" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">class_document</span><span
-            class="method-args">(name, found, klasses, includes, extends)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">class_document</span><span
+              class="method-args">(name, found, klasses, includes, extends)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Builds a <a href="../Markup/Document.html">RDoc::Markup::Document</a> from
-<code>found</code>, <code>klasess</code> and <code>includes</code></p>
-          
-          
+          <p>Builds a <a href="../Markup/Document.html"><code>RDoc::Markup::Document</code></a> from <code>found</code>, <code>klasess</code> and <code>includes</code></p>
 
-          
           <div class="method-source-code" id="class_document-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 636</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 627</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">class_document</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">found</span>, <span class="ruby-identifier">klasses</span>, <span class="ruby-identifier">includes</span>, <span class="ruby-identifier">extends</span>
   <span class="ruby-identifier">also_in</span> = []
 
@@ -1223,35 +989,25 @@ should use those directly.</p>
   <span class="ruby-identifier">out</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-classes" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">classes</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">classes</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Hash mapping a known class or module to the stores it can be loaded from</p>
-          
-          
 
-          
           <div class="method-source-code" id="classes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 702</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 693</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">classes</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@classes</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@classes</span>
 
@@ -1268,36 +1024,25 @@ should use those directly.</p>
   <span class="ruby-ivar">@classes</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-classes_and_includes_and_extends_for" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">classes_and_includes_and_extends_for</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">classes_and_includes_and_extends_for</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Returns the stores wherein <code>name</code> is found along with the
-classes, extends and includes that match it</p>
-          
-          
+          <p>Returns the stores wherein <code>name</code> is found along with the classes, extends and includes that match it</p>
 
-          
           <div class="method-source-code" id="classes_and_includes_and_extends_for-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 722</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 713</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">classes_and_includes_and_extends_for</span> <span class="ruby-identifier">name</span>
   <span class="ruby-identifier">klasses</span> = []
   <span class="ruby-identifier">extends</span> = []
@@ -1320,35 +1065,25 @@ classes, extends and includes that match it</p>
   [<span class="ruby-identifier">found</span>, <span class="ruby-identifier">klasses</span>, <span class="ruby-identifier">includes</span>, <span class="ruby-identifier">extends</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-complete" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">complete</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">complete</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Completes <code>name</code> based on the caches.  For Readline</p>
-          
-          
 
-          
           <div class="method-source-code" id="complete-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 747</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 738</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">complete</span> <span class="ruby-identifier">name</span>
   <span class="ruby-identifier">completions</span> = []
 
@@ -1360,35 +1095,25 @@ classes, extends and includes that match it</p>
   <span class="ruby-identifier">completions</span>.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">uniq</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-display" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">display</span><span
-            class="method-args">(document)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">display</span><span
+              class="method-args">(document)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Converts <code>document</code> to text and writes it to the pager</p>
-          
-          
 
-          
           <div class="method-source-code" id="display-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 797</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 788</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">display</span> <span class="ruby-identifier">document</span>
   <span class="ruby-identifier">page</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">f</span> = <span class="ruby-identifier">formatter</span>(<span class="ruby-identifier">io</span>)
@@ -1399,36 +1124,25 @@ classes, extends and includes that match it</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-display_class" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">display_class</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">display_class</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Outputs formatted <a href="../../RI_rdoc.html">RI</a> data for class
-<code>name</code>.  Groups undocumented classes</p>
-          
-          
+          <p>Outputs formatted <a href="../../RI_rdoc.html">RI</a> data for class <code>name</code>.  Groups undocumented classes</p>
 
-          
           <div class="method-source-code" id="display_class-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 810</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 801</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">display_class</span> <span class="ruby-identifier">name</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/#|\./</span>
 
@@ -1442,36 +1156,25 @@ classes, extends and includes that match it</p>
   <span class="ruby-identifier">display</span> <span class="ruby-identifier">out</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-display_method" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">display_method</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">display_method</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Outputs formatted <a href="../../RI_rdoc.html">RI</a> data for method
-<code>name</code></p>
-          
-          
+          <p>Outputs formatted <a href="../../RI_rdoc.html">RI</a> data for method <code>name</code></p>
 
-          
           <div class="method-source-code" id="display_method-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 826</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 817</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">display_method</span> <span class="ruby-identifier">name</span>
   <span class="ruby-identifier">out</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span>
 
@@ -1480,40 +1183,27 @@ classes, extends and includes that match it</p>
   <span class="ruby-identifier">display</span> <span class="ruby-identifier">out</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-display_name" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">display_name</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">display_name</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Outputs formatted <a href="../../RI_rdoc.html">RI</a> data for the class or
-method <code>name</code>.</p>
+          <p>Outputs formatted <a href="../../RI_rdoc.html">RI</a> data for the class or method <code>name</code>.</p>
 
-<p>Returns true if <code>name</code> was found, false if it was not an
-alternative could be guessed, raises an error if <code>name</code>
-couldn&#39;t be guessed.</p>
-          
-          
+<p>Returns true if <code>name</code> was found, false if it was not an alternative could be guessed, raises an error if <code>name</code> couldn’t be guessed.</p>
 
-          
           <div class="method-source-code" id="display_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 840</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 831</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">display_name</span> <span class="ruby-identifier">name</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\w:(\w|$)/</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">display_page</span> <span class="ruby-identifier">name</span>
@@ -1540,35 +1230,25 @@ couldn&#39;t be guessed.</p>
   <span class="ruby-keyword">false</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-display_names" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">display_names</span><span
-            class="method-args">(names)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">display_names</span><span
+              class="method-args">(names)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Displays each name in <code>name</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="display_names-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 869</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 860</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">display_names</span> <span class="ruby-identifier">names</span>
   <span class="ruby-identifier">names</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">name</span> = <span class="ruby-identifier">expand_name</span> <span class="ruby-identifier">name</span>
@@ -1577,36 +1257,25 @@ couldn&#39;t be guessed.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-display_page" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">display_page</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">display_page</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Outputs formatted <a href="../../RI_rdoc.html">RI</a> data for page
-<code>name</code>.</p>
-          
-          
+          <p>Outputs formatted <a href="../../RI_rdoc.html">RI</a> data for page <code>name</code>.</p>
 
-          
           <div class="method-source-code" id="display_page-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 880</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 871</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">display_page</span> <span class="ruby-identifier">name</span>
   <span class="ruby-identifier">store_name</span>, <span class="ruby-identifier">page_name</span> = <span class="ruby-identifier">name</span>.<span class="ruby-identifier">split</span> <span class="ruby-string">&#39;:&#39;</span>, <span class="ruby-value">2</span>
 
@@ -1635,36 +1304,25 @@ couldn&#39;t be guessed.</p>
   <span class="ruby-identifier">display</span> <span class="ruby-identifier">page</span>.<span class="ruby-identifier">comment</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-display_page_list" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">display_page_list</span><span
-            class="method-args">(store, pages = store.cache[:pages], search = nil)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">display_page_list</span><span
+              class="method-args">(store, pages = store.cache[:pages], search = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Outputs a formatted <a href="../../RI_rdoc.html">RI</a> page list for the
-pages in <code>store</code>.</p>
-          
-          
+          <p>Outputs a formatted <a href="../../RI_rdoc.html">RI</a> page list for the pages in <code>store</code>.</p>
 
-          
           <div class="method-source-code" id="display_page_list-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 911</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 902</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">display_page_list</span> <span class="ruby-identifier">store</span>, <span class="ruby-identifier">pages</span> = <span class="ruby-identifier">store</span>.<span class="ruby-identifier">cache</span>[<span class="ruby-value">:pages</span>], <span class="ruby-identifier">search</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">out</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span>
 
@@ -1688,36 +1346,25 @@ pages in <code>store</code>.</p>
   <span class="ruby-identifier">display</span> <span class="ruby-identifier">out</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-expand_class" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">expand_class</span><span
-            class="method-args">(klass)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">expand_class</span><span
+              class="method-args">(klass)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Expands abbreviated klass <code>klass</code> into a fully-qualified class. 
-“Zl::Da” will be expanded to Zlib::DataError.</p>
-          
-          
+          <p>Expands abbreviated klass <code>klass</code> into a fully-qualified class.  “Zl::Da” will be expanded to Zlib::DataError.</p>
 
-          
           <div class="method-source-code" id="expand_class-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 955</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 946</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">expand_class</span> <span class="ruby-identifier">klass</span>
   <span class="ruby-identifier">class_names</span> = <span class="ruby-identifier">classes</span>.<span class="ruby-identifier">keys</span>
   <span class="ruby-identifier">ary</span> = <span class="ruby-identifier">class_names</span>.<span class="ruby-identifier">grep</span>(<span class="ruby-constant">Regexp</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;\\A#{klass.gsub(/(?=::|\z)/, &#39;[^:]*&#39;)}\\z&quot;</span>))
@@ -1732,36 +1379,25 @@ pages in <code>store</code>.</p>
   <span class="ruby-identifier">ary</span>.<span class="ruby-identifier">first</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-expand_name" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">expand_name</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">expand_name</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Expands the class portion of <code>name</code> into a fully-qualified
-class.  See <a href="Driver.html#method-i-expand_class">expand_class</a>.</p>
-          
-          
+          <p>Expands the class portion of <code>name</code> into a fully-qualified class.  See <a href="Driver.html#method-i-expand_class"><code>expand_class</code></a>.</p>
 
-          
           <div class="method-source-code" id="expand_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 973</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 964</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">expand_name</span> <span class="ruby-identifier">name</span>
   <span class="ruby-identifier">klass</span>, <span class="ruby-identifier">selector</span>, <span class="ruby-identifier">method</span> = <span class="ruby-identifier">parse_name</span> <span class="ruby-identifier">name</span>
 
@@ -1775,36 +1411,25 @@ class.  See <a href="Driver.html#method-i-expand_class">expand_class</a>.</p>
   <span class="ruby-keyword">end</span>.<span class="ruby-identifier">join</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-filter_methods" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">filter_methods</span><span
-            class="method-args">(found, name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">filter_methods</span><span
+              class="method-args">(found, name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Filters the methods in <code>found</code> trying to find a match for
-<code>name</code>.</p>
-          
-          
+          <p>Filters the methods in <code>found</code> trying to find a match for <code>name</code>.</p>
 
-          
           <div class="method-source-code" id="filter_methods-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 989</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 980</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">filter_methods</span> <span class="ruby-identifier">found</span>, <span class="ruby-identifier">name</span>
   <span class="ruby-identifier">regexp</span> = <span class="ruby-identifier">name_regexp</span> <span class="ruby-identifier">name</span>
 
@@ -1817,39 +1442,25 @@ class.  See <a href="Driver.html#method-i-expand_class">expand_class</a>.</p>
   <span class="ruby-identifier">found</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_methods" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_methods</span><span
-            class="method-args">(name) { |*item| ... }</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_methods</span><span
+              class="method-args">(name) { |*item| ... }</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Yields items matching <code>name</code> including the store they were found
-in, the class being searched for, the class they were found in (an
-ancestor) the types of methods to look up (from <a
-href="Driver.html#method-i-method_type">method_type</a>), and the method
-name being searched for</p>
-          
-          
+          <p>Yields items matching <code>name</code> including the store they were found in, the class being searched for, the class they were found in (an ancestor) the types of methods to look up (from <a href="Driver.html#method-i-method_type"><code>method_type</code></a>), and the method name being searched for</p>
 
-          
           <div class="method-source-code" id="find_methods-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1007</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 998</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_methods</span> <span class="ruby-identifier">name</span>
   <span class="ruby-identifier">klass</span>, <span class="ruby-identifier">selector</span>, <span class="ruby-identifier">method</span> = <span class="ruby-identifier">parse_name</span> <span class="ruby-identifier">name</span>
 
@@ -1890,95 +1501,27 @@ name being searched for</p>
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
-      <div id="method-i-find_pager_jruby" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_pager_jruby</span><span
-            class="method-args">(pager)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>Finds the given <code>pager</code> for jruby.  Returns an IO if
-<code>pager</code> was found.</p>
-
-<p>Returns false if <code>pager</code> does not exist.</p>
-
-<p>Returns nil if the jruby JVM doesn&#39;t support ProcessBuilder redirection
-(1.6 and older).</p>
-          
-          
-
-          
-          <div class="method-source-code" id="find_pager_jruby-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1055</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_pager_jruby</span> <span class="ruby-identifier">pager</span>
-  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;java&#39;</span>
-  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;shellwords&#39;</span>
-
-  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">java</span>.<span class="ruby-identifier">lang</span>.<span class="ruby-constant">ProcessBuilder</span>.<span class="ruby-identifier">constants</span>.<span class="ruby-identifier">include?</span> <span class="ruby-value">:Redirect</span>
-
-  <span class="ruby-identifier">pager</span> = <span class="ruby-constant">Shellwords</span>.<span class="ruby-identifier">split</span> <span class="ruby-identifier">pager</span>
-
-  <span class="ruby-identifier">pb</span> = <span class="ruby-identifier">java</span>.<span class="ruby-identifier">lang</span>.<span class="ruby-constant">ProcessBuilder</span>.<span class="ruby-identifier">new</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">pager</span>)
-  <span class="ruby-identifier">pb</span> = <span class="ruby-identifier">pb</span>.<span class="ruby-identifier">redirect_output</span> <span class="ruby-identifier">java</span>.<span class="ruby-identifier">lang</span>.<span class="ruby-constant">ProcessBuilder</span><span class="ruby-operator">::</span><span class="ruby-constant">Redirect</span><span class="ruby-operator">::</span><span class="ruby-constant">INHERIT</span>
-
-  <span class="ruby-ivar">@jruby_pager_process</span> = <span class="ruby-identifier">pb</span>.<span class="ruby-identifier">start</span>
-
-  <span class="ruby-identifier">input</span> = <span class="ruby-ivar">@jruby_pager_process</span>.<span class="ruby-identifier">output_stream</span>
-
-  <span class="ruby-identifier">io</span> = <span class="ruby-identifier">input</span>.<span class="ruby-identifier">to_io</span>
-  <span class="ruby-identifier">io</span>.<span class="ruby-identifier">sync</span> = <span class="ruby-keyword">true</span>
-  <span class="ruby-identifier">io</span>
-<span class="ruby-keyword">rescue</span> <span class="ruby-identifier">java</span>.<span class="ruby-identifier">io</span>.<span class="ruby-constant">IOException</span>
-  <span class="ruby-keyword">false</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
       <div id="method-i-find_store" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_store</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_store</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Finds a store that matches <code>name</code> which can be the name of a
-gem, “ruby”, “home” or “site”.</p>
+          <p>Finds a store that matches <code>name</code> which can be the name of a gem, “ruby”, “home” or “site”.</p>
 
-<p>See also <a href="../Store.html#method-i-source">RDoc::Store#source</a></p>
-          
-          
+<p>See also <a href="../Store.html#method-i-source"><code>RDoc::Store#source</code></a></p>
 
-          
           <div class="method-source-code" id="find_store-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1083</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1044</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_store</span> <span class="ruby-identifier">name</span>
   <span class="ruby-ivar">@stores</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">store</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">source</span> = <span class="ruby-identifier">store</span>.<span class="ruby-identifier">source</span>
@@ -1992,38 +1535,25 @@ gem, “ruby”, “home” or “site”.</p>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RI</span><span class="ruby-operator">::</span><span class="ruby-constant">Driver</span><span class="ruby-operator">::</span><span class="ruby-constant">NotFoundError</span>, <span class="ruby-identifier">name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-formatter" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">formatter</span><span
-            class="method-args">(io)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">formatter</span><span
+              class="method-args">(io)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new <a
-href="../Markup/Formatter.html">RDoc::Markup::Formatter</a>.  If a
-formatter is given with -f, use it.  If we&#39;re outputting to a pager,
-use bs, otherwise ansi.</p>
-          
-          
+          <p>Creates a new <a href="../Markup/Formatter.html"><code>RDoc::Markup::Formatter</code></a>.  If a formatter is given with -f, use it.  If we’re outputting to a pager, use bs, otherwise ansi.</p>
 
-          
           <div class="method-source-code" id="formatter-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1100</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1061</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">formatter</span>(<span class="ruby-identifier">io</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@formatter_klass</span> <span class="ruby-keyword">then</span>
     <span class="ruby-ivar">@formatter_klass</span>.<span class="ruby-identifier">new</span>
@@ -2034,75 +1564,32 @@ use bs, otherwise ansi.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
-      <div id="method-i-in_path-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">in_path?</span><span
-            class="method-args">(file)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>Is <code>file</code> in <a href="'PATH'">ENV</a>?</p>
-          
-          
-
-          
-          <div class="method-source-code" id="in_path-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1147</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">in_path?</span> <span class="ruby-identifier">file</span>
-  <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">file</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">%r%\A/%</span> <span class="ruby-keyword">and</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span> <span class="ruby-identifier">file</span>
-
-  <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;PATH&#39;</span>].<span class="ruby-identifier">split</span>(<span class="ruby-constant">File</span><span class="ruby-operator">::</span><span class="ruby-constant">PATH_SEPARATOR</span>).<span class="ruby-identifier">any?</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">path</span><span class="ruby-operator">|</span>
-    <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">path</span>, <span class="ruby-identifier">file</span>)
-  <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
       <div id="method-i-interactive" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">interactive</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">interactive</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Runs ri interactively using Readline if it is available.</p>
-          
-          
 
-          
           <div class="method-source-code" id="interactive-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1113</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1074</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">interactive</span>
   <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;\nEnter the method name you want to look up.&quot;</span>
 
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;readline&#39;</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>
+  <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span> <span class="ruby-constant">Readline</span> <span class="ruby-keyword">then</span>
     <span class="ruby-constant">Readline</span>.<span class="ruby-identifier">completion_proc</span> = <span class="ruby-identifier">method</span> <span class="ruby-value">:complete</span>
     <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;You can use tab to autocomplete.&quot;</span>
@@ -2131,36 +1618,25 @@ use bs, otherwise ansi.</p>
   <span class="ruby-identifier">exit</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-list_known_classes" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">list_known_classes</span><span
-            class="method-args">(names = [])</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">list_known_classes</span><span
+              class="method-args">(names = [])</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Lists classes known to ri starting with <code>names</code>.  If
-<code>names</code> is empty all known classes are shown.</p>
-          
-          
+          <p>Lists classes known to ri starting with <code>names</code>.  If <code>names</code> is empty all known classes are shown.</p>
 
-          
           <div class="method-source-code" id="list_known_classes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1159</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1113</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">list_known_classes</span> <span class="ruby-identifier">names</span> = []
   <span class="ruby-identifier">classes</span> = []
 
@@ -2190,35 +1666,25 @@ use bs, otherwise ansi.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-list_methods_matching" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">list_methods_matching</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">list_methods_matching</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Returns an Array of methods matching <code>name</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="list_methods_matching-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1191</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1145</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">list_methods_matching</span> <span class="ruby-identifier">name</span>
   <span class="ruby-identifier">found</span> = []
 
@@ -2254,39 +1720,27 @@ use bs, otherwise ansi.</p>
   <span class="ruby-identifier">found</span>.<span class="ruby-identifier">uniq</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-load_method" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">load_method</span><span
-            class="method-args">(store, cache, klass, type, name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">load_method</span><span
+              class="method-args">(store, cache, klass, type, name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Loads <a href="../../RI_rdoc.html">RI</a> data for method <code>name</code>
-on <code>klass</code> from <code>store</code>.  <code>type</code> and
-<code>cache</code> indicate if it is a class or instance method.</p>
-          
-          
+          <p>Loads <a href="../../RI_rdoc.html">RI</a> data for method <code>name</code> on <code>klass</code> from <code>store</code>.  <code>type</code> and <code>cache</code> indicate if it is a class or instance method.</p>
 
-          
           <div class="method-source-code" id="load_method-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1230</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1184</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">load_method</span> <span class="ruby-identifier">store</span>, <span class="ruby-identifier">cache</span>, <span class="ruby-identifier">klass</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">name</span>
-  <span class="ruby-identifier">methods</span> = <span class="ruby-identifier">store</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">cache</span>)[<span class="ruby-identifier">klass</span>]
+  <span class="ruby-identifier">methods</span> = <span class="ruby-identifier">store</span>.<span class="ruby-identifier">public_send</span>(<span class="ruby-identifier">cache</span>)[<span class="ruby-identifier">klass</span>]
 
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">methods</span>
 
@@ -2305,36 +1759,25 @@ on <code>klass</code> from <code>store</code>.  <code>type</code> and
   <span class="ruby-identifier">method</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-load_methods_matching" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">load_methods_matching</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">load_methods_matching</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Returns an Array of <a href="../../RI_rdoc.html">RI</a> data for methods
-matching <code>name</code></p>
-          
-          
+          <p>Returns an Array of <a href="../../RI_rdoc.html">RI</a> data for methods matching <code>name</code></p>
 
-          
           <div class="method-source-code" id="load_methods_matching-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1253</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1207</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">load_methods_matching</span> <span class="ruby-identifier">name</span>
   <span class="ruby-identifier">found</span> = []
 
@@ -2353,35 +1796,25 @@ matching <code>name</code></p>
   <span class="ruby-identifier">found</span>.<span class="ruby-identifier">reject</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">path</span>, <span class="ruby-identifier">methods</span><span class="ruby-operator">|</span> <span class="ruby-identifier">methods</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-lookup_method" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">lookup_method</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">lookup_method</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Returns a filtered list of methods matching <code>name</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="lookup_method-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1274</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1228</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">lookup_method</span> <span class="ruby-identifier">name</span>
   <span class="ruby-identifier">found</span> = <span class="ruby-identifier">load_methods_matching</span> <span class="ruby-identifier">name</span>
 
@@ -2404,36 +1837,25 @@ matching <code>name</code></p>
   <span class="ruby-identifier">filter_methods</span> <span class="ruby-identifier">found</span>, <span class="ruby-identifier">name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-method_document" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">method_document</span><span
-            class="method-args">(name, filtered)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">method_document</span><span
+              class="method-args">(name, filtered)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Builds a <a href="../Markup/Document.html">RDoc::Markup::Document</a> from
-<code>found</code>, <code>klasses</code> and <code>includes</code></p>
-          
-          
+          <p>Builds a <a href="../Markup/Document.html"><code>RDoc::Markup::Document</code></a> from <code>found</code>, <code>klasses</code> and <code>includes</code></p>
 
-          
           <div class="method-source-code" id="method_document-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1299</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1253</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">method_document</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">filtered</span>
   <span class="ruby-identifier">out</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span>
 
@@ -2449,36 +1871,25 @@ matching <code>name</code></p>
   <span class="ruby-identifier">out</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-method_type" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">method_type</span><span
-            class="method-args">(selector)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">method_type</span><span
+              class="method-args">(selector)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Returns the type of method (:both, :instance, :class) for
-<code>selector</code></p>
-          
-          
+          <p>Returns the type of method (:both, :instance, :class) for <code>selector</code></p>
 
-          
           <div class="method-source-code" id="method_type-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1317</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1271</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">method_type</span> <span class="ruby-identifier">selector</span>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">selector</span>
   <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;.&#39;</span>, <span class="ruby-keyword">nil</span> <span class="ruby-keyword">then</span> <span class="ruby-value">:both</span>
@@ -2487,36 +1898,25 @@ matching <code>name</code></p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-name_regexp" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">name_regexp</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">name_regexp</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Returns a regular expression for <code>name</code> that will match an
-RDoc::AnyMethod&#39;s name.</p>
-          
-          
+          <p>Returns a regular expression for <code>name</code> that will match an <a href="../AnyMethod.html"><code>RDoc::AnyMethod</code></a>‘s name.</p>
 
-          
           <div class="method-source-code" id="name_regexp-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1329</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1283</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">name_regexp</span> <span class="ruby-identifier">name</span>
   <span class="ruby-identifier">klass</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">name</span> = <span class="ruby-identifier">parse_name</span> <span class="ruby-identifier">name</span>
 
@@ -2528,42 +1928,31 @@ RDoc::AnyMethod&#39;s name.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-page" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">page</span><span
-            class="method-args">() { |pager| ... }</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">page</span><span
+              class="method-args">() { |pager| ... }</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Paginates output through a pager program.</p>
-          
-          
 
-          
           <div class="method-source-code" id="page-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1343</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1297</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">page</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">pager</span> = <span class="ruby-identifier">setup_pager</span> <span class="ruby-keyword">then</span>
     <span class="ruby-keyword">begin</span>
       <span class="ruby-keyword">yield</span> <span class="ruby-identifier">pager</span>
     <span class="ruby-keyword">ensure</span>
       <span class="ruby-identifier">pager</span>.<span class="ruby-identifier">close</span>
-      <span class="ruby-ivar">@jruby_pager_process</span>.<span class="ruby-identifier">wait_for</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@jruby_pager_process</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">else</span>
     <span class="ruby-keyword">yield</span> <span class="ruby-identifier">$stdout</span>
@@ -2573,72 +1962,50 @@ RDoc::AnyMethod&#39;s name.</p>
   <span class="ruby-ivar">@paging</span> = <span class="ruby-keyword">false</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-paging-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">paging?</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">paging?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Are we using a pager?</p>
-          
-          
 
-          
           <div class="method-source-code" id="paging-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1362</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1315</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">paging?</span>
   <span class="ruby-ivar">@paging</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_name" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_name</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_name</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Extracts the class, selector and method name parts from <code>name</code>
-like Foo::Bar#baz.</p>
+          <p>Extracts the class, selector and method name parts from <code>name</code> like Foo::Bar#baz.</p>
 
-<p>NOTE: Given Foo::Bar, Bar is considered a class even though it may be a
-method</p>
-          
-          
+<p>NOTE: Given Foo::Bar, Bar is considered a class even though it may be a method</p>
 
-          
           <div class="method-source-code" id="parse_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1373</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1326</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_name</span> <span class="ruby-identifier">name</span>
   <span class="ruby-identifier">parts</span> = <span class="ruby-identifier">name</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/(::?|#|\.)/</span>)
 
@@ -2667,35 +2034,25 @@ method</p>
   [<span class="ruby-identifier">klass</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">meth</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-run" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">run</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">run</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Looks up and displays ri data according to the options given.</p>
-          
-          
 
-          
           <div class="method-source-code" id="run-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1494</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1447</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">run</span>
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@list_doc_dirs</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">puts</span> <span class="ruby-ivar">@doc_dirs</span>
@@ -2712,60 +2069,36 @@ method</p>
   <span class="ruby-identifier">abort</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">message</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-setup_pager" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">setup_pager</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">setup_pager</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Sets up a pager program to pass output through.  Tries the RI_PAGER and
-PAGER environment variables followed by pager, less then more.</p>
-          
-          
+          <p>Sets up a pager program to pass output through.  Tries the RI_PAGER and PAGER environment variables followed by pager, less then more.</p>
 
-          
           <div class="method-source-code" id="setup_pager-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1514</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1467</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">setup_pager</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@use_stdout</span>
 
-  <span class="ruby-identifier">jruby</span> = <span class="ruby-constant">RUBY_ENGINE</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;jruby&#39;</span>
-
   <span class="ruby-identifier">pagers</span> = [<span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;RI_PAGER&#39;</span>], <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;PAGER&#39;</span>], <span class="ruby-string">&#39;pager&#39;</span>, <span class="ruby-string">&#39;less&#39;</span>, <span class="ruby-string">&#39;more&#39;</span>]
 
+  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;shellwords&#39;</span>
   <span class="ruby-identifier">pagers</span>.<span class="ruby-identifier">compact</span>.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pager</span><span class="ruby-operator">|</span>
-    <span class="ruby-keyword">next</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">pager</span>
+    <span class="ruby-identifier">pager</span> = <span class="ruby-constant">Shellwords</span>.<span class="ruby-identifier">split</span>(<span class="ruby-identifier">pager</span>)
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">pager</span>.<span class="ruby-identifier">empty?</span>
 
-    <span class="ruby-identifier">pager_cmd</span> = <span class="ruby-identifier">pager</span>.<span class="ruby-identifier">split</span>.<span class="ruby-identifier">first</span>
-
-    <span class="ruby-keyword">next</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">in_path?</span> <span class="ruby-identifier">pager_cmd</span>
-
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">jruby</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-keyword">case</span> <span class="ruby-identifier">io</span> = <span class="ruby-identifier">find_pager_jruby</span>(<span class="ruby-identifier">pager</span>)
-      <span class="ruby-keyword">when</span> <span class="ruby-keyword">nil</span>   <span class="ruby-keyword">then</span> <span class="ruby-keyword">break</span>
-      <span class="ruby-keyword">when</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">then</span> <span class="ruby-keyword">next</span>
-      <span class="ruby-keyword">else</span>            <span class="ruby-identifier">io</span>
-      <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">io</span> = <span class="ruby-constant">IO</span>.<span class="ruby-identifier">popen</span>(<span class="ruby-identifier">pager</span>, <span class="ruby-string">&#39;w&#39;</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">next</span>
-    <span class="ruby-keyword">end</span>
-
+    <span class="ruby-identifier">io</span> = <span class="ruby-constant">IO</span>.<span class="ruby-identifier">popen</span>(<span class="ruby-identifier">pager</span>, <span class="ruby-string">&#39;w&#39;</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">next</span>
     <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">$?</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">$?</span>.<span class="ruby-identifier">pid</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">io</span>.<span class="ruby-identifier">pid</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">$?</span>.<span class="ruby-identifier">exited?</span> <span class="ruby-comment"># pager didn&#39;t work</span>
 
     <span class="ruby-ivar">@paging</span> = <span class="ruby-keyword">true</span>
@@ -2778,37 +2111,31 @@ PAGER environment variables followed by pager, less then more.</p>
   <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-start_server" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">start_server</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">start_server</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Starts a WEBrick server for ri.</p>
-          
-          
 
-          
           <div class="method-source-code" id="start_server-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1553</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/ri/driver.rb, line 1493</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">start_server</span>
-  <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;webrick&#39;</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">require</span> <span class="ruby-string">&#39;webrick&#39;</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">LoadError</span>
+    <span class="ruby-identifier">abort</span> <span class="ruby-string">&quot;webrick is not found. You may need to `gem install webrick` to install webrick.&quot;</span>
+  <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">server</span> = <span class="ruby-constant">WEBrick</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTPServer</span>.<span class="ruby-identifier">new</span> <span class="ruby-value">:Port</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-ivar">@server</span>
 
@@ -2822,24 +2149,20 @@ PAGER environment variables followed by pager, less then more.</p>
   <span class="ruby-identifier">server</span>.<span class="ruby-identifier">start</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

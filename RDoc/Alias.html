@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Alias - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Alias - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
   var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,40 +57,30 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link"><a href="CodeObject.html">RDoc::CodeObject</a>
-  
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li class="calls-super" ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-3C-3D-3E">#&lt;=&gt;</a>
-    
     <li ><a href="#method-i-aref">#aref</a>
-    
     <li ><a href="#method-i-full_old_name">#full_old_name</a>
-    
     <li ><a href="#method-i-html_name">#html_name</a>
-    
     <li ><a href="#method-i-name_prefix">#name_prefix</a>
-    
     <li ><a href="#method-i-pretty_name">#pretty_name</a>
-    
     <li ><a href="#method-i-pretty_new_name">#pretty_new_name</a>
-    
     <li ><a href="#method-i-pretty_old_name">#pretty_old_name</a>
-    
   </ul>
 </div>
 
@@ -102,26 +94,19 @@
 
   <section class="description">
     
-<p>Represent an alias, which is an old_name/new_name pair associated with a
-particular context</p>
+<p>Represent an alias, which is an old_name/new_name pair associated with a particular context</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-name" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">name</span><span
@@ -129,12 +114,9 @@ particular context</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Aliased method&#39;s name</p>
-        
+        <p>Aliased method’s name</p>
         </div>
       </div>
-      
       <div id="attribute-i-new_name" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">new_name</span><span
@@ -142,12 +124,9 @@ particular context</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Aliased method&#39;s name</p>
-        
+        <p>Aliased method’s name</p>
         </div>
       </div>
-      
       <div id="attribute-i-old_name" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">old_name</span><span
@@ -155,12 +134,9 @@ particular context</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Aliasee method&#39;s name</p>
-        
+        <p>Aliasee method’s name</p>
         </div>
       </div>
-      
       <div id="attribute-i-singleton" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">singleton</span><span
@@ -168,12 +144,9 @@ particular context</p>
         </div>
 
         <div class="method-description">
-        
         <p>Is this an alias declared in a singleton context?</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-text" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">text</span><span
@@ -181,48 +154,33 @@ particular context</p>
         </div>
 
         <div class="method-description">
-        
         <p>Source file token stream</p>
-        
         </div>
       </div>
-      
     </section>
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(text, old_name, new_name, comment, singleton = false)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(text, old_name, new_name, comment, singleton = false)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new <a href="Alias.html">Alias</a> with a token stream of
-<code>text</code> that aliases <code>old_name</code> to
-<code>new_name</code>, has <code>comment</code> and is a
-<code>singleton</code> context.</p>
-          
-          
+          <p>Creates a new <a href="Alias.html"><code>Alias</code></a> with a token stream of <code>text</code> that aliases <code>old_name</code> to <code>new_name</code>, has <code>comment</code> and is a <code>singleton</code> context.</p>
             <div class="method-calls-super">
               Calls superclass method
-              <a href="CodeObject.html#method-c-new">RDoc::CodeObject.new</a>
+              <a href="CodeObject.html#method-c-new"><code>RDoc::CodeObject::new</code></a>
             </div>
-          
 
-          
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 37</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">text</span>, <span class="ruby-identifier">old_name</span>, <span class="ruby-identifier">new_name</span>, <span class="ruby-identifier">comment</span>, <span class="ruby-identifier">singleton</span> = <span class="ruby-keyword">false</span>)
@@ -235,75 +193,53 @@ particular context</p>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">comment</span> = <span class="ruby-identifier">comment</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-3C-3D-3E" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">&lt;=&gt;</span><span
-            class="method-args">(other)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">&lt;=&gt;</span><span
+              class="method-args">(other)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Order by <a href="Alias.html#attribute-i-singleton">singleton</a> then <a
-href="Alias.html#attribute-i-new_name">new_name</a></p>
-          
-          
+          <p>Order by <a href="Alias.html#attribute-i-singleton"><code>singleton</code></a> then <a href="Alias.html#attribute-i-new_name"><code>new_name</code></a></p>
 
-          
           <div class="method-source-code" id="3C-3D-3E-source">
             <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 50</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">&lt;=&gt;</span>(<span class="ruby-identifier">other</span>)
   [<span class="ruby-ivar">@singleton</span> <span class="ruby-operator">?</span> <span class="ruby-value">0</span> <span class="ruby-operator">:</span> <span class="ruby-value">1</span>, <span class="ruby-identifier">new_name</span>] <span class="ruby-operator">&lt;=&gt;</span> [<span class="ruby-identifier">other</span>.<span class="ruby-identifier">singleton</span> <span class="ruby-operator">?</span> <span class="ruby-value">0</span> <span class="ruby-operator">:</span> <span class="ruby-value">1</span>, <span class="ruby-identifier">other</span>.<span class="ruby-identifier">new_name</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-aref" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">aref</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">aref</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>HTML fragment reference for this alias</p>
-          
-          
 
-          
           <div class="method-source-code" id="aref-source">
             <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 57</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">aref</span>
@@ -311,222 +247,157 @@ href="Alias.html#attribute-i-new_name">new_name</a></p>
   <span class="ruby-node">&quot;#alias-#{type}-#{html_name}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-full_old_name" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">full_old_name</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">full_old_name</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Full old name including namespace</p>
-          
-          
 
-          
           <div class="method-source-code" id="full_old_name-source">
             <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 65</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">full_old_name</span>
   <span class="ruby-ivar">@full_name</span> <span class="ruby-operator">||</span> <span class="ruby-node">&quot;#{parent.name}#{pretty_old_name}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-html_name" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">html_name</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">html_name</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>HTML id-friendly version of <code>#new_name</code>.</p>
-          
-          
 
-          
           <div class="method-source-code" id="html_name-source">
             <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 72</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">html_name</span>
   <span class="ruby-constant">CGI</span>.<span class="ruby-identifier">escape</span>(<span class="ruby-ivar">@new_name</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;-&#39;</span>, <span class="ruby-string">&#39;-2D&#39;</span>)).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;%&#39;</span>,<span class="ruby-string">&#39;-&#39;</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^-/</span>, <span class="ruby-string">&#39;&#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-name_prefix" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">name_prefix</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">name_prefix</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>&#39;::&#39; for the alias of a singleton method/attribute, &#39;#&#39; for
-instance-level.</p>
-          
-          
+          <p>‘::’ for the alias of a singleton method/attribute, ‘#’ for instance-level.</p>
 
-          
           <div class="method-source-code" id="name_prefix-source">
             <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 87</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">name_prefix</span>
   <span class="ruby-identifier">singleton</span> <span class="ruby-operator">?</span> <span class="ruby-string">&#39;::&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;#&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-pretty_name" class="method-detail method-alias">
-        
-        <div class="method-heading">
-          <span class="method-name">pretty_name</span><span
-            class="method-args">()</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">pretty_name</span><span
+              class="method-args">()</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
           
-          
-          
-          
 
-          
         </div>
 
-        
 
-        
         <div class="aliases">
           Alias for: <a href="Alias.html#method-i-pretty_new_name">pretty_new_name</a>
         </div>
-        
       </div>
 
-    
       <div id="method-i-pretty_new_name" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">pretty_new_name</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">pretty_new_name</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>New name with prefix &#39;::&#39; or &#39;#&#39;.</p>
-          
-          
+          <p>New name with prefix ‘::’ or ‘#’.</p>
 
-          
           <div class="method-source-code" id="pretty_new_name-source">
             <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 101</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pretty_new_name</span>
   <span class="ruby-node">&quot;#{singleton ? &#39;::&#39; : &#39;#&#39;}#{@new_name}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
         <div class="aliases">
           Also aliased as: <a href="Alias.html#method-i-pretty_name">pretty_name</a>
         </div>
-        
 
-        
       </div>
 
-    
       <div id="method-i-pretty_old_name" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">pretty_old_name</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">pretty_old_name</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Old name with prefix &#39;::&#39; or &#39;#&#39;.</p>
-          
-          
+          <p>Old name with prefix ‘::’ or ‘#’.</p>
 
-          
           <div class="method-source-code" id="pretty_old_name-source">
             <pre><span class="ruby-comment"># File lib/rdoc/alias.rb, line 94</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pretty_old_name</span>
   <span class="ruby-node">&quot;#{singleton ? &#39;::&#39; : &#39;#&#39;}#{@old_name}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

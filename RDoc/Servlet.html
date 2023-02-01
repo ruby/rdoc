@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Servlet - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Servlet - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
   var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,54 +57,37 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link">WEBrick::HTTPServlet::AbstractServlet
-  
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li class="calls-super" ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-asset">#asset</a>
-    
     <li ><a href="#method-i-do_GET">#do_GET</a>
-    
     <li ><a href="#method-i-documentation_page">#documentation_page</a>
-    
     <li ><a href="#method-i-documentation_search">#documentation_search</a>
-    
     <li ><a href="#method-i-documentation_source">#documentation_source</a>
-    
     <li ><a href="#method-i-error">#error</a>
-    
     <li ><a href="#method-i-generator_for">#generator_for</a>
-    
     <li ><a href="#method-i-if_modified_since">#if_modified_since</a>
-    
     <li ><a href="#method-i-installed_docs">#installed_docs</a>
-    
     <li ><a href="#method-i-not_found">#not_found</a>
-    
     <li ><a href="#method-i-ri_paths">#ri_paths</a>
-    
     <li ><a href="#method-i-root">#root</a>
-    
     <li ><a href="#method-i-root_search">#root_search</a>
-    
     <li ><a href="#method-i-show_documentation">#show_documentation</a>
-    
     <li ><a href="#method-i-store_for">#store_for</a>
-    
   </ul>
 </div>
 
@@ -118,12 +103,9 @@
     
 <p>This is a WEBrick servlet that allows you to browse ri documentation.</p>
 
-<p>You can show documentation through either `ri –server` or, with RubyGems
-2.0 or newer, `gem server`.  For ri, the server runs on port 8214 by
-default.  For RubyGems the server runs on port 8808 by default.</p>
+<p>You can show documentation through either ‘ri –server` or, with RubyGems 2.0 or newer, `gem server`.  For ri, the server runs on port 8214 by default.  For RubyGems the server runs on port 8808 by default.</p>
 
-<p>You can use this servlet in your own project by mounting it on a WEBrick
-server:</p>
+<p>You can use this servlet in your own project by mounting it on a WEBrick server:</p>
 
 <pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;webrick&#39;</span>
 
@@ -132,29 +114,22 @@ server:</p>
 <span class="ruby-identifier">server</span>.<span class="ruby-identifier">mount</span> <span class="ruby-string">&#39;/&#39;</span>, <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Servlet</span>
 </pre>
 
-<p>If you want to mount the servlet some other place than the root, provide
-the base path when mounting:</p>
+<p>If you want to mount the servlet some other place than the root, provide the base path when mounting:</p>
 
 <pre class="ruby"><span class="ruby-identifier">server</span>.<span class="ruby-identifier">mount</span> <span class="ruby-string">&#39;/rdoc&#39;</span>, <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Servlet</span>, <span class="ruby-string">&#39;/rdoc&#39;</span>
 </pre>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-asset_dirs" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">asset_dirs</span><span
@@ -162,12 +137,9 @@ the base path when mounting:</p>
         </div>
 
         <div class="method-description">
-        
         <p>Maps an asset type to its path on the filesystem</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-options" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">options</span><span
@@ -175,57 +147,41 @@ the base path when mounting:</p>
         </div>
 
         <div class="method-description">
-        
-        <p>An <a href="Options.html">RDoc::Options</a> instance used for rendering
-options</p>
-        
+        <p>An <a href="Options.html"><code>RDoc::Options</code></a> instance used for rendering options</p>
         </div>
       </div>
-      
     </section>
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(server, stores, cache, mount_path = nil, extra_doc_dirs = [])</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(server, stores, cache, mount_path = nil, extra_doc_dirs = [])</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Creates a new WEBrick servlet.</p>
 
-<p>Use <code>mount_path</code> when mounting the servlet somewhere other than
-/.</p>
+<p>Use <code>mount_path</code> when mounting the servlet somewhere other than /.</p>
 
 <p>Use <code>extra_doc_dirs</code> for additional documentation directories.</p>
 
-<p><code>server</code> is provided automatically by WEBrick when mounting. 
-<code>stores</code> and <code>cache</code> are provided automatically by
-the servlet.</p>
-          
-          
+<p><code>server</code> is provided automatically by WEBrick when mounting.  <code>stores</code> and <code>cache</code> are provided automatically by the servlet.</p>
             <div class="method-calls-super">
               Calls superclass method
               
             </div>
-          
 
-          
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 64</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 69</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">server</span>, <span class="ruby-identifier">stores</span>, <span class="ruby-identifier">cache</span>, <span class="ruby-identifier">mount_path</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">extra_doc_dirs</span> = []
   <span class="ruby-keyword">super</span> <span class="ruby-identifier">server</span>
 
@@ -254,44 +210,32 @@ the servlet.</p>
   }
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-asset" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">asset</span><span
-            class="method-args">(generator_name, req, res)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">asset</span><span
+              class="method-args">(generator_name, req, res)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Serves the asset at the path in <code>req</code> for
-<code>generator_name</code> via <code>res</code>.</p>
-          
-          
+          <p>Serves the asset at the path in <code>req</code> for <code>generator_name</code> via <code>res</code>.</p>
 
-          
           <div class="method-source-code" id="asset-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 95</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 100</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">asset</span> <span class="ruby-identifier">generator_name</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
   <span class="ruby-identifier">asset_dir</span> = <span class="ruby-ivar">@asset_dirs</span>[<span class="ruby-identifier">generator_name</span>]
 
@@ -302,44 +246,33 @@ the servlet.</p>
   <span class="ruby-identifier">res</span>.<span class="ruby-identifier">body</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span> <span class="ruby-identifier">asset_path</span>
 
   <span class="ruby-identifier">res</span>.<span class="ruby-identifier">content_type</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">req</span>.<span class="ruby-identifier">path</span>
-                     <span class="ruby-keyword">when</span> <span class="ruby-regexp">/css$/</span> <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;text/css&#39;</span>
-                     <span class="ruby-keyword">when</span> <span class="ruby-regexp">/js$/</span>  <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;application/javascript&#39;</span>
-                     <span class="ruby-keyword">else</span>             <span class="ruby-string">&#39;application/octet-stream&#39;</span>
+                     <span class="ruby-keyword">when</span> <span class="ruby-regexp">/\.css\z/</span> <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;text/css&#39;</span>
+                     <span class="ruby-keyword">when</span> <span class="ruby-regexp">/\.js\z/</span>  <span class="ruby-keyword">then</span> <span class="ruby-string">&#39;application/javascript&#39;</span>
+                     <span class="ruby-keyword">else</span>                <span class="ruby-string">&#39;application/octet-stream&#39;</span>
                      <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-do_GET" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">do_GET</span><span
-            class="method-args">(req, res)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">do_GET</span><span
+              class="method-args">(req, res)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>GET request entry point.  Fills in <code>res</code> for the path, etc. in
-<code>req</code>.</p>
-          
-          
+          <p>GET request entry point.  Fills in <code>res</code> for the path, etc. in <code>req</code>.</p>
 
-          
           <div class="method-source-code" id="do_GET-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 114</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 119</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_GET</span> <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
-  <span class="ruby-identifier">req</span>.<span class="ruby-identifier">path</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/^#{Regexp.escape @mount_path}/o</span>, <span class="ruby-string">&#39;&#39;</span>) <span class="ruby-keyword">if</span> <span class="ruby-ivar">@mount_path</span>
+  <span class="ruby-identifier">req</span>.<span class="ruby-identifier">path</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/\A#{Regexp.escape @mount_path}/</span>, <span class="ruby-string">&#39;&#39;</span>) <span class="ruby-keyword">if</span> <span class="ruby-ivar">@mount_path</span>
 
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">req</span>.<span class="ruby-identifier">path</span>
   <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;/&#39;</span> <span class="ruby-keyword">then</span>
@@ -364,84 +297,61 @@ the servlet.</p>
   <span class="ruby-identifier">error</span> <span class="ruby-identifier">e</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-documentation_page" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">documentation_page</span><span
-            class="method-args">(store, generator, path, req, res)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">documentation_page</span><span
+              class="method-args">(store, generator, path, req, res)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Fills in <code>res</code> with the class, module or page for
-<code>req</code> from <code>store</code>.</p>
+          <p>Fills in <code>res</code> with the class, module or page for <code>req</code> from <code>store</code>.</p>
 
-<p><code>path</code> is relative to the mount_path and is used to determine
-the class, module or page name (/RDoc/Servlet.html becomes <a
-href="Servlet.html">RDoc::Servlet</a>). <code>generator</code> is used to
-create the page.</p>
-          
-          
+<p><code>path</code> is relative to the mount_path and is used to determine the class, module or page name (/RDoc/Servlet.html becomes <a href="Servlet.html"><code>RDoc::Servlet</code></a>). <code>generator</code> is used to create the page.</p>
 
-          
           <div class="method-source-code" id="documentation_page-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 147</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 152</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">documentation_page</span> <span class="ruby-identifier">store</span>, <span class="ruby-identifier">generator</span>, <span class="ruby-identifier">path</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
-  <span class="ruby-identifier">name</span> = <span class="ruby-identifier">path</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/.html$/</span>, <span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">gsub</span> <span class="ruby-string">&#39;/&#39;</span>, <span class="ruby-string">&#39;::&#39;</span>
+  <span class="ruby-identifier">text_name</span> = <span class="ruby-identifier">path</span>.<span class="ruby-identifier">chomp</span> <span class="ruby-string">&#39;.html&#39;</span>
+  <span class="ruby-identifier">name</span> = <span class="ruby-identifier">text_name</span>.<span class="ruby-identifier">gsub</span> <span class="ruby-string">&#39;/&#39;</span>, <span class="ruby-string">&#39;::&#39;</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">klass</span> = <span class="ruby-identifier">store</span>.<span class="ruby-identifier">find_class_or_module</span>(<span class="ruby-identifier">name</span>) <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">res</span>.<span class="ruby-identifier">body</span> = <span class="ruby-identifier">generator</span>.<span class="ruby-identifier">generate_class</span> <span class="ruby-identifier">klass</span>
-  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">page</span> = <span class="ruby-identifier">store</span>.<span class="ruby-identifier">find_text_page</span>(<span class="ruby-identifier">name</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/_([^_]*)$/</span>, <span class="ruby-string">&#39;.\1&#39;</span>)) <span class="ruby-keyword">then</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">page</span> = <span class="ruby-identifier">store</span>.<span class="ruby-identifier">find_text_page</span>(<span class="ruby-identifier">name</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/_([^_]*)\z/</span>, <span class="ruby-string">&#39;.\1&#39;</span>)) <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">res</span>.<span class="ruby-identifier">body</span> = <span class="ruby-identifier">generator</span>.<span class="ruby-identifier">generate_page</span> <span class="ruby-identifier">page</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">page</span> = <span class="ruby-identifier">store</span>.<span class="ruby-identifier">find_text_page</span>(<span class="ruby-identifier">text_name</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/_([^_]*)\z/</span>, <span class="ruby-string">&#39;.\1&#39;</span>)) <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">res</span>.<span class="ruby-identifier">body</span> = <span class="ruby-identifier">generator</span>.<span class="ruby-identifier">generate_page</span> <span class="ruby-identifier">page</span>
   <span class="ruby-keyword">else</span>
     <span class="ruby-identifier">not_found</span> <span class="ruby-identifier">generator</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-documentation_search" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">documentation_search</span><span
-            class="method-args">(store, generator, req, res)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">documentation_search</span><span
+              class="method-args">(store, generator, req, res)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates the JSON search index on <code>res</code> for the given
-<code>store</code>.  <code>generator</code> must respond to #json_index to
-build.  <code>req</code> is ignored.</p>
-          
-          
+          <p>Creates the JSON search index on <code>res</code> for the given <code>store</code>.  <code>generator</code> must respond to #json_index to build.  <code>req</code> is ignored.</p>
 
-          
           <div class="method-source-code" id="documentation_search-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 163</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 171</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">documentation_search</span> <span class="ruby-identifier">store</span>, <span class="ruby-identifier">generator</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
   <span class="ruby-identifier">json_index</span> = <span class="ruby-ivar">@cache</span>[<span class="ruby-identifier">store</span>].<span class="ruby-identifier">fetch</span> <span class="ruby-value">:json_index</span> <span class="ruby-keyword">do</span>
     <span class="ruby-ivar">@cache</span>[<span class="ruby-identifier">store</span>][<span class="ruby-value">:json_index</span>] =
@@ -452,36 +362,25 @@ build.  <code>req</code> is ignored.</p>
   <span class="ruby-identifier">res</span>.<span class="ruby-identifier">body</span> = <span class="ruby-node">&quot;var search_data = #{json_index}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-documentation_source" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">documentation_source</span><span
-            class="method-args">(path)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">documentation_source</span><span
+              class="method-args">(path)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Returns the <a href="Store.html">RDoc::Store</a> and path relative to
-<code>mount_path</code> for documentation at <code>path</code>.</p>
-          
-          
+          <p>Returns the <a href="Store.html"><code>RDoc::Store</code></a> and path relative to <code>mount_path</code> for documentation at <code>path</code>.</p>
 
-          
           <div class="method-source-code" id="documentation_source-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 177</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 185</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">documentation_source</span> <span class="ruby-identifier">path</span>
   <span class="ruby-identifier">_</span>, <span class="ruby-identifier">source_name</span>, <span class="ruby-identifier">path</span> = <span class="ruby-identifier">path</span>.<span class="ruby-identifier">split</span> <span class="ruby-string">&#39;/&#39;</span>, <span class="ruby-value">3</span>
 
@@ -497,36 +396,25 @@ build.  <code>req</code> is ignored.</p>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">store</span>, <span class="ruby-identifier">path</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-error" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">error</span><span
-            class="method-args">(exception, req, res)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">error</span><span
+              class="method-args">(exception, req, res)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Generates an error page for the <code>exception</code> while handling
-<code>req</code> on <code>res</code>.</p>
-          
-          
+          <p>Generates an error page for the <code>exception</code> while handling <code>req</code> on <code>res</code>.</p>
 
-          
           <div class="method-source-code" id="error-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 195</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 203</span>
   <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">error</span> <span class="ruby-identifier">exception</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
     <span class="ruby-identifier">backtrace</span> = <span class="ruby-identifier">exception</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">join</span> <span class="ruby-string">&quot;\n&quot;</span>
 
@@ -567,35 +455,25 @@ version.  If you&#39;re viewing Ruby&#39;s documentation, include the version of
 </span><span class="ruby-identifier">    BODY</span>
   <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-generator_for" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">generator_for</span><span
-            class="method-args">(store)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">generator_for</span><span
+              class="method-args">(store)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Instantiates a Darkfish generator for <code>store</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="generator_for-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 238</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 246</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generator_for</span> <span class="ruby-identifier">store</span>
   <span class="ruby-identifier">generator</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Generator</span><span class="ruby-operator">::</span><span class="ruby-constant">Darkfish</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">store</span>, <span class="ruby-ivar">@options</span>
   <span class="ruby-identifier">generator</span>.<span class="ruby-identifier">file_output</span> = <span class="ruby-keyword">false</span>
@@ -612,38 +490,25 @@ version.  If you&#39;re viewing Ruby&#39;s documentation, include the version of
   <span class="ruby-identifier">generator</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-if_modified_since" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">if_modified_since</span><span
-            class="method-args">(req, res, path = nil)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">if_modified_since</span><span
+              class="method-args">(req, res, path = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Handles the If-Modified-Since HTTP header on <code>req</code> for
-<code>path</code>.  If the file has not been modified a Not Modified
-response is returned.  If the file has been modified a Last-Modified header
-is added to <code>res</code>.</p>
-          
-          
+          <p>Handles the If-Modified-Since HTTP header on <code>req</code> for <code>path</code>.  If the file has not been modified a Not Modified response is returned.  If the file has been modified a Last-Modified header is added to <code>res</code>.</p>
 
-          
           <div class="method-source-code" id="if_modified_since-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 259</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 267</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">if_modified_since</span> <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>, <span class="ruby-identifier">path</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">last_modified</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">stat</span>(<span class="ruby-identifier">path</span>).<span class="ruby-identifier">mtime</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">path</span>
 
@@ -659,41 +524,27 @@ is added to <code>res</code>.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-installed_docs" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">installed_docs</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">installed_docs</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Returns an Array of installed documentation.</p>
 
-<p>Each entry contains the documentation name (gem name, &#39;Ruby
-Documentation&#39;, etc.), the path relative to the mount point, whether
-the documentation exists, the type of documentation (See
-RDoc::RI::Paths#each) and the filesystem to the <a
-href="Store.html">RDoc::Store</a> for the documentation.</p>
-          
-          
+<p>Each entry contains the documentation name (gem name, ‘Ruby Documentation’, etc.), the path relative to the mount point, whether the documentation exists, the type of documentation (See RDoc::RI::Paths#each) and the filesystem to the <a href="Store.html"><code>RDoc::Store</code></a> for the documentation.</p>
 
-          
           <div class="method-source-code" id="installed_docs-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 282</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 290</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">installed_docs</span>
   <span class="ruby-identifier">extra_counter</span> = <span class="ruby-value">0</span>
   <span class="ruby-identifier">ri_paths</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">path</span>, <span class="ruby-identifier">type</span><span class="ruby-operator">|</span>
@@ -719,104 +570,73 @@ href="Store.html">RDoc::Store</a> for the documentation.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-not_found" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">not_found</span><span
-            class="method-args">(generator, req, res, message = nil)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">not_found</span><span
+              class="method-args">(generator, req, res, message = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Returns a 404 page built by <code>generator</code> for <code>req</code> on
-<code>res</code>.</p>
-          
-          
+          <p>Returns a 404 page built by <code>generator</code> for <code>req</code> on <code>res</code>.</p>
 
-          
           <div class="method-source-code" id="not_found-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 310</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 318</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">not_found</span> <span class="ruby-identifier">generator</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>, <span class="ruby-identifier">message</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">message</span> <span class="ruby-operator">||=</span> <span class="ruby-node">&quot;The page &lt;kbd&gt;#{ERB::Util.h req.path}&lt;/kbd&gt; was not found&quot;</span>
   <span class="ruby-identifier">res</span>.<span class="ruby-identifier">body</span> = <span class="ruby-identifier">generator</span>.<span class="ruby-identifier">generate_servlet_not_found</span> <span class="ruby-identifier">message</span>
   <span class="ruby-identifier">res</span>.<span class="ruby-identifier">status</span> = <span class="ruby-value">404</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-ri_paths" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">ri_paths</span><span
-            class="method-args">(&amp;block)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">ri_paths</span><span
+              class="method-args">(&amp;block)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Enumerates the ri paths.  See RDoc::RI::Paths#each</p>
-          
-          
 
-          
           <div class="method-source-code" id="ri_paths-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 319</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 327</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">ri_paths</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>
   <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RI</span><span class="ruby-operator">::</span><span class="ruby-constant">Paths</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">true</span>, <span class="ruby-keyword">true</span>, <span class="ruby-keyword">true</span>, <span class="ruby-value">:all</span>, <span class="ruby-operator">*</span><span class="ruby-ivar">@extra_doc_dirs</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span> <span class="ruby-comment">#TODO: pass extra_dirs</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-root" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">root</span><span
-            class="method-args">(req, res)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">root</span><span
+              class="method-args">(req, res)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Generates the root page on <code>res</code>.  <code>req</code> is ignored.</p>
-          
-          
 
-          
           <div class="method-source-code" id="root-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 326</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 334</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">root</span> <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
   <span class="ruby-identifier">generator</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Generator</span><span class="ruby-operator">::</span><span class="ruby-constant">Darkfish</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">nil</span>, <span class="ruby-ivar">@options</span>
 
@@ -825,36 +645,25 @@ href="Store.html">RDoc::Store</a> for the documentation.</p>
   <span class="ruby-identifier">res</span>.<span class="ruby-identifier">content_type</span> = <span class="ruby-string">&#39;text/html&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-root_search" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">root_search</span><span
-            class="method-args">(req, res)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">root_search</span><span
+              class="method-args">(req, res)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Generates a search index for the root page on <code>res</code>. 
-<code>req</code> is ignored.</p>
-          
-          
+          <p>Generates a search index for the root page on <code>res</code>.  <code>req</code> is ignored.</p>
 
-          
           <div class="method-source-code" id="root_search-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 337</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 345</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">root_search</span> <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
   <span class="ruby-identifier">search_index</span> = []
   <span class="ruby-identifier">info</span>         = []
@@ -901,36 +710,25 @@ href="Store.html">RDoc::Store</a> for the documentation.</p>
   <span class="ruby-identifier">res</span>.<span class="ruby-identifier">content_type</span> = <span class="ruby-string">&#39;application/javascript&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-show_documentation" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">show_documentation</span><span
-            class="method-args">(req, res)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">show_documentation</span><span
+              class="method-args">(req, res)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Displays documentation for <code>req</code> on <code>res</code>, whether
-that be HTML or some asset.</p>
-          
-          
+          <p>Displays documentation for <code>req</code> on <code>res</code>, whether that be HTML or some asset.</p>
 
-          
           <div class="method-source-code" id="show_documentation-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 387</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 395</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">show_documentation</span> <span class="ruby-identifier">req</span>, <span class="ruby-identifier">res</span>
   <span class="ruby-identifier">store</span>, <span class="ruby-identifier">path</span> = <span class="ruby-identifier">documentation_source</span> <span class="ruby-identifier">req</span>.<span class="ruby-identifier">path</span>
 
@@ -952,36 +750,25 @@ that be HTML or some asset.</p>
   <span class="ruby-identifier">res</span>.<span class="ruby-identifier">content_type</span> <span class="ruby-operator">||=</span> <span class="ruby-string">&#39;text/html&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-store_for" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">store_for</span><span
-            class="method-args">(source_name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">store_for</span><span
+              class="method-args">(source_name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Returns an <a href="Store.html">RDoc::Store</a> for the given
-<code>source_name</code> (&#39;ruby&#39; or a gem name).</p>
-          
-          
+          <p>Returns an <a href="Store.html"><code>RDoc::Store</code></a> for the given <code>source_name</code> (‘ruby’ or a gem name).</p>
 
-          
           <div class="method-source-code" id="store_for-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 411</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/servlet.rb, line 419</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">store_for</span> <span class="ruby-identifier">source_name</span>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">source_name</span>
   <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;home&#39;</span> <span class="ruby-keyword">then</span>
@@ -990,7 +777,7 @@ that be HTML or some asset.</p>
     <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Store</span>.<span class="ruby-identifier">new</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RI</span><span class="ruby-operator">::</span><span class="ruby-constant">Paths</span>.<span class="ruby-identifier">system_dir</span>, <span class="ruby-value">:system</span>
   <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;site&#39;</span> <span class="ruby-keyword">then</span>
     <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Store</span>.<span class="ruby-identifier">new</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RI</span><span class="ruby-operator">::</span><span class="ruby-constant">Paths</span>.<span class="ruby-identifier">site_dir</span>, <span class="ruby-value">:site</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/^extra-(\d+)$/</span> <span class="ruby-keyword">then</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-regexp">/\Aextra-(\d+)\z/</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">index</span> = <span class="ruby-node">$1</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">ri_dir</span> = <span class="ruby-identifier">installed_docs</span>[<span class="ruby-identifier">index</span>][<span class="ruby-value">4</span>]
     <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Store</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">ri_dir</span>, <span class="ruby-value">:extra</span>
@@ -1014,24 +801,20 @@ that be HTML or some asset.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

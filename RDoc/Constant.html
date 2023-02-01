@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Constant - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Constant - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
   var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,42 +57,31 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link"><a href="CodeObject.html">RDoc::CodeObject</a>
-  
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li class="calls-super" ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-3C-3D-3E">#&lt;=&gt;</a>
-    
     <li ><a href="#method-i-3D-3D">#==</a>
-    
     <li class="calls-super" ><a href="#method-i-documented-3F">#documented?</a>
-    
     <li ><a href="#method-i-full_name">#full_name</a>
-    
     <li ><a href="#method-i-is_alias_for">#is_alias_for</a>
-    
     <li ><a href="#method-i-marshal_dump">#marshal_dump</a>
-    
     <li ><a href="#method-i-marshal_load">#marshal_load</a>
-    
     <li ><a href="#method-i-path">#path</a>
-    
     <li class="calls-super" ><a href="#method-i-store-3D">#store=</a>
-    
   </ul>
 </div>
 
@@ -108,21 +99,15 @@
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-is_alias_for" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">is_alias_for</span><span
@@ -130,12 +115,9 @@
         </div>
 
         <div class="method-description">
-        
         <p>Sets the module or class this is constant is an alias for.</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-name" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">name</span><span
@@ -143,12 +125,9 @@
         </div>
 
         <div class="method-description">
-        
-        <p>The constant&#39;s name</p>
-        
+        <p>The constant’s name</p>
         </div>
       </div>
-      
       <div id="attribute-i-value" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">value</span><span
@@ -156,12 +135,9 @@
         </div>
 
         <div class="method-description">
-        
-        <p>The constant&#39;s value</p>
-        
+        <p>The constant’s value</p>
         </div>
       </div>
-      
       <div id="attribute-i-visibility" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">visibility</span><span
@@ -169,46 +145,33 @@
         </div>
 
         <div class="method-description">
-        
-        <p>The constant&#39;s visibility</p>
-        
+        <p>The constant’s visibility</p>
         </div>
       </div>
-      
     </section>
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(name, value, comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(name, value, comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new constant with <code>name</code>, <code>value</code> and
-<code>comment</code></p>
-          
-          
+          <p>Creates a new constant with <code>name</code>, <code>value</code> and <code>comment</code></p>
             <div class="method-calls-super">
               Calls superclass method
-              <a href="CodeObject.html#method-c-new">RDoc::CodeObject.new</a>
+              <a href="CodeObject.html#method-c-new"><code>RDoc::CodeObject::new</code></a>
             </div>
-          
 
-          
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 32</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">value</span>, <span class="ruby-identifier">comment</span>)
@@ -223,41 +186,30 @@
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">comment</span> = <span class="ruby-identifier">comment</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-3C-3D-3E" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">&lt;=&gt;</span><span
-            class="method-args">(other)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">&lt;=&gt;</span><span
+              class="method-args">(other)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Constants are ordered by name</p>
-          
-          
 
-          
           <div class="method-source-code" id="3C-3D-3E-source">
             <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 47</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">&lt;=&gt;</span> <span class="ruby-identifier">other</span>
@@ -266,35 +218,23 @@
   [<span class="ruby-identifier">parent_name</span>, <span class="ruby-identifier">name</span>] <span class="ruby-operator">&lt;=&gt;</span> [<span class="ruby-identifier">other</span>.<span class="ruby-identifier">parent_name</span>, <span class="ruby-identifier">other</span>.<span class="ruby-identifier">name</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-3D-3D" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">==</span><span
-            class="method-args">(other)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">==</span><span
+              class="method-args">(other)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Constants are equal when their <a
-href="CodeObject.html#method-i-parent">parent</a> and <a
-href="Constant.html#attribute-i-name">name</a> is the same</p>
-          
-          
+          <p>Constants are equal when their <a href="CodeObject.html#method-i-parent"><code>parent</code></a> and <a href="Constant.html#attribute-i-name"><code>name</code></a> is the same</p>
 
-          
           <div class="method-source-code" id="3D-3D-source">
             <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 56</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">==</span> <span class="ruby-identifier">other</span>
@@ -303,39 +243,27 @@ href="Constant.html#attribute-i-name">name</a> is the same</p>
     <span class="ruby-ivar">@name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-documented-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">documented?</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">documented?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>A constant is documented if it has a comment, or is an alias for a
-documented class or module.</p>
-          
-          
+          <p>A constant is documented if it has a comment, or is an alias for a documented class or module.</p>
             <div class="method-calls-super">
               Calls superclass method
-              <a href="CodeObject.html#method-i-documented-3F">RDoc::CodeObject#documented?</a>
+              <a href="CodeObject.html#method-i-documented-3F"><code>RDoc::CodeObject#documented?</code></a>
             </div>
-          
 
-          
           <div class="method-source-code" id="documented-3F-source">
             <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 66</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">documented?</span>
@@ -350,66 +278,46 @@ documented class or module.</p>
   <span class="ruby-ivar">@is_alias_for</span>.<span class="ruby-identifier">documented?</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-full_name" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">full_name</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">full_name</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Full constant name including namespace</p>
-          
-          
 
-          
           <div class="method-source-code" id="full_name-source">
             <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 81</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">full_name</span>
   <span class="ruby-ivar">@full_name</span> <span class="ruby-operator">||=</span> <span class="ruby-node">&quot;#{parent_name}::#{@name}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-is_alias_for" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">is_alias_for</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">is_alias_for</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>The module or class this constant is an alias for</p>
-          
-          
 
-          
           <div class="method-source-code" id="is_alias_for-source">
             <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 88</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">is_alias_for</span>
@@ -423,34 +331,23 @@ documented class or module.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-marshal_dump" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">marshal_dump</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">marshal_dump</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Dumps this <a href="Constant.html">Constant</a> for use by ri.  See also <a
-href="Constant.html#method-i-marshal_load">marshal_load</a></p>
-          
-          
+          <p>Dumps this <a href="Constant.html"><code>Constant</code></a> for use by ri.  See also <a href="Constant.html#method-i-marshal_load"><code>marshal_load</code></a></p>
 
-          
           <div class="method-source-code" id="marshal_dump-source">
             <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 109</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">marshal_dump</span>
@@ -472,40 +369,28 @@ href="Constant.html#method-i-marshal_load">marshal_load</a></p>
   ]
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-marshal_load" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">marshal_load</span><span
-            class="method-args">(array)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">marshal_load</span><span
+              class="method-args">(array)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Loads this <a href="Constant.html">Constant</a> from <code>array</code>. 
-For a loaded <a href="Constant.html">Constant</a> the following methods
-will return cached values:</p>
+          <p>Loads this <a href="Constant.html"><code>Constant</code></a> from <code>array</code>.  For a loaded <a href="Constant.html"><code>Constant</code></a> the following methods will return cached values:</p>
 <ul><li>
-<p><a href="Constant.html#method-i-full_name">full_name</a></p>
+<p><a href="Constant.html#method-i-full_name"><code>full_name</code></a></p>
 </li><li>
-<p><a href="CodeObject.html#method-i-parent_name">parent_name</a></p>
+<p><a href="CodeObject.html#method-i-parent_name"><code>parent_name</code></a></p>
 </li></ul>
-          
-          
 
-          
           <div class="method-source-code" id="marshal_load-source">
             <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 135</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">marshal_load</span> <span class="ruby-identifier">array</span>
@@ -523,71 +408,50 @@ will return cached values:</p>
   <span class="ruby-ivar">@file</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">TopLevel</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">array</span>[<span class="ruby-value">6</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-path" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">path</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">path</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Path to this constant for use with HTML generator output.</p>
-          
-          
 
-          
           <div class="method-source-code" id="path-source">
             <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 153</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">path</span>
   <span class="ruby-node">&quot;#{@parent.path}##{@name}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-store-3D" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">store=</span><span
-            class="method-args">(store)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">store=</span><span
+              class="method-args">(store)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Sets the store for this class or module and its contained code objects.</p>
-          
-          
             <div class="method-calls-super">
               Calls superclass method
-              <a href="CodeObject.html#method-i-store-3D">RDoc::CodeObject#store=</a>
+              <a href="CodeObject.html#method-i-store-3D"><code>RDoc::CodeObject#store=</code></a>
             </div>
-          
 
-          
           <div class="method-source-code" id="store-3D-source">
             <pre><span class="ruby-comment"># File lib/rdoc/constant.rb, line 171</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">store=</span> <span class="ruby-identifier">store</span>
@@ -596,24 +460,20 @@ will return cached values:</p>
   <span class="ruby-ivar">@file</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">add_file</span> <span class="ruby-ivar">@file</span>.<span class="ruby-identifier">full_name</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

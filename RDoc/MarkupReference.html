@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class RDoc::MarkupReference - rdoc 6.5.0 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
+</script>
+
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+
+
+  <ul class="link-list" role="directory">
+              <li>
+            <details open>
+              <summary>      <a href="#class-RDoc::MarkupReference-label-RDoc+Markup+Reference">RDoc Markup Reference</a>
+</summary>
+              <ul class="link-list" role="directory">
+                          <li>
+            <details open>
+              <summary>      <a href="#class-RDoc::MarkupReference-label-Markup+in+Comments">Markup in Comments</a>
+</summary>
+              <ul class="link-list" role="directory">
+                          <li>      <a href="#class-RDoc::MarkupReference-label-Margins">Margins</a>
+          <li>
+            <details open>
+              <summary>      <a href="#class-RDoc::MarkupReference-label-Blocks">Blocks</a>
+</summary>
+              <ul class="link-list" role="directory">
+                          <li>      <a href="#class-RDoc::MarkupReference-label-Paragraphs">Paragraphs</a>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Verbatim+Text+Blocks">Verbatim Text Blocks</a>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Code+Blocks">Code Blocks</a>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Block+Quotes">Block Quotes</a>
+          <li>
+            <details open>
+              <summary>      <a href="#class-RDoc::MarkupReference-label-Lists">Lists</a>
+</summary>
+              <ul class="link-list" role="directory">
+                          <li>      <a href="#class-RDoc::MarkupReference-label-Bullet+Lists">Bullet Lists</a>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Numbered+Lists">Numbered Lists</a>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Lettered+Lists">Lettered Lists</a>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Labeled+Lists">Labeled Lists</a>
+
+              </ul>
+            </details>
+          </li>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Headings">Headings</a>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Horizontal+Rules">Horizontal Rules</a>
+          <li>
+            <details open>
+              <summary>      <a href="#class-RDoc::MarkupReference-label-Directives">Directives</a>
+</summary>
+              <ul class="link-list" role="directory">
+                          <li>      <a href="#class-RDoc::MarkupReference-label-Directives+for+Allowing+or+Suppressing+Documentation">Directives for Allowing or Suppressing Documentation</a>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Directive+for+Specifying+RDoc+Source+Format">Directive for Specifying RDoc Source Format</a>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Directives+for+HTML+Output">Directives for HTML Output</a>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Directives+for+Method+Documentation">Directives for Method Documentation</a>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Directives+for+Organizing+Documentation">Directives for Organizing Documentation</a>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Directive+for+Including+a+File">Directive for Including a File</a>
+
+              </ul>
+            </details>
+          </li>
+          <li>
+            <details open>
+              <summary>      <a href="#class-RDoc::MarkupReference-label-Text+Markup">Text Markup</a>
+</summary>
+              <ul class="link-list" role="directory">
+                          <li>
+            <details open>
+              <summary>      <a href="#class-RDoc::MarkupReference-label-Typeface+Markup">Typeface Markup</a>
+</summary>
+              <ul class="link-list" role="directory">
+                          <li>      <a href="#class-RDoc::MarkupReference-label-Italic">Italic</a>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Bold">Bold</a>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Monofont">Monofont</a>
+
+              </ul>
+            </details>
+          </li>
+
+              </ul>
+            </details>
+          </li>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Character+Conversions">Character Conversions</a>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Links">Links</a>
+
+              </ul>
+            </details>
+          </li>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Escaping+Text">Escaping Text</a>
+
+              </ul>
+            </details>
+          </li>
+          <li>      <a href="#class-RDoc::MarkupReference-label-Documentation+Derived+from+Ruby+Code">Documentation Derived from Ruby Code</a>
+
+              </ul>
+            </details>
+          </li>
+
+  </ul>
+</div>
+
+
+  <div id="class-metadata">
+    
+    
+<div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  <p class="link"><a href="../Object.html">Object</a>
+</div>
+
+    
+    
+    
+<!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    <li ><a href="#method-c-dummy_singleton_method">::dummy_singleton_method</a>
+    <li ><a href="#method-i-args_directive">#args_directive</a>
+    <li ><a href="#method-i-call_seq_directive">#call_seq_directive</a>
+    <li ><a href="#method-i-dummy_instance_alias">#dummy_instance_alias</a>
+    <li ><a href="#method-i-dummy_instance_method">#dummy_instance_method</a>
+    <li ><a href="#method-i-method">#method</a>
+    <li ><a href="#method-i-yields_directive">#yields_directive</a>
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-RDoc::MarkupReference">
+  <h1 id="class-RDoc::MarkupReference" class="class">
+    class RDoc::MarkupReference
+  </h1>
+
+  <section class="description">
+    
+<p>Class RDoc::MarkupReference exists only to provide a suitable home for a reference document for RDoc markup.</p>
+
+<p>All objects defined in this class – classes, modules, methods, aliases, attributes, and constants – are solely for illustrating RDoc markup, and have no other legitimate use.</p>
+
+<h1 id="class-RDoc::MarkupReference-label-RDoc+Markup+Reference">RDoc Markup Reference<span><a href="#class-RDoc::MarkupReference-label-RDoc+Markup+Reference">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>Notes:</p>
+<ul><li>
+<p>Examples in this reference are Ruby code and comments; certain differences from other sources (such as C code and comments) are noted.</p>
+</li><li>
+<p>An example that shows rendered HTML output displays that output in a blockquote:</p>
+
+<p>Rendered HTML:</p>
+
+<blockquote>
+<p>Some stuff</p>
+</blockquote>
+</li></ul>
+
+<p>RDoc-generated documentation is derived from and controlled by:</p>
+<ul><li>
+<p>Single-line or multi-line comments that precede certain definitions; see <a href="MarkupReference.html#class-RDoc::MarkupReference-label-Markup+in+Comments">Markup in Comments</a>.</p>
+</li><li>
+<p>RDoc directives in trailing comments (on the same line as code); see <code>:nodoc:</code>, <code>:doc:</code>, and <code>:notnew</code>.</p>
+</li><li>
+<p>RDoc directives in single-line comments; see other <a href="MarkupReference.html#class-RDoc::MarkupReference-label-Directives">Directives</a>.</p>
+</li><li>
+<p>The Ruby code itself (but not from C code); see <a href="MarkupReference.html#class-RDoc::MarkupReference-label-Documentation+Derived+from+Ruby+Code">Documentation Derived from Ruby Code</a>.</p>
+</li></ul>
+
+<h2 id="class-RDoc::MarkupReference-label-Markup+in+Comments">Markup in Comments<span><a href="#class-RDoc::MarkupReference-label-Markup+in+Comments">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>The treatment of markup in comments varies according to the type of file:</p>
+<ul><li>
+<p><code>.rb</code> (Ruby code file): markup is parsed from Ruby comments.</p>
+</li><li>
+<p><code>.c</code> (C code file): markup is parsed from C comments.</p>
+</li><li>
+<p><code>.rdoc</code> (<a href="../RDoc.html"><code>RDoc</code></a> text file): markup is parsed from the entire file.</p>
+</li></ul>
+
+<p>The comment associated with a Ruby class, module, method, alias, constant, or attribute becomes the documentation for that defined object:</p>
+<ul><li>
+<p>In a Ruby file, that comment immediately precedes the definition of the object.</p>
+</li><li>
+<p>In a C file, that comment immediately precedes the function that implements a method, or otherwise immediately precedes the definition of the object.</p>
+</li></ul>
+
+<p>In either a Ruby or a C file, RDoc ignores comments that do not precede object definitions.</p>
+
+<p>In an RDoc file, the text is not associated with any code object, but may (depending on how the documentation is built), become a separate page.</p>
+
+<p>Almost all examples on this page are all RDoc-like; that is, they have no comment markers like Ruby <code>#</code> or C <code>/* ... */</code>.</p>
+
+<h3 id="class-RDoc::MarkupReference-label-Margins">Margins<span><a href="#class-RDoc::MarkupReference-label-Margins">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>In a multi-line comment, RDoc looks for the comment’s natural left margin, which becomes the <em>base margin</em> for the comment and is the initial <em>current margin</em> for for the comment.</p>
+
+<p>The current margin can change, and does so, for example in a list.</p>
+
+<h3 id="class-RDoc::MarkupReference-label-Blocks">Blocks<span><a href="#class-RDoc::MarkupReference-label-Blocks">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>It’s convenient to think of RDoc markup input as a sequence of <em>blocks</em> of various types (details at the links):</p>
+<ul><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Paragraphs">Paragraph</a>: an ordinary paragraph.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Verbatim+Text+Blocks">Verbatim text block</a>: a block of text to be rendered literally.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Code+Blocks">Code block</a>: a verbatim text block containing Ruby code, to be rendered with code highlighting.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Block+Quotes">Block quote</a>: a longish quoted passage, to be rendered with indentation instead of quote marks.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Lists">List</a>: items for a bullet list, numbered list, lettered list, or labeled list.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Headings">Heading</a>: a section heading.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Horizontal+Rules">Horizontal rule</a>: a line across the rendered page.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Directives">Directive</a>: various special directions for the rendering.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Text+Markup">Text Markup</a>: text to be rendered in a special way.</p>
+</li></ul>
+
+<p>About the blocks:</p>
+<ul><li>
+<p>Except for a paragraph, a block is distinguished by its indentation, or by unusual initial or embedded characters.</p>
+</li><li>
+<p>Any block may appear independently (that is, not nested in another block); some blocks may be nested, as detailed below.</p>
+</li></ul>
+
+<h4 id="class-RDoc::MarkupReference-label-Paragraphs">Paragraphs<span><a href="#class-RDoc::MarkupReference-label-Paragraphs">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>A paragraph consists of one or more non-empty lines of ordinary text, each beginning at the current margin.</p>
+
+<p>Note: Here, <em>ordinary text</em> means text that is <em>not identified</em> by indentation, or by unusual initial or embedded characters. See below.</p>
+
+<p>Paragraphs are separated by one or more empty lines.</p>
+
+<p>Example input:</p>
+
+<pre>\RDoc produces HTML and command-line documentation for Ruby projects.
+\RDoc includes the rdoc and ri tools for generating and displaying
+documentation from the command-line.
+
+You&#39;ll love it.</pre>
+
+<p>Rendered HTML:</p>
+
+<blockquote>
+<p>RDoc produces HTML and command-line documentation for Ruby projects. RDoc includes the rdoc and ri tools for generating and displaying documentation from the command-line.</p>
+
+<p>You’ll love it.</p>
+</blockquote>
+
+<p>A paragraph may contain nested blocks, including:</p>
+<ul><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Verbatim+Text+Blocks">Verbatim text blocks</a>.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Code+Blocks">Code blocks</a>.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Block+Quotes">Block quotes</a>.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Lists">Lists</a>.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Headings">Headings</a>.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Horizontal+Rules">Horizontal rules</a>.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Text+Markup">Text Markup</a>.</p>
+</li></ul>
+
+<h4 id="class-RDoc::MarkupReference-label-Verbatim+Text+Blocks">Verbatim Text Blocks<span><a href="#class-RDoc::MarkupReference-label-Verbatim+Text+Blocks">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>Text indented farther than the current margin becomes a <em>verbatim text block</em> (or a code block, described next). In the rendered HTML, such text:</p>
+<ul><li>
+<p>Is indented.</p>
+</li><li>
+<p>Has a contrasting background color.</p>
+</li></ul>
+
+<p>The verbatim text block ends at the first line beginning at the current margin.</p>
+
+<p>Example input:</p>
+
+<pre>This is not verbatim text.
+
+  This is verbatim text.
+    Whitespace is honored.     # See?
+      Whitespace is honored.     # See?
+
+  This is still the same verbatim text block.
+
+This is not verbatim text.</pre>
+
+<p>Rendered HTML:</p>
+
+<blockquote>
+<p>This is not verbatim text.</p>
+
+<pre>This is verbatim text.
+  Whitespace is honored.     # See?
+    Whitespace is honored.     # See?
+
+This is still the same verbatim text block.</pre>
+
+<p>This is not verbatim text.</p>
+</blockquote>
+
+<p>A verbatim text block may not contain nested blocks of any kind – it’s verbatim.</p>
+
+<h4 id="class-RDoc::MarkupReference-label-Code+Blocks">Code Blocks<span><a href="#class-RDoc::MarkupReference-label-Code+Blocks">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>A special case of verbatim text is the <em>code block</em>, which is merely verbatim text that RDoc recognizes as Ruby code:</p>
+
+<p>In the rendered HTML, the code block:</p>
+<ul><li>
+<p>Is indented.</p>
+</li><li>
+<p>Has a contrasting background color.</p>
+</li><li>
+<p>Has syntax highlighting.</p>
+</li></ul>
+
+<p>Example input:</p>
+
+<pre class="ruby"><span class="ruby-constant">Consider</span> <span class="ruby-identifier">this</span> <span class="ruby-value">method:</span>
+
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">foo</span>(<span class="ruby-identifier">name</span> = <span class="ruby-string">&#39;&#39;</span>, <span class="ruby-identifier">value</span> = <span class="ruby-value">0</span>)
+    <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>      <span class="ruby-comment"># Whitespace is still honored.</span>
+    <span class="ruby-ivar">@value</span> = <span class="ruby-identifier">value</span>
+  <span class="ruby-keyword">end</span>
+</pre>
+
+<p>Rendered HTML:</p>
+
+<blockquote>
+<p>Consider this method:</p>
+
+<pre class="ruby"><span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">foo</span>(<span class="ruby-identifier">name</span> = <span class="ruby-string">&#39;&#39;</span>, <span class="ruby-identifier">value</span> = <span class="ruby-value">0</span>)
+  <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>      <span class="ruby-comment"># Whitespace is still honored.</span>
+  <span class="ruby-ivar">@value</span> = <span class="ruby-identifier">value</span>
+<span class="ruby-keyword">end</span>
+</pre>
+</blockquote>
+
+<p>Pro tip:  If your indented Ruby code does not get highlighted, it may contain a syntax error.</p>
+
+<p>A code block may not contain nested blocks of any kind – it’s verbatim.</p>
+
+<h4 id="class-RDoc::MarkupReference-label-Block+Quotes">Block Quotes<span><a href="#class-RDoc::MarkupReference-label-Block+Quotes">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>You can use the characters <code>&gt;&gt;&gt;</code> (unindented), followed by indented text, to treat the text as a <a href="https://en.wikipedia.org/wiki/Block_quotation">block quote</a>:</p>
+
+<p>Example input:</p>
+
+<pre>Here&#39;s a block quote:
+&gt;&gt;&gt;
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+  commodo quam iaculis massa posuere, dictum fringilla justo pulvinar.
+  Quisque turpis erat, pharetra eu dui at, sollicitudin accumsan nulla.
+
+  Aenean congue ligula eu ligula molestie, eu pellentesque purus
+  faucibus. In id leo non ligula condimentum lobortis. Duis vestibulum,
+  diam in pellentesque aliquet, mi tellus placerat sapien, id euismod
+  purus magna ut tortor.</pre>
+
+<p>Rendered HTML:</p>
+
+<blockquote>
+<p>Here’s a block quote:</p>
+
+<blockquote>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer commodo quam iaculis massa posuere, dictum fringilla justo pulvinar. Quisque turpis erat, pharetra eu dui at, sollicitudin accumsan nulla.</p>
+
+<p>Aenean congue ligula eu ligula molestie, eu pellentesque purus faucibus. In id leo non ligula condimentum lobortis. Duis vestibulum, diam in pellentesque aliquet, mi tellus placerat sapien, id euismod purus magna ut tortor.</p>
+</blockquote>
+</blockquote>
+
+<p>Note that, unlike verbatim text, single newlines are not honored, but that a double newline begins a new paragraph in the block quote.</p>
+
+<p>A block quote may contain nested blocks, including:</p>
+<ul><li>
+<p>Other block quotes.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Paragraphs">Paragraphs</a>.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Verbatim+Text+Blocks">Verbatim text blocks</a>.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Code+Blocks">Code blocks</a>.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Lists">Lists</a>.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Headings">Headings</a>.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Horizontal+Rules">Horizontal rules</a>.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Text+Markup">Text Markup</a>.</p>
+</li></ul>
+
+<h4 id="class-RDoc::MarkupReference-label-Lists">Lists<span><a href="#class-RDoc::MarkupReference-label-Lists">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>Each type of list item is marked by a special beginning:</p>
+<ul><li>
+<p>Bullet list item: Begins with a hyphen or asterisk.</p>
+</li><li>
+<p>Numbered list item: Begins with digits and a period.</p>
+</li><li>
+<p>Lettered list item: Begins with an alphabetic character and a period.</p>
+</li><li>
+<p>Labeled list item: Begins with one of:</p>
+<ul><li>
+<p>Square-bracketed text.</p>
+</li><li>
+<p>A word followed by two colons.</p>
+</li></ul>
+</li></ul>
+
+<p>A list begins with a list item and continues, even across blank lines, as long as list items of the same type are found at the same indentation level.</p>
+
+<p>A new list resets the current margin inward. Additional lines of text aligned at that margin are part of the continuing list item.</p>
+
+<p>A list item may be continued on additional lines that are aligned with the first line.  See examples below.</p>
+
+<p>A list item may contain nested blocks, including:</p>
+<ul><li>
+<p>Other lists of any type.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Paragraphs">Paragraphs</a>.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Verbatim+Text+Blocks">Verbatim text blocks</a>.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Code+Blocks">Code blocks</a>.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Block+Quotes">Block quotes</a>.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Headings">Headings</a>.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Horizontal+Rules">Horizontal rules</a>.</p>
+</li><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Text+Markup">Text Markup</a>.</p>
+</li></ul>
+
+<h5 id="class-RDoc::MarkupReference-label-Bullet+Lists">Bullet Lists<span><a href="#class-RDoc::MarkupReference-label-Bullet+Lists">&para;</a> <a href="#top">&uarr;</a></span></h5>
+
+<p>A bullet list item begins with a hyphen or asterisk.</p>
+
+<p>Example input:</p>
+
+<pre>- An item.
+- Another.
+- An item spanning
+  multiple lines.
+
+* Yet another.
+- Last one.</pre>
+
+<p>Rendered HTML:</p>
+
+<blockquote><ul><li>
+<p>An item.</p>
+</li><li>
+<p>Another.</p>
+</li><li>
+<p>An item spanning multiple lines.</p>
+</li><li>
+<p>Yet another.</p>
+</li><li>
+<p>Last one.</p>
+</li></ul>
+</blockquote>
+
+<h5 id="class-RDoc::MarkupReference-label-Numbered+Lists">Numbered Lists<span><a href="#class-RDoc::MarkupReference-label-Numbered+Lists">&para;</a> <a href="#top">&uarr;</a></span></h5>
+
+<p>A numbered list item begins with digits and a period.</p>
+
+<p>The items are automatically re-numbered.</p>
+
+<p>Example input:</p>
+
+<pre>100. An item.
+10. Another.
+1. An item spanning
+   multiple lines.
+
+1. Yet another.
+1000. Last one.</pre>
+
+<p>Rendered HTML:</p>
+
+<blockquote><ol><li>
+<p>An item.</p>
+</li><li>
+<p>Another.</p>
+</li><li>
+<p>An item spanning multiple lines.</p>
+</li><li>
+<p>Yet another.</p>
+</li><li>
+<p>Last one.</p>
+</li></ol>
+</blockquote>
+
+<h5 id="class-RDoc::MarkupReference-label-Lettered+Lists">Lettered Lists<span><a href="#class-RDoc::MarkupReference-label-Lettered+Lists">&para;</a> <a href="#top">&uarr;</a></span></h5>
+
+<p>A numbered list item begins with a letters and a period.</p>
+
+<p>The items are automatically “re-lettered.”</p>
+
+<p>Example input:</p>
+
+<pre>z. An item.
+y. Another.
+x. An item spanning
+   multiple lines.
+
+x. Yet another.
+a. Last one.</pre>
+
+<p>Rendered HTML:</p>
+
+<blockquote><ol style="list-style-type: lower-alpha"><li>
+<p>An item.</p>
+</li><li>
+<p>Another.</p>
+</li><li>
+<p>Yet another.</p>
+</li><li>
+<p>Last one.</p>
+</li></ol>
+</blockquote>
+
+<h5 id="class-RDoc::MarkupReference-label-Labeled+Lists">Labeled Lists<span><a href="#class-RDoc::MarkupReference-label-Labeled+Lists">&para;</a> <a href="#top">&uarr;</a></span></h5>
+
+<p>A labeled list item begins with one of:</p>
+<ul><li>
+<p>Square-bracketed text: the label and text are on two lines.</p>
+</li><li>
+<p>A word followed by two colons: the label and text are on the same line.</p>
+</li></ul>
+
+<p>Example input:</p>
+
+<pre>[foo] An item.
+bat:: Another.
+[bag] An item spanning
+      multiple lines.
+
+[bar baz] Yet another.
+bam:: Last one.</pre>
+
+<p>Rendered HTML:</p>
+
+<blockquote><dl class="rdoc-list label-list"><dt>foo
+<dd>
+<p>An item.</p>
+</dd></dl>
+<dl class="rdoc-list note-list"><dt>bat
+<dd>
+<p>Another.</p>
+</dd></dl>
+<dl class="rdoc-list label-list"><dt>bag
+<dd>
+<p>An item spanning multiple lines.</p>
+</dd><dt>bar baz
+<dd>
+<p>Yet another.</p>
+</dd></dl>
+<dl class="rdoc-list note-list"><dt>bam
+<dd>
+<p>Last one.</p>
+</dd></dl>
+</blockquote>
+
+<h4 id="class-RDoc::MarkupReference-label-Headings">Headings<span><a href="#class-RDoc::MarkupReference-label-Headings">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>A heading begins with up to six equal-signs, followed by heading text. Whitespace between those and the heading text is optional.</p>
+
+<p>Examples:</p>
+
+<pre>= Section 1
+== Section 1.1
+=== Section 1.1.1
+=== Section 1.1.2
+== Section 1.2
+= Section 2
+= Foo
+== Bar
+=== Baz
+==== Bam
+===== Bat
+====== Bad
+============Still a Heading (Level 6)
+\== Not a Heading</pre>
+
+<p>A heading may contain only one type of nested block:</p>
+<ul><li>
+<p><a href="MarkupReference.html#class-RDoc::MarkupReference-label-Text+Markup">Text Markup</a>.</p>
+</li></ul>
+
+<h4 id="class-RDoc::MarkupReference-label-Horizontal+Rules">Horizontal Rules<span><a href="#class-RDoc::MarkupReference-label-Horizontal+Rules">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>A horizontal rule consists of a line with three or more hyphens and nothing more.</p>
+
+<p>Example input:</p>
+
+<pre>---
+--- Not a horizontal rule.
+
+-- Also not a horizontal rule.
+---</pre>
+
+<p>Rendered HTML:</p>
+
+<blockquote><hr>
+
+<p>— Not a horizontal rule.</p>
+
+<p>– Also not a horizontal rule.</p>
+<hr>
+</blockquote>
+
+<h4 id="class-RDoc::MarkupReference-label-Directives">Directives<span><a href="#class-RDoc::MarkupReference-label-Directives">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<h5 id="class-RDoc::MarkupReference-label-Directives+for+Allowing+or+Suppressing+Documentation">Directives for Allowing or Suppressing Documentation<span><a href="#class-RDoc::MarkupReference-label-Directives+for+Allowing+or+Suppressing+Documentation">&para;</a> <a href="#top">&uarr;</a></span></h5>
+<ul><li>
+<p><code># :stopdoc:</code>:</p>
+<ul><li>
+<p>Appears on a line by itself.</p>
+</li><li>
+<p>Specifies that RDoc should ignore markup until next <code>:startdoc:</code> directive or end-of-file.</p>
+</li></ul>
+</li><li>
+<p><code># :startdoc:</code>:</p>
+<ul><li>
+<p>Appears on a line by itself.</p>
+</li><li>
+<p>Specifies that RDoc should resume parsing markup.</p>
+</li></ul>
+</li><li>
+<p><code># :enddoc:</code>:</p>
+<ul><li>
+<p>Appears on a line by itself.</p>
+</li><li>
+<p>Specifies that RDoc should ignore markup to end-of-file regardless of other directives.</p>
+</li></ul>
+</li><li>
+<p><code># :nodoc:</code>:</p>
+<ul><li>
+<p>Appended to a line of code that defines a class, module, method, alias, constant, or attribute.</p>
+</li><li>
+<p>Specifies that the defined object should not be documented.</p>
+</li></ul>
+</li><li>
+<p><code># :nodoc: all</code>:</p>
+<ul><li>
+<p>Appended to a line of code that defines a class or module.</p>
+</li><li>
+<p>Specifies that the class or module should not be documented. By default, however, a nested class or module <em>will</em> be documented.</p>
+</li></ul>
+</li><li>
+<p><code># :doc:</code>:</p>
+<ul><li>
+<p>Appended to a line of code that defines a class, module, method, alias, constant, or attribute.</p>
+</li><li>
+<p>Specifies the defined object should be documented, even if otherwise would not be documented.</p>
+</li></ul>
+</li><li>
+<p><code># :notnew:</code> (aliased as <code>:not_new:</code> and <code>:not-new:</code>):</p>
+<ul><li>
+<p>Appended to a line of code that defines instance method <code>initialize</code>.</p>
+</li><li>
+<p>Specifies that singleton method <code>new</code> should not be documented. By default, Ruby fakes a corresponding singleton method <code>new</code>, which RDoc includes in the documentation. Note that instance method <code>initialize</code> is private, and so by default is not documented.</p>
+</li></ul>
+</li></ul>
+
+<p>For Ruby code, but not for other RDoc sources, there is a shorthand for <code>:stopdoc:</code> and <code>:startdoc:</code>:</p>
+
+<pre class="ruby"><span class="ruby-comment"># Documented.</span>
+<span class="ruby-comment">#--</span>
+<span class="ruby-comment"># Not documented.</span>
+<span class="ruby-comment">#++</span>
+<span class="ruby-comment"># Documented.</span>
+</pre>
+
+<p>For C code, any of directives <code>:startdoc:</code>, <code>:enddoc:</code>, and <code>:nodoc:</code> may appear in a stand-alone comment:</p>
+
+<pre>/* :startdoc: */
+/* :stopdoc: */
+/* :enddoc: */</pre>
+
+<h5 id="class-RDoc::MarkupReference-label-Directive+for+Specifying+RDoc+Source+Format">Directive for Specifying RDoc Source Format<span><a href="#class-RDoc::MarkupReference-label-Directive+for+Specifying+RDoc+Source+Format">&para;</a> <a href="#top">&uarr;</a></span></h5>
+<ul><li>
+<p><code># :markup: <em>type</em></code>:</p>
+<ul><li>
+<p>Appears on a line by itself.</p>
+</li><li>
+<p>Specifies the format for the RDoc input; parameter <code>type</code> is one of <code>markdown</code>, <code>rd</code>, <code>rdoc</code>, <code>tomdoc</code>.</p>
+</li></ul>
+</li></ul>
+
+<h5 id="class-RDoc::MarkupReference-label-Directives+for+HTML+Output">Directives for HTML Output<span><a href="#class-RDoc::MarkupReference-label-Directives+for+HTML+Output">&para;</a> <a href="#top">&uarr;</a></span></h5>
+<ul><li>
+<p><code># :title: <em>text</em></code>:</p>
+<ul><li>
+<p>Appears on a line by itself.</p>
+</li><li>
+<p>Specifies the title for the HTML output.</p>
+</li></ul>
+</li><li>
+<p><code># :main: <em>filename</em></code>:</p>
+<ul><li>
+<p>Appears on a line by itself.</p>
+</li><li>
+<p>Specifies the HTML file to be displayed first.</p>
+</li></ul>
+</li></ul>
+
+<h5 id="class-RDoc::MarkupReference-label-Directives+for+Method+Documentation">Directives for Method Documentation<span><a href="#class-RDoc::MarkupReference-label-Directives+for+Method+Documentation">&para;</a> <a href="#top">&uarr;</a></span></h5>
+<ul><li>
+<p><code># :call-seq:</code>:</p>
+<ul><li>
+<p>Appears on a line by itself.</p>
+</li><li>
+<p>Specifies the calling sequence to be reported in the HTML, overriding the actual calling sequence in the code. See method <a href="MarkupReference.html#method-i-call_seq_directive"><code>call_seq_directive</code></a>.</p>
+</li></ul>
+
+<p>Note that RDoc can build the calling sequence for a Ruby-coded method, but not for other languages. You may want to override that by explicitly giving a <code>:call-seq:</code> directive if you want to include:</p>
+<ul><li>
+<p>A return type, which is not automatically inferred.</p>
+</li><li>
+<p>Multiple calling sequences.</p>
+</li></ul>
+
+<p>For C code, the directive may appear in a stand-alone comment.</p>
+</li><li>
+<p><code># :args: <em>arg_names</em></code> (aliased as <code>:arg:</code>):</p>
+<ul><li>
+<p>Appears on a line by itself.</p>
+</li><li>
+<p>Specifies the arguments to be reported in the HTML, overriding the actual arguments in the code. See method <a href="MarkupReference.html#method-i-args_directive"><code>args_directive</code></a>.</p>
+</li></ul>
+</li><li>
+<p><code># :yields: <em>arg_names</em></code> (aliased as <code>:yield:</code>):</p>
+<ul><li>
+<p>Appears on a line by itself.</p>
+</li><li>
+<p>Specifies the yield arguments to be reported in the HTML, overriding the actual yield in the code. See method <a href="MarkupReference.html#method-i-yields_directive"><code>yields_directive</code></a>.</p>
+</li></ul>
+</li></ul>
+
+<h5 id="class-RDoc::MarkupReference-label-Directives+for+Organizing+Documentation">Directives for Organizing Documentation<span><a href="#class-RDoc::MarkupReference-label-Directives+for+Organizing+Documentation">&para;</a> <a href="#top">&uarr;</a></span></h5>
+
+<p>By default, RDoc groups:</p>
+<ul><li>
+<p>Singleton methods together in alphabetical order.</p>
+</li><li>
+<p>Instance methods and their aliases together in alphabetical order.</p>
+</li><li>
+<p>Attributes and their aliases together in alphabetical order.</p>
+</li></ul>
+
+<p>You can use directives to modify those behaviors.</p>
+<ul><li>
+<p><code># :section: <em>section_title</em></code>:</p>
+<ul><li>
+<p>Appears on a line by itself.</p>
+</li><li>
+<p>Specifies that following methods are to be grouped into the section with the given <em>section_title</em>, or into the default section if no title is given. The directive remains in effect until another such directive is given, but may be temporarily overridden by directive <code>:category:</code>. See below.</p>
+</li></ul>
+
+<p>The comment block containing this directive:</p>
+<ul><li>
+<p>Must be separated by a blank line from the documentation for the next item.</p>
+</li><li>
+<p>May have one or more lines preceding the directive. These will be removed, along with any trailing lines that match them. Such lines may be visually helpful.</p>
+</li><li>
+<p>Lines of text that are not so removed become the descriptive text for the section.</p>
+</li></ul>
+
+<p>Example:</p>
+
+<pre class="ruby"><span class="ruby-comment"># ----------------------------------------</span>
+<span class="ruby-comment"># :section: My Section</span>
+<span class="ruby-comment"># This is the section that I wrote.</span>
+<span class="ruby-comment"># See it glisten in the noon-day sun.</span>
+<span class="ruby-comment"># ----------------------------------------</span>
+
+<span class="ruby-comment">##</span>
+<span class="ruby-comment"># Comment for some_method</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">some_method</span>
+  <span class="ruby-comment"># ...</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>You can use directive <code>:category:</code> to temporarily override the current section.</p>
+</li><li>
+<p><code># :category: <em>section_title</em></code>:</p>
+<ul><li>
+<p>Appears on a line by itself.</p>
+</li><li>
+<p>Specifies that just one following method is to be included in the given section, or in the default section if no title is given. Subsequent methods are to be grouped into the current section.</p>
+</li></ul>
+</li></ul>
+
+<h5 id="class-RDoc::MarkupReference-label-Directive+for+Including+a+File">Directive for Including a File<span><a href="#class-RDoc::MarkupReference-label-Directive+for+Including+a+File">&para;</a> <a href="#top">&uarr;</a></span></h5>
+<ul><li>
+<p><code># :include: <em>filepath</em></code>:</p>
+<ul><li>
+<p>Appears on a line by itself.</p>
+</li><li>
+<p>Specifies that the contents of the given file are to be included at this point. The file content is shifted to have the same indentation as the colon at the start of the directive.</p>
+
+<p>The file is searched for in the directories given with the <code>--include</code> command-line option, or by default in the current directory.</p>
+</li></ul>
+
+<p>For C code, the directive may appear in a stand-alone comment</p>
+</li></ul>
+
+<h4 id="class-RDoc::MarkupReference-label-Text+Markup">Text Markup<span><a href="#class-RDoc::MarkupReference-label-Text+Markup">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>Text markup is metatext that affects HTML rendering:</p>
+<ul><li>
+<p>Typeface: italic, bold, monofont.</p>
+</li><li>
+<p>Character conversions: copyright, trademark, certain punctuation.</p>
+</li><li>
+<p>Links.</p>
+</li><li>
+<p>Escapes: marking text as “not markup.”</p>
+</li></ul>
+
+<h5 id="class-RDoc::MarkupReference-label-Typeface+Markup">Typeface Markup<span><a href="#class-RDoc::MarkupReference-label-Typeface+Markup">&para;</a> <a href="#top">&uarr;</a></span></h5>
+
+<p>Typeface markup can specify that text is to be rendered as italic, bold, or monofont.</p>
+
+<p>Typeface markup may contain only one type of nested block:</p>
+<ul><li>
+<p>More typeface markup: italic, bold, monofont.</p>
+</li></ul>
+
+<h6 id="class-RDoc::MarkupReference-label-Italic">Italic<span><a href="#class-RDoc::MarkupReference-label-Italic">&para;</a> <a href="#top">&uarr;</a></span></h6>
+
+<p>Text may be marked as italic via HTML tag <code>&lt;i&gt;</code> or <code>&lt;em&gt;</code>.</p>
+
+<p>Example input:</p>
+
+<pre>&lt;i&gt;Italicized words&lt;/i&gt; in a paragraph.
+
+&gt;&gt;&gt;
+  &lt;i&gt;Italicized words in a block quote&lt;/i&gt;.
+
+- &lt;i&gt;Italicized words&lt;/i&gt; in a list item.
+
+====== &lt;i&gt;Italicized words&lt;/i&gt; in a Heading
+
+&lt;i&gt;Italicized passage containing *bold* and +monofont+.&lt;/i&gt;</pre>
+
+<p>Rendered HTML:</p>
+
+<blockquote>
+<p><em>Italicized words</em> in a paragraph.</p>
+
+<blockquote>
+<p><em>Italicized words in a block quote</em>.</p>
+</blockquote>
+<ul><li>
+<p><em>Italicized words</em> in a list item.</p>
+</li></ul>
+
+<h6 id="class-RDoc::MarkupReference-label-Italicized+words+in+a+Heading"><em>Italicized words</em> in a Heading<span><a href="#class-RDoc::MarkupReference-label-Italicized+words+in+a+Heading">&para;</a> <a href="#top">&uarr;</a></span></h6>
+
+<p><em>Italicized passage containing <strong>bold</strong> and <code>monofont</code>.</em></p>
+</blockquote>
+
+<p>A single word may be italicized via a shorthand: prefixed and suffixed underscores.</p>
+
+<p>Example input:</p>
+
+<pre>_Italic_ in a paragraph.
+
+&gt;&gt;&gt;
+  _Italic_ in a block quote.
+
+- _Italic_ in a list item.
+
+====== _Italic_ in a Heading</pre>
+
+<p>Rendered HTML:</p>
+
+<blockquote>
+<p><em>Italic</em> in a paragraph.</p>
+
+<blockquote>
+<p><em>Italic</em> in a block quote.</p>
+</blockquote>
+<ul><li>
+<p><em>Italic</em> in a list item.</p>
+</li></ul>
+
+<h6 id="class-RDoc::MarkupReference-label-Italic+in+a+Heading"><em>Italic</em> in a Heading<span><a href="#class-RDoc::MarkupReference-label-Italic+in+a+Heading">&para;</a> <a href="#top">&uarr;</a></span></h6>
+</blockquote>
+
+<h6 id="class-RDoc::MarkupReference-label-Bold">Bold<span><a href="#class-RDoc::MarkupReference-label-Bold">&para;</a> <a href="#top">&uarr;</a></span></h6>
+
+<p>Text may be marked as bold via HTML tag <code>&lt;b&gt;</code>.</p>
+
+<p>Example input:</p>
+
+<pre>&lt;b&gt;Bold words&lt;/b&gt; in a paragraph.
+
+&gt;&gt;&gt;
+  &lt;b&gt;Bold words&lt;/b&gt; in a block quote.
+
+- &lt;b&gt;Bold words&lt;/b&gt; in a list item.
+
+====== &lt;b&gt;Bold words&lt;/b&gt; in a Heading
+
+&lt;b&gt;Bold passage containing _italics_ and +monofont+.&lt;/b&gt;</pre>
+
+<p>Rendered HTML:</p>
+
+<blockquote>
+<p><strong>Bold words</strong> in a paragraph.</p>
+
+<blockquote>
+<p><strong>Bold words</strong> in a block quote.</p>
+</blockquote>
+<ul><li>
+<p><strong>Bold words</strong> in a list item.</p>
+</li></ul>
+
+<h6 id="class-RDoc::MarkupReference-label-Bold+words+in+a+Heading"><strong>Bold words</strong> in a Heading<span><a href="#class-RDoc::MarkupReference-label-Bold+words+in+a+Heading">&para;</a> <a href="#top">&uarr;</a></span></h6>
+
+<p><strong>Bold passage containing <em>italics</em> and <code>monofont</code>.</strong></p>
+</blockquote>
+
+<p>A single word may be made bold via a shorthand: prefixed and suffixed asterisks.</p>
+
+<p>Example input:</p>
+
+<pre>*Bold* in a paragraph.
+
+&gt;&gt;&gt;
+  *Bold* in a block quote.
+
+- *Bold* in a list item.
+
+===== *Bold* in a Heading</pre>
+
+<p>Rendered HTML:</p>
+
+<blockquote>
+<p><strong>Bold</strong> in a paragraph.</p>
+
+<blockquote>
+<p><strong>Bold</strong> in a block quote.</p>
+</blockquote>
+<ul><li>
+<p><strong>Bold</strong> in a list item.</p>
+</li></ul>
+
+<h5 id="class-RDoc::MarkupReference-label-Bold+in+a+Heading"><strong>Bold</strong> in a Heading<span><a href="#class-RDoc::MarkupReference-label-Bold+in+a+Heading">&para;</a> <a href="#top">&uarr;</a></span></h5>
+</blockquote>
+
+<h6 id="class-RDoc::MarkupReference-label-Monofont">Monofont<span><a href="#class-RDoc::MarkupReference-label-Monofont">&para;</a> <a href="#top">&uarr;</a></span></h6>
+
+<p>Text may be marked as monofont – sometimes called ‘typewriter font’ – via HTML tag <code>&lt;tt&gt;</code> or <code>&lt;code&gt;</code>.</p>
+
+<p>Example input:</p>
+
+<pre>&lt;tt&gt;Monofont words&lt;/tt&gt; in a paragraph.
+
+&gt;&gt;&gt;
+  &lt;tt&gt;Monofont words&lt;/tt&gt; in a block quote.
+
+- &lt;tt&gt;Monofont words&lt;/tt&gt; in a list item.
+
+====== &lt;tt&gt;Monofont words&lt;/tt&gt; in heading
+
+&lt;tt&gt;Monofont passage containing _italics_ and *bold*.&lt;/tt&gt;</pre>
+
+<p>Rendered HTML:</p>
+
+<blockquote>
+<p><code>Monofont words</code> in a paragraph.</p>
+
+<blockquote>
+<p><code>Monofont words</code> in a block quote.</p>
+</blockquote>
+<ul><li>
+<p><code>Monofont words</code> in a list item.</p>
+</li></ul>
+
+<h6 id="class-RDoc::MarkupReference-label-Monofont+words+in+heading"><code>Monofont words</code> in heading<span><a href="#class-RDoc::MarkupReference-label-Monofont+words+in+heading">&para;</a> <a href="#top">&uarr;</a></span></h6>
+
+<p><code>Monofont passage containing <em>italics</em> and <strong>bold</strong>.</code></p>
+</blockquote>
+
+<p>A single word may be made monofont by a shorthand: prefixed and suffixed plus-signs.</p>
+
+<p>Example input:</p>
+
+<pre>+Monofont+ in a paragraph.
+
+&gt;&gt;&gt;
+  +Monofont+ in a block quote.
+
+- +Monofont+ in a list item.
+
+====== +Monofont+ in a Heading</pre>
+
+<p>Rendered HTML:</p>
+
+<blockquote>
+<p><code>Monofont</code> in a paragraph.</p>
+
+<blockquote>
+<p><code>Monofont</code> in a block quote.</p>
+</blockquote>
+<ul><li>
+<p><code>Monofont</code> in a list item.</p>
+</li></ul>
+
+<h6 id="class-RDoc::MarkupReference-label-Monofont+in+a+Heading"><code>Monofont</code> in a Heading<span><a href="#class-RDoc::MarkupReference-label-Monofont+in+a+Heading">&para;</a> <a href="#top">&uarr;</a></span></h6>
+</blockquote>
+
+<h4 id="class-RDoc::MarkupReference-label-Character+Conversions">Character Conversions<span><a href="#class-RDoc::MarkupReference-label-Character+Conversions">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>Certain combinations of characters may be converted to special characters; whether the conversion occurs depends on whether the special character is available in the current encoding.</p>
+<ul><li>
+<p><code>(c)</code> converts to © (copyright character); must be lowercase.</p>
+</li><li>
+<p><code>(r)</code> converts to ® (registered trademark character); must be lowercase.</p>
+</li><li>
+<p><code>&#39;foo&#39;</code> converts to ‘foo’ (smart single-quotes).</p>
+</li><li>
+<p><code>&quot;foo&quot;</code> converts to “foo” (smart double-quotes).</p>
+</li><li>
+<p><code>foo ... bar</code> converts to foo … bar (1-character ellipsis).</p>
+</li><li>
+<p><code>foo -- bar</code> converts to foo – bar (1-character en-dash).</p>
+</li><li>
+<p><code>foo --- bar</code> converts to foo — bar (1-character em-dash).</p>
+</li></ul>
+
+<h4 id="class-RDoc::MarkupReference-label-Links">Links<span><a href="#class-RDoc::MarkupReference-label-Links">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>Certain strings in RDoc text are converted to links. Any such link may be suppressed by prefixing a backslash. This section shows how to link to various targets.</p>
+<dl class="rdoc-list label-list"><dt>Class
+<dd><ul><li>
+<p>On-page: <code>DummyClass</code> links to <a href="MarkupReference/DummyClass.html"><code>DummyClass</code></a>.</p>
+</li><li>
+<p>Off-page: <code>RDoc::Alias</code> links to <a href="Alias.html"><code>RDoc::Alias</code></a>.</p>
+</li></ul>
+</dd><dt>Module
+<dd><ul><li>
+<p>On-page: <code>DummyModule</code> links to <a href="MarkupReference/DummyModule.html"><code>DummyModule</code></a>.</p>
+</li><li>
+<p>Off-page: <code>RDoc</code> links to <a href="../RDoc.html"><code>RDoc</code></a>.</p>
+</li></ul>
+</dd><dt>Constant
+<dd><ul><li>
+<p>On-page: <code>DUMMY_CONSTANT</code> links to <a href="MarkupReference.html#DUMMY_CONSTANT"><code>DUMMY_CONSTANT</code></a>.</p>
+</li><li>
+<p>Off-page: <code>RDoc::Text::MARKUP_FORMAT</code> links to RDoc::Text::MARKUP_FORMAT.</p>
+</li></ul>
+</dd><dt>Singleton Method
+<dd><ul><li>
+<p>On-page: <code>::dummy_singleton_method</code> links to <a href="MarkupReference.html#method-c-dummy_singleton_method"><code>::dummy_singleton_method</code></a>.</p>
+</li><li>
+<p>Off-page<code>RDoc::TokenStream::to_html</code> links to <a href="TokenStream.html#method-c-to_html"><code>RDoc::TokenStream::to_html</code></a>.</p>
+</li></ul>
+
+<p>Note: Occasionally RDoc is not linked to a method whose name has only special characters. Check whether the links you were expecting are actually there.  If not, you’ll need to put in an explicit link; see below.</p>
+
+<p>Pro tip: The link to any method is available in the alphabetical table of contents at the top left of the page for the class or module.</p>
+</dd><dt>Instance Method
+<dd><ul><li>
+<p>On-page: <code>#dummy_instance_method</code> links to <a href="MarkupReference.html#method-i-dummy_instance_method"><code>dummy_instance_method</code></a>.</p>
+</li><li>
+<p>Off-page: <code>RDoc::Alias#html_name</code> links to <a href="Alias.html#method-i-html_name"><code>RDoc::Alias#html_name</code></a>.</p>
+
+<p>See the Note and Pro Tip immediately above.</p>
+</li></ul>
+</dd><dt>Attribute
+<dd><ul><li>
+<p>On-page: <code>#dummy_attribute</code> links to <a href="MarkupReference.html#attribute-i-dummy_attribute"><code>dummy_attribute</code></a>.</p>
+</li><li>
+<p>Off-page: <code>RDoc::Alias#name</code> links to <a href="Alias.html#attribute-i-name"><code>RDoc::Alias#name</code></a>.</p>
+</li></ul>
+</dd><dt>Alias
+<dd><ul><li>
+<p>On-page: <code>#dummy_instance_alias</code> links to <a href="MarkupReference.html#method-i-dummy_instance_alias"><code>dummy_instance_alias</code></a>.</p>
+</li><li>
+<p>Off-page: <code>RDoc::Alias#new_name</code> links to <a href="Alias.html#attribute-i-new_name"><code>RDoc::Alias#new_name</code></a>.</p>
+</li></ul>
+</dd><dt>Protocol <code>http</code>
+<dd><ul><li>
+<p>Linked: <code>http://yahoo.com</code> links to <a href="http://yahoo.com">yahoo.com</a>.</p>
+</li></ul>
+</dd><dt>Protocol <code>https</code>
+<dd><ul><li>
+<p>Linked: <code>https://github.com</code> links to <a href="https://github.com">github.com</a>.</p>
+</li></ul>
+</dd><dt>Protocol <code>www</code>
+<dd><ul><li>
+<p>Linked: <code>www.yahoo.com</code> links to <a href="www.yahoo.com.">www.yahoo.com.</a></p>
+</li></ul>
+</dd><dt>Protocol <code>ftp</code>
+<dd><ul><li>
+<p>Linked: <code>ftp://nosuch.site</code> links to <a href="ftp://nosuch.site">nosuch.site</a>.</p>
+</li></ul>
+</dd><dt>Protocol <code>mailto</code>
+<dd><ul><li>
+<p>Linked:  <code>mailto:/foo@bar.com</code> links to <a href="mailto://foo@bar.com">foo@bar.com</a>.</p>
+</li></ul>
+</dd><dt>Protocol <code>irc</code>
+<dd><ul><li>
+<p>link: <code>irc://irc.freenode.net/ruby</code> links to <a href="irc://irc.freenode.net/ruby">irc.freenode.net/ruby</a>.</p>
+</li></ul>
+</dd><dt>Image Filename Extensions
+<dd><ul><li>
+<p>Link: <code>https://www.ruby-lang.org/images/header-ruby-logo@2x.png</code> is converted to an in-line HTML <code>img</code> tag, which displays the image in the HTML:</p>
+
+<p><img src="https://www.ruby-lang.org/images/header-ruby-logo@2x.png" /></p>
+
+<p>Also works for <code>bmp</code>, <code>gif</code>, <code>jpeg</code>, and <code>jpg</code> files.</p>
+
+<p>Note: Works only for a fully qualified URL.</p>
+</li></ul>
+</dd><dt>Heading
+<dd><ul><li>
+<p>Link: <code>RDoc::RD@LICENSE</code> links to LICENSE at <code>RDoc::RDoc::RD</code>.</p>
+</li></ul>
+
+<p>Note that spaces in the actual heading are represented by <code>+</code> characters in the linkable text.</p>
+<ul><li>
+<p>Link: <code>RDoc::Options@Saved+Options</code> links to <a href="Options.html#class-RDoc::Options-label-Saved+Options">Saved Options at <code>RDoc::Options</code></a>.</p>
+</li></ul>
+
+<p>Punctuation and other special characters must be escaped like CGI.escape.</p>
+
+<p>Pro tip: The link to any heading is available in the alphabetical table of contents at the top left of the page for the class or module.</p>
+</dd><dt>Section
+<dd>
+<p>See <a href="#class-RDoc::MarkupReference-label-Directives+for+Organizing+Documentation">Directives for Organizing Documentation</a>.</p>
+<ul><li>
+<p>Link: <code>RDoc::Markup::ToHtml@Visitor</code> links to <a href="Markup/ToHtml.html#Visitor">Visitor at <code>RDoc::Markup::ToHtml</code></a>.</p>
+</li></ul>
+
+<p>If a section and a heading share the same name, the link target is the section.</p>
+</dd><dt>Single-Word Text Link
+<dd>
+<p>Use square brackets to create single-word text link:</p>
+<ul><li>
+<p><code>GitHub[https://github.com]</code> links to <a href="https://github.com">GitHub</a>.</p>
+</li></ul>
+</dd><dt>Multi-Word Text Link
+<dd>
+<p>Use square brackets and curly braces to create a multi-word text link.</p>
+<ul><li>
+<p><code>{GitHub home page}[https://github.com]</code> links to <a href="https://github.com">GitHub home page</a>.</p>
+</li></ul>
+</dd><dt><code>rdoc-ref</code> Scheme
+<dd>
+<p>A link with the <code>rdoc-ref:</code> scheme links to the referenced item, if that item exists. The referenced item may be a class, module, method, file, etc.</p>
+<ul><li>
+<p>Class: <code>Alias[rdoc-ref:RDoc::Alias]</code> links to <a href="Alias.html">Alias</a>.</p>
+</li><li>
+<p>Module: <code>RDoc[rdoc-ref:RDoc]</code> links to <a href="../RDoc.html"><code>RDoc</code></a>.</p>
+</li><li>
+<p>Method: <code>foo[rdoc-ref:RDoc::Markup::ToHtml#handle_regexp_RDOCLINK]</code> links to <a href="Markup/ToHtml.html#method-i-handle_regexp_RDOCLINK">foo</a>.</p>
+</li><li>
+<p>Constant: <code>bar[rdoc-ref:RDoc::Markup::ToHtml::LIST_TYPE_TO_HTML]</code> links to bar.</p>
+</li><li>
+<p>Attribute: <code>baz[rdoc-ref:RDoc::Markup::ToHtml#code_object]</code> links to <a href="Markup/ToHtml.html#attribute-i-code_object">baz</a>.</p>
+</li><li>
+<p>Alias: <code>bad[rdoc-ref:RDoc::MarkupReference#dummy_instance_alias]</code> links to <a href="MarkupReference.html#method-i-dummy_instance_alias">bad</a>.</p>
+</li></ul>
+
+<p>If the referenced item does not exist, no link is generated and entire <code>rdoc-ref:</code> square-bracketed clause is removed from the resulting text.</p>
+<ul><li>
+<p><code>Nosuch[rdoc-ref:RDoc::Nosuch]</code> is rendered as Nosuch.</p>
+</li></ul>
+</dd><dt><code>rdoc-label</code> Scheme
+<dd><dl class="rdoc-list label-list"><dt>Simple
+<dd>
+<p>You can specify a link target using this form, where the second part cites the id of an HTML element.</p>
+
+<p>This link refers to the constant <code>DUMMY_CONSTANT</code> on this page:</p>
+<ul><li>
+<p><code>{DUMMY_CONSTANT}[rdoc-label:DUMMY_CONSTANT]</code></p>
+</li></ul>
+
+<p>Thus:</p>
+
+<p><a href="#DUMMY_CONSTANT">DUMMY_CONSTANT</a></p>
+</dd><dt>With Return
+<dd>
+<p>You can specify both a link target and a local label that can be used as the target for a return link. These two links refer to each other:</p>
+<ul><li>
+<p><code>{go to addressee}[rdoc-label:addressee:sender]</code></p>
+</li><li>
+<p><code>{return to sender}[rdoc-label:sender:addressee]</code></p>
+</li></ul>
+
+<p>Thus:</p>
+
+<p><a id="sender" href="#addressee">go to addressee</a></p>
+
+<p>Some text.</p>
+
+<p><a id="addressee" href="#sender">return to sender</a></p>
+</dd></dl>
+</dd><dt><code>link:</code> Scheme
+<dd><ul><li>
+<p><code>link:README_rdoc.html</code> links to <a href="../README_rdoc.html">README_rdoc.html</a>.</p>
+</li></ul>
+</dd><dt><code>rdoc-image</code> Scheme
+<dd>
+<p>Use the <code>rdoc-image</code> scheme to display an image that is also a link:</p>
+
+<pre class="ruby"><span class="ruby-comment"># {rdoc-image:path/to/image}[link_target]</span>
+</pre>
+<ul><li>
+<p>Link: <code>{rdoc-image:https://www.ruby-lang.org/images/header-ruby-logo@2x.png}[https://www.ruby-lang.org]</code> displays image <code>https://www.ruby-lang.org/images/header-ruby-logo@2x.png</code> as a link to <code>https://www.ruby-lang.org</code>.</p>
+
+<p><a href="https://www.ruby-lang.org"><img src="https://www.ruby-lang.org/images/header-ruby-logo@2x.png"></a></p>
+</li></ul>
+
+<p>A relative path as the target also works:</p>
+<ul><li>
+<p>Link: <code>{rdoc-image:https://www.ruby-lang.org/images/header-ruby-logo@2x.png}[./Alias.html]</code> links to <code>./Alias.html</code></p>
+
+<p><a href="./Alias.html"><img src="https://www.ruby-lang.org/images/header-ruby-logo@2x.png"></a></p>
+</li></ul>
+</dd></dl>
+
+<h3 id="class-RDoc::MarkupReference-label-Escaping+Text">Escaping Text<span><a href="#class-RDoc::MarkupReference-label-Escaping+Text">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Text that would otherwise be interpreted as markup can be “escaped,” so that it is not interpreted as markup; the escape character is the backslash (<code>&#39;\&#39;</code>).</p>
+
+<p>In a verbatim text block or a code block, the escape character is always preserved:</p>
+
+<p>Example input:</p>
+
+<pre>This is not verbatim text.
+
+  This is verbatim text, with an escape character \.
+
+This is not a code block.
+
+  def foo
+    &#39;String with an escape character.&#39;
+  end</pre>
+
+<p>Rendered HTML:</p>
+
+<blockquote>
+<p>This is not verbatim text.</p>
+
+<pre>This is verbatim text, with an escape character \.</pre>
+
+<p>This is not a code block.</p>
+
+<pre class="ruby"><span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">foo</span>
+  <span class="ruby-string">&#39;This is a code block with an escape character \.&#39;</span>
+<span class="ruby-keyword">end</span>
+</pre>
+</blockquote>
+
+<p>In typeface markup (italic, bold, or monofont), an escape character is preserved unless it is immediately followed by nested typeface markup.</p>
+
+<p>Example input:</p>
+
+<pre>This list is about escapes; it contains:
+
+- &lt;tt&gt;Monofont text with unescaped nested _italic_&lt;/tt&gt;.
+- &lt;tt&gt;Monofont text with escaped nested \_italic_&lt;/tt&gt;.
+- &lt;tt&gt;Monofont text with an escape character \&lt;/tt&gt;.</pre>
+
+<p>Rendered HTML:</p>
+
+<blockquote>
+<p>This list is about escapes; it contains:</p>
+<ul><li>
+<p><code>Monofont text with unescaped nested <em>italic</em></code>.</p>
+</li><li>
+<p><code>Monofont text with escaped nested _italic_</code>.</p>
+</li><li>
+<p><code>Monofont text with an escape character \ </code>.</p>
+</li></ul>
+</blockquote>
+
+<p>In other text-bearing blocks (paragraphs, block quotes, list items, headings):</p>
+<ul><li>
+<p>A single escape character immediately followed by markup escapes the markup.</p>
+</li><li>
+<p>A single escape character followed by whitespace is preserved.</p>
+</li><li>
+<p>A single escape character anywhere else is ignored.</p>
+</li><li>
+<p>A double escape character is rendered as a single backslash.</p>
+
+<p>Example input:</p>
+
+<pre>This list is about escapes; it contains:
+
+- An unescaped class name, RDoc, that will become a link.
+- An escaped class name, \RDoc, that will not become a link.
+- An escape character followed by whitespace \ .
+- An escape character \that is ignored.
+- A double escape character \\ that is rendered
+  as a single backslash.</pre>
+
+<p>Rendered HTML:</p>
+
+<blockquote>
+<p>This list is about escapes; it contains:</p>
+<ul><li>
+<p>An unescaped class name, <a href="../RDoc.html"><code>RDoc</code></a>, that will become a link.</p>
+</li><li>
+<p>An escaped class name, RDoc, that will not become a link.</p>
+</li><li>
+<p>An escape character followed by whitespace \ .</p>
+</li><li>
+<p>An escape character that is ignored.</p>
+</li><li>
+<p>A double escape character \ that is rendered as a single backslash.</p>
+</li></ul>
+</blockquote>
+</li></ul>
+
+<h2 id="class-RDoc::MarkupReference-label-Documentation+Derived+from+Ruby+Code">Documentation Derived from Ruby Code<span><a href="#class-RDoc::MarkupReference-label-Documentation+Derived+from+Ruby+Code">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<dl class="rdoc-list label-list"><dt>Class
+<dd>
+<p>By default, RDoc documents:</p>
+<ul><li>
+<p>Class name.</p>
+</li><li>
+<p>Parent class.</p>
+</li><li>
+<p>Singleton methods.</p>
+</li><li>
+<p>Instance methods.</p>
+</li><li>
+<p>Aliases.</p>
+</li><li>
+<p>Constants.</p>
+</li><li>
+<p>Attributes.</p>
+</li></ul>
+</dd><dt>Module
+<dd>
+<p>By default, RDoc documents:</p>
+<ul><li>
+<p>Module name.</p>
+</li><li>
+<p>Singleton methods.</p>
+</li><li>
+<p>Instance methods.</p>
+</li><li>
+<p>Aliases.</p>
+</li><li>
+<p>Constants.</p>
+</li><li>
+<p>Attributes.</p>
+</li></ul>
+</dd><dt>Method
+<dd>
+<p>By default, RDoc documents:</p>
+<ul><li>
+<p>Method name.</p>
+</li><li>
+<p>Arguments.</p>
+</li><li>
+<p>Yielded values.</p>
+</li></ul>
+
+<p>See <a href="MarkupReference.html#method-i-method"><code>method</code></a>.</p>
+</dd><dt>Alias
+<dd>
+<p>By default, RDoc documents:</p>
+<ul><li>
+<p>Alias name.</p>
+</li><li>
+<p>Aliased name.</p>
+</li></ul>
+
+<p>See <a href="MarkupReference.html#method-i-dummy_instance_alias"><code>dummy_instance_alias</code></a> and <a href="MarkupReference.html#method-i-dummy_instance_method"><code>dummy_instance_method</code></a>.</p>
+</dd><dt>Constant
+<dd>
+<p>By default, RDoc documents:</p>
+<ul><li>
+<p>Constant name.</p>
+</li></ul>
+
+<p>See <a href="MarkupReference.html#DUMMY_CONSTANT"><code>DUMMY_CONSTANT</code></a>.</p>
+</dd><dt>Attribute
+<dd>
+<p>By default, RDoc documents:</p>
+<ul><li>
+<p>Attribute name.</p>
+</li><li>
+<p>Attribute type (<code>[R]</code>, <code>[W]</code>, or <code>[RW]</code>)</p>
+</li></ul>
+
+<p>See <a href="MarkupReference.html#attribute-i-dummy_attribute"><code>dummy_attribute</code></a>.</p>
+</dd></dl>
+
+  </section>
+
+  <section id="5Buntitled-5D" class="documentation-section">
+
+
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+        <dt id="DUMMY_CONSTANT">DUMMY_CONSTANT
+        <dd>
+      </dl>
+    </section>
+
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      <div id="attribute-i-dummy_attribute" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">dummy_attribute</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        </div>
+      </div>
+      <div id="attribute-i-dummy_attribute_alias" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">dummy_attribute_alias</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        </div>
+      </div>
+    </section>
+
+
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+      <div id="method-c-dummy_singleton_method" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">dummy_singleton_method</span><span
+              class="method-args">(foo, bar)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="dummy_singleton_method-source">
+            <pre><span class="ruby-comment"># File doc/rdoc/markup_reference.rb, line 1197</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">dummy_singleton_method</span>(<span class="ruby-identifier">foo</span>, <span class="ruby-identifier">bar</span>); <span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+    </section>
+
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+      <div id="method-i-args_directive" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">args_directive</span><span
+              class="method-args">(baz)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          <p>The <code>:args:</code> directive overrides the actual arguments found in the Ruby code.</p>
+
+<p>Click on the calling sequence to see the code.</p>
+
+          <div class="method-source-code" id="args_directive-source">
+            <pre><span class="ruby-comment"># File doc/rdoc/markup_reference.rb, line 1237</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">args_directive</span>(<span class="ruby-identifier">foo</span>, <span class="ruby-identifier">bar</span>) <span class="ruby-comment"># :args: baz</span>
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-call_seq_directive" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-callseq">
+              call_seq_directive(foo, bar)
+            </span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          <div class="method-heading">
+            <span class="method-callseq">
+              Can be anything &rarr; bar
+            </span>
+          </div>
+          <div class="method-heading">
+            <span class="method-callseq">
+              Also anything more &rarr; baz or bat
+            </span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          <p>The <code>:call-seq:</code> directive overrides the actual calling sequence found in the Ruby code.</p>
+<ul><li>
+<p>It can specify anything at all.</p>
+</li><li>
+<p>It can have multiple calling sequences.</p>
+</li></ul>
+
+<p>This one includes <code>Can be anything -&gt; foo</code>, which is nonsense.</p>
+
+<p>Note that the “arrow” is two characters, hyphen and right angle-bracket, which is made into a single character in the HTML.</p>
+
+<p>Click on the calling sequence to see the code.</p>
+
+<p>Here is the <code>:call-seq:</code> directive given for the method:</p>
+
+<pre>:call-seq:
+  call_seq_directive(foo, bar)
+  Can be anything -&gt; bar
+  Also anything more -&gt; baz or bat</pre>
+
+          <div class="method-source-code" id="call_seq_directive-source">
+            <pre><span class="ruby-comment"># File doc/rdoc/markup_reference.rb, line 1229</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">call_seq_directive</span>
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-dummy_instance_alias" class="method-detail method-alias">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">dummy_instance_alias</span><span
+              class="method-args">(foo, bar)</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+        </div>
+
+
+        <div class="aliases">
+          Alias for: <a href="MarkupReference.html#method-i-dummy_instance_method">dummy_instance_method</a>
+        </div>
+      </div>
+
+      <div id="method-i-dummy_instance_method" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">dummy_instance_method</span><span
+              class="method-args">(foo, bar)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="dummy_instance_method-source">
+            <pre><span class="ruby-comment"># File doc/rdoc/markup_reference.rb, line 1198</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">dummy_instance_method</span>(<span class="ruby-identifier">foo</span>, <span class="ruby-identifier">bar</span>); <span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+        <div class="aliases">
+          Also aliased as: <a href="MarkupReference.html#method-i-dummy_instance_alias">dummy_instance_alias</a>
+        </div>
+
+      </div>
+
+      <div id="method-i-method" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">method</span><span
+              class="method-args">(foo, bar) { |&#39;baz&#39;| ... }</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          <p>This method is documented only by RDoc, except for these comments.</p>
+
+<p>Click on the calling sequence to see the code.</p>
+
+          <div class="method-source-code" id="method-source">
+            <pre><span class="ruby-comment"># File doc/rdoc/markup_reference.rb, line 1253</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">method</span>(<span class="ruby-identifier">foo</span>, <span class="ruby-identifier">bar</span>)
+  <span class="ruby-keyword">yield</span> <span class="ruby-string">&#39;baz&#39;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-yields_directive" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">yields_directive</span><span
+              class="method-args">(foo, bar) { |&#39;bat&#39;| ... }</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          <p>The <code>:yields:</code> directive overrides the actual yield found in the Ruby code.</p>
+
+<p>Click on the calling sequence to see the code.</p>
+
+          <div class="method-source-code" id="yields_directive-source">
+            <pre><span class="ruby-comment"># File doc/rdoc/markup_reference.rb, line 1245</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">yields_directive</span>(<span class="ruby-identifier">foo</span>, <span class="ruby-identifier">bar</span>) <span class="ruby-comment"># :yields: &#39;bat&#39;</span>
+  <span class="ruby-keyword">yield</span> <span class="ruby-string">&#39;baz&#39;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+    </section>
+
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

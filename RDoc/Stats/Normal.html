@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Stats::Normal - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Stats::Normal - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
   var index_rel_prefix = "../../";
 </script>
 
-<script src="../../js/jquery.js"></script>
-<script src="../../js/darkfish.js"></script>
+<script src="../../js/navigation.js" defer></script>
+<script src="../../js/search.js" defer></script>
+<script src="../../js/search_index.js" defer></script>
+<script src="../../js/searcher.js" defer></script>
+<script src="../../js/darkfish.js" defer></script>
 
 <link href="../../css/fonts.css" rel="stylesheet">
 <link href="../../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,24 +57,22 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link"><a href="Quiet.html">RDoc::Stats::Quiet</a>
-  
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-i-print_file">#print_file</a>
-    
   </ul>
 </div>
 
@@ -86,46 +86,33 @@
 
   <section class="description">
     
-<p>Stats printer that prints just the files being documented with a progress
-bar</p>
+<p>Stats printer that prints just the files being documented with a progress bar</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
 
-    
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-print_file" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">print_file</span><span
-            class="method-args">(files_so_far, filename)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">print_file</span><span
+              class="method-args">(files_so_far, filename)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Prints a file with a progress bar</p>
-          
-          
 
-          
           <div class="method-source-code" id="print_file-source">
             <pre><span class="ruby-comment"># File lib/rdoc/stats/normal.rb, line 23</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">print_file</span> <span class="ruby-identifier">files_so_far</span>, <span class="ruby-identifier">filename</span>
@@ -134,49 +121,45 @@ bar</p>
                          <span class="ruby-identifier">files_so_far</span>,
                          <span class="ruby-ivar">@num_files</span>)
 
-  <span class="ruby-comment"># Print a progress bar, but make sure it fits on a single line. Filename</span>
-  <span class="ruby-comment"># will be truncated if necessary.</span>
-  <span class="ruby-identifier">size</span> = <span class="ruby-constant">IO</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:console_size</span>) <span class="ruby-operator">?</span> <span class="ruby-constant">IO</span>.<span class="ruby-identifier">console_size</span> <span class="ruby-operator">:</span> <span class="ruby-constant">IO</span>.<span class="ruby-identifier">console</span>.<span class="ruby-identifier">winsize</span>
-  <span class="ruby-identifier">terminal_width</span> = <span class="ruby-identifier">size</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_i</span>.<span class="ruby-identifier">nonzero?</span> <span class="ruby-operator">||</span> <span class="ruby-value">80</span>
-  <span class="ruby-identifier">max_filename_size</span> = <span class="ruby-identifier">terminal_width</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">progress_bar</span>.<span class="ruby-identifier">size</span>
-
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">filename</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">max_filename_size</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-comment"># Turn &quot;some_long_filename.rb&quot; to &quot;...ong_filename.rb&quot;</span>
-    <span class="ruby-identifier">filename</span> = <span class="ruby-identifier">filename</span>[(<span class="ruby-identifier">filename</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">max_filename_size</span>) <span class="ruby-operator">..</span> <span class="ruby-value">-1</span>]
-    <span class="ruby-identifier">filename</span>[<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">2</span>] = <span class="ruby-string">&quot;...&quot;</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">line</span> = <span class="ruby-node">&quot;#{progress_bar}#{filename}&quot;</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">tty?</span>
+    <span class="ruby-comment"># Print a progress bar, but make sure it fits on a single line. Filename</span>
+    <span class="ruby-comment"># will be truncated if necessary.</span>
+    <span class="ruby-identifier">size</span> = <span class="ruby-constant">IO</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:console_size</span>) <span class="ruby-operator">?</span> <span class="ruby-constant">IO</span>.<span class="ruby-identifier">console_size</span> <span class="ruby-operator">:</span> <span class="ruby-constant">IO</span>.<span class="ruby-identifier">console</span>.<span class="ruby-identifier">winsize</span>
+    <span class="ruby-identifier">terminal_width</span> = <span class="ruby-identifier">size</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_i</span>.<span class="ruby-identifier">nonzero?</span> <span class="ruby-operator">||</span> <span class="ruby-value">80</span>
+    <span class="ruby-identifier">max_filename_size</span> = (<span class="ruby-identifier">terminal_width</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">progress_bar</span>.<span class="ruby-identifier">size</span>) <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">filename</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">max_filename_size</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-comment"># Turn &quot;some_long_filename.rb&quot; to &quot;...ong_filename.rb&quot;</span>
+      <span class="ruby-identifier">filename</span> = <span class="ruby-identifier">filename</span>[(<span class="ruby-identifier">filename</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">max_filename_size</span>) <span class="ruby-operator">..</span> <span class="ruby-value">-1</span>]
+      <span class="ruby-identifier">filename</span>[<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">2</span>] = <span class="ruby-string">&quot;...&quot;</span>
+    <span class="ruby-keyword">end</span>
+
     <span class="ruby-comment"># Clean the line with whitespaces so that leftover output from the</span>
     <span class="ruby-comment"># previous line doesn&#39;t show up.</span>
-    <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">print</span>(<span class="ruby-string">&quot;\r&quot;</span> <span class="ruby-operator">+</span> (<span class="ruby-string">&quot; &quot;</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@last_width</span>) <span class="ruby-operator">+</span> (<span class="ruby-string">&quot;\b&quot;</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@last_width</span>) <span class="ruby-operator">+</span> <span class="ruby-string">&quot;\r&quot;</span>) <span class="ruby-keyword">if</span> <span class="ruby-ivar">@last_width</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@last_width</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
-    <span class="ruby-ivar">@last_width</span> = <span class="ruby-identifier">line</span>.<span class="ruby-identifier">size</span>
-    <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">print</span>(<span class="ruby-node">&quot;#{line}\r&quot;</span>)
+    <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">print</span>(<span class="ruby-string">&quot;\r\e[K&quot;</span>) <span class="ruby-keyword">if</span> <span class="ruby-ivar">@last_width</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@last_width</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+    <span class="ruby-ivar">@last_width</span> = <span class="ruby-identifier">progress_bar</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">filename</span>.<span class="ruby-identifier">size</span>
+    <span class="ruby-identifier">term</span> = <span class="ruby-string">&quot;\r&quot;</span>
   <span class="ruby-keyword">else</span>
-    <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">puts</span>(<span class="ruby-identifier">line</span>)
+    <span class="ruby-identifier">term</span> = <span class="ruby-string">&quot;\n&quot;</span>
   <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">print</span>(<span class="ruby-identifier">progress_bar</span>, <span class="ruby-identifier">filename</span>, <span class="ruby-identifier">term</span>)
   <span class="ruby-identifier">$stdout</span>.<span class="ruby-identifier">flush</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::RD::BlockParser - rdoc 5.0.0 Documentation</title>
+<title>class RDoc::RD::BlockParser - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
   var index_rel_prefix = "../../";
 </script>
 
-<script src="../../js/jquery.js"></script>
-<script src="../../js/darkfish.js"></script>
+<script src="../../js/navigation.js" defer></script>
+<script src="../../js/search.js" defer></script>
+<script src="../../js/search_index.js" defer></script>
+<script src="../../js/searcher.js" defer></script>
+<script src="../../js/darkfish.js" defer></script>
 
 <link href="../../css/fonts.css" rel="stylesheet">
 <link href="../../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,38 +57,29 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link">Racc::Parser
-  
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-add_footnote">#add_footnote</a>
-    
     <li ><a href="#method-i-add_label">#add_label</a>
-    
     <li ><a href="#method-i-content">#content</a>
-    
     <li ><a href="#method-i-line_index">#line_index</a>
-    
     <li ><a href="#method-i-on_error">#on_error</a>
-    
     <li ><a href="#method-i-paragraph">#paragraph</a>
-    
     <li ><a href="#method-i-parse">#parse</a>
-    
   </ul>
 </div>
 
@@ -100,28 +93,19 @@
 
   <section class="description">
     
-<p><a href="../RD.html">RD</a> format parser for headings, paragraphs, lists,
-verbatim sections that exist as blocks.</p>
+<p><a href="../RD.html"><code>RD</code></a> format parser for headings, paragraphs, lists, verbatim sections that exist as blocks.</p>
 
   </section>
 
-  
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-footnotes" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">footnotes</span><span
@@ -129,12 +113,9 @@ verbatim sections that exist as blocks.</p>
         </div>
 
         <div class="method-description">
-        
         <p>Footnotes for this document</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-include_path" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">include_path</span><span
@@ -142,12 +123,9 @@ verbatim sections that exist as blocks.</p>
         </div>
 
         <div class="method-description">
-        
         <p>Path to find included files in</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-labels" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">labels</span><span
@@ -155,45 +133,32 @@ verbatim sections that exist as blocks.</p>
         </div>
 
         <div class="method-description">
-        
         <p>Labels for items in this document</p>
-        
         </div>
       </div>
-      
     </section>
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new <a href="BlockParser.html">RDoc::RD::BlockParser</a>.  Use <a
-href="BlockParser.html#method-i-parse">parse</a> to parse an rd-format
-document.</p>
-          
-          
+          <p>Creates a new <a href="BlockParser.html"><code>RDoc::RD::BlockParser</code></a>.  Use <a href="BlockParser.html#method-i-parse"><code>parse</code></a> to parse an rd-format document.</p>
 
-          
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rd/block_parser.rb, line 52</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rd/block_parser.rb, line 51</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>
   <span class="ruby-ivar">@inline_parser</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RD</span><span class="ruby-operator">::</span><span class="ruby-constant">InlineParser</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">self</span>
   <span class="ruby-ivar">@include_path</span> = []
 
@@ -202,44 +167,33 @@ document.</p>
   <span class="ruby-ivar">@labels</span>    = {}
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-add_footnote" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_footnote</span><span
-            class="method-args">(content)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_footnote</span><span
+              class="method-args">(content)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Adds footnote <code>content</code> to the document</p>
-          
-          
 
-          
           <div class="method-source-code" id="add_footnote-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rd/block_parser.rb, line 396</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_footnote</span> <span class="ruby-identifier">content</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rd/block_parser.rb, line 401</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_footnote</span> <span class="ruby-identifier">content</span>
   <span class="ruby-identifier">index</span> = <span class="ruby-ivar">@footnotes</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">/</span> <span class="ruby-value">2</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>
 
   <span class="ruby-identifier">footmark_link</span> = <span class="ruby-node">&quot;{^#{index}}[rdoc-label:footmark-#{index}:foottext-#{index}]&quot;</span>
@@ -250,216 +204,155 @@ document.</p>
   <span class="ruby-identifier">index</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_label" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_label</span><span
-            class="method-args">(label)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_label</span><span
+              class="method-args">(label)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Adds label <code>label</code> to the document</p>
-          
-          
 
-          
           <div class="method-source-code" id="add_label-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rd/block_parser.rb, line 410</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_label</span> <span class="ruby-identifier">label</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rd/block_parser.rb, line 415</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_label</span> <span class="ruby-identifier">label</span>
   <span class="ruby-ivar">@labels</span>[<span class="ruby-identifier">label</span>] = <span class="ruby-keyword">true</span>
 
   <span class="ruby-identifier">label</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-content" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">content</span><span
-            class="method-args">(values)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">content</span><span
+              class="method-args">(values)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Retrieves the content of <code>values</code> as a single String</p>
-          
-          
 
-          
           <div class="method-source-code" id="content-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rd/block_parser.rb, line 379</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">content</span> <span class="ruby-identifier">values</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rd/block_parser.rb, line 384</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">content</span> <span class="ruby-identifier">values</span>
  <span class="ruby-identifier">values</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">value</span><span class="ruby-operator">|</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">content</span> }.<span class="ruby-identifier">join</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-line_index" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">line_index</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">line_index</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Current line number</p>
-          
-          
 
-          
           <div class="method-source-code" id="line_index-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rd/block_parser.rb, line 334</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">line_index</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rd/block_parser.rb, line 339</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">line_index</span>
   <span class="ruby-ivar">@i</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-on_error" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">on_error</span><span
-            class="method-args">(et, ev, _values)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">on_error</span><span
+              class="method-args">(et, ev, _values)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Raises a ParseError when invalid formatting is found</p>
-          
-          
 
-          
           <div class="method-source-code" id="on_error-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rd/block_parser.rb, line 318</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">on_error</span>(<span class="ruby-identifier">et</span>, <span class="ruby-identifier">ev</span>, <span class="ruby-identifier">_values</span>)
-  <span class="ruby-identifier">prv</span>, <span class="ruby-identifier">cur</span>, <span class="ruby-identifier">nxt</span> = <span class="ruby-identifier">format_line_num</span>(<span class="ruby-ivar">@i</span>, <span class="ruby-ivar">@i</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>, <span class="ruby-ivar">@i</span><span class="ruby-operator">+</span><span class="ruby-value">2</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/rd/block_parser.rb, line 323</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">on_error</span>(<span class="ruby-identifier">et</span>, <span class="ruby-identifier">ev</span>, <span class="ruby-identifier">_values</span>)
+  <span class="ruby-identifier">prv</span>, <span class="ruby-identifier">cur</span>, <span class="ruby-identifier">nxt</span> = <span class="ruby-identifier">format_line_num</span>(<span class="ruby-ivar">@i</span>, <span class="ruby-ivar">@i</span><span class="ruby-value">+1</span>, <span class="ruby-ivar">@i</span><span class="ruby-value">+2</span>)
 
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ParseError</span>, <span class="ruby-value">&lt;&lt;Msg
-
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">ParseError</span>, <span class="ruby-identifier">&lt;&lt;Msg</span>
+<span class="ruby-value">
 RD syntax error: line #{@i+1}:
   #{prv}  |#{@src[@i-1].chomp}
   #{cur}=&gt;|#{@src[@i].chomp}
   #{nxt}  |#{@src[@i+1].chomp}
 
-Msg</span>
+</span><span class="ruby-identifier">Msg</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-paragraph" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">paragraph</span><span
-            class="method-args">(value)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">paragraph</span><span
+              class="method-args">(value)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Creates a paragraph for <code>value</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="paragraph-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rd/block_parser.rb, line 386</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">paragraph</span> <span class="ruby-identifier">value</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rd/block_parser.rb, line 391</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">paragraph</span> <span class="ruby-identifier">value</span>
   <span class="ruby-identifier">content</span> = <span class="ruby-identifier">cut_off</span>(<span class="ruby-identifier">value</span>).<span class="ruby-identifier">join</span>(<span class="ruby-string">&#39; &#39;</span>).<span class="ruby-identifier">rstrip</span>
   <span class="ruby-identifier">contents</span> = <span class="ruby-ivar">@inline_parser</span>.<span class="ruby-identifier">parse</span> <span class="ruby-identifier">content</span>
 
   <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Paragraph</span>.<span class="ruby-identifier">new</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">contents</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse</span><span
-            class="method-args">(src)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse</span><span
+              class="method-args">(src)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Parses <code>src</code> and returns an <a
-href="../Markup/Document.html">RDoc::Markup::Document</a>.</p>
-          
-          
+          <p>Parses <code>src</code> and returns an <a href="../Markup/Document.html"><code>RDoc::Markup::Document</code></a>.</p>
 
-          
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/rd/block_parser.rb, line 64</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse</span> <span class="ruby-identifier">src</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/rd/block_parser.rb, line 63</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse</span> <span class="ruby-identifier">src</span>
   <span class="ruby-ivar">@src</span> = <span class="ruby-identifier">src</span>
   <span class="ruby-ivar">@src</span>.<span class="ruby-identifier">push</span> <span class="ruby-keyword">false</span>
 
@@ -500,24 +393,20 @@ href="../Markup/Document.html">RDoc::Markup::Document</a>.</p>
   <span class="ruby-identifier">document</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

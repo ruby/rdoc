@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Attr - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Attr - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
   var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,36 +57,28 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link"><a href="MethodAttr.html">RDoc::MethodAttr</a>
-  
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li class="calls-super" ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-3D-3D">#==</a>
-    
     <li ><a href="#method-i-add_alias">#add_alias</a>
-    
     <li ><a href="#method-i-aref_prefix">#aref_prefix</a>
-    
     <li ><a href="#method-i-definition">#definition</a>
-    
     <li ><a href="#method-i-marshal_dump">#marshal_dump</a>
-    
     <li ><a href="#method-i-marshal_load">#marshal_load</a>
-    
   </ul>
 </div>
 
@@ -102,21 +96,15 @@
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-rw" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">rw</span><span
@@ -124,49 +112,33 @@
         </div>
 
         <div class="method-description">
-        
-        <p>Is the attribute readable (&#39;R&#39;), writable (&#39;W&#39;) or both
-(&#39;RW&#39;)?</p>
-        
+        <p>Is the attribute readable (‘R’), writable (‘W’) or both (‘RW’)?</p>
         </div>
       </div>
-      
     </section>
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(text, name, rw, comment, singleton = false)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(text, name, rw, comment, singleton = false)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new <a href="Attr.html">Attr</a> with body <code>text</code>,
-<code>name</code>, read/write status <code>rw</code> and
-<code>comment</code>.  <code>singleton</code> marks this as a class
-attribute.</p>
-          
-          
+          <p>Creates a new <a href="Attr.html"><code>Attr</code></a> with body <code>text</code>, <code>name</code>, read/write status <code>rw</code> and <code>comment</code>.  <code>singleton</code> marks this as a class attribute.</p>
             <div class="method-calls-super">
               Calls superclass method
-              <a href="MethodAttr.html#method-c-new">RDoc::MethodAttr.new</a>
+              <a href="MethodAttr.html#method-c-new"><code>RDoc::MethodAttr::new</code></a>
             </div>
-          
 
-          
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 25</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">text</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">rw</span>, <span class="ruby-identifier">comment</span>, <span class="ruby-identifier">singleton</span> = <span class="ruby-keyword">false</span>)
@@ -177,41 +149,30 @@ attribute.</p>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">comment</span> = <span class="ruby-identifier">comment</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-3D-3D" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">==</span><span
-            class="method-args">(other)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">==</span><span
+              class="method-args">(other)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Attributes are equal when their names, singleton and rw are identical</p>
-          
-          
 
-          
           <div class="method-source-code" id="3D-3D-source">
             <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 36</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">==</span> <span class="ruby-identifier">other</span>
@@ -221,33 +182,23 @@ attribute.</p>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">singleton</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">singleton</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_alias" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_alias</span><span
-            class="method-args">(an_alias, context)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_alias</span><span
+              class="method-args">(an_alias, context)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Add <code>an_alias</code> as an attribute in <code>context</code>.</p>
-          
-          
 
-          
           <div class="method-source-code" id="add_alias-source">
             <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 46</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_alias</span>(<span class="ruby-identifier">an_alias</span>, <span class="ruby-identifier">context</span>)
@@ -262,66 +213,46 @@ attribute.</p>
   <span class="ruby-identifier">new_attr</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-aref_prefix" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">aref_prefix</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">aref_prefix</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>The <a href="MethodAttr.html#method-i-aref">aref</a> prefix for attributes</p>
-          
-          
+          <p>The <a href="MethodAttr.html#method-i-aref"><code>aref</code></a> prefix for attributes</p>
 
-          
           <div class="method-source-code" id="aref_prefix-source">
             <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 61</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">aref_prefix</span>
   <span class="ruby-string">&#39;attribute&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-definition" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">definition</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">definition</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Returns attr_reader, attr_writer or attr_accessor as appropriate.</p>
-          
-          
 
-          
           <div class="method-source-code" id="definition-source">
             <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 78</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">definition</span>
@@ -332,34 +263,23 @@ attribute.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-marshal_dump" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">marshal_dump</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">marshal_dump</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Dumps this <a href="Attr.html">Attr</a> for use by ri.  See also <a
-href="Attr.html#method-i-marshal_load">marshal_load</a></p>
-          
-          
+          <p>Dumps this <a href="Attr.html"><code>Attr</code></a> for use by ri.  See also <a href="Attr.html#method-i-marshal_load"><code>marshal_load</code></a></p>
 
-          
           <div class="method-source-code" id="marshal_dump-source">
             <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 102</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">marshal_dump</span>
@@ -377,40 +297,28 @@ href="Attr.html#method-i-marshal_load">marshal_load</a></p>
   ]
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-marshal_load" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">marshal_load</span><span
-            class="method-args">(array)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">marshal_load</span><span
+              class="method-args">(array)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Loads this <a href="Attr.html">Attr</a> from <code>array</code>.  For a
-loaded <a href="Attr.html">Attr</a> the following methods will return
-cached values:</p>
+          <p>Loads this <a href="Attr.html"><code>Attr</code></a> from <code>array</code>.  For a loaded <a href="Attr.html"><code>Attr</code></a> the following methods will return cached values:</p>
 <ul><li>
-<p><a href="MethodAttr.html#method-i-full_name">full_name</a></p>
+<p><a href="MethodAttr.html#method-i-full_name"><code>full_name</code></a></p>
 </li><li>
-<p><a href="MethodAttr.html#method-i-parent_name">parent_name</a></p>
+<p><a href="MethodAttr.html#method-i-parent_name"><code>parent_name</code></a></p>
 </li></ul>
-          
-          
 
-          
           <div class="method-source-code" id="marshal_load-source">
             <pre><span class="ruby-comment"># File lib/rdoc/attr.rb, line 124</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">marshal_load</span> <span class="ruby-identifier">array</span>
@@ -440,24 +348,20 @@ cached values:</p>
   <span class="ruby-ivar">@parent_name</span> <span class="ruby-operator">||=</span> <span class="ruby-ivar">@full_name</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;#&#39;</span>, <span class="ruby-value">2</span>).<span class="ruby-identifier">first</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

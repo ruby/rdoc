@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>module RDoc::Generator - rdoc 6.0.4 Documentation</title>
+<title>module RDoc::Generator - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
   var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="module">
@@ -55,10 +57,13 @@
 <div class="nav-section">
   <h3>Table of Contents</h3>
 
+
+
   <ul class="link-list" role="directory">
-    <li><a href="#module-RDoc::Generator-label-Registering+a+Generator">Registering a Generator</a>
-    <li><a href="#module-RDoc::Generator-label-Adding+Options+to+rdoc">Adding Options to <code>rdoc</code></a>
-    <li><a href="#module-RDoc::Generator-label-Generator+Instantiation">Generator Instantiation</a>
+              <li>      <a href="#module-RDoc::Generator-label-Registering+a+Generator">Registering a Generator</a>
+          <li>      <a href="#module-RDoc::Generator-label-Adding+Options+to+rdoc">Adding Options to <code>rdoc</code></a>
+          <li>      <a href="#module-RDoc::Generator-label-Generator+Instantiation">Generator Instantiation</a>
+
   </ul>
 </div>
 
@@ -79,79 +84,46 @@
 
   <section class="description">
     
-<p><a href="RDoc.html">RDoc</a> uses generators to turn parsed source code in
-the form of an <a href="CodeObject.html">RDoc::CodeObject</a> tree into
-some form of output.  <a href="RDoc.html">RDoc</a> comes with the HTML
-generator <a href="Generator/Darkfish.html">RDoc::Generator::Darkfish</a>
-and an ri data generator <a
-href="Generator/RI.html">RDoc::Generator::RI</a>.</p>
+<p><a href="RDoc.html"><code>RDoc</code></a> uses generators to turn parsed source code in the form of an <a href="CodeObject.html"><code>RDoc::CodeObject</code></a> tree into some form of output.  <a href="RDoc.html"><code>RDoc</code></a> comes with the HTML generator <a href="Generator/Darkfish.html"><code>RDoc::Generator::Darkfish</code></a> and an ri data generator <a href="Generator/RI.html"><code>RDoc::Generator::RI</code></a>.</p>
 
-<h2 id="module-RDoc::Generator-label-Registering+a+Generator">Registering a <a href="Generator.html">Generator</a><span><a href="#module-RDoc::Generator-label-Registering+a+Generator">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="module-RDoc::Generator-label-Registering+a+Generator">Registering a <a href="Generator.html"><code>Generator</code></a><span><a href="#module-RDoc::Generator-label-Registering+a+Generator">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Generators are registered by calling <a
-href="RDoc.html#method-c-add_generator">RDoc::RDoc.add_generator</a> with
-the class of the generator:</p>
+<p>Generators are registered by calling <a href="RDoc.html#method-c-add_generator"><code>RDoc::RDoc.add_generator</code></a> with the class of the generator:</p>
 
 <pre class="ruby"><span class="ruby-keyword">class</span> <span class="ruby-constant">My</span><span class="ruby-operator">::</span><span class="ruby-constant">Awesome</span><span class="ruby-operator">::</span><span class="ruby-constant">Generator</span>
   <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RDoc</span>.<span class="ruby-identifier">add_generator</span> <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<h2 id="module-RDoc::Generator-label-Adding+Options+to+rdoc">Adding <a href="Options.html">Options</a> to <code>rdoc</code><span><a href="#module-RDoc::Generator-label-Adding+Options+to+rdoc">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="module-RDoc::Generator-label-Adding+Options+to+rdoc">Adding <a href="Options.html"><code>Options</code></a> to <code>rdoc</code><span><a href="#module-RDoc::Generator-label-Adding+Options+to+rdoc">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Before option processing in <code>rdoc</code>, <a
-href="Options.html">RDoc::Options</a> will call ::setup_options on the
-generator class with an <a href="Options.html">RDoc::Options</a> instance. 
-The generator can use <a
-href="Options.html#attribute-i-option_parser">RDoc::Options#option_parser</a>
-to add command-line options to the <code>rdoc</code> tool.  See <a
-href="Options.html#label-Custom+Options">Custom Options at
-RDoc::Options</a> for an example and see OptionParser for details on how to
-add options.</p>
+<p>Before option processing in <code>rdoc</code>, <a href="Options.html"><code>RDoc::Options</code></a> will call ::setup_options on the generator class with an <a href="Options.html"><code>RDoc::Options</code></a> instance.  The generator can use <a href="Options.html#attribute-i-option_parser"><code>RDoc::Options#option_parser</code></a> to add command-line options to the <code>rdoc</code> tool.  See <a href="Options.html#class-RDoc::Options-label-Custom+Options">Custom Options at <code>RDoc::Options</code></a> for an example and see OptionParser for details on how to add options.</p>
 
-<p>You can extend the <a href="Options.html">RDoc::Options</a> instance with
-additional accessors for your generator.</p>
+<p>You can extend the <a href="Options.html"><code>RDoc::Options</code></a> instance with additional accessors for your generator.</p>
 
-<h2 id="module-RDoc::Generator-label-Generator+Instantiation"><a href="Generator.html">Generator</a> Instantiation<span><a href="#module-RDoc::Generator-label-Generator+Instantiation">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="module-RDoc::Generator-label-Generator+Instantiation"><a href="Generator.html"><code>Generator</code></a> Instantiation<span><a href="#module-RDoc::Generator-label-Generator+Instantiation">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>After parsing, <a href="RDoc.html">RDoc::RDoc</a> will instantiate a
-generator by calling initialize with an <a
-href="Store.html">RDoc::Store</a> instance and an <a
-href="Options.html">RDoc::Options</a> instance.</p>
+<p>After parsing, <a href="RDoc.html"><code>RDoc::RDoc</code></a> will instantiate a generator by calling initialize with an <a href="Store.html"><code>RDoc::Store</code></a> instance and an <a href="Options.html"><code>RDoc::Options</code></a> instance.</p>
 
-<p>The <a href="Store.html">RDoc::Store</a> instance holds documentation for
-parsed source code.  In <a href="RDoc.html">RDoc</a> 3 and earlier the <a
-href="TopLevel.html">RDoc::TopLevel</a> class held this data.  When
-upgrading a generator from <a href="RDoc.html">RDoc</a> 3 and earlier you
-should only need to replace <a href="TopLevel.html">RDoc::TopLevel</a> with
-the store instance.</p>
+<p>The <a href="Store.html"><code>RDoc::Store</code></a> instance holds documentation for parsed source code.  In <a href="RDoc.html"><code>RDoc</code></a> 3 and earlier the <a href="TopLevel.html"><code>RDoc::TopLevel</code></a> class held this data.  When upgrading a generator from <a href="RDoc.html"><code>RDoc</code></a> 3 and earlier you should only need to replace <a href="TopLevel.html"><code>RDoc::TopLevel</code></a> with the store instance.</p>
 
-<p><a href="RDoc.html">RDoc</a> will then call generate on the generator
-instance.  You can use the various methods on <a
-href="Store.html">RDoc::Store</a> and in the <a
-href="CodeObject.html">RDoc::CodeObject</a> tree to create your desired
-output format.</p>
+<p><a href="RDoc.html"><code>RDoc</code></a> will then call generate on the generator instance.  You can use the various methods on <a href="Store.html"><code>RDoc::Store</code></a> and in the <a href="CodeObject.html"><code>RDoc::CodeObject</code></a> tree to create your desired output format.</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
 
-    
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

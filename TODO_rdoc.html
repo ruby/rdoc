@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>TODO - rdoc 6.0.4 Documentation</title>
+<title>TODO - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
   var index_rel_prefix = "./";
 </script>
 
-<script src="./js/jquery.js"></script>
-<script src="./js/darkfish.js"></script>
+<script src="./js/navigation.js" defer></script>
+<script src="./js/search.js" defer></script>
+<script src="./js/search_index.js" defer></script>
+<script src="./js/searcher.js" defer></script>
+<script src="./js/darkfish.js" defer></script>
 
 <link href="./css/fonts.css" rel="stylesheet">
 <link href="./css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="file">
@@ -55,39 +57,33 @@
 <div class="nav-section">
   <h3>Table of Contents</h3>
 
+
+
   <ul class="link-list" role="directory">
-    <li><a href="#label-RDoc-3A-3AVERSION.succ">RDoc::VERSION.succ</a>
-    <li><a href="#label-4">4</a>
-    <li><a href="#label-Crazy+Ideas">Crazy Ideas</a>
-    <li><a href="#label-Accessibility">Accessibility</a>
+              <li>      <a href="#label-RDoc-3A-3AVERSION.succ">RDoc::VERSION.succ</a>
+          <li>      <a href="#label-4">4</a>
+          <li>      <a href="#label-Crazy+Ideas">Crazy Ideas</a>
+          <li>      <a href="#label-Accessibility">Accessibility</a>
+
   </ul>
 </div>
 
 
   <div id="project-metadata">
-    <div id="fileindex-section" class="nav-section">
+    
+<div id="fileindex-section" class="nav-section">
   <h3>Pages</h3>
 
   <ul class="link-list">
-  
     <li><a href="./CONTRIBUTING_rdoc.html">CONTRIBUTING</a>
-  
     <li><a href="./CVE-2013-0256_rdoc.html">CVE-2013-0256</a>
-  
     <li><a href="./ExampleRDoc_rdoc.html">ExampleRDoc</a>
-  
     <li><a href="./History_rdoc.html">History</a>
-  
     <li><a href="./LEGAL_rdoc.html">LEGAL</a>
-  
     <li><a href="./LICENSE_rdoc.html">LICENSE</a>
-  
     <li><a href="./README_rdoc.html">README</a>
-  
     <li><a href="./RI_rdoc.html">RI</a>
-  
     <li><a href="./TODO_rdoc.html">TODO</a>
-  
   </ul>
 </div>
 
@@ -96,26 +92,21 @@
 
 <main role="main" aria-label="Page TODO.rdoc">
 
-<p>This file contains some things that might happen in <a
-href="RDoc.html">RDoc</a>, or might not. Forward Looking Statements
-applies.</p>
+<p>This file contains some things that might happen in <a href="RDoc.html"><code>RDoc</code></a>, or might not. Forward Looking Statements applies.</p>
 
 <h3 id="label-RDoc-3A-3AVERSION.succ">RDoc::VERSION.succ<span><a href="#label-RDoc-3A-3AVERSION.succ">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
 <p>Blockers:</p>
 <ul><li>
-<p>Update <a href="LICENSE_rdoc.html">LICENSE</a> to match ruby&#39;s switch</p>
+<p>Update <a href="LICENSE_rdoc.html">LICENSE</a> to match ruby’s switch</p>
 </li><li>
 <p>The alias keyword should not be bidirectional</p>
 </li><li>
-<p>Fix RDoc::Parser#use_markup to handle the filename (see <a
-href="TODO_rdoc.html">TODO</a>)</p>
+<p>Fix RDoc::Parser#use_markup to handle the filename (see <a href="TODO_rdoc.html">TODO</a>)</p>
 </li><li>
-<p>Restore backwards compatibility due to paragraph text joining from existing
-ri files</p>
+<p>Restore backwards compatibility due to paragraph text joining from existing ri files</p>
 </li><li>
-<p>Fix consumption of , after link like: <a href="RDoc.html">RDoc</a>, &lt;-
-comma here</p>
+<p>Fix consumption of , after link like: <a href="RDoc.html"><code>RDoc</code></a>, &lt;- comma here</p>
 </li><li>
 <p>Remove support for links like <a href="*rows">Matrix</a></p>
 </li></ul>
@@ -124,13 +115,11 @@ comma here</p>
 <ul><li>
 <p>Parse only changed files (like in ruby)</p>
 </li><li>
-<p>Page of Glory (or Shame) in HTML output showing documentation coverage
-statistics.</p>
+<p>Page of Glory (or Shame) in HTML output showing documentation coverage statistics.</p>
 </li><li>
 <p>Link to the parent-class implementation of methods that use super</p>
 </li><li>
-<p>Add direct accessor to <a href="RDoc/Options.html">RDoc::Options</a> to <a
-href="RDoc/Task.html">RDoc::Task</a></p>
+<p>Add direct accessor to <a href="RDoc/Options.html"><code>RDoc::Options</code></a> to <a href="RDoc/Task.html"><code>RDoc::Task</code></a></p>
 </li><li>
 <p>Remove “Public” in HTML output if there are only public methods</p>
 </li><li>
@@ -145,27 +134,22 @@ href="RDoc/Task.html">RDoc::Task</a></p>
 
 <h3 id="label-4">4<span><a href="#label-4">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>API changes to <a href="RDoc.html">RDoc</a></p>
+<p>API changes to <a href="RDoc.html"><code>RDoc</code></a></p>
 <ul><li>
-<p><a
-href="RDoc/TopLevel.html#method-i-add_method">RDoc::TopLevel#add_method</a>
-should automatically create the appropriate method class rather than
-requiring one be passed in.</p>
+<p><a href="RDoc/TopLevel.html#method-i-add_method"><code>RDoc::TopLevel#add_method</code></a> should automatically create the appropriate method class rather than requiring one be passed in.</p>
 </li><li>
 <p>Remove comment= from Context subclasses in favor of add_comment</p>
 </li><li>
-<p>Add versions to <a href="RDoc/Markup.html">RDoc::Markup</a> syntax tree
-marshal format</p>
+<p>Add versions to <a href="RDoc/Markup.html"><code>RDoc::Markup</code></a> syntax tree marshal format</p>
 </li><li>
 <p>Comments can no longer be Strings</p>
 </li></ul>
 
 <h3 id="label-Crazy+Ideas">Crazy Ideas<span><a href="#label-Crazy+Ideas">&para;</a> <a href="#top">&uarr;</a></span></h3>
 <ul><li>
-<p>Auto-normalize heading levels to look OK.  It&#39;s weird to see an
-&lt;h1&gt; in the middle of a method section.</p>
+<p>Auto-normalize heading levels to look OK.  It’s weird to see an &lt;h1&gt; in the middle of a method section.</p>
 </li><li>
-<p><a href="RDoc/CodeObject.html">RDoc::CodeObject</a></p>
+<p><a href="RDoc/CodeObject.html"><code>RDoc::CodeObject</code></a></p>
 <ul><li>
 <p>Move into own namespace</p>
 </li><li>
@@ -188,13 +172,14 @@ marshal format</p>
 <p>table-of-contents-navigation div =&gt; nav + role=“navigation”</p>
 
 <p>type “mod”, focus is still on “mod”</p>
+
 </main>
 
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

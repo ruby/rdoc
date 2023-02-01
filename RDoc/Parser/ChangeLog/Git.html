@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module RDoc::Parser::ChangeLog::Git - rdoc 6.5.0 Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../../";
+  var index_rel_prefix = "../../../";
+</script>
+
+<script src="../../../js/navigation.js" defer></script>
+<script src="../../../js/search.js" defer></script>
+<script src="../../../js/search_index.js" defer></script>
+<script src="../../../js/searcher.js" defer></script>
+<script src="../../../js/darkfish.js" defer></script>
+
+<link href="../../../css/fonts.css" rel="stylesheet">
+<link href="../../../css/rdoc.css" rel="stylesheet">
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../../../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../../../table_of_contents.html#pages">Pages</a>
+    <a href="../../../table_of_contents.html#classes">Classes</a>
+    <a href="../../../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    
+    
+    
+    
+<!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    <li ><a href="#method-i-create_entries">#create_entries</a>
+    <li ><a href="#method-i-parse_entries">#parse_entries</a>
+    <li ><a href="#method-i-parse_info">#parse_info</a>
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-RDoc::Parser::ChangeLog::Git">
+  <h1 id="module-RDoc::Parser::ChangeLog::Git" class="module">
+    module RDoc::Parser::ChangeLog::Git
+  </h1>
+
+  <section class="description">
+    
+  </section>
+
+  <section id="5Buntitled-5D" class="documentation-section">
+
+
+
+
+
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+      <div id="method-i-create_entries" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">create_entries</span><span
+              class="method-args">(entries)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="create_entries-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/changelog.rb, line 247</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">create_entries</span> <span class="ruby-identifier">entries</span>
+  <span class="ruby-comment"># git log entries have no strictly itemized style like the old</span>
+  <span class="ruby-comment"># style, just assume Markdown.</span>
+  <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">commit</span>, <span class="ruby-identifier">entry</span><span class="ruby-operator">|</span>
+    <span class="ruby-constant">LogEntry</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@base_url</span>, <span class="ruby-identifier">commit</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">entry</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-parse_entries" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_entries</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="parse_entries-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/changelog.rb, line 225</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_entries</span>
+  <span class="ruby-identifier">entries</span> = []
+
+  <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/^commit\s+(\h{20})\h*\n((?:.+\n)*)\n((?: {4}.*\n+)*)/</span>) <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">entry_name</span>, <span class="ruby-identifier">header</span>, <span class="ruby-identifier">entry_body</span> = <span class="ruby-node">$1</span>, <span class="ruby-node">$2</span>, <span class="ruby-node">$3</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/^ {4}/</span>, <span class="ruby-string">&#39;&#39;</span>)
+    <span class="ruby-comment"># header = header.scan(/^ *(\S+?): +(.*)/).to_h</span>
+    <span class="ruby-comment"># date = header[&quot;CommitDate&quot;] || header[&quot;Date&quot;]</span>
+    <span class="ruby-identifier">date</span> = <span class="ruby-identifier">header</span>[<span class="ruby-regexp">/^ *(?:Author)?Date: +(.*)/</span>, <span class="ruby-value">1</span>]
+    <span class="ruby-identifier">author</span> = <span class="ruby-identifier">header</span>[<span class="ruby-regexp">/^ *Author: +(.*)/</span>, <span class="ruby-value">1</span>]
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-identifier">time</span> = <span class="ruby-identifier">parse_date</span>(<span class="ruby-identifier">header</span>[<span class="ruby-regexp">/^ *CommitDate: +(.*)/</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">date</span>)
+      <span class="ruby-ivar">@time_cache</span>[<span class="ruby-identifier">entry_name</span>] = <span class="ruby-identifier">time</span>
+      <span class="ruby-identifier">author</span>.<span class="ruby-identifier">sub!</span>(<span class="ruby-regexp">/\s*&lt;(.*)&gt;/</span>, <span class="ruby-string">&#39;&#39;</span>)
+      <span class="ruby-identifier">email</span> = <span class="ruby-node">$1</span>
+      <span class="ruby-identifier">entries</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">entry_name</span>, [<span class="ruby-identifier">author</span>, <span class="ruby-identifier">email</span>, <span class="ruby-identifier">date</span>, <span class="ruby-identifier">entry_body</span>]]
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">ArgumentError</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">entries</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-parse_info" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_info</span><span
+              class="method-args">(info)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="parse_info-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/changelog.rb, line 220</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_info</span>(<span class="ruby-identifier">info</span>)
+  <span class="ruby-regexp">/^\s*base-url\s*=\s*(.*\S)/</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">info</span>
+  <span class="ruby-ivar">@base_url</span> = <span class="ruby-node">$1</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+    </section>
+
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Context - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Context - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
   var index_rel_prefix = "../";
 </script>
 
-<script src="../js/jquery.js"></script>
-<script src="../js/darkfish.js"></script>
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
 
 <link href="../css/fonts.css" rel="stylesheet">
 <link href="../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,177 +57,102 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link"><a href="CodeObject.html">RDoc::CodeObject</a>
-  
 </div>
 
-    <div id="includes-section" class="nav-section">
+    
+<div id="includes-section" class="nav-section">
   <h3>Included Modules</h3>
 
   <ul class="link-list">
-  
-  
     <li><span class="include">Comparable</span>
-  
-  
   </ul>
 </div>
 
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li class="calls-super" ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-3C-3D-3E">#&lt;=&gt;</a>
-    
     <li ><a href="#method-i-add">#add</a>
-    
     <li ><a href="#method-i-add_alias">#add_alias</a>
-    
     <li ><a href="#method-i-add_attribute">#add_attribute</a>
-    
     <li ><a href="#method-i-add_class">#add_class</a>
-    
     <li ><a href="#method-i-add_class_or_module">#add_class_or_module</a>
-    
     <li ><a href="#method-i-add_constant">#add_constant</a>
-    
     <li ><a href="#method-i-add_extend">#add_extend</a>
-    
     <li ><a href="#method-i-add_include">#add_include</a>
-    
     <li ><a href="#method-i-add_method">#add_method</a>
-    
     <li ><a href="#method-i-add_module">#add_module</a>
-    
     <li ><a href="#method-i-add_module_alias">#add_module_alias</a>
-    
     <li ><a href="#method-i-add_module_by_normal_module">#add_module_by_normal_module</a>
-    
     <li ><a href="#method-i-add_require">#add_require</a>
-    
     <li ><a href="#method-i-add_section">#add_section</a>
-    
     <li ><a href="#method-i-add_to">#add_to</a>
-    
     <li ><a href="#method-i-any_content">#any_content</a>
-    
     <li ><a href="#method-i-child_name">#child_name</a>
-    
     <li ><a href="#method-i-class_attributes">#class_attributes</a>
-    
     <li ><a href="#method-i-class_method_list">#class_method_list</a>
-    
     <li ><a href="#method-i-classes">#classes</a>
-    
     <li ><a href="#method-i-classes_and_modules">#classes_and_modules</a>
-    
     <li ><a href="#method-i-classes_hash">#classes_hash</a>
-    
     <li ><a href="#method-i-current_section">#current_section</a>
-    
     <li ><a href="#method-i-defined_in-3F">#defined_in?</a>
-    
     <li ><a href="#method-i-each_attribute">#each_attribute</a>
-    
     <li ><a href="#method-i-each_classmodule">#each_classmodule</a>
-    
     <li ><a href="#method-i-each_constant">#each_constant</a>
-    
     <li ><a href="#method-i-each_extend">#each_extend</a>
-    
     <li ><a href="#method-i-each_include">#each_include</a>
-    
     <li ><a href="#method-i-each_method">#each_method</a>
-    
     <li ><a href="#method-i-each_section">#each_section</a>
-    
     <li ><a href="#method-i-find_attribute">#find_attribute</a>
-    
     <li ><a href="#method-i-find_attribute_named">#find_attribute_named</a>
-    
     <li ><a href="#method-i-find_class_method_named">#find_class_method_named</a>
-    
     <li ><a href="#method-i-find_constant_named">#find_constant_named</a>
-    
     <li ><a href="#method-i-find_enclosing_module_named">#find_enclosing_module_named</a>
-    
     <li ><a href="#method-i-find_external_alias">#find_external_alias</a>
-    
     <li ><a href="#method-i-find_external_alias_named">#find_external_alias_named</a>
-    
     <li ><a href="#method-i-find_file_named">#find_file_named</a>
-    
     <li ><a href="#method-i-find_instance_method_named">#find_instance_method_named</a>
-    
     <li ><a href="#method-i-find_local_symbol">#find_local_symbol</a>
-    
     <li ><a href="#method-i-find_method">#find_method</a>
-    
     <li ><a href="#method-i-find_method_named">#find_method_named</a>
-    
     <li ><a href="#method-i-find_module_named">#find_module_named</a>
-    
     <li ><a href="#method-i-find_symbol">#find_symbol</a>
-    
     <li ><a href="#method-i-find_symbol_module">#find_symbol_module</a>
-    
     <li ><a href="#method-i-full_name">#full_name</a>
-    
     <li ><a href="#method-i-fully_documented-3F">#fully_documented?</a>
-    
     <li ><a href="#method-i-http_url">#http_url</a>
-    
     <li ><a href="#method-i-initialize_methods_etc">#initialize_methods_etc</a>
-    
     <li ><a href="#method-i-instance_attributes">#instance_attributes</a>
-    
     <li ><a href="#method-i-instance_method_list">#instance_method_list</a>
-    
+    <li ><a href="#method-i-instance_methods">#instance_methods</a>
     <li ><a href="#method-i-methods_by_type">#methods_by_type</a>
-    
     <li ><a href="#method-i-methods_matching">#methods_matching</a>
-    
     <li ><a href="#method-i-modules">#modules</a>
-    
     <li ><a href="#method-i-modules_hash">#modules_hash</a>
-    
     <li ><a href="#method-i-name_for_path">#name_for_path</a>
-    
     <li ><a href="#method-i-ongoing_visibility-3D">#ongoing_visibility=</a>
-    
     <li ><a href="#method-i-record_location">#record_location</a>
-    
     <li ><a href="#method-i-remove_from_documentation-3F">#remove_from_documentation?</a>
-    
     <li ><a href="#method-i-remove_invisible">#remove_invisible</a>
-    
     <li ><a href="#method-i-resolve_aliases">#resolve_aliases</a>
-    
     <li ><a href="#method-i-section_contents">#section_contents</a>
-    
     <li ><a href="#method-i-sections">#sections</a>
-    
     <li ><a href="#method-i-set_constant_visibility_for">#set_constant_visibility_for</a>
-    
     <li ><a href="#method-i-set_current_section">#set_current_section</a>
-    
     <li ><a href="#method-i-set_visibility_for">#set_visibility_for</a>
-    
     <li ><a href="#method-i-sort_sections">#sort_sections</a>
-    
     <li ><a href="#method-i-top_level">#top_level</a>
-    
     <li ><a href="#method-i-upgrade_to_class">#upgrade_to_class</a>
-    
   </ul>
 </div>
 
@@ -239,41 +166,28 @@
 
   <section class="description">
     
-<p>A <a href="Context.html">Context</a> is something that can hold modules,
-classes, methods, attributes, aliases, requires, and includes. Classes,
-modules, and files are all Contexts.</p>
+<p>A <a href="Context.html"><code>Context</code></a> is something that can hold modules, classes, methods, attributes, aliases, requires, and includes. Classes, modules, and files are all Contexts.</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
     <section class="constants-list">
       <header>
         <h3>Constants</h3>
       </header>
       <dl>
-      
         <dt id="TYPES">TYPES
-        
         <dd><p>Types of methods</p>
-        
-      
       </dl>
     </section>
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-aliases" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">aliases</span><span
@@ -281,12 +195,9 @@ modules, and files are all Contexts.</p>
         </div>
 
         <div class="method-description">
-        
         <p>Class/module aliases</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-attributes" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">attributes</span><span
@@ -294,12 +205,9 @@ modules, and files are all Contexts.</p>
         </div>
 
         <div class="method-description">
-        
         <p>All attr* methods</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-block_params" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">block_params</span><span
@@ -307,12 +215,9 @@ modules, and files are all Contexts.</p>
         </div>
 
         <div class="method-description">
-        
         <p>Block params to be used in the next MethodAttr parsed under this context</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-constants" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">constants</span><span
@@ -320,12 +225,9 @@ modules, and files are all Contexts.</p>
         </div>
 
         <div class="method-description">
-        
         <p>Constants defined</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-constants_hash" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">constants_hash</span><span
@@ -333,12 +235,9 @@ modules, and files are all Contexts.</p>
         </div>
 
         <div class="method-description">
-        
         <p>Hash of registered constants.</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-current_line_visibility" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">current_line_visibility</span><span
@@ -346,12 +245,9 @@ modules, and files are all Contexts.</p>
         </div>
 
         <div class="method-description">
-        
         <p>Current visibility of this line</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-current_section" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">current_section</span><span
@@ -359,12 +255,9 @@ modules, and files are all Contexts.</p>
         </div>
 
         <div class="method-description">
-        
         <p>Sets the current documentation section of documentation</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-extends" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">extends</span><span
@@ -372,12 +265,9 @@ modules, and files are all Contexts.</p>
         </div>
 
         <div class="method-description">
-        
         <p>Modules this context is extended with</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-external_aliases" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">external_aliases</span><span
@@ -385,12 +275,9 @@ modules, and files are all Contexts.</p>
         </div>
 
         <div class="method-description">
-        
         <p>Aliases that could not be resolved.</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-in_files" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">in_files</span><span
@@ -398,12 +285,9 @@ modules, and files are all Contexts.</p>
         </div>
 
         <div class="method-description">
-        
         <p>Files this context is found in</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-includes" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">includes</span><span
@@ -411,12 +295,9 @@ modules, and files are all Contexts.</p>
         </div>
 
         <div class="method-description">
-        
         <p>Modules this context includes</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-method_list" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">method_list</span><span
@@ -424,12 +305,9 @@ modules, and files are all Contexts.</p>
         </div>
 
         <div class="method-description">
-        
         <p>Methods defined in this context</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-methods_hash" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">methods_hash</span><span
@@ -437,13 +315,9 @@ modules, and files are all Contexts.</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Hash of registered methods. Attributes are also registered here, twice if
-they are RW.</p>
-        
+        <p>Hash of registered methods. Attributes are also registered here, twice if they are RW.</p>
         </div>
       </div>
-      
       <div id="attribute-i-name" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">name</span><span
@@ -451,13 +325,9 @@ they are RW.</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Name of this class excluding namespace.  See also <a
-href="Context.html#method-i-full_name">#full_name</a></p>
-        
+        <p>Name of this class excluding namespace.  See also <a href="Context.html#method-i-full_name"><code>full_name</code></a></p>
         </div>
       </div>
-      
       <div id="attribute-i-params" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">params</span><span
@@ -465,12 +335,9 @@ href="Context.html#method-i-full_name">#full_name</a></p>
         </div>
 
         <div class="method-description">
-        
         <p>Params to be used in the next MethodAttr parsed under this context</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-requires" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">requires</span><span
@@ -478,12 +345,9 @@ href="Context.html#method-i-full_name">#full_name</a></p>
         </div>
 
         <div class="method-description">
-        
         <p>Files this context requires</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-temporary_section" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">temporary_section</span><span
@@ -491,12 +355,9 @@ href="Context.html#method-i-full_name">#full_name</a></p>
         </div>
 
         <div class="method-description">
-        
         <p>Use this section for the next method, attribute or constant added.</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-unmatched_alias_lists" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">unmatched_alias_lists</span><span
@@ -504,14 +365,9 @@ href="Context.html#method-i-full_name">#full_name</a></p>
         </div>
 
         <div class="method-description">
-        
-        <p>Hash <code>old_name =&gt; [aliases]</code>, for aliases that haven&#39;t
-(yet) been resolved to a method/attribute. (Not to be confused with the
-aliases of the context.)</p>
-        
+        <p>Hash <code>old_name =&gt; [aliases]</code>, for aliases that haven’t (yet) been resolved to a method/attribute. (Not to be confused with the aliases of the context.)</p>
         </div>
       </div>
-      
       <div id="attribute-i-visibility" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">visibility</span><span
@@ -519,47 +375,35 @@ aliases of the context.)</p>
         </div>
 
         <div class="method-description">
-        
         <p>Current visibility of this context</p>
-        
         </div>
       </div>
-      
     </section>
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Creates an unnamed empty context with public current visibility</p>
-          
-          
             <div class="method-calls-super">
               Calls superclass method
-              <a href="CodeObject.html#method-c-new">RDoc::CodeObject.new</a>
+              <a href="CodeObject.html#method-c-new"><code>RDoc::CodeObject::new</code></a>
             </div>
-          
 
-          
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 125</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 123</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>
   <span class="ruby-keyword">super</span>
 
@@ -579,83 +423,59 @@ aliases of the context.)</p>
   <span class="ruby-identifier">initialize_methods_etc</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-3C-3D-3E" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">&lt;=&gt;</span><span
-            class="method-args">(other)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">&lt;=&gt;</span><span
+              class="method-args">(other)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Contexts are sorted by <a
-href="Context.html#method-i-full_name">#full_name</a></p>
-          
-          
+          <p>Contexts are sorted by <a href="Context.html#method-i-full_name"><code>full_name</code></a></p>
 
-          
           <div class="method-source-code" id="3C-3D-3E-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 173</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 171</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">&lt;=&gt;</span>(<span class="ruby-identifier">other</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">CodeObject</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">other</span>
 
   <span class="ruby-identifier">full_name</span> <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">full_name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add</span><span
-            class="method-args">(klass, name, comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add</span><span
+              class="method-args">(klass, name, comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds an item of type <code>klass</code> with the given <code>name</code>
-and <code>comment</code> to the context.</p>
+          <p>Adds an item of type <code>klass</code> with the given <code>name</code> and <code>comment</code> to the context.</p>
 
-<p>Currently only <a href="Extend.html">RDoc::Extend</a> and <a
-href="Include.html">RDoc::Include</a> are supported.</p>
-          
-          
+<p>Currently only <a href="Extend.html"><code>RDoc::Extend</code></a> and <a href="Include.html"><code>RDoc::Include</code></a> are supported.</p>
 
-          
           <div class="method-source-code" id="add-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 185</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 183</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add</span> <span class="ruby-identifier">klass</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">comment</span>
   <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Extend</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">klass</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">ext</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Extend</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">comment</span>
@@ -668,35 +488,25 @@ href="Include.html">RDoc::Include</a> are supported.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_alias" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_alias</span><span
-            class="method-args">(an_alias)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_alias</span><span
+              class="method-args">(an_alias)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Adds <code>an_alias</code> that is automatically resolved</p>
-          
-          
 
-          
           <div class="method-source-code" id="add_alias-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 200</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 198</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_alias</span> <span class="ruby-identifier">an_alias</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">an_alias</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@document_self</span>
 
@@ -715,42 +525,27 @@ href="Include.html">RDoc::Include</a> are supported.</p>
   <span class="ruby-identifier">an_alias</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_attribute" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_attribute</span><span
-            class="method-args">(attribute)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_attribute</span><span
+              class="method-args">(attribute)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds <code>attribute</code> if not already there. If it is (as method(s) or
-attribute), updates the comment if it was empty.</p>
+          <p>Adds <code>attribute</code> if not already there. If it is (as method(s) or attribute), updates the comment if it was empty.</p>
 
-<p>The attribute is registered only if it defines a new method. For instance,
-<code>attr_reader :foo</code> will not be registered if method
-<code>foo</code> exists, but <code>attr_accessor :foo</code> will be
-registered if method <code>foo</code> exists, but <code>foo=</code> does
-not.</p>
-          
-          
+<p>The attribute is registered only if it defines a new method. For instance, <code>attr_reader :foo</code> will not be registered if method <code>foo</code> exists, but <code>attr_accessor :foo</code> will be registered if method <code>foo</code> exists, but <code>foo=</code> does not.</p>
 
-          
           <div class="method-source-code" id="add_attribute-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 227</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 225</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_attribute</span> <span class="ruby-identifier">attribute</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">attribute</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@document_self</span>
 
@@ -799,49 +594,34 @@ not.</p>
   <span class="ruby-identifier">attribute</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_class" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_class</span><span
-            class="method-args">(class_type, given_name, superclass = &#39;::Object&#39;)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_class</span><span
+              class="method-args">(class_type, given_name, superclass = &#39;::Object&#39;)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Adds a class named <code>given_name</code> with <code>superclass</code>.</p>
 
-<p>Both <code>given_name</code> and <code>superclass</code> may contain
-&#39;::&#39;, and are interpreted relative to the <code>self</code>
-context. This allows handling correctly examples like these:</p>
+<p>Both <code>given_name</code> and <code>superclass</code> may contain ‘::’, and are interpreted relative to the <code>self</code> context. This allows handling correctly examples like these:</p>
 
 <pre>class RDoc::Gauntlet &lt; Gauntlet
 module Mod
   class Object   # implies &lt; ::Object
   class SubObject &lt; Object  # this is _not_ ::Object</pre>
 
-<p>Given <code>class Container::Item</code> <a href="../RDoc.html">RDoc</a>
-assumes <code>Container</code> is a module unless it later sees <code>class
-Container</code>.  <code>add_class</code> automatically upgrades
-<code>given_name</code> to a class in this case.</p>
-          
-          
+<p>Given <code>class Container::Item</code> <a href="../RDoc.html"><code>RDoc</code></a> assumes <code>Container</code> is a module unless it later sees <code>class Container</code>.  <code>add_class</code> automatically upgrades <code>given_name</code> to a class in this case.</p>
 
-          
           <div class="method-source-code" id="add_class-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 290</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 288</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_class</span> <span class="ruby-identifier">class_type</span>, <span class="ruby-identifier">given_name</span>, <span class="ruby-identifier">superclass</span> = <span class="ruby-string">&#39;::Object&#39;</span>
   <span class="ruby-comment"># superclass +nil+ is passed by the C parser in the following cases:</span>
   <span class="ruby-comment"># - registering Object in 1.8 (correct)</span>
@@ -951,45 +731,25 @@ Container</code>.  <code>add_class</code> automatically upgrades
   <span class="ruby-identifier">klass</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_class_or_module" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_class_or_module</span><span
-            class="method-args">(mod, self_hash, all_hash)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_class_or_module</span><span
+              class="method-args">(mod, self_hash, all_hash)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds the class or module <code>mod</code> to the modules or classes Hash
-<code>self_hash</code>, and to <code>all_hash</code> (either
-<code>TopLevel::modules_hash</code> or
-<code>TopLevel::classes_hash</code>), unless <a
-href="CodeObject.html#attribute-i-done_documenting">done_documenting</a> is
-<code>true</code>. Sets the <a
-href="CodeObject.html#method-i-parent">parent</a> of <code>mod</code> to
-<code>self</code>, and its <a
-href="CodeObject.html#method-i-section">section</a> to <a
-href="Context.html#method-i-current_section">current_section</a>. Returns
-<code>mod</code>.</p>
-          
-          
+          <p>Adds the class or module <code>mod</code> to the modules or classes Hash <code>self_hash</code>, and to <code>all_hash</code> (either <code>TopLevel::modules_hash</code> or <code>TopLevel::classes_hash</code>), unless <a href="CodeObject.html#attribute-i-done_documenting"><code>done_documenting</code></a> is <code>true</code>. Sets the <a href="CodeObject.html#method-i-parent"><code>parent</code></a> of <code>mod</code> to <code>self</code>, and its <a href="CodeObject.html#method-i-section"><code>section</code></a> to <a href="Context.html#method-i-current_section"><code>current_section</code></a>. Returns <code>mod</code>.</p>
 
-          
           <div class="method-source-code" id="add_class_or_module-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 406</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 404</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_class_or_module</span> <span class="ruby-identifier">mod</span>, <span class="ruby-identifier">self_hash</span>, <span class="ruby-identifier">all_hash</span>
   <span class="ruby-identifier">mod</span>.<span class="ruby-identifier">section</span> = <span class="ruby-identifier">current_section</span> <span class="ruby-comment"># TODO declaring context? something is</span>
                                 <span class="ruby-comment"># wrong here...</span>
@@ -1011,37 +771,25 @@ href="Context.html#method-i-current_section">current_section</a>. Returns
   <span class="ruby-identifier">mod</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_constant" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_constant</span><span
-            class="method-args">(constant)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_constant</span><span
+              class="method-args">(constant)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds <code>constant</code> if not already there. If it is, updates the
-comment, value and/or is_alias_for of the known constant if they were
-empty/nil.</p>
-          
-          
+          <p>Adds <code>constant</code> if not already there. If it is, updates the comment, value and/or is_alias_for of the known constant if they were empty/nil.</p>
 
-          
           <div class="method-source-code" id="add_constant-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 431</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 429</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_constant</span> <span class="ruby-identifier">constant</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">constant</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@document_self</span>
 
@@ -1064,108 +812,75 @@ empty/nil.</p>
   <span class="ruby-identifier">constant</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_extend" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_extend</span><span
-            class="method-args">(ext)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_extend</span><span
+              class="method-args">(ext)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds extension module <code>ext</code> which should be an <a
-href="Extend.html">RDoc::Extend</a></p>
-          
-          
+          <p>Adds extension module <code>ext</code> which should be an <a href="Extend.html"><code>RDoc::Extend</code></a></p>
 
-          
           <div class="method-source-code" id="add_extend-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 465</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 463</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_extend</span> <span class="ruby-identifier">ext</span>
   <span class="ruby-identifier">add_to</span> <span class="ruby-ivar">@extends</span>, <span class="ruby-identifier">ext</span>
 
   <span class="ruby-identifier">ext</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_include" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_include</span><span
-            class="method-args">(include)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_include</span><span
+              class="method-args">(include)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds included module <code>include</code> which should be an <a
-href="Include.html">RDoc::Include</a></p>
-          
-          
+          <p>Adds included module <code>include</code> which should be an <a href="Include.html"><code>RDoc::Include</code></a></p>
 
-          
           <div class="method-source-code" id="add_include-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 456</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 454</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_include</span> <span class="ruby-identifier">include</span>
   <span class="ruby-identifier">add_to</span> <span class="ruby-ivar">@includes</span>, <span class="ruby-identifier">include</span>
 
   <span class="ruby-identifier">include</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_method" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_method</span><span
-            class="method-args">(method)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_method</span><span
+              class="method-args">(method)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds <code>method</code> if not already there. If it is (as method or
-attribute), updates the comment if it was empty.</p>
-          
-          
+          <p>Adds <code>method</code> if not already there. If it is (as method or attribute), updates the comment if it was empty.</p>
 
-          
           <div class="method-source-code" id="add_method-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 475</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 473</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_method</span> <span class="ruby-identifier">method</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">method</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@document_self</span>
 
@@ -1195,37 +910,25 @@ attribute), updates the comment if it was empty.</p>
   <span class="ruby-identifier">method</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_module" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_module</span><span
-            class="method-args">(class_type, name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_module</span><span
+              class="method-args">(class_type, name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds a module named <code>name</code>.  If <a href="../RDoc.html">RDoc</a>
-already knows <code>name</code> is a class then that class is returned
-instead.  See also <a href="Context.html#method-i-add_class">add_class</a>.</p>
-          
-          
+          <p>Adds a module named <code>name</code>.  If <a href="../RDoc.html"><code>RDoc</code></a> already knows <code>name</code> is a class then that class is returned instead.  See also <a href="Context.html#method-i-add_class"><code>add_class</code></a>.</p>
 
-          
           <div class="method-source-code" id="add_module-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 508</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 506</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_module</span>(<span class="ruby-identifier">class_type</span>, <span class="ruby-identifier">name</span>)
   <span class="ruby-identifier">mod</span> = <span class="ruby-ivar">@classes</span>[<span class="ruby-identifier">name</span>] <span class="ruby-operator">||</span> <span class="ruby-ivar">@modules</span>[<span class="ruby-identifier">name</span>]
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">mod</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">mod</span>
@@ -1236,36 +939,25 @@ instead.  See also <a href="Context.html#method-i-add_class">add_class</a>.</p>
   <span class="ruby-identifier">add_class_or_module</span> <span class="ruby-identifier">mod</span>, <span class="ruby-ivar">@modules</span>, <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">modules_hash</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_module_alias" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_module_alias</span><span
-            class="method-args">(from, from_name, to, file)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_module_alias</span><span
+              class="method-args">(from, from_name, to, file)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds an alias from <code>from</code> (a class or module) to
-<code>name</code> which was defined in <code>file</code>.</p>
-          
-          
+          <p>Adds an alias from <code>from</code> (a class or module) to <code>name</code> which was defined in <code>file</code>.</p>
 
-          
           <div class="method-source-code" id="add_module_alias-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 529</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 527</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_module_alias</span> <span class="ruby-identifier">from</span>, <span class="ruby-identifier">from_name</span>, <span class="ruby-identifier">to</span>, <span class="ruby-identifier">file</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">from</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@done_documenting</span>
 
@@ -1304,69 +996,48 @@ instead.  See also <a href="Context.html#method-i-add_class">add_class</a>.</p>
   <span class="ruby-identifier">new_to</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_module_by_normal_module" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_module_by_normal_module</span><span
-            class="method-args">(mod)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_module_by_normal_module</span><span
+              class="method-args">(mod)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds a module by <code>RDoc::NormalModule</code> instance. See also <a
-href="Context.html#method-i-add_module">add_module</a>.</p>
-          
-          
+          <p>Adds a module by <code>RDoc::NormalModule</code> instance. See also <a href="Context.html#method-i-add_module"><code>add_module</code></a>.</p>
 
-          
           <div class="method-source-code" id="add_module_by_normal_module-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 521</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 519</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_module_by_normal_module</span>(<span class="ruby-identifier">mod</span>)
   <span class="ruby-identifier">add_class_or_module</span> <span class="ruby-identifier">mod</span>, <span class="ruby-ivar">@modules</span>, <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">modules_hash</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_require" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_require</span><span
-            class="method-args">(require)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_require</span><span
+              class="method-args">(require)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds <code>require</code> to this context&#39;s top level</p>
-          
-          
+          <p>Adds <code>require</code> to this context’s top level</p>
 
-          
           <div class="method-source-code" id="add_require-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 570</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 568</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_require</span>(<span class="ruby-identifier">require</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">require</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@document_self</span>
 
@@ -1377,42 +1048,29 @@ href="Context.html#method-i-add_module">add_module</a>.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_section" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_section</span><span
-            class="method-args">(title, comment = nil)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_section</span><span
+              class="method-args">(title, comment = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Returns a section with <code>title</code>, creating it if it doesn&#39;t
-already exist. <code>comment</code> will be appended to the section&#39;s
-comment.</p>
+          <p>Returns a section with <code>title</code>, creating it if it doesn’t already exist. <code>comment</code> will be appended to the section’s comment.</p>
 
-<p>A section with a <code>title</code> of <code>nil</code> will return the
-default section.</p>
+<p>A section with a <code>title</code> of <code>nil</code> will return the default section.</p>
 
-<p>See also <a href="Context/Section.html">RDoc::Context::Section</a></p>
-          
-          
+<p>See also <a href="Context/Section.html"><code>RDoc::Context::Section</code></a></p>
 
-          
           <div class="method-source-code" id="add_section-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 588</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 586</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_section</span> <span class="ruby-identifier">title</span>, <span class="ruby-identifier">comment</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">section</span> = <span class="ruby-ivar">@sections</span>[<span class="ruby-identifier">title</span>] <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">section</span>.<span class="ruby-identifier">add_comment</span> <span class="ruby-identifier">comment</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">comment</span>
@@ -1424,35 +1082,25 @@ default section.</p>
   <span class="ruby-identifier">section</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-add_to" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">add_to</span><span
-            class="method-args">(array, thing)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_to</span><span
+              class="method-args">(array, thing)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Adds <code>thing</code> to the collection <code>array</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="add_to-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 602</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 600</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_to</span> <span class="ruby-identifier">array</span>, <span class="ruby-identifier">thing</span>
   <span class="ruby-identifier">array</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">thing</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@document_self</span>
 
@@ -1461,41 +1109,29 @@ default section.</p>
   <span class="ruby-identifier">thing</span>.<span class="ruby-identifier">section</span> = <span class="ruby-identifier">current_section</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-any_content" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">any_content</span><span
-            class="method-args">(includes = true)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">any_content</span><span
+              class="method-args">(includes = true)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Is there any content?</p>
 
-<p>This means any of: comment, aliases, methods, attributes, external aliases,
-require, constant.</p>
+<p>This means any of: comment, aliases, methods, attributes, external aliases, require, constant.</p>
 
-<p>Includes and extends are also checked unless <code>includes ==
-false</code>.</p>
-          
-          
+<p>Includes and extends are also checked unless <code>includes == false</code>.</p>
 
-          
           <div class="method-source-code" id="any_content-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 618</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 616</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">any_content</span>(<span class="ruby-identifier">includes</span> = <span class="ruby-keyword">true</span>)
   <span class="ruby-ivar">@any_content</span> <span class="ruby-operator">||=</span> <span class="ruby-operator">!</span>(
     <span class="ruby-ivar">@comment</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">&amp;&amp;</span>
@@ -1509,35 +1145,25 @@ false</code>.</p>
   <span class="ruby-ivar">@any_content</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">includes</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span>(<span class="ruby-ivar">@includes</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@extends</span>).<span class="ruby-identifier">empty?</span> )
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-child_name" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">child_name</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">child_name</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Creates the full name for a child with <code>name</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="child_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 634</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 632</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">child_name</span> <span class="ruby-identifier">name</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^:+/</span>
     <span class="ruby-node">$&#39;</span>  <span class="ruby-comment">#&#39;</span>
@@ -1548,202 +1174,140 @@ false</code>.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-class_attributes" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">class_attributes</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">class_attributes</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Class attributes</p>
-          
-          
 
-          
           <div class="method-source-code" id="class_attributes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 647</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 645</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">class_attributes</span>
   <span class="ruby-ivar">@class_attributes</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">attributes</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">singleton</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-class_method_list" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">class_method_list</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">class_method_list</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Class methods</p>
-          
-          
 
-          
           <div class="method-source-code" id="class_method_list-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 654</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 652</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">class_method_list</span>
   <span class="ruby-ivar">@class_method_list</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">method_list</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">singleton</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-classes" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">classes</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">classes</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Array of classes in this context</p>
-          
-          
 
-          
           <div class="method-source-code" id="classes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 661</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 659</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">classes</span>
   <span class="ruby-ivar">@classes</span>.<span class="ruby-identifier">values</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-classes_and_modules" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">classes_and_modules</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">classes_and_modules</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>All classes and modules in this namespace</p>
-          
-          
 
-          
           <div class="method-source-code" id="classes_and_modules-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 668</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 666</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">classes_and_modules</span>
   <span class="ruby-identifier">classes</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">modules</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-classes_hash" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">classes_hash</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">classes_hash</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Hash of classes keyed by class name</p>
-          
-          
 
-          
           <div class="method-source-code" id="classes_hash-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 675</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 673</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">classes_hash</span>
   <span class="ruby-ivar">@classes</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-current_section" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">current_section</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">current_section</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>The current documentation section that new items will be added to.  If <a
-href="Context.html#attribute-i-temporary_section">#temporary_section</a> is
-available it will be used.</p>
-          
-          
+          <p>The current documentation section that new items will be added to.  If <a href="Context.html#attribute-i-temporary_section"><code>temporary_section</code></a> is available it will be used.</p>
 
-          
           <div class="method-source-code" id="current_section-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 683</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 681</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">current_section</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">section</span> = <span class="ruby-ivar">@temporary_section</span> <span class="ruby-keyword">then</span>
     <span class="ruby-ivar">@temporary_section</span> = <span class="ruby-keyword">nil</span>
@@ -1754,277 +1318,192 @@ available it will be used.</p>
   <span class="ruby-identifier">section</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-defined_in-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">defined_in?</span><span
-            class="method-args">(file)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">defined_in?</span><span
+              class="method-args">(file)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Is part of this thing was defined in <code>file</code>?</p>
-          
-          
 
-          
           <div class="method-source-code" id="defined_in-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 696</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 694</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">defined_in?</span>(<span class="ruby-identifier">file</span>)
   <span class="ruby-ivar">@in_files</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">file</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-each_attribute" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">each_attribute</span><span
-            class="method-args">() { |attribute| ... }</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">each_attribute</span><span
+              class="method-args">() { |attribute| ... }</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Iterator for attributes</p>
-          
-          
 
-          
           <div class="method-source-code" id="each_attribute-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 721</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 719</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_attribute</span> <span class="ruby-comment"># :yields: attribute</span>
   <span class="ruby-ivar">@attributes</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-keyword">yield</span> <span class="ruby-identifier">a</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-each_classmodule" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">each_classmodule</span><span
-            class="method-args">() { |module| ... }</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">each_classmodule</span><span
+              class="method-args">() { |module| ... }</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Iterator for classes and modules</p>
-          
-          
 
-          
           <div class="method-source-code" id="each_classmodule-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 728</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 726</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_classmodule</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>) <span class="ruby-comment"># :yields: module</span>
   <span class="ruby-identifier">classes_and_modules</span>.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-each_constant" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">each_constant</span><span
-            class="method-args">() { |constant| ... }</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">each_constant</span><span
+              class="method-args">() { |constant| ... }</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Iterator for constants</p>
-          
-          
 
-          
           <div class="method-source-code" id="each_constant-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 735</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 733</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_constant</span> <span class="ruby-comment"># :yields: constant</span>
   <span class="ruby-ivar">@constants</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-keyword">yield</span> <span class="ruby-identifier">c</span>}
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-each_extend" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">each_extend</span><span
-            class="method-args">() { |extend| ... }</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">each_extend</span><span
+              class="method-args">() { |extend| ... }</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Iterator for extension modules</p>
-          
-          
 
-          
           <div class="method-source-code" id="each_extend-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 749</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 747</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_extend</span> <span class="ruby-comment"># :yields: extend</span>
   <span class="ruby-ivar">@extends</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-keyword">yield</span> <span class="ruby-identifier">e</span> <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-each_include" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">each_include</span><span
-            class="method-args">() { |include| ... }</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">each_include</span><span
+              class="method-args">() { |include| ... }</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Iterator for included modules</p>
-          
-          
 
-          
           <div class="method-source-code" id="each_include-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 742</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 740</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_include</span> <span class="ruby-comment"># :yields: include</span>
   <span class="ruby-ivar">@includes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-keyword">yield</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-each_method" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">each_method</span><span
-            class="method-args">() { |method| ... }</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">each_method</span><span
+              class="method-args">() { |method| ... }</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Iterator for methods</p>
-          
-          
 
-          
           <div class="method-source-code" id="each_method-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 756</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 754</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_method</span> <span class="ruby-comment"># :yields: method</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">enum_for</span> <span class="ruby-identifier">__method__</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">block_given?</span>
 
   <span class="ruby-ivar">@method_list</span>.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-keyword">yield</span> <span class="ruby-identifier">m</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-each_section" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">each_section</span><span
-            class="method-args">() { |section, constants, attributes| ... }</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">each_section</span><span
+              class="method-args">() { |section, constants, attributes| ... }</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Iterator for each section&#39;s contents sorted by title.  The
-<code>section</code>, the section&#39;s <code>constants</code> and the
-sections <code>attributes</code> are yielded.  The <code>constants</code>
-and <code>attributes</code> collections are sorted.</p>
+          <p>Iterator for each section’s contents sorted by title.  The <code>section</code>, the section’s <code>constants</code> and the sections <code>attributes</code> are yielded.  The <code>constants</code> and <code>attributes</code> collections are sorted.</p>
 
-<p>To retrieve methods in a section use <a
-href="Context.html#method-i-methods_by_type">methods_by_type</a> with the
-optional <code>section</code> parameter.</p>
+<p>To retrieve methods in a section use <a href="Context.html#method-i-methods_by_type"><code>methods_by_type</code></a> with the optional <code>section</code> parameter.</p>
 
 <p>NOTE: Do not edit collections yielded by this method</p>
-          
-          
 
-          
           <div class="method-source-code" id="each_section-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 772</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 770</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_section</span> <span class="ruby-comment"># :yields: section, constants, attributes</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">enum_for</span> <span class="ruby-identifier">__method__</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">block_given?</span>
 
@@ -2039,70 +1518,49 @@ optional <code>section</code> parameter.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_attribute" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_attribute</span><span
-            class="method-args">(name, singleton)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_attribute</span><span
+              class="method-args">(name, singleton)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Finds an attribute <code>name</code> with singleton value
-<code>singleton</code>.</p>
-          
-          
+          <p>Finds an attribute <code>name</code> with singleton value <code>singleton</code>.</p>
 
-          
           <div class="method-source-code" id="find_attribute-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 789</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 787</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_attribute</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">singleton</span>)
   <span class="ruby-identifier">name</span> = <span class="ruby-node">$1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^(.*)=$/</span>
   <span class="ruby-ivar">@attributes</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">singleton</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">singleton</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_attribute_named" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_attribute_named</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_attribute_named</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Finds an attribute with <code>name</code> in this context</p>
-          
-          
 
-          
           <div class="method-source-code" id="find_attribute_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 797</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 795</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_attribute_named</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">name</span>
   <span class="ruby-keyword">when</span> <span class="ruby-regexp">/\A#/</span> <span class="ruby-keyword">then</span>
@@ -2114,170 +1572,119 @@ optional <code>section</code> parameter.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_class_method_named" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_class_method_named</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_class_method_named</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Finds a class method with <code>name</code> in this context</p>
-          
-          
 
-          
           <div class="method-source-code" id="find_class_method_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 811</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 809</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_class_method_named</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-ivar">@method_list</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">meth</span><span class="ruby-operator">|</span> <span class="ruby-identifier">meth</span>.<span class="ruby-identifier">singleton</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">meth</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_constant_named" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_constant_named</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_constant_named</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Finds a constant with <code>name</code> in this context</p>
-          
-          
 
-          
           <div class="method-source-code" id="find_constant_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 818</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 816</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_constant_named</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-ivar">@constants</span>.<span class="ruby-identifier">find</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">m</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">full_name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_enclosing_module_named" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_enclosing_module_named</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_enclosing_module_named</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Find a module at a higher scope</p>
-          
-          
 
-          
           <div class="method-source-code" id="find_enclosing_module_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 827</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 825</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_enclosing_module_named</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-identifier">parent</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">find_module_named</span>(<span class="ruby-identifier">name</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_external_alias" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_external_alias</span><span
-            class="method-args">(name, singleton)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_external_alias</span><span
+              class="method-args">(name, singleton)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Finds an external alias <code>name</code> with singleton value
-<code>singleton</code>.</p>
-          
-          
+          <p>Finds an external alias <code>name</code> with singleton value <code>singleton</code>.</p>
 
-          
           <div class="method-source-code" id="find_external_alias-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 834</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 832</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_external_alias</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">singleton</span>)
   <span class="ruby-ivar">@external_aliases</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">singleton</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">singleton</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_external_alias_named" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_external_alias_named</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_external_alias_named</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Finds an external alias with <code>name</code> in this context</p>
-          
-          
 
-          
           <div class="method-source-code" id="find_external_alias_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 841</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 839</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_external_alias_named</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">name</span>
   <span class="ruby-keyword">when</span> <span class="ruby-regexp">/\A#/</span> <span class="ruby-keyword">then</span>
@@ -2289,102 +1696,71 @@ optional <code>section</code> parameter.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_file_named" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_file_named</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_file_named</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Finds a file with <code>name</code> in this context</p>
-          
-          
 
-          
           <div class="method-source-code" id="find_file_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 855</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 853</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_file_named</span> <span class="ruby-identifier">name</span>
   <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">find_file_named</span> <span class="ruby-identifier">name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_instance_method_named" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_instance_method_named</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_instance_method_named</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Finds an instance method with <code>name</code> in this context</p>
-          
-          
 
-          
           <div class="method-source-code" id="find_instance_method_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 862</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 860</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_instance_method_named</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-ivar">@method_list</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">meth</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span><span class="ruby-identifier">meth</span>.<span class="ruby-identifier">singleton</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">meth</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_local_symbol" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_local_symbol</span><span
-            class="method-args">(symbol)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_local_symbol</span><span
+              class="method-args">(symbol)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Finds a method, constant, attribute, external alias, module or file named
-<code>symbol</code> in this context.</p>
-          
-          
+          <p>Finds a method, constant, attribute, external alias, module or file named <code>symbol</code> in this context.</p>
 
-          
           <div class="method-source-code" id="find_local_symbol-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 870</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 868</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_local_symbol</span>(<span class="ruby-identifier">symbol</span>)
   <span class="ruby-identifier">find_method_named</span>(<span class="ruby-identifier">symbol</span>) <span class="ruby-keyword">or</span>
   <span class="ruby-identifier">find_constant_named</span>(<span class="ruby-identifier">symbol</span>) <span class="ruby-keyword">or</span>
@@ -2394,36 +1770,25 @@ optional <code>section</code> parameter.</p>
   <span class="ruby-identifier">find_file_named</span>(<span class="ruby-identifier">symbol</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_method" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_method</span><span
-            class="method-args">(name, singleton)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_method</span><span
+              class="method-args">(name, singleton)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Finds a method named <code>name</code> with singleton value
-<code>singleton</code>.</p>
-          
-          
+          <p>Finds a method named <code>name</code> with singleton value <code>singleton</code>.</p>
 
-          
           <div class="method-source-code" id="find_method-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 882</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 880</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_method</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">singleton</span>)
   <span class="ruby-ivar">@method_list</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">singleton</span>
@@ -2434,35 +1799,25 @@ optional <code>section</code> parameter.</p>
   }
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_method_named" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_method_named</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_method_named</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Finds a instance or module method with <code>name</code> in this context</p>
-          
-          
 
-          
           <div class="method-source-code" id="find_method_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 895</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 893</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_method_named</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">name</span>
   <span class="ruby-keyword">when</span> <span class="ruby-regexp">/\A#/</span> <span class="ruby-keyword">then</span>
@@ -2474,35 +1829,25 @@ optional <code>section</code> parameter.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_module_named" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_module_named</span><span
-            class="method-args">(name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_module_named</span><span
+              class="method-args">(name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Find a module with <code>name</code> using ruby&#39;s scoping rules</p>
-          
-          
+          <p>Find a module with <code>name</code> using ruby’s scoping rules</p>
 
-          
           <div class="method-source-code" id="find_module_named-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 909</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 907</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_module_named</span>(<span class="ruby-identifier">name</span>)
   <span class="ruby-identifier">res</span> = <span class="ruby-ivar">@modules</span>[<span class="ruby-identifier">name</span>] <span class="ruby-operator">||</span> <span class="ruby-ivar">@classes</span>[<span class="ruby-identifier">name</span>]
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">res</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">res</span>
@@ -2510,68 +1855,48 @@ optional <code>section</code> parameter.</p>
   <span class="ruby-identifier">find_enclosing_module_named</span> <span class="ruby-identifier">name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_symbol" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_symbol</span><span
-            class="method-args">(symbol)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_symbol</span><span
+              class="method-args">(symbol)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Look up <code>symbol</code>, first as a module, then as a local symbol.</p>
-          
-          
 
-          
           <div class="method-source-code" id="find_symbol-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 919</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 917</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_symbol</span>(<span class="ruby-identifier">symbol</span>)
   <span class="ruby-identifier">find_symbol_module</span>(<span class="ruby-identifier">symbol</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">find_local_symbol</span>(<span class="ruby-identifier">symbol</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_symbol_module" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_symbol_module</span><span
-            class="method-args">(symbol)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_symbol_module</span><span
+              class="method-args">(symbol)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Look up a module named <code>symbol</code>.</p>
-          
-          
 
-          
           <div class="method-source-code" id="find_symbol_module-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 926</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 924</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_symbol_module</span>(<span class="ruby-identifier">symbol</span>)
   <span class="ruby-identifier">result</span> = <span class="ruby-keyword">nil</span>
 
@@ -2602,70 +1927,50 @@ optional <code>section</code> parameter.</p>
   <span class="ruby-identifier">result</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-full_name" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">full_name</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">full_name</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>The full name for this context.  This method is overridden by subclasses.</p>
-          
-          
 
-          
           <div class="method-source-code" id="full_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 959</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 957</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">full_name</span>
   <span class="ruby-string">&#39;(unknown)&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-fully_documented-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">fully_documented?</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">fully_documented?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Does this context and its methods and constants all have documentation?</p>
 
-<p>(Yes, fully documented doesn&#39;t mean everything.)</p>
-          
-          
+<p>(Yes, fully documented doesn’t mean everything.)</p>
 
-          
           <div class="method-source-code" id="fully_documented-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 968</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 966</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">fully_documented?</span>
   <span class="ruby-identifier">documented?</span> <span class="ruby-keyword">and</span>
     <span class="ruby-identifier">attributes</span>.<span class="ruby-identifier">all?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">documented?</span> } <span class="ruby-keyword">and</span>
@@ -2673,35 +1978,25 @@ optional <code>section</code> parameter.</p>
     <span class="ruby-identifier">constants</span>.<span class="ruby-identifier">all?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">documented?</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-http_url" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">http_url</span><span
-            class="method-args">(prefix)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">http_url</span><span
+              class="method-args">(prefix)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>URL for this with a <code>prefix</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="http_url-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 978</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 976</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">http_url</span>(<span class="ruby-identifier">prefix</span>)
   <span class="ruby-identifier">path</span> = <span class="ruby-identifier">name_for_path</span>
   <span class="ruby-identifier">path</span> = <span class="ruby-identifier">path</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/&lt;&lt;\s*(\w*)/</span>, <span class="ruby-string">&#39;from-\1&#39;</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">path</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/&lt;&lt;/</span>
@@ -2710,35 +2005,25 @@ optional <code>section</code> parameter.</p>
   <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">path</span>.<span class="ruby-identifier">compact</span>) <span class="ruby-operator">+</span> <span class="ruby-string">&#39;.html&#39;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-initialize_methods_etc" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">initialize_methods_etc</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">initialize_methods_etc</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Sets the defaults for methods and so-forth</p>
-          
-          
 
-          
           <div class="method-source-code" id="initialize_methods_etc-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 147</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 145</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize_methods_etc</span>
   <span class="ruby-ivar">@method_list</span> = []
   <span class="ruby-ivar">@attributes</span>  = []
@@ -2762,107 +2047,97 @@ optional <code>section</code> parameter.</p>
   <span class="ruby-ivar">@store</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-instance_attributes" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">instance_attributes</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">instance_attributes</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Instance attributes</p>
-          
-          
 
-          
           <div class="method-source-code" id="instance_attributes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 989</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 987</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">instance_attributes</span>
   <span class="ruby-ivar">@instance_attributes</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">attributes</span>.<span class="ruby-identifier">reject</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">singleton</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-instance_method_list" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">instance_method_list</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">instance_method_list</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Instance methods</p>
-          
-          
 
-          
           <div class="method-source-code" id="instance_method_list-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 998</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1003</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">instance_method_list</span>
-  <span class="ruby-ivar">@instance_method_list</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">method_list</span>.<span class="ruby-identifier">reject</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">singleton</span> }
+  <span class="ruby-identifier">warn</span> <span class="ruby-string">&#39;#instance_method_list is obsoleted, please use #instance_methods&#39;</span>
+  <span class="ruby-ivar">@instance_methods</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">method_list</span>.<span class="ruby-identifier">reject</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">singleton</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
-      <div id="method-i-methods_by_type" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">methods_by_type</span><span
-            class="method-args">(section = nil)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+      <div id="method-i-instance_methods" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">instance_methods</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Breaks <a href="Context.html#attribute-i-method_list">#method_list</a> into
-a nested hash by type (<code>&#39;class&#39;</code> or
-<code>&#39;instance&#39;</code>) and visibility (<code>:public</code>,
-<code>:protected</code>, <code>:private</code>).</p>
+          <p>Instance methods</p>
 
-<p>If <code>section</code> is provided only methods in that <a
-href="Context/Section.html">RDoc::Context::Section</a> will be returned.</p>
-          
-          
+          <div class="method-source-code" id="instance_methods-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 994</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">instance_methods</span>
+  <span class="ruby-ivar">@instance_methods</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">method_list</span>.<span class="ruby-identifier">reject</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">singleton</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
 
-          
+
+      </div>
+
+      <div id="method-i-methods_by_type" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">methods_by_type</span><span
+              class="method-args">(section = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          <p>Breaks <a href="Context.html#attribute-i-method_list"><code>method_list</code></a> into a nested hash by type (<code>&#39;class&#39;</code> or <code>&#39;instance&#39;</code>) and visibility (<code>:public</code>, <code>:protected</code>, <code>:private</code>).</p>
+
+<p>If <code>section</code> is provided only methods in that <a href="Context/Section.html"><code>RDoc::Context::Section</code></a> will be returned.</p>
+
           <div class="method-source-code" id="methods_by_type-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1009</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1015</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">methods_by_type</span> <span class="ruby-identifier">section</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">methods</span> = {}
 
@@ -2883,36 +2158,25 @@ href="Context/Section.html">RDoc::Context::Section</a> will be returned.</p>
   <span class="ruby-identifier">methods</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-methods_matching" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">methods_matching</span><span
-            class="method-args">(methods, singleton = false) { |m| ... }</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">methods_matching</span><span
+              class="method-args">(methods, singleton = false) { |m| ... }</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Yields AnyMethod and Attr entries matching the list of names in
-<code>methods</code>.</p>
-          
-          
+          <p>Yields AnyMethod and Attr entries matching the list of names in <code>methods</code>.</p>
 
-          
           <div class="method-source-code" id="methods_matching-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1032</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1038</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">methods_matching</span>(<span class="ruby-identifier">methods</span>, <span class="ruby-identifier">singleton</span> = <span class="ruby-keyword">false</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   (<span class="ruby-ivar">@method_list</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@attributes</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">yield</span> <span class="ruby-identifier">m</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">methods</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">m</span>.<span class="ruby-identifier">name</span>) <span class="ruby-keyword">and</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">singleton</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">singleton</span>
@@ -2923,216 +2187,151 @@ href="Context/Section.html">RDoc::Context::Section</a> will be returned.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-modules" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">modules</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">modules</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Array of modules in this context</p>
-          
-          
 
-          
           <div class="method-source-code" id="modules-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1045</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1051</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">modules</span>
   <span class="ruby-ivar">@modules</span>.<span class="ruby-identifier">values</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-modules_hash" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">modules_hash</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">modules_hash</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Hash of modules keyed by module name</p>
-          
-          
 
-          
           <div class="method-source-code" id="modules_hash-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1052</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1058</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">modules_hash</span>
   <span class="ruby-ivar">@modules</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-name_for_path" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">name_for_path</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">name_for_path</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Name to use to generate the url. <code>#full_name</code> by default.</p>
-          
-          
 
-          
           <div class="method-source-code" id="name_for_path-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1060</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1066</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">name_for_path</span>
   <span class="ruby-identifier">full_name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-ongoing_visibility-3D" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">ongoing_visibility=</span><span
-            class="method-args">(visibility)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">ongoing_visibility=</span><span
+              class="method-args">(visibility)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Changes the visibility for new methods to <code>visibility</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="ongoing_visibility-3D-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1067</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1073</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">ongoing_visibility=</span>(<span class="ruby-identifier">visibility</span>)
   <span class="ruby-ivar">@visibility</span> = <span class="ruby-identifier">visibility</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-record_location" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">record_location</span><span
-            class="method-args">(top_level)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">record_location</span><span
+              class="method-args">(top_level)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Record <code>top_level</code> as a file <code>self</code> is in.</p>
-          
-          
 
-          
           <div class="method-source-code" id="record_location-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1074</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1080</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">record_location</span>(<span class="ruby-identifier">top_level</span>)
   <span class="ruby-ivar">@in_files</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">top_level</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@in_files</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">top_level</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-remove_from_documentation-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">remove_from_documentation?</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">remove_from_documentation?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Should we remove this context from the documentation?</p>
 
 <p>The answer is yes if:</p>
 <ul><li>
-<p><a href="CodeObject.html#attribute-i-received_nodoc">received_nodoc</a> is
-<code>true</code></p>
+<p><a href="CodeObject.html#attribute-i-received_nodoc"><code>received_nodoc</code></a> is <code>true</code></p>
 </li><li>
-<p><a href="Context.html#method-i-any_content">any_content</a> is
-<code>false</code> (not counting includes)</p>
+<p><a href="Context.html#method-i-any_content"><code>any_content</code></a> is <code>false</code> (not counting includes)</p>
 </li><li>
-<p>All <a href="Context.html#attribute-i-includes">includes</a> are modules
-(not a string), and their module has <code>#remove_from_documentation? ==
-true</code></p>
+<p>All <a href="Context.html#attribute-i-includes"><code>includes</code></a> are modules (not a string), and their module has <code>#remove_from_documentation? == true</code></p>
 </li><li>
-<p>All classes and modules have <code>#remove_from_documentation? ==
-true</code></p>
+<p>All classes and modules have <code>#remove_from_documentation? == true</code></p>
 </li></ul>
-          
-          
 
-          
           <div class="method-source-code" id="remove_from_documentation-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1088</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1094</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_from_documentation?</span>
   <span class="ruby-ivar">@remove_from_documentation</span> <span class="ruby-operator">||=</span>
     <span class="ruby-ivar">@received_nodoc</span> <span class="ruby-operator">&amp;&amp;</span>
@@ -3141,36 +2340,25 @@ true</code></p>
     <span class="ruby-identifier">classes_and_modules</span>.<span class="ruby-identifier">all?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">cm</span><span class="ruby-operator">|</span> <span class="ruby-identifier">cm</span>.<span class="ruby-identifier">remove_from_documentation?</span> }
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-remove_invisible" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">remove_invisible</span><span
-            class="method-args">(min_visibility)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">remove_invisible</span><span
+              class="method-args">(min_visibility)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Removes methods and attributes with a visibility less than
-<code>min_visibility</code>.</p>
-          
-          
+          <p>Removes methods and attributes with a visibility less than <code>min_visibility</code>.</p>
 
-          
           <div class="method-source-code" id="remove_invisible-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1101</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1107</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_invisible</span> <span class="ruby-identifier">min_visibility</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> [<span class="ruby-value">:private</span>, <span class="ruby-value">:nodoc</span>].<span class="ruby-identifier">include?</span> <span class="ruby-identifier">min_visibility</span>
   <span class="ruby-identifier">remove_invisible_in</span> <span class="ruby-ivar">@method_list</span>, <span class="ruby-identifier">min_visibility</span>
@@ -3178,36 +2366,25 @@ true</code></p>
   <span class="ruby-identifier">remove_invisible_in</span> <span class="ruby-ivar">@constants</span>, <span class="ruby-identifier">min_visibility</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-resolve_aliases" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">resolve_aliases</span><span
-            class="method-args">(added)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">resolve_aliases</span><span
+              class="method-args">(added)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Tries to resolve unmatched aliases when a method or attribute has just been
-added.</p>
-          
-          
+          <p>Tries to resolve unmatched aliases when a method or attribute has just been added.</p>
 
-          
           <div class="method-source-code" id="resolve_aliases-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1127</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1133</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">resolve_aliases</span> <span class="ruby-identifier">added</span>
   <span class="ruby-comment"># resolve any pending unmatched aliases</span>
   <span class="ruby-identifier">key</span> = <span class="ruby-identifier">added</span>.<span class="ruby-identifier">pretty_name</span>
@@ -3220,36 +2397,25 @@ added.</p>
   <span class="ruby-ivar">@unmatched_alias_lists</span>.<span class="ruby-identifier">delete</span> <span class="ruby-identifier">key</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-section_contents" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">section_contents</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">section_contents</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Returns <a href="Context/Section.html">RDoc::Context::Section</a> objects
-referenced in this context for use in a table of contents.</p>
-          
-          
+          <p>Returns <a href="Context/Section.html"><code>RDoc::Context::Section</code></a> objects referenced in this context for use in a table of contents.</p>
 
-          
           <div class="method-source-code" id="section_contents-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1143</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1149</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">section_contents</span>
   <span class="ruby-identifier">used_sections</span> = {}
 
@@ -3271,69 +2437,48 @@ referenced in this context for use in a table of contents.</p>
   <span class="ruby-identifier">sections</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-sections" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">sections</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">sections</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Sections in this context</p>
-          
-          
 
-          
           <div class="method-source-code" id="sections-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1167</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1173</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">sections</span>
   <span class="ruby-ivar">@sections</span>.<span class="ruby-identifier">values</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-set_constant_visibility_for" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">set_constant_visibility_for</span><span
-            class="method-args">(names, visibility)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">set_constant_visibility_for</span><span
+              class="method-args">(names, visibility)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Given an array <code>names</code> of constants, set the visibility of each
-constant to <code>visibility</code></p>
-          
-          
+          <p>Given an array <code>names</code> of constants, set the visibility of each constant to <code>visibility</code></p>
 
-          
           <div class="method-source-code" id="set_constant_visibility_for-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1196</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1202</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_constant_visibility_for</span>(<span class="ruby-identifier">names</span>, <span class="ruby-identifier">visibility</span>)
   <span class="ruby-identifier">names</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">constant</span> = <span class="ruby-ivar">@constants_hash</span>[<span class="ruby-identifier">name</span>] <span class="ruby-keyword">or</span> <span class="ruby-keyword">next</span>
@@ -3341,106 +2486,73 @@ constant to <code>visibility</code></p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-set_current_section" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">set_current_section</span><span
-            class="method-args">(title, comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">set_current_section</span><span
+              class="method-args">(title, comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Sets the current section to a section with <code>title</code>.  See also <a
-href="Context.html#method-i-add_section">add_section</a></p>
-          
-          
+          <p>Sets the current section to a section with <code>title</code>.  See also <a href="Context.html#method-i-add_section"><code>add_section</code></a></p>
 
-          
           <div class="method-source-code" id="set_current_section-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1178</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1184</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_current_section</span> <span class="ruby-identifier">title</span>, <span class="ruby-identifier">comment</span>
   <span class="ruby-ivar">@current_section</span> = <span class="ruby-identifier">add_section</span> <span class="ruby-identifier">title</span>, <span class="ruby-identifier">comment</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-set_visibility_for" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">set_visibility_for</span><span
-            class="method-args">(methods, visibility, singleton = false)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">set_visibility_for</span><span
+              class="method-args">(methods, visibility, singleton = false)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Given an array <code>methods</code> of method names, set the visibility of
-each to <code>visibility</code></p>
-          
-          
+          <p>Given an array <code>methods</code> of method names, set the visibility of each to <code>visibility</code></p>
 
-          
           <div class="method-source-code" id="set_visibility_for-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1186</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1192</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_visibility_for</span>(<span class="ruby-identifier">methods</span>, <span class="ruby-identifier">visibility</span>, <span class="ruby-identifier">singleton</span> = <span class="ruby-keyword">false</span>)
   <span class="ruby-identifier">methods_matching</span> <span class="ruby-identifier">methods</span>, <span class="ruby-identifier">singleton</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">m</span>.<span class="ruby-identifier">visibility</span> = <span class="ruby-identifier">visibility</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-sort_sections" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">sort_sections</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">sort_sections</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Sorts sections alphabetically (default) or in TomDoc fashion (none, Public,
-Internal, Deprecated)</p>
-          
-          
+          <p>Sorts sections alphabetically (default) or in TomDoc fashion (none, Public, Internal, Deprecated)</p>
 
-          
           <div class="method-source-code" id="sort_sections-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1207</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1213</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">sort_sections</span>
   <span class="ruby-identifier">titles</span> = <span class="ruby-ivar">@sections</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">title</span>, <span class="ruby-identifier">_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">title</span> }
 
@@ -3457,35 +2569,25 @@ Internal, Deprecated)</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-top_level" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">top_level</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">top_level</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Return the TopLevel that owns us</p>
-          
-          
 
-          
           <div class="method-source-code" id="top_level-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1233</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1239</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">top_level</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@top_level</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span> <span class="ruby-ivar">@top_level</span>
   <span class="ruby-ivar">@top_level</span> = <span class="ruby-keyword">self</span>
@@ -3493,36 +2595,25 @@ Internal, Deprecated)</p>
   <span class="ruby-ivar">@top_level</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-upgrade_to_class" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">upgrade_to_class</span><span
-            class="method-args">(mod, class_type, enclosing)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">upgrade_to_class</span><span
+              class="method-args">(mod, class_type, enclosing)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Upgrades NormalModule <code>mod</code> in <code>enclosing</code> to a
-<code>class_type</code></p>
-          
-          
+          <p>Upgrades NormalModule <code>mod</code> in <code>enclosing</code> to a <code>class_type</code></p>
 
-          
           <div class="method-source-code" id="upgrade_to_class-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1243</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/context.rb, line 1249</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">upgrade_to_class</span> <span class="ruby-identifier">mod</span>, <span class="ruby-identifier">class_type</span>, <span class="ruby-identifier">enclosing</span>
   <span class="ruby-identifier">enclosing</span>.<span class="ruby-identifier">modules_hash</span>.<span class="ruby-identifier">delete</span> <span class="ruby-identifier">mod</span>.<span class="ruby-identifier">name</span>
 
@@ -3536,24 +2627,20 @@ Internal, Deprecated)</p>
   <span class="ruby-identifier">klass</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

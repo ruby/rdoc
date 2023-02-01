@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::RD::Inline - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::RD::Inline - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
   var index_rel_prefix = "../../";
 </script>
 
-<script src="../../js/jquery.js"></script>
-<script src="../../js/darkfish.js"></script>
+<script src="../../js/navigation.js" defer></script>
+<script src="../../js/search.js" defer></script>
+<script src="../../js/search_index.js" defer></script>
+<script src="../../js/searcher.js" defer></script>
+<script src="../../js/darkfish.js" defer></script>
 
 <link href="../../css/fonts.css" rel="stylesheet">
 <link href="../../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,28 +57,24 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
-  <p class="link">Object
-  
+  <p class="link"><a href="../../Object.html">Object</a>
 </div>
 
     
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li class="calls-super" ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-append">#append</a>
-    
     <li ><a href="#method-i-initialize">#initialize</a>
-    
   </ul>
 </div>
 
@@ -90,26 +88,19 @@
 
   <section class="description">
     
-<p><a href="Inline.html">Inline</a> keeps track of markup and labels to create
-proper links.</p>
+<p><a href="Inline.html"><code>Inline</code></a> keeps track of markup and labels to create proper links.</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-rdoc" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">rdoc</span><span
@@ -117,12 +108,9 @@ proper links.</p>
         </div>
 
         <div class="method-description">
-        
-        <p>The markup of this reference in <a href="../../RDoc.html">RDoc</a> format</p>
-        
+        <p>The markup of this reference in <a href="../../RDoc.html"><code>RDoc</code></a> format</p>
         </div>
       </div>
-      
       <div id="attribute-i-reference" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">reference</span><span
@@ -130,12 +118,9 @@ proper links.</p>
         </div>
 
         <div class="method-description">
-        
         <p>The text of the reference</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-to_s" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">to_s</span><span
@@ -143,50 +128,35 @@ proper links.</p>
         </div>
 
         <div class="method-description">
-        
-        <p>The markup of this reference in <a href="../../RDoc.html">RDoc</a> format</p>
-        
+        <p>The markup of this reference in <a href="../../RDoc.html"><code>RDoc</code></a> format</p>
         </div>
       </div>
-      
     </section>
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(rdoc, reference = rdoc)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(rdoc, reference = rdoc)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new <a href="Inline.html">Inline</a> for <code>rdoc</code> and
-<code>reference</code>.</p>
+          <p>Creates a new <a href="Inline.html"><code>Inline</code></a> for <code>rdoc</code> and <code>reference</code>.</p>
 
-<p><code>rdoc</code> may be another <a href="Inline.html">Inline</a> or a
-String.  If <code>reference</code> is not given it will use the text from
-<code>rdoc</code>.</p>
-          
-          
+<p><code>rdoc</code> may be another <a href="Inline.html"><code>Inline</code></a> or a String.  If <code>reference</code> is not given it will use the text from <code>rdoc</code>.</p>
             <div class="method-calls-super">
               Calls superclass method
               
             </div>
-          
 
-          
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/rdoc/rd/inline.rb, line 23</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">new</span> <span class="ruby-identifier">rdoc</span>, <span class="ruby-identifier">reference</span> = <span class="ruby-identifier">rdoc</span>
@@ -197,42 +167,30 @@ String.  If <code>reference</code> is not given it will use the text from
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-append" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">append</span><span
-            class="method-args">(more)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">append</span><span
+              class="method-args">(more)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Appends <code>more</code> to this inline.  <code>more</code> may be a
-String or another <a href="Inline.html">Inline</a>.</p>
-          
-          
+          <p>Appends <code>more</code> to this inline.  <code>more</code> may be a String or another <a href="Inline.html"><code>Inline</code></a>.</p>
 
-          
           <div class="method-source-code" id="append-source">
             <pre><span class="ruby-comment"># File lib/rdoc/rd/inline.rb, line 50</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">append</span> <span class="ruby-identifier">more</span>
@@ -250,42 +208,30 @@ String or another <a href="Inline.html">Inline</a>.</p>
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="protected-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Protected Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-initialize" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">initialize</span><span
-            class="method-args">(rdoc, reference)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">initialize</span><span
+              class="method-args">(rdoc, reference)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Initializes the <a href="Inline.html">Inline</a> with <code>rdoc</code> and
-<code>inline</code></p>
-          
-          
+          <p>Initializes the <a href="Inline.html"><code>Inline</code></a> with <code>rdoc</code> and <code>inline</code></p>
 
-          
           <div class="method-source-code" id="initialize-source">
             <pre><span class="ruby-comment"># File lib/rdoc/rd/inline.rb, line 34</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">rdoc</span>, <span class="ruby-identifier">reference</span> <span class="ruby-comment"># :not-new:</span>
@@ -296,24 +242,20 @@ String or another <a href="Inline.html">Inline</a>.</p>
   <span class="ruby-ivar">@rdoc</span>      = <span class="ruby-identifier">rdoc</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

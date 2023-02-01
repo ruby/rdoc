@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Markup::Document - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Markup::Document - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
   var index_rel_prefix = "../../";
 </script>
 
-<script src="../../js/jquery.js"></script>
-<script src="../../js/darkfish.js"></script>
+<script src="../../js/navigation.js" defer></script>
+<script src="../../js/search.js" defer></script>
+<script src="../../js/search_index.js" defer></script>
+<script src="../../js/searcher.js" defer></script>
+<script src="../../js/darkfish.js" defer></script>
 
 <link href="../../css/fonts.css" rel="stylesheet">
 <link href="../../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,55 +57,40 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
-  <p class="link">Object
-  
+  <p class="link"><a href="../../Object.html">Object</a>
 </div>
 
-    <div id="includes-section" class="nav-section">
+    
+<div id="includes-section" class="nav-section">
   <h3>Included Modules</h3>
 
   <ul class="link-list">
-  
-  
     <li><span class="include">Enumerable</span>
-  
-  
   </ul>
 </div>
 
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-3C-3C">#&lt;&lt;</a>
-    
     <li ><a href="#method-i-accept">#accept</a>
-    
     <li ><a href="#method-i-concat">#concat</a>
-    
     <li ><a href="#method-i-each">#each</a>
-    
     <li ><a href="#method-i-empty-3F">#empty?</a>
-    
     <li ><a href="#method-i-file-3D">#file=</a>
-    
     <li ><a href="#method-i-merge">#merge</a>
-    
     <li ><a href="#method-i-merged-3F">#merged?</a>
-    
     <li ><a href="#method-i-push">#push</a>
-    
     <li ><a href="#method-i-table_of_contents">#table_of_contents</a>
-    
   </ul>
 </div>
 
@@ -117,26 +104,19 @@
 
   <section class="description">
     
-<p>A <a href="Document.html">Document</a> containing lists, headings,
-paragraphs, etc.</p>
+<p>A <a href="Document.html"><code>Document</code></a> containing lists, headings, paragraphs, etc.</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-file" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">file</span><span
@@ -144,13 +124,9 @@ paragraphs, etc.</p>
         </div>
 
         <div class="method-description">
-        
-        <p>The file this document was created from.  See also <a
-href="../ClassModule.html#method-i-add_comment">RDoc::ClassModule#add_comment</a></p>
-        
+        <p>The file this document was created from.  See also <a href="../ClassModule.html#method-i-add_comment"><code>RDoc::ClassModule#add_comment</code></a></p>
         </div>
       </div>
-      
       <div id="attribute-i-omit_headings_below" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">omit_headings_below</span><span
@@ -158,13 +134,9 @@ href="../ClassModule.html#method-i-add_comment">RDoc::ClassModule#add_comment</a
         </div>
 
         <div class="method-description">
-        
-        <p>If a heading is below the given level it will be omitted from the <a
-href="Document.html#method-i-table_of_contents">#table_of_contents</a></p>
-        
+        <p>If a heading is below the given level it will be omitted from the <a href="Document.html#method-i-table_of_contents"><code>table_of_contents</code></a></p>
         </div>
       </div>
-      
       <div id="attribute-i-parts" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">parts</span><span
@@ -172,40 +144,29 @@ href="Document.html#method-i-table_of_contents">#table_of_contents</a></p>
         </div>
 
         <div class="method-description">
-        
-        <p>The parts of the <a href="Document.html">Document</a></p>
-        
+        <p>The parts of the <a href="Document.html"><code>Document</code></a></p>
         </div>
       </div>
-      
     </section>
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(*parts)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(*parts)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new <a href="Document.html">Document</a> with <code>parts</code></p>
-          
-          
+          <p>Creates a new <a href="Document.html"><code>Document</code></a> with <code>parts</code></p>
 
-          
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 29</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-operator">*</span><span class="ruby-identifier">parts</span>
@@ -216,41 +177,30 @@ href="Document.html#method-i-table_of_contents">#table_of_contents</a></p>
   <span class="ruby-ivar">@omit_headings_from_table_of_contents_below</span> = <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-3C-3C" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">&lt;&lt;</span><span
-            class="method-args">(part)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">&lt;&lt;</span><span
+              class="method-args">(part)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Appends <code>part</code> to the document</p>
-          
-          
 
-          
           <div class="method-source-code" id="3C-3C-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 40</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">&lt;&lt;</span> <span class="ruby-identifier">part</span>
@@ -269,33 +219,23 @@ href="Document.html#method-i-table_of_contents">#table_of_contents</a></p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-accept" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">accept</span><span
-            class="method-args">(visitor)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">accept</span><span
+              class="method-args">(visitor)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Runs this document and all its items through <code>visitor</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="accept-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 65</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accept</span> <span class="ruby-identifier">visitor</span>
@@ -306,132 +246,92 @@ href="Document.html#method-i-table_of_contents">#table_of_contents</a></p>
   <span class="ruby-identifier">visitor</span>.<span class="ruby-identifier">end_accepting</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-concat" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">concat</span><span
-            class="method-args">(parts)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">concat</span><span
+              class="method-args">(parts)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Concatenates the given <code>parts</code> onto the document</p>
-          
-          
 
-          
           <div class="method-source-code" id="concat-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 76</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">concat</span> <span class="ruby-identifier">parts</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parts</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">parts</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-each" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">each</span><span
-            class="method-args">(&amp;block)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">each</span><span
+              class="method-args">(&amp;block)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Enumerator for the parts of this document</p>
-          
-          
 
-          
           <div class="method-source-code" id="each-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 83</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>
   <span class="ruby-ivar">@parts</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-empty-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">empty?</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">empty?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Does this document have no parts?</p>
-          
-          
 
-          
           <div class="method-source-code" id="empty-3F-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 90</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">empty?</span>
   <span class="ruby-ivar">@parts</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">or</span> (<span class="ruby-ivar">@parts</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">merged?</span> <span class="ruby-keyword">and</span> <span class="ruby-ivar">@parts</span>.<span class="ruby-identifier">first</span>.<span class="ruby-identifier">empty?</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-file-3D" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">file=</span><span
-            class="method-args">(location)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">file=</span><span
+              class="method-args">(location)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>The file this <a href="Document.html">Document</a> was created from.</p>
-          
-          
+          <p>The file this <a href="Document.html"><code>Document</code></a> was created from.</p>
 
-          
           <div class="method-source-code" id="file-3D-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 97</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">file=</span> <span class="ruby-identifier">location</span>
@@ -443,39 +343,25 @@ href="Document.html#method-i-table_of_contents">#table_of_contents</a></p>
           <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-merge" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">merge</span><span
-            class="method-args">(other)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">merge</span><span
+              class="method-args">(other)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>When this is a collection of documents (#file is not set and this document
-contains only other documents as its direct children) <a
-href="Document.html#method-i-merge">merge</a> replaces documents in this
-class with documents from <code>other</code> when the file matches and adds
-documents from <code>other</code> when the files do not.</p>
+          <p>When this is a collection of documents (<a href="Document.html#attribute-i-file"><code>file</code></a> is not set and this document contains only other documents as its direct children) <a href="Document.html#method-i-merge"><code>merge</code></a> replaces documents in this class with documents from <code>other</code> when the file matches and adds documents from <code>other</code> when the files do not.</p>
 
 <p>The information in <code>other</code> is preferred over the receiver</p>
-          
-          
 
-          
           <div class="method-source-code" id="merge-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 114</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">merge</span> <span class="ruby-identifier">other</span>
@@ -495,125 +381,91 @@ documents from <code>other</code> when the files do not.</p>
   <span class="ruby-keyword">self</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-merged-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">merged?</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">merged?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Does this <a href="Document.html">Document</a> contain other Documents?</p>
-          
-          
+          <p>Does this <a href="Document.html"><code>Document</code></a> contain other Documents?</p>
 
-          
           <div class="method-source-code" id="merged-3F-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 134</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">merged?</span>
   <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span> <span class="ruby-operator">===</span> <span class="ruby-ivar">@parts</span>.<span class="ruby-identifier">first</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-push" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">push</span><span
-            class="method-args">(*parts)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">push</span><span
+              class="method-args">(*parts)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Appends <code>parts</code> to the document</p>
-          
-          
 
-          
           <div class="method-source-code" id="push-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 151</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">push</span> <span class="ruby-operator">*</span><span class="ruby-identifier">parts</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parts</span>.<span class="ruby-identifier">concat</span> <span class="ruby-identifier">parts</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-table_of_contents" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">table_of_contents</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">table_of_contents</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Returns an Array of headings in the document.</p>
 
-<p>Require &#39;rdoc/markup/formatter&#39; before calling this method.</p>
-          
-          
+<p>Require ‘rdoc/markup/formatter’ before calling this method.</p>
 
-          
           <div class="method-source-code" id="table_of_contents-source">
             <pre><span class="ruby-comment"># File lib/rdoc/markup/document.rb, line 160</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">table_of_contents</span>
   <span class="ruby-identifier">accept</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Markup</span><span class="ruby-operator">::</span><span class="ruby-constant">ToTableOfContents</span>.<span class="ruby-identifier">to_toc</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

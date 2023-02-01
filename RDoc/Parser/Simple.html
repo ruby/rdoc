@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Parser::Simple - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Parser::Simple - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
   var index_rel_prefix = "../../";
 </script>
 
-<script src="../../js/jquery.js"></script>
-<script src="../../js/darkfish.js"></script>
+<script src="../../js/navigation.js" defer></script>
+<script src="../../js/search.js" defer></script>
+<script src="../../js/search_index.js" defer></script>
+<script src="../../js/searcher.js" defer></script>
+<script src="../../js/darkfish.js" defer></script>
 
 <link href="../../css/fonts.css" rel="stylesheet">
 <link href="../../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,41 +57,33 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link"><a href="../Parser.html">RDoc::Parser</a>
-  
 </div>
 
-    <div id="includes-section" class="nav-section">
+    
+<div id="includes-section" class="nav-section">
   <h3>Included Modules</h3>
 
   <ul class="link-list">
-  
-  
     <li><a class="include" href="Text.html">RDoc::Parser::Text</a>
-  
-  
   </ul>
 </div>
 
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li class="calls-super" ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-remove_coding_comment">#remove_coding_comment</a>
-    
     <li ><a href="#method-i-remove_private_comment">#remove_private_comment</a>
-    
     <li ><a href="#method-i-scan">#scan</a>
-    
   </ul>
 </div>
 
@@ -103,51 +97,37 @@
 
   <section class="description">
     
-<p>Parse a non-source file. We basically take the whole thing as one big
-comment.</p>
+<p>Parse a non-source file. We basically take the whole thing as one big comment.</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(top_level, file_name, content, options, stats)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(top_level, file_name, content, options, stats)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Prepare to parse a plain file</p>
-          
-          
             <div class="method-calls-super">
               Calls superclass method
-              <a href="../Parser.html#method-c-new">RDoc::Parser.new</a>
+              <a href="../Parser.html#method-c-new"><code>RDoc::Parser::new</code></a>
             </div>
-          
 
-          
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/rdoc/parser/simple.rb, line 17</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">top_level</span>, <span class="ruby-identifier">file_name</span>, <span class="ruby-identifier">content</span>, <span class="ruby-identifier">options</span>, <span class="ruby-identifier">stats</span>)
@@ -158,79 +138,55 @@ comment.</p>
   <span class="ruby-ivar">@content</span> = <span class="ruby-identifier">preprocess</span>.<span class="ruby-identifier">handle</span> <span class="ruby-ivar">@content</span>, <span class="ruby-ivar">@top_level</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-remove_coding_comment" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">remove_coding_comment</span><span
-            class="method-args">(text)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">remove_coding_comment</span><span
+              class="method-args">(text)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Removes the encoding magic comment from <code>text</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="remove_coding_comment-source">
             <pre><span class="ruby-comment"># File lib/rdoc/parser/simple.rb, line 41</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_coding_comment</span> <span class="ruby-identifier">text</span>
   <span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/\A# .*coding[=:].*$/</span>, <span class="ruby-string">&#39;&#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-remove_private_comment" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">remove_private_comment</span><span
-            class="method-args">(comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">remove_private_comment</span><span
+              class="method-args">(comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Removes private comments.</p>
 
-<p>Unlike <a
-href="../Comment.html#method-i-remove_private">RDoc::Comment#remove_private</a>
-this implementation only looks for two dashes at the beginning of the line.
-Three or more dashes are considered to be a rule and ignored.</p>
-          
-          
+<p>Unlike <a href="../Comment.html#method-i-remove_private"><code>RDoc::Comment#remove_private</code></a> this implementation only looks for two dashes at the beginning of the line.  Three or more dashes are considered to be a rule and ignored.</p>
 
-          
           <div class="method-source-code" id="remove_private_comment-source">
             <pre><span class="ruby-comment"># File lib/rdoc/parser/simple.rb, line 52</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_private_comment</span> <span class="ruby-identifier">comment</span>
@@ -242,33 +198,23 @@ Three or more dashes are considered to be a rule and ignored.</p>
   <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">%r%^--\n.*%m</span>, <span class="ruby-identifier">empty</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-scan" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">scan</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">scan</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Extract the file contents and attach them to the TopLevel as a comment</p>
-          
-          
 
-          
           <div class="method-source-code" id="scan-source">
             <pre><span class="ruby-comment"># File lib/rdoc/parser/simple.rb, line 28</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">scan</span>
@@ -281,24 +227,20 @@ Three or more dashes are considered to be a rule and ignored.</p>
   <span class="ruby-ivar">@top_level</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

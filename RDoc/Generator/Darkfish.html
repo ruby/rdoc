@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Generator::Darkfish - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Generator::Darkfish - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
   var index_rel_prefix = "../../";
 </script>
 
-<script src="../../js/jquery.js"></script>
-<script src="../../js/darkfish.js"></script>
+<script src="../../js/navigation.js" defer></script>
+<script src="../../js/search.js" defer></script>
+<script src="../../js/search_index.js" defer></script>
+<script src="../../js/searcher.js" defer></script>
+<script src="../../js/darkfish.js" defer></script>
 
 <link href="../../css/fonts.css" rel="stylesheet">
 <link href="../../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,94 +57,68 @@
 <div class="nav-section">
   <h3>Table of Contents</h3>
 
+
+
   <ul class="link-list" role="directory">
-    <li><a href="#class-RDoc::Generator::Darkfish-label-Author-2Fs">Author/s</a>
-    <li><a href="#class-RDoc::Generator::Darkfish-label-Contributors">Contributors</a>
-    <li><a href="#class-RDoc::Generator::Darkfish-label-License">License</a>
-    <li><a href="#class-RDoc::Generator::Darkfish-label-Attributions">Attributions</a>
+              <li>      <a href="#class-RDoc::Generator::Darkfish-label-Author-2Fs">Author/s</a>
+          <li>      <a href="#class-RDoc::Generator::Darkfish-label-Contributors">Contributors</a>
+          <li>      <a href="#class-RDoc::Generator::Darkfish-label-License">License</a>
+          <li>      <a href="#class-RDoc::Generator::Darkfish-label-Attributions">Attributions</a>
+
   </ul>
 </div>
 
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
-  <p class="link">Object
-  
+  <p class="link"><a href="../../Object.html">Object</a>
 </div>
 
-    <div id="includes-section" class="nav-section">
+    
+<div id="includes-section" class="nav-section">
   <h3>Included Modules</h3>
 
   <ul class="link-list">
-  
-  
     <li><span class="include">ERB::Util</span>
-  
-  
   </ul>
 </div>
 
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-assemble_template">#assemble_template</a>
-    
     <li ><a href="#method-i-class_dir">#class_dir</a>
-    
     <li ><a href="#method-i-copy_static">#copy_static</a>
-    
     <li ><a href="#method-i-debug_msg">#debug_msg</a>
-    
     <li ><a href="#method-i-file_dir">#file_dir</a>
-    
     <li ><a href="#method-i-gen_sub_directories">#gen_sub_directories</a>
-    
     <li ><a href="#method-i-generate">#generate</a>
-    
     <li ><a href="#method-i-generate_class">#generate_class</a>
-    
     <li ><a href="#method-i-generate_class_files">#generate_class_files</a>
-    
     <li ><a href="#method-i-generate_file_files">#generate_file_files</a>
-    
     <li ><a href="#method-i-generate_index">#generate_index</a>
-    
     <li ><a href="#method-i-generate_page">#generate_page</a>
-    
     <li ><a href="#method-i-generate_servlet_not_found">#generate_servlet_not_found</a>
-    
     <li ><a href="#method-i-generate_servlet_root">#generate_servlet_root</a>
-    
     <li ><a href="#method-i-generate_table_of_contents">#generate_table_of_contents</a>
-    
     <li ><a href="#method-i-get_sorted_module_list">#get_sorted_module_list</a>
-    
     <li ><a href="#method-i-get_svninfo">#get_svninfo</a>
-    
     <li ><a href="#method-i-render">#render</a>
-    
     <li ><a href="#method-i-render_template">#render_template</a>
-    
     <li ><a href="#method-i-setup">#setup</a>
-    
     <li ><a href="#method-i-template_for">#template_for</a>
-    
     <li ><a href="#method-i-template_result">#template_result</a>
-    
     <li ><a href="#method-i-time_delta_string">#time_delta_string</a>
-    
     <li ><a href="#method-i-write_style_sheet">#write_style_sheet</a>
-    
   </ul>
 </div>
 
@@ -156,8 +132,7 @@
 
   <section class="description">
     
-<p><a href="Darkfish.html">Darkfish</a> <a href="../../RDoc.html">RDoc</a>
-HTML Generator</p>
+<p><a href="Darkfish.html"><code>Darkfish</code></a> <a href="../../RDoc.html"><code>RDoc</code></a> HTML Generator</p>
 
 <p>$Id: darkfish.rb 52 2009-01-07 02:08:11Z deveiant $</p>
 
@@ -177,86 +152,47 @@ HTML Generator</p>
 
 <p>Copyright © 2007, 2008, Michael Granger. All rights reserved.</p>
 
-<p>Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:</p>
+<p>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p>
 <ul><li>
-<p>Redistributions of source code must retain the above copyright notice, this
-list of conditions and the following disclaimer.</p>
+<p>Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</p>
 </li><li>
-<p>Redistributions in binary form must reproduce the above copyright notice,
-this list of conditions and the following disclaimer in the documentation
-and/or other materials provided with the distribution.</p>
+<p>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</p>
 </li><li>
-<p>Neither the name of the author/s, nor the names of the project&#39;s
-contributors may be used to endorse or promote products derived from this
-software without specific prior written permission.</p>
+<p>Neither the name of the author/s, nor the names of the project’s contributors may be used to endorse or promote products derived from this software without specific prior written permission.</p>
 </li></ul>
 
-<p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS”
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.</p>
+<p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
 
 <h2 id="class-RDoc::Generator::Darkfish-label-Attributions">Attributions<span><a href="#class-RDoc::Generator::Darkfish-label-Attributions">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p><a href="Darkfish.html">Darkfish</a> uses the <a
-href="http://www.famfamfam.com/lab/icons/silk/">Silk Icons</a> set by Mark
-James.</p>
+<p><a href="Darkfish.html"><code>Darkfish</code></a> uses the <a href="http://www.famfamfam.com/lab/icons/silk/">Silk Icons</a> set by Mark James.</p>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
     <section class="constants-list">
       <header>
         <h3>Constants</h3>
       </header>
       <dl>
-      
         <dt id="DESCRIPTION">DESCRIPTION
-        
         <dd><p>Description of this generator</p>
-        
-      
         <dt id="GENERATOR_DIR">GENERATOR_DIR
-        
-        <dd><p>Path to this file&#39;s parent directory. Used to find templates and other
-resources.</p>
-        
-      
+        <dd><p>Path to this file’s parent directory. Used to find templates and other resources.</p>
         <dt id="SVNID_PATTERN">SVNID_PATTERN
-        
         <dd><p>%q$Id: darkfish.rb 52 2009-01-07 02:08:11Z deveiant $“</p>
-        
-      
         <dt id="VERSION">VERSION
-        
         <dd><p>Release Version</p>
-        
-      
       </dl>
     </section>
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-asset_rel_path" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">asset_rel_path</span><span
@@ -264,13 +200,9 @@ resources.</p>
         </div>
 
         <div class="method-description">
-        
-        <p>The relative path to style sheets and javascript.  By default this is set
-the same as the rel_prefix.</p>
-        
+        <p>The relative path to style sheets and javascript.  By default this is set the same as the rel_prefix.</p>
         </div>
       </div>
-      
       <div id="attribute-i-base_dir" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">base_dir</span><span
@@ -278,13 +210,9 @@ the same as the rel_prefix.</p>
         </div>
 
         <div class="method-description">
-        
-        <p>The path to generate files into, combined with <code>--op</code> from the
-options for a full path.</p>
-        
+        <p>The path to generate files into, combined with <code>--op</code> from the options for a full path.</p>
         </div>
       </div>
-      
       <div id="attribute-i-classes" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">classes</span><span
@@ -292,14 +220,9 @@ options for a full path.</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Classes and modules to be used by this generator, not necessarily
-displayed.  See also <a
-href="Darkfish.html#attribute-i-modsort">modsort</a></p>
-        
+        <p>Classes and modules to be used by this generator, not necessarily displayed.  See also <a href="Darkfish.html#attribute-i-modsort"><code>modsort</code></a></p>
         </div>
       </div>
-      
       <div id="attribute-i-dry_run" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">dry_run</span><span
@@ -307,13 +230,9 @@ href="Darkfish.html#attribute-i-modsort">modsort</a></p>
         </div>
 
         <div class="method-description">
-        
-        <p>No files will be written when <a
-href="Darkfish.html#attribute-i-dry_run">#dry_run</a> is true.</p>
-        
+        <p>No files will be written when <a href="Darkfish.html#attribute-i-dry_run"><code>dry_run</code></a> is true.</p>
         </div>
       </div>
-      
       <div id="attribute-i-file_output" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">file_output</span><span
@@ -321,13 +240,9 @@ href="Darkfish.html#attribute-i-dry_run">#dry_run</a> is true.</p>
         </div>
 
         <div class="method-description">
-        
-        <p>When false the generate methods return a String instead of writing to a
-file.  The default is true.</p>
-        
+        <p>When false the generate methods return a String instead of writing to a file.  The default is true.</p>
         </div>
       </div>
-      
       <div id="attribute-i-files" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">files</span><span
@@ -335,12 +250,9 @@ file.  The default is true.</p>
         </div>
 
         <div class="method-description">
-        
         <p>Files to be displayed by this generator</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-json_index" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">json_index</span><span
@@ -348,13 +260,9 @@ file.  The default is true.</p>
         </div>
 
         <div class="method-description">
-        
-        <p>The JSON index generator for this <a href="Darkfish.html">Darkfish</a>
-generator</p>
-        
+        <p>The JSON index generator for this <a href="Darkfish.html"><code>Darkfish</code></a> generator</p>
         </div>
       </div>
-      
       <div id="attribute-i-methods" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">methods</span><span
@@ -362,12 +270,9 @@ generator</p>
         </div>
 
         <div class="method-description">
-        
         <p>Methods to be displayed by this generator</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-modsort" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">modsort</span><span
@@ -375,12 +280,9 @@ generator</p>
         </div>
 
         <div class="method-description">
-        
         <p>Sorted list of classes and modules to be displayed by this generator</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-outputdir" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">outputdir</span><span
@@ -388,12 +290,9 @@ generator</p>
         </div>
 
         <div class="method-description">
-        
         <p>The output directory</p>
-        
         </div>
       </div>
-      
       <div id="attribute-i-store" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">store</span><span
@@ -401,41 +300,29 @@ generator</p>
         </div>
 
         <div class="method-description">
-        
-        <p>The <a href="../Store.html">RDoc::Store</a> that is the source of the
-generated content</p>
-        
+        <p>The <a href="../Store.html"><code>RDoc::Store</code></a> that is the source of the generated content</p>
         </div>
       </div>
-      
     </section>
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(store, options)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(store, options)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Initialize a few instance variables before we start</p>
-          
-          
 
-          
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 159</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">store</span>, <span class="ruby-identifier">options</span>
@@ -458,44 +345,32 @@ generated content</p>
   <span class="ruby-ivar">@json_index</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Generator</span><span class="ruby-operator">::</span><span class="ruby-constant">JsonIndex</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">self</span>, <span class="ruby-identifier">options</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-assemble_template" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">assemble_template</span><span
-            class="method-args">(body_file)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">assemble_template</span><span
+              class="method-args">(body_file)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Creates a template from its components and the <code>body_file</code>.</p>
 
-<p>For backwards compatibility, if <code>body_file</code> contains “&lt;html”
-the body is used directly.</p>
-          
-          
+<p>For backwards compatibility, if <code>body_file</code> contains “&lt;html” the body is used directly.</p>
 
-          
           <div class="method-source-code" id="assemble_template-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 675</span>
   <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">assemble_template</span> <span class="ruby-identifier">body_file</span>
@@ -518,66 +393,46 @@ the body is used directly.</p>
 </span><span class="ruby-identifier">    TEMPLATE</span>
   <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-class_dir" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">class_dir</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">class_dir</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Directory where generated class HTML files live relative to the output dir.</p>
-          
-          
 
-          
           <div class="method-source-code" id="class_dir-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 191</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">class_dir</span>
   <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-copy_static" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">copy_static</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">copy_static</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Copies static files from the static_path into the output directory</p>
-          
-          
 
-          
           <div class="method-source-code" id="copy_static-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 265</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">copy_static</span>
@@ -587,7 +442,7 @@ the body is used directly.</p>
 
   <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">static_path</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">path</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-identifier">path</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">install</span> <span class="ruby-identifier">path</span>, <span class="ruby-ivar">@outputdir</span>, <span class="ruby-identifier">fu_options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-value">:mode</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0644</span>)
+      <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">install</span> <span class="ruby-identifier">path</span>, <span class="ruby-ivar">@outputdir</span>, <span class="ruby-operator">**</span><span class="ruby-identifier">fu_options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-value">:mode</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0644</span>)
       <span class="ruby-keyword">next</span>
     <span class="ruby-keyword">end</span>
 
@@ -596,42 +451,32 @@ the body is used directly.</p>
         <span class="ruby-identifier">dest_file</span> = <span class="ruby-ivar">@outputdir</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">entry</span>
 
         <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-identifier">entry</span> <span class="ruby-keyword">then</span>
-          <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">mkdir_p</span> <span class="ruby-identifier">entry</span>, <span class="ruby-identifier">fu_options</span>
+          <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">mkdir_p</span> <span class="ruby-identifier">entry</span>, <span class="ruby-operator">**</span><span class="ruby-identifier">fu_options</span>
         <span class="ruby-keyword">else</span>
-          <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">install</span> <span class="ruby-identifier">entry</span>, <span class="ruby-identifier">dest_file</span>, <span class="ruby-identifier">fu_options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-value">:mode</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0644</span>)
+          <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">install</span> <span class="ruby-identifier">entry</span>, <span class="ruby-identifier">dest_file</span>, <span class="ruby-operator">**</span><span class="ruby-identifier">fu_options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-value">:mode</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0644</span>)
         <span class="ruby-keyword">end</span>
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-debug_msg" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">debug_msg</span><span
-            class="method-args">(*msg)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">debug_msg</span><span
+              class="method-args">(*msg)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Output progress information if debugging is enabled</p>
-          
-          
 
-          
           <div class="method-source-code" id="debug_msg-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 182</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">debug_msg</span> <span class="ruby-operator">*</span><span class="ruby-identifier">msg</span>
@@ -639,101 +484,69 @@ the body is used directly.</p>
   <span class="ruby-identifier">$stderr</span>.<span class="ruby-identifier">puts</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">msg</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-file_dir" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">file_dir</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">file_dir</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Directory where generated class HTML files live relative to the output dir.</p>
-          
-          
 
-          
           <div class="method-source-code" id="file_dir-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 199</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">file_dir</span>
   <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-gen_sub_directories" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">gen_sub_directories</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">gen_sub_directories</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Create the directories the generated docs will live in if they don&#39;t
-already exist.</p>
-          
-          
+          <p>Create the directories the generated docs will live in if they don’t already exist.</p>
 
-          
           <div class="method-source-code" id="gen_sub_directories-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 207</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">gen_sub_directories</span>
   <span class="ruby-ivar">@outputdir</span>.<span class="ruby-identifier">mkpath</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-generate" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">generate</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">generate</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Build the initial indices and output objects based on an array of TopLevel
-objects containing the extracted information.</p>
-          
-          
+          <p>Build the initial indices and output objects based on an array of TopLevel objects containing the extracted information.</p>
 
-          
           <div class="method-source-code" id="generate-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 241</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate</span>
@@ -757,33 +570,23 @@ objects containing the extracted information.</p>
   <span class="ruby-identifier">raise</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-generate_class" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">generate_class</span><span
-            class="method-args">(klass, template_file = nil)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">generate_class</span><span
+              class="method-args">(klass, template_file = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Generates a class file for <code>klass</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="generate_class-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 337</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_class</span> <span class="ruby-identifier">klass</span>, <span class="ruby-identifier">template_file</span> = <span class="ruby-keyword">nil</span>
@@ -814,33 +617,23 @@ objects containing the extracted information.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-generate_class_files" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">generate_class_files</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">generate_class_files</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Generate a documentation file for each class and module</p>
-          
-          
 
-          
           <div class="method-source-code" id="generate_class_files-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 368</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_class_files</span>
@@ -867,33 +660,23 @@ objects containing the extracted information.</p>
   <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-generate_file_files" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">generate_file_files</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">generate_file_files</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Generate a documentation file for each file</p>
-          
-          
 
-          
           <div class="method-source-code" id="generate_file_files-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 395</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_file_files</span>
@@ -962,33 +745,23 @@ objects containing the extracted information.</p>
   <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-generate_index" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">generate_index</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">generate_index</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Generate an index page which lists all the classes which are documented.</p>
-          
-          
 
-          
           <div class="method-source-code" id="generate_index-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 303</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_index</span>
@@ -1022,33 +795,23 @@ objects containing the extracted information.</p>
   <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-generate_page" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">generate_page</span><span
-            class="method-args">(file)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">generate_page</span><span
+              class="method-args">(file)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Generate a page file for <code>file</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="generate_page-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 464</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_page</span> <span class="ruby-identifier">file</span>
@@ -1077,33 +840,23 @@ objects containing the extracted information.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-generate_servlet_not_found" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">generate_servlet_not_found</span><span
-            class="method-args">(message)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">generate_servlet_not_found</span><span
+              class="method-args">(message)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Generates the 404 page for the <a href="../../RDoc.html">RDoc</a> servlet</p>
-          
-          
+          <p>Generates the 404 page for the <a href="../../RDoc.html"><code>RDoc</code></a> servlet</p>
 
-          
           <div class="method-source-code" id="generate_servlet_not_found-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 493</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_servlet_not_found</span> <span class="ruby-identifier">message</span>
@@ -1136,34 +889,23 @@ objects containing the extracted information.</p>
   <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-generate_servlet_root" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">generate_servlet_root</span><span
-            class="method-args">(installed)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">generate_servlet_root</span><span
+              class="method-args">(installed)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Generates the servlet root page for the <a href="../../RDoc.html">RDoc</a>
-servlet</p>
-          
-          
+          <p>Generates the servlet root page for the <a href="../../RDoc.html"><code>RDoc</code></a> servlet</p>
 
-          
           <div class="method-source-code" id="generate_servlet_root-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 526</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_servlet_root</span> <span class="ruby-identifier">installed</span>
@@ -1190,33 +932,23 @@ servlet</p>
   <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-generate_table_of_contents" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">generate_table_of_contents</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">generate_table_of_contents</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Generate an index page which lists all the classes which are documented.</p>
-          
-          
 
-          
           <div class="method-source-code" id="generate_table_of_contents-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 553</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">generate_table_of_contents</span>
@@ -1250,34 +982,23 @@ servlet</p>
   <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-get_sorted_module_list" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">get_sorted_module_list</span><span
-            class="method-args">(classes)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">get_sorted_module_list</span><span
+              class="method-args">(classes)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Return a list of the documented modules sorted by salience first, then by
-name.</p>
-          
-          
+          <p>Return a list of the documented modules sorted by salience first, then by name.</p>
 
-          
           <div class="method-source-code" id="get_sorted_module_list-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 294</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_sorted_module_list</span> <span class="ruby-identifier">classes</span>
@@ -1286,35 +1007,23 @@ name.</p>
   <span class="ruby-keyword">end</span>.<span class="ruby-identifier">sort</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-get_svninfo" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">get_svninfo</span><span
-            class="method-args">(klass)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">get_svninfo</span><span
+              class="method-args">(klass)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Try to extract Subversion information out of the first constant whose value
-looks like a subversion Id tag. If no matching constant is found, and empty
-hash is returned.</p>
-          
-          
+          <p>Try to extract Subversion information out of the first constant whose value looks like a subversion Id tag. If no matching constant is found, and empty hash is returned.</p>
 
-          
           <div class="method-source-code" id="get_svninfo-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 652</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_svninfo</span> <span class="ruby-identifier">klass</span>
@@ -1334,34 +1043,23 @@ hash is returned.</p>
   }
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-render" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">render</span><span
-            class="method-args">(file_name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">render</span><span
+              class="method-args">(file_name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Renders the ERb contained in <code>file_name</code> relative to the
-template directory and returns the result based on the current context.</p>
-          
-          
+          <p>Renders the ERb contained in <code>file_name</code> relative to the template directory and returns the result based on the current context.</p>
 
-          
           <div class="method-source-code" id="render-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 699</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">render</span> <span class="ruby-identifier">file_name</span>
@@ -1374,39 +1072,27 @@ template directory and returns the result based on the current context.</p>
   <span class="ruby-identifier">template</span>.<span class="ruby-identifier">result</span> <span class="ruby-ivar">@context</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-render_template" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">render_template</span><span
-            class="method-args">(template_file, out_file = nil) { |io| ... }</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">render_template</span><span
+              class="method-args">(template_file, out_file = nil) { |io| ... }</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Load and render the erb template in the given <code>template_file</code>
-and write it out to <code>out_file</code>.</p>
+          <p>Load and render the erb template in the given <code>template_file</code> and write it out to <code>out_file</code>.</p>
 
-<p>Both <code>template_file</code> and <code>out_file</code> should be
-Pathname-like objects.</p>
+<p>Both <code>template_file</code> and <code>out_file</code> should be Pathname-like objects.</p>
 
 <p>An io will be yielded which must be captured by binding in the caller.</p>
-          
-          
 
-          
           <div class="method-source-code" id="render_template-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 717</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">render_template</span> <span class="ruby-identifier">template_file</span>, <span class="ruby-identifier">out_file</span> = <span class="ruby-keyword">nil</span> <span class="ruby-comment"># :yield: io</span>
@@ -1439,33 +1125,23 @@ Pathname-like objects.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-setup" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">setup</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">setup</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Prepares for generation of output from the current directory</p>
-          
-          
 
-          
           <div class="method-source-code" id="setup-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 604</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">setup</span>
@@ -1481,34 +1157,23 @@ Pathname-like objects.</p>
   <span class="ruby-ivar">@modsort</span> = <span class="ruby-identifier">get_sorted_module_list</span> <span class="ruby-ivar">@classes</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-template_for" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">template_for</span><span
-            class="method-args">(file, page = true, klass = ERB)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">template_for</span><span
+              class="method-args">(file, page = true, klass = ERB)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Retrieves a cache template for <code>file</code>, if present, or fills the
-cache.</p>
-          
-          
+          <p>Retrieves a cache template for <code>file</code>, if present, or fills the cache.</p>
 
-          
           <div class="method-source-code" id="template_for-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 764</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">template_for</span> <span class="ruby-identifier">file</span>, <span class="ruby-identifier">page</span> = <span class="ruby-keyword">true</span>, <span class="ruby-identifier">klass</span> = <span class="ruby-constant">ERB</span>
@@ -1529,43 +1194,31 @@ cache.</p>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-constant">RUBY_VERSION</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">&#39;2.6&#39;</span>
-    <span class="ruby-identifier">template</span> = <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">template</span>, <span class="ruby-value">trim_mode:</span> <span class="ruby-string">&#39;&lt;&gt;&#39;</span>, <span class="ruby-value">eoutvar:</span> <span class="ruby-identifier">erbout</span>
+    <span class="ruby-identifier">template</span> = <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">template</span>, <span class="ruby-value">trim_mode:</span> <span class="ruby-string">&#39;-&#39;</span>, <span class="ruby-value">eoutvar:</span> <span class="ruby-identifier">erbout</span>
   <span class="ruby-keyword">else</span>
-    <span class="ruby-identifier">template</span> = <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">template</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-string">&#39;&lt;&gt;&#39;</span>, <span class="ruby-identifier">erbout</span>
+    <span class="ruby-identifier">template</span> = <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">template</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-string">&#39;-&#39;</span>, <span class="ruby-identifier">erbout</span>
   <span class="ruby-keyword">end</span>
   <span class="ruby-ivar">@template_cache</span>[<span class="ruby-identifier">file</span>] = <span class="ruby-identifier">template</span>
   <span class="ruby-identifier">template</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-template_result" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">template_result</span><span
-            class="method-args">(template, context, template_file)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">template_result</span><span
+              class="method-args">(template, context, template_file)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates the result for <code>template</code> with <code>context</code>.  If
-an error is raised a Pathname <code>template_file</code> will indicate the
-file where the error occurred.</p>
-          
-          
+          <p>Creates the result for <code>template</code> with <code>context</code>.  If an error is raised a Pathname <code>template_file</code> will indicate the file where the error occurred.</p>
 
-          
           <div class="method-source-code" id="template_result-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 751</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">template_result</span> <span class="ruby-identifier">template</span>, <span class="ruby-identifier">context</span>, <span class="ruby-identifier">template_file</span>
@@ -1578,34 +1231,23 @@ file where the error occurred.</p>
   ], <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-time_delta_string" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">time_delta_string</span><span
-            class="method-args">(seconds)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">time_delta_string</span><span
+              class="method-args">(seconds)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Return a string describing the amount of time in the given number of
-seconds in terms a human can understand easily.</p>
-          
-          
+          <p>Return a string describing the amount of time in the given number of seconds in terms a human can understand easily.</p>
 
-          
           <div class="method-source-code" id="time_delta_string-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 621</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">time_delta_string</span> <span class="ruby-identifier">seconds</span>
@@ -1623,34 +1265,23 @@ seconds in terms a human can understand easily.</p>
   <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;#{seconds / 31536000} years&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-write_style_sheet" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">write_style_sheet</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">write_style_sheet</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Copy over the stylesheet into the appropriate place in the output
-directory.</p>
-          
-          
+          <p>Copy over the stylesheet into the appropriate place in the output directory.</p>
 
-          
           <div class="method-source-code" id="write_style_sheet-source">
             <pre><span class="ruby-comment"># File lib/rdoc/generator/darkfish.rb, line 215</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">write_style_sheet</span>
@@ -1661,8 +1292,8 @@ directory.</p>
     <span class="ruby-identifier">install_rdoc_static_file</span> <span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">item</span>, <span class="ruby-node">&quot;./#{item}&quot;</span>, <span class="ruby-identifier">options</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">template_stylesheets</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">stylesheet</span><span class="ruby-operator">|</span>
-    <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">cp</span> <span class="ruby-identifier">stylesheet</span>, <span class="ruby-string">&#39;.&#39;</span>, <span class="ruby-identifier">options</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">template_stylesheets</span>.<span class="ruby-identifier">empty?</span>
+    <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">cp</span> <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">template_stylesheets</span>, <span class="ruby-string">&#39;.&#39;</span>, <span class="ruby-operator">**</span><span class="ruby-identifier">options</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-constant">Dir</span>[(<span class="ruby-ivar">@template_dir</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;{js,images}/**/*&quot;</span>).<span class="ruby-identifier">to_s</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">path</span><span class="ruby-operator">|</span>
@@ -1675,24 +1306,20 @@ directory.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

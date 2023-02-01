@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>README - rdoc 6.0.4 Documentation</title>
+<title>README - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
   var index_rel_prefix = "./";
 </script>
 
-<script src="./js/jquery.js"></script>
-<script src="./js/darkfish.js"></script>
+<script src="./js/navigation.js" defer></script>
+<script src="./js/search.js" defer></script>
+<script src="./js/search_index.js" defer></script>
+<script src="./js/searcher.js" defer></script>
+<script src="./js/darkfish.js" defer></script>
 
 <link href="./css/fonts.css" rel="stylesheet">
 <link href="./css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="file">
@@ -55,42 +57,44 @@
 <div class="nav-section">
   <h3>Table of Contents</h3>
 
+
+
   <ul class="link-list" role="directory">
-    <li><a href="#label-RDoc+-+Ruby+Documentation+System">RDoc - Ruby Documentation System</a>
-    <li><a href="#label-Description">Description</a>
-    <li><a href="#label-Generating+Documentation">Generating Documentation</a>
-    <li><a href="#label-Writing+Documentation">Writing Documentation</a>
-    <li><a href="#label-Bugs">Bugs</a>
-    <li><a href="#label-License">License</a>
-    <li><a href="#label-Warranty">Warranty</a>
+              <li>
+            <details open>
+              <summary>      <a href="#label-RDoc+-+Ruby+Documentation+System">RDoc - Ruby Documentation System</a>
+</summary>
+              <ul class="link-list" role="directory">
+                          <li>      <a href="#label-Description">Description</a>
+          <li>      <a href="#label-Generating+Documentation">Generating Documentation</a>
+          <li>      <a href="#label-Writing+Documentation">Writing Documentation</a>
+          <li>      <a href="#label-Bugs">Bugs</a>
+          <li>      <a href="#label-License">License</a>
+          <li>      <a href="#label-Warranty">Warranty</a>
+
+              </ul>
+            </details>
+          </li>
+
   </ul>
 </div>
 
 
   <div id="project-metadata">
-    <div id="fileindex-section" class="nav-section">
+    
+<div id="fileindex-section" class="nav-section">
   <h3>Pages</h3>
 
   <ul class="link-list">
-  
     <li><a href="./CONTRIBUTING_rdoc.html">CONTRIBUTING</a>
-  
     <li><a href="./CVE-2013-0256_rdoc.html">CVE-2013-0256</a>
-  
     <li><a href="./ExampleRDoc_rdoc.html">ExampleRDoc</a>
-  
     <li><a href="./History_rdoc.html">History</a>
-  
     <li><a href="./LEGAL_rdoc.html">LEGAL</a>
-  
     <li><a href="./LICENSE_rdoc.html">LICENSE</a>
-  
     <li><a href="./README_rdoc.html">README</a>
-  
     <li><a href="./RI_rdoc.html">RI</a>
-  
     <li><a href="./TODO_rdoc.html">TODO</a>
-  
   </ul>
 </div>
 
@@ -108,31 +112,19 @@
 <p><a href="https://ruby.github.io/rdoc">ruby.github.io/rdoc</a></p>
 </dd><dt>bugs 
 <dd>
-<p><a
-href="https://github.com/ruby/rdoc/issues">github.com/ruby/rdoc/issues</a></p>
-</dd><dt>build status 
-<dd>
-<p><a href="https://travis-ci.org/ruby/rdoc"><img
-src="https://travis-ci.org/ruby/rdoc.svg?branch=master" alt="Build Status"
-/></a></p>
+<p><a href="https://github.com/ruby/rdoc/issues">github.com/ruby/rdoc/issues</a></p>
 </dd><dt>code quality 
 <dd>
-<p><a href="https://codeclimate.com/github/ruby/rdoc"><img
-src="https://codeclimate.com/github/ruby/rdoc/badges/gpa.svg" alt="Code
-Climate"></a></p>
+<p><a href="https://codeclimate.com/github/ruby/rdoc">&lt;img src=“https://codeclimate.com/github/ruby/rdoc/badges/gpa.svg” alt=“Code Climate”&gt;</a></p>
 </dd></dl>
 
 <h2 id="label-Description">Description<span><a href="#label-Description">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p><a href="RDoc.html">RDoc</a> produces HTML and command-line documentation
-for Ruby projects.  <a href="RDoc.html">RDoc</a> includes the
-<code>rdoc</code> and <code>ri</code> tools for generating and displaying
-documentation from the command-line.</p>
+<p><a href="RDoc.html"><code>RDoc</code></a> produces HTML and command-line documentation for Ruby projects.  <a href="RDoc.html"><code>RDoc</code></a> includes the <code>rdoc</code> and <code>ri</code> tools for generating and displaying documentation from the command-line.</p>
 
 <h2 id="label-Generating+Documentation">Generating Documentation<span><a href="#label-Generating+Documentation">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>Once installed, you can create documentation using the <code>rdoc</code>
-command</p>
+<p>Once installed, you can create documentation using the <code>rdoc</code> command</p>
 
 <pre>$ rdoc [options] [names...]</pre>
 
@@ -140,35 +132,21 @@ command</p>
 
 <pre>$ rdoc --help</pre>
 
-<p>A typical use might be to generate documentation for a package of Ruby
-source (such as <a href="RDoc.html">RDoc</a> itself).</p>
+<p>A typical use might be to generate documentation for a package of Ruby source (such as <a href="RDoc.html"><code>RDoc</code></a> itself).</p>
 
 <pre>$ rdoc</pre>
 
-<p>This command generates documentation for all the Ruby and C source files in
-and below the current directory.  These will be stored in a documentation
-tree starting in the subdirectory <code>doc</code>.</p>
+<p>This command generates documentation for all the Ruby and C source files in and below the current directory.  These will be stored in a documentation tree starting in the subdirectory <code>doc</code>.</p>
 
-<p>You can make this slightly more useful for your readers by having the index
-page contain the documentation for the primary file.  In our case, we could
-type</p>
+<p>You can make this slightly more useful for your readers by having the index page contain the documentation for the primary file.  In our case, we could type</p>
 
 <pre>% rdoc --main README.rdoc</pre>
 
-<p>You&#39;ll find information on the various formatting tricks you can use in
-comment blocks in the documentation this generates.</p>
+<p>You’ll find information on the various formatting tricks you can use in comment blocks in the documentation this generates.</p>
 
-<p><a href="RDoc.html">RDoc</a> uses file extensions to determine how to
-process each file.  File names ending <code>.rb</code> and
-<code>.rbw</code> are assumed to be Ruby source.  Files ending
-<code>.c</code> are parsed as C files.  All other files are assumed to
-contain just Markup-style markup (with or without leading &#39;#&#39;
-comment markers).  If directory names are passed to <a
-href="RDoc.html">RDoc</a>, they are scanned recursively for C and Ruby
-source files only.</p>
+<p><a href="RDoc.html"><code>RDoc</code></a> uses file extensions to determine how to process each file.  File names ending <code>.rb</code> and <code>.rbw</code> are assumed to be Ruby source.  Files ending <code>.c</code> are parsed as C files.  All other files are assumed to contain just Markup-style markup (with or without leading ‘#’ comment markers).  If directory names are passed to <a href="RDoc.html"><code>RDoc</code></a>, they are scanned recursively for C and Ruby source files only.</p>
 
-<p>To generate documentation using <code>rake</code> see <a
-href="https://ruby.github.io/rdoc/RDocTask.html">RDoc::Task</a>.</p>
+<p>To generate documentation using <code>rake</code> see <a href="https://ruby.github.io/rdoc/RDocTask.html">RDoc::Task</a>.</p>
 
 <p>To generate documentation programmatically:</p>
 
@@ -185,9 +163,7 @@ href="https://ruby.github.io/rdoc/RDocTask.html">RDoc::Task</a>.</p>
 
 <h2 id="label-Writing+Documentation">Writing Documentation<span><a href="#label-Writing+Documentation">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>To write documentation for <a href="RDoc.html">RDoc</a> place a comment
-above the class, module, method, constant, or attribute you want
-documented:</p>
+<p>To write documentation for <a href="RDoc.html"><code>RDoc</code></a> place a comment above the class, module, method, constant, or attribute you want documented:</p>
 
 <pre class="ruby"><span class="ruby-comment">##</span>
 <span class="ruby-comment"># This class represents an arbitrary shape by a series of points.</span>
@@ -210,64 +186,35 @@ documented:</p>
 <span class="ruby-keyword">end</span>
 </pre>
 
-<p>The default comment markup format is the <a
-href="RDoc/Markup.html">RDoc::Markup</a> format. <a
-href="RDoc/TomDoc.html">TomDoc</a>, <a
-href="RDoc/Markdown.html">Markdown</a> and <a href="RDoc/RD.html">RD</a>
-format comments are also supported.  You can set the default comment format
-for your entire project by creating a <code>.rdoc_options</code> file.  See
-<a href="RDoc/Options.html#label-Saved+Options">Saved Options at
-RDoc::Options</a> for instructions on creating one.  You can also set the
-comment format for a single file through the <code>:markup:</code>
-directive, but this is only recommended if you wish to switch markup
-formats.  See <a href="RDoc/Markup.html#label-Other+directives">Other
-directives at RDoc::Markup</a>.</p>
+<p>The default comment markup format is the <a href="RDoc/Markup.html"><code>RDoc::Markup</code></a> format. <a href="RDoc/TomDoc.html">TomDoc</a>, <a href="RDoc/Markdown.html">Markdown</a> and <a href="RDoc/RD.html">RD</a> format comments are also supported.  You can set the default comment format for your entire project by creating a <code>.rdoc_options</code> file.  See <a href="RDoc/Options.html#class-RDoc::Options-label-Saved+Options">Saved Options at <code>RDoc::Options</code></a> for instructions on creating one.  You can also set the comment format for a single file through the <code>:markup:</code> directive, but this is only recommended if you wish to switch markup formats.  See <a href="RDoc/Markup.html#class-RDoc::Markup-label-Other+directives">Other directives at <code>RDoc::Markup</code></a>.</p>
 
-<p>Comments can contain directives that tell <a href="RDoc.html">RDoc</a>
-information that it cannot otherwise discover through parsing.  See <a
-href="RDoc/Markup.html#label-Directives">Directives at RDoc::Markup</a> to
-control what is or is not documented, to define method arguments or to
-break up methods in a class by topic.  See <a
-href="RDoc/Parser/Ruby.html">RDoc::Parser::Ruby</a> for directives used to
-teach <a href="RDoc.html">RDoc</a> about metaprogrammed methods.</p>
+<p>Comments can contain directives that tell <a href="RDoc.html"><code>RDoc</code></a> information that it cannot otherwise discover through parsing.  See <a href="RDoc/Markup.html#class-RDoc::Markup-label-Directives">Directives at <code>RDoc::Markup</code></a> to control what is or is not documented, to define method arguments or to break up methods in a class by topic.  See <a href="RDoc/Parser/Ruby.html"><code>RDoc::Parser::Ruby</code></a> for directives used to teach <a href="RDoc.html"><code>RDoc</code></a> about metaprogrammed methods.</p>
 
-<p>See <a href="RDoc/Parser/C.html">RDoc::Parser::C</a> for documenting C
-extensions with <a href="RDoc.html">RDoc</a>.</p>
+<p>See <a href="RDoc/Parser/C.html"><code>RDoc::Parser::C</code></a> for documenting C extensions with <a href="RDoc.html"><code>RDoc</code></a>.</p>
 
-<p>To determine how well your project is documented run <code>rdoc -C
-lib</code> to get a documentation coverage report.  <code>rdoc -C1
-lib</code> includes parameter names in the documentation coverage report.</p>
+<p>To determine how well your project is documented run <code>rdoc -C lib</code> to get a documentation coverage report.  <code>rdoc -C1 lib</code> includes parameter names in the documentation coverage report.</p>
 
 <h2 id="label-Bugs">Bugs<span><a href="#label-Bugs">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>See <a href="CONTRIBUTING_rdoc.html#label-Bugs">Bugs at CONTRIBUTING</a>
-for information on filing a bug report.  It&#39;s OK to file a bug report
-for anything you&#39;re having a problem with.  If you can&#39;t figure out
-how to make <a href="RDoc.html">RDoc</a> produce the output you like that
-is probably a documentation bug.</p>
+<p>See <a href="CONTRIBUTING_rdoc.html#label-Bugs">Bugs at <code>CONTRIBUTING</code></a> for information on filing a bug report.  It’s OK to file a bug report for anything you’re having a problem with.  If you can’t figure out how to make <a href="RDoc.html"><code>RDoc</code></a> produce the output you like that is probably a documentation bug.</p>
 
 <h2 id="label-License">License<span><a href="#label-License">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p><a href="RDoc.html">RDoc</a> is Copyright © 2001-2003 Dave Thomas, The
-Pragmatic Programmers. Portions © 2007-2011 Eric Hodel.  Portions copyright
-others, see individual files and <a href="LEGAL_rdoc.html">LEGAL.rdoc</a>
-for details.</p>
+<p><a href="RDoc.html"><code>RDoc</code></a> is Copyright © 2001-2003 Dave Thomas, The Pragmatic Programmers. Portions © 2007-2011 Eric Hodel.  Portions copyright others, see individual files and <a href="LEGAL_rdoc.html">LEGAL.rdoc</a> for details.</p>
 
-<p><a href="RDoc.html">RDoc</a> is free software, and may be redistributed
-under the terms specified in <a href="LICENSE_rdoc.html">LICENSE.rdoc</a>.</p>
+<p><a href="RDoc.html"><code>RDoc</code></a> is free software, and may be redistributed under the terms specified in <a href="LICENSE_rdoc.html">LICENSE.rdoc</a>.</p>
 
 <h2 id="label-Warranty">Warranty<span><a href="#label-Warranty">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>This software is provided “as is” and without any express or implied
-warranties, including, without limitation, the implied warranties of
-merchantability and fitness for a particular purpose.</p>
+<p>This software is provided “as is” and without any express or implied warranties, including, without limitation, the implied warranties of merchantability and fitness for a particular purpose.</p>
+
 </main>
 
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

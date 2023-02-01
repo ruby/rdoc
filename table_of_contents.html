@@ -4,24 +4,26 @@
 <head>
 <meta charset="UTF-8">
 
-<title>Table of Contents - rdoc 6.0.4 Documentation</title>
+<title>Table of Contents - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
   var index_rel_prefix = "./";
 </script>
 
-<script src="./js/jquery.js"></script>
-<script src="./js/darkfish.js"></script>
+<script src="./js/navigation.js" defer></script>
+<script src="./js/search.js" defer></script>
+<script src="./js/search_index.js" defer></script>
+<script src="./js/searcher.js" defer></script>
+<script src="./js/darkfish.js" defer></script>
 
 <link href="./css/fonts.css" rel="stylesheet">
 <link href="./css/rdoc.css" rel="stylesheet">
 
 
-
 <body id="top" class="table-of-contents">
 <main role="main">
-<h1 class="class">Table of Contents - rdoc 6.0.4 Documentation</h1>
+<h1 class="class">Table of Contents - rdoc 6.5.0 Documentation</h1>
 
 <h2 id="pages">Pages</h2>
 <ul>
@@ -46,14 +48,14 @@
       <li><a href="CONTRIBUTING_rdoc.html#label-Markup">Markup</a>
     </ul>
   </li>
-    <li class="file">
+  <li class="file">
     <a href="CVE-2013-0256_rdoc.html">CVE-2013-0256</a>
 
     <ul>
       <li><a href="CVE-2013-0256_rdoc.html#label-RDoc+2.3.0+through+3.12+XSS+Exploit">RDoc 2.3.0 through 3.12 XSS Exploit</a>
     </ul>
   </li>
-    <li class="file">
+  <li class="file">
     <a href="ExampleRDoc_rdoc.html">ExampleRDoc</a>
 
     <ul>
@@ -74,7 +76,7 @@
       <li><a href="ExampleRDoc_rdoc.html#label-Rule">Rule</a>
     </ul>
   </li>
-    <li class="file">
+  <li class="file">
     <a href="History_rdoc.html">History</a>
 
     <ul>
@@ -140,17 +142,17 @@
       <li><a href="History_rdoc.html#label-2.0.0+-2F+2008-04-10">2.0.0 / 2008-04-10</a>
     </ul>
   </li>
-    <li class="file">
+  <li class="file">
     <a href="LEGAL_rdoc.html">LEGAL</a>
 
     <ul>
       <li><a href="LEGAL_rdoc.html#label-Legal+Notice+Information">Legal Notice Information</a>
     </ul>
   </li>
-    <li class="file">
+  <li class="file">
     <a href="LICENSE_rdoc.html">LICENSE</a>
   </li>
-    <li class="file">
+  <li class="file">
     <a href="README_rdoc.html">README</a>
 
     <ul>
@@ -163,7 +165,7 @@
       <li><a href="README_rdoc.html#label-Warranty">Warranty</a>
     </ul>
   </li>
-    <li class="file">
+  <li class="file">
     <a href="RI_rdoc.html">RI</a>
 
     <ul>
@@ -172,7 +174,7 @@
       <li><a href="RI_rdoc.html#label-Options">Options</a>
     </ul>
   </li>
-    <li class="file">
+  <li class="file">
     <a href="TODO_rdoc.html">TODO</a>
 
     <ul>
@@ -182,11 +184,13 @@
       <li><a href="TODO_rdoc.html#label-Accessibility">Accessibility</a>
     </ul>
   </li>
-  
 </ul>
 
 <h2 id="classes">Classes and Modules</h2>
 <ul>
+  <li class="class">
+    <a href="Object.html">Object</a>
+  </li>
   <li class="module">
     <a href="RDoc.html">RDoc</a>
 
@@ -309,8 +313,30 @@
   <li class="class">
     <a href="RDoc/Include.html">RDoc::Include</a>
   </li>
-  <li class="module">
+  <li class="class">
     <a href="RDoc/Markdown.html">RDoc::Markdown</a>
+
+    <ul>
+      <li><a href="RDoc/Markdown.html#label-Usage">Usage</a>
+      <li><a href="RDoc/Markdown.html#label-Extensions">Extensions</a>
+      <li><a href="RDoc/Markdown.html#label-RDoc">RDoc</a>
+      <li><a href="RDoc/Markdown.html#label-Break+on+Newline">Break on Newline</a>
+      <li><a href="RDoc/Markdown.html#label-CSS">CSS</a>
+      <li><a href="RDoc/Markdown.html#label-Definition+Lists">Definition Lists</a>
+      <li><a href="RDoc/Markdown.html#label-Strike">Strike</a>
+      <li><a href="RDoc/Markdown.html#label-Github">Github</a>
+      <li><a href="RDoc/Markdown.html#label-Fenced+code+blocks">Fenced code blocks</a>
+      <li><a href="RDoc/Markdown.html#label-Syntax+highlighting">Syntax highlighting</a>
+      <li><a href="RDoc/Markdown.html#label-HTML">HTML</a>
+      <li><a href="RDoc/Markdown.html#label-Notes">Notes</a>
+      <li><a href="RDoc/Markdown.html#label-Limitations">Limitations</a>
+      <li><a href="RDoc/Markdown.html#label-Author">Author</a>
+      <li><a href="RDoc/Markdown.html#5Buntitled-5D">Top Section</a>
+      <li><a href="RDoc/Markdown.html#Extensions">Extensions</a>
+    </ul>
+  </li>
+  <li class="class">
+    <a href="RDoc/Markdown/Literals.html">RDoc::Markdown::Literals</a>
   </li>
   <li class="class">
     <a href="RDoc/Markup.html">RDoc::Markup</a>
@@ -321,24 +347,6 @@
       <li><a href="RDoc/Markup.html#label-Synopsis">Synopsis</a>
       <li><a href="RDoc/Markup.html#label-Encoding">Encoding</a>
       <li><a href="RDoc/Markup.html#label-RDoc+Markup+Reference">RDoc Markup Reference</a>
-      <li><a href="RDoc/Markup.html#label-Block+Markup">Block Markup</a>
-      <li><a href="RDoc/Markup.html#label-Paragraphs+and+Verbatim">Paragraphs and Verbatim</a>
-      <li><a href="RDoc/Markup.html#label-Headers">Headers</a>
-      <li><a href="RDoc/Markup.html#label-Rules">Rules</a>
-      <li><a href="RDoc/Markup.html#label-Simple+Lists">Simple Lists</a>
-      <li><a href="RDoc/Markup.html#label-Labeled+Lists">Labeled Lists</a>
-      <li><a href="RDoc/Markup.html#label-Lists+and+Verbatim">Lists and Verbatim</a>
-      <li><a href="RDoc/Markup.html#label-Text+Markup">Text Markup</a>
-      <li><a href="RDoc/Markup.html#label-Bold-2C+Italic-2C+Typewriter+Text">Bold, Italic, Typewriter Text</a>
-      <li><a href="RDoc/Markup.html#label-Links">Links</a>
-      <li><a href="RDoc/Markup.html#label-Escaping+Text+Markup">Escaping Text Markup</a>
-      <li><a href="RDoc/Markup.html#label-Conversion+of+characters">Conversion of characters</a>
-      <li><a href="RDoc/Markup.html#label-Documenting+Source+Code">Documenting Source Code</a>
-      <li><a href="RDoc/Markup.html#label-Directives">Directives</a>
-      <li><a href="RDoc/Markup.html#label-Controlling+what+is+documented">Controlling what is documented</a>
-      <li><a href="RDoc/Markup.html#label-Method+arguments">Method arguments</a>
-      <li><a href="RDoc/Markup.html#label-Sections">Sections</a>
-      <li><a href="RDoc/Markup.html#label-Other+directives">Other directives</a>
     </ul>
   </li>
   <li class="class">
@@ -366,9 +374,6 @@
     <a href="RDoc/Markup/Formatter.html">RDoc::Markup::Formatter</a>
   </li>
   <li class="class">
-    <a href="RDoc/Markup/FormatterTestCase.html">RDoc::Markup::FormatterTestCase</a>
-  </li>
-  <li class="class">
     <a href="RDoc/Markup/HardBreak.html">RDoc::Markup::HardBreak</a>
   </li>
   <li class="class">
@@ -393,6 +398,9 @@
     <a href="RDoc/Markup/Parser/Error.html">RDoc::Markup::Parser::Error</a>
   </li>
   <li class="class">
+    <a href="RDoc/Markup/Parser/MyStringScanner.html">RDoc::Markup::Parser::MyStringScanner</a>
+  </li>
+  <li class="class">
     <a href="RDoc/Markup/Parser/ParseError.html">RDoc::Markup::Parser::ParseError</a>
   </li>
   <li class="class">
@@ -402,13 +410,13 @@
     <a href="RDoc/Markup/Raw.html">RDoc::Markup::Raw</a>
   </li>
   <li class="class">
+    <a href="RDoc/Markup/RegexpHandling.html">RDoc::Markup::RegexpHandling</a>
+  </li>
+  <li class="class">
     <a href="RDoc/Markup/Rule.html">RDoc::Markup::Rule</a>
   </li>
   <li class="class">
-    <a href="RDoc/Markup/Special.html">RDoc::Markup::Special</a>
-  </li>
-  <li class="class">
-    <a href="RDoc/Markup/TextFormatterTestCase.html">RDoc::Markup::TextFormatterTestCase</a>
+    <a href="RDoc/Markup/Table.html">RDoc::Markup::Table</a>
   </li>
   <li class="class">
     <a href="RDoc/Markup/ToAnsi.html">RDoc::Markup::ToAnsi</a>
@@ -421,7 +429,7 @@
 
     <ul>
       <li><a href="RDoc/Markup/ToHtml.html#5Buntitled-5D">Top Section</a>
-      <li><a href="RDoc/Markup/ToHtml.html#Special+Handling">Special Handling</a>
+      <li><a href="RDoc/Markup/ToHtml.html#Regexp+Handling">Regexp Handling</a>
       <li><a href="RDoc/Markup/ToHtml.html#Utilities">Utilities</a>
       <li><a href="RDoc/Markup/ToHtml.html#Visitor">Visitor</a>
     </ul>
@@ -457,6 +465,49 @@
     <a href="RDoc/Markup/Verbatim.html">RDoc::Markup::Verbatim</a>
   </li>
   <li class="class">
+    <a href="RDoc/MarkupReference.html">RDoc::MarkupReference</a>
+
+    <ul>
+      <li><a href="RDoc/MarkupReference.html#label-RDoc+Markup+Reference">RDoc Markup Reference</a>
+      <li><a href="RDoc/MarkupReference.html#label-Markup+in+Comments">Markup in Comments</a>
+      <li><a href="RDoc/MarkupReference.html#label-Margins">Margins</a>
+      <li><a href="RDoc/MarkupReference.html#label-Blocks">Blocks</a>
+      <li><a href="RDoc/MarkupReference.html#label-Paragraphs">Paragraphs</a>
+      <li><a href="RDoc/MarkupReference.html#label-Verbatim+Text+Blocks">Verbatim Text Blocks</a>
+      <li><a href="RDoc/MarkupReference.html#label-Code+Blocks">Code Blocks</a>
+      <li><a href="RDoc/MarkupReference.html#label-Block+Quotes">Block Quotes</a>
+      <li><a href="RDoc/MarkupReference.html#label-Lists">Lists</a>
+      <li><a href="RDoc/MarkupReference.html#label-Bullet+Lists">Bullet Lists</a>
+      <li><a href="RDoc/MarkupReference.html#label-Numbered+Lists">Numbered Lists</a>
+      <li><a href="RDoc/MarkupReference.html#label-Lettered+Lists">Lettered Lists</a>
+      <li><a href="RDoc/MarkupReference.html#label-Labeled+Lists">Labeled Lists</a>
+      <li><a href="RDoc/MarkupReference.html#label-Headings">Headings</a>
+      <li><a href="RDoc/MarkupReference.html#label-Horizontal+Rules">Horizontal Rules</a>
+      <li><a href="RDoc/MarkupReference.html#label-Directives">Directives</a>
+      <li><a href="RDoc/MarkupReference.html#label-Directives+for+Allowing+or+Suppressing+Documentation">Directives for Allowing or Suppressing Documentation</a>
+      <li><a href="RDoc/MarkupReference.html#label-Directive+for+Specifying+RDoc+Source+Format">Directive for Specifying RDoc Source Format</a>
+      <li><a href="RDoc/MarkupReference.html#label-Directives+for+HTML+Output">Directives for HTML Output</a>
+      <li><a href="RDoc/MarkupReference.html#label-Directives+for+Method+Documentation">Directives for Method Documentation</a>
+      <li><a href="RDoc/MarkupReference.html#label-Directives+for+Organizing+Documentation">Directives for Organizing Documentation</a>
+      <li><a href="RDoc/MarkupReference.html#label-Directive+for+Including+a+File">Directive for Including a File</a>
+      <li><a href="RDoc/MarkupReference.html#label-Text+Markup">Text Markup</a>
+      <li><a href="RDoc/MarkupReference.html#label-Typeface+Markup">Typeface Markup</a>
+      <li><a href="RDoc/MarkupReference.html#label-Italic">Italic</a>
+      <li><a href="RDoc/MarkupReference.html#label-Bold">Bold</a>
+      <li><a href="RDoc/MarkupReference.html#label-Monofont">Monofont</a>
+      <li><a href="RDoc/MarkupReference.html#label-Character+Conversions">Character Conversions</a>
+      <li><a href="RDoc/MarkupReference.html#label-Links">Links</a>
+      <li><a href="RDoc/MarkupReference.html#label-Escaping+Text">Escaping Text</a>
+      <li><a href="RDoc/MarkupReference.html#label-Documentation+Derived+from+Ruby+Code">Documentation Derived from Ruby Code</a>
+    </ul>
+  </li>
+  <li class="class">
+    <a href="RDoc/MarkupReference/DummyClass.html">RDoc::MarkupReference::DummyClass</a>
+  </li>
+  <li class="module">
+    <a href="RDoc/MarkupReference/DummyModule.html">RDoc::MarkupReference::DummyModule</a>
+  </li>
+  <li class="class">
     <a href="RDoc/MetaMethod.html">RDoc::MetaMethod</a>
   </li>
   <li class="class">
@@ -489,11 +540,20 @@
   <li class="class">
     <a href="RDoc/Parser/ChangeLog.html">RDoc::Parser::ChangeLog</a>
   </li>
+  <li class="module">
+    <a href="RDoc/Parser/ChangeLog/Git.html">RDoc::Parser::ChangeLog::Git</a>
+  </li>
   <li class="class">
     <a href="RDoc/Parser/Markdown.html">RDoc::Parser::Markdown</a>
   </li>
   <li class="class">
     <a href="RDoc/Parser/RD.html">RDoc::Parser::RD</a>
+  </li>
+  <li class="class">
+    <a href="RDoc/Parser/RipperStateLex.html">RDoc::Parser::RipperStateLex</a>
+  </li>
+  <li class="class">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html">RDoc::Parser::RipperStateLex::InnerStateLex</a>
   </li>
   <li class="class">
     <a href="RDoc/Parser/Ruby.html">RDoc::Parser::Ruby</a>
@@ -515,7 +575,13 @@
     </ul>
   </li>
   <li class="class">
+    <a href="RDoc/RD/BlockParser.html">RDoc::RD::BlockParser</a>
+  </li>
+  <li class="class">
     <a href="RDoc/RD/Inline.html">RDoc::RD::Inline</a>
+  </li>
+  <li class="class">
+    <a href="RDoc/RD/InlineParser.html">RDoc::RD::InlineParser</a>
   </li>
   <li class="class">
     <a href="RDoc/RDoc.html">RDoc::RDoc</a>
@@ -543,12 +609,6 @@
   </li>
   <li class="class">
     <a href="RDoc/Require.html">RDoc::Require</a>
-  </li>
-  <li class="class">
-    <a href="RDoc/RipperStateLex.html">RDoc::RipperStateLex</a>
-  </li>
-  <li class="class">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html">RDoc::RipperStateLex::InnerStateLex</a>
   </li>
   <li class="class">
     <a href="RDoc/RubygemsHook.html">RDoc::RubygemsHook</a>
@@ -604,13 +664,6 @@
   <li class="class">
     <a href="RDoc/TopLevel.html">RDoc::TopLevel</a>
   </li>
-  <li class="class">
-    <a href="RDocTask.html">RDocTask</a>
-
-    <ul>
-      <li><a href="RDocTask.html#label-Specifying+different+task+names">Specifying different task names</a>
-    </ul>
-  </li>
 </ul>
 
 <h2 id="methods">Methods</h2>
@@ -630,16 +683,6 @@
     <a href="RDoc/RDoc.html#method-c-add_generator">::add_generator</a>
     &mdash;
     <span class="container">RDoc::RDoc</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/TextFormatterTestCase.html#method-c-add_text_tests">::add_text_tests</a>
-    &mdash;
-    <span class="container">RDoc::Markup::TextFormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-c-add_visitor_tests">::add_visitor_tests</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
 
   <li class="method">
     <a href="RDoc/Parser.html#method-c-alias_extension">::alias_extension</a>
@@ -692,6 +735,11 @@
     <span class="container">RDoc::Encoding</span>
 
   <li class="method">
+    <a href="RDoc/MarkupReference.html#method-c-dummy_singleton_method">::dummy_singleton_method</a>
+    &mdash;
+    <span class="container">RDoc::MarkupReference</span>
+
+  <li class="method">
     <a href="RDoc/RI/Driver.html#method-c-dump">::dump</a>
     &mdash;
     <span class="container">RDoc::RI::Driver</span>
@@ -707,9 +755,14 @@
     <span class="container">RDoc::Text</span>
 
   <li class="method">
-    <a href="RDoc/RipperStateLex.html#method-c-end-3F">::end?</a>
+    <a href="RDoc/Parser/RipperStateLex.html#method-c-end-3F">::end?</a>
     &mdash;
-    <span class="container">RDoc::RipperStateLex</span>
+    <span class="container">RDoc::Parser::RipperStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Markdown.html#method-c-extension">::extension</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
 
   <li class="method">
     <a href="RDoc/Parser.html#method-c-for">::for</a>
@@ -742,9 +795,19 @@
     <span class="container">RDoc::RubygemsHook</span>
 
   <li class="method">
+    <a href="RDoc.html#method-c-home">::home</a>
+    &mdash;
+    <span class="container">RDoc</span>
+
+  <li class="method">
     <a href="RDoc/RI/Paths.html#method-c-home_dir">::home_dir</a>
     &mdash;
     <span class="container">RDoc::RI::Paths</span>
+
+  <li class="method">
+    <a href="RDoc/Options.html#method-c-load_options">::load_options</a>
+    &mdash;
+    <span class="container">RDoc::Options</span>
 
   <li class="method">
     <a href="RDoc/RubygemsHook.html#method-c-load_rdoc">::load_rdoc</a>
@@ -757,9 +820,84 @@
     <span class="container">RDoc</span>
 
   <li class="method">
+    <a href="RDoc/Generator/POT/POEntry.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Generator::POT::POEntry</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToTtOnly.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToTtOnly</span>
+
+  <li class="method">
+    <a href="RDoc/RubygemsHook.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::RubygemsHook</span>
+
+  <li class="method">
+    <a href="RDoc/I18n/Locale.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::I18n::Locale</span>
+
+  <li class="method">
+    <a href="RDoc/I18n/Text.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::I18n::Text</span>
+
+  <li class="method">
+    <a href="RDoc/Servlet.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Servlet</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Attributes.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Attributes</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/Simple.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Parser::Simple</span>
+
+  <li class="method">
+    <a href="RDoc/RD/BlockParser.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::RD::BlockParser</span>
+
+  <li class="method">
+    <a href="RDoc/RD/Inline.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::RD::Inline</span>
+
+  <li class="method">
+    <a href="RDoc/RD/InlineParser.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::RD::InlineParser</span>
+
+  <li class="method">
     <a href="RDoc/Alias.html#method-c-new">::new</a>
     &mdash;
     <span class="container">RDoc::Alias</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/Ruby.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Parser::Ruby</span>
+
+  <li class="method">
+    <a href="RDoc/RDoc.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::RDoc</span>
+
+  <li class="method">
+    <a href="RDoc/Require.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Require</span>
+
+  <li class="method">
+    <a href="RDoc/Task.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Task</span>
 
   <li class="method">
     <a href="RDoc/AnyMethod.html#method-c-new">::new</a>
@@ -767,34 +905,34 @@
     <span class="container">RDoc::AnyMethod</span>
 
   <li class="method">
-    <a href="RDoc/Attr.html#method-c-new">::new</a>
+    <a href="RDoc/Store/MissingFileError.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">RDoc::Attr</span>
+    <span class="container">RDoc::Store::MissingFileError</span>
 
   <li class="method">
-    <a href="RDoc/ClassModule.html#method-c-new">::new</a>
+    <a href="RDoc/RI/Driver.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">RDoc::ClassModule</span>
+    <span class="container">RDoc::RI::Driver</span>
 
   <li class="method">
-    <a href="RDoc/CodeObject.html#method-c-new">::new</a>
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">RDoc::CodeObject</span>
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
 
   <li class="method">
-    <a href="RDoc/Comment.html#method-c-new">::new</a>
+    <a href="RDoc/Parser/RipperStateLex.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">RDoc::Comment</span>
+    <span class="container">RDoc::Parser::RipperStateLex</span>
 
   <li class="method">
-    <a href="RDoc/Constant.html#method-c-new">::new</a>
+    <a href="RDoc/Parser/C.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">RDoc::Constant</span>
+    <span class="container">RDoc::Parser::C</span>
 
   <li class="method">
-    <a href="RDoc/Context.html#method-c-new">::new</a>
+    <a href="RDoc/Parser.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">RDoc::Context</span>
+    <span class="container">RDoc::Parser</span>
 
   <li class="method">
     <a href="RDoc/Context/Section.html#method-c-new">::new</a>
@@ -812,6 +950,11 @@
     <span class="container">RDoc::ERBIO</span>
 
   <li class="method">
+    <a href="RDoc/Attr.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Attr</span>
+
+  <li class="method">
     <a href="RDoc/Generator/Darkfish.html#method-c-new">::new</a>
     &mdash;
     <span class="container">RDoc::Generator::Darkfish</span>
@@ -822,9 +965,24 @@
     <span class="container">RDoc::Generator::JsonIndex</span>
 
   <li class="method">
+    <a href="RDoc/ClassModule.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::ClassModule</span>
+
+  <li class="method">
     <a href="RDoc/MethodAttr.html#method-c-new">::new</a>
     &mdash;
     <span class="container">RDoc::MethodAttr</span>
+
+  <li class="method">
+    <a href="RDoc/Mixin.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Mixin</span>
+
+  <li class="method">
+    <a href="RDoc/RI/Task.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::RI::Task</span>
 
   <li class="method">
     <a href="RDoc/TopLevel.html#method-c-new">::new</a>
@@ -842,19 +1000,114 @@
     <span class="container">RDoc::Generator::POT::PO</span>
 
   <li class="method">
-    <a href="RDoc/Generator/POT/POEntry.html#method-c-new">::new</a>
+    <a href="RDoc/Markup/Formatter.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">RDoc::Generator::POT::POEntry</span>
+    <span class="container">RDoc::Markup::Formatter</span>
 
   <li class="method">
-    <a href="RDoc/I18n/Locale.html#method-c-new">::new</a>
+    <a href="RDoc/Markup/RegexpHandling.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">RDoc::I18n::Locale</span>
+    <span class="container">RDoc::Markup::RegexpHandling</span>
 
   <li class="method">
-    <a href="RDoc/I18n/Text.html#method-c-new">::new</a>
+    <a href="RDoc/Markup/HardBreak.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">RDoc::I18n::Text</span>
+    <span class="container">RDoc::Markup::HardBreak</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Include.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Include</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Raw.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Raw</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/IndentedParagraph.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Markup::IndentedParagraph</span>
+
+  <li class="method">
+    <a href="RDoc/Constant.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Constant</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/List.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Markup::List</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ListItem.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ListItem</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/PreProcess.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Markup::PreProcess</span>
+
+  <li class="method">
+    <a href="RDoc/TomDoc.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::TomDoc</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Parser.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Parser</span>
+
+  <li class="method">
+    <a href="RDoc/Context.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Context</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Parser/MyStringScanner.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Parser::MyStringScanner</span>
+
+  <li class="method">
+    <a href="RDoc/CodeObject.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::CodeObject</span>
+
+  <li class="method">
+    <a href="RDoc/Markdown.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
+
+  <li class="method">
+    <a href="RDoc/Store.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Store</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToRdoc.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToRdoc</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToMarkdown.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToMarkdown</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToLabel.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToLabel</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToHtmlSnippet.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtmlSnippet</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToHtmlCrossref.html#method-c-new">::new</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtmlCrossref</span>
 
   <li class="method">
     <a href="RDoc/Markup.html#method-c-new">::new</a>
@@ -872,189 +1125,9 @@
     <span class="container">RDoc::Markup::AttributeManager</span>
 
   <li class="method">
-    <a href="RDoc/Markup/Attributes.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Attributes</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/BlankLine.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::BlankLine</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/Document.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Document</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/Formatter.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Formatter</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/HardBreak.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::HardBreak</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/Include.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Include</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/IndentedParagraph.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::IndentedParagraph</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/List.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::List</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ListItem.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ListItem</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/Parser.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Parser</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/PreProcess.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::PreProcess</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/Raw.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Raw</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/Special.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Special</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToAnsi.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToAnsi</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToBs.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToBs</span>
-
-  <li class="method">
     <a href="RDoc/Markup/ToHtml.html#method-c-new">::new</a>
     &mdash;
     <span class="container">RDoc::Markup::ToHtml</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToHtmlCrossref.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToHtmlCrossref</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToHtmlSnippet.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToHtmlSnippet</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToLabel.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToLabel</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToMarkdown.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToMarkdown</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToRdoc.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToRdoc</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToTtOnly.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToTtOnly</span>
-
-  <li class="method">
-    <a href="RDoc/Mixin.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Mixin</span>
-
-  <li class="method">
-    <a href="RDoc/Parser.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Parser</span>
-
-  <li class="method">
-    <a href="RDoc/Parser/C.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Parser::C</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/Parser/Ruby.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Parser::Ruby</span>
-
-  <li class="method">
-    <a href="RDoc/Parser/Simple.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Parser::Simple</span>
-
-  <li class="method">
-    <a href="RDoc/RD/Inline.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::RD::Inline</span>
-
-  <li class="method">
-    <a href="RDoc/RDoc.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::RDoc</span>
-
-  <li class="method">
-    <a href="RDoc/Require.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Require</span>
-
-  <li class="method">
-    <a href="RDoc/RI/Driver.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::RI::Driver</span>
-
-  <li class="method">
-    <a href="RDoc/RI/Task.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::RI::Task</span>
-
-  <li class="method">
-    <a href="RDoc/RubygemsHook.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::RubygemsHook</span>
-
-  <li class="method">
-    <a href="RDoc/Servlet.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Servlet</span>
-
-  <li class="method">
-    <a href="RDoc/Stats.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">RDoc::Stats</span>
 
   <li class="method">
     <a href="RDoc/Stats/Quiet.html#method-c-new">::new</a>
@@ -1062,44 +1135,39 @@
     <span class="container">RDoc::Stats::Quiet</span>
 
   <li class="method">
-    <a href="RDoc/Store.html#method-c-new">::new</a>
+    <a href="RDoc/Markup/ToBs.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">RDoc::Store</span>
+    <span class="container">RDoc::Markup::ToBs</span>
 
   <li class="method">
-    <a href="RDoc/Store/MissingFileError.html#method-c-new">::new</a>
+    <a href="RDoc/Markup/ToAnsi.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">RDoc::Store::MissingFileError</span>
+    <span class="container">RDoc::Markup::ToAnsi</span>
 
   <li class="method">
-    <a href="RDoc/Task.html#method-c-new">::new</a>
+    <a href="RDoc/Stats.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">RDoc::Task</span>
+    <span class="container">RDoc::Stats</span>
 
   <li class="method">
-    <a href="RDoc/Task.html#method-c-new">::new</a>
+    <a href="RDoc/Markup/BlankLine.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">RDoc::Task</span>
+    <span class="container">RDoc::Markup::BlankLine</span>
 
   <li class="method">
-    <a href="RDoc/TomDoc.html#method-c-new">::new</a>
+    <a href="RDoc/Markup/Table.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">RDoc::TomDoc</span>
+    <span class="container">RDoc::Markup::Table</span>
 
   <li class="method">
-    <a href="RDoc/Markup.html#method-c-parse">::parse</a>
+    <a href="RDoc/Markup/Document.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">RDoc::Markup</span>
+    <span class="container">RDoc::Markup::Document</span>
 
   <li class="method">
-    <a href="RDoc/Markup/Parser.html#method-c-parse">::parse</a>
+    <a href="RDoc/Comment.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">RDoc::Markup::Parser</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex.html#method-c-parse">::parse</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex</span>
+    <span class="container">RDoc::Comment</span>
 
   <li class="method">
     <a href="RDoc/RD.html#method-c-parse">::parse</a>
@@ -1107,9 +1175,29 @@
     <span class="container">RDoc::RD</span>
 
   <li class="method">
+    <a href="RDoc/Markdown.html#method-c-parse">::parse</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex.html#method-c-parse">::parse</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex</span>
+
+  <li class="method">
     <a href="RDoc/TomDoc.html#method-c-parse">::parse</a>
     &mdash;
     <span class="container">RDoc::TomDoc</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Parser.html#method-c-parse">::parse</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Parser</span>
+
+  <li class="method">
+    <a href="RDoc/Markup.html#method-c-parse">::parse</a>
+    &mdash;
+    <span class="container">RDoc::Markup</span>
 
   <li class="method">
     <a href="RDoc/Parser.html#method-c-parse_files_matching">::parse_files_matching</a>
@@ -1227,9 +1315,9 @@
     <span class="container">RDoc::Markup::Document</span>
 
   <li class="method">
-    <a href="RDoc/Markup/List.html#method-i-3C-3C">#&lt;&lt;</a>
+    <a href="RDoc/Markup/Raw.html#method-i-3C-3C">#&lt;&lt;</a>
     &mdash;
-    <span class="container">RDoc::Markup::List</span>
+    <span class="container">RDoc::Markup::Raw</span>
 
   <li class="method">
     <a href="RDoc/Markup/ListItem.html#method-i-3C-3C">#&lt;&lt;</a>
@@ -1237,9 +1325,9 @@
     <span class="container">RDoc::Markup::ListItem</span>
 
   <li class="method">
-    <a href="RDoc/Markup/Raw.html#method-i-3C-3C">#&lt;&lt;</a>
+    <a href="RDoc/Markup/List.html#method-i-3C-3C">#&lt;&lt;</a>
     &mdash;
-    <span class="container">RDoc::Markup::Raw</span>
+    <span class="container">RDoc::Markup::List</span>
 
   <li class="method">
     <a href="RDoc/Alias.html#method-i-3C-3D-3E">#&lt;=&gt;</a>
@@ -1247,14 +1335,14 @@
     <span class="container">RDoc::Alias</span>
 
   <li class="method">
-    <a href="RDoc/Constant.html#method-i-3C-3D-3E">#&lt;=&gt;</a>
-    &mdash;
-    <span class="container">RDoc::Constant</span>
-
-  <li class="method">
     <a href="RDoc/Context.html#method-i-3C-3D-3E">#&lt;=&gt;</a>
     &mdash;
     <span class="container">RDoc::Context</span>
+
+  <li class="method">
+    <a href="RDoc/Mixin.html#method-i-3C-3D-3E">#&lt;=&gt;</a>
+    &mdash;
+    <span class="container">RDoc::Mixin</span>
 
   <li class="method">
     <a href="RDoc/MethodAttr.html#method-i-3C-3D-3E">#&lt;=&gt;</a>
@@ -1262,9 +1350,24 @@
     <span class="container">RDoc::MethodAttr</span>
 
   <li class="method">
-    <a href="RDoc/Mixin.html#method-i-3C-3D-3E">#&lt;=&gt;</a>
+    <a href="RDoc/Constant.html#method-i-3C-3D-3E">#&lt;=&gt;</a>
     &mdash;
-    <span class="container">RDoc::Mixin</span>
+    <span class="container">RDoc::Constant</span>
+
+  <li class="method">
+    <a href="RDoc/TopLevel.html#method-i-3D-3D">#==</a>
+    &mdash;
+    <span class="container">RDoc::TopLevel</span>
+
+  <li class="method">
+    <a href="RDoc/Context/Section.html#method-i-3D-3D">#==</a>
+    &mdash;
+    <span class="container">RDoc::Context::Section</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Table.html#method-i-3D-3D">#==</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Table</span>
 
   <li class="method">
     <a href="RDoc/Attr.html#method-i-3D-3D">#==</a>
@@ -1277,24 +1380,39 @@
     <span class="container">RDoc::Constant</span>
 
   <li class="method">
-    <a href="RDoc/Context/Section.html#method-i-3D-3D">#==</a>
+    <a href="RDoc/Markup/RegexpHandling.html#method-i-3D-3D">#==</a>
     &mdash;
-    <span class="container">RDoc::Context::Section</span>
-
-  <li class="method">
-    <a href="RDoc/TopLevel.html#method-i-3D-3D">#==</a>
-    &mdash;
-    <span class="container">RDoc::TopLevel</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/Special.html#method-i-3D-3D">#==</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Special</span>
+    <span class="container">RDoc::Markup::RegexpHandling</span>
 
   <li class="method">
     <a href="RDoc/Markup/AttrSpan.html#method-i-5B-5D">#[]</a>
     &mdash;
     <span class="container">RDoc::Markup::AttrSpan</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Parser/MyStringScanner.html#method-i-5B-5D">#[]</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Parser::MyStringScanner</span>
+
+  <li class="method">
+    <a href="RDoc/AnyMethod.html#method-i-_call_seq">#_call_seq</a>
+    &mdash;
+    <span class="container">RDoc::AnyMethod</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Paragraph.html#method-i-accept">#accept</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Paragraph</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Table.html#method-i-accept">#accept</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Table</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Verbatim.html#method-i-accept">#accept</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Verbatim</span>
 
   <li class="method">
     <a href="RDoc/Markup/BlankLine.html#method-i-accept">#accept</a>
@@ -1307,9 +1425,19 @@
     <span class="container">RDoc::Markup::BlockQuote</span>
 
   <li class="method">
+    <a href="RDoc/Markup/Rule.html#method-i-accept">#accept</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Rule</span>
+
+  <li class="method">
     <a href="RDoc/Markup/Document.html#method-i-accept">#accept</a>
     &mdash;
     <span class="container">RDoc::Markup::Document</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Raw.html#method-i-accept">#accept</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Raw</span>
 
   <li class="method">
     <a href="RDoc/Markup/HardBreak.html#method-i-accept">#accept</a>
@@ -1332,31 +1460,6 @@
     <span class="container">RDoc::Markup::ListItem</span>
 
   <li class="method">
-    <a href="RDoc/Markup/Paragraph.html#method-i-accept">#accept</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Paragraph</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/Raw.html#method-i-accept">#accept</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Raw</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/Rule.html#method-i-accept">#accept</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Rule</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/Verbatim.html#method-i-accept">#accept</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Verbatim</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToHtml.html#method-i-accept_blank_line">#accept_blank_line</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToHtml</span>
-
-  <li class="method">
     <a href="RDoc/Markup/ToRdoc.html#method-i-accept_blank_line">#accept_blank_line</a>
     &mdash;
     <span class="container">RDoc::Markup::ToRdoc</span>
@@ -1365,6 +1468,11 @@
     <a href="RDoc/Markup/ToTtOnly.html#method-i-accept_blank_line">#accept_blank_line</a>
     &mdash;
     <span class="container">RDoc::Markup::ToTtOnly</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToHtml.html#method-i-accept_blank_line">#accept_blank_line</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtml</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToHtml.html#method-i-accept_block_quote">#accept_block_quote</a>
@@ -1392,9 +1500,9 @@
     <span class="container">RDoc::Markup::ToTableOfContents</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToBs.html#method-i-accept_heading">#accept_heading</a>
+    <a href="RDoc/Markup/ToTtOnly.html#method-i-accept_heading">#accept_heading</a>
     &mdash;
-    <span class="container">RDoc::Markup::ToBs</span>
+    <span class="container">RDoc::Markup::ToTtOnly</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToHtml.html#method-i-accept_heading">#accept_heading</a>
@@ -1402,14 +1510,14 @@
     <span class="container">RDoc::Markup::ToHtml</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToHtmlSnippet.html#method-i-accept_heading">#accept_heading</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToHtmlSnippet</span>
-
-  <li class="method">
     <a href="RDoc/Markup/ToRdoc.html#method-i-accept_heading">#accept_heading</a>
     &mdash;
     <span class="container">RDoc::Markup::ToRdoc</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToBs.html#method-i-accept_heading">#accept_heading</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToBs</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToTableOfContents.html#method-i-accept_heading">#accept_heading</a>
@@ -1417,27 +1525,12 @@
     <span class="container">RDoc::Markup::ToTableOfContents</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToTtOnly.html#method-i-accept_heading">#accept_heading</a>
+    <a href="RDoc/Markup/ToHtmlSnippet.html#method-i-accept_heading">#accept_heading</a>
     &mdash;
-    <span class="container">RDoc::Markup::ToTtOnly</span>
+    <span class="container">RDoc::Markup::ToHtmlSnippet</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToRdoc.html#method-i-accept_indented_paragraph">#accept_indented_paragraph</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToRdoc</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToHtml.html#method-i-accept_list_end">#accept_list_end</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToHtml</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToMarkdown.html#method-i-accept_list_end">#accept_list_end</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToMarkdown</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToRdoc.html#method-i-accept_list_end">#accept_list_end</a>
     &mdash;
     <span class="container">RDoc::Markup::ToRdoc</span>
 
@@ -1447,14 +1540,34 @@
     <span class="container">RDoc::Markup::ToTtOnly</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToAnsi.html#method-i-accept_list_item_end">#accept_list_item_end</a>
+    <a href="RDoc/Markup/ToHtml.html#method-i-accept_list_end">#accept_list_end</a>
     &mdash;
-    <span class="container">RDoc::Markup::ToAnsi</span>
+    <span class="container">RDoc::Markup::ToHtml</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToRdoc.html#method-i-accept_list_end">#accept_list_end</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToRdoc</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToMarkdown.html#method-i-accept_list_end">#accept_list_end</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToMarkdown</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToHtml.html#method-i-accept_list_item_end">#accept_list_item_end</a>
     &mdash;
     <span class="container">RDoc::Markup::ToHtml</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToTtOnly.html#method-i-accept_list_item_end">#accept_list_item_end</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToTtOnly</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToAnsi.html#method-i-accept_list_item_end">#accept_list_item_end</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToAnsi</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToHtmlSnippet.html#method-i-accept_list_item_end">#accept_list_item_end</a>
@@ -1472,7 +1585,7 @@
     <span class="container">RDoc::Markup::ToRdoc</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToTtOnly.html#method-i-accept_list_item_end">#accept_list_item_end</a>
+    <a href="RDoc/Markup/ToTtOnly.html#method-i-accept_list_item_start">#accept_list_item_start</a>
     &mdash;
     <span class="container">RDoc::Markup::ToTtOnly</span>
 
@@ -1482,9 +1595,9 @@
     <span class="container">RDoc::Markup::ToAnsi</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToHtml.html#method-i-accept_list_item_start">#accept_list_item_start</a>
+    <a href="RDoc/Markup/ToRdoc.html#method-i-accept_list_item_start">#accept_list_item_start</a>
     &mdash;
-    <span class="container">RDoc::Markup::ToHtml</span>
+    <span class="container">RDoc::Markup::ToRdoc</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToHtmlSnippet.html#method-i-accept_list_item_start">#accept_list_item_start</a>
@@ -1492,32 +1605,12 @@
     <span class="container">RDoc::Markup::ToHtmlSnippet</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToMarkdown.html#method-i-accept_list_item_start">#accept_list_item_start</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToMarkdown</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToRdoc.html#method-i-accept_list_item_start">#accept_list_item_start</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToRdoc</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToTtOnly.html#method-i-accept_list_item_start">#accept_list_item_start</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToTtOnly</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToHtml.html#method-i-accept_list_start">#accept_list_start</a>
+    <a href="RDoc/Markup/ToHtml.html#method-i-accept_list_item_start">#accept_list_item_start</a>
     &mdash;
     <span class="container">RDoc::Markup::ToHtml</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToHtmlSnippet.html#method-i-accept_list_start">#accept_list_start</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToHtmlSnippet</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToMarkdown.html#method-i-accept_list_start">#accept_list_start</a>
+    <a href="RDoc/Markup/ToMarkdown.html#method-i-accept_list_item_start">#accept_list_item_start</a>
     &mdash;
     <span class="container">RDoc::Markup::ToMarkdown</span>
 
@@ -1532,9 +1625,19 @@
     <span class="container">RDoc::Markup::ToTtOnly</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToHtml.html#method-i-accept_paragraph">#accept_paragraph</a>
+    <a href="RDoc/Markup/ToHtmlSnippet.html#method-i-accept_list_start">#accept_list_start</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtmlSnippet</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToHtml.html#method-i-accept_list_start">#accept_list_start</a>
     &mdash;
     <span class="container">RDoc::Markup::ToHtml</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToMarkdown.html#method-i-accept_list_start">#accept_list_start</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToMarkdown</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToHtmlSnippet.html#method-i-accept_paragraph">#accept_paragraph</a>
@@ -1542,9 +1645,19 @@
     <span class="container">RDoc::Markup::ToHtmlSnippet</span>
 
   <li class="method">
+    <a href="RDoc/Markup/ToHtml.html#method-i-accept_paragraph">#accept_paragraph</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtml</span>
+
+  <li class="method">
     <a href="RDoc/Markup/ToJoinedParagraph.html#method-i-accept_paragraph">#accept_paragraph</a>
     &mdash;
     <span class="container">RDoc::Markup::ToJoinedParagraph</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToTtOnly.html#method-i-accept_paragraph">#accept_paragraph</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToTtOnly</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToRdoc.html#method-i-accept_paragraph">#accept_paragraph</a>
@@ -1552,7 +1665,7 @@
     <span class="container">RDoc::Markup::ToRdoc</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToTtOnly.html#method-i-accept_paragraph">#accept_paragraph</a>
+    <a href="RDoc/Markup/ToTtOnly.html#method-i-accept_raw">#accept_raw</a>
     &mdash;
     <span class="container">RDoc::Markup::ToTtOnly</span>
 
@@ -1567,7 +1680,7 @@
     <span class="container">RDoc::Markup::ToRdoc</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToTtOnly.html#method-i-accept_raw">#accept_raw</a>
+    <a href="RDoc/Markup/ToTtOnly.html#method-i-accept_rule">#accept_rule</a>
     &mdash;
     <span class="container">RDoc::Markup::ToTtOnly</span>
 
@@ -1587,7 +1700,17 @@
     <span class="container">RDoc::Markup::ToRdoc</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToTtOnly.html#method-i-accept_rule">#accept_rule</a>
+    <a href="RDoc/Markup/ToHtml.html#method-i-accept_table">#accept_table</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtml</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToRdoc.html#method-i-accept_table">#accept_table</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToRdoc</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToTtOnly.html#method-i-accept_verbatim">#accept_verbatim</a>
     &mdash;
     <span class="container">RDoc::Markup::ToTtOnly</span>
 
@@ -1612,11 +1735,6 @@
     <span class="container">RDoc::Markup::ToRdoc</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToTtOnly.html#method-i-accept_verbatim">#accept_verbatim</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToTtOnly</span>
-
-  <li class="method">
     <a href="RDoc/Context.html#method-i-add">#add</a>
     &mdash;
     <span class="container">RDoc::Context</span>
@@ -1632,14 +1750,14 @@
     <span class="container">RDoc::AnyMethod</span>
 
   <li class="method">
+    <a href="RDoc/Stats.html#method-i-add_alias">#add_alias</a>
+    &mdash;
+    <span class="container">RDoc::Stats</span>
+
+  <li class="method">
     <a href="RDoc/Attr.html#method-i-add_alias">#add_alias</a>
     &mdash;
     <span class="container">RDoc::Attr</span>
-
-  <li class="method">
-    <a href="RDoc/Context.html#method-i-add_alias">#add_alias</a>
-    &mdash;
-    <span class="container">RDoc::Context</span>
 
   <li class="method">
     <a href="RDoc/MethodAttr.html#method-i-add_alias">#add_alias</a>
@@ -1647,14 +1765,19 @@
     <span class="container">RDoc::MethodAttr</span>
 
   <li class="method">
+    <a href="RDoc/Context.html#method-i-add_alias">#add_alias</a>
+    &mdash;
+    <span class="container">RDoc::Context</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/C.html#method-i-add_alias">#add_alias</a>
+    &mdash;
+    <span class="container">RDoc::Parser::C</span>
+
+  <li class="method">
     <a href="RDoc/TopLevel.html#method-i-add_alias">#add_alias</a>
     &mdash;
     <span class="container">RDoc::TopLevel</span>
-
-  <li class="method">
-    <a href="RDoc/Stats.html#method-i-add_alias">#add_alias</a>
-    &mdash;
-    <span class="container">RDoc::Stats</span>
 
   <li class="method">
     <a href="RDoc/RI/Driver.html#method-i-add_also_in">#add_also_in</a>
@@ -1662,14 +1785,14 @@
     <span class="container">RDoc::RI::Driver</span>
 
   <li class="method">
-    <a href="RDoc/Context.html#method-i-add_attribute">#add_attribute</a>
-    &mdash;
-    <span class="container">RDoc::Context</span>
-
-  <li class="method">
     <a href="RDoc/Stats.html#method-i-add_attribute">#add_attribute</a>
     &mdash;
     <span class="container">RDoc::Stats</span>
+
+  <li class="method">
+    <a href="RDoc/Context.html#method-i-add_attribute">#add_attribute</a>
+    &mdash;
+    <span class="container">RDoc::Context</span>
 
   <li class="method">
     <a href="RDoc/Store.html#method-i-add_c_enclosure">#add_c_enclosure</a>
@@ -1702,19 +1825,14 @@
     <span class="container">RDoc::Context</span>
 
   <li class="method">
-    <a href="RDoc/ClassModule.html#method-i-add_comment">#add_comment</a>
-    &mdash;
-    <span class="container">RDoc::ClassModule</span>
-
-  <li class="method">
     <a href="RDoc/Context/Section.html#method-i-add_comment">#add_comment</a>
     &mdash;
     <span class="container">RDoc::Context::Section</span>
 
   <li class="method">
-    <a href="RDoc/Context.html#method-i-add_constant">#add_constant</a>
+    <a href="RDoc/ClassModule.html#method-i-add_comment">#add_comment</a>
     &mdash;
-    <span class="container">RDoc::Context</span>
+    <span class="container">RDoc::ClassModule</span>
 
   <li class="method">
     <a href="RDoc/TopLevel.html#method-i-add_constant">#add_constant</a>
@@ -1725,6 +1843,11 @@
     <a href="RDoc/Stats.html#method-i-add_constant">#add_constant</a>
     &mdash;
     <span class="container">RDoc::Stats</span>
+
+  <li class="method">
+    <a href="RDoc/Context.html#method-i-add_constant">#add_constant</a>
+    &mdash;
+    <span class="container">RDoc::Context</span>
 
   <li class="method">
     <a href="RDoc/Context.html#method-i-add_extend">#add_extend</a>
@@ -1742,14 +1865,19 @@
     <span class="container">RDoc::RI::Driver</span>
 
   <li class="method">
+    <a href="RDoc/Store.html#method-i-add_file">#add_file</a>
+    &mdash;
+    <span class="container">RDoc::Store</span>
+
+  <li class="method">
     <a href="RDoc/Stats.html#method-i-add_file">#add_file</a>
     &mdash;
     <span class="container">RDoc::Stats</span>
 
   <li class="method">
-    <a href="RDoc/Store.html#method-i-add_file">#add_file</a>
+    <a href="RDoc/RD/BlockParser.html#method-i-add_footnote">#add_footnote</a>
     &mdash;
-    <span class="container">RDoc::Store</span>
+    <span class="container">RDoc::RD::BlockParser</span>
 
   <li class="method">
     <a href="RDoc/RI/Driver.html#method-i-add_from">#add_from</a>
@@ -1767,14 +1895,14 @@
     <span class="container">RDoc::Markup::AttributeManager</span>
 
   <li class="method">
-    <a href="RDoc/Context.html#method-i-add_include">#add_include</a>
-    &mdash;
-    <span class="container">RDoc::Context</span>
-
-  <li class="method">
     <a href="RDoc/TopLevel.html#method-i-add_include">#add_include</a>
     &mdash;
     <span class="container">RDoc::TopLevel</span>
+
+  <li class="method">
+    <a href="RDoc/Context.html#method-i-add_include">#add_include</a>
+    &mdash;
+    <span class="container">RDoc::Context</span>
 
   <li class="method">
     <a href="RDoc/RI/Driver.html#method-i-add_includes">#add_includes</a>
@@ -1782,19 +1910,19 @@
     <span class="container">RDoc::RI::Driver</span>
 
   <li class="method">
+    <a href="RDoc/RD/BlockParser.html#method-i-add_label">#add_label</a>
+    &mdash;
+    <span class="container">RDoc::RD::BlockParser</span>
+
+  <li class="method">
     <a href="RDoc/MethodAttr.html#method-i-add_line_numbers">#add_line_numbers</a>
     &mdash;
     <span class="container">RDoc::MethodAttr</span>
 
   <li class="method">
-    <a href="RDoc/Context.html#method-i-add_method">#add_method</a>
+    <a href="RDoc/Stats.html#method-i-add_method">#add_method</a>
     &mdash;
-    <span class="container">RDoc::Context</span>
-
-  <li class="method">
-    <a href="RDoc/TopLevel.html#method-i-add_method">#add_method</a>
-    &mdash;
-    <span class="container">RDoc::TopLevel</span>
+    <span class="container">RDoc::Stats</span>
 
   <li class="method">
     <a href="RDoc/RI/Driver.html#method-i-add_method">#add_method</a>
@@ -1802,9 +1930,14 @@
     <span class="container">RDoc::RI::Driver</span>
 
   <li class="method">
-    <a href="RDoc/Stats.html#method-i-add_method">#add_method</a>
+    <a href="RDoc/TopLevel.html#method-i-add_method">#add_method</a>
     &mdash;
-    <span class="container">RDoc::Stats</span>
+    <span class="container">RDoc::TopLevel</span>
+
+  <li class="method">
+    <a href="RDoc/Context.html#method-i-add_method">#add_method</a>
+    &mdash;
+    <span class="container">RDoc::Context</span>
 
   <li class="method">
     <a href="RDoc/RI/Driver.html#method-i-add_method_documentation">#add_method_documentation</a>
@@ -1842,6 +1975,26 @@
     <span class="container">RDoc::Markup::ToHtmlSnippet</span>
 
   <li class="method">
+    <a href="RDoc/Markup.html#method-i-add_regexp_handling">#add_regexp_handling</a>
+    &mdash;
+    <span class="container">RDoc::Markup</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/AttributeManager.html#method-i-add_regexp_handling">#add_regexp_handling</a>
+    &mdash;
+    <span class="container">RDoc::Markup::AttributeManager</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Formatter.html#method-i-add_regexp_handling_RDOCLINK">#add_regexp_handling_RDOCLINK</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Formatter</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Formatter.html#method-i-add_regexp_handling_TIDYLINK">#add_regexp_handling_TIDYLINK</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Formatter</span>
+
+  <li class="method">
     <a href="RDoc/Context.html#method-i-add_require">#add_require</a>
     &mdash;
     <span class="container">RDoc::Context</span>
@@ -1850,26 +2003,6 @@
     <a href="RDoc/Context.html#method-i-add_section">#add_section</a>
     &mdash;
     <span class="container">RDoc::Context</span>
-
-  <li class="method">
-    <a href="RDoc/Markup.html#method-i-add_special">#add_special</a>
-    &mdash;
-    <span class="container">RDoc::Markup</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/AttributeManager.html#method-i-add_special">#add_special</a>
-    &mdash;
-    <span class="container">RDoc::Markup::AttributeManager</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/Formatter.html#method-i-add_special_RDOCLINK">#add_special_RDOCLINK</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Formatter</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/Formatter.html#method-i-add_special_TIDYLINK">#add_special_TIDYLINK</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Formatter</span>
 
   <li class="method">
     <a href="RDoc/Markup/Formatter.html#method-i-add_tag">#add_tag</a>
@@ -1937,11 +2070,6 @@
     <span class="container">RDoc::ClassModule</span>
 
   <li class="method">
-    <a href="RDoc/NormalClass.html#method-i-ancestors">#ancestors</a>
-    &mdash;
-    <span class="container">RDoc::NormalClass</span>
-
-  <li class="method">
     <a href="RDoc/SingleClass.html#method-i-ancestors">#ancestors</a>
     &mdash;
     <span class="container">RDoc::SingleClass</span>
@@ -1950,6 +2078,11 @@
     <a href="RDoc/Store.html#method-i-ancestors">#ancestors</a>
     &mdash;
     <span class="container">RDoc::Store</span>
+
+  <li class="method">
+    <a href="RDoc/NormalClass.html#method-i-ancestors">#ancestors</a>
+    &mdash;
+    <span class="container">RDoc::NormalClass</span>
 
   <li class="method">
     <a href="RDoc/RI/Driver.html#method-i-ancestors_of">#ancestors_of</a>
@@ -1977,11 +2110,6 @@
     <span class="container">RDoc::RD::Inline</span>
 
   <li class="method">
-    <a href="RDoc/Alias.html#method-i-aref">#aref</a>
-    &mdash;
-    <span class="container">RDoc::Alias</span>
-
-  <li class="method">
     <a href="RDoc/ClassModule.html#method-i-aref">#aref</a>
     &mdash;
     <span class="container">RDoc::ClassModule</span>
@@ -1992,19 +2120,24 @@
     <span class="container">RDoc::Context::Section</span>
 
   <li class="method">
+    <a href="RDoc/Alias.html#method-i-aref">#aref</a>
+    &mdash;
+    <span class="container">RDoc::Alias</span>
+
+  <li class="method">
     <a href="RDoc/MethodAttr.html#method-i-aref">#aref</a>
     &mdash;
     <span class="container">RDoc::MethodAttr</span>
 
   <li class="method">
-    <a href="RDoc/AnyMethod.html#method-i-aref_prefix">#aref_prefix</a>
-    &mdash;
-    <span class="container">RDoc::AnyMethod</span>
-
-  <li class="method">
     <a href="RDoc/Attr.html#method-i-aref_prefix">#aref_prefix</a>
     &mdash;
     <span class="container">RDoc::Attr</span>
+
+  <li class="method">
+    <a href="RDoc/AnyMethod.html#method-i-aref_prefix">#aref_prefix</a>
+    &mdash;
+    <span class="container">RDoc::AnyMethod</span>
 
   <li class="method">
     <a href="RDoc/MethodAttr.html#method-i-aref_prefix">#aref_prefix</a>
@@ -2020,6 +2153,11 @@
     <a href="RDoc/AnyMethod.html#method-i-arglists">#arglists</a>
     &mdash;
     <span class="container">RDoc::AnyMethod</span>
+
+  <li class="method">
+    <a href="RDoc/MarkupReference.html#method-i-args_directive">#args_directive</a>
+    &mdash;
+    <span class="container">RDoc::MarkupReference</span>
 
   <li class="method">
     <a href="RDoc/Generator/Markup.html#method-i-as_href">#as_href</a>
@@ -2047,24 +2185,19 @@
     <span class="container">RDoc::Markup::AttributeManager</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToRdoc.html#method-i-attributes">#attributes</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToRdoc</span>
-
-  <li class="method">
     <a href="RDoc/Store.html#method-i-attributes">#attributes</a>
     &mdash;
     <span class="container">RDoc::Store</span>
 
   <li class="method">
+    <a href="RDoc/Markup/ToRdoc.html#method-i-attributes">#attributes</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToRdoc</span>
+
+  <li class="method">
     <a href="RDoc/TopLevel.html#method-i-base_name">#base_name</a>
     &mdash;
     <span class="container">RDoc::TopLevel</span>
-
-  <li class="method">
-    <a href="RDoc/Task.html#method-i-before_running_rdoc">#before_running_rdoc</a>
-    &mdash;
-    <span class="container">RDoc::Task</span>
 
   <li class="method">
     <a href="RDoc/Task.html#method-i-before_running_rdoc">#before_running_rdoc</a>
@@ -2092,6 +2225,11 @@
     <span class="container">RDoc::MethodAttr</span>
 
   <li class="method">
+    <a href="RDoc/Markdown.html#method-i-break_on_newline">#break_on_newline</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
+
+  <li class="method">
     <a href="RDoc/Markup/Parser.html#method-i-build_heading">#build_heading</a>
     &mdash;
     <span class="container">RDoc::Markup::Parser</span>
@@ -2112,17 +2250,12 @@
     <span class="container">RDoc::Markup::Parser</span>
 
   <li class="method">
-    <a href="RDoc/Markup/Parser.html#method-i-build_paragraph">#build_paragraph</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Parser</span>
-
-  <li class="method">
     <a href="RDoc/TomDoc.html#method-i-build_paragraph">#build_paragraph</a>
     &mdash;
     <span class="container">RDoc::TomDoc</span>
 
   <li class="method">
-    <a href="RDoc/Markup/Parser.html#method-i-build_verbatim">#build_verbatim</a>
+    <a href="RDoc/Markup/Parser.html#method-i-build_paragraph">#build_paragraph</a>
     &mdash;
     <span class="container">RDoc::Markup::Parser</span>
 
@@ -2130,6 +2263,11 @@
     <a href="RDoc/TomDoc.html#method-i-build_verbatim">#build_verbatim</a>
     &mdash;
     <span class="container">RDoc::TomDoc</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Parser.html#method-i-build_verbatim">#build_verbatim</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Parser</span>
 
   <li class="method">
     <a href="RDoc/Store.html#method-i-cache_path">#cache_path</a>
@@ -2142,9 +2280,19 @@
     <span class="container">RDoc::Stats</span>
 
   <li class="method">
+    <a href="RDoc/AnyMethod.html#method-i-call_seq">#call_seq</a>
+    &mdash;
+    <span class="container">RDoc::AnyMethod</span>
+
+  <li class="method">
     <a href="RDoc/AnyMethod.html#method-i-call_seq-3D">#call_seq=</a>
     &mdash;
     <span class="container">RDoc::AnyMethod</span>
+
+  <li class="method">
+    <a href="RDoc/MarkupReference.html#method-i-call_seq_directive">#call_seq_directive</a>
+    &mdash;
+    <span class="container">RDoc::MarkupReference</span>
 
   <li class="method">
     <a href="RDoc/Markup/AttributeManager.html#method-i-change_attribute">#change_attribute</a>
@@ -2155,11 +2303,6 @@
     <a href="RDoc/Markup/AttributeManager.html#method-i-changed_attribute_by_name">#changed_attribute_by_name</a>
     &mdash;
     <span class="container">RDoc::Markup::AttributeManager</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/Parser.html#method-i-char_pos">#char_pos</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Parser</span>
 
   <li class="method">
     <a href="RDoc/Options.html#method-i-check_files">#check_files</a>
@@ -2177,11 +2320,6 @@
     <span class="container">RDoc::Task</span>
 
   <li class="method">
-    <a href="RDoc/Task.html#method-i-check_names">#check_names</a>
-    &mdash;
-    <span class="container">RDoc::Task</span>
-
-  <li class="method">
     <a href="RDoc/Context.html#method-i-child_name">#child_name</a>
     &mdash;
     <span class="container">RDoc::Context</span>
@@ -2192,6 +2330,11 @@
     <span class="container">RDoc::Context</span>
 
   <li class="method">
+    <a href="RDoc/Generator/POT.html#method-i-class_dir">#class_dir</a>
+    &mdash;
+    <span class="container">RDoc::Generator::POT</span>
+
+  <li class="method">
     <a href="RDoc/Generator/Darkfish.html#method-i-class_dir">#class_dir</a>
     &mdash;
     <span class="container">RDoc::Generator::Darkfish</span>
@@ -2200,11 +2343,6 @@
     <a href="RDoc/Generator/JsonIndex.html#method-i-class_dir">#class_dir</a>
     &mdash;
     <span class="container">RDoc::Generator::JsonIndex</span>
-
-  <li class="method">
-    <a href="RDoc/Generator/POT.html#method-i-class_dir">#class_dir</a>
-    &mdash;
-    <span class="container">RDoc::Generator::POT</span>
 
   <li class="method">
     <a href="RDoc/RI/Driver.html#method-i-class_document">#class_document</a>
@@ -2232,14 +2370,14 @@
     <span class="container">RDoc::Store</span>
 
   <li class="method">
-    <a href="RDoc/Context.html#method-i-classes">#classes</a>
-    &mdash;
-    <span class="container">RDoc::Context</span>
-
-  <li class="method">
     <a href="RDoc/RI/Driver.html#method-i-classes">#classes</a>
     &mdash;
     <span class="container">RDoc::RI::Driver</span>
+
+  <li class="method">
+    <a href="RDoc/Context.html#method-i-classes">#classes</a>
+    &mdash;
+    <span class="container">RDoc::Context</span>
 
   <li class="method">
     <a href="RDoc/RI/Driver.html#method-i-classes_and_includes_and_extends_for">#classes_and_includes_and_extends_for</a>
@@ -2252,24 +2390,19 @@
     <span class="container">RDoc::Context</span>
 
   <li class="method">
-    <a href="RDoc/Context.html#method-i-classes_hash">#classes_hash</a>
-    &mdash;
-    <span class="container">RDoc::Context</span>
-
-  <li class="method">
     <a href="RDoc/Store.html#method-i-classes_hash">#classes_hash</a>
     &mdash;
     <span class="container">RDoc::Store</span>
 
   <li class="method">
+    <a href="RDoc/Context.html#method-i-classes_hash">#classes_hash</a>
+    &mdash;
+    <span class="container">RDoc::Context</span>
+
+  <li class="method">
     <a href="RDoc/ClassModule.html#method-i-clear_comment">#clear_comment</a>
     &mdash;
     <span class="container">RDoc::ClassModule</span>
-
-  <li class="method">
-    <a href="RDoc/Task.html#method-i-clobber_task_description">#clobber_task_description</a>
-    &mdash;
-    <span class="container">RDoc::Task</span>
 
   <li class="method">
     <a href="RDoc/Task.html#method-i-clobber_task_description">#clobber_task_description</a>
@@ -2292,14 +2425,14 @@
     <span class="container">RDoc::CodeObject</span>
 
   <li class="method">
-    <a href="RDoc/ClassModule.html#method-i-complete">#complete</a>
-    &mdash;
-    <span class="container">RDoc::ClassModule</span>
-
-  <li class="method">
     <a href="RDoc/RI/Driver.html#method-i-complete">#complete</a>
     &mdash;
     <span class="container">RDoc::RI::Driver</span>
+
+  <li class="method">
+    <a href="RDoc/ClassModule.html#method-i-complete">#complete</a>
+    &mdash;
+    <span class="container">RDoc::ClassModule</span>
 
   <li class="method">
     <a href="RDoc/Store.html#method-i-complete">#complete</a>
@@ -2312,14 +2445,19 @@
     <span class="container">RDoc::Markup::Document</span>
 
   <li class="method">
+    <a href="RDoc/RD/BlockParser.html#method-i-content">#content</a>
+    &mdash;
+    <span class="container">RDoc::RD::BlockParser</span>
+
+  <li class="method">
     <a href="RDoc/Parser/ChangeLog.html#method-i-continue_entry_body">#continue_entry_body</a>
     &mdash;
     <span class="container">RDoc::Parser::ChangeLog</span>
 
   <li class="method">
-    <a href="RDoc/Markup.html#method-i-convert">#convert</a>
+    <a href="RDoc/Markup/ToHtmlSnippet.html#method-i-convert">#convert</a>
     &mdash;
-    <span class="container">RDoc::Markup</span>
+    <span class="container">RDoc::Markup::ToHtmlSnippet</span>
 
   <li class="method">
     <a href="RDoc/Markup/Formatter.html#method-i-convert">#convert</a>
@@ -2327,9 +2465,9 @@
     <span class="container">RDoc::Markup::Formatter</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToHtmlSnippet.html#method-i-convert">#convert</a>
+    <a href="RDoc/Markup.html#method-i-convert">#convert</a>
     &mdash;
-    <span class="container">RDoc::Markup::ToHtmlSnippet</span>
+    <span class="container">RDoc::Markup</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToLabel.html#method-i-convert">#convert</a>
@@ -2338,6 +2476,16 @@
 
   <li class="method">
     <a href="RDoc/Markup/AttributeManager.html#method-i-convert_attrs">#convert_attrs</a>
+    &mdash;
+    <span class="container">RDoc::Markup::AttributeManager</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/AttributeManager.html#method-i-convert_attrs_matching_word_pairs">#convert_attrs_matching_word_pairs</a>
+    &mdash;
+    <span class="container">RDoc::Markup::AttributeManager</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/AttributeManager.html#method-i-convert_attrs_word_pair_map">#convert_attrs_word_pair_map</a>
     &mdash;
     <span class="container">RDoc::Markup::AttributeManager</span>
 
@@ -2357,19 +2505,24 @@
     <span class="container">RDoc::Markup::AttributeManager</span>
 
   <li class="method">
-    <a href="RDoc/Markup/Formatter.html#method-i-convert_special">#convert_special</a>
+    <a href="RDoc/Markup/Formatter.html#method-i-convert_regexp_handling">#convert_regexp_handling</a>
     &mdash;
     <span class="container">RDoc::Markup::Formatter</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToBs.html#method-i-convert_special">#convert_special</a>
+    <a href="RDoc/Markup/ToBs.html#method-i-convert_regexp_handling">#convert_regexp_handling</a>
     &mdash;
     <span class="container">RDoc::Markup::ToBs</span>
 
   <li class="method">
-    <a href="RDoc/Markup/AttributeManager.html#method-i-convert_specials">#convert_specials</a>
+    <a href="RDoc/Markup/AttributeManager.html#method-i-convert_regexp_handlings">#convert_regexp_handlings</a>
     &mdash;
     <span class="container">RDoc::Markup::AttributeManager</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToHtml.html#method-i-convert_string">#convert_string</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtml</span>
 
   <li class="method">
     <a href="RDoc/Markup/Formatter.html#method-i-convert_string">#convert_string</a>
@@ -2380,11 +2533,6 @@
     <a href="RDoc/Markup/ToBs.html#method-i-convert_string">#convert_string</a>
     &mdash;
     <span class="container">RDoc::Markup::ToBs</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToHtml.html#method-i-convert_string">#convert_string</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToHtml</span>
 
   <li class="method">
     <a href="RDoc/Generator/Darkfish.html#method-i-copy_static">#copy_static</a>
@@ -2407,6 +2555,11 @@
     <span class="container">RDoc::Parser::ChangeLog</span>
 
   <li class="method">
+    <a href="RDoc/Parser/ChangeLog/Git.html#method-i-create_entries">#create_entries</a>
+    &mdash;
+    <span class="container">RDoc::Parser::ChangeLog::Git</span>
+
+  <li class="method">
     <a href="RDoc/Parser/ChangeLog.html#method-i-create_entries">#create_entries</a>
     &mdash;
     <span class="container">RDoc::Parser::ChangeLog</span>
@@ -2420,6 +2573,11 @@
     <a href="RDoc/Markup/ToHtmlCrossref.html#method-i-cross_reference">#cross_reference</a>
     &mdash;
     <span class="container">RDoc::Markup::ToHtmlCrossref</span>
+
+  <li class="method">
+    <a href="RDoc/Markdown.html#method-i-css">#css</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
 
   <li class="method">
     <a href="RDoc/Context.html#method-i-current_section">#current_section</a>
@@ -2447,11 +2605,6 @@
     <span class="container">RDoc::Generator::JsonIndex</span>
 
   <li class="method">
-    <a href="RDoc/Parser/C.html#method-i-deduplicate_call_seq">#deduplicate_call_seq</a>
-    &mdash;
-    <span class="container">RDoc::Parser::C</span>
-
-  <li class="method">
     <a href="RDoc/Options.html#method-i-default_title-3D">#default_title=</a>
     &mdash;
     <span class="container">RDoc::Options</span>
@@ -2463,16 +2616,6 @@
 
   <li class="method">
     <a href="RDoc/Task.html#method-i-defaults">#defaults</a>
-    &mdash;
-    <span class="container">RDoc::Task</span>
-
-  <li class="method">
-    <a href="RDoc/Task.html#method-i-defaults">#defaults</a>
-    &mdash;
-    <span class="container">RDoc::Task</span>
-
-  <li class="method">
-    <a href="RDoc/Task.html#method-i-define">#define</a>
     &mdash;
     <span class="container">RDoc::Task</span>
 
@@ -2497,14 +2640,19 @@
     <span class="container">RDoc::NormalClass</span>
 
   <li class="method">
+    <a href="RDoc/SingleClass.html#method-i-definition">#definition</a>
+    &mdash;
+    <span class="container">RDoc::SingleClass</span>
+
+  <li class="method">
     <a href="RDoc/NormalModule.html#method-i-definition">#definition</a>
     &mdash;
     <span class="container">RDoc::NormalModule</span>
 
   <li class="method">
-    <a href="RDoc/SingleClass.html#method-i-definition">#definition</a>
+    <a href="RDoc/Markdown.html#method-i-definition_lists">#definition_lists</a>
     &mdash;
-    <span class="container">RDoc::SingleClass</span>
+    <span class="container">RDoc::Markdown</span>
 
   <li class="method">
     <a href="RDoc/RubygemsHook.html#method-i-delete_legacy_args">#delete_legacy_args</a>
@@ -2512,17 +2660,12 @@
     <span class="container">RDoc::RubygemsHook</span>
 
   <li class="method">
-    <a href="RDoc/ClassModule.html#method-i-description">#description</a>
-    &mdash;
-    <span class="container">RDoc::ClassModule</span>
-
-  <li class="method">
     <a href="RDoc/Generator/Markup.html#method-i-description">#description</a>
     &mdash;
     <span class="container">RDoc::Generator::Markup</span>
 
   <li class="method">
-    <a href="RDoc/ClassModule.html#method-i-direct_ancestors">#direct_ancestors</a>
+    <a href="RDoc/ClassModule.html#method-i-description">#description</a>
     &mdash;
     <span class="container">RDoc::ClassModule</span>
 
@@ -2530,6 +2673,11 @@
     <a href="RDoc/NormalClass.html#method-i-direct_ancestors">#direct_ancestors</a>
     &mdash;
     <span class="container">RDoc::NormalClass</span>
+
+  <li class="method">
+    <a href="RDoc/ClassModule.html#method-i-direct_ancestors">#direct_ancestors</a>
+    &mdash;
+    <span class="container">RDoc::ClassModule</span>
 
   <li class="method">
     <a href="RDoc/RI/Driver.html#method-i-display">#display</a>
@@ -2602,32 +2750,12 @@
     <span class="container">RDoc::Parser::C</span>
 
   <li class="method">
-    <a href="RDoc/Parser/C.html#method-i-do_classes">#do_classes</a>
+    <a href="RDoc/Parser/C.html#method-i-do_classes_and_modules">#do_classes_and_modules</a>
     &mdash;
     <span class="container">RDoc::Parser::C</span>
 
   <li class="method">
     <a href="RDoc/Parser/C.html#method-i-do_constants">#do_constants</a>
-    &mdash;
-    <span class="container">RDoc::Parser::C</span>
-
-  <li class="method">
-    <a href="RDoc/Parser/C.html#method-i-do_define_class">#do_define_class</a>
-    &mdash;
-    <span class="container">RDoc::Parser::C</span>
-
-  <li class="method">
-    <a href="RDoc/Parser/C.html#method-i-do_define_class_under">#do_define_class_under</a>
-    &mdash;
-    <span class="container">RDoc::Parser::C</span>
-
-  <li class="method">
-    <a href="RDoc/Parser/C.html#method-i-do_define_module">#do_define_module</a>
-    &mdash;
-    <span class="container">RDoc::Parser::C</span>
-
-  <li class="method">
-    <a href="RDoc/Parser/C.html#method-i-do_define_module_under">#do_define_module_under</a>
     &mdash;
     <span class="container">RDoc::Parser::C</span>
 
@@ -2647,24 +2775,9 @@
     <span class="container">RDoc::Parser::C</span>
 
   <li class="method">
-    <a href="RDoc/Parser/C.html#method-i-do_modules">#do_modules</a>
-    &mdash;
-    <span class="container">RDoc::Parser::C</span>
-
-  <li class="method">
     <a href="RDoc/Markup/ToTtOnly.html#method-i-do_nothing">#do_nothing</a>
     &mdash;
     <span class="container">RDoc::Markup::ToTtOnly</span>
-
-  <li class="method">
-    <a href="RDoc/Parser/C.html#method-i-do_singleton_class">#do_singleton_class</a>
-    &mdash;
-    <span class="container">RDoc::Parser::C</span>
-
-  <li class="method">
-    <a href="RDoc/Parser/C.html#method-i-do_struct_define_without_accessor">#do_struct_define_without_accessor</a>
-    &mdash;
-    <span class="container">RDoc::Parser::C</span>
 
   <li class="method">
     <a href="RDoc/Stats.html#method-i-doc_stats">#doc_stats</a>
@@ -2712,14 +2825,9 @@
     <span class="container">RDoc::Servlet</span>
 
   <li class="method">
-    <a href="RDoc/ClassModule.html#method-i-documented-3F">#documented?</a>
+    <a href="RDoc/MethodAttr.html#method-i-documented-3F">#documented?</a>
     &mdash;
-    <span class="container">RDoc::ClassModule</span>
-
-  <li class="method">
-    <a href="RDoc/CodeObject.html#method-i-documented-3F">#documented?</a>
-    &mdash;
-    <span class="container">RDoc::CodeObject</span>
+    <span class="container">RDoc::MethodAttr</span>
 
   <li class="method">
     <a href="RDoc/Constant.html#method-i-documented-3F">#documented?</a>
@@ -2727,14 +2835,14 @@
     <span class="container">RDoc::Constant</span>
 
   <li class="method">
-    <a href="RDoc/MethodAttr.html#method-i-documented-3F">#documented?</a>
+    <a href="RDoc/CodeObject.html#method-i-documented-3F">#documented?</a>
     &mdash;
-    <span class="container">RDoc::MethodAttr</span>
+    <span class="container">RDoc::CodeObject</span>
 
   <li class="method">
-    <a href="RDoc/Stats.html#method-i-done_adding">#done_adding</a>
+    <a href="RDoc/ClassModule.html#method-i-documented-3F">#documented?</a>
     &mdash;
-    <span class="container">RDoc::Stats</span>
+    <span class="container">RDoc::ClassModule</span>
 
   <li class="method">
     <a href="RDoc/Stats/Quiet.html#method-i-done_adding">#done_adding</a>
@@ -2742,19 +2850,29 @@
     <span class="container">RDoc::Stats::Quiet</span>
 
   <li class="method">
+    <a href="RDoc/Stats.html#method-i-done_adding">#done_adding</a>
+    &mdash;
+    <span class="container">RDoc::Stats</span>
+
+  <li class="method">
     <a href="RDoc/CodeObject.html#method-i-done_documenting-3D">#done_documenting=</a>
     &mdash;
     <span class="container">RDoc::CodeObject</span>
 
   <li class="method">
+    <a href="RDoc/MarkupReference.html#method-i-dummy_instance_alias">#dummy_instance_alias</a>
+    &mdash;
+    <span class="container">RDoc::MarkupReference</span>
+
+  <li class="method">
+    <a href="RDoc/MarkupReference.html#method-i-dummy_instance_method">#dummy_instance_method</a>
+    &mdash;
+    <span class="container">RDoc::MarkupReference</span>
+
+  <li class="method">
     <a href="RDoc/Markup/Document.html#method-i-each">#each</a>
     &mdash;
     <span class="container">RDoc::Markup::Document</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-each">#each</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
 
   <li class="method">
     <a href="RDoc/ClassModule.html#method-i-each_ancestor">#each_ancestor</a>
@@ -2807,14 +2925,9 @@
     <span class="container">RDoc::Context</span>
 
   <li class="method">
-    <a href="RDoc/Comment.html#method-i-empty-3F">#empty?</a>
+    <a href="RDoc/Markdown.html#method-i-emphasis">#emphasis</a>
     &mdash;
-    <span class="container">RDoc::Comment</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/Document.html#method-i-empty-3F">#empty?</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Document</span>
+    <span class="container">RDoc::Markdown</span>
 
   <li class="method">
     <a href="RDoc/Markup/List.html#method-i-empty-3F">#empty?</a>
@@ -2825,6 +2938,16 @@
     <a href="RDoc/Markup/ListItem.html#method-i-empty-3F">#empty?</a>
     &mdash;
     <span class="container">RDoc::Markup::ListItem</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Document.html#method-i-empty-3F">#empty?</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Document</span>
+
+  <li class="method">
+    <a href="RDoc/Comment.html#method-i-empty-3F">#empty?</a>
+    &mdash;
+    <span class="container">RDoc::Comment</span>
 
   <li class="method">
     <a href="RDoc/Comment.html#method-i-encode-21">#encode!</a>
@@ -2842,19 +2965,19 @@
     <span class="container">RDoc::Markup::ToRdoc</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToTableOfContents.html#method-i-end_accepting">#end_accepting</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToTableOfContents</span>
-
-  <li class="method">
     <a href="RDoc/Markup/ToTtOnly.html#method-i-end_accepting">#end_accepting</a>
     &mdash;
     <span class="container">RDoc::Markup::ToTtOnly</span>
 
   <li class="method">
-    <a href="RDoc/Context/Section.html#method-i-eql-3F">#eql?</a>
+    <a href="RDoc/Markup/ToTableOfContents.html#method-i-end_accepting">#end_accepting</a>
     &mdash;
-    <span class="container">RDoc::Context::Section</span>
+    <span class="container">RDoc::Markup::ToTableOfContents</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Parser/MyStringScanner.html#method-i-eos-3F">#eos?</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Parser::MyStringScanner</span>
 
   <li class="method">
     <a href="RDoc/TopLevel.html#method-i-eql-3F">#eql?</a>
@@ -2862,9 +2985,9 @@
     <span class="container">RDoc::TopLevel</span>
 
   <li class="method">
-    <a href="RDoc/Parser/Ruby.html#method-i-error">#error</a>
+    <a href="RDoc/Context/Section.html#method-i-eql-3F">#eql?</a>
     &mdash;
-    <span class="container">RDoc::Parser::Ruby</span>
+    <span class="container">RDoc::Context::Section</span>
 
   <li class="method">
     <a href="RDoc/RDoc.html#method-i-error">#error</a>
@@ -2875,6 +2998,21 @@
     <a href="RDoc/Servlet.html#method-i-error">#error</a>
     &mdash;
     <span class="container">RDoc::Servlet</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/Ruby.html#method-i-error">#error</a>
+    &mdash;
+    <span class="container">RDoc::Parser::Ruby</span>
+
+  <li class="method">
+    <a href="RDoc/Options.html#method-i-exclude">#exclude</a>
+    &mdash;
+    <span class="container">RDoc::Options</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/AttributeManager.html#method-i-exclusive-3F">#exclusive?</a>
+    &mdash;
+    <span class="container">RDoc::Markup::AttributeManager</span>
 
   <li class="method">
     <a href="RDoc/RI/Driver.html#method-i-expand_class">#expand_class</a>
@@ -2890,6 +3028,16 @@
     <a href="RDoc/Text.html#method-i-expand_tabs">#expand_tabs</a>
     &mdash;
     <span class="container">RDoc::Text</span>
+
+  <li class="method">
+    <a href="RDoc/Markdown.html#method-i-extension">#extension</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
+
+  <li class="method">
+    <a href="RDoc/Markdown.html#method-i-extension-3F">#extension?</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
 
   <li class="method">
     <a href="RDoc/Generator/POT/MessageExtractor.html#method-i-extract">#extract</a>
@@ -2917,14 +3065,14 @@
     <span class="container">RDoc::Markup::Document</span>
 
   <li class="method">
-    <a href="RDoc/Generator/Darkfish.html#method-i-file_dir">#file_dir</a>
-    &mdash;
-    <span class="container">RDoc::Generator::Darkfish</span>
-
-  <li class="method">
     <a href="RDoc/Generator/JsonIndex.html#method-i-file_dir">#file_dir</a>
     &mdash;
     <span class="container">RDoc::Generator::JsonIndex</span>
+
+  <li class="method">
+    <a href="RDoc/Generator/Darkfish.html#method-i-file_dir">#file_dir</a>
+    &mdash;
+    <span class="container">RDoc::Generator::Darkfish</span>
 
   <li class="method">
     <a href="RDoc/CodeObject.html#method-i-file_name">#file_name</a>
@@ -3007,14 +3155,14 @@
     <span class="container">RDoc::Store</span>
 
   <li class="method">
-    <a href="RDoc/TopLevel.html#method-i-find_class_or_module">#find_class_or_module</a>
-    &mdash;
-    <span class="container">RDoc::TopLevel</span>
-
-  <li class="method">
     <a href="RDoc/Store.html#method-i-find_class_or_module">#find_class_or_module</a>
     &mdash;
     <span class="container">RDoc::Store</span>
+
+  <li class="method">
+    <a href="RDoc/TopLevel.html#method-i-find_class_or_module">#find_class_or_module</a>
+    &mdash;
+    <span class="container">RDoc::TopLevel</span>
 
   <li class="method">
     <a href="RDoc/Parser/C.html#method-i-find_const_comment">#find_const_comment</a>
@@ -3042,14 +3190,14 @@
     <span class="container">RDoc::Context</span>
 
   <li class="method">
-    <a href="RDoc/Context.html#method-i-find_file_named">#find_file_named</a>
-    &mdash;
-    <span class="container">RDoc::Context</span>
-
-  <li class="method">
     <a href="RDoc/Store.html#method-i-find_file_named">#find_file_named</a>
     &mdash;
     <span class="container">RDoc::Store</span>
+
+  <li class="method">
+    <a href="RDoc/Context.html#method-i-find_file_named">#find_file_named</a>
+    &mdash;
+    <span class="container">RDoc::Context</span>
 
   <li class="method">
     <a href="RDoc/Markup/PreProcess.html#method-i-find_include_file">#find_include_file</a>
@@ -3062,14 +3210,14 @@
     <span class="container">RDoc::Context</span>
 
   <li class="method">
-    <a href="RDoc/Context.html#method-i-find_local_symbol">#find_local_symbol</a>
-    &mdash;
-    <span class="container">RDoc::Context</span>
-
-  <li class="method">
     <a href="RDoc/TopLevel.html#method-i-find_local_symbol">#find_local_symbol</a>
     &mdash;
     <span class="container">RDoc::TopLevel</span>
+
+  <li class="method">
+    <a href="RDoc/Context.html#method-i-find_local_symbol">#find_local_symbol</a>
+    &mdash;
+    <span class="container">RDoc::Context</span>
 
   <li class="method">
     <a href="RDoc/Context.html#method-i-find_method">#find_method</a>
@@ -3092,6 +3240,11 @@
     <span class="container">RDoc::Parser::C</span>
 
   <li class="method">
+    <a href="RDoc/Store.html#method-i-find_module_named">#find_module_named</a>
+    &mdash;
+    <span class="container">RDoc::Store</span>
+
+  <li class="method">
     <a href="RDoc/Context.html#method-i-find_module_named">#find_module_named</a>
     &mdash;
     <span class="container">RDoc::Context</span>
@@ -3102,19 +3255,9 @@
     <span class="container">RDoc::TopLevel</span>
 
   <li class="method">
-    <a href="RDoc/Store.html#method-i-find_module_named">#find_module_named</a>
-    &mdash;
-    <span class="container">RDoc::Store</span>
-
-  <li class="method">
     <a href="RDoc/Parser/C.html#method-i-find_override_comment">#find_override_comment</a>
     &mdash;
     <span class="container">RDoc::Parser::C</span>
-
-  <li class="method">
-    <a href="RDoc/RI/Driver.html#method-i-find_pager_jruby">#find_pager_jruby</a>
-    &mdash;
-    <span class="container">RDoc::RI::Driver</span>
 
   <li class="method">
     <a href="RDoc/RI/Driver.html#method-i-find_store">#find_store</a>
@@ -3177,14 +3320,14 @@
     <span class="container">RDoc::Comment</span>
 
   <li class="method">
-    <a href="RDoc/RI/Driver.html#method-i-formatter">#formatter</a>
-    &mdash;
-    <span class="container">RDoc::RI::Driver</span>
-
-  <li class="method">
     <a href="RDoc/Generator/Markup.html#method-i-formatter">#formatter</a>
     &mdash;
     <span class="container">RDoc::Generator::Markup</span>
+
+  <li class="method">
+    <a href="RDoc/RI/Driver.html#method-i-formatter">#formatter</a>
+    &mdash;
+    <span class="container">RDoc::RI::Driver</span>
 
   <li class="method">
     <a href="RDoc/Store.html#method-i-friendly_path">#friendly_path</a>
@@ -3192,24 +3335,14 @@
     <span class="container">RDoc::Store</span>
 
   <li class="method">
-    <a href="RDoc/ClassModule.html#method-i-full_name">#full_name</a>
-    &mdash;
-    <span class="container">RDoc::ClassModule</span>
-
-  <li class="method">
-    <a href="RDoc/Constant.html#method-i-full_name">#full_name</a>
-    &mdash;
-    <span class="container">RDoc::Constant</span>
-
-  <li class="method">
-    <a href="RDoc/Context.html#method-i-full_name">#full_name</a>
-    &mdash;
-    <span class="container">RDoc::Context</span>
-
-  <li class="method">
     <a href="RDoc/MethodAttr.html#method-i-full_name">#full_name</a>
     &mdash;
     <span class="container">RDoc::MethodAttr</span>
+
+  <li class="method">
+    <a href="RDoc/Mixin.html#method-i-full_name">#full_name</a>
+    &mdash;
+    <span class="container">RDoc::Mixin</span>
 
   <li class="method">
     <a href="RDoc/TopLevel.html#method-i-full_name">#full_name</a>
@@ -3217,9 +3350,19 @@
     <span class="container">RDoc::TopLevel</span>
 
   <li class="method">
-    <a href="RDoc/Mixin.html#method-i-full_name">#full_name</a>
+    <a href="RDoc/Context.html#method-i-full_name">#full_name</a>
     &mdash;
-    <span class="container">RDoc::Mixin</span>
+    <span class="container">RDoc::Context</span>
+
+  <li class="method">
+    <a href="RDoc/Constant.html#method-i-full_name">#full_name</a>
+    &mdash;
+    <span class="container">RDoc::Constant</span>
+
+  <li class="method">
+    <a href="RDoc/ClassModule.html#method-i-full_name">#full_name</a>
+    &mdash;
+    <span class="container">RDoc::ClassModule</span>
 
   <li class="method">
     <a href="RDoc/CodeObject.html#method-i-full_name-3D">#full_name=</a>
@@ -3282,24 +3425,9 @@
     <span class="container">RDoc::Markup::ToMarkdown</span>
 
   <li class="method">
-    <a href="RDoc/Generator/Darkfish.html#method-i-generate">#generate</a>
+    <a href="RDoc/RubygemsHook.html#method-i-generate">#generate</a>
     &mdash;
-    <span class="container">RDoc::Generator::Darkfish</span>
-
-  <li class="method">
-    <a href="RDoc/Generator/JsonIndex.html#method-i-generate">#generate</a>
-    &mdash;
-    <span class="container">RDoc::Generator::JsonIndex</span>
-
-  <li class="method">
-    <a href="RDoc/Generator/POT.html#method-i-generate">#generate</a>
-    &mdash;
-    <span class="container">RDoc::Generator::POT</span>
-
-  <li class="method">
-    <a href="RDoc/Generator/RI.html#method-i-generate">#generate</a>
-    &mdash;
-    <span class="container">RDoc::Generator::RI</span>
+    <span class="container">RDoc::RubygemsHook</span>
 
   <li class="method">
     <a href="RDoc/RDoc.html#method-i-generate">#generate</a>
@@ -3307,9 +3435,24 @@
     <span class="container">RDoc::RDoc</span>
 
   <li class="method">
-    <a href="RDoc/RubygemsHook.html#method-i-generate">#generate</a>
+    <a href="RDoc/Generator/Darkfish.html#method-i-generate">#generate</a>
     &mdash;
-    <span class="container">RDoc::RubygemsHook</span>
+    <span class="container">RDoc::Generator::Darkfish</span>
+
+  <li class="method">
+    <a href="RDoc/Generator/POT.html#method-i-generate">#generate</a>
+    &mdash;
+    <span class="container">RDoc::Generator::POT</span>
+
+  <li class="method">
+    <a href="RDoc/Generator/JsonIndex.html#method-i-generate">#generate</a>
+    &mdash;
+    <span class="container">RDoc::Generator::JsonIndex</span>
+
+  <li class="method">
+    <a href="RDoc/Generator/RI.html#method-i-generate">#generate</a>
+    &mdash;
+    <span class="container">RDoc::Generator::RI</span>
 
   <li class="method">
     <a href="RDoc/Generator/Darkfish.html#method-i-generate_class">#generate_class</a>
@@ -3392,7 +3535,7 @@
     <span class="container">RDoc::Parser::Ruby</span>
 
   <li class="method">
-    <a href="RDoc/Parser/Ruby.html#method-i-get_constant_with_optional_parens">#get_constant_with_optional_parens</a>
+    <a href="RDoc/Parser/Ruby.html#method-i-get_included_module_with_optional_parens">#get_included_module_with_optional_parens</a>
     &mdash;
     <span class="container">RDoc::Parser::Ruby</span>
 
@@ -3402,9 +3545,9 @@
     <span class="container">RDoc::Generator::Darkfish</span>
 
   <li class="method">
-    <a href="RDoc/RipperStateLex.html#method-i-get_squashed_tk">#get_squashed_tk</a>
+    <a href="RDoc/Parser/RipperStateLex.html#method-i-get_squashed_tk">#get_squashed_tk</a>
     &mdash;
-    <span class="container">RDoc::RipperStateLex</span>
+    <span class="container">RDoc::Parser::RipperStateLex</span>
 
   <li class="method">
     <a href="RDoc/Generator/Darkfish.html#method-i-get_svninfo">#get_svninfo</a>
@@ -3430,6 +3573,11 @@
     <a href="RDoc/Parser/RubyTools.html#method-i-get_tkread">#get_tkread</a>
     &mdash;
     <span class="container">RDoc::Parser::RubyTools</span>
+
+  <li class="method">
+    <a href="RDoc/Markdown.html#method-i-github">#github</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
 
   <li class="method">
     <a href="RDoc/Stats.html#method-i-great_job">#great_job</a>
@@ -3487,94 +3635,94 @@
     <span class="container">RDoc::Markup::ToMarkdown</span>
 
   <li class="method">
+    <a href="RDoc/Markup/ToLabel.html#method-i-handle_regexp_CROSSREF">#handle_regexp_CROSSREF</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToLabel</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToHtmlCrossref.html#method-i-handle_regexp_CROSSREF">#handle_regexp_CROSSREF</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtmlCrossref</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToHtmlSnippet.html#method-i-handle_regexp_CROSSREF">#handle_regexp_CROSSREF</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtmlSnippet</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToMarkdown.html#method-i-handle_regexp_HARD_BREAK">#handle_regexp_HARD_BREAK</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToMarkdown</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToHtmlSnippet.html#method-i-handle_regexp_HARD_BREAK">#handle_regexp_HARD_BREAK</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtmlSnippet</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToHtml.html#method-i-handle_regexp_HARD_BREAK">#handle_regexp_HARD_BREAK</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtml</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToRdoc.html#method-i-handle_regexp_HARD_BREAK">#handle_regexp_HARD_BREAK</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToRdoc</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToHtmlCrossref.html#method-i-handle_regexp_HYPERLINK">#handle_regexp_HYPERLINK</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtmlCrossref</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToHtml.html#method-i-handle_regexp_HYPERLINK">#handle_regexp_HYPERLINK</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtml</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToHtml.html#method-i-handle_regexp_RDOCLINK">#handle_regexp_RDOCLINK</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtml</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToHtmlCrossref.html#method-i-handle_regexp_RDOCLINK">#handle_regexp_RDOCLINK</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtmlCrossref</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToMarkdown.html#method-i-handle_regexp_RDOCLINK">#handle_regexp_RDOCLINK</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToMarkdown</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToRdoc.html#method-i-handle_regexp_SUPPRESSED_CROSSREF">#handle_regexp_SUPPRESSED_CROSSREF</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToRdoc</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToMarkdown.html#method-i-handle_regexp_TIDYLINK">#handle_regexp_TIDYLINK</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToMarkdown</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToHtml.html#method-i-handle_regexp_TIDYLINK">#handle_regexp_TIDYLINK</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtml</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToLabel.html#method-i-handle_regexp_TIDYLINK">#handle_regexp_TIDYLINK</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToLabel</span>
+
+  <li class="method">
     <a href="RDoc/Parser/C.html#method-i-handle_singleton">#handle_singleton</a>
     &mdash;
     <span class="container">RDoc::Parser::C</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToHtmlCrossref.html#method-i-handle_special_CROSSREF">#handle_special_CROSSREF</a>
+    <a href="RDoc/Parser.html#method-i-handle_tab_width">#handle_tab_width</a>
     &mdash;
-    <span class="container">RDoc::Markup::ToHtmlCrossref</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToHtmlSnippet.html#method-i-handle_special_CROSSREF">#handle_special_CROSSREF</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToHtmlSnippet</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToLabel.html#method-i-handle_special_CROSSREF">#handle_special_CROSSREF</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToLabel</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToHtml.html#method-i-handle_special_HARD_BREAK">#handle_special_HARD_BREAK</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToHtml</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToHtmlSnippet.html#method-i-handle_special_HARD_BREAK">#handle_special_HARD_BREAK</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToHtmlSnippet</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToMarkdown.html#method-i-handle_special_HARD_BREAK">#handle_special_HARD_BREAK</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToMarkdown</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToRdoc.html#method-i-handle_special_HARD_BREAK">#handle_special_HARD_BREAK</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToRdoc</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToHtml.html#method-i-handle_special_HYPERLINK">#handle_special_HYPERLINK</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToHtml</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToHtmlCrossref.html#method-i-handle_special_HYPERLINK">#handle_special_HYPERLINK</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToHtmlCrossref</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToHtml.html#method-i-handle_special_RDOCLINK">#handle_special_RDOCLINK</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToHtml</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToHtmlCrossref.html#method-i-handle_special_RDOCLINK">#handle_special_RDOCLINK</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToHtmlCrossref</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToMarkdown.html#method-i-handle_special_RDOCLINK">#handle_special_RDOCLINK</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToMarkdown</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToRdoc.html#method-i-handle_special_SUPPRESSED_CROSSREF">#handle_special_SUPPRESSED_CROSSREF</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToRdoc</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToHtml.html#method-i-handle_special_TIDYLINK">#handle_special_TIDYLINK</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToHtml</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToLabel.html#method-i-handle_special_TIDYLINK">#handle_special_TIDYLINK</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToLabel</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToMarkdown.html#method-i-handle_special_TIDYLINK">#handle_special_TIDYLINK</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToMarkdown</span>
-
-  <li class="method">
-    <a href="RDoc/Parser/C.html#method-i-handle_tab_width">#handle_tab_width</a>
-    &mdash;
-    <span class="container">RDoc::Parser::C</span>
+    <span class="container">RDoc::Parser</span>
 
   <li class="method">
     <a href="RDoc/TopLevel.html#method-i-hash">#hash</a>
@@ -3582,9 +3730,9 @@
     <span class="container">RDoc::TopLevel</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToHtml.html#method-i-html_list_name">#html_list_name</a>
+    <a href="RDoc/Markdown.html#method-i-html">#html</a>
     &mdash;
-    <span class="container">RDoc::Markup::ToHtml</span>
+    <span class="container">RDoc::Markdown</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToHtmlSnippet.html#method-i-html_list_name">#html_list_name</a>
@@ -3592,9 +3740,9 @@
     <span class="container">RDoc::Markup::ToHtmlSnippet</span>
 
   <li class="method">
-    <a href="RDoc/Alias.html#method-i-html_name">#html_name</a>
+    <a href="RDoc/Markup/ToHtml.html#method-i-html_list_name">#html_list_name</a>
     &mdash;
-    <span class="container">RDoc::Alias</span>
+    <span class="container">RDoc::Markup::ToHtml</span>
 
   <li class="method">
     <a href="RDoc/MethodAttr.html#method-i-html_name">#html_name</a>
@@ -3602,9 +3750,9 @@
     <span class="container">RDoc::MethodAttr</span>
 
   <li class="method">
-    <a href="RDoc/Context.html#method-i-http_url">#http_url</a>
+    <a href="RDoc/Alias.html#method-i-html_name">#html_name</a>
     &mdash;
-    <span class="container">RDoc::Context</span>
+    <span class="container">RDoc::Alias</span>
 
   <li class="method">
     <a href="RDoc/TopLevel.html#method-i-http_url">#http_url</a>
@@ -3612,19 +3760,24 @@
     <span class="container">RDoc::TopLevel</span>
 
   <li class="method">
+    <a href="RDoc/Context.html#method-i-http_url">#http_url</a>
+    &mdash;
+    <span class="container">RDoc::Context</span>
+
+  <li class="method">
     <a href="RDoc/Servlet.html#method-i-if_modified_since">#if_modified_since</a>
     &mdash;
     <span class="container">RDoc::Servlet</span>
 
   <li class="method">
-    <a href="RDoc/CodeObject.html#method-i-ignore">#ignore</a>
-    &mdash;
-    <span class="container">RDoc::CodeObject</span>
-
-  <li class="method">
     <a href="RDoc/Markup/Formatter.html#method-i-ignore">#ignore</a>
     &mdash;
     <span class="container">RDoc::Markup::Formatter</span>
+
+  <li class="method">
+    <a href="RDoc/CodeObject.html#method-i-ignore">#ignore</a>
+    &mdash;
+    <span class="container">RDoc::CodeObject</span>
 
   <li class="method">
     <a href="RDoc/CodeObject.html#method-i-ignored-3F">#ignored?</a>
@@ -3635,11 +3788,6 @@
     <a href="RDoc/Context/Section.html#method-i-in_files">#in_files</a>
     &mdash;
     <span class="container">RDoc::Context::Section</span>
-
-  <li class="method">
-    <a href="RDoc/RI/Driver.html#method-i-in_path-3F">#in_path?</a>
-    &mdash;
-    <span class="container">RDoc::RI::Driver</span>
 
   <li class="method">
     <a href="RDoc/Markup/Formatter.html#method-i-in_tt-3F">#in_tt?</a>
@@ -3667,6 +3815,21 @@
     <span class="container">RDoc::Generator::JsonIndex</span>
 
   <li class="method">
+    <a href="RDoc/Markup/ToHtml.html#method-i-init_link_notation_regexp_handlings">#init_link_notation_regexp_handlings</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtml</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToHtmlCrossref.html#method-i-init_link_notation_regexp_handlings">#init_link_notation_regexp_handlings</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtmlCrossref</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToHtml.html#method-i-init_regexp_handlings">#init_regexp_handlings</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtml</span>
+
+  <li class="method">
     <a href="RDoc/Markup/ToAnsi.html#method-i-init_tags">#init_tags</a>
     &mdash;
     <span class="container">RDoc::Markup::ToAnsi</span>
@@ -3675,11 +3838,6 @@
     <a href="RDoc/Markup/ToBs.html#method-i-init_tags">#init_tags</a>
     &mdash;
     <span class="container">RDoc::Markup::ToBs</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/ToHtml.html#method-i-init_tags">#init_tags</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToHtml</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToMarkdown.html#method-i-init_tags">#init_tags</a>
@@ -3692,14 +3850,19 @@
     <span class="container">RDoc::Markup::ToRdoc</span>
 
   <li class="method">
-    <a href="RDoc/Generator/POT.html#method-i-initialize">#initialize</a>
+    <a href="RDoc/Markup/ToHtml.html#method-i-init_tags">#init_tags</a>
     &mdash;
-    <span class="container">RDoc::Generator::POT</span>
+    <span class="container">RDoc::Markup::ToHtml</span>
 
   <li class="method">
     <a href="RDoc/Generator/RI.html#method-i-initialize">#initialize</a>
     &mdash;
     <span class="container">RDoc::Generator::RI</span>
+
+  <li class="method">
+    <a href="RDoc/Generator/POT.html#method-i-initialize">#initialize</a>
+    &mdash;
+    <span class="container">RDoc::Generator::POT</span>
 
   <li class="method">
     <a href="RDoc/RD/Inline.html#method-i-initialize">#initialize</a>
@@ -3710,6 +3873,11 @@
     <a href="RDoc/Context.html#method-i-initialize_methods_etc">#initialize_methods_etc</a>
     &mdash;
     <span class="container">RDoc::Context</span>
+
+  <li class="method">
+    <a href="RDoc/RD/InlineParser.html#method-i-inline">#inline</a>
+    &mdash;
+    <span class="container">RDoc::RD::InlineParser</span>
 
   <li class="method">
     <a href="RDoc/RDoc.html#method-i-install_siginfo_handler">#install_siginfo_handler</a>
@@ -3728,6 +3896,11 @@
 
   <li class="method">
     <a href="RDoc/Context.html#method-i-instance_method_list">#instance_method_list</a>
+    &mdash;
+    <span class="container">RDoc::Context</span>
+
+  <li class="method">
+    <a href="RDoc/Context.html#method-i-instance_methods">#instance_methods</a>
     &mdash;
     <span class="container">RDoc::Context</span>
 
@@ -3762,9 +3935,19 @@
     <span class="container">RDoc::Markup::ListItem</span>
 
   <li class="method">
+    <a href="RDoc/RD/BlockParser.html#method-i-line_index">#line_index</a>
+    &mdash;
+    <span class="container">RDoc::RD::BlockParser</span>
+
+  <li class="method">
     <a href="RDoc/Markup/ToHtmlCrossref.html#method-i-link">#link</a>
     &mdash;
     <span class="container">RDoc::Markup::ToHtmlCrossref</span>
+
+  <li class="method">
+    <a href="RDoc/Markdown.html#method-i-link_to">#link_to</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToHtml.html#method-i-list_end_for">#list_end_for</a>
@@ -3777,14 +3960,19 @@
     <span class="container">RDoc::RDoc</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToHtml.html#method-i-list_item_start">#list_item_start</a>
+    <a href="RDoc/Markdown.html#method-i-list_item_from">#list_item_from</a>
     &mdash;
-    <span class="container">RDoc::Markup::ToHtml</span>
+    <span class="container">RDoc::Markdown</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToHtmlSnippet.html#method-i-list_item_start">#list_item_start</a>
     &mdash;
     <span class="container">RDoc::Markup::ToHtmlSnippet</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToHtml.html#method-i-list_item_start">#list_item_start</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToHtml</span>
 
   <li class="method">
     <a href="RDoc/RI/Driver.html#method-i-list_known_classes">#list_known_classes</a>
@@ -3822,24 +4010,19 @@
     <span class="container">RDoc::Store</span>
 
   <li class="method">
-    <a href="RDoc/RI/Driver.html#method-i-load_method">#load_method</a>
-    &mdash;
-    <span class="container">RDoc::RI::Driver</span>
-
-  <li class="method">
     <a href="RDoc/Store.html#method-i-load_method">#load_method</a>
     &mdash;
     <span class="container">RDoc::Store</span>
 
   <li class="method">
-    <a href="RDoc/RI/Driver.html#method-i-load_methods_matching">#load_methods_matching</a>
+    <a href="RDoc/RI/Driver.html#method-i-load_method">#load_method</a>
     &mdash;
     <span class="container">RDoc::RI::Driver</span>
 
   <li class="method">
-    <a href="RDoc/RDoc.html#method-i-load_options">#load_options</a>
+    <a href="RDoc/RI/Driver.html#method-i-load_methods_matching">#load_methods_matching</a>
     &mdash;
-    <span class="container">RDoc::RDoc</span>
+    <span class="container">RDoc::RI::Driver</span>
 
   <li class="method">
     <a href="RDoc/Store.html#method-i-load_page">#load_page</a>
@@ -3897,9 +4080,9 @@
     <span class="container">RDoc::MethodAttr</span>
 
   <li class="method">
-    <a href="RDoc/AnyMethod.html#method-i-marshal_dump">#marshal_dump</a>
+    <a href="RDoc/Constant.html#method-i-marshal_dump">#marshal_dump</a>
     &mdash;
-    <span class="container">RDoc::AnyMethod</span>
+    <span class="container">RDoc::Constant</span>
 
   <li class="method">
     <a href="RDoc/Attr.html#method-i-marshal_dump">#marshal_dump</a>
@@ -3907,9 +4090,9 @@
     <span class="container">RDoc::Attr</span>
 
   <li class="method">
-    <a href="RDoc/Constant.html#method-i-marshal_dump">#marshal_dump</a>
+    <a href="RDoc/AnyMethod.html#method-i-marshal_dump">#marshal_dump</a>
     &mdash;
-    <span class="container">RDoc::Constant</span>
+    <span class="container">RDoc::AnyMethod</span>
 
   <li class="method">
     <a href="RDoc/Context/Section.html#method-i-marshal_dump">#marshal_dump</a>
@@ -3947,9 +4130,19 @@
     <span class="container">RDoc::Markup::AttributeManager</span>
 
   <li class="method">
-    <a href="RDoc/ClassModule.html#method-i-merge">#merge</a>
+    <a href="Object.html#method-i-match_length">#match_length</a>
     &mdash;
-    <span class="container">RDoc::ClassModule</span>
+    <span class="container">Object</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Parser/MyStringScanner.html#method-i-matched">#matched</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Parser::MyStringScanner</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Document.html#method-i-merge">#merge</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Document</span>
 
   <li class="method">
     <a href="RDoc/Generator/POT/POEntry.html#method-i-merge">#merge</a>
@@ -3957,9 +4150,9 @@
     <span class="container">RDoc::Generator::POT::POEntry</span>
 
   <li class="method">
-    <a href="RDoc/Markup/Document.html#method-i-merge">#merge</a>
+    <a href="RDoc/ClassModule.html#method-i-merge">#merge</a>
     &mdash;
-    <span class="container">RDoc::Markup::Document</span>
+    <span class="container">RDoc::ClassModule</span>
 
   <li class="method">
     <a href="RDoc/Markup/Raw.html#method-i-merge">#merge</a>
@@ -3970,6 +4163,11 @@
     <a href="RDoc/Markup/Document.html#method-i-merged-3F">#merged?</a>
     &mdash;
     <span class="container">RDoc::Markup::Document</span>
+
+  <li class="method">
+    <a href="RDoc/MarkupReference.html#method-i-method">#method</a>
+    &mdash;
+    <span class="container">RDoc::MarkupReference</span>
 
   <li class="method">
     <a href="RDoc/RI/Driver.html#method-i-method_document">#method_document</a>
@@ -4002,14 +4200,14 @@
     <span class="container">RDoc::Mixin</span>
 
   <li class="method">
-    <a href="RDoc/ClassModule.html#method-i-module-3F">#module?</a>
-    &mdash;
-    <span class="container">RDoc::ClassModule</span>
-
-  <li class="method">
     <a href="RDoc/NormalModule.html#method-i-module-3F">#module?</a>
     &mdash;
     <span class="container">RDoc::NormalModule</span>
+
+  <li class="method">
+    <a href="RDoc/ClassModule.html#method-i-module-3F">#module?</a>
+    &mdash;
+    <span class="container">RDoc::ClassModule</span>
 
   <li class="method">
     <a href="RDoc/Store.html#method-i-module_names">#module_names</a>
@@ -4032,19 +4230,14 @@
     <span class="container">RDoc::Store</span>
 
   <li class="method">
-    <a href="RDoc/AnyMethod.html#method-i-name">#name</a>
-    &mdash;
-    <span class="container">RDoc::AnyMethod</span>
-
-  <li class="method">
-    <a href="RDoc/TopLevel.html#method-i-name">#name</a>
-    &mdash;
-    <span class="container">RDoc::TopLevel</span>
-
-  <li class="method">
     <a href="RDoc/RI/Driver/NotFoundError.html#method-i-name">#name</a>
     &mdash;
     <span class="container">RDoc::RI::Driver::NotFoundError</span>
+
+  <li class="method">
+    <a href="RDoc/AnyMethod.html#method-i-name">#name</a>
+    &mdash;
+    <span class="container">RDoc::AnyMethod</span>
 
   <li class="method">
     <a href="RDoc/ClassModule.html#method-i-name-3D">#name=</a>
@@ -4062,14 +4255,14 @@
     <span class="container">RDoc::Context</span>
 
   <li class="method">
-    <a href="RDoc/Alias.html#method-i-name_prefix">#name_prefix</a>
-    &mdash;
-    <span class="container">RDoc::Alias</span>
-
-  <li class="method">
     <a href="RDoc/MethodAttr.html#method-i-name_prefix">#name_prefix</a>
     &mdash;
     <span class="container">RDoc::MethodAttr</span>
+
+  <li class="method">
+    <a href="RDoc/Alias.html#method-i-name_prefix">#name_prefix</a>
+    &mdash;
+    <span class="container">RDoc::Alias</span>
 
   <li class="method">
     <a href="RDoc/RI/Driver.html#method-i-name_regexp">#name_regexp</a>
@@ -4077,9 +4270,29 @@
     <span class="container">RDoc::RI::Driver</span>
 
   <li class="method">
+    <a href="RDoc/Parser/C.html#method-i-new_comment">#new_comment</a>
+    &mdash;
+    <span class="container">RDoc::Parser::C</span>
+
+  <li class="method">
     <a href="RDoc/Parser/Ruby.html#method-i-new_comment">#new_comment</a>
     &mdash;
     <span class="container">RDoc::Parser::Ruby</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Parser/MyStringScanner.html#method-i-newline-21">#newline!</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Parser::MyStringScanner</span>
+
+  <li class="method">
+    <a href="RDoc/RD/InlineParser.html#method-i-next_token">#next_token</a>
+    &mdash;
+    <span class="container">RDoc::RD::InlineParser</span>
+
+  <li class="method">
+    <a href="RDoc/RD/InlineParser.html#method-i-next_words_on_error">#next_words_on_error</a>
+    &mdash;
+    <span class="container">RDoc::RD::InlineParser</span>
 
   <li class="method">
     <a href="RDoc/Stats/Verbose.html#method-i-nodoc">#nodoc</a>
@@ -4117,14 +4330,24 @@
     <span class="container">RDoc::Servlet</span>
 
   <li class="method">
+    <a href="RDoc/Markdown.html#method-i-note">#note</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
+
+  <li class="method">
+    <a href="RDoc/Markdown.html#method-i-note_for">#note_for</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
+
+  <li class="method">
+    <a href="RDoc/Markdown.html#method-i-notes">#notes</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
+
+  <li class="method">
     <a href="RDoc/TopLevel.html#method-i-object_class">#object_class</a>
     &mdash;
     <span class="container">RDoc::TopLevel</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/Formatter.html#method-i-off_tags">#off_tags</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Formatter</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToHtmlSnippet.html#method-i-off_tags">#off_tags</a>
@@ -4132,154 +4355,169 @@
     <span class="container">RDoc::Markup::ToHtmlSnippet</span>
 
   <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_CHAR">#on_CHAR</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_backref">#on_backref</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_comma">#on_comma</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_comment">#on_comment</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_const">#on_const</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_cvar">#on_cvar</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_default">#on_default</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_float">#on_float</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_gvar">#on_gvar</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_heredoc_end">#on_heredoc_end</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_ident">#on_ident</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_ignored_nl">#on_ignored_nl</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_ignored_sp">#on_ignored_sp</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_imaginary">#on_imaginary</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_int">#on_int</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_ivar">#on_ivar</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_kw">#on_kw</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_lbrace">#on_lbrace</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_lbracket">#on_lbracket</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_lparen">#on_lparen</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_nl">#on_nl</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_op">#on_op</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_period">#on_period</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_rational">#on_rational</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_rbrace">#on_rbrace</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_rbracket">#on_rbracket</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_rparen">#on_rparen</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_sp">#on_sp</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_symbeg">#on_symbeg</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/Formatter.html#method-i-on_tags">#on_tags</a>
+    <a href="RDoc/Markup/Formatter.html#method-i-off_tags">#off_tags</a>
     &mdash;
     <span class="container">RDoc::Markup::Formatter</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_CHAR">#on_CHAR</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_backref">#on_backref</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_comma">#on_comma</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_comment">#on_comment</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_const">#on_const</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_cvar">#on_cvar</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_default">#on_default</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/RD/BlockParser.html#method-i-on_error">#on_error</a>
+    &mdash;
+    <span class="container">RDoc::RD::BlockParser</span>
+
+  <li class="method">
+    <a href="RDoc/RD/InlineParser.html#method-i-on_error">#on_error</a>
+    &mdash;
+    <span class="container">RDoc::RD::InlineParser</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_float">#on_float</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_gvar">#on_gvar</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_heredoc_beg">#on_heredoc_beg</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_heredoc_end">#on_heredoc_end</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_ident">#on_ident</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_ignored_nl">#on_ignored_nl</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_ignored_sp">#on_ignored_sp</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_imaginary">#on_imaginary</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_int">#on_int</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_ivar">#on_ivar</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_kw">#on_kw</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_lbrace">#on_lbrace</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_lbracket">#on_lbracket</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_lparen">#on_lparen</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_nl">#on_nl</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_op">#on_op</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_period">#on_period</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_rational">#on_rational</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_rbrace">#on_rbrace</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_rbracket">#on_rbracket</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_rparen">#on_rparen</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_sp">#on_sp</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_symbeg">#on_symbeg</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToHtmlSnippet.html#method-i-on_tags">#on_tags</a>
@@ -4287,14 +4525,19 @@
     <span class="container">RDoc::Markup::ToHtmlSnippet</span>
 
   <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_tstring_beg">#on_tstring_beg</a>
+    <a href="RDoc/Markup/Formatter.html#method-i-on_tags">#on_tags</a>
     &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
+    <span class="container">RDoc::Markup::Formatter</span>
 
   <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-on_tstring_end">#on_tstring_end</a>
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_tstring_beg">#on_tstring_beg</a>
     &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-on_tstring_end">#on_tstring_end</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
 
   <li class="method">
     <a href="RDoc/Context.html#method-i-ongoing_visibility-3D">#ongoing_visibility=</a>
@@ -4307,14 +4550,14 @@
     <span class="container">RDoc::Task</span>
 
   <li class="method">
-    <a href="RDoc/Task.html#method-i-option_list">#option_list</a>
-    &mdash;
-    <span class="container">RDoc::Task</span>
-
-  <li class="method">
     <a href="RDoc/CodeObject.html#method-i-options">#options</a>
     &mdash;
     <span class="container">RDoc::CodeObject</span>
+
+  <li class="method">
+    <a href="RDoc/Markdown.html#method-i-orig_initialize">#orig_initialize</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
 
   <li class="method">
     <a href="RDoc/RDoc.html#method-i-output_flag_file">#output_flag_file</a>
@@ -4327,14 +4570,14 @@
     <span class="container">RDoc::MethodAttr</span>
 
   <li class="method">
-    <a href="RDoc/RI/Driver.html#method-i-page">#page</a>
-    &mdash;
-    <span class="container">RDoc::RI::Driver</span>
-
-  <li class="method">
     <a href="RDoc/Store.html#method-i-page">#page</a>
     &mdash;
     <span class="container">RDoc::Store</span>
+
+  <li class="method">
+    <a href="RDoc/RI/Driver.html#method-i-page">#page</a>
+    &mdash;
+    <span class="container">RDoc::RI::Driver</span>
 
   <li class="method">
     <a href="RDoc/Store.html#method-i-page_file">#page_file</a>
@@ -4350,6 +4593,16 @@
     <a href="RDoc/RI/Driver.html#method-i-paging-3F">#paging?</a>
     &mdash;
     <span class="container">RDoc::RI::Driver</span>
+
+  <li class="method">
+    <a href="RDoc/Markdown.html#method-i-paragraph">#paragraph</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
+
+  <li class="method">
+    <a href="RDoc/RD/BlockParser.html#method-i-paragraph">#paragraph</a>
+    &mdash;
+    <span class="container">RDoc::RD::BlockParser</span>
 
   <li class="method">
     <a href="RDoc/AnyMethod.html#method-i-param_list">#param_list</a>
@@ -4382,19 +4635,14 @@
     <span class="container">RDoc::MethodAttr</span>
 
   <li class="method">
-    <a href="RDoc/ClassModule.html#method-i-parse">#parse</a>
-    &mdash;
-    <span class="container">RDoc::ClassModule</span>
-
-  <li class="method">
-    <a href="RDoc/Comment.html#method-i-parse">#parse</a>
-    &mdash;
-    <span class="container">RDoc::Comment</span>
-
-  <li class="method">
     <a href="RDoc/Context/Section.html#method-i-parse">#parse</a>
     &mdash;
     <span class="container">RDoc::Context::Section</span>
+
+  <li class="method">
+    <a href="RDoc/Markdown.html#method-i-parse">#parse</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
 
   <li class="method">
     <a href="RDoc/Markup/Parser.html#method-i-parse">#parse</a>
@@ -4402,14 +4650,34 @@
     <span class="container">RDoc::Markup::Parser</span>
 
   <li class="method">
-    <a href="RDoc/Options.html#method-i-parse">#parse</a>
+    <a href="RDoc/Comment.html#method-i-parse">#parse</a>
     &mdash;
-    <span class="container">RDoc::Options</span>
+    <span class="container">RDoc::Comment</span>
 
   <li class="method">
     <a href="RDoc/Text.html#method-i-parse">#parse</a>
     &mdash;
     <span class="container">RDoc::Text</span>
+
+  <li class="method">
+    <a href="RDoc/RD/BlockParser.html#method-i-parse">#parse</a>
+    &mdash;
+    <span class="container">RDoc::RD::BlockParser</span>
+
+  <li class="method">
+    <a href="RDoc/Options.html#method-i-parse">#parse</a>
+    &mdash;
+    <span class="container">RDoc::Options</span>
+
+  <li class="method">
+    <a href="RDoc/RD/InlineParser.html#method-i-parse">#parse</a>
+    &mdash;
+    <span class="container">RDoc::RD::InlineParser</span>
+
+  <li class="method">
+    <a href="RDoc/ClassModule.html#method-i-parse">#parse</a>
+    &mdash;
+    <span class="container">RDoc::ClassModule</span>
 
   <li class="method">
     <a href="RDoc/Parser/Ruby.html#method-i-parse_alias">#parse_alias</a>
@@ -4457,6 +4725,11 @@
     <span class="container">RDoc::Parser::Ruby</span>
 
   <li class="method">
+    <a href="RDoc/Parser/ChangeLog.html#method-i-parse_date">#parse_date</a>
+    &mdash;
+    <span class="container">RDoc::Parser::ChangeLog</span>
+
+  <li class="method">
     <a href="RDoc/RDoc.html#method-i-parse_dot_doc_file">#parse_dot_doc_file</a>
     &mdash;
     <span class="container">RDoc::RDoc</span>
@@ -4467,6 +4740,11 @@
     <span class="container">RDoc::Parser::ChangeLog</span>
 
   <li class="method">
+    <a href="RDoc/Parser/ChangeLog/Git.html#method-i-parse_entries">#parse_entries</a>
+    &mdash;
+    <span class="container">RDoc::Parser::ChangeLog::Git</span>
+
+  <li class="method">
     <a href="RDoc/RDoc.html#method-i-parse_file">#parse_file</a>
     &mdash;
     <span class="container">RDoc::RDoc</span>
@@ -4475,6 +4753,11 @@
     <a href="RDoc/RDoc.html#method-i-parse_files">#parse_files</a>
     &mdash;
     <span class="container">RDoc::RDoc</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/ChangeLog/Git.html#method-i-parse_info">#parse_info</a>
+    &mdash;
+    <span class="container">RDoc::Parser::ChangeLog::Git</span>
 
   <li class="method">
     <a href="RDoc/Parser/Ruby.html#method-i-parse_meta_attr">#parse_meta_attr</a>
@@ -4572,14 +4855,14 @@
     <span class="container">RDoc::Markup::ToHtml</span>
 
   <li class="method">
+    <a href="RDoc/TopLevel.html#method-i-parser-3D">#parser=</a>
+    &mdash;
+    <span class="container">RDoc::TopLevel</span>
+
+  <li class="method">
     <a href="RDoc/ClassModule.html#method-i-path">#path</a>
     &mdash;
     <span class="container">RDoc::ClassModule</span>
-
-  <li class="method">
-    <a href="RDoc/Constant.html#method-i-path">#path</a>
-    &mdash;
-    <span class="container">RDoc::Constant</span>
 
   <li class="method">
     <a href="RDoc/MethodAttr.html#method-i-path">#path</a>
@@ -4590,6 +4873,11 @@
     <a href="RDoc/TopLevel.html#method-i-path">#path</a>
     &mdash;
     <span class="container">RDoc::TopLevel</span>
+
+  <li class="method">
+    <a href="RDoc/Constant.html#method-i-path">#path</a>
+    &mdash;
+    <span class="container">RDoc::Constant</span>
 
   <li class="method">
     <a href="RDoc/Parser/RubyTools.html#method-i-peek_read">#peek_read</a>
@@ -4607,6 +4895,11 @@
     <span class="container">RDoc::Markup::Parser</span>
 
   <li class="method">
+    <a href="RDoc/Markdown.html#method-i-peg_parse">#peg_parse</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
+
+  <li class="method">
     <a href="RDoc/Stats.html#method-i-percent_doc">#percent_doc</a>
     &mdash;
     <span class="container">RDoc::Stats</span>
@@ -4622,14 +4915,19 @@
     <span class="container">RDoc::TokenStream</span>
 
   <li class="method">
-    <a href="RDoc/Alias.html#method-i-pretty_name">#pretty_name</a>
+    <a href="RDoc/Markup/Parser/MyStringScanner.html#method-i-pos">#pos</a>
     &mdash;
-    <span class="container">RDoc::Alias</span>
+    <span class="container">RDoc::Markup::Parser::MyStringScanner</span>
 
   <li class="method">
     <a href="RDoc/MethodAttr.html#method-i-pretty_name">#pretty_name</a>
     &mdash;
     <span class="container">RDoc::MethodAttr</span>
+
+  <li class="method">
+    <a href="RDoc/Alias.html#method-i-pretty_name">#pretty_name</a>
+    &mdash;
+    <span class="container">RDoc::Alias</span>
 
   <li class="method">
     <a href="RDoc/Alias.html#method-i-pretty_new_name">#pretty_new_name</a>
@@ -4640,6 +4938,11 @@
     <a href="RDoc/Alias.html#method-i-pretty_old_name">#pretty_old_name</a>
     &mdash;
     <span class="container">RDoc::Alias</span>
+
+  <li class="method">
+    <a href="RDoc/RD/InlineParser.html#method-i-prev_words_on_error">#prev_words_on_error</a>
+    &mdash;
+    <span class="container">RDoc::RD::InlineParser</span>
 
   <li class="method">
     <a href="RDoc/Stats/Quiet.html#method-i-print_alias">#print_alias</a>
@@ -4682,24 +4985,24 @@
     <span class="container">RDoc::Stats::Quiet</span>
 
   <li class="method">
-    <a href="RDoc/Markup/Document.html#method-i-push">#push</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Document</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/List.html#method-i-push">#push</a>
-    &mdash;
-    <span class="container">RDoc::Markup::List</span>
-
-  <li class="method">
     <a href="RDoc/Markup/ListItem.html#method-i-push">#push</a>
     &mdash;
     <span class="container">RDoc::Markup::ListItem</span>
 
   <li class="method">
+    <a href="RDoc/Markup/Document.html#method-i-push">#push</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Document</span>
+
+  <li class="method">
     <a href="RDoc/Markup/Raw.html#method-i-push">#push</a>
     &mdash;
     <span class="container">RDoc::Markup::Raw</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/List.html#method-i-push">#push</a>
+    &mdash;
+    <span class="container">RDoc::Markup::List</span>
 
   <li class="method">
     <a href="RDoc/Options.html#method-i-quiet">#quiet</a>
@@ -4727,11 +5030,6 @@
     <span class="container">RDoc::Task</span>
 
   <li class="method">
-    <a href="RDoc/Task.html#method-i-rdoc_task_description">#rdoc_task_description</a>
-    &mdash;
-    <span class="container">RDoc::Task</span>
-
-  <li class="method">
     <a href="RDoc/Parser/Ruby.html#method-i-read_directive">#read_directive</a>
     &mdash;
     <span class="container">RDoc::Parser::Ruby</span>
@@ -4750,6 +5048,11 @@
     <a href="RDoc/Context.html#method-i-record_location">#record_location</a>
     &mdash;
     <span class="container">RDoc::Context</span>
+
+  <li class="method">
+    <a href="RDoc/Markdown.html#method-i-reference">#reference</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
 
   <li class="method">
     <a href="RDoc/RubygemsHook.html#method-i-remove">#remove</a>
@@ -4857,14 +5160,9 @@
     <span class="container">RDoc::Task</span>
 
   <li class="method">
-    <a href="RDoc/Task.html#method-i-rerdoc_task_description">#rerdoc_task_description</a>
+    <a href="RDoc/Parser/RipperStateLex/InnerStateLex.html#method-i-reset">#reset</a>
     &mdash;
-    <span class="container">RDoc::Task</span>
-
-  <li class="method">
-    <a href="RDoc/RipperStateLex/InnerStateLex.html#method-i-reset">#reset</a>
-    &mdash;
-    <span class="container">RDoc::RipperStateLex::InnerStateLex</span>
+    <span class="container">RDoc::Parser::RipperStateLex::InnerStateLex</span>
 
   <li class="method">
     <a href="RDoc/Parser/RubyTools.html#method-i-reset">#reset</a>
@@ -4880,6 +5178,16 @@
     <a href="RDoc/Context.html#method-i-resolve_aliases">#resolve_aliases</a>
     &mdash;
     <span class="container">RDoc::Context</span>
+
+  <li class="method">
+    <a href="RDoc/CrossReference.html#method-i-resolve_method">#resolve_method</a>
+    &mdash;
+    <span class="container">RDoc::CrossReference</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/Ruby.html#method-i-retrieve_comment_body">#retrieve_comment_body</a>
+    &mdash;
+    <span class="container">RDoc::Parser::Ruby</span>
 
   <li class="method">
     <a href="RDoc/RubygemsHook.html#method-i-ri_installed-3F">#ri_installed?</a>
@@ -4942,9 +5250,24 @@
     <span class="container">RDoc::Store</span>
 
   <li class="method">
+    <a href="RDoc/Parser/Simple.html#method-i-scan">#scan</a>
+    &mdash;
+    <span class="container">RDoc::Parser::Simple</span>
+
+  <li class="method">
     <a href="RDoc/Parser/C.html#method-i-scan">#scan</a>
     &mdash;
     <span class="container">RDoc::Parser::C</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Parser/MyStringScanner.html#method-i-scan">#scan</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Parser::MyStringScanner</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/Ruby.html#method-i-scan">#scan</a>
+    &mdash;
+    <span class="container">RDoc::Parser::Ruby</span>
 
   <li class="method">
     <a href="RDoc/Parser/ChangeLog.html#method-i-scan">#scan</a>
@@ -4962,19 +5285,9 @@
     <span class="container">RDoc::Parser::RD</span>
 
   <li class="method">
-    <a href="RDoc/Parser/Ruby.html#method-i-scan">#scan</a>
+    <a href="RDoc/TopLevel.html#method-i-search_record">#search_record</a>
     &mdash;
-    <span class="container">RDoc::Parser::Ruby</span>
-
-  <li class="method">
-    <a href="RDoc/Parser/Simple.html#method-i-scan">#scan</a>
-    &mdash;
-    <span class="container">RDoc::Parser::Simple</span>
-
-  <li class="method">
-    <a href="RDoc/ClassModule.html#method-i-search_record">#search_record</a>
-    &mdash;
-    <span class="container">RDoc::ClassModule</span>
+    <span class="container">RDoc::TopLevel</span>
 
   <li class="method">
     <a href="RDoc/MethodAttr.html#method-i-search_record">#search_record</a>
@@ -4982,9 +5295,9 @@
     <span class="container">RDoc::MethodAttr</span>
 
   <li class="method">
-    <a href="RDoc/TopLevel.html#method-i-search_record">#search_record</a>
+    <a href="RDoc/ClassModule.html#method-i-search_record">#search_record</a>
     &mdash;
-    <span class="container">RDoc::TopLevel</span>
+    <span class="container">RDoc::ClassModule</span>
 
   <li class="method">
     <a href="RDoc/Generator/JsonIndex.html#method-i-search_string">#search_string</a>
@@ -5010,11 +5323,6 @@
     <a href="RDoc/MethodAttr.html#method-i-see">#see</a>
     &mdash;
     <span class="container">RDoc::MethodAttr</span>
-
-  <li class="method">
-    <a href="RDoc/Context/Section.html#method-i-sequence">#sequence</a>
-    &mdash;
-    <span class="container">RDoc::Context::Section</span>
 
   <li class="method">
     <a href="RDoc/Markup/AttrSpan.html#method-i-set_attrs">#set_attrs</a>
@@ -5047,19 +5355,14 @@
     <span class="container">RDoc::Context</span>
 
   <li class="method">
-    <a href="RDoc/Generator/Darkfish.html#method-i-setup">#setup</a>
-    &mdash;
-    <span class="container">RDoc::Generator::Darkfish</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-setup">#setup</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
     <a href="RDoc/RubygemsHook.html#method-i-setup">#setup</a>
     &mdash;
     <span class="container">RDoc::RubygemsHook</span>
+
+  <li class="method">
+    <a href="RDoc/Generator/Darkfish.html#method-i-setup">#setup</a>
+    &mdash;
+    <span class="container">RDoc::Generator::Darkfish</span>
 
   <li class="method">
     <a href="RDoc/Options.html#method-i-setup_generator">#setup_generator</a>
@@ -5107,6 +5410,11 @@
     <span class="container">RDoc::Parser::Ruby</span>
 
   <li class="method">
+    <a href="RDoc/Parser/Ruby.html#method-i-skip_parentheses">#skip_parentheses</a>
+    &mdash;
+    <span class="container">RDoc::Parser::Ruby</span>
+
+  <li class="method">
     <a href="RDoc/Parser/RubyTools.html#method-i-skip_tkspace">#skip_tkspace</a>
     &mdash;
     <span class="container">RDoc::Parser::RubyTools</span>
@@ -5115,6 +5423,11 @@
     <a href="RDoc/Parser/Ruby.html#method-i-skip_tkspace_comment">#skip_tkspace_comment</a>
     &mdash;
     <span class="container">RDoc::Parser::Ruby</span>
+
+  <li class="method">
+    <a href="RDoc/Parser/RubyTools.html#method-i-skip_tkspace_without_nl">#skip_tkspace_without_nl</a>
+    &mdash;
+    <span class="container">RDoc::Parser::RubyTools</span>
 
   <li class="method">
     <a href="RDoc/Text.html#method-i-snippet">#snippet</a>
@@ -5135,6 +5448,11 @@
     <a href="RDoc/Markup/AttributeManager.html#method-i-split_into_flow">#split_into_flow</a>
     &mdash;
     <span class="container">RDoc::Markup::AttributeManager</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToTtOnly.html#method-i-start_accepting">#start_accepting</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToTtOnly</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToAnsi.html#method-i-start_accepting">#start_accepting</a>
@@ -5162,11 +5480,6 @@
     <span class="container">RDoc::Markup::ToTableOfContents</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToTtOnly.html#method-i-start_accepting">#start_accepting</a>
-    &mdash;
-    <span class="container">RDoc::Markup::ToTtOnly</span>
-
-  <li class="method">
     <a href="RDoc/TokenStream.html#method-i-start_collecting_tokens">#start_collecting_tokens</a>
     &mdash;
     <span class="container">RDoc::TokenStream</span>
@@ -5187,19 +5500,9 @@
     <span class="container">RDoc::CodeObject</span>
 
   <li class="method">
-    <a href="RDoc/AnyMethod.html#method-i-store-3D">#store=</a>
+    <a href="RDoc/MethodAttr.html#method-i-store-3D">#store=</a>
     &mdash;
-    <span class="container">RDoc::AnyMethod</span>
-
-  <li class="method">
-    <a href="RDoc/ClassModule.html#method-i-store-3D">#store=</a>
-    &mdash;
-    <span class="container">RDoc::ClassModule</span>
-
-  <li class="method">
-    <a href="RDoc/CodeObject.html#method-i-store-3D">#store=</a>
-    &mdash;
-    <span class="container">RDoc::CodeObject</span>
+    <span class="container">RDoc::MethodAttr</span>
 
   <li class="method">
     <a href="RDoc/Constant.html#method-i-store-3D">#store=</a>
@@ -5207,14 +5510,9 @@
     <span class="container">RDoc::Constant</span>
 
   <li class="method">
-    <a href="RDoc/MethodAttr.html#method-i-store-3D">#store=</a>
+    <a href="RDoc/CodeObject.html#method-i-store-3D">#store=</a>
     &mdash;
-    <span class="container">RDoc::MethodAttr</span>
-
-  <li class="method">
-    <a href="RDoc/Mixin.html#method-i-store-3D">#store=</a>
-    &mdash;
-    <span class="container">RDoc::Mixin</span>
+    <span class="container">RDoc::CodeObject</span>
 
   <li class="method">
     <a href="RDoc/RDoc.html#method-i-store-3D">#store=</a>
@@ -5222,9 +5520,29 @@
     <span class="container">RDoc::RDoc</span>
 
   <li class="method">
+    <a href="RDoc/AnyMethod.html#method-i-store-3D">#store=</a>
+    &mdash;
+    <span class="container">RDoc::AnyMethod</span>
+
+  <li class="method">
+    <a href="RDoc/Mixin.html#method-i-store-3D">#store=</a>
+    &mdash;
+    <span class="container">RDoc::Mixin</span>
+
+  <li class="method">
+    <a href="RDoc/ClassModule.html#method-i-store-3D">#store=</a>
+    &mdash;
+    <span class="container">RDoc::ClassModule</span>
+
+  <li class="method">
     <a href="RDoc/Servlet.html#method-i-store_for">#store_for</a>
     &mdash;
     <span class="container">RDoc::Servlet</span>
+
+  <li class="method">
+    <a href="RDoc/Markdown.html#method-i-strike">#strike</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
 
   <li class="method">
     <a href="RDoc/Text.html#method-i-strip_hashes">#strip_hashes</a>
@@ -5242,19 +5560,24 @@
     <span class="container">RDoc::Text</span>
 
   <li class="method">
+    <a href="RDoc/Markdown.html#method-i-strong">#strong</a>
+    &mdash;
+    <span class="container">RDoc::Markdown</span>
+
+  <li class="method">
     <a href="RDoc/Stats.html#method-i-summary">#summary</a>
     &mdash;
     <span class="container">RDoc::Stats</span>
 
   <li class="method">
-    <a href="RDoc/ClassModule.html#method-i-superclass">#superclass</a>
-    &mdash;
-    <span class="container">RDoc::ClassModule</span>
-
-  <li class="method">
     <a href="RDoc/NormalModule.html#method-i-superclass">#superclass</a>
     &mdash;
     <span class="container">RDoc::NormalModule</span>
+
+  <li class="method">
+    <a href="RDoc/ClassModule.html#method-i-superclass">#superclass</a>
+    &mdash;
+    <span class="container">RDoc::ClassModule</span>
 
   <li class="method">
     <a href="RDoc/ClassModule.html#method-i-superclass-3D">#superclass=</a>
@@ -5302,299 +5625,9 @@
     <span class="container">RDoc::Generator::Darkfish</span>
 
   <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_blank_line">#test_accept_blank_line</a>
+    <a href="RDoc/Markup/Verbatim.html#method-i-text">#text</a>
     &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_block_quote">#test_accept_block_quote</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_document">#test_accept_document</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_heading">#test_accept_heading</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_heading_1">#test_accept_heading_1</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_heading_2">#test_accept_heading_2</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_heading_3">#test_accept_heading_3</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_heading_4">#test_accept_heading_4</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_heading_b">#test_accept_heading_b</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/TextFormatterTestCase.html#method-i-test_accept_heading_indent">#test_accept_heading_indent</a>
-    &mdash;
-    <span class="container">RDoc::Markup::TextFormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_heading_suppressed_crossref">#test_accept_heading_suppressed_crossref</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_end_bullet">#test_accept_list_end_bullet</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_end_label">#test_accept_list_end_label</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_end_lalpha">#test_accept_list_end_lalpha</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_end_note">#test_accept_list_end_note</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_end_number">#test_accept_list_end_number</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_end_ualpha">#test_accept_list_end_ualpha</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_item_end_bullet">#test_accept_list_item_end_bullet</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_item_end_label">#test_accept_list_item_end_label</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_item_end_lalpha">#test_accept_list_item_end_lalpha</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_item_end_note">#test_accept_list_item_end_note</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_item_end_number">#test_accept_list_item_end_number</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_item_end_ualpha">#test_accept_list_item_end_ualpha</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_item_start_bullet">#test_accept_list_item_start_bullet</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_item_start_label">#test_accept_list_item_start_label</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_item_start_lalpha">#test_accept_list_item_start_lalpha</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_item_start_note">#test_accept_list_item_start_note</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_item_start_note_2">#test_accept_list_item_start_note_2</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_item_start_note_multi_description">#test_accept_list_item_start_note_multi_description</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_item_start_note_multi_label">#test_accept_list_item_start_note_multi_label</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_item_start_number">#test_accept_list_item_start_number</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_item_start_ualpha">#test_accept_list_item_start_ualpha</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_start_bullet">#test_accept_list_start_bullet</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_start_label">#test_accept_list_start_label</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_start_lalpha">#test_accept_list_start_lalpha</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_start_note">#test_accept_list_start_note</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_start_number">#test_accept_list_start_number</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_list_start_ualpha">#test_accept_list_start_ualpha</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_paragraph">#test_accept_paragraph</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_paragraph_b">#test_accept_paragraph_b</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_paragraph_br">#test_accept_paragraph_br</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_paragraph_break">#test_accept_paragraph_break</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_paragraph_i">#test_accept_paragraph_i</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/TextFormatterTestCase.html#method-i-test_accept_paragraph_indent">#test_accept_paragraph_indent</a>
-    &mdash;
-    <span class="container">RDoc::Markup::TextFormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_paragraph_plus">#test_accept_paragraph_plus</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_paragraph_star">#test_accept_paragraph_star</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_paragraph_underscore">#test_accept_paragraph_underscore</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/TextFormatterTestCase.html#method-i-test_accept_paragraph_wrap">#test_accept_paragraph_wrap</a>
-    &mdash;
-    <span class="container">RDoc::Markup::TextFormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_raw">#test_accept_raw</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_rule">#test_accept_rule</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/TextFormatterTestCase.html#method-i-test_accept_rule_indent">#test_accept_rule_indent</a>
-    &mdash;
-    <span class="container">RDoc::Markup::TextFormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_accept_verbatim">#test_accept_verbatim</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/TextFormatterTestCase.html#method-i-test_accept_verbatim_big_indent">#test_accept_verbatim_big_indent</a>
-    &mdash;
-    <span class="container">RDoc::Markup::TextFormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/TextFormatterTestCase.html#method-i-test_accept_verbatim_indent">#test_accept_verbatim_indent</a>
-    &mdash;
-    <span class="container">RDoc::Markup::TextFormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/TextFormatterTestCase.html#method-i-test_attributes">#test_attributes</a>
-    &mdash;
-    <span class="container">RDoc::Markup::TextFormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_end_accepting">#test_end_accepting</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_list_nested">#test_list_nested</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_list_verbatim">#test_list_verbatim</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/FormatterTestCase.html#method-i-test_start_accepting">#test_start_accepting</a>
-    &mdash;
-    <span class="container">RDoc::Markup::FormatterTestCase</span>
+    <span class="container">RDoc::Markup::Verbatim</span>
 
   <li class="method">
     <a href="RDoc/Markup/IndentedParagraph.html#method-i-text">#text</a>
@@ -5610,11 +5643,6 @@
     <a href="RDoc/Markup/Raw.html#method-i-text">#text</a>
     &mdash;
     <span class="container">RDoc::Markup::Raw</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/Verbatim.html#method-i-text">#text</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Verbatim</span>
 
   <li class="method">
     <a href="RDoc/Comment.html#method-i-text-3D">#text=</a>
@@ -5647,9 +5675,9 @@
     <span class="container">RDoc::Parser::Ruby</span>
 
   <li class="method">
-    <a href="RDoc/Parser/RubyTools.html#method-i-tk_nl-3F">#tk_nl?</a>
+    <a href="RDoc/Text.html#method-i-to_html">#to_html</a>
     &mdash;
-    <span class="container">RDoc::Parser::RubyTools</span>
+    <span class="container">RDoc::Text</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToHtml.html#method-i-to_html">#to_html</a>
@@ -5657,9 +5685,9 @@
     <span class="container">RDoc::Markup::ToHtml</span>
 
   <li class="method">
-    <a href="RDoc/Text.html#method-i-to_html">#to_html</a>
+    <a href="RDoc/Generator/POT/POEntry.html#method-i-to_s">#to_s</a>
     &mdash;
-    <span class="container">RDoc::Text</span>
+    <span class="container">RDoc::Generator::POT::POEntry</span>
 
   <li class="method">
     <a href="RDoc/Generator/POT/PO.html#method-i-to_s">#to_s</a>
@@ -5667,19 +5695,9 @@
     <span class="container">RDoc::Generator::POT::PO</span>
 
   <li class="method">
-    <a href="RDoc/Generator/POT/POEntry.html#method-i-to_s">#to_s</a>
-    &mdash;
-    <span class="container">RDoc::Generator::POT::POEntry</span>
-
-  <li class="method">
     <a href="RDoc/Parser/RubyTools.html#method-i-token_listener">#token_listener</a>
     &mdash;
     <span class="container">RDoc::Parser::RubyTools</span>
-
-  <li class="method">
-    <a href="RDoc/Markup/Parser.html#method-i-token_pos">#token_pos</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Parser</span>
 
   <li class="method">
     <a href="RDoc/TokenStream.html#method-i-token_stream">#token_stream</a>
@@ -5687,14 +5705,14 @@
     <span class="container">RDoc::TokenStream</span>
 
   <li class="method">
-    <a href="RDoc/Markup/Parser.html#method-i-tokenize">#tokenize</a>
-    &mdash;
-    <span class="container">RDoc::Markup::Parser</span>
-
-  <li class="method">
     <a href="RDoc/TomDoc.html#method-i-tokenize">#tokenize</a>
     &mdash;
     <span class="container">RDoc::TomDoc</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/Parser.html#method-i-tokenize">#tokenize</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Parser</span>
 
   <li class="method">
     <a href="RDoc/TokenStream.html#method-i-tokens_to_s">#tokens_to_s</a>
@@ -5717,14 +5735,14 @@
     <span class="container">RDoc::Require</span>
 
   <li class="method">
-    <a href="RDoc/I18n/Locale.html#method-i-translate">#translate</a>
-    &mdash;
-    <span class="container">RDoc::I18n::Locale</span>
-
-  <li class="method">
     <a href="RDoc/I18n/Text.html#method-i-translate">#translate</a>
     &mdash;
     <span class="container">RDoc::I18n::Text</span>
+
+  <li class="method">
+    <a href="RDoc/I18n/Locale.html#method-i-translate">#translate</a>
+    &mdash;
+    <span class="container">RDoc::I18n::Locale</span>
 
   <li class="method">
     <a href="RDoc/Markup/ToHtmlSnippet.html#method-i-truncate">#truncate</a>
@@ -5742,14 +5760,14 @@
     <span class="container">RDoc::Markup::ToTtOnly</span>
 
   <li class="method">
-    <a href="RDoc/ClassModule.html#method-i-type">#type</a>
-    &mdash;
-    <span class="container">RDoc::ClassModule</span>
-
-  <li class="method">
     <a href="RDoc/MethodAttr.html#method-i-type">#type</a>
     &mdash;
     <span class="container">RDoc::MethodAttr</span>
+
+  <li class="method">
+    <a href="RDoc/ClassModule.html#method-i-type">#type</a>
+    &mdash;
+    <span class="container">RDoc::ClassModule</span>
 
   <li class="method">
     <a href="RDoc/Stats.html#method-i-undoc_params">#undoc_params</a>
@@ -5787,6 +5805,11 @@
     <span class="container">RDoc::Markup::AttributeManager</span>
 
   <li class="method">
+    <a href="RDoc/Markup/Parser/MyStringScanner.html#method-i-unscan">#unscan</a>
+    &mdash;
+    <span class="container">RDoc::Markup::Parser::MyStringScanner</span>
+
+  <li class="method">
     <a href="RDoc/ClassModule.html#method-i-update_aliases">#update_aliases</a>
     &mdash;
     <span class="container">RDoc::ClassModule</span>
@@ -5807,6 +5830,11 @@
     <span class="container">RDoc::RDoc</span>
 
   <li class="method">
+    <a href="RDoc/Store.html#method-i-update_parser_of_file">#update_parser_of_file</a>
+    &mdash;
+    <span class="container">RDoc::Store</span>
+
+  <li class="method">
     <a href="RDoc/Context.html#method-i-upgrade_to_class">#upgrade_to_class</a>
     &mdash;
     <span class="container">RDoc::Context</span>
@@ -5822,24 +5850,24 @@
     <span class="container">RDoc::Options</span>
 
   <li class="method">
-    <a href="RDoc/Options.html#method-i-warn">#warn</a>
-    &mdash;
-    <span class="container">RDoc::Options</span>
-
-  <li class="method">
     <a href="RDoc/Parser/Ruby.html#method-i-warn">#warn</a>
     &mdash;
     <span class="container">RDoc::Parser::Ruby</span>
 
   <li class="method">
-    <a href="RDoc/Markup/ToRdoc.html#method-i-wrap">#wrap</a>
+    <a href="RDoc/Options.html#method-i-warn">#warn</a>
     &mdash;
-    <span class="container">RDoc::Markup::ToRdoc</span>
+    <span class="container">RDoc::Options</span>
 
   <li class="method">
     <a href="RDoc/Text.html#method-i-wrap">#wrap</a>
     &mdash;
     <span class="container">RDoc::Text</span>
+
+  <li class="method">
+    <a href="RDoc/Markup/ToRdoc.html#method-i-wrap">#wrap</a>
+    &mdash;
+    <span class="container">RDoc::Markup::ToRdoc</span>
 
   <li class="method">
     <a href="RDoc/Options.html#method-i-write_options">#write_options</a>
@@ -5850,13 +5878,18 @@
     <a href="RDoc/Generator/Darkfish.html#method-i-write_style_sheet">#write_style_sheet</a>
     &mdash;
     <span class="container">RDoc::Generator::Darkfish</span>
+
+  <li class="method">
+    <a href="RDoc/MarkupReference.html#method-i-yields_directive">#yields_directive</a>
+    &mdash;
+    <span class="container">RDoc::MarkupReference</span>
 </ul>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

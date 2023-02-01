@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Parser::C - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Parser::C - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
   var index_rel_prefix = "../../";
 </script>
 
-<script src="../../js/jquery.js"></script>
-<script src="../../js/darkfish.js"></script>
+<script src="../../js/navigation.js" defer></script>
+<script src="../../js/search.js" defer></script>
+<script src="../../js/search_index.js" defer></script>
+<script src="../../js/searcher.js" defer></script>
+<script src="../../js/darkfish.js" defer></script>
 
 <link href="../../css/fonts.css" rel="stylesheet">
 <link href="../../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,122 +57,69 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link"><a href="../Parser.html">RDoc::Parser</a>
-  
 </div>
 
-    <div id="includes-section" class="nav-section">
+    
+<div id="includes-section" class="nav-section">
   <h3>Included Modules</h3>
 
   <ul class="link-list">
-  
-  
     <li><a class="include" href="../Text.html">RDoc::Text</a>
-  
-  
   </ul>
 </div>
 
-    <div id="extends-section" class="nav-section">
+    
+<div id="extends-section" class="nav-section">
   <h3>Extended With Modules</h3>
 
   <ul class="link-list">
-    
-  
     <li><span class="extend">TSort</span>
-  
-  
   </ul>
 </div>
 
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li class="calls-super" ><a href="#method-c-new">::new</a>
-    
-    <li ><a href="#method-i-deduplicate_call_seq">#deduplicate_call_seq</a>
-    
+    <li ><a href="#method-i-add_alias">#add_alias</a>
     <li ><a href="#method-i-do_aliases">#do_aliases</a>
-    
     <li ><a href="#method-i-do_attrs">#do_attrs</a>
-    
     <li ><a href="#method-i-do_boot_defclass">#do_boot_defclass</a>
-    
-    <li ><a href="#method-i-do_classes">#do_classes</a>
-    
+    <li ><a href="#method-i-do_classes_and_modules">#do_classes_and_modules</a>
     <li ><a href="#method-i-do_constants">#do_constants</a>
-    
-    <li ><a href="#method-i-do_define_class">#do_define_class</a>
-    
-    <li ><a href="#method-i-do_define_class_under">#do_define_class_under</a>
-    
-    <li ><a href="#method-i-do_define_module">#do_define_module</a>
-    
-    <li ><a href="#method-i-do_define_module_under">#do_define_module_under</a>
-    
     <li ><a href="#method-i-do_includes">#do_includes</a>
-    
     <li ><a href="#method-i-do_methods">#do_methods</a>
-    
     <li ><a href="#method-i-do_missing">#do_missing</a>
-    
-    <li ><a href="#method-i-do_modules">#do_modules</a>
-    
-    <li ><a href="#method-i-do_singleton_class">#do_singleton_class</a>
-    
-    <li ><a href="#method-i-do_struct_define_without_accessor">#do_struct_define_without_accessor</a>
-    
     <li ><a href="#method-i-find_alias_comment">#find_alias_comment</a>
-    
     <li ><a href="#method-i-find_attr_comment">#find_attr_comment</a>
-    
     <li ><a href="#method-i-find_body">#find_body</a>
-    
     <li ><a href="#method-i-find_class">#find_class</a>
-    
     <li ><a href="#method-i-find_class_comment">#find_class_comment</a>
-    
     <li ><a href="#method-i-find_const_comment">#find_const_comment</a>
-    
     <li ><a href="#method-i-find_modifiers">#find_modifiers</a>
-    
     <li ><a href="#method-i-find_override_comment">#find_override_comment</a>
-    
     <li ><a href="#method-i-gen_body_table">#gen_body_table</a>
-    
     <li ><a href="#method-i-gen_const_table">#gen_const_table</a>
-    
     <li ><a href="#method-i-handle_attr">#handle_attr</a>
-    
     <li ><a href="#method-i-handle_class_module">#handle_class_module</a>
-    
     <li ><a href="#method-i-handle_constants">#handle_constants</a>
-    
     <li ><a href="#method-i-handle_ifdefs_in">#handle_ifdefs_in</a>
-    
     <li ><a href="#method-i-handle_method">#handle_method</a>
-    
     <li ><a href="#method-i-handle_singleton">#handle_singleton</a>
-    
-    <li ><a href="#method-i-handle_tab_width">#handle_tab_width</a>
-    
     <li ><a href="#method-i-load_variable_map">#load_variable_map</a>
-    
     <li ><a href="#method-i-look_for_directives_in">#look_for_directives_in</a>
-    
+    <li ><a href="#method-i-new_comment">#new_comment</a>
     <li ><a href="#method-i-rb_scan_args">#rb_scan_args</a>
-    
     <li ><a href="#method-i-remove_commented_out_lines">#remove_commented_out_lines</a>
-    
     <li ><a href="#method-i-scan">#scan</a>
-    
   </ul>
 </div>
 
@@ -184,50 +133,37 @@
 
   <section class="description">
     
-<p><a href="C.html">RDoc::Parser::C</a> attempts to parse <a
-href="C.html">C</a> extension files.  It looks for the standard patterns
-that you find in extensions: <code>rb_define_class, rb_define_method</code>
-and so on.  It tries to find the corresponding <a href="C.html">C</a>
-source for the methods and extract comments, but if we fail we don&#39;t
-worry too much.</p>
+<p><a href="C.html"><code>RDoc::Parser::C</code></a> attempts to parse <a href="C.html"><code>C</code></a> extension files.  It looks for the standard patterns that you find in extensions: <code>rb_define_class</code>, <code>rb_define_method</code> and so on.  It tries to find the corresponding <a href="C.html"><code>C</code></a> source for the methods and extract comments, but if we fail we don’t worry too much.</p>
 
-<p>The comments associated with a Ruby method are extracted from the <a
-href="C.html">C</a> comment block associated with the routine that
-<em>implements</em> that method, that is to say the method whose name is
-given in the <code>rb_define_method</code> call. For example, you might
-write:</p>
+<p>The comments associated with a Ruby method are extracted from the <a href="C.html"><code>C</code></a> comment block associated with the routine that <em>implements</em> that method, that is to say the method whose name is given in the <code>rb_define_method</code> call. For example, you might write:</p>
 
-<pre>  Returns a new array that is a one-dimensional flattening of this
-  array (recursively). That is, for every element that is an array,
-  extract its elements into the new array.
+<pre>/*
+ * Returns a new array that is a one-dimensional flattening of this
+ * array (recursively). That is, for every element that is an array,
+ * extract its elements into the new array.
+ *
+ *    s = [ 1, 2, 3 ]           #=&gt; [1, 2, 3]
+ *    t = [ 4, 5, 6, [7, 8] ]   #=&gt; [4, 5, 6, [7, 8]]
+ *    a = [ s, t, 9, 10 ]       #=&gt; [[1, 2, 3], [4, 5, 6, [7, 8]], 9, 10]
+ *    a.flatten                 #=&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+ */
+ static VALUE
+ rb_ary_flatten(VALUE ary)
+ {
+     ary = rb_obj_dup(ary);
+     rb_ary_flatten_bang(ary);
+     return ary;
+ }
 
-     s = [ 1, 2, 3 ]           #=&gt; [1, 2, 3]
-     t = [ 4, 5, 6, [7, 8] ]   #=&gt; [4, 5, 6, [7, 8]]
-     a = [ s, t, 9, 10 ]       #=&gt; [[1, 2, 3], [4, 5, 6, [7, 8]], 9, 10]
-     a.flatten                 #=&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+ ...
 
-static VALUE
-rb_ary_flatten(ary)
-    VALUE ary;
-{
-    ary = rb_obj_dup(ary);
-    rb_ary_flatten_bang(ary);
-    return ary;
-}
+ void
+ Init_Array(void)
+ {
+   ...
+   rb_define_method(rb_cArray, &quot;flatten&quot;, rb_ary_flatten, 0);</pre>
 
-...
-
-void
-Init_Array()
-{
-  ...
-  rb_define_method(rb_cArray, &quot;flatten&quot;, rb_ary_flatten, 0);</pre>
-
-<p>Here <a href="../../RDoc.html">RDoc</a> will determine from the
-rb_define_method line that there&#39;s a method called “flatten” in class
-Array, and will look for the implementation in the method rb_ary_flatten.
-It will then use the comment from that method in the HTML output. This
-method must be in the same source file as the rb_define_method.</p>
+<p>Here <a href="../../RDoc.html"><code>RDoc</code></a> will determine from the <code>rb_define_method</code> line that there’s a method called “flatten” in class Array, and will look for the implementation in the method <code>rb_ary_flatten</code>. It will then use the comment from that method in the HTML output. This method must be in the same source file as the <code>rb_define_method</code>.</p>
 
 <p>The comment blocks may include special directives:</p>
 <dl class="rdoc-list label-list"><dt>Document-class: <code>name</code>
@@ -242,7 +178,7 @@ method must be in the same source file as the rb_define_method.</p>
 
 <p>Constant values can be supplied on the first line of the comment like so:</p>
 
-<pre>   300: The highest possible score in bowling   
+<pre>/* 300: The highest possible score in bowling */
 rb_define_const(cFoo, &quot;PERFECT&quot;, INT2FIX(300));</pre>
 
 <p>The value can contain internal colons so long as they are escaped with a \</p>
@@ -252,76 +188,59 @@ rb_define_const(cFoo, &quot;PERFECT&quot;, INT2FIX(300));</pre>
 </dd><dt>Document-variable: <code>name</code>
 <dd>
 <p>Documentation for the named <code>rb_define_variable</code></p>
-</dd></dl>
-
-<p>[</p>
-
-<pre>Documentation for the named method.  Use this when the method name is
-unambiguous.</pre>
-
-<p>[</p>
-
-<pre>Documentation for a singleton method in the given class.  Use this when
-the method name alone is ambiguous.</pre>
-
-<p>[</p>
-
-<pre>Documentation for a instance method in the given class.  Use this when the
-method name alone is ambiguous.</pre>
-<dl class="rdoc-list label-list"><dt>Document-attr: <code>name</code>
+</dd><dt>Document-method: <code>method_name</code>
+<dd>
+<p>Documentation for the named method.  Use this when the method name is unambiguous.</p>
+</dd><dt>Document-method: <code>ClassName::method_name</code>
+<dd>
+<p>Documentation for a singleton method in the given class.  Use this when the method name alone is ambiguous.</p>
+</dd><dt>Document-method: <code>ClassName#method_name</code>
+<dd>
+<p>Documentation for a instance method in the given class.  Use this when the method name alone is ambiguous.</p>
+</dd><dt>Document-attr: <code>name</code>
 <dd>
 <p>Documentation for the named attribute.</p>
 </dd><dt>call-seq:  <em>text up to an empty line</em>
 <dd>
-<p>Because <a href="C.html">C</a> source doesn&#39;t give descriptive names to
-Ruby-level parameters, you need to document the calling sequence explicitly</p>
+<p>Because <a href="C.html"><code>C</code></a> source doesn’t give descriptive names to Ruby-level parameters, you need to document the calling sequence explicitly</p>
 </dd></dl>
 
-<p>In addition, <a href="../../RDoc.html">RDoc</a> assumes by default that the
-<a href="C.html">C</a> method implementing a Ruby function is in the same
-source file as the rb_define_method call. If this isn&#39;t the case, add
-the comment:</p>
+<p>In addition, <a href="../../RDoc.html"><code>RDoc</code></a> assumes by default that the <a href="C.html"><code>C</code></a> method implementing a Ruby function is in the same source file as the rb_define_method call. If this isn’t the case, add the comment:</p>
 
 <pre>rb_define_method(....);  // in filename</pre>
 
-<p>As an example, we might have an extension that defines multiple classes in
-its Init_xxx method. We could document them using</p>
+<p>As an example, we might have an extension that defines multiple classes in its Init_xxx method. We could document them using</p>
 
 <pre>/*
-   Document-class:  MyClass
-
-   Encapsulate the writing and reading of the configuration
-   file. ...
-  /
+ * Document-class:  MyClass
+ *
+ * Encapsulate the writing and reading of the configuration
+ * file. ...
+ */
 
 /*
-
-   call-seq:
-     cfg.read_value(key)            -&gt; value
-     cfg.read_value(key} { |key| }  -&gt; value
-
-   Return the value corresponding to +key+ from the configuration.
-   In the second form, if the key isn&#39;t found, invoke the
-   block and return its value.
-  /</pre>
+ * Document-method: read_value
+ *
+ * call-seq:
+ *   cfg.read_value(key)            -&gt; value
+ *   cfg.read_value(key} { |key| }  -&gt; value
+ *
+ * Return the value corresponding to +key+ from the configuration.
+ * In the second form, if the key isn&#39;t found, invoke the
+ * block and return its value.
+ */</pre>
 
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
 
-    
     <section class="attribute-method-details" class="method-section">
       <header>
         <h3>Attributes</h3>
       </header>
 
-      
       <div id="attribute-i-classes" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">classes</span><span
@@ -329,13 +248,9 @@ its Init_xxx method. We could document them using</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Maps <a href="C.html">C</a> variable names to names of Ruby classes or
-modules</p>
-        
+        <p>Maps <a href="C.html"><code>C</code></a> variable names to names of Ruby classes or modules</p>
         </div>
       </div>
-      
       <div id="attribute-i-content" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">content</span><span
@@ -343,12 +258,9 @@ modules</p>
         </div>
 
         <div class="method-description">
-        
-        <p><a href="C.html">C</a> file the parser is parsing</p>
-        
+        <p><a href="C.html"><code>C</code></a> file the parser is parsing</p>
         </div>
       </div>
-      
       <div id="attribute-i-enclosure_dependencies" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">enclosure_dependencies</span><span
@@ -356,14 +268,9 @@ modules</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Dependencies from a missing enclosing class to the classes in <a
-href="C.html#attribute-i-missing_dependencies">#missing_dependencies</a>
-that depend upon it.</p>
-        
+        <p>Dependencies from a missing enclosing class to the classes in <a href="C.html#attribute-i-missing_dependencies"><code>missing_dependencies</code></a> that depend upon it.</p>
         </div>
       </div>
-      
       <div id="attribute-i-known_classes" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">known_classes</span><span
@@ -371,13 +278,9 @@ that depend upon it.</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Maps <a href="C.html">C</a> variable names to names of Ruby classes (and
-singleton classes)</p>
-        
+        <p>Maps <a href="C.html"><code>C</code></a> variable names to names of Ruby classes (and singleton classes)</p>
         </div>
       </div>
-      
       <div id="attribute-i-missing_dependencies" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">missing_dependencies</span><span
@@ -385,14 +288,9 @@ singleton classes)</p>
         </div>
 
         <div class="method-description">
-        
-        <p>Classes found while parsing the <a href="C.html">C</a> file that were not
-yet registered due to a missing enclosing class.  These are processed by <a
-href="C.html#method-i-do_missing">#do_missing</a></p>
-        
+        <p>Classes found while parsing the <a href="C.html"><code>C</code></a> file that were not yet registered due to a missing enclosing class.  These are processed by <a href="C.html#method-i-do_missing"><code>do_missing</code></a></p>
         </div>
       </div>
-      
       <div id="attribute-i-singleton_classes" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">singleton_classes</span><span
@@ -400,13 +298,9 @@ href="C.html#method-i-do_missing">#do_missing</a></p>
         </div>
 
         <div class="method-description">
-        
-        <p>Maps <a href="C.html">C</a> variable names to names of Ruby singleton
-classes</p>
-        
+        <p>Maps <a href="C.html"><code>C</code></a> variable names to names of Ruby singleton classes</p>
         </div>
       </div>
-      
       <div id="attribute-i-top_level" class="method-detail">
         <div class="method-heading attribute-method-heading">
           <span class="method-name">top_level</span><span
@@ -414,48 +308,35 @@ classes</p>
         </div>
 
         <div class="method-description">
-        
         <p>The TopLevel items in the parsed file belong to</p>
-        
         </div>
       </div>
-      
     </section>
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(top_level, file_name, content, options, stats)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(top_level, file_name, content, options, stats)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Prepares for parsing a <a href="C.html">C</a> file.  See
-RDoc::Parser#initialize for details on the arguments.</p>
-          
-          
+          <p>Prepares for parsing a <a href="C.html"><code>C</code></a> file.  See RDoc::Parser#initialize for details on the arguments.</p>
             <div class="method-calls-super">
               Calls superclass method
-              <a href="../Parser.html#method-c-new">RDoc::Parser.new</a>
+              <a href="../Parser.html#method-c-new"><code>RDoc::Parser::new</code></a>
             </div>
-          
 
-          
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 167</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 171</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span> <span class="ruby-identifier">top_level</span>, <span class="ruby-identifier">file_name</span>, <span class="ruby-identifier">content</span>, <span class="ruby-identifier">options</span>, <span class="ruby-identifier">stats</span>
   <span class="ruby-keyword">super</span>
 
@@ -465,6 +346,8 @@ RDoc::Parser#initialize for details on the arguments.</p>
 
   <span class="ruby-ivar">@classes</span>           = <span class="ruby-identifier">load_variable_map</span> <span class="ruby-value">:c_class_variables</span>
   <span class="ruby-ivar">@singleton_classes</span> = <span class="ruby-identifier">load_variable_map</span> <span class="ruby-value">:c_singleton_class_variables</span>
+
+  <span class="ruby-ivar">@markup</span> = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">markup</span>
 
   <span class="ruby-comment"># class_variable =&gt; { function =&gt; [method, ...] }</span>
   <span class="ruby-ivar">@methods</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">h</span>, <span class="ruby-identifier">f</span><span class="ruby-operator">|</span> <span class="ruby-identifier">h</span>[<span class="ruby-identifier">f</span>] = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span>, <span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">i</span>[<span class="ruby-identifier">m</span>] = [] } }
@@ -502,88 +385,61 @@ RDoc::Parser#initialize for details on the arguments.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
-      <div id="method-i-deduplicate_call_seq" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">deduplicate_call_seq</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+      <div id="method-i-add_alias" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">add_alias</span><span
+              class="method-args">(var_name, class_obj, old_name, new_name, comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Removes duplicate call-seq entries for methods using the same
-implementation.</p>
-          
-          
+          <p>Add alias, either from a direct alias definition, or from two method that reference the same function.</p>
 
-          
-          <div class="method-source-code" id="deduplicate_call_seq-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 217</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">deduplicate_call_seq</span>
-  <span class="ruby-ivar">@methods</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">functions</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">class_name</span> = <span class="ruby-ivar">@known_classes</span>[<span class="ruby-identifier">var_name</span>]
-    <span class="ruby-identifier">class_obj</span>  = <span class="ruby-identifier">find_class</span> <span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">class_name</span>
-
-    <span class="ruby-identifier">functions</span>.<span class="ruby-identifier">each_value</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">method_names</span><span class="ruby-operator">|</span>
-      <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">method_names</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
-
-      <span class="ruby-identifier">method_names</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">method_name</span><span class="ruby-operator">|</span>
-        <span class="ruby-identifier">deduplicate_method_name</span> <span class="ruby-identifier">class_obj</span>, <span class="ruby-identifier">method_name</span>
-      <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">end</span>
+          <div class="method-source-code" id="add_alias-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 250</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_alias</span>(<span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">class_obj</span>, <span class="ruby-identifier">old_name</span>, <span class="ruby-identifier">new_name</span>, <span class="ruby-identifier">comment</span>)
+  <span class="ruby-identifier">al</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Alias</span>.<span class="ruby-identifier">new</span> <span class="ruby-string">&#39;&#39;</span>, <span class="ruby-identifier">old_name</span>, <span class="ruby-identifier">new_name</span>, <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-identifier">al</span>.<span class="ruby-identifier">singleton</span> = <span class="ruby-ivar">@singleton_classes</span>.<span class="ruby-identifier">key?</span> <span class="ruby-identifier">var_name</span>
+  <span class="ruby-identifier">al</span>.<span class="ruby-identifier">comment</span> = <span class="ruby-identifier">comment</span>
+  <span class="ruby-identifier">al</span>.<span class="ruby-identifier">record_location</span> <span class="ruby-ivar">@top_level</span>
+  <span class="ruby-identifier">class_obj</span>.<span class="ruby-identifier">add_alias</span> <span class="ruby-identifier">al</span>
+  <span class="ruby-ivar">@stats</span>.<span class="ruby-identifier">add_alias</span> <span class="ruby-identifier">al</span>
+  <span class="ruby-identifier">al</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-do_aliases" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">do_aliases</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">do_aliases</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Scans <a href="C.html#attribute-i-content">content</a> for rb_define_alias</p>
-          
-          
+          <p>Scans <a href="C.html#attribute-i-content"><code>content</code></a> for rb_define_alias</p>
 
-          
           <div class="method-source-code" id="do_aliases-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 257</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 222</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_aliases</span>
   <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/rb_define_alias\s*\(
                  \s*(\w+),
@@ -599,102 +455,73 @@ implementation.</p>
     <span class="ruby-keyword">end</span>
 
     <span class="ruby-identifier">class_obj</span> = <span class="ruby-identifier">find_class</span> <span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">class_name</span>
-
-    <span class="ruby-identifier">al</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Alias</span>.<span class="ruby-identifier">new</span> <span class="ruby-string">&#39;&#39;</span>, <span class="ruby-identifier">old_name</span>, <span class="ruby-identifier">new_name</span>, <span class="ruby-string">&#39;&#39;</span>
-    <span class="ruby-identifier">al</span>.<span class="ruby-identifier">singleton</span> = <span class="ruby-ivar">@singleton_classes</span>.<span class="ruby-identifier">key?</span> <span class="ruby-identifier">var_name</span>
-
     <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">find_alias_comment</span> <span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">new_name</span>, <span class="ruby-identifier">old_name</span>
-
     <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">normalize</span>
-
-    <span class="ruby-identifier">al</span>.<span class="ruby-identifier">comment</span> = <span class="ruby-identifier">comment</span>
-
-    <span class="ruby-identifier">al</span>.<span class="ruby-identifier">record_location</span> <span class="ruby-ivar">@top_level</span>
-
-    <span class="ruby-identifier">class_obj</span>.<span class="ruby-identifier">add_alias</span> <span class="ruby-identifier">al</span>
-    <span class="ruby-ivar">@stats</span>.<span class="ruby-identifier">add_alias</span> <span class="ruby-identifier">al</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">existing_method</span> = <span class="ruby-identifier">class_obj</span>.<span class="ruby-identifier">method_list</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">old_name</span>}
+      <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">existing_method</span>.<span class="ruby-identifier">comment</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">add_alias</span>(<span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">class_obj</span>, <span class="ruby-identifier">old_name</span>, <span class="ruby-identifier">new_name</span>, <span class="ruby-identifier">comment</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-do_attrs" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">do_attrs</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">do_attrs</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Scans <a href="C.html#attribute-i-content">content</a> for rb_attr and
-rb_define_attr</p>
-          
-          
+          <p>Scans <a href="C.html#attribute-i-content"><code>content</code></a> for rb_attr and rb_define_attr</p>
 
-          
           <div class="method-source-code" id="do_attrs-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 292</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 263</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_attrs</span>
   <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/rb_attr\s*\(
                  \s*(\w+),
                  \s*([\w&quot;()]+),
-                 \s*([01]),
-                 \s*([01]),
-                 \s*\w+\);/xm</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">attr_name</span>, <span class="ruby-identifier">read</span>, <span class="ruby-identifier">write</span><span class="ruby-operator">|</span>
+                 #{BOOL_ARG_PATTERN},
+                 #{BOOL_ARG_PATTERN},
+                 \s*\w+\);/xmo</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">attr_name</span>, <span class="ruby-identifier">read</span>, <span class="ruby-identifier">write</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">handle_attr</span> <span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">attr_name</span>, <span class="ruby-identifier">read</span>, <span class="ruby-identifier">write</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">%r%rb_define_attr\(
                            \s*([\w\.]+),
                            \s*&quot;([^&quot;]+)&quot;,
-                           \s*(\d+),
-                           \s*(\d+)\s*\);
-              %xm</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">attr_name</span>, <span class="ruby-identifier">read</span>, <span class="ruby-identifier">write</span><span class="ruby-operator">|</span>
+                           #{BOOL_ARG_PATTERN},
+                           #{BOOL_ARG_PATTERN}\);
+              %xmo</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">attr_name</span>, <span class="ruby-identifier">read</span>, <span class="ruby-identifier">write</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">handle_attr</span> <span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">attr_name</span>, <span class="ruby-identifier">read</span>, <span class="ruby-identifier">write</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-do_boot_defclass" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">do_boot_defclass</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">do_boot_defclass</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Scans <a href="C.html#attribute-i-content">content</a> for boot_defclass</p>
-          
-          
+          <p>Scans <a href="C.html#attribute-i-content"><code>content</code></a> for boot_defclass</p>
 
-          
           <div class="method-source-code" id="do_boot_defclass-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 315</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 286</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_boot_defclass</span>
   <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/(\w+)\s*=\s*boot_defclass\s*\(\s*&quot;(\w+?)&quot;,\s*(\w+?)\s*\)/</span>) <span class="ruby-keyword">do</span>
     <span class="ruby-operator">|</span><span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">class_name</span>, <span class="ruby-identifier">parent</span><span class="ruby-operator">|</span>
@@ -703,75 +530,138 @@ rb_define_attr</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
-      <div id="method-i-do_classes" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">do_classes</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+      <div id="method-i-do_classes_and_modules" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">do_classes_and_modules</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Scans <a href="C.html#attribute-i-content">content</a> for rb_define_class,
-boot_defclass, rb_define_class_under and rb_singleton_class</p>
-          
-          
+          <p>Scans <a href="C.html#attribute-i-content"><code>content</code></a> for rb_define_class, boot_defclass, rb_define_class_under and rb_singleton_class</p>
 
-          
-          <div class="method-source-code" id="do_classes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 327</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_classes</span>
-  <span class="ruby-identifier">do_boot_defclass</span>
-  <span class="ruby-identifier">do_define_class</span>
-  <span class="ruby-identifier">do_define_class_under</span>
-  <span class="ruby-identifier">do_singleton_class</span>
-  <span class="ruby-identifier">do_struct_define_without_accessor</span>
+          <div class="method-source-code" id="do_classes_and_modules-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 298</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_classes_and_modules</span>
+  <span class="ruby-identifier">do_boot_defclass</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@file_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;class.c&quot;</span>
+
+  <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">scan</span>(
+    <span class="ruby-regexp">%r(
+      (?&lt;open&gt;\s*\(\s*) {0}
+      (?&lt;close&gt;\s*\)\s*) {0}
+      (?&lt;name&gt;\s*&quot;(?&lt;class_name&gt;\w+)&quot;) {0}
+      (?&lt;parent&gt;\s*(?:
+        (?&lt;parent_name&gt;[\w\*\s\(\)\.\-&gt;]+) |
+        rb_path2class\s*\(\s*&quot;(?&lt;path&gt;[\w:]+)&quot;\s*\)
+      )) {0}
+      (?&lt;under&gt;\w+) {0}
+
+      (?&lt;var_name&gt;[\w\.]+)\s* =
+      \s*rb_(?:
+        define_(?:
+          class(?: # rb_define_class(name, parent_name)
+            \(\s*
+              \g&lt;name&gt;,
+              \g&lt;parent&gt;
+            \s*\)
+          |
+            _under\g&lt;open&gt; # rb_define_class_under(under, name, parent_name...)
+              \g&lt;under&gt;,
+              \g&lt;name&gt;,
+              \g&lt;parent&gt;
+            \g&lt;close&gt;
+          )
+        |
+          (?&lt;module&gt;)
+          module(?: # rb_define_module(name)
+            \g&lt;open&gt;
+              \g&lt;name&gt;
+            \g&lt;close&gt;
+          |
+            _under\g&lt;open&gt; # rb_define_module_under(under, name)
+              \g&lt;under&gt;,
+              \g&lt;name&gt;
+            \g&lt;close&gt;
+          )
+        )
+    |
+      (?&lt;attributes&gt;(?:\s*&quot;\w+&quot;,)*\s*NULL\s*) {0}
+      struct_define(?:
+        \g&lt;open&gt; # rb_struct_define(name, ...)
+          \g&lt;name&gt;,
+      |
+        _under\g&lt;open&gt; # rb_struct_define_under(under, name, ...)
+          \g&lt;under&gt;,
+          \g&lt;name&gt;,
+      |
+        _without_accessor(?:
+          \g&lt;open&gt; # rb_struct_define_without_accessor(name, parent_name, ...)
+        |
+          _under\g&lt;open&gt; # rb_struct_define_without_accessor_under(under, name, parent_name, ...)
+            \g&lt;under&gt;,
+        )
+          \g&lt;name&gt;,
+          \g&lt;parent&gt;,
+          \s*\w+,        # Allocation function
+      )
+        \g&lt;attributes&gt;
+      \g&lt;close&gt;
+    |
+      singleton_class\g&lt;open&gt; # rb_singleton_class(target_class_name)
+        (?&lt;target_class_name&gt;\w+)
+      \g&lt;close&gt;
+      )
+    )mx</span>
+  ) <span class="ruby-keyword">do</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">target_class_name</span> = <span class="ruby-identifier">$~</span>[<span class="ruby-value">:target_class_name</span>]
+      <span class="ruby-comment"># rb_singleton_class(target_class_name)</span>
+      <span class="ruby-identifier">handle_singleton</span> <span class="ruby-identifier">$~</span>[<span class="ruby-value">:var_name</span>], <span class="ruby-identifier">target_class_name</span>
+      <span class="ruby-keyword">next</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">var_name</span> = <span class="ruby-identifier">$~</span>[<span class="ruby-value">:var_name</span>]
+    <span class="ruby-identifier">type</span> = <span class="ruby-identifier">$~</span>[<span class="ruby-value">:module</span>] <span class="ruby-operator">?</span> <span class="ruby-value">:module</span> <span class="ruby-operator">:</span> <span class="ruby-value">:class</span>
+    <span class="ruby-identifier">class_name</span> = <span class="ruby-identifier">$~</span>[<span class="ruby-value">:class_name</span>]
+    <span class="ruby-identifier">parent_name</span> = <span class="ruby-identifier">$~</span>[<span class="ruby-value">:parent_name</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">$~</span>[<span class="ruby-value">:path</span>]
+    <span class="ruby-identifier">under</span> = <span class="ruby-identifier">$~</span>[<span class="ruby-value">:under</span>]
+    <span class="ruby-identifier">attributes</span> = <span class="ruby-identifier">$~</span>[<span class="ruby-value">:attributes</span>]
+
+    <span class="ruby-identifier">handle_class_module</span>(<span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">class_name</span>, <span class="ruby-identifier">parent_name</span>, <span class="ruby-identifier">under</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">attributes</span> <span class="ruby-keyword">and</span> <span class="ruby-operator">!</span><span class="ruby-identifier">parent_name</span> <span class="ruby-comment"># rb_struct_define *not* without_accessor</span>
+      <span class="ruby-identifier">true_flag</span> = <span class="ruby-string">&#39;Qtrue&#39;</span>
+      <span class="ruby-identifier">attributes</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/&quot;\K\w+(?=&quot;)/</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">attr_name</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">handle_attr</span> <span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">attr_name</span>, <span class="ruby-identifier">true_flag</span>, <span class="ruby-identifier">true_flag</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-do_constants" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">do_constants</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">do_constants</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Scans <a href="C.html#attribute-i-content">content</a> for
-rb_define_variable, rb_define_readonly_variable, rb_define_const and
-rb_define_global_const</p>
-          
-          
+          <p>Scans <a href="C.html#attribute-i-content"><code>content</code></a> for rb_define_variable, rb_define_readonly_variable, rb_define_const and rb_define_global_const</p>
 
-          
           <div class="method-source-code" id="do_constants-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 339</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 396</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_constants</span>
   <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">%r%\Wrb_define_
                  ( variable          |
@@ -814,245 +704,55 @@ rb_define_global_const</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
-      <div id="method-i-do_define_class" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">do_define_class</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>Scans <a href="C.html#attribute-i-content">content</a> for rb_define_class</p>
-          
-          
-
-          
-          <div class="method-source-code" id="do_define_class-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 384</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_define_class</span>
-  <span class="ruby-comment"># The &#39;.&#39; lets us handle SWIG-generated files</span>
-  <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/([\w\.]+)\s* = \s*rb_define_class\s*
-            \(
-               \s*&quot;(\w+)&quot;,
-               \s*(\w+)\s*
-            \)/mx</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">class_name</span>, <span class="ruby-identifier">parent</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">handle_class_module</span>(<span class="ruby-identifier">var_name</span>, <span class="ruby-value">:class</span>, <span class="ruby-identifier">class_name</span>, <span class="ruby-identifier">parent</span>, <span class="ruby-keyword">nil</span>)
-  <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-      <div id="method-i-do_define_class_under" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">do_define_class_under</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>Scans <a href="C.html#attribute-i-content">content</a> for
-rb_define_class_under</p>
-          
-          
-
-          
-          <div class="method-source-code" id="do_define_class_under-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 398</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_define_class_under</span>
-  <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/([\w\.]+)\s* =                  # var_name
-                 \s*rb_define_class_under\s*
-                 \(
-                   \s* (\w+),                    # under
-                   \s* &quot;(\w+)&quot;,                  # class_name
-                   \s*
-                   (?:
-                     ([\w\*\s\(\)\.\-&gt;]+) |      # parent_name
-                     rb_path2class\(&quot;([\w:]+)&quot;\) # path
-                   )
-                   \s*
-                 \)
-                /mx</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">under</span>, <span class="ruby-identifier">class_name</span>, <span class="ruby-identifier">parent_name</span>, <span class="ruby-identifier">path</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">parent</span> = <span class="ruby-identifier">path</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">parent_name</span>
-
-    <span class="ruby-identifier">handle_class_module</span> <span class="ruby-identifier">var_name</span>, <span class="ruby-value">:class</span>, <span class="ruby-identifier">class_name</span>, <span class="ruby-identifier">parent</span>, <span class="ruby-identifier">under</span>
-  <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-      <div id="method-i-do_define_module" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">do_define_module</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>Scans <a href="C.html#attribute-i-content">content</a> for rb_define_module</p>
-          
-          
-
-          
-          <div class="method-source-code" id="do_define_module-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 421</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_define_module</span>
-  <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/(\w+)\s* = \s*rb_define_module\s*\(\s*&quot;(\w+)&quot;\s*\)/mx</span>) <span class="ruby-keyword">do</span>
-    <span class="ruby-operator">|</span><span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">class_name</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">handle_class_module</span>(<span class="ruby-identifier">var_name</span>, <span class="ruby-value">:module</span>, <span class="ruby-identifier">class_name</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-keyword">nil</span>)
-  <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-      <div id="method-i-do_define_module_under" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">do_define_module_under</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>Scans <a href="C.html#attribute-i-content">content</a> for
-rb_define_module_under</p>
-          
-          
-
-          
-          <div class="method-source-code" id="do_define_module_under-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 431</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_define_module_under</span>
-  <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/(\w+)\s* = \s*rb_define_module_under\s*
-            \(
-               \s*(\w+),
-               \s*&quot;(\w+)&quot;
-            \s*\)/mx</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">in_module</span>, <span class="ruby-identifier">class_name</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">handle_class_module</span>(<span class="ruby-identifier">var_name</span>, <span class="ruby-value">:module</span>, <span class="ruby-identifier">class_name</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">in_module</span>)
-  <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
       <div id="method-i-do_includes" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">do_includes</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">do_includes</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Scans <a href="C.html#attribute-i-content">content</a> for
-rb_include_module</p>
-          
-          
+          <p>Scans <a href="C.html#attribute-i-content"><code>content</code></a> for rb_include_module</p>
 
-          
           <div class="method-source-code" id="do_includes-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 444</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 442</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_includes</span>
   <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/rb_include_module\s*\(\s*(\w+?),\s*(\w+?)\s*\)/</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span>,<span class="ruby-identifier">m</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">next</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">cls</span> = <span class="ruby-ivar">@classes</span>[<span class="ruby-identifier">c</span>]
     <span class="ruby-identifier">m</span> = <span class="ruby-ivar">@known_classes</span>[<span class="ruby-identifier">m</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">m</span>
 
-    <span class="ruby-identifier">comment</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span>.<span class="ruby-identifier">new</span> <span class="ruby-string">&#39;&#39;</span>, <span class="ruby-ivar">@top_level</span>
+    <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">new_comment</span> <span class="ruby-string">&#39;&#39;</span>, <span class="ruby-ivar">@top_level</span>, <span class="ruby-value">:c</span>
     <span class="ruby-identifier">incl</span> = <span class="ruby-identifier">cls</span>.<span class="ruby-identifier">add_include</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Include</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">m</span>, <span class="ruby-identifier">comment</span>)
     <span class="ruby-identifier">incl</span>.<span class="ruby-identifier">record_location</span> <span class="ruby-ivar">@top_level</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-do_methods" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">do_methods</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">do_methods</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Scans <a href="C.html#attribute-i-content">content</a> for
-rb_define_method, rb_define_singleton_method, rb_define_module_function,
-rb_define_private_method, rb_define_global_function and
-define_filetest_function</p>
-          
-          
+          <p>Scans <a href="C.html#attribute-i-content"><code>content</code></a> for rb_define_method, rb_define_singleton_method, rb_define_module_function, rb_define_private_method, rb_define_global_function and define_filetest_function</p>
 
-          
           <div class="method-source-code" id="do_methods-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 460</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 458</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_methods</span>
   <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">%r%rb_define_
                  (
@@ -1098,36 +798,25 @@ define_filetest_function</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-do_missing" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">do_missing</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">do_missing</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates classes and module that were missing were defined due to the file
-order being different than the declaration order.</p>
-          
-          
+          <p>Creates classes and module that were missing were defined due to the file order being different than the declaration order.</p>
 
-          
           <div class="method-source-code" id="do_missing-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 509</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 507</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_missing</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@missing_dependencies</span>.<span class="ruby-identifier">empty?</span>
 
@@ -1140,198 +829,57 @@ order being different than the declaration order.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
-      <div id="method-i-do_modules" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">do_modules</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>Scans <a href="C.html#attribute-i-content">content</a> for rb_define_module
-and rb_define_module_under</p>
-          
-          
-
-          
-          <div class="method-source-code" id="do_modules-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 524</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_modules</span>
-  <span class="ruby-identifier">do_define_module</span>
-  <span class="ruby-identifier">do_define_module_under</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-      <div id="method-i-do_singleton_class" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">do_singleton_class</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>Scans <a href="C.html#attribute-i-content">content</a> for
-rb_singleton_class</p>
-          
-          
-
-          
-          <div class="method-source-code" id="do_singleton_class-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 532</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_singleton_class</span>
-  <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/([\w\.]+)\s* = \s*rb_singleton_class\s*
-                \(
-                  \s*(\w+)
-                \s*\)/mx</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">sclass_var</span>, <span class="ruby-identifier">class_var</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">handle_singleton</span> <span class="ruby-identifier">sclass_var</span>, <span class="ruby-identifier">class_var</span>
-  <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-      <div id="method-i-do_struct_define_without_accessor" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">do_struct_define_without_accessor</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>Scans <a href="C.html#attribute-i-content">content</a> for
-struct_define_without_accessor</p>
-          
-          
-
-          
-          <div class="method-source-code" id="do_struct_define_without_accessor-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 544</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">do_struct_define_without_accessor</span>
-  <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">/([\w\.]+)\s* = \s*rb_struct_define_without_accessor\s*
-            \(
-               \s*&quot;(\w+)&quot;,  # Class name
-               \s*(\w+),    # Parent class
-               \s*\w+,      # Allocation function
-               (\s*&quot;\w+&quot;,)* # Attributes
-               \s*NULL
-            \)/mx</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">class_name</span>, <span class="ruby-identifier">parent</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">handle_class_module</span>(<span class="ruby-identifier">var_name</span>, <span class="ruby-value">:class</span>, <span class="ruby-identifier">class_name</span>, <span class="ruby-identifier">parent</span>, <span class="ruby-keyword">nil</span>)
-  <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
       <div id="method-i-find_alias_comment" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_alias_comment</span><span
-            class="method-args">(class_name, new_name, old_name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_alias_comment</span><span
+              class="method-args">(class_name, new_name, old_name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Finds the comment for an alias on <code>class_name</code> from
-<code>new_name</code> to <code>old_name</code></p>
-          
-          
+          <p>Finds the comment for an alias on <code>class_name</code> from <code>new_name</code> to <code>old_name</code></p>
 
-          
           <div class="method-source-code" id="find_alias_comment-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 561</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 523</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_alias_comment</span> <span class="ruby-identifier">class_name</span>, <span class="ruby-identifier">new_name</span>, <span class="ruby-identifier">old_name</span>
   <span class="ruby-identifier">content</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">%r%((?&gt;/\*.*?\*/\s+))
                 rb_define_alias\(\s*#{Regexp.escape class_name}\s*,
                                  \s*&quot;#{Regexp.escape new_name}&quot;\s*,
                                  \s*&quot;#{Regexp.escape old_name}&quot;\s*\);%xm</span>
 
-  <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">$1</span> <span class="ruby-operator">||</span> <span class="ruby-string">&#39;&#39;</span>, <span class="ruby-ivar">@top_level</span>)
+  <span class="ruby-identifier">new_comment</span>(<span class="ruby-node">$1</span> <span class="ruby-operator">||</span> <span class="ruby-string">&#39;&#39;</span>, <span class="ruby-ivar">@top_level</span>, <span class="ruby-value">:c</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_attr_comment" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_attr_comment</span><span
-            class="method-args">(var_name, attr_name, read = nil, write = nil)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_attr_comment</span><span
+              class="method-args">(var_name, attr_name, read = nil, write = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Finds a comment for rb_define_attr, rb_attr or Document-attr.</p>
 
-<p><code>var_name</code> is the <a href="C.html">C</a> class variable the
-attribute is defined on. <code>attr_name</code> is the attribute&#39;s
-name.</p>
+<p><code>var_name</code> is the <a href="C.html"><code>C</code></a> class variable the attribute is defined on. <code>attr_name</code> is the attribute’s name.</p>
 
-<p><code>read</code> and <code>write</code> are the read/write flags
-(&#39;1&#39; or &#39;0&#39;).  Either both or neither must be provided.</p>
-          
-          
+<p><code>read</code> and <code>write</code> are the read/write flags (‘1’ or ‘0’).  Either both or neither must be provided.</p>
 
-          
           <div class="method-source-code" id="find_attr_comment-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 579</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 541</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_attr_comment</span> <span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">attr_name</span>, <span class="ruby-identifier">read</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">write</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">attr_name</span> = <span class="ruby-constant">Regexp</span>.<span class="ruby-identifier">escape</span> <span class="ruby-identifier">attr_name</span>
 
@@ -1359,38 +907,28 @@ name.</p>
               <span class="ruby-string">&#39;&#39;</span>
             <span class="ruby-keyword">end</span>
 
-  <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">comment</span>, <span class="ruby-ivar">@top_level</span>
+  <span class="ruby-identifier">new_comment</span> <span class="ruby-identifier">comment</span>, <span class="ruby-ivar">@top_level</span>, <span class="ruby-value">:c</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_body" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_body</span><span
-            class="method-args">(class_name, meth_name, meth_obj, file_content, quiet = false)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_body</span><span
+              class="method-args">(class_name, meth_name, meth_obj, file_content, quiet = false)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Find the <a href="C.html">C</a> code corresponding to a Ruby method</p>
-          
-          
+          <p>Find the <a href="C.html"><code>C</code></a> code corresponding to a Ruby method</p>
 
-          
           <div class="method-source-code" id="find_body-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 637</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 599</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_body</span> <span class="ruby-identifier">class_name</span>, <span class="ruby-identifier">meth_name</span>, <span class="ruby-identifier">meth_obj</span>, <span class="ruby-identifier">file_content</span>, <span class="ruby-identifier">quiet</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">file_content</span>
     <span class="ruby-ivar">@body_table</span> <span class="ruby-operator">||=</span> {}
@@ -1400,7 +938,7 @@ name.</p>
 
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">type</span>
   <span class="ruby-keyword">when</span> <span class="ruby-value">:func_def</span>
-    <span class="ruby-identifier">comment</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">0</span>], <span class="ruby-ivar">@top_level</span>
+    <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">new_comment</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">0</span>], <span class="ruby-ivar">@top_level</span>, <span class="ruby-value">:c</span>
     <span class="ruby-identifier">body</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">1</span>]
     <span class="ruby-identifier">offset</span>, = <span class="ruby-identifier">args</span>[<span class="ruby-value">2</span>]
 
@@ -1430,7 +968,7 @@ name.</p>
 
     <span class="ruby-identifier">body</span>
   <span class="ruby-keyword">when</span> <span class="ruby-value">:macro_def</span>
-    <span class="ruby-identifier">comment</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">0</span>], <span class="ruby-ivar">@top_level</span>
+    <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">new_comment</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">0</span>], <span class="ruby-ivar">@top_level</span>, <span class="ruby-value">:c</span>
     <span class="ruby-identifier">body</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">1</span>]
     <span class="ruby-identifier">offset</span>, = <span class="ruby-identifier">args</span>[<span class="ruby-value">2</span>]
 
@@ -1472,44 +1010,33 @@ name.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_class" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_class</span><span
-            class="method-args">(raw_name, name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_class</span><span
+              class="method-args">(raw_name, name, base_name = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Finds a <a href="../NormalClass.html">RDoc::NormalClass</a> or <a
-href="../NormalModule.html">RDoc::NormalModule</a> for
-<code>raw_name</code></p>
-          
-          
+          <p>Finds a <a href="../NormalClass.html"><code>RDoc::NormalClass</code></a> or <a href="../NormalModule.html"><code>RDoc::NormalModule</code></a> for <code>raw_name</code></p>
 
-          
           <div class="method-source-code" id="find_class-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 721</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_class</span>(<span class="ruby-identifier">raw_name</span>, <span class="ruby-identifier">name</span>)
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 683</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_class</span>(<span class="ruby-identifier">raw_name</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">base_name</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@classes</span>[<span class="ruby-identifier">raw_name</span>]
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">raw_name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^rb_m/</span>
       <span class="ruby-identifier">container</span> = <span class="ruby-ivar">@top_level</span>.<span class="ruby-identifier">add_module</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">NormalModule</span>, <span class="ruby-identifier">name</span>
     <span class="ruby-keyword">else</span>
       <span class="ruby-identifier">container</span> = <span class="ruby-ivar">@top_level</span>.<span class="ruby-identifier">add_class</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">NormalClass</span>, <span class="ruby-identifier">name</span>
     <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">container</span>.<span class="ruby-identifier">name</span> = <span class="ruby-identifier">base_name</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">base_name</span>
 
     <span class="ruby-identifier">container</span>.<span class="ruby-identifier">record_location</span> <span class="ruby-ivar">@top_level</span>
     <span class="ruby-ivar">@classes</span>[<span class="ruby-identifier">raw_name</span>] = <span class="ruby-identifier">container</span>
@@ -1517,56 +1044,45 @@ href="../NormalModule.html">RDoc::NormalModule</a> for
   <span class="ruby-ivar">@classes</span>[<span class="ruby-identifier">raw_name</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_class_comment" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_class_comment</span><span
-            class="method-args">(class_name, class_mod)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_class_comment</span><span
+              class="method-args">(class_name, class_mod)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Look for class or module documentation above Init_+class_name+(void), in a
-Document-class <code>class_name</code> (or module) comment or above an
-rb_define_class (or module).  If a comment is supplied above a matching
-Init_ and a rb_define_class the Init_ comment is used.</p>
+          <p>Look for class or module documentation above Init_<code>class_name</code>(void), in a Document-class <code>class_name</code> (or module) comment or above an rb_define_class (or module).  If a comment is supplied above a matching Init_ and a rb_define_class the Init_ comment is used.</p>
 
-<pre>   This is a comment for Foo
-
+<pre>/*
+ * This is a comment for Foo
+ */
 Init_Foo(void) {
     VALUE cFoo = rb_define_class(&quot;Foo&quot;, rb_cObject);
 }
 
-   Document-class: Foo
-   This is a comment for Foo
-
+/*
+ * Document-class: Foo
+ * This is a comment for Foo
+ */
 Init_foo(void) {
     VALUE cFoo = rb_define_class(&quot;Foo&quot;, rb_cObject);
 }
 
 /*
-   This is a comment for Foo
-  /
+ * This is a comment for Foo
+ */
 VALUE cFoo = rb_define_class(&quot;Foo&quot;, rb_cObject);</pre>
-          
-          
 
-          
           <div class="method-source-code" id="find_class_comment-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 761</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 724</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_class_comment</span> <span class="ruby-identifier">class_name</span>, <span class="ruby-identifier">class_mod</span>
   <span class="ruby-identifier">comment</span> = <span class="ruby-keyword">nil</span>
 
@@ -1574,7 +1090,7 @@ VALUE cFoo = rb_define_class(&quot;Foo&quot;, rb_cObject);</pre>
       ((?&gt;/\*.*?\*/\s+))
       (static\s+)?
       void\s+
-      Init_#{class_name}\s*(?:_\(\s*)?\(\s*(?:void\s*)?\)%xmi</span> <span class="ruby-keyword">then</span>
+      Init(?:VM)?_(?i:#{class_name})\s*(?:_\(\s*)?\(\s*(?:void\s*)?\)%xm</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">comment</span> = <span class="ruby-node">$1</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">%r%Document-(?:class|module):\s+#{class_name}%</span>, <span class="ruby-string">&#39;&#39;</span>)
   <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@content</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">%r%Document-(?:class|module):\s+#{class_name}\s*?
                        (?:&lt;\s+[:,\w]+)?\n((?&gt;.*?\*/))%xm</span> <span class="ruby-keyword">then</span>
@@ -1589,7 +1105,7 @@ VALUE cFoo = rb_define_class(&quot;Foo&quot;, rb_cObject);</pre>
     <span class="ruby-identifier">comment</span> = <span class="ruby-string">&#39;&#39;</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">comment</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">comment</span>, <span class="ruby-ivar">@top_level</span>
+  <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">new_comment</span> <span class="ruby-identifier">comment</span>, <span class="ruby-ivar">@top_level</span>, <span class="ruby-value">:c</span>
   <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">normalize</span>
 
   <span class="ruby-identifier">look_for_directives_in</span> <span class="ruby-identifier">class_mod</span>, <span class="ruby-identifier">comment</span>
@@ -1597,36 +1113,25 @@ VALUE cFoo = rb_define_class(&quot;Foo&quot;, rb_cObject);</pre>
   <span class="ruby-identifier">class_mod</span>.<span class="ruby-identifier">add_comment</span> <span class="ruby-identifier">comment</span>, <span class="ruby-ivar">@top_level</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_const_comment" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_const_comment</span><span
-            class="method-args">(type, const_name, class_name = nil)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_const_comment</span><span
+              class="method-args">(type, const_name, class_name = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Finds a comment matching <code>type</code> and <code>const_name</code>
-either above the comment or in the matching Document- section.</p>
-          
-          
+          <p>Finds a comment matching <code>type</code> and <code>const_name</code> either above the comment or in the matching Document- section.</p>
 
-          
           <div class="method-source-code" id="find_const_comment-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 817</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 780</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_const_comment</span>(<span class="ruby-identifier">type</span>, <span class="ruby-identifier">const_name</span>, <span class="ruby-identifier">class_name</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-ivar">@const_table</span> <span class="ruby-operator">||=</span> {}
   <span class="ruby-ivar">@const_table</span>[<span class="ruby-ivar">@content</span>] <span class="ruby-operator">||=</span> <span class="ruby-identifier">gen_const_table</span> <span class="ruby-ivar">@content</span>
@@ -1638,39 +1143,28 @@ either above the comment or in the matching Document- section.</p>
     <span class="ruby-identifier">table</span>[<span class="ruby-identifier">const_name</span>] <span class="ruby-operator">||</span>
     <span class="ruby-string">&#39;&#39;</span>
 
-  <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">comment</span>, <span class="ruby-ivar">@top_level</span>
+  <span class="ruby-identifier">new_comment</span> <span class="ruby-identifier">comment</span>, <span class="ruby-ivar">@top_level</span>, <span class="ruby-value">:c</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_modifiers" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_modifiers</span><span
-            class="method-args">(comment, meth_obj)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_modifiers</span><span
+              class="method-args">(comment, meth_obj)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Handles modifiers in <code>comment</code> and updates <code>meth_obj</code>
-as appropriate.</p>
-          
-          
+          <p>Handles modifiers in <code>comment</code> and updates <code>meth_obj</code> as appropriate.</p>
 
-          
           <div class="method-source-code" id="find_modifiers-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 834</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 797</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_modifiers</span> <span class="ruby-identifier">comment</span>, <span class="ruby-identifier">meth_obj</span>
   <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">normalize</span>
   <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">extract_call_seq</span> <span class="ruby-identifier">meth_obj</span>
@@ -1678,36 +1172,25 @@ as appropriate.</p>
   <span class="ruby-identifier">look_for_directives_in</span> <span class="ruby-identifier">meth_obj</span>, <span class="ruby-identifier">comment</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-find_override_comment" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">find_override_comment</span><span
-            class="method-args">(class_name, meth_obj)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">find_override_comment</span><span
+              class="method-args">(class_name, meth_obj)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Finds a <code>Document-method</code> override for <code>meth_obj</code> on
-<code>class_name</code></p>
-          
-          
+          <p>Finds a <code>Document-method</code> override for <code>meth_obj</code> on <code>class_name</code></p>
 
-          
           <div class="method-source-code" id="find_override_comment-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 844</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 807</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find_override_comment</span> <span class="ruby-identifier">class_name</span>, <span class="ruby-identifier">meth_obj</span>
   <span class="ruby-identifier">name</span> = <span class="ruby-constant">Regexp</span>.<span class="ruby-identifier">escape</span> <span class="ruby-identifier">meth_obj</span>.<span class="ruby-identifier">name</span>
   <span class="ruby-identifier">prefix</span> = <span class="ruby-constant">Regexp</span>.<span class="ruby-identifier">escape</span> <span class="ruby-identifier">meth_obj</span>.<span class="ruby-identifier">name_prefix</span>
@@ -1723,45 +1206,35 @@ as appropriate.</p>
 
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">comment</span>
 
-  <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">comment</span>, <span class="ruby-ivar">@top_level</span>
+  <span class="ruby-identifier">new_comment</span> <span class="ruby-identifier">comment</span>, <span class="ruby-ivar">@top_level</span>, <span class="ruby-value">:c</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-gen_body_table" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">gen_body_table</span><span
-            class="method-args">(file_content)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">gen_body_table</span><span
+              class="method-args">(file_content)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Generate a Ruby-method table</p>
-          
-          
 
-          
           <div class="method-source-code" id="gen_body_table-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 612</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 574</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">gen_body_table</span> <span class="ruby-identifier">file_content</span>
   <span class="ruby-identifier">table</span> = {}
   <span class="ruby-identifier">file_content</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">%r{
     ((?&gt;/\*.*?\*/\s*)?)
     ((?:(?:\w+)\s+)?
       (?:intern\s+)?VALUE\s+(\w+)
-      \s*(?:\([^)]*\))(?:[^;]|$))
+      \s*(?:\([^)]*\))(?:[^\);]|$))
   | ((?&gt;/\*.*?\*/\s*))^\s*(\#\s*define\s+(\w+)\s+(\w+))
   | ^\s*\#\s*define\s+(\w+)\s+(\w+)
   }xm</span>) <span class="ruby-keyword">do</span>
@@ -1777,35 +1250,25 @@ as appropriate.</p>
   <span class="ruby-identifier">table</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-gen_const_table" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">gen_const_table</span><span
-            class="method-args">(file_content)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">gen_const_table</span><span
+              class="method-args">(file_content)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Generate a const table</p>
-          
-          
 
-          
           <div class="method-source-code" id="gen_const_table-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 794</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 757</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">gen_const_table</span> <span class="ruby-identifier">file_content</span>
   <span class="ruby-identifier">table</span> = {}
   <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-regexp">%r{
@@ -1825,41 +1288,29 @@ as appropriate.</p>
   <span class="ruby-identifier">table</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-handle_attr" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">handle_attr</span><span
-            class="method-args">(var_name, attr_name, read, write)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">handle_attr</span><span
+              class="method-args">(var_name, attr_name, read, write)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new <a href="../Attr.html">RDoc::Attr</a> <code>attr_name</code>
-on class <code>var_name</code> that is either <code>read</code>,
-<code>write</code> or both</p>
-          
-          
+          <p>Creates a new <a href="../Attr.html"><code>RDoc::Attr</code></a> <code>attr_name</code> on class <code>var_name</code> that is either <code>read</code>, <code>write</code> or both</p>
 
-          
           <div class="method-source-code" id="handle_attr-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 866</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 829</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_attr</span>(<span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">attr_name</span>, <span class="ruby-identifier">read</span>, <span class="ruby-identifier">write</span>)
   <span class="ruby-identifier">rw</span> = <span class="ruby-string">&#39;&#39;</span>
-  <span class="ruby-identifier">rw</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&#39;R&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-string">&#39;1&#39;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">read</span>
-  <span class="ruby-identifier">rw</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&#39;W&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-string">&#39;1&#39;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">write</span>
+  <span class="ruby-identifier">rw</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&#39;R&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">TRUE_VALUES</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">read</span>)
+  <span class="ruby-identifier">rw</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&#39;W&#39;</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">TRUE_VALUES</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">write</span>)
 
   <span class="ruby-identifier">class_name</span> = <span class="ruby-ivar">@known_classes</span>[<span class="ruby-identifier">var_name</span>]
 
@@ -1881,38 +1332,25 @@ on class <code>var_name</code> that is either <code>read</code>,
   <span class="ruby-ivar">@stats</span>.<span class="ruby-identifier">add_attribute</span> <span class="ruby-identifier">attr</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-handle_class_module" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">handle_class_module</span><span
-            class="method-args">(var_name, type, class_name, parent, in_module)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">handle_class_module</span><span
+              class="method-args">(var_name, type, class_name, parent, in_module)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new <a href="../NormalClass.html">RDoc::NormalClass</a> or <a
-href="../NormalModule.html">RDoc::NormalModule</a> based on
-<code>type</code> named <code>class_name</code> in <code>parent</code>
-which was assigned to the <a href="C.html">C</a> <code>var_name</code>.</p>
-          
-          
+          <p>Creates a new <a href="../NormalClass.html"><code>RDoc::NormalClass</code></a> or <a href="../NormalModule.html"><code>RDoc::NormalModule</code></a> based on <code>type</code> named <code>class_name</code> in <code>parent</code> which was assigned to the <a href="C.html"><code>C</code></a> <code>var_name</code>.</p>
 
-          
           <div class="method-source-code" id="handle_class_module-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 895</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 858</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_class_module</span>(<span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">class_name</span>, <span class="ruby-identifier">parent</span>, <span class="ruby-identifier">in_module</span>)
   <span class="ruby-identifier">parent_name</span> = <span class="ruby-ivar">@known_classes</span>[<span class="ruby-identifier">parent</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">parent</span>
 
@@ -1968,50 +1406,36 @@ which was assigned to the <a href="C.html">C</a> <code>var_name</code>.</p>
   <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">add_c_enclosure</span> <span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">cm</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-handle_constants" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">handle_constants</span><span
-            class="method-args">(type, var_name, const_name, definition)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">handle_constants</span><span
+              class="method-args">(type, var_name, const_name, definition)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds constants.  By providing some_value: at the start of the comment you
-can override the <a href="C.html">C</a> value of the comment to give a
-friendly definition.</p>
+          <p>Adds constants.  By providing some_value: at the start of the comment you can override the <a href="C.html"><code>C</code></a> value of the comment to give a friendly definition.</p>
 
-<pre>   300: The perfect score in bowling   
-rb_define_const(cFoo, &quot;PERFECT&quot;, INT2FIX(300);</pre>
+<pre>/* 300: The perfect score in bowling */
+rb_define_const(cFoo, &quot;PERFECT&quot;, INT2FIX(300));</pre>
 
-<p>Will override <code>INT2FIX(300)</code> with the value <code>300</code> in
-the output <a href="../../RDoc.html">RDoc</a>.  Values may include quotes
-and escaped colons (:).</p>
-          
-          
+<p>Will override <code>INT2FIX(300)</code> with the value <code>300</code> in the output <a href="../../RDoc.html"><code>RDoc</code></a>.  Values may include quotes and escaped colons (:).</p>
 
-          
           <div class="method-source-code" id="handle_constants-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 960</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 923</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_constants</span>(<span class="ruby-identifier">type</span>, <span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">const_name</span>, <span class="ruby-identifier">definition</span>)
   <span class="ruby-identifier">class_name</span> = <span class="ruby-ivar">@known_classes</span>[<span class="ruby-identifier">var_name</span>]
 
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">class_name</span>
 
-  <span class="ruby-identifier">class_obj</span> = <span class="ruby-identifier">find_class</span> <span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">class_name</span>
+  <span class="ruby-identifier">class_obj</span> = <span class="ruby-identifier">find_class</span> <span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">class_name</span>, <span class="ruby-identifier">class_name</span>[<span class="ruby-regexp">/::\K[^:]+\z/</span>]
 
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">class_obj</span> <span class="ruby-keyword">then</span>
     <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">warn</span> <span class="ruby-string">&#39;Enclosing class or module %p is not known&#39;</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">const_name</span>]
@@ -2039,7 +1463,7 @@ and escaped colons (:).</p>
 
       <span class="ruby-identifier">new_comment</span> = <span class="ruby-node">&quot;#{$1}#{new_comment.lstrip}&quot;</span>
 
-      <span class="ruby-identifier">new_comment</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">new_comment</span>, <span class="ruby-ivar">@top_level</span>
+      <span class="ruby-identifier">new_comment</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">new_comment</span>(<span class="ruby-identifier">new_comment</span>, <span class="ruby-ivar">@top_level</span>, <span class="ruby-value">:c</span>)
 
       <span class="ruby-identifier">con</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Constant</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">const_name</span>, <span class="ruby-identifier">new_definition</span>, <span class="ruby-identifier">new_comment</span>
     <span class="ruby-keyword">else</span>
@@ -2054,72 +1478,48 @@ and escaped colons (:).</p>
   <span class="ruby-identifier">class_obj</span>.<span class="ruby-identifier">add_constant</span> <span class="ruby-identifier">con</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-handle_ifdefs_in" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">handle_ifdefs_in</span><span
-            class="method-args">(body)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">handle_ifdefs_in</span><span
+              class="method-args">(body)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Removes ifdefs that would otherwise confuse us</p>
-          
-          
 
-          
           <div class="method-source-code" id="handle_ifdefs_in-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 1011</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 974</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_ifdefs_in</span>(<span class="ruby-identifier">body</span>)
   <span class="ruby-identifier">body</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/^#ifdef HAVE_PROTOTYPES.*?#else.*?\n(.*?)#endif.*?\n/m</span>, <span class="ruby-string">&#39;\1&#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-handle_method" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">handle_method</span><span
-            class="method-args">(type, var_name, meth_name, function, param_count, source_file = nil)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">handle_method</span><span
+              class="method-args">(type, var_name, meth_name, function, param_count, source_file = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Adds an <a href="../AnyMethod.html">RDoc::AnyMethod</a>
-<code>meth_name</code> defined on a class or module assigned to
-<code>var_name</code>.  <code>type</code> is the type of method definition
-function used. <code>singleton_method</code> and
-<code>module_function</code> create a singleton method.</p>
-          
-          
+          <p>Adds an <a href="../AnyMethod.html"><code>RDoc::AnyMethod</code></a> <code>meth_name</code> defined on a class or module assigned to <code>var_name</code>.  <code>type</code> is the type of method definition function used. <code>singleton_method</code> and <code>module_function</code> create a singleton method.</p>
 
-          
           <div class="method-source-code" id="handle_method-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 1020</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 983</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_method</span>(<span class="ruby-identifier">type</span>, <span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">meth_name</span>, <span class="ruby-identifier">function</span>, <span class="ruby-identifier">param_count</span>,
                   <span class="ruby-identifier">source_file</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">class_name</span> = <span class="ruby-ivar">@known_classes</span>[<span class="ruby-identifier">var_name</span>]
@@ -2130,6 +1530,10 @@ function used. <code>singleton_method</code> and
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">class_name</span>
 
   <span class="ruby-identifier">class_obj</span> = <span class="ruby-identifier">find_class</span> <span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">class_name</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_method</span> = <span class="ruby-identifier">class_obj</span>.<span class="ruby-identifier">method_list</span>.<span class="ruby-identifier">find</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">c_function</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">function</span> }
+    <span class="ruby-identifier">add_alias</span>(<span class="ruby-identifier">var_name</span>, <span class="ruby-identifier">class_obj</span>, <span class="ruby-identifier">existing_method</span>.<span class="ruby-identifier">name</span>, <span class="ruby-identifier">meth_name</span>, <span class="ruby-identifier">existing_method</span>.<span class="ruby-identifier">comment</span>)
+  <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">class_obj</span> <span class="ruby-keyword">then</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">meth_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;initialize&#39;</span> <span class="ruby-keyword">then</span>
@@ -2165,48 +1569,43 @@ function used. <code>singleton_method</code> and
                         <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">p_count</span> <span class="ruby-operator">==</span> <span class="ruby-value">-1</span> <span class="ruby-keyword">then</span> <span class="ruby-comment"># argc, argv</span>
                           <span class="ruby-identifier">rb_scan_args</span> <span class="ruby-identifier">body</span>
                         <span class="ruby-keyword">else</span>
-                          <span class="ruby-node">&quot;(#{(1..p_count).map { |i| &quot;p#{i}&quot; }.join &#39;, &#39;})&quot;</span>
+                          <span class="ruby-identifier">args</span> = (<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-identifier">p_count</span>).<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-node">&quot;p#{i}&quot;</span> }
+                          <span class="ruby-node">&quot;(#{args.join &#39;, &#39;})&quot;</span>
                         <span class="ruby-keyword">end</span>
 
 
       <span class="ruby-identifier">meth_obj</span>.<span class="ruby-identifier">record_location</span> <span class="ruby-ivar">@top_level</span>
+
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">meth_obj</span>.<span class="ruby-identifier">section_title</span>
+        <span class="ruby-identifier">class_obj</span>.<span class="ruby-identifier">temporary_section</span> = <span class="ruby-identifier">class_obj</span>.<span class="ruby-identifier">add_section</span>(<span class="ruby-identifier">meth_obj</span>.<span class="ruby-identifier">section_title</span>)
+      <span class="ruby-keyword">end</span>
       <span class="ruby-identifier">class_obj</span>.<span class="ruby-identifier">add_method</span> <span class="ruby-identifier">meth_obj</span>
+
       <span class="ruby-ivar">@stats</span>.<span class="ruby-identifier">add_method</span> <span class="ruby-identifier">meth_obj</span>
       <span class="ruby-identifier">meth_obj</span>.<span class="ruby-identifier">visibility</span> = <span class="ruby-value">:private</span> <span class="ruby-keyword">if</span> <span class="ruby-string">&#39;private_method&#39;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">type</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-handle_singleton" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">handle_singleton</span><span
-            class="method-args">(sclass_var, class_var)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">handle_singleton</span><span
+              class="method-args">(sclass_var, class_var)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Registers a singleton class <code>sclass_var</code> as a singleton of
-<code>class_var</code></p>
-          
-          
+          <p>Registers a singleton class <code>sclass_var</code> as a singleton of <code>class_var</code></p>
 
-          
           <div class="method-source-code" id="handle_singleton-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 1080</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 1053</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_singleton</span> <span class="ruby-identifier">sclass_var</span>, <span class="ruby-identifier">class_var</span>
   <span class="ruby-identifier">class_name</span> = <span class="ruby-ivar">@known_classes</span>[<span class="ruby-identifier">class_var</span>]
 
@@ -2214,79 +1613,25 @@ function used. <code>singleton_method</code> and
   <span class="ruby-ivar">@singleton_classes</span>[<span class="ruby-identifier">sclass_var</span>] = <span class="ruby-identifier">class_name</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
-      <div id="method-i-handle_tab_width" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">handle_tab_width</span><span
-            class="method-args">(body)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>Normalizes tabs in <code>body</code></p>
-          
-          
-
-          
-          <div class="method-source-code" id="handle_tab_width-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 1090</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_tab_width</span>(<span class="ruby-identifier">body</span>)
-  <span class="ruby-keyword">if</span> <span class="ruby-regexp">/\t/</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">body</span>
-    <span class="ruby-identifier">tab_width</span> = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">tab_width</span>
-    <span class="ruby-identifier">body</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/\n/</span>).<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>
-      <span class="ruby-value">1</span> <span class="ruby-keyword">while</span> <span class="ruby-identifier">line</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/\t+/</span>) <span class="ruby-keyword">do</span>
-        <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">*</span> (<span class="ruby-identifier">tab_width</span> <span class="ruby-operator">*</span> <span class="ruby-node">$&amp;</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-node">$`</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">%</span> <span class="ruby-identifier">tab_width</span>)
-      <span class="ruby-keyword">end</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">$~</span>
-      <span class="ruby-identifier">line</span>
-    <span class="ruby-keyword">end</span>.<span class="ruby-identifier">join</span> <span class="ruby-string">&quot;\n&quot;</span>
-  <span class="ruby-keyword">else</span>
-    <span class="ruby-identifier">body</span>
-  <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
       <div id="method-i-load_variable_map" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">load_variable_map</span><span
-            class="method-args">(map_name)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">load_variable_map</span><span
+              class="method-args">(map_name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Loads the variable map with the given <code>name</code> from the <a
-href="../Store.html">RDoc::Store</a>, if present.</p>
-          
-          
+          <p>Loads the variable map with the given <code>name</code> from the <a href="../Store.html"><code>RDoc::Store</code></a>, if present.</p>
 
-          
           <div class="method-source-code" id="load_variable_map-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 1108</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 1064</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">load_variable_map</span> <span class="ruby-identifier">map_name</span>
   <span class="ruby-keyword">return</span> {} <span class="ruby-keyword">unless</span> <span class="ruby-identifier">files</span> = <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">cache</span>[<span class="ruby-identifier">map_name</span>]
   <span class="ruby-keyword">return</span> {} <span class="ruby-keyword">unless</span> <span class="ruby-identifier">name_map</span> = <span class="ruby-identifier">files</span>[<span class="ruby-ivar">@file_name</span>]
@@ -2307,39 +1652,31 @@ href="../Store.html">RDoc::Store</a>, if present.</p>
   <span class="ruby-identifier">class_map</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-look_for_directives_in" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">look_for_directives_in</span><span
-            class="method-args">(context, comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">look_for_directives_in</span><span
+              class="method-args">(context, comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Look for directives in a normal comment block:</p>
 
-<pre>* :title: My Awesome Project</pre>
+<pre>/*
+ * :title: My Awesome Project
+ */</pre>
 
 <p>This method modifies the <code>comment</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="look_for_directives_in-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 1137</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 1093</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">look_for_directives_in</span> <span class="ruby-identifier">context</span>, <span class="ruby-identifier">comment</span>
   <span class="ruby-ivar">@preprocess</span>.<span class="ruby-identifier">handle</span> <span class="ruby-identifier">comment</span>, <span class="ruby-identifier">context</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">directive</span>, <span class="ruby-identifier">param</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">case</span> <span class="ruby-identifier">directive</span>
@@ -2355,37 +1692,50 @@ href="../Store.html">RDoc::Store</a>, if present.</p>
   <span class="ruby-identifier">comment</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
-      <div id="method-i-rb_scan_args" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">rb_scan_args</span><span
-            class="method-args">(method_body)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+      <div id="method-i-new_comment" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new_comment</span><span
+              class="method-args">(text = nil, location = nil, language = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
           
-          <p>Extracts parameters from the <code>method_body</code> and returns a method
-parameter string.  Follows 1.9.3dev&#39;s scan-arg-spec, see <a
-href="../../README_rdoc.html">README</a>.EXT</p>
-          
-          
 
-          
+          <div class="method-source-code" id="new_comment-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 1220</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">new_comment</span> <span class="ruby-identifier">text</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">location</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">language</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">text</span>, <span class="ruby-identifier">location</span>, <span class="ruby-identifier">language</span>).<span class="ruby-identifier">tap</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">comment</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">format</span> = <span class="ruby-ivar">@markup</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-rb_scan_args" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">rb_scan_args</span><span
+              class="method-args">(method_body)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          <p>Extracts parameters from the <code>method_body</code> and returns a method parameter string.  Follows 1.9.3dev’s scan-arg-spec, see README.EXT</p>
+
           <div class="method-source-code" id="rb_scan_args-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 1156</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 1112</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rb_scan_args</span> <span class="ruby-identifier">method_body</span>
   <span class="ruby-identifier">method_body</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/rb_scan_args\((.*?)\)/m</span>
   <span class="ruby-keyword">return</span> <span class="ruby-string">&#39;(*args)&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-node">$1</span>
@@ -2465,76 +1815,52 @@ href="../../README_rdoc.html">README</a>.EXT</p>
   <span class="ruby-node">&quot;(#{args.join &#39;, &#39;})&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-remove_commented_out_lines" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">remove_commented_out_lines</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">remove_commented_out_lines</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Removes lines that are commented out that might otherwise get picked up
-when scanning for classes and methods</p>
-          
-          
+          <p>Removes lines that are commented out that might otherwise get picked up when scanning for classes and methods</p>
 
-          
           <div class="method-source-code" id="remove_commented_out_lines-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 1239</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 1195</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">remove_commented_out_lines</span>
   <span class="ruby-ivar">@content</span> = <span class="ruby-ivar">@content</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">%r%//.*rb_define_%</span>, <span class="ruby-string">&#39;//&#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-scan" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">scan</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">scan</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Extracts the classes, modules, methods, attributes, constants and aliases
-from a <a href="C.html">C</a> file and returns an <a
-href="../TopLevel.html">RDoc::TopLevel</a> for this file</p>
-          
-          
+          <p>Extracts the classes, modules, methods, attributes, constants and aliases from a <a href="C.html"><code>C</code></a> file and returns an <a href="../TopLevel.html"><code>RDoc::TopLevel</code></a> for this file</p>
 
-          
           <div class="method-source-code" id="scan-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 1247</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/c.rb, line 1203</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">scan</span>
   <span class="ruby-identifier">remove_commented_out_lines</span>
 
-  <span class="ruby-identifier">do_modules</span>
-  <span class="ruby-identifier">do_classes</span>
+  <span class="ruby-identifier">do_classes_and_modules</span>
   <span class="ruby-identifier">do_missing</span>
 
   <span class="ruby-identifier">do_constants</span>
@@ -2543,31 +1869,25 @@ href="../TopLevel.html">RDoc::TopLevel</a> for this file</p>
   <span class="ruby-identifier">do_aliases</span>
   <span class="ruby-identifier">do_attrs</span>
 
-  <span class="ruby-identifier">deduplicate_call_seq</span>
-
   <span class="ruby-ivar">@store</span>.<span class="ruby-identifier">add_c_variables</span> <span class="ruby-keyword">self</span>
 
   <span class="ruby-ivar">@top_level</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

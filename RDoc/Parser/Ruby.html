@@ -4,19 +4,21 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class RDoc::Parser::Ruby - rdoc 6.0.4 Documentation</title>
+<title>class RDoc::Parser::Ruby - rdoc 6.5.0 Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../../";
   var index_rel_prefix = "../../";
 </script>
 
-<script src="../../js/jquery.js"></script>
-<script src="../../js/darkfish.js"></script>
+<script src="../../js/navigation.js" defer></script>
+<script src="../../js/search.js" defer></script>
+<script src="../../js/search_index.js" defer></script>
+<script src="../../js/searcher.js" defer></script>
+<script src="../../js/darkfish.js" defer></script>
 
 <link href="../../css/fonts.css" rel="stylesheet">
 <link href="../../css/rdoc.css" rel="stylesheet">
-
 
 
 <body id="top" role="document" class="class">
@@ -55,129 +57,78 @@
 
   <div id="class-metadata">
     
-    <div id="parent-class-section" class="nav-section">
+    
+<div id="parent-class-section" class="nav-section">
   <h3>Parent</h3>
 
-  
   <p class="link"><a href="../Parser.html">RDoc::Parser</a>
-  
 </div>
 
-    <div id="includes-section" class="nav-section">
+    
+<div id="includes-section" class="nav-section">
   <h3>Included Modules</h3>
 
   <ul class="link-list">
-  
-  
     <li><a class="include" href="../TokenStream.html">RDoc::TokenStream</a>
-  
-  
-  
     <li><a class="include" href="RubyTools.html">RDoc::Parser::RubyTools</a>
-  
-  
   </ul>
 </div>
 
     
-    <!-- Method Quickref -->
+    
+<!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
-    
     <li class="calls-super" ><a href="#method-c-new">::new</a>
-    
     <li ><a href="#method-i-collect_first_comment">#collect_first_comment</a>
-    
     <li ><a href="#method-i-error">#error</a>
-    
     <li ><a href="#method-i-get_bool">#get_bool</a>
-    
     <li ><a href="#method-i-get_class_or_module">#get_class_or_module</a>
-    
     <li ><a href="#method-i-get_class_specification">#get_class_specification</a>
-    
     <li ><a href="#method-i-get_constant">#get_constant</a>
-    
-    <li ><a href="#method-i-get_constant_with_optional_parens">#get_constant_with_optional_parens</a>
-    
+    <li ><a href="#method-i-get_included_module_with_optional_parens">#get_included_module_with_optional_parens</a>
     <li ><a href="#method-i-get_symbol_or_name">#get_symbol_or_name</a>
-    
     <li ><a href="#method-i-look_for_directives_in">#look_for_directives_in</a>
-    
     <li ><a href="#method-i-make_message">#make_message</a>
-    
     <li ><a href="#method-i-new_comment">#new_comment</a>
-    
     <li ><a href="#method-i-parse_alias">#parse_alias</a>
-    
     <li ><a href="#method-i-parse_attr">#parse_attr</a>
-    
     <li ><a href="#method-i-parse_attr_accessor">#parse_attr_accessor</a>
-    
     <li ><a href="#method-i-parse_call_parameters">#parse_call_parameters</a>
-    
     <li ><a href="#method-i-parse_class">#parse_class</a>
-    
     <li ><a href="#method-i-parse_comment">#parse_comment</a>
-    
     <li ><a href="#method-i-parse_comment_tomdoc">#parse_comment_tomdoc</a>
-    
     <li ><a href="#method-i-parse_constant">#parse_constant</a>
-    
     <li ><a href="#method-i-parse_constant_visibility">#parse_constant_visibility</a>
-    
     <li ><a href="#method-i-parse_meta_attr">#parse_meta_attr</a>
-    
     <li ><a href="#method-i-parse_meta_method">#parse_meta_method</a>
-    
     <li ><a href="#method-i-parse_method">#parse_method</a>
-    
     <li ><a href="#method-i-parse_method_dummy">#parse_method_dummy</a>
-    
     <li ><a href="#method-i-parse_method_or_yield_parameters">#parse_method_or_yield_parameters</a>
-    
     <li ><a href="#method-i-parse_method_parameters">#parse_method_parameters</a>
-    
     <li ><a href="#method-i-parse_method_params_and_body">#parse_method_params_and_body</a>
-    
     <li ><a href="#method-i-parse_module">#parse_module</a>
-    
     <li ><a href="#method-i-parse_require">#parse_require</a>
-    
     <li ><a href="#method-i-parse_rescue">#parse_rescue</a>
-    
     <li ><a href="#method-i-parse_statements">#parse_statements</a>
-    
     <li ><a href="#method-i-parse_symbol_arg">#parse_symbol_arg</a>
-    
     <li ><a href="#method-i-parse_symbol_in_arg">#parse_symbol_in_arg</a>
-    
     <li ><a href="#method-i-parse_top_level_statements">#parse_top_level_statements</a>
-    
     <li ><a href="#method-i-parse_visibility">#parse_visibility</a>
-    
     <li ><a href="#method-i-parse_yield">#parse_yield</a>
-    
     <li ><a href="#method-i-read_directive">#read_directive</a>
-    
     <li ><a href="#method-i-read_documentation_modifiers">#read_documentation_modifiers</a>
-    
+    <li ><a href="#method-i-retrieve_comment_body">#retrieve_comment_body</a>
     <li ><a href="#method-i-scan">#scan</a>
-    
     <li ><a href="#method-i-skip_for_variable">#skip_for_variable</a>
-    
     <li ><a href="#method-i-skip_method">#skip_method</a>
-    
     <li ><a href="#method-i-skip_optional_do_after_expression">#skip_optional_do_after_expression</a>
-    
+    <li ><a href="#method-i-skip_parentheses">#skip_parentheses</a>
     <li ><a href="#method-i-skip_tkspace_comment">#skip_tkspace_comment</a>
-    
     <li ><a href="#method-i-tk_nl-3F">#tk_nl?</a>
-    
     <li ><a href="#method-i-warn">#warn</a>
-    
   </ul>
 </div>
 
@@ -193,84 +144,55 @@
     
   </section>
 
-  
   <section id="5Buntitled-5D" class="documentation-section">
-    
 
-    
 
-    
     <section class="constants-list">
       <header>
         <h3>Constants</h3>
       </header>
       <dl>
-      
         <dt id="NORMAL">NORMAL
-        
-        <dd><p><a href="../NormalClass.html">RDoc::NormalClass</a> type</p>
-        
-      
+        <dd><p><a href="../NormalClass.html"><code>RDoc::NormalClass</code></a> type</p>
         <dt id="SINGLE">SINGLE
-        
-        <dd><p><a href="../SingleClass.html">RDoc::SingleClass</a> type</p>
-        
-      
+        <dd><p><a href="../SingleClass.html"><code>RDoc::SingleClass</code></a> type</p>
       </dl>
     </section>
-    
 
-    
 
-    
+
      <section id="public-class-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Class Methods</h3>
        </header>
 
-    
       <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(top_level, file_name, content, options, stats)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(top_level, file_name, content, options, stats)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates a new <a href="Ruby.html">Ruby</a> parser.</p>
-          
-          
+          <p>Creates a new <a href="Ruby.html"><code>Ruby</code></a> parser.</p>
             <div class="method-calls-super">
               Calls superclass method
-              <a href="../Parser.html#method-c-new">RDoc::Parser.new</a>
+              <a href="../Parser.html#method-c-new"><code>RDoc::Parser::new</code></a>
             </div>
-          
 
-          
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 165</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 164</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">top_level</span>, <span class="ruby-identifier">file_name</span>, <span class="ruby-identifier">content</span>, <span class="ruby-identifier">options</span>, <span class="ruby-identifier">stats</span>)
   <span class="ruby-keyword">super</span>
 
-  <span class="ruby-keyword">if</span> <span class="ruby-regexp">/\t/</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">content</span> <span class="ruby-keyword">then</span>
-    <span class="ruby-identifier">tab_width</span> = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">tab_width</span>
-    <span class="ruby-identifier">content</span> = <span class="ruby-identifier">content</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/\n/</span>).<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>
-      <span class="ruby-value">1</span> <span class="ruby-keyword">while</span> <span class="ruby-identifier">line</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp">/\t+/</span>) {
-        <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">*</span> (<span class="ruby-identifier">tab_width</span><span class="ruby-operator">*</span><span class="ruby-node">$&amp;</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-node">$`</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">%</span> <span class="ruby-identifier">tab_width</span>)
-      }  <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">$~</span>
-      <span class="ruby-identifier">line</span>
-    <span class="ruby-keyword">end</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;\n&quot;</span>)
-  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">content</span> = <span class="ruby-identifier">handle_tab_width</span>(<span class="ruby-identifier">content</span>)
 
   <span class="ruby-ivar">@size</span> = <span class="ruby-value">0</span>
   <span class="ruby-ivar">@token_listeners</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">content</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Encoding</span>.<span class="ruby-identifier">remove_magic_comment</span> <span class="ruby-identifier">content</span>
-  <span class="ruby-ivar">@scanner</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">content</span>)
+  <span class="ruby-ivar">@scanner</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">content</span>)
   <span class="ruby-ivar">@content</span> = <span class="ruby-identifier">content</span>
   <span class="ruby-ivar">@scanner_point</span> = <span class="ruby-value">0</span>
   <span class="ruby-ivar">@prev_seek</span> = <span class="ruby-keyword">nil</span>
@@ -281,57 +203,48 @@
   <span class="ruby-identifier">reset</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
        <header>
          <h3>Public Instance Methods</h3>
        </header>
 
-    
       <div id="method-i-collect_first_comment" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">collect_first_comment</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">collect_first_comment</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Look for the first comment in a file that isn&#39;t a shebang line.</p>
-          
-          
+          <p>Look for the first comment in a file that isn’t a shebang line.</p>
 
-          
           <div class="method-source-code" id="collect_first_comment-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 242</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 233</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">collect_first_comment</span>
   <span class="ruby-identifier">skip_tkspace</span>
   <span class="ruby-identifier">comment</span> = <span class="ruby-string">&#39;&#39;</span>.<span class="ruby-identifier">dup</span>
   <span class="ruby-identifier">comment</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Encoding</span>.<span class="ruby-identifier">change_encoding</span> <span class="ruby-identifier">comment</span>, <span class="ruby-ivar">@encoding</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@encoding</span>
   <span class="ruby-identifier">first_line</span> = <span class="ruby-keyword">true</span>
   <span class="ruby-identifier">first_comment_tk_kind</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">line_no</span> = <span class="ruby-keyword">nil</span>
 
   <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
 
   <span class="ruby-keyword">while</span> <span class="ruby-identifier">tk</span> <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-value">:on_comment</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>] <span class="ruby-keyword">or</span> <span class="ruby-value">:on_embdoc</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>])
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">first_line</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:text</span>] <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\A#!/</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-identifier">comment_body</span> = <span class="ruby-identifier">retrieve_comment_body</span>(<span class="ruby-identifier">tk</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">first_line</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">comment_body</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\A#!/</span> <span class="ruby-keyword">then</span>
       <span class="ruby-identifier">skip_tkspace</span>
       <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
-    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">first_line</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:text</span>] <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\A#\s*-\*-/</span> <span class="ruby-keyword">then</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">first_line</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">comment_body</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\A#\s*-\*-/</span> <span class="ruby-keyword">then</span>
       <span class="ruby-identifier">first_line</span> = <span class="ruby-keyword">false</span>
       <span class="ruby-identifier">skip_tkspace</span>
       <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
@@ -339,12 +252,13 @@
       <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">first_comment_tk_kind</span> <span class="ruby-keyword">and</span> <span class="ruby-keyword">not</span> <span class="ruby-identifier">first_comment_tk_kind</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>]
       <span class="ruby-identifier">first_comment_tk_kind</span> = <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>]
 
+      <span class="ruby-identifier">line_no</span> = <span class="ruby-identifier">tk</span>[<span class="ruby-value">:line_no</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">first_line</span>
       <span class="ruby-identifier">first_line</span> = <span class="ruby-keyword">false</span>
-      <span class="ruby-identifier">comment</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:text</span>]
+      <span class="ruby-identifier">comment</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">comment_body</span>
       <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
 
       <span class="ruby-keyword">if</span> <span class="ruby-value">:on_nl</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">tk</span> <span class="ruby-keyword">then</span>
-        <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+        <span class="ruby-identifier">skip_tkspace_without_nl</span>
         <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
@@ -352,73 +266,53 @@
 
   <span class="ruby-identifier">unget_tk</span> <span class="ruby-identifier">tk</span>
 
-  <span class="ruby-identifier">new_comment</span> <span class="ruby-identifier">comment</span>
+  <span class="ruby-identifier">new_comment</span> <span class="ruby-identifier">comment</span>, <span class="ruby-identifier">line_no</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-error" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">error</span><span
-            class="method-args">(msg)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">error</span><span
+              class="method-args">(msg)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Aborts with <code>msg</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="error-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 316</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 310</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">error</span>(<span class="ruby-identifier">msg</span>)
   <span class="ruby-identifier">msg</span> = <span class="ruby-identifier">make_message</span> <span class="ruby-identifier">msg</span>
 
   <span class="ruby-identifier">abort</span> <span class="ruby-identifier">msg</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-get_bool" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">get_bool</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">get_bool</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Looks for a true or false token.</p>
-          
-          
 
-          
           <div class="method-source-code" id="get_bool-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 325</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 319</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_bool</span>
   <span class="ruby-identifier">skip_tkspace</span>
   <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
@@ -432,28 +326,21 @@
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-get_class_or_module" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">get_class_or_module</span><span
-            class="method-args">(container, ignore_constants = false)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">get_class_or_module</span><span
+              class="method-args">(container, ignore_constants = false)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <dl class="rdoc-list note-list"><dt>Look for the name of a class of module (optionally with a leading 
 <dd>
 <p>or</p>
@@ -463,12 +350,9 @@
 </dd></dl>
 
 <p>container, and the given name (with the ::).</p>
-          
-          
 
-          
           <div class="method-source-code" id="get_class_or_module-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 343</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 337</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_class_or_module</span> <span class="ruby-identifier">container</span>, <span class="ruby-identifier">ignore_constants</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-identifier">skip_tkspace</span>
   <span class="ruby-identifier">name_t</span> = <span class="ruby-identifier">get_tk</span>
@@ -481,7 +365,7 @@
     <span class="ruby-identifier">given_name</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;::&#39;</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">skip_tkspace_without_nl</span>
   <span class="ruby-identifier">given_name</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">name_t</span>[<span class="ruby-value">:text</span>]
 
   <span class="ruby-identifier">is_self</span> = <span class="ruby-identifier">name_t</span>[<span class="ruby-value">:kind</span>] <span class="ruby-operator">==</span> <span class="ruby-value">:on_op</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">name_t</span>[<span class="ruby-value">:text</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&#39;&lt;&lt;&#39;</span>
@@ -505,7 +389,11 @@
     <span class="ruby-identifier">record_location</span> <span class="ruby-identifier">container</span>
 
     <span class="ruby-identifier">get_tk</span>
-    <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+    <span class="ruby-identifier">skip_tkspace</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-value">:on_lparen</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">peek_tk</span>[<span class="ruby-value">:kind</span>] <span class="ruby-comment"># ProcObjectInConstant::()</span>
+      <span class="ruby-identifier">parse_method_or_yield_parameters</span>
+      <span class="ruby-keyword">break</span>
+    <span class="ruby-keyword">end</span>
     <span class="ruby-identifier">name_t</span> = <span class="ruby-identifier">get_tk</span>
     <span class="ruby-keyword">unless</span> <span class="ruby-value">:on_const</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name_t</span>[<span class="ruby-value">:kind</span>] <span class="ruby-operator">||</span> <span class="ruby-value">:on_ident</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name_t</span>[<span class="ruby-value">:kind</span>]
       <span class="ruby-identifier">raise</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-node">&quot;Invalid class or module definition: #{given_name}&quot;</span>
@@ -517,40 +405,30 @@
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">skip_tkspace_without_nl</span>
 
   <span class="ruby-keyword">return</span> [<span class="ruby-identifier">container</span>, <span class="ruby-identifier">name_t</span>, <span class="ruby-identifier">given_name</span>, <span class="ruby-identifier">new_modules</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-get_class_specification" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">get_class_specification</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">get_class_specification</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Return a superclass, which can be either a constant of an expression</p>
-          
-          
 
-          
           <div class="method-source-code" id="get_class_specification-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 399</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 420</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_class_specification</span>
   <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">peek_tk</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">tk</span>.<span class="ruby-identifier">nil?</span>
@@ -563,7 +441,7 @@
 
   <span class="ruby-identifier">res</span> = <span class="ruby-identifier">get_constant</span>
 
-  <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">skip_tkspace_without_nl</span>
 
   <span class="ruby-identifier">get_tkread</span> <span class="ruby-comment"># empty out read buffer</span>
 
@@ -580,39 +458,28 @@
   <span class="ruby-identifier">res</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-get_constant" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">get_constant</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">get_constant</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Parse a constant, which might be qualified by one or more class or module
-names</p>
-          
-          
+          <p>Parse a constant, which might be qualified by one or more class or module names</p>
 
-          
           <div class="method-source-code" id="get_constant-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 432</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 453</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_constant</span>
   <span class="ruby-identifier">res</span> = <span class="ruby-string">&quot;&quot;</span>
-  <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">skip_tkspace_without_nl</span>
   <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
 
   <span class="ruby-keyword">while</span> <span class="ruby-identifier">tk</span> <span class="ruby-operator">&amp;&amp;</span> ((<span class="ruby-value">:on_op</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-string">&#39;::&#39;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:text</span>]) <span class="ruby-operator">||</span> <span class="ruby-value">:on_const</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>]) <span class="ruby-keyword">do</span>
@@ -624,86 +491,121 @@ names</p>
   <span class="ruby-identifier">res</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
-      <div id="method-i-get_constant_with_optional_parens" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">get_constant_with_optional_parens</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+      <div id="method-i-get_included_module_with_optional_parens" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">get_included_module_with_optional_parens</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Get a constant that may be surrounded by parens</p>
-          
-          
+          <p>Get an included module that may be surrounded by parens</p>
 
-          
-          <div class="method-source-code" id="get_constant_with_optional_parens-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 449</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_constant_with_optional_parens</span>
-  <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+          <div class="method-source-code" id="get_included_module_with_optional_parens-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 470</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_included_module_with_optional_parens</span>
+  <span class="ruby-identifier">skip_tkspace_without_nl</span>
+  <span class="ruby-identifier">get_tkread</span>
+  <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
+  <span class="ruby-identifier">end_token</span> = <span class="ruby-identifier">get_end_token</span> <span class="ruby-identifier">tk</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-string">&#39;&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">end_token</span>
 
   <span class="ruby-identifier">nest</span> = <span class="ruby-value">0</span>
+  <span class="ruby-identifier">continue</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">only_constant</span> = <span class="ruby-keyword">true</span>
 
-  <span class="ruby-keyword">while</span> <span class="ruby-value">:on_lparen</span> <span class="ruby-operator">==</span> (<span class="ruby-identifier">tk</span> = <span class="ruby-identifier">peek_tk</span>)[<span class="ruby-value">:kind</span>] <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">get_tk</span>
-    <span class="ruby-identifier">skip_tkspace</span>
-    <span class="ruby-identifier">nest</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-identifier">name</span> = <span class="ruby-identifier">get_constant</span>
-
-  <span class="ruby-keyword">while</span> <span class="ruby-identifier">nest</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
-    <span class="ruby-identifier">skip_tkspace</span>
+  <span class="ruby-keyword">while</span> <span class="ruby-identifier">tk</span> <span class="ruby-operator">!=</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">is_element_of_constant</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-keyword">case</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>]
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:on_semicolon</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">nest</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:on_lbracket</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">nest</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:on_rbracket</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">nest</span> <span class="ruby-operator">-=</span> <span class="ruby-value">1</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:on_lbrace</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">nest</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:on_rbrace</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">nest</span> <span class="ruby-operator">-=</span> <span class="ruby-value">1</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">nest</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-value">0</span>
+        <span class="ruby-comment"># we might have a.each { |i| yield i }</span>
+        <span class="ruby-identifier">unget_tk</span>(<span class="ruby-identifier">tk</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">nest</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">0</span>
+        <span class="ruby-keyword">break</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:on_lparen</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">nest</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-identifier">end_token</span>[<span class="ruby-value">:kind</span>] <span class="ruby-keyword">then</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">end_token</span>[<span class="ruby-value">:kind</span>] <span class="ruby-operator">==</span> <span class="ruby-value">:on_rparen</span>
+        <span class="ruby-identifier">nest</span> <span class="ruby-operator">-=</span> <span class="ruby-value">1</span>
+        <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">nest</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-value">0</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">nest</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-value">0</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:on_rparen</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">nest</span> <span class="ruby-operator">-=</span> <span class="ruby-value">1</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:on_comment</span>, <span class="ruby-value">:on_embdoc</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-ivar">@read</span>.<span class="ruby-identifier">pop</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-value">:on_nl</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">end_token</span>[<span class="ruby-value">:kind</span>] <span class="ruby-keyword">and</span> <span class="ruby-string">&quot;\n&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:text</span>][<span class="ruby-value">-1</span>] <span class="ruby-keyword">and</span>
+        (<span class="ruby-operator">!</span><span class="ruby-identifier">continue</span> <span class="ruby-keyword">or</span> (<span class="ruby-identifier">tk</span>[<span class="ruby-value">:state</span>] <span class="ruby-operator">&amp;</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span><span class="ruby-operator">::</span><span class="ruby-constant">EXPR_LABEL</span>) <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>) <span class="ruby-keyword">then</span>
+        <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">continue</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">nest</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-value">0</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:on_comma</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">continue</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:on_ident</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">continue</span> = <span class="ruby-keyword">false</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">continue</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:on_kw</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-keyword">case</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:text</span>]
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;def&#39;</span>, <span class="ruby-string">&#39;do&#39;</span>, <span class="ruby-string">&#39;case&#39;</span>, <span class="ruby-string">&#39;for&#39;</span>, <span class="ruby-string">&#39;begin&#39;</span>, <span class="ruby-string">&#39;class&#39;</span>, <span class="ruby-string">&#39;module&#39;</span>
+        <span class="ruby-identifier">nest</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;if&#39;</span>, <span class="ruby-string">&#39;unless&#39;</span>, <span class="ruby-string">&#39;while&#39;</span>, <span class="ruby-string">&#39;until&#39;</span>, <span class="ruby-string">&#39;rescue&#39;</span>
+        <span class="ruby-comment"># postfix if/unless/while/until/rescue must be EXPR_LABEL</span>
+        <span class="ruby-identifier">nest</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">unless</span> (<span class="ruby-identifier">tk</span>[<span class="ruby-value">:state</span>] <span class="ruby-operator">&amp;</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span><span class="ruby-operator">::</span><span class="ruby-constant">EXPR_LABEL</span>) <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;end&#39;</span>
+        <span class="ruby-identifier">nest</span> <span class="ruby-operator">-=</span> <span class="ruby-value">1</span>
+        <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">nest</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:on_const</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">is_element_of_constant</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:on_op</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">is_element_of_constant</span> = <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-string">&#39;::&#39;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:text</span>]
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">only_constant</span> = <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">is_element_of_constant</span>
     <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
-    <span class="ruby-identifier">nest</span> <span class="ruby-operator">-=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-value">:on_rparen</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>]
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">name</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">only_constant</span>
+    <span class="ruby-identifier">get_tkread_clean</span>(<span class="ruby-regexp">/\s+/</span>, <span class="ruby-string">&#39; &#39;</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-get_symbol_or_name" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">get_symbol_or_name</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">get_symbol_or_name</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Extracts a name or symbol from the token stream.</p>
-          
-          
 
-          
           <div class="method-source-code" id="get_symbol_or_name-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 542</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 618</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_symbol_or_name</span>
   <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>]
@@ -726,28 +628,21 @@ names</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-look_for_directives_in" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">look_for_directives_in</span><span
-            class="method-args">(container, comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">look_for_directives_in</span><span
+              class="method-args">(container, comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Look for directives in a normal comment block:</p>
 
 <pre class="ruby"><span class="ruby-comment"># :stopdoc:</span>
@@ -755,12 +650,9 @@ names</p>
 </pre>
 
 <p>This routine modifies its <code>comment</code> parameter.</p>
-          
-          
 
-          
           <div class="method-source-code" id="look_for_directives_in-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 582</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 658</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">look_for_directives_in</span> <span class="ruby-identifier">container</span>, <span class="ruby-identifier">comment</span>
   <span class="ruby-ivar">@preprocess</span>.<span class="ruby-identifier">handle</span> <span class="ruby-identifier">comment</span>, <span class="ruby-identifier">container</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">directive</span>, <span class="ruby-identifier">param</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">case</span> <span class="ruby-identifier">directive</span>
@@ -778,35 +670,25 @@ names</p>
   <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">remove_private</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-make_message" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">make_message</span><span
-            class="method-args">(message)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">make_message</span><span
+              class="method-args">(message)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Adds useful info about the parser to <code>message</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="make_message-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 602</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 678</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">make_message</span> <span class="ruby-identifier">message</span>
   <span class="ruby-identifier">prefix</span> = <span class="ruby-node">&quot;#{@file_name}:&quot;</span>.<span class="ruby-identifier">dup</span>
 
@@ -816,71 +698,51 @@ names</p>
   <span class="ruby-node">&quot;#{prefix} #{message}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-new_comment" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new_comment</span><span
-            class="method-args">(comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new_comment</span><span
+              class="method-args">(comment, line_no = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Creates a comment with the correct format</p>
-          
-          
 
-          
           <div class="method-source-code" id="new_comment-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 614</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">new_comment</span> <span class="ruby-identifier">comment</span>
-  <span class="ruby-identifier">c</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">comment</span>, <span class="ruby-ivar">@top_level</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 690</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">new_comment</span> <span class="ruby-identifier">comment</span>, <span class="ruby-identifier">line_no</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">c</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">comment</span>, <span class="ruby-ivar">@top_level</span>, <span class="ruby-value">:ruby</span>
+  <span class="ruby-identifier">c</span>.<span class="ruby-identifier">line</span> = <span class="ruby-identifier">line_no</span>
   <span class="ruby-identifier">c</span>.<span class="ruby-identifier">format</span> = <span class="ruby-ivar">@markup</span>
   <span class="ruby-identifier">c</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_alias" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_alias</span><span
-            class="method-args">(context, single, tk, comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_alias</span><span
+              class="method-args">(context, single, tk, comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Parses an <code>alias</code> in <code>context</code> with
-<code>comment</code></p>
-          
-          
+          <p>Parses an <code>alias</code> in <code>context</code> with <code>comment</code></p>
 
-          
           <div class="method-source-code" id="parse_alias-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 682</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 759</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_alias</span>(<span class="ruby-identifier">context</span>, <span class="ruby-identifier">single</span>, <span class="ruby-identifier">tk</span>, <span class="ruby-identifier">comment</span>)
   <span class="ruby-identifier">line_no</span> = <span class="ruby-identifier">tk</span>[<span class="ruby-value">:line_no</span>]
 
@@ -917,36 +779,25 @@ names</p>
   <span class="ruby-identifier">al</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_attr" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_attr</span><span
-            class="method-args">(context, single, tk, comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_attr</span><span
+              class="method-args">(context, single, tk, comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates an <a href="../Attr.html">RDoc::Attr</a> for the name following
-<code>tk</code>, setting the comment to <code>comment</code>.</p>
-          
-          
+          <p>Creates an <a href="../Attr.html"><code>RDoc::Attr</code></a> for the name following <code>tk</code>, setting the comment to <code>comment</code>.</p>
 
-          
           <div class="method-source-code" id="parse_attr-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 624</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 701</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_attr</span>(<span class="ruby-identifier">context</span>, <span class="ruby-identifier">single</span>, <span class="ruby-identifier">tk</span>, <span class="ruby-identifier">comment</span>)
   <span class="ruby-identifier">line_no</span> = <span class="ruby-identifier">tk</span>[<span class="ruby-value">:line_no</span>]
 
@@ -954,7 +805,7 @@ names</p>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-keyword">then</span>
     <span class="ruby-identifier">name</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">0</span>]
     <span class="ruby-identifier">rw</span> = <span class="ruby-string">&quot;R&quot;</span>
-    <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+    <span class="ruby-identifier">skip_tkspace_without_nl</span>
     <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
 
     <span class="ruby-keyword">if</span> <span class="ruby-value">:on_comma</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>] <span class="ruby-keyword">then</span>
@@ -972,37 +823,25 @@ names</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_attr_accessor" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_attr_accessor</span><span
-            class="method-args">(context, single, tk, comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_attr_accessor</span><span
+              class="method-args">(context, single, tk, comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates an <a href="../Attr.html">RDoc::Attr</a> for each attribute listed
-after <code>tk</code>, setting the comment for each to
-<code>comment</code>.</p>
-          
-          
+          <p>Creates an <a href="../Attr.html"><code>RDoc::Attr</code></a> for each attribute listed after <code>tk</code>, setting the comment for each to <code>comment</code>.</p>
 
-          
           <div class="method-source-code" id="parse_attr_accessor-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 653</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 730</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_attr_accessor</span>(<span class="ruby-identifier">context</span>, <span class="ruby-identifier">single</span>, <span class="ruby-identifier">tk</span>, <span class="ruby-identifier">comment</span>)
   <span class="ruby-identifier">line_no</span> = <span class="ruby-identifier">tk</span>[<span class="ruby-value">:line_no</span>]
 
@@ -1029,35 +868,25 @@ after <code>tk</code>, setting the comment for each to
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_call_parameters" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_call_parameters</span><span
-            class="method-args">(tk)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_call_parameters</span><span
+              class="method-args">(tk)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Extracts call parameters from the token stream.</p>
-          
-          
 
-          
           <div class="method-source-code" id="parse_call_parameters-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 721</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 798</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_call_parameters</span>(<span class="ruby-identifier">tk</span>)
   <span class="ruby-identifier">end_token</span> = <span class="ruby-keyword">case</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>]
               <span class="ruby-keyword">when</span> <span class="ruby-value">:on_lparen</span>
@@ -1079,9 +908,9 @@ after <code>tk</code>, setting the comment for each to
     <span class="ruby-keyword">when</span> <span class="ruby-identifier">end_token</span>
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">end_token</span> <span class="ruby-operator">==</span> <span class="ruby-value">:on_rparen</span>
         <span class="ruby-identifier">nest</span> <span class="ruby-operator">-=</span> <span class="ruby-value">1</span>
-        <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span>.<span class="ruby-identifier">end?</span>(<span class="ruby-identifier">tk</span>) <span class="ruby-keyword">and</span> <span class="ruby-identifier">nest</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-value">0</span>
+        <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span>.<span class="ruby-identifier">end?</span>(<span class="ruby-identifier">tk</span>) <span class="ruby-keyword">and</span> <span class="ruby-identifier">nest</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-value">0</span>
       <span class="ruby-keyword">else</span>
-        <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span>.<span class="ruby-identifier">end?</span>(<span class="ruby-identifier">tk</span>)
+        <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span>.<span class="ruby-identifier">end?</span>(<span class="ruby-identifier">tk</span>)
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">when</span> <span class="ruby-value">:on_comment</span>, <span class="ruby-value">:on_embdoc</span>
       <span class="ruby-identifier">unget_tk</span>(<span class="ruby-identifier">tk</span>)
@@ -1098,35 +927,25 @@ after <code>tk</code>, setting the comment for each to
   <span class="ruby-identifier">get_tkread_clean</span> <span class="ruby-string">&quot;\n&quot;</span>, <span class="ruby-string">&quot; &quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_class" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_class</span><span
-            class="method-args">(container, single, tk, comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_class</span><span
+              class="method-args">(container, single, tk, comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Parses a class in <code>context</code> with <code>comment</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="parse_class-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 764</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 841</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_class</span> <span class="ruby-identifier">container</span>, <span class="ruby-identifier">single</span>, <span class="ruby-identifier">tk</span>, <span class="ruby-identifier">comment</span>
   <span class="ruby-identifier">line_no</span> = <span class="ruby-identifier">tk</span>[<span class="ruby-value">:line_no</span>]
 
@@ -1137,7 +956,7 @@ after <code>tk</code>, setting the comment for each to
     <span class="ruby-identifier">cls</span> = <span class="ruby-identifier">parse_class_regular</span> <span class="ruby-identifier">container</span>, <span class="ruby-identifier">declaration_context</span>, <span class="ruby-identifier">single</span>,
       <span class="ruby-identifier">name_t</span>, <span class="ruby-identifier">given_name</span>, <span class="ruby-identifier">comment</span>
   <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">name_t</span>[<span class="ruby-value">:kind</span>] <span class="ruby-operator">==</span> <span class="ruby-value">:on_op</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">name_t</span>[<span class="ruby-value">:text</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&#39;&lt;&lt;&#39;</span>
-    <span class="ruby-keyword">case</span> <span class="ruby-identifier">name</span> = <span class="ruby-identifier">get_class_specification</span>
+    <span class="ruby-keyword">case</span> <span class="ruby-identifier">name</span> = <span class="ruby-identifier">skip_parentheses</span> { <span class="ruby-identifier">get_class_specification</span> }
     <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;self&#39;</span>, <span class="ruby-identifier">container</span>.<span class="ruby-identifier">name</span>
       <span class="ruby-identifier">read_documentation_modifiers</span> <span class="ruby-identifier">cls</span>, <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">CLASS_MODIFIERS</span>
       <span class="ruby-identifier">parse_statements</span> <span class="ruby-identifier">container</span>, <span class="ruby-constant">SINGLE</span>
@@ -1158,47 +977,36 @@ after <code>tk</code>, setting the comment for each to
   <span class="ruby-identifier">cls</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_comment" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_comment</span><span
-            class="method-args">(container, tk, comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_comment</span><span
+              class="method-args">(container, tk, comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Generates an RDoc::Method or <a href="../Attr.html">RDoc::Attr</a> from
-<code>comment</code> by looking for :method: or :attr: directives in
-<code>comment</code>.</p>
-          
-          
+          <p>Generates an RDoc::Method or <a href="../Attr.html"><code>RDoc::Attr</code></a> from <code>comment</code> by looking for :method: or :attr: directives in <code>comment</code>.</p>
 
-          
           <div class="method-source-code" id="parse_comment-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1003</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1080</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_comment</span> <span class="ruby-identifier">container</span>, <span class="ruby-identifier">tk</span>, <span class="ruby-identifier">comment</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">parse_comment_tomdoc</span> <span class="ruby-identifier">container</span>, <span class="ruby-identifier">tk</span>, <span class="ruby-identifier">comment</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@markup</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;tomdoc&#39;</span>
   <span class="ruby-identifier">column</span>  = <span class="ruby-identifier">tk</span>[<span class="ruby-value">:char_no</span>]
-  <span class="ruby-identifier">line_no</span> = <span class="ruby-identifier">tk</span>[<span class="ruby-value">:line_no</span>]
+  <span class="ruby-identifier">line_no</span> = <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">line</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:line_no</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">line</span>
 
   <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">text</span> = <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/(^# +:?)(singleton-)(method:)/</span>, <span class="ruby-string">&#39;\1\3&#39;</span>)
   <span class="ruby-identifier">singleton</span> = <span class="ruby-operator">!</span><span class="ruby-operator">!</span><span class="ruby-identifier">$~</span>
 
   <span class="ruby-identifier">co</span> =
     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">comment</span>.<span class="ruby-identifier">text</span> = <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/^# +:?method: *(\S*).*?\n/i</span>, <span class="ruby-string">&#39;&#39;</span>)) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-operator">!</span><span class="ruby-identifier">$~</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">line_no</span> <span class="ruby-operator">+=</span> <span class="ruby-node">$`</span>.<span class="ruby-identifier">count</span>(<span class="ruby-string">&quot;\n&quot;</span>)
       <span class="ruby-identifier">parse_comment_ghost</span> <span class="ruby-identifier">container</span>, <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">text</span>, <span class="ruby-node">$1</span>, <span class="ruby-identifier">column</span>, <span class="ruby-identifier">line_no</span>, <span class="ruby-identifier">comment</span>
     <span class="ruby-keyword">elsif</span> (<span class="ruby-identifier">comment</span>.<span class="ruby-identifier">text</span> = <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/# +:?(attr(_reader|_writer|_accessor)?): *(\S*).*?\n/i</span>, <span class="ruby-string">&#39;&#39;</span>)) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-operator">!</span><span class="ruby-identifier">$~</span> <span class="ruby-keyword">then</span>
       <span class="ruby-identifier">parse_comment_attr</span> <span class="ruby-identifier">container</span>, <span class="ruby-node">$1</span>, <span class="ruby-node">$3</span>, <span class="ruby-identifier">comment</span>
@@ -1212,36 +1020,25 @@ after <code>tk</code>, setting the comment for each to
   <span class="ruby-keyword">true</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_comment_tomdoc" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_comment_tomdoc</span><span
-            class="method-args">(container, tk, comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_comment_tomdoc</span><span
+              class="method-args">(container, tk, comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Creates an RDoc::Method on <code>container</code> from <code>comment</code>
-if there is a Signature section in the comment</p>
-          
-          
+          <p>Creates an RDoc::Method on <code>container</code> from <code>comment</code> if there is a Signature section in the comment</p>
 
-          
           <div class="method-source-code" id="parse_comment_tomdoc-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1081</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1159</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_comment_tomdoc</span> <span class="ruby-identifier">container</span>, <span class="ruby-identifier">tk</span>, <span class="ruby-identifier">comment</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">signature</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">TomDoc</span>.<span class="ruby-identifier">signature</span>(<span class="ruby-identifier">comment</span>)
   <span class="ruby-identifier">column</span>  = <span class="ruby-identifier">tk</span>[<span class="ruby-value">:char_no</span>]
@@ -1254,10 +1051,10 @@ if there is a Signature section in the comment</p>
   <span class="ruby-identifier">meth</span>.<span class="ruby-identifier">line</span>      = <span class="ruby-identifier">line_no</span>
 
   <span class="ruby-identifier">meth</span>.<span class="ruby-identifier">start_collecting_tokens</span>
-  <span class="ruby-identifier">indent</span> = { <span class="ruby-value">:line_no</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">1</span>, <span class="ruby-value">:char_no</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">1</span>, <span class="ruby-value">:kind</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">:on_sp</span>, <span class="ruby-value">:text</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">column</span> }
-  <span class="ruby-identifier">position_comment</span> = { <span class="ruby-value">:line_no</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">line_no</span>, <span class="ruby-value">:char_no</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">1</span>, <span class="ruby-value">:kind</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">:on_comment</span> }
+  <span class="ruby-identifier">indent</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span><span class="ruby-operator">::</span><span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, <span class="ruby-value">1</span>, <span class="ruby-value">:on_sp</span>, <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">column</span>)
+  <span class="ruby-identifier">position_comment</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span><span class="ruby-operator">::</span><span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">line_no</span>, <span class="ruby-value">1</span>, <span class="ruby-value">:on_comment</span>)
   <span class="ruby-identifier">position_comment</span>[<span class="ruby-value">:text</span>] = <span class="ruby-node">&quot;# File #{@top_level.relative_name}, line #{line_no}&quot;</span>
-  <span class="ruby-identifier">newline</span> = { <span class="ruby-value">:line_no</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0</span>, <span class="ruby-value">:char_no</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0</span>, <span class="ruby-value">:kind</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">:on_nl</span>, <span class="ruby-value">:text</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;\n&quot;</span> }
+  <span class="ruby-identifier">newline</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span><span class="ruby-operator">::</span><span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">0</span>, <span class="ruby-value">0</span>, <span class="ruby-value">:on_nl</span>, <span class="ruby-string">&quot;\n&quot;</span>)
   <span class="ruby-identifier">meth</span>.<span class="ruby-identifier">add_tokens</span> [<span class="ruby-identifier">position_comment</span>, <span class="ruby-identifier">newline</span>, <span class="ruby-identifier">indent</span>]
 
   <span class="ruby-identifier">meth</span>.<span class="ruby-identifier">call_seq</span> = <span class="ruby-identifier">signature</span>
@@ -1273,42 +1070,30 @@ if there is a Signature section in the comment</p>
   <span class="ruby-ivar">@stats</span>.<span class="ruby-identifier">add_method</span> <span class="ruby-identifier">meth</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_constant" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_constant</span><span
-            class="method-args">(container, tk, comment, ignore_constants = false)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_constant</span><span
+              class="method-args">(container, tk, comment, ignore_constants = false)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Parses a constant in <code>context</code> with <code>comment</code>.  If
-<code>ignore_constants</code> is true, no found constants will be added to
-<a href="../../RDoc.html">RDoc</a>.</p>
-          
-          
+          <p>Parses a constant in <code>context</code> with <code>comment</code>.  If <code>ignore_constants</code> is true, no found constants will be added to <a href="../../RDoc.html"><code>RDoc</code></a>.</p>
 
-          
           <div class="method-source-code" id="parse_constant-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 877</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 954</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_constant</span> <span class="ruby-identifier">container</span>, <span class="ruby-identifier">tk</span>, <span class="ruby-identifier">comment</span>, <span class="ruby-identifier">ignore_constants</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-identifier">line_no</span> = <span class="ruby-identifier">tk</span>[<span class="ruby-value">:line_no</span>]
 
   <span class="ruby-identifier">name</span> = <span class="ruby-identifier">tk</span>[<span class="ruby-value">:text</span>]
-  <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">skip_tkspace_without_nl</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^\w+$/</span>
 
@@ -1334,7 +1119,7 @@ if there is a Signature section in the comment</p>
         <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">nest</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
-    <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+    <span class="ruby-identifier">skip_tkspace_without_nl</span>
     <span class="ruby-identifier">is_array_or_hash</span> = <span class="ruby-keyword">true</span>
   <span class="ruby-keyword">end</span>
 
@@ -1371,36 +1156,25 @@ if there is a Signature section in the comment</p>
   <span class="ruby-keyword">true</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_constant_visibility" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_constant_visibility</span><span
-            class="method-args">(container, single, tk)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_constant_visibility</span><span
+              class="method-args">(container, single, tk)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Parses a Module#private_constant or Module#public_constant call from
-<code>tk</code>.</p>
-          
-          
+          <p>Parses a Module#private_constant or Module#public_constant call from <code>tk</code>.</p>
 
-          
           <div class="method-source-code" id="parse_constant_visibility-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1977</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2091</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_constant_visibility</span>(<span class="ruby-identifier">container</span>, <span class="ruby-identifier">single</span>, <span class="ruby-identifier">tk</span>)
   <span class="ruby-identifier">args</span> = <span class="ruby-identifier">parse_symbol_arg</span>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:text</span>]
@@ -1414,30 +1188,22 @@ if there is a Signature section in the comment</p>
   <span class="ruby-identifier">container</span>.<span class="ruby-identifier">set_constant_visibility_for</span> <span class="ruby-identifier">args</span>, <span class="ruby-identifier">vis</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_meta_attr" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_meta_attr</span><span
-            class="method-args">(context, single, tk, comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_meta_attr</span><span
+              class="method-args">(context, single, tk, comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Parses a meta-programmed attribute and creates an <a
-href="../Attr.html">RDoc::Attr</a>.</p>
+          <p>Parses a meta-programmed attribute and creates an <a href="../Attr.html"><code>RDoc::Attr</code></a>.</p>
 
 <p>To create foo and bar attributes on class C with comment “My attributes”:</p>
 
@@ -1466,12 +1232,9 @@ href="../Attr.html">RDoc::Attr</a>.</p>
 
 <span class="ruby-keyword">end</span>
 </pre>
-          
-          
 
-          
           <div class="method-source-code" id="parse_meta_attr-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1202</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1296</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_meta_attr</span>(<span class="ruby-identifier">context</span>, <span class="ruby-identifier">single</span>, <span class="ruby-identifier">tk</span>, <span class="ruby-identifier">comment</span>)
   <span class="ruby-identifier">args</span> = <span class="ruby-identifier">parse_symbol_arg</span>
   <span class="ruby-identifier">rw</span> = <span class="ruby-string">&quot;?&quot;</span>
@@ -1503,35 +1266,25 @@ href="../Attr.html">RDoc::Attr</a>.</p>
   <span class="ruby-identifier">att</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_meta_method" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_meta_method</span><span
-            class="method-args">(container, single, tk, comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_meta_method</span><span
+              class="method-args">(container, single, tk, comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Parses a meta-programmed method</p>
-          
-          
 
-          
           <div class="method-source-code" id="parse_meta_method-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1236</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1330</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_meta_method</span>(<span class="ruby-identifier">container</span>, <span class="ruby-identifier">single</span>, <span class="ruby-identifier">tk</span>, <span class="ruby-identifier">comment</span>)
   <span class="ruby-identifier">column</span>  = <span class="ruby-identifier">tk</span>[<span class="ruby-value">:char_no</span>]
   <span class="ruby-identifier">line_no</span> = <span class="ruby-identifier">tk</span>[<span class="ruby-value">:line_no</span>]
@@ -1540,7 +1293,7 @@ href="../Attr.html">RDoc::Attr</a>.</p>
   <span class="ruby-identifier">add_token</span> <span class="ruby-identifier">tk</span>
   <span class="ruby-identifier">add_token_listener</span> <span class="ruby-keyword">self</span>
 
-  <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">skip_tkspace_without_nl</span>
 
   <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">text</span> = <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">text</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/(^# +:?)(singleton-)(method:)/</span>, <span class="ruby-string">&#39;\1\3&#39;</span>)
   <span class="ruby-identifier">singleton</span> = <span class="ruby-operator">!</span><span class="ruby-operator">!</span><span class="ruby-identifier">$~</span>
@@ -1557,10 +1310,10 @@ href="../Attr.html">RDoc::Attr</a>.</p>
   <span class="ruby-identifier">remove_token_listener</span> <span class="ruby-keyword">self</span>
 
   <span class="ruby-identifier">meth</span>.<span class="ruby-identifier">start_collecting_tokens</span>
-  <span class="ruby-identifier">indent</span> = { <span class="ruby-value">:line_no</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">1</span>, <span class="ruby-value">:char_no</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">1</span>, <span class="ruby-value">:kind</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">:on_sp</span>, <span class="ruby-value">:text</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">column</span> }
-  <span class="ruby-identifier">position_comment</span> = { <span class="ruby-value">:line_no</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">line_no</span>, <span class="ruby-value">:char_no</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">1</span>, <span class="ruby-value">:kind</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">:on_comment</span> }
+  <span class="ruby-identifier">indent</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span><span class="ruby-operator">::</span><span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, <span class="ruby-value">1</span>, <span class="ruby-value">:on_sp</span>, <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">column</span>)
+  <span class="ruby-identifier">position_comment</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span><span class="ruby-operator">::</span><span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">line_no</span>, <span class="ruby-value">1</span>, <span class="ruby-value">:on_comment</span>)
   <span class="ruby-identifier">position_comment</span>[<span class="ruby-value">:text</span>] = <span class="ruby-node">&quot;# File #{@top_level.relative_name}, line #{line_no}&quot;</span>
-  <span class="ruby-identifier">newline</span> = { <span class="ruby-value">:line_no</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0</span>, <span class="ruby-value">:char_no</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0</span>, <span class="ruby-value">:kind</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">:on_nl</span>, <span class="ruby-value">:text</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;\n&quot;</span> }
+  <span class="ruby-identifier">newline</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span><span class="ruby-operator">::</span><span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">0</span>, <span class="ruby-value">0</span>, <span class="ruby-value">:on_nl</span>, <span class="ruby-string">&quot;\n&quot;</span>)
   <span class="ruby-identifier">meth</span>.<span class="ruby-identifier">add_tokens</span> [<span class="ruby-identifier">position_comment</span>, <span class="ruby-identifier">newline</span>, <span class="ruby-identifier">indent</span>]
   <span class="ruby-identifier">meth</span>.<span class="ruby-identifier">add_tokens</span> <span class="ruby-ivar">@token_stream</span>
 
@@ -1573,35 +1326,25 @@ href="../Attr.html">RDoc::Attr</a>.</p>
   <span class="ruby-identifier">meth</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_method" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_method</span><span
-            class="method-args">(container, single, tk, comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_method</span><span
+              class="method-args">(container, single, tk, comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Parses a normal method defined by <code>def</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="parse_method-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1338</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1432</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_method</span>(<span class="ruby-identifier">container</span>, <span class="ruby-identifier">single</span>, <span class="ruby-identifier">tk</span>, <span class="ruby-identifier">comment</span>)
   <span class="ruby-identifier">singleton</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">added_container</span> = <span class="ruby-keyword">false</span>
@@ -1628,10 +1371,10 @@ href="../Attr.html">RDoc::Attr</a>.</p>
   <span class="ruby-identifier">meth</span>.<span class="ruby-identifier">line</span>   = <span class="ruby-identifier">line_no</span>
 
   <span class="ruby-identifier">meth</span>.<span class="ruby-identifier">start_collecting_tokens</span>
-  <span class="ruby-identifier">indent</span> = { <span class="ruby-value">:line_no</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">1</span>, <span class="ruby-value">:char_no</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">1</span>, <span class="ruby-value">:kind</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">:on_sp</span>, <span class="ruby-value">:text</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">column</span> }
-  <span class="ruby-identifier">token</span> = { <span class="ruby-value">:line_no</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">line_no</span>, <span class="ruby-value">:char_no</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">1</span>, <span class="ruby-value">:kind</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">:on_comment</span> }
+  <span class="ruby-identifier">indent</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span><span class="ruby-operator">::</span><span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, <span class="ruby-value">1</span>, <span class="ruby-value">:on_sp</span>, <span class="ruby-string">&#39; &#39;</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">column</span>)
+  <span class="ruby-identifier">token</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span><span class="ruby-operator">::</span><span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">line_no</span>, <span class="ruby-value">1</span>, <span class="ruby-value">:on_comment</span>)
   <span class="ruby-identifier">token</span>[<span class="ruby-value">:text</span>] = <span class="ruby-node">&quot;# File #{@top_level.relative_name}, line #{line_no}&quot;</span>
-  <span class="ruby-identifier">newline</span> = { <span class="ruby-value">:line_no</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0</span>, <span class="ruby-value">:char_no</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">0</span>, <span class="ruby-value">:kind</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-value">:on_nl</span>, <span class="ruby-value">:text</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-string">&quot;\n&quot;</span> }
+  <span class="ruby-identifier">newline</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span><span class="ruby-operator">::</span><span class="ruby-constant">Token</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">0</span>, <span class="ruby-value">0</span>, <span class="ruby-value">:on_nl</span>, <span class="ruby-string">&quot;\n&quot;</span>)
   <span class="ruby-identifier">meth</span>.<span class="ruby-identifier">add_tokens</span> [<span class="ruby-identifier">token</span>, <span class="ruby-identifier">newline</span>, <span class="ruby-identifier">indent</span>]
   <span class="ruby-identifier">meth</span>.<span class="ruby-identifier">add_tokens</span> <span class="ruby-ivar">@token_stream</span>
 
@@ -1648,35 +1391,25 @@ href="../Attr.html">RDoc::Attr</a>.</p>
   <span class="ruby-ivar">@stats</span>.<span class="ruby-identifier">add_method</span> <span class="ruby-identifier">meth</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_method_dummy" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_method_dummy</span><span
-            class="method-args">(container)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_method_dummy</span><span
+              class="method-args">(container)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Parses a method that needs to be ignored.</p>
-          
-          
 
-          
           <div class="method-source-code" id="parse_method_dummy-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1417</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1511</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_method_dummy</span> <span class="ruby-identifier">container</span>
   <span class="ruby-identifier">dummy</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Context</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-identifier">dummy</span>.<span class="ruby-identifier">parent</span> = <span class="ruby-identifier">container</span>
@@ -1684,38 +1417,28 @@ href="../Attr.html">RDoc::Attr</a>.</p>
   <span class="ruby-identifier">skip_method</span> <span class="ruby-identifier">dummy</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_method_or_yield_parameters" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_method_or_yield_parameters</span><span
-            class="method-args">(method = nil, modifiers = RDoc::METHOD_MODIFIERS)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_method_or_yield_parameters</span><span
+              class="method-args">(method = nil, modifiers = RDoc::METHOD_MODIFIERS)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Extracts <code>yield</code> parameters from <code>method</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="parse_method_or_yield_parameters-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1519</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1613</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_method_or_yield_parameters</span>(<span class="ruby-identifier">method</span> = <span class="ruby-keyword">nil</span>,
                                      <span class="ruby-identifier">modifiers</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">METHOD_MODIFIERS</span>)
-  <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">skip_tkspace_without_nl</span>
   <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
   <span class="ruby-identifier">end_token</span> = <span class="ruby-identifier">get_end_token</span> <span class="ruby-identifier">tk</span>
   <span class="ruby-keyword">return</span> <span class="ruby-string">&#39;&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">end_token</span>
@@ -1727,6 +1450,10 @@ href="../Attr.html">RDoc::Attr</a>.</p>
     <span class="ruby-keyword">case</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>]
     <span class="ruby-keyword">when</span> <span class="ruby-value">:on_semicolon</span> <span class="ruby-keyword">then</span>
       <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">nest</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:on_lbracket</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">nest</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:on_rbracket</span> <span class="ruby-keyword">then</span>
+      <span class="ruby-identifier">nest</span> <span class="ruby-operator">-=</span> <span class="ruby-value">1</span>
     <span class="ruby-keyword">when</span> <span class="ruby-value">:on_lbrace</span> <span class="ruby-keyword">then</span>
       <span class="ruby-identifier">nest</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
     <span class="ruby-keyword">when</span> <span class="ruby-value">:on_rbrace</span> <span class="ruby-keyword">then</span>
@@ -1750,7 +1477,7 @@ href="../Attr.html">RDoc::Attr</a>.</p>
     <span class="ruby-keyword">when</span> <span class="ruby-value">:on_comment</span>, <span class="ruby-value">:on_embdoc</span> <span class="ruby-keyword">then</span>
       <span class="ruby-ivar">@read</span>.<span class="ruby-identifier">pop</span>
       <span class="ruby-keyword">if</span> <span class="ruby-value">:on_nl</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">end_token</span>[<span class="ruby-value">:kind</span>] <span class="ruby-keyword">and</span> <span class="ruby-string">&quot;\n&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:text</span>][<span class="ruby-value">-1</span>] <span class="ruby-keyword">and</span>
-        (<span class="ruby-operator">!</span><span class="ruby-identifier">continue</span> <span class="ruby-keyword">or</span> (<span class="ruby-identifier">tk</span>[<span class="ruby-value">:state</span>] <span class="ruby-operator">&amp;</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span><span class="ruby-operator">::</span><span class="ruby-constant">EXPR_LABEL</span>) <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>) <span class="ruby-keyword">then</span>
+        (<span class="ruby-operator">!</span><span class="ruby-identifier">continue</span> <span class="ruby-keyword">or</span> (<span class="ruby-identifier">tk</span>[<span class="ruby-value">:state</span>] <span class="ruby-operator">&amp;</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span><span class="ruby-operator">::</span><span class="ruby-constant">EXPR_LABEL</span>) <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>) <span class="ruby-keyword">then</span>
         <span class="ruby-keyword">if</span> <span class="ruby-identifier">method</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">method</span>.<span class="ruby-identifier">block_params</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">then</span>
           <span class="ruby-identifier">unget_tk</span> <span class="ruby-identifier">tk</span>
           <span class="ruby-identifier">read_documentation_modifiers</span> <span class="ruby-identifier">method</span>, <span class="ruby-identifier">modifiers</span>
@@ -1768,41 +1495,30 @@ href="../Attr.html">RDoc::Attr</a>.</p>
   <span class="ruby-identifier">get_tkread_clean</span>(<span class="ruby-regexp">/\s+/</span>, <span class="ruby-string">&#39; &#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_method_parameters" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_method_parameters</span><span
-            class="method-args">(method)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_method_parameters</span><span
+              class="method-args">(method)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Capture the method&#39;s parameters. Along the way, look for a comment
-containing:</p>
+          <p>Capture the method’s parameters. Along the way, look for a comment containing:</p>
 
 <pre class="ruby"><span class="ruby-comment"># yields: ....</span>
 </pre>
 
 <p>and add this as the block_params for the method</p>
-          
-          
 
-          
           <div class="method-source-code" id="parse_method_parameters-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1582</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1680</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_method_parameters</span> <span class="ruby-identifier">method</span>
   <span class="ruby-identifier">res</span> = <span class="ruby-identifier">parse_method_or_yield_parameters</span> <span class="ruby-identifier">method</span>
 
@@ -1811,39 +1527,29 @@ containing:</p>
 
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span>  <span class="ruby-identifier">method</span>.<span class="ruby-identifier">block_params</span>
 
-  <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">skip_tkspace_without_nl</span>
   <span class="ruby-identifier">read_documentation_modifiers</span> <span class="ruby-identifier">method</span>, <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">METHOD_MODIFIERS</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_method_params_and_body" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_method_params_and_body</span><span
-            class="method-args">(container, single, meth, added_container)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_method_params_and_body</span><span
+              class="method-args">(container, single, meth, added_container)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Parses the parameters and body of <code>meth</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="parse_method_params_and_body-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1387</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1481</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_method_params_and_body</span> <span class="ruby-identifier">container</span>, <span class="ruby-identifier">single</span>, <span class="ruby-identifier">meth</span>, <span class="ruby-identifier">added_container</span>
   <span class="ruby-identifier">token_listener</span> <span class="ruby-identifier">meth</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">parse_method_parameters</span> <span class="ruby-identifier">meth</span>
@@ -1871,36 +1577,25 @@ containing:</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_module" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_module</span><span
-            class="method-args">(container, single, tk, comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_module</span><span
+              class="method-args">(container, single, tk, comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Parses an <a href="../NormalModule.html">RDoc::NormalModule</a> in
-<code>container</code> with <code>comment</code></p>
-          
-          
+          <p>Parses an <a href="../NormalModule.html"><code>RDoc::NormalModule</code></a> in <code>container</code> with <code>comment</code></p>
 
-          
           <div class="method-source-code" id="parse_module-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1597</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1695</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_module</span> <span class="ruby-identifier">container</span>, <span class="ruby-identifier">single</span>, <span class="ruby-identifier">tk</span>, <span class="ruby-identifier">comment</span>
   <span class="ruby-identifier">container</span>, <span class="ruby-identifier">name_t</span>, = <span class="ruby-identifier">get_class_or_module</span> <span class="ruby-identifier">container</span>
 
@@ -1920,36 +1615,25 @@ containing:</p>
   <span class="ruby-ivar">@stats</span>.<span class="ruby-identifier">add_module</span> <span class="ruby-identifier">mod</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_require" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_require</span><span
-            class="method-args">(context, comment)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_require</span><span
+              class="method-args">(context, comment)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Parses an <a href="../Require.html">RDoc::Require</a> in
-<code>context</code> containing <code>comment</code></p>
-          
-          
+          <p>Parses an <a href="../Require.html"><code>RDoc::Require</code></a> in <code>context</code> containing <code>comment</code></p>
 
-          
           <div class="method-source-code" id="parse_require-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1619</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1717</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_require</span>(<span class="ruby-identifier">context</span>, <span class="ruby-identifier">comment</span>)
   <span class="ruby-identifier">skip_tkspace_comment</span>
   <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
@@ -1968,81 +1652,61 @@ containing:</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_rescue" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_rescue</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_rescue</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Parses a rescue</p>
-          
-          
 
-          
           <div class="method-source-code" id="parse_rescue-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1640</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1738</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_rescue</span>
-  <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">skip_tkspace_without_nl</span>
 
   <span class="ruby-keyword">while</span> <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
     <span class="ruby-keyword">case</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>]
     <span class="ruby-keyword">when</span> <span class="ruby-value">:on_nl</span>, <span class="ruby-value">:on_semicolon</span>, <span class="ruby-value">:on_comment</span> <span class="ruby-keyword">then</span>
       <span class="ruby-keyword">break</span>
     <span class="ruby-keyword">when</span> <span class="ruby-value">:on_comma</span> <span class="ruby-keyword">then</span>
-      <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+      <span class="ruby-identifier">skip_tkspace_without_nl</span>
 
       <span class="ruby-identifier">get_tk</span> <span class="ruby-keyword">if</span> <span class="ruby-value">:on_nl</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">peek_tk</span>[<span class="ruby-value">:kind</span>]
     <span class="ruby-keyword">end</span>
 
-    <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+    <span class="ruby-identifier">skip_tkspace_without_nl</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_statements" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_statements</span><span
-            class="method-args">(container, single = NORMAL, current_method = nil, comment = new_comment(&#39;&#39;))</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_statements</span><span
+              class="method-args">(container, single = NORMAL, current_method = nil, comment = new_comment(&#39;&#39;))</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>The core of the <a href="Ruby.html">Ruby</a> parser.</p>
-          
-          
+          <p>The core of the <a href="Ruby.html"><code>Ruby</code></a> parser.</p>
 
-          
           <div class="method-source-code" id="parse_statements-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1660</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1769</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_statements</span>(<span class="ruby-identifier">container</span>, <span class="ruby-identifier">single</span> = <span class="ruby-constant">NORMAL</span>, <span class="ruby-identifier">current_method</span> = <span class="ruby-keyword">nil</span>,
                      <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">new_comment</span>(<span class="ruby-string">&#39;&#39;</span>))
   <span class="ruby-identifier">raise</span> <span class="ruby-string">&#39;no&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Comment</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">comment</span>
@@ -2092,17 +1756,20 @@ containing:</p>
           <span class="ruby-identifier">comment</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Encoding</span>.<span class="ruby-identifier">change_encoding</span> <span class="ruby-identifier">comment</span>, <span class="ruby-ivar">@encoding</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@encoding</span>
         <span class="ruby-keyword">end</span>
 
+        <span class="ruby-identifier">line_no</span> = <span class="ruby-keyword">nil</span>
         <span class="ruby-keyword">while</span> <span class="ruby-identifier">tk</span> <span class="ruby-keyword">and</span> (<span class="ruby-value">:on_comment</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>] <span class="ruby-keyword">or</span> <span class="ruby-value">:on_embdoc</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>]) <span class="ruby-keyword">do</span>
-          <span class="ruby-identifier">comment</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:text</span>]
-          <span class="ruby-identifier">comment</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;\n&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-string">&quot;\n&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:text</span>].<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">to_a</span>.<span class="ruby-identifier">last</span>
+          <span class="ruby-identifier">comment_body</span> = <span class="ruby-identifier">retrieve_comment_body</span>(<span class="ruby-identifier">tk</span>)
+          <span class="ruby-identifier">line_no</span> = <span class="ruby-identifier">tk</span>[<span class="ruby-value">:line_no</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">empty?</span>
+          <span class="ruby-identifier">comment</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">comment_body</span>
+          <span class="ruby-identifier">comment</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;\n&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">comment_body</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\n\z/</span>
 
-          <span class="ruby-keyword">if</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:text</span>].<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-string">&quot;\n&quot;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:text</span>].<span class="ruby-identifier">chars</span>.<span class="ruby-identifier">to_a</span>.<span class="ruby-identifier">last</span> <span class="ruby-keyword">then</span>
-            <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span> <span class="ruby-comment"># leading spaces</span>
+          <span class="ruby-keyword">if</span> <span class="ruby-identifier">comment_body</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">comment_body</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/\n\z/</span> <span class="ruby-keyword">then</span>
+            <span class="ruby-identifier">skip_tkspace_without_nl</span> <span class="ruby-comment"># leading spaces</span>
           <span class="ruby-keyword">end</span>
           <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
         <span class="ruby-keyword">end</span>
 
-        <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">new_comment</span> <span class="ruby-identifier">comment</span>
+        <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">new_comment</span> <span class="ruby-identifier">comment</span>, <span class="ruby-identifier">line_no</span>
 
         <span class="ruby-keyword">unless</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">then</span>
           <span class="ruby-identifier">look_for_directives_in</span> <span class="ruby-identifier">container</span>, <span class="ruby-identifier">comment</span>
@@ -2144,7 +1811,7 @@ containing:</p>
         <span class="ruby-keyword">end</span>
 
       <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;until&#39;</span>, <span class="ruby-string">&#39;while&#39;</span> <span class="ruby-keyword">then</span>
-        <span class="ruby-keyword">if</span> (<span class="ruby-identifier">tk</span>[<span class="ruby-value">:state</span>] <span class="ruby-operator">&amp;</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span><span class="ruby-operator">::</span><span class="ruby-constant">EXPR_LABEL</span>) <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+        <span class="ruby-keyword">if</span> (<span class="ruby-identifier">tk</span>[<span class="ruby-value">:state</span>] <span class="ruby-operator">&amp;</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span><span class="ruby-operator">::</span><span class="ruby-constant">EXPR_LABEL</span>) <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
           <span class="ruby-identifier">nest</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
           <span class="ruby-identifier">skip_optional_do_after_expression</span>
         <span class="ruby-keyword">end</span>
@@ -2160,7 +1827,7 @@ containing:</p>
         <span class="ruby-identifier">skip_optional_do_after_expression</span>
 
       <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;case&#39;</span>, <span class="ruby-string">&#39;do&#39;</span>, <span class="ruby-string">&#39;if&#39;</span>, <span class="ruby-string">&#39;unless&#39;</span>, <span class="ruby-string">&#39;begin&#39;</span> <span class="ruby-keyword">then</span>
-        <span class="ruby-keyword">if</span> (<span class="ruby-identifier">tk</span>[<span class="ruby-value">:state</span>] <span class="ruby-operator">&amp;</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span><span class="ruby-operator">::</span><span class="ruby-constant">EXPR_LABEL</span>) <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+        <span class="ruby-keyword">if</span> (<span class="ruby-identifier">tk</span>[<span class="ruby-value">:state</span>] <span class="ruby-operator">&amp;</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Parser</span><span class="ruby-operator">::</span><span class="ruby-constant">RipperStateLex</span><span class="ruby-operator">::</span><span class="ruby-constant">EXPR_LABEL</span>) <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
           <span class="ruby-identifier">nest</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
         <span class="ruby-keyword">end</span>
 
@@ -2198,6 +1865,8 @@ containing:</p>
         <span class="ruby-identifier">parse_extend_or_include</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Include</span>, <span class="ruby-identifier">container</span>, <span class="ruby-identifier">comment</span>
       <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;extend&quot;</span> <span class="ruby-keyword">then</span>
         <span class="ruby-identifier">parse_extend_or_include</span> <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">Extend</span>, <span class="ruby-identifier">container</span>, <span class="ruby-identifier">comment</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;included&quot;</span> <span class="ruby-keyword">then</span>
+        <span class="ruby-identifier">parse_included_with_activesupport_concern</span> <span class="ruby-identifier">container</span>, <span class="ruby-identifier">comment</span>
       <span class="ruby-keyword">end</span>
 
     <span class="ruby-keyword">else</span>
@@ -2225,35 +1894,25 @@ containing:</p>
   <span class="ruby-identifier">container</span>.<span class="ruby-identifier">block_params</span> = <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_symbol_arg" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_symbol_arg</span><span
-            class="method-args">(no = nil)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_symbol_arg</span><span
+              class="method-args">(no = nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Parse up to <code>no</code> symbol arguments</p>
-          
-          
 
-          
           <div class="method-source-code" id="parse_symbol_arg-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1845</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1959</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_symbol_arg</span>(<span class="ruby-identifier">no</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">skip_tkspace_comment</span>
 
@@ -2265,35 +1924,25 @@ containing:</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_symbol_in_arg" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_symbol_in_arg</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_symbol_in_arg</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Returns symbol text from the next token</p>
-          
-          
 
-          
           <div class="method-source-code" id="parse_symbol_in_arg-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1919</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2033</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_symbol_in_arg</span>
   <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
   <span class="ruby-keyword">if</span> <span class="ruby-value">:on_symbol</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>] <span class="ruby-keyword">then</span>
@@ -2308,35 +1957,25 @@ containing:</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_top_level_statements" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_top_level_statements</span><span
-            class="method-args">(container)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_top_level_statements</span><span
+              class="method-args">(container)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Parses statements in the top-level <code>container</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="parse_top_level_statements-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1936</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2050</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_top_level_statements</span> <span class="ruby-identifier">container</span>
   <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">collect_first_comment</span>
 
@@ -2352,35 +1991,25 @@ containing:</p>
   <span class="ruby-identifier">parse_statements</span> <span class="ruby-identifier">container</span>, <span class="ruby-constant">NORMAL</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">comment</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_visibility" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_visibility</span><span
-            class="method-args">(container, single, tk)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_visibility</span><span
+              class="method-args">(container, single, tk)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Determines the visibility in <code>container</code> from <code>tk</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="parse_visibility-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1954</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2068</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_visibility</span>(<span class="ruby-identifier">container</span>, <span class="ruby-identifier">single</span>, <span class="ruby-identifier">tk</span>)
   <span class="ruby-identifier">vis_type</span>, <span class="ruby-identifier">vis</span>, <span class="ruby-identifier">singleton</span> = <span class="ruby-identifier">get_visibility_information</span> <span class="ruby-identifier">tk</span>, <span class="ruby-identifier">single</span>
 
@@ -2401,35 +2030,25 @@ containing:</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-parse_yield" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">parse_yield</span><span
-            class="method-args">(context, single, tk, method)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">parse_yield</span><span
+              class="method-args">(context, single, tk, method)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Determines the block parameter for <code>context</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="parse_yield-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1993</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2107</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parse_yield</span>(<span class="ruby-identifier">context</span>, <span class="ruby-identifier">single</span>, <span class="ruby-identifier">tk</span>, <span class="ruby-identifier">method</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">method</span>.<span class="ruby-identifier">block_params</span>
 
@@ -2437,30 +2056,22 @@ containing:</p>
   <span class="ruby-identifier">method</span>.<span class="ruby-identifier">block_params</span> = <span class="ruby-identifier">parse_method_or_yield_parameters</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-read_directive" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">read_directive</span><span
-            class="method-args">(allowed)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">read_directive</span><span
+              class="method-args">(allowed)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Directives are modifier comments that can appear after class, module, or
-method names. For example:</p>
+          <p>Directives are modifier comments that can appear after class, module, or method names. For example:</p>
 
 <pre>def fred # :yields: a, b</pre>
 
@@ -2468,15 +2079,10 @@ method names. For example:</p>
 
 <pre>class MyClass # :nodoc:</pre>
 
-<p>We return the directive name and any parameters as a two element array if
-the name is in <code>allowed</code>.  A directive can be found anywhere up
-to the end of the current line.</p>
-          
-          
+<p>We return the directive name and any parameters as a two element array if the name is in <code>allowed</code>.  A directive can be found anywhere up to the end of the current line.</p>
 
-          
           <div class="method-source-code" id="read_directive-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2014</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2128</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">read_directive</span> <span class="ruby-identifier">allowed</span>
   <span class="ruby-identifier">tokens</span> = []
 
@@ -2503,42 +2109,29 @@ to the end of the current line.</p>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-read_documentation_modifiers" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">read_documentation_modifiers</span><span
-            class="method-args">(context, allowed)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">read_documentation_modifiers</span><span
+              class="method-args">(context, allowed)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Handles directives following the definition for <code>context</code> (any
-<a href="../CodeObject.html">RDoc::CodeObject</a>) if the directives are
-<code>allowed</code> at this point.</p>
+          <p>Handles directives following the definition for <code>context</code> (any <a href="../CodeObject.html"><code>RDoc::CodeObject</code></a>) if the directives are <code>allowed</code> at this point.</p>
 
-<p>See also <a
-href="../Markup/PreProcess.html#method-i-handle_directive">RDoc::Markup::PreProcess#handle_directive</a></p>
-          
-          
+<p>See also <a href="../Markup/PreProcess.html#method-i-handle_directive"><code>RDoc::Markup::PreProcess#handle_directive</code></a></p>
 
-          
           <div class="method-source-code" id="read_documentation_modifiers-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2046</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2160</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">read_documentation_modifiers</span> <span class="ruby-identifier">context</span>, <span class="ruby-identifier">allowed</span>
-  <span class="ruby-identifier">skip_tkspace</span>(<span class="ruby-keyword">false</span>)
+  <span class="ruby-identifier">skip_tkspace_without_nl</span>
   <span class="ruby-identifier">directive</span>, <span class="ruby-identifier">value</span> = <span class="ruby-identifier">read_directive</span> <span class="ruby-identifier">allowed</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">directive</span>
@@ -2552,36 +2145,52 @@ href="../Markup/PreProcess.html#method-i-handle_directive">RDoc::Markup::PreProc
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
-      <div id="method-i-scan" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">scan</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+      <div id="method-i-retrieve_comment_body" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">retrieve_comment_body</span><span
+              class="method-args">(tk)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Scans this <a href="Ruby.html">Ruby</a> file for <a
-href="Ruby.html">Ruby</a> constructs</p>
-          
-          
+          <p>Retrieve comment body without =begin/=end</p>
 
-          
+          <div class="method-source-code" id="retrieve_comment_body-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 1758</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">retrieve_comment_body</span>(<span class="ruby-identifier">tk</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-value">:on_embdoc</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>]
+    <span class="ruby-identifier">tk</span>[<span class="ruby-value">:text</span>].<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/\A=begin.*\n/</span>, <span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/=end\n?\z/</span>, <span class="ruby-string">&#39;&#39;</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">tk</span>[<span class="ruby-value">:text</span>]
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-scan" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">scan</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          <p>Scans this <a href="Ruby.html"><code>Ruby</code></a> file for <a href="Ruby.html"><code>Ruby</code></a> constructs</p>
+
           <div class="method-source-code" id="scan-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2077</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2191</span>
   <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">scan</span>
     <span class="ruby-identifier">reset</span>
 
@@ -2626,109 +2235,79 @@ href="Ruby.html">Ruby</a> constructs</p>
     <span class="ruby-ivar">@top_level</span>
   <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-skip_for_variable" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">skip_for_variable</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">skip_for_variable</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>skip the var [in] part of a &#39;for&#39; statement</p>
-          
-          
+          <p>skip the var [in] part of a ‘for’ statement</p>
 
-          
           <div class="method-source-code" id="skip_for_variable-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2165</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2279</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">skip_for_variable</span>
-  <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">skip_tkspace_without_nl</span>
   <span class="ruby-identifier">get_tk</span>
-  <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">skip_tkspace_without_nl</span>
   <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
   <span class="ruby-identifier">unget_tk</span>(<span class="ruby-identifier">tk</span>) <span class="ruby-keyword">unless</span> <span class="ruby-value">:on_kw</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>] <span class="ruby-keyword">and</span> <span class="ruby-string">&#39;in&#39;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:text</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-skip_method" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">skip_method</span><span
-            class="method-args">(container)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">skip_method</span><span
+              class="method-args">(container)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>Skips the next method in <code>container</code></p>
-          
-          
 
-          
           <div class="method-source-code" id="skip_method-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2176</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2290</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">skip_method</span> <span class="ruby-identifier">container</span>
   <span class="ruby-identifier">meth</span> = <span class="ruby-constant">RDoc</span><span class="ruby-operator">::</span><span class="ruby-constant">AnyMethod</span>.<span class="ruby-identifier">new</span> <span class="ruby-string">&quot;&quot;</span>, <span class="ruby-string">&quot;anon&quot;</span>
   <span class="ruby-identifier">parse_method_parameters</span> <span class="ruby-identifier">meth</span>
   <span class="ruby-identifier">parse_statements</span> <span class="ruby-identifier">container</span>, <span class="ruby-keyword">false</span>, <span class="ruby-identifier">meth</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-skip_optional_do_after_expression" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">skip_optional_do_after_expression</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">skip_optional_do_after_expression</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
           <p>while, until, and for have an optional do</p>
-          
-          
 
-          
           <div class="method-source-code" id="skip_optional_do_after_expression-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2124</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2238</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">skip_optional_do_after_expression</span>
-  <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">skip_tkspace_without_nl</span>
   <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
 
   <span class="ruby-identifier">b_nest</span> = <span class="ruby-value">0</span>
@@ -2760,133 +2339,137 @@ href="Ruby.html">Ruby</a> constructs</p>
     <span class="ruby-identifier">tk</span> = <span class="ruby-identifier">get_tk</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">skip_tkspace_without_nl</span>
 
   <span class="ruby-identifier">get_tk</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">peek_tk</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-value">:on_kw</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">peek_tk</span>[<span class="ruby-value">:kind</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-string">&#39;do&#39;</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">peek_tk</span>[<span class="ruby-value">:text</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
-      <div id="method-i-skip_tkspace_comment" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">skip_tkspace_comment</span><span
-            class="method-args">(skip_nl = true)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+      <div id="method-i-skip_parentheses" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">skip_parentheses</span><span
+              class="method-args">() { || ... }</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Skip spaces until a comment is found</p>
-          
-          
+          <p>Skip opening parentheses and yield the block. Skip closing parentheses too when exists.</p>
 
-          
+          <div class="method-source-code" id="skip_parentheses-source">
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 398</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">skip_parentheses</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">left_tk</span> = <span class="ruby-identifier">peek_tk</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-value">:on_lparen</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">left_tk</span>[<span class="ruby-value">:kind</span>]
+    <span class="ruby-identifier">get_tk</span>
+
+    <span class="ruby-identifier">ret</span> = <span class="ruby-identifier">skip_parentheses</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+
+    <span class="ruby-identifier">right_tk</span> = <span class="ruby-identifier">peek_tk</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-value">:on_rparen</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">right_tk</span>[<span class="ruby-value">:kind</span>]
+      <span class="ruby-identifier">get_tk</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">ret</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">yield</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-skip_tkspace_comment" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">skip_tkspace_comment</span><span
+              class="method-args">(skip_nl = true)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          <p>Skip spaces until a comment is found</p>
+
           <div class="method-source-code" id="skip_tkspace_comment-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2185</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2299</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">skip_tkspace_comment</span>(<span class="ruby-identifier">skip_nl</span> = <span class="ruby-keyword">true</span>)
   <span class="ruby-identifier">loop</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-identifier">skip_nl</span>
+    <span class="ruby-identifier">skip_nl</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">skip_tkspace</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">skip_tkspace_without_nl</span>
     <span class="ruby-identifier">next_tk</span> = <span class="ruby-identifier">peek_tk</span>
     <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">next_tk</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> (<span class="ruby-value">:on_comment</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">next_tk</span>[<span class="ruby-value">:kind</span>] <span class="ruby-keyword">and</span> <span class="ruby-value">:on_embdoc</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">next_tk</span>[<span class="ruby-value">:kind</span>])
     <span class="ruby-identifier">get_tk</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-tk_nl-3F" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">tk_nl?</span><span
-            class="method-args">(tk)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">tk_nl?</span><span
+              class="method-args">(tk)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
           
-          
-          
-          
 
-          
           <div class="method-source-code" id="tk_nl-3F-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 192</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 183</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tk_nl?</span>(<span class="ruby-identifier">tk</span>)
   <span class="ruby-value">:on_nl</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>] <span class="ruby-keyword">or</span> <span class="ruby-value">:on_ignored_nl</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">tk</span>[<span class="ruby-value">:kind</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
       <div id="method-i-warn" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">warn</span><span
-            class="method-args">(message)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">warn</span><span
+              class="method-args">(message)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
         </div>
-        
 
         <div class="method-description">
-          
-          <p>Prints <code>message</code> to +$stderr+ unless we&#39;re being quiet</p>
-          
-          
+          <p>Prints <code>message</code> to +$stderr+ unless we’re being quiet</p>
 
-          
           <div class="method-source-code" id="warn-source">
-            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2242</span>
+            <pre><span class="ruby-comment"># File lib/rdoc/parser/ruby.rb, line 2356</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">warn</span> <span class="ruby-identifier">message</span>
   <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">warn</span> <span class="ruby-identifier">make_message</span> <span class="ruby-identifier">message</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
-          
         </div>
 
-        
 
-        
       </div>
 
-    
     </section>
-  
+
   </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
