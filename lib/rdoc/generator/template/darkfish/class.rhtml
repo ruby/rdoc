@@ -17,6 +17,20 @@
   <%= render '_footer.rhtml' %>
 </nav>
 
+<nav role="navigation" aria-label="breadcrumb" class="breadcrumb">
+  <ol>
+    <% breadcrumb.each do |namespace| %>
+    <li>
+      <% if namespace[:self] %>
+      <span><%= namespace[:name] %></span>
+      <% else %>
+      <a href="<%= namespace[:path] %>"><%= namespace[:name] %></a><span>::</span>
+      <% end %>
+    </li>
+    <% end %>
+  </ol>
+</nav>
+
 <main role="main" aria-labelledby="<%=h klass.aref %>">
   <h1 id="<%=h klass.aref %>" class="anchor-link <%= klass.type %>">
     <%= klass.type %> <%= klass.full_name %>
