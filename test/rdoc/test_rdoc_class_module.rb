@@ -1526,6 +1526,28 @@ class TestRDocClassModule < XrefTestCase
     assert_equal [a, c], @c1.extends
   end
 
+  def test_namespaces
+    cm1 = RDoc::ClassModule.new "A"
+    assert_equal ["A"], cm1.namespaces
+
+    cm2 = RDoc::ClassModule.new "A::B"
+    assert_equal ["A", "B"], cm2.namespaces
+
+    cm3 = RDoc::ClassModule.new "::A::B::C"
+    assert_equal ["A", "B", "C"], cm3.namespaces
+  end
+
+  def test_fully_qualified_namespaces
+    cm1 = RDoc::ClassModule.new "A"
+    assert_equal ["A"], cm1.fully_qualified_namespaces
+
+    cm2 = RDoc::ClassModule.new "A::B"
+    assert_equal ["A", "A::B"], cm2.fully_qualified_namespaces
+
+    cm3 = RDoc::ClassModule.new "::A::B::C"
+    assert_equal ["A", "A::B", "A::B::C"], cm3.fully_qualified_namespaces
+  end
+
   class TestRDocClassModuleMixins < XrefTestCase
     def setup
       super
