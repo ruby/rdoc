@@ -296,6 +296,25 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
+  # Return array of full_name splitted by +::+.
+
+  def namespaces
+    @namespaces ||= full_name.split("::").reject(&:empty?)
+  end
+
+  ##
+  # Return array of fully qualified namespaces.
+  #
+  # For example, if full_name is +A::B::C+, this method returns <code>["A", "A::B", "A::B::C"]</code>
+
+  def fully_qualified_namespaces
+    return namespaces if namespaces.length < 2
+    @fqns ||= namespaces.map.with_index do |_, i|
+      namespaces[0..i].join("::")
+    end
+  end
+
+  ##
   # TODO: filter included items by #display?
 
   def marshal_dump # :nodoc:
