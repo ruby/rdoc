@@ -845,7 +845,8 @@ class RDoc::Generator::Darkfish
 
   def generate_namespaces_breadcrumb klass, rel_prefix
     namespaces_to_class_modules(klass).map do |namespace, class_module|
-      { name: namespace, path: (rel_prefix + class_module.path).to_s, self: klass.full_name == class_module.full_name }
+      path = class_module ? (rel_prefix + class_module.path).to_s : ""
+      { name: namespace, path: path, self: klass.full_name == class_module&.full_name }
     end
   end
 end
