@@ -23,7 +23,7 @@ task :default => :test
 RDoc::Task.new do |doc|
   doc.main = 'README.rdoc'
   doc.title = "rdoc #{RDoc::VERSION} Documentation"
-  doc.rdoc_dir = 'html'
+  doc.rdoc_dir = '_site' # for github pages
   doc.rdoc_files = FileList.new %w[lib/**/*.rb *.rdoc doc/rdoc/markup_reference.rb] - PARSER_FILES
 end
 
