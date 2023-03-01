@@ -31,8 +31,6 @@ jobs:
       - name: Build with RDoc
         # Outputs to the './_site' directory by default
         run: rake rdoc
-        env:
-          JEKYLL_ENV: production
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
 
