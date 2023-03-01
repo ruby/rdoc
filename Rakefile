@@ -6,7 +6,6 @@ require_relative 'lib/rdoc/task'
 require 'bundler/gem_tasks'
 require 'rake/testtask'
 
-task :docs    => :generate
 task :test    => [:normal_test, :rubygems_test]
 
 PARSER_FILES = %w[
@@ -25,15 +24,6 @@ RDoc::Task.new do |doc|
   doc.title = "rdoc #{RDoc::VERSION} Documentation"
   doc.rdoc_dir = '_site' # for github pages
   doc.rdoc_files = FileList.new %w[lib/**/*.rb *.rdoc doc/rdoc/markup_reference.rb] - PARSER_FILES
-end
-
-task ghpages: :rdoc do
-  `git checkout gh-pages`
-  require "fileutils"
-  FileUtils.rm_rf "/tmp/html"
-  FileUtils.mv "html", "/tmp"
-  FileUtils.rm_rf "*"
-  FileUtils.cp_r Dir.glob("/tmp/html/*"), "."
 end
 
 Rake::TestTask.new(:normal_test) do |t|
