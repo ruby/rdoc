@@ -19,6 +19,7 @@ $rdoc_rakefile = true
 
 task :default => :test
 
+task rdoc: :generate
 RDoc::Task.new do |doc|
   doc.main = 'README.rdoc'
   doc.title = "rdoc #{RDoc::VERSION} Documentation"
