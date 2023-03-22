@@ -3,7 +3,7 @@
 home :: https://github.com/ruby/rdoc
 rdoc :: https://ruby.github.io/rdoc
 bugs :: https://github.com/ruby/rdoc/issues
-code quality :: {<img src="https://codeclimate.com/github/ruby/rdoc/badges/gpa.svg" alt="Code Climate">}[https://codeclimate.com/github/ruby/rdoc]
+code quality :: https://codeclimate.com/github/ruby/rdoc
 
 == Description
 
