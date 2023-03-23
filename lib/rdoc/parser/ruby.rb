@@ -291,6 +291,32 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   ##
+  # Creates a new attribute in +container+ with +name+.
+
+  def create_mattr container, single, name, rw, comment # :nodoc:
+    att = RDoc::Mattr.new get_tkread, name, rw, comment, single == SINGLE
+    record_location att
+
+    container.add_mattr att
+    #@stats.add_mattr att
+
+    att
+  end
+
+  ##
+  # Creates a new attribute in +container+ with +name+.
+
+  def create_thread_mattr container, single, name, rw, comment # :nodoc:
+    att = RDoc::ThreadMattr.new get_tkread, name, rw, comment, single == SINGLE
+    record_location att
+
+    container.add_thread_mattr att
+    #@stats.add_thread_mattr att
+
+    att
+  end
+
+  ##
   # Creates a module alias in +container+ at +rhs_name+ (or at the top-level
   # for "::") with the name from +constant+.
 
@@ -749,6 +775,64 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     for name in args
       att = create_attr context, single, name, rw, comment
+      att.line   = line_no
+    end
+  end
+
+  ##
+  # Creates an RDoc::Mattr for each attribute listed after +tk+, setting the
+  # comment for each to +comment+.
+
+  def parse_mattr_accessor(context, single, tk, comment)
+    line_no = tk[:line_no]
+
+    args = parse_symbol_arg
+    rw = "?"
+
+    tmp = RDoc::CodeObject.new
+    read_documentation_modifiers tmp, RDoc::ATTR_MODIFIERS
+    # TODO In most other places we let the context keep track of document_self
+    # and add found items appropriately but here we do not.  I'm not sure why.
+    return if @track_visibility and not tmp.document_self
+
+    case tk[:text]
+    when "mattr_reader"   then rw = "R"
+    when "mattr_writer"   then rw = "W"
+    when "mattr_accessor" then rw = "RW"
+    else
+      rw = '?'
+    end
+
+    for name in args
+      att = create_mattr context, single, name, rw, comment
+      att.line   = line_no
+    end
+  end
+
+  ##
+  # Creates an RDoc::ThreadMattr for each attribute listed after +tk+, setting the
+  # comment for each to +comment+.
+
+  def parse_thread_mattr_accessor(context, single, tk, comment)
+    line_no = tk[:line_no]
+
+    args = parse_symbol_arg
+    rw = "?"
+
+    tmp = RDoc::CodeObject.new
+    read_documentation_modifiers tmp, RDoc::ATTR_MODIFIERS
+    # TODO In most other places we let the context keep track of document_self
+    # and add found items appropriately but here we do not.  I'm not sure why.
+    return if @track_visibility and not tmp.document_self
+
+    case tk[:text]
+    when "thread_mattr_accessor" then rw = "RW"
+    else
+      rw = '?'
+    end
+
+    for name in args
+      att = create_thread_mattr context, single, name, rw, comment
       att.line   = line_no
     end
   end
@@ -1242,6 +1326,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
       parse_attr container, single, tk, comment
     when /^attr_(reader|writer|accessor)$/ then
       parse_attr_accessor container, single, tk, comment
+    when /^mattr_(reader|writer|accessor)$/ then
+      parse_mattr_accessor container, single, tk, comment
+    when /^thread_mattr_(reader|writer|accessor)$/ then
+      parse_thread_mattr_accessor container, single, tk, comment
     when 'alias_method' then
       parse_alias container, single, tk, comment
     when 'require', 'include' then
