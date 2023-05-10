@@ -45,9 +45,6 @@ class LinkChecker
   # Path to HTML directory.
   attr_accessor :html_dirpath
 
-  # File path for the output report.
-  attr_accessor :report_file_path
-
   # Returns a new \LinkChecker object:
   #
   # - +html_dirpath+: path to the local directory containing HTML files
@@ -57,10 +54,6 @@ class LinkChecker
   #   (given in the ruby clone directory) such as:
   #
   #     rdoc --visibility=private --op html . # Note the trailing dot.
-  #
-  #  - +report_file_path+: path to the report file that will be written;
-  #    defaults to <tt>'./Report.html'</tt>.
-  #    It's best not to put this file into the file tree at +html_dirpath+.
   #
   # - +omit_source_paths_regexp+: \Regexp to specify paths to omit;
   #   defaults to +nil+ (omit no source paths).
@@ -78,13 +71,11 @@ class LinkChecker
   #
   def initialize(
     html_dirpath,
-    report_file_path: './Report.html',
     omit_source_paths_regexp: nil,
     omit_offsite_targets: false,
     verbose: false
   )
     self.html_dirpath = html_dirpath
-    self.report_file_path = report_file_path
     self.omit_source_paths_regexp = omit_source_paths_regexp
     self.omit_offsite_targets = omit_offsite_targets
     self.verbose = verbose
@@ -102,15 +93,15 @@ class LinkChecker
   def check
     # All work is done in the HTML directory,
     # and that is where Report.htm will be put.
-    counts[:start_time] = Time.now
     Dir.chdir(html_dirpath) do |dir|
+      counts[:start_time] = Time.now
       gather_source_paths
       create_source_pages
       create_target_pages
       verify_links
+      counts[:end_time] = Time.now
+      report
     end
-    counts[:end_time] = Time.now
-    report
   end
 
   # Gather paths to source HTML pages.
@@ -532,6 +523,7 @@ EOT
     self.add_summary(body)
     self.add_broken_links(body)
     self.add_offsite_links(body) unless omit_offsite_targets
+    report_file_path = 'Report.htm' # _Not_ .html.
     doc.write(File.new(report_file_path, 'w'), 2)
   end
 
@@ -543,7 +535,6 @@ EOT
     data = []
     [
       :html_dirpath,
-      :report_file_path,
       :omit_source_paths_regexp,
       :omit_offsite_targets,
       :verbose
@@ -760,7 +751,6 @@ end
 if $0 == __FILE__
   checker = LinkChecker.new(
     '../ruby/html/',
-    report_file_path: './Report.html',
     omit_source_paths_regexp: /table_of_contents\.html/,
     omit_offsite_targets: false,
     verbose: false
