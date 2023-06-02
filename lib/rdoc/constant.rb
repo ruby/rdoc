@@ -60,6 +60,13 @@ class RDoc::Constant < RDoc::CodeObject
   end
 
   ##
+  # HTML fragment reference for this Constant
+
+  def aref
+    "#constant-#{full_name}"
+  end
+
+  ##
   # A constant is documented if it has a comment, or is an alias
   # for a documented class or module.
 

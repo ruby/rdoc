@@ -9,6 +9,10 @@ class TestRDocConstant < XrefTestCase
     @const = @c1.constants.first
   end
 
+  def test_aref
+    assert_equal '#constant-C1::CONST', @const.aref
+  end
+
   def test_documented_eh
     top_level = @store.add_file 'file.rb'
 
