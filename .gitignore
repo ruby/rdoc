@@ -4,6 +4,7 @@
 .DS_Store
 /.rdoc
 /.rvmrc
+/.ruby-version
 /TAGS
 /html
 /_site
