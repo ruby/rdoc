@@ -353,7 +353,7 @@ class RDoc::Generator::Darkfish
     asset_rel_prefix = rel_prefix + @asset_rel_path
     svninfo          = get_svninfo(current)
 
-    breadcrumb = generate_namespaces_breadcrumb(current, rel_prefix)
+    breadcrumb = generate_nesting_namespaces_breadcrumb(current, rel_prefix)
 
     @title = "#{klass.type} #{klass.full_name} - #{@options.title}"
 
@@ -833,18 +833,18 @@ class RDoc::Generator::Darkfish
 
   private
 
-  def namespaces_to_class_modules klass
+  def nesting_namespaces_to_class_modules klass
     tree = {}
 
-    klass.namespaces.zip(klass.fully_qualified_namespaces) do |ns, fqns|
+    klass.nesting_namespaces.zip(klass.fully_qualified_nesting_namespaces) do |ns, fqns|
       tree[ns] = @store.classes_hash[fqns] || @store.modules_hash[fqns]
     end
 
     tree
   end
 
-  def generate_namespaces_breadcrumb klass, rel_prefix
-    namespaces_to_class_modules(klass).map do |namespace, class_module|
+  def generate_nesting_namespaces_breadcrumb klass, rel_prefix
+    nesting_namespaces_to_class_modules(klass).map do |namespace, class_module|
       path = class_module ? (rel_prefix + class_module.path).to_s : ""
       { name: namespace, path: path, self: klass.full_name == class_module&.full_name }
     end
