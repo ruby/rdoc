@@ -309,8 +309,8 @@ class RDoc::ClassModule < RDoc::Context
 
   def fully_qualified_nesting_namespaces
     return nesting_namespaces if nesting_namespaces.length < 2
-    @fqns ||= nesting_namespaces.map.with_index do |_, i|
-      nesting_namespaces[0..i].join("::")
+    @fqns ||= nesting_namespaces.inject([]) do |list, n|
+      list << (list.empty? ? n : "#{list.last}::#{n}")
     end
   end
 
