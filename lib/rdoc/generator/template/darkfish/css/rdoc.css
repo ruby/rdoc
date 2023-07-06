@@ -211,8 +211,6 @@ nav {
   /* Layout */
   width: 300px;
   min-height: 100vh;
-
-  resize: horizontal;
   background: white;
 }
 
