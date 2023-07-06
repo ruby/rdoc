@@ -298,19 +298,19 @@ class RDoc::ClassModule < RDoc::Context
   ##
   # Return array of full_name splitted by +::+.
 
-  def namespaces
+  def nesting_namespaces
     @namespaces ||= full_name.split("::").reject(&:empty?)
   end
 
   ##
-  # Return array of fully qualified namespaces.
+  # Return array of fully qualified nesting namespaces.
   #
   # For example, if full_name is +A::B::C+, this method returns <code>["A", "A::B", "A::B::C"]</code>
 
-  def fully_qualified_namespaces
-    return namespaces if namespaces.length < 2
-    @fqns ||= namespaces.map.with_index do |_, i|
-      namespaces[0..i].join("::")
+  def fully_qualified_nesting_namespaces
+    return nesting_namespaces if nesting_namespaces.length < 2
+    @fqns ||= nesting_namespaces.map.with_index do |_, i|
+      nesting_namespaces[0..i].join("::")
     end
   end
 
