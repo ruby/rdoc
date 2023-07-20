@@ -8,7 +8,9 @@ permissions:  # added using https://github.com/step-security/secure-workflows
 jobs:
   ruby-versions:
     uses: ruby/actions/.github/workflows/ruby_versions.yml@master
-
+    with:
+      engine: cruby-jruby
+      versions: '["truffleruby"]'
   test:
     needs: ruby-versions
     strategy:
@@ -18,8 +20,6 @@ jobs:
         exclude:
           - os: windows-latest
             ruby: truffleruby
-          - os: windows-latest
-            ruby: truffleruby-head
           - os: windows-latest
             ruby: jruby
           - os: windows-latest
