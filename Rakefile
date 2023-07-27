@@ -25,6 +25,7 @@ RDoc::Task.new do |doc|
   doc.title = "rdoc #{RDoc::VERSION} Documentation"
   doc.rdoc_dir = '_site' # for github pages
   doc.rdoc_files = FileList.new %w[lib/**/*.rb *.rdoc doc/rdoc/markup_reference.rb] - PARSER_FILES
+  doc.generator = "snapper"
 end
 
 Rake::TestTask.new(:normal_test) do |t|
