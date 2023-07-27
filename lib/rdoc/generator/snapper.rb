@@ -38,6 +38,7 @@ module RDoc
         @grouped_classes = @classes.group_by { |klass| klass.full_name[/\A[^:]++(?:::[^:]++(?=::))*+(?=::[^:]*+\z)/] }
         @methods = @store.all_classes_and_modules.flat_map(&:method_list).sort!
         @files   = @store.all_files.sort
+        @grouped_files = group_files
 
         @json_index = JsonIndex.new(self, options)
       end
@@ -91,10 +92,54 @@ module RDoc
         end
       end
 
+      # Turn the array of files into a nested hash of directories and files. This makes it easier to handle an arbitrary
+      # number of nested folders with documentation inside
+      def group_files
+        grouped_files = {}
+        current_level = grouped_files
+
+        @files.select(&:text?).each do |file|
+          path = Pathname.new(file.full_name).dirname
+
+          path.split.each do |folder|
+            folder_name = folder.to_s
+            next if folder_name == "."
+            current_level[folder_name] ||= {}
+            current_level = current_level[folder_name]
+          end
+
+          current_level[file.name] = file
+          current_level = grouped_files
+        end
+
+        grouped_files
+      end
+
       # Creates the nested links for files in the sidebar
-      def create_sidebar_page_entries(rel_prefix)
-        @files.select(&:text?).each_with_object(+"") do |file, html|
-          html << "<li class=\"index-entry\"><a href=\"#{rel_prefix}/#{file.path}\">#{file.page_name}</a></li>"
+      def create_sidebar_page_entries(grouped_files, rel_prefix)
+        grouped_files.each_with_object(+"") do |(path, files_or_dir), html|
+          # files_or_dir being a Hash indicates it's a directory with files inside. We traverse recursively to nested
+          # any number of subdirectories
+          if files_or_dir.is_a?(Hash)
+            html << <<~HTML
+              <li class="expandable-index-entry">
+                <details>
+                  <summary>#{path}</summary>
+                  <ul>
+                    #{create_sidebar_page_entries(files_or_dir, rel_prefix)}
+                  </ul>
+                </details>
+              </li>
+            HTML
+          else
+            html << <<~HTML
+              <li class="index-entry">
+                <a href="#{rel_prefix}/#{files_or_dir.path}">
+                  #{files_or_dir.page_name}
+                </a>
+              </li>
+            HTML
+          end
         end
       end
 

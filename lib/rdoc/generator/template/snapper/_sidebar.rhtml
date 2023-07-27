@@ -4,7 +4,7 @@
   <ul id="navigation-list">
     <li id="getting-started"><a href="<%= rel_prefix %>/index.html">Getting started</a></li>
     <p class="separator">PAGES</p>
-    <%= create_sidebar_page_entries(rel_prefix) %>
+    <%= create_sidebar_page_entries(@grouped_files, rel_prefix) %>
     <p class="separator">CODE</p>
     <%= create_sidebar_class_entries(@grouped_classes[nil], rel_prefix) %>
   </ul>
