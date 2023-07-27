@@ -96,6 +96,10 @@ h6 span a {
     padding: 10px 0 10px 0;
 }
 
+.title {
+    white-space: nowrap;
+}
+
 .expandable-index-entry:hover>details>summary,
 .expandable-index-entry details[open]>summary {
     background-color: #F6F6F9;
