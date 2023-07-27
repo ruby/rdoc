@@ -16,17 +16,8 @@ module RDoc
       VERSION = "1"
       DESCRIPTION = "A modern HTML generator"
 
-      attr_accessor :asset_rel_path
       attr_reader :base_dir
-      attr_reader :classes
-      attr_accessor :dry_run
-      attr_accessor :file_output
-      attr_reader :files
-      attr_reader :json_index
-      attr_reader :methods
       attr_reader :store
-      attr_reader :template_dir
-      attr_reader :outputdir
 
       def initialize(store, options)
         @store   = store
