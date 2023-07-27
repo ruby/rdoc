@@ -1,39 +1,69 @@
-<%- comment = if current.respond_to? :comment_location then
-               current.comment_location
-             else
-               current.comment
-             end
-   table = current.parse(comment).table_of_contents.dup
+<div class="right-section">
+  <nav class="right-nav">
+    <span id="right-side-bar-title" class="right-side-bar-title">On this page</span>
+        <ul>
+          <li id="right-side-bar-<%=klass.aref.to_s.downcase.gsub('::','-')%>" class="right-side-bar-<%= klass.type %>">
+            <%= klass.type %> <%= klass.full_name %>
+          
+            <ul>
+              <%- klass.each_section do |section, constants, attributes| -%>
+                <%- unless constants.empty? then -%>
+                  <li>
+                  <details open>
+                  <summary id="right-side-bar-section-constants" class="right-side-bar-section">Constants</summary>
+                    <ul>
+                      <%- constants.each do |const| -%>
+                        <li id="right-nav-<%= const.name %>" class="right-side-bar-element">
+                          <a href="#<%= const.name %>">
+                          <%= const.name %>
+                          </a>
+                        </li>
+                      <%- end -%>
+                    </ul>
+                  </details>
+                  </li>
+                <%- end -%>
 
-   if table.length > 1 then %>
-<div class="nav-section">
-  <h3>Table of Contents</h3>
-
-    <%- display_link = proc do |heading| -%>
-      <a href="#<%= heading.label current %>"><%= heading.plain_html %></a>
-    <%- end -%>
-
-    <%- list_siblings = proc do -%>
-      <%- level = table.first&.level -%>
-      <%- while table.first && table.first.level >= level -%>
-        <%- heading = table.shift -%>
-        <%- if table.first.nil? || table.first.level <= heading.level -%>
-          <li><% display_link.call heading -%>
-        <%- else -%>
-          <li>
-            <details open>
-              <summary><%- display_link.call heading -%></summary>
-              <ul class="link-list" role="directory">
-                <% list_siblings.call %>
-              </ul>
-            </details>
+                <%- unless attributes.empty? then -%>
+                  <li>
+                  <details open>
+                  <summary id="right-side-bar-section-attributes" class="right-side-bar-section">Attributes</summary>
+                    <ul>
+                      <%- attributes.each do |attrib| -%>
+                        <li id="right-nav-<%= attrib.name %>" class="right-side-bar-element">
+                          <a href="#<%= attrib.aref %>">
+                            <%= attrib.name %>
+                            </a>
+                        </li>
+                      <%- end -%>
+                    </ul>
+                  </details>
+                  </li>
+                <%- end -%>
+                <%- klass.methods_by_type(section).each do |type, visibilities|
+                  next if visibilities.empty?
+                  visibilities.each do |visibility, methods|
+                    next if methods.empty? %>
+                  
+                  <li>
+                  <details open>
+                  <summary id="right-side-bar-section-<%= visibility.to_s.downcase %>-<%= type.capitalize.to_s.downcase %>-methods" class="right-side-bar-section"><%= visibility.to_s.capitalize %> <%= type.capitalize %> Methods</summary>
+                    <ul>
+                      <%- methods.each do |method| -%>
+                        <li id="right-nav-<%= method.name %>" class="right-side-bar-element">
+                          <a href="#<%= method.aref %>">
+                            <%= method.name %>
+                            </a>
+                        </li>
+                      <%- end -%>
+                    </ul>
+                  </details>
+                  </li>
+                <%- end -%>
+              <%- end -%>
+            <%- end -%>
           </li>
-        <%- end -%>
-      <%- end -%>
-    <%- end -%>
-
-  <ul class="link-list" role="directory">
-    <% list_siblings.call %>
-  </ul>
+        </ul>
+      </li>
+  </nav>
 </div>
-<%- end -%>
