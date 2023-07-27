@@ -258,8 +258,9 @@ class RDoc::Generator::JsonIndex
     pages.each do |page|
       debug_msg "    #{page.page_name}"
       record = page.search_record
-      @index[:searchIndex]     << search_string(record.shift)
-      @index[:longSearchIndex] << ''
+      search_term = search_string(record.shift)
+      @index[:searchIndex]     << search_term
+      @index[:longSearchIndex] << search_term
       record.shift
       @index[:info]            << record
     end
