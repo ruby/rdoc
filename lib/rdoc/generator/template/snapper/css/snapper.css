@@ -8,16 +8,16 @@
 }
 
 :root {
-  --font-sans: Inter, system-ui, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-  --font-mono: Consolas, 'Lucida Console', Menlo, Monaco, Cousine, 'Courier New', Courier, monospace;
+    --font-sans: Inter, system-ui, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    --font-mono: Consolas, 'Lucida Console', Menlo, Monaco, Cousine, 'Courier New', Courier, monospace;
 }
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 html {
-  font-family: var(--font-sans);
+    font-family: var(--font-sans);
 }
 
 body {
@@ -28,11 +28,11 @@ footer {
     text-align: center;
 }
 
-.main-container {
+#main-container {
     display: flex;
 }
 
-.main-container main {
+#main-container main {
     padding-left: 25px;
 }
 
@@ -57,18 +57,19 @@ h6 span a {
     color: transparent;
 }
 
-pre, code {
-  font-family: var(--font-mono);
-  background-color: #F6F6F9;
-  border-radius: 5px;
+pre,
+code {
+    font-family: var(--font-mono);
+    background-color: #F6F6F9;
+    border-radius: 5px;
 }
 
 pre {
-  padding: 10px;
+    padding: 10px;
 }
 
 code {
-  padding: 2px;
+    padding: 2px;
 }
 
 #nav {
@@ -148,4 +149,57 @@ details>summary {
 details>summary::marker,
 details>summary::-webkit-details-marker {
     display: none;
+}
+
+#side-search {
+    width: 90%;
+    border-radius: 7px;
+    outline: none;
+    border: 1px solid #0B1324;
+    padding: 10px;
+    box-shadow: 0px 1px 3.3px 0px #0B13241A;
+    box-shadow: 0px -1px 0px 0px #0000001A inset;
+    display: block;
+    margin: 0 auto;
+}
+
+#search-modal {
+    filter: none;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+#search-modal-content {
+    background: white;
+    width: 50%;
+    height: 40%;
+    box-shadow: 0px 0px 1px 0px #42474C7A inset;
+    box-shadow: 0px 4.3px 8.6px 0px #42474C0F;
+    border-radius: 9px;
+}
+
+#search-modal-input {
+    font-size: 16px;
+    color: #656C78;
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 15px;
+    border-radius: 9px;
+}
+
+#search-modal-input::placeholder {
+    color: #656C78;
+}
+
+#search-results {
+    border-top: 1px solid #E6E7E8;
+    width: 100%;
 }
