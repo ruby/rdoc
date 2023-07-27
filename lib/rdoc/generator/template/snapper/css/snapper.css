@@ -7,9 +7,17 @@
         url("../fonts/Inter-Regular.ttf") format("truetype");
 }
 
+:root {
+  --font-sans: Inter, system-ui, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  --font-mono: Consolas, 'Lucida Console', Menlo, Monaco, Cousine, 'Courier New', Courier, monospace;
+}
+
 * {
-    box-sizing: border-box;
-    font-family: Inter;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-sans);
 }
 
 body {
@@ -47,6 +55,20 @@ h6 span a {
     font-size: 14px;
     text-decoration: none;
     color: transparent;
+}
+
+pre, code {
+  font-family: var(--font-mono);
+  background-color: #F6F6F9;
+  border-radius: 5px;
+}
+
+pre {
+  padding: 10px;
+}
+
+code {
+  padding: 2px;
 }
 
 #nav {
