@@ -1,10 +1,10 @@
 <nav id="nav">
-  <h3>&lt;/&gt; <%= @title %></h3>
+  <h3 class="title">&lt;/&gt; <%= @title %></h3>
 
   <ul id="navigation-list">
     <li id="getting-started"><a href="<%= rel_prefix %>/index.html">Getting started</a></li>
     <p class="separator">PAGES</p>
-    <%= create_sidebar_page_entries(rel_prefix) %>
+    <%= create_sidebar_page_entries(@grouped_files, rel_prefix) %>
     <p class="separator">CODE</p>
     <%= create_sidebar_class_entries(@grouped_classes[nil], rel_prefix) %>
   </ul>
