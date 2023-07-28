@@ -74,7 +74,7 @@ footer {
 #main-container {
     display: flex;
     justify-content: flex-start;
-    transition: filter 0.3s ease-in-out;
+    transition: filter 0.2s ease-in-out;
 }
 
 #main-container main {
@@ -229,7 +229,8 @@ details>summary::-webkit-details-marker {
     width: 70%;
     height: 60%;
     box-shadow: 0px 0px 1px 0px #42474C7A inset;
-    box-shadow: 0px 4.3px 8.6px 0px #42474C0F;
+    box-shadow: 0px 5px 8px 2px #36363636;
+    border: 1px solid #efefef;
     border-radius: 9px;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -240,12 +241,13 @@ details>summary::-webkit-details-marker {
 }
 
 #search-modal-input {
-    font-size: 16px;
+    font-size: 20px;
+    line-height: 3;
     color: #656C78;
     border: none;
     outline: none;
     width: 100%;
-    padding: 15px;
+    padding: 15px 30px;
     border-radius: 9px;
 }
 
@@ -259,16 +261,15 @@ details>summary::-webkit-details-marker {
     width: 100%;
     font-size: 16px;
     list-style-type: none;
-    padding: 5px 15px 0 15px;
+    padding: 0;
 }
 
 #search-results .result-link {
     text-decoration: none;
     width: 100%;
     display: flex;
-    justify-content: space-between;
-    padding: 5px;
-    border-radius: 7px;
+    gap: calc(var(--space) / 2);
+    padding: 0 var(--space);
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -289,6 +290,10 @@ details>summary::-webkit-details-marker {
 }
 
 #search-results .result-link .result-title {
-    color: black;
     margin: 16px 16px 16px 0;
+    flex-basis: 20%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
+    color: #212121;
 }
