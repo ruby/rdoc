@@ -297,3 +297,50 @@ details>summary::-webkit-details-marker {
     text-align: right;
     color: #212121;
 }
+
+/* Code blocks syntax highlighting */
+.ruby-constant {
+    color: #4b82e9;
+}
+
+.ruby-keyword {
+    color: #dd5555;
+    font-weight: bold;
+}
+
+.ruby-ivar {
+    color: #837c7c;
+}
+
+.ruby-operator {
+    color: black;
+}
+
+.ruby-identifier {
+    color: black;
+}
+
+.ruby-identifier.ruby-title {
+    color: #d464eb;
+}
+
+.ruby-node {
+    color: black;
+}
+
+.ruby-comment {
+    color: #bea17f;
+    font-style: italic;
+}
+
+.ruby-regexp {
+    color: #a6cc5f;
+}
+
+.ruby-value {
+    color: #6bb7b7;
+}
+
+.ruby-string {
+    color: #5ac16c;
+}
