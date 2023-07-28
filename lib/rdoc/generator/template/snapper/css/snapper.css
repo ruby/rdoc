@@ -317,7 +317,7 @@ details>summary::-webkit-details-marker {
 
 .right-section {
   min-width: 300px;
-  height: 100vh;
+  height: 90vh;
   padding: 1em;
   padding-left: 2em;
   overflow-y: scroll;
@@ -363,7 +363,6 @@ details>summary::-webkit-details-marker {
 .right-side-bar-section {
     text-transform: capitalize;
 } 
-=======
 /* Code blocks syntax highlighting */
 .ruby-constant {
     color: #4b82e9;
