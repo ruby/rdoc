@@ -20,6 +20,10 @@ jobs:
             ruby: truffleruby
           - os: windows-latest
             ruby: truffleruby-head
+          - os: ubuntu-latest
+            ruby: truffleruby-head
+          - os: macos-latest
+            ruby: truffleruby-head
           - os: windows-latest
             ruby: jruby
           - os: windows-latest
