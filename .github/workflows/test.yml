@@ -42,9 +42,7 @@ jobs:
       run: bundle exec rake
       env:
         RUBYOPT: --enable-frozen_string_literal
-      continue-on-error: ${{ matrix.ruby == 'truffleruby-head' }}
     - if: ${{ matrix.ruby == 'head' && startsWith(matrix.os, 'ubuntu') }}
       run: bundle exec rake rdoc
     - if: ${{ matrix.ruby == 'head' && startsWith(matrix.os, 'ubuntu') }}
       run: bundle exec rake rubocop
-
