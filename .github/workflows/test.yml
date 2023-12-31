@@ -31,7 +31,7 @@ jobs:
     - if: ${{ matrix.os == 'ubuntu-latest' }}
       run: sudo apt install libyaml-dev
     - name: Set up Ruby
-      uses: ruby/setup-ruby@af848b40be8bb463a751551a1180d74782ba8a72 # v1.162.0
+      uses: ruby/setup-ruby@master
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true # 'bundle install' and cache
