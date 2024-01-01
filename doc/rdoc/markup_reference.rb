@@ -63,15 +63,6 @@ require 'rdoc'
 # - The entire markup (<tt>.rdoc</tt>) file or markdown (<tt>.md</tt>) file,
 #   (which is usually multi-line).
 #
-# === Margins
-#
-# In a multi-line segment,
-# \RDoc looks for the segment's natural left margin,
-# which becomes the <em>base margin</em> for the segment
-# and is the initial <em>current margin</em> for the segment.
-#
-# The current margin can change, and does so, for example in a list.
-#
 # === Blocks
 #
 # It's convenient to think of a segment as a sequence of _blocks_
@@ -105,6 +96,10 @@ require 'rdoc'
 # - Any block may appear independently
 #   (that is, not nested in another block);
 #   some blocks may be nested, as detailed below.
+# - In a multi-line block,
+#   \RDoc looks for the block's natural left margin,
+#   which becomes the <em>base margin</em> for the block
+#   and is the initial <em>current margin</em> for the block.
 #
 # ==== Paragraphs
 #
