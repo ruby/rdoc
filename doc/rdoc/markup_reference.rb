@@ -52,7 +52,7 @@ require 'rdoc'
 #   but may (depending on how the documentation is built),
 #   become a separate page.
 #
-# An <i>RDoc segment</i> (hereafter simply called a _segment_) is:
+# An <i>RDoc document</i>:
 #
 # - A (possibly multi-line) comment in a Ruby or C file
 #   that generates \RDoc documentation (as above).
@@ -61,7 +61,7 @@ require 'rdoc'
 #
 # === Blocks
 #
-# It's convenient to think of a segment as a sequence of _blocks_
+# It's convenient to think of an \RDoc document as a sequence of _blocks_
 # of various types (details at the links):
 #
 # - {Paragraph}[rdoc-ref:RDoc::MarkupReference@Paragraphs]:
