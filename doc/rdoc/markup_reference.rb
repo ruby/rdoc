@@ -56,7 +56,7 @@ require 'rdoc'
 #
 # - A (possibly multi-line) comment in a Ruby or C file
 #   that generates \RDoc documentation (as above).
-# - The entire markup (<tt>.rdoc</tt>) file or markdown (<tt>.md</tt>) file,
+# - The entire markup (<tt>.rdoc</tt>) file or markdown (<tt>.md</tt>) file
 #   (which is usually multi-line).
 #
 # === Blocks
