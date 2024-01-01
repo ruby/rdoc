@@ -49,7 +49,7 @@ require 'rdoc'
 # - <tt>.rdoc</tt> (\RDoc markup text file) or <tt>.md</tt> (\RDoc markdown text file):
 #   markup is parsed from the entire file.
 #   The text is not associated with any code object,
-#   but may (depending on how the documentation is built),
+#   but may (depending on how the documentation is built)
 #   become a separate page.
 #
 # An <i>RDoc document</i>:
