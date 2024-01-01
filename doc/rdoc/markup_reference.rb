@@ -21,10 +21,6 @@ require 'rdoc'
 #   >>>
 #     Some stuff
 #
-# \RDoc-generated documentation is derived from and controlled by:
-#
-
-#
 # == \RDoc Sources
 #
 # The sources of \RDoc documentation vary according to the type of file:
