@@ -31,8 +31,10 @@ task "coverage" do
   cov = []
   e = IO.popen([FileUtils::RUBY, "-I./lib", "exe/rdoc", "-C"], &:read)
   e.scan(/^ *# in file (?<loc>.*)\n *(?<code>.*)|^ *(?<code>.*\S) *# in file (?<loc>.*)/) do
-    puts "%s: %s\n" % $~.values_at(:loc, :code)
+    cov << "%s: %s\n" % $~.values_at(:loc, :code)
   end
+  cov.sort!
+  puts cov
 end
 
 Rake::TestTask.new(:normal_test) do |t|
