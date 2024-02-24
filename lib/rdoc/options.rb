@@ -344,6 +344,12 @@ class RDoc::Options
   # Indicates if files of test suites should be skipped
   attr_accessor :skip_tests
 
+  ##
+  # Meta tags to be included in the HTML header, such as keywords, description,
+  # author and others. This option is a hash where the keys are the meta tag
+  # name and the values are the content of the meta tag.
+  attr_accessor :meta_tags
+
   def initialize loaded_options = nil # :nodoc:
     init_ivars
     override loaded_options if loaded_options
@@ -392,6 +398,7 @@ class RDoc::Options
     @encoding = Encoding::UTF_8
     @charset = @encoding.name
     @skip_tests = true
+    @meta_tags = {}
   end
 
   def init_with map # :nodoc:
@@ -416,6 +423,7 @@ class RDoc::Options
     @title          = map['title']
     @visibility     = map['visibility']
     @webcvs         = map['webcvs']
+    @meta_tags      = map['meta_tags']
 
     @rdoc_include = sanitize_path map['rdoc_include']
     @static_path  = sanitize_path map['static_path']
@@ -448,6 +456,7 @@ class RDoc::Options
     @title          = map['title']          if map.has_key?('title')
     @visibility     = map['visibility']     if map.has_key?('visibility')
     @webcvs         = map['webcvs']         if map.has_key?('webcvs')
+    @meta_tags      = map['meta_tags']      if map.has_key?('meta_tags')
 
     if map.has_key?('rdoc_include')
       @rdoc_include = sanitize_path map['rdoc_include']
@@ -475,7 +484,8 @@ class RDoc::Options
       @template       == other.template       and
       @title          == other.title          and
       @visibility     == other.visibility     and
-      @webcvs         == other.webcvs
+      @webcvs         == other.webcvs         and
+      @meta_tags      == other.meta_tags
   end
 
   ##
@@ -788,6 +798,15 @@ Usage: #{opt.program_name} [options] [names...]
       opt.on("--no-skipping-tests", nil,
              "Don't skip generating documentation for test and spec files") do |value|
         @skip_tests = false
+      end
+
+      opt.separator nil
+
+       opt.on("-mTAGS", "--meta-tags=TAGS",
+             "Meta tags to be included in the HTML head") do |value|
+        @meta_tags = JSON.parse(value)
+      rescue  JSON::ParserError, TypeError
+        raise OptionParser::InvalidArgument, "Invalid value for --meta-tags. Should be a JSON string"
       end
 
       opt.separator nil
