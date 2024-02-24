@@ -2,6 +2,10 @@
 
 <title><%= h @title %></title>
 
+<%- @options.meta_tags.each do |name, content| -%>
+<meta name="<%= h name %>" content="<%= h content %>">
+<%- end -%>
+
 <script type="text/javascript">
   var rdoc_rel_prefix = "<%= h asset_rel_prefix %>/";
   var index_rel_prefix = "<%= h rel_prefix %>/";
