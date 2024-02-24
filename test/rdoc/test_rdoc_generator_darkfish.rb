@@ -322,6 +322,22 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
     assert_main_title(File.binread('index.html'), title)
   end
 
+  def test_meta_tags
+    @options.meta_tags = {
+      "keywords" => "ruby,programming,software",
+      "description" => "RDoc is an awesome documentation generator for Ruby!"
+    }
+    @g.generate
+
+    content = File.binread("index.html")
+
+    assert_match("<meta name=\"keywords\" content=\"ruby,programming,software\">", content)
+    assert_match(
+      "<meta name=\"description\" content=\"RDoc is an awesome documentation generator for Ruby!\">",
+      content
+    )
+  end
+
   ##
   # Asserts that +filename+ has a link count greater than 1 if hard links to
   # @tmpdir are supported.
