@@ -1,0 +1,429 @@
+# `RI` (Ruby Information)
+
+`RI` is a Ruby command-line utility that operates in a terminal (command) window;
+it accepts commands and prints Ruby documents or other information.
+
+There are two modes:
+
+- <i>Static mode</i>:
+  In general, `ri` responds in static mode
+  if the command has an argument.
+  See {Static Mode}[RI_md.html#label-Static+Mode].
+- <i>Interactive mode</i>:
+  In general, `ri` responds in interactive mode
+  if the command has no argument.
+  See {Interactive Mode}[RI_md.html#label-Interactive+Mode].
+
+## About the Examples
+
+`RI` output is commonly large,
+and so here we often pipe the output to one of these:
+
+- `head` leading lines only.
+- `tail` trailing lines only.
+- `wc -l`: line count only.
+
+## Static Mode
+
+In static mode, `ri` prints a response and exits.
+
+In general, `ri` responds in static mode
+if the command has an argument.
+
+### Classes and Modules
+
+To get the document for a particular class or module,
+give its name as the argument:
+
+For class `File`:
+
+```sh
+$ ri File | head
+= File < IO
+
+(from ruby core)
+------------------------------------------------------------------------
+A File is an abstraction of any file object accessible by the program
+and is closely associated with class IO.  File includes the methods of
+module FileTest as class methods, allowing you to write (for example)
+File.exist?("foo").
+
+In the description of File methods, permission_
+```
+    
+For module `File::File::FileConstants`:
+
+```sh
+$ ri File::File::Constants | head
+= File::File::Constants
+
+(from ruby core)
+------------------------------------------------------------------------
+Document-module: File::Constants
+
+File::Constants provides file-related constants.  All possible file
+constants are listed in the documentation but they may not all be
+present on your platform.
+```
+
+You can abbreviate a class or module name to unique initial characters:
+
+```sh
+$ ri Arr | head -1
+= Array < Object
+```
+
+If the name is not unique initial characters,
+no document is found:
+
+```sh
+$ ri A
+Nothing known about A
+```
+
+To get a list of all classes and modules,
+use option `--list` with no argument:
+
+```sh
+$ ri --list | head
+ACL
+ACL::ACLEntry
+ACL::ACLList
+ARGF
+Abbrev
+Addrinfo
+ArgumentError
+Array
+Base64
+BasicObject
+```
+
+To get a list of classes and modules beginning with a certain substring,
+use option `--list` with an argument:
+
+```sh
+$ ri --list A | head
+ACL
+ACL::ACLEntry
+ACL::ACLList
+ARGF
+Abbrev
+Addrinfo
+ArgumentError
+Array
+
+$ ri --list Ar | head
+ArgumentError
+Array
+```
+
+To get the document for a class or module,
+together with the documents for all its methods,
+use option `--all`:
+
+```sh
+$ ri Array | wc -l       # Class only.
+390
+$ ri --all Array | wc -l # Class and methods.
+4224
+```
+
+### Methods
+
+To get the document for a particular instance method,
+include the class/module name and the method name in the command:
+
+```sh
+$ ri IO#read | head
+= IO#read
+
+(from ruby core)
+------------------------------------------------------------------------
+  ios.read([length [, outbuf]])    -> string, outbuf, or nil
+
+------------------------------------------------------------------------
+
+Reads length bytes from the I/O stream.
+```
+
+
+### Gems
+
+
+
+### Pages
+
+`ri` handles free-standing _pages_,
+each of which presents a document that is not defined within a class or module.
+
+To get a particular page document,
+include its name in the argument:
+
+```sh
+$ ri ruby:regexp | head
+Regular expressions (regexps) are patterns which describe
+the contents of a string. They're used for testing whether a string
+contains a given pattern, or extracting the portions that match. They
+are created with the /pat/ and %r{pat} literals or the
+Regexp.new constructor.
+
+A regexp is usually delimited with forward slashes (/). For example:
+
+  /hay/ =~ 'haystack'   #=> 0
+  /y/.match('haystack') #=> #<MatchData "y">
+  ```
+
+To get a list of the page documents,
+give the argument as `ruby:`:
+
+```sh
+$ ri ruby: | head
+= Pages in ruby core
+
+CONTRIBUTING.md
+COPYING
+COPYING.ja
+LEGAL
+NEWS-1.8.7
+NEWS-1.9.1
+NEWS-1.9.2
+NEWS-1.9.3
+```
+
+Many of the "boilerplate" pages have names beginning with a capital letter;
+other pages typically do not:
+
+```sh
+$ ri ruby: | grep "^[a-z]" | head
+bug_triaging.rdoc
+contributing.rdoc
+dig_methods.rdoc
+dtrace_probes.rdoc
+extension.ja.rdoc
+extension.rdoc
+fiber.md
+globals.rdoc
+implicit_conversion.rdoc
+keywords.rdoc
+
+$ ri ruby: | grep "^[a-z]" | tail
+syntax/control_expressions.rdoc
+syntax/exceptions.rdoc
+syntax/literals.rdoc
+syntax/methods.rdoc
+syntax/miscellaneous.rdoc
+syntax/modules_and_classes.rdoc
+syntax/pattern_matching.rdoc
+syntax/precedence.rdoc
+syntax/refinements.rdoc
+win32/README.win32
+```
+
+To get a page:
+
+```sh
+$ ri ruby:syntax/exceptions.rdoc | head
+= Exception Handling
+
+Exceptions are rescued in a begin/end block:
+
+  begin
+    # code that might raise
+  rescue
+    # handle exception
+  end
+```
+
+If the page name is sufficiently unique,
+you can omit leading and trailing elements:
+`ruby:exeptions` is the same as `ruby:syntax/exceptions.rdoc`.
+
+### Static Options
+
+`ri` also responds in static mode when certain options are given,
+even with no arguments;
+these include:
+
+- {Option --help}: Prints `RI` help text.
+- {Option --list}: Prints list of classes and modules.
+- {Option --list-doc-dirs}: Prints list of `RI` source directories.
+- {Option --version}: Prints `RI` version.
+
+
+## Interactive Mode
+
+In general' `ri` responds to a command in interactive mode
+if the command has no arguments.
+
+## Options
+
+
+
+
+
+
++ri+ is a tool that allows Ruby documentation to be viewed on the command-line.
+
+You can use +ri+ to look up information from either the command line or
+interactively.  When you run +ri+ without any arguments it will launch in
+interactive mode.  In interactive mode you can tab-complete class and method
+names.
+
+== Usage
+
+To see information for a class, do:
+  ri ClassName
+
+For example, for the Array class, do:
+  ri Array
+
+To see information on a method on a class, do:
+  ri ClassName.method
+
+This will show both instance and class methods.  For example, the IO
+class defines both IO::read and IO#read:
+  ri IO.read
+
+To see information for an instance method, do:
+  ri ClassName#method_name
+
+For example, for Array's +join+ method, do:
+  ri Array#join
+
+To see information for a class method, do:
+  ri ClassName::method_name
+
+For example, for Module's +private+ method, do:
+  ri Module::private
+
+To read documentation for all +read+ methods, do:
+  ri read
+
+== Options
+
++ri+ supports a variety of options, all of which can be viewed via +--help+.
+Of particular interest, are:
+
+[<tt>-f</tt>]
+  Outputs ri data using the selected formatter.  You can see the available
+  formatters in <tt>ri --help</tt>
+[<tt>-T</tt>]
+  Send output to stdout, rather than to a pager.
+
+All options also can be specified through the +RI+ environment variable.
+Command-line options always override those specified in the +RI+ environment
+variable.
+
+The +RI_PAGER+ environment variable allows you to choose a particular pager or
+particular options for your pager.
+
+=========================
+
+Usage: ri [options] [name ...]
+
+Where name can be:
+
+  Class | Module | Module::Class
+
+  Class::method | Class#method | Class.method | method
+
+  gem_name: | gem_name:README | gem_name:History
+
+All class names may be abbreviated to their minimum unambiguous form.
+If a name is ambiguous, all valid options will be listed.
+
+A '.' matches either class or instance methods, while #method
+matches only instance and ::method matches only class methods.
+
+README and other files may be displayed by prefixing them with the gem name
+they're contained in.  If the gem name is followed by a ':' all files in the
+gem will be shown.  The file name extension may be omitted where it is
+unambiguous.
+
+For example:
+
+    ri Fil
+    ri File
+    ri File.new
+    ri zip
+    ri rdoc:README
+
+Note that shell quoting or escaping may be required for method names
+containing punctuation:
+
+    ri 'Array.[]'
+    ri compact\!
+
+To see the default directories ri will search, run:
+
+    ri --list-doc-dirs
+
+Specifying the --system, --site, --home, --gems, or --doc-dir options
+will limit ri to searching only the specified directories.
+
+ri options may be set in the RI environment variable.
+
+The ri pager can be set with the RI_PAGER environment variable
+or the PAGER environment variable.
+
+Options:
+
+    -i, --[no-]interactive           In interactive mode you can repeatedly
+                                     look up methods with autocomplete.
+
+    -a, --[no-]all                   Show all documentation for a class or
+                                     module.
+
+    -l, --[no-]list                  List classes ri knows about.
+
+        --[no-]pager                 Send output to a pager,
+                                     rather than directly to stdout.
+
+    -T                               Synonym for --no-pager.
+
+    -w, --width=WIDTH                Set the width of the output.
+
+        --server[=PORT]              Run RDoc server on the given port.
+                                     The default port is 8214.
+
+    -f, --format=NAME                Use the selected formatter.  The default
+                                     formatter is bs for paged output and ansi
+                                     otherwise.  Valid formatters are:
+                                     ansi, bs, markdown, rdoc.
+
+    -h, --help                       Show help and exit.
+
+    -v, --version                    Output version information and exit.
+
+Data source options:
+
+        --[no-]list-doc-dirs         List the directories from which ri will
+                                     source documentation on stdout and exit.
+
+    -d, --doc-dir=DIRNAME            List of directories from which to source
+                                     documentation in addition to the standard
+                                     directories.  May be repeated.
+
+        --no-standard-docs           Do not include documentation from
+                                     the Ruby standard library, site_lib,
+                                     installed gems, or ~/.rdoc.
+                                     Use with --doc-dir.
+
+        --[no-]system                Include documentation from Ruby's
+                                     standard library.  Defaults to true.
+
+        --[no-]site                  Include documentation from libraries
+                                     installed in site_lib.
+                                     Defaults to true.
+
+        --[no-]gems                  Include documentation from RubyGems.
+                                     Defaults to true.
+
+        --[no-]home                  Include documentation stored in ~/.rdoc.
+                                     Defaults to true.
+
+Debug options:
+
+        --[no-]profile               Run with the ruby profiler.
+
+        --dump=CACHE                 Dump data from an ri cache or data file.
