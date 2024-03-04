@@ -3,6 +3,40 @@
 `RI` is a Ruby command-line utility that operates in a terminal (command) window;
 it accepts commands and prints Ruby documents or other information.
 
+## Summary
+
+These examples summarize most uses of `RI`.
+
+- Classes and modules:
+
+    | Item                     | Prints                                                    |
+    |--------------------------|-----------------------------------------------------------|
+    | ri --list                | List of all classes and modules.                          |
+    | ri --list Fi             | List of all classes and modules beginning with Fi.        |
+    | ri File                  | Document for class File.                                  |
+    | ri File::File::Constants | Document for module File::File::Constants.                |
+    | ri -all File             | Documents for class File, its constants, and its methods. |
+    | ri Ar                    | Nothing (not unique initial characters).                  |
+    | ri Arr                   | Document for class Array (unique initial characters).     |
+
+- Methods:
+
+    | Item             | Prints                                                                                                        |
+    |------------------|---------------------------------------------------------------------------------------------------------------|
+    | ri IO::readlines | Document for singleton method IO::readlines.                                                                  |
+    | ri IO#readlines  | Document for instance method IO::readlines.                                                                   |
+    | ri IO.readlines  | Documents for instance method IO::readlines and singleton method IO::readlines.                               |
+    | ri ::readlines   | Documents for singleton method readlines in all classes and modules.                                          |
+    | ri \#readlines   | Documents for instance method #readlines in all classes and modules.                                          |
+    | ri .readlines    | Documents for singleton method ::readlines and instance method #readlines in all classes and modules.         |
+    | ri readlines     | Documents for singleton method ::readlines and instance method #readlines in all classes and modules.         |
+ 
+- Pages:
+
+- Gems:
+
+## Modes
+
 There are two modes:
 
 - <i>Static mode</i>:
@@ -19,9 +53,9 @@ There are two modes:
 `RI` output is commonly large,
 and so here we often pipe the output to one of these:
 
-- `head` leading lines only.
-- `tail` trailing lines only.
-- `wc -l`: line count only.
+- {head}[https://www.man7.org/linux/man-pages/man1/head.1.html] leading lines only.
+- {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html] trailing lines only.
+- {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
 
 ## Static Mode
 
@@ -147,10 +181,6 @@ Reads length bytes from the I/O stream.
 ```
 
 
-### Gems
-
-
-
 ### Pages
 
 `ri` handles free-standing _pages_,
@@ -237,6 +267,10 @@ Exceptions are rescued in a begin/end block:
 If the page name is sufficiently unique,
 you can omit leading and trailing elements:
 `ruby:exeptions` is the same as `ruby:syntax/exceptions.rdoc`.
+
+### Gems
+
+
 
 ### Static Options
 
@@ -427,3 +461,4 @@ Debug options:
         --[no-]profile               Run with the ruby profiler.
 
         --dump=CACHE                 Dump data from an ri cache or data file.
+
