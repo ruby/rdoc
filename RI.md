@@ -3,7 +3,28 @@
 `RI` is a Ruby command-line utility that operates in a terminal (command) window;
 it accepts commands and prints Ruby documents or other information.
 
+`RI` derives documentation from _local_ files,
+(not from the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]).
+To see the source directories on your local machine:
+
+```sh
+$ ri --list-doc-dirs
+```
+
+These are the directories that `RI` may search, which may or may not actually exist.
+
 ## Why `RI`?
+
+Using `RI` may have advantages over using
+the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
+
+- The `RI` documentation is always available, even when you do not have internet access
+  (think, airplane mode).
+- If you are working in a terminal window, typing `ri _whatever_` may be faster
+  than navigating to a browser window and then to a documentation page.
+- If you are working
+  in {irb (interactive Ruby)}[https://docs.ruby-lang.org/en/master/IRB.html],
+  you have immediate access to `RI`.
 
 ## Summary
 
@@ -59,6 +80,15 @@ These examples summarize most uses of `RI`.
     | ri Nokogiri::HTML4::Document::parse   | Document for singleton method Nokogiri::HTML4::Document::parse.                |
     | ri Nokogiri::HTML4::Document#fragment | Document for instance method Nokogiri::HTML4::Document#fragment.               |
 
+## About the Examples
+
+`RI` output is often large,
+and so here we sometimes pipe the output to one of these:
+
+- {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
+- {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
+- {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
+
 ## Modes
 
 There are two modes:
@@ -71,15 +101,6 @@ There are two modes:
   In general, `ri` responds in interactive mode
   if the command has no argument.
   See {Interactive Mode}[RI_md.html#label-Interactive+Mode].
-
-## About the Examples
-
-`RI` output is commonly large,
-and so here we often pipe the output to one of these:
-
-- {head}[https://www.man7.org/linux/man-pages/man1/head.1.html] leading lines only.
-- {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html] trailing lines only.
-- {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
 
 ## Static Mode
 
@@ -317,56 +338,8 @@ if the command has no arguments.
 
 
 
+## Environment Variables
 
-
-
-+ri+ is a tool that allows Ruby documentation to be viewed on the command-line.
-
-You can use +ri+ to look up information from either the command line or
-interactively.  When you run +ri+ without any arguments it will launch in
-interactive mode.  In interactive mode you can tab-complete class and method
-names.
-
-== Usage
-
-To see information for a class, do:
-  ri ClassName
-
-For example, for the Array class, do:
-  ri Array
-
-To see information on a method on a class, do:
-  ri ClassName.method
-
-This will show both instance and class methods.  For example, the IO
-class defines both IO::read and IO#read:
-  ri IO.read
-
-To see information for an instance method, do:
-  ri ClassName#method_name
-
-For example, for Array's +join+ method, do:
-  ri Array#join
-
-To see information for a class method, do:
-  ri ClassName::method_name
-
-For example, for Module's +private+ method, do:
-  ri Module::private
-
-To read documentation for all +read+ methods, do:
-  ri read
-
-== Options
-
-+ri+ supports a variety of options, all of which can be viewed via +--help+.
-Of particular interest, are:
-
-[<tt>-f</tt>]
-  Outputs ri data using the selected formatter.  You can see the available
-  formatters in <tt>ri --help</tt>
-[<tt>-T</tt>]
-  Send output to stdout, rather than to a pager.
 
 All options also can be specified through the +RI+ environment variable.
 Command-line options always override those specified in the +RI+ environment
@@ -374,115 +347,4 @@ variable.
 
 The +RI_PAGER+ environment variable allows you to choose a particular pager or
 particular options for your pager.
-
-=========================
-
-Usage: ri [options] [name ...]
-
-Where name can be:
-
-  Class | Module | Module::Class
-
-  Class::method | Class#method | Class.method | method
-
-  gem_name: | gem_name:README | gem_name:History
-
-All class names may be abbreviated to their minimum unambiguous form.
-If a name is ambiguous, all valid options will be listed.
-
-A '.' matches either class or instance methods, while #method
-matches only instance and ::method matches only class methods.
-
-README and other files may be displayed by prefixing them with the gem name
-they're contained in.  If the gem name is followed by a ':' all files in the
-gem will be shown.  The file name extension may be omitted where it is
-unambiguous.
-
-For example:
-
-    ri Fil
-    ri File
-    ri File.new
-    ri zip
-    ri rdoc:README
-
-Note that shell quoting or escaping may be required for method names
-containing punctuation:
-
-    ri 'Array.[]'
-    ri compact\!
-
-To see the default directories ri will search, run:
-
-    ri --list-doc-dirs
-
-Specifying the --system, --site, --home, --gems, or --doc-dir options
-will limit ri to searching only the specified directories.
-
-ri options may be set in the RI environment variable.
-
-The ri pager can be set with the RI_PAGER environment variable
-or the PAGER environment variable.
-
-Options:
-
-    -i, --[no-]interactive           In interactive mode you can repeatedly
-                                     look up methods with autocomplete.
-
-    -a, --[no-]all                   Show all documentation for a class or
-                                     module.
-
-    -l, --[no-]list                  List classes ri knows about.
-
-        --[no-]pager                 Send output to a pager,
-                                     rather than directly to stdout.
-
-    -T                               Synonym for --no-pager.
-
-    -w, --width=WIDTH                Set the width of the output.
-
-        --server[=PORT]              Run RDoc server on the given port.
-                                     The default port is 8214.
-
-    -f, --format=NAME                Use the selected formatter.  The default
-                                     formatter is bs for paged output and ansi
-                                     otherwise.  Valid formatters are:
-                                     ansi, bs, markdown, rdoc.
-
-    -h, --help                       Show help and exit.
-
-    -v, --version                    Output version information and exit.
-
-Data source options:
-
-        --[no-]list-doc-dirs         List the directories from which ri will
-                                     source documentation on stdout and exit.
-
-    -d, --doc-dir=DIRNAME            List of directories from which to source
-                                     documentation in addition to the standard
-                                     directories.  May be repeated.
-
-        --no-standard-docs           Do not include documentation from
-                                     the Ruby standard library, site_lib,
-                                     installed gems, or ~/.rdoc.
-                                     Use with --doc-dir.
-
-        --[no-]system                Include documentation from Ruby's
-                                     standard library.  Defaults to true.
-
-        --[no-]site                  Include documentation from libraries
-                                     installed in site_lib.
-                                     Defaults to true.
-
-        --[no-]gems                  Include documentation from RubyGems.
-                                     Defaults to true.
-
-        --[no-]home                  Include documentation stored in ~/.rdoc.
-                                     Defaults to true.
-
-Debug options:
-
-        --[no-]profile               Run with the ruby profiler.
-
-        --dump=CACHE                 Dump data from an ri cache or data file.
 
