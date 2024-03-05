@@ -3,6 +3,8 @@
 `RI` is a Ruby command-line utility that operates in a terminal (command) window;
 it accepts commands and prints Ruby documents or other information.
 
+## Why `RI`?
+
 ## Summary
 
 These examples summarize most uses of `RI`.
@@ -31,9 +33,31 @@ These examples summarize most uses of `RI`.
     | ri .readlines    | Documents for singleton method ::readlines and instance method #readlines in all classes and modules.         |
     | ri readlines     | Documents for singleton method ::readlines and instance method #readlines in all classes and modules.         |
  
-- Pages:
+- Ruby pages:
 
-- Gems:
+    | Item                           | Prints                                                          |
+    |--------------------------------|-----------------------------------------------------------------|
+    | ri ruby:                       | List of Ruby pages.                                             |
+    | ri ruby:security.rdoc          | Document for page security.                                     |
+    | ri ruby:security               | Document for page security (if no other security.*).            |
+    | ri ruby:syntax/assignment.rdoc | Document for page assignment.                                   |
+    | ri ruby:syntax/assignment      | Document for page assignment (if no other syntax/assignment.*). |
+    | ri ruby:assignment             | Document for page assignment (if no other */assignment.*).      |
+
+- Gems (assuming gem Nokigiri installed):
+
+    | Item                                  | Prints                                                                         |
+    |---------------------------------------|--------------------------------------------------------------------------------|
+    | ri Nokigiri                           | Document for module Nokogiri.                                                  |
+    | ri --list Nokogiri                    | List of classes and modules in Nokogiri.                                       |
+    | ri Nokigiri::CSS                      | Document for class Nokogiri::CSS.                                              |
+    | ri nokogiri:                          | List of Nokogiri pages.                                                        |
+    | ri nokogiri:README.md                 | Document for page README.md.                                                   |
+    | ri nokogiri:README                    | Document for page README.md (if no other README.*).                            |
+    | ri Nokogiri::HTML4::Document          | Document for class Nokogiri::HTML4::Document.                                  |
+    | ri -all Nokogiri::HTML4::Document     | Documents for class Nokogiri::HTML4::Document, its constants, and its methods. |
+    | ri Nokogiri::HTML4::Document::parse   | Document for singleton method Nokogiri::HTML4::Document::parse.                |
+    | ri Nokogiri::HTML4::Document#fragment | Document for instance method Nokogiri::HTML4::Document#fragment.               |
 
 ## Modes
 
