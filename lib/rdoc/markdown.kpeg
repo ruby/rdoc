@@ -1237,7 +1237,7 @@ DefinitionListItem = ( DefinitionListLabel+ ):label
                        list_items
                      }
 
-DefinitionListLabel = StrChunk:label @Sp @Newline
+DefinitionListLabel = Inline:label @Sp @Newline
                       { label }
 
 DefinitionListDefinition = @NonindentSpace ":" @Space Inlines:a @BlankLine+
