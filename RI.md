@@ -1,34 +1,120 @@
-# `RI` (Ruby Information)
+# `ri` (Ruby Information)
 
-`RI` is a Ruby command-line utility that operates in a terminal (command) window;
+`ri` is a the command-line interface to Ruby documentation;
 it accepts commands and prints Ruby documents or other information.
 
-`RI` derives documentation from _local_ files,
-(not from the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]).
-To see the source directories on your local machine:
+Examples:
 
-```sh
-$ ri --list-doc-dirs
-```
+- Document for class {Array}[https://docs.ruby-lang.org/en/master/Array.html]:
 
-These are the directories that `RI` may search, which may or may not actually exist.
+    ```sh
+    # Use 'head' to get just the first lines.
+    $ ri Array | head
+    = Array < Object
+    
+    ------------------------------------------------------------------------
+    = Includes:
+    Enumerable (from ruby core)
+    
+    (from ruby core)
+    ------------------------------------------------------------------------
+    An Array is an ordered, integer-indexed collection of objects, called
+    elements.  Any object (even another array) may be an array element.
+    ```
 
-## Why `RI`?
+- Document for instance method {Array#first}[https://docs.ruby-lang.org/en/master/Array.html#method-i-first]:
 
-Using `RI` may have advantages over using
+    ```sh
+    $ ri Array#first | head
+    = Array#first
+    
+    (from ruby core)
+    ------------------------------------------------------------------------
+    array.first -> object or nil
+    array.first(n) -> new_array
+    
+    ------------------------------------------------------------------------
+    
+    Returns elements from self; does not modify self.
+
+    ```
+
+- Document for page {Dig Methods}[https://docs.ruby-lang.org/en/master/dig_methods_rdoc.html]:
+
+    ```sh
+    $ ri ruby:dig_methods | head
+    = Dig Methods
+    
+    Ruby's dig methods are useful for accessing nested data structures.
+    
+    Consider this data:
+    item = {
+    id: "0001",
+    type: "donut",
+    name: "Cake",
+    ppu: 0.55,
+    ```
+
+- Document for (gem) class Nokogiri:
+
+    ```sh
+    $ ri Nokogiri | head
+    = Nokogiri
+    
+    (from gem nokogiri-1.16.2-x86_64-linux)
+    ------------------------------------------------------------------------
+    
+    Nokogiri parses and searches XML/HTML very quickly, and also has
+    correctly implemented CSS3 selector support as well as XPath 1.0
+    support.
+    
+    Parsing a document returns either a Nokogiri::XML::Document, or a
+    ```
+
+
+## Why `ri`?
+
+Using `ri` may have advantages over using
 the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
 
-- The `RI` documentation is always available, even when you do not have internet access
+- The `ri` documentation is always available, even when you do not have internet access
   (think, airplane mode).
 - If you are working in a terminal window, typing `ri _whatever_` may be faster
-  than navigating to a browser window and then to a documentation page.
+  than navigating to a browser window and searching for documentation.
 - If you are working
   in {irb (interactive Ruby)}[https://docs.ruby-lang.org/en/master/IRB.html],
-  you have immediate access to `RI`.
+  you have immediate access to `ri`.
+
+## `ri` Modes
+
+There are two `ri` modes:
+
+- <i>Static mode</i>:
+  In general, `ri` responds in static mode
+  if the command has an argument.
+  See {Static Mode}[RI_md.html#label-Static+Mode].
+- <i>Interactive mode</i>:
+  In general, `ri` responds in interactive mode
+  if the command has no argument.
+  See {Interactive Mode}[RI_md.html#label-Interactive+Mode].
+
+If you are a frequent `ri` user,
+you can save time by keeping open a command window with an active `ri` session:
+
+```sh
+$ ri
+Enter the method name you want to look up.
+You can use tab to autocomplete.
+Enter a blank line to exit.
+>>
+```
+
+This avoid the performance overhead of reading the `ri` files
+every time you invoke `ri`.
 
 ## Summary
 
-These examples summarize most uses of `RI`.
+These examples summarize most uses of `ri`.
 
 - Classes and modules:
 
@@ -38,7 +124,7 @@ These examples summarize most uses of `RI`.
     | ri --list Fi             | List of all classes and modules beginning with Fi.        |
     | ri File                  | Document for class File.                                  |
     | ri File::File::Constants | Document for module File::File::Constants.                |
-    | ri -all File             | Documents for class File, its constants, and its methods. |
+    | ri --all File            | Documents for class File, its constants, and its methods. |
     | ri Ar                    | Nothing (not unique initial characters).                  |
     | ri Arr                   | Document for class Array (unique initial characters).     |
 
@@ -76,31 +162,30 @@ These examples summarize most uses of `RI`.
     | ri nokogiri:README.md                 | Document for page README.md.                                                   |
     | ri nokogiri:README                    | Document for page README.md (if no other README.*).                            |
     | ri Nokogiri::HTML4::Document          | Document for class Nokogiri::HTML4::Document.                                  |
-    | ri -all Nokogiri::HTML4::Document     | Documents for class Nokogiri::HTML4::Document, its constants, and its methods. |
+    | ri --all Nokogiri::HTML4::Document    | Documents for class Nokogiri::HTML4::Document, its constants, and its methods. |
     | ri Nokogiri::HTML4::Document::parse   | Document for singleton method Nokogiri::HTML4::Document::parse.                |
     | ri Nokogiri::HTML4::Document#fragment | Document for instance method Nokogiri::HTML4::Document#fragment.               |
 
+## Source Files
+
+`ri` derives documentation from files in _local_ directories,
+(not from the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]).
+To see the source directories on your local machine:
+
+```sh
+$ ri --list-doc-dirs
+```
+
+These are the directories that `ri` may search, which may or may not actually exist.
+
 ## About the Examples
 
-`RI` output is often large,
+`ri` output can be large,
 and so here we sometimes pipe the output to one of these:
 
 - {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
 - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
 - {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
-
-## Modes
-
-There are two modes:
-
-- <i>Static mode</i>:
-  In general, `ri` responds in static mode
-  if the command has an argument.
-  See {Static Mode}[RI_md.html#label-Static+Mode].
-- <i>Interactive mode</i>:
-  In general, `ri` responds in interactive mode
-  if the command has no argument.
-  See {Interactive Mode}[RI_md.html#label-Interactive+Mode].
 
 ## Static Mode
 
@@ -301,7 +386,7 @@ $ ri ruby:syntax/exceptions.rdoc | head
 = Exception Handling
 
 Exceptions are rescued in a begin/end block:
-
+1
   begin
     # code that might raise
   rescue
@@ -323,10 +408,10 @@ you can omit leading and trailing elements:
 even with no arguments;
 these include:
 
-- {Option --help}: Prints `RI` help text.
+- {Option --help}: Prints `ri` help text.
 - {Option --list}: Prints list of classes and modules.
-- {Option --list-doc-dirs}: Prints list of `RI` source directories.
-- {Option --version}: Prints `RI` version.
+- {Option --list-doc-dirs}: Prints list of `ri` source directories.
+- {Option --version}: Prints `ri` version.
 
 
 ## Interactive Mode
