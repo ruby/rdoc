@@ -108,6 +108,8 @@ and so here we sometimes pipe the output to one of these:
 - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
 - {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
 
+We also assume that gem nokogiri is installed.
+
 ## Modes
 
 There are two `ri` modes:
@@ -135,7 +137,21 @@ In both modes, static and interactive,
 each name specifies what is to be printed:
 a document, multiple documents, or other information.
 
-These examples summarize `ri` names
+### Names for Getting Lists
+
+This table summarizes `ri` names for getting lists:
+
+| Name      | Prints                  |
+|-----------|-------------------------|
+| ruby:     | List of Ruby pages.     |
+| nokogiri: | List of Nokogiri pages. |
+<br>
+
+See also {option --list}[rdoc-ref:RI.md@-list].
+
+### Names for Getting Documents
+
+These tables summarize `ri` names for getting documents
 (for details and examples, follow the links):
 
 - {Ruby classes and modules}[rdoc-ref:RI.md@Ruby+Classes+and+Modules]:
@@ -148,6 +164,8 @@ These examples summarize `ri` names
     | Arr                   | Document for class Array (unique initial characters).     |
 <br>
 
+See also {option --all}[rdoc-ref:RI.md@-all].
+ 
 - {Ruby methods}[rdoc-ref:RI.md@Ruby+Methods]:
 
     | Name                  | Prints                                                                                                        |
@@ -164,7 +182,6 @@ These examples summarize `ri` names
 
     | Name                        | Prints                                                          |
     |-----------------------------|-----------------------------------------------------------------|
-    | ruby:                       | List of Ruby pages.                                             |
     | ruby:security.rdoc          | Document for page security.                                     |
     | ruby:security               | Document for page security (if no other security.*).            |
     | ruby:syntax/assignment.rdoc | Document for page assignment.                                   |
@@ -172,19 +189,19 @@ These examples summarize `ri` names
     | ruby:assignment             | Document for page assignment (if no other */assignment.*).      |
 <br>
 
-- {Gem documents}[rdoc-ref:RI.md@Gem+Documents]
-  (assuming gem Nokigiri installed):
+- {Gem documents}[rdoc-ref:RI.md@Gem+Documents]:
 
     | Name                               | Prints                                                                         |
     |------------------------------------|--------------------------------------------------------------------------------|
-    | Nokigiri                           | Document for module Nokogiri.                                                  |
-    | Nokigiri::CSS                      | Document for class Nokogiri::CSS.                                              |
-    | nokogiri:                          | List of Nokogiri pages.                                                        |
+    | Nokogiri                           | Document for module Nokogiri.                                                  |
+    | Nokogiri::CSS                      | Document for class Nokogiri::CSS.                                              |
     | nokogiri:README.md                 | Document for page README.md.                                                   |
     | nokogiri:README                    | Document for page README.md (if no other README.*).                            |
     | Nokogiri::HTML4::Document          | Document for class Nokogiri::HTML4::Document.                                  |
     | Nokogiri::HTML4::Document::parse   | Document for singleton method Nokogiri::HTML4::Document::parse.                |
     | Nokogiri::HTML4::Document#fragment | Document for instance method Nokogiri::HTML4::Document#fragment.               |
+
+See also {option --all}[rdoc-ref:RI.md@-all].
 
 ## Source Files
 
@@ -431,6 +448,10 @@ In general' `ri` responds to a command in interactive mode
 if the command has no arguments.
 
 ## Options
+
+### `--all`
+
+### `--list`
 
 
 
