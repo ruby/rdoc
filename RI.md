@@ -83,7 +83,7 @@ Examples:
 
     ```
 
-- Document for page {Dig Methods}[https://docs.ruby-lang.org/en/master/dig_methods_rdoc.html]:
+- Document for page {ruby:dig_methods}[https://docs.ruby-lang.org/en/master/dig_methods_rdoc.html]:
 
     ```sh
     $ ri ruby:dig_methods | head
@@ -132,7 +132,8 @@ without the performance overhead of re-reading `ri` source files.
 
 In both modes, static and interactive,
 `ri` responds to input _names_;
-each name specifies documents or other information to be printed.
+each name specifies what is to be printed:
+a document, multiple documents, or other information.
 
 These examples summarize `ri` names
 (for details and examples, follow the links):
@@ -149,15 +150,14 @@ These examples summarize `ri` names
 
 - {Ruby methods}[rdoc-ref:RI.md@Ruby+Methods]:
 
-    | Name            | Prints                                                                                                        |
-    |-----------------|---------------------------------------------------------------------------------------------------------------|
-    | IO::readlines   | Document for singleton method IO::readlines.                                                                  |
-    | IO#readlines    | Document for instance method IO::readlines.                                                                   |
-    | IO.readlines    | Documents for instance method IO::readlines and singleton method IO::readlines.                               |
-    | ::readlines     | Documents for singleton method readlines in all classes and modules.                                          |
-    | #readlines      | Documents for instance method #readlines in all classes and modules.                                          |
-    | .readlines      | Documents for singleton method ::readlines and instance method #readlines in all classes and modules.         |
-    | readlines       | Documents for singleton method ::readlines and instance method #readlines in all classes and modules.         |
+    | Name                  | Prints                                                                                                        |
+    |-----------------------|---------------------------------------------------------------------------------------------------------------|
+    | IO::readlines         | Document for singleton method IO::readlines.                                                                  |
+    | IO#readlines          | Document for instance method IO::readlines.                                                                   |
+    | IO.readlines          | Documents for instance method IO::readlines and singleton method IO::readlines.                               |
+    | ::readlines           | Documents for singleton method readlines in all classes and modules.                                          |
+    | #readlines            | Documents for instance method #readlines in all classes and modules.                                          |
+    | .readlines, readlines | Documents for singleton method ::readlines and instance method #readlines in all classes and modules.         |
 <br>
 
 - {Ruby pages}[rdoc-ref:RI.md@Ruby+Pages]:
@@ -297,9 +297,9 @@ together with the documents for all its methods,
 use option `--all`:
 
 ```sh
-$ ri Array | wc -l       # Class only.
+$ ri Array | wc -l       # Line count for document Array only.
 390
-$ ri --all Array | wc -l # Class and methods.
+$ ri --all Array | wc -l # Line count for document Array and its method documents.
 4224
 ```
 
