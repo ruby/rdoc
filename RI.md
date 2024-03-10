@@ -1,19 +1,33 @@
 # `ri` (Ruby Information)
 
-`ri` is the the command-line interface to Ruby documentation;
-it gives fast and easy access to Ruby documentation.
+`ri` gives fast and easy on-line access to Ruby documentation.
+
+## Why `ri`?
+
+Using `ri` may have advantages over using
+the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
+
+- The `ri` documentation is always available, even when you do not have internet access
+  (think, airplane mode).
+- If you are working in a terminal window, typing `ri _whatever_` may be faster
+  than navigating to a browser window and searching for documentation.
+- If you are working
+  in {irb (interactive Ruby)}[https://docs.ruby-lang.org/en/master/IRB.html],
+  you _already_ have immediate access to `ri`.
+
+## Using `ri`
 
 With `ri`, you can quickly access documents for:
 
   - Ruby (core and standard library):
 
-    - Class (e.g., `Array`).
+    - Class or module (e.g., `Array` or `Enumerable`).
     - Singleton or instance method (e.g., `IO::readlines` or `IO#readlines`).
-    - Page (e.g., `dig_methods`).
+    - Page (e.g., `ruby:dig_methods`).
 
   - Gems:
 
-    - Class (e.g., `Nokogiri::HMTL4::Document).
+    - Class or module (e.g., `Nokogiri::HMTL4::Document` or `Nokogiri`).
     - Singleton or instance method
       (e.g., `Nokogiri::HTML4::Document::parse` or `Nokogiri::HTML4::Document#fragment`).
     - Page (e.g., `nokogiri:README`).
@@ -85,20 +99,16 @@ Examples:
     ppu: 0.55,
     ```
 
-## Why `ri`?
+## About the Examples
 
-Using `ri` may have advantages over using
-the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
+`ri` output can be large,
+and so here we sometimes pipe the output to one of these:
 
-- The `ri` documentation is always available, even when you do not have internet access
-  (think, airplane mode).
-- If you are working in a terminal window, typing `ri _whatever_` may be faster
-  than navigating to a browser window and searching for documentation.
-- If you are working
-  in {irb (interactive Ruby)}[https://docs.ruby-lang.org/en/master/IRB.html],
-  you have immediate access to `ri`.
+- {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
+- {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
+- {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
 
-## `ri` Modes
+## Modes
 
 There are two `ri` modes:
 
@@ -118,11 +128,16 @@ with a running interactive `ri` session;
 when you switch to that window, `ri` is ready to respond quickly,
 without the performance overhead of re-reading `ri` source files.
 
-## Summary
+## Names
 
-These examples summarize most uses of `ri`.
+In both modes, static and interactive,
+`ri` responds to input _names_;
+each name specifies documents or other information to be printed.
 
-- Ruby classes and modules:
+These examples summarize `ri` names
+(for details and examples, follow the links):
+
+- {Ruby classes and modules}[rdoc-ref:RI.md@Ruby+Classes+and+Modules]:
 
     | Name                  | Prints                                                    |
     |-----------------------|-----------------------------------------------------------|
@@ -130,8 +145,9 @@ These examples summarize most uses of `ri`.
     | File::File::Constants | Document for module File::File::Constants.                |
     | Ar                    | Nothing (not unique initial characters).                  |
     | Arr                   | Document for class Array (unique initial characters).     |
+<br>
 
-- Ruby methods:
+- {Ruby methods}[rdoc-ref:RI.md@Ruby+Methods]:
 
     | Name            | Prints                                                                                                        |
     |-----------------|---------------------------------------------------------------------------------------------------------------|
@@ -142,8 +158,9 @@ These examples summarize most uses of `ri`.
     | #readlines      | Documents for instance method #readlines in all classes and modules.                                          |
     | .readlines      | Documents for singleton method ::readlines and instance method #readlines in all classes and modules.         |
     | readlines       | Documents for singleton method ::readlines and instance method #readlines in all classes and modules.         |
- 
-- Ruby pages:
+<br>
+
+- {Ruby pages}[rdoc-ref:RI.md@Ruby+Pages]:
 
     | Name                        | Prints                                                          |
     |-----------------------------|-----------------------------------------------------------------|
@@ -153,8 +170,10 @@ These examples summarize most uses of `ri`.
     | ruby:syntax/assignment.rdoc | Document for page assignment.                                   |
     | ruby:syntax/assignment      | Document for page assignment (if no other syntax/assignment.*). |
     | ruby:assignment             | Document for page assignment (if no other */assignment.*).      |
+<br>
 
-- Gem documents (assuming gem Nokigiri installed):
+- {Gem documents}[rdoc-ref:RI.md@Gem+Documents]
+  (assuming gem Nokigiri installed):
 
     | Name                               | Prints                                                                         |
     |------------------------------------|--------------------------------------------------------------------------------|
@@ -179,15 +198,6 @@ $ ri --list-doc-dirs
 
 These are the directories that `ri` may search, which may or may not actually exist.
 
-## About the Examples
-
-`ri` output can be large,
-and so here we sometimes pipe the output to one of these:
-
-- {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
-- {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
-- {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
-
 ## Static Mode
 
 In static mode, `ri` prints a response and exits.
@@ -195,7 +205,7 @@ In static mode, `ri` prints a response and exits.
 In general, `ri` responds in static mode
 if the command has an argument.
 
-### Classes and Modules
+### Ruby Classes and Modules
 
 To get the document for a particular class or module,
 give its name as the argument:
@@ -293,7 +303,7 @@ $ ri --all Array | wc -l # Class and methods.
 4224
 ```
 
-### Methods
+### Ruby Methods
 
 To get the document for a particular instance method,
 include the class/module name and the method name in the command:
@@ -312,7 +322,7 @@ Reads length bytes from the I/O stream.
 ```
 
 
-### Pages
+### Ruby Pages
 
 `ri` handles free-standing _pages_,
 each of which presents a document that is not defined within a class or module.
@@ -399,7 +409,7 @@ If the page name is sufficiently unique,
 you can omit leading and trailing elements:
 `ruby:exeptions` is the same as `ruby:syntax/exceptions.rdoc`.
 
-### Gems
+### Gem Documents
 
 
 
