@@ -122,55 +122,50 @@ without the performance overhead of re-reading `ri` source files.
 
 These examples summarize most uses of `ri`.
 
-- Classes and modules:
+- Ruby classes and modules:
 
-    | Item                     | Prints                                                    |
-    |--------------------------|-----------------------------------------------------------|
-    | ri --list                | List of all classes and modules.                          |
-    | ri --list Fi             | List of all classes and modules beginning with Fi.        |
-    | ri File                  | Document for class File.                                  |
-    | ri File::File::Constants | Document for module File::File::Constants.                |
-    | ri --all File            | Documents for class File, its constants, and its methods. |
-    | ri Ar                    | Nothing (not unique initial characters).                  |
-    | ri Arr                   | Document for class Array (unique initial characters).     |
+    | Name                  | Prints                                                    |
+    |-----------------------|-----------------------------------------------------------|
+    | File                  | Document for class File.                                  |
+    | File::File::Constants | Document for module File::File::Constants.                |
+    | Ar                    | Nothing (not unique initial characters).                  |
+    | Arr                   | Document for class Array (unique initial characters).     |
 
-- Methods:
+- Ruby methods:
 
-    | Item             | Prints                                                                                                        |
-    |------------------|---------------------------------------------------------------------------------------------------------------|
-    | ri IO::readlines | Document for singleton method IO::readlines.                                                                  |
-    | ri IO#readlines  | Document for instance method IO::readlines.                                                                   |
-    | ri IO.readlines  | Documents for instance method IO::readlines and singleton method IO::readlines.                               |
-    | ri ::readlines   | Documents for singleton method readlines in all classes and modules.                                          |
-    | ri \#readlines   | Documents for instance method #readlines in all classes and modules.                                          |
-    | ri .readlines    | Documents for singleton method ::readlines and instance method #readlines in all classes and modules.         |
-    | ri readlines     | Documents for singleton method ::readlines and instance method #readlines in all classes and modules.         |
+    | Name            | Prints                                                                                                        |
+    |-----------------|---------------------------------------------------------------------------------------------------------------|
+    | IO::readlines   | Document for singleton method IO::readlines.                                                                  |
+    | IO#readlines    | Document for instance method IO::readlines.                                                                   |
+    | IO.readlines    | Documents for instance method IO::readlines and singleton method IO::readlines.                               |
+    | ::readlines     | Documents for singleton method readlines in all classes and modules.                                          |
+    | #readlines      | Documents for instance method #readlines in all classes and modules.                                          |
+    | .readlines      | Documents for singleton method ::readlines and instance method #readlines in all classes and modules.         |
+    | readlines       | Documents for singleton method ::readlines and instance method #readlines in all classes and modules.         |
  
 - Ruby pages:
 
-    | Item                           | Prints                                                          |
-    |--------------------------------|-----------------------------------------------------------------|
-    | ri ruby:                       | List of Ruby pages.                                             |
-    | ri ruby:security.rdoc          | Document for page security.                                     |
-    | ri ruby:security               | Document for page security (if no other security.*).            |
-    | ri ruby:syntax/assignment.rdoc | Document for page assignment.                                   |
-    | ri ruby:syntax/assignment      | Document for page assignment (if no other syntax/assignment.*). |
-    | ri ruby:assignment             | Document for page assignment (if no other */assignment.*).      |
+    | Name                        | Prints                                                          |
+    |-----------------------------|-----------------------------------------------------------------|
+    | ruby:                       | List of Ruby pages.                                             |
+    | ruby:security.rdoc          | Document for page security.                                     |
+    | ruby:security               | Document for page security (if no other security.*).            |
+    | ruby:syntax/assignment.rdoc | Document for page assignment.                                   |
+    | ruby:syntax/assignment      | Document for page assignment (if no other syntax/assignment.*). |
+    | ruby:assignment             | Document for page assignment (if no other */assignment.*).      |
 
-- Gems (assuming gem Nokigiri installed):
+- Gem documents (assuming gem Nokigiri installed):
 
-    | Item                                  | Prints                                                                         |
-    |---------------------------------------|--------------------------------------------------------------------------------|
-    | ri Nokigiri                           | Document for module Nokogiri.                                                  |
-    | ri --list Nokogiri                    | List of classes and modules in Nokogiri.                                       |
-    | ri Nokigiri::CSS                      | Document for class Nokogiri::CSS.                                              |
-    | ri nokogiri:                          | List of Nokogiri pages.                                                        |
-    | ri nokogiri:README.md                 | Document for page README.md.                                                   |
-    | ri nokogiri:README                    | Document for page README.md (if no other README.*).                            |
-    | ri Nokogiri::HTML4::Document          | Document for class Nokogiri::HTML4::Document.                                  |
-    | ri --all Nokogiri::HTML4::Document    | Documents for class Nokogiri::HTML4::Document, its constants, and its methods. |
-    | ri Nokogiri::HTML4::Document::parse   | Document for singleton method Nokogiri::HTML4::Document::parse.                |
-    | ri Nokogiri::HTML4::Document#fragment | Document for instance method Nokogiri::HTML4::Document#fragment.               |
+    | Name                               | Prints                                                                         |
+    |------------------------------------|--------------------------------------------------------------------------------|
+    | Nokigiri                           | Document for module Nokogiri.                                                  |
+    | Nokigiri::CSS                      | Document for class Nokogiri::CSS.                                              |
+    | nokogiri:                          | List of Nokogiri pages.                                                        |
+    | nokogiri:README.md                 | Document for page README.md.                                                   |
+    | nokogiri:README                    | Document for page README.md (if no other README.*).                            |
+    | Nokogiri::HTML4::Document          | Document for class Nokogiri::HTML4::Document.                                  |
+    | Nokogiri::HTML4::Document::parse   | Document for singleton method Nokogiri::HTML4::Document::parse.                |
+    | Nokogiri::HTML4::Document#fragment | Document for instance method Nokogiri::HTML4::Document#fragment.               |
 
 ## Source Files
 
