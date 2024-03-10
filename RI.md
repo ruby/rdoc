@@ -1,7 +1,22 @@
 # `ri` (Ruby Information)
 
-`ri` is a the command-line interface to Ruby documentation;
-it accepts commands and prints Ruby documents or other information.
+`ri` is the the command-line interface to Ruby documentation;
+it gives fast and easy access to Ruby documentation.
+
+With `ri`, you can quickly access documents for:
+
+  - Ruby (core and standard library):
+
+    - Class (e.g., `Array`).
+    - Singleton or instance method (e.g., `IO::readlines` or `IO#readlines`).
+    - Page (e.g., `dig_methods`).
+
+  - Gems:
+
+    - Class (e.g., `Nokogiri::HMTL4::Document).
+    - Singleton or instance method
+      (e.g., `Nokogiri::HTML4::Document::parse` or `Nokogiri::HTML4::Document#fragment`).
+    - Page (e.g., `nokogiri:README`).
 
 Examples:
 
@@ -22,20 +37,35 @@ Examples:
     elements.  Any object (even another array) may be an array element.
     ```
 
-- Document for instance method {Array#first}[https://docs.ruby-lang.org/en/master/Array.html#method-i-first]:
+- Document for singleton method {IO::readlines}[https://docs.ruby-lang.org/en/master/IO.html#method-c-readlines]:
 
     ```sh
-    $ ri Array#first | head
-    = Array#first
+    $ ri IO::readlines | head
+    = IO::readlines
     
     (from ruby core)
     ------------------------------------------------------------------------
-    array.first -> object or nil
-    array.first(n) -> new_array
+    IO.readlines(name, sep=$/ [, getline_args, open_args])     -> array
+    IO.readlines(name, limit [, getline_args, open_args])      -> array
+    IO.readlines(name, sep, limit [, getline_args, open_args]) -> array
     
     ------------------------------------------------------------------------
     
-    Returns elements from self; does not modify self.
+    ```
+
+- Document for instance method {IO#readlines}[https://docs.ruby-lang.org/en/master/IO.html#method-i-readlines]:
+
+    ```sh
+    $ ri IO#readlines | head
+    = IO#readlines
+    
+    (from ruby core)
+    ------------------------------------------------------------------------
+    ios.readlines(sep=$/ [, getline_args])     -> array
+    ios.readlines(limit [, getline_args])      -> array
+    ios.readlines(sep, limit [, getline_args]) -> array
+    
+    ------------------------------------------------------------------------
 
     ```
 
@@ -54,23 +84,6 @@ Examples:
     name: "Cake",
     ppu: 0.55,
     ```
-
-- Document for (gem) class Nokogiri:
-
-    ```sh
-    $ ri Nokogiri | head
-    = Nokogiri
-    
-    (from gem nokogiri-1.16.2-x86_64-linux)
-    ------------------------------------------------------------------------
-    
-    Nokogiri parses and searches XML/HTML very quickly, and also has
-    correctly implemented CSS3 selector support as well as XPath 1.0
-    support.
-    
-    Parsing a document returns either a Nokogiri::XML::Document, or a
-    ```
-
 
 ## Why `ri`?
 
@@ -98,19 +111,12 @@ There are two `ri` modes:
   if the command has no argument.
   See {Interactive Mode}[RI_md.html#label-Interactive+Mode].
 
+<b>Pro tip</b>:
 If you are a frequent `ri` user,
-you can save time by keeping open a command window with an active `ri` session:
-
-```sh
-$ ri
-Enter the method name you want to look up.
-You can use tab to autocomplete.
-Enter a blank line to exit.
->>
-```
-
-This avoid the performance overhead of reading the `ri` files
-every time you invoke `ri`.
+you can save time by keeping open a dedicated command window
+with a running interactive `ri` session;
+when you switch to that window, `ri` is ready to respond quickly,
+without the performance overhead of re-reading `ri` source files.
 
 ## Summary
 
