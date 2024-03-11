@@ -1,6 +1,23 @@
 # `ri` (Ruby Information)
 
-`ri` gives fast and easy on-line access to Ruby documentation.
+`ri` is the command-line utility
+that gives fast and easy on-line access to Ruby documentation.
+
+Example (`head` restricts output to leading lines):
+
+```sh
+$ ri Array | head
+= Array < Object
+
+------------------------------------------------------------------------
+= Includes:
+Enumerable (from ruby core)
+
+(from ruby core)
+------------------------------------------------------------------------
+An Array is an ordered, integer-indexed collection of objects, called
+elements.  Any object may be an Array element.
+```
 
 ## Why `ri`?
 
@@ -14,6 +31,17 @@ the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
 - If you are working
   in {irb (interactive Ruby)}[https://docs.ruby-lang.org/en/master/IRB.html],
   you _already_ have immediate access to `ri`.
+
+## About the Examples
+
+`ri` output can be large,
+and so here we sometimes pipe the output to one of these:
+
+- {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
+- {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
+- {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
+
+We also assume that gem nokogiri is installed.
 
 ## Using `ri`
 
@@ -99,35 +127,32 @@ Examples:
     ppu: 0.55,
     ```
 
-## About the Examples
-
-`ri` output can be large,
-and so here we sometimes pipe the output to one of these:
-
-- {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
-- {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
-- {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
-
-We also assume that gem nokogiri is installed.
-
 ## Modes
 
 There are two `ri` modes:
 
 - <i>Static mode</i>:
   In general, `ri` responds in static mode
-  if the command has an argument.
+  if the command has an argument;
+  in static mode, `ri` prints and exits.
   See {Static Mode}[RI_md.html#label-Static+Mode].
 - <i>Interactive mode</i>:
   In general, `ri` responds in interactive mode
-  if the command has no argument.
+  if the command has no argument;
+  in interactive mode, `ri` prints and waits for another command.
   See {Interactive Mode}[RI_md.html#label-Interactive+Mode].
 
-<b>Pro tip</b>:
+## Pro Tip
+
 If you are a frequent `ri` user,
 you can save time by keeping open a dedicated command window
-with a running interactive `ri` session;
-when you switch to that window, `ri` is ready to respond quickly,
+with either of:
+
+- A running {interactive ri}[rdoc-ref:RI.md@Interactive+Mode] session.
+- A running {irb session}[https://docs.ruby-lang.org/en/master/IRB.html];
+  type `help` or `show_doc` to enter `ri`, newline to exit.
+
+When you switch to that window, `ri` is ready to respond quickly, 
 without the performance overhead of re-reading `ri` source files.
 
 ## Names
@@ -135,7 +160,29 @@ without the performance overhead of re-reading `ri` source files.
 In both modes, static and interactive,
 `ri` responds to input _names_;
 each name specifies what is to be printed:
-a document, multiple documents, or other information.
+a document, multiple documents, or other information:
+
+- In the shell, type `ri _name_`;
+  examples (output for names omitted):
+
+    ```sh
+    $ ri ruby:
+    $ ri File
+    $ ri IO#readlines
+    ```
+  
+- In `ri`, just type the name; 
+  examples (output for names omitted):
+
+    ```sh
+    $ ri
+    Enter the method name you want to look up.
+    You can use tab to autocomplete.
+    Enter a blank line to exit.
+    >> ruby:
+    >> File
+    >> IO#readlines
+    ```
 
 ### Names for Getting Lists
 
@@ -202,18 +249,6 @@ See also {option --all}[rdoc-ref:RI.md@-all].
     | Nokogiri::HTML4::Document#fragment | Document for instance method Nokogiri::HTML4::Document#fragment.               |
 
 See also {option --all}[rdoc-ref:RI.md@-all].
-
-## Source Files
-
-`ri` derives documentation from files in _local_ directories,
-(not from the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]).
-To see the source directories on your local machine:
-
-```sh
-$ ri --list-doc-dirs
-```
-
-These are the directories that `ri` may search, which may or may not actually exist.
 
 ## Static Mode
 
@@ -447,7 +482,53 @@ these include:
 In general' `ri` responds to a command in interactive mode
 if the command has no arguments.
 
+## Source Files
+
+`ri` derives documentation from files in _local_ directories,
+(not from the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]).
+To see the source directories on your local machine:
+
+```sh
+$ ri --list-doc-dirs
+```
+
+These are the directories that `ri` may search, which may or may not actually exist.
+
 ## Options
+
+Summary (see details and examples below):
+
+| Option                  | Effect                                                                            |
+|-------------------------|-----------------------------------------------------------------------------------|
+| --all, -a               | Print all (class or module plus methods); default is --no-all.                    |
+| --doc-dir=_DIRPATH_, -d | Add directory to ri source directories; may be repeated.                          |
+| --dump=FILEPATH         | Print dump of cache file; default is --no-dump.                                   |
+| --format=FORMAT, -f     | Set formatter: ansi, bs, markdown, rdoc; default is bs for pager, ansi otherwise. |
+| --gems                  | Include docs for installed gems; default.                                         |
+| --help, -h              | Print help message and exit.                                                      |
+| --home                  | Include docs from ~/.rdoc; default.                                               |
+| --interactive, -i       | Enter interactive mode; default when no name given.                               |
+| --list, -l              | Print list of classes and modules; default is --no-list.                          |
+| --list-doc-dirs         | Print list of ri source directories; default is --no-list-doc-dirs.               |
+| --no-all                | Do not print all; default.                                                        |
+| --no-dump               | Do not print dump of cache file; default.                                         |
+| --no-gems               | Exclude docs for installed gems; default is --gems.                               |
+| --no-home               | Exclude docs from ~/.rdoc; default is --home.                                     |
+| --no-interactive        | Do not enter interactive mode; default when name given.                           |
+| --no-list               | Do not print list; default.                                                       |
+| --no-list-doc-dirs      | Do not print list of ri source directories; default;                              |
+| --no-pager, -T          | Do not pipe output to pager; default is --pager.                                  |
+| --no-profile            | Do not run with Ruby profiler; default.                                           |
+| --no-site               | Exclude docs from site libraries; default is --site.                              |
+| --no-standard-docs      | Exclude docs from the standard library, etc; default is --standard-docs.          |
+| --no-system             | Exclude docs from from standard library; default is --system.                     |
+| --pager                 | Pipe output to pager; default.                                                    |
+| --no-profile            | Run with Ruby profiler; default is --no-profile.                                  |
+| --server=NUMBER         | Set port for RDoc server; default is 8214.                                        |
+| --site                  | Include docs from site libraries; default.                                        |
+| --system                | Include docs from from standard library; default.                                 |
+| --version, -v           | Print ri version and exit.                                                        |
+| --width=NUMBER, -w      | Set width (in characters) for output; default is 80.                              |
 
 ### `--all`
 
