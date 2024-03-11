@@ -34,14 +34,23 @@ the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
 
 ## About the Examples
 
-`ri` output can be large,
-and so here we sometimes pipe the output to one of these:
+- `ri` output can be large,
+  and so here we sometimes pipe the output to one of these:
 
-- {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
-- {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
-- {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
+    - {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
+    - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
+    - {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
 
-We also assume that gem nokogiri is installed.
+- Some examples define an environment variable on the command line:
+
+    ```sh
+    $ RI="--all --no-gems" ruby -e "p ENV['RI']"
+    "--all --no-gems"
+    $ RI_PAGER="grep . | less" ruby -e "p ENV['RI_PAGER']"
+    "grep . | less"
+    ```
+
+- We assume that gem nokogiri is installed.
 
 ## Using `ri`
 
@@ -530,7 +539,34 @@ Summary (see details and examples below):
 | --version, -v           | Print ri version and exit.                                                        |
 | --width=NUMBER, -w      | Set width (in characters) for output; default is 80.                              |
 
-### `--all`
+Options may be given on the `ri` command line;
+those should be whitespace-separated, and must precede the given _name_, if any.
+
+Options may also be specified in environment variable `RI`;
+those should also be whitespace-separated.
+
+An option specified in environment variable `RI`
+may be overridden by an option on the `ri` command line:
+
+```sh
+$ RI="--all" ri Array | wc -l
+4224
+$ RI="--all" ri --no-all Array | wc -l
+390
+```
+
+### `--all`, `-a`
+
+Option `--all` (aliased as `-a`) specifies that when _name_ identifies a class or module,
+the output should include both the document for that object
+and those for all its methods:
+
+```shell
+$ ri Array | wc -l
+390
+$ ri --all Array | wc -l
+4224
+```
 
 ### `--list`
 
