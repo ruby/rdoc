@@ -220,7 +220,7 @@ These tables summarize `ri` names for getting documents
     | Arr                   | Document for class Array (unique initial characters).     |
 <br>
 
-See also {option --all}[rdoc-ref:RI.md@-all].
+See also {option --all}[rdoc-ref:RI.md@-all-2C+-a].
  
 - {Ruby methods}[rdoc-ref:RI.md@Ruby+Methods]:
 
@@ -257,7 +257,7 @@ See also {option --all}[rdoc-ref:RI.md@-all].
     | Nokogiri::HTML4::Document::parse   | Document for singleton method Nokogiri::HTML4::Document::parse.                |
     | Nokogiri::HTML4::Document#fragment | Document for instance method Nokogiri::HTML4::Document#fragment.               |
 
-See also {option --all}[rdoc-ref:RI.md@-all].
+See also {option --all}[rdoc-ref:RI.md@-all-2C+-a].
 
 ## Static Mode
 
