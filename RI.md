@@ -505,7 +505,23 @@ These are the directories that `ri` may search, which may or may not actually ex
 
 ## Options
 
-Summary (see details and examples below):
+Options may be given on the `ri` command line;
+those should be whitespace-separated, and must precede the given _name_, if any.
+
+Options may also be specified in environment variable `RI`;
+those should also be whitespace-separated.
+
+An option specified in environment variable `RI`
+may be overridden by an option on the `ri` command line:
+
+```sh
+$ RI="--all" ri Array | wc -l
+4224
+$ RI="--all" ri --no-all Array | wc -l
+390
+```
+
+### Summary
 
 | Option                  | Effect                                                                            |
 |-------------------------|-----------------------------------------------------------------------------------|
@@ -539,22 +555,6 @@ Summary (see details and examples below):
 | --version, -v           | Print ri version and exit.                                                        |
 | --width=NUMBER, -w      | Set width (in characters) for output; default is 80.                              |
 
-Options may be given on the `ri` command line;
-those should be whitespace-separated, and must precede the given _name_, if any.
-
-Options may also be specified in environment variable `RI`;
-those should also be whitespace-separated.
-
-An option specified in environment variable `RI`
-may be overridden by an option on the `ri` command line:
-
-```sh
-$ RI="--all" ri Array | wc -l
-4224
-$ RI="--all" ri --no-all Array | wc -l
-390
-```
-
 ### `--all`, `-a`
 
 Option `--all` (aliased as `-a`) specifies that when _name_ identifies a class or module,
@@ -568,9 +568,33 @@ $ ri --all Array | wc -l
 4224
 ```
 
-### `--list`
+### `--doc-dir=DIRPATH`, `-d`
 
+Option `--doc-dir=DIRPATH` (aliased as `-d`) adds the given directory path
+to the front (like `unshift`) of the array of `ri` source directory paths.
 
+### `--dump=FILEPATH`
+
+Option `--dump=FILEPATH` specifies that `ri` is to dump the content
+of the `.ri` file at the given file path;
+the path may point to any `.ri` file,
+but typically would point to one named `cache.ri`:
+
+```sh
+$ ri --dump=/usr/share/ri/3.0.0/system/cache.ri | wc -l
+14487
+$ ri --dump=/usr/share/ri/3.0.0/system/cache.ri | head
+{:ancestors=>
+  {"Array"=>["Enumerable", "Object"],
+   "RubyVM"=>["Object"],
+   "RubyVM::AbstractSyntaxTree::Node"=>["Object"],
+   "Object"=>["BasicObject", "Kernel"],
+   "Integer"=>["Numeric"],
+   "Module"=>["Object"],
+   "Class"=>["Module"],
+   "Complex"=>["Numeric"],
+   "NilClass"=>["Object"],
+```
 
 ## Environment Variables
 
