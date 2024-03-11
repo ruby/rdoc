@@ -568,6 +568,8 @@ $ ri --all Array | wc -l
 4224
 ```
 
+The default is `--no-all`.
+
 ### `--doc-dir=DIRPATH`, `-d`
 
 Option `--doc-dir=DIRPATH` (aliased as `-d`) adds the given directory path
@@ -595,6 +597,31 @@ $ ri --dump=/usr/share/ri/3.0.0/system/cache.ri | head
    "Complex"=>["Numeric"],
    "NilClass"=>["Object"],
 ```
+
+### `--format=FORMAT`, `-f`
+
+Option `--format=FORMAT` (aliased as `-f`) specifies the formatter for the output,
+which must `ansi`, `bs`, `markdown`, or `rdoc`;
+the default is `bs` for paged output, `ansi` otherwise.
+
+### `--gems`
+
+Option `--gems` (the default) specifies that `ri` sources
+will include those for installed gems;
+option `--no-gems` may be used to exclude them:
+
+```sh
+$ ri --list | wc -l
+1417
+$ ri --list --no-gems| wc -l
+1262
+```
+
+### `--help`, '-h'
+
+Option `--help` (aliased as `-h`) specifies that `ri` is to print
+its help text and exit.
+
 
 ## Environment Variables
 
