@@ -213,11 +213,12 @@ These tables summarize `ri` names for getting documents
 
 - {Ruby classes and modules}[rdoc-ref:RI.md@Ruby+Classes+and+Modules]:
 
-    | Name                  | Prints                                                    |
-    |-----------------------|-----------------------------------------------------------|
-    | File                  | Document for class File.                                  |
-    | File::File::Constants | Document for module File::File::Constants.                |
-    | Arr                   | Document for class Array (unique initial characters).     |
+    | Name       | Prints                                                |
+    |------------|-------------------------------------------------------|
+    | File       | Document for class File.                              |
+    | File::Stat | Document for nested class File::Stat.                 |
+    | Enumerable | Document for module Enumerable.                       |
+    | Arr        | Document for class Array (unique initial characters). |
 <br>
 
     See also {option --all}[rdoc-ref:RI.md@-all-2C+-a].
@@ -231,9 +232,12 @@ These tables summarize `ri` names for getting documents
     | IO#readlines          | Document for instance method IO::readlines.                                     |
     | IO.readlines          | Documents for instance method IO::readlines and singleton method IO::readlines. |
     | ::readlines           | Documents for all singleton methods ::readlines.                                |
-    | #readlines            | Documents for all instance methods #readlines.                                  |
+    | #readlines            | Documents for all instance methods #readlines; see note below.                   |
     | .readlines, readlines | Documents for singleton methods ::readlines and instance methods #readlines.    |
 <br>
+
+    Note: in static mode, the name must be escaped as `\#readlines`;
+    see {Escaping Names}[rdoc-ref:RI.md@Escaping+Names].
 
 - {Ruby pages}[rdoc-ref:RI.md@Ruby+Pages]:
 
@@ -530,6 +534,9 @@ these include:
 - {Option --list}: Prints list of classes and modules.
 - {Option --list-doc-dirs}: Prints list of `ri` source directories.
 - {Option --version}: Prints `ri` version.
+
+### Escaping Names
+
 
 
 ## Interactive Mode
