@@ -523,43 +523,42 @@ $ RI="--all" ri --no-all Array | wc -l
 
 ### Summary
 
-| Option               | Effect                                                                            |
-|----------------------|-----------------------------------------------------------------------------------|
-| --all, -a            | Print all (class or module plus methods); default is --no-all.                    |
-| --doc-dir=_DIRPATH_, -d | Add directory to ri source directories; may be repeated.                          |
-| --dump=FILEPATH      | Print dump of cache file; default is --no-dump.                                   |
-| --format=FORMAT, -f  | Set formatter: ansi, bs, markdown, rdoc; default is bs for pager, ansi otherwise. |
-| --gems               | Include docs for installed gems; default.                                         |
-| --help, -h           | Print help message and exit.                                                      |
-| --home               | Include docs from ~/.rdoc; default.                                               |
-| --interactive, -i    | Enter interactive mode; default when no name given.                               |
-| --list, -l           | Print list of classes and modules; default is --no-list.                          |
-| --list-doc-dirs      | Print list of ri source directories; default is --no-list-doc-dirs.               |
-| --no-all             | Do not print all; default.                                                        |
-| --no-dump            | Do not print dump of cache file; default.                                         |
-| --no-gems            | Exclude docs for installed gems; default is --gems.                               |
-| --no-home            | Exclude docs from ~/.rdoc; default is --home.                                     |
-| --no-interactive     | Do not enter interactive mode; default when name given.                           |
-| --no-list            | Do not print list; default.                                                       |
-| --no-list-doc-dirs   | Do not print list of ri source directories; default;                              |
-| --no-pager, -T       | Do not pipe output to pager; default is --pager.                                  |
-| --no-profile         | Do not run with Ruby profiler; default.                                           |
-| --no-site            | Exclude docs from site libraries; default is --site.                              |
-| --no-standard-docs   | Exclude docs from the standard library, etc; default is to include them.          |
-| --no-system          | Exclude docs from from system library; default is --system.                       |
-| --pager              | Pipe output to pager; default.                                                    |
-| --profile            | Run with Ruby profiler; default is --no-profile.                                  |
-| --server=NUMBER      | Set port for RDoc server; default is 8214.                                        |
-| --site               | Include docs from site libraries; default.                                        |
-| --system             | Include docs from from system library; default.                                   |
-| --version, -v        | Print ri version and exit.                                                        |
-| --width=NUMBER, -w   | Set width (in characters) for output; default is 80.                              |
+| Option                   | Effect                                                                            |
+|--------------------------|-----------------------------------------------------------------------------------|
+| --all, -a                | Print all (class or module plus methods); default is --no-all.                    |
+| --doc-dir=_DIRPATH_, -d  | Add directory to ri source directories; may be repeated.                          |
+| --dump=FILEPATH          | Print dump of cache file; default is --no-dump.                                   |
+| --format=FORMAT, -f      | Set formatter: ansi, bs, markdown, rdoc; default is bs for pager, ansi otherwise. |
+| --gems                   | Allow documents from installed gems; default.                                     |
+| --help, -h               | Print help message and exit.                                                      |
+| --home                   | Allow documents from ~/.rdoc; default.                                            |
+| --interactive, -i        | Enter interactive mode; default when no name given.                               |
+| --list, -l               | Print list of classes and modules; default is --no-list.                          |
+| --list-doc-dirs          | Print list of ri source directories; default is --no-list-doc-dirs.               |
+| --no-all                 | Do not print methods for named class or module; default.                          |
+| --no-dump                | Do not print dump of cache file; default.                                         |
+| --no-gems                | Exclude documents for installed gems; default is --gems.                          |
+| --no-home                | Exclude documents from ~/.rdoc; default is --home.                                |
+| --no-interactive         | Do not enter interactive mode; default when name given.                           |
+| --no-list                | Do not print list; default.                                                       |
+| --no-list-doc-dirs       | Do not print list of ri source directories; default;                              |
+| --no-pager, -T           | Do not pipe output to pager; default is --pager.                                  |
+| --no-profile             | Do not run with Ruby profiler; default.                                           |
+| --no-site                | Exclude documents from site libraries; default is --site.                         |
+| --no-standard-docs       | Exclude documents from the standard library, etc; default is to include them.     |
+| --no-system              | Exclude documents from from system libraries; default is --system.                |
+| --pager                  | Pipe output to pager; default.                                                    |
+| --profile                | Run with Ruby profiler; default is --no-profile.                                  |
+| --server=NUMBER          | Set port for RDoc server; default is 8214.                                        |
+| --site                   | Allow documents from site libraries; default.                                     |
+| --system                 | Allow documents from from system libraries; default.                              |
+| --version, -v            | Print ri version and exit.                                                        |
+| --width=NUMBER, -w       | Set width (in characters) for output; default is 80.                              |
 
 ### `--all`, `-a`
 
 Option `--all` (aliased as `-a`) specifies that when _name_ identifies a class or module,
-the output should include both the document for that object
-and those for all its methods:
+the output should include the documents for all its methods:
 
 ```shell
 $ ri Array | wc -l
@@ -573,7 +572,12 @@ The default is `--no-all`.
 ### `--doc-dir=DIRPATH`, `-d`
 
 Option `--doc-dir=DIRPATH` (aliased as `-d`) adds the given directory path
-to the front (like `unshift`) of the array of `ri` source directory paths.
+to the beginning of the array of `ri` source directory paths:
+
+```sh
+$ ri --doc-dir=/tmp --list-doc-dirs | head -1
+/tmp
+```
 
 ### `--dump=FILEPATH`
 
@@ -603,13 +607,13 @@ $ ri --dump=/usr/share/ri/3.0.0/system/cache.ri | head
 ### `--format=FORMAT`, `-f`
 
 Option `--format=FORMAT` (aliased as `-f`) specifies the formatter for the output,
-which must `ansi`, `bs`, `markdown`, or `rdoc`;
+which must be `ansi`, `bs`, `markdown`, or `rdoc`;
 the default is `bs` for paged output, `ansi` otherwise.
 
 ### `--gems`
 
-Option `--gems` (the default) specifies that `ri` sources
-will include those for installed gems;
+Option `--gems` (the default) specifies that documents from installed gems
+may be included;
 option `--no-gems` may be used to exclude them:
 
 ```sh
