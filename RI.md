@@ -167,8 +167,8 @@ without the performance overhead of re-reading `ri` source files.
 ## Names
 
 In both modes, static and interactive,
-`ri` responds to input _names_;
-each name specifies what is to be printed:
+`ri` responds to an input _name_;
+the _name_ specifies what is to be printed:
 a document, multiple documents, or other information:
 
 - In the shell, type `ri _name_`;
@@ -180,7 +180,7 @@ a document, multiple documents, or other information:
     $ ri IO#readlines
     ```
   
-- In `ri`, just type the name; 
+- In `ri`, just type the _name_; 
   examples (output for names omitted):
 
     ```sh
@@ -269,7 +269,7 @@ if the command has an argument.
 ### Ruby Classes and Modules
 
 To get the document for a particular class or module,
-give its name as the argument:
+give its _name_ as the argument:
 
 For class `File`:
 
@@ -309,7 +309,7 @@ $ ri Arr | head -1
 = Array < Object
 ```
 
-If the name is not unique initial characters,
+If the _name_ is not unique initial characters,
 no document is found:
 
 ```sh
@@ -523,37 +523,37 @@ $ RI="--all" ri --no-all Array | wc -l
 
 ### Summary
 
-| Option                  | Effect                                                                            |
-|-------------------------|-----------------------------------------------------------------------------------|
-| --all, -a               | Print all (class or module plus methods); default is --no-all.                    |
+| Option               | Effect                                                                            |
+|----------------------|-----------------------------------------------------------------------------------|
+| --all, -a            | Print all (class or module plus methods); default is --no-all.                    |
 | --doc-dir=_DIRPATH_, -d | Add directory to ri source directories; may be repeated.                          |
-| --dump=FILEPATH         | Print dump of cache file; default is --no-dump.                                   |
-| --format=FORMAT, -f     | Set formatter: ansi, bs, markdown, rdoc; default is bs for pager, ansi otherwise. |
-| --gems                  | Include docs for installed gems; default.                                         |
-| --help, -h              | Print help message and exit.                                                      |
-| --home                  | Include docs from ~/.rdoc; default.                                               |
-| --interactive, -i       | Enter interactive mode; default when no name given.                               |
-| --list, -l              | Print list of classes and modules; default is --no-list.                          |
-| --list-doc-dirs         | Print list of ri source directories; default is --no-list-doc-dirs.               |
-| --no-all                | Do not print all; default.                                                        |
-| --no-dump               | Do not print dump of cache file; default.                                         |
-| --no-gems               | Exclude docs for installed gems; default is --gems.                               |
-| --no-home               | Exclude docs from ~/.rdoc; default is --home.                                     |
-| --no-interactive        | Do not enter interactive mode; default when name given.                           |
-| --no-list               | Do not print list; default.                                                       |
-| --no-list-doc-dirs      | Do not print list of ri source directories; default;                              |
-| --no-pager, -T          | Do not pipe output to pager; default is --pager.                                  |
-| --no-profile            | Do not run with Ruby profiler; default.                                           |
-| --no-site               | Exclude docs from site libraries; default is --site.                              |
-| --no-standard-docs      | Exclude docs from the standard library, etc; default is --standard-docs.          |
-| --no-system             | Exclude docs from from standard library; default is --system.                     |
-| --pager                 | Pipe output to pager; default.                                                    |
-| --no-profile            | Run with Ruby profiler; default is --no-profile.                                  |
-| --server=NUMBER         | Set port for RDoc server; default is 8214.                                        |
-| --site                  | Include docs from site libraries; default.                                        |
-| --system                | Include docs from from standard library; default.                                 |
-| --version, -v           | Print ri version and exit.                                                        |
-| --width=NUMBER, -w      | Set width (in characters) for output; default is 80.                              |
+| --dump=FILEPATH      | Print dump of cache file; default is --no-dump.                                   |
+| --format=FORMAT, -f  | Set formatter: ansi, bs, markdown, rdoc; default is bs for pager, ansi otherwise. |
+| --gems               | Include docs for installed gems; default.                                         |
+| --help, -h           | Print help message and exit.                                                      |
+| --home               | Include docs from ~/.rdoc; default.                                               |
+| --interactive, -i    | Enter interactive mode; default when no name given.                               |
+| --list, -l           | Print list of classes and modules; default is --no-list.                          |
+| --list-doc-dirs      | Print list of ri source directories; default is --no-list-doc-dirs.               |
+| --no-all             | Do not print all; default.                                                        |
+| --no-dump            | Do not print dump of cache file; default.                                         |
+| --no-gems            | Exclude docs for installed gems; default is --gems.                               |
+| --no-home            | Exclude docs from ~/.rdoc; default is --home.                                     |
+| --no-interactive     | Do not enter interactive mode; default when name given.                           |
+| --no-list            | Do not print list; default.                                                       |
+| --no-list-doc-dirs   | Do not print list of ri source directories; default;                              |
+| --no-pager, -T       | Do not pipe output to pager; default is --pager.                                  |
+| --no-profile         | Do not run with Ruby profiler; default.                                           |
+| --no-site            | Exclude docs from site libraries; default is --site.                              |
+| --no-standard-docs   | Exclude docs from the standard library, etc; default is to include them.          |
+| --no-system          | Exclude docs from from system library; default is --system.                       |
+| --pager              | Pipe output to pager; default.                                                    |
+| --profile            | Run with Ruby profiler; default is --no-profile.                                  |
+| --server=NUMBER      | Set port for RDoc server; default is 8214.                                        |
+| --site               | Include docs from site libraries; default.                                        |
+| --system             | Include docs from from system library; default.                                   |
+| --version, -v        | Print ri version and exit.                                                        |
+| --width=NUMBER, -w   | Set width (in characters) for output; default is 80.                              |
 
 ### `--all`, `-a`
 
@@ -579,7 +579,9 @@ to the front (like `unshift`) of the array of `ri` source directory paths.
 
 Option `--dump=FILEPATH` specifies that `ri` is to dump the content
 of the `.ri` file at the given file path;
-the path may point to any `.ri` file,
+the default is `--no-dump`.
+
+The file path may point to any `.ri` file,
 but typically would point to one named `cache.ri`:
 
 ```sh
@@ -617,10 +619,150 @@ $ ri --list --no-gems| wc -l
 1262
 ```
 
-### `--help`, '-h'
+### `--help`, `-h`
 
 Option `--help` (aliased as `-h`) specifies that `ri` is to print
 its help text and exit.
+
+### `--home`
+
+Option `--home` (the default) specifies that `ri` is to include source directory
+in `~/.rdoc` if it exists.
+
+### `--interactive`, `-i`
+
+Option `--interactive` (aliased as `-i`)
+specifies that `ri` is to enter interactive mode (ignoring the _name_ if given);
+the option is the default when no _name_ is given.
+
+### `--list`, `-l`
+
+Option '--list' specifies that all class and module names
+whose initial characters match the given _name_ are to be printed;
+the default is `--no-list`:
+
+```sh
+$ ri --list Ar | head
+ArgumentError
+Array
+```
+
+If no _name_ is given, all class and module names are printed.
+
+### `--no-all`
+
+Option `--no-all` (the default) specifies that for a given class or module,
+its method documents are not to be printed.
+
+### `--no-dump`
+
+Option `--no-dump` (the default) specifies that a cache file is not to be dumped.
+
+### `--no-gems`
+
+Option `--no-gems` specifies that gem documents are not to be printed;
+`--gems` is the default.
+
+### `--no-home`
+
+Option `--no-gems` specifies that gem documents from `~/.rdoc` are not to be printed;
+`--home` is the default.
+
+### `--no-interactive`
+
+Option `--no-interactive` (the default when _name_ is not given)
+specifies that `ir` is not to enter interactive mode,
+regardless of whether _name_ is given.
+
+### `--no-list`
+
+Option `--no-list` (the default) specifies that a list of class and module names
+is not to be printed.
+
+### `--no-list-doc-dirs`
+
+Option `--no-list-doc-dirs` (the default) specifies that the list of documentation
+directories is not to be printed.
+
+### `--no-pager`, `-T`
+
+Option `--no-pager` (aliased as `-T`) specifies that the output is not to be piped
+to a pager;
+default is `--pager`.
+
+### `--no-profile`
+
+Option `no-profile` (the default) specifies that the program is not to be run
+with the Ruby profiler.
+
+### `--no-site`
+
+Option `--no-site` specifies that documents from the site libraries
+are not to be printed;
+default is `--site`.
+
+### `--no-standard`
+
+Option `--no-standard` specifies that documents from the standard libraries
+are not to be printed;
+default is to print documents from the standard libraries.
+
+### `--no-system`
+
+Option `--no-system` specifies that documents from the system libraries
+are not to be printed;
+default is `--system`.
+
+### `--pager`
+
+Option `--pager` (the default) specifies that the output is to be piped
+to a pager.
+
+### `--profile`
+
+Option `--profile` specifies that the program is to be run with the Ruby profiler;
+default is `--no-profile`.
+
+### `--server=NUMBER`
+
+Option `--server` specifies that the RDoc server is to be run on the port
+given as _NUMBER_;
+the default port is `8214`.
+
+### `--site`
+
+Option `--site` (the default) specifies that documents from the site libraries
+may be included.
+
+### `--system`
+
+Option `--system` (the default) specifies that documents from the system libraries
+may be included.
+
+### `--version`
+
+Option `--version` specifies that `ri` is to print its version and exit.
+
+### `--width=NUMBER`
+
+Option `--width` specifies that the output line lengths should be restricted
+to the given _NUMBER_ of characters;
+this is to be accomplished by line-wrapping, not truncation.
+The default width is `80`:
+
+```she\
+$ ri --width=40 Array | head
+= Array < Object
+
+----------------------------------------
+= Includes:
+Enumerable (from ruby core)
+
+(from ruby core)
+----------------------------------------
+An Array is an ordered, integer-indexed
+collection of objects, called
+```
 
 
 ## Environment Variables
