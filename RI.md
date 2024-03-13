@@ -3,7 +3,7 @@
 `ri` is the command-line utility
 that gives fast and easy on-line access to Ruby documentation.
 
-Example (`head` restricts output to leading lines):
+Example (the pipe to `head` restricts output to leading lines):
 
 ```sh
 $ ri Array | head
@@ -26,11 +26,12 @@ the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
 
 - The `ri` documentation is always available, even when you do not have internet access
   (think, airplane mode).
-- If you are working in a terminal window, typing `ri _whatever_` may be faster
-  than navigating to a browser window and searching for documentation.
-- If you are working
-  in {irb (interactive Ruby)}[https://docs.ruby-lang.org/en/master/IRB.html],
-  you _already_ have immediate access to `ri`.
+- If you are working in a terminal window, typing `ri _whatever_` (or just `ri`)
+- may be faster than navigating to a browser window and searching for documentation.
+- If you are working in an
+  {irb (interactive Ruby)}[https://docs.ruby-lang.org/en/master/IRB.html]
+  session, you _already_ have immediate access to `ri`:
+  just type `help` or `show_doc`.
 
 ## About the Examples
 
@@ -41,7 +42,9 @@ the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
     - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
     - {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
 
-- Some examples define an environment variable on the command line:
+  - Examples that involve environment variables `RI` or `RI_PAGER`
+    my use the shell idiom `_env_name_="_env_value_"`
+    to define an environment variable on the command line:
 
     ```sh
     $ RI="--all --no-gems" ruby -e "p ENV['RI']"
@@ -52,9 +55,9 @@ the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
 
 - We assume that gem nokogiri is installed.
 
-## Using `ri`
+## `ri` Documents
 
-With `ri`, you can quickly access documents for:
+With `ri`, you can quickly access documents on-line for:
 
   - Ruby (core and standard library):
 
@@ -63,7 +66,7 @@ With `ri`, you can quickly access documents for:
     - Page (e.g., `ruby:dig_methods`).
 
   - Gems:
-
+.
     - Class or module (e.g., `Nokogiri::HMTL4::Document` or `Nokogiri`).
     - Singleton or instance method
       (e.g., `Nokogiri::HTML4::Document::parse` or `Nokogiri::HTML4::Document#fragment`).
@@ -74,7 +77,6 @@ Examples:
 - Document for class {Array}[https://docs.ruby-lang.org/en/master/Array.html]:
 
     ```sh
-    # Use 'head' to get just the first lines.
     $ ri Array | head
     = Array < Object
     
@@ -141,13 +143,13 @@ Examples:
 There are two `ri` modes:
 
 - <i>Static mode</i>:
-  In general, `ri` responds in static mode
-  if the command has an argument;
-  in static mode, `ri` prints and exits.
+  In general, `ri` responds in its static mode
+  if a _name_ is given;
+  it prints and exits.
   See {Static Mode}[RI_md.html#label-Static+Mode].
 - <i>Interactive mode</i>:
-  In general, `ri` responds in interactive mode
-  if the command has no argument;
+  In general, `ri` enters its interactive mode
+  if no _name_ is given;
   in interactive mode, `ri` prints and waits for another command.
   See {Interactive Mode}[RI_md.html#label-Interactive+Mode].
 
@@ -167,30 +169,29 @@ without the performance overhead of re-reading `ri` source files.
 ## Names
 
 In both modes, static and interactive,
-`ri` responds to an input _name_;
-the _name_ specifies what is to be printed:
+`ri` responds to an input _name_ that specifies what is to be printed:
 a document, multiple documents, or other information:
 
-- In the shell, type `ri _name_`;
-  examples (output for names omitted):
+- Static mode (in the shell): type `ri _name_`;
+  examples (output omitted):
 
     ```sh
-    $ ri ruby:
     $ ri File
     $ ri IO#readlines
+    $ ri ruby:
     ```
   
-- In `ri`, just type the _name_; 
-  examples (output for names omitted):
+- Interactive mode (already in `ri`): just type the _name_; 
+  examples (output omitted):
 
     ```sh
     $ ri
     Enter the method name you want to look up.
     You can use tab to autocomplete.
     Enter a blank line to exit.
-    >> ruby:
     >> File
     >> IO#readlines
+    >> ruby:
     ```
 
 ### Names for Getting Lists
@@ -203,7 +204,7 @@ This table summarizes `ri` names for getting lists:
 | nokogiri: | List of Nokogiri pages. |
 <br>
 
-See also {option --list}[rdoc-ref:RI.md@-list].
+See also {option --list}[rdoc-ref:RI.md@-list-2C+-l].
 
 ### Names for Getting Documents
 
@@ -216,22 +217,22 @@ These tables summarize `ri` names for getting documents
     |-----------------------|-----------------------------------------------------------|
     | File                  | Document for class File.                                  |
     | File::File::Constants | Document for module File::File::Constants.                |
-    | Ar                    | Nothing (not unique initial characters).                  |
     | Arr                   | Document for class Array (unique initial characters).     |
 <br>
 
-See also {option --all}[rdoc-ref:RI.md@-all-2C+-a].
+    See also {option --all}[rdoc-ref:RI.md@-all-2C+-a].
  
 - {Ruby methods}[rdoc-ref:RI.md@Ruby+Methods]:
 
-    | Name                  | Prints                                                                                                        |
-    |-----------------------|---------------------------------------------------------------------------------------------------------------|
-    | IO::readlines         | Document for singleton method IO::readlines.                                                                  |
-    | IO#readlines          | Document for instance method IO::readlines.                                                                   |
-    | IO.readlines          | Documents for instance method IO::readlines and singleton method IO::readlines.                               |
-    | ::readlines           | Documents for singleton method readlines in all classes and modules.                                          |
-    | #readlines            | Documents for instance method #readlines in all classes and modules.                                          |
-    | .readlines, readlines | Documents for singleton method ::readlines and instance method #readlines in all classes and modules.         |
+
+    | Name                  | Prints                                                                          |
+    |-----------------------|---------------------------------------------------------------------------------|
+    | IO::readlines         | Document for singleton method IO::readlines.                                    |
+    | IO#readlines          | Document for instance method IO::readlines.                                     |
+    | IO.readlines          | Documents for instance method IO::readlines and singleton method IO::readlines. |
+    | ::readlines           | Documents for all singleton methods ::readlines.                                |
+    | #readlines            | Documents for all instance methods #readlines.                                  |
+    | .readlines, readlines | Documents for singleton methods ::readlines and instance methods #readlines.    |
 <br>
 
 - {Ruby pages}[rdoc-ref:RI.md@Ruby+Pages]:
@@ -256,20 +257,53 @@ See also {option --all}[rdoc-ref:RI.md@-all-2C+-a].
     | Nokogiri::HTML4::Document          | Document for class Nokogiri::HTML4::Document.                                  |
     | Nokogiri::HTML4::Document::parse   | Document for singleton method Nokogiri::HTML4::Document::parse.                |
     | Nokogiri::HTML4::Document#fragment | Document for instance method Nokogiri::HTML4::Document#fragment.               |
+<br>
 
-See also {option --all}[rdoc-ref:RI.md@-all-2C+-a].
+    See also {option --all}[rdoc-ref:RI.md@-all-2C+-a].
 
 ## Static Mode
 
 In static mode, `ri` prints a response and exits.
 
 In general, `ri` responds in static mode
-if the command has an argument.
+if the command gives a _name_:
+
+```sh
+$ ri Array | head
+= Array < Object
+
+------------------------------------------------------------------------
+= Includes:
+Enumerable (from ruby core)
+
+(from ruby core)
+------------------------------------------------------------------------
+An Array is an ordered, integer-indexed collection of objects, called
+elements.  Any object may be an Array element.
+```
+
+The name may also be given in `$stdin`:
+
+```sh
+$ echo "Array" | ri | head
+
+Enter the method name you want to look up.
+You can use tab to autocomplete.
+Enter a blank line to exit.
+
+= Array < Object
+
+------------------------------------------------------------------------
+= Includes:
+Enumerable (from ruby core)
+```
+
+Despite the message ("Enter ...."), `ri` does not enter its interactive mode. 
 
 ### Ruby Classes and Modules
 
 To get the document for a particular class or module,
-give its _name_ as the argument:
+give its name as the _name_ argument:
 
 For class `File`:
 
@@ -318,7 +352,7 @@ Nothing known about A
 ```
 
 To get a list of all classes and modules,
-use option `--list` with no argument:
+use option `--list` with no _name_:
 
 ```sh
 $ ri --list | head
@@ -366,8 +400,22 @@ $ ri --all Array | wc -l # Line count for document Array and its method document
 
 ### Ruby Methods
 
+For methods, `ri` can print:
+
+- For a given Ruby class or module:
+
+  - The document for a the singleton method of a given name.
+  - The document for a the instance method of a given name.
+  - The documents for both the singleton and the instance methods of a given name.
+
+- For all Ruby classes and modules:
+
+  - The documents for all singleton methods of a given name.
+  - The documents for all instance methods of a given name.
+  - The documents for all singleton and instance methods of a given name.
+
 To get the document for a particular instance method,
-include the class/module name and the method name in the command:
+give the _name_ in the form `_name_of_class_or_module_#_name_of_method_`:
 
 ```sh
 $ ri IO#read | head
@@ -472,9 +520,7 @@ you can omit leading and trailing elements:
 
 ### Gem Documents
 
-
-
-### Static Options
+### Options
 
 `ri` also responds in static mode when certain options are given,
 even with no arguments;
@@ -488,8 +534,23 @@ these include:
 
 ## Interactive Mode
 
-In general' `ri` responds to a command in interactive mode
-if the command has no arguments.
+In general, `ri` responds to a command in interactive mode
+if the command has no arguments:
+
+```sh
+$ ri
+Enter the method name you want to look up.
+You can use tab to autocomplete.
+Enter a blank line to exit.
+>> 
+
+```
+
+A command in interactive mode are similar to one in static mode,
+except that you omit:
+
+- Command word `ri`; just type the _name_.
+- Options;  the only options in effect are those found in environment variable `RI`.
 
 ## Source Files
 
