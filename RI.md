@@ -206,7 +206,7 @@ This table summarizes `ri` names for getting lists:
 <br>
 
 There are more lists available;
-see {option --list}[rdoc-ref:RI.md@-list-2C+-l].
+see {option \\--list}[rdoc-ref:RI.md@-list-2C+-l].
 
 ### Names for Getting Documents
 
@@ -223,7 +223,7 @@ These tables summarize `ri` names for getting documents
     | Arr        | Document for class Array (unique initial characters). |
 <br>
 
-    If option {option --all}[rdoc-ref:RI.md@-all-2C+-a]
+    If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
     is in effect, documents for the methods in the named class or module
     are also printed.
  
@@ -270,7 +270,7 @@ These tables summarize `ri` names for getting documents
     | Nokogiri::HTML4::Document#fragment | Document for instance method Nokogiri::HTML4::Document#fragment.               |
 <br>
 
-    If option {option --all}[rdoc-ref:RI.md@-all-2C+-a]
+    If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
     is in effect, documents for the methods in the named class or module
     are also printed.
 
@@ -312,6 +312,43 @@ Enumerable (from ruby core)
 ```
 
 Despite the message ("Enter ...."), `ri` does not enter its interactive mode. 
+
+`ri` also responds in static mode when certain options are given,
+even when no _name_ is given;
+these include:
+
+Option –help or -h: Prints ri help text
+
+- {Option \--help or -h}[rdoc-ref:RI.md@-help-2C+-h]:
+  Prints `ri` help text.
+- {option \\--list or -l}[rdoc-ref:RI.md@-list-2C+-l]:
+  Prints list of classes and modules.
+- {option \\--list-doc-dirs}[rdoc-ref:RI.md@-list-doc-dirs]:
+  Prints list of `ri` source directories.
+- {option \\--version or -v}[rdoc-ref:RI.md@-version-2C+-v]:
+  Prints `ri` version.
+
+## Interactive Mode
+
+In general, `ri` responds to a command in interactive mode
+if the command has no arguments:
+
+```sh
+$ ri
+Enter the method name you want to look up.
+You can use tab to autocomplete.
+Enter a blank line to exit.
+>> 
+
+```
+
+A command in interactive mode are similar to one in static mode,
+except that you omit:
+
+- Command word `ri`; just type the _name_.
+- Options;  the only options in effect are those found in environment variable `RI`.
+
+## Getting Ruby Documents
 
 ### Ruby Classes and Modules
 
@@ -531,42 +568,17 @@ If the page name is sufficiently unique,
 you can omit leading and trailing elements:
 `ruby:exeptions` is the same as `ruby:syntax/exceptions.rdoc`.
 
-### Gem Documents
+## Getting Gem Documents
 
-### Options
+### Gem Classes and Modules
 
-`ri` also responds in static mode when certain options are given,
-even with no arguments;
-these include:
+### Gem Methods
 
-- {Option --help}: Prints `ri` help text.
-- {Option --list}: Prints list of classes and modules.
-- {Option --list-doc-dirs}: Prints list of `ri` source directories.
-- {Option --version}: Prints `ri` version.
+### Gem Pages
 
 ### Escaping Names
 
 [TODO]
-
-## Interactive Mode
-
-In general, `ri` responds to a command in interactive mode
-if the command has no arguments:
-
-```sh
-$ ri
-Enter the method name you want to look up.
-You can use tab to autocomplete.
-Enter a blank line to exit.
->> 
-
-```
-
-A command in interactive mode are similar to one in static mode,
-except that you omit:
-
-- Command word `ri`; just type the _name_.
-- Options;  the only options in effect are those found in environment variable `RI`.
 
 ## Source Files
 
@@ -718,7 +730,7 @@ the option is the default when no _name_ is given.
 
 ### `--list`, `-l`
 
-Option '--list' specifies that all class and module names
+Option `--list` (aliased as `-l`) specifies that all class and module names
 whose initial characters match the given _name_ are to be printed;
 the default is `--no-list`:
 
@@ -729,6 +741,12 @@ Array
 ```
 
 If no _name_ is given, all class and module names are printed.
+
+### `--list-doc-dirs`
+
+Option `--list-doc-dirs` specifies that a list of the `ri` source directories
+is to be printed;
+default is `--no-list-doc-dirs`.
 
 ### `--no-all`
 
@@ -820,9 +838,9 @@ may be included.
 Option `--system` (the default) specifies that documents from the system libraries
 may be included.
 
-### `--version`
+### `--version`, `-v`
 
-Option `--version` specifies that `ri` is to print its version and exit.
+Option `--version` (aliased as `-v`) specifies that `ri` is to print its version and exit.
 
 ### `--width=NUMBER`
 
