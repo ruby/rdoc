@@ -67,14 +67,14 @@ With `ri`, you can quickly access documents on-line for:
 
   - Gems:
 .
-    - Class or module (e.g., `Nokogiri::HMTL4::Document` or `Nokogiri`).
+    - Class or module (e.g., `Nokogiri::HTML4::Document` or `Nokogiri`).
     - Singleton or instance method
       (e.g., `Nokogiri::HTML4::Document::parse` or `Nokogiri::HTML4::Document#fragment`).
     - Page (e.g., `nokogiri:README`).
 
 Examples:
 
-- Document for class `Array`:
+- Document for Ruby class `Array`:
 
     ```sh
     $ ri Array | head
@@ -90,7 +90,23 @@ Examples:
     elements.  Any object (even another array) may be an array element.
     ```
 
-- Document for singleton method `IO::readlines`:
+- Document for Ruby module `Enumerable`:
+
+```sh
+$ ri Enumerable | head
+= Enumerable
+
+(from ruby core)
+------------------------------------------------------------------------
+The Enumerable mixin provides collection classes with several traversal
+and searching methods, and with the ability to sort. The class must
+provide a method #each, which yields successive members of the
+collection. If Enumerable#max, #min, or #sort is used, the objects in
+the collection must also implement a meaningful <=> operator, as these
+methods rely on an ordering between members of the collection.
+```
+
+- Document for Ruby singleton method `IO::readlines`:
 
     ```sh
     $ ri IO::readlines | head
@@ -106,7 +122,7 @@ Examples:
     
     ```
 
-- Document for instance method `IO#readlines`:
+- Document for Ruby instance method `IO#readlines`:
 
     ```sh
     $ ri IO#readlines | head
@@ -122,7 +138,7 @@ Examples:
 
     ```
 
-- Document for page `ruby:dig_methods`:
+- Document for Ruby page `ruby:dig_methods`:
 
     ```sh
     $ ri ruby:dig_methods | head
@@ -137,6 +153,86 @@ Examples:
     name: "Cake",
     ppu: 0.55,
     ```
+
+- Document for Nokogiri class `Nokogiri::HTML4::Document`:
+
+```sh
+$ ri Nokogiri::HTML4::Document | head
+= Nokogiri::HTML4::Document < Nokogiri::XML::Document
+
+(from gem nokogiri-1.16.2-x86_64-linux)
+------------------------------------------------------------------------
+= Class methods:
+
+  parse
+
+= Instance methods:
+
+```
+
+- Document for Nokogiri module `Nokogiri`:
+
+```sh
+$ ri Nokogiri | head
+= Nokogiri
+
+(from gem nokogiri-1.16.2-x86_64-linux)
+------------------------------------------------------------------------
+
+Nokogiri parses and searches XML/HTML very quickly, and also has
+correctly implemented CSS3 selector support as well as XPath 1.0
+support.
+
+Parsing a document returns either a Nokogiri::XML::Document, or a
+```
+
+- Document for Nokogiri singleton method `Nokogiri::HTML4::Document::parse`:
+
+```sh
+$ ri Nokogiri::HTML4::Document::parse | head
+= Nokogiri::HTML4::Document::parse
+
+(from gem nokogiri-1.16.2-x86_64-linux)
+=== Implementation from Document
+------------------------------------------------------------------------
+  parse(string_or_io, url = nil, encoding = nil, options = XML::ParseOptions::DEFAULT_HTML) { |options| ... }
+
+------------------------------------------------------------------------
+
+Parse HTML.  string_or_io may be a String, or any object that responds
+```
+
+- Document for Nokogiri instance method `Nokogiri::HTML4::Document#fragment`:
+
+```sh
+$ ri Nokogiri::HTML4::Document#fragment | head
+= Nokogiri::HTML4::Document#fragment
+
+(from gem nokogiri-1.16.2-x86_64-linux)
+=== Implementation from Document
+------------------------------------------------------------------------
+  fragment(tags = nil)
+
+------------------------------------------------------------------------
+
+Create a Nokogiri::XML::DocumentFragment from tags
+```
+
+- Document for Nokogiri page `nokogiri:README`:
+
+```sh
+$ ri nokogiri:README | head
+<div><img src="https://nokogiri.org/images/nokogiri-serif-black.png" align="right"/></div>= Nokogiri
+Nokogiri (鋸) makes it easy and painless to work with XML and HTML from
+Ruby. It provides a sensible, easy-to-understand API for
+{reading}[https://nokogiri.org/tutorials/parsing_an_html_xml_document.ht
+ml], writing,
+{modifying}[https://nokogiri.org/tutorials/modifying_an_html_xml_documen
+t.html], and
+{querying}[https://nokogiri.org/tutorials/searching_a_xml_html_document.
+html] documents. It is fast and standards-compliant by relying on native
+parsers like libxml2, libgumbo, and xerces.
+```
 
 ## Modes
 
@@ -209,10 +305,10 @@ see {option \\--list}[rdoc-ref:RI.md@-list-2C+-l].
 
 ### Names for Getting Documents
 
-These tables summarize `ri` names for getting documents
-(for details and examples, follow the links):
+These tables summarize `ri` names for getting documents:
 
-- {Ruby classes and modules}[rdoc-ref:RI.md@Ruby+Classes+and+Modules]:
+- Ruby classes and modules
+  (see {details and examples}[rdoc-ref:RI.md@Ruby+Classes+and+Modules]):
 
     | Name       | Prints                                                |
     |------------|-------------------------------------------------------|
@@ -225,8 +321,9 @@ These tables summarize `ri` names for getting documents
     If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
     is in effect, documents for the methods in the named class or module
     are also printed.
- 
-- {Ruby methods}[rdoc-ref:RI.md@Ruby+Methods]:
+
+- Ruby methods
+  (see {details and examples}[rdoc-ref:RI.md@Ruby+Methods]):
 
 
     | Name                  | Prints                                                                          |
@@ -245,7 +342,8 @@ These tables summarize `ri` names for getting documents
     other escapes may be required for certain other method names.
     See {Escaping Names}[rdoc-ref:RI.md@Escaping+Names].
 
-- {Ruby pages}[rdoc-ref:RI.md@Ruby+Pages]:
+- Ruby pages
+  (see {details and examples}[rdoc-ref:RI.md@Ruby+Pages]):
 
     | Name                        | Prints                                                          |
     |-----------------------------|-----------------------------------------------------------------|
@@ -256,7 +354,8 @@ These tables summarize `ri` names for getting documents
     | ruby:assignment             | Document for page assignment (if no other */assignment.*).      |
 <br>
 
-- {Gem documents}[rdoc-ref:RI.md@Gem+Documents]:
+- Gem documents
+  (see {details and examples}[rdoc-ref:RI.md@Getting+Gem+Documents]):
 
     | Name                               | Prints                                                                         |
     |------------------------------------|--------------------------------------------------------------------------------|
@@ -345,7 +444,9 @@ A command in interactive mode are similar to one in static mode,
 except that you:
 
 - Omit command word `ri`; just type the _name_.
-- Omit options;  the only options in effect are those found in environment variable `RI`.
+- Omit options; in interactive mode the only options in effect
+  are those taken from environment variable `RI`.
+  See {Options}[rdoc-ref:RI.md@Options].
 
 ## Getting Ruby Documents
 
@@ -654,37 +755,37 @@ $ RI="--all" ri --no-all Array | wc -l
 
 ### Summary
 
-| Option                   | Effect                                                                            |
-|--------------------------|-----------------------------------------------------------------------------------|
-| --all, -a                | Print all (class or module plus methods); default is --no-all.                    |
-| --doc-dir=_DIRPATH_, -d  | Add directory to ri source directories; may be repeated.                          |
-| --dump=FILEPATH          | Print dump of cache file; default is --no-dump.                                   |
-| --format=FORMAT, -f      | Set formatter: ansi, bs, markdown, rdoc; default is bs for pager, ansi otherwise. |
-| --gems                   | Allow documents from installed gems; default.                                     |
-| --help, -h               | Print help message and exit.                                                      |
-| --home                   | Allow documents from ~/.rdoc; default.                                            |
-| --interactive, -i        | Enter interactive mode; default when no name given.                               |
-| --list, -l               | Print list of classes and modules; default is --no-list.                          |
-| --list-doc-dirs          | Print list of ri source directories; default is --no-list-doc-dirs.               |
-| --no-all                 | Do not print methods for named class or module; default.                          |
-| --no-dump                | Do not print dump of cache file; default.                                         |
-| --no-gems                | Exclude documents for installed gems; default is --gems.                          |
-| --no-home                | Exclude documents from ~/.rdoc; default is --home.                                |
-| --no-interactive         | Do not enter interactive mode; default when name given.                           |
-| --no-list                | Do not print list; default.                                                       |
-| --no-list-doc-dirs       | Do not print list of ri source directories; default;                              |
-| --no-pager, -T           | Do not pipe output to pager; default is --pager.                                  |
-| --no-profile             | Do not run with Ruby profiler; default.                                           |
-| --no-site                | Exclude documents from site libraries; default is --site.                         |
-| --no-standard-docs       | Exclude documents from the standard library, etc; default is to include them.     |
-| --no-system              | Exclude documents from from system libraries; default is --system.                |
-| --pager                  | Pipe output to pager; default.                                                    |
-| --profile                | Run with Ruby profiler; default is --no-profile.                                  |
-| --server=NUMBER          | Set port for RDoc server; default is 8214.                                        |
-| --site                   | Allow documents from site libraries; default.                                     |
-| --system                 | Allow documents from from system libraries; default.                              |
-| --version, -v            | Print ri version and exit.                                                        |
-| --width=NUMBER, -w       | Set width (in characters) for output; default is 80.                              |
+| Option                        | Effect                                                                            |
+|-------------------------------|-----------------------------------------------------------------------------------|
+| --all, -a                     | Print all (class or module plus methods); default is --no-all.                    |
+| --doc-dir=DIRPATH, -d DIRPATH | Add directory to ri source directories; may be repeated.                          |
+| --dump=FILEPATH               | Print dump of cache file; default is --no-dump.                                   |
+| --format=FORMAT, -f FORMAT    | Set formatter: ansi, bs, markdown, rdoc; default is bs for pager, ansi otherwise. |
+| --gems                        | Allow documents from installed gems; default.                                     |
+| --help, -h                    | Print help message and exit.                                                      |
+| --home                        | Allow documents from ~/.rdoc; default.                                            |
+| --interactive, -i             | Enter interactive mode; default when no name given.                               |
+| --list, -l                    | Print list of classes and modules; default is --no-list.                          |
+| --list-doc-dirs               | Print list of ri source directories; default is --no-list-doc-dirs.               |
+| --no-all                      | Do not print methods for named class or module; default.                          |
+| --no-dump                     | Do not print dump of cache file; default.                                         |
+| --no-gems                     | Exclude documents for installed gems; default is --gems.                          |
+| --no-home                     | Exclude documents from ~/.rdoc; default is --home.                                |
+| --no-interactive              | Do not enter interactive mode; default when name given.                           |
+| --no-list                     | Do not print list; default.                                                       |
+| --no-list-doc-dirs            | Do not print list of ri source directories; default;                              |
+| --no-pager, -T                | Do not pipe output to pager; default is --pager.                                  |
+| --no-profile                  | Do not run with Ruby profiler; default.                                           |
+| --no-site                     | Exclude documents from site libraries; default is --site.                         |
+| --no-standard-docs            | Exclude documents from the standard library, etc; default is to include them.     |
+| --no-system                   | Exclude documents from from system libraries; default is --system.                |
+| --pager                       | Pipe output to pager; default.                                                    |
+| --profile                     | Run with Ruby profiler; default is --no-profile.                                  |
+| --server=NUMBER               | Set port for RDoc server; default is 8214.                                        |
+| --site                        | Allow documents from site libraries; default.                                     |
+| --system                      | Allow documents from from system libraries; default.                              |
+| --version, -v                 | Print ri version and exit.                                                        |
+| --width=NUMBER, -w NUMBER     | Set width (in characters) for output; default is 80.                              |
 
 ### `--all`, `-a`
 
@@ -700,7 +801,7 @@ $ ri --all Array | wc -l
 
 The default is `--no-all`.
 
-### `--doc-dir=DIRPATH`, `-d`
+### `--doc-dir=DIRPATH`, `-d DIRPATH`
 
 Option `--doc-dir=DIRPATH` (aliased as `-d`) adds the given directory path
 to the beginning of the array of `ri` source directory paths:
@@ -735,7 +836,7 @@ $ ri --dump=/usr/share/ri/3.0.0/system/cache.ri | head
    "NilClass"=>["Object"],
 ```
 
-### `--format=FORMAT`, `-f`
+### `--format=FORMAT`, `-f FORMAT`
 
 Option `--format=FORMAT` (aliased as `-f`) specifies the formatter for the output,
 which must be `ansi`, `bs`, `markdown`, or `rdoc`;
@@ -884,10 +985,10 @@ may be included.
 
 Option `--version` (aliased as `-v`) specifies that `ri` is to print its version and exit.
 
-### `--width=NUMBER`
+### `--width=NUMBER`, '-w NUMBER'
 
-Option `--width` specifies that the output line lengths should be restricted
-to the given _NUMBER_ of characters;
+Option `--width` (aliased as `-w`) specifies that the output line lengths
+should be restricted to the given _NUMBER_ of characters;
 this is to be accomplished by line-wrapping, not truncation.
 The default width is `80`:
 
@@ -904,15 +1005,4 @@ Enumerable (from ruby core)
 An Array is an ordered, integer-indexed
 collection of objects, called
 ```
-
-
-## Environment Variables
-
-
-All options also can be specified through the +RI+ environment variable.
-Command-line options always override those specified in the +RI+ environment
-variable.
-
-The +RI_PAGER+ environment variable allows you to choose a particular pager or
-particular options for your pager.
 
