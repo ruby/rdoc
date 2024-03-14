@@ -1,6 +1,6 @@
 # `ri` (Ruby Information)
 
-`ri` is the command-line utility
+`ri` is the Ruby command-line utility
 that gives fast and easy on-line access to Ruby documentation.
 
 Example (the pipe to `head` restricts output to leading lines):
@@ -25,7 +25,8 @@ Using `ri` may have advantages over using
 the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
 
 - The `ri` documentation is always available, even when you do not have internet access
-  (think, airplane mode).
+  (think:
+- airplane mode).
 - If you are working in a terminal window, typing `ri _whatever_` (or just `ri`)
 - may be faster than navigating to a browser window and searching for documentation.
 - If you are working in an
@@ -74,7 +75,7 @@ With `ri`, you can quickly access documents on-line for:
 
 Examples:
 
-- Document for class {Array}[https://docs.ruby-lang.org/en/master/Array.html]:
+- Document for class `Array`:
 
     ```sh
     $ ri Array | head
@@ -90,7 +91,7 @@ Examples:
     elements.  Any object (even another array) may be an array element.
     ```
 
-- Document for singleton method {IO::readlines}[https://docs.ruby-lang.org/en/master/IO.html#method-c-readlines]:
+- Document for singleton method `IO::readlines`:
 
     ```sh
     $ ri IO::readlines | head
@@ -106,7 +107,7 @@ Examples:
     
     ```
 
-- Document for instance method {IO#readlines}[https://docs.ruby-lang.org/en/master/IO.html#method-i-readlines]:
+- Document for instance method `IO#readlines`:
 
     ```sh
     $ ri IO#readlines | head
@@ -122,7 +123,7 @@ Examples:
 
     ```
 
-- Document for page {ruby:dig_methods}[https://docs.ruby-lang.org/en/master/dig_methods_rdoc.html]:
+- Document for page `ruby:dig_methods`:
 
     ```sh
     $ ri ruby:dig_methods | head
@@ -153,7 +154,7 @@ There are two `ri` modes:
   in interactive mode, `ri` prints and waits for another command.
   See {Interactive Mode}[RI_md.html#label-Interactive+Mode].
 
-## Pro Tip
+### Pro Tip: Keep `ri` Available
 
 If you are a frequent `ri` user,
 you can save time by keeping open a dedicated command window
@@ -204,7 +205,8 @@ This table summarizes `ri` names for getting lists:
 | nokogiri: | List of Nokogiri pages. |
 <br>
 
-See also {option --list}[rdoc-ref:RI.md@-list-2C+-l].
+There are more lists available;
+see {option --list}[rdoc-ref:RI.md@-list-2C+-l].
 
 ### Names for Getting Documents
 
@@ -221,7 +223,9 @@ These tables summarize `ri` names for getting documents
     | Arr        | Document for class Array (unique initial characters). |
 <br>
 
-    See also {option --all}[rdoc-ref:RI.md@-all-2C+-a].
+    If option {option --all}[rdoc-ref:RI.md@-all-2C+-a]
+    is in effect, documents for the methods in the named class or module
+    are also printed.
  
 - {Ruby methods}[rdoc-ref:RI.md@Ruby+Methods]:
 
@@ -236,8 +240,11 @@ These tables summarize `ri` names for getting documents
     | .readlines, readlines | Documents for singleton methods ::readlines and instance methods #readlines.    |
 <br>
 
-    Note: in static mode, the name must be escaped as `\#readlines`;
-    see {Escaping Names}[rdoc-ref:RI.md@Escaping+Names].
+    Note: in static mode, the name on the command line may need escape characters.
+    In the table above, `#readlines` on the command line
+    may (depending on the shell) need to be escaped as `\#readlines`;
+    other escapes may be required for certain other method names.
+    See {Escaping Names}[rdoc-ref:RI.md@Escaping+Names].
 
 - {Ruby pages}[rdoc-ref:RI.md@Ruby+Pages]:
 
@@ -263,7 +270,9 @@ These tables summarize `ri` names for getting documents
     | Nokogiri::HTML4::Document#fragment | Document for instance method Nokogiri::HTML4::Document#fragment.               |
 <br>
 
-    See also {option --all}[rdoc-ref:RI.md@-all-2C+-a].
+    If option {option --all}[rdoc-ref:RI.md@-all-2C+-a]
+    is in effect, documents for the methods in the named class or module
+    are also printed.
 
 ## Static Mode
 
@@ -537,7 +546,7 @@ these include:
 
 ### Escaping Names
 
-
+[TODO]
 
 ## Interactive Mode
 
