@@ -25,14 +25,13 @@ Using `ri` may have advantages over using
 the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
 
 - The `ri` documentation is always available, even when you do not have internet access
-  (think:
-- airplane mode).
+  (think: airplane mode).
 - If you are working in a terminal window, typing `ri _whatever_` (or just `ri`)
-- may be faster than navigating to a browser window and searching for documentation.
+  may be faster than navigating to a browser window and searching for documentation.
 - If you are working in an
   {irb (interactive Ruby)}[https://docs.ruby-lang.org/en/master/IRB.html]
   session, you _already_ have immediate access to `ri`:
-  just type `help` or `show_doc`.
+  just type `'help'` or `'show_doc'`.
 
 ## About the Examples
 
@@ -43,8 +42,8 @@ the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
     - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
     - {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
 
-  - Examples that involve environment variables `RI` or `RI_PAGER`
-    my use the shell idiom `_env_name_="_env_value_"`
+  - Examples that involve the `ri` environment variables `RI` or `RI_PAGER`
+    may use the shell idiom `_env_name_="_env_value_"`
     to define an environment variable on the command line:
 
     ```sh
@@ -54,7 +53,7 @@ the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
     "grep . | less"
     ```
 
-- We assume that gem nokogiri is installed.
+- Examples that involve gems assume that gem `nokogiri` is installed.
 
 ## `ri` Documents
 
@@ -162,7 +161,7 @@ with either of:
 
 - A running {interactive ri}[rdoc-ref:RI.md@Interactive+Mode] session.
 - A running {irb session}[https://docs.ruby-lang.org/en/master/IRB.html];
-  type `help` or `show_doc` to enter `ri`, newline to exit.
+  type `'help'` or `'show_doc'` to enter `ri`, newline to exit.
 
 When you switch to that window, `ri` is ready to respond quickly, 
 without the performance overhead of re-reading `ri` source files.
@@ -173,7 +172,7 @@ In both modes, static and interactive,
 `ri` responds to an input _name_ that specifies what is to be printed:
 a document, multiple documents, or other information:
 
-- Static mode (in the shell): type `ri _name_`;
+- Static mode (in the shell): type `'ri _name_'`;
   examples (output omitted):
 
     ```sh
@@ -343,10 +342,10 @@ Enter a blank line to exit.
 ```
 
 A command in interactive mode are similar to one in static mode,
-except that you omit:
+except that you:
 
-- Command word `ri`; just type the _name_.
-- Options;  the only options in effect are those found in environment variable `RI`.
+- Omit command word `ri`; just type the _name_.
+- Omit options;  the only options in effect are those found in environment variable `RI`.
 
 ## Getting Ruby Documents
 
@@ -591,6 +590,49 @@ $ ri --list-doc-dirs
 ```
 
 These are the directories that `ri` may search, which may or may not actually exist.
+
+## Pager
+
+Because `ri` output is often large,
+`ri` by default pipes the output to a _pager_,
+which is the program whose name is the first-found among:
+
+- The value of `ENV['RI_PAGER']`.
+- The value of `ENV['PAGER']`.
+- `'pager'`.
+- `'less'`.
+- `'more'`.
+
+If none is found, the output goes directly to `$stdout`, with no pager.
+
+If you set environment variable `RI_PAGER` or `PAGER`,
+its value should be the name of an executable program
+that will accept the `ri` output (such as `'pager'`, `'less'`, or `'more'`).
+
+### Pro Tip: Pager Options
+
+You can set the pager value to a pager program name with options;
+this example (which omits output) sets the pager to `'less'`,
+with options `'-E'` (quit at EOF) and `'-F'` (quit if one screen):
+
+```sh
+RI_PAGER="less -E -F" ri Array
+```
+
+See the options for your chosen pager program
+(e.g, type `'less --help'`).
+
+### Pro Tip: Pre-Pager Processing
+
+The "pager" value actually need not specify a simple pager program.
+You can, for example, set the pager value to `'grep . | less'`,
+which will exclude blank lines (thus saving screen space)
+before piping output to `less`;
+example (output omitted):
+
+```sh
+RI_PAGER="grep . | less" ri Array
+```
 
 ## Options
 
