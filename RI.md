@@ -33,44 +33,28 @@ the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
   session, you _already_ have immediate access to `ri`:
   just type `'help'` or `'show_doc'`.
 
-## About the Examples
-
-- `ri` output can be large,
-  and so here we sometimes pipe the output to one of these:
-
-    - {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
-    - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
-    - {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
-
-  - Examples that involve the `ri` environment variables `RI` or `RI_PAGER`
-    may use the shell idiom `_env_name_="_env_value_"`
-    to define an environment variable on the command line:
-
-    ```sh
-    $ RI="--all --no-gems" ruby -e "p ENV['RI']"
-    "--all --no-gems"
-    $ RI_PAGER="grep . | less" ruby -e "p ENV['RI_PAGER']"
-    "grep . | less"
-    ```
-
-- Examples that involve gems assume that gem `nokogiri` is installed.
-
 ## `ri` Documents
 
 With `ri`, you can quickly access documents on-line for:
 
   - Ruby (core and standard library):
 
-    - Class or module (e.g., `Array` or `Enumerable`).
-    - Singleton or instance method (e.g., `IO::readlines` or `IO#readlines`).
-    - Page (e.g., `ruby:dig_methods`).
+    - Class or module (e.g., `Array` or `Enumerable`);
+      see {Ruby Classes and Modules}[rdoc-ref:RI.md@Ruby+Classes+and+Modules].
+    - Singleton or instance method (e.g., `IO::readlines` or `IO#readlines`);
+      see {Ruby Methods}[rdoc-ref:RI.md@Ruby+Methods].
+    - Page (e.g., `ruby:dig_methods`);
+      see {Ruby Pages}[rdoc-ref:RI.md@Ruby+Pages].
 
   - Gems:
-.
-    - Class or module (e.g., `Nokogiri::HTML4::Document` or `Nokogiri`).
+
+    - Class or module (e.g., `Nokogiri::HTML4::Document` or `Nokogiri`);
+      see {Gem Classes and Modules}[rdoc-ref:RI.md@Gem+Classes+and+Modules].
     - Singleton or instance method
-      (e.g., `Nokogiri::HTML4::Document::parse` or `Nokogiri::HTML4::Document#fragment`).
-    - Page (e.g., `nokogiri:README`).
+      (e.g., `Nokogiri::HTML4::Document::parse` or `Nokogiri::HTML4::Document#fragment`);
+      see {Gem Methods}[rdoc-ref:RI.md@Gem+Methods].
+    - Page (e.g., `nokogiri:README`);
+      see {Gem Pages}[rdoc-ref:RI.md@Gem+Pages].
 
 Examples:
 
@@ -234,6 +218,10 @@ html] documents. It is fast and standards-compliant by relying on native
 parsers like libxml2, libgumbo, and xerces.
 ```
 
+## `ri` Lists
+
+## `ri` Information
+
 ## Modes
 
 There are two `ri` modes:
@@ -290,7 +278,7 @@ a document, multiple documents, or other information:
     >> ruby:
     ```
 
-### Names for Getting Lists
+### Names for Printing Lists
 
 This table summarizes `ri` names for getting lists:
 
@@ -303,7 +291,7 @@ This table summarizes `ri` names for getting lists:
 There are more lists available;
 see {option \\--list}[rdoc-ref:RI.md@-list-2C+-l].
 
-### Names for Getting Documents
+### Names for Printing Documents
 
 These tables summarize `ri` names for getting documents:
 
@@ -355,7 +343,7 @@ These tables summarize `ri` names for getting documents:
 <br>
 
 - Gem documents
-  (see {details and examples}[rdoc-ref:RI.md@Getting+Gem+Documents]):
+  (see {details and examples}[rdoc-ref:RI.md@Printing+Gem+Documents]):
 
     | Name                               | Prints                                                                         |
     |------------------------------------|--------------------------------------------------------------------------------|
@@ -371,6 +359,28 @@ These tables summarize `ri` names for getting documents:
     If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
     is in effect, documents for the methods in the named class or module
     are also printed.
+
+## About the Examples
+
+- `ri` output can be large,
+  and so here we sometimes pipe the output to one of these:
+
+    - {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
+    - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
+    - {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
+
+    - Examples that involve the `ri` environment variables `RI` or `RI_PAGER`
+      may use the shell idiom `_env_name_="_env_value_"`
+      to define an environment variable on the command line:
+
+      ```sh
+      $ RI="--all --no-gems" ruby -e "p ENV['RI']"
+      "--all --no-gems"
+      $ RI_PAGER="grep . | less" ruby -e "p ENV['RI_PAGER']"
+      "grep . | less"
+      ```
+
+- Examples that involve gems assume that gem `nokogiri` is installed.
 
 ## Static Mode
 
@@ -448,105 +458,154 @@ except that you:
   are those taken from environment variable `RI`.
   See {Options}[rdoc-ref:RI.md@Options].
 
-## Getting Ruby Documents
+## `ri` for Ruby Documentation
 
 ### Ruby Classes and Modules
 
-To get the document for a particular class or module,
-give its name as the _name_ argument:
+#### Ruby Class and Module Lists
 
-For class `File`:
+Names for Ruby class and module lists (when given with option `--list`:
 
-```sh
-$ ri File | head
-= File < IO
+| Name       | Prints                                               |
+|------------|------------------------------------------------------|
+| '' [none]  | List of all Ruby classes and modules.                |
+| 'A'        | List of Ruby classes and modules starting with 'A'.  |
+| 'Ar'       | List of Ruby classes and modules starting with 'Ar'. |
+| 'NoSuch'   | Nothing (no matching class or module name).          |
+<br>
 
-(from ruby core)
-------------------------------------------------------------------------
-A File is an abstraction of any file object accessible by the program
-and is closely associated with class IO.  File includes the methods of
-module FileTest as class methods, allowing you to write (for example)
-File.exist?("foo").
+Examples:
 
-In the description of File methods, permission_
-```
+- List of all Ruby classes and modules:
+
+    ```sh
+    $ ri --list | head
+    ACL
+    ACL::ACLEntry
+    ACL::ACLList
+    ARGF
+    Abbrev
+    Addrinfo
+    ArgumentError
+    Array
+    Base64
+    BasicObject
+    ```
+
+- List of Ruby classes and modules starting with `'A'`:
+
+    ```sh
+    $ ri --list A | head
+    ACL
+    ACL::ACLEntry
+    ACL::ACLList
+    ARGF
+    Abbrev
+    Addrinfo
+    ArgumentError
+    Array
+    ```
+
+- List of Ruby classes and modules starting with `'Ar'`:
+
+    ```sh
     
-For module `File::File::FileConstants`:
+    $ ri --list Ar | head
+    ArgumentError
+    Array
+    ```
 
-```sh
-$ ri File::File::Constants | head
-= File::File::Constants
+#### Ruby Class and Module Documents
 
-(from ruby core)
-------------------------------------------------------------------------
-Document-module: File::Constants
+Names for Ruby class and module documents:
 
-File::Constants provides file-related constants.  All possible file
-constants are listed in the documentation but they may not all be
-present on your platform.
-```
+| Name         | Prints                                                |
+|--------------|-------------------------------------------------------|
+| 'File'       | Document for class File.                              |
+| 'File::Stat' | Document for nested class File::Stat.                 |
+| 'Enumerable' | Document for module Enumerable.                       |
+| 'Arr'        | Document for class Array (unique initial characters). |
+| 'A'          | Nothing (not unique initial characters).              |
+<br>
 
-You can abbreviate a class or module name to unique initial characters:
+If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
+is in effect, documents for the methods in the named class or module
+are also printed.
 
-```sh
-$ ri Arr | head -1
-= Array < Object
-```
+Examples:
 
-If the _name_ is not unique initial characters,
-no document is found:
+- Document for class `File`:
 
-```sh
-$ ri A
-Nothing known about A
-```
+    ```sh
+    $ ri File | head
+    = File < IO
+    
+    (from ruby core)
+    ------------------------------------------------------------------------
+    A File is an abstraction of any file object accessible by the program
+    and is closely associated with class IO.  File includes the methods of
+    module FileTest as class methods, allowing you to write (for example)
+    File.exist?("foo").
+    
+    In the description of File methods, permission_
+    ```
 
-To get a list of all classes and modules,
-use option `--list` with no _name_:
+- Document for nested class `File::Stat`:
 
-```sh
-$ ri --list | head
-ACL
-ACL::ACLEntry
-ACL::ACLList
-ARGF
-Abbrev
-Addrinfo
-ArgumentError
-Array
-Base64
-BasicObject
-```
+    ```sh
+    $ ri File::Stat | head
+    = File::Stat < Object
+    
+    ------------------------------------------------------------------------
+    = Includes:
+    Comparable (from ruby core)
+    
+    (from ruby core)
+    ------------------------------------------------------------------------
+    Objects of class File::Stat encapsulate common status information for
+    File objects. The information is recorded at the moment the File::Stat
+    ```
 
-To get a list of classes and modules beginning with a certain substring,
-use option `--list` with an argument:
+- Document for class `Enumerable`:
 
-```sh
-$ ri --list A | head
-ACL
-ACL::ACLEntry
-ACL::ACLList
-ARGF
-Abbrev
-Addrinfo
-ArgumentError
-Array
+    ```sh
+    $ ri Enumerable | head
+    = Enumerable
+    
+    (from ruby core)
+    ------------------------------------------------------------------------
+    The Enumerable mixin provides collection classes with several traversal
+    and searching methods, and with the ability to sort. The class must
+    provide a method #each, which yields successive members of the
+    collection. If Enumerable#max, #min, or #sort is used, the objects in
+    the collection must also implement a meaningful <=> operator, as these
+    methods rely on an ordering between members of the collection.
+    ```
 
-$ ri --list Ar | head
-ArgumentError
-Array
-```
+- Document for class `Array` (unique initial characters):
 
-To get the document for a class or module,
-together with the documents for all its methods,
-use option `--all`:
+    ```sh
+    $ ri Arr | head
+    = Array < Object
+    
+    ------------------------------------------------------------------------
+    = Includes:
+    Enumerable (from ruby core)
+    
+    (from ruby core)
+    ------------------------------------------------------------------------
+    An Array is an ordered, integer-indexed collection of objects, called
+    elements.  Any object may be an Array element.
+    ```
 
-```sh
-$ ri Array | wc -l       # Line count for document Array only.
-390
-$ ri --all Array | wc -l # Line count for document Array and its method documents.
-4224
-```
+- Document for class `Array` with option `--all`:
+
+    ```sh
+    $ ri Array | wc -l
+    390
+    $ ri --all Array | wc -l
+    4224
+    ```
 
 ### Ruby Methods
 
@@ -668,7 +727,7 @@ If the page name is sufficiently unique,
 you can omit leading and trailing elements:
 `ruby:exeptions` is the same as `ruby:syntax/exceptions.rdoc`.
 
-## Getting Gem Documents
+## `ri` for Gem Documentation
 
 ### Gem Classes and Modules
 
