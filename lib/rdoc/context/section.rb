@@ -177,7 +177,7 @@ class RDoc::Context::Section
   # Parses +comment_location+ into an RDoc::Markup::Document composed of
   # multiple RDoc::Markup::Documents with their file set.
 
-  def parse
+  def parse _comment_location
     case @comments
     when String then
       super
