@@ -6,9 +6,16 @@ require_relative '../rdoc'
 # # `ri` (Ruby Information)
 #
 # `ri` is the Ruby command-line utility
-# that gives fast and easy on-line access to Ruby documentation.
+# that gives fast and easy on-line access to documentation
+# (Ruby core and installed gems) for:
 #
-# Example (the pipe to `head` restricts output to leading lines):
+# - Classes and modules.
+# - Methods.
+# - Pages.
+#
+# Examples (the pipe to `head` abbreviates output to leading lines):
+#
+# - Ruby class `Array`:
 #
 # ```sh
 # $ ri Array | head
@@ -24,6 +31,51 @@ require_relative '../rdoc'
 # elements.  Any object may be an Array element.
 # ```
 #
+# - Ruby class method `IO::readlines`:
+#
+# ```sh
+# $ ri IO::readlines | head
+# = IO::readlines
+#
+# (from ruby core)
+# ------------------------------------------------------------------------
+# IO.readlines(name, sep=$/ [, getline_args, open_args])     -> array
+# IO.readlines(name, limit [, getline_args, open_args])      -> array
+# IO.readlines(name, sep, limit [, getline_args, open_args]) -> array
+#
+# ------------------------------------------------------------------------
+# ```
+#
+# - Ruby instance method `Array#push`:
+#
+# ```sh
+# $ ri Array#push | head
+# = Array#push
+#
+# (from ruby core)
+# ------------------------------------------------------------------------
+#   array.push(*objects) -> self
+#
+# ------------------------------------------------------------------------
+#
+# Appends trailing elements.
+# ```
+# - Ruby page `dig_methods`:
+#
+# ```sh
+# $ ri ruby:dig_methods | head
+# = Dig Methods
+#
+# Ruby's dig methods are useful for accessing nested data structures.
+#
+# Consider this data:
+#   item = {
+#     id: "0001",
+#     type: "donut",
+#     name: "Cake",
+#     ppu: 0.55,
+# ```
+#
 # ## Why `ri`?
 #
 # Using `ri` may have advantages over using
@@ -37,6 +89,140 @@ require_relative '../rdoc'
 #   {irb (interactive Ruby)}[https://docs.ruby-lang.org/en/master/IRB.html]
 #   session, you _already_ have immediate access to `ri`:
 #   just type `'help'` or `'show_doc'`.
+#
+# ## Modes
+#
+# There are two `ri` modes:
+#
+# - <i>Static mode</i>:
+#   In general, `ri` responds in its static mode
+#   if a _name_ is given;
+#   it prints and exits.
+#   See {Static Mode}[RI_md.html#label-Static+Mode].
+# - <i>Interactive mode</i>:
+#   In general, `ri` enters its interactive mode
+#   if no _name_ is given;
+#   in interactive mode, `ri` prints and waits for another command.
+#   See {Interactive Mode}[RI_md.html#label-Interactive+Mode].
+#
+# <b>Pro Tip: Keep `ri` available.</b>
+#
+# If you are a frequent `ri` user,
+# you can save time by keeping open a dedicated command window
+# with either of:
+#
+# - A running {interactive ri}[rdoc-ref:RI.md@Interactive+Mode] session.
+# - A running {irb session}[https://docs.ruby-lang.org/en/master/IRB.html];
+#   type `'help'` or `'show_doc'` to enter `ri`, newline to exit.
+#
+# When you switch to that window, `ri` is ready to respond quickly,
+# without the performance overhead of re-reading `ri` source files.
+#
+# ## Names
+#
+# In both modes, static and interactive,
+# `ri` responds to an input _name_ that specifies what is to be printed:
+# a document, multiple documents, or other information:
+#
+# - Static mode (in the shell): type `'ri _name_'`;
+#   examples (output omitted):
+#
+#     ```sh
+#     $ ri File
+#     $ ri IO#readlines
+#     $ ri ruby:
+#     ```
+#
+# - Interactive mode (already in `ri`): just type the _name_;
+#   examples (output omitted):
+#
+#     ```sh
+#     $ ri
+#     Enter the method name you want to look up.
+#     You can use tab to autocomplete.
+#     Enter a blank line to exit.
+#     >> File
+#     >> IO#readlines
+#     >> ruby:
+#     ```
+#
+# These table summarizes `ri` _name_ values:
+#
+# - Lists:
+#
+#     | Name        | Prints                  |
+#     |-------------|-------------------------|
+#     | 'ruby:'     | List of Ruby pages.     |
+#     | 'nokogiri:' | List of Nokogiri pages. |
+# <br>
+#
+#     There are more lists available;
+#     see {option \\--list}[rdoc-ref:RI.md@-list-2C+-l].
+#
+# - Ruby classes and modules
+#   (see {details and examples}[rdoc-ref:RI.md@Ruby+Classes+and+Modules]):
+#
+#     | Name       | Prints                                                |
+#     |------------|-------------------------------------------------------|
+#     | File       | Document for class File.                              |
+#     | File::Stat | Document for nested class File::Stat.                 |
+#     | Enumerable | Document for module Enumerable.                       |
+#     | Arr        | Document for class Array (unique initial characters). |
+# <br>
+#
+#     If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
+#     is in effect, documents for the methods in the named class or module
+#     are also printed.
+#
+# - Ruby methods
+#   (see {details and examples}[rdoc-ref:RI.md@Ruby+Methods]):
+#
+#
+#     | Name                  | Prints                                                                          |
+#     |-----------------------|---------------------------------------------------------------------------------|
+#     | IO::readlines         | Document for class method IO::readlines.                                    |
+#     | IO#readlines          | Document for instance method IO::readlines.                                     |
+#     | IO.readlines          | Documents for instance method IO::readlines and class method IO::readlines. |
+#     | ::readlines           | Documents for all class methods ::readlines.                                |
+#     | #readlines            | Documents for all instance methods #readlines; see note below.                   |
+#     | .readlines, readlines | Documents for class methods ::readlines and instance methods #readlines.    |
+# <br>
+#
+#     Note: in static mode, the name on the command line may need escape characters.
+#     In the table above, `#readlines` on the command line
+#     may (depending on the shell) need to be escaped as `\#readlines`;
+#     other escapes may be required for certain other method names.
+#     See {Escaping Names}[rdoc-ref:RI.md@Escaping+Names].
+#
+# - Ruby pages
+#   (see {details and examples}[rdoc-ref:RI.md@Ruby+Pages]):
+#
+#     | Name                        | Prints                                                          |
+#     |-----------------------------|-----------------------------------------------------------------|
+#     | ruby:security.rdoc          | Document for page security.                                     |
+#     | ruby:security               | Document for page security (if no other security.*).            |
+#     | ruby:syntax/assignment.rdoc | Document for page assignment.                                   |
+#     | ruby:syntax/assignment      | Document for page assignment (if no other syntax/assignment.*). |
+#     | ruby:assignment             | Document for page assignment (if no other */assignment.*).      |
+# <br>
+#
+# - Gem documents
+#   (see {details and examples}[rdoc-ref:RI.md@Printing+Gem+Documents]):
+#
+#     | Name                               | Prints                                                                         |
+#     |------------------------------------|--------------------------------------------------------------------------------|
+#     | Nokogiri                           | Document for module Nokogiri.                                                  |
+#     | Nokogiri::CSS                      | Document for class Nokogiri::CSS.                                              |
+#     | nokogiri:README.md                 | Document for page README.md.                                                   |
+#     | nokogiri:README                    | Document for page README.md (if no other README.*).                            |
+#     | Nokogiri::HTML4::Document          | Document for class Nokogiri::HTML4::Document.                                  |
+#     | Nokogiri::HTML4::Document::parse   | Document for class method Nokogiri::HTML4::Document::parse.                |
+#     | Nokogiri::HTML4::Document#fragment | Document for instance method Nokogiri::HTML4::Document#fragment.               |
+# <br>
+#
+#     If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
+#     is in effect, documents for the methods in the named class or module
+#     are also printed.
 #
 # ## `ri` Lists
 #
@@ -119,144 +305,6 @@ require_relative '../rdoc'
 # ```
 #
 # ## `ri` Information
-#
-# ## Modes
-#
-# There are two `ri` modes:
-#
-# - <i>Static mode</i>:
-#   In general, `ri` responds in its static mode
-#   if a _name_ is given;
-#   it prints and exits.
-#   See {Static Mode}[RI_md.html#label-Static+Mode].
-# - <i>Interactive mode</i>:
-#   In general, `ri` enters its interactive mode
-#   if no _name_ is given;
-#   in interactive mode, `ri` prints and waits for another command.
-#   See {Interactive Mode}[RI_md.html#label-Interactive+Mode].
-#
-# <b>Pro Tip: Keep `ri` available.</b>
-#
-# If you are a frequent `ri` user,
-# you can save time by keeping open a dedicated command window
-# with either of:
-#
-# - A running {interactive ri}[rdoc-ref:RI.md@Interactive+Mode] session.
-# - A running {irb session}[https://docs.ruby-lang.org/en/master/IRB.html];
-#   type `'help'` or `'show_doc'` to enter `ri`, newline to exit.
-#
-# When you switch to that window, `ri` is ready to respond quickly,
-# without the performance overhead of re-reading `ri` source files.
-#
-# ## Names
-#
-# In both modes, static and interactive,
-# `ri` responds to an input _name_ that specifies what is to be printed:
-# a document, multiple documents, or other information:
-#
-# - Static mode (in the shell): type `'ri _name_'`;
-#   examples (output omitted):
-#
-#     ```sh
-#     $ ri File
-#     $ ri IO#readlines
-#     $ ri ruby:
-#     ```
-#
-# - Interactive mode (already in `ri`): just type the _name_;
-#   examples (output omitted):
-#
-#     ```sh
-#     $ ri
-#     Enter the method name you want to look up.
-#     You can use tab to autocomplete.
-#     Enter a blank line to exit.
-#     >> File
-#     >> IO#readlines
-#     >> ruby:
-#     ```
-#
-# ### Names for Printing Lists
-#
-# This table summarizes `ri` names for getting lists:
-#
-# | Name      | Prints                  |
-# |-----------|-------------------------|
-# | ruby:     | List of Ruby pages.     |
-# | nokogiri: | List of Nokogiri pages. |
-# <br>
-#
-# There are more lists available;
-# see {option \\--list}[rdoc-ref:RI.md@-list-2C+-l].
-#
-# ### Names for Printing Documents
-#
-# These tables summarize `ri` names for getting documents:
-#
-# - Ruby classes and modules
-#   (see {details and examples}[rdoc-ref:RI.md@Ruby+Classes+and+Modules]):
-#
-#     | Name       | Prints                                                |
-#     |------------|-------------------------------------------------------|
-#     | File       | Document for class File.                              |
-#     | File::Stat | Document for nested class File::Stat.                 |
-#     | Enumerable | Document for module Enumerable.                       |
-#     | Arr        | Document for class Array (unique initial characters). |
-# <br>
-#
-#     If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
-#     is in effect, documents for the methods in the named class or module
-#     are also printed.
-#
-# - Ruby methods
-#   (see {details and examples}[rdoc-ref:RI.md@Ruby+Methods]):
-#
-#
-#     | Name                  | Prints                                                                          |
-#     |-----------------------|---------------------------------------------------------------------------------|
-#     | IO::readlines         | Document for class method IO::readlines.                                    |
-#     | IO#readlines          | Document for instance method IO::readlines.                                     |
-#     | IO.readlines          | Documents for instance method IO::readlines and class method IO::readlines. |
-#     | ::readlines           | Documents for all class methods ::readlines.                                |
-#     | #readlines            | Documents for all instance methods #readlines; see note below.                   |
-#     | .readlines, readlines | Documents for class methods ::readlines and instance methods #readlines.    |
-# <br>
-#
-#     Note: in static mode, the name on the command line may need escape characters.
-#     In the table above, `#readlines` on the command line
-#     may (depending on the shell) need to be escaped as `\#readlines`;
-#     other escapes may be required for certain other method names.
-#     See {Escaping Names}[rdoc-ref:RI.md@Escaping+Names].
-#
-# - Ruby pages
-#   (see {details and examples}[rdoc-ref:RI.md@Ruby+Pages]):
-#
-#     | Name                        | Prints                                                          |
-#     |-----------------------------|-----------------------------------------------------------------|
-#     | ruby:security.rdoc          | Document for page security.                                     |
-#     | ruby:security               | Document for page security (if no other security.*).            |
-#     | ruby:syntax/assignment.rdoc | Document for page assignment.                                   |
-#     | ruby:syntax/assignment      | Document for page assignment (if no other syntax/assignment.*). |
-#     | ruby:assignment             | Document for page assignment (if no other */assignment.*).      |
-# <br>
-#
-# - Gem documents
-#   (see {details and examples}[rdoc-ref:RI.md@Printing+Gem+Documents]):
-#
-#     | Name                               | Prints                                                                         |
-#     |------------------------------------|--------------------------------------------------------------------------------|
-#     | Nokogiri                           | Document for module Nokogiri.                                                  |
-#     | Nokogiri::CSS                      | Document for class Nokogiri::CSS.                                              |
-#     | nokogiri:README.md                 | Document for page README.md.                                                   |
-#     | nokogiri:README                    | Document for page README.md (if no other README.*).                            |
-#     | Nokogiri::HTML4::Document          | Document for class Nokogiri::HTML4::Document.                                  |
-#     | Nokogiri::HTML4::Document::parse   | Document for class method Nokogiri::HTML4::Document::parse.                |
-#     | Nokogiri::HTML4::Document#fragment | Document for instance method Nokogiri::HTML4::Document#fragment.               |
-# <br>
-#
-#     If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
-#     is in effect, documents for the methods in the named class or module
-#     are also printed.
 #
 # ## About the Examples
 #
@@ -528,7 +576,7 @@ require_relative '../rdoc'
 #   - The documents for all instance methods of a given name.
 #   - The documents for all class and instance methods of a given name.
 #
-# To get the document for a particular instance method,
+# To print the document for a particular instance method,
 # give the _name_ in the form `_name_of_class_or_module_#_name_of_method_`:
 #
 # ```sh
@@ -550,7 +598,7 @@ require_relative '../rdoc'
 # `ri` handles free-standing _pages_,
 # each of which presents a document that is not defined within a class or module.
 #
-# To get a particular page document,
+# To print a particular page document,
 # include its name in the argument:
 #
 # ```sh
@@ -567,7 +615,7 @@ require_relative '../rdoc'
 #   /y/.match('haystack') #=> #<MatchData "y">
 #   ```
 #
-# To get a list of the page documents,
+# To print a list of the page documents,
 # give the argument as `ruby:`:
 #
 # ```sh
@@ -613,7 +661,7 @@ require_relative '../rdoc'
 # win32/README.win32
 # ```
 #
-# To get a page:
+# To print a page:
 #
 # ```sh
 # $ ri ruby:syntax/exceptions.rdoc | head
