@@ -270,7 +270,7 @@ require_relative '../rdoc'
 # The document for a class or module shows:
 #
 # - The class or module name, along with its parent class if any.
-# - Where it's defined (Ruby core or gem name).
+# - Where it's defined (Ruby core or gem).
 # - When each exists:
 #
 #     - The names of its included modules.
@@ -335,6 +335,8 @@ require_relative '../rdoc'
 # = Instance methods:
 # ```
 #
+# #### Class or Module Methods
+#
 # <b>Pro Tip: Show just the methods from the document.</b>
 #
 # This command shows only the methods sections
@@ -346,52 +348,130 @@ require_relative '../rdoc'
 #
 # ### Method Document
 #
-# The document for a method includes a section for each found implementation:
+# The output for a given method _name_ includes the document
+# for each found implementation;
+# the number of such implementations depends on the _name_.
 #
-# - Class methods only:
-#
-# ```sh
-# $ ri ::readlines | grep "= Implementation"
-# === Implementation from CSV
-# === Implementation from IO
-# ```
-#
-# - Instance methods only:
+# Each of these commands prints documents
+# for one or more methods in the given class (output omitted):
 #
 # ```sh
-# $ ri \#readlines | grep "= Implementation"
-# === Implementation from ARGF
-# === Implementation from CSV
-# === Implementation from IO
-# === Implementation from Kernel
-# === Implementation from Buffering
-# === Implementation from Pathname
-# === Implementation from StringIO
-# === Implementation from GzipReader
+# $ ri IO::readlines # Class method.
+# $ ri IO#readlines  # Instance method.
+# $ ri IO.readlines  # Both.
 # ```
 #
-# - All methods:
+# Each of these commands prints a multiple-section document
+# multiple implementations (output filtered to show sections):
 #
-# ```sh
-# $ ri .readlines | grep "= Implementation"
-# === Implementation from ARGF
-# === Implementation from CSV
-# === Implementation from CSV
-# === Implementation from IO
-# === Implementation from IO
-# === Implementation from Kernel
-# === Implementation from Buffering
-# === Implementation from Pathname
-# === Implementation from StringIO
-# === Implementation from GzipReader
-# ```
+# - Class methods in all Ruby classes and modules:
 #
-# Each such section includes:
+#     ```sh
+#     $ ri ::readlines | grep "= Implementation"
+#     === Implementation from CSV
+#     === Implementation from IO
+#     ```
 #
-# - The full method name.
+# - Instance methods in all Ruby classes and modules:
+#
+#     ```sh
+#     $ ri \#readlines | grep "= Implementation"
+#     === Implementation from ARGF
+#     === Implementation from CSV
+#     === Implementation from IO
+#     === Implementation from Kernel
+#     === Implementation from Buffering
+#     === Implementation from Pathname
+#     === Implementation from StringIO
+#     === Implementation from GzipReader
+#     ```
+#
+# - Class and instance methods in all Ruby classes and modules:
+#
+#     ```sh
+#     $ ri .readlines | grep "= Implementation"
+#     === Implementation from ARGF
+#     === Implementation from CSV
+#     === Implementation from CSV
+#     === Implementation from IO
+#     === Implementation from IO
+#     === Implementation from Kernel
+#     === Implementation from Buffering
+#     === Implementation from Pathname
+#     === Implementation from StringIO
+#     === Implementation from GzipReader
+#     ```
+#
+# Each document includes:
+#
 # - The source of the method: `'(from ruby core)'` or `'(from gem _gem_)'`.
-# - The calling sequences for the method.
-# - The documentation for the method.
+# - The calling sequence(s) for the method.
+# - The text of its embedded documentation (if it exists).
+#
+# Examples:
+#
+# - Class method `IO::read`:
+#
+#     ```sh
+#     $ ri IO::read | head
+#     = IO::read
+#
+#     (from ruby core)
+#     ------------------------------------------------------------------------
+#     IO.read(name, [length [, offset]] [, opt] )   -> string
+#
+#     ------------------------------------------------------------------------
+#
+#     Opens the file, optionally seeks to the given offset, then returns
+#     length bytes (defaulting to the rest of the file).  #read ensures the
+#     ```
+#
+# - Instance method `IO#read`:
+#
+#     ```sh
+#     $ ri IO#read | head
+#     = IO#read
+#
+#     (from ruby core)
+#     ------------------------------------------------------------------------
+#     ios.read([length [, outbuf]])    -> string, outbuf, or nil
+#
+#     ------------------------------------------------------------------------
+#
+#     Reads length bytes from the I/O stream.
+#     ```
+#
+# - Class method `IO::read` and instance method `IO#read`:
+#
+#     ```sh
+#     $ ri IO.read | head
+#     = IO.read
+#
+#     (from ruby core)
+#     ------------------------------------------------------------------------
+#       IO.read(name, [length [, offset]] [, opt] )   -> string
+#
+#     ------------------------------------------------------------------------
+#
+#     Opens the file, optionally seeks to the given offset, then returns
+#     length bytes (defaulting to the rest of the file).  #read ensures the
+#     ```
+#
+# - All methods `::readlines` in all Ruby classes:
+#
+#     ```sh
+#     $ ri readlines | head
+#     = .readlines
+#
+#     (from ruby core)
+#     === Implementation from ARGF
+#     ------------------------------------------------------------------------
+#     ARGF.readlines(sep=$/)     -> array
+#     ARGF.readlines(limit)      -> array
+#     ARGF.readlines(sep, limit) -> array
+#     ARGF.to_a(sep=$/)     -> array
+#     ARGF.to_a(limit)      -> array
+#     ```
 #
 # ### Page Document
 #
@@ -631,7 +711,7 @@ require_relative '../rdoc'
 # #### Ruby Methods Lists
 #
 # `ri` does not provide a formal _name_ for listing methods;
-# see, however, {Method Documents}[rdoc-ref:RDoc::RI@Method+Document].
+# see, however, {Class or Module Methods}[rdoc-ref:RDoc::RI@Class+or+Module+Methods].
 #
 # #### Ruby Method Documents
 #
