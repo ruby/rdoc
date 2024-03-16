@@ -40,16 +40,19 @@ the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
 ### Class or Module Document
 
 The document for a class or module typically includes certain headings,
-which may be useful for searching:
+which may be useful for searching;
+the heading is omitted if it would have no content:
 
-- `'= Includes:`: Included modules.
-- `'= Constants:`: Constants and their documentation.
-- `'= Class methods:`: Class methods and their documentation.
-- `'= Instance methods:`: Instance methods and their documentation.
+- `'= Includes:'`: Included modules.
+- `'= Constants:'`: Constants and their documentation.
+- `'= Class methods:'`: Class methods and their documentation.
+- `'= Instance methods:'`: Instance methods and their documentation.
 
-You can omit printed output up to a given line;
-for example, this command prints only the last two sections (output omitted),
-which show the lists of class and instance methods for class `Array`:
+<b>Pro Tip: List class or module methods.</b>
+
+This command prints only the last two sections,
+`'= Class methods'` and `'= Instance methods'`,
+from the document for class `Array` (output omitted):
 
 ```sh
 $ ri Array | less +/"= Class methods:"
@@ -115,7 +118,7 @@ There are two `ri` modes:
   in interactive mode, `ri` prints and waits for another command.
   See {Interactive Mode}[RI_md.html#label-Interactive+Mode].
 
-### Pro Tip: Keep `ri` Available
+<b>Pro Tip: Keep `ri` available.</b>
 
 If you are a frequent `ri` user,
 you can save time by keeping open a dedicated command window
@@ -651,7 +654,7 @@ If you set environment variable `RI_PAGER` or `PAGER`,
 its value should be the name of an executable program
 that will accept the `ri` output (such as `'pager'`, `'less'`, or `'more'`).
 
-### Pro Tip: Pager Options
+<b>Pro Tip: Use pager options.</b>
 
 You can set the pager value to a pager program name with options;
 this example (which omits output) sets the pager to `'less'`,
@@ -664,7 +667,7 @@ RI_PAGER="less -E -F" ri Array
 See the options for your chosen pager program
 (e.g, type `'less --help'`).
 
-### Pro Tip: Pre-Pager Processing
+<b>Pro Tip: Filter documents.</b>
 
 The "pager" value actually need not specify a simple pager program.
 You can, for example, set the pager value to `'grep . | less'`,
