@@ -236,15 +236,12 @@ require_relative '../rdoc'
 #
 # ## About the Examples
 #
-# - `ri` output can be large,
-#   and so here we sometimes pipe the output to one of these:
+# - `ri` output can be large;
+#   for our purposes here, we sometimes pipe to one of these:
 #
 #     - {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
 #     - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
 #     - {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
-#
-# - To filter the output, we sometimes pipe the output to:
-#
 #     - {grep}[https://www.man7.org/linux/man-pages/man1/grep.1.html]: selected lines only.
 #
 # - Examples that involve the `ri` environment variables `RI` or `RI_PAGER`
