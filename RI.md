@@ -100,6 +100,18 @@ $ ri .readlines | grep "= Implementation"
 === Implementation from GzipReader
 ```
 
+Each such section includes:
+
+- The full method name.
+- The source of the method: `'(from ruby core)'` or `'(from gem _gem_)'`.
+- The calling sequences for the method.
+- The documentation for the method.
+
+Examples:
+
+```sh
+
+```
 
 ## `ri` Information
 
@@ -489,6 +501,13 @@ Examples:
     ```
 
 ### Ruby Methods
+
+#### Ruby Methods Lists
+
+`ri` does not provide a formal _name_ for listing methods;
+see, however, {Method Documents}[rdoc-ref:RI.md@Method+Document].
+
+#### Ruby Method Documents
 
 For methods, `ri` can print:
 
