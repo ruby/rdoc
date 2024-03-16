@@ -97,13 +97,22 @@ require_relative '../rdoc'
 # - <i>Static mode</i>:
 #   In general, `ri` responds in its static mode
 #   if a _name_ is given;
-#   it prints and exits.
-#   See {Static Mode}[RI_md.html#label-Static+Mode].
+#   it prints and exits (as in the examples above).
+#   See {Static Mode}[rdoc-ref:RDoc::RI@Static+Mode].
 # - <i>Interactive mode</i>:
 #   In general, `ri` enters its interactive mode
 #   if no _name_ is given;
-#   in interactive mode, `ri` prints and waits for another command.
-#   See {Interactive Mode}[RI_md.html#label-Interactive+Mode].
+#   in interactive mode, `ri` prints and waits for another command:
+#
+#     ```sh
+#     $ ri
+#     Enter the method name you want to look up.
+#     You can use tab to autocomplete.
+#     Enter a blank line to exit.
+#     >>
+#     ```
+#
+#   See {Interactive Mode}[rdoc-ref:RDoc::RI@Interactive+Mode].
 #
 # <b>Pro Tip: Keep `ri` available.</b>
 #
@@ -111,7 +120,7 @@ require_relative '../rdoc'
 # you can save time by keeping open a dedicated command window
 # with either of:
 #
-# - A running {interactive ri}[rdoc-ref:RI.md@Interactive+Mode] session.
+# - A running {interactive ri}[rdoc-ref:RDoc::RI@Interactive+Mode] session.
 # - A running {irb session}[https://docs.ruby-lang.org/en/master/IRB.html];
 #   type `'help'` or `'show_doc'` to enter `ri`, newline to exit.
 #
@@ -157,10 +166,10 @@ require_relative '../rdoc'
 # <br>
 #
 #     There are more lists available;
-#     see {option \\--list}[rdoc-ref:RI.md@-list-2C+-l].
+#     see {option \\--list}[rdoc-ref:RDoc::RI@-list-2C+-l].
 #
 # - Ruby classes and modules
-#   (see {details and examples}[rdoc-ref:RI.md@Ruby+Classes+and+Modules]):
+#   (see {details and examples}[rdoc-ref:RDoc::RI@Ruby+Classes+and+Modules]):
 #
 #     | Name       | Prints                                                |
 #     |------------|-------------------------------------------------------|
@@ -170,12 +179,12 @@ require_relative '../rdoc'
 #     | Arr        | Document for class Array (unique initial characters). |
 # <br>
 #
-#     If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
+#     If {option \\--all}[rdoc-ref:RDoc::RI@-all-2C+-a]
 #     is in effect, documents for the methods in the named class or module
 #     are also printed.
 #
 # - Ruby methods
-#   (see {details and examples}[rdoc-ref:RI.md@Ruby+Methods]):
+#   (see {details and examples}[rdoc-ref:RDoc::RI@Ruby+Methods]):
 #
 #
 #     | Name                  | Prints                                                                          |
@@ -192,10 +201,10 @@ require_relative '../rdoc'
 #     In the table above, `#readlines` on the command line
 #     may (depending on the shell) need to be escaped as `\#readlines`;
 #     other escapes may be required for certain other method names.
-#     See {Escaping Names}[rdoc-ref:RI.md@Escaping+Names].
+#     See {Escaping Names}[rdoc-ref:RDoc::RI@Escaping+Names].
 #
 # - Ruby pages
-#   (see {details and examples}[rdoc-ref:RI.md@Ruby+Pages]):
+#   (see {details and examples}[rdoc-ref:RDoc::RI@Ruby+Pages]):
 #
 #     | Name                        | Prints                                                          |
 #     |-----------------------------|-----------------------------------------------------------------|
@@ -207,7 +216,7 @@ require_relative '../rdoc'
 # <br>
 #
 # - Gem documents
-#   (see {details and examples}[rdoc-ref:RI.md@Printing+Gem+Documents]):
+#   (see {details and examples}[rdoc-ref:RDoc::RI@ri+for+Gem+Documentation]):
 #
 #     | Name                               | Prints                                                                         |
 #     |------------------------------------|--------------------------------------------------------------------------------|
@@ -220,33 +229,93 @@ require_relative '../rdoc'
 #     | Nokogiri::HTML4::Document#fragment | Document for instance method Nokogiri::HTML4::Document#fragment.               |
 # <br>
 #
-#     If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
+#     If {option \\--all}[rdoc-ref:RDoc::RI@-all-2C+-a]
 #     is in effect, documents for the methods in the named class or module
 #     are also printed.
 #
 # ## `ri` Lists
 #
+# [TODO]
+#
 # ## `ri` Documents
+#
+# This section outlines what you should expect in printed `ri` documents.
 #
 # ### Class or Module Document
 #
-# The document for a class or module typically includes certain headings,
+# The document for a class or module shows:
+#
+# - The class or module name, along with its parent class if any.
+# - Where it's defined (Ruby core or gem name).
+# - The names of its included modules, if any.
+# - The text of its embedded documentation, if any.
+# - Its constants, if any.
+# - Its class methods, if any.
+# - Its instance methods, if any.
+#
+# Examples:
+#
+# - Ruby class `Array`:
+#
+#     ```sh
+#     $ ri Array | head
+#     = Array < Object
+#
+#     ------------------------------------------------------------------------
+#     = Includes:
+#       Enumerable (from ruby core)
+#
+#     (from ruby core)
+#     ------------------------------------------------------------------------
+#     An Array is an ordered, integer-indexed collection of objects, called
+#     elements.  Any object may be an Array element.
+#     ```
+#
+# - Gem Nokogiri module `Nokogiri`:
+#
+#     ```sh
+#     $ ri Nokogiri | head
+#     = Nokogiri
+#
+#     (from gem nokogiri-1.16.2-x86_64-linux)
+#     ------------------------------------------------------------------------
+#
+#     Nokogiri parses and searches XML/HTML very quickly, and also has
+#     correctly implemented CSS3 selector support as well as XPath 1.0
+#     support.
+#
+#     Parsing a document returns either a Nokogiri::XML::Document, or a
+#     ```
+#
+# The document typically includes certain headings,
 # which may be useful for searching;
 # the heading is omitted if it would have no content:
 #
+# - `'= _class_name_ < _superclass_name_'` if a class;
+#   `'= _module_name_'` if a module.
 # - `'= Includes:'`: Included modules.
 # - `'= Constants:'`: Constants and their documentation.
 # - `'= Class methods:'`: Class methods and their documentation.
 # - `'= Instance methods:'`: Instance methods and their documentation.
 #
-# <b>Pro Tip: List class or module methods.</b>
+# Example:
 #
-# This command prints only the last two sections,
-# `'= Class methods'` and `'= Instance methods'`,
+# ```sh
+# $ ri IO | grep "^= "
+# = IO < Object
+# = Includes:
+# = Constants:
+# = Class methods:
+# = Instance methods:
+# ```
+#
+# <b>Pro Tip: Show just the methods from the document.</b>
+#
+# This command shows only the methods sections
 # from the document for class `Array` (output omitted):
 #
 # ```sh
-# $ ri Array | less +/"= Class methods:"
+# ri Array | less +/"= \w+ methods:"
 # ```
 #
 # ### Method Document
@@ -298,11 +367,9 @@ require_relative '../rdoc'
 # - The calling sequences for the method.
 # - The documentation for the method.
 #
-# Examples:
+# ### Page Document
 #
-# ```sh
-#
-# ```
+# [TODO]
 #
 # ## `ri` Information
 #
@@ -315,16 +382,16 @@ require_relative '../rdoc'
 #     - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
 #     - {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
 #
-#     - Examples that involve the `ri` environment variables `RI` or `RI_PAGER`
-#       may use the shell idiom `_env_name_="_env_value_"`
-#       to define an environment variable on the command line:
+# - Examples that involve the `ri` environment variables `RI` or `RI_PAGER`
+#   may use the shell idiom `_env_name_="_env_value_"`
+#   to define an environment variable on the command line:
 #
-#       ```sh
-#       $ RI="--all --no-gems" ruby -e "p ENV['RI']"
-#       "--all --no-gems"
-#       $ RI_PAGER="grep . | less" ruby -e "p ENV['RI_PAGER']"
-#       "grep . | less"
-#       ```
+#     ```sh
+#     $ RI="--all --no-gems" ruby -e "p ENV['RI']"
+#     "--all --no-gems"
+#     $ RI_PAGER="grep . | less" ruby -e "p ENV['RI_PAGER']"
+#     "grep . | less"
+#     ```
 #
 # - Examples that involve gems assume that gem `nokogiri` is installed.
 #
@@ -373,13 +440,13 @@ require_relative '../rdoc'
 #
 # Option –help or -h: Prints ri help text
 #
-# - {Option \--help or -h}[rdoc-ref:RI.md@-help-2C+-h]:
+# - {Option \--help or -h}[rdoc-ref:RDoc::RI@-help-2C+-h]:
 #   Prints `ri` help text.
-# - {option \\--list or -l}[rdoc-ref:RI.md@-list-2C+-l]:
+# - {option \\--list or -l}[rdoc-ref:RDoc::RI@-list-2C+-l]:
 #   Prints list of classes and modules.
-# - {option \\--list-doc-dirs}[rdoc-ref:RI.md@-list-doc-dirs]:
+# - {option \\--list-doc-dirs}[rdoc-ref:RDoc::RI@-list-doc-dirs]:
 #   Prints list of `ri` source directories.
-# - {option \\--version or -v}[rdoc-ref:RI.md@-version-2C+-v]:
+# - {option \\--version or -v}[rdoc-ref:RDoc::RI@-version-2C+-v]:
 #   Prints `ri` version.
 #
 # ## Interactive Mode
@@ -402,7 +469,7 @@ require_relative '../rdoc'
 # - Omit command word `ri`; just type the _name_.
 # - Omit options; in interactive mode the only options in effect
 #   are those taken from environment variable `RI`.
-#   See {Options}[rdoc-ref:RI.md@Options].
+#   See {Options}[rdoc-ref:RDoc::RI@Options].
 #
 # ## `ri` for Ruby Documentation
 #
@@ -474,7 +541,7 @@ require_relative '../rdoc'
 # | 'A'          | Nothing (not unique initial characters).              |
 # <br>
 #
-# If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
+# If {option \\--all}[rdoc-ref:RDoc::RI@-all-2C+-a]
 # is in effect, documents for the methods in the named class or module
 # are also printed.
 #
@@ -558,7 +625,7 @@ require_relative '../rdoc'
 # #### Ruby Methods Lists
 #
 # `ri` does not provide a formal _name_ for listing methods;
-# see, however, {Method Documents}[rdoc-ref:RI.md@Method+Document].
+# see, however, {Method Documents}[rdoc-ref:RDoc::RI@Method+Document].
 #
 # #### Ruby Method Documents
 #
@@ -751,12 +818,12 @@ require_relative '../rdoc'
 # RI_PAGER="grep . | less" ri Array
 # ```
 #
-# ## Options
+# ## \Options
 #
-# Options may be given on the `ri` command line;
+# \Options may be given on the `ri` command line;
 # those should be whitespace-separated, and must precede the given _name_, if any.
 #
-# Options may also be specified in environment variable `RI`;
+# \Options may also be specified in environment variable `RI`;
 # those should also be whitespace-separated.
 #
 # An option specified in environment variable `RI`
@@ -983,7 +1050,7 @@ require_relative '../rdoc'
 #
 # ### `--server=NUMBER`
 #
-# Option `--server` specifies that the RDoc server is to be run on the port
+# Option `--server` specifies that the \RDoc server is to be run on the port
 # given as _NUMBER_;
 # the default port is `8214`.
 #
