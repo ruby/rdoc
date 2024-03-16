@@ -166,17 +166,18 @@ require_relative '../rdoc'
 # <br>
 #
 #     There are more lists available;
-#     see {option \\--list}[rdoc-ref:RDoc::RI@-list-2C+-l].
+#     see {ri Lists}[rdoc-ref:RDoc::RI@ri+Lists]
+#     and {option \\--list}[rdoc-ref:RDoc::RI@-list-2C+-l].
 #
 # - Ruby classes and modules
 #   (see {details and examples}[rdoc-ref:RDoc::RI@Ruby+Classes+and+Modules]):
 #
-#     | Name       | Prints                                                |
-#     |------------|-------------------------------------------------------|
-#     | File       | Document for class File.                              |
-#     | File::Stat | Document for nested class File::Stat.                 |
-#     | Enumerable | Document for module Enumerable.                       |
-#     | Arr        | Document for class Array (unique initial characters). |
+#     | Name         | Prints                                                |
+#     |--------------|-------------------------------------------------------|
+#     | 'File'       | Document for class File.                              |
+#     | 'File::Stat' | Document for nested class File::Stat.                 |
+#     | 'Enumerable' | Document for module Enumerable.                       |
+#     | 'Arr'        | Document for class Array (unique initial characters). |
 # <br>
 #
 #     If {option \\--all}[rdoc-ref:RDoc::RI@-all-2C+-a]
@@ -187,14 +188,14 @@ require_relative '../rdoc'
 #   (see {details and examples}[rdoc-ref:RDoc::RI@Ruby+Methods]):
 #
 #
-#     | Name                  | Prints                                                                          |
-#     |-----------------------|---------------------------------------------------------------------------------|
-#     | IO::readlines         | Document for class method IO::readlines.                                    |
-#     | IO#readlines          | Document for instance method IO::readlines.                                     |
-#     | IO.readlines          | Documents for instance method IO::readlines and class method IO::readlines. |
-#     | ::readlines           | Documents for all class methods ::readlines.                                |
-#     | #readlines            | Documents for all instance methods #readlines; see note below.                   |
-#     | .readlines, readlines | Documents for class methods ::readlines and instance methods #readlines.    |
+#     | Name                      | Prints                                                                      |
+#     |---------------------------|-----------------------------------------------------------------------------|
+#     | 'IO::readlines'           | Document for class method IO::readlines.                                    |
+#     | 'IO#readlines'            | Document for instance method IO::readlines.                                 |
+#     | 'IO.readlines'            | Documents for instance method IO::readlines and class method IO::readlines. |
+#     | '::readlines'             | Documents for all class methods ::readlines.                                |
+#     | '#readlines'              | Documents for all instance methods #readlines; see note below.              |
+#     | '.readlines', 'readlines' | Documents for class methods ::readlines and instance methods #readlines.    |
 # <br>
 #
 #     Note: in static mode, the name on the command line may need escape characters.
@@ -206,32 +207,58 @@ require_relative '../rdoc'
 # - Ruby pages
 #   (see {details and examples}[rdoc-ref:RDoc::RI@Ruby+Pages]):
 #
-#     | Name                        | Prints                                                          |
-#     |-----------------------------|-----------------------------------------------------------------|
-#     | ruby:security.rdoc          | Document for page security.                                     |
-#     | ruby:security               | Document for page security (if no other security.*).            |
-#     | ruby:syntax/assignment.rdoc | Document for page assignment.                                   |
-#     | ruby:syntax/assignment      | Document for page assignment (if no other syntax/assignment.*). |
-#     | ruby:assignment             | Document for page assignment (if no other */assignment.*).      |
+#     | Name                          | Prints                                                          |
+#     |-------------------------------|-----------------------------------------------------------------|
+#     | 'ruby:security.rdoc'          | Document for page security.                                     |
+#     | 'ruby:security'               | Document for page security (if no other security.*).            |
+#     | 'ruby:syntax/assignment.rdoc' | Document for page assignment.                                   |
+#     | 'ruby:syntax/assignment'      | Document for page assignment (if no other syntax/assignment.*). |
+#     | 'ruby:assignment'             | Document for page assignment (if no other */assignment.*).      |
 # <br>
 #
 # - Gem documents
 #   (see {details and examples}[rdoc-ref:RDoc::RI@ri+for+Gem+Documentation]):
 #
-#     | Name                               | Prints                                                                         |
-#     |------------------------------------|--------------------------------------------------------------------------------|
-#     | Nokogiri                           | Document for module Nokogiri.                                                  |
-#     | Nokogiri::CSS                      | Document for class Nokogiri::CSS.                                              |
-#     | nokogiri:README.md                 | Document for page README.md.                                                   |
-#     | nokogiri:README                    | Document for page README.md (if no other README.*).                            |
-#     | Nokogiri::HTML4::Document          | Document for class Nokogiri::HTML4::Document.                                  |
-#     | Nokogiri::HTML4::Document::parse   | Document for class method Nokogiri::HTML4::Document::parse.                |
-#     | Nokogiri::HTML4::Document#fragment | Document for instance method Nokogiri::HTML4::Document#fragment.               |
+#     | Name                                 | Prints                                                           |
+#     |--------------------------------------|------------------------------------------------------------------|
+#     | 'Nokogiri'                           | Document for module Nokogiri.                                    |
+#     | 'Nokogiri::CSS'                      | Document for class Nokogiri::CSS.                                |
+#     | 'nokogiri:README.md'                 | Document for page README.md.                                     |
+#     | 'nokogiri:README'                    | Document for page README.md (if no other README.*).              |
+#     | 'Nokogiri::HTML4::Document'          | Document for class Nokogiri::HTML4::Document.                    |
+#     | 'Nokogiri::HTML4::Document::parse'   | Document for class method Nokogiri::HTML4::Document::parse.      |
+#     | 'Nokogiri::HTML4::Document#fragment' | Document for instance method Nokogiri::HTML4::Document#fragment. |
 # <br>
 #
 #     If {option \\--all}[rdoc-ref:RDoc::RI@-all-2C+-a]
 #     is in effect, documents for the methods in the named class or module
 #     are also printed.
+#
+# ## About the Examples
+#
+# - `ri` output can be large,
+#   and so here we sometimes pipe the output to one of these:
+#
+#     - {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
+#     - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
+#     - {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
+#
+# - To filter the output, we sometimes pipe the output to:
+#
+#     - {grep}[https://www.man7.org/linux/man-pages/man1/grep.1.html]: selected lines only.
+#
+# - Examples that involve the `ri` environment variables `RI` or `RI_PAGER`
+#   may use the shell idiom `_env_name_="_env_value_"`
+#   to define an environment variable on the command line:
+#
+#     ```sh
+#     $ RI="--all --no-gems" ruby -e "p ENV['RI']"
+#     "--all --no-gems"
+#     $ RI_PAGER="grep . | less" ruby -e "p ENV['RI_PAGER']"
+#     "grep . | less"
+#     ```
+#
+# - Examples that involve gems assume that gem `nokogiri` is installed.
 #
 # ## `ri` Lists
 #
@@ -247,11 +274,13 @@ require_relative '../rdoc'
 #
 # - The class or module name, along with its parent class if any.
 # - Where it's defined (Ruby core or gem name).
-# - The names of its included modules, if any.
-# - The text of its embedded documentation, if any.
-# - Its constants, if any.
-# - Its class methods, if any.
-# - Its instance methods, if any.
+# - When each exists:
+#
+#     - The names of its included modules.
+#     - The text of its embedded documentation.
+#     - Its constants.
+#     - Its class methods.
+#     - Its instance methods.
 #
 # Examples:
 #
@@ -373,27 +402,7 @@ require_relative '../rdoc'
 #
 # ## `ri` Information
 #
-# ## About the Examples
-#
-# - `ri` output can be large,
-#   and so here we sometimes pipe the output to one of these:
-#
-#     - {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
-#     - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
-#     - {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
-#
-# - Examples that involve the `ri` environment variables `RI` or `RI_PAGER`
-#   may use the shell idiom `_env_name_="_env_value_"`
-#   to define an environment variable on the command line:
-#
-#     ```sh
-#     $ RI="--all --no-gems" ruby -e "p ENV['RI']"
-#     "--all --no-gems"
-#     $ RI_PAGER="grep . | less" ruby -e "p ENV['RI_PAGER']"
-#     "grep . | less"
-#     ```
-#
-# - Examples that involve gems assume that gem `nokogiri` is installed.
+# [TODO]
 #
 # ## Static Mode
 #
