@@ -33,192 +33,70 @@ the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
   session, you _already_ have immediate access to `ri`:
   just type `'help'` or `'show_doc'`.
 
+## `ri` Lists
+
 ## `ri` Documents
 
-With `ri`, you can quickly access documents on-line for:
+### Class or Module Document
 
-  - Ruby (core and standard library):
+The document for a class or module typically includes certain headings,
+which may be useful for searching:
 
-    - Class or module (e.g., `Array` or `Enumerable`);
-      see {Ruby Classes and Modules}[rdoc-ref:RI.md@Ruby+Classes+and+Modules].
-    - Singleton or instance method (e.g., `IO::readlines` or `IO#readlines`);
-      see {Ruby Methods}[rdoc-ref:RI.md@Ruby+Methods].
-    - Page (e.g., `ruby:dig_methods`);
-      see {Ruby Pages}[rdoc-ref:RI.md@Ruby+Pages].
+- `'= Includes:`: Included modules.
+- `'= Constants:`: Constants and their documentation.
+- `'= Class methods:`: Class methods and their documentation.
+- `'= Instance methods:`: Instance methods and their documentation.
 
-  - Gems:
-
-    - Class or module (e.g., `Nokogiri::HTML4::Document` or `Nokogiri`);
-      see {Gem Classes and Modules}[rdoc-ref:RI.md@Gem+Classes+and+Modules].
-    - Singleton or instance method
-      (e.g., `Nokogiri::HTML4::Document::parse` or `Nokogiri::HTML4::Document#fragment`);
-      see {Gem Methods}[rdoc-ref:RI.md@Gem+Methods].
-    - Page (e.g., `nokogiri:README`);
-      see {Gem Pages}[rdoc-ref:RI.md@Gem+Pages].
-
-Examples:
-
-- Document for Ruby class `Array`:
-
-    ```sh
-    $ ri Array | head
-    = Array < Object
-    
-    ------------------------------------------------------------------------
-    = Includes:
-    Enumerable (from ruby core)
-    
-    (from ruby core)
-    ------------------------------------------------------------------------
-    An Array is an ordered, integer-indexed collection of objects, called
-    elements.  Any object (even another array) may be an array element.
-    ```
-
-- Document for Ruby module `Enumerable`:
+You can omit printed output up to a given line;
+for example, this command prints only the last two sections (output omitted),
+which show the lists of class and instance methods for class `Array`:
 
 ```sh
-$ ri Enumerable | head
-= Enumerable
-
-(from ruby core)
-------------------------------------------------------------------------
-The Enumerable mixin provides collection classes with several traversal
-and searching methods, and with the ability to sort. The class must
-provide a method #each, which yields successive members of the
-collection. If Enumerable#max, #min, or #sort is used, the objects in
-the collection must also implement a meaningful <=> operator, as these
-methods rely on an ordering between members of the collection.
+$ ri Array | less +/"= Class methods:"
 ```
 
-- Document for Ruby singleton method `IO::readlines`:
+### Method Document
 
-    ```sh
-    $ ri IO::readlines | head
-    = IO::readlines
-    
-    (from ruby core)
-    ------------------------------------------------------------------------
-    IO.readlines(name, sep=$/ [, getline_args, open_args])     -> array
-    IO.readlines(name, limit [, getline_args, open_args])      -> array
-    IO.readlines(name, sep, limit [, getline_args, open_args]) -> array
-    
-    ------------------------------------------------------------------------
-    
-    ```
+The document for a method includes a section for each found implementation:
 
-- Document for Ruby instance method `IO#readlines`:
-
-    ```sh
-    $ ri IO#readlines | head
-    = IO#readlines
-    
-    (from ruby core)
-    ------------------------------------------------------------------------
-    ios.readlines(sep=$/ [, getline_args])     -> array
-    ios.readlines(limit [, getline_args])      -> array
-    ios.readlines(sep, limit [, getline_args]) -> array
-    
-    ------------------------------------------------------------------------
-
-    ```
-
-- Document for Ruby page `ruby:dig_methods`:
-
-    ```sh
-    $ ri ruby:dig_methods | head
-    = Dig Methods
-    
-    Ruby's dig methods are useful for accessing nested data structures.
-    
-    Consider this data:
-    item = {
-    id: "0001",
-    type: "donut",
-    name: "Cake",
-    ppu: 0.55,
-    ```
-
-- Document for Nokogiri class `Nokogiri::HTML4::Document`:
+- Class methods only:
 
 ```sh
-$ ri Nokogiri::HTML4::Document | head
-= Nokogiri::HTML4::Document < Nokogiri::XML::Document
-
-(from gem nokogiri-1.16.2-x86_64-linux)
-------------------------------------------------------------------------
-= Class methods:
-
-  parse
-
-= Instance methods:
-
+$ ri ::readlines | grep "= Implementation"
+=== Implementation from CSV
+=== Implementation from IO
 ```
 
-- Document for Nokogiri module `Nokogiri`:
+- Instance methods only:
 
 ```sh
-$ ri Nokogiri | head
-= Nokogiri
-
-(from gem nokogiri-1.16.2-x86_64-linux)
-------------------------------------------------------------------------
-
-Nokogiri parses and searches XML/HTML very quickly, and also has
-correctly implemented CSS3 selector support as well as XPath 1.0
-support.
-
-Parsing a document returns either a Nokogiri::XML::Document, or a
+$ ri \#readlines | grep "= Implementation"
+=== Implementation from ARGF
+=== Implementation from CSV
+=== Implementation from IO
+=== Implementation from Kernel
+=== Implementation from Buffering
+=== Implementation from Pathname
+=== Implementation from StringIO
+=== Implementation from GzipReader
 ```
 
-- Document for Nokogiri singleton method `Nokogiri::HTML4::Document::parse`:
+- All methods:
 
 ```sh
-$ ri Nokogiri::HTML4::Document::parse | head
-= Nokogiri::HTML4::Document::parse
-
-(from gem nokogiri-1.16.2-x86_64-linux)
-=== Implementation from Document
-------------------------------------------------------------------------
-  parse(string_or_io, url = nil, encoding = nil, options = XML::ParseOptions::DEFAULT_HTML) { |options| ... }
-
-------------------------------------------------------------------------
-
-Parse HTML.  string_or_io may be a String, or any object that responds
+$ ri .readlines | grep "= Implementation"
+=== Implementation from ARGF
+=== Implementation from CSV
+=== Implementation from CSV
+=== Implementation from IO
+=== Implementation from IO
+=== Implementation from Kernel
+=== Implementation from Buffering
+=== Implementation from Pathname
+=== Implementation from StringIO
+=== Implementation from GzipReader
 ```
 
-- Document for Nokogiri instance method `Nokogiri::HTML4::Document#fragment`:
-
-```sh
-$ ri Nokogiri::HTML4::Document#fragment | head
-= Nokogiri::HTML4::Document#fragment
-
-(from gem nokogiri-1.16.2-x86_64-linux)
-=== Implementation from Document
-------------------------------------------------------------------------
-  fragment(tags = nil)
-
-------------------------------------------------------------------------
-
-Create a Nokogiri::XML::DocumentFragment from tags
-```
-
-- Document for Nokogiri page `nokogiri:README`:
-
-```sh
-$ ri nokogiri:README | head
-<div><img src="https://nokogiri.org/images/nokogiri-serif-black.png" align="right"/></div>= Nokogiri
-Nokogiri (鋸) makes it easy and painless to work with XML and HTML from
-Ruby. It provides a sensible, easy-to-understand API for
-{reading}[https://nokogiri.org/tutorials/parsing_an_html_xml_document.ht
-ml], writing,
-{modifying}[https://nokogiri.org/tutorials/modifying_an_html_xml_documen
-t.html], and
-{querying}[https://nokogiri.org/tutorials/searching_a_xml_html_document.
-html] documents. It is fast and standards-compliant by relying on native
-parsers like libxml2, libgumbo, and xerces.
-```
-
-## `ri` Lists
 
 ## `ri` Information
 
@@ -316,12 +194,12 @@ These tables summarize `ri` names for getting documents:
 
     | Name                  | Prints                                                                          |
     |-----------------------|---------------------------------------------------------------------------------|
-    | IO::readlines         | Document for singleton method IO::readlines.                                    |
+    | IO::readlines         | Document for class method IO::readlines.                                    |
     | IO#readlines          | Document for instance method IO::readlines.                                     |
-    | IO.readlines          | Documents for instance method IO::readlines and singleton method IO::readlines. |
-    | ::readlines           | Documents for all singleton methods ::readlines.                                |
+    | IO.readlines          | Documents for instance method IO::readlines and class method IO::readlines. |
+    | ::readlines           | Documents for all class methods ::readlines.                                |
     | #readlines            | Documents for all instance methods #readlines; see note below.                   |
-    | .readlines, readlines | Documents for singleton methods ::readlines and instance methods #readlines.    |
+    | .readlines, readlines | Documents for class methods ::readlines and instance methods #readlines.    |
 <br>
 
     Note: in static mode, the name on the command line may need escape characters.
@@ -352,7 +230,7 @@ These tables summarize `ri` names for getting documents:
     | nokogiri:README.md                 | Document for page README.md.                                                   |
     | nokogiri:README                    | Document for page README.md (if no other README.*).                            |
     | Nokogiri::HTML4::Document          | Document for class Nokogiri::HTML4::Document.                                  |
-    | Nokogiri::HTML4::Document::parse   | Document for singleton method Nokogiri::HTML4::Document::parse.                |
+    | Nokogiri::HTML4::Document::parse   | Document for class method Nokogiri::HTML4::Document::parse.                |
     | Nokogiri::HTML4::Document#fragment | Document for instance method Nokogiri::HTML4::Document#fragment.               |
 <br>
 
@@ -613,15 +491,15 @@ For methods, `ri` can print:
 
 - For a given Ruby class or module:
 
-  - The document for a the singleton method of a given name.
+  - The document for a the class method of a given name.
   - The document for a the instance method of a given name.
-  - The documents for both the singleton and the instance methods of a given name.
+  - The documents for both the class and the instance methods of a given name.
 
 - For all Ruby classes and modules:
 
-  - The documents for all singleton methods of a given name.
+  - The documents for all class methods of a given name.
   - The documents for all instance methods of a given name.
-  - The documents for all singleton and instance methods of a given name.
+  - The documents for all class and instance methods of a given name.
 
 To get the document for a particular instance method,
 give the _name_ in the form `_name_of_class_or_module_#_name_of_method_`:
@@ -730,6 +608,10 @@ you can omit leading and trailing elements:
 ## `ri` for Gem Documentation
 
 ### Gem Classes and Modules
+
+#### Gem Class and Module Lists
+
+#### Gem Class and Module Documents
 
 ### Gem Methods
 
