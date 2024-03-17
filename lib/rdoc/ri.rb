@@ -873,39 +873,96 @@ require_relative '../rdoc'
 # 390
 # ```
 #
-# ### Summary
+# ### \Options Summary
+#
+# These tables summarize `ri` options;
+# for details, see {Options Details}[rdoc-ref:RDoc::RI@Options+Details].
+#
+# #### Source Directories \Options
+#
+# `ri`-defined source directories:
+#
+# | Option                        | Effect                                                                            |
+# |-----------------------|-------------------------------------------------------------------------------|
+# | --gems, --no-gems     | Allow/exclude documents from installed gems. Default: --gems.                 |
+# | --home, --no-home     | Allow/exclude documents from ~/.rdoc. Default: --home.                        |
+# | --site, --no-site     | Allow/exclude documents from site libraries. Default: --site.                 |
+# | --no-standard-docs    | Exclude documents from the standard library, etc; default is to include them. |
+# | --system, --no-system | Allow/exclude documents from from system libraries. Default: --system.        |
+# <br>
+#
+# User-defined source directories:
 #
 # | Option                        | Effect                                                                            |
 # |-------------------------------|-----------------------------------------------------------------------------------|
-# | --all, -a                     | Print all (class or module plus methods); default is --no-all.                    |
 # | --doc-dir=DIRPATH, -d DIRPATH | Add directory to ri source directories; may be repeated.                          |
-# | --dump=FILEPATH               | Print dump of cache file; default is --no-dump.                                   |
-# | --format=FORMAT, -f FORMAT    | Set formatter: ansi, bs, markdown, rdoc; default is bs for pager, ansi otherwise. |
-# | --gems                        | Allow documents from installed gems; default.                                     |
-# | --help, -h                    | Print help message and exit.                                                      |
-# | --home                        | Allow documents from ~/.rdoc; default.                                            |
-# | --interactive, -i             | Enter interactive mode; default when no name given.                               |
-# | --list, -l                    | Print list of classes and modules; default is --no-list.                          |
+# <br>
+#
+# Source directories information:
+#
+# | Option                        | Effect                                                                            |
+# |-------------------------------|-----------------------------------------------------------------------------------|
 # | --list-doc-dirs               | Print list of ri source directories; default is --no-list-doc-dirs.               |
-# | --no-all                      | Do not print methods for named class or module; default.                          |
-# | --no-dump                     | Do not print dump of cache file; default.                                         |
-# | --no-gems                     | Exclude documents for installed gems; default is --gems.                          |
-# | --no-home                     | Exclude documents from ~/.rdoc; default is --home.                                |
-# | --no-interactive              | Do not enter interactive mode; default when name given.                           |
-# | --no-list                     | Do not print list; default.                                                       |
 # | --no-list-doc-dirs            | Do not print list of ri source directories; default;                              |
-# | --no-pager, -T                | Do not pipe output to pager; default is --pager.                                  |
-# | --no-profile                  | Do not run with Ruby profiler; default.                                           |
-# | --no-site                     | Exclude documents from site libraries; default is --site.                         |
-# | --no-standard-docs            | Exclude documents from the standard library, etc; default is to include them.     |
-# | --no-system                   | Exclude documents from from system libraries; default is --system.                |
-# | --pager                       | Pipe output to pager; default.                                                    |
-# | --profile                     | Run with Ruby profiler; default is --no-profile.                                  |
-# | --server=NUMBER               | Set port for RDoc server; default is 8214.                                        |
-# | --site                        | Allow documents from site libraries; default.                                     |
-# | --system                      | Allow documents from from system libraries; default.                              |
+# <br>
+#
+# #### Mode \Options
+#
+# | Option                        | Effect                                                                            |
+# |-------------------|---------------------------------------------------------|
+# | --interactive, -i | Enter interactive mode; default when no name given.     |
+# | --no-interactive  | Do not enter interactive mode; default when name given. |
+# <br>
+#
+# #### Information \Options
+#
+# | Option                        | Effect                                                                            |
+# |-------------------------------|-----------------------------------------------------------------------------------|
+# | --help, -h                    | Print help message and exit.                                                      |
 # | --version, -v                 | Print ri version and exit.                                                        |
-# | --width=NUMBER, -w NUMBER     | Set width (in characters) for output; default is 80.                              |
+# <br>
+#
+# #### Debugging \Options
+#
+# | Option                     | Effect                                                    |
+# |----------------------------|-----------------------------------------------------------|
+# | --dump=FILEPATH, --no-dump | Print/don't-print dump of cache file. Default: --no-dump. |
+# | --profile, --no-profile    | Run/don't-run  with Ruby profiler. Default: --no-profile. |
+# <br>
+#
+# #### Output \Options
+# | Option                     | Effect                                                                            |
+# |----------------------------|-----------------------------------------------------------------------------------|
+# | --format=FORMAT, -f FORMAT | Set formatter: ansi, bs, markdown, rdoc; default is bs for pager, ansi otherwise. |
+# | --pager                    | Pipe output to pager; default.                                                    |
+# | --no-pager, -T             | Do not pipe output to pager; default is --pager.                                  |
+# | --width=NUMBER, -w NUMBER  | Set width (in characters) for output; default is 80.                              |
+# <br>
+#
+# #### List \Options
+#
+# | Option                        | Effect                                                                            |
+# |------------|----------------------------------------------------------|
+# | --list, -l | Print list of classes and modules; default is --no-list. |
+# | --no-list  | Do not print list; default.                              |
+# <br>
+#
+# #### Methods \Options (for Class or Module)
+#
+# | Option                        | Effect                                                                            |
+# |-----------|----------------------------------------------------------------|
+# | --all, -a | Print all (class or module plus methods); default is --no-all. |
+# | --no-all  | Do not print methods for named class or module; default.       |
+# <br>
+#
+# #### Server Option
+#
+# | Option                        | Effect                                                                            |
+# |-----------------|--------------------------------------------|
+# | --server=NUMBER | Set port for RDoc server; default is 8214. |
+# <br>
+#
+# ### \Options Details
 #
 # ### `--all`, `-a`
 #
