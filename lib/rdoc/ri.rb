@@ -155,19 +155,7 @@ require_relative '../rdoc'
 #     >> ruby:
 #     ```
 #
-# These table summarizes `ri` _name_ values:
-#
-# - Lists:
-#
-#     | Name        | Prints                  |
-#     |-------------|-------------------------|
-#     | 'ruby:'     | List of Ruby pages.     |
-#     | 'nokogiri:' | List of Nokogiri pages. |
-# <br>
-#
-#     There are more lists available;
-#     see {ri Lists}[rdoc-ref:RDoc::RI@ri+Lists]
-#     and {option \\--list}[rdoc-ref:RDoc::RI@-list-2C+-l].
+# These tables summarizes `ri` _name_ values:
 #
 # - Ruby classes and modules
 #   (see {details and examples}[rdoc-ref:RDoc::RI@Ruby+Classes+and+Modules]):
@@ -233,6 +221,18 @@ require_relative '../rdoc'
 #     If {option \\--all}[rdoc-ref:RDoc::RI@-all-2C+-a]
 #     is in effect, documents for the methods in the named class or module
 #     are also printed.
+#
+# - Lists:
+#
+#     | Name        | Prints                  |
+#     |-------------|-------------------------|
+#     | 'ruby:'     | List of Ruby pages.     |
+#     | 'nokogiri:' | List of Nokogiri pages. |
+# <br>
+#
+#     There are more lists available;
+#     see {ri Lists}[rdoc-ref:RDoc::RI@ri+Lists]
+#     and {option \\--list}[rdoc-ref:RDoc::RI@-list-2C+-l].
 #
 # ## About the Examples
 #
