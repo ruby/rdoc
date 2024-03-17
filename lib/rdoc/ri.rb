@@ -314,17 +314,7 @@ require_relative '../rdoc'
 #     ```
 #
 # The document typically includes certain headings,
-# which may be useful for searching;
-# the heading is omitted if it would have no content:
-#
-# - `'= _class_name_ < _superclass_name_'` if a class;
-#   `'= _module_name_'` if a module.
-# - `'= Includes:'`: Included modules.
-# - `'= Constants:'`: Constants and their documentation.
-# - `'= Class methods:'`: Class methods and their documentation.
-# - `'= Instance methods:'`: Instance methods and their documentation.
-#
-# Example:
+# which may be useful for searching:
 #
 # ```sh
 # $ ri IO | grep "^= "
@@ -333,17 +323,6 @@ require_relative '../rdoc'
 # = Constants:
 # = Class methods:
 # = Instance methods:
-# ```
-#
-# #### Class or Module Methods
-#
-# <b>Pro Tip: Show just the methods from the document.</b>
-#
-# This command shows only the methods sections
-# from the document for class `Array` (output omitted):
-#
-# ```sh
-# ri Array | less +/"= \w+ methods:"
 # ```
 #
 # ### Method Document
