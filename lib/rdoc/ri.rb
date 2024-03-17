@@ -257,10 +257,6 @@ require_relative '../rdoc'
 #
 # - Examples that involve gems assume that gem `nokogiri` is installed.
 #
-# ## `ri` Lists
-#
-# [TODO]
-#
 # ## `ri` Documents
 #
 # This section outlines what you should expect in printed `ri` documents.
@@ -425,6 +421,10 @@ require_relative '../rdoc'
 #     ```
 #
 # ### Page Document
+#
+# [TODO]
+#
+# ## `ri` Lists
 #
 # [TODO]
 #
