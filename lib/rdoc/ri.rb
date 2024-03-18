@@ -112,7 +112,7 @@ require_relative '../rdoc'
 #     >>
 #     ```
 #
-#   See {Interactive Mode}[rdoc-ref:RDoc::RI@Interactive+Mode].
+#     See {Interactive Mode}[rdoc-ref:RDoc::RI@Interactive+Mode].
 #
 # <b>Pro Tip: Keep `ri` available.</b>
 #
@@ -475,8 +475,6 @@ require_relative '../rdoc'
 # even when no _name_ is given;
 # these include:
 #
-# Option –help or -h: Prints ri help text
-#
 # - {Option \--help or -h}[rdoc-ref:RDoc::RI@-help-2C+-h]:
 #   Prints `ri` help text.
 # - {option \\--list or -l}[rdoc-ref:RDoc::RI@-list-2C+-l]:
@@ -511,59 +509,6 @@ require_relative '../rdoc'
 # ## `ri` for Ruby Documentation
 #
 # ### Ruby Classes and Modules
-#
-# #### Ruby Class and Module Lists
-#
-# Names for Ruby class and module lists (when given with option `--list`:
-#
-# | Name       | Prints                                               |
-# |------------|------------------------------------------------------|
-# | '' [none]  | List of all Ruby classes and modules.                |
-# | 'A'        | List of Ruby classes and modules starting with 'A'.  |
-# | 'Ar'       | List of Ruby classes and modules starting with 'Ar'. |
-# | 'NoSuch'   | Nothing (no matching class or module name).          |
-# <br>
-#
-# Examples:
-#
-# - List of all Ruby classes and modules:
-#
-#     ```sh
-#     $ ri --list | head
-#     ACL
-#     ACL::ACLEntry
-#     ACL::ACLList
-#     ARGF
-#     Abbrev
-#     Addrinfo
-#     ArgumentError
-#     Array
-#     Base64
-#     BasicObject
-#     ```
-#
-# - List of Ruby classes and modules starting with `'A'`:
-#
-#     ```sh
-#     $ ri --list A | head
-#     ACL
-#     ACL::ACLEntry
-#     ACL::ACLList
-#     ARGF
-#     Abbrev
-#     Addrinfo
-#     ArgumentError
-#     Array
-#     ```
-#
-# - List of Ruby classes and modules starting with `'Ar'`:
-#
-#     ```sh
-#
-#     $ ri --list Ar | head
-#     ArgumentError
-#     Array
-#     ```
 #
 # #### Ruby Class and Module Documents
 #
@@ -657,28 +602,84 @@ require_relative '../rdoc'
 #     4224
 #     ```
 #
-# ### Ruby Methods
+# #### Ruby Class and Module Lists
 #
-# #### Ruby Methods Lists
+# Names for Ruby class and module lists (when given with option `--list`):
 #
-# `ri` does not provide a formal _name_ for listing methods;
-# see, however, {Class or Module Methods}[rdoc-ref:RDoc::RI@Class+or+Module+Methods].
+# | Name       | Prints                                               |
+# |------------|------------------------------------------------------|
+# | '' [none]  | List of all Ruby classes and modules.                |
+# | 'A'        | List of Ruby classes and modules starting with 'A'.  |
+# | 'Ar'       | List of Ruby classes and modules starting with 'Ar'. |
+# | 'NoSuch'   | Nothing (no matching class or module name).          |
+# <br>
 #
-# #### Ruby Method Documents
+# Examples:
 #
-# For methods, `ri` can print:
+# - List of all Ruby classes and modules:
 #
-# - For a given Ruby class or module:
+#     ```sh
+#     $ ri --list | head
+#     ACL
+#     ACL::ACLEntry
+#     ACL::ACLList
+#     ARGF
+#     Abbrev
+#     Addrinfo
+#     ArgumentError
+#     Array
+#     Base64
+#     BasicObject
+#     ```
 #
-#   - The document for a the class method of a given name.
-#   - The document for a the instance method of a given name.
-#   - The documents for both the class and the instance methods of a given name.
+# - List of Ruby classes and modules starting with `'A'`:
 #
-# - For all Ruby classes and modules:
+#     ```sh
+#     $ ri --list A | head
+#     ACL
+#     ACL::ACLEntry
+#     ACL::ACLList
+#     ARGF
+#     Abbrev
+#     Addrinfo
+#     ArgumentError
+#     Array
+#     ```
 #
-#   - The documents for all class methods of a given name.
-#   - The documents for all instance methods of a given name.
-#   - The documents for all class and instance methods of a given name.
+# - List of Ruby classes and modules starting with `'Ar'`:
+#
+#     ```sh
+#
+#     $ ri --list Ar | head
+#     ArgumentError
+#     Array
+#     ```
+#
+# ### Ruby Method Documents
+#
+# | Name                      | Prints                                                                      |
+# |---------------------------|-----------------------------------------------------------------------------|
+# | 'IO::readlines'           | Document for class method IO::readlines.                                    |
+# | 'IO#readlines'            | Document for instance method IO::readlines.                                 |
+# | 'IO.readlines'            | Documents for instance method IO::readlines and class method IO::readlines. |
+# | '::readlines'             | Documents for all class methods ::readlines.                                |
+# | '#readlines'              | Documents for all instance methods #readlines; see note below.              |
+# | '.readlines', 'readlines' | Documents for class methods ::readlines and instance methods #readlines.    |
+# <br>
+#
+# `ri` can print:
+#
+# - For a given Ruby class or module, document(s) for:
+#
+#     - The class method of a given name.
+#     - The instance method of a given name.
+#     - The class and instance methods of a given name.
+#
+# - For all Ruby classes and modules, documents for:
+#
+#     - All class methods of a given name.
+#     - All instance methods of a given name.
+#     - All class and instance methods of a given name.
 #
 # To print the document for a particular instance method,
 # give the _name_ in the form `_name_of_class_or_module_#_name_of_method_`:
