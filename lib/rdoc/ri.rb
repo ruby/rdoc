@@ -114,19 +114,6 @@ require_relative '../rdoc'
 #
 #     See {Interactive Mode}[rdoc-ref:RDoc::RI@Interactive+Mode].
 #
-# <b>Pro Tip: Keep `ri` available.</b>
-#
-# If you are a frequent `ri` user,
-# you can save time by keeping open a dedicated command window
-# with either of:
-#
-# - A running {interactive ri}[rdoc-ref:RDoc::RI@Interactive+Mode] session.
-# - A running {irb session}[https://docs.ruby-lang.org/en/master/IRB.html];
-#   type `'help'` or `'show_doc'` to enter `ri`, newline to exit.
-#
-# When you switch to that window, `ri` is ready to respond quickly,
-# without the performance overhead of re-reading `ri` source files.
-#
 # ## Names
 #
 # In both modes, static and interactive,
@@ -158,7 +145,7 @@ require_relative '../rdoc'
 # These tables summarizes `ri` _name_ values:
 #
 # - Ruby classes and modules
-#   (see {details and examples}[rdoc-ref:RDoc::RI@Ruby+Classes+and+Modules]):
+#   (see {details and examples}[rdoc-ref:RDoc::RI@Ruby+Class+and+Module+Documents]):
 #
 #     | Name         | Prints                                                |
 #     |--------------|-------------------------------------------------------|
@@ -173,7 +160,7 @@ require_relative '../rdoc'
 #     are also printed.
 #
 # - Ruby methods
-#   (see {details and examples}[rdoc-ref:RDoc::RI@Ruby+Methods]):
+#   (see {details and examples}[rdoc-ref:RDoc::RI@Ruby+Method+Documents]):
 #
 #
 #     | Name                      | Prints                                                                      |
@@ -234,10 +221,99 @@ require_relative '../rdoc'
 #     see {ri Lists}[rdoc-ref:RDoc::RI@ri+Lists]
 #     and {option \\--list}[rdoc-ref:RDoc::RI@-list-2C+-l].
 #
+# ## Pro Tips
+#
+# ### `ri` at the Ready
+#
+# If you are a frequent `ri` user,
+# you can save time by keeping open a dedicated command window
+# with either of:
+#
+# - A running {interactive ri}[rdoc-ref:RDoc::RI@Interactive+Mode] session.
+# - A running {irb session}[https://docs.ruby-lang.org/en/master/IRB.html];
+#   type `'help'` or `'show_doc'` to enter `ri`, newline to exit.
+#
+# When you switch to that window, `ri` is ready to respond quickly,
+# without the performance overhead of re-reading `ri` source files.
+#
+# ### Pager \Options
+#
+# You can set the pager value to a pager program name with options;
+# this example (which omits output) sets the pager to `'less'`,
+# with options `'-E'` (quit at EOF) and `'-F'` (quit if one screen):
+#
+# ```sh
+# RI_PAGER="less -E -F" ri Array
+# ```
+#
+# See the options for your chosen pager program
+# (e.g, type `'less --help'`).
+#
+# ### Output Filters
+#
+# The "pager" value actually need not specify a simple pager program.
+# You can, for example, set the pager value to `'grep . | less'`,
+# which will exclude blank lines (thus saving screen space)
+# before piping output to `less`;
+# example (output omitted):
+#
+# ```sh
+# RI_PAGER="grep . | less" ri Array
+# ```
+#
+# ### Links  in `ri` Output
+#
+# #### Implicit Link
+#
+# When you see:
+#
+# - `'IO::readlines'`, `'IO#readlines'`, `'IO.readlines'`:
+#   use that same text as the _name_ in an `ri` command.
+#
+#     Examples (output omitted):
+#
+#     ```sh
+#     $ ri IO::readlines
+#     $ ri IO#readlines
+#     $ ri IO.readlines
+#     ```
+#
+# - `'#read'`, `'::read'`, `'.read'`:
+#   you're likely already in the `ri` document for a class or module,
+#   or for a method in a class or module;
+#   use that same text with the name of the class or module (such as `'File'`)
+#   as the _name_ in an `ri` command.
+#
+#     Examples (output omitted):
+#
+#     ```sh
+#     $ ri File::read
+#     $ ri File#read
+#     $ ri File.read
+#     ```
+#
+# #### Explicit Link
+#
+# When you see:
+#
+# - `'{Dig Methods}[rdoc-ref:doc/dig_methods.rdoc]'`:
+#    use the trailing part of the `'[rdoc-ref:doc/'` in an `ri` command
+#    for a Ruby document.
+#
+#     Example (output omitted):
+#
+#     ```sh
+#     $ ri ruby:dig_methods.rdoc
+#     ```
+#
+# - `'{Table (information)}[https://en.wikipedia.org/wiki/Table_(information)]'`:
+#   go to the given URL in your browser.
+#
+#
 # ## About the Examples
 #
 # - `ri` output can be large;
-#   for our purposes here, we sometimes pipe to one of these:
+#   for our purposes here, we sometimes pipe it to one of these:
 #
 #     - {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
 #     - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
@@ -257,9 +333,15 @@ require_relative '../rdoc'
 #
 # - Examples that involve gems assume that gem `nokogiri` is installed.
 #
-# ## `ri` Documents
+# ## `ri` Output
 #
-# This section outlines what you should expect in printed `ri` documents.
+# This section outlines what you can expect to find
+# in the `ri` output for a class, module, method, or page.
+#
+# See also:
+#
+# - {Pager}[rdoc-ref:RDoc::RI@Pager].
+# - {Links in ri Output}[rdoc-ref:RDoc::RI@Links+in+ri+Output].
 #
 # ### Class or Module Document
 #
@@ -424,6 +506,14 @@ require_relative '../rdoc'
 #
 # [TODO]
 #
+# ### Filtering the Output
+#
+# [TODO]
+#
+# ### Links in the Output
+#
+# [TODO]
+#
 # ## `ri` Lists
 #
 # [TODO]
@@ -499,12 +589,17 @@ require_relative '../rdoc'
 # ```
 #
 # A command in interactive mode are similar to one in static mode,
-# except that you:
+# except that it:
 #
-# - Omit command word `ri`; just type the _name_.
-# - Omit options; in interactive mode the only options in effect
+# - Omits command word `ri`; you just type the _name_.
+# - Omits options; in interactive mode the only options in effect
 #   are those taken from environment variable `RI`.
 #   See {Options}[rdoc-ref:RDoc::RI@Options].
+# - Supports tab auto-completion for the names of a classes, modules, and methods;
+#   when, for example, you type `"Arr\t"` (here `"\t` represents the tab character),
+#   `ri` "completes" the text as `'Array '`.
+#
+# See also {ri at the Ready}[rdoc-ref:RDoc::RI@ri+at+the+Ready].
 #
 # ## `ri` for Ruby Documentation
 #
@@ -831,30 +926,10 @@ require_relative '../rdoc'
 # its value should be the name of an executable program
 # that will accept the `ri` output (such as `'pager'`, `'less'`, or `'more'`).
 #
-# <b>Pro Tip: Use pager options.</b>
+# See also:
 #
-# You can set the pager value to a pager program name with options;
-# this example (which omits output) sets the pager to `'less'`,
-# with options `'-E'` (quit at EOF) and `'-F'` (quit if one screen):
-#
-# ```sh
-# RI_PAGER="less -E -F" ri Array
-# ```
-#
-# See the options for your chosen pager program
-# (e.g, type `'less --help'`).
-#
-# <b>Pro Tip: Filter documents.</b>
-#
-# The "pager" value actually need not specify a simple pager program.
-# You can, for example, set the pager value to `'grep . | less'`,
-# which will exclude blank lines (thus saving screen space)
-# before piping output to `less`;
-# example (output omitted):
-#
-# ```sh
-# RI_PAGER="grep . | less" ri Array
-# ```
+# - {Pager Options}[rdoc-ref:RDoc::RI@Pager+Options].
+# - {Output Filters}[rdoc-ref:RDoc::RI@Output+Filters].
 #
 # ## \Options
 #
@@ -1183,6 +1258,10 @@ require_relative '../rdoc'
 # An Array is an ordered, integer-indexed
 # collection of objects, called
 # ```
+#
+# ## Generating `ri` Source Files
+#
+# [TODO]
 #
 
 module RDoc::RI
