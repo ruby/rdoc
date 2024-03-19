@@ -506,14 +506,6 @@ require_relative '../rdoc'
 #
 # [TODO]
 #
-# ### Filtering the Output
-#
-# [TODO]
-#
-# ### Links in the Output
-#
-# [TODO]
-#
 # ## `ri` Lists
 #
 # [TODO]
@@ -892,7 +884,7 @@ require_relative '../rdoc'
 #
 # ### Gem Pages
 #
-# ### Escaping Names
+# ## Escaping Names
 #
 # [TODO]
 #
