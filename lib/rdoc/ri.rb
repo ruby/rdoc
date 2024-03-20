@@ -491,14 +491,6 @@ require_relative '../rdoc'
 #     === Implementation from GzipReader
 #     ```
 #
-# ### Page Documents
-#
-# [TODO]
-#
-# ## Lists
-#
-# [TODO]
-#
 # ## `ri` Information
 #
 # [TODO]
