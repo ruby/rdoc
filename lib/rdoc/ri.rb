@@ -6,14 +6,14 @@ require_relative '../rdoc'
 # # `ri` (Ruby Information)
 #
 # `ri` is the Ruby command-line utility
-# that gives fast and easy on-line access to documentation
-# (Ruby core and installed gems) for:
+# that gives fast and easy on-line access to documentation for:
 #
 # - Classes and modules.
 # - Methods.
 # - Pages.
 #
-# Example commands to print Ruby documents:
+# Example commands for printing Ruby documents;
+# see {Ruby Documents}[rdoc-ref:RDoc::RI@Ruby+Documents]:
 #
 # | Command         | Prints Document For                                            |
 # |--------------|-------------------------------------------------------|
@@ -24,8 +24,9 @@ require_relative '../rdoc'
 # | ri ruby:dig_methods | Page dig_methods. |
 # <br>
 #
-# Example commands to print documents for gem `nokogiri`
-# (assuming that the gem is installed):
+# Example commands for printing Nokogiri documents
+# (assuming that the gem is installed);
+# see {Gem Documents}[rdoc-ref:RDoc::RI@Gem+Documents]:
 #
 # | Command         | Prints Document For                                            |
 # |--------------|-------------------------------------------------------|
@@ -35,6 +36,24 @@ require_relative '../rdoc'
 # | ri Nokogiri::HTML4::Document#fragment | Instance method Nokogiri::HTML4::Document#fragment. |
 # | ri nokogiri:README | Page README.md. |
 # <br>
+#
+# `ri` can also print various lists;
+# see {Lists}[rdoc-ref:RDoc::RI@Lists]:
+#
+# Example commands for printing Ruby lists:
+#
+# | Command         | Prints List Of                                          |
+# |--------------|-------------------------------------------------------|
+# | ri --list | Ruby classes and modules. |
+# | ri ruby: | Ruby pages. |
+# <br>
+#
+# Example commands for printing Nokogiri lists:
+#
+# | Command         | Prints List Of                                          |
+# |--------------|-------------------------------------------------------|
+# | ri --list Nokogiri | Nokogiri classes and modules. |
+# | ri nokogiri: | Nokogiri pages. |
 #
 # ## Why `ri`?
 #
@@ -49,6 +68,29 @@ require_relative '../rdoc'
 #   {irb (interactive Ruby)}[https://docs.ruby-lang.org/en/master/IRB.html]
 #   session, you _already_ have immediate access to `ri`:
 #   just type `'help'` or `'show_doc'`.
+#
+# ## About the Examples
+#
+# - `ri` output can be large;
+#   for our purposes here, we sometimes pipe it to one of these:
+#
+#     - {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
+#     - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
+#     - {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
+#     - {grep}[https://www.man7.org/linux/man-pages/man1/grep.1.html]: selected lines only.
+#
+# - Examples that involve the `ri` environment variables `RI` or `RI_PAGER`
+#   may use the shell idiom `_env_name_="_env_value_"`
+#   to define an environment variable on the command line:
+#
+#     ```sh
+#     $ RI="--all --no-gems" ruby -e "p ENV['RI']"
+#     "--all --no-gems"
+#     $ RI_PAGER="grep . | less" ruby -e "p ENV['RI_PAGER']"
+#     "grep . | less"
+#     ```
+#
+# - Examples that involve gems assume that gem `nokogiri` is installed.
 #
 # ## Modes
 #
@@ -152,7 +194,7 @@ require_relative '../rdoc'
 # <br>
 #
 # - Gem documents
-#   (see {details and examples}[rdoc-ref:RDoc::RI@ri+for+Gem+Documentation]):
+#   (see {details and examples}[rdoc-ref:RDoc::RI@Gem+Documents]):
 #
 #     | Name                                 | Prints                                                           |
 #     |--------------------------------------|------------------------------------------------------------------|
@@ -178,8 +220,7 @@ require_relative '../rdoc'
 # <br>
 #
 #     There are more lists available;
-#     see {ri Lists}[rdoc-ref:RDoc::RI@ri+Lists]
-#     and {option \\--list}[rdoc-ref:RDoc::RI@-list-2C+-l].
+#     see {Lists}[rdoc-ref:RDoc::RI@Lists].
 #
 # ## Pro Tips
 #
@@ -270,29 +311,6 @@ require_relative '../rdoc'
 #   go to the given URL in your browser.
 #
 #
-# ## About the Examples
-#
-# - `ri` output can be large;
-#   for our purposes here, we sometimes pipe it to one of these:
-#
-#     - {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
-#     - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
-#     - {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
-#     - {grep}[https://www.man7.org/linux/man-pages/man1/grep.1.html]: selected lines only.
-#
-# - Examples that involve the `ri` environment variables `RI` or `RI_PAGER`
-#   may use the shell idiom `_env_name_="_env_value_"`
-#   to define an environment variable on the command line:
-#
-#     ```sh
-#     $ RI="--all --no-gems" ruby -e "p ENV['RI']"
-#     "--all --no-gems"
-#     $ RI_PAGER="grep . | less" ruby -e "p ENV['RI_PAGER']"
-#     "grep . | less"
-#     ```
-#
-# - Examples that involve gems assume that gem `nokogiri` is installed.
-#
 # ## `ri` Output
 #
 # This section outlines what you can expect to find
@@ -303,7 +321,7 @@ require_relative '../rdoc'
 # - {Pager}[rdoc-ref:RDoc::RI@Pager].
 # - {Links in ri Output}[rdoc-ref:RDoc::RI@Links+in+ri+Output].
 #
-# ### Class or Module Document
+# ### Class and Module Documents
 #
 # The document for a class or module shows:
 #
@@ -363,7 +381,7 @@ require_relative '../rdoc'
 # = Instance methods:
 # ```
 #
-# ### Method Document
+# ### Method Documents
 #
 # The document for a method includes:
 #
@@ -462,15 +480,15 @@ require_relative '../rdoc'
 #     === Implementation from GzipReader
 #     ```
 #
-# ### Page Document
+# ### Page Documents
 #
 # [TODO]
 #
-# ## `ri` Lists
+# ### Lists
 #
 # [TODO]
 #
-# ## `ri` Information
+# ### `ri` Information
 #
 # [TODO]
 #
@@ -553,7 +571,7 @@ require_relative '../rdoc'
 #
 # See also {ri at the Ready}[rdoc-ref:RDoc::RI@ri+at+the+Ready].
 #
-# ## `ri` for Ruby Documentation
+# ## Ruby Documents
 #
 # ### Ruby Classes and Modules
 #
@@ -832,7 +850,7 @@ require_relative '../rdoc'
 # you can omit leading and trailing elements:
 # `ruby:exceptions` is the same as `ruby:syntax/exceptions.rdoc`.
 #
-# ## `ri` for Gem Documentation
+# ## Gem Documents
 #
 # ### Gem Classes and Modules
 #
@@ -846,7 +864,7 @@ require_relative '../rdoc'
 #
 # [TODO]
 #
-# ### Gem Methods
+# ### Gem Method Documents
 #
 # [TODO]
 #
