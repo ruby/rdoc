@@ -6,11 +6,18 @@ require_relative '../rdoc'
 # # `ri` (Ruby Information)
 #
 # `ri` is the Ruby command-line utility
-# that gives fast and easy on-line access to documentation for:
+# that gives fast and easy on-line access to Ruby documentation;
+# depending on the given command, it can print documentation for:
 #
-# - Classes and modules.
-# - Methods.
-# - Pages.
+# - A class or module: text associated with the class or module definition
+#   in `.rb` and `.c` source files.
+# - One or more methods: text associated with method definitions
+#   in `.rb` and `.c` source files.
+# - A page: text from a stand-alone `.md` or `.rdoc` source file
+#   (or sometimes a file whose name has no extension).
+#
+# Note that throughout this page, the term _prints_
+# means <i>puts onto `$stdout`</i>, not <i>sends to a print device</i>.
 #
 # Example commands for printing Ruby documents;
 # see {Ruby Documents}[rdoc-ref:RDoc::RI@Ruby+Documents]:
@@ -28,7 +35,7 @@ require_relative '../rdoc'
 # (assuming that the gem is installed);
 # see {Gem Documents}[rdoc-ref:RDoc::RI@Gem+Documents]:
 #
-# | Command         | Prints Document For                                            |
+# | Command                               | Prints Document For                                 |
 # |---------------------------------------|-----------------------------------------------------|
 # | ri Nokogiri                           | Module Nokogiri.                                    |
 # | ri Nokogiri::HTML4::Document          | Class Nokogiri::HTML4::Document.                    |
@@ -140,7 +147,7 @@ require_relative '../rdoc'
 #
 # These tables summarizes `ri` _name_ values:
 #
-# - Ruby classes and modules
+# - Ruby class and module documents
 #   (see {details and examples}[rdoc-ref:RDoc::RI@Ruby+Class+and+Module+Documents]):
 #
 #     | Name         | Prints                                                |
@@ -155,7 +162,7 @@ require_relative '../rdoc'
 #     is in effect, documents for the methods in the named class or module
 #     are also printed.
 #
-# - Ruby methods
+# - Ruby method documents
 #   (see {details and examples}[rdoc-ref:RDoc::RI@Ruby+Method+Documents]):
 #
 #
@@ -175,33 +182,45 @@ require_relative '../rdoc'
 #     other escapes may be required for certain other method names.
 #     See {Escaping Names}[rdoc-ref:RDoc::RI@Escaping+Names].
 #
-# - Ruby pages
-#   (see {details and examples}[rdoc-ref:RDoc::RI@Ruby+Pages]):
+# - Ruby page documents
+#   (see {details and examples}[rdoc-ref:RDoc::RI@Ruby+Page+Documents]):
 #
 #     | Name                          | Prints                                                          |
 #     |-------------------------------|-----------------------------------------------------------------|
-#     | 'ruby:security.rdoc'          | Document for page security.                                     |
-#     | 'ruby:security'               | Document for page security (if no other security.*).            |
 #     | 'ruby:syntax/assignment.rdoc' | Document for page assignment.                                   |
 #     | 'ruby:syntax/assignment'      | Document for page assignment (if no other syntax/assignment.*). |
 #     | 'ruby:assignment'             | Document for page assignment (if no other */assignment.*).      |
 # <br>
 #
-# - Gem documents
-#   (see {details and examples}[rdoc-ref:RDoc::RI@Gem+Documents]):
+# - Gem class and module documents
+#   (see {details and examples}[rdoc-ref:RDoc::RI@Gem+Class+and+Module+Documents]):
 #
-#     | Name                                 | Prints                                                           |
-#     |--------------------------------------|------------------------------------------------------------------|
-#     | 'Nokogiri::HTML4::Document'          | Document for class Nokogiri::HTML4::Document.                    |
-#     | 'Nokogiri'                           | Document for module Nokogiri.                                    |
-#     | 'Nokogiri::HTML4::Document::parse'   | Document for class method Nokogiri::HTML4::Document::parse.      |
-#     | 'nokogiri:README.md'                 | Document for page README.md.                                     |
-#     | 'Nokogiri::HTML4::Document#fragment' | Document for instance method Nokogiri::HTML4::Document#fragment. |
+#     | Name                        | Prints                                                           |
+#     |-----------------------------|-----------------------------------------------|
+#     | 'Nokogiri::HTML4::Document' | Document for class Nokogiri::HTML4::Document. |
+#     | 'Nokogiri'                  | Document for module Nokogiri.                 |
 # <br>
 #
 #     If {option \\--all}[rdoc-ref:RDoc::RI@-all-2C+-a]
 #     is in effect, documents for the methods in the named class or module
 #     are also printed.
+#
+# - Gem method documents
+#   (see {details and examples}[rdoc-ref:RDoc::RI@Gem+Method+Documents]):
+#
+#     | Name                                 | Prints                                                           |
+#     |--------------------------------------|------------------------------------------------------------------|
+#     | 'Nokogiri::HTML4::Document::parse'   | Document for class method Nokogiri::HTML4::Document::parse.      |
+#     | 'Nokogiri::HTML4::Document#fragment' | Document for instance method Nokogiri::HTML4::Document#fragment. |
+# <br>
+#
+# - Gem page documents
+#   (see {details and examples}[rdoc-ref:RDoc::RI@Gem+Page+Documents]):
+#
+#     | Name                 | Prints                       |
+#     |----------------------|------------------------------|
+#     | 'nokogiri:README.md' | Document for page README.md. |
+# <br>
 #
 # - Lists:
 #
@@ -565,9 +584,7 @@ require_relative '../rdoc'
 #
 # ## Ruby Documents
 #
-# ### Ruby Classes and Modules
-#
-# #### Ruby Class and Module Documents
+# ### Ruby Class and Module Documents
 #
 # Names for Ruby class and module documents:
 #
@@ -755,7 +772,7 @@ require_relative '../rdoc'
 # ```
 #
 #
-# ### Ruby Pages
+# ### Ruby Page Documents
 #
 # `ri` handles free-standing _pages_,
 # each of which presents a document that is not defined within a class or module.
@@ -794,8 +811,23 @@ require_relative '../rdoc'
 # NEWS-1.9.3
 # ```
 #
-# Many of the "boilerplate" pages have names beginning with a capital letter;
-# other pages typically do not:
+# Many of the "boilerplate" pages have names beginning with a capital letter:
+#
+# ```sh
+# $ ri ruby: | grep "^[A-Z]" | head
+# CONTRIBUTING.md
+# COPYING
+# COPYING.ja
+# LEGAL
+# NEWS-1.8.7
+# NEWS-1.9.1
+# NEWS-1.9.2
+# NEWS-1.9.3
+# NEWS-2.0.0
+# NEWS-2.1.0
+# ```
+#
+# Other pages typically do not:
 #
 # ```sh
 # $ ri ruby: | grep "^[a-z]" | head
@@ -844,7 +876,7 @@ require_relative '../rdoc'
 #
 # ## Gem Documents
 #
-# ### Gem Classes and Modules
+# ### Gem Class and Module Documents
 #
 # [TODO]
 #
@@ -860,7 +892,7 @@ require_relative '../rdoc'
 #
 # [TODO]
 #
-# ### Gem Pages
+# ### Gem Page Documents
 #
 # [TODO]
 #
