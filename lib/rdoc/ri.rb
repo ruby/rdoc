@@ -870,19 +870,29 @@ require_relative '../rdoc'
 #
 # If the page name is sufficiently unique,
 # you can omit leading and trailing elements:
-# `ruby:exeptions` is the same as `ruby:syntax/exceptions.rdoc`.
+# `ruby:exceptions` is the same as `ruby:syntax/exceptions.rdoc`.
 #
 # ## `ri` for Gem Documentation
 #
 # ### Gem Classes and Modules
 #
+# [TODO]
+#
 # #### Gem Class and Module Lists
+#
+# [TODO]
 #
 # #### Gem Class and Module Documents
 #
+# [TODO]
+#
 # ### Gem Methods
 #
+# [TODO]
+#
 # ### Gem Pages
+#
+# [TODO]
 #
 # ## Escaping Names
 #
