@@ -13,6 +13,30 @@ require_relative '../rdoc'
 # - Methods.
 # - Pages.
 #
+# Example commands to print Ruby documents:
+#
+# | Command         | Prints Document For                                            |
+# |--------------|-------------------------------------------------------|
+# | ri IO | Class IO. |
+# | ri Enumerable | Module Enumerable |
+# | ri IO::readlines | Class method IO::readlines. |
+# | ri IO#readlines | Instance method IO::readlines. |
+# | ri ruby:dig_methods | Page dig_methods. |
+# <br>
+#
+# Example commands to print documents for gem `nokogiri`
+# (assuming that the gem is installed):
+#
+# | Command         | Prints Document For                                            |
+# |--------------|-------------------------------------------------------|
+# | ri Nokogiri | Module Nokogiri. |
+# | ri Nokogiri::HTML4::Document | Class Nokogiri::HTML4::Document. |
+# | ri Nokogiri::HTML4::Document::parse |	Class method Nokogiri::HTML4::Document::parse. |
+# | ri Nokogiri::HTML4::Document#fragment | Instance method Nokogiri::HTML4::Document#fragment. |
+# | ri nokogiri:README | Page README.md. |
+# <br>
+#
+#
 # Examples (the pipe to `head` abbreviates output to leading lines):
 #
 # - Ruby class `Array`:
