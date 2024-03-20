@@ -15,13 +15,13 @@ require_relative '../rdoc'
 # Example commands for printing Ruby documents;
 # see {Ruby Documents}[rdoc-ref:RDoc::RI@Ruby+Documents]:
 #
-# | Command         | Prints Document For                                            |
-# |--------------|-------------------------------------------------------|
-# | ri IO | Class IO. |
-# | ri Enumerable | Module Enumerable |
-# | ri IO::readlines | Class method IO::readlines. |
-# | ri IO#readlines | Instance method IO::readlines. |
-# | ri ruby:dig_methods | Page dig_methods. |
+# | Command             | Prints Document For            |
+# |---------------------|--------------------------------|
+# | ri IO               | Class IO.                      |
+# | ri Enumerable       | Module Enumerable              |
+# | ri IO::readlines    | Class method IO::readlines.    |
+# | ri IO#readlines     | Instance method IO::readlines. |
+# | ri ruby:dig_methods | Page dig_methods.              |
 # <br>
 #
 # Example commands for printing Nokogiri documents
@@ -29,31 +29,25 @@ require_relative '../rdoc'
 # see {Gem Documents}[rdoc-ref:RDoc::RI@Gem+Documents]:
 #
 # | Command         | Prints Document For                                            |
-# |--------------|-------------------------------------------------------|
-# | ri Nokogiri | Module Nokogiri. |
-# | ri Nokogiri::HTML4::Document | Class Nokogiri::HTML4::Document. |
-# | ri Nokogiri::HTML4::Document::parse |	Class method Nokogiri::HTML4::Document::parse. |
+# |---------------------------------------|-----------------------------------------------------|
+# | ri Nokogiri                           | Module Nokogiri.                                    |
+# | ri Nokogiri::HTML4::Document          | Class Nokogiri::HTML4::Document.                    |
+# | ri Nokogiri::HTML4::Document::parse   |	Class method Nokogiri::HTML4::Document::parse.      |
 # | ri Nokogiri::HTML4::Document#fragment | Instance method Nokogiri::HTML4::Document#fragment. |
-# | ri nokogiri:README | Page README.md. |
+# | ri nokogiri:README                    | Page README.md.                                     |
 # <br>
 #
 # `ri` can also print various lists;
 # see {Lists}[rdoc-ref:RDoc::RI@Lists]:
 #
-# Example commands for printing Ruby lists:
+# Example commands for printing lists:
 #
-# | Command         | Prints List Of                                          |
-# |--------------|-------------------------------------------------------|
-# | ri --list | Ruby classes and modules. |
-# | ri ruby: | Ruby pages. |
-# <br>
-#
-# Example commands for printing Nokogiri lists:
-#
-# | Command         | Prints List Of                                          |
-# |--------------|-------------------------------------------------------|
-# | ri --list Nokogiri | Nokogiri classes and modules. |
-# | ri nokogiri: | Nokogiri pages. |
+# | Command      | Prints List Of                                           |
+# |--------------|----------------------------------------------------------|
+# | ri --list    | Classes and modules (including gems).                    |
+# | ri --list Fi | Classes and modules starting with 'Fi' (including gems). |
+# | ri ruby:     | Ruby pages.                                              |
+# | ri nokogiri: | Nokogiri pages.                                          |
 #
 # ## Why `ri`?
 #
@@ -198,12 +192,10 @@ require_relative '../rdoc'
 #
 #     | Name                                 | Prints                                                           |
 #     |--------------------------------------|------------------------------------------------------------------|
-#     | 'Nokogiri'                           | Document for module Nokogiri.                                    |
-#     | 'Nokogiri::CSS'                      | Document for class Nokogiri::CSS.                                |
-#     | 'nokogiri:README.md'                 | Document for page README.md.                                     |
-#     | 'nokogiri:README'                    | Document for page README.md (if no other README.*).              |
 #     | 'Nokogiri::HTML4::Document'          | Document for class Nokogiri::HTML4::Document.                    |
+#     | 'Nokogiri'                           | Document for module Nokogiri.                                    |
 #     | 'Nokogiri::HTML4::Document::parse'   | Document for class method Nokogiri::HTML4::Document::parse.      |
+#     | 'nokogiri:README.md'                 | Document for page README.md.                                     |
 #     | 'Nokogiri::HTML4::Document#fragment' | Document for instance method Nokogiri::HTML4::Document#fragment. |
 # <br>
 #
@@ -311,10 +303,10 @@ require_relative '../rdoc'
 #   go to the given URL in your browser.
 #
 #
-# ## `ri` Output
+# ## `ri` Documents
 #
 # This section outlines what you can expect to find
-# in the `ri` output for a class, module, method, or page.
+# in the `ri` document for a class, module, method, or page.
 #
 # See also:
 #
@@ -484,11 +476,11 @@ require_relative '../rdoc'
 #
 # [TODO]
 #
-# ### Lists
+# ## Lists
 #
 # [TODO]
 #
-# ### `ri` Information
+# ## `ri` Information
 #
 # [TODO]
 #
