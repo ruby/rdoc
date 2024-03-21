@@ -224,7 +224,7 @@ These tables summarizes `ri` _name_ values:
 <br>
 
     There are more lists available;
-    see {Lists}[rdoc-ref:RI.md@Lists].
+    see {option --list}[rdoc-ref:RI.md@-list-2C+-l].
 
 ## Pro Tips
 
