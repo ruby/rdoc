@@ -484,8 +484,16 @@ the number of such implementations depends on the _name_:
 
 ## `ri` Information
 
-[TODO]
+An `ri` command may print information other than documents
+for a class, module, methods, or page:
 
+| Command         | Prints                                 |
+|-----------------|----------------------------------------|
+| --dump=FILEPATH | Content of the given ri file.          |
+| --help          | Help text for ri.                      |
+| --list-doc-dirs | Paths to directories that ri searches. |
+| --version       | Version for ri.                        |
+ 
 ## Static Mode
 
 In static mode, `ri` prints a response and exits.
