@@ -484,16 +484,20 @@ the number of such implementations depends on the _name_:
 
 ## `ri` Information
 
-An `ri` command may print information other than documents
+With certain options, an `ri` command may print information other than documents
 for a class, module, methods, or page:
 
-| Command         | Prints                                 |
-|-----------------|----------------------------------------|
-| --dump=FILEPATH | Content of the given ri file.          |
-| --help          | Help text for ri.                      |
-| --list-doc-dirs | Paths to directories that ri searches. |
-| --version       | Version for ri.                        |
- 
+- {Option \\--help or -h}[rdoc-ref:RI.md@-help-2C+-h]:
+  Prints `ri` help text.
+- {option \\--version or -v}[rdoc-ref:RI.md@-version-2C+-v]:
+  Prints `ri` version.
+- {option \\--list or -l}[rdoc-ref:RI.md@-list-2C+-l]:
+  Prints list of classes and modules.
+- {option \\--list-doc-dirs}[rdoc-ref:RI.md@-list-doc-dirs]:
+  Prints list of `ri` source directories.
+- {Option \\--dump=FILEPATH}[rdoc-ref:RI.md@-dump-3DFILEPATH]:
+  Prints dump of ri cache file at the given filepath.
+
 ## Static Mode
 
 In static mode, `ri` prints a response and exits.
@@ -535,16 +539,7 @@ Despite the message ("Enter ...."), `ri` does not enter its interactive mode.
 
 `ri` also responds in static mode when certain options are given,
 even when no _name_ is given;
-these include:
-
-- {Option \--help or -h}[rdoc-ref:RI.md@-help-2C+-h]:
-  Prints `ri` help text.
-- {option \\--list or -l}[rdoc-ref:RI.md@-list-2C+-l]:
-  Prints list of classes and modules.
-- {option \\--list-doc-dirs}[rdoc-ref:RI.md@-list-doc-dirs]:
-  Prints list of `ri` source directories.
-- {option \\--version or -v}[rdoc-ref:RI.md@-version-2C+-v]:
-  Prints `ri` version.
+see {ri Information}[rdoc-ref:RI.md@ri+Information].
 
 ## Interactive Mode
 
