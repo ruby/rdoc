@@ -2,7 +2,7 @@
 
 `ri` is the Ruby command-line utility
 that gives fast and easy on-line access to Ruby documentation;
-depending on the given command, it can print documentation for:
+it can print documentation for:
 
 - A class or module: text associated with the class or module definition
   in `.rb` and `.c` source files.
@@ -11,7 +11,7 @@ depending on the given command, it can print documentation for:
 - A page: text from a stand-alone `.md` or `.rdoc` source file
   (or sometimes a file whose name has no extension).
 
-Note that throughout this page, the term _prints_
+**Note**: Throughout this page, the term _prints_
 means <i>puts onto `$stdout`</i>, not <i>sends to a print device</i>.
 
 Example commands for printing Ruby documents;
@@ -39,8 +39,7 @@ see {Gem Documents}[rdoc-ref:RDoc::RI@Gem+Documents]:
 | ri nokogiri:README                    | Page README.md.                                     |
 <br>
 
-`ri` can also print various lists;
-see {Lists}[rdoc-ref:RDoc::RI@Lists]:
+`ri` can also print various lists.
 
 Example commands for printing lists:
 
