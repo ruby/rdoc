@@ -15,7 +15,7 @@ it can print documentation for:
 means <i>puts onto `$stdout`</i>, not <i>sends to a print device</i>.
 
 Example commands for printing Ruby documents;
-see {Ruby Documents}[rdoc-ref:RDoc::RI@Ruby+Documents]:
+see {Ruby Documents}[rdoc-ref:RI.md@Ruby+Documents]:
 
 | Command             | Prints Document For            |
 |---------------------|--------------------------------|
@@ -28,7 +28,7 @@ see {Ruby Documents}[rdoc-ref:RDoc::RI@Ruby+Documents]:
 
 Example commands for printing Nokogiri documents
 (assuming that the gem is installed);
-see {Gem Documents}[rdoc-ref:RDoc::RI@Gem+Documents]:
+see {Gem Documents}[rdoc-ref:RI.md@Gem+Documents]:
 
 | Command                               | Prints Document For                                 |
 |---------------------------------------|-----------------------------------------------------|
@@ -95,7 +95,7 @@ There are two `ri` modes:
   In general, `ri` responds in its static mode
   if a _name_ is given;
   it prints and exits (as in the examples above).
-  See {Static Mode}[rdoc-ref:RDoc::RI@Static+Mode].
+  See {Static Mode}[rdoc-ref:RI.md@Static+Mode].
 - <i>Interactive mode</i>:
   In general, `ri` enters its interactive mode
   if no _name_ is given;
@@ -109,7 +109,7 @@ There are two `ri` modes:
     >>
     ```
 
-    See {Interactive Mode}[rdoc-ref:RDoc::RI@Interactive+Mode].
+    See {Interactive Mode}[rdoc-ref:RI.md@Interactive+Mode].
 
 ## Names
 
@@ -142,7 +142,7 @@ a document, multiple documents, or other information:
 These tables summarizes `ri` _name_ values:
 
 - Ruby class and module documents
-  (see {details and examples}[rdoc-ref:RDoc::RI@Ruby+Class+and+Module+Documents]):
+  (see {details and examples}[rdoc-ref:RI.md@Ruby+Class+and+Module+Documents]):
 
     | Name         | Prints                                                |
     |--------------|-------------------------------------------------------|
@@ -152,12 +152,12 @@ These tables summarizes `ri` _name_ values:
     | 'Arr'        | Document for class Array (unique initial characters). |
 <br>
 
-    If {option \\--all}[rdoc-ref:RDoc::RI@-all-2C+-a]
+    If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
     is in effect, documents for the methods in the named class or module
     are also printed.
 
 - Ruby method documents
-  (see {details and examples}[rdoc-ref:RDoc::RI@Ruby+Method+Documents]):
+  (see {details and examples}[rdoc-ref:RI.md@Ruby+Method+Documents]):
 
     | Name                      | Prints                                                                      |
     |---------------------------|-----------------------------------------------------------------------------|
@@ -169,14 +169,14 @@ These tables summarizes `ri` _name_ values:
     | '.readlines', 'readlines' | Documents for class methods ::readlines and instance methods #readlines.    |
 <br>
 
-    Note: in static mode, the name on the command line may need escape characters.
+    **Note**: in static mode, the name on the command line may need escape characters.
     In the table above, `#readlines` on the command line
     may (depending on the shell) need to be escaped as `\#readlines`;
     other escapes may be required for certain other method names.
-    See {Escaping Names}[rdoc-ref:RDoc::RI@Escaping+Names].
+    See {Escaping Names}[rdoc-ref:RI.md@Escaping+Names].
 
 - Ruby page documents
-  (see {details and examples}[rdoc-ref:RDoc::RI@Ruby+Page+Documents]):
+  (see {details and examples}[rdoc-ref:RI.md@Ruby+Page+Documents]):
 
     | Name                          | Prints                                                          |
     |-------------------------------|-----------------------------------------------------------------|
@@ -186,7 +186,7 @@ These tables summarizes `ri` _name_ values:
 <br>
 
 - Gem class and module documents
-  (see {details and examples}[rdoc-ref:RDoc::RI@Gem+Class+and+Module+Documents]):
+  (see {details and examples}[rdoc-ref:RI.md@Gem+Class+and+Module+Documents]):
 
     | Name                        | Prints                                                           |
     |-----------------------------|-----------------------------------------------|
@@ -194,12 +194,12 @@ These tables summarizes `ri` _name_ values:
     | 'Nokogiri'                  | Document for module Nokogiri.                 |
 <br>
 
-    If {option \\--all}[rdoc-ref:RDoc::RI@-all-2C+-a]
+    If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
     is in effect, documents for the methods in the named class or module
     are also printed.
 
 - Gem method documents
-  (see {details and examples}[rdoc-ref:RDoc::RI@Gem+Method+Documents]):
+  (see {details and examples}[rdoc-ref:RI.md@Gem+Method+Documents]):
 
     | Name                                 | Prints                                                           |
     |--------------------------------------|------------------------------------------------------------------|
@@ -208,7 +208,7 @@ These tables summarizes `ri` _name_ values:
 <br>
 
 - Gem page documents
-  (see {details and examples}[rdoc-ref:RDoc::RI@Gem+Page+Documents]):
+  (see {details and examples}[rdoc-ref:RI.md@Gem+Page+Documents]):
 
     | Name                 | Prints                       |
     |----------------------|------------------------------|
@@ -224,7 +224,7 @@ These tables summarizes `ri` _name_ values:
 <br>
 
     There are more lists available;
-    see {Lists}[rdoc-ref:RDoc::RI@Lists].
+    see {Lists}[rdoc-ref:RI.md@Lists].
 
 ## Pro Tips
 
@@ -234,7 +234,7 @@ If you are a frequent `ri` user,
 you can save time by keeping open a dedicated command window
 with either of:
 
-- A running {interactive ri}[rdoc-ref:RDoc::RI@Interactive+Mode] session.
+- A running {interactive ri}[rdoc-ref:RI.md@Interactive+Mode] session.
 - A running {irb session}[https://docs.ruby-lang.org/en/master/IRB.html];
   type `'help'` or `'show_doc'` to enter `ri`, newline to exit.
 
@@ -321,8 +321,8 @@ in the `ri` document for a class, module, method, or page.
 
 See also:
 
-- {Pager}[rdoc-ref:RDoc::RI@Pager].
-- {Links in ri Output}[rdoc-ref:RDoc::RI@Links+in+ri+Output].
+- {Pager}[rdoc-ref:RI.md@Pager].
+- {Links in ri Output}[rdoc-ref:RI.md@Links+in+ri+Output].
 
 ### Class and Module Documents
 
@@ -529,13 +529,13 @@ Despite the message ("Enter ...."), `ri` does not enter its interactive mode.
 even when no _name_ is given;
 these include:
 
-- {Option \--help or -h}[rdoc-ref:RDoc::RI@-help-2C+-h]:
+- {Option \--help or -h}[rdoc-ref:RI.md@-help-2C+-h]:
   Prints `ri` help text.
-- {option \\--list or -l}[rdoc-ref:RDoc::RI@-list-2C+-l]:
+- {option \\--list or -l}[rdoc-ref:RI.md@-list-2C+-l]:
   Prints list of classes and modules.
-- {option \\--list-doc-dirs}[rdoc-ref:RDoc::RI@-list-doc-dirs]:
+- {option \\--list-doc-dirs}[rdoc-ref:RI.md@-list-doc-dirs]:
   Prints list of `ri` source directories.
-- {option \\--version or -v}[rdoc-ref:RDoc::RI@-version-2C+-v]:
+- {option \\--version or -v}[rdoc-ref:RI.md@-version-2C+-v]:
   Prints `ri` version.
 
 ## Interactive Mode
@@ -558,12 +558,12 @@ except that it:
 - Omits command word `ri`; you just type the _name_.
 - Omits options; in interactive mode the only options in effect
   are those taken from environment variable `RI`.
-  See {Options}[rdoc-ref:RDoc::RI@Options].
+  See {Options}[rdoc-ref:RI.md@Options].
 - Supports tab auto-completion for the names of a classes, modules, and methods;
   when, for example, you type `"Arr\t"` (here `"\t` represents the tab character),
   `ri` "completes" the text as `'Array '`.
 
-See also {ri at the Ready}[rdoc-ref:RDoc::RI@ri+at+the+Ready].
+See also {ri at the Ready}[rdoc-ref:RI.md@ri+at+the+Ready].
 
 ## Ruby Documents
 
@@ -580,7 +580,7 @@ Names for Ruby class and module documents:
 | 'A'          | Nothing (not unique initial characters).              |
 <br>
 
-If {option \\--all}[rdoc-ref:RDoc::RI@-all-2C+-a]
+If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
 is in effect, documents for the methods in the named class or module
 are also printed.
 
@@ -914,8 +914,8 @@ that will accept the `ri` output (such as `'pager'`, `'less'`, or `'more'`).
 
 See also:
 
-- {Pager Options}[rdoc-ref:RDoc::RI@Pager+Options].
-- {Output Filters}[rdoc-ref:RDoc::RI@Output+Filters].
+- {Pager Options}[rdoc-ref:RI.md@Pager+Options].
+- {Output Filters}[rdoc-ref:RI.md@Output+Filters].
 
 ## \Options
 
@@ -938,7 +938,7 @@ $ RI="--all" ri --no-all Array | wc -l
 ### \Options Summary
 
 These tables summarize `ri` options;
-for details, see {Options Details}[rdoc-ref:RDoc::RI@Options+Details].
+for details, see {Options Details}[rdoc-ref:RI.md@Options+Details].
 
 #### Source Directories \Options
 
