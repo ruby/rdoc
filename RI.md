@@ -67,16 +67,16 @@ the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
 ## About the Examples
 
 - `ri` output can be large;
-  for our purposes here, we sometimes pipe it to one of these:
+  to save space, an example may pipe it to one of these:
 
     - {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
     - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
     - {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
     - {grep}[https://www.man7.org/linux/man-pages/man1/grep.1.html]: selected lines only.
 
-- Examples that involve the `ri` environment variables `RI` or `RI_PAGER`
-  may use the shell idiom `_env_name_="_env_value_"`
-  to define an environment variable on the command line:
+- An example that involves the `ri` environment variables `RI` or `RI_PAGER`
+  may define an environment variable on the command line
+  via the shell idiom `_env_name_="_env_value_"`:
 
     ```sh
     $ RI="--all --no-gems" ruby -e "p ENV['RI']"
@@ -85,7 +85,7 @@ the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
     "grep . | less"
     ```
 
-- Examples that involve gems assume that gem `nokogiri` is installed.
+- An example that involves a gem assumes that gem `nokogiri` is installed.
 
 ## Modes
 
