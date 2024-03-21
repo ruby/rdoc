@@ -664,45 +664,95 @@ Examples:
 
 ### Ruby Method Documents
 
-| Name                      | Prints                                                                      |
-|---------------------------|-----------------------------------------------------------------------------|
-| 'IO::readlines'           | Document for class method IO::readlines.                                    |
-| 'IO#readlines'            | Document for instance method IO::readlines.                                 |
-| 'IO.readlines'            | Documents for instance method IO::readlines and class method IO::readlines. |
-| '::readlines'             | Documents for all class methods ::readlines.                                |
-| '#readlines'              | Documents for all instance methods #readlines; see note below.              |
-| '.readlines', 'readlines' | Documents for class methods ::readlines and instance methods #readlines.    |
+| Name                      | Prints                                                                     |
+|---------------------------|----------------------------------------------------------------------------|
+| 'IO::readlines'           | Document for class method IO::readlines.                                   |
+| 'IO#readlines'            | Document for instance method IO#readlines.                                 |
+| 'IO.readlines'            | Documents for class method IO::readlines and instance method IO#readlines. |
+| '::readlines'             | Documents for all class methods ::readlines.                               |
+| '#readlines'              | Documents for all instance methods #readlines; see note below.             |
+| '.readlines', 'readlines' | Documents for class methods ::readlines and instance methods #readlines.   |
 <br>
 
-`ri` can print:
+Examples:
 
-- For a given Ruby class or module, document(s) for:
+- Document for class method `IO::readlines`:
 
-    - The class method of a given name.
-    - The instance method of a given name.
-    - The class and instance methods of a given name.
+    ```sh
+    $ ri IO::readlines | head
+    = IO::readlines
+    
+    (from ruby core)
+    ------------------------------------------------------------------------
+    IO.readlines(name, sep=$/ [, getline_args, open_args])     -> array
+    IO.readlines(name, limit [, getline_args, open_args])      -> array
+    IO.readlines(name, sep, limit [, getline_args, open_args]) -> array
 
-- For all Ruby classes and modules, documents for:
+    ------------------------------------------------------------------------
+    ```
+  
+  - Document for instance method `IO#readlines`:
 
-    - All class methods of a given name.
-    - All instance methods of a given name.
-    - All class and instance methods of a given name.
+    ```sh
+    $ ri IO#readlines | head
+    = IO#readlines
+  
+    (from ruby core)
+    ------------------------------------------------------------------------
+    ios.readlines(sep=$/ [, getline_args])     -> array
+    ios.readlines(limit [, getline_args])      -> array
+    ios.readlines(sep, limit [, getline_args]) -> array
+  
+    ------------------------------------------------------------------------
+    ```
 
-To print the document for a particular instance method,
-give the _name_ in the form `_name_of_class_or_module_#_name_of_method_`:
+  - Documents for class method `IO::readlines` and instance method `IO#readlines`
+    (prints two documents):
 
-```sh
-$ ri IO#read | head
-= IO#read
+    ```sh
+    $ ri IO.readlines | grep "(from "
+    (from ruby core)
+    (from ruby core)
+    ```
 
-(from ruby core)
-------------------------------------------------------------------------
-  ios.read([length [, outbuf]])    -> string, outbuf, or nil
+- Documents for all class methods `::readlines`
+  (prints two documents):
 
-------------------------------------------------------------------------
+    ```sh
+    $ ri ::readlines | grep Implementation
+    === Implementation from CSV
+    === Implementation from IO
+    ```
 
-Reads length bytes from the I/O stream.
-```
+  - Documents for all instance methods `#readlines`:
+
+    ```sh
+    $ ri \#readlines | grep Implementation
+    === Implementation from ARGF
+    === Implementation from CSV
+    === Implementation from IO
+    === Implementation from Kernel
+    === Implementation from Buffering
+    === Implementation from Pathname
+    === Implementation from StringIO
+    === Implementation from GzipReader
+    ```
+
+  - Documents for class methods `::readlines` and instance methods `#readlines`:
+
+    ```sh
+    $ ri .readlines | grep Implementation
+    === Implementation from ARGF
+    === Implementation from CSV
+    === Implementation from CSV
+    === Implementation from IO
+    === Implementation from IO
+    === Implementation from Kernel
+    === Implementation from Buffering
+    === Implementation from Pathname
+    === Implementation from StringIO
+    === Implementation from GzipReader
+    ```
 
 ### Ruby Page Documents
 
