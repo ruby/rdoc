@@ -32,11 +32,11 @@ see {Gem Documents}[rdoc-ref:RDoc::RI@Gem+Documents]:
 
 | Command                               | Prints Document For                                 |
 |---------------------------------------|-----------------------------------------------------|
-| ri Nokogiri                           | Module Nokogiri.                                    |
 | ri Nokogiri::HTML4::Document          | Class Nokogiri::HTML4::Document.                    |
-| ri Nokogiri::HTML4::Document::parse   |	Class method Nokogiri::HTML4::Document::parse.      |
+| ri Nokogiri                           | Module Nokogiri.                                    |
+| ri Nokogiri::HTML4::Document::parse   | 	Class method Nokogiri::HTML4::Document::parse.     |
 | ri Nokogiri::HTML4::Document#fragment | Instance method Nokogiri::HTML4::Document#fragment. |
-| ri nokogiri:README                    | Page README.md.                                     |
+| ri nokogiri:README                    | Page README.                                        |
 <br>
 
 `ri` can also print various lists.
