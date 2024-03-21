@@ -222,7 +222,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         :public
       when 'module_function' then
         singleton = true
-        :public
+        :module_function
       else
         raise RDoc::Error, "Invalid visibility: #{tk.name}"
       end
@@ -1473,6 +1473,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.add_tokens [token, newline, indent]
     meth.add_tokens @token_stream
 
+    if !meth.singleton and container.pretend_object?
+      container = @top_level.object_class
+    end
     parse_method_params_and_body container, single, meth, added_container
 
     comment.normalize
@@ -1510,6 +1513,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
           meth.name = "new"
           meth.visibility = :public
         end
+      end
+      if meth.visibility == :module_function
+        meth.visibility = :public
       end
 
       parse_statements container, single, meth
@@ -2351,7 +2357,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
       container.set_visibility_for args, vis, singleton
     end
 
+    # Move public methods from Kernel to Object
+    if container.pretend_object?
+      old_methods = container.methods_hash
+      container = @top_level.object_class
+    end
+
     new_methods.each do |method|
+      old_methods&.delete(method.pretty_name)
       case method
       when RDoc::AnyMethod then
         container.add_method method

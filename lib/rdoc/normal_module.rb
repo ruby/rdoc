@@ -15,6 +15,11 @@ class RDoc::NormalModule < RDoc::ClassModule
     ]
   end
 
+  def initialize(name, *args) # :nodoc:
+    super
+    @pretend_object = name == "Kernel"
+  end
+
   ##
   # The definition of this module, <tt>module MyModuleName</tt>
 
@@ -29,6 +34,16 @@ class RDoc::NormalModule < RDoc::ClassModule
     true
   end
 
+  ##
+  # Show public methods in Object class?
+
+  def pretend_object?
+    if @pretend_object
+      (@current_line_visibility || @visibility) == :public
+    end
+  end
+
+  ##
   def pretty_print q # :nodoc:
     q.group 2, "[module #{full_name}:", "]" do
       q.breakable

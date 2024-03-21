@@ -2747,7 +2747,7 @@ end
     assert_equal false,    foo.singleton,  'instance method singleton'
 
     assert_equal 'foo',   s_foo.name,       'module function name'
-    assert_equal :public, s_foo.visibility, 'module function visibility'
+    assert_equal :module_function, s_foo.visibility, 'module function visibility'
     assert_equal true,    s_foo.singleton,  'module function singleton'
   end
 
