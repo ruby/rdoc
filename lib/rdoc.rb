@@ -155,6 +155,7 @@ module RDoc
 
   autoload :RDoc,           "#{__dir__}/rdoc/rdoc"
 
+  autoload :TypeParameter,  "#{__dir__}/rdoc/type_parameter"
   autoload :CrossReference, "#{__dir__}/rdoc/cross_reference"
   autoload :ERBIO,          "#{__dir__}/rdoc/erbio"
   autoload :ERBPartial,     "#{__dir__}/rdoc/erb_partial"

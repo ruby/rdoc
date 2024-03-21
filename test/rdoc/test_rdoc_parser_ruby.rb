@@ -739,6 +739,34 @@ ruby
     assert_equal 1, foo.line
   end
 
+  def test_parse_class_generic
+    comment = RDoc::Comment.new <<-COMMENT, @top_level, :ruby
+##
+# my class
+# :type-params:
+#   out KEY < Integer
+#   unchecked in VALUE < String
+#   X
+#
+    COMMENT
+
+    util_parser "class Foo\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_class @top_level, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    type_parameters = [
+      RDoc::TypeParameter.new("KEY", :covariant, false, "Integer"),
+      RDoc::TypeParameter.new("VALUE", :contravariant, true, "String"),
+      RDoc::TypeParameter.new("X", :invariant, false)
+    ]
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+    assert_equal 'my class', foo.comment.text
+    assert_equal type_parameters, foo.type_parameters
+  end
+
   def test_parse_class_singleton
     comment = RDoc::Comment.new "##\n# my class\n", @top_level
 
@@ -1025,6 +1053,34 @@ end
     foo = @top_level.modules.first
     assert_equal 'Foo', foo.full_name
     assert_equal 'my module', foo.comment.text
+  end
+
+  def test_parse_module_generic
+    comment = RDoc::Comment.new <<-COMMENT, @top_level, :ruby
+##
+# my module
+# :type-params:
+#   out KEY < Integer
+#   unchecked in VALUE < String
+#   X
+#
+    COMMENT
+
+    util_parser "module Foo\nend"
+
+    tk = @parser.get_tk
+
+    @parser.parse_module @top_level, RDoc::Parser::Ruby::NORMAL, tk, comment
+
+    type_parameters = [
+      RDoc::TypeParameter.new("KEY", :covariant, false, "Integer"),
+      RDoc::TypeParameter.new("VALUE", :contravariant, true, "String"),
+      RDoc::TypeParameter.new("X", :invariant, false)
+    ]
+    foo = @top_level.modules.first
+    assert_equal 'Foo', foo.full_name
+    assert_equal 'my module', foo.comment.text
+    assert_equal type_parameters, foo.type_parameters
   end
 
   def test_parse_module_nodoc

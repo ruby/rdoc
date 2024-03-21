@@ -322,6 +322,36 @@ class TestRDocGeneratorDarkfish < RDoc::TestCase
     assert_main_title(File.binread('index.html'), title)
   end
 
+  def test_generate_type_param
+    top_level = @store.add_file 'file.rb'
+    type_parameters = [
+      RDoc::TypeParameter.new("Elem", :invariant, true, "Integer")
+    ]
+    top_level.add_class @klass.class, @klass.name, nil, type_parameters
+
+    @g.generate
+
+    assert_file @klass.name + ".html"
+
+    assert_include File.read(@klass.name + ".html"), %Q[<code>\[unchecked Elem < Integer\]</code>]
+  end
+
+  def test_generate_type_params
+    top_level = @store.add_file 'file.rb'
+    type_parameters = [
+      RDoc::TypeParameter.new("Elem", :invariant, true, "Integer"),
+      RDoc::TypeParameter.new("T", :covariant, false, "String"),
+      RDoc::TypeParameter.new("A", :contravariant, true, "Object")
+    ]
+    top_level.add_class @klass.class, @klass.name, nil, type_parameters
+
+    @g.generate
+
+    assert_file @klass.name + ".html"
+
+    assert_include File.read(@klass.name + ".html"), %Q[<code>\[unchecked Elem < Integer, out T < String, unchecked in A < Object\]</code>]
+  end
+
   ##
   # Asserts that +filename+ has a link count greater than 1 if hard links to
   # @tmpdir are supported.
