@@ -25,6 +25,10 @@ RDoc::Task.new do |doc|
   doc.title = "rdoc #{RDoc::VERSION} Documentation"
   doc.rdoc_dir = '_site' # for github pages
   doc.rdoc_files = FileList.new %w[lib/**/*.rb *.rdoc doc/rdoc/markup_reference.rb] - PARSER_FILES
+  doc.meta_tags = {
+    "description" => "Documentation for RDoc, the Ruby documentation generator",
+    "keywords" => "rdoc,ruby,documentation,generator"
+  }
 end
 
 task "coverage" do
