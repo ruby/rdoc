@@ -662,59 +662,6 @@ Examples:
     4224
     ```
 
-#### Ruby Class and Module Lists
-
-Names for Ruby class and module lists (when given with option `--list`):
-
-| Name       | Prints                                               |
-|------------|------------------------------------------------------|
-| '' [none]  | List of all Ruby classes and modules.                |
-| 'A'        | List of Ruby classes and modules starting with 'A'.  |
-| 'Ar'       | List of Ruby classes and modules starting with 'Ar'. |
-| 'NoSuch'   | Nothing (no matching class or module name).          |
-<br>
-
-Examples:
-
-- List of all Ruby classes and modules:
-
-    ```sh
-    $ ri --list | head
-    ACL
-    ACL::ACLEntry
-    ACL::ACLList
-    ARGF
-    Abbrev
-    Addrinfo
-    ArgumentError
-    Array
-    Base64
-    BasicObject
-    ```
-
-- List of Ruby classes and modules starting with `'A'`:
-
-    ```sh
-    $ ri --list A | head
-    ACL
-    ACL::ACLEntry
-    ACL::ACLList
-    ARGF
-    Abbrev
-    Addrinfo
-    ArgumentError
-    Array
-    ```
-
-- List of Ruby classes and modules starting with `'Ar'`:
-
-    ```sh
-
-    $ ri --list Ar | head
-    ArgumentError
-    Array
-    ```
-
 ### Ruby Method Documents
 
 | Name                      | Prints                                                                      |
@@ -859,17 +806,62 @@ If the page name is sufficiently unique,
 you can omit leading and trailing elements:
 `ruby:exceptions` is the same as `ruby:syntax/exceptions.rdoc`.
 
+## Ruby Lists
+
+Names for Ruby class and module lists (when given with option `--list`):
+
+| Name       | Prints                                               |
+|------------|------------------------------------------------------|
+| '' [none]  | List of all Ruby classes and modules.                |
+| 'A'        | List of Ruby classes and modules starting with 'A'.  |
+| 'Ar'       | List of Ruby classes and modules starting with 'Ar'. |
+| 'NoSuch'   | Nothing (no matching class or module name).          |
+<br>
+
+Examples:
+
+- List of all Ruby classes and modules:
+
+    ```sh
+    $ ri --list | head
+    ACL
+    ACL::ACLEntry
+    ACL::ACLList
+    ARGF
+    Abbrev
+    Addrinfo
+    ArgumentError
+    Array
+    Base64
+    BasicObject
+    ```
+
+- List of Ruby classes and modules starting with `'A'`:
+
+    ```sh
+    $ ri --list A | head
+    ACL
+    ACL::ACLEntry
+    ACL::ACLList
+    ARGF
+    Abbrev
+    Addrinfo
+    ArgumentError
+    Array
+    ```
+
+- List of Ruby classes and modules starting with `'Ar'`:
+
+    ```sh
+
+    $ ri --list Ar | head
+    ArgumentError
+    Array
+    ```
+
 ## Gem Documents
 
 ### Gem Class and Module Documents
-
-[TODO]
-
-#### Gem Class and Module Lists
-
-[TODO]
-
-#### Gem Class and Module Documents
 
 [TODO]
 
@@ -878,6 +870,10 @@ you can omit leading and trailing elements:
 [TODO]
 
 ### Gem Page Documents
+
+[TODO]
+
+## Gem Lists
 
 [TODO]
 
