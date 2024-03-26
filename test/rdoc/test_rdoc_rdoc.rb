@@ -80,6 +80,17 @@ class TestRDocRDoc < RDoc::TestCase
     assert_equal [a, b], @rdoc.gather_files([b, a, b])
   end
 
+  def test_gather_files_with_no_force_update
+    a = File.expand_path __FILE__
+    b = File.expand_path '../test_rdoc_text.rb', __FILE__
+
+    assert_equal [a, b], @rdoc.gather_files([a, b])
+
+    @rdoc.last_modified[a] -= 10
+    @rdoc.options.force_update = false
+    assert_equal [a], @rdoc.gather_files([a, b])
+  end
+
   def test_handle_pipe
     $stdin = StringIO.new "hello"
 
