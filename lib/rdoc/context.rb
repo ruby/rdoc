@@ -30,6 +30,11 @@ class RDoc::Context < RDoc::CodeObject
   attr_reader :attributes
 
   ##
+  # All mattr* methods
+
+  attr_reader :mattrs
+
+  ##
   # Block params to be used in the next MethodAttr parsed under this context
 
   attr_accessor :block_params
@@ -145,6 +150,7 @@ class RDoc::Context < RDoc::CodeObject
   def initialize_methods_etc
     @method_list = []
     @attributes  = []
+    @mattrs      = []
     @aliases     = []
     @requires    = []
     @includes    = []
@@ -264,6 +270,63 @@ class RDoc::Context < RDoc::CodeObject
     if register then
       attribute.visibility = @visibility
       add_to @attributes, attribute
+      resolve_aliases attribute
+    end
+
+    attribute
+  end
+
+  ##
+  # Adds +attribute+ if not already there. If it is (as method(s) or attribute),
+  # updates the comment if it was empty.
+  #
+  # The attribute is registered only if it defines a new method.
+  # For instance, <tt>attr_reader :foo</tt> will not be registered
+  # if method +foo+ exists, but <tt>attr_accessor :foo</tt> will be registered
+  # if method +foo+ exists, but <tt>foo=</tt> does not.
+
+  def add_mattr attribute
+    return attribute unless @document_self
+
+    # mainly to check for redefinition of an attribute as a method
+    # TODO find a policy for 'attr_reader :foo' + 'def foo=()'
+    register = false
+
+    key = nil
+
+    if attribute.rw.index 'R' then
+      key = attribute.pretty_name
+      known = @methods_hash[key]
+
+      if known then
+        known.comment = attribute.comment if known.comment.empty?
+      elsif registered = @methods_hash[attribute.pretty_name + '='] and
+            RDoc::Mattr === registered then
+        registered.rw = 'RW'
+      else
+        @methods_hash[key] = attribute
+        register = true
+      end
+    end
+
+    if attribute.rw.index 'W' then
+      key = attribute.pretty_name + '='
+      known = @methods_hash[key]
+
+      if known then
+        known.comment = attribute.comment if known.comment.empty?
+      elsif registered = @methods_hash[attribute.pretty_name] and
+            RDoc::Mattr === registered then
+        registered.rw = 'RW'
+      else
+        @methods_hash[key] = attribute
+        register = true
+      end
+    end
+
+    if register then
+      attribute.visibility = @visibility
+      add_to @mattrs, attribute
       resolve_aliases attribute
     end
 
@@ -618,6 +681,7 @@ class RDoc::Context < RDoc::CodeObject
       @comment.empty? &&
       @method_list.empty? &&
       @attributes.empty? &&
+      @mattrs.empty? &&
       @aliases.empty? &&
       @external_aliases.empty? &&
       @requires.empty? &&
@@ -718,6 +782,13 @@ class RDoc::Context < RDoc::CodeObject
 
   def each_attribute # :yields: attribute
     @attributes.each { |a| yield a }
+  end
+
+  ##
+  # Iterator for mattrs
+
+  def each_mattr # :yields: attribute
+    @mattrs.each { |a| yield a }
   end
 
   ##

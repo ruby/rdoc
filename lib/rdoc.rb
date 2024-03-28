@@ -203,6 +203,7 @@ module RDoc
   autoload :GhostMethod,    "#{__dir__}/rdoc/ghost_method"
   autoload :MetaMethod,     "#{__dir__}/rdoc/meta_method"
   autoload :Attr,           "#{__dir__}/rdoc/attr"
+  autoload :Mattr,           "#{__dir__}/rdoc/mattr"
 
   autoload :Constant,       "#{__dir__}/rdoc/constant"
   autoload :Mixin,          "#{__dir__}/rdoc/mixin"
