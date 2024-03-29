@@ -16,13 +16,13 @@ means <i>puts onto `$stdout`</i>, not <i>sends to a print device</i>.
 Example commands for printing Ruby documents;
 see {Ruby Documents}[rdoc-ref:RI.md@Ruby+Documents]:
 
-| Command             | Prints Document For            |
-|---------------------|--------------------------------|
-| ri IO               | Class IO.                      |
-| ri Enumerable       | Module Enumerable.             |
-| ri IO::readlines    | Class method IO::readlines.    |
-| ri IO#readlines     | Instance method IO::readlines. |
-| ri ruby:dig_methods | Page dig_methods.              |
+| Command             | Prints Document For           |
+|---------------------|-------------------------------|
+| ri IO               | Class IO.                     |
+| ri Enumerable       | Module Enumerable.            |
+| ri IO::readlines    | Class method IO::readlines.   |
+| ri IO#readlines     | Instance method IO#readlines. |
+| ri ruby:dig_methods | Page dig_methods.             |
 <br>
 
 Example commands for printing Nokogiri documents
@@ -33,7 +33,7 @@ see {Gem Documents}[rdoc-ref:RI.md@Gem+Documents]:
 |---------------------------------------|-----------------------------------------------------|
 | ri Nokogiri::HTML4::Document          | Class Nokogiri::HTML4::Document.                    |
 | ri Nokogiri                           | Module Nokogiri.                                    |
-| ri Nokogiri::HTML4::Document::parse   | 	Class method Nokogiri::HTML4::Document::parse.     |
+| ri Nokogiri::HTML4::Document::parse   | Class method Nokogiri::HTML4::Document::parse.      |
 | ri Nokogiri::HTML4::Document#fragment | Instance method Nokogiri::HTML4::Document#fragment. |
 | ri nokogiri:README                    | Page README.                                        |
 <br>
@@ -533,8 +533,6 @@ Enter a blank line to exit.
 = Includes:
 Enumerable (from ruby core)
 ```
-
-Despite the message ("Enter ...."), `ri` does not enter its interactive mode.
 
 `ri` also responds in static mode when certain options are given,
 even when no _name_ is given;
