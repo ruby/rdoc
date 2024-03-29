@@ -2,7 +2,7 @@
 
 `ri` is the Ruby command-line utility
 that gives fast and easy on-line access to Ruby documentation;
-it can print documentation for:
+it can output documentation for:
 
 - A class or module: text associated with the class or module definition
   in `.rb` and `.c` files in the installed Ruby and gems.
@@ -10,13 +10,10 @@ it can print documentation for:
   in `.rb` and `.c` files in the installed Ruby and gems.
 - A page: text from a stand-alone file in the installed Ruby and gems.
 
-**Note**: Throughout this page, the term _prints_
-means <i>puts onto `$stdout`</i>, not <i>sends to a print device</i>.
-
-Example commands for printing Ruby documents;
+Example commands for outputting Ruby documents;
 see {Ruby Documents}[rdoc-ref:RI.md@Ruby+Documents]:
 
-| Command             | Prints Document For           |
+| Command             | Outputs Document For          |
 |---------------------|-------------------------------|
 | ri IO               | Class IO.                     |
 | ri Enumerable       | Module Enumerable.            |
@@ -25,11 +22,11 @@ see {Ruby Documents}[rdoc-ref:RI.md@Ruby+Documents]:
 | ri ruby:dig_methods | Page dig_methods.             |
 <br>
 
-Example commands for printing Nokogiri documents
+Example commands for outputting Nokogiri documents
 (assuming that the gem is installed);
 see {Gem Documents}[rdoc-ref:RI.md@Gem+Documents]:
 
-| Command                               | Prints Document For                                 |
+| Command                               | Outputs Document For                                |
 |---------------------------------------|-----------------------------------------------------|
 | ri Nokogiri::HTML4::Document          | Class Nokogiri::HTML4::Document.                    |
 | ri Nokogiri                           | Module Nokogiri.                                    |
@@ -38,11 +35,11 @@ see {Gem Documents}[rdoc-ref:RI.md@Gem+Documents]:
 | ri nokogiri:README                    | Page README.                                        |
 <br>
 
-`ri` can also print various lists.
+`ri` can also output various lists.
 
-Example commands for printing lists:
+Example commands for outputting lists:
 
-| Command      | Prints List Of                                           |
+| Command      | Outputs List Of                                          |
 |--------------|----------------------------------------------------------|
 | ri --list    | Classes and modules (including gems).                    |
 | ri --list Fi | Classes and modules starting with 'Fi' (including gems). |
@@ -93,12 +90,12 @@ There are two `ri` modes:
 - <i>Static mode</i>:
   In general, `ri` responds in its static mode
   if a _name_ is given;
-  it prints and exits (as in the examples above).
+  it outputs and exits (as in the examples above).
   See {Static Mode}[rdoc-ref:RI.md@Static+Mode].
 - <i>Interactive mode</i>:
   In general, `ri` enters its interactive mode
   if no _name_ is given;
-  in interactive mode, `ri` prints and waits for another command:
+  in interactive mode, `ri` outputs and waits for another command:
 
     ```sh
     $ ri
@@ -113,7 +110,7 @@ There are two `ri` modes:
 ## Names
 
 In both modes, static and interactive,
-`ri` responds to an input _name_ that specifies what is to be printed:
+`ri` responds to an input _name_ that specifies what is to be output:
 a document, multiple documents, or other information:
 
 - Static mode (in the shell): type `'ri _name_'`;
@@ -143,7 +140,7 @@ These tables summarize `ri` _name_ values:
 - Ruby class and module documents
   (see {details and examples}[rdoc-ref:RI.md@Ruby+Class+and+Module+Documents]):
 
-    | Name         | Prints                                                |
+    | Name         | Outputs                                               |
     |--------------|-------------------------------------------------------|
     | 'File'       | Document for class File.                              |
     | 'File::Stat' | Document for nested class File::Stat.                 |
@@ -153,12 +150,12 @@ These tables summarize `ri` _name_ values:
 
     If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
     is in effect, documents for the methods in the named class or module
-    are also printed.
+    are also output.
 
 - Ruby method documents
   (see {details and examples}[rdoc-ref:RI.md@Ruby+Method+Documents]):
 
-    | Name                      | Prints                                                                      |
+    | Name                      | Outputs                                                                     |
     |---------------------------|-----------------------------------------------------------------------------|
     | 'IO::readlines'           | Document for class method IO::readlines.                                    |
     | 'IO#readlines'            | Document for instance method IO::readlines.                                 |
@@ -177,7 +174,7 @@ These tables summarize `ri` _name_ values:
 - Ruby page documents
   (see {details and examples}[rdoc-ref:RI.md@Ruby+Page+Documents]):
 
-    | Name                          | Prints                                                          |
+    | Name                          | Outputs                                                         |
     |-------------------------------|-----------------------------------------------------------------|
     | 'ruby:syntax/assignment.rdoc' | Document for page assignment.                                   |
     | 'ruby:syntax/assignment'      | Document for page assignment (if no other syntax/assignment.*). |
@@ -187,7 +184,7 @@ These tables summarize `ri` _name_ values:
 - Gem class and module documents
   (see {details and examples}[rdoc-ref:RI.md@Gem+Class+and+Module+Documents]):
 
-    | Name                        | Prints                                                           |
+    | Name                        | Outputs                                       |
     |-----------------------------|-----------------------------------------------|
     | 'Nokogiri::HTML4::Document' | Document for class Nokogiri::HTML4::Document. |
     | 'Nokogiri'                  | Document for module Nokogiri.                 |
@@ -195,12 +192,12 @@ These tables summarize `ri` _name_ values:
 
     If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
     is in effect, documents for the methods in the named class or module
-    are also printed.
+    are also output.
 
 - Gem method documents
   (see {details and examples}[rdoc-ref:RI.md@Gem+Method+Documents]):
 
-    | Name                                 | Prints                                                           |
+    | Name                                 | Outputs                                                          |
     |--------------------------------------|------------------------------------------------------------------|
     | 'Nokogiri::HTML4::Document::parse'   | Document for class method Nokogiri::HTML4::Document::parse.      |
     | 'Nokogiri::HTML4::Document#fragment' | Document for instance method Nokogiri::HTML4::Document#fragment. |
@@ -209,14 +206,14 @@ These tables summarize `ri` _name_ values:
 - Gem page documents
   (see {details and examples}[rdoc-ref:RI.md@Gem+Page+Documents]):
 
-    | Name                 | Prints                       |
+    | Name                 | Outputs                      |
     |----------------------|------------------------------|
     | 'nokogiri:README.md' | Document for page README.md. |
 <br>
 
 - Lists:
 
-    | Name        | Prints                  |
+    | Name        | Outputs                 |
     |-------------|-------------------------|
     | 'ruby:'     | List of Ruby pages.     |
     | 'nokogiri:' | List of Nokogiri pages. |
@@ -425,7 +422,7 @@ the number of such implementations depends on the _name_:
 
 - Within a class:
 
-    Each of these commands prints documents
+    Each of these commands outputs documents
     for methods in the class `IO` (output omitted):
 
     ```sh
@@ -436,7 +433,7 @@ the number of such implementations depends on the _name_:
 
 - In all Ruby classes:
 
-    Each of these commands prints documents
+    Each of these commands outputs documents
     for methods in all Ruby classes (output omitted):
 
     ```sh
@@ -483,23 +480,23 @@ the number of such implementations depends on the _name_:
 
 ## `ri` Information
 
-With certain options, an `ri` command may print information other than documents
+With certain options, an `ri` command may output information other than documents
 for a class, module, methods, or page:
 
 - {Option \\--help or -h}[rdoc-ref:RI.md@-help-2C+-h]:
-  Prints `ri` help text.
+  Outputs `ri` help text.
 - {option \\--version or -v}[rdoc-ref:RI.md@-version-2C+-v]:
-  Prints `ri` version.
+  Outputs `ri` version.
 - {option \\--list or -l}[rdoc-ref:RI.md@-list-2C+-l]:
-  Prints list of classes and modules.
+  Outputs list of classes and modules.
 - {option \\--list-doc-dirs}[rdoc-ref:RI.md@-list-doc-dirs]:
-  Prints list of `ri` source directories.
+  Outputs list of `ri` source directories.
 - {Option \\--dump=FILEPATH}[rdoc-ref:RI.md@-dump-3DFILEPATH]:
-  Prints dump of ri cache file at the given filepath.
+  Outputs dump of ri cache file at the given filepath.
 
 ## Static Mode
 
-In static mode, `ri` prints a response and exits.
+In static mode, `ri` outputs a response and exits.
 
 In general, `ri` responds in static mode
 if the command gives a _name_:
@@ -573,7 +570,7 @@ See {Ruby Class and Module Lists}[rdoc-ref:RI.md@Ruby+Class+and+Module+Lists].
 
 Names for Ruby class and module documents:
 
-| Name         | Prints                                                |
+| Name         | Outputs                                               |
 |--------------|-------------------------------------------------------|
 | 'File'       | Document for class File.                              |
 | 'File::Stat' | Document for nested class File::Stat.                 |
@@ -584,7 +581,7 @@ Names for Ruby class and module documents:
 
 If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
 is in effect, documents for the methods in the named class or module
-are also printed.
+are also output.
 
 Examples:
 
@@ -665,7 +662,7 @@ Examples:
 
 Names for Ruby method documents:
 
-| Name                      | Prints                                                                     |
+| Name                      | Outputs                                                                    |
 |---------------------------|----------------------------------------------------------------------------|
 | 'IO::readlines'           | Document for class method IO::readlines.                                   |
 | 'IO#readlines'            | Document for instance method IO#readlines.                                 |
@@ -708,7 +705,7 @@ Examples:
     ```
 
   - Documents for class method `IO::readlines` and instance method `IO#readlines`
-    (prints two documents):
+    (outputs two documents):
 
     ```sh
     $ ri IO.readlines | grep "(from "
@@ -717,7 +714,7 @@ Examples:
     ```
 
 - Documents for all class methods `::readlines`
-  (prints two documents):
+  (outputs two documents):
 
     ```sh
     $ ri ::readlines | grep Implementation
@@ -759,7 +756,7 @@ Examples:
 
 See {Ruby Page Lists}[rdoc-ref:RI.md@Ruby+Page+Lists].
 
-To print a Ruby page document:
+To output a Ruby page document:
 
 ```sh
 $ ri ruby:syntax/exceptions.rdoc | head
@@ -784,7 +781,7 @@ you can omit leading and trailing elements:
 
 Names for Ruby class and module lists (when given with option `--list`):
 
-| Name       | Prints                                               |
+| Name       | Outputs                                              |
 |------------|------------------------------------------------------|
 | '' [none]  | List of all Ruby classes and modules.                |
 | 'A'        | List of Ruby classes and modules starting with 'A'.  |
@@ -835,7 +832,7 @@ Examples:
 
 ### Ruby Page Lists
 
-To print a list of the Ruby page documents,
+To output a list of the Ruby page documents,
 give the _name_ as `ruby:`:
 
 ```sh
@@ -885,7 +882,7 @@ See {Gem Class and Model Lists}[rdoc-ref:RI.md@Gem+Class+and+Model+Lists].
 
 Names for gem `nokogiri` class and model documents:
 
-| Name                        | Prints                                                           |
+| Name                        | Outputs                                       |
 |-----------------------------|-----------------------------------------------|
 | 'Nokogiri::HTML4::Document' | Document for class Nokogiri::HTML4::Document. |
 | 'Nokogiri'                  | Document for module Nokogiri.                 |
@@ -893,7 +890,7 @@ Names for gem `nokogiri` class and model documents:
 
 If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
 is in effect, documents for the methods in the named class or module
-are also printed.
+are also output.
 
 Examples:
 
@@ -932,7 +929,7 @@ Examples:
 
 Names for gem `nokogiri` methods documents:
 
-| Name                                 | Prints                                                           |
+| Name                                 | Outputs                                                          |
 |--------------------------------------|------------------------------------------------------------------|
 | 'Nokogiri::HTML4::Document::parse'   | Document for class method Nokogiri::HTML4::Document::parse.      |
 | 'Nokogiri::HTML4::Document#fragment' | Document for instance method Nokogiri::HTML4::Document#fragment. |
@@ -974,7 +971,7 @@ Examples:
 
 ### Gem Page Documents
 
-To print a list of gem page documents, give the _name_ as _gemname_ with suffixed colon:
+To output a list of gem page documents, give the _name_ as _gemname_ with suffixed colon:
 
 ```sh
 $ ri nokogiri: | head
@@ -984,7 +981,7 @@ README.md
 lib/nokogiri/css/tokenizer.rex
 ```
 
-To print a gem page document:
+To output a gem page document:
 
 ```sh
 $ ri nokogiri:README.md | head
@@ -1010,7 +1007,7 @@ you can omit leading and trailing elements:
 
 Names for gem `nokogiri` class and module lists (when given with option `--list`):
 
-| Name       | Prints                                |
+| Name       | Outputs                               |
 |------------|---------------------------------------|
 | Nokogiri   | List of Nokogiri classes and modules. |
 
@@ -1032,7 +1029,7 @@ Nokogiri::CSS::XPathVisitor::DoctypeConfig
 
 ### Gem Page Lists
 
-To print a list of the `nokogiri` page documents, give the _name_ as `nokogiri:`:
+To output a list of the `nokogiri` page documents, give the _name_ as `nokogiri:`:
 
 ```sh
 $ ri nokogiri: | head
@@ -1169,8 +1166,8 @@ Options for source directories information:
 
 | Option                        | Effect                                                                            |
 |-------------------------------|-----------------------------------------------------------------------------------|
-| --list-doc-dirs               | Print list of ri source directories; default is --no-list-doc-dirs.               |
-| --no-list-doc-dirs            | Do not print list of ri source directories; default;                              |
+| --list-doc-dirs               | Output list of ri source directories; default is --no-list-doc-dirs.               |
+| --no-list-doc-dirs            | Do not output list of ri source directories; default;                              |
 <br>
 
 #### Mode \Options
@@ -1185,15 +1182,15 @@ Options for source directories information:
 
 | Option                        | Effect                                                                            |
 |-------------------------------|-----------------------------------------------------------------------------------|
-| --help, -h                    | Print help message and exit.                                                      |
-| --version, -v                 | Print ri version and exit.                                                        |
+| --help, -h                    | Output help message and exit.                                                      |
+| --version, -v                 | Output ri version and exit.                                                        |
 <br>
 
 #### Debugging \Options
 
 | Option                     | Effect                                                    |
 |----------------------------|-----------------------------------------------------------|
-| --dump=FILEPATH, --no-dump | Print/don't-print dump of cache file. Default: --no-dump. |
+| --dump=FILEPATH, --no-dump | Output/don't-output dump of cache file. Default: --no-dump. |
 | --profile, --no-profile    | Run/don't-run  with Ruby profiler. Default: --no-profile. |
 <br>
 
@@ -1210,16 +1207,16 @@ Options for source directories information:
 
 | Option                        | Effect                                                                            |
 |------------|----------------------------------------------------------|
-| --list, -l | Print list of classes and modules; default is --no-list. |
-| --no-list  | Do not print list; default.                              |
+| --list, -l | Output list of classes and modules; default is --no-list. |
+| --no-list  | Do not output list; default.                              |
 <br>
 
 #### Methods \Options (for Class or Module)
 
 | Option                        | Effect                                                                            |
 |-----------|----------------------------------------------------------------|
-| --all, -a | Print all (class or module plus methods); default is --no-all. |
-| --no-all  | Do not print methods for named class or module; default.       |
+| --all, -a | Output all (class or module plus methods); default is --no-all. |
+| --no-all  | Do not output methods for named class or module; default.       |
 <br>
 
 #### Server Option
@@ -1305,7 +1302,7 @@ See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 
 ### `--help`, `-h`
 
-Option `--help` (aliased as `-h`) specifies that `ri` is to print
+Option `--help` (aliased as `-h`) specifies that `ri` is to output
 its help text and exit.
 
 ### `--home`
@@ -1324,7 +1321,7 @@ the option is the default when no _name_ is given.
 ### `--list`, `-l`
 
 Option `--list` (aliased as `-l`) specifies that all class and module names
-whose initial characters match the given _name_ are to be printed;
+whose initial characters match the given _name_ are to be output;
 the default is `--no-list`:
 
 ```sh
@@ -1333,12 +1330,12 @@ ArgumentError
 Array
 ```
 
-If no _name_ is given, all class and module names are printed.
+If no _name_ is given, all class and module names are output.
 
 ### `--list-doc-dirs`
 
 Option `--list-doc-dirs` specifies that a list of the `ri` source directories
-is to be printed;
+is to be output;
 default is `--no-list-doc-dirs`.
 
 See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
@@ -1346,7 +1343,7 @@ See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 ### `--no-all`
 
 Option `--no-all` (the default) specifies that for a given class or module,
-its method documents are not to be printed.
+its method documents are not to be output.
 
 ### `--no-dump`
 
@@ -1354,14 +1351,14 @@ Option `--no-dump` (the default) specifies that a cache file is not to be dumped
 
 ### `--no-gems`
 
-Option `--no-gems` specifies that gem documents are not to be printed;
+Option `--no-gems` specifies that gem documents are not to be output;
 `--gems` is the default.
 
 See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 
 ### `--no-home`
 
-Option `--no-gems` specifies that gem documents from `~/.rdoc` are not to be printed;
+Option `--no-gems` specifies that gem documents from `~/.rdoc` are not to be output;
 `--home` is the default.
 
 See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
@@ -1375,12 +1372,12 @@ regardless of whether _name_ is given.
 ### `--no-list`
 
 Option `--no-list` (the default) specifies that a list of class and module names
-is not to be printed.
+is not to be output.
 
 ### `--no-list-doc-dirs`
 
 Option `--no-list-doc-dirs` (the default) specifies that the list of documentation
-directories is not to be printed.
+directories is not to be output.
 
 See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 
@@ -1398,7 +1395,7 @@ with the Ruby profiler.
 ### `--no-site`
 
 Option `--no-site` specifies that documents from the site libraries
-are not to be printed;
+are not to be output;
 default is `--site`.
 
 See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
@@ -1406,15 +1403,15 @@ See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 ### `--no-standard`
 
 Option `--no-standard` specifies that documents from the standard libraries
-are not to be printed;
-default is to print documents from the standard libraries.
+are not to be output;
+default is to output documents from the standard libraries.
 
 See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 
 ### `--no-system`
 
 Option `--no-system` specifies that documents from the system libraries
-are not to be printed;
+are not to be output;
 default is `--system`.
 
 See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
@@ -1451,7 +1448,7 @@ See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 
 ### `--version`, `-v`
 
-Option `--version` (aliased as `-v`) specifies that `ri` is to print its version and exit.
+Option `--version` (aliased as `-v`) specifies that `ri` is to output its version and exit.
 
 ### `--width=NUMBER`, `-w NUMBER`
 
