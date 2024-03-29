@@ -1010,6 +1010,7 @@ Names for gem `nokogiri` class and module lists (when given with option `--list`
 | Name       | Outputs                               |
 |------------|---------------------------------------|
 | Nokogiri   | List of Nokogiri classes and modules. |
+<br>
 
 Example:
 
