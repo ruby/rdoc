@@ -1,50 +1,73 @@
-#`ri` (Ruby Information)
+#`ri`: Ruby Information
 
-`ri` is the Ruby command-line utility
-that gives fast and easy on-line access to Ruby documentation;
-it can output documentation for:
+`ri` (<b>r</b>uby <b>i</b>nformation) is the Ruby command-line utility
+that gives fast and easy on-line access to Ruby documentation.
 
-- A class or module: text associated with the class or module definition
-  in `.rb` and `.c` files in the installed Ruby and gems.
-- One or more methods: text associated with method definitions
-  in `.rb` and `.c` files in the installed Ruby and gems.
-- A page: text from a stand-alone file in the installed Ruby and gems.
+`ri` can show documentation for Ruby and installed gems:
 
-Example commands for outputting Ruby documents;
-see {Ruby Documents}[rdoc-ref:RI.md@Ruby+Documents]:
+- A **class** or **module**:
+  text associated with the class or module definition
+  in a source file (`.rb` or `.c`).
+- One or more **methods**:
+  text associated with method definitions
+  in source files (`.rb` and `.c`).
+- A **page**:
+  text from a stand-alone documentation file
+  (`.rdoc` or  `.md`, or sometimes other).
 
-| Command             | Outputs Document For          |
-|---------------------|-------------------------------|
-| ri IO               | Class IO.                     |
-| ri Enumerable       | Module Enumerable.            |
-| ri IO::readlines    | Class method IO::readlines.   |
-| ri IO#readlines     | Instance method IO#readlines. |
-| ri ruby:dig_methods | Page dig_methods.             |
+`ri` can also show lists of:
+
+- **classes** and **modules**:
+  full or partial list.
+- **pages**:
+  for Ruby or for an installed gem.
+
+## In Brief
+
+Command for class or module document;
+see output details at {Class or Module Document}[rdoc-ref:RI.md@Class+or+Module+Document]:
+
+| Command                             | Document                         |
+|-------------------------------------|----------------------------------|
+| ri IO                               | Class IO.                        |
+| ri Nokogiri::HTML4::Document        | Class Nokogiri::HTML4::Document. |
+| ri Enumerable                       | Module Enumerable.               |
+| ri Nokogiri                         | Module Nokogiri.                 |
 <br>
 
-Example commands for outputting Nokogiri documents
-(assuming that the gem is installed);
-see {Gem Documents}[rdoc-ref:RI.md@Gem+Documents]:
+Command for method documents;
+see output details at {Method Document}[rdoc-ref:RI.md@Method+Document]:
 
-| Command                               | Outputs Document For                                |
-|---------------------------------------|-----------------------------------------------------|
-| ri Nokogiri::HTML4::Document          | Class Nokogiri::HTML4::Document.                    |
-| ri Nokogiri                           | Module Nokogiri.                                    |
-| ri Nokogiri::HTML4::Document::parse   | Class method Nokogiri::HTML4::Document::parse.      |
-| ri Nokogiri::HTML4::Document#fragment | Instance method Nokogiri::HTML4::Document#fragment. |
-| ri nokogiri:README                    | Page README.                                        |
+| Command                             | Document(s)                                            |
+|-------------------------------------|--------------------------------------------------------|
+| ri IO::readlines                    | Class method IO::readlines.                            |
+| ri IO#readlines                     | Instance method IO#readlines.                          |
+| ri IO.readlines                     | Both of the above.                                     |
+| ri readlines                        | ::readlines and #readlines in all classes and modules. |
+| ri Nokogiri::HTML4::Document::parse | Class method Nokogiri::HTML4::Document::parse.         |
+| ri Nokogiri::HTML4::Document#parse  | Instance method Nokogiri#HTML4::Document::parse.       |
+| ri Nokogiri::HTML4::Document.parse  | Both of the above.                                     |
 <br>
 
-`ri` can also output various lists.
+Command for page;
+see output details at {Page Document}[rdoc-ref:RI.md@Page+Document]:
 
-Example commands for outputting lists:
+| Command                             | Page              |
+|-------------------------------------|-------------------|
+| ri ruby:dig_methods                 | Ruby dig_methods. |
+| ri nokogiri:README                  | Nokogiri README.  |
+<br>
 
-| Command      | Outputs List Of                                          |
-|--------------|----------------------------------------------------------|
-| ri --list    | Classes and modules (including gems).                    |
-| ri --list Fi | Classes and modules starting with 'Fi' (including gems). |
-| ri ruby:     | Ruby pages.                                              |
-| ri nokogiri: | Nokogiri pages.                                          |
+Command for list;
+see output details at {Lists}[rdoc-ref:RI.md@Lists]:
+
+| Command                             | List                                                     |
+|-------------------------------------|----------------------------------------------------------|
+| ri --list                           | Classes and modules (including gems).                    |
+| ri --list Fi                        | Classes and modules starting with 'Fi' (including gems). |
+| ri ruby:                            | Ruby pages.                                              |
+| ri nokogiri:                        | Nokogiri pages.                                          |
+<br>
 
 ## Why `ri`?
 
