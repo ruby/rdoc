@@ -3,7 +3,7 @@
 `ri` (<b>r</b>uby <b>i</b>nformation) is the Ruby command-line utility
 that gives fast and easy on-line access to Ruby documentation.
 
-`ri` can show documentation for Ruby and installed gems:
+`ri` can show documentation for Ruby itself and for its installed gems:
 
 - A **class** or **module**:
   text associated with the class or module definition
@@ -15,6 +15,15 @@ that gives fast and easy on-line access to Ruby documentation.
   text from a stand-alone documentation file
   (`.rdoc` or  `.md`, or sometimes other).
 
+Examples (output omitted):
+
+```sh
+$ ri Hash             # Document for class Hash.
+$ ri Array#sort       # Document for instance method sort in class Array.
+$ ri read             # Documents for methods ::read and #read in all classes and modules.
+$ ri ruby:dig_methods # Document for page dig_methods.
+```
+
 `ri` can also show lists of:
 
 - **classes** and **modules**:
@@ -22,52 +31,12 @@ that gives fast and easy on-line access to Ruby documentation.
 - **pages**:
   for Ruby or for an installed gem.
 
-## In Brief
+Examples (output omitted):
 
-Command for class or module document;
-see output details at {Class or Module Document}[rdoc-ref:RI.md@Class+or+Module+Document]:
-
-| Command                             | Document                         |
-|-------------------------------------|----------------------------------|
-| ri IO                               | Class IO.                        |
-| ri Nokogiri::HTML4::Document        | Class Nokogiri::HTML4::Document. |
-| ri Enumerable                       | Module Enumerable.               |
-| ri Nokogiri                         | Module Nokogiri.                 |
-<br>
-
-Command for method documents;
-see output details at {Method Document}[rdoc-ref:RI.md@Method+Document]:
-
-| Command                             | Document(s)                                            |
-|-------------------------------------|--------------------------------------------------------|
-| ri IO::readlines                    | Class method IO::readlines.                            |
-| ri IO#readlines                     | Instance method IO#readlines.                          |
-| ri IO.readlines                     | Both of the above.                                     |
-| ri readlines                        | ::readlines and #readlines in all classes and modules. |
-| ri Nokogiri::HTML4::Document::parse | Class method Nokogiri::HTML4::Document::parse.         |
-| ri Nokogiri::HTML4::Document#parse  | Instance method Nokogiri#HTML4::Document::parse.       |
-| ri Nokogiri::HTML4::Document.parse  | Both of the above.                                     |
-<br>
-
-Command for page;
-see output details at {Page Document}[rdoc-ref:RI.md@Page+Document]:
-
-| Command                             | Page              |
-|-------------------------------------|-------------------|
-| ri ruby:dig_methods                 | Ruby dig_methods. |
-| ri nokogiri:README                  | Nokogiri README.  |
-<br>
-
-Command for list;
-see output details at {Lists}[rdoc-ref:RI.md@Lists]:
-
-| Command                             | List                                                     |
-|-------------------------------------|----------------------------------------------------------|
-| ri --list                           | Classes and modules (including gems).                    |
-| ri --list Fi                        | Classes and modules starting with 'Fi' (including gems). |
-| ri ruby:                            | Ruby pages.                                              |
-| ri nokogiri:                        | Nokogiri pages.                                          |
-<br>
+```sh
+$ ri --list # List of classes and modules.
+$ ri ruby:  # List of Ruby pages.
+```
 
 ## Why `ri`?
 
@@ -82,29 +51,6 @@ the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
   {irb (interactive Ruby)}[https://docs.ruby-lang.org/en/master/IRB.html]
   session, you _already_ have immediate access to `ri`:
   just type `'help'` or `'show_doc'`.
-
-## About the Examples
-
-- `ri` output can be large;
-  to save space, an example may pipe it to one of these:
-
-    - {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
-    - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
-    - {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
-    - {grep}[https://www.man7.org/linux/man-pages/man1/grep.1.html]: selected lines only.
-
-- An example that involves the `ri` environment variables `RI` or `RI_PAGER`
-  may define an environment variable on the command line
-  via the shell idiom `_env_name_="_env_value_"`:
-
-    ```sh
-    $ RI="--all --no-gems" ruby -e "p ENV['RI']"
-    "--all --no-gems"
-    $ RI_PAGER="grep . | less" ruby -e "p ENV['RI_PAGER']"
-    "grep . | less"
-    ```
-
-- An example that involves a gem assumes that gem `nokogiri` is installed.
 
 ## Modes
 
@@ -161,7 +107,7 @@ a document, multiple documents, or other information:
 These tables summarize `ri` _name_ values:
 
 - Ruby class and module documents
-  (see {details and examples}[rdoc-ref:RI.md@Ruby+Class+and+Module+Documents]):
+  (see {details and examples}[rdoc-ref:RI.md@Class+and+Module+Documents]):
 
     | Name         | Outputs                                               |
     |--------------|-------------------------------------------------------|
@@ -176,7 +122,7 @@ These tables summarize `ri` _name_ values:
     are also output.
 
 - Ruby method documents
-  (see {details and examples}[rdoc-ref:RI.md@Ruby+Method+Documents]):
+  (see {details and examples}[rdoc-ref:RI.md@Method+Documents]):
 
     | Name                      | Outputs                                                                     |
     |---------------------------|-----------------------------------------------------------------------------|
@@ -195,7 +141,7 @@ These tables summarize `ri` _name_ values:
     see {Shell Quoting and Escaping}[rdoc-ref:RI.md@Shell+Quoting+or+Escaping].
 
 - Ruby page documents
-  (see {details and examples}[rdoc-ref:RI.md@Ruby+Page+Documents]):
+  (see {details and examples}[rdoc-ref:RI.md@Page+Documents]):
 
     | Name                          | Outputs                                                         |
     |-------------------------------|-----------------------------------------------------------------|
@@ -205,7 +151,7 @@ These tables summarize `ri` _name_ values:
 <br>
 
 - Gem class and module documents
-  (see {details and examples}[rdoc-ref:RI.md@Gem+Class+and+Module+Documents]):
+  (see {details and examples}[rdoc-ref:RI.md@Class+and+Module+Documents]):
 
     | Name                        | Outputs                                       |
     |-----------------------------|-----------------------------------------------|
@@ -218,7 +164,7 @@ These tables summarize `ri` _name_ values:
     are also output.
 
 - Gem method documents
-  (see {details and examples}[rdoc-ref:RI.md@Gem+Method+Documents]):
+  (see {details and examples}[rdoc-ref:RI.md@Method+Documents]):
 
     | Name                                 | Outputs                                                          |
     |--------------------------------------|------------------------------------------------------------------|
@@ -227,14 +173,15 @@ These tables summarize `ri` _name_ values:
 <br>
 
 - Gem page documents
-  (see {details and examples}[rdoc-ref:RI.md@Gem+Page+Documents]):
+  (see {details and examples}[rdoc-ref:RI.md@Page+Documents]):
 
     | Name                 | Outputs                      |
     |----------------------|------------------------------|
     | 'nokogiri:README.md' | Document for page README.md. |
 <br>
 
-- Lists:
+- Lists
+  (see {details and examples}[rdoc-ref:RI.md@ri+Lists])
 
     | Name        | Outputs                 |
     |-------------|-------------------------|
@@ -332,6 +279,29 @@ When you see:
 
 - `'{Table (information)}[https://en.wikipedia.org/wiki/Table_(information)]'`:
   go to the given URL in your browser.
+
+## About the Examples
+
+- `ri` output can be large;
+  to save space, an example may pipe it to one of these:
+
+  - {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
+  - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
+  - {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
+  - {grep}[https://www.man7.org/linux/man-pages/man1/grep.1.html]: selected lines only.
+
+- An example that involves the `ri` environment variables `RI` or `RI_PAGER`
+  may define an environment variable on the command line
+  via the shell idiom `_env_name_="_env_value_"`:
+
+    ```sh
+    $ RI="--all --no-gems" ruby -e "p ENV['RI']"
+    "--all --no-gems"
+    $ RI_PAGER="grep . | less" ruby -e "p ENV['RI_PAGER']"
+    "grep . | less"
+    ```
+
+- An example that involves a gem assumes that gem `nokogiri` is installed.
 
 ## `ri` Documents
 
@@ -501,10 +471,14 @@ the number of such implementations depends on the _name_:
     === Implementation from GzipReader
     ```
 
+### Page Documents
+
+## `ri` Lists
+
 ## `ri` Information
 
-With certain options, an `ri` command may output information other than documents
-for a class, module, methods, or page:
+With certain options,
+an `ri` command may output information other than documents or lists:
 
 - {Option \\--help or -h}[rdoc-ref:RI.md@-help-2C+-h]:
   Outputs `ri` help text.
