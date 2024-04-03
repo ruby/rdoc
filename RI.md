@@ -104,10 +104,10 @@ a document, multiple documents, or other information:
     >> ruby:
     ```
 
-These tables summarize `ri` _name_ values:
+### Names for Class and Module Documents
 
-- Class and module documents
-  (see {details and examples}[rdoc-ref:RI.md@Class+and+Module+Documents]):
+These are example names for class and module documents
+(see {details and examples}[rdoc-ref:RI.md@Class+and+Module+Documents]):
 
     | Name                        | Outputs                                                    |
     |-----------------------------|------------------------------------------------------------|
@@ -123,8 +123,10 @@ These tables summarize `ri` _name_ values:
     is in effect, documents for the methods in the named class or module
     are also output.
 
-- Method documents
-  (see {details and examples}[rdoc-ref:RI.md@Method+Documents]):
+### Names for Method Documents
+
+These are example names for method documents
+(see {details and examples}[rdoc-ref:RI.md@Method+Documents]):
 
     | Name                                 | Outputs                                                                          |
     |--------------------------------------|----------------------------------------------------------------------------------|
@@ -144,8 +146,10 @@ These tables summarize `ri` _name_ values:
     may (depending on the shell) need to be escaped as `\#readlines`;
     see {Shell Quoting and Escaping}[rdoc-ref:RI.md@Shell+Quoting+or+Escaping].
 
-- Page documents
-  (see {details and examples}[rdoc-ref:RI.md@Page+Documents]):
+### Page Documents
+
+These are example names for page documents
+(see {details and examples}[rdoc-ref:RI.md@Page+Documents]):
 
     | Name                          | Outputs                                         |
     |-------------------------------|-------------------------------------------------|
@@ -155,8 +159,8 @@ These tables summarize `ri` _name_ values:
     | 'nokogiri:README.md'          | Document for page README.md.                    |
 <br>
 
-- Lists
-  (see {details and examples}[rdoc-ref:RI.md@ri+Lists])
+These are example names for lists
+(see {details and examples}[rdoc-ref:RI.md@ri+Lists]):
 
     | Name        | Outputs                 |
     |-------------|-------------------------|
@@ -320,7 +324,7 @@ Examples:
     elements.  Any object may be an Array element.
     ```
 
-- Gem Nokogiri module `Nokogiri`:
+- Gem module `Nokogiri`:
 
     ```sh
     $ ri Nokogiri | head
@@ -391,7 +395,7 @@ the number of such implementations depends on the _name_:
 - Within a class:
 
     Each of these commands outputs documents
-    for methods in the class `IO` (output omitted):
+    for methods in Ruby class `IO` (output omitted):
 
     ```sh
     $ ri IO::readlines # Class method ::readlines.
@@ -399,10 +403,10 @@ the number of such implementations depends on the _name_:
     $ ri IO.readlines  # Both of above.
     ```
 
-- In all Ruby classes:
+- In all classes:
 
     Each of these commands outputs documents
-    for methods in all Ruby classes (output omitted):
+    for methods in all classes (output omitted):
 
     ```sh
     $ ri ::readlines   # Class method ::readlines.
