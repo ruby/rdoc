@@ -59,12 +59,12 @@ There are two `ri` modes:
 - <i>Static mode</i>:
   In general, `ri` responds in its static mode
   if a _name_ is given;
-  it outputs and exits (as in the examples above).
+  it shows results and exits (as in the examples above).
   See {Static Mode}[rdoc-ref:RI.md@Static+Mode].
 - <i>Interactive mode</i>:
   In general, `ri` enters its interactive mode
   if no _name_ is given;
-  in interactive mode, `ri` outputs and waits for another command:
+  in interactive mode, `ri` shows results and waits for another command:
 
     ```sh
     $ ri
@@ -79,7 +79,7 @@ There are two `ri` modes:
 ## Names
 
 In both modes, static and interactive,
-`ri` responds to an input _name_ that specifies what is to be output:
+`ri` responds to an input _name_ that specifies what is to be displayed:
 a document, multiple documents, or other information:
 
 - Static mode (in the shell): type `'ri _name_'`;
@@ -109,26 +109,26 @@ a document, multiple documents, or other information:
 These are example names for class and module documents
 (see {details and examples}[rdoc-ref:RI.md@Class+and+Module+Documents]):
 
-| Name                        | Outputs                                                    |
-|-----------------------------|------------------------------------------------------------|
-| 'File'                      | Document for Ruby class File.                              |
-| 'File::Stat'                | Document for Ruby nested class File::Stat.                 |
-| 'Enumerable'                | Document for Rubymodule Enumerable.                        |
-| 'Arr'                       | Document for Ruby class Array (unique initial characters). |
-| 'Nokogiri::HTML4::Document' | Document for gem class Nokogiri::HTML4::Document.          |
-| 'Nokogiri'                  | Document for gem module Nokogiri.                          |
+| Name                        | Shows                                                       |
+|-----------------------------|-------------------------------------------------------------|
+| 'File'                      | Document for Ruby class File.                               |
+| 'File::Stat'                | Document for Ruby nested class File::Stat.                  |
+| 'Enumerable'                | Document for Rubymodule Enumerable.                         |
+| 'Arr'                       | Document for Ruby class Array (unique initial characters).  |
+| 'Nokogiri::HTML4::Document' | Document for gem class Nokogiri::HTML4::Document.           |
+| 'Nokogiri'                  | Document for gem module Nokogiri.                           |
 <br>
 
 If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
 is in effect, documents for the methods in the named class or module
-are also output.
+are included in the display.
 
 ### Names for Method Documents
 
 These are example names for method documents
 (see {details and examples}[rdoc-ref:RI.md@Method+Documents]):
 
-| Name                                 | Outputs                                                                          |
+| Name                                 | Shows                                                                            |
 |--------------------------------------|----------------------------------------------------------------------------------|
 | 'IO::readlines'                      | Document for Ruby class method IO::readlines.                                    |
 | 'IO#readlines'                       | Document for RUbyinstance method IO::readlines.                                  |
@@ -151,7 +151,7 @@ see {Shell Quoting and Escaping}[rdoc-ref:RI.md@Shell+Quoting+or+Escaping].
 These are example names for page documents
 (see {details and examples}[rdoc-ref:RI.md@Page+Documents]):
 
-| Name                          | Outputs                                         |
+| Name                          | Shows                                           |
 |-------------------------------|-------------------------------------------------|
 | 'ruby:syntax/assignment.rdoc' | Document for Ruby page assignment.              |
 | 'ruby:syntax/assignment'      | Same document, if no other syntax/assignment.*. |
@@ -164,7 +164,7 @@ These are example names for page documents
 These are example names for lists
 (see {details and examples}[rdoc-ref:RI.md@ri+Lists]):
 
-| Name        | Outputs                 |
+| Name        | Shows                   |
 |-------------|-------------------------|
 | 'ruby:'     | List of Ruby pages.     |
 | 'nokogiri:' | List of Nokogiri pages. |
@@ -191,11 +191,11 @@ without the performance overhead of re-reading `ri` sources.
 ### Pager \Options
 
 You can set the pager value to a pager program name with options;
-this example (which omits output) sets the pager to `'less'`,
+this example (output omitted) sets the pager to `'less'`,
 with options `'-E'` (quit at EOF) and `'-F'` (quit if one screen):
 
 ```sh
-RI_PAGER="less -E -F" ri Array
+$ RI_PAGER="less -E -F" ri Array
 ```
 
 See the options for your chosen pager program
@@ -206,11 +206,11 @@ See the options for your chosen pager program
 The "pager" value actually need not specify a simple pager program.
 You can, for example, set the pager value to `'grep . | less'`,
 which will exclude blank lines (thus saving screen space)
-before piping output to `less`;
+before piping the result to `less`;
 example (output omitted):
 
 ```sh
-RI_PAGER="grep . | less" ri Array
+$ RI_PAGER="grep . | less" ri Array
 ```
 
 ### Links  in `ri` Output
@@ -396,7 +396,7 @@ the number of such implementations depends on the _name_:
 
 - Within a class:
 
-    Each of these commands outputs documents
+    Each of these commands shows documents
     for methods in Ruby class `IO` (output omitted):
 
     ```sh
@@ -407,7 +407,7 @@ the number of such implementations depends on the _name_:
 
 - In all classes:
 
-    Each of these commands outputs documents
+    Each of these commands shows documents
     for methods in all classes (output omitted):
 
     ```sh
@@ -540,18 +540,18 @@ See also:
 ## `ri` Information
 
 With certain options,
-an `ri` command may output information other than documents or lists:
+an `ri` command may display information other than documents or lists:
 
 - {Option \\--help or -h}[rdoc-ref:RI.md@-help-2C+-h]:
-  Outputs `ri` help text.
+  Shows `ri` help text.
 - {option \\--version or -v}[rdoc-ref:RI.md@-version-2C+-v]:
-  Outputs `ri` version.
+  Shows `ri` version.
 - {Option \\--dump=FILEPATH}[rdoc-ref:RI.md@-dump-3DFILEPATH]:
-  Outputs dump of ri cache file at the given filepath.
+  Shows dump of ri cache file at the given filepath.
 
 ## Static Mode
 
-In static mode, `ri` outputs a response and exits.
+In static mode, `ri` shows a response and exits.
 
 In general, `ri` responds in static mode
 if the command gives a _name_:
@@ -626,8 +626,8 @@ need shell quoting or escaping.
 Examples (output omitted):
 
 ```sh
-ri \#readlines
-ri 'Array.[]'
+$ ri \#readlines
+$ ri 'Array.[]'
 ```
 
 It is never necessary to quote or escape characters in interactive mode.
@@ -675,7 +675,7 @@ Therefore the usual order of searching will be:
 ## Pager
 
 Because `ri` output is often large,
-`ri` by default pipes the output to a _pager_,
+`ri` by default pipes it to a _pager_,
 which is the program whose name is the first-found among:
 
 - The value of `ENV['RI_PAGER']`.
@@ -742,10 +742,10 @@ Options for user-defined source directories:
 
 Options for source directories information:
 
-| Option                        | Effect                                                                            |
-|-------------------------------|-----------------------------------------------------------------------------------|
-| --list-doc-dirs               | Output list of ri source directories; default is --no-list-doc-dirs.               |
-| --no-list-doc-dirs            | Do not output list of ri source directories; default;                              |
+| Option                        | Effect                                                      |
+|-------------------------------|-------------------------------------------------------------|
+| --list-doc-dirs               | Lists ri source directories; default is --no-list-doc-dirs. |
+| --no-list-doc-dirs            | Does not list ri source directories; default;               |
 <br>
 
 #### Mode \Options
@@ -758,17 +758,17 @@ Options for source directories information:
 
 #### Information \Options
 
-| Option                        | Effect                                                                            |
-|-------------------------------|-----------------------------------------------------------------------------------|
-| --help, -h                    | Output help message and exit.                                                      |
-| --version, -v                 | Output ri version and exit.                                                        |
+| Option                        | Effect                      |
+|-------------------------------|-----------------------------|
+| --help, -h                    | Show help message and exit. |
+| --version, -v                 | Show ri version and exit.   |
 <br>
 
 #### Debugging \Options
 
 | Option                     | Effect                                                    |
 |----------------------------|-----------------------------------------------------------|
-| --dump=FILEPATH, --no-dump | Output/don't-output dump of cache file. Default: --no-dump. |
+| --dump=FILEPATH, --no-dump | Dump/don't-dump cache file. Default: --no-dump.        |
 | --profile, --no-profile    | Run/don't-run  with Ruby profiler. Default: --no-profile. |
 <br>
 
@@ -777,24 +777,24 @@ Options for source directories information:
 |----------------------------|-----------------------------------------------------------------------------------|
 | --format=FORMAT, -f FORMAT | Set formatter: ansi, bs, markdown, rdoc; default is bs for pager, ansi otherwise. |
 | --pager                    | Pipe output to pager; default.                                                    |
-| --no-pager, -T             | Do not pipe output to pager; default is --pager.                                  |
+| --no-pager, -T             | Don't pipe output to pager; default is --pager.                                   |
 | --width=NUMBER, -w NUMBER  | Set width (in characters) for output; default is 80.                              |
 <br>
 
 #### List \Options
 
-| Option                        | Effect                                                                            |
-|------------|----------------------------------------------------------|
-| --list, -l | Output list of classes and modules; default is --no-list. |
-| --no-list  | Do not output list; default.                              |
+| Option     | Effect                                          |
+|------------|-------------------------------------------------|
+| --list, -l | List classes and modules; default is --no-list. |
+| --no-list  | Don't list classes and modules; default.        |
 <br>
 
 #### Methods \Options (for Class or Module)
 
-| Option                        | Effect                                                                            |
-|-----------|----------------------------------------------------------------|
-| --all, -a | Output all (class or module plus methods); default is --no-all. |
-| --no-all  | Do not output methods for named class or module; default.       |
+| Option     | Effect                                                        |
+|------------|---------------------------------------------------------------|
+| --all, -a  | Show all (class or module plus methods); default is --no-all. |
+| --no-all   | Don't show methods for named class or module; default.        |
 <br>
 
 #### Server Option
@@ -809,7 +809,7 @@ Options for source directories information:
 ### `--all`, `-a`
 
 Option `--all` (aliased as `-a`) specifies that when _name_ identifies a class or module,
-the output should include the documents for all its methods:
+the documents for all its methods are included:
 
 ```shell
 $ ri Array | wc -l
@@ -880,7 +880,7 @@ See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 
 ### `--help`, `-h`
 
-Option `--help` (aliased as `-h`) specifies that `ri` is to output
+Option `--help` (aliased as `-h`) specifies that `ri` is to show
 its help text and exit.
 
 ### `--home`
@@ -899,7 +899,7 @@ the option is the default when no _name_ is given.
 ### `--list`, `-l`
 
 Option `--list` (aliased as `-l`) specifies that all class and module names
-whose initial characters match the given _name_ are to be output;
+whose initial characters match the given _name_ are to be displayed;
 the default is `--no-list`:
 
 ```sh
@@ -908,12 +908,12 @@ ArgumentError
 Array
 ```
 
-If no _name_ is given, all class and module names are output.
+If no _name_ is given, all class and module names are displayed.
 
 ### `--list-doc-dirs`
 
 Option `--list-doc-dirs` specifies that a list of the `ri` source directories
-is to be output;
+is to be displayed;
 default is `--no-list-doc-dirs`.
 
 See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
@@ -921,7 +921,7 @@ See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 ### `--no-all`
 
 Option `--no-all` (the default) specifies that for a given class or module,
-its method documents are not to be output.
+its method documents are not to be included.
 
 ### `--no-dump`
 
@@ -929,14 +929,14 @@ Option `--no-dump` (the default) specifies that a cache file is not to be dumped
 
 ### `--no-gems`
 
-Option `--no-gems` specifies that gem documents are not to be output;
+Option `--no-gems` specifies that gem documents are not to be included;
 `--gems` is the default.
 
 See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 
 ### `--no-home`
 
-Option `--no-gems` specifies that gem documents from `~/.rdoc` are not to be output;
+Option `--no-gems` specifies that gem documents from `~/.rdoc` are not to be included;
 `--home` is the default.
 
 See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
@@ -950,12 +950,12 @@ regardless of whether _name_ is given.
 ### `--no-list`
 
 Option `--no-list` (the default) specifies that a list of class and module names
-is not to be output.
+is not to be displayed.
 
 ### `--no-list-doc-dirs`
 
 Option `--no-list-doc-dirs` (the default) specifies that the list of documentation
-directories is not to be output.
+directories is not to be displayed.
 
 See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 
@@ -973,7 +973,7 @@ with the Ruby profiler.
 ### `--no-site`
 
 Option `--no-site` specifies that documents from the site libraries
-are not to be output;
+are not to be included;
 default is `--site`.
 
 See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
@@ -981,15 +981,15 @@ See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 ### `--no-standard`
 
 Option `--no-standard` specifies that documents from the standard libraries
-are not to be output;
-default is to output documents from the standard libraries.
+are not to be included;
+default is to include documents from the standard libraries.
 
 See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 
 ### `--no-system`
 
 Option `--no-system` specifies that documents from the system libraries
-are not to be output;
+are not to be included;
 default is `--system`.
 
 See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
@@ -1026,11 +1026,11 @@ See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 
 ### `--version`, `-v`
 
-Option `--version` (aliased as `-v`) specifies that `ri` is to output its version and exit.
+Option `--version` (aliased as `-v`) specifies that `ri` is to show its version and exit.
 
 ### `--width=NUMBER`, `-w NUMBER`
 
-Option `--width` (aliased as `-w`) specifies that the output line lengths
+Option `--width` (aliased as `-w`) specifies that the lengths of the displayed lines
 should be restricted to the given _NUMBER_ of characters;
 this is to be accomplished by line-wrapping, not truncation.
 The default width is `80`:
@@ -1059,9 +1059,9 @@ This command creates `ri` source files in local directory `my_ri`,
 from Ruby source files in local directory `my_sources`:
 
 ```sh
-rdoc --op my_ri --format=ri my_sources
+$ rdoc --op my_ri --format=ri my_sources
 ```
 
-Those files may then be considered for any `ri` output
+Those files may then be considered for any `ri` command
 by specifying option `--doc-dir=my_ri`;
 see {option \\--doc-dir}[rdoc-ref:RI.md@-doc-dir-3DDIRPATH-2C+-d+DIRPATH].
