@@ -109,67 +109,69 @@ a document, multiple documents, or other information:
 These are example names for class and module documents
 (see {details and examples}[rdoc-ref:RI.md@Class+and+Module+Documents]):
 
-    | Name                        | Outputs                                                    |
-    |-----------------------------|------------------------------------------------------------|
-    | 'File'                      | Document for Ruby class File.                              |
-    | 'File::Stat'                | Document for Ruby nested class File::Stat.                 |
-    | 'Enumerable'                | Document for Rubymodule Enumerable.                        |
-    | 'Arr'                       | Document for Ruby class Array (unique initial characters). |
-    | 'Nokogiri::HTML4::Document' | Document for gem class Nokogiri::HTML4::Document.          |
-    | 'Nokogiri'                  | Document for gem module Nokogiri.                          |
+| Name                        | Outputs                                                    |
+|-----------------------------|------------------------------------------------------------|
+| 'File'                      | Document for Ruby class File.                              |
+| 'File::Stat'                | Document for Ruby nested class File::Stat.                 |
+| 'Enumerable'                | Document for Rubymodule Enumerable.                        |
+| 'Arr'                       | Document for Ruby class Array (unique initial characters). |
+| 'Nokogiri::HTML4::Document' | Document for gem class Nokogiri::HTML4::Document.          |
+| 'Nokogiri'                  | Document for gem module Nokogiri.                          |
 <br>
 
-    If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
-    is in effect, documents for the methods in the named class or module
-    are also output.
+If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
+is in effect, documents for the methods in the named class or module
+are also output.
 
 ### Names for Method Documents
 
 These are example names for method documents
 (see {details and examples}[rdoc-ref:RI.md@Method+Documents]):
 
-    | Name                                 | Outputs                                                                          |
-    |--------------------------------------|----------------------------------------------------------------------------------|
-    | 'IO::readlines'                      | Document for Ruby class method IO::readlines.                                    |
-    | 'IO#readlines'                       | Document for RUbyinstance method IO::readlines.                                  |
-    | 'IO.readlines'                       | Documents for Ruby instance method IO::readlines and class method IO::readlines. |
-    | '::readlines'                        | Documents for all class methods ::readlines.                                     |
-    | '#readlines'                         | Documents for all instance methods #readlines; see note below.                   |
-    | '.readlines', 'readlines'            | Documents for class methods ::readlines and instance methods #readlines.         |
-    | 'Nokogiri::HTML4::Document::parse'   | Document for gem class method Nokogiri::HTML4::Document::parse.                  |
-    | 'Nokogiri::HTML4::Document#fragment' | Document for gem instance method Nokogiri::HTML4::Document#fragment.             |
+| Name                                 | Outputs                                                                          |
+|--------------------------------------|----------------------------------------------------------------------------------|
+| 'IO::readlines'                      | Document for Ruby class method IO::readlines.                                    |
+| 'IO#readlines'                       | Document for RUbyinstance method IO::readlines.                                  |
+| 'IO.readlines'                       | Documents for Ruby instance method IO::readlines and class method IO::readlines. |
+| '::readlines'                        | Documents for all class methods ::readlines.                                     |
+| '#readlines'                         | Documents for all instance methods #readlines; see note below.                   |
+| '.readlines', 'readlines'            | Documents for class methods ::readlines and instance methods #readlines.         |
+| 'Nokogiri::HTML4::Document::parse'   | Document for gem class method Nokogiri::HTML4::Document::parse.                  |
+| 'Nokogiri::HTML4::Document#fragment' | Document for gem instance method Nokogiri::HTML4::Document#fragment.             |
 <br>
 
-    **Note**: in static mode, a name on the command line may need
-    shell quote or escape characters.
-    In the table above, `#readlines` on the command line
-    may (depending on the shell) need to be escaped as `\#readlines`;
-    see {Shell Quoting and Escaping}[rdoc-ref:RI.md@Shell+Quoting+or+Escaping].
+**Note**: in static mode, a name on the command line may need
+shell quote or escape characters.
+In the table above, `#readlines` on the command line
+may (depending on the shell) need to be escaped as `\#readlines`;
+see {Shell Quoting and Escaping}[rdoc-ref:RI.md@Shell+Quoting+or+Escaping].
 
-### Page Documents
+### Names for Page Documents
 
 These are example names for page documents
 (see {details and examples}[rdoc-ref:RI.md@Page+Documents]):
 
-    | Name                          | Outputs                                         |
-    |-------------------------------|-------------------------------------------------|
-    | 'ruby:syntax/assignment.rdoc' | Document for Ruby page assignment.              |
-    | 'ruby:syntax/assignment'      | Same document, if no other syntax/assignment.*. |
-    | 'ruby:assignment'             | Same document, if no other */assignment.*.      |
-    | 'nokogiri:README.md'          | Document for page README.md.                    |
+| Name                          | Outputs                                         |
+|-------------------------------|-------------------------------------------------|
+| 'ruby:syntax/assignment.rdoc' | Document for Ruby page assignment.              |
+| 'ruby:syntax/assignment'      | Same document, if no other syntax/assignment.*. |
+| 'ruby:assignment'             | Same document, if no other */assignment.*.      |
+| 'nokogiri:README.md'          | Document for page README.md.                    |
 <br>
+
+### Names for Lists
 
 These are example names for lists
 (see {details and examples}[rdoc-ref:RI.md@ri+Lists]):
 
-    | Name        | Outputs                 |
-    |-------------|-------------------------|
-    | 'ruby:'     | List of Ruby pages.     |
-    | 'nokogiri:' | List of Nokogiri pages. |
+| Name        | Outputs                 |
+|-------------|-------------------------|
+| 'ruby:'     | List of Ruby pages.     |
+| 'nokogiri:' | List of Nokogiri pages. |
 <br>
 
-    There are more lists available;
-    see {option --list}[rdoc-ref:RI.md@-list-2C+-l].
+There are more lists available;
+see {option \\--list}[rdoc-ref:RI.md@-list-2C+-l].
 
 ## Pro Tips
 
@@ -452,7 +454,88 @@ the number of such implementations depends on the _name_:
 
 ### Page Documents
 
+The document for a Ruby page is the text from the `.rdoc` or `.md` source
+for that page:
+
+```sh
+$ ri ruby:dig_methods | head
+= Dig Methods
+
+Ruby's dig methods are useful for accessing nested data structures.
+
+Consider this data:
+  item = {
+    id: "0001",
+    type: "donut",
+    name: "Cake",
+    ppu: 0.55,
+```
+
+The document for a gem page is whatever the gem has generated
+for the page:
+
+```sh
+$ ri nokogiri:README | head
+<div><img src="https://nokogiri.org/images/nokogiri-serif-black.png" align="right"/></div>= Nokoii
+Nokogiri (鋸) makes it easy and painless to work with XML and HTML from
+Ruby. It provides a sensible, easy-to-understand API for
+{reading}[https://nokogiri.org/tutorials/parsing_an_html_xml_document.ht
+ml], writing,
+{modifying}[https://nokogiri.org/tutorials/modifying_an_html_xml_documen
+t.html], and
+{querying}[https://nokogiri.org/tutorials/searching_a_xml_html_document.
+html] documents. It is fast and standards-compliant by relying on native
+parsers like libxml2, libgumbo, and xerces.
+```
+
 ## `ri` Lists
+
+The list of Ruby pages is available via _name_ `'ruby:'`:
+
+```sh
+$ ri ruby: | head
+= Pages in ruby core
+
+CONTRIBUTING.md
+COPYING
+COPYING.ja
+LEGAL
+NEWS-1.8.7
+NEWS-1.9.1
+NEWS-1.9.2
+NEWS-1.9.3
+```
+
+```sh
+$ ri ruby: | tail
+syntax/control_expressions.rdoc
+syntax/exceptions.rdoc
+syntax/literals.rdoc
+syntax/methods.rdoc
+syntax/miscellaneous.rdoc
+syntax/modules_and_classes.rdoc
+syntax/pattern_matching.rdoc
+syntax/precedence.rdoc
+syntax/refinements.rdoc
+win32/README.win32
+```
+
+The list of gem pages is available via _name_ `'_gem_name_'`:
+
+```sh
+$ ri nokogiri: | head
+= Pages in gem nokogiri-1.16.2-x86_64-linux
+
+README.md
+lib/nokogiri/css/tokenizer.rex
+```
+
+See also:
+
+- {Option \\--list}[rdoc-ref:RI.md@-list-2C+-l]:
+  lists classes and modules.
+- {Option \\--list-doc-dirs}[rdoc-ref:RI.md@-list-doc-dirs]:
+  lists `ri` source directories.
 
 ## `ri` Information
 
@@ -463,10 +546,6 @@ an `ri` command may output information other than documents or lists:
   Outputs `ri` help text.
 - {option \\--version or -v}[rdoc-ref:RI.md@-version-2C+-v]:
   Outputs `ri` version.
-- {option \\--list or -l}[rdoc-ref:RI.md@-list-2C+-l]:
-  Outputs list of classes and modules.
-- {option \\--list-doc-dirs}[rdoc-ref:RI.md@-list-doc-dirs]:
-  Outputs list of `ri` source directories.
 - {Option \\--dump=FILEPATH}[rdoc-ref:RI.md@-dump-3DFILEPATH]:
   Outputs dump of ri cache file at the given filepath.
 
@@ -538,484 +617,6 @@ except that it:
 
 See also {ri at the Ready}[rdoc-ref:RI.md@ri+at+the+Ready].
 
-## Ruby Documents
-
-### Ruby Class and Module Documents
-
-See {Ruby Class and Module Lists}[rdoc-ref:RI.md@Ruby+Class+and+Module+Lists].
-
-Names for Ruby class and module documents:
-
-| Name         | Outputs                                               |
-|--------------|-------------------------------------------------------|
-| 'File'       | Document for class File.                              |
-| 'File::Stat' | Document for nested class File::Stat.                 |
-| 'Enumerable' | Document for module Enumerable.                       |
-| 'Arr'        | Document for class Array (unique initial characters). |
-| 'A'          | Nothing (not unique initial characters).              |
-<br>
-
-If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
-is in effect, documents for the methods in the named class or module
-are also output.
-
-Examples:
-
-- Document for class `File`:
-
-    ```sh
-    $ ri File | head
-    = File < IO
-
-    (from ruby core)
-    ------------------------------------------------------------------------
-    A File is an abstraction of any file object accessible by the program
-    and is closely associated with class IO.  File includes the methods of
-    module FileTest as class methods, allowing you to write (for example)
-    File.exist?("foo").
-
-    In the description of File methods, permission_
-    ```
-
-- Document for nested class `File::Stat`:
-
-    ```sh
-    $ ri File::Stat | head
-    = File::Stat < Object
-
-    ------------------------------------------------------------------------
-    = Includes:
-    Comparable (from ruby core)
-
-    (from ruby core)
-    ------------------------------------------------------------------------
-    Objects of class File::Stat encapsulate common status information for
-    File objects. The information is recorded at the moment the File::Stat
-    ```
-
-- Document for class `Enumerable`:
-
-    ```sh
-    $ ri Enumerable | head
-    = Enumerable
-
-    (from ruby core)
-    ------------------------------------------------------------------------
-    The Enumerable mixin provides collection classes with several traversal
-    and searching methods, and with the ability to sort. The class must
-    provide a method #each, which yields successive members of the
-    collection. If Enumerable#max, #min, or #sort is used, the objects in
-    the collection must also implement a meaningful <=> operator, as these
-    methods rely on an ordering between members of the collection.
-    ```
-
-- Document for class `Array` (unique initial characters):
-
-    ```sh
-    $ ri Arr | head
-    = Array < Object
-
-    ------------------------------------------------------------------------
-    = Includes:
-    Enumerable (from ruby core)
-
-    (from ruby core)
-    ------------------------------------------------------------------------
-    An Array is an ordered, integer-indexed collection of objects, called
-    elements.  Any object may be an Array element.
-    ```
-
-- Document for class `Array` with option `--all`:
-
-    ```sh
-    $ ri Array | wc -l
-    390
-    $ ri --all Array | wc -l
-    4224
-    ```
-
-### Ruby Method Documents
-
-Names for Ruby method documents:
-
-| Name                      | Outputs                                                                    |
-|---------------------------|----------------------------------------------------------------------------|
-| 'IO::readlines'           | Document for class method IO::readlines.                                   |
-| 'IO#readlines'            | Document for instance method IO#readlines.                                 |
-| 'IO.readlines'            | Documents for class method IO::readlines and instance method IO#readlines. |
-| '::readlines'             | Documents for all class methods ::readlines.                               |
-| '#readlines'              | Documents for all instance methods #readlines; see note below.             |
-| '.readlines', 'readlines' | Documents for class methods ::readlines and instance methods #readlines.   |
-<br>
-
-Examples:
-
-- Document for class method `IO::readlines`:
-
-    ```sh
-    $ ri IO::readlines | head
-    = IO::readlines
-    
-    (from ruby core)
-    ------------------------------------------------------------------------
-    IO.readlines(name, sep=$/ [, getline_args, open_args])     -> array
-    IO.readlines(name, limit [, getline_args, open_args])      -> array
-    IO.readlines(name, sep, limit [, getline_args, open_args]) -> array
-
-    ------------------------------------------------------------------------
-    ```
-  
-  - Document for instance method `IO#readlines`:
-
-    ```sh
-    $ ri IO#readlines | head
-    = IO#readlines
-  
-    (from ruby core)
-    ------------------------------------------------------------------------
-    ios.readlines(sep=$/ [, getline_args])     -> array
-    ios.readlines(limit [, getline_args])      -> array
-    ios.readlines(sep, limit [, getline_args]) -> array
-  
-    ------------------------------------------------------------------------
-    ```
-
-  - Documents for class method `IO::readlines` and instance method `IO#readlines`
-    (outputs two documents):
-
-    ```sh
-    $ ri IO.readlines | grep "(from "
-    (from ruby core)
-    (from ruby core)
-    ```
-
-- Documents for all class methods `::readlines`
-  (outputs two documents):
-
-    ```sh
-    $ ri ::readlines | grep Implementation
-    === Implementation from CSV
-    === Implementation from IO
-    ```
-
-  - Documents for all instance methods `#readlines`:
-
-    ```sh
-    $ ri \#readlines | grep Implementation
-    === Implementation from ARGF
-    === Implementation from CSV
-    === Implementation from IO
-    === Implementation from Kernel
-    === Implementation from Buffering
-    === Implementation from Pathname
-    === Implementation from StringIO
-    === Implementation from GzipReader
-    ```
-
-  - Documents for class methods `::readlines` and instance methods `#readlines`:
-
-    ```sh
-    $ ri .readlines | grep Implementation
-    === Implementation from ARGF
-    === Implementation from CSV
-    === Implementation from CSV
-    === Implementation from IO
-    === Implementation from IO
-    === Implementation from Kernel
-    === Implementation from Buffering
-    === Implementation from Pathname
-    === Implementation from StringIO
-    === Implementation from GzipReader
-    ```
-
-### Ruby Page Documents
-
-See {Ruby Page Lists}[rdoc-ref:RI.md@Ruby+Page+Lists].
-
-To output a Ruby page document:
-
-```sh
-$ ri ruby:syntax/exceptions.rdoc | head
-= Exception Handling
-
-Exceptions are rescued in a begin/end block:
-1
-  begin
-    # code that might raise
-  rescue
-    # handle exception
-  end
-```
-
-If the page name is sufficiently unique,
-you can omit leading and trailing elements:
-`ruby:exceptions` is the same as `ruby:syntax/exceptions.rdoc`.
-
-## Ruby Lists
-
-### Ruby Class and Module Lists
-
-Names for Ruby class and module lists (when given with option `--list`):
-
-| Name       | Outputs                                              |
-|------------|------------------------------------------------------|
-| '' [none]  | List of all Ruby classes and modules.                |
-| 'A'        | List of Ruby classes and modules starting with 'A'.  |
-| 'Ar'       | List of Ruby classes and modules starting with 'Ar'. |
-| 'NoSuch'   | Nothing (no matching class or module name).          |
-<br>
-
-Examples:
-
-- List of all Ruby classes and modules:
-
-    ```sh
-    $ ri --list | head
-    ACL
-    ACL::ACLEntry
-    ACL::ACLList
-    ARGF
-    Abbrev
-    Addrinfo
-    ArgumentError
-    Array
-    Base64
-    BasicObject
-    ```
-
-- List of Ruby classes and modules starting with `'A'`:
-
-    ```sh
-    $ ri --list A | head
-    ACL
-    ACL::ACLEntry
-    ACL::ACLList
-    ARGF
-    Abbrev
-    Addrinfo
-    ArgumentError
-    Array
-    ```
-
-- List of Ruby classes and modules starting with `'Ar'`:
-
-    ```sh
-
-    $ ri --list Ar | head
-    ArgumentError
-    Array
-    ```
-
-### Ruby Page Lists
-
-To output a list of the Ruby page documents,
-give the _name_ as `ruby:`:
-
-```sh
-$ ri ruby: | head
-= Pages in ruby core
-
-CONTRIBUTING.md
-COPYING
-COPYING.ja
-LEGAL
-NEWS-1.8.7
-NEWS-1.9.1
-NEWS-1.9.2
-NEWS-1.9.3
-```
-
-Many of the "boilerplate" pages have names beginning with a capital letter
-(as seen above);
-other pages typically do not:
-
-```sh
-$ ri ruby: | grep "^[a-z]"  | wc -l
-35
-```
-
-```sh
-$ ri ruby: | grep "^[a-z]" | head -5
-bug_triaging.rdoc
-contributing.rdoc
-dig_methods.rdoc
-dtrace_probes.rdoc
-extension.ja.rdoc
-
-$ ri ruby: | grep "^[a-z]" | tail -5
-syntax/modules_and_classes.rdoc
-syntax/pattern_matching.rdoc
-syntax/precedence.rdoc
-syntax/refinements.rdoc
-win32/README.win32
-```
-
-## Gem Documents
-
-### Gem Class and Module Documents
-
-See {Gem Class and Model Lists}[rdoc-ref:RI.md@Gem+Class+and+Model+Lists].
-
-Names for gem `nokogiri` class and model documents:
-
-| Name                        | Outputs                                       |
-|-----------------------------|-----------------------------------------------|
-| 'Nokogiri::HTML4::Document' | Document for class Nokogiri::HTML4::Document. |
-| 'Nokogiri'                  | Document for module Nokogiri.                 |
-<br>
-
-If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
-is in effect, documents for the methods in the named class or module
-are also output.
-
-Examples:
-
-- Document for class `Nokogiri::HTML4::Document:
- 
-    ```sh
-    $ ri Nokogiri::HTML4::Document | head
-    = Nokogiri::HTML4::Document < Nokogiri::XML::Document
-    
-    (from gem nokogiri-1.16.2-x86_64-linux)
-    ------------------------------------------------------------------------
-    = Class methods:
-    
-      parse
-    
-    = Instance methods:
-    ```
-
-  - Document for module `Nokogiri`:
-
-    ```sh
-    $ ri Nokogiri | head
-    = Nokogiri
-    
-    (from gem nokogiri-1.16.2-x86_64-linux)
-    ------------------------------------------------------------------------
-    
-    Nokogiri parses and searches XML/HTML very quickly, and also has
-    correctly implemented CSS3 selector support as well as XPath 1.0
-    support.
-    
-    Parsing a document returns either a Nokogiri::XML::Document, or a
-    ```
-    
-### Gem Method Documents
-
-Names for gem `nokogiri` methods documents:
-
-| Name                                 | Outputs                                                          |
-|--------------------------------------|------------------------------------------------------------------|
-| 'Nokogiri::HTML4::Document::parse'   | Document for class method Nokogiri::HTML4::Document::parse.      |
-| 'Nokogiri::HTML4::Document#fragment' | Document for instance method Nokogiri::HTML4::Document#fragment. |
-<br>
-
-Examples:
-
-- Document for class method `Nokogiri::HTML4::Document::parse`:
-
-    ```sh
-    $ ri Nokogiri::HTML4::Document::parse | head
-    = Nokogiri::HTML4::Document::parse
-    
-    (from gem nokogiri-1.16.2-x86_64-linux)
-    === Implementation from Document
-    ------------------------------------------------------------------------
-    parse(string_or_io, url = nil, encoding = nil, options = XML::ParseOptions::DEFAULT_HTML) { |options| ... }
-    
-    ------------------------------------------------------------------------
-    
-    Parse HTML.  string_or_io may be a String, or any object that responds
-    ```
-
-- Document for instance method `Nokogiri::HTML4::Document#fragment`:
-
-    ```sh
-    $ ri Nokogiri::HTML4::Document#fragment | head
-    = Nokogiri::HTML4::Document#fragment
-    
-    (from gem nokogiri-1.16.2-x86_64-linux)
-    === Implementation from Document
-    ------------------------------------------------------------------------
-    fragment(tags = nil)
-    
-    ------------------------------------------------------------------------
-    
-    Create a Nokogiri::XML::DocumentFragment from tags
-    ```
-
-### Gem Page Documents
-
-To output a list of gem page documents, give the _name_ as _gemname_ with suffixed colon:
-
-```sh
-$ ri nokogiri: | head
-= Pages in gem nokogiri-1.16.2-x86_64-linux
-
-README.md
-lib/nokogiri/css/tokenizer.rex
-```
-
-To output a gem page document:
-
-```sh
-$ ri nokogiri:README.md | head
-<div><img src="https://nokogiri.org/images/nokogiri-serif-black.png" align="right"/></div>= Nokogiri
-Nokogiri (鋸) makes it easy and painless to work with XML and HTML from
-Ruby. It provides a sensible, easy-to-understand API for
-{reading}[https://nokogiri.org/tutorials/parsing_an_html_xml_document.ht
-ml], writing,
-{modifying}[https://nokogiri.org/tutorials/modifying_an_html_xml_documen
-t.html], and
-{querying}[https://nokogiri.org/tutorials/searching_a_xml_html_document.
-html] documents. It is fast and standards-compliant by relying on native
-parsers like libxml2, libgumbo, and xerces.
-```
-
-If the page name is sufficiently unique,
-you can omit leading and trailing elements:
-`nokogiri:tokenizer` is the same as `nokogiri:lib/nokogiri/css/tokenizer.rex`.
-
-## Gem Lists
-
-### Gem Class and Module Lists
-
-Names for gem `nokogiri` class and module lists (when given with option `--list`):
-
-| Name       | Outputs                               |
-|------------|---------------------------------------|
-| Nokogiri   | List of Nokogiri classes and modules. |
-<br>
-
-Example:
-
-```sh
-$ ri --list Nokogiri | head
-Nokogiri
-Nokogiri::CSS
-Nokogiri::CSS::Node
-Nokogiri::CSS::Parser
-Nokogiri::CSS::SyntaxError
-Nokogiri::CSS::Tokenizer
-Nokogiri::CSS::Tokenizer::ScanError
-Nokogiri::CSS::XPathVisitor
-Nokogiri::CSS::XPathVisitor::BuiltinsConfig
-Nokogiri::CSS::XPathVisitor::DoctypeConfig
-```
-
-### Gem Page Lists
-
-To output a list of the `nokogiri` page documents, give the _name_ as `nokogiri:`:
-
-```sh
-$ ri nokogiri: | head
-= Pages in gem nokogiri-1.16.2-x86_64-linux
-
-README.md
-lib/nokogiri/css/tokenizer.rex
-```
-
 ## Shell Quoting or Escaping
 
 In static mode,
@@ -1046,7 +647,7 @@ $ ri --list-doc-dirs
 The listed directories will include:
 
 - Each user-specified directory,
-  as given by {option --doc-dir}[rdoc-ref:RI.md@-doc-dir-3DDIRPATH-2C+-d+DIRPATH];
+  as given by {option \\--doc-dir}[rdoc-ref:RI.md@-doc-dir-3DDIRPATH-2C+-d+DIRPATH];
   see {Generating ri Source Files}[rdoc-ref:RI.md@Generating+ri+Source+Files].
 - The system directory,
   which on a Unix-style platform may be `/usr/share/ri/_ruby_/system`;
@@ -1463,4 +1064,4 @@ rdoc --op my_ri --format=ri my_sources
 
 Those files may then be considered for any `ri` output
 by specifying option `--doc-dir=my_ri`;
-see {option --doc-dir}[rdoc-ref:RI.md@-doc-dir-3DDIRPATH-2C+-d+DIRPATH].
+see {option \\--doc-dir}[rdoc-ref:RI.md@-doc-dir-3DDIRPATH-2C+-d+DIRPATH].
