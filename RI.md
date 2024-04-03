@@ -106,32 +106,36 @@ a document, multiple documents, or other information:
 
 These tables summarize `ri` _name_ values:
 
-- Ruby class and module documents
+- Class and module documents
   (see {details and examples}[rdoc-ref:RI.md@Class+and+Module+Documents]):
 
-    | Name         | Outputs                                               |
-    |--------------|-------------------------------------------------------|
-    | 'File'       | Document for class File.                              |
-    | 'File::Stat' | Document for nested class File::Stat.                 |
-    | 'Enumerable' | Document for module Enumerable.                       |
-    | 'Arr'        | Document for class Array (unique initial characters). |
+    | Name                        | Outputs                                                    |
+    |-----------------------------|------------------------------------------------------------|
+    | 'File'                      | Document for Ruby class File.                              |
+    | 'File::Stat'                | Document for Ruby nested class File::Stat.                 |
+    | 'Enumerable'                | Document for Rubymodule Enumerable.                        |
+    | 'Arr'                       | Document for Ruby class Array (unique initial characters). |
+    | 'Nokogiri::HTML4::Document' | Document for gem class Nokogiri::HTML4::Document.          |
+    | 'Nokogiri'                  | Document for gem module Nokogiri.                          |
 <br>
 
     If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
     is in effect, documents for the methods in the named class or module
     are also output.
 
-- Ruby method documents
+- Method documents
   (see {details and examples}[rdoc-ref:RI.md@Method+Documents]):
 
-    | Name                      | Outputs                                                                     |
-    |---------------------------|-----------------------------------------------------------------------------|
-    | 'IO::readlines'           | Document for class method IO::readlines.                                    |
-    | 'IO#readlines'            | Document for instance method IO::readlines.                                 |
-    | 'IO.readlines'            | Documents for instance method IO::readlines and class method IO::readlines. |
-    | '::readlines'             | Documents for all class methods ::readlines.                                |
-    | '#readlines'              | Documents for all instance methods #readlines; see note below.              |
-    | '.readlines', 'readlines' | Documents for class methods ::readlines and instance methods #readlines.    |
+    | Name                                 | Outputs                                                                          |
+    |--------------------------------------|----------------------------------------------------------------------------------|
+    | 'IO::readlines'                      | Document for Ruby class method IO::readlines.                                    |
+    | 'IO#readlines'                       | Document for RUbyinstance method IO::readlines.                                  |
+    | 'IO.readlines'                       | Documents for Ruby instance method IO::readlines and class method IO::readlines. |
+    | '::readlines'                        | Documents for all class methods ::readlines.                                     |
+    | '#readlines'                         | Documents for all instance methods #readlines; see note below.                   |
+    | '.readlines', 'readlines'            | Documents for class methods ::readlines and instance methods #readlines.         |
+    | 'Nokogiri::HTML4::Document::parse'   | Document for gem class method Nokogiri::HTML4::Document::parse.                  |
+    | 'Nokogiri::HTML4::Document#fragment' | Document for gem instance method Nokogiri::HTML4::Document#fragment.             |
 <br>
 
     **Note**: in static mode, a name on the command line may need
@@ -140,44 +144,15 @@ These tables summarize `ri` _name_ values:
     may (depending on the shell) need to be escaped as `\#readlines`;
     see {Shell Quoting and Escaping}[rdoc-ref:RI.md@Shell+Quoting+or+Escaping].
 
-- Ruby page documents
+- Page documents
   (see {details and examples}[rdoc-ref:RI.md@Page+Documents]):
 
-    | Name                          | Outputs                                                         |
-    |-------------------------------|-----------------------------------------------------------------|
-    | 'ruby:syntax/assignment.rdoc' | Document for page assignment.                                   |
-    | 'ruby:syntax/assignment'      | Document for page assignment (if no other syntax/assignment.*). |
-    | 'ruby:assignment'             | Document for page assignment (if no other */assignment.*).      |
-<br>
-
-- Gem class and module documents
-  (see {details and examples}[rdoc-ref:RI.md@Class+and+Module+Documents]):
-
-    | Name                        | Outputs                                       |
-    |-----------------------------|-----------------------------------------------|
-    | 'Nokogiri::HTML4::Document' | Document for class Nokogiri::HTML4::Document. |
-    | 'Nokogiri'                  | Document for module Nokogiri.                 |
-<br>
-
-    If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
-    is in effect, documents for the methods in the named class or module
-    are also output.
-
-- Gem method documents
-  (see {details and examples}[rdoc-ref:RI.md@Method+Documents]):
-
-    | Name                                 | Outputs                                                          |
-    |--------------------------------------|------------------------------------------------------------------|
-    | 'Nokogiri::HTML4::Document::parse'   | Document for class method Nokogiri::HTML4::Document::parse.      |
-    | 'Nokogiri::HTML4::Document#fragment' | Document for instance method Nokogiri::HTML4::Document#fragment. |
-<br>
-
-- Gem page documents
-  (see {details and examples}[rdoc-ref:RI.md@Page+Documents]):
-
-    | Name                 | Outputs                      |
-    |----------------------|------------------------------|
-    | 'nokogiri:README.md' | Document for page README.md. |
+    | Name                          | Outputs                                         |
+    |-------------------------------|-------------------------------------------------|
+    | 'ruby:syntax/assignment.rdoc' | Document for Ruby page assignment.              |
+    | 'ruby:syntax/assignment'      | Same document, if no other syntax/assignment.*. |
+    | 'ruby:assignment'             | Same document, if no other */assignment.*.      |
+    | 'nokogiri:README.md'          | Document for page README.md.                    |
 <br>
 
 - Lists
