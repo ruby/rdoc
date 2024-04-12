@@ -188,22 +188,13 @@ with either of:
 When you switch to that window, `ri` is ready to respond quickly,
 without the performance overhead of re-reading `ri` sources.
 
-### Pager \Options
-
-You can set the pager value to a pager program name with options;
-this example (output omitted) sets the pager to `'less'`,
-with options `'-E'` (quit at EOF) and `'-F'` (quit if one screen):
-
-```sh
-$ RI_PAGER="less -E -F" ri Array
-```
-
-See the options for your chosen pager program
-(e.g, type `'less --help'`).
-
 ### Output Filters
 
-The "pager" value actually need not specify a simple pager program.
+The `pager` value actually need not be simply the path to an executable;
+it's actually a full-fledged command line,
+and so may include not only the executable path,
+but also whatever options and arguments that executable accepts.
+
 You can, for example, set the pager value to `'grep . | less'`,
 which will exclude blank lines (thus saving screen space)
 before piping the result to `less`;
