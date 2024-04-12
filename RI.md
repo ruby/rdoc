@@ -188,22 +188,13 @@ with either of:
 When you switch to that window, `ri` is ready to respond quickly,
 without the performance overhead of re-reading `ri` sources.
 
-### Pager \Options
-
-You can set the pager value to a pager program name with options;
-this example (output omitted) sets the pager to `'less'`,
-with options `'-E'` (quit at EOF) and `'-F'` (quit if one screen):
-
-```sh
-$ RI_PAGER="less -E -F" ri Array
-```
-
-See the options for your chosen pager program
-(e.g, type `'less --help'`).
-
 ### Output Filters
 
-The "pager" value actually need not specify a simple pager program.
+The "pager" value actually need not be simply the path to an executable;
+it's actually a full-fledged command line,
+and so can include not only the executable path,
+but also whatever options and arguments that executable accepts.
+
 You can, for example, set the pager value to `'grep . | less'`,
 which will exclude blank lines (thus saving screen space)
 before piping the result to `less`;
@@ -212,6 +203,9 @@ example (output omitted):
 ```sh
 $ RI_PAGER="grep . | less" ri Array
 ```
+
+See the documentation for your chosen pager programs
+(e.g, type `'grep --help'`, `'less --help'`).
 
 ### Links  in `ri` Output
 
@@ -690,10 +684,7 @@ If you set environment variable `RI_PAGER` or `PAGER`,
 its value should be the name of an executable program
 that will accept the `ri` output (such as `'pager'`, `'less'`, or `'more'`).
 
-See also:
-
-- {Pager Options}[rdoc-ref:RI.md@Pager+Options].
-- {Output Filters}[rdoc-ref:RI.md@Output+Filters].
+See also {Output Filters}[rdoc-ref:RI.md@Output+Filters].
 
 ## \Options
 
