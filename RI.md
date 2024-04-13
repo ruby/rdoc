@@ -204,6 +204,9 @@ example (output omitted):
 $ RI_PAGER="grep . | less" ri Array
 ```
 
+See the documentation for your chosen pager programs
+(e.g, type `'grep --help'`, `'less --help'`).
+
 ### Links  in `ri` Output
 
 #### Implicit Link
@@ -681,10 +684,7 @@ If you set environment variable `RI_PAGER` or `PAGER`,
 its value should be the name of an executable program
 that will accept the `ri` output (such as `'pager'`, `'less'`, or `'more'`).
 
-See also:
-
-- {Pager Options}[rdoc-ref:RI.md@Pager+Options].
-- {Output Filters}[rdoc-ref:RI.md@Output+Filters].
+See also {Output Filters}[rdoc-ref:RI.md@Output+Filters].
 
 ## \Options
 
