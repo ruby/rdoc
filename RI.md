@@ -109,14 +109,14 @@ a document, multiple documents, or other information:
 These are example names for class and module documents
 (see {details and examples}[rdoc-ref:RI.md@Class+and+Module+Documents]):
 
-| Name                        | Shows                                                       |
-|-----------------------------|-------------------------------------------------------------|
-| 'File'                      | Document for Ruby class File.                               |
-| 'File::Stat'                | Document for Ruby nested class File::Stat.                  |
-| 'Enumerable'                | Document for Rubymodule Enumerable.                         |
-| 'Arr'                       | Document for Ruby class Array (unique initial characters).  |
-| 'Nokogiri::HTML4::Document' | Document for gem class Nokogiri::HTML4::Document.           |
-| 'Nokogiri'                  | Document for gem module Nokogiri.                           |
+| Name                        | Shows                                                      |
+|-----------------------------|------------------------------------------------------------|
+| 'File'                      | Document for Ruby class File.                              |
+| 'File::Stat'                | Document for Ruby nested class File::Stat.                 |
+| 'Enumerable'                | Document for Ruby module Enumerable.                       |
+| 'Arr'                       | Document for Ruby class Array (unique initial characters). |
+| 'Nokogiri::HTML4::Document' | Document for gem class Nokogiri::HTML4::Document.          |
+| 'Nokogiri'                  | Document for gem module Nokogiri.                          |
 <br>
 
 If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
@@ -131,7 +131,7 @@ These are example names for method documents
 | Name                                 | Shows                                                                            |
 |--------------------------------------|----------------------------------------------------------------------------------|
 | 'IO::readlines'                      | Document for Ruby class method IO::readlines.                                    |
-| 'IO#readlines'                       | Document for RUbyinstance method IO::readlines.                                  |
+| 'IO#readlines'                       | Document for RUby instance method IO::readlines.                                 |
 | 'IO.readlines'                       | Documents for Ruby instance method IO::readlines and class method IO::readlines. |
 | '::readlines'                        | Documents for all class methods ::readlines.                                     |
 | '#readlines'                         | Documents for all instance methods #readlines; see note below.                   |
@@ -139,12 +139,6 @@ These are example names for method documents
 | 'Nokogiri::HTML4::Document::parse'   | Document for gem class method Nokogiri::HTML4::Document::parse.                  |
 | 'Nokogiri::HTML4::Document#fragment' | Document for gem instance method Nokogiri::HTML4::Document#fragment.             |
 <br>
-
-**Note**: in static mode, a name on the command line may need
-shell quote or escape characters.
-In the table above, `#readlines` on the command line
-may (depending on the shell) need to be escaped as `\#readlines`;
-see {Shell Quoting and Escaping}[rdoc-ref:RI.md@Shell+Quoting+or+Escaping].
 
 ### Names for Page Documents
 
@@ -264,17 +258,6 @@ When you see:
   - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
   - {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
   - {grep}[https://www.man7.org/linux/man-pages/man1/grep.1.html]: selected lines only.
-
-- An example that involves the `ri` environment variables `RI` or `RI_PAGER`
-  may define an environment variable on the command line
-  via the shell idiom `_env_name_="_env_value_"`:
-
-    ```sh
-    $ RI="--all --no-gems" ruby -e "p ENV['RI']"
-    "--all --no-gems"
-    $ RI_PAGER="grep . | less" ruby -e "p ENV['RI_PAGER']"
-    "grep . | less"
-    ```
 
 - An example that involves a gem assumes that gem `nokogiri` is installed.
 
@@ -564,22 +547,6 @@ An Array is an ordered, integer-indexed collection of objects, called
 elements.  Any object may be an Array element.
 ```
 
-The name may also be given in `$stdin`:
-
-```sh
-$ echo "Array" | ri | head
-
-Enter the method name you want to look up.
-You can use tab to autocomplete.
-Enter a blank line to exit.
-
-= Array < Object
-
-------------------------------------------------------------------------
-= Includes:
-Enumerable (from ruby core)
-```
-
 `ri` also responds in static mode when certain options are given,
 even when no _name_ is given;
 see {ri Information}[rdoc-ref:RI.md@ri+Information].
@@ -610,61 +577,6 @@ except that it:
   `ri` "completes" the text as `'Array '`.
 
 See also {ri at the Ready}[rdoc-ref:RI.md@ri+at+the+Ready].
-
-## Shell Quoting or Escaping
-
-In static mode,
-a _name_ on the command line may (depending on the shell)
-need shell quoting or escaping.
-
-Examples (output omitted):
-
-```sh
-$ ri \#readlines
-$ ri 'Array.[]'
-```
-
-It is never necessary to quote or escape characters in interactive mode.
-
-## `ri` Source Directories
-
-`ri` derives documentation from files in _local_ directories,
-(not from the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]).
-
-To see the directories that `ri` may search
-(which may or may not actually exist):
-
-```sh
-$ ri --list-doc-dirs
-```
-
-The listed directories will include:
-
-- Each user-specified directory,
-  as given by {option \\--doc-dir}[rdoc-ref:RI.md@-doc-dir-3DDIRPATH-2C+-d+DIRPATH];
-  see {Generating ri Source Files}[rdoc-ref:RI.md@Generating+ri+Source+Files].
-- The system directory,
-  which on a Unix-style platform may be `/usr/share/ri/_ruby_/system`;
-  this directory is created and populated when Ruby is installed.
-- The site directory,
-  which on a Unix-style platform may be `/usr/share/ri/_ruby_/site`.
-- The home directory,
-  which on a Unix-style platform may be `~/.local/share/rdoc`.
-- Each gem directory,
-  which on a Unix-style platform may be `/var/lib/gems/_ruby_/doc/_gem_/ri`.
-
-where:
-
-- _ruby_ is the Ruby version number.
-- Each _gem_ is a gem version.
-
-The site and home directories are cited only for historical reasons,
-and in a modern Ruby installation do not exist.
-Therefore the usual order of searching will be:
-
-1. User-specified directories.
-1. The system directory.
-1. Gem directories.
 
 ## Pager
 
@@ -710,8 +622,6 @@ These tables summarize `ri` options;
 for details, see {Options Details}[rdoc-ref:RI.md@Options+Details].
 
 #### Source Directories \Options
-
-See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 
 Options for `ri`-defined source directories:
 
@@ -821,8 +731,6 @@ $ ri --doc-dir=/tmp --list-doc-dirs | head -1
 /tmp
 ```
 
-See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
-
 ### `--dump=FILEPATH`
 
 Option `--dump=FILEPATH` specifies that `ri` is to dump the content
@@ -867,8 +775,6 @@ $ ri --list --no-gems| wc -l
 1262
 ```
 
-See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
-
 ### `--help`, `-h`
 
 Option `--help` (aliased as `-h`) specifies that `ri` is to show
@@ -878,8 +784,6 @@ its help text and exit.
 
 Option `--home` (the default) specifies that `ri` is to include source directory
 in `~/.rdoc` if it exists.
-
-See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 
 ### `--interactive`, `-i`
 
@@ -907,8 +811,6 @@ Option `--list-doc-dirs` specifies that a list of the `ri` source directories
 is to be displayed;
 default is `--no-list-doc-dirs`.
 
-See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
-
 ### `--no-all`
 
 Option `--no-all` (the default) specifies that for a given class or module,
@@ -923,19 +825,15 @@ Option `--no-dump` (the default) specifies that a cache file is not to be dumped
 Option `--no-gems` specifies that gem documents are not to be included;
 `--gems` is the default.
 
-See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
-
 ### `--no-home`
 
 Option `--no-gems` specifies that gem documents from `~/.rdoc` are not to be included;
 `--home` is the default.
 
-See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
-
 ### `--no-interactive`
 
 Option `--no-interactive` (the default when _name_ is not given)
-specifies that `ir` is not to enter interactive mode,
+specifies that `ri` is not to enter interactive mode,
 regardless of whether _name_ is given.
 
 ### `--no-list`
@@ -947,8 +845,6 @@ is not to be displayed.
 
 Option `--no-list-doc-dirs` (the default) specifies that the list of documentation
 directories is not to be displayed.
-
-See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 
 ### `--no-pager`, `-T`
 
@@ -967,23 +863,17 @@ Option `--no-site` specifies that documents from the site libraries
 are not to be included;
 default is `--site`.
 
-See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
-
 ### `--no-standard`
 
 Option `--no-standard` specifies that documents from the standard libraries
 are not to be included;
 default is to include documents from the standard libraries.
 
-See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
-
 ### `--no-system`
 
 Option `--no-system` specifies that documents from the system libraries
 are not to be included;
 default is `--system`.
-
-See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 
 ### `--pager`
 
@@ -1006,14 +896,10 @@ the default port is `8214`.
 Option `--site` (the default) specifies that documents from the site libraries
 may be included.
 
-See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
-
 ### `--system`
 
 Option `--system` (the default) specifies that documents from the system libraries
 may be included.
-
-See {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories].
 
 ### `--version`, `-v`
 
@@ -1042,7 +928,6 @@ collection of objects, called
 
 ## Generating `ri` Source Files
 
-As may be seen at {ri Source Directories}[rdoc-ref:RI.md@ri+Source+Directories],
 `ri` by default reads data from directories installed by Ruby and gems.
 
 You can create your own `ri` source files.
