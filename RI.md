@@ -131,10 +131,10 @@ These are example names for method documents
 | Name                                 | Shows                                                                            |
 |--------------------------------------|----------------------------------------------------------------------------------|
 | 'IO::readlines'                      | Document for Ruby class method IO::readlines.                                    |
-| 'IO#readlines'                       | Document for RUby instance method IO::readlines.                                 |
+| 'IO#readlines'                       | Document for Ruby instance method IO::readlines.                                 |
 | 'IO.readlines'                       | Documents for Ruby instance method IO::readlines and class method IO::readlines. |
 | '::readlines'                        | Documents for all class methods ::readlines.                                     |
-| '#readlines'                         | Documents for all instance methods #readlines; see note below.                   |
+| '#readlines'                         | Documents for all instance methods #readlines.                                   |
 | '.readlines', 'readlines'            | Documents for class methods ::readlines and instance methods #readlines.         |
 | 'Nokogiri::HTML4::Document::parse'   | Document for gem class method Nokogiri::HTML4::Document::parse.                  |
 | 'Nokogiri::HTML4::Document#fragment' | Document for gem instance method Nokogiri::HTML4::Document#fragment.             |
