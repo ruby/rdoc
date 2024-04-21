@@ -616,38 +616,60 @@ $ RI="--all" ri --no-all Array | wc -l
 390
 ```
 
-### \Options Summary
+### Source Directories \Options
 
-These tables summarize `ri` options;
-for details, see {Options Details}[rdoc-ref:RI.md@Options+Details].
+#### `--doc-dir=DIRPATH`, `-d DIRPATH`
 
-#### Source Directories \Options
+Option `--doc-dir=DIRPATH` (aliased as `-d`) adds the given directory path
+to the beginning of the array of `ri` source directory paths:
 
-Options for `ri`-defined source directories:
+```sh
+$ ri --doc-dir=/tmp --list-doc-dirs | head -1
+/tmp
+```
 
-| Option                        | Effect                                                                            |
-|-----------------------|-------------------------------------------------------------------------------|
-| --gems, --no-gems     | Allow/exclude documents from installed gems. Default: --gems.                 |
-| --home, --no-home     | Allow/exclude documents from ~/.rdoc. Default: --home.                        |
-| --site, --no-site     | Allow/exclude documents from site libraries. Default: --site.                 |
-| --no-standard-docs    | Exclude documents from the standard library, etc; default is to include them. |
-| --system, --no-system | Allow/exclude documents from from system libraries. Default: --system.        |
-<br>
+#### `--gems`, `--no-gems`
 
-Options for user-defined source directories:
+Option `--gems` (the default) specifies that documents from installed gems
+may be included;
+option `--no-gems` may be used to exclude them:
 
-| Option                        | Effect                                                                            |
-|-------------------------------|-----------------------------------------------------------------------------------|
-| --doc-dir=DIRPATH, -d DIRPATH | Add directory to ri source directories; may be repeated.                          |
-<br>
+```sh
+$ ri --list | wc -l
+1417
+$ ri --list --no-gems| wc -l
+1262
+```
 
-Options for source directories information:
+#### `--home`, `--no-home`
 
-| Option                        | Effect                                                      |
-|-------------------------------|-------------------------------------------------------------|
-| --list-doc-dirs               | Lists ri source directories; default is --no-list-doc-dirs. |
-| --no-list-doc-dirs            | Does not list ri source directories; default;               |
-<br>
+Option `--home` (the default) specifies that `ri` is to include source directory
+in `~/.rdoc` if it exists;
+option `--no-home` may be used to exclude them.
+
+#### `--list-doc-dirs`, `--no-list-doc-dirs`
+
+Option `--list-doc-dirs` specifies that a list of the `ri` source directories
+is to be displayed;
+default is `--no-list-doc-dirs`.
+
+#### `--no-standard`
+
+Option `--no-standard` specifies that documents from the standard libraries
+are not to be included;
+default is to include documents from the standard libraries.
+
+#### `--site`, `--no-site`
+
+Option `--site` (the default) specifies that documents from the site libraries
+may be included;
+option `--no-site` may be used to exclude them.
+
+#### `--system`, `--no-system`
+
+Option `--system` (the default) specifies that documents from the system libraries
+may be included;
+option `--no-system` may be used to exclude them.
 
 #### Mode \Options
 
@@ -721,16 +743,6 @@ $ ri --all Array | wc -l
 
 The default is `--no-all`.
 
-### `--doc-dir=DIRPATH`, `-d DIRPATH`
-
-Option `--doc-dir=DIRPATH` (aliased as `-d`) adds the given directory path
-to the beginning of the array of `ri` source directory paths:
-
-```sh
-$ ri --doc-dir=/tmp --list-doc-dirs | head -1
-/tmp
-```
-
 ### `--dump=FILEPATH`
 
 Option `--dump=FILEPATH` specifies that `ri` is to dump the content
@@ -762,28 +774,10 @@ Option `--format=FORMAT` (aliased as `-f`) specifies the formatter for the outpu
 which must be `ansi`, `bs`, `markdown`, or `rdoc`;
 the default is `bs` for paged output, `ansi` otherwise.
 
-### `--gems`
-
-Option `--gems` (the default) specifies that documents from installed gems
-may be included;
-option `--no-gems` may be used to exclude them:
-
-```sh
-$ ri --list | wc -l
-1417
-$ ri --list --no-gems| wc -l
-1262
-```
-
 ### `--help`, `-h`
 
 Option `--help` (aliased as `-h`) specifies that `ri` is to show
 its help text and exit.
-
-### `--home`
-
-Option `--home` (the default) specifies that `ri` is to include source directory
-in `~/.rdoc` if it exists.
 
 ### `--interactive`, `-i`
 
@@ -805,12 +799,6 @@ Array
 
 If no _name_ is given, all class and module names are displayed.
 
-### `--list-doc-dirs`
-
-Option `--list-doc-dirs` specifies that a list of the `ri` source directories
-is to be displayed;
-default is `--no-list-doc-dirs`.
-
 ### `--no-all`
 
 Option `--no-all` (the default) specifies that for a given class or module,
@@ -819,16 +807,6 @@ its method documents are not to be included.
 ### `--no-dump`
 
 Option `--no-dump` (the default) specifies that a cache file is not to be dumped.
-
-### `--no-gems`
-
-Option `--no-gems` specifies that gem documents are not to be included;
-`--gems` is the default.
-
-### `--no-home`
-
-Option `--no-gems` specifies that gem documents from `~/.rdoc` are not to be included;
-`--home` is the default.
 
 ### `--no-interactive`
 
@@ -841,11 +819,6 @@ regardless of whether _name_ is given.
 Option `--no-list` (the default) specifies that a list of class and module names
 is not to be displayed.
 
-### `--no-list-doc-dirs`
-
-Option `--no-list-doc-dirs` (the default) specifies that the list of documentation
-directories is not to be displayed.
-
 ### `--no-pager`, `-T`
 
 Option `--no-pager` (aliased as `-T`) specifies that the output is not to be piped
@@ -856,24 +829,6 @@ default is `--pager`.
 
 Option `no-profile` (the default) specifies that the program is not to be run
 with the Ruby profiler.
-
-### `--no-site`
-
-Option `--no-site` specifies that documents from the site libraries
-are not to be included;
-default is `--site`.
-
-### `--no-standard`
-
-Option `--no-standard` specifies that documents from the standard libraries
-are not to be included;
-default is to include documents from the standard libraries.
-
-### `--no-system`
-
-Option `--no-system` specifies that documents from the system libraries
-are not to be included;
-default is `--system`.
 
 ### `--pager`
 
@@ -890,16 +845,6 @@ default is `--no-profile`.
 Option `--server` specifies that the \RDoc server is to be run on the port
 given as _NUMBER_;
 the default port is `8214`.
-
-### `--site`
-
-Option `--site` (the default) specifies that documents from the site libraries
-may be included.
-
-### `--system`
-
-Option `--system` (the default) specifies that documents from the system libraries
-may be included.
 
 ### `--version`, `-v`
 
