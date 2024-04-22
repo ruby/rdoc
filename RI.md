@@ -618,7 +618,7 @@ $ RI="--all" ri --no-all Array | wc -l
 
 ### Source Directories \Options
 
-#### `--doc-dir=DIRPATH`, `-d DIRPATH`
+#### Options `--doc-dir=DIRPATH`, `-d DIRPATH`
 
 Option `--doc-dir=DIRPATH` (aliased as `-d`) adds the given directory path
 to the beginning of the array of `ri` source directory paths:
@@ -628,7 +628,7 @@ $ ri --doc-dir=/tmp --list-doc-dirs | head -1
 /tmp
 ```
 
-#### `--gems`, `--no-gems`
+#### Options `--gems`, `--no-gems`
 
 Option `--gems` (the default) specifies that documents from installed gems
 may be included;
@@ -641,113 +641,65 @@ $ ri --list --no-gems| wc -l
 1262
 ```
 
-#### `--home`, `--no-home`
+#### Options `--home`, `--no-home`
 
 Option `--home` (the default) specifies that `ri` is to include source directory
 in `~/.rdoc` if it exists;
 option `--no-home` may be used to exclude them.
 
-#### `--list-doc-dirs`, `--no-list-doc-dirs`
+#### Options `--list-doc-dirs`, `--no-list-doc-dirs`
 
 Option `--list-doc-dirs` specifies that a list of the `ri` source directories
 is to be displayed;
 default is `--no-list-doc-dirs`.
 
-#### `--no-standard`
+#### Option `--no-standard`
 
 Option `--no-standard` specifies that documents from the standard libraries
 are not to be included;
 default is to include documents from the standard libraries.
 
-#### `--site`, `--no-site`
+#### Options `--site`, `--no-site`
 
 Option `--site` (the default) specifies that documents from the site libraries
 may be included;
 option `--no-site` may be used to exclude them.
 
-#### `--system`, `--no-system`
+#### Options `--system`, `--no-system`
 
 Option `--system` (the default) specifies that documents from the system libraries
 may be included;
 option `--no-system` may be used to exclude them.
 
-#### Mode \Options
+### Mode \Options
 
-| Option                        | Effect                                                                            |
-|-------------------|---------------------------------------------------------|
-| --interactive, -i | Enter interactive mode; default when no name given.     |
-| --no-interactive  | Do not enter interactive mode; default when name given. |
-<br>
+#### Options `--interactive`, `-i`, `--no-interactive`
 
-#### Information \Options
+Option `--interactive` (aliased as `-i`)
+specifies that `ri` is to enter interactive mode (ignoring the _name_ if given);
+the option is the default when no _name_ is given;
+option `--no-interactive` (the default)
+specifies that `ri` is not to enter interactive mode,
+regardless of whether _name_ is given.
 
-| Option                        | Effect                      |
-|-------------------------------|-----------------------------|
-| --help, -h                    | Show help message and exit. |
-| --version, -v                 | Show ri version and exit.   |
-<br>
+### Information \Options
 
-#### Debugging \Options
+#### Options `--help`, `-h`
 
-| Option                     | Effect                                                    |
-|----------------------------|-----------------------------------------------------------|
-| --dump=FILEPATH, --no-dump | Dump/don't-dump cache file. Default: --no-dump.        |
-| --profile, --no-profile    | Run/don't-run  with Ruby profiler. Default: --no-profile. |
-<br>
+Option `--help` (aliased as `-h`) specifies that `ri` is to show
+its help text and exit.
 
-#### Output \Options
-| Option                     | Effect                                                                            |
-|----------------------------|-----------------------------------------------------------------------------------|
-| --format=FORMAT, -f FORMAT | Set formatter: ansi, bs, markdown, rdoc; default is bs for pager, ansi otherwise. |
-| --pager                    | Pipe output to pager; default.                                                    |
-| --no-pager, -T             | Don't pipe output to pager; default is --pager.                                   |
-| --width=NUMBER, -w NUMBER  | Set width (in characters) for output; default is 80.                              |
-<br>
+#### Options `--version`, `-v`
 
-#### List \Options
+Option `--version` (aliased as `-v`) specifies that `ri` is to show its version and exit.
 
-| Option     | Effect                                          |
-|------------|-------------------------------------------------|
-| --list, -l | List classes and modules; default is --no-list. |
-| --no-list  | Don't list classes and modules; default.        |
-<br>
+### Debugging \Options
 
-#### Methods \Options (for Class or Module)
-
-| Option     | Effect                                                        |
-|------------|---------------------------------------------------------------|
-| --all, -a  | Show all (class or module plus methods); default is --no-all. |
-| --no-all   | Don't show methods for named class or module; default.        |
-<br>
-
-#### Server Option
-
-| Option                        | Effect                                                                            |
-|-----------------|--------------------------------------------|
-| --server=NUMBER | Set port for RDoc server; default is 8214. |
-<br>
-
-### \Options Details
-
-### `--all`, `-a`
-
-Option `--all` (aliased as `-a`) specifies that when _name_ identifies a class or module,
-the documents for all its methods are included:
-
-```shell
-$ ri Array | wc -l
-390
-$ ri --all Array | wc -l
-4224
-```
-
-The default is `--no-all`.
-
-### `--dump=FILEPATH`
+#### Options `--dump=FILEPATH`, `--no-dump`
 
 Option `--dump=FILEPATH` specifies that `ri` is to dump the content
 of the `.ri` file at the given file path;
-the default is `--no-dump`.
+option`--no-dump` (the default) specifies that `ri` is not to dump content.
 
 The file path may point to any `.ri` file,
 but typically would point to one named `cache.ri`:
@@ -768,89 +720,27 @@ $ ri --dump=/usr/share/ri/3.0.0/system/cache.ri | head
    "NilClass"=>["Object"],
 ```
 
-### `--format=FORMAT`, `-f FORMAT`
+#### Options `--profile`, `--no-profile`
+
+Option `--profile` specifies that the program is to be run with the Ruby profiler;
+option `no-profile` (the default) specifies that the program is not to be run
+with the Ruby profiler.
+
+### Output \Options
+
+#### Options `--format=FORMAT`, `-f FORMAT`
 
 Option `--format=FORMAT` (aliased as `-f`) specifies the formatter for the output,
 which must be `ansi`, `bs`, `markdown`, or `rdoc`;
 the default is `bs` for paged output, `ansi` otherwise.
 
-### `--help`, `-h`
-
-Option `--help` (aliased as `-h`) specifies that `ri` is to show
-its help text and exit.
-
-### `--interactive`, `-i`
-
-Option `--interactive` (aliased as `-i`)
-specifies that `ri` is to enter interactive mode (ignoring the _name_ if given);
-the option is the default when no _name_ is given.
-
-### `--list`, `-l`
-
-Option `--list` (aliased as `-l`) specifies that all class and module names
-whose initial characters match the given _name_ are to be displayed;
-the default is `--no-list`:
-
-```sh
-$ ri --list Ar | head
-ArgumentError
-Array
-```
-
-If no _name_ is given, all class and module names are displayed.
-
-### `--no-all`
-
-Option `--no-all` (the default) specifies that for a given class or module,
-its method documents are not to be included.
-
-### `--no-dump`
-
-Option `--no-dump` (the default) specifies that a cache file is not to be dumped.
-
-### `--no-interactive`
-
-Option `--no-interactive` (the default when _name_ is not given)
-specifies that `ri` is not to enter interactive mode,
-regardless of whether _name_ is given.
-
-### `--no-list`
-
-Option `--no-list` (the default) specifies that a list of class and module names
-is not to be displayed.
-
-### `--no-pager`, `-T`
-
-Option `--no-pager` (aliased as `-T`) specifies that the output is not to be piped
-to a pager;
-default is `--pager`.
-
-### `--no-profile`
-
-Option `no-profile` (the default) specifies that the program is not to be run
-with the Ruby profiler.
-
-### `--pager`
+#### Options `--pager`, `--no-pager`
 
 Option `--pager` (the default) specifies that the output is to be piped
-to a pager.
+to a pager;
+option `--no-pager` specifies that the output is not to be piped.
 
-### `--profile`
-
-Option `--profile` specifies that the program is to be run with the Ruby profiler;
-default is `--no-profile`.
-
-### `--server=NUMBER`
-
-Option `--server` specifies that the \RDoc server is to be run on the port
-given as _NUMBER_;
-the default port is `8214`.
-
-### `--version`, `-v`
-
-Option `--version` (aliased as `-v`) specifies that `ri` is to show its version and exit.
-
-### `--width=NUMBER`, `-w NUMBER`
+#### Options `--width=NUMBER`, `-w NUMBER`
 
 Option `--width` (aliased as `-w`) specifies that the lengths of the displayed lines
 should be restricted to the given _NUMBER_ of characters;
@@ -870,6 +760,49 @@ Enumerable (from ruby core)
 An Array is an ordered, integer-indexed
 collection of objects, called
 ```
+
+
+### List \Options
+
+#### Options `--list`, `-l`, `--no-list`
+
+Option `--list` (aliased as `-l`) specifies that all class and module names
+whose initial characters match the given _name_ are to be displayed:
+whose initial characters match the given _name_ are to be displayed:
+
+```sh
+$ ri --list Ar | head
+ArgumentError
+Array
+```
+
+If no _name_ is given, all class and module names are displayed.
+
+Option `--no-list` (the default) specifies that a list of class and module names
+is not to be displayed.
+
+### Methods \Options (for Class or Module)
+
+#### Options `--all`, `-a`, `--no-all`
+
+Option `--all` (aliased as `-a`) specifies that when _name_ identifies a class or module,
+the documents for all its methods are included;
+option `--no-all` (the default) specifies that the method documents are not to be included:
+
+```shell
+$ ri Array | wc -l
+390
+$ ri --all Array | wc -l
+4224
+```
+
+### Server Option
+
+#### Option `--server=NUMBER`
+
+Option `--server` specifies that the \RDoc server is to be run on the port
+given as _NUMBER_;
+the default port is `8214`.
 
 ## Generating `ri` Source Files
 
