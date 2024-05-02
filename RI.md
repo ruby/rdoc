@@ -820,7 +820,7 @@ Those files may then be considered for any `ri` command
 by specifying option `--doc-dir=my_ri`;
 see [option \\--doc-dir][20].
 
-[1]: #label-Static+Mode
+[1]: rdoc-ref:RI.md@Static+Mode
 [2]: rdoc-ref:RI.md@Interactive+Mode
 [3]: rdoc-ref:RI.md@Class+and+Module+Documents
 [4]: rdoc-ref:RI.md@Options+--all-2C+-a-2C+--no-all
