@@ -106,17 +106,17 @@ a document, multiple documents, or other information:
 
 ### Names for Class and Module Documents
 
-These are example names for class and module documents
+These example `ri` commands cite names for class and module documents
 (see [details and examples][3]):
 
-| Name                        | Shows                                                      |
-|-----------------------------|------------------------------------------------------------|
-| 'File'                      | Document for Ruby class File.                              |
-| 'File::Stat'                | Document for Ruby nested class File::Stat.                 |
-| 'Enumerable'                | Document for Ruby module Enumerable.                       |
-| 'Arr'                       | Document for Ruby class Array (unique initial characters). |
-| 'Nokogiri::HTML4::Document' | Document for gem class Nokogiri::HTML4::Document.          |
-| 'Nokogiri'                  | Document for gem module Nokogiri.                          |
+| Command                      | Shows                                                      |
+|------------------------------|------------------------------------------------------------|
+| ri File                      | Document for Ruby class File.                              |
+| ri File::Stat                | Document for Ruby nested class File::Stat.                 |
+| ri Enumerable                | Document for Ruby module Enumerable.                       |
+| ri Arr                       | Document for Ruby class Array (unique initial characters). |
+| ri Nokogiri::HTML4::Document | Document for gem class Nokogiri::HTML4::Document.          |
+| ri Nokogiri                  | Document for gem module Nokogiri.                          |
 <br>
 
 If [option \\--all][4]
@@ -125,43 +125,43 @@ are included in the display.
 
 ### Names for Method Documents
 
-These are example names for method documents
+These example `ri` commands cite names for method documents
 (see [details and examples][5]):
 
-| Name                                 | Shows                                                                            |
+| Command                              | Shows                                                                            |
 |--------------------------------------|----------------------------------------------------------------------------------|
-| 'IO::readlines'                      | Document for Ruby class method IO::readlines.                                    |
-| 'IO#readlines'                       | Document for Ruby instance method IO::readlines.                                 |
-| 'IO.readlines'                       | Documents for Ruby instance method IO::readlines and class method IO::readlines. |
-| '::readlines'                        | Documents for all class methods ::readlines.                                     |
-| '#readlines'                         | Documents for all instance methods #readlines.                                   |
-| '.readlines', 'readlines'            | Documents for class methods ::readlines and instance methods #readlines.         |
-| 'Nokogiri::HTML4::Document::parse'   | Document for gem class method Nokogiri::HTML4::Document::parse.                  |
-| 'Nokogiri::HTML4::Document#fragment' | Document for gem instance method Nokogiri::HTML4::Document#fragment.             |
+| ri IO::readlines                     | Document for Ruby class method IO::readlines.                                    |
+| ri IO#readlines                      | Document for Ruby instance method IO::readlines.                                 |
+| ri IO.readlines                      | Documents for Ruby instance method IO::readlines and class method IO::readlines. |
+| ri ::readlines                       | Documents for all class methods ::readlines.                                     |
+| ri #readlines                        | Documents for all instance methods #readlines.                                   |
+| ri .readlines, ri readlines          | Documents for class methods ::readlines and instance methods #readlines.         |
+| ri Nokogiri::HTML4::Document::parse  | Document for gem class method Nokogiri::HTML4::Document::parse.                  |
+| ri Nokogiri::HTML4::Document#fragment | Document for gem instance method Nokogiri::HTML4::Document#fragment.            |
 <br>
 
 ### Names for Page Documents
 
-These are example names for page documents
+These example `ri` commands cite names for page documents
 (see [details and examples][6]):
 
-| Name                          | Shows                                           |
-|-------------------------------|-------------------------------------------------|
-| 'ruby:syntax/assignment.rdoc' | Document for Ruby page assignment.              |
-| 'ruby:syntax/assignment'      | Same document, if no other syntax/assignment.*. |
-| 'ruby:assignment'             | Same document, if no other */assignment.*.      |
-| 'nokogiri:README.md'          | Document for page README.md.                    |
+| Command                        | Shows                                            |
+|--------------------------------|--------------------------------------------------|
+| ri ruby:syntax/assignment.rdoc | Document for Ruby page assignment.               |
+| ri ruby:syntax/assignment      | Same document, if no other syntax/assignment.*.  |
+| ri ruby:assignment             | Same document, if no other */assignment.*.       |
+| ri nokogiri:README.md          | Document for page README.md.                     |
 <br>
 
 ### Names for Lists
 
-These are example names for lists
+These example `ri` commands cite names for lists
 (see [details and examples][7]):
 
-| Name        | Shows                   |
-|-------------|-------------------------|
-| 'ruby:'     | List of Ruby pages.     |
-| 'nokogiri:' | List of Nokogiri pages. |
+| Command       | Shows                   |
+|---------------|-------------------------|
+| ri ruby:      | List of Ruby pages.     |
+| ri nokogiri:  | List of Nokogiri pages. |
 <br>
 
 There are more lists available;
