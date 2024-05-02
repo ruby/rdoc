@@ -60,7 +60,7 @@ There are two `ri` modes:
   In general, `ri` responds in its static mode
   if a _name_ is given;
   it shows results and exits (as in the examples above).
-  See {Static Mode}[rdoc-ref:RI.md@Static+Mode].
+  See [Static Mode][1].
 - <i>Interactive mode</i>:
   In general, `ri` enters its interactive mode
   if no _name_ is given;
@@ -74,7 +74,7 @@ There are two `ri` modes:
     >>
     ```
 
-    See {Interactive Mode}[rdoc-ref:RI.md@Interactive+Mode].
+    See [Interactive Mode][2].
 
 ## Names
 
@@ -107,7 +107,7 @@ a document, multiple documents, or other information:
 ### Names for Class and Module Documents
 
 These are example names for class and module documents
-(see {details and examples}[rdoc-ref:RI.md@Class+and+Module+Documents]):
+(see [details and examples][3]):
 
 | Name                        | Shows                                                      |
 |-----------------------------|------------------------------------------------------------|
@@ -119,14 +119,14 @@ These are example names for class and module documents
 | 'Nokogiri'                  | Document for gem module Nokogiri.                          |
 <br>
 
-If {option \\--all}[rdoc-ref:RI.md@-all-2C+-a]
+If [option \\--all][4]
 is in effect, documents for the methods in the named class or module
 are included in the display.
 
 ### Names for Method Documents
 
 These are example names for method documents
-(see {details and examples}[rdoc-ref:RI.md@Method+Documents]):
+(see [details and examples][5]):
 
 | Name                                 | Shows                                                                            |
 |--------------------------------------|----------------------------------------------------------------------------------|
@@ -143,7 +143,7 @@ These are example names for method documents
 ### Names for Page Documents
 
 These are example names for page documents
-(see {details and examples}[rdoc-ref:RI.md@Page+Documents]):
+(see [details and examples][6]):
 
 | Name                          | Shows                                           |
 |-------------------------------|-------------------------------------------------|
@@ -156,7 +156,7 @@ These are example names for page documents
 ### Names for Lists
 
 These are example names for lists
-(see {details and examples}[rdoc-ref:RI.md@ri+Lists]):
+(see [details and examples][7]):
 
 | Name        | Shows                   |
 |-------------|-------------------------|
@@ -165,7 +165,7 @@ These are example names for lists
 <br>
 
 There are more lists available;
-see {option \\--list}[rdoc-ref:RI.md@-list-2C+-l].
+see [option \\--list][8].
 
 ## Pro Tips
 
@@ -175,8 +175,8 @@ If you are a frequent `ri` user,
 you can save time by keeping open a dedicated command window
 with either of:
 
-- A running {interactive ri}[rdoc-ref:RI.md@Interactive+Mode] session.
-- A running [irb session](https://docs.ruby-lang.org/en/master/IRB.html);
+- A running [interactive ri][2] session.
+- A running [irb session][9];
   type `'help'` or `'show_doc'` to enter `ri`, newline to exit.
 
 When you switch to that window, `ri` is ready to respond quickly,
@@ -268,8 +268,8 @@ in the `ri` document for a class, module, method, or page.
 
 See also:
 
-- {Pager}[rdoc-ref:RI.md@Pager].
-- {Links in ri Output}[rdoc-ref:RI.md@Links+in+ri+Output].
+- [Pager][10].
+- [Links in ri Output][11].
 
 ### Class and Module Documents
 
@@ -819,3 +819,15 @@ $ rdoc --op my_ri --format=ri my_sources
 Those files may then be considered for any `ri` command
 by specifying option `--doc-dir=my_ri`;
 see {option \\--doc-dir}[rdoc-ref:RI.md@-doc-dir-3DDIRPATH-2C+-d+DIRPATH].
+
+[1]: rdoc-ref:RI.md@Static+Mode
+[2]: rdoc-ref:RI.md@Interactive+Mode
+[3]: rdoc-ref:RI.md@Class+and+Module+Documents
+[4]: rdoc-ref:RI.md@Options+--all-2C+-a-2C+--no-all
+[5]: rdoc-ref:RI.md@Method+Documents
+[6]: rdoc-ref:RI.md@Page+Documents
+[7]: rdoc-ref:RI.md@ri+Lists
+[8]: rdoc-ref:RI.md@Options+--list-2C+-l-2C+--no-list
+[9]: https://docs.ruby-lang.org/en/master/IRB.html
+[10]: rdoc-ref:RI.md@Pager
+[11]: rdoc-ref:RI.md@Links+in+ri+Output
