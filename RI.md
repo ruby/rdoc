@@ -41,14 +41,14 @@ $ ri ruby:  # List of Ruby pages.
 ## Why `ri`?
 
 Using `ri` may have advantages over using
-the {Ruby online documentation}[https://docs.ruby-lang.org/en/master]:
+the [Ruby online documentation](https://docs.ruby-lang.org/en/master):
 
 - The `ri` documentation is always available, even when you do not have internet access
   (think: airplane mode).
 - If you are working in a terminal window, typing `ri _whatever_` (or just `ri`)
   may be faster than navigating to a browser window and searching for documentation.
 - If you are working in an
-  {irb (interactive Ruby)}[https://docs.ruby-lang.org/en/master/IRB.html]
+  [irb \(interactive Ruby\)](https://docs.ruby-lang.org/en/master/IRB.html)
   session, you _already_ have immediate access to `ri`:
   just type `'help'` or `'show_doc'`.
 
@@ -176,7 +176,7 @@ you can save time by keeping open a dedicated command window
 with either of:
 
 - A running {interactive ri}[rdoc-ref:RI.md@Interactive+Mode] session.
-- A running {irb session}[https://docs.ruby-lang.org/en/master/IRB.html];
+- A running [irb session](https://docs.ruby-lang.org/en/master/IRB.html);
   type `'help'` or `'show_doc'` to enter `ri`, newline to exit.
 
 When you switch to that window, `ri` is ready to respond quickly,
@@ -254,10 +254,10 @@ When you see:
 - `ri` output can be large;
   to save space, an example may pipe it to one of these:
 
-  - {head}[https://www.man7.org/linux/man-pages/man1/head.1.html]: leading lines only.
-  - {tail}[https://www.man7.org/linux/man-pages/man1/tail.1.html]: trailing lines only.
-  - {wc -l}[https://www.man7.org/linux/man-pages/man1/wc.1.html]: line count only.
-  - {grep}[https://www.man7.org/linux/man-pages/man1/grep.1.html]: selected lines only.
+    - [head](https://www.man7.org/linux/man-pages/man1/head.1.html): leading lines only.
+    - [tail](https://www.man7.org/linux/man-pages/man1/tail.1.html): trailing lines only.
+    - [wc -l](https://www.man7.org/linux/man-pages/man1/wc.1.html): line count only.
+    - [grep](https://www.man7.org/linux/man-pages/man1/grep.1.html): selected lines only.
 
 - An example that involves a gem assumes that gem `nokogiri` is installed.
 
