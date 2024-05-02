@@ -509,9 +509,9 @@ lib/nokogiri/css/tokenizer.rex
 
 See also:
 
-- {Option \\--list}[rdoc-ref:RI.md@-list-2C+-l]:
+- [Option \\--list][8]:
   lists classes and modules.
-- {Option \\--list-doc-dirs}[rdoc-ref:RI.md@-list-doc-dirs]:
+- [Option \\--list-doc-dirs][12]:
   lists `ri` source directories.
 
 ## `ri` Information
@@ -519,12 +519,12 @@ See also:
 With certain options,
 an `ri` command may display information other than documents or lists:
 
-- {Option \\--help or -h}[rdoc-ref:RI.md@-help-2C+-h]:
+- [Option \\--help or -h][13]:
   Shows `ri` help text.
-- {option \\--version or -v}[rdoc-ref:RI.md@-version-2C+-v]:
+- [option \\--version or -v][14]:
   Shows `ri` version.
-- {Option \\--dump=FILEPATH}[rdoc-ref:RI.md@-dump-3DFILEPATH]:
-  Shows dump of ri cache file at the given filepath.
+- [Option \\--dump=FILEPATH][15]:
+  Shows dump of `ri` cache file at the given filepath.
 
 ## Static Mode
 
@@ -549,7 +549,7 @@ elements.  Any object may be an Array element.
 
 `ri` also responds in static mode when certain options are given,
 even when no _name_ is given;
-see {ri Information}[rdoc-ref:RI.md@ri+Information].
+see [ri Information][16].
 
 ## Interactive Mode
 
@@ -571,12 +571,12 @@ except that it:
 - Omits command word `ri`; you just type the _name_.
 - Omits options; in interactive mode the only options in effect
   are those taken from environment variable `RI`.
-  See {Options}[rdoc-ref:RI.md@Options].
+  See [Options][17].
 - Supports tab auto-completion for the names of a classes, modules, and methods;
   when, for example, you type `"Arr\t"` (here `"\t` represents the tab character),
   `ri` "completes" the text as `'Array '`.
 
-See also {ri at the Ready}[rdoc-ref:RI.md@ri+at+the+Ready].
+See also [ri at the Ready][18].
 
 ## Pager
 
@@ -596,7 +596,7 @@ If you set environment variable `RI_PAGER` or `PAGER`,
 its value should be the name of an executable program
 that will accept the `ri` output (such as `'pager'`, `'less'`, or `'more'`).
 
-See also {Output Filters}[rdoc-ref:RI.md@Output+Filters].
+See also [Output Filters][19].
 
 ## \Options
 
@@ -818,7 +818,7 @@ $ rdoc --op my_ri --format=ri my_sources
 
 Those files may then be considered for any `ri` command
 by specifying option `--doc-dir=my_ri`;
-see {option \\--doc-dir}[rdoc-ref:RI.md@-doc-dir-3DDIRPATH-2C+-d+DIRPATH].
+see [option \\--doc-dir][20].
 
 [1]: rdoc-ref:RI.md@Static+Mode
 [2]: rdoc-ref:RI.md@Interactive+Mode
@@ -831,3 +831,12 @@ see {option \\--doc-dir}[rdoc-ref:RI.md@-doc-dir-3DDIRPATH-2C+-d+DIRPATH].
 [9]: https://docs.ruby-lang.org/en/master/IRB.html
 [10]: rdoc-ref:RI.md@Pager
 [11]: rdoc-ref:RI.md@Links+in+ri+Output
+[12]: rdoc-ref:RI.md@Options+--list-doc-dirs-2C+--no-list-doc-dirs
+[13]: rdoc-ref:RI.md@Options+--help-2C+-h
+[14]: rdoc-ref:RI.md@Options+--version-2C+-v
+[15]: rdoc-ref:RI.md@Options+--dump-3DFILEPATH-2C+--no-dump
+[16]: rdoc-ref:RI.md@ri+Information
+[17]: rdoc-ref:RI.md@Options
+[18]: rdoc-ref:RI.md@ri+at+the+Ready
+[19]: rdoc-ref:RI.md@Output+Filters
+[20]: rdoc-ref:RI.md@Options+--doc-dir-3DDIRPATH-2C+-d+DIRPATH
