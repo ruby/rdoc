@@ -572,7 +572,7 @@ except that it:
 - Omits options; in interactive mode the only options in effect
   are those taken from environment variable `RI`.
   See [Options][17].
-- Supports tab auto-completion for the names of a classes, modules, and methods;
+- Supports tab auto-completion for the name of a class, module, or method;
   when, for example, you type `"Arr\t"` (here `"\t` represents the tab character),
   `ri` "completes" the text as `'Array '`.
 
