@@ -40,7 +40,7 @@ If the tests don't pass on the first run check the {GitHub Actions page}[https:/
 You can now use `rake` and `autotest` to run the tests.
 
 Note: the `rake` command must be used first before running any tests, because
-its used to generate various parsers implemented in RDoc. Also `rake clean` is
+it's used to generate various parsers implemented in RDoc. Also `rake clean` is
 helpful to delete these generated files.
 
 == Glossary
