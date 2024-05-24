@@ -574,6 +574,21 @@ This is [an example][] reference-style link.
     assert_equal expected, doc
   end
 
+  def test_parse_multiline_link
+    doc = parse <<-MD
+This is an [example
+link across
+newlines](
+  http://example.com
+)
+    MD
+
+    expected = doc(
+      para("This is an {example\nlink across\nnewlines}[http://example.com]"))
+
+    assert_equal expected, doc
+  end
+
   def test_parse_list_bullet
     doc = parse <<-MD
 * one

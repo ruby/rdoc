@@ -993,27 +993,36 @@ Strike = &{ strike? }
          { strike a.join }
 
 # TODO alt text support
-Image = "!" ( ExplicitLink | ReferenceLink ):a
+Image = "!" ( MultiLineExplicitLink | MultiLineReferenceLink ):a
         { "rdoc-image:#{a[/\[(.*)\]/, 1]}" }
 
-Link =  ExplicitLink | ReferenceLink | AutoLink
+# Allow links to span multiple lines
+Link = MultiLineExplicitLink | MultiLineReferenceLink | AutoLink
 
-ReferenceLink = ReferenceLinkDouble | ReferenceLinkSingle
+MultiLineReferenceLink = MultiLineReferenceLinkDouble | MultiLineReferenceLinkSingle
 
-ReferenceLinkDouble = Label:content < Spnl > !"[]" Label:label
-                      { link_to content, label, text }
+MultiLineReferenceLinkDouble = Label:content < Spnl > !"[]" Label:label
+                               { link_to content, label, text }
 
-ReferenceLinkSingle = Label:content < (Spnl "[]")? >
-                      { link_to content, content, text }
+MultiLineReferenceLinkSingle = Label:content < (Spnl "[]")? >
+                               { link_to content, content, text }
 
-ExplicitLink =  Label:l "(" @Sp Source:s Spnl Title @Sp ")"
-                { "{#{l}}[#{s}]" }
+MultiLineExplicitLink = Label:l "(" @Sp Source:s (Spnl | @Newline)+ Title @Sp ")"
+                        { "{#{l}}[#{s}]" }
+
+# Example: Allow link labels and URLs to span multiple lines
+Label = "[" ( !"^" &{ notes? } | &. &{ !notes? } )
+        @StartList:a
+        ( !"]" Inline:l { a << l } | @Newline { a << "\n" } )+
+        "]"
+        { a.join.gsub(/\s+/, ' ') }
 
 Source  = ( "<" < SourceContents > ">" | < SourceContents > )
           { text }
 
-SourceContents = ( ( !"(" !")" !">" Nonspacechar )+ | "(" SourceContents ")")*
+SourceContents = ( ( !("(" | ")" | ">" | @Newline) Nonspacechar )+ | "(" SourceContents ")")*
 
+# Allow newlines in titles
 Title = ( TitleSingle | TitleDouble | "" ):a
         { a }
 
@@ -1035,12 +1044,6 @@ Reference = @NonindentSpace !"[]"
               reference label, link
               nil
             }
-
-Label = "[" ( !"^" &{ notes? } | &. &{ !notes? } )
-        @StartList:a
-        ( !"]" Inline:l { a << l } )*
-        "]"
-        { a.join.gsub(/\s+/, ' ') }
 
 RefSrc = < Nonspacechar+ > { text }
 
