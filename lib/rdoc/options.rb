@@ -802,7 +802,7 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-       opt.on("-mTAGS", "--meta-tags=TAGS",
+      opt.on("-mTAGS", "--meta-tags=TAGS",
              "Meta tags to be included in the HTML head") do |value|
         @meta_tags = JSON.parse(value)
       rescue  JSON::ParserError, TypeError
