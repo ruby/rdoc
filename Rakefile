@@ -90,15 +90,14 @@ end
 task "#{path}.gem" => package_parser_files
 
 desc "Generate all files use racc and kpeg"
-task :generate do
-  unless ENV.key?('BUNDLE_GEMFILE')
+task :generate => parsed_files
+
+unless ENV.key?('BUNDLE_GEMFILE')
+  task :gem_install do
     Gem.install 'racc', '> 1.4.10'
     Gem.install 'kpeg', '>= 1.3.3'
   end
-
-  parsed_files.each do |file_name|
-    Rake::Task[file_name].invoke
-  end
+  file parsed_files => :gem_install
 end
 
 task :clean do
