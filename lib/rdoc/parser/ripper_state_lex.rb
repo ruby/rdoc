@@ -13,7 +13,6 @@ class RDoc::Parser::RipperStateLex
   EXPR_ENDFN = Ripper::EXPR_ENDFN
   EXPR_ARG   = Ripper::EXPR_ARG
   EXPR_FNAME = Ripper::EXPR_FNAME
-  EXPR_LABEL = Ripper::EXPR_LABEL
 
   class InnerStateLex < Ripper::Filter
     def initialize(code)
