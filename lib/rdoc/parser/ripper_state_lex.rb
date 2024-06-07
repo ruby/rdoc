@@ -9,24 +9,11 @@ class RDoc::Parser::RipperStateLex
 
   Token = Struct.new(:line_no, :char_no, :kind, :text, :state)
 
-  EXPR_NONE = 0
-  EXPR_BEG = 1
-  EXPR_END = 2
-  EXPR_ENDARG = 4
-  EXPR_ENDFN = 8
-  EXPR_ARG = 16
-  EXPR_CMDARG = 32
-  EXPR_MID = 64
-  EXPR_FNAME = 128
-  EXPR_DOT = 256
-  EXPR_CLASS = 512
-  EXPR_LABEL = 1024
-  EXPR_LABELED = 2048
-  EXPR_FITEM = 4096
-  EXPR_VALUE = EXPR_BEG
-  EXPR_BEG_ANY  =  (EXPR_BEG | EXPR_MID | EXPR_CLASS)
-  EXPR_ARG_ANY  =  (EXPR_ARG | EXPR_CMDARG)
-  EXPR_END_ANY  =  (EXPR_END | EXPR_ENDARG | EXPR_ENDFN)
+  EXPR_END   = Ripper::EXPR_END
+  EXPR_ENDFN = Ripper::EXPR_ENDFN
+  EXPR_ARG   = Ripper::EXPR_ARG
+  EXPR_FNAME = Ripper::EXPR_FNAME
+  EXPR_LABEL = Ripper::EXPR_LABEL
 
   class InnerStateLex < Ripper::Filter
     def initialize(code)
@@ -53,7 +40,7 @@ class RDoc::Parser::RipperStateLex
     when :on_backtick then
       if (tk[:state] & (EXPR_FNAME | EXPR_ENDFN)) != 0
         tk[:kind] = :on_ident
-        tk[:state] = Ripper::Lexer.const_defined?(:State) ? Ripper::Lexer::State.new(EXPR_ARG) : EXPR_ARG
+        tk[:state] = Ripper::Lexer::State.new(EXPR_ARG)
       else
         tk = get_string_tk(tk)
       end
@@ -266,7 +253,7 @@ class RDoc::Parser::RipperStateLex
   private def get_op_tk(tk)
     redefinable_operators = %w[! != !~ % & * ** + +@ - -@ / < << <= <=> == === =~ > >= >> [] []= ^ ` | ~]
     if redefinable_operators.include?(tk[:text]) and tk[:state] == EXPR_ARG then
-      tk[:state] = Ripper::Lexer.const_defined?(:State) ? Ripper::Lexer::State.new(EXPR_ARG) : EXPR_ARG
+      tk[:state] = Ripper::Lexer::State.new(EXPR_ARG)
       tk[:kind] = :on_ident
     elsif tk[:text] =~ /^[-+]$/ then
       tk_ahead = get_squashed_tk
