@@ -35,7 +35,6 @@ end unless defined?(Rake)
 require_relative '../rdoc'
 require 'rake'
 require 'rake/tasklib'
-require "json"
 
 ##
 # RDoc::Task creates the following rake tasks to generate and clean up RDoc
@@ -153,12 +152,6 @@ class RDoc::Task < Rake::TaskLib
   attr_accessor :external
 
   ##
-  # Meta tags to be included in the HTML header, such as keywords, description,
-  # author and others. This option is a hash where the keys are the meta tag
-  # name and the values are the content of the meta tag.
-  attr_accessor :meta_tags
-
-  ##
   # Create an RDoc task with the given name. See the RDoc::Task class overview
   # for documentation.
 
@@ -208,7 +201,6 @@ class RDoc::Task < Rake::TaskLib
     @template = nil
     @generator = nil
     @options = []
-    @meta_tags = nil
   end
 
   ##
@@ -279,13 +271,12 @@ class RDoc::Task < Rake::TaskLib
 
   def option_list
     result = @options.dup
-    result << "-o"          << @rdoc_dir
-    result << "--main"      << main      if main
-    result << "--markup"    << markup    if markup
-    result << "--title"     << title     if title
-    result << "-T"          << template  if template
-    result << '-f'          << generator if generator
-    result << '--meta-tags' << meta_tags.to_json if meta_tags
+    result << "-o"       << @rdoc_dir
+    result << "--main"   << main      if main
+    result << "--markup" << markup    if markup
+    result << "--title"  << title     if title
+    result << "-T"       << template  if template
+    result << '-f'       << generator if generator
     result
   end
 

@@ -83,7 +83,6 @@ class TestRDocOptions < RDoc::TestCase
       'visibility'           => :protected,
       'webcvs'               => nil,
       'skip_tests'           => true,
-      'meta_tags'            => {},
     }
 
     assert_equal expected, coder
