@@ -116,6 +116,7 @@ class RDoc::CodeObject
     @full_name        = nil
     @store            = nil
     @track_visibility = true
+    @mixin_from       = nil
 
     initialize_visibility
   end
