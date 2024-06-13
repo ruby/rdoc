@@ -1026,7 +1026,10 @@ class RDoc::Context < RDoc::CodeObject
 
     each_method do |method|
       next if section and not method.section == section
-      methods[method.type][method.visibility] << method
+      if (visibility = method.visibility) == :module_function
+        visibility = :public
+      end
+      methods[method.type][visibility] << method
     end
 
     methods
@@ -1257,6 +1260,10 @@ class RDoc::Context < RDoc::CodeObject
     enclosing.classes_hash[mod.name]   = klass
 
     klass
+  end
+
+  def pretend_object? # :nodoc:
+    false
   end
 
   autoload :Section, "#{__dir__}/context/section"
