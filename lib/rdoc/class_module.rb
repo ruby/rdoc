@@ -833,6 +833,8 @@ class RDoc::ClassModule < RDoc::Context
     code_object.mixin_from = code_object.parent
     code_object.singleton = true if singleton
     set_current_section(code_object.section.title, code_object.section.comment)
+    # add_method and add_attribute will reassign self's visibility back to the method/attribute
+    # so we need to sync self's visibility with the object's to properly retain that information
     self.visibility = code_object.visibility
     code_object
   end
