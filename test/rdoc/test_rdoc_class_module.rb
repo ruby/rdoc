@@ -1525,6 +1525,9 @@ class TestRDocClassModule < XrefTestCase
       incmod_private_method = @incmod.add_method(RDoc::AnyMethod.new(nil, "incmod_private_method"))
       incmod_private_method.visibility = :private
 
+      incmod_private_attr = @incmod.add_attribute(RDoc::Attr.new(nil, "incmod_private_attr", "RW", ""))
+      incmod_private_attr.visibility = :private
+
       extmod_tl = @store.add_file("extmod.rb")
       @extmod = extmod_tl.add_module(RDoc::NormalModule, "Extmod")
 
@@ -1538,6 +1541,9 @@ class TestRDocClassModule < XrefTestCase
 
       extmod_private_method = @extmod.add_method(RDoc::AnyMethod.new(nil, "extmod_private_method"))
       extmod_private_method.visibility = :private
+
+      extmod_private_attr = @extmod.add_attribute(RDoc::Attr.new(nil, "extmod_private_attr", "RW", "", true))
+      extmod_private_attr.visibility = :private
 
       @klass.add_include(RDoc::Include.new("Incmod", nil))
       @klass.add_extend(RDoc::Include.new("Extmod", nil))
@@ -1577,6 +1583,7 @@ class TestRDocClassModule < XrefTestCase
       assert_equal(@incmod, instance_attr.mixin_from)
 
       refute(@klass.method_list.find { |m| m.name == "incmod_private_method" })
+      refute(@klass.attributes.find { |m| m.name == "incmod_private_attr" })
 
       class_method = @klass.method_list.find { |m| m.name == "extmod_method" }
       assert(class_method, "class method from extended mixin should be present")
@@ -1589,6 +1596,7 @@ class TestRDocClassModule < XrefTestCase
       assert_equal(@extmod, class_attr.mixin_from)
 
       refute(@klass.method_list.find { |m| m.name == "extmod_private_method" })
+      refute(@klass.attributes.find { |m| m.name == "extmod_private_attr" })
 
       # assert that sections are also imported
       constant_section = @klass.sections.find { |s| s.title == "Incmod const section" }
