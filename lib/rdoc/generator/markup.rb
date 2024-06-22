@@ -41,20 +41,6 @@ module RDoc::Generator::Markup
     @formatter.code_object = self
     @formatter
   end
-
-  ##
-  # Build a webcvs URL starting for the given +url+ with +full_path+ appended
-  # as the destination path.  If +url+ contains '%s' +full_path+ will be
-  # will replace the %s using sprintf on the +url+.
-
-  def cvs_url(url, full_path)
-    if /%s/ =~ url then
-      sprintf url, full_path
-    else
-      url + full_path
-    end
-  end
-
 end
 
 class RDoc::CodeObject
@@ -137,23 +123,5 @@ end
 class RDoc::Context::Section
 
   include RDoc::Generator::Markup
-
-end
-
-class RDoc::TopLevel
-
-  ##
-  # Returns a URL for this source file on some web repository.  Use the -W
-  # command line option to set.
-
-  def cvs_url
-    url = @store.rdoc.options.webcvs
-
-    if /%s/ =~ url then
-      url % @relative_name
-    else
-      url + @relative_name
-    end
-  end
 
 end

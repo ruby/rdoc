@@ -27,14 +27,6 @@ class TestRDocGeneratorMarkup < RDoc::TestCase
     assert_equal '../index.html', as_href('Foo/Bar.html')
   end
 
-  def test_cvs_url
-    assert_equal 'http://example/this_page',
-                 cvs_url('http://example/', 'this_page')
-
-    assert_equal 'http://example/?page=this_page&foo=bar',
-                 cvs_url('http://example/?page=%s&foo=bar', 'this_page')
-  end
-
   def test_description
     @comment = '= Hello'
 

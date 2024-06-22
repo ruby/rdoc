@@ -81,7 +81,6 @@ class TestRDocOptions < RDoc::TestCase
       'template_stylesheets' => [],
       'title'                => nil,
       'visibility'           => :protected,
-      'webcvs'               => nil,
       'skip_tests'           => true,
     }
 

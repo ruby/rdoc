@@ -326,11 +326,6 @@ class RDoc::Options
   attr_accessor :verbosity
 
   ##
-  # URL of web cvs frontend
-
-  attr_accessor :webcvs
-
-  ##
   # Minimum visibility of a documented method. One of +:public+, +:protected+,
   # +:private+ or +:nodoc+.
   #
@@ -387,7 +382,6 @@ class RDoc::Options
     @update_output_dir = true
     @verbosity = 1
     @visibility = :protected
-    @webcvs = nil
     @write_options = false
     @encoding = Encoding::UTF_8
     @charset = @encoding.name
@@ -415,7 +409,6 @@ class RDoc::Options
     @template_dir   = map['template_dir']
     @title          = map['title']
     @visibility     = map['visibility']
-    @webcvs         = map['webcvs']
 
     @rdoc_include = sanitize_path map['rdoc_include']
     @static_path  = sanitize_path map['static_path']
@@ -447,7 +440,6 @@ class RDoc::Options
     @template_dir   = map['template_dir']   if map.has_key?('template_dir')
     @title          = map['title']          if map.has_key?('title')
     @visibility     = map['visibility']     if map.has_key?('visibility')
-    @webcvs         = map['webcvs']         if map.has_key?('webcvs')
 
     if map.has_key?('rdoc_include')
       @rdoc_include = sanitize_path map['rdoc_include']
@@ -474,8 +466,7 @@ class RDoc::Options
       @tab_width      == other.tab_width      and
       @template       == other.template       and
       @title          == other.title          and
-      @visibility     == other.visibility     and
-      @webcvs         == other.webcvs
+      @visibility     == other.visibility
   end
 
   ##
@@ -1025,7 +1016,7 @@ Usage: #{opt.program_name} [options] [names...]
              "name of the current file will be",
              "substituted; if the URL doesn't contain a",
              "'\%s', the filename will be appended to it.") do |value|
-        @webcvs = value
+               # It does nothing but exists for compatibility
       end
 
       opt.separator nil
