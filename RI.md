@@ -1,4 +1,4 @@
-#`ri`: Ruby Information
+# `ri`: Ruby Information
 
 `ri` (<b>r</b>uby <b>i</b>nformation) is the Ruby command-line utility
 that gives fast and easy on-line access to Ruby documentation.
@@ -50,7 +50,7 @@ the [Ruby online documentation](https://docs.ruby-lang.org/en/master):
 - If you are working in an
   [irb \(interactive Ruby\)](https://docs.ruby-lang.org/en/master/IRB.html)
   session, you _already_ have immediate access to `ri`:
-  just type `'help'` or `'show_doc'`.
+  just type `'show_doc'`.
 
 ## Modes
 
@@ -177,7 +177,7 @@ with either of:
 
 - A running [interactive ri][2] session.
 - A running [irb session][9];
-  type `'help'` or `'show_doc'` to enter `ri`, newline to exit.
+  type `'show_doc'` to enter `ri`, newline to exit.
 
 When you switch to that window, `ri` is ready to respond quickly,
 without the performance overhead of re-reading `ri` sources.
@@ -259,7 +259,7 @@ When you see:
     - [wc -l](https://www.man7.org/linux/man-pages/man1/wc.1.html): line count only.
     - [grep](https://www.man7.org/linux/man-pages/man1/grep.1.html): selected lines only.
 
-- An example that involves a gem assumes that gem `nokogiri` is installed.
+- An example that involves a gem assumes that gems `nokogiri` and `minitest` are installed.
 
 ## `ri` Documents
 
@@ -452,17 +452,17 @@ The document for a gem page is whatever the gem has generated
 for the page:
 
 ```sh
-$ ri nokogiri:README | head
-<div><img src="https://nokogiri.org/images/nokogiri-serif-black.png" align="right"/></div>= Nokoii
-Nokogiri (鋸) makes it easy and painless to work with XML and HTML from
-Ruby. It provides a sensible, easy-to-understand API for
-{reading}[https://nokogiri.org/tutorials/parsing_an_html_xml_document.ht
-ml], writing,
-{modifying}[https://nokogiri.org/tutorials/modifying_an_html_xml_documen
-t.html], and
-{querying}[https://nokogiri.org/tutorials/searching_a_xml_html_document.
-html] documents. It is fast and standards-compliant by relying on native
-parsers like libxml2, libgumbo, and xerces.
+$ ri minitest:README | head
+= minitest/{test,spec,mock,benchmark}
+
+home:
+  https://github.com/minitest/minitest
+
+bugs:
+  https://github.com/minitest/minitest/issues
+
+rdoc:
+  https://docs.seattlerb.org/minitest
 ```
 
 ## `ri` Lists
@@ -598,12 +598,12 @@ that will accept the `ri` output (such as `'pager'`, `'less'`, or `'more'`).
 
 See also [Output Filters][19].
 
-## \Options
+## Options
 
-\Options may be given on the `ri` command line;
+Options may be given on the `ri` command line;
 those should be whitespace-separated, and must precede the given _name_, if any.
 
-\Options may also be specified in environment variable `RI`;
+Options may also be specified in environment variable `RI`;
 those should also be whitespace-separated.
 
 An option specified in environment variable `RI`
@@ -616,7 +616,7 @@ $ RI="--all" ri --no-all Array | wc -l
 390
 ```
 
-### Source Directories \Options
+### Source Directories Options
 
 #### Options `--doc-dir=DIRPATH`, `-d DIRPATH`
 
@@ -671,7 +671,7 @@ Option `--system` (the default) specifies that documents from the system librari
 may be included;
 option `--no-system` may be used to exclude them.
 
-### Mode \Options
+### Mode Options
 
 #### Options `--interactive`, `-i`, `--no-interactive`
 
@@ -682,7 +682,7 @@ option `--no-interactive` (the default)
 specifies that `ri` is not to enter interactive mode,
 regardless of whether _name_ is given.
 
-### Information \Options
+### Information Options
 
 #### Options `--help`, `-h`
 
@@ -693,7 +693,7 @@ its help text and exit.
 
 Option `--version` (aliased as `-v`) specifies that `ri` is to show its version and exit.
 
-### Debugging \Options
+### Debugging Options
 
 #### Options `--dump=FILEPATH`, `--no-dump`
 
@@ -726,7 +726,7 @@ Option `--profile` specifies that the program is to be run with the Ruby profile
 option `no-profile` (the default) specifies that the program is not to be run
 with the Ruby profiler.
 
-### Output \Options
+### Output Options
 
 #### Options `--format=FORMAT`, `-f FORMAT`
 
@@ -762,7 +762,7 @@ collection of objects, called
 ```
 
 
-### List \Options
+### List Options
 
 #### Options `--list`, `-l`, `--no-list`
 
@@ -781,7 +781,7 @@ If no _name_ is given, all class and module names are displayed.
 Option `--no-list` (the default) specifies that a list of class and module names
 is not to be displayed.
 
-### Methods \Options (for Class or Module)
+### Methods Options (for Class or Module)
 
 #### Options `--all`, `-a`, `--no-all`
 
