@@ -14,4 +14,5 @@
 /lib/rdoc/markdown/literals.rb
 /pkg
 /tmp
+/doc
 Gemfile.lock
