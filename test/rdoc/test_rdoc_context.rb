@@ -409,13 +409,26 @@ class TestRDocContext < XrefTestCase
     refute_includes arr, incl
   end
 
-  def bench_add_include
-    cm = RDoc::ClassModule.new 'Klass'
-
-    assert_performance_linear 0.5 do |count|
+  def test_bench_add_include
+    assert_linear_performance (1..25) do |count|
+      cm = RDoc::ClassModule.new 'Klass'
       count.times do |i|
         cm.add_include RDoc::Include.new("N::M#{i}", nil)
       end
+    end
+  end
+
+  def test_bench_include_module_resolution
+    assert_linear_performance (1..25) do |count|
+      cm = RDoc::ClassModule.new 'Klass'
+      cm.store = RDoc::Store.new
+
+      count.times do |i|
+        cm.add_include RDoc::Include.new("N::M#{i}", nil)
+      end
+      last_include = RDoc::Include.new("N::M#{count + 1}", nil)
+      cm.add_include(last_include)
+      last_include.module
     end
   end
 

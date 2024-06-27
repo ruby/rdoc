@@ -18,6 +18,7 @@ class RDoc::Mixin < RDoc::CodeObject
     @name = name
     self.comment = comment
     @module = nil # cache for module if found
+    @module_lookup_failed = false
   end
 
   ##
@@ -64,16 +65,10 @@ class RDoc::Mixin < RDoc::CodeObject
   # - if not found, look into the children of included modules,
   #   in reverse inclusion order;
   # - if still not found, go up the hierarchy of names.
-  #
-  # This method has <code>O(n!)</code> behavior when the module calling
-  # include is referencing nonexistent modules.  Avoid calling #module until
-  # after all the files are parsed.  This behavior is due to ruby's constant
-  # lookup behavior.
-  #
-  # As of the beginning of October, 2011, no gem includes nonexistent modules.
 
   def module
     return @module if @module
+    return @name if @module_lookup_failed
 
     # search the current context
     return @name unless parent
@@ -101,6 +96,7 @@ class RDoc::Mixin < RDoc::CodeObject
       up = up.parent
     end
 
+    @module_lookup_failed = true
     @name
   end
 
