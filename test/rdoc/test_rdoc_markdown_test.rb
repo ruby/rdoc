@@ -1863,8 +1863,8 @@ foo
     assert_equal expected, doc
   end
 
-  def test_tidyness
-    input = File.read "#{MARKDOWN_TEST_PATH}/Tidyness.text"
+  def test_tidiness
+    input = File.read "#{MARKDOWN_TEST_PATH}/Tidiness.text"
 
     doc = @parser.parse input
 
