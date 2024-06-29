@@ -63,7 +63,7 @@ class TestRDocInclude < XrefTestCase
     m1_k1.add_include i1_k0_m4
 
     assert_equal [i1_m1, i1_m2, i1_m3, i1_m4, i1_k0_m4], m1_k1.includes
-    assert_equal [m1_m2_k0_m4, m1_m2_m3_m4, m1_m2_m3, m1_m2, m1, @object,
+    assert_equal [m1_m2_k0_m4, m1_m2_m4, m1_m3, m1_m2, m1, @object,
                   'BasicObject'], m1_k1.ancestors
 
     m1_k2 = m1.add_class RDoc::NormalClass, 'Klass2'
@@ -94,6 +94,32 @@ class TestRDocInclude < XrefTestCase
 
     assert_equal [i3_m1, i3_m2, i3_m4], m1_k3.includes
     assert_equal [m1_m2_m4, m1_m2, m1, @object, 'BasicObject'], m1_k3.ancestors
+  end
+
+  def test_include_through_include
+    top_level = @store.add_file 'file.rb'
+
+    mod1 = top_level.add_module RDoc::NormalModule, 'Mod1'
+    mod2 = top_level.add_module RDoc::NormalModule, 'Mod2'
+    mod3 = top_level.add_module RDoc::NormalModule, 'Mod3'
+    submod = mod1.add_module RDoc::NormalModule, 'Sub'
+    mod2.add_include RDoc::Include.new('Mod1', '')
+    mod3.add_include RDoc::Include.new('Mod2', '')
+    mod3.add_include RDoc::Include.new('Sub', '')
+    assert_equal [submod, mod2], mod3.ancestors
+  end
+
+  def test_include_through_top_level_include
+    top_level = @store.add_file 'file.rb'
+
+    mod1 = top_level.add_module RDoc::NormalModule, 'Mod1'
+    mod2 = top_level.add_module RDoc::NormalModule, 'Mod2'
+    mod3 = mod2.add_module RDoc::NormalModule, 'Mod3'
+    submod = mod1.add_module RDoc::NormalModule, 'Sub'
+    mod2.add_include RDoc::Include.new('Mod1', '')
+    top_level.add_include RDoc::Include.new('Mod2', '')
+    mod3.add_include RDoc::Include.new('Sub', '')
+    assert_equal [submod], mod3.ancestors
   end
 
   def test_store_equals

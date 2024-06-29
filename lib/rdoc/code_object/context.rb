@@ -1261,4 +1261,50 @@ class RDoc::Context < RDoc::CodeObject
 
   autoload :Section, "#{__dir__}/context/section"
 
+  ##
+  # Attempts to locate the module object in this context.
+  #
+  # The scoping rules of Ruby to resolve the name of an included module are:
+  # - first search constant directly defined in nested modules from inside to outside
+  # - if not found, look into the children of included modules,
+  #   in reverse inclusion order;
+  # - if still not found, look into included modules of Object
+
+  def lookup_module(name, before: nil, searched: {}.compare_by_identity)
+    # Search nested modules first
+    nesting = self
+    while nesting
+      full_name = nesting.child_name(name)
+      mod = @store.modules_hash[full_name]
+      return mod if mod
+      nesting = nesting.parent
+    end
+
+    # Search included modules recursively
+    mod = find_module(name, before: before, searched: searched)
+    return mod if mod
+
+    # Search Object recursively
+    top_level.object_class.find_module(name, searched: searched)
+  end
+
+  ##
+  # Recursively search for a module in this context and its includes.
+
+  def find_module(name, before: nil, searched: {}.compare_by_identity)
+    return if searched.include?(self)
+    searched[self] = true
+    full_name = child_name(name)
+    mod = @store.modules_hash[full_name]
+    return mod if mod
+
+    # recursively search the includes in reverse order
+    includes.take_while { |i| i != before }.reverse_each do |i|
+      inc = i.module
+      next if String === inc
+      mod = inc.find_module(name, searched: searched)
+      return mod if mod
+    end
+    nil
+  end
 end
