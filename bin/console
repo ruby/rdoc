@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'rdoc'
+
+require_relative '../doc/rdoc/markup_reference'
+
+require 'irb'
+IRB.start(__FILE__)
