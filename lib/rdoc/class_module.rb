@@ -41,6 +41,8 @@ class RDoc::ClassModule < RDoc::Context
 
   attr_accessor :is_alias_for
 
+  attr_accessor :type_parameters
+
   ##
   # Return a RDoc::ClassModule of class +class_type+ that is a copy
   # of module +module+. Used to promote modules to classes.
@@ -108,13 +110,14 @@ class RDoc::ClassModule < RDoc::Context
   #
   # This is a constructor for subclasses, and must never be called directly.
 
-  def initialize(name, superclass = nil)
+  def initialize(name, superclass = nil, type_parameters = [])
     @constant_aliases = []
     @diagram          = nil
     @is_alias_for     = nil
     @name             = name
     @superclass       = superclass
     @comment_location = [] # [[comment, location]]
+    @type_parameters  = type_parameters
 
     super()
   end
@@ -339,8 +342,8 @@ class RDoc::ClassModule < RDoc::Context
         tl.relative_name
       end,
       parent.full_name,
-      parent.class,
-    ]
+      parent.class
+    ].concat(type_parameters)
   end
 
   def marshal_load array # :nodoc:
@@ -425,6 +428,7 @@ class RDoc::ClassModule < RDoc::Context
 
     @parent_name  = array[12]
     @parent_class = array[13]
+    @type_parameters = array[14] if array[14]
   end
 
   ##
@@ -723,6 +727,12 @@ class RDoc::ClassModule < RDoc::Context
 
   def type
     module? ? 'module' : 'class'
+  end
+
+  def type_parameters_to_s
+    return nil if type_parameters.empty?
+
+    "[" +  type_parameters.map(&:to_s).join(", ") + "]"
   end
 
   ##

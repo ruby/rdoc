@@ -901,6 +901,33 @@ class RDoc::Parser::Ruby < RDoc::Parser
     read_documentation_modifiers cls, RDoc::CLASS_MODIFIERS
     record_location cls
 
+    if comment.text =~ /^#(\W)*:type-params:$/
+      all_lines = comment.text.lines
+      non_param_lines = all_lines.take_while { |line| line !~ /^#(\W)*:type-params:$/ }
+      param_lines = all_lines.drop(non_param_lines.size).drop(1).take_while { |line| line !~ /^#\W*$/ }
+      comment.text = non_param_lines.join("\n")
+      cls.type_parameters = param_lines.map do |type_param_line|
+        type_params = type_param_line.gsub(/^#/, '').gsub(/\n$/, '').lstrip.split(" ")
+        type_param_hash = { name: nil, variance: :invariant, unchecked: false, upper_bound: nil }
+        type_params.each_with_index do |type_param, i|
+          case type_param
+          when "unchecked"
+            type_param_hash[:unchecked] = true
+          when "in"
+            type_param_hash[:variance] = :contravariant
+          when "out"
+            type_param_hash[:variance] = :covariant
+          when "<"
+            type_param_hash[:upper_bound] = type_params[i + 1]
+            break
+          else
+            type_param_hash[:name] = type_param
+          end
+        end
+        RDoc::TypeParameter.new(*type_param_hash.values)
+      end
+    end
+
     cls.add_comment comment, @top_level
 
     @top_level.add_to_classes_or_modules cls
@@ -1713,6 +1740,34 @@ class RDoc::Parser::Ruby < RDoc::Parser
     record_location mod
 
     read_documentation_modifiers mod, RDoc::CLASS_MODIFIERS
+
+    if comment.text =~ /^#(\W)*:type-params:$/
+      all_lines = comment.text.lines
+      non_param_lines = all_lines.take_while { |line| line !~ /^#(\W)*:type-params:$/ }
+      param_lines = all_lines.drop(non_param_lines.size).drop(1).take_while { |line| line !~ /^#\W*$/ }
+      comment.text = non_param_lines.join("\n")
+      mod.type_parameters = param_lines.map do |type_param_line|
+        type_params = type_param_line.gsub(/^#/, '').gsub(/\n$/, '').lstrip.split(" ")
+        type_param_hash = { name: nil, variance: :invariant, unchecked: false, upper_bound: nil }
+        type_params.each_with_index do |type_param, i|
+          case type_param
+          when "unchecked"
+            type_param_hash[:unchecked] = true
+          when "in"
+            type_param_hash[:variance] = :contravariant
+          when "out"
+            type_param_hash[:variance] = :covariant
+          when "<"
+            type_param_hash[:upper_bound] = type_params[i + 1]
+            break
+          else
+            type_param_hash[:name] = type_param
+          end
+        end
+        RDoc::TypeParameter.new(*type_param_hash.values)
+      end
+    end
+
     mod.add_comment comment, @top_level
     parse_statements mod
 
