@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'rdoc'
+
+# This is the easy way to prepare various kinds of RDoc objects.
+require_relative '../doc/rdoc/markup_reference'
+
+require 'irb'
+IRB.start(__FILE__)
