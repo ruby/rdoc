@@ -1,0 +1,12 @@
+<%- unless klass.attributes.empty? then %>
+<!-- Method Quickref -->
+<div id="attribute-list-section" class="nav-section">
+  <h3>Atributes</h3>
+
+  <ul class="link-list" role="directory">
+    <%- klass.attributes.each do |attribute| -%>
+      <a href="#<%= attribute.aref %>"><%= h attribute.name -%></a>
+    <%- end -%>
+  </ul>
+</div>
+<%- end -%>
