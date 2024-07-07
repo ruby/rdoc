@@ -87,7 +87,7 @@ class RDocParserTest < RDoc::TestCase
 
   def test_class_for_executable
     with_top_level("app", "#!/usr/bin/env ruby -w\n") do |top_level, content|
-      parser = @RP.for top_level, top_level.absolute_name, content, @options, :stats
+      parser = @RP.for top_level, content, @options, :stats
 
       assert_kind_of RDoc::Parser::Ruby, parser
 
@@ -103,7 +103,7 @@ class RDocParserTest < RDoc::TestCase
         File.chmod 0000, io.path
         forbidden = @store.add_file io.path
 
-        parser = @RP.for forbidden, 'forbidden', '', @options, :stats
+        parser = @RP.for forbidden, '', @options, :stats
 
         assert_nil parser
       ensure
@@ -116,7 +116,7 @@ class RDocParserTest < RDoc::TestCase
 
   def test_class_for_modeline
     with_top_level("NEWS", "# -*- rdoc -*-\n= NEWS\n") do |top_level, content|
-      parser = @RP.for top_level, top_level.absolute_name, content, @options, :stats
+      parser = @RP.for top_level, content, @options, :stats
 
       assert_kind_of RDoc::Parser::Simple, parser
 
@@ -215,13 +215,13 @@ class RDocParserTest < RDoc::TestCase
   def test_class_for_binary
     dat_fixture = File.read(@binary_dat_fixture_path)
     with_top_level("binary.dat", dat_fixture) do |top_level, content|
-      assert_nil @RP.for(top_level, top_level.absolute_name, content, @options, nil)
+      assert_nil @RP.for(top_level, content, @options, nil)
     end
   end
 
   def test_class_for_markup
     with_top_level("file.rb", "# coding: utf-8 markup: rd") do |top_level, content|
-      parser = @RP.for top_level, top_level.absolute_name, content, @options, nil
+      parser = @RP.for top_level, content, @options, nil
 
       assert_kind_of @RP::RD, parser
     end
