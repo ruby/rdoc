@@ -24,7 +24,7 @@ RDoc::Task.new do |doc|
   doc.main = 'README.rdoc'
   doc.title = "rdoc #{RDoc::VERSION} Documentation"
   doc.rdoc_dir = '_site' # for github pages
-  doc.rdoc_files = FileList.new %w[lib/**/*.rb *.rdoc doc/rdoc/markup_reference.rb] - PARSER_FILES
+  doc.rdoc_files = FileList.new %w[lib/**/*.rb *.rdoc *.md doc/rdoc/markup_reference.rb] - PARSER_FILES
 end
 
 task "coverage" do
