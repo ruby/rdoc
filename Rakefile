@@ -105,8 +105,8 @@ begin
   require 'rubocop/rake_task'
 rescue LoadError
 else
-  RuboCop::RakeTask.new(:rubocop) do |t|
-    t.options = [*parsed_files]
+  RuboCop::RakeTask.new(:format_generated_files) do |t|
+    t.options = parsed_files + ["--config=.generated_files_rubocop.yml"]
   end
-  task :build => [:generate, "rubocop:autocorrect"]
+  task :build => [:generate, "format_generated_files:autocorrect"]
 end
