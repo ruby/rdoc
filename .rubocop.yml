@@ -1,0 +1,19 @@
+AllCops:
+  TargetRubyVersion: 3.0
+  DisabledByDefault: true
+  SuggestExtensions: false
+
+Layout/TrailingWhitespace:
+  Enabled: true
+
+Layout/TrailingEmptyLines:
+  Enabled: true
+
+Layout/SpaceAroundKeyword:
+  Enabled: true
+
+Layout/SpaceBeforeComma:
+  Enabled: true
+
+Layout/SpaceAfterComma:
+  Enabled: true
