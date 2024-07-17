@@ -1,0 +1,12 @@
+# This rubocop configuration is ONLY for the generated files (listed in Rakefile). It is not meant to be used for RDoc's
+# source code.
+# The purpose of this file is to ensure the generated files don't have trailing whitespace or empty lines, which could
+# be a problem for ruby/ruby's CI
+AllCops:
+  TargetRubyVersion: 3.3
+  DisabledByDefault: true
+
+Layout/TrailingWhitespace:
+  Enabled: true
+Layout/TrailingEmptyLines:
+  Enabled: true
