@@ -299,14 +299,13 @@ nav p {
 .navigation-toggle {
   position: fixed;
   left: 4px;
-  top: 6px;
   z-index: 100;
 
   background: transparent;
   border: none;
   cursor: pointer;
-  margin-left: 7px;
   padding: 4px;
+  font-size: 24px;
 }
 .navigation-toggle[aria-expanded="true"] {
   left: 260px;
