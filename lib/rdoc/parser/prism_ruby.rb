@@ -612,7 +612,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   # Adds a method defined by `def` syntax
 
-  def add_method(name, receiver_name:, receiver_fallback_type:, visibility:, singleton:, signature:, tokens:, start_line:, end_line:)
+  def add_method(name, receiver_name:, receiver_fallback_type:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, start_line:, end_line:)
     receiver = receiver_name ? find_or_create_module_path(receiver_name, receiver_fallback_type) : @container
     meth = RDoc::AnyMethod.new(nil, name)
     if (comment = consecutive_comment(start_line))
@@ -643,11 +643,9 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     meth.singleton = singleton
     receiver.add_method(meth) # should add after setting singleton and before setting visibility
     meth.visibility = visibility
-    if signature
-      meth.params ||= signature.params
-      meth.calls_super = signature.calls_super
-      meth.block_params ||= signature.yields.first unless signature.yields.empty?
-    end
+    meth.params ||= params
+    meth.calls_super = calls_super
+    meth.block_params ||= block_params if block_params
     record_location(meth)
     meth.start_collecting_tokens
     tokens.each do |token|
@@ -974,7 +972,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         return
       end
       name = node.name.to_s
-      signature = MethodSignature.new(node)
+      params, block_params, calls_super = MethodSignatureVisitor.scan_signature(node)
       tokens = @scanner.visible_tokens_from_location(node.location)
 
       @scanner.add_method(
@@ -983,7 +981,9 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         receiver_fallback_type: receiver_fallback_type,
         visibility: visibility,
         singleton: singleton,
-        signature: signature,
+        params: params,
+        block_params: block_params,
+        calls_super: calls_super,
         tokens: tokens,
         start_line: start_line,
         end_line: end_line
@@ -1054,32 +1054,42 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         "#{parent_name}::#{node.name}" if parent_name
       end
     end
-  end
 
-  class MethodSignature < Prism::Visitor # :nodoc:
-    attr_reader :yields, :calls_super, :params
-    def initialize(def_node)
-      @yields = []
-      @calls_super = false
-      @params = "(#{def_node.parameters&.slice})"
-      def_node.body&.accept(self)
-    end
+    class MethodSignatureVisitor < Prism::Visitor # :nodoc:
+      class << self
+        def scan_signature(def_node)
+          visitor = new
+          def_node.body&.accept(visitor)
+          params = "(#{def_node.parameters&.slice})"
+          block_params = visitor.yields.first
+          [params, block_params, visitor.calls_super]
+        end
+      end
 
-    def visit_def_node(node)
-      # stop traverse inside nested def
-    end
+      attr_reader :params, :yields, :calls_super
 
-    def visit_yield_node(node)
-      yields << (node.arguments&.slice || '')
-    end
+      def initialize
+        @params = nil
+        @calls_super = false
+        @yields = []
+      end
 
-    def visit_super_node(node)
-      @calls_super = true
-      super
-    end
+      def visit_def_node(node)
+        # stop traverse inside nested def
+      end
 
-    def visit_forwarding_super_node(node)
-      @calls_super = true
+      def visit_yield_node(node)
+        @yields << (node.arguments&.slice || '')
+      end
+
+      def visit_super_node(node)
+        @calls_super = true
+        super
+      end
+
+      def visit_forwarding_super_node(node)
+        @calls_super = true
+      end
     end
   end
 end
