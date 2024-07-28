@@ -375,11 +375,11 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         ''
       when 'method'
         method_name = param
-        line_no = node ? node.location.start_line : line
+        line_no = line
         ''
       when 'singleton-method'
         method_name = param
-        line_no = node ? node.location.start_line : line
+        line_no = line
         singleton_method = true
         visibility = :public
         ''
@@ -399,7 +399,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         @container.add_attribute(a)
         a.visibility = visibility
       end
-    else
+    elsif line_no || node
       method_name ||= call_node_name_arguments(node).first if is_call_node
       meth = RDoc::AnyMethod.new(@container, method_name)
       meth.singleton = @singleton || singleton_method
@@ -411,13 +411,17 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       meth.params ||= '()'
       meth.comment = comment
       meth.store = @store
-      meth.line = node ? node.location.start_line : line_no
-      record_location(meth)
       if node
-        meth.start_collecting_tokens
-        visible_tokens_from_location(node.location).each do |token|
-          meth.token_stream << token
-        end
+        meth.line = node.location.start_line
+        tokens = visible_tokens_from_location(node.location)
+      else
+        meth.line = line_no
+        tokens = [file_line_comment_token(line_no)]
+      end
+      record_location(meth)
+      meth.start_collecting_tokens
+      tokens.each do |token|
+        meth.token_stream << token
       end
       @container.add_method(meth)
       meth.visibility = visibility

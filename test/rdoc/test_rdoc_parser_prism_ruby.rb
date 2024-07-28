@@ -460,6 +460,29 @@ module RDocParserPrismTestCases
     assert_equal ['a1', 'ar1', 'aw1', 'arw1'], klass.attributes.map(&:name)
   end
 
+  def test_unknown_meta_method
+    util_parser <<~RUBY
+      class Foo
+        ##
+        # :call-seq:
+        #   two(name)
+        #
+        # method or singleton-method directive is missing
+      end
+
+      class Bar
+        ##
+        # unknown meta method
+        add_my_method("foo" + "bar")
+      end
+    RUBY
+
+    foo = @store.find_class_named 'Foo'
+    bar = @store.find_class_named 'Bar'
+    assert_equal [], foo.method_list.map(&:name)
+    assert_equal ['unknown'], bar.method_list.map(&:name)
+  end
+
   def test_method
     util_parser <<~RUBY
       class Foo
