@@ -990,6 +990,18 @@ module RDocParserPrismTestCases
     assert_equal ['m2', 'm4', 'm5'], public_singleton_methods.map(&:name)
   end
 
+  def test_undocumentable_change_visibility
+    pend if accept_legacy_bug?
+    util_parser <<~RUBY
+      class A
+        def m1; end
+        private 42, :m1 # maybe not Module#private
+      end
+    RUBY
+    klass = @store.find_class_named 'A'
+    assert_equal [:public], klass.method_list.map(&:visibility)
+  end
+
   def test_method_visibility_change_in_subclass
     pend 'not implemented' if accept_legacy_bug?
     util_parser <<~RUBY
@@ -1101,6 +1113,20 @@ module RDocParserPrismTestCases
     end
   end
 
+  def test_invalid_alias_method
+    pend if accept_legacy_bug?
+    util_parser <<~RUBY
+      class Foo
+        def foo; end
+        alias_method
+        alias_method :foo
+        alias_method :foo, :bar, :baz
+        alias_method 42, :foo
+      end
+    RUBY
+    assert_equal ['foo'], @top_level.classes.first.method_list.map(&:name)
+  end
+
   def test_alias_method_stopdoc_nodoc
     util_parser <<~RUBY
       class Foo
@@ -1161,6 +1187,18 @@ module RDocParserPrismTestCases
     assert_equal [7, 7], [w1.line, w2.line]
     assert_equal [9, 9], [rw1.line, rw2.line]
     assert_equal [@top_level] * 8, [a1, a2, r1, r2, w1, w2, rw1, rw2].map(&:file)
+  end
+
+  def test_undocumentable_attributes
+    util_parser <<~RUBY
+      class Foo
+        attr
+        attr 42, :foo
+      end
+    RUBY
+    klass = @store.find_class_named 'Foo'
+    assert_empty klass.method_list
+    assert_empty klass.attributes
   end
 
   def test_singleton_class_attributes
@@ -1427,6 +1465,8 @@ module RDocParserPrismTestCases
         A = 1
         B = 2
         C = 3
+        private_constant
+        private_constant foo
         private_constant :A
         private_constant :B, :C
         public_constant :B
@@ -1577,6 +1617,22 @@ module RDocParserPrismTestCases
     RUBY
     klass = @store.find_class_named 'A::B::C::D::Foo'
     assert_equal 'A::B::M', klass.includes.first.module.full_name
+  end
+
+  def test_various_argument_include
+    pend 'not implemented' if accept_legacy_bug?
+    util_parser <<~RUBY
+      module A; end
+      module B; end
+      module C; end
+      class A
+        include
+        include A, B
+        include 42, C # Maybe not Module#include
+      end
+    RUBY
+    klass = @top_level.classes.first
+    assert_equal ['A', 'B'], klass.includes.map(&:name)
   end
 
   def test_require
