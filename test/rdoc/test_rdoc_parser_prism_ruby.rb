@@ -680,6 +680,22 @@ module RDocParserPrismTestCases
     assert_equal expected, methods.map(&:arglists)
   end
 
+  def test_calls_super
+    util_parser <<~RUBY
+      class A
+        def m1; foo; bar; end
+        def m2; if cond; super(a); end; end # SuperNode
+        def m3; tap do; super; end; end # ForwardingSuperNode
+        def m4; def a.b; super; end; end # super inside another method
+      end
+    RUBY
+
+    klass = @store.find_class_named 'A'
+    methods = klass.method_list
+    assert_equal ['m1', 'm2', 'm3', 'm4'], methods.map(&:name)
+    assert_equal [false, true, true, false], methods.map(&:calls_super)
+  end
+
   def test_method_args_directive
     util_parser <<~RUBY
       class Foo
