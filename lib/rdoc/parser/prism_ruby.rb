@@ -831,7 +831,15 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       when Prism::NilNode, Prism::TrueNode, Prism::FalseNode
         visibility = :public
         singleton = false
-        receiver_name = { Prism::NilNode => 'NilClass', Prism::TrueNode => 'TrueClass', Prism::FalseNode => 'FalseClass' }[node.receiver.class]
+        receiver_name =
+          case node.receiver
+          when Prism::NilNode
+            'NilClass'
+          when Prism::TrueNode
+            'TrueClass'
+          when Prism::FalseNode
+            'FalseClass'
+          end
         receiver_fallback_type = :class
       when Prism::SelfNode
         # singleton method of a singleton class is not documentable
