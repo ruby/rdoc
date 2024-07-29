@@ -144,6 +144,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         consecutive_comments << (current = [comment])
       end
     end
+    consecutive_comments.reject!(&:empty?)
 
     # Example: line_no = 5, start_line = 2, comment_text = "# comment_start_line\n# comment\n"
     # 1| class A
@@ -152,7 +153,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     # 4|
     # 5|   def f; end # comment linked to this line
     # 6| end
-    @unprocessed_comments = consecutive_comments.reject(&:empty?).map do |comments|
+    @unprocessed_comments = consecutive_comments.map! do |comments|
       start_line = comments.first.location.start_line
       line_no = comments.last.location.end_line + (comments.last.location.end_column == 0 ? 0 : 1)
       texts = comments.map do |c|
