@@ -286,25 +286,24 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       handle_consecutive_comment_directive(meth, comment)
       comment.normalize
       comment.extract_call_seq(meth)
-      meth.name ||= meth.call_seq[/\A[^()\s]+/] if meth.call_seq
-      meth.name ||= 'unknown'
-      meth.params ||= '()'
       meth.comment = comment
-      meth.store = @store
       if node
-        meth.line = node.location.start_line
         tokens = visible_tokens_from_location(node.location)
+        line_no = node.location.start_line
       else
-        meth.line = line_no
         tokens = [file_line_comment_token(line_no)]
       end
-      record_location(meth)
-      meth.start_collecting_tokens
-      tokens.each do |token|
-        meth.token_stream << token
-      end
-      @container.add_method(meth)
-      meth.visibility = visibility
+      internal_add_method(
+        @container,
+        meth,
+        line_no: line_no,
+        visibility: visibility,
+        singleton: @singleton || singleton_method,
+        params: '()',
+        calls_super: false,
+        block_params: nil,
+        tokens: tokens
+      )
     end
   end
 
@@ -507,8 +506,6 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     handle_modifier_directive(meth, end_line)
     return unless should_document?(meth)
 
-    meth.store = @store
-    meth.line = start_line
 
     if meth.name == 'initialize' && !singleton
       if meth.dont_rename_initialize
@@ -520,8 +517,26 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       end
     end
 
+    internal_add_method(
+      receiver,
+      meth,
+      line_no: start_line,
+      visibility: visibility,
+      singleton: singleton,
+      params: params,
+      calls_super: calls_super,
+      block_params: block_params,
+      tokens: tokens
+    )
+  end
+
+  private def internal_add_method(container, meth, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:) # :nodoc:
+    meth.name ||= meth.call_seq[/\A[^()\s]+/] if meth.call_seq
+    meth.name ||= 'unknown'
+    meth.store = @store
+    meth.line = line_no
     meth.singleton = singleton
-    receiver.add_method(meth) # should add after setting singleton and before setting visibility
+    container.add_method(meth) # should add after setting singleton and before setting visibility
     meth.visibility = visibility
     meth.params ||= params
     meth.calls_super = calls_super
