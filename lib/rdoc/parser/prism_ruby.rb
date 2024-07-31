@@ -885,12 +885,24 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       arguments_node = call_node.arguments
       return unless arguments_node
       symbols = symbol_arguments(call_node)
-      return symbols.map(&:to_s) if symbols # module_function :foo, :bar
-      return unless arguments_node.arguments.size == 1
-      arg = arguments_node.arguments.first
-      return unless arg.is_a?(Prism::DefNode)
-      # `module_function def foo; end` or `private_class_method def self.foo; end`
-      [arg.name.to_s] if singleton ? arg.receiver.is_a?(Prism::SelfNode) : arg.receiver.nil?
+      if symbols
+        # module_function :foo, :bar
+        return symbols.map(&:to_s)
+      else
+        return unless arguments_node.arguments.size == 1
+        arg = arguments_node.arguments.first
+        return unless arg.is_a?(Prism::DefNode)
+
+        if singleton
+          # `private_class_method def foo; end` `private_class_method def not_self.foo; end` should be ignored
+          return unless arg.receiver.is_a?(Prism::SelfNode)
+        else
+          # `module_function def something.foo` should be ignored
+          return if arg.receiver
+        end
+        # `module_function def foo; end` or `private_class_method def self.foo; end`
+        [arg.name.to_s]
+      end
     end
 
     def constant_path_string(node)

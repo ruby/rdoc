@@ -1007,11 +1007,17 @@ module RDocParserPrismTestCases
     util_parser <<~RUBY
       class A
         def m1; end
-        private 42, :m1 # maybe not Module#private
+        def self.m2; end
+        private 42, :m # maybe not Module#private
+        # ignore all non-standard `private def` and `private_class_method def`
+        private def self.m1; end
+        private_class_method def m2; end
+        private def to_s.m1; end
+        private_class_method def to_s.m2; end
       end
     RUBY
     klass = @store.find_class_named 'A'
-    assert_equal [:public], klass.method_list.map(&:visibility)
+    assert_equal [:public] * 4, klass.method_list.map(&:visibility)
   end
 
   def test_method_visibility_change_in_subclass
