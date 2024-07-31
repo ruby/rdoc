@@ -43,6 +43,11 @@ jobs:
       run: bundle exec rake
       env:
         RUBYOPT: --enable-frozen_string_literal
+    - name: Run test with Prism parser
+      run: bundle exec rake
+      env:
+        RUBYOPT: --enable-frozen_string_literal
+        RDOC_USE_PRISM_PARSER: true
     - if: ${{ matrix.ruby == 'head' && startsWith(matrix.os, 'ubuntu') }}
       run: bundle exec rake rdoc
   lint:
