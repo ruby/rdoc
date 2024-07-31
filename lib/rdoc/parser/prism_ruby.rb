@@ -670,25 +670,6 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   end
 
   class RDocVisitor < Prism::Visitor # :nodoc:
-    DSL = {
-      attr: -> (v, call_node) { v._visit_call_attr_reader_writer_accessor(call_node, 'R') },
-      attr_reader: -> (v, call_node) { v._visit_call_attr_reader_writer_accessor(call_node, 'R') },
-      attr_writer: -> (v, call_node) { v._visit_call_attr_reader_writer_accessor(call_node, 'W') },
-      attr_accessor: -> (v, call_node) { v._visit_call_attr_reader_writer_accessor(call_node, 'RW') },
-      include: -> (v, call_node) { v._visit_call_include(call_node) },
-      extend: -> (v, call_node) { v._visit_call_extend(call_node) },
-      public: -> (v, call_node, &block) { v._visit_call_public_private_protected(call_node, :public, &block) },
-      private: -> (v, call_node, &block) { v._visit_call_public_private_protected(call_node, :private, &block) },
-      protected: -> (v, call_node, &block) { v._visit_call_public_private_protected(call_node, :protected, &block) },
-      private_constant: -> (v, call_node) { v._visit_call_private_constant(call_node) },
-      public_constant: -> (v, call_node) { v._visit_call_public_constant(call_node) },
-      require: -> (v, call_node) { v._visit_call_require(call_node) },
-      alias_method: -> (v, call_node) { v._visit_call_alias_method(call_node) },
-      module_function: -> (v, call_node, &block) { v._visit_call_module_function(call_node, &block) },
-      public_class_method: -> (v, call_node, &block) { v._visit_call_public_private_class_method(call_node, :public, &block) },
-      private_class_method: -> (v, call_node, &block) { v._visit_call_public_private_class_method(call_node, :private, &block) },
-    }
-
     def initialize(scanner, top_level, store)
       @scanner = scanner
       @top_level = top_level
@@ -697,83 +678,46 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
     def visit_call_node(node)
       @scanner.process_comments_until(node.location.start_line - 1)
-      if node.receiver.nil? && (dsl_proc = DSL[node.name])
-        dsl_proc.call(self, node) { super }
+      if node.receiver.nil?
+        case node.name
+        when :attr
+          _visit_call_attr_reader_writer_accessor(node, 'R')
+        when :attr_reader
+          _visit_call_attr_reader_writer_accessor(node, 'R')
+        when :attr_writer
+          _visit_call_attr_reader_writer_accessor(node, 'W')
+        when :attr_accessor
+          _visit_call_attr_reader_writer_accessor(node, 'RW')
+        when :include
+          _visit_call_include(node)
+        when :extend
+          _visit_call_extend(node)
+        when :public
+          _visit_call_public_private_protected(node, :public) { super }
+        when :private
+          _visit_call_public_private_protected(node, :private) { super }
+        when :protected
+          _visit_call_public_private_protected(node, :protected) { super }
+        when :private_constant
+          _visit_call_private_constant(node)
+        when :public_constant
+          _visit_call_public_constant(node)
+        when :require
+          _visit_call_require(node)
+        when :alias_method
+          _visit_call_alias_method(node)
+        when :module_function
+          _visit_call_module_function(node) { super }
+        when :public_class_method
+          _visit_call_public_private_class_method(node, :public) { super }
+        when :private_class_method
+          _visit_call_public_private_class_method(node, :private) { super }
+        else
+          super
+        end
       else
         super
       end
-    end
-
-    def _visit_call_require(call_node)
-      return unless call_node.arguments&.arguments&.size == 1
-      arg = call_node.arguments.arguments.first
-      return unless arg.is_a?(Prism::StringNode)
-      @scanner.container.add_require(RDoc::Require.new(arg.unescaped, nil))
-    end
-
-    def _visit_call_module_function(call_node)
-      yield
-      return if @scanner.singleton
-      names = visibility_method_arguments(call_node, singleton: false)&.map(&:to_s)
-      @scanner.change_method_to_module_function(names) if names
-    end
-
-    def _visit_call_public_private_class_method(call_node, visibility)
-      yield
-      return if @scanner.singleton
-      names = visibility_method_arguments(call_node, singleton: true)
-      @scanner.change_method_visibility(names, visibility, singleton: true) if names
-    end
-
-    def _visit_call_public_private_protected(call_node, visibility)
-      arguments_node = call_node.arguments
-      if arguments_node.nil? # `public` `private`
-        @scanner.visibility = visibility
-      else # `public :foo, :bar`, `private def foo; end`
-        yield
-        names = visibility_method_arguments(call_node, singleton: @scanner.singleton)
-        @scanner.change_method_visibility(names, visibility) if names
-      end
-    end
-
-    def _visit_call_alias_method(call_node)
-      new_name, old_name, *rest = symbol_arguments(call_node)
-      return unless old_name && new_name && rest.empty?
-      @scanner.add_alias_method(old_name.to_s, new_name.to_s, call_node.location.start_line)
-    end
-
-    def _visit_call_include(call_node)
-      names = constant_arguments_names(call_node)
-      line_no = call_node.location.start_line
-      return unless names
-
-      if @scanner.singleton
-        @scanner.add_extends(names, line_no)
-      else
-        @scanner.add_includes(names, line_no)
-      end
-    end
-
-    def _visit_call_extend(call_node)
-      names = constant_arguments_names(call_node)
-      @scanner.add_extends(names, call_node.location.start_line) if names && !@scanner.singleton
-    end
-
-    def _visit_call_public_constant(call_node)
-      return if @scanner.singleton
-      names = symbol_arguments(call_node)
-      @scanner.container.set_constant_visibility_for(names.map(&:to_s), :public) if names
-    end
-
-    def _visit_call_private_constant(call_node)
-      return if @scanner.singleton
-      names = symbol_arguments(call_node)
-      @scanner.container.set_constant_visibility_for(names.map(&:to_s), :private) if names
-    end
-
-    def _visit_call_attr_reader_writer_accessor(call_node, rw)
-      names = symbol_arguments(call_node)
-      @scanner.add_attributes(names.map(&:to_s), rw, call_node.location.start_line) if names
     end
 
     def visit_alias_method_node(node)
@@ -959,6 +903,77 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       end
     end
 
+    def _visit_call_require(call_node)
+      return unless call_node.arguments&.arguments&.size == 1
+      arg = call_node.arguments.arguments.first
+      return unless arg.is_a?(Prism::StringNode)
+      @scanner.container.add_require(RDoc::Require.new(arg.unescaped, nil))
+    end
+
+    def _visit_call_module_function(call_node)
+      yield
+      return if @scanner.singleton
+      names = visibility_method_arguments(call_node, singleton: false)&.map(&:to_s)
+      @scanner.change_method_to_module_function(names) if names
+    end
+
+    def _visit_call_public_private_class_method(call_node, visibility)
+      yield
+      return if @scanner.singleton
+      names = visibility_method_arguments(call_node, singleton: true)
+      @scanner.change_method_visibility(names, visibility, singleton: true) if names
+    end
+
+    def _visit_call_public_private_protected(call_node, visibility)
+      arguments_node = call_node.arguments
+      if arguments_node.nil? # `public` `private`
+        @scanner.visibility = visibility
+      else # `public :foo, :bar`, `private def foo; end`
+        yield
+        names = visibility_method_arguments(call_node, singleton: @scanner.singleton)
+        @scanner.change_method_visibility(names, visibility) if names
+      end
+    end
+
+    def _visit_call_alias_method(call_node)
+      new_name, old_name, *rest = symbol_arguments(call_node)
+      return unless old_name && new_name && rest.empty?
+      @scanner.add_alias_method(old_name.to_s, new_name.to_s, call_node.location.start_line)
+    end
+
+    def _visit_call_include(call_node)
+      names = constant_arguments_names(call_node)
+      line_no = call_node.location.start_line
+      return unless names
+
+      if @scanner.singleton
+        @scanner.add_extends(names, line_no)
+      else
+        @scanner.add_includes(names, line_no)
+      end
+    end
+
+    def _visit_call_extend(call_node)
+      names = constant_arguments_names(call_node)
+      @scanner.add_extends(names, call_node.location.start_line) if names && !@scanner.singleton
+    end
+
+    def _visit_call_public_constant(call_node)
+      return if @scanner.singleton
+      names = symbol_arguments(call_node)
+      @scanner.container.set_constant_visibility_for(names.map(&:to_s), :public) if names
+    end
+
+    def _visit_call_private_constant(call_node)
+      return if @scanner.singleton
+      names = symbol_arguments(call_node)
+      @scanner.container.set_constant_visibility_for(names.map(&:to_s), :private) if names
+    end
+
+    def _visit_call_attr_reader_writer_accessor(call_node, rw)
+      names = symbol_arguments(call_node)
+      @scanner.add_attributes(names.map(&:to_s), rw, call_node.location.start_line) if names
+    end
     class MethodSignatureVisitor < Prism::Visitor # :nodoc:
       class << self
         def scan_signature(def_node)

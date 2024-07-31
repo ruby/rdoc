@@ -615,22 +615,34 @@ module RDocParserPrismTestCases
         included do
           ##
           # :singleton-method:
-          # Hello
+          # comment foo
           mattr_accessor :foo
 
           ##
           # :method: bar
-          # World
+          # comment bar
           add_my_method :bar
         end
+
+        tap do
+          # comment baz1
+          def baz1; end
+        end
+
+        self.tap do
+          # comment baz2
+          def baz2; end
+        end
+
+        my_decorator def self.baz3; end
+
+        self.my_decorator def baz4; end
       end
     RUBY
     mod = @store.find_module_named 'A'
-    foo, bar = mod.method_list
-    assert_equal 'A::foo', foo.full_name
-    assert_equal 'A#bar', bar.full_name
-    assert_equal 'Hello', foo.comment.text.strip
-    assert_equal 'World', bar.comment.text.strip
+    methods = mod.method_list
+    assert_equal ['A::foo', 'A#bar', 'A#baz1', 'A#baz2', 'A::baz3', 'A#baz4'], methods.map(&:full_name)
+    assert_equal ['comment foo', 'comment bar', 'comment baz1', 'comment baz2'], methods.take(4).map { |m| m.comment.text.strip }
   end
 
   def test_method_yields_directive
