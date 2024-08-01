@@ -1977,7 +1977,7 @@ class TestRDocParserPrismRuby < RDoc::TestCase
   end
 
   def util_parser(content)
-    @parser = RDoc::Parser::PrismRuby.new @top_level, @filename, content, @options, @stats
+    @parser = RDoc::Parser::PrismRuby.new @top_level, content, @options, @stats
     @parser.scan
   end
 end
@@ -1991,7 +1991,7 @@ class TestRDocParserRubyWithPrismRubyTestCases < RDoc::TestCase
   end
 
   def util_parser(content)
-    @parser = RDoc::Parser::Ruby.new @top_level, @filename, content, @options, @stats
+    @parser = RDoc::Parser::Ruby.new @top_level, content, @options, @stats
     @parser.scan
   end
 end unless ENV['RDOC_USE_PRISM_PARSER']
