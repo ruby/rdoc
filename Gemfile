@@ -10,4 +10,5 @@ group :development do
   gem 'test-unit-ruby-core'
   gem 'rubocop', '>= 1.31.0'
   gem 'gettext'
+  gem 'prism', '>= 0.30.0'
 end

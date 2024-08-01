@@ -8,6 +8,9 @@ permissions:  # added using https://github.com/step-security/secure-workflows
 jobs:
   ruby-versions:
     uses: ruby/actions/.github/workflows/ruby_versions.yml@master
+    with:
+      # 2.7 breaks `test_parse_statements_nodoc_identifier_alias_method`
+      min_version: 3.0
 
   test:
     needs: ruby-versions
@@ -43,6 +46,11 @@ jobs:
       run: bundle exec rake
       env:
         RUBYOPT: --enable-frozen_string_literal
+    - name: Run test with Prism parser
+      run: bundle exec rake
+      env:
+        RUBYOPT: --enable-frozen_string_literal
+        RDOC_USE_PRISM_PARSER: true
     - if: ${{ matrix.ruby == 'head' && startsWith(matrix.os, 'ubuntu') }}
       run: bundle exec rake rdoc
   lint:
