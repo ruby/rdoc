@@ -214,13 +214,6 @@ nav {
   background: white;
 }
 
-@media (min-width: 1024px) {
-  nav {
-    min-height: unset;
-    height: calc(100vh - 100px); /* reduce the footer height */
-  }
-}
-
 main {
   display: block;
   margin: 3em 1em 1em;
