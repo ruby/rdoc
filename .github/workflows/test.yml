@@ -11,6 +11,7 @@ jobs:
     with:
       # 2.7 breaks `test_parse_statements_nodoc_identifier_alias_method`
       min_version: 3.0
+      versions: '["mswin"]'
       engine: cruby-truffleruby
 
   test:
@@ -25,9 +26,11 @@ jobs:
             ruby: truffleruby
           - os: windows-latest
             ruby: truffleruby-head
-          # Remove it once https://github.com/ruby/setup-ruby/issues/680 is fixed
-          - os: windows-latest
-            ruby: 3.4
+          - os: macos-latest
+            ruby: mswin
+          - os: ubuntu-latest
+            ruby: mswin
+
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4 # v3.3.0
