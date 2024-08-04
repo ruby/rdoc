@@ -223,7 +223,8 @@ nav {
 
 main {
   display: block;
-  margin: 3em 1em 1em;
+  margin: 3em auto 1em;
+  padding: 0 1em; /* Add padding to keep space between main content and sidebar/right side of the screen */
   min-width: 340px;
   font-size: 16px;
   width: 100%;
@@ -232,8 +233,7 @@ main {
 
 @media (min-width: 1024px) {
   main {
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 300px;
   }
 }
 
