@@ -167,6 +167,7 @@ module RDoc
   autoload :Store,          "#{__dir__}/rdoc/store"
   autoload :Task,           "#{__dir__}/rdoc/task"
   autoload :Text,           "#{__dir__}/rdoc/text"
+  autoload :Server,         "#{__dir__}/rdoc/server"
 
   autoload :Markdown,       "#{__dir__}/rdoc/markdown"
   autoload :Markup,         "#{__dir__}/rdoc/markup"

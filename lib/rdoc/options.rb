@@ -341,6 +341,11 @@ class RDoc::Options
   attr_reader :visibility
 
   ##
+  # The server's port to listen on. `nil` means the server is disabled.
+
+  attr_reader :server_port
+
+  ##
   # Indicates if files of test suites should be skipped
   attr_accessor :skip_tests
 
@@ -392,6 +397,7 @@ class RDoc::Options
     @encoding = Encoding::UTF_8
     @charset = @encoding.name
     @skip_tests = true
+    @server_port = false
   end
 
   def init_with map # :nodoc:
@@ -1115,6 +1121,15 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.separator nil
+
+      opt.on(
+        "--server[=PORT]",
+        Integer,
+        "[Experimental] Run WEBrick server with generated documentation.",
+        "Uses port 4000 by default. Will use ./tmp for file output."
+      ) do |port|
+        @server_port = port || 4000
+      end
 
       opt.on("--help", "-h", "Display this help") do
         RDoc::RDoc::GENERATORS.each_key do |generator|

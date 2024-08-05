@@ -210,6 +210,7 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
     "lib/rdoc/ri/task.rb",
     "lib/rdoc/ri/servlet.rb",
     "lib/rdoc/rubygems_hook.rb",
+    "lib/rdoc/server.rb",
     "lib/rdoc/single_class.rb",
     "lib/rdoc/stats.rb",
     "lib/rdoc/stats/normal.rb",

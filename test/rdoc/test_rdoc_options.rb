@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocOptions < RDoc::TestCase
+class RDocOptionsTest < RDoc::TestCase
 
   def setup
     super
@@ -82,6 +82,7 @@ class TestRDocOptions < RDoc::TestCase
       'title'                => nil,
       'visibility'           => :protected,
       'webcvs'               => nil,
+      'server_port'          => false,
       'skip_tests'           => true,
     }
 
