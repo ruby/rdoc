@@ -162,7 +162,6 @@ module RDoc
   autoload :Generator,      "#{__dir__}/rdoc/generator"
   autoload :Options,        "#{__dir__}/rdoc/options"
   autoload :Parser,         "#{__dir__}/rdoc/parser"
-  autoload :Servlet,        "#{__dir__}/rdoc/servlet"
   autoload :RI,             "#{__dir__}/rdoc/ri"
   autoload :Stats,          "#{__dir__}/rdoc/stats"
   autoload :Store,          "#{__dir__}/rdoc/store"

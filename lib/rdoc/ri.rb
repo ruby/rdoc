@@ -13,8 +13,9 @@ module RDoc::RI
 
   class Error < RDoc::Error; end
 
-  autoload :Driver, "#{__dir__}/ri/driver"
-  autoload :Paths,  "#{__dir__}/ri/paths"
-  autoload :Store,  "#{__dir__}/ri/store"
+  autoload :Driver,  "#{__dir__}/ri/driver"
+  autoload :Paths,   "#{__dir__}/ri/paths"
+  autoload :Store,   "#{__dir__}/ri/store"
+  autoload :Servlet, "#{__dir__}/ri/servlet"
 
 end
