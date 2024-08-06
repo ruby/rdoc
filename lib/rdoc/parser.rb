@@ -191,7 +191,7 @@ class RDoc::Parser
 
     content = remove_modeline content
 
-    parser.new top_level, file_name, content, options, stats
+    parser.new top_level, content, options, stats
   rescue SystemCallError
     nil
   end
@@ -252,12 +252,12 @@ class RDoc::Parser
   # RDoc::Markup::PreProcess object is created which allows processing of
   # directives.
 
-  def initialize top_level, file_name, content, options, stats
+  def initialize top_level, content, options, stats
     @top_level = top_level
     @top_level.parser = self.class
     @store = @top_level.store
 
-    @file_name = file_name
+    @file_name = top_level.absolute_name
     @content = content
     @options = options
     @stats = stats
