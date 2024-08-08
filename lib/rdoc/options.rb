@@ -341,6 +341,11 @@ class RDoc::Options
   attr_reader :visibility
 
   ##
+  # Whether server mode is enabled or not
+
+  attr_reader :server
+
+  ##
   # Indicates if files of test suites should be skipped
   attr_accessor :skip_tests
 
@@ -392,6 +397,7 @@ class RDoc::Options
     @encoding = Encoding::UTF_8
     @charset = @encoding.name
     @skip_tests = true
+    @server = false
   end
 
   def init_with map # :nodoc:
@@ -1115,6 +1121,14 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.separator nil
+
+      opt.on(
+        "--server",
+        "-s",
+        "[Experimental] Run WEBrick server with generated documentation. Will use ./tmp for file output."
+      ) do
+        @server = true
+      end
 
       opt.on("--help", "-h", "Display this help") do
         RDoc::RDoc::GENERATORS.each_key do |generator|

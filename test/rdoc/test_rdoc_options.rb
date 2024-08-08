@@ -82,6 +82,7 @@ class TestRDocOptions < RDoc::TestCase
       'title'                => nil,
       'visibility'           => :protected,
       'webcvs'               => nil,
+      'server'               => false,
       'skip_tests'           => true,
     }
 

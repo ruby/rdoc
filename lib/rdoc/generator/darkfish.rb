@@ -259,6 +259,22 @@ class RDoc::Generator::Darkfish
     raise
   end
 
+  def generate_for_server
+    write_style_sheet
+    generate_index
+    generate_class_files
+    generate_file_files
+    generate_table_of_contents
+
+    copy_static
+  rescue => e
+    debug_msg "%s: %s\n  %s" % [
+      e.class.name, e.message, e.backtrace.join("\n  ")
+    ]
+
+    raise
+  end
+
   ##
   # Copies static files from the static_path into the output directory
 

@@ -11,4 +11,5 @@ group :development do
   gem 'rubocop', '>= 1.31.0'
   gem 'gettext'
   gem 'prism', '>= 0.30.0'
+  gem 'webrick'
 end

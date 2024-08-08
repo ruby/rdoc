@@ -463,7 +463,7 @@ The internal error was:
       exit
     end
 
-    unless @options.coverage_report then
+    unless @options.coverage_report || @options.server
       @last_modified = setup_output_dir @options.op_dir, @options.force_update
     end
 
@@ -496,8 +496,15 @@ The internal error was:
 
       @generator = gen_klass.new @store, @options
 
-      generate
+      if @options.server
+        start_server
+      else
+        generate
+      end
     end
+
+    # Don't need to run stats for server mode
+    return if @options.server
 
     if @stats and (@options.coverage_report or not @options.quiet) then
       puts
@@ -505,6 +512,26 @@ The internal error was:
     end
 
     exit @stats.fully_documented? if @options.coverage_report
+  end
+
+  def start_server
+    begin
+      require 'webrick'
+    rescue LoadError
+      abort "webrick is not found. You may need to `gem install webrick` to install webrick."
+    end
+
+    # Change the output directory to tmp so it doesn't overwrite the current documentation
+    Dir.chdir "tmp" do
+      server = WEBrick::HTTPServer.new :Port => 8080
+
+      server.mount '/', RDoc::Server, self
+
+      trap 'INT'  do server.shutdown end
+      trap 'TERM' do server.shutdown end
+
+      server.start
+    end
   end
 
   ##
