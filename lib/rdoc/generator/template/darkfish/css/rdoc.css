@@ -209,6 +209,7 @@ nav {
   border-right: 1px solid #ccc;
   position: fixed;
   top: 0;
+  bottom: 0;
   overflow: auto;
   z-index: 10;
 
