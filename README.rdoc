@@ -60,6 +60,10 @@ To generate documentation programmatically:
   rdoc.document options
   # see RDoc::RDoc
 
+You can specify the target files for document generation with +.document+ file in the project root directory.
++.document+ file contains a list of file and directory names including comment lines starting with '#'.
+See https://github.com/ruby/rdoc/blob/master/.document as an example.
+
 == Writing Documentation
 
 To write documentation for RDoc place a comment above the class, module,
