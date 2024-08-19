@@ -21,10 +21,8 @@ task :default => :test
 
 task rdoc: :generate
 RDoc::Task.new do |doc|
-  doc.main = 'README.rdoc'
-  doc.title = "rdoc #{RDoc::VERSION} Documentation"
-  doc.rdoc_dir = '_site' # for github pages
-  doc.rdoc_files = FileList.new %w[lib/**/*.rb *.rdoc *.md doc/rdoc/markup_reference.rb] - PARSER_FILES
+  # RDoc task defaults to /html and overrides the op_dir option in .rdoc_options
+  doc.rdoc_dir = "_site" # for github pages
 end
 
 task "coverage" do

@@ -1,7 +1,7 @@
 History.txt
 LICENSE.txt
 README.txt
-RI.txt
-RI.md
+*.md
+*.rdoc
 lib
 doc
