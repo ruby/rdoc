@@ -3,6 +3,6 @@ exclude:
   - lib/rdoc/rd/inline_parser.ry
   - lib/rdoc/markdown.kpeg
   - lib/rdoc/markdown/literals.kpeg
-op_dir: _site # for GH pages and should match the config of RDoc task in Rakefile
+op_dir: _site # for GitHub Pages and should match the config of RDoc task in Rakefile
 title: rdoc Documentation
 main_page: README.rdoc
