@@ -12,28 +12,31 @@
 /* 1. Variables and Root Styles */
 :root {
   --sidebar-width: 300px;
-  --primary-color: #2c8c5e;  /* A more muted green */
-  --secondary-color: #246b4b;  /* A darker, muted green */
+
+  --primary-color: oklch(50.8% 0.217 10.59);  /* A more muted green */
+  --primary-hover-color: oklch(45% 0.23 10.59);  /* A slightly darker teal-green */
+
   --text-color: #333;
   --background-color: #f8f9fa;
+
   --code-block-background-color: #f0f4f8;
   --code-block-border-color: #d1d5da;
-  --link-color: #246b4b;  /* A muted teal-green color */
-  --link-hover-color: #25a28a;  /* A slightly brighter teal-green */
-  --border-color: #e0e0e0;
-  --sidebar-text-color: #2c3e50;  /* Dark blue-gray for contrast */
 
-  /* Font family variables */
-  --font-primary: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-  --font-heading: 'Helvetica Neue', Arial, sans-serif;
-  --font-code: 'Source Code Pro', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  --border-color: #e0e0e0;
+
+  --note-background-color: #f1edba;
+
+
+  /* System fonts, remove /fonts */
+  --font-primary: system-ui, sans-serif;
+  --font-code: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 }
 
 /* 2. Global Styles */
 body {
   background: var(--background-color);
   font-family: var(--font-primary);
-  font-weight: 400;
+  font-weight: normal;
   color: var(--text-color);
   line-height: 1.6;
 
@@ -89,16 +92,14 @@ h6:target {
 /* 4. Links */
 :link,
 :visited {
-  color: var(--link-color);
-  text-decoration: none;
+  color: var(--primary-color);
+  text-decoration: underline;
   transition: color 0.3s ease;
-  font-weight: 600;  /* Make links bolder */
 }
 
 :link:hover,
 :visited:hover {
-  color: var(--link-hover-color);
-  text-decoration: underline;
+  color: var(--primary-hover-color);
 }
 
 /* 5. Code and Pre */
@@ -137,8 +138,6 @@ table tr:nth-child(even) td {
 
 /* 7. Navigation and Sidebar */
 nav {
-  font-family: var(--font-heading);
-  font-size: 16px;
   border-right: 1px solid var(--border-color);
   position: fixed;
   top: 0;
@@ -150,7 +149,6 @@ nav {
   z-index: 10;
   display: flex;
   flex-direction: column;
-  color: var(--sidebar-text-color);
 }
 
 nav[hidden] {
@@ -188,23 +186,52 @@ nav dl,
 nav p {
   padding: 0;
   list-style: none;
-  margin: 0.5em 0;
+  margin: 0.5em 0 0;
 }
 
-nav ul li {
-  margin-bottom: 0.3em;
+nav li {
+  padding: 0.25em 0;
+}
+
+nav li li {
+  padding-bottom: 0;
 }
 
 nav ul ul {
-  padding-left: 1em;
+  margin: 0 0 0 0.75em;
+  padding-left: 0;
 }
 
-nav ul ul ul {
-  padding-left: 1em;
+nav ul ul li {
+  padding-left: 0.75em;
+  position: relative;
+  border-left: 1px solid var(--border-color);
 }
 
-nav ul ul ul ul {
-  padding-left: 1em;
+nav ul ul li:before {
+  position: absolute;
+  left: 0;
+  top: 1em;
+  content: '';
+  display: inline-block;
+  height: 1px;
+  width: 0.5em;
+  background: var(--border-color);
+}
+
+nav ul ul li:last-of-type {
+  border-left: 0;
+}
+
+nav ul ul li:last-of-type:after {
+  position: absolute;
+  left: 0;
+  top: 0;
+  content: '';
+  display: inline-block;
+  height:1em;
+  width: 1px;
+  background: var(--border-color);
 }
 
 nav a {
@@ -240,16 +267,14 @@ nav ul li details > summary {
   position: relative; /* So that the open/close triangle can position itself absolutely inside */
 }
 
-nav ul li details > summary::after {
+nav ul li details > summary::before {
   content: '▶';  /* Unicode right-pointing triangle */
-  position: absolute;
   font-size: 0.8em;
-  bottom: 0.1em;
-  margin-left: 0.3em;
   transition: transform 0.2s ease;
+  display: inline-block;
 }
 
-nav ul li details[open] > summary::after {
+nav ul li details[open] > summary::before {
   transform: rotate(90deg);  /* Rotate the triangle when open */
 }
 
@@ -260,9 +285,6 @@ main {
   margin: 3em auto;
   padding: 0 2em;
   max-width: 800px;
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--text-color);
   box-sizing: border-box;
 }
 
@@ -270,15 +292,6 @@ main {
   main {
     margin-left: var(--sidebar-width);
   }
-}
-
-main h1,
-main h2,
-main h3,
-main h4,
-main h5,
-main h6 {
-  font-family: var(--font-heading);
 }
 
 @media (min-width: 1024px) {
@@ -381,10 +394,6 @@ em {
 }
 
 /* 14. Specific Component Styles */
-.table-of-contents ul {
-  margin: 1em;
-  list-style: none;
-}
 
 .table-of-contents ul ul {
   margin-top: 0.25em;
@@ -410,7 +419,7 @@ em {
 }
 
 main {
-  color: #333;
+  color: var(--text-color);
 }
 
 main > h1:first-child,
@@ -432,37 +441,35 @@ main h1[class] {
   margin-top: 0;
   margin-bottom: 1em;
   font-size: 2.5em;
-  color: var(--primary-color);
 }
 
 main h1 {
   margin: 1.5em 0 0.5em;
   font-size: 2.2em;
-  color: var(--secondary-color);
+}
+
+main h1 + p {
+  font-size: 1.44em;
 }
 
 main h2 {
   margin: 1.3em 0 0.5em;
   font-size: 1.8em;
-  color: var(--secondary-color);
 }
 
 main h3 {
   margin: 1.2em 0 0.5em;
   font-size: 1.5em;
-  color: var(--secondary-color);
 }
 
 main h4 {
   margin: 1.1em 0 0.5em;
   font-size: 1.3em;
-  color: var(--secondary-color);
 }
 
 main h5, main h6 {
   margin: 1em 0 0.5em;
   font-size: 1.1em;
-  color: var(--secondary-color);
 }
 
 main p {
@@ -471,7 +478,7 @@ main p {
 }
 
 main pre {
-  margin: 1.2em 0.5em;
+  margin: 1em 0;
   padding: 1em;
   font-size: 0.8em;
 }
@@ -489,7 +496,8 @@ main blockquote {
 
 main ol,
 main ul {
-  margin: 1em 2em;
+  margin: 1em 0 0;
+  padding: 0 1em;
 }
 
 main li > p {
@@ -497,18 +505,20 @@ main li > p {
 }
 
 main dl {
-  margin: 1em 0.5em;
+  margin: 1em 0;
 }
 
 main dt {
-  margin-bottom: 0.5em;
-  margin-right: 1em;
-  float: left;
+  margin: 1em 0 0;
   font-weight: bold;
 }
 
 main dd {
-  margin: 0 1em 1em 0.5em;
+  margin: 0;
+}
+
+main dd p {
+  margin: 0;
 }
 
 main header h2 {
@@ -520,8 +530,9 @@ main header h2 {
 
 main header h3 {
   margin: 2em 0 1.5em;
+  padding-top: 1em;
   border-width: 0;
-  border-top: 3px solid #bbb;
+  border-top: 1px solid var(--border-color);
   font-size: 120%;
 }
 
@@ -540,6 +551,11 @@ main header h3 {
 
 .documentation-section-title:hover .section-click-top {
   visibility: visible;
+}
+
+.note-list {
+  padding: 1em 1em 2em;
+  box-shadow: 0 0 0 1px var(--border-color);
 }
 
 .constants-list > dl {
@@ -606,9 +622,8 @@ main .method-detail {
   cursor: pointer;
 }
 
-main .method-detail:target {
-  margin-left: -10px;
-  border-left: 10px solid #f1edba;
+main .method-detail:target .method-heading {
+  background: #f1edba;
 }
 
 main .method-heading {
@@ -670,12 +685,10 @@ main .attribute-access-type {
 
 /* @group search results */
 #search-results {
-  font-family: var(--font-primary);
   font-weight: 300;
 }
 
 #search-results .search-match {
-  font-family: var(--font-heading);
   font-weight: normal;
 }
 
