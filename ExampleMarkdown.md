@@ -1,3 +1,5 @@
+# Example Markdown
+
 This document contains example output to show RDoc styling.  This file was
 created from a Markdown file.
 

@@ -11,40 +11,50 @@
 
 /* 1. Variables and Root Styles */
 :root {
-  --sidebar-width: 300px;
-  --primary-color: #2c8c5e;  /* A more muted green */
-  --secondary-color: #246b4b;  /* A darker, muted green */
-  --text-color: #333;
-  --background-color: #f8f9fa;
-  --code-block-background-color: #f0f4f8;
-  --code-block-border-color: #d1d5da;
-  --link-color: #246b4b;  /* A muted teal-green color */
-  --link-hover-color: #25a28a;  /* A slightly brighter teal-green */
-  --border-color: #e0e0e0;
-  --sidebar-text-color: #2c3e50;  /* Dark blue-gray for contrast */
+  --sidebar-width: 20%;
 
-  /* Font family variables */
-  --font-primary: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-  --font-heading: 'Helvetica Neue', Arial, sans-serif;
-  --font-code: 'Source Code Pro', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  --primary-color: oklch(0.5 0.18 29);
+  --primary-hover-color: oklch(47% 0.18 89);
+
+  --text-color: oklch(40% 0.03 269);
+  --background-color: oklch(99% 0.001 269);;
+
+  --code-block-background-color: oklch(97% 0.002 269);
+  --code-block-border-color: oklch(91% 0.002 269);
+
+  --border-color: oklch(91% 0.002 269);;
+
+  /* System fonts, remove /fonts */
+  --font-primary: "Inter", system-ui, sans-serif;
+
+  --font-code: "Monaspace", ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+}
+
+html {
+  line-height: 1.5;
+  color: var(--text-color);
+  font-weight: normal;
+  font-size: 14px;
+  font-optical-sizing: auto;
+  scroll-padding-top: calc(40px + 1em);
+  scroll-behavior: smooth;
 }
 
 /* 2. Global Styles */
 body {
   background: var(--background-color);
   font-family: var(--font-primary);
-  font-weight: 400;
-  color: var(--text-color);
-  line-height: 1.6;
 
   /* Layout */
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   margin: 0;
+  padding-top: 35px;
 }
 
 /* 3. Typography */
+
 h1 span,
 h2 span,
 h3 span,
@@ -52,20 +62,19 @@ h4 span,
 h5 span,
 h6 span {
   position: relative;
-
   display: none;
   padding-left: 1em;
   line-height: 0;
   vertical-align: baseline;
-  font-size: 10px;
+  font-size: 1rem;
 }
 
-h1 span { top: -1.3em; }
-h2 span { top: -1.2em; }
-h3 span { top: -1.0em; }
-h4 span { top: -0.8em; }
-h5 span { top: -0.5em; }
-h6 span { top: -0.5em; }
+h1 span { top: -0.28em; }
+h2 span { top: -0.28em; }
+h3 span { top: -0.1em; }
+h4 span { top: -0.1em; }
+h5 span { top: 0; }
+h6 span { top: 0; }
 
 h1:hover span,
 h2:hover span,
@@ -76,29 +85,17 @@ h6:hover span {
   display: inline;
 }
 
-h1:target,
-h2:target,
-h3:target,
-h4:target,
-h5:target,
-h6:target {
-  margin-left: -10px;
-  border-left: 10px solid #f1edba;
-}
-
 /* 4. Links */
 :link,
 :visited {
-  color: var(--link-color);
-  text-decoration: none;
+  color: var(--primary-color);
+  text-decoration: underline;
   transition: color 0.3s ease;
-  font-weight: 600;  /* Make links bolder */
 }
 
 :link:hover,
 :visited:hover {
-  color: var(--link-hover-color);
-  text-decoration: underline;
+  color: var(--primary-hover-color);
 }
 
 /* 5. Code and Pre */
@@ -106,11 +103,11 @@ code,
 pre {
   font-family: var(--font-code);
   background-color: var(--code-block-background-color);
-  border: 1px solid var(--code-block-border-color);
+  box-shadow: 0 0 0 1px var(--code-block-border-color) inset;
   border-radius: 6px;
   padding: 16px;
   overflow-x: auto;
-  font-size: 15px;  /* Increased from 14px */
+  font-size: 1rem;  /* Increased from 14px */
   line-height: 1.5;  /* Slightly increased for better readability with larger font */
   margin: 1em 0;  /* Add some vertical margin */
 }
@@ -124,33 +121,48 @@ table {
 
 table tr th, table tr td {
   padding: 0.2em 0.4em;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color);
 }
 
 table tr th {
-  background-color: #eceaed;
+  background-color: oklch(95% 0.002 269);; /* todo */
 }
 
 table tr:nth-child(even) td {
-  background-color: #f5f4f6;
+  background-color: oklch(97% 0.002 269);
 }
 
 /* 7. Navigation and Sidebar */
-nav {
-  font-family: var(--font-heading);
-  font-size: 16px;
-  border-right: 1px solid var(--border-color);
+.topbar {
+  width: 100%;
+  padding: 0.5em 1em;
+  box-shadow: 0 1px 0 0 var(--border-color);
+  z-index: 100;
   position: fixed;
   top: 0;
+  background-color: var(--primary-color);
+  display: flex;
+  gap: 8px;
+}
+
+.topbar > a {
+  text-decoration: none;
+  font-weight: 700;
+  color: var(--background-color);
+}
+
+nav {
+  border-right: 1px solid var(--border-color);
+  position: fixed;
+  top: 35px;
   bottom: 0;
   left: 0;
-  width: var(--sidebar-width);
+  width: 100%;
   background: var(--background-color);
   overflow-y: auto;
   z-index: 10;
   display: flex;
   flex-direction: column;
-  color: var(--sidebar-text-color);
 }
 
 nav[hidden] {
@@ -159,12 +171,21 @@ nav[hidden] {
 
 nav footer {
   padding: 1em;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.694rem;
 }
 
-nav .nav-section {
+.nav-section {
   margin-top: 1em;
   padding: 0 1em;
+}
+
+.nav-section h3 {
+  padding: 0;
+}
+
+.nav-section ul {
+  margin-top: 0;
 }
 
 nav h2 {
@@ -183,28 +204,66 @@ nav h3,
   color: var(--text-color);
 }
 
-nav ul,
 nav dl,
 nav p {
   padding: 0;
   list-style: none;
-  margin: 0.5em 0;
+  margin: 0.5em 0 0;
 }
 
-nav ul li {
-  margin-bottom: 0.3em;
+ul {
+  padding: 0;
+  list-style: none;
 }
 
-nav ul ul {
-  padding-left: 1em;
+main > ul {
+  padding: 0 0 0 16px;
+  list-style-type: square;
 }
 
-nav ul ul ul {
-  padding-left: 1em;
+li {
+  padding: 0.25em 0;
 }
 
-nav ul ul ul ul {
-  padding-left: 1em;
+li li {
+  padding-bottom: 0;
+}
+
+ul ul {
+  margin: 0 0 0 10px;
+  padding-left: 0;
+}
+
+ul ul li {
+  padding-left: 15px;
+  position: relative;
+  border-left: 1px solid var(--border-color);
+}
+
+ul ul li:before {
+  position: absolute;
+  left: 0;
+  top: 18px;
+  content: '';
+  display: inline-block;
+  height: 1px;
+  width: 11px;
+  background: var(--border-color);
+}
+
+ul ul li:last-of-type {
+  border-left: 0;
+}
+
+ul ul li:last-of-type:after {
+  position: absolute;
+  left: 0;
+  top: 0;
+  content: '';
+  display: inline-block;
+  height:18px;
+  width: 1px;
+  background: var(--border-color);
 }
 
 nav a {
@@ -217,74 +276,109 @@ nav a:hover {
 }
 
 #navigation-toggle {
-  z-index: 1000;
-  font-size: 2em;
-  display: block;
-  position: fixed;
-  top: 10px;
-  left: 20px;
+  display: inline-block;
+  color: var(--background-color);
 }
 
-#navigation-toggle[aria-expanded="true"] {
-  top: 10px;
-  left: 250px;
+#home-section {
+  padding-left: 44px;
 }
 
-nav ul li details {
-  position: relative;
-  padding-right: 1.5em;  /* Add space for the marker on the right */
+#home-section a:any-link {
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.44rem;
+  line-height: 26px;
+  color: var(--text-color)
 }
 
-nav ul li details > summary {
+details > summary {
   list-style: none;  /* Remove the default marker */
   position: relative; /* So that the open/close triangle can position itself absolutely inside */
+  display: flex;
+  width: 100%;
+  gap: 4px;
 }
 
-nav ul li details > summary::after {
-  content: '▶';  /* Unicode right-pointing triangle */
-  position: absolute;
+details > summary > a {
+  flex: 1;
+}
+
+details > summary::after {
+  content: '+';  /* Unicode right-pointing triangle */
   font-size: 0.8em;
-  bottom: 0.1em;
-  margin-left: 0.3em;
+  font-weight: bold;
+  width: 22px;
+  height: 22px;
+  line-height: 20px;
+  border-radius: 50%;
+  text-align: center;
+  box-shadow: 0 0 0 1px var(--border-color) inset;
   transition: transform 0.2s ease;
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  top: 2px;
 }
 
-nav ul li details[open] > summary::after {
-  transform: rotate(90deg);  /* Rotate the triangle when open */
+details > summary::after:hover { 
+  box-shadow: 0 0 0 1px #333 inset;
 }
+
+details[open] > summary::after { content: '-'; }
 
 /* 8. Main Content */
 main {
-  flex: 1;
-  display: block;
-  margin: 3em auto;
-  padding: 0 2em;
+  padding: 1em;
+  width: calc(100% - 2em);
   max-width: 800px;
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--text-color);
-  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+main > * {
+  grid-column: 1 / span 1;
+}
+
+nav.contextual {
+  position: fixed;
+  left: auto;
+  right: 0;
+  top: 40px;
+  bottom: 0;
+  border: 0;
+  overflow-y: auto;
+  display: none
 }
 
 @media (min-width: 1024px) {
+  html {
+    font-size: 16px;
+  }
+
+  body {
+    padding-top: 40px;
+  }
+
   main {
     margin-left: var(--sidebar-width);
+    max-width: calc(100% - (var(--sidebar-width) * 2) - 4em);
+    padding: 1em 2em;
   }
-}
 
-main h1,
-main h2,
-main h3,
-main h4,
-main h5,
-main h6 {
-  font-family: var(--font-heading);
-}
-
-@media (min-width: 1024px) {
-  .table-of-contents main {
-    margin-left: 20em;
+  #navigation-toggle {
+    display: none
   }
+
+  nav {
+    max-width: var(--sidebar-width);
+    top: 40px;
+  }
+
+  nav[hidden] {
+    display: block;
+  }
+
+  nav.contextual { display: block; }
 }
 
 #validator-badges {
@@ -294,7 +388,7 @@ main h6 {
 
 /* 9. Search */
 #search-section {
-  padding: 1em;
+  padding: 1em 1em 0;
   background-color: var(--background-color);
   border-bottom: 1px solid var(--border-color);
 }
@@ -351,40 +445,36 @@ main h6 {
 }
 
 /* 13. Syntax Highlighting */
-.ruby-constant   { color: #0366d6; }  /* Bright blue for constants */
-.ruby-keyword    { color: #d73a49; }  /* Red for keywords */
-.ruby-ivar       { color: #e36209; }  /* Orange for instance variables */
-.ruby-operator   { color: #005cc5; }  /* Dark blue for operators */
-.ruby-identifier { color: #24292e; }  /* Dark gray for identifiers */
-.ruby-node       { color: #22863a; }  /* Green for interpolation */
-.ruby-comment    { color: #6a737d; }  /* Gray for comments */
-.ruby-regexp     { color: #032f62; }  /* Navy for regular expressions */
-.ruby-value      { color: #005cc5; }  /* Dark blue for numeric values */
-.ruby-string     { color: #22863a; }  /* Green for strings */
+.ruby-constant   { color: oklch(0.5 0.18 269); }  /* Bright blue for constants */
+.ruby-keyword    { color: oklch(0.5 0.18 29); }  /* Red for keywords */
+.ruby-ivar       { color: oklch(0.5 0.18 59); }  /* Orange for instance variables */
+.ruby-operator   { color: oklch(38% 0.18 269); }  /* Dark blue for operators */
+.ruby-identifier { color: oklch(27% 0.03 269); }  /* Dark gray for identifiers */
+.ruby-node       { color: oklch(0.5 0.18 149); }  /* Green for interpolation */
+.ruby-comment    { color: oklch(40% 0.03 269); }  /* Gray for comments */
+.ruby-regexp     { color: oklch(0.5 0.18 299); }  /* Navy for regular expressions */
+.ruby-value      { color: oklch(38% 0.18 269); }  /* Dark blue for numeric values */
+.ruby-string     { color: oklch(0.5 0.18 149); }  /* Green for strings */
 
 code {
-  background-color: #f0f4f8;  /* Match pre background */
-  padding: 0.2em 0.4em;
+  background-color: var(--code-block-background-color);  /* Match pre background */
+  padding: 0em 0.4em;
   border-radius: 3px;
-  font-size: 85%;
+  font-size: 1em;
 }
 
 em {
-  text-decoration-color: rgba(52, 48, 64, 0.25);
+  text-decoration-color: var(--border-color);
   text-decoration-line: underline;
   text-decoration-style: dotted;
 }
 
 strong,
 em {
-  background-color: rgba(158, 178, 255, 0.1);
+  background-color: oklch(96% 0.02 269);
 }
 
 /* 14. Specific Component Styles */
-.table-of-contents ul {
-  margin: 1em;
-  list-style: none;
-}
 
 .table-of-contents ul ul {
   margin-top: 0.25em;
@@ -410,7 +500,7 @@ em {
 }
 
 main {
-  color: #333;
+  color: var(--text-color);
 }
 
 main > h1:first-child,
@@ -428,41 +518,37 @@ main sup {
 }
 
 /* The heading with the class name */
-main h1[class] {
-  margin-top: 0;
-  margin-bottom: 1em;
-  font-size: 2.5em;
-  color: var(--primary-color);
-}
 
 main h1 {
+  font-size: 2.488rem;
+  line-height: 3rem;
   margin: 1.5em 0 0.5em;
-  font-size: 2.2em;
-  color: var(--secondary-color);
+}
+
+main h1 + p {
+  font-size: 1.44em;
 }
 
 main h2 {
-  margin: 1.3em 0 0.5em;
-  font-size: 1.8em;
-  color: var(--secondary-color);
+  margin: 1.5em 0 0.5em;
+  font-size: 1.728rem;
+  line-height: 3rem;
+  box-shadow: 0 2px 0 0 var(--text-color);
 }
 
 main h3 {
-  margin: 1.2em 0 0.5em;
-  font-size: 1.5em;
-  color: var(--secondary-color);
+  margin: 1.5em 0 0.5em;
+  font-size: 1.44em;
 }
 
 main h4 {
-  margin: 1.1em 0 0.5em;
-  font-size: 1.3em;
-  color: var(--secondary-color);
+  margin: 1.5em 0 0;
+  font-size: 1.2em;
 }
 
 main h5, main h6 {
   margin: 1em 0 0.5em;
-  font-size: 1.1em;
-  color: var(--secondary-color);
+  font-size: 1em;
 }
 
 main p {
@@ -471,9 +557,9 @@ main p {
 }
 
 main pre {
-  margin: 1.2em 0.5em;
-  padding: 1em;
-  font-size: 0.8em;
+  margin: 1em 0;
+  padding: 1em 1.5em;
+  font-size: 0.833rem;
 }
 
 main hr {
@@ -487,28 +573,34 @@ main blockquote {
   border-left: 2px solid #ddd;
 }
 
-main ol,
-main ul {
-  margin: 1em 2em;
+ol {
+  margin: 1em 0 0;
+  padding: 0 1em;
+}
+
+ol ol {
+  margin: 0;
 }
 
 main li > p {
-  margin-bottom: 0.5em;
+  margin: 0;
 }
 
 main dl {
-  margin: 1em 0.5em;
+  margin: 1em 0;
 }
 
 main dt {
-  margin-bottom: 0.5em;
-  margin-right: 1em;
-  float: left;
+  margin: 1em 0 0;
   font-weight: bold;
 }
 
 main dd {
-  margin: 0 1em 1em 0.5em;
+  margin: 0;
+}
+
+main dd p {
+  margin: 0;
 }
 
 main header h2 {
@@ -520,8 +612,9 @@ main header h2 {
 
 main header h3 {
   margin: 2em 0 1.5em;
+  padding-top: 1em;
   border-width: 0;
-  border-top: 3px solid #bbb;
+  border-top: 1px solid var(--border-color);
   font-size: 120%;
 }
 
@@ -540,6 +633,11 @@ main header h3 {
 
 .documentation-section-title:hover .section-click-top {
   visibility: visible;
+}
+
+main  > .note-list {
+  padding: 1em 1em 2em;
+  box-shadow: 0 0 0 1px var(--border-color);
 }
 
 .constants-list > dl {
@@ -561,7 +659,7 @@ main header h3 {
 .constants-list > dl dd {
   margin: 0 0 2em 0;
   padding: 0;
-  color: #666;
+  color: oklch(50% 0.03 269);
 }
 
 .documentation-section h2 {
@@ -606,45 +704,43 @@ main .method-detail {
   cursor: pointer;
 }
 
-main .method-detail:target {
-  margin-left: -10px;
-  border-left: 10px solid #f1edba;
-}
-
 main .method-heading {
   position: relative;
   font-family: var(--font-code);
-  font-size: 110%;
+  font-size: 1rem;
   font-weight: bold;
   color: var(--text-color);
 }
+
+main .method-heading span {
+  background-color: var(--code-block-background-color);
+}
+
 main .method-heading :link,
 main .method-heading :visited {
   color: inherit;
 }
-main .method-click-advice {
+
+main .method-heading .method-click-advice {
+  background-color: transparent;
   position: absolute;
-  top: 2px;
-  right: 5px;
-  font-size: 12px;
-  color: #9b9877;
+  right: 0;
+  font-size: 0.694rem;
+  font-weight: 400;
   visibility: hidden;
-  padding-right: 20px;
-  line-height: 20px;
-  background: url(../images/zoom.png) no-repeat right top;
+  padding-right: 0;
+  line-height: 1.5rem;
 }
 main .method-header:hover .method-click-advice {
   visibility: visible;
 }
 
-main .method-alias .method-heading {
-  color: #666;
-}
+
 
 main .method-description,
 main .aliases {
   margin-top: 0.75em;
-  color: var(--text-color);
+  color: oklch(50% 0.03 269);
 }
 
 main .aliases {
@@ -670,12 +766,10 @@ main .attribute-access-type {
 
 /* @group search results */
 #search-results {
-  font-family: var(--font-primary);
   font-weight: 300;
 }
 
 #search-results .search-match {
-  font-family: var(--font-heading);
   font-weight: normal;
 }
 
@@ -741,3 +835,4 @@ main .attribute-access-type {
   }
 }
 /* @end */
+
