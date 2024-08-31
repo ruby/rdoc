@@ -341,7 +341,7 @@ class RDoc::Options
   attr_reader :visibility
 
   ##
-  # The server's port to listen on. `nil` means the server is disabled.
+  # The server's port to listen on. `nil` or `false` means the server is disabled.
 
   attr_reader :server_port
 
