@@ -26,7 +26,6 @@
 
   /* System fonts, remove /fonts */
   --font-primary: "Inter", system-ui, sans-serif;
-
   --font-code: "Monaspace", ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 }
 
@@ -86,17 +85,13 @@ h6:hover span {
 }
 
 /* 4. Links */
-:link,
-:visited {
+:any-link {
   color: var(--primary-color);
   text-decoration: underline;
   transition: color 0.3s ease;
 }
 
-:link:hover,
-:visited:hover {
-  color: var(--primary-hover-color);
-}
+:any-link:hover { color: var(--primary-hover-color); }
 
 /* 5. Code and Pre */
 code,
@@ -125,7 +120,7 @@ table tr th, table tr td {
 }
 
 table tr th {
-  background-color: oklch(95% 0.002 269);; /* todo */
+  background-color: oklch(95% 0.002 269); /* todo */
 }
 
 table tr:nth-child(even) td {
@@ -180,13 +175,9 @@ nav footer {
   padding: 0 1em;
 }
 
-.nav-section h3 {
-  padding: 0;
-}
+.nav-section h3 { padding: 0; }
 
-.nav-section ul {
-  margin-top: 0;
-}
+.nav-section ul { margin-top: 0; }
 
 nav h2 {
   margin: 0 0 0.5em;
@@ -221,13 +212,9 @@ main > ul {
   list-style-type: square;
 }
 
-li {
-  padding: 0.25em 0;
-}
+li { padding: 0.25em 0; }
 
-li li {
-  padding-bottom: 0;
-}
+li li { padding-bottom: 0; }
 
 ul ul {
   margin: 0 0 0 10px;
@@ -251,9 +238,7 @@ ul ul li:before {
   background: var(--border-color);
 }
 
-ul ul li:last-of-type {
-  border-left: 0;
-}
+ul ul li:last-of-type { border-left: 0; }
 
 ul ul li:last-of-type:after {
   position: absolute;
@@ -266,23 +251,12 @@ ul ul li:last-of-type:after {
   background: var(--border-color);
 }
 
-nav a {
-  color: var(--link-color);
-  text-decoration: none;
-}
-
-nav a:hover {
-  text-decoration: underline;
-}
-
 #navigation-toggle {
   display: inline-block;
   color: var(--background-color);
 }
 
-#home-section {
-  padding-left: 44px;
-}
+#home-section { padding-left: 44px; }
 
 #home-section a:any-link {
   text-decoration: none;
