@@ -15,16 +15,17 @@
   <h1 id="<%=h klass.aref %>" class="<%= klass.type %>">
     <%= klass.type %> <%= klass.full_name %>
   </h1>
-  
+
   <%= klass.description %>
+
 
   <%- klass.each_section do |section, constants, attributes| -%>
   <section id="<%= section.aref %>" class="documentation-section">
     <%- if section.title then -%>
     <header class="documentation-section-title">
-      <h2>
+      <h3>
         <%= section.title %>
-      </h2>
+      </h3>
       <span class="section-click-top">
         <a href="#top">&uarr; top</a>
       </span>
@@ -58,7 +59,7 @@
     <%- unless attributes.empty? then -%>
     <section class="attribute-method-details" class="method-section">
       <header>
-        <h3>Attributes</h3>
+        <h2>Attributes</h2>
       </header>
 
       <%- attributes.each do |attrib| -%>
@@ -86,7 +87,7 @@
          next if methods.empty? %>
      <section id="<%= visibility %>-<%= type %>-<%= section.aref %>-method-details" class="method-section">
        <header>
-         <h3><%= visibility.to_s.capitalize %> <%= type.capitalize %> Methods</h3>
+         <h2><%= visibility.to_s.capitalize %> <%= type.capitalize %> Methods</h2>
        </header>
 
     <%- methods.each do |method| -%>

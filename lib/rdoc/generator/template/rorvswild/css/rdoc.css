@@ -605,9 +605,6 @@ main dd p {
 
 main header h2 {
   margin-top: 2em;
-  border-width: 0;
-  border-top: 4px solid #bbb;
-  font-size: 130%;
 }
 
 main header h3 {
@@ -691,7 +688,7 @@ main .method-source-code {
 }
 
 main .method-source-code.active-menu {
-  max-height: 100vh;
+  max-height: none;
 }
 
 main .method-description .method-calls-super {
@@ -700,16 +697,16 @@ main .method-description .method-calls-super {
 }
 
 main .method-detail {
-  margin-bottom: 2.5em;
+  margin: 2em 0 0;
   cursor: pointer;
 }
 
 main .method-heading {
   position: relative;
   font-family: var(--font-code);
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: bold;
-  color: var(--text-color);
+  color: var(--primary-color);
 }
 
 main .method-heading span {
@@ -735,11 +732,9 @@ main .method-header:hover .method-click-advice {
   visibility: visible;
 }
 
-
-
 main .method-description,
 main .aliases {
-  margin-top: 0.75em;
+  margin-top: 0.5em;
   color: oklch(50% 0.03 269);
 }
 
@@ -748,6 +743,11 @@ main .aliases {
   font-style: italic;
   cursor: default;
 }
+
+main .method-description p {
+  margin: 0;
+}
+
 main .method-description ul {
   margin-left: 1.5em;
 }
