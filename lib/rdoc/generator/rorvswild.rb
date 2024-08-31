@@ -61,6 +61,11 @@ class RDoc::Generator::Darkfish
 
   BUILTIN_STYLE_ITEMS = # :nodoc:
     %w[
+      css/fonts.css
+      fonts/MonaspaceNeon-Bold.woff
+      fonts/MonaspaceNeon-Bold.woff2
+      fonts/MonaspaceNeon-Regular.woff
+      fonts/MonaspaceNeon-Regular.woff2
       css/rdoc.css
   ]
 
