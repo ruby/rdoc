@@ -17,7 +17,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.repository == 'ruby/rdoc' && !startsWith(github.event_name, 'pull') }}
+    if: ${{ github.repository == 'basesecrete/rdoc' && !startsWith(github.event_name, 'pull') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
