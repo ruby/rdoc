@@ -1,8 +1,8 @@
-name: Deploy RDoc site to Pages
+name: Deploy Ruby docs to Pages
 
 on:
   push:
-    branches: [ 'master' ]
+    branches: [ 'ruby-docs' ]
   workflow_dispatch:
 
 permissions:
@@ -17,21 +17,33 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.repository == 'ruby/rdoc' && !startsWith(github.event_name, 'pull') }}
+    if: ${{ github.repository == 'basesecrete/rdoc' && !startsWith(github.event_name, 'pull') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Checkout Ruby
+        uses: actions/checkout@v4
+        with:
+          repository: ruby/ruby
+          path: ruby
+
       - name: Setup Ruby
         uses: ruby/setup-ruby@161cd54b698f1fb3ea539faab2e036d409550e3c # v1.187.0
         with:
           ruby-version: '3.2'
           bundler-cache: true
+
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
+
       - name: Build with RDoc
-        # Outputs to the './_site' directory by default
-        run: bundle exec rake rdoc
+        run: |
+          bundle
+          bundle exec rake generate
+          bundle exec rdoc --root=ruby --include=ruby/doc --main=README.md --template=rorvswild --debug
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
