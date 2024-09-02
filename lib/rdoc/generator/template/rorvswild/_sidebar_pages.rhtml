@@ -1,10 +1,8 @@
 <%- simple_files = @files.select { |f| f.text? } %>
 
-<!--
-<%#- if defined?(current) -%>
-  <%#- dir = current.full_name[%r{\A[^/]+(?=/)}] || current.page_name -%>
-<%#- end -%>
--->
+<%- if defined?(current) && current.respond_to?(:page_name) -%>
+  <%- dir = current.full_name[%r{\A[^/]+(?=/)}] || current.page_name -%>
+<%- end -%>
 
 <%- unless simple_files.empty? then -%>
 <div id="fileindex-section" class="nav-section">
