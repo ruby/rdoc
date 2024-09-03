@@ -3,6 +3,7 @@ require_relative '../rdoc'
 
 require 'find'
 require 'fileutils'
+require 'tmpdir'
 require 'pathname'
 require 'time'
 
@@ -463,7 +464,7 @@ The internal error was:
       exit
     end
 
-    unless @options.coverage_report then
+    unless @options.coverage_report || @options.server_port
       @last_modified = setup_output_dir @options.op_dir, @options.force_update
     end
 
@@ -496,8 +497,15 @@ The internal error was:
 
       @generator = gen_klass.new @store, @options
 
-      generate
+      if @options.server_port
+        start_server
+      else
+        generate
+      end
     end
+
+    # Don't need to run stats for server mode
+    return if @options.server_port
 
     if @stats and (@options.coverage_report or not @options.quiet) then
       puts
@@ -505,6 +513,30 @@ The internal error was:
     end
 
     exit @stats.fully_documented? if @options.coverage_report
+  end
+
+  def start_server
+    begin
+      require 'webrick'
+    rescue LoadError
+      abort "webrick is not found. You may need to `gem install webrick` to install webrick."
+    end
+
+    tmp_dir = Dir.mktmpdir
+
+    # Change the output directory to tmp so it doesn't overwrite the current documentation
+    Dir.chdir tmp_dir do
+      server = WEBrick::HTTPServer.new Port: @options.server_port
+
+      server.mount '/', RDoc::Server, self
+
+      trap 'INT'  do server.shutdown end
+      trap 'TERM' do server.shutdown end
+
+      server.start
+    end
+  ensure
+    FileUtils.remove_entry tmp_dir
   end
 
   ##

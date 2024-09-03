@@ -238,7 +238,7 @@ class RDoc::Generator::Darkfish
   # Build the initial indices and output objects based on an array of TopLevel
   # objects containing the extracted information.
 
-  def generate
+  def generate(server_mode: false)
     setup
 
     write_style_sheet
@@ -246,11 +246,13 @@ class RDoc::Generator::Darkfish
     generate_class_files
     generate_file_files
     generate_table_of_contents
-    @json_index.generate
-    @json_index.generate_gzipped
 
-    copy_static
-
+    unless server_mode
+      # For the server, we only generate the JSON index if requested
+      @json_index.generate
+      @json_index.generate_gzipped
+      copy_static
+    end
   rescue => e
     debug_msg "%s: %s\n  %s" % [
       e.class.name, e.message, e.backtrace.join("\n  ")
@@ -608,10 +610,21 @@ class RDoc::Generator::Darkfish
 
     return unless @store
 
+    update_data_from_store
+  end
+
+  def update_data_from_store
     @classes = @store.all_classes_and_modules.sort
     @files   = @store.all_files.sort
     @methods = @classes.flat_map { |m| m.method_list }.sort
     @modsort = get_sorted_module_list @classes
+  end
+
+  def clear_data
+    @classes.clear if @classes
+    @files.clear if @files
+    @methods.clear if @methods
+    @modsort.clear if @modsort
   end
 
   ##
