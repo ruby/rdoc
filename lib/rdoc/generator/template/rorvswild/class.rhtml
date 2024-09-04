@@ -23,9 +23,9 @@
   <section id="<%= section.aref %>" class="documentation-section">
     <%- if section.title then -%>
     <header class="documentation-section-title">
-      <h3>
+      <h2>
         <%= section.title %>
-      </h3>
+      </h2>
       <span class="section-click-top">
         <a href="#top">&uarr; top</a>
       </span>
@@ -41,7 +41,7 @@
     <%- unless constants.empty? then -%>
     <section class="constants-list">
       <header>
-        <h3>Constants</h3>
+        <h2>Constants</h2>
       </header>
       <dl>
       <%- constants.each do |const| -%>

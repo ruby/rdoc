@@ -88,6 +88,8 @@ h6:hover span {
 :any-link {
   color: var(--primary-color);
   text-decoration: underline;
+  text-decoration-color: oklch(61% 0.18 29);
+  text-decoration-thickness: 0.5px;
   transition: color 0.3s ease;
 }
 
@@ -517,12 +519,27 @@ main h3 {
 
 main h4 {
   margin: 1.5em 0 0;
-  font-size: 1.2em;
+  font-size: 1em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
-main h5, main h6 {
-  margin: 1em 0 0.5em;
+main h5 {
+  margin: 1em 0 0;
   font-size: 1em;
+}
+
+main h6 {
+  margin: 1em 0 0;
+  font-size: 0.833rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+main h4 + p,
+main h5 + p, 
+main h6 + p {
+  margin-top: 0;
 }
 
 main p {
