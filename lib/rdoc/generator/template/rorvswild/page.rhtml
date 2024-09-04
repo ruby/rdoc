@@ -12,8 +12,10 @@
 </nav>
 
 <main role="main" aria-label="Page <%=h file.full_name%>">
-  <%= file.description %>
+  <article>
+    <%= file.description %>
+  </article>
+  <nav class="contextual">
+    <%= render '_sidebar_table_of_contents.rhtml' %>
+  </nav>
 </main>
-<nav class="contextual">
-  <%= render '_sidebar_table_of_contents.rhtml' %>
-</nav>

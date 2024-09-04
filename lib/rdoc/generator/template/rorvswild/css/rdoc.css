@@ -11,7 +11,7 @@
 
 /* 1. Variables and Root Styles */
 :root {
-  --sidebar-width: 20%;
+  --sidebar-width: 300px;
   
   --color-primary: oklch(0.5 0.18 29);
   --color-primary-hover: oklch(0.4 0.18 29);
@@ -267,11 +267,8 @@ details[open] > summary::after { content: '-'; }
 main {
   padding: 1em;
   width: calc(100% - 2em);
-  max-width: 800px;
   margin: 0 auto;
 }
-
-main > * { grid-column: 1 / span 1; }
 
 main > h1:first-child,
 main > h2:first-child,
@@ -290,13 +287,13 @@ main sup {
 main h1 {
   font-size: 2.488rem;
   line-height: 3rem;
-  margin: 1.5em 0 0.5em;
+  margin: 1rem 0 0;
   color: var(--color-title);
 }
 
 main h1 + p {
   font-size: 1.44em;
-  margin-top: -0.5rem;
+  margin-top: 0.5rem;
   color: var(--color-text-light);
 }
 
@@ -480,13 +477,6 @@ nav p {
 }
 
 nav.contextual {
-  position: fixed;
-  left: auto;
-  right: 0;
-  top: 40px;
-  bottom: 0;
-  border: 0;
-  overflow-y: auto;
   display: none
 }
 
@@ -594,7 +584,7 @@ em {
 
 .note-list {
   padding: 1em 1em 2em;
-  box-shadow: 0 0 0 1px var(--color-border);
+  box-shadow: 0 0 0 1px var(--color-border) inset;
 }
 
 .constants-list > dl {
@@ -766,12 +756,31 @@ em {
 @media (min-width: 1024px) {
   html { font-size: 16px; }
 
-  body { padding-top: 40px; }
+  body { 
+    padding-top: 40px;
+    display: grid;
+    grid-template-columns: var(--sidebar-width) auto;
+    gap: 24px;
+  }
 
   main {
-    margin-left: var(--sidebar-width);
-    max-width: calc(100% - (var(--sidebar-width) * 2) - 4em);
-    padding: 1em 2em;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1300px;
+    padding: 0;
+    position: relative;
+    grid-column: 2/ span 1;
+    display: grid;
+    grid-template-columns: 1fr var(--sidebar-width);
+    gap: 24px;
+  }
+
+  main > article {
+    position: relative;
+    overflow: hidden;
+    padding: 0 1rem;
+    width: 100%;
+    grid-column: 1 / span 1;
   }
 
   #navigation-toggle { display: none }
@@ -781,8 +790,20 @@ em {
     top: 40px;
   }
 
-  nav[hidden],
-  nav.contextual { 
+  nav[hidden] { display: block; }
+
+  nav.contextual {
+    width: var(--sidebar-width);
+    grid-column: 2 / span 1;
+    position: sticky;
+    max-height: calc(100svh - 40px);
+    left: auto;
+    right: 0;
+    top: 40px;
+    border: 0;
+    overflow-y: auto;
+    background: transparent;
     display: block;
+    align-self: start;
   }
 }
