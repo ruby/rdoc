@@ -12,26 +12,79 @@
 /* 1. Variables and Root Styles */
 :root {
   --sidebar-width: 20%;
+  
+  --color-primary: oklch(0.5 0.18 29);
+  --color-primary-hover: oklch(0.4 0.18 29);
+  --color-link-decoration: oklch(0.61 0.18 29);
 
-  --primary-color: oklch(0.5 0.18 29);
-  --primary-hover-color: oklch(47% 0.18 89);
+  --color-strong-background: oklch(0.9 0.2 99);
 
-  --text-color: oklch(40% 0.03 269);
-  --background-color: oklch(99% 0.001 269);;
+  --color-topbar: var(--color-primary);
+  --color-topbar-text: var(--color-background);
 
-  --code-block-background-color: oklch(97% 0.002 269);
-  --code-block-border-color: oklch(91% 0.002 269);
+  --color-text: oklch(0.40 0.03 269);
+  --color-text-light: oklch(0.55 0.03 269);
+  --color-title: oklch(0.27 0.03 269);
+  --color-background: oklch(0.99 0.001 269);
+  --color-code-background: oklch(0.97 0.002 269);
+  --color-th-background: oklch(0.95 0.002 269);
+  --color-border: oklch(0.91 0.002 269);
 
-  --border-color: oklch(91% 0.002 269);;
+  /* syntax highlighting */
+  --color-constant: oklch(0.5 0.18 269);  /* Bright blue for constants */
+  --color-keyword: var(--color-primary);  /* Red for keywords */
+  --color-ivar: oklch(0.5 0.18 59);  /* Orange for instance variables */
+  --color-operator: oklch(0.38 0.18 269);  /* Dark blue for operators */
+  --color-identifier: var(--color-title);  /* Dark gray for identifiers */
+  --color-node: oklch(0.5 0.18 149);  /* Green for interpolation */
+  --color-comment: oklch(0.5 0.03 269); /* Gray for comments */
+  --color-regexp: oklch(0.5 0.18 299);  /* purple for regular expressions */
+  --color-value: var(--color-operator);  /* Dark blue for numeric values */
+  --color-string: oklch(0.5 0.18 149);  /* Green for strings */
 
-  /* System fonts, remove /fonts */
+  /* fonts */
   --font-primary: "Inter", system-ui, sans-serif;
   --font-code: "Monaspace", ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 }
 
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: oklch(0.85 0.09 29);
+    --color-primary-hover: oklch(87.78296875% 0.07 29);
+    --color-link-decoration: oklch(41.89453125% 0.09 29);
+
+    --color-strong-background: oklch(0.5 0.1 99);
+
+    --color-topbar: oklch(0.5 0.18 29);
+    --color-topbar-text: oklch(0.99 0.001 269);
+  
+    /* greys */
+    --color-text: oklch(0.84 0.02 269);
+    --color-text-light: oklch(0.69 0.02 269);
+    --color-title: oklch(0.91 0.02 269);
+    --color-background: oklch(0.19 0.01 269);
+    --color-code-background: oklch(0.25 0.01 269);
+    --color-th-background: oklch(0.41 0.01 269);
+    --color-border: oklch(0.27 0.01 269);
+  
+    /* syntax highlighting */
+    --color-constant: oklch(0.84 0.09 260);  /* Bright blue for constants */
+    --color-keyword: var(--color-primary);  /* Red for keywords */
+    --color-ivar: oklch(0.85 0.09 59);  /* Orange for instance variables */
+    --color-operator: oklch(0.91 0.04 269);  /* Dark blue for operators */
+    --color-identifier: var(--color-title);  /* Dark gray for identifiers */
+    --color-node: oklch(0.83 0.09 149);  /* Green for interpolation */
+    --color-comment: oklch(0.69 0.02 269); /* Gray for comments */
+    --color-regexp: oklch(0.85 0.09 299);  /* purple for regular expressions */
+    --color-value: var(--color-operator);  /* Dark blue for numeric values */
+    --color-string: oklch(0.83 0.09 149);  /* Green for strings */
+  }
+}
+
 html {
   line-height: 1.5;
-  color: var(--text-color);
+  color: var(--color-text);
   font-weight: normal;
   font-size: 14px;
   font-optical-sizing: auto;
@@ -41,7 +94,7 @@ html {
 
 /* 2. Global Styles */
 body {
-  background: var(--background-color);
+  background: var(--color-background);
   font-family: var(--font-primary);
 
   /* Layout */
@@ -86,21 +139,21 @@ h6:hover span {
 
 /* 4. Links */
 :any-link {
-  color: var(--primary-color);
+  color: var(--color-primary);
   text-decoration: underline;
-  text-decoration-color: oklch(61% 0.18 29);
+  text-decoration-color: var(--color-link-decoration);
   text-decoration-thickness: 0.5px;
   transition: color 0.3s ease;
 }
 
-:any-link:hover { color: var(--primary-hover-color); }
+:any-link:hover { color: var(--color-primary-hover); }
 
 /* 5. Code and Pre */
 code,
 pre {
   font-family: var(--font-code);
-  background-color: var(--code-block-background-color);
-  box-shadow: 0 0 0 1px var(--code-block-border-color) inset;
+  background-color: var(--color-code-background);
+  box-shadow: 0 0 0 1px var(--color-border) inset;
   border-radius: 6px;
   padding: 16px;
   overflow-x: auto;
@@ -118,91 +171,12 @@ table {
 
 table tr th, table tr td {
   padding: 0.2em 0.4em;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
 }
 
-table tr th {
-  background-color: oklch(95% 0.002 269); /* todo */
-}
+table tr th { background-color: var(--color-th-background); /* todo */ }
 
-table tr:nth-child(even) td {
-  background-color: oklch(97% 0.002 269);
-}
-
-/* 7. Navigation and Sidebar */
-.topbar {
-  width: 100%;
-  padding: 0.5em 1em;
-  box-shadow: 0 1px 0 0 var(--border-color);
-  z-index: 100;
-  position: fixed;
-  top: 0;
-  background-color: var(--primary-color);
-  display: flex;
-  gap: 8px;
-}
-
-.topbar > a {
-  text-decoration: none;
-  font-weight: 700;
-  color: var(--background-color);
-}
-
-nav {
-  border-right: 1px solid var(--border-color);
-  position: fixed;
-  top: 35px;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: var(--background-color);
-  overflow-y: auto;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-}
-
-nav[hidden] {
-  display: none;
-}
-
-nav footer {
-  padding: 1em;
-  border-top: 1px solid var(--border-color);
-  font-size: 0.694rem;
-}
-
-.nav-section {
-  margin-top: 1em;
-  padding: 0 1em;
-}
-
-.nav-section h3 { padding: 0; }
-
-.nav-section ul { margin-top: 0; }
-
-nav h2 {
-  margin: 0 0 0.5em;
-  padding: 0.5em 0;
-  font-size: 1.2em;
-  color: var(--text-color);
-  border-bottom: 1px solid var(--border-color);
-}
-
-nav h3,
-#table-of-contents-navigation {
-  margin: 0;
-  padding: 0.5em 0;
-  font-size: 1em;
-  color: var(--text-color);
-}
-
-nav dl,
-nav p {
-  padding: 0;
-  list-style: none;
-  margin: 0.5em 0 0;
-}
+table tr:nth-child(even) td { background-color: var(--color-code-background); }
 
 ul {
   padding: 0;
@@ -226,7 +200,7 @@ ul ul {
 ul ul li {
   padding-left: 15px;
   position: relative;
-  border-left: 1px solid var(--border-color);
+  border-left: 1px solid var(--color-border);
 }
 
 ul ul li:before {
@@ -237,7 +211,7 @@ ul ul li:before {
   display: inline-block;
   height: 1px;
   width: 11px;
-  background: var(--border-color);
+  background: var(--color-border);
 }
 
 ul ul li:last-of-type { border-left: 0; }
@@ -250,23 +224,15 @@ ul ul li:last-of-type:after {
   display: inline-block;
   height:18px;
   width: 1px;
-  background: var(--border-color);
+  background: var(--color-border);
 }
 
-#navigation-toggle {
-  display: inline-block;
-  color: var(--background-color);
+ol {
+  margin: 1em 0 0;
+  padding: 0 1em;
 }
 
-#home-section { padding-left: 44px; }
-
-#home-section a:any-link {
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 1.44rem;
-  line-height: 26px;
-  color: var(--text-color)
-}
+ol ol { margin: 0; }
 
 details > summary {
   list-style: none;  /* Remove the default marker */
@@ -276,20 +242,18 @@ details > summary {
   gap: 4px;
 }
 
-details > summary > a {
-  flex: 1;
-}
+details > summary > a { flex: 1; }
 
 details > summary::after {
-  content: '+';  /* Unicode right-pointing triangle */
-  font-size: 0.8em;
+  content: '+';
+  font-size: 0.833em;
   font-weight: bold;
   width: 22px;
   height: 22px;
   line-height: 20px;
   border-radius: 50%;
   text-align: center;
-  box-shadow: 0 0 0 1px var(--border-color) inset;
+  box-shadow: 0 0 0 1px var(--color-border) inset;
   transition: transform 0.2s ease;
   display: inline-block;
   cursor: pointer;
@@ -297,13 +261,9 @@ details > summary::after {
   top: 2px;
 }
 
-details > summary::after:hover { 
-  box-shadow: 0 0 0 1px #333 inset;
-}
-
 details[open] > summary::after { content: '-'; }
 
-/* 8. Main Content */
+/* Main Content */
 main {
   padding: 1em;
   width: calc(100% - 2em);
@@ -311,173 +271,7 @@ main {
   margin: 0 auto;
 }
 
-main > * {
-  grid-column: 1 / span 1;
-}
-
-nav.contextual {
-  position: fixed;
-  left: auto;
-  right: 0;
-  top: 40px;
-  bottom: 0;
-  border: 0;
-  overflow-y: auto;
-  display: none
-}
-
-@media (min-width: 1024px) {
-  html {
-    font-size: 16px;
-  }
-
-  body {
-    padding-top: 40px;
-  }
-
-  main {
-    margin-left: var(--sidebar-width);
-    max-width: calc(100% - (var(--sidebar-width) * 2) - 4em);
-    padding: 1em 2em;
-  }
-
-  #navigation-toggle {
-    display: none
-  }
-
-  nav {
-    max-width: var(--sidebar-width);
-    top: 40px;
-  }
-
-  nav[hidden] {
-    display: block;
-  }
-
-  nav.contextual { display: block; }
-}
-
-#validator-badges {
-  margin: 1em 1em 2em;
-  font-size: smaller;
-}
-
-/* 9. Search */
-#search-section {
-  padding: 1em 1em 0;
-  background-color: var(--background-color);
-  border-bottom: 1px solid var(--border-color);
-}
-
-#search-field-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-#search-field {
-  width: 100%;
-  padding: 0.5em 1em 0.5em 2em;
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.3s ease;
-  background-color: var(--background-color);
-}
-
-#search-field:focus {
-  border-color: var(--primary-color);
-}
-
-#search-field::placeholder {
-  color: var(--text-color);
-  opacity: 0.6;
-}
-
-#search-field-wrapper::before {
-  content: "\1F50D";  /* Unicode for magnifying glass */
-  position: absolute;
-  left: 0.75em;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 14px;
-  color: var(--text-color);
-  opacity: 0.6;
-}
-
-/* 10. Utility Classes */
-.hide { display: none !important; }
-.initially-hidden { display: none; }
-
-/* 11. Media Queries */
-@media (min-width: 1024px) {
-  /* Styles for larger screens */
-}
-
-/* 12. Print Styles */
-@media print {
-  /* Print-specific styles */
-}
-
-/* 13. Syntax Highlighting */
-.ruby-constant   { color: oklch(0.5 0.18 269); }  /* Bright blue for constants */
-.ruby-keyword    { color: oklch(0.5 0.18 29); }  /* Red for keywords */
-.ruby-ivar       { color: oklch(0.5 0.18 59); }  /* Orange for instance variables */
-.ruby-operator   { color: oklch(38% 0.18 269); }  /* Dark blue for operators */
-.ruby-identifier { color: oklch(27% 0.03 269); }  /* Dark gray for identifiers */
-.ruby-node       { color: oklch(0.5 0.18 149); }  /* Green for interpolation */
-.ruby-comment    { color: oklch(40% 0.03 269); }  /* Gray for comments */
-.ruby-regexp     { color: oklch(0.5 0.18 299); }  /* Navy for regular expressions */
-.ruby-value      { color: oklch(38% 0.18 269); }  /* Dark blue for numeric values */
-.ruby-string     { color: oklch(0.5 0.18 149); }  /* Green for strings */
-
-code {
-  background-color: var(--code-block-background-color);  /* Match pre background */
-  padding: 0em 0.4em;
-  border-radius: 3px;
-  font-size: 1em;
-}
-
-em {
-  text-decoration-color: var(--border-color);
-  text-decoration-line: underline;
-  text-decoration-style: dotted;
-}
-
-strong,
-em {
-  background-color: oklch(96% 0.02 269);
-}
-
-/* 14. Specific Component Styles */
-
-.table-of-contents ul ul {
-  margin-top: 0.25em;
-}
-
-.table-of-contents ul :link,
-.table-of-contents ul :visited {
-  font-size: 16px;
-}
-
-.table-of-contents li {
-  margin-bottom: 0.25em;
-}
-
-.table-of-contents li .toc-toggle {
-  width: 16px;
-  height: 16px;
-  background: url(../images/add.png) no-repeat;
-}
-
-.table-of-contents li .toc-toggle.open {
-  background: url(../images/delete.png) no-repeat;
-}
-
-main {
-  color: var(--text-color);
-}
+main > * { grid-column: 1 / span 1; }
 
 main > h1:first-child,
 main > h2:first-child,
@@ -493,40 +287,46 @@ main sup {
   font-size: 0.8em;
 }
 
-/* The heading with the class name */
-
 main h1 {
   font-size: 2.488rem;
   line-height: 3rem;
   margin: 1.5em 0 0.5em;
+  color: var(--color-title);
 }
 
 main h1 + p {
   font-size: 1.44em;
+  margin-top: -0.5rem;
+  color: var(--color-text-light);
 }
 
 main h2 {
   margin: 1.5em 0 0.5em;
   font-size: 1.728rem;
   line-height: 3rem;
-  box-shadow: 0 2px 0 0 var(--text-color);
+  color: var(--color-title);
+  box-shadow: 0 2px 0 0 var(--color-text);
 }
 
 main h3 {
   margin: 1.5em 0 0.5em;
   font-size: 1.44em;
+  color: var(--color-title);
 }
 
 main h4 {
   margin: 1.5em 0 0;
   font-size: 1em;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  color: var(--color-title);
+  letter-spacing: 0.05em;
 }
+
 
 main h5 {
   margin: 1em 0 0;
   font-size: 1em;
+  color: var(--color-title);
 }
 
 main h6 {
@@ -534,6 +334,7 @@ main h6 {
   font-size: 0.833rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  color: var(--color-title);
 }
 
 main h4 + p,
@@ -564,51 +365,221 @@ main blockquote {
   border-left: 2px solid #ddd;
 }
 
-ol {
-  margin: 1em 0 0;
-  padding: 0 1em;
-}
-
-ol ol {
-  margin: 0;
-}
-
-main li > p {
-  margin: 0;
-}
-
-main dl {
-  margin: 1em 0;
-}
+main dl { margin: 1em 0; }
 
 main dt {
   margin: 1em 0 0;
   font-weight: bold;
 }
 
-main dd {
+main dd,
+main dd p,
+main li > p {
   margin: 0;
 }
 
-main dd p {
-  margin: 0;
-}
-
-main header h2 {
-  margin-top: 2em;
-}
+main header h2 { margin-top: 2em; }
 
 main header h3 {
   margin: 2em 0 1.5em;
   padding-top: 1em;
   border-width: 0;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--color-border);
   font-size: 120%;
 }
 
-.documentation-section-title {
-  position: relative;
+/* Navigation and Sidebar */
+.topbar {
+  width: 100%;
+  padding: 0.5em 1em;
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  background-color: var(--color-topbar);
+  display: flex;
+  gap: 8px;
 }
+
+.topbar > a:any-link {
+  text-decoration: none;
+  font-weight: 700;
+  color: var(--color-topbar-text);
+}
+
+.topbar > a:any-link:hover { color: var(--color-topbar-text); }
+
+#navigation-toggle {
+  display: inline-block;
+  color: var(--color-topbar-text);
+}
+
+nav {
+  border-right: 1px solid var(--color-border);
+  position: fixed;
+  top: 35px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--color-background);
+  overflow-y: auto;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.833rem;
+  line-height: 1.5rem;
+}
+
+nav a:any-link {
+  color: var(--color-text);
+  text-decoration-color: inherit;
+}
+
+nav[hidden] { display: none; }
+
+nav footer {
+  padding: 1em;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.694rem;
+}
+
+nav footer a:any-link {
+  font-weight: 700;
+}
+
+.nav-section {
+  margin-top: 1em;
+  padding: 0 1em;
+}
+
+.nav-section h3 { padding: 0; }
+
+.nav-section ul { margin-top: 0; }
+
+nav h2 {
+  margin: 0 0 0.5em;
+  padding: 0.5em 0;
+  font-size: 1.2em;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+}
+
+nav h3,
+#table-of-contents-navigation {
+  margin: 0;
+  padding: 0.5em 0;
+  font-size: 0.694rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+nav dl,
+nav p {
+  padding: 0;
+  list-style: none;
+  margin: 0.5em 0 0;
+}
+
+nav.contextual {
+  position: fixed;
+  left: auto;
+  right: 0;
+  top: 40px;
+  bottom: 0;
+  border: 0;
+  overflow-y: auto;
+  display: none
+}
+
+#validator-badges {
+  margin: 1em 1em 2em;
+  font-size: smaller;
+}
+
+/* 9. Search */
+#search-section {
+  padding: 1em 1em 0;
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+}
+
+#search-field-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#search-field {
+  width: 100%;
+  padding: 0.5em 1em 0.5em 2em;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  border-radius: 20px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  background-color: var(--color-background);
+}
+
+#search-field:focus {
+  border-color: var(--color-primary);
+}
+
+#search-field::placeholder {
+  color: var(--color-text);
+  opacity: 0.6;
+}
+
+#search-field-wrapper::before {
+  content: "\1F50D";  /* Unicode for magnifying glass */
+  position: absolute;
+  left: 0.75em;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: var(--color-text);
+  opacity: 0.6;
+}
+
+/* 10. Utility Classes */
+.hide { display: none !important; }
+.initially-hidden { display: none; }
+
+
+/* 13. Syntax Highlighting */
+.ruby-constant   { color: var(--color-constant); }  /* Bright blue for constants */
+.ruby-keyword    { color: var(--color-keyword); }  /* Red for keywords */
+.ruby-ivar       { color: var(--color-ivar); }  /* Orange for instance variables */
+.ruby-operator   { color: var(--color-operator); }  /* Dark blue for operators */
+.ruby-identifier { color: var(--color-identifier); }  /* Dark gray for identifiers */
+.ruby-node       { color: var(--color-node); }  /* Green for interpolation */
+.ruby-comment    { color: var(--color-comment); }  /* Gray for comments */
+.ruby-regexp     { color: var(--color-regexp); }  /* Navy for regular expressions */
+.ruby-value      { color: var(--color-value); }  /* Dark blue for numeric values */
+.ruby-string     { color: var(--color-string); }  /* Green for strings */
+
+code {
+  background-color: var(--color-code-background);  /* Match pre background */
+  padding: 0em 0.4em;
+  border-radius: 3px;
+  font-size: 1em;
+  text-transform: initial;
+}
+
+em {
+  text-decoration-color: var(--color-border);
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+}
+
+strong,
+em {
+  background-color: var(--color-strong-background);
+}
+
+/* 14. Specific Component Styles */
+
+.documentation-section-title { position: relative; }
+
 .documentation-section-title .section-click-top {
   position: absolute;
   top: 6px;
@@ -619,13 +590,11 @@ main header h3 {
   padding-left: 0.5px;
 }
 
-.documentation-section-title:hover .section-click-top {
-  visibility: visible;
-}
+.documentation-section-title:hover .section-click-top { visibility: visible; }
 
-main  > .note-list {
+.note-list {
   padding: 1em 1em 2em;
-  box-shadow: 0 0 0 1px var(--border-color);
+  box-shadow: 0 0 0 1px var(--color-border);
 }
 
 .constants-list > dl {
@@ -640,19 +609,14 @@ main  > .note-list {
   font-size: 110%;
 }
 
-.constants-list > dl dt a {
-  color: inherit;
-}
+.constants-list > dl dt a { color: inherit; }
 
 .constants-list > dl dd {
   margin: 0 0 2em 0;
   padding: 0;
-  color: oklch(50% 0.03 269);
 }
 
-.documentation-section h2 {
-  position: relative;
-}
+.documentation-section h2 { position: relative; }
 
 .documentation-section h2 a {
   position: absolute;
@@ -663,13 +627,9 @@ main  > .note-list {
   visibility: hidden;
 }
 
-.documentation-section h2:hover a {
-  visibility: visible;
-}
+.documentation-section h2:hover a { visibility: visible; }
 
-/* @group Method Details */
-
-main .method-source-code {
+.method-source-code {
   max-height: 0;
   overflow: auto;
   transition-duration: 200ms;
@@ -678,38 +638,31 @@ main .method-source-code {
   transition-timing-function: ease-in-out;
 }
 
-main .method-source-code.active-menu {
-  max-height: none;
-}
+.method-source-code.active-menu { max-height: none; }
 
-main .method-description .method-calls-super {
-  color: var(--text-color);
+.method-description .method-calls-super {
+  color: var(--color-text);
   font-weight: bold;
 }
 
-main .method-detail {
+.method-detail {
   margin: 2em 0 0;
   cursor: pointer;
 }
 
-main .method-heading {
+.method-heading {
   position: relative;
   font-family: var(--font-code);
   font-size: 1.2rem;
   font-weight: bold;
-  color: var(--primary-color);
+  color: var(--color-primary);
 }
 
-main .method-heading span {
-  background-color: var(--code-block-background-color);
-}
+.method-heading span { background-color: var(--color-code-background); }
 
-main .method-heading :link,
-main .method-heading :visited {
-  color: inherit;
-}
+.method-heading :any-link { color: inherit; }
 
-main .method-heading .method-click-advice {
+.method-heading .method-click-advice {
   background-color: transparent;
   position: absolute;
   right: 0;
@@ -719,59 +672,47 @@ main .method-heading .method-click-advice {
   padding-right: 0;
   line-height: 1.5rem;
 }
-main .method-header:hover .method-click-advice {
-  visibility: visible;
-}
 
-main .method-description,
-main .aliases {
+.method-header:hover .method-click-advice { visibility: visible; }
+
+.method-description,
+.aliases {
   margin-top: 0.5em;
-  color: oklch(50% 0.03 269);
 }
 
-main .aliases {
+.aliases {
   padding-top: 4px;
   font-style: italic;
   cursor: default;
 }
 
-main .method-description p {
-  margin: 0;
-}
+.method-description p { margin: 0; }
 
-main .method-description ul {
-  margin-left: 1.5em;
-}
-
-main #attribute-method-details .method-detail:hover {
+.method-description ul { margin-left: 1.5em; }
+ 
+#attribute-method-details .method-detail:hover {
   background-color: transparent;
   cursor: default;
 }
-main .attribute-access-type {
+
+.attribute-access-type {
   text-transform: uppercase;
   padding: 0 1em;
 }
-/* @end */
-
-/* @end */
 
 /* @group search results */
-#search-results {
-  font-weight: 300;
-}
+#search-results { font-weight: 300; }
 
-#search-results .search-match {
-  font-weight: normal;
-}
+#search-results .search-match { font-weight: normal; }
 
 #search-results .search-selected {
-  background: #e8e8e8;
+  background: var(--color-code-background);
   border-bottom: 1px solid transparent;
 }
 
 #search-results li {
   list-style: none;
-  border-bottom: 1px solid #aaa;
+  border-bottom: 1px solid var(--color-border);
   margin-bottom: 0.5em;
 }
 
@@ -785,12 +726,10 @@ main .attribute-access-type {
   margin: 0.5em;
 }
 
-#search-results .search-namespace {
-  font-weight: bold;
-}
+#search-results .search-namespace { font-weight: bold; }
 
 #search-results li em {
-  background: yellow;
+  background: var(--color-strong-background);
   font-style: normal;
 }
 
@@ -799,10 +738,10 @@ main .attribute-access-type {
   font-family: var(--font-code);
 }
 
+/* 11. Media Queries */
+
 @media (max-width: 480px) {
-  nav {
-    width: 100%;
-  }
+  nav { width: 100%; }
 
   main {
     margin: 1em auto;
@@ -815,9 +754,7 @@ main .attribute-access-type {
     left: auto;
   }
 
-  #navigation-toggle[aria-expanded="true"] {
-    left: auto;
-  }
+  #navigation-toggle[aria-expanded="true"] { left: auto; }
 
   table {
     display: block;
@@ -825,5 +762,27 @@ main .attribute-access-type {
     white-space: nowrap;
   }
 }
-/* @end */
 
+@media (min-width: 1024px) {
+  html { font-size: 16px; }
+
+  body { padding-top: 40px; }
+
+  main {
+    margin-left: var(--sidebar-width);
+    max-width: calc(100% - (var(--sidebar-width) * 2) - 4em);
+    padding: 1em 2em;
+  }
+
+  #navigation-toggle { display: none }
+
+  nav {
+    max-width: var(--sidebar-width);
+    top: 40px;
+  }
+
+  nav[hidden],
+  nav.contextual { 
+    display: block;
+  }
+}
