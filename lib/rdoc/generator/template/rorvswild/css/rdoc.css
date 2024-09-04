@@ -43,8 +43,8 @@
   --color-string: oklch(0.5 0.18 149);  /* Green for strings */
 
   /* fonts */
-  --font-primary: "Inter", system-ui, sans-serif;
-  --font-code: "Monaspace", ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "Monaspace", ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 }
 
 
@@ -90,12 +90,13 @@ html {
   font-optical-sizing: auto;
   scroll-padding-top: calc(40px + 1em);
   scroll-behavior: smooth;
+  font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
 }
 
 /* 2. Global Styles */
 body {
   background: var(--color-background);
-  font-family: var(--font-primary);
+  font-family: var(--font-sans);
 
   /* Layout */
   display: flex;
@@ -151,7 +152,7 @@ h6:hover span {
 /* 5. Code and Pre */
 code,
 pre {
-  font-family: var(--font-code);
+  font-family: var(--font-mono);
   background-color: var(--color-code-background);
   box-shadow: 0 0 0 1px var(--color-border) inset;
   border-radius: 6px;
@@ -352,14 +353,14 @@ main pre {
 }
 
 main hr {
-  margin: 1.5em 1em;
-  border: 2px solid #ddd;
+  margin: 1.5em 0;
+  border: 2px solid var(--color-border);
 }
 
 main blockquote {
   margin: 0 2em 1.2em 1.2em;
   padding-left: 0.5em;
-  border-left: 2px solid #ddd;
+  border-left: 2px solid var(--color-border);
 }
 
 main dl { margin: 1em 0; }
@@ -595,7 +596,7 @@ em {
 .constants-list > dl dt {
   margin-bottom: 0.75em;
   padding-left: 0;
-  font-family: var(--font-code);
+  font-family: var(--font-mono);
   font-size: 110%;
 }
 
@@ -642,7 +643,7 @@ em {
 
 .method-heading {
   position: relative;
-  font-family: var(--font-code);
+  font-family: var(--font-mono);
   font-size: 1.2rem;
   font-weight: bold;
   color: var(--color-primary);
@@ -725,7 +726,7 @@ em {
 
 #search-results pre {
   margin: 0.5em;
-  font-family: var(--font-code);
+  font-family: var(--font-mono);
 }
 
 /* 11. Media Queries */
@@ -760,7 +761,7 @@ em {
     padding-top: 40px;
     display: grid;
     grid-template-columns: var(--sidebar-width) auto;
-    gap: 24px;
+    gap: 1rem;
   }
 
   main {
