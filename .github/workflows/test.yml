@@ -53,6 +53,8 @@ jobs:
         RDOC_USE_PRISM_PARSER: true
     - if: ${{ matrix.ruby == 'head' && startsWith(matrix.os, 'ubuntu') }}
       run: bundle exec rake rdoc
+    - if: ${{ matrix.ruby == 'head' && startsWith(matrix.os, 'ubuntu') }}
+      run: bundle exec rake install
   lint:
     runs-on: ubuntu-latest
     steps:
