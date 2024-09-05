@@ -22,8 +22,8 @@
   --color-topbar: var(--color-primary);
   --color-topbar-text: var(--color-background);
 
-  --color-text: oklch(0.40 0.03 269);
-  --color-text-light: oklch(0.55 0.03 269);
+  --color-text: oklch(0.4 0.03 269);
+  --color-text-light: oklch(0.5 0.03 269);
   --color-title: oklch(0.27 0.03 269);
   --color-background: oklch(0.99 0.001 269);
   --color-code-background: oklch(0.97 0.002 269);
@@ -61,7 +61,7 @@
   
     /* greys */
     --color-text: oklch(0.84 0.02 269);
-    --color-text-light: oklch(0.69 0.02 269);
+    --color-text-light: oklch(0.74 0.02 269);
     --color-title: oklch(0.91 0.02 269);
     --color-background: oklch(0.19 0.01 269);
     --color-code-background: oklch(0.25 0.01 269);
@@ -184,12 +184,14 @@ ul {
   list-style: none;
 }
 
-main > ul {
+main article > ul {
   padding: 0 0 0 16px;
   list-style-type: square;
 }
 
 li { padding: 0.25em 0; }
+
+main li > p { margin: 0; }
 
 li li { padding-bottom: 0; }
 
@@ -271,15 +273,6 @@ main {
   margin: 0 auto;
 }
 
-main > h1:first-child,
-main > h2:first-child,
-main > h3:first-child,
-main > h4:first-child,
-main > h5:first-child,
-main > h6:first-child {
-  margin-top: 0px;
-}
-
 main sup {
   vertical-align: super;
   font-size: 0.8em;
@@ -319,7 +312,6 @@ main h4 {
   color: var(--color-title);
   letter-spacing: 0.05em;
 }
-
 
 main h5 {
   margin: 1em 0 0;
@@ -368,12 +360,13 @@ main dl { margin: 1em 0; }
 main dt {
   margin: 1em 0 0;
   font-weight: bold;
+  color: var(--color-title);
 }
 
 main dd,
-main dd p,
-main li > p {
+main dd p {
   margin: 0;
+  color: var(--color-text-light);
 }
 
 main header h2 { margin-top: 2em; }
@@ -779,7 +772,7 @@ em {
   main > article {
     position: relative;
     overflow: hidden;
-    padding: 0 1rem;
+    padding: 0 1rem 3rem;
     width: 100%;
     grid-column: 1 / span 1;
   }
