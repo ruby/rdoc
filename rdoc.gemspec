@@ -46,7 +46,7 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
     "LEGAL.rdoc",
     "LICENSE.rdoc",
     "README.rdoc",
-    "RI.md",
+    "RI.rdoc",
     "TODO.rdoc",
     "exe/rdoc",
     "exe/ri",
