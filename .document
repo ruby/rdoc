@@ -1,7 +1,4 @@
-History.txt
-LICENSE.txt
-README.txt
-*.md
-*.rdoc
-lib
-doc
+*.md   # Include all .md files.
+*.rdoc # Include all .rdoc files.
+lib    # Recursively search directory lib/.
+doc    # Recursively search directory doc/.
