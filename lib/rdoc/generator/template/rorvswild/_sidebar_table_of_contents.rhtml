@@ -1,4 +1,5 @@
-<%- comment = if current.respond_to? :comment_location then
+<%- 
+  comment = if current.respond_to? :comment_location then
                current.comment_location
              else
                current.comment

@@ -17,7 +17,7 @@
   --color-primary-hover: oklch(0.4 0.18 29);
   --color-link-decoration: oklch(0.61 0.18 29);
 
-  --color-strong-background: oklch(0.9 0.2 99);
+  --color-strong-background: oklch(0.97 0.12 99);
 
   --color-topbar: var(--color-primary);
   --color-topbar-text: var(--color-background);
@@ -198,7 +198,7 @@ details > summary {
   gap: 4px;
 }
 
-details > summary > a { flex: 1; }
+summary::-webkit-details-marker { display: none; }
 
 details > summary::after {
   content: '+';
@@ -215,6 +215,7 @@ details > summary::after {
   cursor: pointer;
   position: relative;
   top: 2px;
+  margin-left: auto;
 }
 
 details[open] > summary::after { content: '-'; }
@@ -390,14 +391,27 @@ nav footer a:any-link {
   font-weight: 700;
 }
 
-.nav-section {
-  margin-top: 1em;
-  padding: 0 1em;
-}
+.nav-section { margin-top: 1em; }
 
-.nav-section h3 { padding: 0; }
+.nav-section h3 { padding: 0 1em; }
 
 .nav-section ul { margin-top: 0; }
+
+.nav-section > ul > li {
+  padding: 0.25em 0.75em;
+}
+
+.nav-section li a {
+  padding: 0 0.25em;
+  display: inline-block;
+}
+
+.nav-section li.active > a,
+.nav-section li.active > details > summary > a,
+.nav-section li:has(li.active) > details > summary > a {
+  text-decoration: none;
+  background-color: var(--color-strong-background);
+}
 
 nav h2 {
   margin: 0 0 0.5em;
@@ -481,6 +495,7 @@ nav.contextual {
 .hide { display: none !important; }
 .initially-hidden { display: none; }
 
+pre,
 code {
   /* syntax highlighting */
   --color-constant: oklch(0.5 0.18 269);  /* Bright blue for constants */
@@ -493,7 +508,9 @@ code {
   --color-regexp: oklch(0.5 0.18 299);  /* purple for regular expressions */
   --color-value: var(--color-operator);  /* Dark blue for numeric values */
   --color-string: oklch(0.5 0.18 149);  /* Green for strings */
+}
 
+code {
   background-color: var(--color-code-background);  /* Match pre background */
   padding: 0em 0.4em;
   border-radius: 3px;
@@ -763,7 +780,7 @@ em {
     border: 0;
     overflow-y: auto;
     background: transparent;
-    display: block;
+    display: flex;
     align-self: start;
   }
 }
@@ -774,7 +791,7 @@ em {
     --color-primary-hover: oklch(87.78296875% 0.07 29);
     --color-link-decoration: oklch(41.89453125% 0.09 29);
 
-    --color-strong-background: oklch(0.5 0.1 99);
+    --color-strong-background: oklch(0.35 0.09 99);
 
     --color-topbar: oklch(0.5 0.18 29);
     --color-topbar-text: oklch(0.99 0.001 269);
@@ -789,6 +806,7 @@ em {
     --color-border: oklch(0.27 0.01 269);
   }
 
+  pre,
   code {
     /* syntax highlighting */
     --color-constant: oklch(0.84 0.09 260);  /* Bright blue for constants */
