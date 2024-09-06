@@ -14,6 +14,15 @@
       -%><%= index_klass.name %><%-
     end
   end
+
+  def has_active_descendant?(klass, current, all_classes)
+    return false unless defined?(current)
+    return true if klass == current
+    children = all_classes[klass.full_name]
+    return false unless children
+    children.any? { |child| has_active_descendant?(child, current, all_classes) }
+  end
+
   if top = all_classes[nil]
     solo = top.one? {|klass| klass.display?}
     traverse = proc do |klasses|
@@ -23,7 +32,7 @@
       <%- klasses.each do |index_klass| -%>
         <%- if children = all_classes[index_klass.full_name] -%>
           <li class="<%= "active" if defined?(current) && (index_klass == current) %>">
-            <details<% if solo || children.any? { |child| defined?(current) && (child == current) }; solo = false %> open<% end %>>
+            <details<% if solo || (defined?(current) && has_active_descendant?(index_klass, current, all_classes)); solo = false %>  open<% end %>>
               <summary><% link.call(index_klass) %></summary>
               <%- traverse.call(children) -%>
               </ul>
