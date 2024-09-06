@@ -111,18 +111,6 @@ Note that in a `.document` file, the character `#` in a line
 marks that character and all characters after it to end-of-line as a comment;
 the comment has no effect on file selection.
 
-#### Scope
-
-A file named `.document` may affect file selection in the directory tree at its own directory,
-but may be "overridden" by other files named `.document` lower in that directory tree.
-
-If there is a single `.document` file,
-it affects file selection throughout the directory tree.
-
-If there are multiple `.document` files,
-each directory has just one controlling `.document` file:
-the nearest such file in the chain of *ancestor* directories.
-
 #### Content
 
 Excluding its comments,
@@ -148,6 +136,14 @@ doc    # Recursively search directory doc/.
 
 **Note well:** If the effective `.document` file is empty,
 *all* files and directories in its directory tree are excluded.
+
+#### Scope
+
+A file named `.document` affects file selection in the directory tree at its own directory,
+but may be "overridden" by other files named `.document` lower in that directory tree.
+
+Each directory throughout the directory tree has just one controlling `.document` file:
+the nearest such file in the chain of *ancestor* directories.
 
 ### Command-Line Options
 
