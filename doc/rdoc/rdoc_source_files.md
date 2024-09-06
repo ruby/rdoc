@@ -1,6 +1,6 @@
 ## \RDoc Source Files
 
-When generating documentation, \RDoc reads source code and text from selected files.
+When generating documentation, `rdoc` reads source code and text from selected files.
 
 The files selected are based on `rdoc`
 [command-line arguments](rdoc-ref:doc/rdoc/rdoc_source_files.md@Command-Line+Arguments)
@@ -8,17 +8,24 @@ and [command-line options](rdoc-ref:doc/rdoc/rdoc_source_files.md@Command-Line+O
 
 ### Command-Line Arguments
 
-The selected files are searched for in the files and directories
-specified by arguments on the `rdoc` command line:
+The `rdoc` command-line arguments specify directories and files that are to be considered.
 
-Argument `.`, the current directory,
-specifies that the current directory is to be searched;
-this is also the default if no argument is given.
+Examples:
 
-Argument `*` specifies that:
+- Argument `.`, the current directory,
+  specifies that the current directory is to be searched;
+  this is also the default if no argument is given.
 
-- Each file in the current working directory is to be considered for inclusion.
-- Each directory in the current working directory is to be considered for (recursive) searching.
+- Argument `*` specifies that:
+
+    - Each file in the current working directory is to be considered for inclusion.
+    - Each directory in the current working directory is to be considered for (recursive) searching.
+
+- Argument `*.rb` specifies that all Ruby files in the current directory tree
+  are to be considered for inclusion.
+
+- Argument `rdoc` specifies that all directories and files in each directory named `rdoc`
+  are to be considered for inclusion.
 
 Although arguments may specify any directories and files,
 specifying a directory or file outside of the current directory tree
@@ -36,13 +43,12 @@ Certain directories and files are *always* excluded from consideration:
 
 ### Default Exclusions
 
-Certain other directories are by default excluded from consideration:
+Certain other directories and files are by default excluded from consideration:
 
 - Each directory named `spec` or `test`.
   This default may be overridden;
   see [Option \\--no-skipping-tests](rdoc-ref:doc/rdoc/rdoc_source_files.md@Option+--no-skipping-tests).
-- Each directory whose name *starts with* `.`.
-
+- Each directory or file whose name *starts with* `.`.
 
 ### Further Refinements
 
