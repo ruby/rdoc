@@ -9,15 +9,20 @@ and [command-line options](rdoc-ref:doc/rdoc/rdoc_source_files.md@Command-Line+O
 ### Command-Line Arguments
 
 The selected files are searched for in the files and directories
-specified by arguments on the `rdoc` command line.
+specified by arguments on the `rdoc` command line:
 
-The default, if no command-line arguments are given, is `.` (the current directory),
-which is then the only directory to be (recursively) searched.
+Argument `.`, the current directory,
+specifies that the current directory is to be searched;
+this is also the default if no argument is given.
 
-Specifying `*` (all entries in the current directory) is different; it means that:
+Argument `*` specifies that:
 
 - Each file in the current working directory is to be considered for inclusion.
 - Each directory in the current working directory is to be considered for (recursive) searching.
+
+Although arguments may specify any directories and files,
+specifying a directory or file outside of the current directory tree
+may yield surprising results.
 
 ### Unconditional Exclusions
 
@@ -61,7 +66,7 @@ As directories are searched, additional files may be added to that set,
 but only those that are not excluded (as above).
 
 The final such set is non-redundant,
-so that no file is to be read more than once.
+so that no file is read more than once.
 
 ### Directories to Be Searched
 
@@ -77,7 +82,7 @@ As directories are searched, additional directories may be added to that set,
 but only those that are not excluded (as above).
 
 The final such set is non-redundant,
-so that no directory is to be searched more than once.
+so that no directory is searched more than once.
 
 Each directory to be searched is recursively traversed
 [breadth-first](https://en.wikipedia.org/wiki/Breadth-first_search).
@@ -120,10 +125,11 @@ each of which indicates files or directories to be included for consideration;
 for clarity, it's good to put each such string on a separate line.
 
 Each such string is converted to a Regexp,
-and each matching entry:
+which is matched to each entry in each searche directory;
+for each matching entry:
 
-- If the entry is a file, it is added to the files to be considered.
-- If it is a directory, that directory is to be searched.
+- If the entry is a file, it is added to the files to be read.
+- If it is a directory, it is added to the directories to be searched.
 
 Example: contents of file `.document` in the \RDoc root directory:
 
@@ -134,7 +140,7 @@ lib    # Recursively search directory lib/.
 doc    # Recursively search directory doc/.
 ```
 
-If the effective `.document` file is empty,
+**Note well:** If the effective `.document` file is empty,
 *all* files and directories in its directory tree are excluded.
 
 ### Command-Line Options
@@ -143,6 +149,11 @@ This section describes only those options that affect `rdoc` file selection;
 for other options, see the help text (by typing `rdoc --help`).
 
 #### Option `--exclude`
+
+Command-line option `--exclude` specifies a string that is converted to a Regexp;
+each matching entry in each searched directory is excluded from consideration.
+
+This option may be given more than once.
 
 #### Option `--no-skipping-tests`
 
