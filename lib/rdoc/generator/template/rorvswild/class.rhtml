@@ -103,7 +103,7 @@
                       gsub(/(.*)[-=]&gt;/, '\1&rarr;') %>
               </span>
               <%- if i == 0 and method.token_stream then -%>
-              <span class="method-click-advice">click to toggle source</span>
+              <span class="method-click-advice">toggle source</span>
               <%- end -%>
             </div>
             <%-   end -%>
@@ -116,7 +116,7 @@
               <span class="method-name"><%= h method.name %></span><span
                 class="method-args"><%= h method.param_seq %></span>
               <%- if method.token_stream then -%>
-              <span class="method-click-advice">click to toggle source</span>
+              <span class="method-click-advice">toggle source</span>
               <%- end -%>
             </div>
             <%- end -%>
@@ -175,9 +175,9 @@
   </article>
   <nav class="contextual">
     <%= render '_sidebar_parent.rhtml' %>
+    <%= render '_sidebar_includes.rhtml' %>
     <%= render '_sidebar_table_of_contents.rhtml' %>
     <%= render '_sidebar_sections.rhtml' %>
-    <%= render '_sidebar_includes.rhtml' %>
     <%= render '_sidebar_extends.rhtml' %>
     <%= render '_sidebar_methods.rhtml' %>
   </nav>

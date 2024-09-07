@@ -17,7 +17,7 @@
   --color-primary-hover: oklch(0.4 0.18 29);
   --color-link-decoration: oklch(0.61 0.18 29);
 
-  --color-strong-background: oklch(0.97 0.09 99);
+  --color-strong-background: oklch(0.97 0.06 29);
 
   --color-topbar: var(--color-primary);
   --color-topbar-text: var(--color-background);
@@ -233,7 +233,7 @@ main sup {
 }
 
 main h1 {
-  font-size: 2.488rem;
+  font-size: 2.074rem;
   line-height: 3rem;
   margin: 1rem 0 0;
   color: var(--color-title);
@@ -247,7 +247,7 @@ main h1 + p {
 
 main h2 {
   margin: 1.5em 0 0.5em;
-  font-size: 1.728rem;
+  font-size: 1.44rem;
   line-height: 3rem;
   color: var(--color-title);
   box-shadow: 0 2px 0 0 var(--color-text);
@@ -255,7 +255,7 @@ main h2 {
 
 main h3 {
   margin: 1.5em 0 0.5em;
-  font-size: 1.44em;
+  font-size: 1.2em;
   color: var(--color-title);
 }
 
@@ -411,6 +411,8 @@ nav footer a:any-link {
 .nav-section li:has(li.active) > details > summary > a {
   text-decoration: none;
   background-color: var(--color-strong-background);
+  font-weight: 700;
+  cursor: initial;
 }
 
 nav h2 {
@@ -612,19 +614,19 @@ em {
 }
 
 .method-detail {
-  margin: 2em 0 0;
+  margin: 1.5rem 0 0;
 }
 
 .method-detail + .method-detail {
-  margin: 2em 0 0;
+  margin: 1.5rem 0 0;
   border-top: 1px solid var(--color-border);
-  padding-top: 2em;
+  padding-top: 1.5em;
 }
 
 .method-heading {
   position: relative;
   font-family: var(--font-mono);
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
   color: var(--color-text);
   cursor: pointer;
@@ -650,6 +652,7 @@ em {
 
 .method-description,
 .aliases {
+  color: var(--color-text-light);
   margin-top: 0.5em;
 }
 
@@ -797,7 +800,7 @@ em {
     --color-primary-hover: oklch(87.78296875% 0.07 29);
     --color-link-decoration: oklch(41.89453125% 0.09 29);
 
-    --color-strong-background: oklch(0.35 0.09 99);
+    --color-strong-background: oklch(0.26 0.1 29);
 
     --color-topbar: oklch(0.5 0.18 29);
     --color-topbar-text: oklch(0.99 0.001 269);
