@@ -17,7 +17,7 @@
   --color-primary-hover: oklch(0.4 0.18 29);
   --color-link-decoration: oklch(0.61 0.18 29);
 
-  --color-strong-background: oklch(0.97 0.12 99);
+  --color-strong-background: oklch(0.97 0.09 99);
 
   --color-topbar: var(--color-primary);
   --color-topbar-text: var(--color-background);
@@ -613,7 +613,12 @@ em {
 
 .method-detail {
   margin: 2em 0 0;
-  cursor: pointer;
+}
+
+.method-detail + .method-detail {
+  margin: 2em 0 0;
+  border-top: 1px solid var(--color-border);
+  padding-top: 2em;
 }
 
 .method-heading {
@@ -622,6 +627,7 @@ em {
   font-size: 1.2rem;
   font-weight: bold;
   color: var(--color-text);
+  cursor: pointer;
 }
 
 .method-heading span { background-color: var(--color-code-background); }
