@@ -130,6 +130,11 @@
 
         <%- unless method.skip_description? then -%>
         <div class="method-description">
+          <%- if method.token_stream then -%>
+          <div class="method-source-code" id="<%= method.html_name %>-source">
+            <pre><%= method.markup_code %></pre>
+          </div>
+          <%- end -%>
           <%- if method.comment then -%>
           <%= method.description.strip %>
           <%- else -%>
@@ -143,12 +148,6 @@
                   method.formatter.link(method.superclass_method.full_name, method.superclass_method.full_name) : nil
               %>
             </div>
-          <%- end -%>
-
-          <%- if method.token_stream then -%>
-          <div class="method-source-code" id="<%= method.html_name %>-source">
-            <pre><%= method.markup_code %></pre>
-          </div>
           <%- end -%>
         </div>
         <%- end -%>
