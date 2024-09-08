@@ -8,7 +8,7 @@ begin
   require_relative '../../lib/rubygems_plugin'
 rescue LoadError
 end
-  
+
 class TestRDocRubyGemsHook < Test::Unit::TestCase
   def setup
     @a = Gem::Specification.new do |s|
