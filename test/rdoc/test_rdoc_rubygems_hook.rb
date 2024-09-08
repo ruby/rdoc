@@ -2,9 +2,13 @@
 require 'rubygems'
 require 'fileutils'
 require 'tmpdir'
-require_relative '../../lib/rubygems_plugin'
 require 'test/unit'
 
+begin
+  require_relative '../../lib/rubygems_plugin'
+rescue LoadError
+end
+  
 class TestRDocRubyGemsHook < Test::Unit::TestCase
   def setup
     @a = Gem::Specification.new do |s|
@@ -284,4 +288,4 @@ class TestRDocRubyGemsHook < Test::Unit::TestCase
     end
   end
 
-end
+end if defined?(RDoc::RubyGemsHook)

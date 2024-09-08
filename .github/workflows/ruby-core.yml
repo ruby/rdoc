@@ -55,5 +55,5 @@ jobs:
           ruby tool/sync_default_gems.rb rdoc
         working-directory: ruby/ruby
       - name: Test RDoc
-        run: make -j2 -s test-all TESTS="rdoc --no-retry --exclude test_rdoc_rubygems_hook.rb"
+        run: make -j2 -s test-all TESTS="rdoc --no-retry"
         working-directory: ruby/ruby
