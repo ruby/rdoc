@@ -615,6 +615,10 @@ main .method-detail:target {
   border-left: 10px solid #f1edba;
 }
 
+main .method-header {
+  display: inline-block;
+}
+
 main .method-heading {
   position: relative;
   font-family: var(--font-code);
@@ -622,16 +626,10 @@ main .method-heading {
   font-weight: bold;
   color: var(--text-color);
 }
-main .method-heading :link,
-main .method-heading :visited {
-  color: inherit;
-}
-main .method-source-toggle {
-  position: absolute;
-  top: 2px;
-  right: 0px;
-  padding-right: 20px;
+
+main .method-controls {
   line-height: 20px;
+  float: right;
   color: var(--secondary-color);
   cursor: pointer;
 }
@@ -739,13 +737,9 @@ main .attribute-access-type {
     white-space: nowrap;
   }
 
-  .method-controls {
-    position: static;
-  }
-
-  main .method-source-toggle {
-    position: static;
-    display: inline-block;
+  main .method-controls {
+    margin-top: 10px;
+    float: none;
   }
 }
 /* @end */
