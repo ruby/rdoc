@@ -109,7 +109,11 @@
                     gsub(/(.*)[-=]&gt;/, '\1&rarr;') %>
             </span>
             <%- if i == 0 and method.token_stream then -%>
-            <span class="method-click-advice">Toggle source</span>
+            <div class="method-controls">
+              <details class="method-click-advice">
+                <summary>Source</summary>
+              </details>
+            </div>
             <%- end -%>
           </div>
           <%-   end -%>
@@ -119,10 +123,14 @@
           </div>
           <%- else -%>
           <div class="method-heading">
-            <span class="method-name"><%= h method.name %></span><span
-              class="method-args"><%= h method.param_seq %></span>
+            <span class="method-name"><%= h method.name %></span>
+            <span class="method-args"><%= h method.param_seq %></span>
             <%- if method.token_stream then -%>
-            <span class="method-click-advice">Toggle source</span>
+            <div class="method-controls">
+              <details class="method-click-advice">
+                <summary>Source</summary>
+              </details>
+            </div>
             <%- end -%>
           </div>
           <%- end -%>

@@ -630,7 +630,6 @@ main .method-click-advice {
   position: absolute;
   top: 2px;
   right: 0px;
-  font-size: 12px;
   padding-right: 20px;
   line-height: 20px;
   color: var(--secondary-color);
@@ -738,6 +737,15 @@ main .attribute-access-type {
     display: block;
     overflow-x: auto;
     white-space: nowrap;
+  }
+
+  .method-controls {
+    position: static;
+  }
+
+  main .method-click-advice {
+    position: static;
+    display: inline-block;
   }
 }
 /* @end */
