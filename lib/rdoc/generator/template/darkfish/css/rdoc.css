@@ -626,7 +626,7 @@ main .method-heading :link,
 main .method-heading :visited {
   color: inherit;
 }
-main .method-click-advice {
+main .method-source-toggle {
   position: absolute;
   top: 2px;
   right: 0px;
@@ -743,7 +743,7 @@ main .attribute-access-type {
     position: static;
   }
 
-  main .method-click-advice {
+  main .method-source-toggle {
     position: static;
     display: inline-block;
   }
