@@ -15,9 +15,8 @@
   
   --color-primary: oklch(0.5 0.18 29);
   --color-primary-hover: oklch(0.4 0.18 29);
-  --color-link-decoration: oklch(0.61 0.18 29);
 
-  --color-strong-background: oklch(0.97 0.06 29);
+  --color-strong-background: oklch(0.97 0.03 59);
 
   --color-topbar: var(--color-primary);
   --color-topbar-text: var(--color-background);
@@ -95,8 +94,7 @@ h6:hover span {
 :any-link {
   color: var(--color-primary);
   text-decoration: underline;
-  text-decoration-color: var(--color-link-decoration);
-  text-decoration-thickness: 0.5px;
+  text-decoration-thickness: 0.02em;
   transition: color 0.3s ease;
 }
 
@@ -411,6 +409,7 @@ nav footer a:any-link {
 .nav-section li:has(li.active) > details > summary > a {
   text-decoration: none;
   background-color: var(--color-strong-background);
+  border-radius: 3px;
   font-weight: 700;
   cursor: initial;
 }
@@ -798,9 +797,8 @@ em {
   :root {
     --color-primary: oklch(0.85 0.09 29);
     --color-primary-hover: oklch(87.78296875% 0.07 29);
-    --color-link-decoration: oklch(41.89453125% 0.09 29);
 
-    --color-strong-background: oklch(0.26 0.1 29);
+    --color-strong-background: oklch(0.27 0.04 59);
 
     --color-topbar: oklch(0.5 0.18 29);
     --color-topbar-text: oklch(0.99 0.001 269);

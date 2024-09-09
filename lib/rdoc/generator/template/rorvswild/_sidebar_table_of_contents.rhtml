@@ -1,4 +1,8 @@
 <%- 
+  unless defined?(current)
+    return
+  end
+  
   comment = if current.respond_to? :comment_location then
                current.comment_location
              else

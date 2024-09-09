@@ -15,9 +15,14 @@
     <article>
       <%- if @options.main_page and
         main_page = @files.find { |f| f.full_name == @options.main_page } then %>
+        <%- current = main_page -%>
         <%= main_page.description %>
       <%- else -%>
         <p>This is the API documentation for <%= h @title %>.
       <%- end -%>
     </article>
+
+    <nav class="contextual">
+      <%= render '_sidebar_table_of_contents.rhtml' %>
+    </nav>
   </main>
