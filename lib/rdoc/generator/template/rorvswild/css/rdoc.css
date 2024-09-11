@@ -545,20 +545,6 @@ em {
 
 /* 14. Specific Component Styles */
 
-.documentation-section-title { position: relative; }
-
-.documentation-section-title .section-click-top {
-  position: absolute;
-  top: 6px;
-  left: 12px;
-  font-size: 10px;
-  color: #9b9877;
-  visibility: hidden;
-  padding-left: 0.5px;
-}
-
-.documentation-section-title:hover .section-click-top { visibility: visible; }
-
 .note-list {
   padding: 1em 1em 2em;
   box-shadow: 0 0 0 1px var(--color-border) inset;
@@ -582,19 +568,6 @@ em {
   margin: 0 0 2em 0;
   padding: 0;
 }
-
-.documentation-section h2 { position: relative; }
-
-.documentation-section h2 a {
-  position: absolute;
-  top: 8px;
-  right: 10px;
-  font-size: 12px;
-  color: #9b9877;
-  visibility: hidden;
-}
-
-.documentation-section h2:hover a { visibility: visible; }
 
 .method-source-code {
   max-height: 0;

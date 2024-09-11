@@ -1,8 +1,4 @@
-<%- 
-  unless defined?(current)
-    return
-  end
-  
+<%-   
   comment = if current.respond_to? :comment_location then
                current.comment_location
              else
@@ -14,29 +10,29 @@
   <div class="nav-section">
     <h3>On this page</h3>
 
-      <%- display_link = proc do |heading| -%>
-        <a href="#<%= heading.label current %>"><%= heading.plain_html %></a>
-      <%- end -%>
+    <%- display_link = proc do |heading| -%>
+      <a href="#<%= heading.label current %>"><%= heading.plain_html %></a>
+    <%- end -%>
 
-      <%- list_siblings = proc do -%>
-        <%- level = table.first&.level -%>
-        <%- while table.first && table.first.level >= level -%>
-          <%- heading = table.shift -%>
-          <%- if table.first.nil? || table.first.level <= heading.level -%>
-            <li><% display_link.call heading -%>
-          <%- else -%>
-            <li>
-              <details open>
-                <summary><%- display_link.call heading -%></summary>
-                <ul class="link-list" role="directory">
-                  <% list_siblings.call %>
-                </ul>
-              </details>
-            </li>
-          <%- end -%>
+    <%- list_siblings = proc do -%>
+      <%- level = table.first&.level -%>
+      <%- while table.first && table.first.level >= level -%>
+        <%- heading = table.shift -%>
+        <%- if table.first.nil? || table.first.level <= heading.level -%>
+          <li><% display_link.call heading -%>
+        <%- else -%>
+          <li>
+            <details open>
+              <summary><%- display_link.call heading -%></summary>
+              <ul class="link-list" role="directory">
+                <% list_siblings.call %>
+              </ul>
+            </details>
+          </li>
         <%- end -%>
       <%- end -%>
-
+    <%- end -%>
+    
     <ul class="link-list" role="directory">
       <% list_siblings.call %>
     </ul>
