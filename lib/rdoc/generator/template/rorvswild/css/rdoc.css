@@ -40,7 +40,7 @@ html {
   font-weight: normal;
   font-size: 14px;
   font-optical-sizing: auto;
-  scroll-padding-top: calc(40px - 0.5em);
+  scroll-padding-top: calc(40px + 1em);
   scroll-behavior: smooth;
   font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
 }
