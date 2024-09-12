@@ -722,7 +722,7 @@ em {
     grid-column: 2/ span 1;
     display: grid;
     grid-template-columns: 1fr var(--sidebar-width);
-    gap: 24px;
+    gap: 32px;
   }
 
   main > article {
