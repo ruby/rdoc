@@ -601,6 +601,24 @@ main .method-source-code.active-menu {
   max-height: 100vh;
 }
 
+main pre.ruby::before {
+  content: "Example";
+  color: var(--secondary-color);
+  border-bottom: 1px solid var(--border-color);
+  display: block;
+  padding: 10px 0;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+
+main pre.ruby {
+  margin: 0;
+  padding: 0px 16px 16px 16px;
+  overflow-x: auto;
+  border-radius: 4px;
+  border-color: var(--border-color);
+}
+
 main .method-description .method-calls-super {
   color: var(--text-color);
   font-weight: bold;
