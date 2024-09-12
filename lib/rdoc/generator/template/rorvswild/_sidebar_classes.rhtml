@@ -28,7 +28,7 @@
     traverse = proc do |klasses|
       has_active_descendant = false
       -%>
-    <ul class="link-list">
+    <ul class="link-list" id="class-and-module-index">
       <%- klasses.each do |index_klass| -%>
         <%- if children = all_classes[index_klass.full_name] -%>
           <li class="<%= "active" if defined?(current) && (index_klass == current) %>">
