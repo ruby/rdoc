@@ -11,7 +11,7 @@
 
 /* 1. Variables and Root Styles */
 :root {
-  --sidebar-width: 300px;
+  --sidebar-width: 240px;
   
   --color-primary: oklch(0.5 0.18 29);
   --color-primary-hover: oklch(0.4 0.18 29);
@@ -40,7 +40,7 @@ html {
   font-weight: normal;
   font-size: 14px;
   font-optical-sizing: auto;
-  scroll-padding-top: calc(40px + 1em);
+  scroll-padding-top: calc(40px - 0.5em);
   scroll-behavior: smooth;
   font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
 }
@@ -363,6 +363,7 @@ nav {
   bottom: 0;
   left: 0;
   width: 100%;
+  max-width: var(--sidebar-width);
   background: var(--color-background);
   overflow-y: auto;
   z-index: 10;
@@ -711,16 +712,7 @@ em {
   }
 }
 
-@media (min-width: 1024px) {
-  html { font-size: 16px; }
-
-  body { 
-    padding-top: 40px;
-    display: grid;
-    grid-template-columns: var(--sidebar-width) auto;
-    gap: 1rem;
-  }
-
+@media (min-width: 800px) {
   main {
     margin: 0 auto;
     width: 100%;
@@ -741,15 +733,6 @@ em {
     grid-column: 1 / span 1;
   }
 
-  #navigation-toggle { display: none }
-
-  nav {
-    max-width: var(--sidebar-width);
-    top: 40px;
-  }
-
-  nav[hidden] { display: block; }
-
   nav.contextual {
     width: var(--sidebar-width);
     grid-column: 2 / span 1;
@@ -757,13 +740,33 @@ em {
     max-height: calc(100svh - 40px);
     left: auto;
     right: 0;
-    top: 40px;
     border: 0;
     overflow-y: auto;
     background: transparent;
     display: flex;
     align-self: start;
   }
+}
+
+@media (min-width: 1024px) {
+  html { font-size: 16px; }
+
+  body { 
+    padding-top: 40px;
+    display: grid;
+    grid-template-columns: var(--sidebar-width) auto;
+    gap: 1rem;
+  }
+
+  #navigation-toggle { display: none }
+
+  nav { top: 40px; }
+
+  nav[hidden] { display: block; }
+}
+
+@media (min-width: 1200px) {
+  :root { --sidebar-width: 300px; }
 }
 
 @media (prefers-color-scheme: dark) {
