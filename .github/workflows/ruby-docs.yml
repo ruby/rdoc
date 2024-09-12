@@ -42,7 +42,7 @@ jobs:
         run: |
           bundle
           bundle exec rake generate
-          bundle exec rdoc --root=ruby --include=ruby/doc --main=README.md --template=rorvswild --debug
+          bundle exec rdoc --root=ruby --include=ruby/doc --title "Ruby Documentation" --main=README.md --template=rorvswild --debug
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
