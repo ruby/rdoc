@@ -449,6 +449,39 @@ nav.contextual {
 }
 
 /* 9. Search */
+
+.search-button {
+  background-color: var(--color-background);
+  border: none;
+  border-radius: 4px;
+  color:var(--color-text-light);
+  box-shadow: none;
+}
+
+.search-button:hover,
+.search-button:focus {
+  color:var(--color-text);
+}
+
+.search-dialog {
+  background-color: var(--color-background);
+  width: calc(100% - 4em);
+  max-width: 1000px;
+  max-height: calc(100svh - 80px);
+  margin: 0 auto;
+  top: 40px;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: 
+    0 0 0 1px var(--color-border), 
+    0 0 24px 8px oklch(0.02 0.05 269 /1);
+}
+
+.search-dialog::backdrop {
+  background-color: oklch(0.1 0.02 269 /0.9);
+  backdrop-filter: blur(4px);
+}
+
 #search-section {
   padding: 1em 1em 0;
   background-color: var(--color-background);
@@ -466,16 +499,14 @@ nav.contextual {
   padding: 0.5em 1em 0.5em 2em;
   border: 1px solid var(--color-border);
   color: var(--color-text);
-  border-radius: 20px;
+  border-radius: 4px;
   font-size: 14px;
   outline: none;
   transition: border-color 0.3s ease;
   background-color: var(--color-background);
 }
 
-#search-field:focus {
-  border-color: var(--color-primary);
-}
+#search-field:focus { border-color: var(--color-primary); }
 
 #search-field::placeholder {
   color: var(--color-text);
@@ -493,7 +524,6 @@ nav.contextual {
   opacity: 0.6;
 }
 
-/* 10. Utility Classes */
 .hide { display: none !important; }
 .initially-hidden { display: none; }
 
@@ -586,9 +616,7 @@ em {
   font-weight: bold;
 }
 
-.method-detail {
-  margin: 1.5rem 0 0;
-}
+.method-detail { margin: 1.5rem 0 0; }
 
 .method-detail + .method-detail {
   margin: 1.5rem 0 0;
@@ -650,7 +678,12 @@ em {
 }
 
 /* @group search results */
-#search-results { font-weight: 300; }
+#search-results { 
+  margin: 0;
+  color: var(--color-text);
+}
+
+#search-results li:first-of-type { margin-top: 2rem; }
 
 #search-results .search-match { font-weight: normal; }
 
@@ -690,20 +723,11 @@ em {
 /* 11. Media Queries */
 
 @media (max-width: 480px) {
-  nav { width: 100%; }
-
   main {
     margin: 1em auto;
     padding: 0 1em;
     max-width: 100%;
   }
-
-  #navigation-toggle {
-    right: 10px;
-    left: auto;
-  }
-
-  #navigation-toggle[aria-expanded="true"] { left: auto; }
 
   table {
     display: block;
@@ -778,8 +802,7 @@ em {
 
     --color-topbar: oklch(0.5 0.18 29);
     --color-topbar-text: oklch(0.99 0.001 269);
-  
-    /* greys */
+
     --color-text: oklch(0.84 0.02 269);
     --color-text-light: oklch(0.74 0.02 269);
     --color-title: oklch(0.91 0.02 269);
@@ -791,7 +814,6 @@ em {
 
   pre,
   code {
-    /* syntax highlighting */
     --color-constant: oklch(0.84 0.09 260);  /* Bright blue for constants */
     --color-keyword: var(--color-primary);  /* Red for keywords */
     --color-ivar: oklch(0.85 0.09 59);  /* Orange for instance variables */

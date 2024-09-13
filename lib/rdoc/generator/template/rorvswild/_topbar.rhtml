@@ -1,4 +1,9 @@
 <header class="topbar">
   <%= render '_sidebar_toggle.rhtml' %>
   <a href="<%= rel_prefix %>/index.html" rel="home"><%= @options.title %></a>
+  <button type="button" aria-label="Search" class="search-button">
+    search
+  </button>
 </header>
+
+<%= render '_dialog_search.rhtml' %>
