@@ -334,7 +334,7 @@ main header h3 {
 /* Navigation and Sidebar */
 .topbar {
   width: 100%;
-  padding: 0.5em 1em;
+  padding: 0.5em 1rem;
   z-index: 100;
   position: fixed;
   top: 0;
@@ -381,7 +381,7 @@ nav a:any-link {
 nav[hidden] { display: none; }
 
 nav footer {
-  padding: 1em;
+  padding: 1em 1rem;
   border-top: 1px solid var(--color-border);
   font-size: 0.694rem;
 }
@@ -390,18 +390,18 @@ nav footer a:any-link {
   font-weight: 700;
 }
 
-.nav-section { margin-top: 1em; }
+.nav-section { margin-top: 1rem; }
 
-.nav-section h3 { padding: 0 1em; }
+.nav-section h3 { padding: 0 1rem; }
 
 .nav-section ul { margin-top: 0; }
 
 .nav-section > ul > li {
-  padding: 0.25em 0.75em;
+  padding: 0.25em 0.75rem;
 }
 
 .nav-section li a {
-  padding: 0 0.25em;
+  padding: 0 0.25rem;
   display: inline-block;
 }
 
