@@ -1,12 +1,23 @@
 <%- if klass.type == 'class' then %>
   <div class="nav-section">
-    <h3>Parent</h3>
-    <ul class="link-list">
-      <%- if klass.superclass and not String === klass.superclass then -%>
-        <li><a href="<%= klass.aref_to klass.superclass.path %>"><%= klass.superclass.full_name %></a>
-      <%- else -%>
-        <li><%= klass.superclass %>
-      <%- end -%>
+    <h3>Ancestors</h3>
+    <ul class="link-list" role="directory">
+      <% for ancestor in (ancestors = klass.super_classes.reverse << klass) %>
+        <% if ancestor.is_a?(String) %>
+          <li>
+            <%= ancestor %>
+            <ul class="link-list" role="directory">
+        <% elsif ancestor.is_a?(RDoc::NormalClass) %>
+          <li>
+            <a href="<%= ancestor.aref_to ancestor.path %>"><%= ancestor.full_name %></a>
+            <ul class="link-list" role="directory">
+        <% end %>
+      <% end %>
+
+      <% for ancestor in ancestors %>
+          </ul>
+        </li>
+      <% end %>
     </ul>
   </div>
 <%- end -%>

@@ -9,7 +9,7 @@
   </div>
 <% end %>
 
-<% if (instance_methods = klass.instance_method_list.sort).any? %>
+<% if (instance_methods = klass.instance_methods.sort).any? %>
   <div class="nav-section">
     <h3>Instance Methods</h3>
     <ul class="link-list" role="directory">
