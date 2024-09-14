@@ -597,8 +597,8 @@ nav.contextual {
 }
 
 #search-results pre {
-  margin: 0.5em;
-  font-family: var(--font-mono);
+  font-size: 0.833rem;
+  margin: 0.5rem 0;
 }
 
 .hide { display: none !important; }
