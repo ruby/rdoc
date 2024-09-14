@@ -407,7 +407,8 @@ nav footer a:any-link {
   padding: 0.25em 0.75rem;
 }
 
-.nav-section li a {
+.nav-section li a,
+.nav-section li > span {
   padding: 0 0.25rem;
   display: inline-block;
 }

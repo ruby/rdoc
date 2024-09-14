@@ -5,7 +5,7 @@
       <% for ancestor in (ancestors = klass.super_classes.reverse << klass) %>
         <% if ancestor.is_a?(String) %>
           <li>
-            <%= ancestor %>
+            <span><%= ancestor %></span>
             <ul class="link-list" role="directory">
         <% elsif ancestor.is_a?(RDoc::NormalClass) %>
           <li>
