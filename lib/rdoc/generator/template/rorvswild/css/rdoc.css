@@ -208,14 +208,15 @@ details > summary::after {
   content: '+';
   font-size: 0.833em;
   font-weight: bold;
-  width: 22px;
-  height: 22px;
-  line-height: 20px;
+  width: 2em;
+  height: 2em;
+  line-height: 2em;
   border-radius: 50%;
   text-align: center;
   box-shadow: 0 0 0 1px var(--color-border) inset;
   transition: transform 0.2s ease;
   display: inline-block;
+  flex-shrink: 0;
   cursor: pointer;
   position: relative;
   top: 2px;
@@ -707,26 +708,29 @@ em {
   font-size: 1rem;
   font-weight: bold;
   color: var(--color-text);
-  cursor: pointer;
 }
 
 .method-heading span { background-color: var(--color-code-background); }
 
 .method-heading :any-link { color: inherit; }
 
-.method-heading .method-click-advice {
-  background-color: transparent;
-  position: absolute;
-  color: var(--color-text-light);
-  right: 0;
-  font-size: 0.694rem;
+.toggle-source {
+  margin-top: 0.5rem;
+  font-size: 0.833rem;
   font-weight: 400;
-  visibility: hidden;
-  padding-right: 0;
-  line-height: 1.5rem;
+  line-height: 1rem;
+  background: var(--color-code-background);
+  box-shadow: 0 0 0 1px var(--color-border);
+  color: var(--color-text);
+  border-radius: 2px;
+  border: none;
+  cursor: pointer;
 }
 
-.method-header:hover .method-click-advice { visibility: visible; }
+.toggle-source:hover {
+  box-shadow: 0 0 0 1px var(--color-text-light);
+  color: var(--color-title);
+}
 
 .method-description,
 .aliases {

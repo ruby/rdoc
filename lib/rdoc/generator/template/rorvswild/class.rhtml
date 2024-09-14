@@ -82,9 +82,6 @@
                                   gsub( /^\w+\./m, '')).
                                   gsub(/(.*)[-=]&gt;/, '\1&rarr;') %>
                           </span>
-                          <%- if i == 0 and method.token_stream then -%>
-                            <span class="method-click-advice">toggle source</span>
-                          <%- end -%>
                         </div>
                       <%- end -%>
                     <%- elsif method.has_call_seq? then -%>
@@ -93,11 +90,8 @@
                       </div>
                     <%- else -%>
                       <div class="method-heading">
-                        <span class="method-name"><%= h method.name %></span><span
-                          class="method-args"><%= h method.param_seq %></span>
-                        <%- if method.token_stream then -%>
-                          <span class="method-click-advice">toggle source</span>
-                        <%- end -%>
+                        <span class="method-name"><%= h method.name %></span>
+                        <span class="method-args"><%= h method.param_seq %></span>
                       </div>
                     <%- end -%>
                   </div>
@@ -115,6 +109,7 @@
                         </div>
                       <%- end -%> 
                       <%- if method.token_stream then -%>
+                        <button class="toggle-source">toggle source</button>
                         <div class="method-source-code" id="<%= method.html_name %>-source">
                           <pre><%= method.markup_code %></pre>
                         </div>
