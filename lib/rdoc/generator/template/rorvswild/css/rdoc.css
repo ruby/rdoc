@@ -298,7 +298,7 @@ main p {
 }
 
 main pre {
-  margin: 1em 0;
+  margin: 1em 0 0;
   padding: 1em 1.5em;
   font-size: 0.833rem;
 }
@@ -715,7 +715,7 @@ em {
 .method-heading :any-link { color: inherit; }
 
 .toggle-source {
-  margin-top: 0.5rem;
+  margin-top: 1rem;
   font-size: 0.833rem;
   font-weight: 400;
   line-height: 1rem;
