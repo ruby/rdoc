@@ -465,6 +465,7 @@ nav.contextual {
   display: flex;
   gap: 4px;
   align-items: center;
+  cursor: text;
 }
 
 .search-button svg {
@@ -484,17 +485,30 @@ nav.contextual {
   max-width: 1000px;
   max-height: calc(100svh - 80px);
   margin: 0 auto;
+  padding: 0;
   top: 40px;
   border: 0;
   border-radius: 8px;
   box-shadow: 
     0 0 0 1px var(--color-border), 
     0 0 24px 8px oklch(0.02 0.05 269 /1);
+  overflow: hidden;
 }
 
 .search-dialog::backdrop {
   background-color: oklch(0.1 0.02 269 /0.9);
   backdrop-filter: blur(4px);
+}
+
+.search-dialog[open] {
+  display: flex;
+}
+
+.search-dialog form {
+ overflow: hidden; 
+ display: flex;
+ flex-direction: column;
+ flex: 1;
 }
 
 #search-section {
@@ -507,6 +521,11 @@ nav.contextual {
   position: relative;
   display: flex;
   align-items: center;
+  padding: 1rem;
+}
+
+.search-dialog form:has(li) #search-field-wrapper {
+  box-shadow: 0 1px 0 0 var(--color-border);
 }
 
 #search-field {
@@ -533,8 +552,53 @@ nav.contextual {
   stroke: var(--color-text-light);
   width: 16px;
   height: 16px;
-  left: 8px;
+  left: 24px;
   opacity: 0.6;
+}
+
+#search-results {
+  color: var(--color-text);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin: 0;
+}
+
+#search-results .search-match { font-weight: normal; }
+
+#search-results .search-selected {
+  background: var(--color-code-background);
+  border-bottom: 1px solid transparent;
+  box-shadow: 0 0 0 1px var(--color-border) inset;
+}
+
+#search-results li {
+  list-style: none;
+  border-bottom: 1px solid var(--color-border);
+  padding: 0.5em 1rem;
+}
+
+#search-results li:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+#search-results li p {
+  padding: 0;
+  margin: 0;
+}
+
+#search-results .search-namespace { font-weight: bold; }
+
+#search-results li em {
+  background: var(--color-strong-background);
+  font-style: normal;
+}
+
+#search-results pre {
+  margin: 0.5em;
+  font-family: var(--font-mono);
 }
 
 .hide { display: none !important; }
@@ -688,49 +752,6 @@ em {
 .attribute-access-type {
   text-transform: uppercase;
   padding: 0 1em;
-}
-
-/* @group search results */
-#search-results { 
-  margin: 0;
-  color: var(--color-text);
-}
-
-#search-results li:first-of-type { margin-top: 2rem; }
-
-#search-results .search-match { font-weight: normal; }
-
-#search-results .search-selected {
-  background: var(--color-code-background);
-  border-bottom: 1px solid transparent;
-}
-
-#search-results li {
-  list-style: none;
-  border-bottom: 1px solid var(--color-border);
-  margin-bottom: 0.5em;
-}
-
-#search-results li:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-}
-
-#search-results li p {
-  padding: 0;
-  margin: 0.5em;
-}
-
-#search-results .search-namespace { font-weight: bold; }
-
-#search-results li em {
-  background: var(--color-strong-background);
-  font-style: normal;
-}
-
-#search-results pre {
-  margin: 0.5em;
-  font-family: var(--font-mono);
 }
 
 /* 11. Media Queries */
