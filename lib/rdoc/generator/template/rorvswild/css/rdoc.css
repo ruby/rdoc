@@ -298,7 +298,7 @@ main p {
 }
 
 main pre {
-  margin: 1em 0 0;
+  margin: 1em 0;
   padding: 1em 1.5em;
   font-size: 0.833rem;
 }
@@ -730,6 +730,10 @@ em {
 .toggle-source:hover {
   box-shadow: 0 0 0 1px var(--color-text-light);
   color: var(--color-title);
+}
+
+pre + .toggle-source {
+  margin-top: 0.5rem;
 }
 
 .method-description,
