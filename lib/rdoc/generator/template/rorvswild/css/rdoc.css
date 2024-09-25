@@ -242,6 +242,7 @@ main h1 {
   line-height: 3rem;
   margin: 1rem 0 0;
   color: var(--color-title);
+  word-break: break-word;
 }
 
 main h1 + p {
@@ -401,16 +402,13 @@ nav footer a:any-link {
 
 .nav-section h3 { padding: 0 1rem; }
 
-.nav-section ul { margin-top: 0; }
+.nav-section ul { 
+  margin-top: 0;
+  overflow: hidden;
+}
 
 .nav-section > ul > li {
   padding: 0.25em 0.75rem;
-}
-
-.nav-section li a,
-.nav-section li > span {
-  padding: 0 0.25rem;
-  display: inline-block;
 }
 
 .nav-section li.active > a,
@@ -421,6 +419,13 @@ nav footer a:any-link {
   border-radius: 3px;
   font-weight: 700;
   cursor: initial;
+}
+
+.nav-section li a,
+.nav-section li > span {
+  padding: 0 0.25rem;
+  display: inline-block;
+  word-break: break-word;
 }
 
 nav h2 {
