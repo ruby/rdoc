@@ -2,7 +2,7 @@ name: Deploy Ruby docs to Pages
 
 on:
   push:
-    branches: [ 'ruby-docs' ]
+    branches: [ 'rorvswild_theme' ]
   workflow_dispatch:
 
 permissions:
