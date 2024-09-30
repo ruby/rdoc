@@ -1,26 +1,18 @@
 /*
- * "Darkfish" Rdoc CSS
- * $Id: rdoc.css 54 2009-01-27 01:09:48Z deveiant $
+ * RoRvsWild Theme – Rdoc CSS
  *
- * Author: Michael Granger <ged@FaerieMUD.org>
+ * Authors: Antoine Marguerie & Alexis Bernard (rorvswild.com)
  *
  */
 
-/* vim: ft=css et sw=2 ts=2 sts=2 */
-/* Base Green is: #6C8C22 */
-
-/* 1. Variables and Root Styles */
 :root {
   --sidebar-width: 240px;
-  
+
   --color-primary: oklch(0.5 0.18 29);
   --color-primary-hover: oklch(0.4 0.18 29);
-
   --color-strong-background: oklch(0.97 0.03 59);
-
   --color-topbar: var(--color-primary);
   --color-topbar-text: var(--color-background);
-
   --color-text: oklch(0.4 0.03 269);
   --color-text-light: oklch(0.5 0.03 269);
   --color-title: oklch(0.27 0.03 269);
@@ -29,7 +21,6 @@
   --color-th-background: oklch(0.95 0.002 269);
   --color-border: oklch(0.91 0.002 269);
 
-  /* fonts */
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "Monaspace", ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 }
@@ -42,23 +33,18 @@ html {
   font-optical-sizing: auto;
   scroll-padding-top: calc(40px + 1em);
   scroll-behavior: smooth;
-  font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
+  font-feature-settings: 'liga' 1, 'calt' 1;
 }
 
-/* 2. Global Styles */
 body {
   background: var(--color-background);
   font-family: var(--font-sans);
-
-  /* Layout */
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   margin: 0;
   padding-top: 35px;
 }
-
-/* 3. Typography */
 
 h1 span,
 h2 span,
@@ -90,7 +76,6 @@ h6:hover span {
   display: inline;
 }
 
-/* 4. Links */
 :any-link {
   color: var(--color-primary);
   text-decoration: underline;
@@ -100,7 +85,6 @@ h6:hover span {
 
 :any-link:hover { color: var(--color-primary-hover); }
 
-/* 5. Code and Pre */
 code,
 pre {
   font-family: var(--font-mono);
@@ -109,12 +93,11 @@ pre {
   border-radius: 6px;
   padding: 16px;
   overflow-x: auto;
-  font-size: 1rem;  /* Increased from 14px */
-  line-height: 1.5;  /* Slightly increased for better readability with larger font */
-  margin: 1em 0;  /* Add some vertical margin */
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 1em 0;
 }
 
-/* 6. Tables */
 table {
   margin: 0;
   border-spacing: 0;
@@ -126,7 +109,7 @@ table tr th, table tr td {
   border: 1px solid var(--color-border);
 }
 
-table tr th { background-color: var(--color-th-background); /* todo */ }
+table tr th { background-color: var(--color-th-background); }
 
 table tr:nth-child(even) td { background-color: var(--color-code-background); }
 
@@ -189,8 +172,8 @@ ol {
 ol ol { margin: 0; }
 
 details > summary {
-  list-style: none;  /* Remove the default marker */
-  position: relative; /* So that the open/close triangle can position itself absolutely inside */
+  list-style: none;
+  position: relative;
   display: flex;
   width: calc(100% - 0.25rem);
   gap: 4px;
@@ -225,7 +208,6 @@ details > summary::after {
 
 details[open] > summary::after { content: '-'; }
 
-/* Main Content */
 main {
   padding: 1em;
   width: calc(100% - 2em);
@@ -339,7 +321,6 @@ main header h3 {
   font-size: 120%;
 }
 
-/* Navigation and Sidebar */
 .topbar {
   width: 100%;
   padding: 0.5em 1rem;
@@ -452,16 +433,12 @@ nav p {
   margin: 0.5em 0 0;
 }
 
-nav.contextual {
-  display: none
-}
+nav.contextual { display: none }
 
 #validator-badges {
   margin: 1em 1em 2em;
   font-size: smaller;
 }
-
-/* 9. Search */
 
 .search-button {
   background-color: var(--color-background);
@@ -507,9 +484,7 @@ nav.contextual {
   backdrop-filter: blur(4px);
 }
 
-.search-dialog[open] {
-  display: flex;
-}
+.search-dialog[open] { display: flex; }
 
 .search-dialog form {
  overflow: hidden; 
@@ -531,9 +506,7 @@ nav.contextual {
   padding: 1rem;
 }
 
-.search-dialog form:has(li) #search-field-wrapper {
-  box-shadow: 0 1px 0 0 var(--color-border);
-}
+.search-dialog form:has(li) #search-field-wrapper { box-shadow: 0 1px 0 0 var(--color-border); }
 
 #search-field {
   width: 100%;
@@ -613,21 +586,20 @@ nav.contextual {
 
 pre,
 code {
-  /* syntax highlighting */
-  --color-constant: oklch(0.5 0.18 269);  /* Bright blue for constants */
-  --color-keyword: var(--color-primary);  /* Red for keywords */
-  --color-ivar: oklch(0.5 0.18 59);  /* Orange for instance variables */
-  --color-operator: oklch(0.38 0.18 269);  /* Dark blue for operators */
-  --color-identifier: var(--color-title);  /* Dark gray for identifiers */
-  --color-node: oklch(0.5 0.18 149);  /* Green for interpolation */
-  --color-comment: oklch(0.5 0.03 269); /* Gray for comments */
-  --color-regexp: oklch(0.5 0.18 299);  /* purple for regular expressions */
-  --color-value: var(--color-operator);  /* Dark blue for numeric values */
-  --color-string: oklch(0.5 0.18 149);  /* Green for strings */
+  --color-constant: oklch(0.5 0.18 269);
+  --color-keyword: var(--color-primary);
+  --color-ivar: oklch(0.5 0.18 59);
+  --color-operator: oklch(0.38 0.18 269);
+  --color-identifier: var(--color-title);
+  --color-node: oklch(0.5 0.18 149);
+  --color-comment: oklch(0.5 0.03 269);
+  --color-regexp: oklch(0.5 0.18 299);
+  --color-value: var(--color-operator);
+  --color-string: oklch(0.5 0.18 149);
 }
 
 code {
-  background-color: var(--color-code-background);  /* Match pre background */
+  background-color: var(--color-code-background);
   padding: 0em 0.4em;
   border-radius: 3px;
   font-size: 1em;
@@ -635,17 +607,16 @@ code {
   text-transform: initial;
 }
 
-/* 13. Syntax Highlighting */
-.ruby-constant   { color: var(--color-constant); }  /* Bright blue for constants */
-.ruby-keyword    { color: var(--color-keyword); }  /* Red for keywords */
-.ruby-ivar       { color: var(--color-ivar); }  /* Orange for instance variables */
-.ruby-operator   { color: var(--color-operator); }  /* Dark blue for operators */
-.ruby-identifier { color: var(--color-identifier); }  /* Dark gray for identifiers */
-.ruby-node       { color: var(--color-node); }  /* Green for interpolation */
-.ruby-comment    { color: var(--color-comment); }  /* Gray for comments */
-.ruby-regexp     { color: var(--color-regexp); }  /* Navy for regular expressions */
-.ruby-value      { color: var(--color-value); }  /* Dark blue for numeric values */
-.ruby-string     { color: var(--color-string); }  /* Green for strings */
+.ruby-constant   { color: var(--color-constant); }
+.ruby-keyword    { color: var(--color-keyword); }
+.ruby-ivar       { color: var(--color-ivar); }
+.ruby-operator   { color: var(--color-operator); }
+.ruby-identifier { color: var(--color-identifier); }
+.ruby-node       { color: var(--color-node); }
+.ruby-comment    { color: var(--color-comment); }
+.ruby-regexp     { color: var(--color-regexp); }
+.ruby-value      { color: var(--color-value); }
+.ruby-string     { color: var(--color-string); }
 
 em {
   text-decoration-color: var(--color-border);
@@ -657,8 +628,6 @@ strong,
 em {
   background-color: var(--color-strong-background);
 }
-
-/* 14. Specific Component Styles */
 
 .note-list {
   padding: 1em 1em 2em;
@@ -738,9 +707,7 @@ em {
   color: var(--color-title);
 }
 
-pre + .toggle-source {
-  margin-top: 0.5rem;
-}
+pre + .toggle-source { margin-top: 0.5rem; }
 
 .method-description,
 .aliases {
@@ -767,8 +734,6 @@ pre + .toggle-source {
   text-transform: uppercase;
   padding: 0 1em;
 }
-
-/* 11. Media Queries */
 
 @media (max-width: 480px) {
   main {
@@ -862,15 +827,15 @@ pre + .toggle-source {
 
   pre,
   code {
-    --color-constant: oklch(0.84 0.09 260);  /* Bright blue for constants */
-    --color-keyword: var(--color-primary);  /* Red for keywords */
-    --color-ivar: oklch(0.85 0.09 59);  /* Orange for instance variables */
-    --color-operator: oklch(0.91 0.04 269);  /* Dark blue for operators */
-    --color-identifier: var(--color-title);  /* Dark gray for identifiers */
-    --color-node: oklch(0.83 0.09 149);  /* Green for interpolation */
-    --color-comment: oklch(0.69 0.02 269); /* Gray for comments */
-    --color-regexp: oklch(0.85 0.09 299);  /* purple for regular expressions */
-    --color-value: var(--color-operator);  /* Dark blue for numeric values */
-    --color-string: oklch(0.83 0.09 149);  /* Green for strings */
+    --color-constant: oklch(0.84 0.09 260);
+    --color-keyword: var(--color-primary);
+    --color-ivar: oklch(0.85 0.09 59);
+    --color-operator: oklch(0.91 0.04 269);
+    --color-identifier: var(--color-title);
+    --color-node: oklch(0.83 0.09 149);
+    --color-comment: oklch(0.69 0.02 269);
+    --color-regexp: oklch(0.85 0.09 299);
+    --color-value: var(--color-operator);
+    --color-string: oklch(0.83 0.09 149);
   }
 }
