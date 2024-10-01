@@ -204,7 +204,7 @@
     scheme.  See RDoc::Markup@Links for details.  Issue #93 by Tim Pease.
   * Ignore empty call-seq for methods.  Improved deduplication of C methods
     sharing the same C function.  This allows the method heading to show
-    up correctly for String#== and #==.  Bug #244 by Neurogami.
+    up correctly for String#== and #===.  Bug #244 by Neurogami.
   * RDoc no longer adds "http://" to urls without a scheme.  Bug #208 by
     Zachary Scott.
   * Improved the error message in the RDoc server when ri data is missing.
