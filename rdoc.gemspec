@@ -125,7 +125,6 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
     "lib/rdoc/generator/template/darkfish/images/transparent.png",
     "lib/rdoc/generator/template/darkfish/images/wrench.png",
     "lib/rdoc/generator/template/darkfish/images/wrench_orange.png",
-    "lib/rdoc/generator/template/darkfish/images/zoom.png",
     "lib/rdoc/generator/template/darkfish/index.rhtml",
     "lib/rdoc/generator/template/darkfish/js/darkfish.js",
     "lib/rdoc/generator/template/darkfish/js/search.js",
