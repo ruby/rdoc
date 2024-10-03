@@ -617,7 +617,7 @@ main .method-detail {
 
 main .method-detail:target {
   margin-left: -10px;
-  border-left: 10px solid #f1edba;
+  border-left: 10px solid var(--source-code-background-color);
 }
 
 main .method-header {
