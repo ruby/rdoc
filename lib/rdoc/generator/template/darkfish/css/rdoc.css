@@ -22,6 +22,7 @@
   --link-hover-color: #25a28a;  /* A slightly brighter teal-green */
   --border-color: #e0e0e0;
   --sidebar-text-color: #2c3e50;  /* Dark blue-gray for contrast */
+  --source-code-background-color: #e8f0eb;
 
   /* Font family variables */
   --font-primary: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
@@ -594,6 +595,10 @@ main .method-source-code {
   transition-delay: 0ms;
   transition-property: all;
   transition-timing-function: ease-in-out;
+}
+
+main .method-source-code pre {
+  background: var(--source-code-background-color);
 }
 
 main .method-source-code.active-menu {
