@@ -1,4 +1,5 @@
-<%- comment = if current.respond_to? :comment_location then
+<%-   
+  comment = if current.respond_to? :comment_location then
                current.comment_location
              else
                current.comment
@@ -6,8 +7,8 @@
    table = current.parse(comment).table_of_contents.dup
 
    if table.length > 1 then %>
-<div class="nav-section">
-  <h3>Table of Contents</h3>
+  <div class="nav-section">
+    <h3>On this page</h3>
 
     <%- display_link = proc do |heading| -%>
       <a href="#<%= heading.label current %>"><%= heading.plain_html %></a>
@@ -31,9 +32,9 @@
         <%- end -%>
       <%- end -%>
     <%- end -%>
-
-  <ul class="link-list" role="directory">
-    <% list_siblings.call %>
-  </ul>
-</div>
+    
+    <ul class="link-list" role="directory">
+      <% list_siblings.call %>
+    </ul>
+  </div>
 <%- end -%>

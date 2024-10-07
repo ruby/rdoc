@@ -1,4 +1,4 @@
-<div id="classindex-section" class="nav-section">
+<div class="nav-section">
   <h3>Class and Module Index</h3>
 
   <%-
@@ -9,22 +9,37 @@
   end
   link = proc do |index_klass, display = index_klass.display?|
     if display
-      -%><code><a href="<%= rel_prefix %>/<%= index_klass.path %>"><%= index_klass.name %></a></code><%-
+      -%><a href="<%= rel_prefix %>/<%= index_klass.path %>"><%= index_klass.name %></a><%-
     else
-      -%><code><%= index_klass.name %></code><%-
+      -%><%= index_klass.name %><%-
     end
   end
+
+  def has_active_descendant?(klass, current, all_classes)
+    return false unless defined?(current)
+    return true if klass == current
+    children = all_classes[klass.full_name]
+    return false unless children
+    children.any? { |child| has_active_descendant?(child, current, all_classes) }
+  end
+
   if top = all_classes[nil]
     solo = top.one? {|klass| klass.display?}
-    traverse = proc do |klasses| -%>
-  <ul class="link-list">
+    traverse = proc do |klasses|
+      has_active_descendant = false
+      -%>
+    <ul class="link-list" id="class-and-module-index">
       <%- klasses.each do |index_klass| -%>
         <%- if children = all_classes[index_klass.full_name] -%>
-  <li><details<% if solo; solo = false %> open<% end %>><summary><% link.call(index_klass) %></summary>
-          <%- traverse.call(children) -%>
-  </ul></details>
+          <li class="<%= "active" if defined?(current) && (index_klass == current) %>">
+            <details<% if solo || (defined?(current) && has_active_descendant?(index_klass, current, all_classes)); solo = false %>  open<% end %>>
+              <summary><% link.call(index_klass) %></summary>
+              <%- traverse.call(children) -%>
+              </ul>
+            </details>
         <%- elsif index_klass.display? -%>
-  <li><% link.call(index_klass, true) %>
+          <li class="<%= "active" if defined?(current) && (index_klass == current) %>">
+            <% link.call(index_klass, true) %>
         <%- end -%>
       <%- end -%>
     <%- end -%>
