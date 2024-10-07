@@ -23,7 +23,6 @@ task rdoc: :generate
 RDoc::Task.new do |doc|
   # RDoc task defaults to /html and overrides the op_dir option in .rdoc_options
   doc.rdoc_dir = "_site" # for GitHub Pages
-  doc.template = "rorvswild"
 end
 
 task "coverage" do
