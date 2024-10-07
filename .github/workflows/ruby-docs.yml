@@ -1,0 +1,59 @@
+name: Deploy Ruby docs to Pages
+
+on:
+  push:
+    branches: [ 'rorvswild_theme' ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.repository == 'basesecrete/rdoc' && !startsWith(github.event_name, 'pull') }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout Ruby
+        uses: actions/checkout@v4
+        with:
+          repository: ruby/ruby
+          path: ruby
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@161cd54b698f1fb3ea539faab2e036d409550e3c # v1.187.0
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Build with RDoc
+        run: |
+          bundle
+          bundle exec rake generate
+          bundle exec rdoc --root=ruby --include=ruby/doc --title "Ruby Documentation" --main=README.md --template=rorvswild --debug
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

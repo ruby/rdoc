@@ -1,0 +1,10 @@
+<% if (constants = klass.constants.sort).any? %>
+  <div class="nav-section">
+    <h3>Constants</h3>
+    <ul class="link-list" role="directory">
+      <%- constants.each do |const| -%>
+      <li><a href="#<%= h const.name %>"><%= h const.name -%></a></li>
+      <%- end -%>
+    </ul>
+  </div>
+<% end %>

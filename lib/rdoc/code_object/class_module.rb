@@ -710,6 +710,16 @@ class RDoc::ClassModule < RDoc::Context
     @superclass = superclass
   end
 
+  def super_classes
+    result = []
+    parent = self
+    while parent = parent.superclass
+      result << parent
+      return result if parent.is_a?(String)
+    end
+    result
+  end
+
   def to_s # :nodoc:
     if is_alias_for then
       "#{self.class.name} #{self.full_name} -> #{is_alias_for}"

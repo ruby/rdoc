@@ -1,11 +1,41 @@
-<%- if klass.type == 'class' then %>
-<div id="parent-class-section" class="nav-section">
-  <h3>Parent</h3>
+<%- if klass.type == 'class' && (ancestors = klass.super_classes).any? then -%>
+  <div class="nav-section">
+    <h3>Ancestors</h3>
+    <ul class="link-list" role="directory">
+      <%- ancestors.each_with_index do |ancestor, index| -%>
+        <%- if ancestor.is_a?(String) -%>
+          <li>
+            <%- if index == 0 && ancestors.size > 1 -%>
+              <details>
+                <summary><%= ancestor -%></summary>
+                  <ul class="link-list" role="directory">
+            <%- else -%>
+              <span><%= ancestor -%></span>
+              <ul class="link-list" role="directory">
+            <%- end -%>
+        <%- elsif ancestor.is_a?(RDoc::NormalClass) -%>
+          <li>
+            <%- if index == 0 && ancestors.size > 1 -%>
+              <details>
+                <summary><a href="<%= klass.aref_to ancestor.path -%>"><%= ancestor.full_name -%></a></summary>
+                <ul class="link-list" role="directory">
+            <%- else -%>
+              <a href="<%= klass.aref_to ancestor.path -%>"><%= ancestor.full_name -%></a>
+              <ul class="link-list" role="directory">
+            <%- end -%>
+        <%- end -%>
+      <%- end -%>
 
-  <%- if klass.superclass and not String === klass.superclass then -%>
-  <p class="link"><a href="<%= klass.aref_to klass.superclass.path %>"><%= klass.superclass.full_name %></a>
-  <%- else -%>
-  <p class="link"><%= klass.superclass %>
-  <%- end -%>
-</div>
+      <%- ancestors.each_with_index do |ancestor, index| -%>
+        <%- if index == 0 && ancestors.size > 1 -%>
+              </ul>
+            </details>
+          </li>
+        <%- else -%>
+            </ul>
+          </li>
+        <%- end -%>
+      <%- end -%>
+    </ul>
+  </div>
 <%- end -%>
