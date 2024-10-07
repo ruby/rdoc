@@ -49,7 +49,7 @@ class TestRDocParserRd < RDoc::TestCase
   end
 
   def util_parser content
-    RDoc::Parser::RD.new @top_level, @fn, content, @options, @stats
+    RDoc::Parser::RD.new @top_level, content, @options, @stats
   end
 
 end
