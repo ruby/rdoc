@@ -10,12 +10,12 @@
 
   --color-primary: oklch(0.5 0.18 29);
   --color-primary-hover: oklch(0.4 0.18 29);
-  --color-strong-background: oklch(0.97 0.05 89);
+  --color-strong-background: oklch(0.97 0.03 59);
   --color-topbar: var(--color-primary);
   --color-topbar-text: var(--color-background);
-  --color-text: oklch(0.36 0.03 269);
-  --color-text-light: oklch(0.46 0.03 269);
-  --color-title: oklch(0.26 0.03 269);
+  --color-text: oklch(0.4 0.03 269);
+  --color-text-light: oklch(0.5 0.03 269);
+  --color-title: oklch(0.27 0.03 269);
   --color-background: oklch(0.99 0.001 269);
   --color-code-background: oklch(0.97 0.002 269);
   --color-th-background: oklch(0.95 0.002 269);
@@ -202,7 +202,7 @@ details > summary::after {
   flex-shrink: 0;
   cursor: pointer;
   position: relative;
-  top: 1px;
+  top: 2px;
   margin-left: auto;
 }
 
@@ -238,7 +238,7 @@ main h2 {
   font-size: 1.44rem;
   line-height: 3rem;
   color: var(--color-title);
-  box-shadow: 0 2px 0 0 var(--color-text);
+  box-shadow: 0 1px 0 0 var(--color-text-light);
 }
 
 main h3 {
@@ -811,7 +811,7 @@ pre + .toggle-source { margin-top: 0.5rem; }
     --color-primary: oklch(0.85 0.09 29);
     --color-primary-hover: oklch(87.78296875% 0.07 29);
 
-    --color-strong-background: oklch(0.28 0.06 89);
+    --color-strong-background: oklch(0.27 0.04 59);
 
     --color-topbar: oklch(0.5 0.18 29);
     --color-topbar-text: oklch(0.99 0.001 269);
