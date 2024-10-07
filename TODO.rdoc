@@ -3,7 +3,7 @@ Forward Looking Statements applies.
 
 === RDoc::VERSION.succ
 
-- Blockers:
+Blockers:
 
 * Update LICENSE to match ruby's switch
 * The alias keyword should not be bidirectional
@@ -13,7 +13,7 @@ Forward Looking Statements applies.
 * Fix consumption of , after link like: RDoc[rdoc-ref:RDoc], <- comma here
 * Remove support for links like Matrix[*rows]
 
-- Nice to have:
+Nice to have:
 
 * Parse only changed files (like in ruby)
 * Page of Glory (or Shame) in HTML output showing documentation coverage
@@ -28,7 +28,7 @@ Forward Looking Statements applies.
 
 === More Future
 
-- API changes to RDoc
+API changes to RDoc
 
 * RDoc::TopLevel#add_method should automatically create the appropriate method
   class rather than requiring one be passed in.
