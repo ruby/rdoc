@@ -780,4 +780,18 @@ class RDoc::Generator::Darkfish
     template
   end
 
+  # Returns an excerpt of the content for usage in meta description tags
+  def excerpt(content)
+    text = content.is_a?(RDoc::Comment) ? content.text : content
+
+    # Try to select the text up to the second paragraph, the first paragraph or the first 150 characters
+    excerpt_end = text.index(".")
+    excerpt_end = if excerpt_end
+      text.index(".", excerpt_end + 1) || excerpt_end
+    else
+      150
+    end
+
+    text[0...excerpt_end].gsub(/\n/, ' ').squeeze(" ")
+  end
 end
