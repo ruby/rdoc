@@ -23,6 +23,8 @@
   --border-color: #e0e0e0;
   --sidebar-text-color: #2c3e50;  /* Dark blue-gray for contrast */
   --source-code-background-color: #e8f0eb;
+  --search-section-background-color: #e8e8e8;
+  --nav-border-color: #aaa;
 
   /* Font family variables */
   --font-primary: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
@@ -160,7 +162,7 @@ nav[hidden] {
 
 nav footer {
   padding: 1em;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid var(--nav-border-color);
 }
 
 nav .nav-section {
@@ -365,7 +367,7 @@ main h6 {
 .ruby-string     { color: #22863a; }  /* Green for strings */
 
 code {
-  background-color: #f0f4f8;  /* Match pre background */
+  background-color: var(--code-block-background-color);
   padding: 0.2em 0.4em;
   border-radius: 3px;
   font-size: 85%;
@@ -412,7 +414,7 @@ em {
 }
 
 main {
-  color: #333;
+  color: var(--text-color);
 }
 
 main > h1:first-child,
@@ -484,13 +486,13 @@ main pre {
 
 main hr {
   margin: 1.5em 1em;
-  border: 2px solid #ddd;
+  border: 2px solid var(--border-color);
 }
 
 main blockquote {
   margin: 0 2em 1.2em 1.2em;
   padding-left: 0.5em;
-  border-left: 2px solid #ddd;
+  border-left: 2px solid var(--border-color);
 }
 
 main ol,
@@ -520,20 +522,23 @@ main dd {
 main header h2 {
   margin-top: 2em;
   border-width: 0;
-  border-top: 4px solid #bbb;
+  border-top: 4px solid var(--border-color);
   font-size: 130%;
 }
 
 main header h3 {
   margin: 2em 0 1.5em;
   border-width: 0;
-  border-top: 3px solid #bbb;
+  border-top: 3px solid var(--border-color);
   font-size: 120%;
 }
 
 .documentation-section-title {
   position: relative;
 }
+
+/* This is the little arrow that appears when you hover over a section title */
+/* Probably rarely used and can be removed if desired */
 .documentation-section-title .section-click-top {
   position: absolute;
   top: 6px;
@@ -570,6 +575,7 @@ main header h3 {
   color: #666;
 }
 
+/* Not sure what this is for */
 .documentation-section h2 {
   position: relative;
 }
@@ -655,10 +661,6 @@ main .method-controls {
   cursor: pointer;
 }
 
-main .method-alias .method-heading {
-  color: #666;
-}
-
 main .method-description,
 main .aliases {
   margin-top: 0.75em;
@@ -688,9 +690,6 @@ main #attribute-method-details .method-detail:hover {
 main .attribute-access-type {
   text-transform: uppercase;
 }
-/* @end */
-
-/* @end */
 
 /* @group search results */
 #search-results {
@@ -704,13 +703,13 @@ main .attribute-access-type {
 }
 
 #search-results .search-selected {
-  background: #e8e8e8;
+  background: var(--search-section-background-color);
   border-bottom: 1px solid transparent;
 }
 
 #search-results li {
   list-style: none;
-  border-bottom: 1px solid #aaa;
+  border-bottom: 1px solid var(--nav-border-color);
   margin-bottom: 0.5em;
 }
 
