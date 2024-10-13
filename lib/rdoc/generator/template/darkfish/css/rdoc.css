@@ -11,14 +11,14 @@
 /* 1. Variables and Root Styles */
 :root {
   --sidebar-width: 300px;
-  --highlight-color: #b61d1c; /* Reddish color for accents and headings */
+  --highlight-color: #cc342d; /* Reddish color for accents and headings */
   --secondary-highlight-color: #c83045; /* Darker reddish color for secondary highlights */
   --text-color: #505050; /* Dark bluish-grey for text */
   --background-color: #fefefe; /* Near white background */
-  --code-block-background-color: #e6e6e6; /* Slightly darker grey for code blocks */
-  --link-color: #3F3D56; /* Dark bluish-grey for links */
-  --link-hover-color: #b61d1c; /* Reddish color on hover */
-  --border-color: #e0e0e0; /* General border color */
+  --code-block-background-color: #f6f6f3; /* Slightly darker grey for code blocks */
+  --link-color: #3f3d56; /* Dark bluish-grey for links */
+  --link-hover-color: var(--highlight-color); /* Reddish color on hover */
+  --border-color: #e0e0e0;; /* General border color */
   --source-code-toggle-color: var(--secondary-highlight-color);
   --scrollbar-thumb-hover-background: #505050; /* Hover color for scrollbar thumb */
   --table-header-background-color: #eceaed;
@@ -84,12 +84,12 @@ h4:target,
 h5:target,
 h6:target {
   margin-left: -10px;
-  border-left: 10px solid var(--code-block-background-color);
+  border-left: 10px solid var(--border-color);
   scroll-margin-top: 1rem;
 }
 
 main .anchor-link:target {
-  scroll-margin-top: 20px;
+  scroll-margin-top: 1rem;
 }
 
 /* 4. Links */
@@ -558,7 +558,7 @@ main .method-detail {
 
 main .method-detail:target {
   margin-left: -10px;
-  border-left: 10px solid var(--code-block-background-color);
+  border-left: 10px solid var(--border-color);
 }
 
 main .method-header {
