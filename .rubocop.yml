@@ -17,3 +17,6 @@ Layout/SpaceBeforeComma:
 
 Layout/SpaceAfterComma:
   Enabled: true
+
+Lint/UnreachableCode:
+  Enabled: true
