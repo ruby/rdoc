@@ -22,6 +22,7 @@
   --link-hover-color: #25a28a;  /* A slightly brighter teal-green */
   --border-color: #e0e0e0;
   --sidebar-text-color: #2c3e50;  /* Dark blue-gray for contrast */
+  --source-code-background-color: #e8f0eb;
 
   /* Font family variables */
   --font-primary: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
@@ -83,7 +84,7 @@ h4:target,
 h5:target,
 h6:target {
   margin-left: -10px;
-  border-left: 10px solid #f1edba;
+  border-left: 10px solid var(--source-code-background-color);
   scroll-margin-top: 1rem;
 }
 
@@ -93,7 +94,6 @@ h6:target {
   color: var(--link-color);
   text-decoration: none;
   transition: color 0.3s ease;
-  font-weight: 600;  /* Make links bolder */
 }
 
 :link:hover,
@@ -224,6 +224,7 @@ nav a:hover {
   position: fixed;
   top: 10px;
   left: 20px;
+  cursor: pointer;
 }
 
 #navigation-toggle[aria-expanded="true"] {
@@ -308,7 +309,7 @@ main h6 {
 
 #search-field {
   width: 100%;
-  padding: 0.5em 1em 0.5em 2em;
+  padding: 0.5em 1em 0.5em 2.5em;
   border: 1px solid var(--border-color);
   border-radius: 20px;
   font-size: 14px;
@@ -585,6 +586,9 @@ main header h3 {
 /* @group Method Details */
 
 main .method-source-code {
+  /* While this is already invisible through the rule below, this will inform the browser to
+  not consider source code during text searching until it is actually expanded. */
+  visibility: hidden;
   max-height: 0;
   overflow: auto;
   transition-duration: 200ms;
@@ -593,7 +597,12 @@ main .method-source-code {
   transition-timing-function: ease-in-out;
 }
 
+main .method-source-code pre {
+  background: var(--source-code-background-color);
+}
+
 main .method-source-code.active-menu {
+  visibility: visible;
   max-height: 100vh;
 }
 
@@ -604,12 +613,15 @@ main .method-description .method-calls-super {
 
 main .method-detail {
   margin-bottom: 2.5em;
-  cursor: pointer;
 }
 
 main .method-detail:target {
   margin-left: -10px;
-  border-left: 10px solid #f1edba;
+  border-left: 10px solid var(--source-code-background-color);
+}
+
+main .method-header {
+  display: inline-block;
 }
 
 main .method-heading {
@@ -619,23 +631,24 @@ main .method-heading {
   font-weight: bold;
   color: var(--text-color);
 }
-main .method-heading :link,
-main .method-heading :visited {
-  color: inherit;
-}
-main .method-click-advice {
+
+main .method-heading::after {
+  content: '¶';
   position: absolute;
-  top: 2px;
-  right: 5px;
-  font-size: 12px;
-  color: #9b9877;
   visibility: hidden;
-  padding-right: 20px;
-  line-height: 20px;
-  background: url(../images/zoom.png) no-repeat right top;
+  color: var(--secondary-color);
+  font-size: 0.5em;
 }
-main .method-header:hover .method-click-advice {
+
+main .method-heading:hover::after {
   visibility: visible;
+}
+
+main .method-controls {
+  line-height: 20px;
+  float: right;
+  color: var(--secondary-color);
+  cursor: pointer;
 }
 
 main .method-alias .method-heading {
@@ -663,7 +676,6 @@ main #attribute-method-details .method-detail:hover {
 }
 main .attribute-access-type {
   text-transform: uppercase;
-  padding: 0 1em;
 }
 /* @end */
 
@@ -739,6 +751,11 @@ main .attribute-access-type {
     display: block;
     overflow-x: auto;
     white-space: nowrap;
+  }
+
+  main .method-controls {
+    margin-top: 10px;
+    float: none;
   }
 }
 /* @end */
