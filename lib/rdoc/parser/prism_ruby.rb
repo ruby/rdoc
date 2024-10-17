@@ -18,7 +18,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   attr_accessor :visibility
   attr_reader :container, :singleton
 
-  def initialize(top_level, file_name, content, options, stats)
+  def initialize(top_level, content, options, stats)
     super
 
     content = handle_tab_width(content)
