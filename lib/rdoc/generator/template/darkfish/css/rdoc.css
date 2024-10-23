@@ -16,7 +16,7 @@
   --text-color: #505050; /* Dark bluish-grey for text */
   --background-color: #fefefe; /* Near white background */
   --code-block-background-color: #f6f6f3; /* Slightly darker grey for code blocks */
-  --link-color: #3f3d56; /* Dark bluish-grey for links */
+  --link-color: #42405F; /* Dark bluish-grey for links */
   --link-hover-color: var(--highlight-color); /* Reddish color on hover */
   --border-color: #e0e0e0;; /* General border color */
   --source-code-toggle-color: var(--secondary-highlight-color);
@@ -95,13 +95,11 @@ main .anchor-link:target {
 /* 4. Links */
 a {
   color: var(--link-color);
-  text-decoration: none;
   transition: color 0.3s ease;
 }
 
 a:hover {
   color: var(--link-hover-color);
-  text-decoration: underline;
 }
 
 a code:hover {
