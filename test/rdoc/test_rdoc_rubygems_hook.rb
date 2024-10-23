@@ -2,10 +2,17 @@
 require 'rubygems'
 require 'fileutils'
 require 'tmpdir'
-require_relative '../../lib/rdoc/rubygems_hook'
 require 'test/unit'
 
-class TestRDocRubygemsHook < Test::Unit::TestCase
+# This test requires lib/rubygems_plugin.rb .
+# To execute this test under a ruby-core, lib/rubygems_plugin.rb should be synced to ruby/ruby.
+# But I don't do so and skip this test under the situation because of avoiding ambiguity about rubygems_plugins on ruby/ruby.
+begin
+  require_relative '../../lib/rubygems_plugin'
+rescue LoadError
+end
+
+class TestRDocRubyGemsHook < Test::Unit::TestCase
   def setup
     @a = Gem::Specification.new do |s|
       s.platform    = Gem::Platform::RUBY
@@ -40,10 +47,10 @@ class TestRDocRubygemsHook < Test::Unit::TestCase
     FileUtils.touch   File.join(@tempdir, 'a-2', 'lib', 'a.rb')
     FileUtils.touch   File.join(@tempdir, 'a-2', 'README')
 
-    @hook = RDoc::RubygemsHook.new @a
+    @hook = RDoc::RubyGemsHook.new @a
 
     begin
-      RDoc::RubygemsHook.load_rdoc
+      RDoc::RubyGemsHook.load_rdoc
     rescue Gem::DocumentError => e
       omit e.message
     end
@@ -63,7 +70,7 @@ class TestRDocRubygemsHook < Test::Unit::TestCase
     refute @hook.generate_rdoc
     assert @hook.generate_ri
 
-    rdoc = RDoc::RubygemsHook.new @a, false, false
+    rdoc = RDoc::RubyGemsHook.new @a, false, false
 
     refute rdoc.generate_rdoc
     refute rdoc.generate_ri
@@ -284,4 +291,4 @@ class TestRDocRubygemsHook < Test::Unit::TestCase
     end
   end
 
-end
+end if defined?(RDoc::RubyGemsHook)
