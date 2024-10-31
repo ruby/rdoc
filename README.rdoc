@@ -110,6 +110,15 @@ To determine how well your project is documented run <tt>rdoc -C lib</tt> to
 get a documentation coverage report.  <tt>rdoc -C1 lib</tt> includes parameter
 names in the documentation coverage report.
 
+== Theme Options
+
+There are a few community-maintained themes for \RDoc:
+
+- rorvswild-theme-rdoc[https://github.com/BaseSecrete/rorvswild-theme-rdoc]
+- hanna[https://github.com/jeremyevans/hanna] (a fork maintained by {Jeremy Evans}[https://github.com/jeremyevans])
+
+Please follow the theme's README for usage instructions.
+
 == Bugs
 
 See CONTRIBUTING@Bugs for information on filing a bug report.  It's OK to file
