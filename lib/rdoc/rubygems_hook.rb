@@ -273,11 +273,11 @@ end
 module RDoc
   class RubygemsHook
     def self.default_gem?
-      File.exist?(File.join(__dir__, "..", "rubygems_plugin.rb"))
+      !File.exist?(File.join(__dir__, "..", "rubygems_plugin.rb"))
     end
 
     def initialize(spec)
-      @spe = spec
+      @spec = spec
     end
 
     def remove
@@ -294,7 +294,7 @@ module RDoc
       return unless default_gem?
 
       # Generate document for compatibility if this is a default gem.
-      RubyGemsHook.generation_hook(installer, specs)
+      ::RDoc::RubyGemsHook.generate(installer, specs)
     end
   end
 end
