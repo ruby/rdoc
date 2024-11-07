@@ -294,7 +294,7 @@ module RDoc
       return unless default_gem?
 
       # Generate document for compatibility if this is a default gem.
-      ::RDoc::RubyGemsHook.generate(installer, specs)
+      RubyGemsHook.generate(installer, specs)
     end
   end
 end
