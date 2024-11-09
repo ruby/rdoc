@@ -1,8 +1,6 @@
 # frozen_string_literal: true
-
 require 'rubygems/user_interaction'
 require 'fileutils'
-
 require_relative '../rdoc'
 
 # We define the following two similar name classes in this file:
@@ -284,7 +282,7 @@ module RDoc
       # Do nothing if this is NOT a default gem.
       return unless self.class.default_gem?
 
-      # Remove generate document for compatibility if this is a
+      # Remove generated document for compatibility if this is a
       # default gem.
       RubyGemsHook.new(@spec).remove
     end

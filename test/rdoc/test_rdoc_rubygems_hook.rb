@@ -2,15 +2,8 @@
 require 'rubygems'
 require 'fileutils'
 require 'tmpdir'
+require_relative '../../lib/rdoc/rubygems_hook'
 require 'test/unit'
-
-# This test requires lib/rubygems_plugin.rb .
-# To execute this test under a ruby-core, lib/rubygems_plugin.rb should be synced to ruby/ruby.
-# But I don't do so and skip this test under the situation because of avoiding ambiguity about rubygems_plugins on ruby/ruby.
-begin
-  require_relative '../../lib/rubygems_plugin'
-rescue LoadError
-end
 
 class TestRDocRubyGemsHook < Test::Unit::TestCase
   def setup
@@ -291,4 +284,4 @@ class TestRDocRubyGemsHook < Test::Unit::TestCase
     end
   end
 
-end if defined?(RDoc::RubyGemsHook)
+end
