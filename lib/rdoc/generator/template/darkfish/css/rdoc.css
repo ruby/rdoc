@@ -469,14 +469,15 @@ main dl {
 }
 
 main dt {
-  margin-bottom: 0.5em;
-  margin-right: 1em;
-  float: left;
   font-weight: bold;
 }
 
 main dd {
-  margin: 0 1em 1em 0.5em;
+  margin: 0 0 1em 1em;
+}
+
+main dd p:first-child {
+  margin-top: 0;
 }
 
 /* Headers within Main */
