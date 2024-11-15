@@ -77,12 +77,12 @@ class TestRDocConstant < XrefTestCase
     loaded = Marshal.load Marshal.dump c
     loaded.store = @store
 
-    comment = doc(para('this is a comment'))
+    document = doc(para('this is a comment'))
 
     assert_equal c, loaded
 
     assert_equal aliased,        loaded.is_alias_for
-    assert_equal comment,        loaded.comment
+    assert_equal document,       loaded.comment.parse
     assert_equal top_level,      loaded.file
     assert_equal 'Klass::CONST', loaded.full_name
     assert_equal 'CONST',        loaded.name
@@ -105,12 +105,12 @@ class TestRDocConstant < XrefTestCase
     loaded = Marshal.load Marshal.dump c
     loaded.store = @store
 
-    comment = doc(para('this is a comment'))
+    document = doc(para('this is a comment'))
 
     assert_equal c, loaded
 
     assert_nil                   loaded.is_alias_for
-    assert_equal comment,        loaded.comment
+    assert_equal document,       loaded.comment.parse
     assert_equal top_level,      loaded.file
     assert_equal 'Klass::CONST', loaded.full_name
     assert_equal 'CONST',        loaded.name
@@ -139,10 +139,10 @@ class TestRDocConstant < XrefTestCase
 
     loaded.store = @store
 
-    comment = doc(para('this is a comment'))
+    document = doc(para('this is a comment'))
 
     assert_equal aliased,        loaded.is_alias_for
-    assert_equal comment,        loaded.comment
+    assert_equal document,       loaded.comment.parse
     assert_equal top_level,      loaded.file
     assert_equal 'Klass::CONST', loaded.full_name
     assert_equal 'CONST',        loaded.name

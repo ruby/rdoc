@@ -384,7 +384,7 @@ class TestRDocStore < XrefTestCase
                  methods.sort_by { |m| m.full_name }
 
     method = methods.find { |m| m == @meth }
-    assert_equal @meth_comment.parse, method.comment
+    assert_equal @meth_comment.parse, method.comment.parse
 
     assert_equal @klass, methods.last.parent
 
@@ -394,7 +394,7 @@ class TestRDocStore < XrefTestCase
 
     assert_equal [@attr], attributes
 
-    assert_equal @attr_comment.parse, attributes.first.comment
+    assert_equal @attr_comment.parse, attributes.first.comment.parse
   end
 
   def test_load_cache

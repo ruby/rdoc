@@ -210,10 +210,10 @@ class TestRDocClassModule < XrefTestCase
       RDoc::Markup::Paragraph.new('this is a comment'))
     inner.file = tl
 
-    comment = RDoc::Markup::Document.new inner
+    document = RDoc::Markup::Document.new(inner)
 
     assert_equal [a2, a1],           loaded.attributes.sort
-    assert_equal comment,            loaded.comment
+    assert_equal document,           loaded.comment.parse
     assert_equal [c1],               loaded.constants
     assert_equal 'Namespace::Klass', loaded.full_name
     assert_equal [i1],               loaded.includes
@@ -326,11 +326,11 @@ class TestRDocClassModule < XrefTestCase
 
     assert_equal cm, loaded
 
-    comment = RDoc::Markup::Document.new(
-                RDoc::Markup::Paragraph.new('this is a comment'))
+    document = RDoc::Markup::Document.new(
+                 RDoc::Markup::Paragraph.new('this is a comment'))
 
     assert_equal [a],                loaded.attributes
-    assert_equal comment,            loaded.comment
+    assert_equal document,           loaded.comment.parse
     assert_equal [c],                loaded.constants
     assert_equal 'Namespace::Klass', loaded.full_name
     assert_equal [i],                loaded.includes
@@ -403,10 +403,10 @@ class TestRDocClassModule < XrefTestCase
       RDoc::Markup::Paragraph.new('this is a comment'))
     inner.file = tl
 
-    comment = RDoc::Markup::Document.new inner
+    document = RDoc::Markup::Document.new(inner)
 
     assert_equal [a2, a1],           loaded.attributes.sort
-    assert_equal comment,            loaded.comment
+    assert_equal document,           loaded.comment.parse
     assert_equal [c1],               loaded.constants
     assert_equal 'Namespace::Klass', loaded.full_name
     assert_equal [i1],               loaded.includes
@@ -487,10 +487,10 @@ class TestRDocClassModule < XrefTestCase
       RDoc::Markup::Paragraph.new('this is a comment'))
     inner.file = tl
 
-    comment = RDoc::Markup::Document.new inner
+    document = RDoc::Markup::Document.new(inner)
 
     assert_equal [a2, a1],           loaded.attributes.sort
-    assert_equal comment,            loaded.comment
+    assert_equal document,           loaded.comment.parse
     assert_equal [c1],               loaded.constants
     assert_equal 'Namespace::Klass', loaded.full_name
     assert_equal [i1],               loaded.includes
@@ -585,10 +585,10 @@ class TestRDocClassModule < XrefTestCase
       RDoc::Markup::Paragraph.new('this is a comment'))
     inner.file = tl
 
-    comment = RDoc::Markup::Document.new inner
+    document = RDoc::Markup::Document.new(inner)
 
     assert_equal [a2, a1],           loaded.attributes.sort
-    assert_equal comment,            loaded.comment
+    assert_equal document,           loaded.comment.parse
     assert_equal [c1],               loaded.constants
     assert_equal 'Namespace::Klass', loaded.full_name
     assert_equal [i1],               loaded.includes
@@ -752,7 +752,7 @@ class TestRDocClassModule < XrefTestCase
 
     expected = @RM::Document.new inner2, inner1
 
-    assert_equal expected, cm1.comment
+    assert_equal expected, cm1.comment.parse
   end
 
   def test_merge_comment_version_0
@@ -777,7 +777,7 @@ class TestRDocClassModule < XrefTestCase
       inner,
       @RM::Document.new(@RM::Paragraph.new('klass 2'))
 
-    assert_equal expected, cm1.comment
+    assert_equal expected, cm1.comment.parse
   end
 
   def test_merge_constants

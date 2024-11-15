@@ -359,12 +359,14 @@ class RDoc::ClassModule < RDoc::Context
     @name       = array[1]
     @full_name  = array[2]
     @superclass = array[3]
-    @comment    = array[4]
+    document    = array[4]
 
-    @comment_location = if RDoc::Markup::Document === @comment.parts.first then
-                          @comment
+    @comment    = RDoc::Comment.from_document document
+
+    @comment_location = if RDoc::Markup::Document === document.parts.first then
+                          document
                         else
-                          RDoc::Markup::Document.new @comment
+                          RDoc::Markup::Document.new document
                         end
 
     array[5].each do |name, rw, visibility, singleton, file|
@@ -378,18 +380,18 @@ class RDoc::ClassModule < RDoc::Context
       attr.record_location RDoc::TopLevel.new file
     end
 
-    array[6].each do |constant, comment, file|
+    array[6].each do |constant, document, file|
       case constant
       when RDoc::Constant then
         add_constant constant
       else
-        constant = add_constant RDoc::Constant.new(constant, nil, comment)
+        constant = add_constant RDoc::Constant.new(constant, nil, RDoc::Comment.from_document(document))
         constant.record_location RDoc::TopLevel.new file
       end
     end
 
-    array[7].each do |name, comment, file|
-      incl = add_include RDoc::Include.new(name, comment)
+    array[7].each do |name, document, file|
+      incl = add_include RDoc::Include.new(name, RDoc::Comment.from_document(document))
       incl.record_location RDoc::TopLevel.new file
     end
 
@@ -406,8 +408,8 @@ class RDoc::ClassModule < RDoc::Context
       end
     end
 
-    array[9].each do |name, comment, file|
-      ext = add_extend RDoc::Extend.new(name, comment)
+    array[9].each do |name, document, file|
+      ext = add_extend RDoc::Extend.new(name, RDoc::Comment.from_document(document))
       ext.record_location RDoc::TopLevel.new file
     end if array[9] # Support Marshal version 1
 
@@ -444,7 +446,8 @@ class RDoc::ClassModule < RDoc::Context
 
       document = document.merge other_document
 
-      @comment = @comment_location = document
+      @comment = RDoc::Comment.from_document(document)
+      @comment_location = document
     end
 
     cm = class_module
