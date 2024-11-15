@@ -469,7 +469,13 @@ main dl {
 }
 
 main dt {
+  line-height: 1.5; /* matches `main p` */
   font-weight: bold;
+}
+
+main dl.note-list dt {
+  margin-right: 1em;
+  float: left;
 }
 
 main dd {
