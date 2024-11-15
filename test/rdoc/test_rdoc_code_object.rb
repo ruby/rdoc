@@ -40,13 +40,12 @@ class TestRDocCodeObject < XrefTestCase
     assert_equal 'I am a comment', @co.comment.text
   end
 
-  def test_comment_equals_document
-    doc = RDoc::Markup::Document.new
-    @co.comment = doc
+  def test_comment_equals_empty_string
+    @co.comment = 'comment'
 
     @co.comment = ''
 
-    assert_equal doc, @co.comment
+    assert_equal 'comment', @co.comment
   end
 
   def test_comment_equals_encoding

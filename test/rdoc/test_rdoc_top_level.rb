@@ -177,9 +177,9 @@ class TestRDocTopLevel < XrefTestCase
 
     loaded = Marshal.load Marshal.dump page
 
-    comment = RDoc::Markup::Document.new(
-                RDoc::Markup::Paragraph.new('This is a page'))
-    comment.file = loaded
+    document = RDoc::Markup::Document.new(
+                 RDoc::Markup::Paragraph.new('This is a page'))
+    document.file = loaded
 
     assert_equal page, loaded
 
@@ -188,7 +188,7 @@ class TestRDocTopLevel < XrefTestCase
 
     assert_equal RDoc::Parser::Simple, loaded.parser
 
-    assert_equal comment, loaded.comment
+    assert_equal document, loaded.comment.parse
   end
 
   def test_marshal_load_version_0
@@ -199,16 +199,16 @@ class TestRDocTopLevel < XrefTestCase
                           "[\x06o:\x1CRDoc::Markup::Paragraph\x06;\b" +
                           "[\x06I\"\x13This is a page\x06;\x06F:\n@file@\a"
 
-    comment = RDoc::Markup::Document.new(
-                RDoc::Markup::Paragraph.new('This is a page'))
-    comment.file = loaded
+    document = RDoc::Markup::Document.new(
+                 RDoc::Markup::Paragraph.new('This is a page'))
+    document.file = loaded
 
     assert_equal 'README.txt', loaded.absolute_name
     assert_equal 'README.txt', loaded.relative_name
 
     assert_equal RDoc::Parser::Simple, loaded.parser
 
-    assert_equal comment, loaded.comment
+    assert_equal document, loaded.comment.parse
 
     assert loaded.display?
   end

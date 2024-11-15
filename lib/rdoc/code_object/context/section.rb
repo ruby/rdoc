@@ -61,19 +61,13 @@ class RDoc::Context::Section
   # Adds +comment+ to this section
 
   def add_comment comment
-    comment = extract_comment comment
-
-    return if comment.empty?
-
-    case comment
-    when RDoc::Comment then
-      @comments << comment
-    when RDoc::Markup::Document then
-      @comments.concat comment.parts
-    when Array then
-      @comments.concat comment
+    if comment.is_a?(Array)
+      comment.each do |c|
+        @comments << extract_comment(c)
+      end
     else
-      raise TypeError, "unknown comment type: #{comment.inspect}"
+      comment = extract_comment(comment)
+      @comments << comment unless comment.empty?
     end
   end
 
@@ -97,10 +91,6 @@ class RDoc::Context::Section
 
   def extract_comment comment
     case comment
-    when Array then
-      comment.map do |c|
-        extract_comment c
-      end
     when nil
       RDoc::Comment.new ''
     when RDoc::Comment then
@@ -115,8 +105,6 @@ class RDoc::Context::Section
                        end
       end
 
-      comment
-    when RDoc::Markup::Document then
       comment
     else
       raise TypeError, "unknown comment #{comment.inspect}"
@@ -135,19 +123,8 @@ class RDoc::Context::Section
   # The files comments in this section come from
 
   def in_files
-    return [] if @comments.empty?
-
-    case @comments
-    when Array then
-      @comments.map do |comment|
-        comment.file
-      end
-    when RDoc::Markup::Document then
-      @comment.parts.map do |document|
-        document.file
-      end
-    else
-      raise RDoc::Error, "BUG: unknown comment class #{@comments.class}"
+    @comments.map do |comment|
+      comment.file
     end
   end
 
@@ -170,7 +147,7 @@ class RDoc::Context::Section
     @parent  = nil
 
     @title    = array[1]
-    @comments = array[2]
+    @comments = array[2].parts.map { |doc| RDoc::Comment.from_document(doc) }
   end
 
   ##
@@ -178,26 +155,7 @@ class RDoc::Context::Section
   # multiple RDoc::Markup::Documents with their file set.
 
   def parse
-    case @comments
-    when String then
-      super
-    when Array then
-      docs = @comments.map do |comment, location|
-        doc = super comment
-        doc.file = location if location
-        doc
-      end
-
-      RDoc::Markup::Document.new(*docs)
-    when RDoc::Comment then
-      doc = super @comments.text, comments.format
-      doc.file = @comments.location
-      doc
-    when RDoc::Markup::Document then
-      return @comments
-    else
-      raise ArgumentError, "unknown comment class #{comments.class}"
-    end
+    RDoc::Markup::Document.new(*@comments.map(&:parse))
   end
 
   ##
@@ -214,19 +172,8 @@ class RDoc::Context::Section
   # +comment+
 
   def remove_comment comment
-    return if @comments.empty?
-
-    case @comments
-    when Array then
-      @comments.delete_if do |my_comment|
-        my_comment.file == comment.file
-      end
-    when RDoc::Markup::Document then
-      @comments.parts.delete_if do |document|
-        document.file == comment.file.name
-      end
-    else
-      raise RDoc::Error, "BUG: unknown comment class #{@comments.class}"
+    @comments.delete_if do |my_comment|
+      my_comment.file == comment.file
     end
   end
 

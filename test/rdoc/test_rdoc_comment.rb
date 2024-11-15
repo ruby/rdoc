@@ -14,12 +14,17 @@ class TestRDocComment < RDoc::TestCase
     @comment.text = 'this is a comment'
   end
 
-  def test_empty_eh
-    refute_empty @comment
-
-    @comment = ''
-
+  def test_empty
+    @comment.text = ''
     assert_empty @comment
+    empty_doc = @comment.parse
+    assert_empty @comment
+    @comment.text = 'a'
+    refute_empty @comment
+    present_doc = @comment.parse
+    refute_empty @comment
+    assert_empty RDoc::Comment.from_document(empty_doc)
+    refute_empty RDoc::Comment.from_document(present_doc)
   end
 
   def test_equals2

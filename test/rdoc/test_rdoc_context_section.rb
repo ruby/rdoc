@@ -83,11 +83,10 @@ class TestRDocContextSection < RDoc::TestCase
   def test_marshal_dump
     loaded = Marshal.load Marshal.dump @s
 
-    expected = RDoc::Comment.new('comment', @top_level).parse
-    expected = doc(expected)
+    expected = doc RDoc::Comment.new('comment', @top_level).parse
 
     assert_equal 'section', loaded.title
-    assert_equal expected,  loaded.comments
+    assert_equal expected,  loaded.parse
     assert_nil              loaded.parent, 'parent is set manually'
   end
 
@@ -113,7 +112,7 @@ class TestRDocContextSection < RDoc::TestCase
     expected = doc RDoc::Comment.new('comment', @top_level).parse
 
     assert_equal 'section', loaded.title
-    assert_equal expected,  loaded.comments
+    assert_equal expected,  loaded.parse
     assert_nil              loaded.parent, 'parent is set manually'
   end
 
@@ -140,7 +139,7 @@ class TestRDocContextSection < RDoc::TestCase
 
     loaded.remove_comment comment('bogus', @top_level)
 
-    assert_equal doc(other_comment.parse), loaded.comments
+    assert_equal doc(other_comment.parse), loaded.parse
   end
 
 end

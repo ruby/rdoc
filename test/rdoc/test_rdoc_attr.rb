@@ -59,10 +59,10 @@ class TestRDocAttr < RDoc::TestCase
 
     assert_equal @a, loaded
 
-    comment = RDoc::Markup::Document.new(
-                RDoc::Markup::Paragraph.new('this is a comment'))
+    document = RDoc::Markup::Document.new(
+                 RDoc::Markup::Paragraph.new('this is a comment'))
 
-    assert_equal comment,      loaded.comment
+    assert_equal document,      loaded.comment.parse
     assert_equal 'file.rb',    loaded.file.relative_name
     assert_equal 'Klass#attr', loaded.full_name
     assert_equal 'attr',       loaded.name
@@ -94,10 +94,10 @@ class TestRDocAttr < RDoc::TestCase
 
     assert_equal @a, loaded
 
-    comment = RDoc::Markup::Document.new(
-                RDoc::Markup::Paragraph.new('this is a comment'))
+    document = RDoc::Markup::Document.new(
+                 RDoc::Markup::Paragraph.new('this is a comment'))
 
-    assert_equal comment,       loaded.comment
+    assert_equal document,      loaded.comment.parse
     assert_equal 'Klass::attr', loaded.full_name
     assert_equal 'attr',        loaded.name
     assert_equal 'R',           loaded.rw
@@ -122,10 +122,10 @@ class TestRDocAttr < RDoc::TestCase
     loaded = Marshal.load data
     loaded.store = @store
 
-    comment = RDoc::Markup::Document.new(
-                RDoc::Markup::Paragraph.new('this is a comment'))
+    document = RDoc::Markup::Document.new(
+                 RDoc::Markup::Paragraph.new('this is a comment'))
 
-    assert_equal comment,      loaded.comment
+    assert_equal document,     loaded.comment.parse
     assert_equal 'Klass#attr', loaded.full_name
     assert_equal 'attr',       loaded.name
     assert_equal 'RW',         loaded.rw
@@ -155,9 +155,9 @@ class TestRDocAttr < RDoc::TestCase
                           "@file0FI\"\ffile.rb\x06;\x06T"
     loaded.store = @store
 
-    comment = doc(para('this is a comment'))
+    document = doc(para('this is a comment'))
 
-    assert_equal comment,      loaded.comment
+    assert_equal document,     loaded.comment.parse
     assert_equal 'Klass#attr', loaded.full_name
     assert_equal 'attr',       loaded.name
     assert_equal 'RW',         loaded.rw
