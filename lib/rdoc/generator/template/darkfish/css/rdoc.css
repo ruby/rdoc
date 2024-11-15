@@ -478,6 +478,15 @@ main dl.note-list dt {
   float: left;
 }
 
+main dl.note-list dt:has(+ dt) {
+  margin-right: 0.25em;
+}
+
+main dl.note-list dt:has(+ dt)::after {
+  content: ', ';
+  font-weight: normal;
+}
+
 main dd {
   margin: 0 0 1em 1em;
 }
