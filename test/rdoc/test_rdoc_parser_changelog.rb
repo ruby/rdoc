@@ -474,8 +474,7 @@ ChangeLog
   end
 
   def util_parser content = ''
-    RDoc::Parser::ChangeLog.new \
-      @top_level, @tempfile.path, content, @options, @stats
+    RDoc::Parser::ChangeLog.new @top_level, content, @options, @stats
   end
 
   def log_entry(*a)

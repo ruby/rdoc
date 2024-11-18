@@ -310,7 +310,7 @@ class RDocParserTest < RDoc::TestCase
 
   def test_initialize
     with_top_level("file.rb", "") do |top_level, content|
-      @RP.new top_level, top_level.absolute_name, content, @options, nil
+      @RP.new top_level, content, @options, nil
 
       assert_equal @RP, top_level.parser
     end
