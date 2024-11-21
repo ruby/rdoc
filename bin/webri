@@ -61,14 +61,24 @@ if release.nil?
   release = href_for_release.keys[1]
 end
 href = href_for_release[release]
+
+def choose(choices)
+  selection = nil
+  range = (1..choices.size)
+  until range.include?(selection)
+    choices.each_with_index do |choice, i|
+      puts "  #{i + 1}:  #{choice}"
+    end
+    print "Choose (#{range}):  "
+    selection = gets.to_i
+  end
+  choices[selection - 1]
+end
+
 if href.nil?
   releases = href_for_release.keys
   puts "Unrecognized release #{release}; available releases:"
-  releases.each_with_index do |release, i|
-    puts "  #{i}:  #{release}"
-  end
-  print "Choose (#{0..releases.size-1}):  "
-  release = releases[gets.to_i]
+  release = choose(releases)
   href = href_for_release[release]
 end
 
