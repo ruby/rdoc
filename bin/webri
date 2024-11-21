@@ -86,28 +86,32 @@ def make_entries(type)
   li_eles = @doc.xpath(xpath)
   li_eles.each do |li_ele|
     a_ele = li_ele.xpath('./a').first
-    name = a_ele.text
+    entry_name = a_ele.text
     href = a_ele.attributes['href'].value
-    @data_for_name[name] ||= []
+    @data_for_name[entry_name] ||= []
     main_entry = {
       type: type,
-      text: a_ele.text,
-      name: a_ele.text,
+      text: entry_name,
       link: href,
     }
-    @data_for_name[name].push(main_entry)
+    @data_for_name[entry_name].push(main_entry)
     next unless type == 'method'
+    # Add parent name to main entry.
     method_span_ele = li_ele.xpath('./span').first
     parent_name = method_span_ele.text
     main_entry[:parent_name] = parent_name
-    full_name = parent_name + name
-    @data_for_name[name].push({
-                                type: :method,
-                                text: full_name,
-                                name: full_name,
-                                link: href,
-                                parent_name: parent_name,
-                              })
+    # Add aliases.
+    full_name = parent_name + entry_name
+    bare_name = entry_name.sub(/^::/, '').sub(/^#/, '')
+    dot_name = '.' + bare_name
+    [full_name, bare_name, dot_name].each do |name|
+      @data_for_name[entry_name].push({
+                                        type: type,
+                                        text: name,
+                                        link: href,
+                                        parent_name: parent_name,
+                                      })
+    end
   end
 end
 
