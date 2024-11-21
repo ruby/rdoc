@@ -87,46 +87,34 @@ def make_entries(type)
   li_eles.each do |li_ele|
     a_ele = li_ele.xpath('./a').first
     name = a_ele.text
+    href = a_ele.attributes['href'].value
     @data_for_name[name] ||= []
     main_entry = {
       type: type,
       text: a_ele.text,
       name: a_ele.text,
-      link: a_ele.attributes['href'].value,
+      link: href,
     }
     @data_for_name[name].push(main_entry)
+    next unless type == 'method'
+    method_span_ele = li_ele.xpath('./span').first
+    parent_name = method_span_ele.text
+    main_entry[:parent_name] = parent_name
+    full_name = parent_name + name
+    @data_for_name[name].push({
+                                type: :method,
+                                text: full_name,
+                                name: full_name,
+                                link: href,
+                                parent_name: parent_name,
+                              })
   end
 end
 
 make_entries('file')
 make_entries('class')
 make_entries('module')
-
-# Get the methods.
-method_li_eles = @doc.xpath('//li[@class="method"]')
-method_li_eles.each do |method_li_ele|
-  method_a_ele = method_li_ele.xpath('./a').first
-  name = method_a_ele.text
-  href = method_a_ele.attributes['href'].value
-  @data_for_name[name] ||= []
-  method_span_ele = method_li_ele.xpath('./span').first
-  parent_name = method_span_ele.text
-  @data_for_name[name].push({
-                             type: :method,
-                             text: name,
-                             name: name,
-                             link: href,
-                             parent_name: parent_name,
-                           })
-  full_name = parent_name + name
-  @data_for_name[name].push({
-                             type: :method,
-                             text: full_name,
-                             name: full_name,
-                             link: href,
-                             parent_name: parent_name,
-                           })
-end
+make_entries('method')
 # @data_for_name.each_pair do |key, value|
 #   p [key, value.size]
 # end
