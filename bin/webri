@@ -72,7 +72,8 @@ if href.nil?
   href = href_for_release[release]
 end
 
-toc_url = URI.join(ReleasesUrl, href, 'table_of_contents.html')
+url_stem = URI.join(ReleasesUrl, href)
+toc_url = URI.join(url_stem, 'table_of_contents.html')
 html = URI.open(toc_url.to_s)
 @doc = Nokogiri::HTML(html)
 
@@ -137,3 +138,10 @@ executable_name = case host_os
                     raise RuntimeError.new(message)
                   end
 
+target_data = @data_for_name[target_name][1]
+target_url = URI.join(url_stem, target_data[:link])
+p target_url
+
+command = "#{executable_name} #{target_url}"
+p command
+system(command)
