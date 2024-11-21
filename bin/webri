@@ -46,8 +46,8 @@ target_name = ARGV.shift
 
 ReleasesUrl = 'https://docs.ruby-lang.org/en/'
 html = URI.open(ReleasesUrl)
-doc = Nokogiri::HTML(html)
-link_eles = doc.xpath("//a")
+@doc = Nokogiri::HTML(html)
+link_eles = @doc.xpath("//a")
 href_for_release = {}
 link_eles.each do |link_ele|
   text = link_ele.text
@@ -74,62 +74,42 @@ end
 
 toc_url = URI.join(ReleasesUrl, href, 'table_of_contents.html')
 html = URI.open(toc_url.to_s)
-doc = Nokogiri::HTML(html)
+@doc = Nokogiri::HTML(html)
 
 html = URI.open(toc_url.to_s)
-doc = Nokogiri::HTML(html)
+@doc = Nokogiri::HTML(html)
 
-data_for_name = {}
+@data_for_name = {}
 
-# Get the files (free-standing pages).
-file_a_eles = doc.xpath('//li[@class="file"]/a')
-file_a_eles.each do |file_a_ele|
-  name = file_a_ele.text
-  data_for_name[name] ||= []
-  data_for_name[name].push({
-    type: :file,
-    text: file_a_ele.text,
-    name: file_a_ele.text,
-    link: file_a_ele.attributes['href'].value,
-  })
+def make_entries(type)
+  xpath = "//li[@class='#{type}']/a"
+  a_eles = @doc.xpath(xpath)
+  a_eles.each do |a_ele|
+    name = a_ele.text
+    @data_for_name[name] ||= []
+    @data_for_name[name].push({
+                                type: type,
+                                text: a_ele.text,
+                                name: a_ele.text,
+                                link: a_ele.attributes['href'].value,
+                              })
+  end
 end
 
-# Get the classes.
-class_a_eles = doc.xpath('//li[@class="class"]/a')
-class_a_eles.each do |class_a_ele|
-  name = class_a_ele.text
-  data_for_name[name] ||= []
-  data_for_name[name].push({
-                             type: :class,
-                             text: class_a_ele.text,
-                             name: class_a_ele.text,
-                             link: class_a_ele.attributes['href'].value,
-                           })
-end
-
-# Get the modules.
-module_a_eles = doc.xpath('//li[@class="module"]/a')
-module_a_eles.each do |module_a_ele|
-  name = module_a_ele.text
-  data_for_name[name] ||= []
-  data_for_name[name].push({
-                             type: :module,
-                             text: module_a_ele.text,
-                             name: module_a_ele.text,
-                             link: module_a_ele.attributes['href'].value,
-                           })
-end
+make_entries('file')
+make_entries('class')
+make_entries('module')
 
 # Get the methods.
-method_li_eles = doc.xpath('//li[@class="method"]')
+method_li_eles = @doc.xpath('//li[@class="method"]')
 method_li_eles.each do |method_li_ele|
   method_a_ele = method_li_ele.xpath('./a').first
   name = method_a_ele.text
   href = method_a_ele.attributes['href'].value
-  data_for_name[name] ||= []
+  @data_for_name[name] ||= []
   method_span_ele = method_li_ele.xpath('./span').first
   parent_name = method_span_ele.text
-  data_for_name[name].push({
+  @data_for_name[name].push({
                              type: :method,
                              text: name,
                              name: name,
@@ -137,7 +117,7 @@ method_li_eles.each do |method_li_ele|
                              parent_name: parent_name,
                            })
   full_name = parent_name + name
-  data_for_name[name].push({
+  @data_for_name[name].push({
                              type: :method,
                              text: full_name,
                              name: full_name,
@@ -145,9 +125,10 @@ method_li_eles.each do |method_li_ele|
                              parent_name: parent_name,
                            })
 end
-# data_for_name.each_pair do |key, value|
+# @data_for_name.each_pair do |key, value|
 #   p [key, value.size]
 # end
+p @data_for_name.size
 
 # Select executable for launching web browser.
 host_os = RbConfig::CONFIG['host_os']
