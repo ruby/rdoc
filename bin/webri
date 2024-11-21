@@ -82,9 +82,10 @@ html = URI.open(toc_url.to_s)
 @data_for_name = {}
 
 def make_entries(type)
-  xpath = "//li[@class='#{type}']/a"
-  a_eles = @doc.xpath(xpath)
-  a_eles.each do |a_ele|
+  xpath = "//li[@class='#{type}']"
+  li_eles = @doc.xpath(xpath)
+  li_eles.each do |li_ele|
+    a_ele = li_ele.xpath('./a').first
     name = a_ele.text
     @data_for_name[name] ||= []
     main_entry = {
