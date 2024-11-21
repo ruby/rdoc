@@ -87,12 +87,13 @@ def make_entries(type)
   a_eles.each do |a_ele|
     name = a_ele.text
     @data_for_name[name] ||= []
-    @data_for_name[name].push({
-                                type: type,
-                                text: a_ele.text,
-                                name: a_ele.text,
-                                link: a_ele.attributes['href'].value,
-                              })
+    main_entry = {
+      type: type,
+      text: a_ele.text,
+      name: a_ele.text,
+      link: a_ele.attributes['href'].value,
+    }
+    @data_for_name[name].push(main_entry)
   end
 end
 
