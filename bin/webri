@@ -62,7 +62,7 @@ if release.nil?
 end
 href = href_for_release[release]
 
-def choose(choices)
+def choice_index(choices)
   selection = nil
   range = (1..choices.size)
   until range.include?(selection)
@@ -72,13 +72,14 @@ def choose(choices)
     print "Choose (#{range}):  "
     selection = gets.to_i
   end
-  choices[selection - 1]
+  selection - 1
 end
 
 if href.nil?
   releases = href_for_release.keys
   puts "Unrecognized release #{release}; available releases:"
-  release = choose(releases)
+  index = choice_index(releases)
+  release = releases[index]
   href = href_for_release[release]
 end
 
@@ -148,10 +149,10 @@ executable_name = case host_os
                     raise RuntimeError.new(message)
                   end
 
-target_data = @data_for_name[target_name][1]
+target_data = @data_for_name[target_name]
+full_names = target_data.map {|x| x[:parent_name] + x[:text]}
+index = choice_index(full_names)
+target_data = target_data[index]
 target_url = URI.join(url_stem, target_data[:link])
-p target_url
-
 command = "#{executable_name} #{target_url}"
-p command
 system(command)
