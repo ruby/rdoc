@@ -42,7 +42,7 @@ else
 end
 raise ArgumentError.new(error_message) if error_message
 
-name = ARGV.shift
+target_name = ARGV.shift
 
 ReleasesUrl = 'https://docs.ruby-lang.org/en/'
 html = URI.open(ReleasesUrl)
@@ -137,7 +137,6 @@ method_li_eles.each do |method_li_ele|
                              parent_name: parent_name,
                            })
   full_name = parent_name + name
-  p full_name
   data_for_name[name].push({
                              type: :method,
                              text: full_name,
@@ -146,11 +145,9 @@ method_li_eles.each do |method_li_ele|
                              parent_name: parent_name,
                            })
 end
-data_for_name.each_pair do |key, value|
-  p [key, value.size]
-end
-
-# Get the methods.
+# data_for_name.each_pair do |key, value|
+#   p [key, value.size]
+# end
 
 # Select executable for launching web browser.
 host_os = RbConfig::CONFIG['host_os']
