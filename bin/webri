@@ -86,28 +86,29 @@ def make_entries(type)
   li_eles = @doc.xpath(xpath)
   li_eles.each do |li_ele|
     a_ele = li_ele.xpath('./a').first
-    entry_name = a_ele.text
+    main_entry_name = a_ele.text
     href = a_ele.attributes['href'].value
-    @data_for_name[entry_name] ||= []
+    @data_for_name[main_entry_name] ||= []
     main_entry = {
       type: type,
-      text: entry_name,
+      text: main_entry_name,
       link: href,
     }
-    @data_for_name[entry_name].push(main_entry)
+    @data_for_name[main_entry_name].push(main_entry)
     next unless type == 'method'
     # Add parent name to main entry.
     method_span_ele = li_ele.xpath('./span').first
     parent_name = method_span_ele.text
     main_entry[:parent_name] = parent_name
     # Add aliases.
-    full_name = parent_name + entry_name
-    bare_name = entry_name.sub(/^::/, '').sub(/^#/, '')
+    full_name = parent_name + main_entry_name
+    bare_name = main_entry_name.sub(/^::/, '').sub(/^#/, '')
     dot_name = '.' + bare_name
-    [full_name, bare_name, dot_name].each do |name|
-      @data_for_name[entry_name].push({
+    [full_name, bare_name, dot_name].each do |other_name|
+      @data_for_name[other_name] ||= []
+      @data_for_name[other_name].push({
                                         type: type,
-                                        text: name,
+                                        text: main_entry_name,
                                         link: href,
                                         parent_name: parent_name,
                                       })
@@ -119,9 +120,7 @@ make_entries('file')
 make_entries('class')
 make_entries('module')
 make_entries('method')
-# @data_for_name.each_pair do |key, value|
-#   p [key, value.size]
-# end
+
 p @data_for_name.size
 
 # Select executable for launching web browser.
