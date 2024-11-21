@@ -62,17 +62,81 @@ if release.nil?
 end
 href = href_for_release[release]
 if href.nil?
-  message = <<-MESSAGE
-
-Unrecognized release #{release}:
-  Should be one of #{href_for_release.keys}.
-  Your installed Ruby is release #{RUBY_VERSION}.
-MESSAGE
-  raise ArgumentError.new(message)
+  releases = href_for_release.keys
+  puts "Unrecognized release #{release}; available releases:"
+  releases.each_with_index do |release, i|
+    puts "  #{i}:  #{release}"
+  end
+  print "Choose (#{0..releases.size-1}):  "
+  release = releases[gets.to_i]
+  href = href_for_release[release]
 end
+
 toc_url = URI.join(ReleasesUrl, href, 'table_of_contents.html')
 html = URI.open(toc_url.to_s)
 doc = Nokogiri::HTML(html)
+
+html = URI.open(toc_url.to_s)
+doc = Nokogiri::HTML(html)
+
+data_for_name = {}
+
+# Get the files (free-standing pages).
+file_a_eles = doc.xpath('//li[@class="file"]/a')
+file_a_eles.each do |file_a_ele|
+  name = file_a_ele.text
+  data_for_name[name] ||= []
+  data_for_name[name].push({
+    type: :file,
+    text: file_a_ele.text,
+    name: file_a_ele.text,
+    link: file_a_ele.attributes['href'].value,
+  })
+end
+
+# Get the classes.
+class_a_eles = doc.xpath('//li[@class="class"]/a')
+class_a_eles.each do |class_a_ele|
+  name = class_a_ele.text
+  data_for_name[name] ||= []
+  data_for_name[name].push({
+                             type: :class,
+                             text: class_a_ele.text,
+                             name: class_a_ele.text,
+                             link: class_a_ele.attributes['href'].value,
+                           })
+end
+
+# Get the modules.
+module_a_eles = doc.xpath('//li[@class="module"]/a')
+module_a_eles.each do |module_a_ele|
+  name = module_a_ele.text
+  data_for_name[name] ||= []
+  data_for_name[name].push({
+                             type: :module,
+                             text: module_a_ele.text,
+                             name: module_a_ele.text,
+                             link: module_a_ele.attributes['href'].value,
+                           })
+end
+
+# Get the methods.
+method_a_eles = doc.xpath('//li[@class="method"]/a')
+method_a_eles.each do |method_a_ele|
+  name = method_a_ele.text
+  data_for_name[name] ||= []
+  data_for_name[name].push({
+                             type: :method,
+                             text: method_a_ele.text,
+                             name: method_a_ele.text,
+                             link: method_a_ele.attributes['href'].value,
+                           })
+end
+data_for_name.each_pair do |key, value|
+  p [key, value.size]
+end
+
+# Get the methods.
 
 # Select executable for launching web browser.
 host_os = RbConfig::CONFIG['host_os']
@@ -88,5 +152,3 @@ executable_name = case host_os
                     raise RuntimeError.new(message)
                   end
 
-p release
-p executable_name
