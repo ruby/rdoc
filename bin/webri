@@ -1,11 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
-require 'open-uri'
-require 'nokogiri'
-require 'rdoc'
-
-include Nokogiri
+require_relative '../lib/rdoc/web_ri'
 
 options = {}
 
@@ -44,115 +40,4 @@ raise ArgumentError.new(error_message) if error_message
 
 target_name = ARGV.shift
 
-ReleasesUrl = 'https://docs.ruby-lang.org/en/'
-html = URI.open(ReleasesUrl)
-@doc = Nokogiri::HTML(html)
-link_eles = @doc.xpath("//a")
-href_for_release = {}
-link_eles.each do |link_ele|
-  text = link_ele.text
-  next if text.match('outdated')
-  release = text.sub('Ruby ', '')
-  href = link_ele[:href]
-  href_for_release[release] = href
-end
-release = options[:release]
-if release.nil?
-  release = href_for_release.keys[1]
-end
-href = href_for_release[release]
-
-def choice_index(choices)
-  selection = nil
-  range = (1..choices.size)
-  until range.include?(selection)
-    choices.each_with_index do |choice, i|
-      puts "  #{i + 1}:  #{choice}"
-    end
-    print "Choose (#{range}):  "
-    selection = gets.to_i
-  end
-  selection - 1
-end
-
-if href.nil?
-  releases = href_for_release.keys
-  puts "Unrecognized release #{release}; available releases:"
-  index = choice_index(releases)
-  release = releases[index]
-  href = href_for_release[release]
-end
-
-url_stem = URI.join(ReleasesUrl, href)
-toc_url = URI.join(url_stem, 'table_of_contents.html')
-html = URI.open(toc_url.to_s)
-@doc = Nokogiri::HTML(html)
-
-html = URI.open(toc_url.to_s)
-@doc = Nokogiri::HTML(html)
-
-@data_for_name = {}
-
-def make_entries(type)
-  xpath = "//li[@class='#{type}']"
-  li_eles = @doc.xpath(xpath)
-  li_eles.each do |li_ele|
-    a_ele = li_ele.xpath('./a').first
-    main_entry_name = a_ele.text
-    href = a_ele.attributes['href'].value
-    @data_for_name[main_entry_name] ||= []
-    main_entry = {
-      type: type,
-      text: main_entry_name,
-      link: href,
-    }
-    @data_for_name[main_entry_name].push(main_entry)
-    next unless type == 'method'
-    # Add parent name to main entry.
-    method_span_ele = li_ele.xpath('./span').first
-    parent_name = method_span_ele.text
-    main_entry[:parent_name] = parent_name
-    # Add aliases.
-    full_name = parent_name + main_entry_name
-    bare_name = main_entry_name.sub(/^::/, '').sub(/^#/, '')
-    dot_name = '.' + bare_name
-    [full_name, bare_name, dot_name].each do |other_name|
-      @data_for_name[other_name] ||= []
-      @data_for_name[other_name].push({
-                                        type: type,
-                                        text: main_entry_name,
-                                        link: href,
-                                        parent_name: parent_name,
-                                      })
-    end
-  end
-end
-
-make_entries('file')
-make_entries('class')
-make_entries('module')
-make_entries('method')
-
-p @data_for_name.size
-
-# Select executable for launching web browser.
-host_os = RbConfig::CONFIG['host_os']
-executable_name = case host_os
-                  when /linux|bsd/
-                    'xdg-open'
-                  when /darwin/
-                    'open'
-                  when /32$/
-                    'start'
-                  else
-                    message = "Unrecognized host OS: '#{host_os}'."
-                    raise RuntimeError.new(message)
-                  end
-
-target_data = @data_for_name[target_name]
-full_names = target_data.map {|x| x[:parent_name] + x[:text]}
-index = choice_index(full_names)
-target_data = target_data[index]
-target_url = URI.join(url_stem, target_data[:link])
-command = "#{executable_name} #{target_url}"
-system(command)
+web_ri = RDoc::WebRI.new(target_name, options)
