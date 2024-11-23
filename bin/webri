@@ -22,6 +22,12 @@ If name specifies a single item, the page for that item is opened;
 if it specifies multiple items, the names of those specific items are displayed,
 and the user may choose among them.
 
+The given name is converted to a Regexp, which is used to select
+the items for consideration.
+
+Note that your command window may require you to escape certain characters;
+in particular, you may need to escape circumflex (^), dollar sign ($),
+and pound sign (#).
 BANNER
 
 parser.on('-h', '--help', 'Prints this help.') do
