@@ -15,8 +15,16 @@ class RDoc::WebRI
   def initialize(target_name, options)
     release_name = get_release_name(options[:release])
     entries = get_entries(release_name)
-    target_entries = entries[target_name]
-    if target_entries.nil? || target_entries.empty?
+    # target_entries = entries[target_name]
+    target_entries = []
+    entries.select do |name, value|
+      if name.match(Regexp.new(target_name))
+        value.each do |x|
+          target_entries << x
+        end
+      end
+    end
+    if target_entries.empty?
       puts "No documentation found for #{target_name}."
     else
       target_url = get_target_url(target_entries, release_name)
@@ -148,7 +156,8 @@ class RDoc::WebRI
     range = (0..choices.size - 1)
     until range.include?(index)
       choices.each_with_index do |choice, i|
-        puts "  #{i}:  #{choice}"
+        s = "%6d" % i
+        puts "  #{s}:  #{choice}"
       end
       print "Choose (#{range}):  "
       $stdout.flush
