@@ -11,25 +11,32 @@ parser = OptionParser.new
 
 parser.version = RDoc::VERSION
 parser.banner = <<-BANNER
-Command to open the web page for Ruby documentation
-(page, class, module, or method).
+webri is a console application for accessing Ruby online HTML documentation.
 
 Usage: #{parser.program_name} [options] name
 
-  where name specifies one or more pages, classes, modules, or methods.
+Argument name selects the documentation to be accessed.
 
-If name specifies a single item, the page for that item is opened;
-if it specifies multiple items, the names of those specific items are displayed,
-and the user may choose among them.
+o If name specifies a single item, that item is selected.
+o If name specifies multiple items, those items are displayed.
 
-The given name is converted to a Regexp, which is used to select
-the items for consideration.
+The given name is converted to a Regexp, which is used to select documentation.
 
 Note that your command window may require you to escape certain characters;
 in particular, you may need to escape circumflex (^), dollar sign ($),
 and pound sign (#).
+
 BANNER
 
+parser.separator('Options:')
+parser.on('-r', '--release=STR',
+          'Sets the target documentation release to STR.',
+          'If not given, uses the release of the installed Ruby',
+           "(currently #{RUBY_VERSION}).",
+          'If given and not valid, the valid releases are displayed.',
+          ) do |release|
+  options[:release] = release
+end
 parser.on('-h', '--help', 'Prints this help.') do
   puts parser
   exit
@@ -37,14 +44,6 @@ end
 parser.on('-v', '--version', 'Prints the version of webri.') do
   puts RDoc::VERSION
   exit
-end
-parser.on('-r', '--release=STR',
-          'Sets desired documentation release to STR.',
-          "If not given, uses the release of the installed Ruby (#{RUBY_VERSION}).",
-          'If given and not valid, the valid releases are displayed,',
-          'and the user may choose among them.',
-) do |release|
-  options[:release] = release
 end
 parser.parse!
 
