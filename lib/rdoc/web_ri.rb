@@ -5,16 +5,23 @@ include Nokogiri
 
 require_relative '../rdoc'
 
+# A class to display Ruby HTML documentation.
 class RDoc::WebRI
 
+  # Where the documentation lives.
   ReleasesUrl = 'https://docs.ruby-lang.org/en/'
+
 
   def initialize(target_name, options)
     release_name = get_release_name(options[:release])
     entries = get_entries(release_name)
     target_entries = entries[target_name]
-    target_url = get_target_url(target_entries, release_name)
-    open_url(target_url)
+    if target_entries.nil? || target_entries.empty?
+      puts "No documentation found for #{target_name}."
+    else
+      target_url = get_target_url(target_entries, release_name)
+      open_url(target_url)
+    end
   end
 
   class Entry
@@ -107,9 +114,10 @@ class RDoc::WebRI
     if target_entries.size == 1
       target_entry = target_entries.first
     else
-      full_names = target_entries.map { |entry| entry.full_name }.sort
+      sorted_target_entries = target_entries.sort_by {|entry| entry.full_name}
+      full_names = sorted_target_entries.map { |entry| "#{entry.full_name} (#{entry.type})" }
       index = get_choice_index(full_names)
-      target_entry = target_entries[index - 1]
+      target_entry = sorted_target_entries[index]
     end
     File.join(ReleasesUrl, release_name, target_entry.href).to_s
   end
@@ -137,15 +145,16 @@ class RDoc::WebRI
 
   def get_choice_index(choices)
     index = nil
-    range = (1..choices.size)
+    range = (0..choices.size - 1)
     until range.include?(index)
       choices.each_with_index do |choice, i|
-        puts "  #{i + 1}:  #{choice}"
+        puts "  #{i}:  #{choice}"
       end
       print "Choose (#{range}):  "
-      index = gets.to_i
+      response = gets
+      index = response.match(/\d+/) ? response.to_i : -1
     end
-    index - 1
+    index
   end
 
 end

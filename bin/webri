@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+# A console application to display Ruby HTML documentation.
+
 require 'optparse'
 require_relative '../lib/rdoc/web_ri'
 
