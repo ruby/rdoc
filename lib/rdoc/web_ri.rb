@@ -63,7 +63,7 @@ class RDoc::WebRI
       end
     end
     if release_name.nil?
-      puts "Could not select documentation release '#{requested_release_name}' from #{available_release_names}."
+      puts "Could not find documentation for release '#{requested_release_name}': available releases:"
       release_name = get_choice(available_release_names)
     end
     puts "Selected documentation release #{release_name}."
@@ -151,6 +151,7 @@ class RDoc::WebRI
         puts "  #{i}:  #{choice}"
       end
       print "Choose (#{range}):  "
+      $stdout.flush
       response = gets
       index = response.match(/\d+/) ? response.to_i : -1
     end
