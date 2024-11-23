@@ -11,21 +11,33 @@ parser = OptionParser.new
 
 parser.version = RDoc::VERSION
 parser.banner = <<-BANNER
+Command to open the web page for Ruby documentation
+(page, class, module, or method).
+
 Usage: #{parser.program_name} [options] name
 
-  where name is the name of a page, a class, or a method.
+  where name specifies one or more pages, classes, modules, or methods.
+
+If name specifies a single item, the page for that item is opened;
+if it specifies multiple items, the names of those specific items are displayed,
+and the user may choose among them.
 
 BANNER
 
-parser.on('-h', '--help', 'Print this help.') do
+parser.on('-h', '--help', 'Prints this help.') do
   puts parser
   exit
 end
-parser.on('-v', '--version', 'Print the version of webri.') do
+parser.on('-v', '--version', 'Prints the version of webri.') do
   puts RDoc::VERSION
   exit
 end
-parser.on('-r', '--release=STR', 'Sets Ruby release to STR') do |release|
+parser.on('-r', '--release=STR',
+          'Sets desired documentation release to STR.',
+          "If not given, uses the release of the installed Ruby (#{RUBY_VERSION}).",
+          'If given and not valid, the valid releases are displayed,',
+          'and the user may choose among them.',
+) do |release|
   options[:release] = release
 end
 parser.parse!
