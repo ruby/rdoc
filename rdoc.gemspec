@@ -223,6 +223,7 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
     "lib/rdoc/tom_doc.rb",
     "lib/rdoc/code_object/top_level.rb",
     "lib/rdoc/version.rb",
+    "lib/rubygems_plugin.rb",
     "man/ri.1",
   ]
   # files from .gitignore
