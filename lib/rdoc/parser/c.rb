@@ -1103,6 +1103,13 @@ class RDoc::Parser::C < RDoc::Parser
       case directive
       when 'main' then
         @options.main_page = param
+
+        warn <<~MSG
+          The :main: directive is deprecated and will be removed in RDoc 7.
+
+          Use `--main=#{param}` to specify the initial page displayed.
+          If you use `RDoc::Task`, use `rdoc.main = "#{param}"` instead.
+        MSG
         ''
       when 'title' then
         @options.default_title = param if @options.respond_to? :default_title=

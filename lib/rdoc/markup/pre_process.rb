@@ -187,6 +187,12 @@ class RDoc::Markup::PreProcess
       include_file filename, prefix, encoding
     when 'main' then
       @options.main_page = param if @options.respond_to? :main_page
+      warn <<~MSG
+        The :main: directive is deprecated and will be removed in RDoc 7.
+
+        Use `--main=#{param}` to specify the initial page displayed.
+        If you use `RDoc::Task`, use `rdoc.main = "#{param}"` instead.
+      MSG
 
       blankline
     when 'nodoc' then
