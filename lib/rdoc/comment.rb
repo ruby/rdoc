@@ -165,6 +165,12 @@ class RDoc::Comment
     self
   end
 
+  # Change normalized, when creating already normalized comment.
+
+  def normalized=(value)
+    @normalized = value
+  end
+
   ##
   # Was this text normalized?
 
@@ -226,4 +232,164 @@ class RDoc::Comment
     @format == 'tomdoc'
   end
 
+  MULTILINE_DIRECTIVES = %w[call-seq].freeze # :nodoc:
+  private_constant :MULTILINE_DIRECTIVES
+
+  class << self
+
+    # Parse comment, collect directives as an attribute and return [normalized_comment_text, directives_hash]
+    # This method expands include and removes everything not needed in the document text, such as
+    # private section, directive line, comment characters `# /* * */` and indent spaces.
+    #
+    # RDoc comment consists of include, directive, multiline directive, private section and comment text.
+    #
+    # Include
+    #   # :include: filename
+    #
+    # Directive
+    #   # :directive-without-value:
+    #   # :directive-with-value: value
+    #
+    # Multiline directive (only :call-seq:)
+    #   # :multiline-directive:
+    #   #   value1
+    #   #   value2
+    #
+    # Private section
+    #   #--
+    #   # private comment
+    #   #++
+
+    def parse(text, filename, line_no, type)
+      case type
+      when :ruby
+        private_start_regexp = /^#?-{2,}$/
+        private_end_regexp = /^#?\+{2}$/
+        indent_regexp = /^#?\s*/
+        text = text.sub(/\A#\#$/, '')
+      when :c
+        private_start_regexp = /^(\s*\*)?-{2,}$/
+        private_end_regexp = /^(\s*\*)?\+{2}$/
+        indent_regexp = /^\s*(\/\*+|\*)?\s*/
+        text = text.sub(/\s*\*+\/\s*\z/, '')
+        # TODO: should not be here. Looks like another type of directive
+        text = text.gsub %r%Document-method:\s+[\w:.#=!?|^&<>~+\-/*\%@`\[\]]+%, ''
+      when :simple
+        # Unlike other types, this implementation only looks for two
+        # dashes at the beginning of the line.  Three or more dashes are considered
+        # to be a rule and ignored.
+        private_start_regexp = /^-{2}$/
+        private_end_regexp = /^\+{2}$/
+        indent_regexp = /^\s*/
+      end
+
+      directives = {}
+      lines = text.split("\n")
+      in_private = false
+      comment_lines = []
+      until lines.empty?
+        line = lines.shift
+        read_lines = 1
+        if in_private
+          in_private = false if line.match?(private_end_regexp)
+          line_no += read_lines
+          next
+        elsif line.match?(private_start_regexp)
+          in_private = true
+          line_no += read_lines
+          next
+        end
+
+        prefix = line[indent_regexp]
+        prefix_indent = ' ' * prefix.size
+        line = line.byteslice(prefix.bytesize..)
+        /\A(?<colon>\\?:|:?)(?<directive>[\w-]+):(?<param>.*)/ =~ line
+        directive = directive&.downcase
+
+        if colon == '\\:'
+          # unescape if escaped
+          comment_lines << prefix_indent + line.sub('\\:', ':')
+        elsif !directive || param.start_with?(':') || (colon.empty? && directive != 'call-seq')
+          # Something like `:toto::` is not a directive
+          # directive without colon prefix is only allowed for call-seq
+          comment_lines << prefix_indent + line
+        elsif directive == 'include'
+          filename_to_include = param.strip
+          yield(filename_to_include, prefix_indent).lines.each { |l| comment_lines << l.chomp }
+        elsif MULTILINE_DIRECTIVES.include?(directive)
+          param = param.strip
+          value_lines = take_multiline_directive_value_lines(directive, filename, line_no, lines, prefix_indent, indent_regexp, private_start_regexp)
+          read_lines += value_lines.size
+          lines.shift(value_lines.size)
+          unless param.empty?
+            # Accept `:call-seq: first-line\n  second-line` for now
+            value_lines.unshift(param)
+          end
+          value = value_lines.join("\n")
+          directives[directive] = [value.empty? ? nil : value, line_no]
+        else
+          value = param.strip
+          directives[directive] = [value.empty? ? nil : value, line_no]
+        end
+        line_no += read_lines
+      end
+      # normalize comment
+      min_spaces = nil
+      comment_lines.each do |l|
+        next if l.match?(/\A\s*\z/)
+        n = l[/\A */].size
+        min_spaces = n if !min_spaces || n < min_spaces
+      end
+      comment_lines.map! { |l| l[min_spaces..] || '' } if min_spaces
+      comment_lines.shift while comment_lines.first&.empty?
+
+      [String.new(encoding: text.encoding) << comment_lines.join("\n"), directives]
+    end
+
+    # Take value lines of multiline directive
+
+    private def take_multiline_directive_value_lines(directive, filename, line_no, lines, base_indent, indent_regexp, private_start_regexp)
+      return [] if lines.empty?
+
+      base_indent_size = base_indent.size
+
+      if lines.first[indent_regexp].size <= base_indent_size && !lines.first.sub(indent_regexp, '').chomp.empty?
+        # Unindented invalid block directive
+        warn "#{filename}:#{line_no} Multiline directive :#{directive}: should be indented."
+        # Take until next blank line, directive line or private section start to accept this invalid format
+        #   # :multiline-directive:
+        #   # line1
+        #   # line2
+        #   # :other-directive:
+        value_lines = lines.take_while do |l|
+          next false if l.match?(private_start_regexp)
+          l = l.sub(indent_regexp, '').chomp
+          !l.empty? && !l.start_with?(/:[\w-]+:/)
+        end.map do |l|
+          l.sub(indent_regexp, '').chomp
+        end
+      else
+        # Take indented lines accepting blank lines between them
+        first_indent = nil
+        value_lines = lines.take_while do |l|
+          l = l.rstrip
+          indent = l[indent_regexp]
+          if indent == l || (first_indent && indent.size >= first_indent)
+            true
+          elsif first_indent.nil? && indent.size > base_indent_size
+            first_indent = indent.size
+            true
+          end
+        end
+        first_indent ||= base_indent_size
+        value_lines.map! { |l| (l[first_indent..] || '').chomp }
+
+        if value_lines.size != lines.size && !value_lines.last.empty?
+          warn "#{filename}:#{line_no} Multiline directive :#{directive}: should end with a blank line."
+        end
+        value_lines.pop while value_lines.last&.empty?
+      end
+      value_lines
+    end
+  end
 end
