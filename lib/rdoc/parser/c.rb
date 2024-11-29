@@ -1097,6 +1097,7 @@ class RDoc::Parser::C < RDoc::Parser
   #    */
   #
   # This method modifies the +comment+
+  # Both :main: and :title: directives are deprecated and will be removed in RDoc 7.
 
   def look_for_directives_in context, comment
     @preprocess.handle comment, context do |directive, param|
