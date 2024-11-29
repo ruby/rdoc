@@ -223,6 +223,13 @@ class RDoc::Markup::PreProcess
     when 'title' then
       @options.default_title = param if @options.respond_to? :default_title=
 
+      warn <<~MSG
+        The :title: directive is deprecated and will be removed in RDoc 7.
+
+        Use `--title=#{param}` to specify the title displayed.
+        If you use `RDoc::Task`, use `rdoc.title = "#{param}"` instead.
+      MSG
+
       blankline
     when 'yield', 'yields' then
       return blankline unless code_object
