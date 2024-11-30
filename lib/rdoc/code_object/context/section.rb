@@ -61,13 +61,10 @@ class RDoc::Context::Section
   # Adds +comment+ to this section
 
   def add_comment comment
-    if comment.is_a?(Array)
-      comment.each do |c|
-        @comments << extract_comment(c)
-      end
-    else
-      comment = extract_comment(comment)
-      @comments << comment unless comment.empty?
+    comments = Array(comment)
+    comments.each do |c|
+      extracted_comment = extract_comment(c)
+      @comments << extracted_comment unless extracted_comment.empty?
     end
   end
 
@@ -123,9 +120,7 @@ class RDoc::Context::Section
   # The files comments in this section come from
 
   def in_files
-    @comments.map do |comment|
-      comment.file
-    end
+    @comments.map(&:file)
   end
 
   ##
@@ -171,9 +166,9 @@ class RDoc::Context::Section
   # Removes a comment from this section if it is from the same file as
   # +comment+
 
-  def remove_comment comment
-    @comments.delete_if do |my_comment|
-      my_comment.file == comment.file
+  def remove_comment target_comment
+    @comments.delete_if do |stored_comment|
+      stored_comment.file == target_comment.file
     end
   end
 
