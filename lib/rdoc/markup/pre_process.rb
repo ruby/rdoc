@@ -190,8 +190,10 @@ class RDoc::Markup::PreProcess
       warn <<~MSG
         The :main: directive is deprecated and will be removed in RDoc 7.
 
-        Use `--main=#{param}` to specify the initial page displayed.
-        If you use `RDoc::Task`, use `rdoc.main = "#{param}"` instead.
+        You can use these options to specify the initial page displayed instead:
+        - `--main=#{param}` via the command line
+        - `rdoc.main = "#{param}"` if you use `RDoc::Task`
+        - `main_page: #{param}` in your `.rdoc_options` file
       MSG
 
       blankline
@@ -226,8 +228,10 @@ class RDoc::Markup::PreProcess
       warn <<~MSG
         The :title: directive is deprecated and will be removed in RDoc 7.
 
-        Use `--title=#{param}` to specify the title displayed.
-        If you use `RDoc::Task`, use `rdoc.title = "#{param}"` instead.
+        You can use these options to specify the title displayed instead:
+        - `--title=#{param}` via the command line
+        - `rdoc.title = "#{param}"` if you use `RDoc::Task`
+        - `title: #{param}` in your `.rdoc_options` file
       MSG
 
       blankline
