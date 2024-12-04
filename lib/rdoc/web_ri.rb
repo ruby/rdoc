@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'rbconfig'
 require 'find'
+require 'cgi'
 
 require_relative '../rdoc'
 
@@ -12,69 +13,60 @@ class RDoc::WebRI
     ruby_installation_dirpath = File.dirname(File.dirname(ruby_exe_filepath))
     ri_filepaths = get_ri_filepaths(ruby_installation_dirpath)
     html_filepaths = get_html_filepaths(ruby_installation_dirpath)
-    filepaths = {}
+    target_urls = {}
     missing_html = []
     unused_ri = []
     ri_filepaths.each do |ri_filepath|
       next if ri_filepath == 'cache.ri'
       filepath = ri_filepath.sub('.ri', '.html')
-      html_filepath = case
-                      when filepath.match(/-c\.html/)
+      name, target_url = case
+                      when filepath.match(/-c\.html/) # Class method.
                         dirname = File.dirname(filepath)
-                        basename = File.basename(filepath)
-                        name = basename.sub('-c.html', '')
-                        dirname + '.html'
-                      when filepath.match(/-i\.html/)
+                        method_name = CGI.unescape(File.basename(filepath).sub('-c.html', ''))
+                        target_url = dirname + '.html#method-c-' + method_name
+                        name = dirname.gsub('/', '::') + '::' + method_name
+                        [name, target_url]
+                      when filepath.match(/-i\.html/) # Instance method.
                         dirname = File.dirname(filepath)
-                        basename = File.basename(filepath)
-                        name = basename.sub('-i.html', '')
-                        dirname + '.html'
-                      when filepath.match(/\/cdesc-/)
-                        File.dirname(filepath) + '.html'
+                        method_name = CGI.unescape(File.basename(filepath).sub('-i.html', ''))
+                        target_url = dirname + '.html#method-i-' + method_name
+                        name = dirname.gsub('/', '::') + '#' + method_name
+                        [name, target_url]
+                      when filepath.match(/\/cdesc-/) # Class.
+                        target_url = File.dirname(filepath) + '.html'
+                        name = target_url.gsub('/', '::').sub('.html', '')
+                        [name, target_url]
                       when File.basename(filepath).match(/^page-/)
-                        filepath.sub('page-', '')
+                        target_url = filepath.sub('page-', '') # File.
+                        name = target_url.sub('.html', '').sub(/_rdoc$/, '.rdoc').sub(/_md$/, '.md')
+                        [name, target_url]
                       else
                         raise filepath
                       end
-      unless html_filepaths.include?(html_filepath)
-        missing_html.push(html_filepath)
+      unless html_filepaths.include?(target_url)
+        missing_html.push(target_url)
         unused_ri.push(ri_filepath)
       end
-      filepaths[ri_filepath] = html_filepath
+      target_urls[name] = target_url
     end
     # puts missing_html.uniq
     # puts unused_ri
 
-    puts filepaths.keys.sort.take(200)
-    puts target_name
-    return
-
-    target_entries = []
-    entries.select do |name, value|
+    selected_urls = {}
+    target_urls.select do |name, value|
       if name.match(Regexp.new(target_name))
-        value.each do |x|
-          target_entries << x
-        end
+        selected_urls[name] = value
       end
     end
-    if target_entries.empty?
+    case selected_urls.size
+    when 0
       puts "No documentation found for #{target_name}."
+    when 1
+      url = selected_urls.first[1]
+      open_url(url)
     else
-      target_url = get_target_url(target_entries, release_name)
-      open_url(target_url)
+      p get_choice(selected_urls.keys)
     end
-  end
-
-class Entry
-
-    attr_accessor :type, :full_name, :href
-
-    def initialize(type, full_name, href)
-      self.type = type
-      self.full_name = full_name
-      self.href = href
-    end
-
   end
 
 def get_ri_filepaths(ruby_installation_dirpath)
@@ -120,5 +112,24 @@ def get_ri_filepaths(ruby_installation_dirpath)
     end
     index
   end
+
+  def open_url(target_url)
+    host_os = RbConfig::CONFIG['host_os']
+    executable_name = case host_os
+                      when /linux|bsd/
+                        'xdg-open'
+                      when /darwin/
+                        'open'
+                      when /32$/
+                        'start'
+                      else
+                        message = "Unrecognized host OS: '#{host_os}'."
+                        raise RuntimeError.new(message)
+                      end
+    command = "#{executable_name} #{target_url}"
+    p command
+    return
+    system(command)
+    end
 
 end
