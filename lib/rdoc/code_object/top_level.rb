@@ -214,7 +214,7 @@ class RDoc::TopLevel < RDoc::Context
     initialize array[1]
 
     @parser  = array[2]
-    @comment = array[3]
+    @comment = RDoc::Comment.from_document array[3]
 
     @file_stat          = nil
   end
