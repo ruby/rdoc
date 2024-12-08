@@ -116,7 +116,7 @@ class TestRDocStore < XrefTestCase
     some_ext   = c_file.add_class RDoc::NormalClass, 'SomeExt'
                  c_file.add_class RDoc::SingleClass, 'SomeExtSingle'
 
-    c_parser = RDoc::Parser::C.new c_file, 'ext.c', '', options, nil
+    c_parser = RDoc::Parser::C.new c_file, '', options, nil
 
     c_parser.classes['cSomeExt']             = some_ext
     c_parser.singleton_classes['s_cSomeExt'] = 'SomeExtSingle'
@@ -698,7 +698,7 @@ class TestRDocStore < XrefTestCase
     some_ext   = c_file.add_class RDoc::NormalClass, 'SomeExt'
                  c_file.add_class RDoc::SingleClass, 'SomeExtSingle'
 
-    c_parser = RDoc::Parser::C.new c_file, 'ext.c', '', options, nil
+    c_parser = RDoc::Parser::C.new c_file, '', options, nil
 
     c_parser.classes['cSomeExt']             = some_ext
     c_parser.singleton_classes['s_cSomeExt'] = 'SomeExtSingle'

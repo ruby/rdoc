@@ -168,7 +168,7 @@ class RDoc::Parser::C < RDoc::Parser
   # Prepares for parsing a C file.  See RDoc::Parser#initialize for details on
   # the arguments.
 
-  def initialize top_level, file_name, content, options, stats
+  def initialize top_level, content, options, stats
     super
 
     @known_classes = RDoc::KNOWN_CLASSES.dup
