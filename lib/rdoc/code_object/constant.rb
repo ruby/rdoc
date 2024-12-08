@@ -133,7 +133,7 @@ class RDoc::Constant < RDoc::CodeObject
   # * #parent_name
 
   def marshal_load array
-    initialize array[1], nil, array[5]
+    initialize array[1], nil, RDoc::Comment.from_document(array[5])
 
     @full_name     = array[2]
     @visibility    = array[3] || :public

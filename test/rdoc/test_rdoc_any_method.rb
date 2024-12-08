@@ -223,15 +223,15 @@ each_line(foo)
     loaded = Marshal.load Marshal.dump m
     loaded.store = @store
 
-    comment = RDoc::Markup::Document.new(
-                RDoc::Markup::Paragraph.new('this is a comment'))
+    document = RDoc::Markup::Document.new(
+                 RDoc::Markup::Paragraph.new('this is a comment'))
 
     assert_equal m, loaded
 
     assert_equal [al_m.name],    loaded.aliases.map { |alas| alas.name }
     assert_equal 'some_block',   loaded.block_params
     assert_equal 'call_seq',     loaded.call_seq
-    assert_equal comment,        loaded.comment
+    assert_equal document,       loaded.comment.parse
     assert_equal top_level,      loaded.file
     assert_equal 'Klass#method', loaded.full_name
     assert_equal 'method',       loaded.name
@@ -311,15 +311,15 @@ each_line(foo)
 
     loaded.store = @store
 
-    comment = RDoc::Markup::Document.new(
-                RDoc::Markup::Paragraph.new('this is a comment'))
+    document = RDoc::Markup::Document.new(
+                 RDoc::Markup::Paragraph.new('this is a comment'))
 
     assert_equal m, loaded
 
     assert_equal [al_m.name],    loaded.aliases.map { |alas| alas.name }
     assert_equal 'some_block',   loaded.block_params
     assert_equal 'call_seq',     loaded.call_seq
-    assert_equal comment,        loaded.comment
+    assert_equal document,       loaded.comment.parse
     assert_equal 'Klass#method', loaded.full_name
     assert_equal 'method',       loaded.name
     assert_equal 'param',        loaded.params
@@ -368,14 +368,14 @@ each_line(foo)
 
     loaded.store = @store
 
-    comment = doc(para('this is a comment'))
+    document = doc(para('this is a comment'))
 
     assert_equal m, loaded
 
     assert_equal [al_m.name],    loaded.aliases.map { |alas| alas.name }
     assert_equal 'some_block',   loaded.block_params
     assert_equal 'call_seq',     loaded.call_seq
-    assert_equal comment,        loaded.comment
+    assert_equal document,       loaded.comment.parse
     assert_equal top_level,      loaded.file
     assert_equal 'Klass#method', loaded.full_name
     assert_equal 'method',       loaded.name
