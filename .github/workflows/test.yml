@@ -11,6 +11,7 @@ jobs:
     with:
       # 2.7 breaks `test_parse_statements_nodoc_identifier_alias_method`
       min_version: 3.0
+      engine: cruby-truffleruby
 
   test:
     needs: ruby-versions
@@ -24,10 +25,6 @@ jobs:
             ruby: truffleruby
           - os: windows-latest
             ruby: truffleruby-head
-          - os: windows-latest
-            ruby: jruby
-          - os: windows-latest
-            ruby: jruby-head
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4 # v3.3.0
