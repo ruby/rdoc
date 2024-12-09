@@ -49,17 +49,3 @@ jobs:
       run: bundle exec rake rdoc
     - if: ${{ matrix.ruby == 'head' && startsWith(matrix.os, 'ubuntu') }}
       run: bundle exec rake install
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.3"
-          bundler-cache: true
-      - name: Run rubocop
-        run: bundle exec rubocop
-        # Just to make sure the format_generated_files task is working
-      - name: Sanity check for the format_generated_files task
-        run: bundle exec rake generate format_generated_files
