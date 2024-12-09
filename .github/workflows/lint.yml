@@ -1,0 +1,27 @@
+name: Lint
+
+on: [push, pull_request]
+
+permissions:  # added using https://github.com/step-security/secure-workflows
+  contents: read
+
+jobs:
+  lint:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4 # v3.3.0
+    # libyaml-dev is needed for psych, see https://github.com/ruby/setup-ruby/issues/409
+    - if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: sudo apt install libyaml-dev
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@master
+      with:
+        ruby-version: 3.3
+        bundler-cache: true
+    - name: Run rubocop
+      run: bundle exec rubocop
+    - name: Sanity check for the format_generated_files task
+      run: bundle exec rake generate format_generated_files
+
