@@ -12,6 +12,3 @@ group :development do
   gem 'gettext'
   gem 'prism', '>= 0.30.0'
 end
-
-# Workaround for https://github.com/mkristian/jar-dependencies/issues/86
-gem "jar-dependencies", "~> 0.4.0", platform: :jruby
