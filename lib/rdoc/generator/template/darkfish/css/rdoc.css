@@ -37,12 +37,12 @@ body {
   font-weight: 400;
   color: var(--text-color);
   line-height: 1.6;
-
-  /* Layout */
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
   margin: 0;
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  overflow-y: auto;
+  justify-content: center;
 }
 
 /* 3. Typography */
@@ -152,17 +152,16 @@ nav {
   font-family: var(--font-heading);
   font-size: 16px;
   border-right: 1px solid var(--border-color);
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: var(--sidebar-width);
-  background: var(--background-color); /* It needs an explicit background for toggling narrow screens */
-  overflow-y: auto;
-  z-index: 10;
+  position: relative;
+  width: 300px;
+  min-width: 300px;
+  background: var(--background-color);
+  overflow: visible;
   display: flex;
   flex-direction: column;
   color: var(--text-color);
+  padding-top: 3em;
+  margin-right: 0;
 }
 
 nav[hidden] {
@@ -170,7 +169,7 @@ nav[hidden] {
 }
 
 nav footer {
-  padding: 1em;
+  padding: 1em 1.5em;
   border-top: 1px solid var(--border-color);
 }
 
@@ -180,7 +179,7 @@ nav footer a {
 
 nav .nav-section {
   margin-top: 1em;
-  padding: 0 1em;
+  padding: 0 1.5em;
 }
 
 nav h2, nav h3 {
@@ -279,7 +278,7 @@ nav ul li details[open] > summary::after {
 main {
   flex: 1;
   display: block;
-  margin: 3em auto;
+  margin: 3em 0;
   padding: 0 2em;
   max-width: 800px;
   font-size: 16px;
@@ -290,7 +289,7 @@ main {
 
 @media (min-width: 1024px) {
   main {
-    margin-left: var(--sidebar-width);
+    margin: 3em 0;
   }
 }
 
@@ -319,7 +318,7 @@ main h6 {
 
 /* Search */
 #search-section {
-  padding: 1em;
+  padding: 1em 1.5em;
   background-color: var(--background-color);
   border-bottom: 1px solid var(--border-color);
 }
@@ -645,34 +644,14 @@ main .attribute-access-type {
 }
 
 /* Responsive Adjustments */
-@media (max-width: 480px) {
+@media (max-width: 1023px) {
   nav {
-    width: 100%;
+    width: 300px;
+    min-width: 300px;
   }
-
+  
   main {
-    margin: 1em auto;
+    margin: 3em 0;
     padding: 0 1em;
-    max-width: 100%;
-  }
-
-  #navigation-toggle {
-    right: 10px;
-    left: auto;
-  }
-
-  #navigation-toggle[aria-expanded="true"] {
-    left: auto;
-  }
-
-  table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-
-  main .method-controls {
-    margin-top: 10px;
-    float: none;
   }
 }
