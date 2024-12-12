@@ -232,19 +232,72 @@ nav a:hover {
   text-decoration: underline;
 }
 
+/* Navigation toggle button */
 #navigation-toggle {
+  display: none; /* Hide by default on desktop */
   z-index: 1000;
   font-size: 2em;
-  display: block;
   position: fixed;
-  top: 10px;
-  left: 20px;
+  top: 1rem;
+  right: 1rem; /* Align to top right */
   cursor: pointer;
+  color: var(--highlight-color);
 }
 
+/* Mobile styles */
+@media (max-width: 1023px) {
+  body {
+    flex-direction: column;
+    position: relative;
+  }
+
+  nav {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    height: 100vh;
+    width: 300px;
+    transition: left 0.3s ease;
+    z-index: 1000;
+    background: var(--background-color);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    padding-top: 4rem;
+    overflow-y: auto;
+  }
+
+  nav[aria-expanded="true"] {
+    left: 0;
+  }
+
+  main {
+    position: relative;
+    width: 100%;
+    margin-top: 4rem;
+    transition: transform 0.3s ease;
+    padding: 0 1rem;
+  }
+
+  main[aria-hidden="true"] {
+    transform: translateX(300px);
+    pointer-events: none;
+    position: fixed;
+    width: 100%;
+  }
+
+  /* Ensure the toggle stays on top */
+  #navigation-toggle {
+    display: block;
+    background: var(--background-color);
+    padding: 0.5rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Remove old toggle positioning */
 #navigation-toggle[aria-expanded="true"] {
-  top: 10px;
-  left: 250px;
+  top: 1rem;
+  right: 1rem; /* Keep in top right even when expanded */
 }
 
 nav ul li details {
