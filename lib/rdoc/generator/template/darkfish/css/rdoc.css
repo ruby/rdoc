@@ -296,6 +296,10 @@ main {
   .table-of-contents main {
     margin-left: 20em;
   }
+
+  #navigation-toggle {
+    display: none !important;
+  }
 }
 
 main h1[class] {
