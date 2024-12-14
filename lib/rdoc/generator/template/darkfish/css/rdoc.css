@@ -37,12 +37,12 @@ body {
   font-weight: 400;
   color: var(--text-color);
   line-height: 1.6;
-
-  /* Layout */
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
   margin: 0;
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  overflow-y: auto;
+  justify-content: center;
 }
 
 /* 3. Typography */
@@ -152,17 +152,15 @@ nav {
   font-family: var(--font-heading);
   font-size: 16px;
   border-right: 1px solid var(--border-color);
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: var(--sidebar-width);
-  background: var(--background-color); /* It needs an explicit background for toggling narrow screens */
-  overflow-y: auto;
-  z-index: 10;
+  position: relative;
+  width: 360px;
+  min-width: 360px;
+  background: var(--background-color);
   display: flex;
   flex-direction: column;
   color: var(--text-color);
+  padding-top: 3em;
+  margin-right: 0;
 }
 
 nav[hidden] {
@@ -170,7 +168,7 @@ nav[hidden] {
 }
 
 nav footer {
-  padding: 1em;
+  padding: 1em 1.5em;
   border-top: 1px solid var(--border-color);
 }
 
@@ -180,7 +178,7 @@ nav footer a {
 
 nav .nav-section {
   margin-top: 1em;
-  padding: 0 1em;
+  padding: 0 1.5em;
 }
 
 nav h2, nav h3 {
@@ -233,19 +231,140 @@ nav a:hover {
   text-decoration: underline;
 }
 
+/* Navigation toggle button */
 #navigation-toggle {
-  z-index: 1000;
+  display: none;
+  z-index: 1001;
   font-size: 2em;
-  display: block;
   position: fixed;
-  top: 10px;
-  left: 20px;
+  top: 1rem;
+  right: 1rem;
   cursor: pointer;
+  color: var(--text-color);
 }
 
+/* Mobile and tablet styles */
+@media (max-width: 1199px) {
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+    height: 100dvh;
+  }
+
+  body {
+    flex-direction: column;
+  }
+
+  #navigation {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    height: 100dvh;
+    width: 100%;
+    min-width: 100%;
+    transition: left 0.3s ease;
+    z-index: 1000;
+    background: var(--background-color);
+    box-shadow: none;
+    padding: 0;
+    border: none;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #navigation .nav-content {
+    padding: 4rem 1.5rem;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-bottom: env(safe-area-inset-bottom, 120px);
+  }
+
+  #navigation #project-navigation {
+    margin-bottom: 1em;
+  }
+
+  #navigation .nav-section {
+    margin: 1em 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  #navigation h2, 
+  #navigation h3 {
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.5em 0;
+    margin: 0 0 0.5em;
+    color: var(--highlight-color);
+  }
+
+  #search-section {
+    padding: 1em 0;
+    border-bottom: 1px solid var(--border-color);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  #search-field {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+    padding: 0.5em 1em 0.5em 2.5em;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    font-size: 14px;
+    outline: none;
+  }
+
+  #navigation[aria-expanded="true"] {
+    left: 0;
+  }
+
+  main {
+    width: 100%;
+    margin: 4rem auto 0;
+    transition: transform 0.3s ease;
+    padding: 0 1rem;
+    position: relative;
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+
+  main[aria-hidden="true"] {
+    transform: translateX(100%);
+    pointer-events: none;
+    position: fixed;
+    overflow: hidden;
+    width: 100vw;
+    visibility: hidden;
+  }
+
+  #navigation-toggle {
+    display: block;
+    background: var(--background-color);
+    padding: 0.5rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    z-index: 1001;
+    right: 1rem;
+    top: 1rem;
+    color: var(--text-color);
+  }
+}
+
+/* Remove old toggle positioning */
 #navigation-toggle[aria-expanded="true"] {
-  top: 10px;
-  left: 250px;
+  top: 1rem;
+  right: 1rem; /* Keep in top right even when expanded */
 }
 
 nav ul li details {
@@ -279,7 +398,7 @@ nav ul li details[open] > summary::after {
 main {
   flex: 1;
   display: block;
-  margin: 3em auto;
+  margin: 3em 0;
   padding: 0 2em;
   max-width: 800px;
   font-size: 16px;
@@ -290,7 +409,7 @@ main {
 
 @media (min-width: 1024px) {
   main {
-    margin-left: var(--sidebar-width);
+    margin: 3em 0;
   }
 }
 
@@ -319,7 +438,7 @@ main h6 {
 
 /* Search */
 #search-section {
-  padding: 1em;
+  padding: 1em 1.5em;
   background-color: var(--background-color);
   border-bottom: 1px solid var(--border-color);
 }
@@ -645,34 +764,14 @@ main .attribute-access-type {
 }
 
 /* Responsive Adjustments */
-@media (max-width: 480px) {
+@media (max-width: 1023px) {
   nav {
-    width: 100%;
+    width: 300px;
+    min-width: 300px;
   }
-
+  
   main {
-    margin: 1em auto;
+    margin: 3em 0;
     padding: 0 1em;
-    max-width: 100%;
-  }
-
-  #navigation-toggle {
-    right: 10px;
-    left: auto;
-  }
-
-  #navigation-toggle[aria-expanded="true"] {
-    left: auto;
-  }
-
-  table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-
-  main .method-controls {
-    margin-top: 10px;
-    float: none;
   }
 }
