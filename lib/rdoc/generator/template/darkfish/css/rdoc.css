@@ -10,7 +10,7 @@
 
 /* 1. Variables and Root Styles */
 :root {
-  --sidebar-width: 300px;
+  --sidebar-width: 360px;
   --highlight-color: #cc342d; /* Reddish color for accents and headings */
   --secondary-highlight-color: #c83045; /* Darker reddish color for secondary highlights */
   --text-color: #505050; /* Dark bluish-grey for text */
@@ -37,11 +37,11 @@ body {
   font-weight: 400;
   color: var(--text-color);
   line-height: 1.6;
-
+  
   /* Layout */
   display: flex;
-  flex-direction: column;
   min-height: 100vh;
+  justify-content: center;
   margin: 0;
 }
 
@@ -151,18 +151,9 @@ table tr:nth-child(even) td {
 nav {
   font-family: var(--font-heading);
   font-size: 16px;
-  border-right: 1px solid var(--border-color);
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
   width: var(--sidebar-width);
-  background: var(--background-color); /* It needs an explicit background for toggling narrow screens */
-  overflow-y: auto;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  color: var(--text-color);
+  background: var(--background-color);
+  padding-top: 3em;
 }
 
 nav[hidden] {
@@ -170,7 +161,9 @@ nav[hidden] {
 }
 
 nav footer {
-  padding: 1em;
+  /* adjusting padding and margin so the borders the same width as h3 */
+  padding: 1em 1em 1em 0;
+  margin: 0 1em;
   border-top: 1px solid var(--border-color);
 }
 
@@ -278,20 +271,13 @@ nav ul li details[open] > summary::after {
 /* 8. Main Content */
 main {
   flex: 1;
-  display: block;
-  margin: 3em auto;
+  margin: 3em 2em;
   padding: 0 2em;
   max-width: 800px;
   font-size: 16px;
   line-height: 1.6;
   color: var(--text-color);
   box-sizing: border-box;
-}
-
-@media (min-width: 1024px) {
-  main {
-    margin-left: var(--sidebar-width);
-  }
 }
 
 main h1[class] {
@@ -319,7 +305,9 @@ main h6 {
 
 /* Search */
 #search-section {
-  padding: 1em;
+  /* adjusting padding and margin so the borders the same width as h3 */
+  padding: 1em 1em 1em 0;
+  margin: 0 1em;
   background-color: var(--background-color);
   border-bottom: 1px solid var(--border-color);
 }
@@ -519,6 +507,10 @@ main header h3 {
   /* Styles for larger screens */
   .table-of-contents main {
     margin-left: 20em;
+  }
+
+  #navigation-toggle {
+    display: none !important;
   }
 }
 
