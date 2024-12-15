@@ -298,7 +298,7 @@ main {
   }
 
   #navigation-toggle {
-    display: none !important;
+    display: none;
   }
 }
 
