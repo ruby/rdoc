@@ -6,3 +6,4 @@ exclude:
 op_dir: _site # for GitHub Pages and should match the config of RDoc task in Rakefile
 title: rdoc Documentation
 main_page: README.rdoc
+warn_missing_rdoc_ref: true
