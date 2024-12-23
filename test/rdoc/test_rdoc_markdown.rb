@@ -31,6 +31,30 @@ class TestRDocMarkdown < RDoc::TestCase
     assert_equal '<em>*bold*</em>',    @parser.emphasis('*bold*')
   end
 
+  def test_parse_links
+    doc = parse <<-MD
+    [Link to Foo](https://example.com)
+    MD
+    expected = doc(verb("[Link to Foo](https://example.com)\n"))
+
+    assert_equal(expected, doc)
+
+    doc = parse <<-MD
+    [Link to `Foo`](https://example.com)
+    MD
+
+    expected = doc(para("[Link to <code>Foo</code>](https://example.com)"))
+
+    assert_equal(expected, doc)
+
+    doc = parse <<-MD
+    [Link to **Foo**](https://example.com)
+    MD
+    expected = doc(para("[Link to <b>Foo</b>](https://example.com)"))
+
+    assert_equal(expected, doc)
+  end
+
   def test_parse_auto_link_email
     doc = parse "Autolink: <nobody-0+_./!%~$@example>"
 
