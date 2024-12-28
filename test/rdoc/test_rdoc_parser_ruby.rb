@@ -872,6 +872,54 @@ end
     assert_equal 2, foo.method_list.length
   end
 
+  def test_parse_comments_followed_by_linebreaks
+    util_parser <<-CLASS
+class Foo
+  # Ignored comment
+
+  ##
+  # :method: ghost
+  # This is a ghost method
+
+  # Comment followed by a method
+  def regular
+  end
+
+  ##
+  # :method: another_ghost
+  # This is another ghost method
+
+  # Comment followed by a linebreak
+
+  def regular2
+  end
+end
+    CLASS
+
+    tk = @parser.get_tk
+
+    @parser.parse_class @top_level, RDoc::Parser::Ruby::NORMAL, tk, @comment
+
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+
+    ghost = foo.method_list.first
+    assert_equal 'Foo#ghost', ghost.full_name
+    assert_equal 'This is a ghost method', ghost.comment.to_s
+
+    regular = foo.method_list[1]
+    assert_equal 'Foo#regular', regular.full_name
+    assert_equal 'Comment followed by a method', regular.comment.to_s
+
+    another_ghost = foo.method_list[2]
+    assert_equal 'Foo#another_ghost', another_ghost.full_name
+    assert_equal 'This is another ghost method', another_ghost.comment.to_s
+
+    regular2 = foo.method_list[3]
+    assert_equal 'Foo#regular2', regular2.full_name
+    assert_equal 'Comment followed by a linebreak', regular2.comment.to_s
+  end
+
   def test_parse_class_nodoc
     comment = RDoc::Comment.new "##\n# my class\n", @top_level
 
