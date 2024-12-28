@@ -25,6 +25,9 @@ jobs:
             ruby: truffleruby
           - os: windows-latest
             ruby: truffleruby-head
+          # Remove it once https://github.com/ruby/setup-ruby/issues/680 is fixed
+          - os: windows-latest
+            ruby: 3.4
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4 # v3.3.0
