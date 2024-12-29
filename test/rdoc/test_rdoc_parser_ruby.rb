@@ -920,6 +920,32 @@ end
     assert_equal 'Comment followed by a linebreak', regular2.comment.to_s
   end
 
+  def test_parse_ghost_method_followed_by_undocumented_method
+    util_parser <<-'CLASS'
+class Foo
+  ##
+  # :method: ghost
+  # This is a ghost method
+
+  def baz() end
+end
+    CLASS
+
+    tk = @parser.get_tk
+
+    @parser.parse_class @top_level, RDoc::Parser::Ruby::NORMAL, tk, @comment
+
+    foo = @top_level.classes.first
+    assert_equal 'Foo', foo.full_name
+
+    ghost = foo.method_list.first
+    assert_equal 'Foo#ghost', ghost.full_name
+    assert_equal 'This is a ghost method', ghost.comment.to_s
+
+    baz = foo.method_list[1]
+    assert_equal 'Foo#baz', baz.full_name
+  end
+
   def test_parse_class_nodoc
     comment = RDoc::Comment.new "##\n# my class\n", @top_level
 

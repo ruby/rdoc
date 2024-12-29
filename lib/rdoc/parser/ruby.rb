@@ -1806,6 +1806,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
       case tk[:kind]
       when :on_nl, :on_ignored_nl then
         skip_tkspace
+        non_comment_seen = parse_comment container, tk, comment unless
+          comment.empty?
 
         keep_comment = true
         container.current_line_visibility = nil
@@ -1828,10 +1830,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
         end
 
         if non_comment_seen then
-          # Look for RDoc in a comment about to be thrown away
-          non_comment_seen = parse_comment container, tk, comment unless
-            comment.empty?
-
           comment = ''
           comment = RDoc::Encoding.change_encoding comment, @encoding if @encoding
         end
