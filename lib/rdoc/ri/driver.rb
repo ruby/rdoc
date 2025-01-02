@@ -754,7 +754,7 @@ or the PAGER environment variable.
     complete_klass  name, klass, selector, method, completions
     complete_method name, klass, selector,         completions
 
-    completions.sort.uniq
+    completions.uniq.select {|s| s.start_with? name }.sort
   end
 
   def complete_klass name, klass, selector, method, completions # :nodoc:
@@ -789,7 +789,15 @@ or the PAGER environment variable.
         completions << "#{klass}#{selector}"
       end
 
-      completions.concat methods
+      methods.each do |klass_sel_method|
+        match = klass_sel_method.match(/^(.+)(#|\.|::)([^#.:]+)$/)
+        # match[2] is `::` for class method and `#` for instance method.
+        # To be consistent with old completion that completes `['Foo#i', 'Foo::c']` for `Foo.`,
+        # `.` should be a wildcard for both `#` and `::` here.
+        if match && match[2] == selector || selector == '.'
+          completions << match[1] + selector + match[3]
+        end
+      end
     end
   end
 
