@@ -47,6 +47,20 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     assert_equal para("<a href=\"C1.html\">Constant</a>"), result
   end
 
+  def test_convert_CROSSREF_no_autolink
+    @c1.metadata["autolink"] = "false"
+
+    result = @to.convert 'C1'
+    assert_equal para("C1"), result
+
+    result = @to.convert '+C1+'
+    assert_equal para("<a href=\"C1.html\"><code>C1</code></a>"), result
+
+    # Explicit linking with rdoc-ref is not ignored
+    result = @to.convert 'Constant[rdoc-ref:C1]'
+    assert_equal para("<a href=\"C1.html\">Constant</a>"), result
+  end
+
   def test_convert_CROSSREF_method
     result = @to.convert 'C1#m(foo, bar, baz)'
 
