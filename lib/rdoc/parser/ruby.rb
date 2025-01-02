@@ -1804,65 +1804,60 @@ class RDoc::Parser::Ruby < RDoc::Parser
       non_comment_seen = true unless (:on_comment == tk[:kind] or :on_embdoc == tk[:kind])
 
       case tk[:kind]
-      when :on_nl, :on_ignored_nl, :on_comment, :on_embdoc then
-        if :on_nl == tk[:kind] or :on_ignored_nl == tk[:kind]
-          skip_tkspace
-          tk = get_tk
-        else
-          past_tokens = @read.size > 1 ? @read[0..-2] : []
-          nl_position = 0
-          past_tokens.reverse.each_with_index do |read_tk, i|
-            if read_tk =~ /^\n$/ then
-              nl_position = (past_tokens.size - 1) - i
-              break
-            elsif read_tk =~ /^#.*\n$/ then
-              nl_position = ((past_tokens.size - 1) - i) + 1
-              break
-            end
-          end
-          comment_only_line = past_tokens[nl_position..-1].all?{ |c| c =~ /^\s+$/ }
-          unless comment_only_line then
-            tk = get_tk
+      when :on_nl, :on_ignored_nl then
+        skip_tkspace
+
+        keep_comment = true
+        container.current_line_visibility = nil
+
+      when :on_comment, :on_embdoc then
+        past_tokens = @read.size > 1 ? @read[0..-2] : []
+        nl_position = 0
+        past_tokens.reverse.each_with_index do |read_tk, i|
+          if read_tk =~ /^\n$/ then
+            nl_position = (past_tokens.size - 1) - i
+            break
+          elsif read_tk =~ /^#.*\n$/ then
+            nl_position = ((past_tokens.size - 1) - i) + 1
+            break
           end
         end
+        comment_only_line = past_tokens[nl_position..-1].all?{ |c| c =~ /^\s+$/ }
+        unless comment_only_line then
+          tk = get_tk
+        end
 
-        if tk and (:on_comment == tk[:kind] or :on_embdoc == tk[:kind]) then
-          if non_comment_seen then
-            # Look for RDoc in a comment about to be thrown away
-            non_comment_seen = parse_comment container, tk, comment unless
-              comment.empty?
+        if non_comment_seen then
+          # Look for RDoc in a comment about to be thrown away
+          non_comment_seen = parse_comment container, tk, comment unless
+            comment.empty?
 
-            comment = ''
-            comment = RDoc::Encoding.change_encoding comment, @encoding if @encoding
+          comment = ''
+          comment = RDoc::Encoding.change_encoding comment, @encoding if @encoding
+        end
+
+        line_no = nil
+        while tk and (:on_comment == tk[:kind] or :on_embdoc == tk[:kind]) do
+          comment_body = retrieve_comment_body(tk)
+          line_no = tk[:line_no] if comment.empty?
+          comment += comment_body
+          comment << "\n" unless comment_body =~ /\n\z/
+
+          if comment_body.size > 1 && comment_body =~ /\n\z/ then
+            skip_tkspace_without_nl # leading spaces
           end
+          tk = get_tk
+        end
 
-          line_no = nil
-          while tk and (:on_comment == tk[:kind] or :on_embdoc == tk[:kind]) do
-            comment_body = retrieve_comment_body(tk)
-            line_no = tk[:line_no] if comment.empty?
-            comment += comment_body
-            comment << "\n" unless comment_body =~ /\n\z/
+        comment = new_comment comment, line_no
 
-            if comment_body.size > 1 && comment_body =~ /\n\z/ then
-              skip_tkspace_without_nl # leading spaces
-            end
-            tk = get_tk
+        unless comment.empty? then
+          look_for_directives_in container, comment
+
+          if container.done_documenting then
+            throw :eof if RDoc::TopLevel === container
+            container.ongoing_visibility = save_visibility
           end
-
-          comment = new_comment comment, line_no
-
-          unless comment.empty? then
-            look_for_directives_in container, comment
-
-            if container.done_documenting then
-              throw :eof if RDoc::TopLevel === container
-              container.ongoing_visibility = save_visibility
-            end
-          end
-
-          keep_comment = true
-        else
-          non_comment_seen = true
         end
 
         unget_tk tk
