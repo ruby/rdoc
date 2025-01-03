@@ -780,20 +780,13 @@ class RDoc::Generator::Darkfish
     template
   end
 
-  # Returns an excerpt of the content for usage in meta description tags
-  def excerpt(content)
-    text = case content
+  # Returns an excerpt of the comment for usage in meta description tags
+  def excerpt(comment)
+    text = case comment
     when RDoc::Comment
-      content.text
-    when RDoc::Markup::Document
-      # This case is for page files that are not markdown nor rdoc
-      # We convert them to markdown for now as it's easier to extract the text
-      formatter = RDoc::Markup::ToMarkdown.new
-      formatter.start_accepting
-      formatter.accept_document(content)
-      formatter.end_accepting
+      comment.text
     else
-      content
+      comment
     end
 
     # Match from a capital letter to the first period, discarding any links, so

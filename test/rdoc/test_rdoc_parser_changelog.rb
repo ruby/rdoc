@@ -326,7 +326,7 @@ Mon Dec  3 20:37:22 2012  Koichi Sasada  <ko1@atdot.net>
 
     expected.file = @top_level
 
-    assert_equal expected, @top_level.comment
+    assert_equal expected, @top_level.comment.parse
   end
 
   def test_scan_git
@@ -430,7 +430,7 @@ ChangeLog
 
     expected.file = @top_level
 
-    assert_equal expected, @top_level.comment
+    assert_equal expected, @top_level.comment.parse
   end
 
   def test_scan_git_commit_date
@@ -470,7 +470,7 @@ ChangeLog
 
     expected.file = @top_level
 
-    assert_equal expected, @top_level.comment
+    assert_equal expected, @top_level.comment.parse
   end
 
   def util_parser content = ''

@@ -387,21 +387,20 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
 
   def test_meta_tags_for_raw_pages
     top_level = @store.add_file("MyPage", parser: RDoc::Parser::Simple)
-    top_level.comment = RDoc::Markup::Document.new(RDoc::Markup::Paragraph.new('this is a comment'))
+    comment = RDoc::Comment.new('this is a comment')
+    comment.document = RDoc::Markup::Document.new(RDoc::Markup::Paragraph.new('this is a comment'))
+    top_level.comment = comment
 
     @g.generate
 
     content = File.binread("MyPage.html")
     assert_include(content, '<meta name="keywords" content="ruby,documentation,MyPage">')
-    assert_include(
-      content,
-      '<meta name="description" content="MyPage: this is a comment ">',
-    )
+    assert_include(content, '<meta name="description" content="MyPage: this is a comment">')
   end
 
   def test_meta_tags_for_empty_document
     top_level = @store.add_file("MyPage", parser: RDoc::Parser::Simple)
-    top_level.comment = RDoc::Markup::Document.new
+    top_level.comment = RDoc::Comment.from_document(RDoc::Markup::Document.new)
 
     @g.generate
 
