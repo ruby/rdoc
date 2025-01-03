@@ -437,4 +437,13 @@ class TestRDocCodeObject < XrefTestCase
     assert @co.suppressed?
   end
 
+  def test_autolink
+    assert_predicate @c1, :autolink?, "default is true"
+
+    @c1.metadata["autolink"] = "false"
+    assert_not_predicate @c1, :autolink?
+
+    @c1.metadata["autolink"] = "true"
+    assert_predicate @c1, :autolink?
+  end
 end
