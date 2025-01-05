@@ -273,10 +273,6 @@ module RDoc
 
     attr_accessor :generate_rdoc, :generate_ri, :force
 
-    class << self
-      attr_accessor :rdoc_version
-    end
-
     def self.default_gem?
       !File.exist?(File.join(__dir__, "..", "rubygems_plugin.rb"))
     end
@@ -316,7 +312,11 @@ module RDoc
     end
 
     def self.load_rdoc
-      @rdoc_version = RubyGemsHook.load_rdoc
+      RubyGemsHook.load_rdoc
+    end
+
+    def self.rdoc_version
+      RubyGemsHook.rdoc_version
     end
   end
 end
