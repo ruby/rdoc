@@ -318,5 +318,13 @@ module RDoc
     def self.rdoc_version
       RubyGemsHook.rdoc_version
     end
+
+    def rdoc_installed?
+      RubyGemsHook.new(@spec).rdoc_installed?
+    end
+
+    def ri_installed?
+      RubyGemsHook.new(@spec).ri_installed?
+    end
   end
 end
