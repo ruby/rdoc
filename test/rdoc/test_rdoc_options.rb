@@ -82,7 +82,7 @@ class TestRDocOptions < RDoc::TestCase
       'template_stylesheets'  => [],
       'title'                 => nil,
       'visibility'            => :protected,
-      'warn_missing_rdoc_ref' => false,
+      'warn_missing_rdoc_ref' => true,
       'webcvs'                => nil,
       'skip_tests'            => true,
       'apply_default_exclude' => true,
