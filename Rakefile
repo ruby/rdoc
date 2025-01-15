@@ -70,7 +70,7 @@ parsed_files = PARSER_FILES.map do |parser_file|
     puts "Generating #{parsed_file}..."
     case ext
     when '.ry' # need racc
-      racc = Gem.bin_path 'racc', 'racc'
+      racc = ENV['RACC'] || Gem.bin_path('racc', 'racc')
       rb_file = parser_file.gsub(/\.ry\z/, ".rb")
       ruby "#{racc} -l -E -o #{rb_file} #{parser_file}"
       File.open(rb_file, 'r+') do |f|
