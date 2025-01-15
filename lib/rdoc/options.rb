@@ -410,7 +410,7 @@ class RDoc::Options
     @update_output_dir = true
     @verbosity = 1
     @visibility = :protected
-    @warn_missing_rdoc_ref = false
+    @warn_missing_rdoc_ref = true
     @webcvs = nil
     @write_options = false
     @encoding = Encoding::UTF_8
