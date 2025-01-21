@@ -15,7 +15,7 @@ permissions: # added using https://github.com/step-security/secure-workflows
 
 jobs:
   ruby_core:
-    name: RDoc under a ruby-core setup
+    name: Generate ruby/ruby documentation with the current RDoc commit
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
@@ -45,18 +45,16 @@ jobs:
         run: |
           autoconf
           ./configure -C --disable-install-doc
-          make -j2
         working-directory: ruby/ruby
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v3.1.0
         with:
           path: ruby/rdoc
-      - name: Sync tools
+      - name: Build RDoc locally
         run: |
-          ruby tool/sync_default_gems.rb rdoc
-        working-directory: ruby/ruby
-      - name: Test RDoc
-        run: make -j2 -s test-all TESTS="rdoc --no-retry"
-        working-directory: ruby/ruby
+          bundle install
+          bundle exec rake build
+          mv pkg/rdoc-*.gem ../ruby/gems
+        working-directory: ruby/rdoc
       - name: Generate Documentation with RDoc
         run: make html
         working-directory: ruby/ruby
@@ -70,3 +68,4 @@ jobs:
         working-directory: ruby/ruby
         env:
           RDOC_USE_PRISM_PARSER: true
+
