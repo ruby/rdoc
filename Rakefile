@@ -99,6 +99,18 @@ task :clean do
   end
 end
 
+desc "Build #{Bundler::GemHelper.gemspec.full_name} and move it to local ruby/ruby project's bundled gems folder"
+namespace :build do
+  task local_ruby: :build do
+    target = File.join("..", "ruby", "gems")
+    unless File.directory?(target)
+      abort("Expected ruby to be cloned at the same level as #{Bundler::GemHelper.gemspec.full_name} to use this task")
+    end
+
+    mv("#{path}.gem", target)
+  end
+end
+
 begin
   require 'rubocop/rake_task'
 rescue LoadError
