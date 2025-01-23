@@ -199,25 +199,16 @@ nav h3,
   font-size: 1em;
 }
 
-nav.breadcrumb {
+ol.breadcrumb {
+  display: flex;
+
+  padding: 0;
+  margin: 0 0 1em;
+}
+
+ol.breadcrumb li {
   display: block;
-  float: unset;
-  width: unset;
-  height: unset;
-  border: none;
-  position: unset;
-  top: unset;
-  padding-top: 10px;
-  padding-left: 20px;
-  margin-bottom: 1em;
-}
-
-nav.breadcrumb ol {
-  display: inline-block;
-}
-
-nav.breadcrumb li {
-  display: inline-block;
+  list-style: none;
   font-size: 125%;
 }
 
