@@ -103,8 +103,9 @@ desc "Build #{Bundler::GemHelper.gemspec.full_name} and move it to local ruby/ru
 namespace :build do
   task local_ruby: :build do
     target = File.join("..", "ruby", "gems")
+
     unless File.directory?(target)
-      abort("Expected ruby to be cloned at the same level as #{Bundler::GemHelper.gemspec.full_name} to use this task")
+      abort("Expected Ruby to be cloned under the same parent directory as RDoc to use this task")
     end
 
     mv("#{path}.gem", target)
