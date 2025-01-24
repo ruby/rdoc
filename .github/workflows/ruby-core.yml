@@ -52,8 +52,7 @@ jobs:
       - name: Build RDoc locally
         run: |
           bundle install
-          bundle exec rake build
-          mv pkg/rdoc-*.gem ../ruby/gems
+          bundle exec rake build:local_ruby
         working-directory: ruby/rdoc
       - name: Generate Documentation with RDoc
         run: make html
