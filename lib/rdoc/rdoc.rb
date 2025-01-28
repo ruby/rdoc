@@ -356,7 +356,7 @@ option)
 
     top_level = @store.add_file filename, relative_name: relative_path.to_s
 
-    parser = RDoc::Parser.for top_level, filename, content, @options, @stats
+    parser = RDoc::Parser.for top_level, content, @options, @stats
 
     return unless parser
 
@@ -395,7 +395,6 @@ The internal error was:
     $stderr.puts e.backtrace.join("\n\t") if $DEBUG_RDOC
 
     raise e
-    nil
   end
 
   ##
@@ -407,6 +406,7 @@ The internal error was:
 
     return [] if file_list.empty?
 
+    # This workaround can be removed after the :main: directive is removed
     original_options = @options.dup
     @stats.begin_adding
 
@@ -414,6 +414,8 @@ The internal error was:
       @current = filename
       parse_file filename
     end.compact
+
+    @store.resolve_c_superclasses
 
     @stats.done_adding
     @options = original_options
@@ -520,6 +522,7 @@ The internal error was:
       Dir.chdir @options.op_dir do
         unless @options.quiet then
           $stderr.puts "\nGenerating #{@generator.class.name.sub(/^.*::/, '')} format into #{Dir.pwd}..."
+          $stderr.puts "\nYou can visit the home page at: \e]8;;file://#{Dir.pwd}/index.html\e\\file://#{Dir.pwd}/index.html\e]8;;\e\\"
         end
 
         @generator.generate
@@ -544,7 +547,7 @@ end
 begin
   require 'rubygems'
 
-  rdoc_extensions = Gem.find_files 'rdoc/discover'
+  rdoc_extensions = Gem.find_latest_files 'rdoc/discover'
 
   rdoc_extensions.each do |extension|
     begin

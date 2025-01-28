@@ -58,7 +58,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # Creates a link to the reference +name+ if the name exists.  If +text+ is
   # given it is used as the link text, otherwise +name+ is used.
 
-  def cross_reference name, text = nil, code = true
+  def cross_reference name, text = nil, code = true, rdoc_ref: false
     lookup = name
 
     name = name[1..-1] unless @show_hash if name[0, 1] == '#'
@@ -70,7 +70,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       text ||= name
     end
 
-    link lookup, text, code
+    link lookup, text, code, rdoc_ref: rdoc_ref
   end
 
   ##
@@ -83,6 +83,8 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   def handle_regexp_CROSSREF(target)
     name = target.text
 
+    return name if @options.autolink_excluded_words&.include?(name)
+
     return name if name =~ /@[\w-]+\.[\w-]/ # labels that look like emails
 
     unless @hyperlink_all then
@@ -92,7 +94,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       return name if name =~ /\A[a-z]*\z/
     end
 
-    cross_reference name
+    cross_reference name, rdoc_ref: false
   end
 
   ##
@@ -100,9 +102,14 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # handle other schemes.
 
   def handle_regexp_HYPERLINK target
-    return cross_reference $' if target.text =~ /\Ardoc-ref:/
+    url = target.text
 
-    super
+    case url
+    when /\Ardoc-ref:/
+      cross_reference $', rdoc_ref: true
+    else
+      super
+    end
   end
 
   ##
@@ -117,8 +124,8 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     url = target.text
 
     case url
-    when /\Ardoc-ref:/ then
-      cross_reference $'
+    when /\Ardoc-ref:/
+      cross_reference $', rdoc_ref: true
     else
       super
     end
@@ -129,16 +136,18 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # RDoc::Markup::ToHtml to handle other schemes.
 
   def gen_url url, text
-    return super unless url =~ /\Ardoc-ref:/
-
-    name = $'
-    cross_reference name, text, name == text
+    if url =~ /\Ardoc-ref:/
+      name = $'
+      cross_reference name, text, name == text, rdoc_ref: true
+    else
+      super
+    end
   end
 
   ##
   # Creates an HTML link to +name+ with the given +text+.
 
-  def link name, text, code = true
+  def link name, text, code = true, rdoc_ref: false
     if !(name.end_with?('+@', '-@')) and name =~ /(.*[^#:])?@/
       name = $1
       label = $'
@@ -148,6 +157,9 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
     case ref
     when String then
+      if rdoc_ref && @options.warn_missing_rdoc_ref
+        puts "#{@from_path}: `rdoc-ref:#{name}` can't be resolved for `#{text}`"
+      end
       ref
     else
       path = ref ? ref.as_href(@from_path) : +""
@@ -172,4 +184,43 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     end
   end
 
+  def convert_flow(flow)
+    res = []
+
+    i = 0
+    while i < flow.size
+      item = flow[i]
+      i += 1
+      case item
+      when RDoc::Markup::AttrChanger then
+        # Make "+Class#method+" a cross reference
+        if tt_tag?(item.turn_on) and
+          String === (str = flow[i]) and
+          RDoc::Markup::AttrChanger === flow[i+1] and
+          tt_tag?(flow[i+1].turn_off, true) and
+          (@options.hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP).match?(str) and
+          (text = cross_reference str) != str
+        then
+          text = yield text, res if defined?(yield)
+          res << text
+          i += 2
+          next
+        end
+        off_tags res, item
+        on_tags res, item
+      when String then
+        text = convert_string(item)
+        text = yield text, res if defined?(yield)
+        res << text
+      when RDoc::Markup::RegexpHandling then
+        text = convert_regexp_handling(item)
+        text = yield text, res if defined?(yield)
+        res << text
+      else
+        raise "Unknown flow element: #{item.inspect}"
+      end
+    end
+
+    res.join('')
+  end
 end

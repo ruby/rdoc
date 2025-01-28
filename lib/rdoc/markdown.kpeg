@@ -530,7 +530,7 @@ AtxInline = !@Newline !(@Sp /#*/ @Sp @Newline) Inline
 AtxStart =  < /\#{1,6}/ >
             { text.length }
 
-AtxHeading = AtxStart:s @Sp AtxInline+:a (@Sp /#*/ @Sp)?  @Newline
+AtxHeading = AtxStart:s @Spacechar+ AtxInline+:a (@Sp /#*/ @Sp)?  @Newline
             { RDoc::Markup::Heading.new(s, a.join) }
 
 SetextHeading = SetextHeading1 | SetextHeading2

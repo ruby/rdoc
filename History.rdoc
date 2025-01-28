@@ -1,4 +1,6 @@
-=== 5.1.0 / 2017-02-24
+= History
+
+== 5.1.0 / 2017-02-24
 
 * Bug fixes
   * Fix an issue that rdoc fails when running on Windows with RUBYOPT=-U.
@@ -8,7 +10,7 @@
   * Parse ruby 2.1 <visibility> def. PR #436 by Akira Matsuda.
   * Suppress warnings in eval. PR #440 by Nobuyoshi Nakada.
 
-=== 5.0.0 / 2016-11-05
+== 5.0.0 / 2016-11-05
 
 * Major enhancements
   * Cleanup deprecated code targeted Ruby 1.8
@@ -25,19 +27,19 @@
   * Improve class name expansion/resolution in ri.  PR #400 by NARUSE, Yui
   * Improve performance of document generation. PR #397 by Yusuke Endoh.
 
-=== 4.3.0 / 2016-11-04
+== 4.3.0 / 2016-11-04
 
 * Minor enhancements
   * Removed json dependency for Ruby 2.4.0
   * End to support Ruby 1.8.x
 
-=== 4.2.2 / 2016-02-09
+== 4.2.2 / 2016-02-09
 
 * Bug fixes
   * Include lib/rdoc/generator/pot/* in built gem
 
 
-=== 4.2.1 / 2015-12-22
+== 4.2.1 / 2015-12-22
 
 * Bug fixes
   * Fixed infinite loop with CR #339 by @nobu
@@ -47,7 +49,7 @@
   * Fix for valid syntax `class C end` parsing #368 by @nobu
 
 
-=== 4.2.0 / 2014-12-06
+== 4.2.0 / 2014-12-06
 
 * Major enhancements
   * RDoc can now produce translation files for use with gettext.  See
@@ -116,12 +118,12 @@
     #312 by Scott Thompson.
   * Fixed RegExp matching stack overflow on Ruby 1.8.7.  Issue #327 by sshao.
 
-=== 4.1.2 / 2014-09-05
+== 4.1.2 / 2014-09-05
 
 * Bug fixes
   * Updated vendored jQuery to 1.6.4.  Bug ruby/ruby#711 by @neuralme
 
-=== 4.1.1 / 2014-01-09
+== 4.1.1 / 2014-01-09
 
 * Bug fixes
   * Fixed reporting of undocumented method parameters when including when
@@ -132,7 +134,7 @@
   * Removed duplicated condition in superclass fixup.  Pull request #282 by
     Benoit Daloze.
 
-=== 4.1.0 / 2013-12-26
+== 4.1.0 / 2013-12-26
 
 * Notable changes
   * Improved accessibility of HTML output.  Accessibility review was provided
@@ -222,7 +224,7 @@
   * Regexp options are no longer stripped in HTML output.  Bug #259 by Zachary
     Scott, Pull request #265 by Rein Henrichs
 
-=== 4.0.1 / 2013-03-27
+== 4.0.1 / 2013-03-27
 
 * Bug fixes
   * RDoc::Options parser should rescue from OptionParser::ParseError.
@@ -252,7 +254,7 @@
   * The C parser now de-duplicates call-seq if the same C function is used for
     multiple method names.  Bug #203 by Pete Higgins
 
-=== 4.0.0 / 2013-02-24
+== 4.0.0 / 2013-02-24
 
 RDoc 4.0 includes several new features and several breaking changes.  The
 changes should not affect users of `rdoc` or `ri`.
@@ -380,7 +382,7 @@ Changes since RDoc 3.12.1:
   * RDoc now ignores methods defined on constants instead of creating a fake
     module.  Bug #163 by Zachary Scott.
   * Fixed ChangeLog parsing for FFI gem.  Bug #165 by Zachary Scott.
-  * RDoc now links \#=== methods.  Bug #164 by Zachary Scott.
+  * RDoc now links \#== methods.  Bug #164 by Zachary Scott.
   * Allow [] following argument names for TomDoc.  Bug #167 by Ellis Berner.
   * Fixed the RDoc servlet for home and site directories.  Bug #170 by Thomas
     Leitner.
@@ -455,7 +457,7 @@ Changes since RDoc 4.0.0.rc.2:
   * Templates now use the correct encoding when generating pages.  Issue #183
     by Vít Ondruch
 
-=== 4.0.0.rc.2 / 2013-02-05
+== 4.0.0.rc.2 / 2013-02-05
 
 * Minor enhancements
   * Added current heading and page-top links to HTML headings.
@@ -476,7 +478,7 @@ Changes since RDoc 4.0.0.rc.2:
   * RDoc now ignores methods defined on constants instead of creating a fake
     module.  Bug #163 by Zachary Scott.
   * Fixed ChangeLog parsing for FFI gem.  Bug #165 by Zachary Scott.
-  * RDoc now links \#=== methods.  Bug #164 by Zachary Scott.
+  * RDoc now links \#== methods.  Bug #164 by Zachary Scott.
   * Allow [] following argument names for TomDoc.  Bug #167 by Ellis Berner.
   * Fixed the RDoc servlet for home and site directories.  Bug #170 by Thomas
     Leitner.
@@ -487,7 +489,7 @@ Changes since RDoc 4.0.0.rc.2:
   * Fixed deletion of attribute ri data when a class was loaded then saved.
     Issue #171 by Thomas Leitner.
 
-=== 4.0.0.preview2.1 / 2012-12-14
+== 4.0.0.preview2.1 / 2012-12-14
 
 * Minor enhancements
   * Added --page-dir option to give pretty names for a FAQ, guides, or other
@@ -510,7 +512,7 @@ Changes since RDoc 4.0.0.rc.2:
   * Incremental ri builds of C files now work.  C variable names from previous
     runs are now saved between runs.
 
-=== 4.0.0.preview2 / 2012-12-01
+== 4.0.0.preview2 / 2012-12-01
 
 * Breaking changes
   * The default output encoding for RDoc is now UTF-8.  Previously RDoc used
@@ -658,7 +660,7 @@ Changes since RDoc 4.0.0.rc.2:
   * Fixed class << ::Foo writing documentation to /Foo.html
   * Fixed class ::A referencing itself from inside its own namespace.
 
-=== 3.12.2 / 2013-02-24
+== 3.12.2 / 2013-02-24
 
 * Bug fixes
   * Fixed bug in syntax-highlighting that would corrupt regular expressions.
@@ -672,7 +674,7 @@ Changes since RDoc 4.0.0.rc.2:
     end.  When a HEREDOC is not followed by a line end RDoc is not currently
     smart enough to restore the source correctly.  Bug #162 by Zachary Scott.
 
-=== 3.12.1 / 2013-02-05
+== 3.12.1 / 2013-02-05
 
 * Bug fixes
   * Fixed an XSS exploit in darkfish.js.  This could lead to cookie disclosure
@@ -680,7 +682,7 @@ Changes since RDoc 4.0.0.rc.2:
     details including a patch you can apply to generated RDoc documentation.
   * Ensured that rd parser files are generated before checking the manifest.
 
-=== 3.12 / 2011-12-15
+== 3.12 / 2011-12-15
 
 * Minor enhancements
   * Added DEVELOPERS document which contains an overview of how RDoc works and
@@ -711,13 +713,13 @@ Changes since RDoc 4.0.0.rc.2:
   * In rdoc, backspace and ansi formatters, whitespace between label or note
     and the colon is now stripped.
 
-=== 3.11 / 2011-10-17
+== 3.11 / 2011-10-17
 
 * Bug fixes
   * Avoid parsing TAGS files included in gems.  Issue #81 by Santiago
     Pastorino.
 
-=== 3.10 / 2011-10-08
+== 3.10 / 2011-10-08
 
 * Major enhancements
   * RDoc HTML output has been improved:
@@ -822,19 +824,19 @@ Changes since RDoc 4.0.0.rc.2:
     parsed.  Unless your project includes nonexistent modules this avoids
     worst-case behavior (<tt>O(n!)</tt>) of RDoc::Include#module.
 
-=== 3.9.5 / 2013-02-05
+== 3.9.5 / 2013-02-05
 
 * Bug fixes
   * Fixed an XSS exploit in darkfish.js.  This could lead to cookie disclosure
     to third parties.  See CVE-2013-0256.rdoc for full details including a
     patch you can apply to generated RDoc documentation.
 
-=== 3.9.4 / 2011-08-26
+== 3.9.4 / 2011-08-26
 
 * Bug fixes
   * Applied typo and grammar fixes from Luke Gruber.  Ruby bug #5203
 
-=== 3.9.3 / 2011-08-23
+== 3.9.3 / 2011-08-23
 
 * Bug fixes
   * Add US-ASCII magic comments to work with <tt>ruby -Ku</tt>.  Issue #63 by
@@ -844,14 +846,14 @@ Changes since RDoc 4.0.0.rc.2:
   * Markup defined by RDoc::Markup#add_special inside a <tt><tt></tt> is no
     longer converted.
 
-=== 3.9.2 / 2011-08-11
+== 3.9.2 / 2011-08-11
 
 * Bug fix
   * Loosened TIDYLINK regexp to allow any content in the link section like:
     <tt>{foo}[rdoc-ref:SomeClass]</tt>
   * In HTML output headings are capped at <tt><h6></tt> again
 
-=== 3.9.1 / 2011-07-31
+== 3.9.1 / 2011-07-31
 
 * Bug fixes
   * Fix RDoc::Markup parser for a header followed by a non-text token.  Issue
@@ -859,7 +861,7 @@ Changes since RDoc 4.0.0.rc.2:
   * Fix RDoc::Markup::ToHtmlCrossref#gen_url for non-<tt>rdoc-ref</tt> links.
   * Fix bug report URL when rdoc crashes.
 
-=== 3.9 / 2011-07-30
+== 3.9 / 2011-07-30
 
 * Minor enhancements
   * RDoc::Parser::C now supports :doc: and :nodoc: for class comments
@@ -879,7 +881,7 @@ Changes since RDoc 4.0.0.rc.2:
   * Remove tokenizer restriction on header lengths for verbatim sections.
     Issue #49 by trans
 
-=== 3.8 / 2011-06-29
+== 3.8 / 2011-06-29
 
 * Minor enhancements
   * RDoc::Parser::C can now discover methods on ENV and ARGF.
@@ -888,7 +890,7 @@ Changes since RDoc 4.0.0.rc.2:
   * Updating Object in an ri data store with new data now removes methods,
     includes, constants and aliases.
 
-=== 3.7 / 2011-06-27
+== 3.7 / 2011-06-27
 
 * Minor enhancements
   * New directive :category: which allows methods to be grouped into sections
@@ -933,7 +935,7 @@ Changes since RDoc 4.0.0.rc.2:
   * ri data generation for method aliases no longer duplicates the class in
     #full_name
 
-=== 3.6.1 / 2011-05-15
+== 3.6.1 / 2011-05-15
 
 * Bug fixes
   * Fix infinite loop created when re-encountering BasicObject.
@@ -941,7 +943,7 @@ Changes since RDoc 4.0.0.rc.2:
   * rb_path2class() can now be used to discover the parent class in
     rb_define_class_under.
 
-=== 3.6 / 2011-05-13
+== 3.6 / 2011-05-13
 
 * Major Enhancements
   * Interactive ri is now the default when no names are given.
@@ -966,7 +968,7 @@ Changes since RDoc 4.0.0.rc.2:
   * The doc directive now forces documentation even when the method is marked
     private or protected.
 
-=== 3.5.3 / 2010-02-06
+== 3.5.3 / 2010-02-06
 
 * Bug fixes
   * When including a file perform a lossy force-transcoding to the output
@@ -978,7 +980,7 @@ Changes since RDoc 4.0.0.rc.2:
     Bug #4376.
   * When Darkfish fails the file being generated is now reported.
 
-=== 3.5.2 / 2010-02-04
+== 3.5.2 / 2010-02-04
 
 * Deprecations
   * RDoc::Context::Section#sequence is now deprecated.  Use
@@ -995,14 +997,14 @@ Changes since RDoc 4.0.0.rc.2:
   * Fixed post-install message for Ruby 1.9.2 users.
   * Set required ruby version to >= 1.8.7.
 
-=== 3.5.1 / 2010-01-30
+== 3.5.1 / 2010-01-30
 
 * Bug fixes
   * Fixed some typos.  Pull request #13 by R.T. Lechow.
   * Ensure an RDoc::Stats is created in #parse_files.  Fixes documentation for
     railties which has no files.  Reported by Aaron Patterson
 
-=== 3.5 / 2010-01-29
+== 3.5 / 2010-01-29
 
 * Minor enhancements
   * RDoc::Parser::C looks for rb_scan_args and fills in RDoc::AnyMethod#params
@@ -1025,7 +1027,7 @@ Changes since RDoc 4.0.0.rc.2:
   * Relaxed RDoc::Parser::Ruby#remove_private_comments to consume more dashes
     as older versions once did.  Bug #7 by Claus Folke Brobak.
 
-=== 3.4 / 2010-01-06
+== 3.4 / 2010-01-06
 
 * Minor enhancements
   * RDoc::RDoc#document may now be called with an RDoc::Options instance.
@@ -1033,7 +1035,7 @@ Changes since RDoc 4.0.0.rc.2:
   * Added skips to Encoding tests running on 1.8.
   * Fixed warnings
 
-=== 3.3 / 2010-01-03
+== 3.3 / 2010-01-03
 
 * Minor enhancements
   * The coverage report can now report undocumented method parameters
@@ -1060,7 +1062,7 @@ Changes since RDoc 4.0.0.rc.2:
     parser.  RubyForge bug #28370 by Erik Hollensbe.
   * ri no longer displays all methods in the inheritance chain.
 
-=== 3.2 / 2010-12-29
+== 3.2 / 2010-12-29
 
 * Minor enhancements
   * RDoc generator authors may now suppress updating the output dir (creating
@@ -1070,7 +1072,7 @@ Changes since RDoc 4.0.0.rc.2:
   * RDoc's gitignore now ignores .DS_Store files.  Pull Request #3 by Shane
     Becker.
 
-=== 3.1 / 2010-12-28
+== 3.1 / 2010-12-28
 
 RDoc has moved to github.  Releases after 3.1 reference github unless
 otherwise noted.
@@ -1108,12 +1110,12 @@ otherwise noted.
   * RDoc::Parser::Ruby now parses negative numbers correctly.  RubyForge patch
     #28544 by Eito Katagiri.
 
-=== 3.0.1 / 2010-12-19
+== 3.0.1 / 2010-12-19
 
 * Bug fix
   * RDoc no longer has a Perl parser.
 
-=== 3.0 / 2010-12-19
+== 3.0 / 2010-12-19
 
 Special thanks to Thierry Lambert for massive improvements to RDoc.
 
@@ -1208,7 +1210,7 @@ Special thanks to Thierry Lambert for massive improvements to RDoc.
   * Methods added to true, false and nil are now documented.
   * Remove warning for methods defined on globals.
 
-=== 2.5.11 / 2010-08-20
+== 2.5.11 / 2010-08-20
 
 * Minor Enhancements
   * Alias comments are now discovered by the C parser.  Reported by Jeremy
@@ -1216,7 +1218,7 @@ Special thanks to Thierry Lambert for massive improvements to RDoc.
   * Removed --all option which is unused in RDoc.  Use the nodoc or
     stopdoc/startdoc directives to suppress documentation instead.
 
-=== 2.5.10 / 2010-08-17
+== 2.5.10 / 2010-08-17
 
 * Minor Enhancements
   * Support rb_singleton_class().  Reported by Jeremy Evans.
@@ -1234,14 +1236,14 @@ Special thanks to Thierry Lambert for massive improvements to RDoc.
     Evans.
   * RDoc now understands singleton aliases.  Reported by Jeremy Evans.
 
-=== 2.5.9 / 2010-07-06
+== 2.5.9 / 2010-07-06
 
 * Bug Fixes
   * Look up pager correctly.
   * Fixed handling of bullets in verbatim sections.  Partial patch by
     Juha-Jarmo Heinonen.
 
-=== 2.5.8 / 2010-04-27
+== 2.5.8 / 2010-04-27
 
 *NOTE*:
 
@@ -1266,7 +1268,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
   * ri no longer complains about nonexistent pagers.
   * Fixed failing test
 
-=== 2.5.7 / 2010-04-22
+== 2.5.7 / 2010-04-22
 
 * Minor Enhancements
   * Unrecognized RDoc directives can now be registered by a plugin for
@@ -1277,7 +1279,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
   * rdoc -p no longer means --pipe if files are also given.
   * RDoc now knows about BasicObject by default.  Ruby Bug #1318 by Ambrus Zsbán
 
-=== 2.5.6 / 2010-04-22
+== 2.5.6 / 2010-04-22
 
 * Minor Enhancements
   * Unrecognized RDoc directives are added as metadata to the object they get
@@ -1293,7 +1295,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
     options.
   * Fixed link size on Darkfish file pages
 
-=== 2.5.5 / 2010-04-19
+== 2.5.5 / 2010-04-19
 
 * 1 Minor Enhancement
   * Use #binread in RDoc::Markup::PreProcess.  Patch from ruby trunk.
@@ -1305,7 +1307,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
   * Fixed handling of ignored invalid options to continue after the invalid
     option.
 
-=== 2.5.4 / 2010-04-18
+== 2.5.4 / 2010-04-18
 
 * 2 Minor Enhancements
   * Methods will now be cross-referenced when preceded with ::.  Ruby Bug
@@ -1316,7 +1318,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
   * RDoc::Parser::Ruby now handles <code>while begin a; b end # ...</code>.
     Ruby Bug #3160 by Yusuke Endoh.
 
-=== 2.5.3 / 2010-04-10
+== 2.5.3 / 2010-04-10
 
 * 1 Minor Enhancement
   * RDoc::Parser::Simple and the include directive remove coding: comment from
@@ -1326,7 +1328,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
     #3121 by Yusuke Endoh.
   * Compare times as Integers as created.rid doesn't store fractional times.
 
-=== 2.5.2 / 2010-04-09
+== 2.5.2 / 2010-04-09
 
 * 1 Minor Enhancement
   * Imported various changes by Nobu from ruby trunk.
@@ -1334,7 +1336,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
   * RDoc parses files without extensions as text files again.
   * RDoc::Parser::Ruby parses %{ strings correctly again.
 
-=== 2.5.1 / 2010-04-06
+== 2.5.1 / 2010-04-06
 
 * 1 Minor Enhancement
   * RDoc::Parser::C now supports the include directive for classes and
@@ -1348,7 +1350,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
   * RDoc::Task's rerdoc task no longer deletes the doc directory twice.
   * rdoc --force-update now works correctly.  Patch by Nobu Nokada
 
-=== 2.5 / 2010-03-31
+== 2.5 / 2010-03-31
 
 * 9 Major Enhancements
   * Darkfish now has a "Home" button
@@ -1404,13 +1406,13 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
     Filed Selenium bug #27789.
   * Alias comments are no longer hidden.  Reported by Adam Avilla.
 
-=== 2.4.3 / 2009-04-01
+== 2.4.3 / 2009-04-01
 
 * 2 Bug Fixes
   * Corrected patch for file links
   * Corrected display of file popup
 
-=== 2.4.2 / 2009-03-25
+== 2.4.2 / 2009-03-25
 
 * 2 Minor Enhancements
   * Added --pipe for turning RDoc on stdin into HTML
@@ -1435,7 +1437,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
   * Added back --promiscuous which didn't do anything you cared about.  Why
     did you enable it?  Nobody looked at that page!  Oh, it warns, too.
 
-=== 2.4.1 / 2009-02-26
+== 2.4.1 / 2009-02-26
 
 * 1 Minor Enhancements
   * Added :attr:, :attr_reader:, :attr_writer:, :attr_accessor: directives.
@@ -1446,7 +1448,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
   * Restore --inline-source that warns
   * Fixed links to files in Darkfish output
 
-=== 2.4.0 / 2009-02-24
+== 2.4.0 / 2009-02-24
 
 * 9 Minor Enhancements
   * `ri -f html` is now XHTML-happy
@@ -1473,7 +1475,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
   * RDoc doesn't crash with def (blah).foo() end
   * RDoc doesn't crash with #define functions
 
-=== 2.3.0 / 2009-01-28
+== 2.3.0 / 2009-01-28
 
 * 3 Major Enhancements
   * Michael Granger's Darkfish generator is now the default for HTML output
@@ -1508,7 +1510,7 @@ If you don't want to rebuild the rdoc for `gem server`, add --no-rdoc.
   * C file RDoc is no longer included in token stream
   * Scan all gem paths to match gem name for ri output
 
-=== 2.2.1 / 2008-09-24
+== 2.2.1 / 2008-09-24
 This version provides some minor fixes and enhancements to 2.2.0 intended
 to polish RDoc for Ruby 1.9.1.
 
@@ -1540,7 +1542,7 @@ to polish RDoc for Ruby 1.9.1.
   * Fixed missing display of constant values in ri.
   * Fixed display of constants in ri's html output.
 
-=== 2.2.0 / 2008-09-19
+== 2.2.0 / 2008-09-19
 This version includes some significant enhancements to ri.  See RI.txt for
 documentation about ri.
 
@@ -1621,7 +1623,7 @@ documentation about ri.
   * Fixed the horizontal rule markup (---) so that it correctly adds a
     horizontal rule rather than suppressing all text that follows.
 
-=== 2.1.0 / 2008-07-20
+== 2.1.0 / 2008-07-20
 
 * 3 Major Enhancements:
   * RDoc now knows about meta-programmed methods, see RDoc::Parser::Ruby
@@ -1651,7 +1653,7 @@ documentation about ri.
     described in the documentation
   * RDoc now correctly sets superclasses if they were originally unknown
 
-=== 2.0.0 / 2008-04-10
+== 2.0.0 / 2008-04-10
 
 * 3 Major Enhancements:
   * Renamespaced everything RDoc under the RDoc module.

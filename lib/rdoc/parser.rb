@@ -166,7 +166,8 @@ class RDoc::Parser
   # Finds and instantiates the correct parser for the given +file_name+ and
   # +content+.
 
-  def self.for top_level, file_name, content, options, stats
+  def self.for top_level, content, options, stats
+    file_name = top_level.absolute_name
     return if binary? file_name
 
     parser = use_markup content
@@ -190,7 +191,7 @@ class RDoc::Parser
 
     content = remove_modeline content
 
-    parser.new top_level, file_name, content, options, stats
+    parser.new top_level, content, options, stats
   rescue SystemCallError
     nil
   end
@@ -251,12 +252,12 @@ class RDoc::Parser
   # RDoc::Markup::PreProcess object is created which allows processing of
   # directives.
 
-  def initialize top_level, file_name, content, options, stats
+  def initialize top_level, content, options, stats
     @top_level = top_level
     @top_level.parser = self.class
     @store = @top_level.store
 
-    @file_name = file_name
+    @file_name = top_level.absolute_name
     @content = content
     @options = options
     @stats = stats

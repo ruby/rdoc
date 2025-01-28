@@ -100,6 +100,23 @@ class RDoc::Markup::TextFormatterTestCase < RDoc::Markup::FormatterTestCase
       end
 
       ##
+      # Test case that calls <tt>@to.accept_table</tt>
+
+      def test_accept_table_align
+        header = ['AA', 'BB', 'CCCCC', 'DDDDD']
+        body = [
+          ['', 'bbb', 'c', ''],
+          ['aaaa', 'b', '', 'dd'],
+          ['a', '', 'cc', 'dd']
+        ]
+        aligns = [nil, :left, :right, :center]
+        @to.start_accepting
+        @to.accept_table header, body, aligns
+
+        accept_table_align
+      end
+
+      ##
       # Test case that calls <tt>@to.attributes</tt> with an escaped
       # cross-reference.  If this test doesn't pass something may be very
       # wrong.

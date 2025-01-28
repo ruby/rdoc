@@ -2,6 +2,8 @@
 
 require_relative 'helper'
 
+return if ENV['RDOC_USE_PRISM_PARSER']
+
 class TestRDocParserRuby < RDoc::TestCase
 
   def setup
@@ -4085,8 +4087,7 @@ end
   end
 
   def util_parser(content)
-    @parser = RDoc::Parser::Ruby.new @top_level, @filename, content, @options,
-                                     @stats
+    @parser = RDoc::Parser::Ruby.new @top_level, content, @options, @stats
   end
 
   def util_two_parsers(first_file_content, second_file_content)

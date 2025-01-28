@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocMarkupToBs < RDoc::Markup::TextFormatterTestCase
+class RDocMarkupToBsTest < RDoc::Markup::TextFormatterTestCase
 
   add_visitor_tests
   add_text_tests
@@ -346,6 +346,17 @@ words words words words
 
     EXPECTED
 
+    assert_equal expected, @to.end_accepting
+  end
+
+  def accept_table_align
+    expected = <<-EXPECTED
+ AA |BB |CCCCC|DDDDD
+----|---|-----|-----
+    |bbb|    c|
+aaaa|b  |     | dd
+ a  |   |   cc| dd
+    EXPECTED
     assert_equal expected, @to.end_accepting
   end
 

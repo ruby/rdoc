@@ -8,6 +8,11 @@ permissions:  # added using https://github.com/step-security/secure-workflows
 jobs:
   ruby-versions:
     uses: ruby/actions/.github/workflows/ruby_versions.yml@master
+    with:
+      # 2.7 breaks `test_parse_statements_nodoc_identifier_alias_method`
+      min_version: 3.0
+      versions: '["mswin"]'
+      engine: cruby-truffleruby
 
   test:
     needs: ruby-versions
@@ -21,10 +26,11 @@ jobs:
             ruby: truffleruby
           - os: windows-latest
             ruby: truffleruby-head
-          - os: windows-latest
-            ruby: jruby
-          - os: windows-latest
-            ruby: jruby-head
+          - os: macos-latest
+            ruby: mswin
+          - os: ubuntu-latest
+            ruby: mswin
+
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4 # v3.3.0
@@ -36,14 +42,16 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true # 'bundle install' and cache
-    # Avoid issues on these platforms
-    - if: ${{ matrix.ruby == '2.6' }}
-      run: gem update --system
     - name: Run test
       run: bundle exec rake
       env:
         RUBYOPT: --enable-frozen_string_literal
+    - name: Run test with Prism parser
+      run: bundle exec rake
+      env:
+        RUBYOPT: --enable-frozen_string_literal
+        RDOC_USE_PRISM_PARSER: true
     - if: ${{ matrix.ruby == 'head' && startsWith(matrix.os, 'ubuntu') }}
       run: bundle exec rake rdoc
     - if: ${{ matrix.ruby == 'head' && startsWith(matrix.os, 'ubuntu') }}
-      run: bundle exec rake rubocop
+      run: bundle exec rake install

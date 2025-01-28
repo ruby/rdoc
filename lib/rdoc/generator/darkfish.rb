@@ -316,11 +316,14 @@ class RDoc::Generator::Darkfish
     asset_rel_prefix = rel_prefix + @asset_rel_path
 
     @title = @options.title
+    @main_page = @files.find { |f| f.full_name == @options.main_page }
 
     render_template template_file, out_file do |io|
       here = binding
       # suppress 1.9.3 warning
       here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
+      # some partials rely on the presence of current variable to render
+      here.local_variable_set(:current, @main_page) if @main_page
       here
     end
   rescue => e
@@ -677,7 +680,6 @@ class RDoc::Generator::Darkfish
     return body if body =~ /<html/
 
     head_file = @template_dir + '_head.rhtml'
-    footer_file = @template_dir + '_footer.rhtml'
 
     <<-TEMPLATE
 <!DOCTYPE html>
@@ -687,8 +689,6 @@ class RDoc::Generator::Darkfish
 #{head_file.read}
 
 #{body}
-
-#{footer_file.read}
     TEMPLATE
   end
 
@@ -783,4 +783,49 @@ class RDoc::Generator::Darkfish
     template
   end
 
+  # Returns an excerpt of the content for usage in meta description tags
+  def excerpt(content)
+    text = case content
+    when RDoc::Comment
+      content.text
+    when RDoc::Markup::Document
+      # This case is for page files that are not markdown nor rdoc
+      # We convert them to markdown for now as it's easier to extract the text
+      formatter = RDoc::Markup::ToMarkdown.new
+      formatter.start_accepting
+      formatter.accept_document(content)
+      formatter.end_accepting
+    else
+      content
+    end
+
+    # Match from a capital letter to the first period, discarding any links, so
+    # that we don't end up matching badges in the README
+    first_paragraph_match = text.match(/[A-Z][^\.:\/]+\./)
+    return text[0...150].gsub(/\n/, " ").squeeze(" ") unless first_paragraph_match
+
+    extracted_text = first_paragraph_match[0]
+    second_paragraph = first_paragraph_match.post_match.match(/[A-Z][^\.:\/]+\./)
+    extracted_text << " " << second_paragraph[0] if second_paragraph
+
+    extracted_text[0...150].gsub(/\n/, " ").squeeze(" ")
+  end
+
+  def generate_ancestor_list(ancestors, klass)
+    return '' if ancestors.empty?
+
+    ancestor = ancestors.shift
+    content = +'<ul><li>'
+
+    if ancestor.is_a?(RDoc::NormalClass)
+      content << "<a href=\"#{klass.aref_to ancestor.path}\">#{ancestor.full_name}</a>"
+    else
+      content << ancestor.to_s
+    end
+
+    # Recursively call the method for the remaining ancestors
+    content << generate_ancestor_list(ancestors, klass)
+
+    content << '</li></ul>'
+  end
 end

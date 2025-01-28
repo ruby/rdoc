@@ -21,10 +21,8 @@ task :default => :test
 
 task rdoc: :generate
 RDoc::Task.new do |doc|
-  doc.main = 'README.rdoc'
-  doc.title = "rdoc #{RDoc::VERSION} Documentation"
-  doc.rdoc_dir = '_site' # for github pages
-  doc.rdoc_files = FileList.new %w[lib/**/*.rb *.rdoc doc/rdoc/markup_reference.rb] - PARSER_FILES
+  # RDoc task defaults to /html and overrides the op_dir option in .rdoc_options
+  doc.rdoc_dir = "_site" # for GitHub Pages
 end
 
 task "coverage" do
@@ -101,12 +99,25 @@ task :clean do
   end
 end
 
+desc "Build #{Bundler::GemHelper.gemspec.full_name} and move it to local ruby/ruby project's bundled gems folder"
+namespace :build do
+  task local_ruby: :build do
+    target = File.join("..", "ruby", "gems")
+
+    unless File.directory?(target)
+      abort("Expected Ruby to be cloned under the same parent directory as RDoc to use this task")
+    end
+
+    mv("#{path}.gem", target)
+  end
+end
+
 begin
   require 'rubocop/rake_task'
 rescue LoadError
 else
-  RuboCop::RakeTask.new(:rubocop) do |t|
-    t.options = [*parsed_files]
+  RuboCop::RakeTask.new(:format_generated_files) do |t|
+    t.options = parsed_files + ["--config=.generated_files_rubocop.yml"]
   end
-  task :build => [:generate, "rubocop:autocorrect"]
+  task :build => [:generate, "format_generated_files:autocorrect"]
 end

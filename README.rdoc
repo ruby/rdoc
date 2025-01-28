@@ -60,6 +60,10 @@ To generate documentation programmatically:
   rdoc.document options
   # see RDoc::RDoc
 
+You can specify the target files for document generation with +.document+ file in the project root directory.
++.document+ file contains a list of file and directory names including comment lines starting with '#'.
+See https://github.com/ruby/rdoc/blob/master/.document as an example.
+
 == Writing Documentation
 
 To write documentation for RDoc place a comment above the class, module,
@@ -105,6 +109,15 @@ See RDoc::Parser::C for documenting C extensions with RDoc.
 To determine how well your project is documented run <tt>rdoc -C lib</tt> to
 get a documentation coverage report.  <tt>rdoc -C1 lib</tt> includes parameter
 names in the documentation coverage report.
+
+== Theme Options
+
+There are a few community-maintained themes for \RDoc:
+
+- rorvswild-theme-rdoc[https://github.com/BaseSecrete/rorvswild-theme-rdoc]
+- hanna[https://github.com/jeremyevans/hanna] (a fork maintained by {Jeremy Evans}[https://github.com/jeremyevans])
+
+Please follow the theme's README for usage instructions.
 
 == Bugs
 

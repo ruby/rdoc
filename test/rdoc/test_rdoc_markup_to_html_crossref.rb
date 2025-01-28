@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 require_relative 'xref_test_case'
 
-class TestRDocMarkupToHtmlCrossref < XrefTestCase
+class RDocMarkupToHtmlCrossrefTest < XrefTestCase
 
   def setup
     super
 
     @options.hyperlink_all = true
+    @options.warn_missing_rdoc_ref = true
 
     @to = RDoc::Markup::ToHtmlCrossref.new @options, 'index.html', @c1
   end
@@ -15,6 +16,35 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
     result = @to.convert 'C1'
 
     assert_equal para("<a href=\"C1.html\"><code>C1</code></a>"), result
+
+    result = @to.convert '+C1+'
+    assert_equal para("<a href=\"C1.html\"><code>C1</code></a>"), result
+
+    result = @to.convert 'Constant[rdoc-ref:C1]'
+    assert_equal para("<a href=\"C1.html\">Constant</a>"), result
+
+    result = @to.convert 'FOO'
+    assert_equal para("FOO"), result
+
+    result = @to.convert '+FOO+'
+    assert_equal para("<code>FOO</code>"), result
+
+    result = @to.convert '<tt># :stopdoc:</tt>:'
+    assert_equal para("<code># :stopdoc:</code>:"), result
+  end
+
+  def test_convert_CROSSREF_ignored_excluded_words
+    @options.autolink_excluded_words = ['C1']
+
+    result = @to.convert 'C1'
+    assert_equal para("C1"), result
+
+    result = @to.convert '+C1+'
+    assert_equal para("<a href=\"C1.html\"><code>C1</code></a>"), result
+
+    # Explicit linking with rdoc-ref is not ignored
+    result = @to.convert 'Constant[rdoc-ref:C1]'
+    assert_equal para("<a href=\"C1.html\">Constant</a>"), result
   end
 
   def test_convert_CROSSREF_method
@@ -65,6 +95,16 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
     result = @to.convert 'rdoc-ref:C1'
 
     assert_equal para("<a href=\"C1.html\"><code>C1</code></a>"), result
+  end
+
+  def test_convert_RDOCLINK_rdoc_ref_not_found
+    result = nil
+    stdout, _ = capture_output do
+      result = @to.convert 'rdoc-ref:FOO'
+    end
+
+    assert_equal para("FOO"), result
+    assert_include stdout, "index.html: `rdoc-ref:FOO` can't be resolved for `FOO`"
   end
 
   def test_convert_RDOCLINK_rdoc_ref_method
@@ -151,6 +191,14 @@ class TestRDocMarkupToHtmlCrossref < XrefTestCase
 
     assert_equal '<a href="http://example">HTTP example</a>',
                  @to.gen_url('http://example', 'HTTP example')
+  end
+
+  def test_gen_url_rdoc_ref_not_found
+    stdout, _ = capture_output do
+      @to.gen_url 'rdoc-ref:FOO', 'FOO'
+    end
+
+    assert_include stdout, "index.html: `rdoc-ref:FOO` can't be resolved for `FOO`"
   end
 
   def test_handle_regexp_CROSSREF

@@ -233,9 +233,9 @@ class RDoc::Options
   attr_accessor :main_page
 
   ##
-  # The default markup format.  The default is 'rdoc'.  'markdown', 'tomdoc'
-  # and 'rd' are also built-in.
-
+  # The markup format.
+  # One of: +rdoc+ (the default), +markdown+, +rd+, +tomdoc+.
+  # See {Markup Formats}[rdoc-ref:RDoc::Markup@Markup+Formats].
   attr_accessor :markup
 
   ##
@@ -326,6 +326,12 @@ class RDoc::Options
   attr_accessor :verbosity
 
   ##
+  # Warn if rdoc-ref links can't be resolved
+  # Default is +false+
+
+  attr_accessor :warn_missing_rdoc_ref
+
+  ##
   # URL of web cvs frontend
 
   attr_accessor :webcvs
@@ -344,17 +350,34 @@ class RDoc::Options
   # Indicates if files of test suites should be skipped
   attr_accessor :skip_tests
 
+  ##
+  # Embed mixin methods, attributes, and constants into class documentation. Set via
+  # +--[no-]embed-mixins+ (Default is +false+.)
+  attr_accessor :embed_mixins
+
+  ##
+  # Exclude the default patterns as well if true.
+  attr_reader :apply_default_exclude
+
+  ##
+  # Words to be ignored in autolink cross-references
+  attr_accessor :autolink_excluded_words
+
   def initialize loaded_options = nil # :nodoc:
     init_ivars
     override loaded_options if loaded_options
   end
 
+  DEFAULT_EXCLUDE = %w[
+    ~\z \.orig\z \.rej\z \.bak\z
+    \.gemspec\z
+  ]
+
   def init_ivars # :nodoc:
+    @autolink_excluded_words = []
     @dry_run = false
-    @exclude = %w[
-      ~\z \.orig\z \.rej\z \.bak\z
-      \.gemspec\z
-    ]
+    @embed_mixins = false
+    @exclude = []
     @files = nil
     @force_output = false
     @force_update = true
@@ -387,11 +410,13 @@ class RDoc::Options
     @update_output_dir = true
     @verbosity = 1
     @visibility = :protected
+    @warn_missing_rdoc_ref = true
     @webcvs = nil
     @write_options = false
     @encoding = Encoding::UTF_8
     @charset = @encoding.name
     @skip_tests = true
+    @apply_default_exclude = true
   end
 
   def init_with map # :nodoc:
@@ -401,6 +426,7 @@ class RDoc::Options
     @encoding = encoding ? Encoding.find(encoding) : encoding
 
     @charset        = map['charset']
+    @embed_mixins   = map['embed_mixins']
     @exclude        = map['exclude']
     @generator_name = map['generator_name']
     @hyperlink_all  = map['hyperlink_all']
@@ -417,6 +443,9 @@ class RDoc::Options
     @visibility     = map['visibility']
     @webcvs         = map['webcvs']
 
+    @apply_default_exclude   = map['apply_default_exclude']
+    @autolink_excluded_words = map['autolink_excluded_words']
+
     @rdoc_include = sanitize_path map['rdoc_include']
     @static_path  = sanitize_path map['static_path']
   end
@@ -432,6 +461,7 @@ class RDoc::Options
     end
 
     @charset        = map['charset']        if map.has_key?('charset')
+    @embed_mixins   = map['embed_mixins']   if map.has_key?('embed_mixins')
     @exclude        = map['exclude']        if map.has_key?('exclude')
     @generator_name = map['generator_name'] if map.has_key?('generator_name')
     @hyperlink_all  = map['hyperlink_all']  if map.has_key?('hyperlink_all')
@@ -448,6 +478,10 @@ class RDoc::Options
     @title          = map['title']          if map.has_key?('title')
     @visibility     = map['visibility']     if map.has_key?('visibility')
     @webcvs         = map['webcvs']         if map.has_key?('webcvs')
+    @autolink_excluded_words = map['autolink_excluded_words'] if map.has_key?('autolink_excluded_words')
+    @apply_default_exclude = map['apply_default_exclude'] if map.has_key?('apply_default_exclude')
+
+    @warn_missing_rdoc_ref = map['warn_missing_rdoc_ref'] if map.has_key?('warn_missing_rdoc_ref')
 
     if map.has_key?('rdoc_include')
       @rdoc_include = sanitize_path map['rdoc_include']
@@ -460,11 +494,12 @@ class RDoc::Options
   def == other # :nodoc:
     self.class === other and
       @encoding       == other.encoding       and
+      @embed_mixins   == other.embed_mixins   and
       @generator_name == other.generator_name and
       @hyperlink_all  == other.hyperlink_all  and
       @line_numbers   == other.line_numbers   and
       @locale         == other.locale         and
-      @locale_dir     == other.locale_dir and
+      @locale_dir     == other.locale_dir     and
       @main_page      == other.main_page      and
       @markup         == other.markup         and
       @op_dir         == other.op_dir         and
@@ -475,7 +510,9 @@ class RDoc::Options
       @template       == other.template       and
       @title          == other.title          and
       @visibility     == other.visibility     and
-      @webcvs         == other.webcvs
+      @webcvs         == other.webcvs         and
+      @apply_default_exclude == other.apply_default_exclude and
+      @autolink_excluded_words == other.autolink_excluded_words
   end
 
   ##
@@ -546,10 +583,12 @@ class RDoc::Options
     if @exclude.nil? or Regexp === @exclude then
       # done, #finish is being re-run
       @exclude
-    elsif @exclude.empty? then
+    elsif !@apply_default_exclude and @exclude.empty? then
       nil
     else
-      Regexp.new(@exclude.join("|"))
+      exclude = @exclude
+      exclude |= DEFAULT_EXCLUDE if @apply_default_exclude
+      Regexp.new(exclude.join("|"))
     end
   end
 
@@ -683,7 +722,7 @@ Usage: #{opt.program_name} [options] [names...]
 
       EOF
 
-      parsers = Hash.new { |h,parser| h[parser] = [] }
+      parsers = Hash.new { |h, parser| h[parser] = [] }
 
       RDoc::Parser.parsers.each do |regexp, parser|
         parsers[parser.name.sub('RDoc::Parser::', '')] << regexp.source
@@ -783,6 +822,11 @@ Usage: #{opt.program_name} [options] [names...]
         @exclude << value
       end
 
+      opt.on("--[no-]apply-default-exclude",
+             "Use default PATTERN to exclude.") do |value|
+        @apply_default_exclude = value
+      end
+
       opt.separator nil
 
       opt.on("--no-skipping-tests", nil,
@@ -838,6 +882,14 @@ Usage: #{opt.program_name} [options] [names...]
              "One of 'public', 'protected' (the default),",
              "'private' or 'nodoc' (show everything)") do |value|
         @visibility = value
+      end
+
+      opt.separator nil
+
+      opt.on("--[no-]embed-mixins",
+             "Embed mixin methods, attributes, and constants",
+             "into class documentation. (default false)") do |value|
+        @embed_mixins = value
       end
 
       opt.separator nil
@@ -942,6 +994,13 @@ Usage: #{opt.program_name} [options] [names...]
              "Use --encoding instead of --charset if",
              "available.") do |value|
         @charset = value
+      end
+
+      opt.separator nil
+
+      opt.on("--autolink-excluded-words=WORDS", Array,
+             "Words to be ignored in autolink cross-references") do |value|
+        @autolink_excluded_words.concat value
       end
 
       opt.separator nil
@@ -1083,6 +1142,13 @@ Usage: #{opt.program_name} [options] [names...]
       opt.on("-D", "--[no-]debug",
              "Displays lots on internal stuff.") do |value|
         $DEBUG_RDOC = value
+      end
+
+      opt.separator nil
+
+      opt.on("--warn-missing-rdoc-ref",
+             "Warn if rdoc-ref links can't be resolved") do |value|
+        @warn_missing_rdoc_ref = value
       end
 
       opt.separator nil

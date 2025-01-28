@@ -532,18 +532,8 @@ require 'rdoc'
 #
 #   - Appears on a line by itself.
 #   - Specifies the format for the \RDoc input;
-#     parameter +type+ is one of +markdown+, +rd+, +rdoc+, +tomdoc+.
-#
-# ===== Directives for HTML Output
-#
-# - <tt># :title: _text_</tt>:
-#
-#   - Appears on a line by itself.
-#   - Specifies the title for the HTML output.
-#
-# - <tt># :main: _filename_</tt>:
-#   - Appears on a line by itself.
-#   - Specifies the HTML file to be displayed first.
+#     parameter +type+ is one of: +rdoc+ (the default), +markdown+, +rd+, +tomdoc+.
+#     See {Markup Formats}[rdoc-ref:RDoc::Markup@Markup+Formats].
 #
 # ===== Directives for Method Documentation
 #
@@ -869,6 +859,15 @@ require 'rdoc'
 #   - On-page: <tt>DummyClass</tt> links to DummyClass.
 #   - Off-page: <tt>RDoc::Alias</tt> links to RDoc::Alias.
 #
+#   Note: For poeple want to mark up code (such as class, module,
+#   constant, and method) as "<tt>+code+</tt>" (for interoperability
+#   with other MarkDown parsers mainly), such word that refers a known
+#   code object and is marked up entirely and separately as "monofont"
+#   is also converted to a link.
+#
+#   - <tt>+DummyClass+</tt> links to DummyClass
+#   - <tt>+DummyClass-object+</tt> is not a link.
+#
 # [Module]
 #
 #   - On-page: <tt>DummyModule</tt> links to DummyModule.
@@ -916,10 +915,6 @@ require 'rdoc'
 # [Protocol +https+]
 #
 #   - Linked: <tt>https://github.com</tt> links to https://github.com.
-#
-# [Protocol +www+]
-#
-#   - Linked: <tt>www.yahoo.com</tt> links to www.yahoo.com.
 #
 # [Protocol +ftp+]
 #
@@ -986,23 +981,22 @@ require 'rdoc'
 #   if that item exists.
 #   The referenced item may be a class, module, method, file, etc.
 #
-#   - Class: <tt>Alias[rdoc-ref:RDoc::Alias]</tt> links to Alias[rdoc-ref:RDoc::Alias].
-#   - Module: <tt>RDoc[rdoc-ref:RDoc]</tt> links to RDoc[rdoc-ref:RDoc].
-#   - Method: <tt>foo[rdoc-ref:RDoc::Markup::ToHtml#handle_regexp_RDOCLINK]</tt>
-#     links to foo[rdoc-ref:RDoc::Markup::ToHtml#handle_regexp_RDOCLINK].
-#   - Constant: <tt>bar[rdoc-ref:RDoc::Markup::ToHtml::LIST_TYPE_TO_HTML]</tt>
-#     links to bar[rdoc-ref:RDoc::Markup::ToHtml::LIST_TYPE_TO_HTML].
-#   - Attribute: <tt>baz[rdoc-ref:RDoc::Markup::ToHtml#code_object]</tt>
-#     links to baz[rdoc-ref:RDoc::Markup::ToHtml#code_object].
-#   - Alias: <tt>bad[rdoc-ref:RDoc::MarkupReference#dummy_instance_alias]</tt> links to
-#     bad[rdoc-ref:RDoc::MarkupReference#dummy_instance_alias].
+#   - Class: <tt>Alias[rdoc-ref:RDoc::Alias]</tt> generates Alias[rdoc-ref:RDoc::Alias].
+#   - Module: <tt>RDoc[rdoc-ref:RDoc]</tt> generates RDoc[rdoc-ref:RDoc].
+#   - Method: <tt>foo[rdoc-ref:RDoc::MarkupReference#dummy_instance_method]</tt>
+#     generates foo[rdoc-ref:RDoc::MarkupReference#dummy_instance_method].
+#   - Constant: <tt>bar[rdoc-ref:RDoc::MarkupReference::DUMMY_CONSTANT]</tt>
+#     generates bar[rdoc-ref:RDoc::MarkupReference::DUMMY_CONSTANT].
+#   - Attribute: <tt>baz[rdoc-ref:RDoc::MarkupReference#dummy_attribute]</tt>
+#     generates baz[rdoc-ref:RDoc::MarkupReference#dummy_attribute].
+#   - Alias: <tt>bad[rdoc-ref:RDoc::MarkupReference#dummy_instance_alias]</tt>
+#     generates bad[rdoc-ref:RDoc::MarkupReference#dummy_instance_alias].
 #
 #   If the referenced item does not exist, no link is generated
 #   and entire <tt>rdoc-ref:</tt> square-bracketed clause is removed
 #   from the resulting text.
 #
-#   - <tt>Nosuch[rdoc-ref:RDoc::Nosuch]</tt> is rendered as
-#     Nosuch[rdoc-ref:RDoc::Nosuch].
+#   - <tt>Nosuch[rdoc-ref:RDoc::Nosuch]</tt> generates Nosuch.
 #
 #
 # [<tt>rdoc-label</tt> Scheme]

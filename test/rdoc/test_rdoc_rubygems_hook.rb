@@ -5,7 +5,7 @@ require 'tmpdir'
 require_relative '../../lib/rdoc/rubygems_hook'
 require 'test/unit'
 
-class TestRDocRubygemsHook < Test::Unit::TestCase
+class TestRDocRubyGemsHook < Test::Unit::TestCase
   def setup
     @a = Gem::Specification.new do |s|
       s.platform    = Gem::Platform::RUBY
@@ -37,13 +37,20 @@ class TestRDocRubygemsHook < Test::Unit::TestCase
     @a.loaded_from = File.join(@tempdir, 'a-2', 'a-2.gemspec')
 
     FileUtils.mkdir_p File.join(@tempdir, 'a-2', 'lib')
-    FileUtils.touch   File.join(@tempdir, 'a-2', 'lib', 'a.rb')
     FileUtils.touch   File.join(@tempdir, 'a-2', 'README')
+    File.open(File.join(@tempdir, 'a-2', 'lib', 'a.rb'), 'w') do |f|
+      f.puts '# comment'
+      f.puts '# :include: include.txt'
+      f.puts 'class A; end'
+    end
+    File.open(File.join(@tempdir, 'a-2', 'include.txt'), 'w') do |f|
+      f.puts 'included content'
+    end
 
-    @hook = RDoc::RubygemsHook.new @a
+    @hook = RDoc::RubyGemsHook.new @a
 
     begin
-      RDoc::RubygemsHook.load_rdoc
+      RDoc::RubyGemsHook.load_rdoc
     rescue Gem::DocumentError => e
       omit e.message
     end
@@ -63,7 +70,7 @@ class TestRDocRubygemsHook < Test::Unit::TestCase
     refute @hook.generate_rdoc
     assert @hook.generate_ri
 
-    rdoc = RDoc::RubygemsHook.new @a, false, false
+    rdoc = RDoc::RubyGemsHook.new @a, false, false
 
     refute rdoc.generate_rdoc
     refute rdoc.generate_ri
@@ -112,6 +119,10 @@ class TestRDocRubygemsHook < Test::Unit::TestCase
     assert_equal %w[README lib], rdoc.options.files.sort
 
     assert_equal 'MyTitle', rdoc.store.main
+
+    klass = rdoc.store.find_class_named('A')
+    refute_nil klass
+    assert_includes klass.comment.text, 'included content'
   end
 
   def test_generate_all
@@ -198,6 +209,25 @@ class TestRDocRubygemsHook < Test::Unit::TestCase
 
     assert_path_not_exist File.join(@a.doc_dir('rdoc'), 'index.html')
     assert_path_exist File.join(@a.doc_dir('ri'),   'cache.ri')
+  end
+
+  def test_generate_rubygems_compatible
+    original_default_gem_method = RDoc::RubygemsHook.method(:default_gem?)
+    RDoc::RubygemsHook.singleton_class.remove_method(:default_gem?)
+    RDoc::RubygemsHook.define_singleton_method(:default_gem?) { true }
+    FileUtils.mkdir_p @a.doc_dir 'ri'
+    FileUtils.mkdir_p @a.doc_dir 'rdoc'
+    FileUtils.mkdir_p File.join(@a.gem_dir, 'lib')
+
+    # rubygems/lib/rubygems/commands/rdoc_command.rb calls this
+    hook = RDoc::RubygemsHook.new @a, true, true
+    hook.force = true
+    hook.generate
+
+    assert_path_exist File.join(@a.doc_dir('rdoc'), 'index.html')
+  ensure
+    RDoc::RubygemsHook.singleton_class.remove_method(:default_gem?)
+    RDoc::RubygemsHook.define_singleton_method(:default_gem?, &original_default_gem_method)
   end
 
   def test_generate_no_overwrite

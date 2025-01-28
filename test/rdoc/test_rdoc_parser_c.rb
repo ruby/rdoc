@@ -138,7 +138,7 @@ class TestRDocParserC < RDoc::TestCase
       @fn => { 'cSomeExtSingle' => 'SomeExtSingle' }
     }
 
-    parser = RDoc::Parser::C.new @top_level, @fn, '', @options, @stats
+    parser = RDoc::Parser::C.new @top_level, '', @options, @stats
 
     expected = { 'cSomeExt' => some_ext }
     assert_equal expected, parser.classes
@@ -572,6 +572,38 @@ Multiline comment goes here because this comment spans multiple lines.
 1: However, the value extraction should only happen for the first line
     EOF
     assert_equal ['MULTILINE_COLON_ON_SECOND_LINE', 'INT2FIX(1)', comment],
+                 constants.shift
+
+    assert constants.empty?, constants.inspect
+  end
+
+  def test_do_constants_global
+    content = <<-'EOF'
+#include <ruby.h>
+
+void Init_foo(){
+
+   /* Toplevel const */
+   rb_define_global_const("ANSWER", INT2FIX(42));
+
+}
+    EOF
+
+    @parser = util_parser content
+
+    @parser.do_classes_and_modules
+    @parser.do_constants
+
+    klass = @parser.classes['rb_cObject']
+    assert klass
+
+    constants = klass.constants
+    assert !klass.constants.empty?
+
+    assert_equal @top_level, constants.first.file
+
+    constants = constants.map { |c| [c.name, c.value, c.comment.text] }
+    assert_equal ['ANSWER', 'INT2FIX(42)', "Toplevel const   "],
                  constants.shift
 
     assert constants.empty?, constants.inspect
@@ -1028,6 +1060,21 @@ Init_Foo(void) {
  * A comment
  */
 rb_define_const(cFoo, "CONST", value);
+    EOF
+
+    parser = util_parser content
+
+    comment = parser.find_const_comment 'const', 'CONST'
+
+    assert_equal "/*\n * A comment\n */\n", comment.text
+  end
+
+  def test_find_const_comment_rb_define_global
+    content = <<-EOF
+/*
+ * A comment
+ */
+rb_define_global_const("CONST", value);
     EOF
 
     parser = util_parser content
@@ -2097,7 +2144,7 @@ void Init_Blah(void) {
   end
 
   def util_parser content = ''
-    RDoc::Parser::C.new @top_level, @fn, content, @options, @stats
+    RDoc::Parser::C.new @top_level, content, @options, @stats
   end
 
 end

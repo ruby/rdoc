@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 $DEBUG_RDOC = nil
 
-# :main: README.rdoc
-
 ##
 # RDoc produces documentation for Ruby source files by parsing the source and
 # extracting the definition for classes, modules, methods, includes and
@@ -21,7 +19,7 @@ $DEBUG_RDOC = nil
 # see RDoc::Markup and refer to <tt>rdoc --help</tt> for command line usage.
 #
 # If you want to set the default markup format see
-# RDoc::Markup@Supported+Formats
+# RDoc::Markup@Markup+Formats
 #
 # If you want to store rdoc configuration in your gem (such as the default
 # markup format) see RDoc::Options@Saved+Options

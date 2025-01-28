@@ -168,7 +168,7 @@ class RDoc::Parser::C < RDoc::Parser
   # Prepares for parsing a C file.  See RDoc::Parser#initialize for details on
   # the arguments.
 
-  def initialize top_level, file_name, content, options, stats
+  def initialize top_level, content, options, stats
     super
 
     @known_classes = RDoc::KNOWN_CLASSES.dup
@@ -405,6 +405,7 @@ class RDoc::Parser::C < RDoc::Parser
                  \s*(.*?)\s*\)\s*;
                  %xm) do |type, var_name, const_name, definition|
       var_name = "rb_cObject" if !var_name or var_name == "rb_mKernel"
+      type = "const" if type == "global_const"
       handle_constants type, var_name, const_name, definition
     end
 
@@ -440,7 +441,7 @@ class RDoc::Parser::C < RDoc::Parser
   # Scans #content for rb_include_module
 
   def do_includes
-    @content.scan(/rb_include_module\s*\(\s*(\w+?),\s*(\w+?)\s*\)/) do |c,m|
+    @content.scan(/rb_include_module\s*\(\s*(\w+?),\s*(\w+?)\s*\)/) do |c, m|
       next unless cls = @classes[c]
       m = @known_classes[m] || m
 
@@ -758,6 +759,10 @@ class RDoc::Parser::C < RDoc::Parser
     @content.scan(%r{
       (?<doc>(?>^\s*/\*.*?\*/\s+))
         rb_define_(?<type>\w+)\(\s*(?:\w+),\s*
+                           "(?<name>\w+)"\s*,
+                           .*?\)\s*;
+    | (?<doc>(?>^\s*/\*.*?\*/\s+))
+        rb_define_global_(?<type>const)\(\s*
                            "(?<name>\w+)"\s*,
                            .*?\)\s*;
     |  (?<doc>(?>^\s*/\*.*?\*/\s+))
@@ -1097,15 +1102,34 @@ class RDoc::Parser::C < RDoc::Parser
   #    */
   #
   # This method modifies the +comment+
+  # Both :main: and :title: directives are deprecated and will be removed in RDoc 7.
 
   def look_for_directives_in context, comment
     @preprocess.handle comment, context do |directive, param|
       case directive
       when 'main' then
         @options.main_page = param
+
+        warn <<~MSG
+          The :main: directive is deprecated and will be removed in RDoc 7.
+
+          You can use these options to specify the initial page displayed instead:
+          - `--main=#{param}` via the command line
+          - `rdoc.main = "#{param}"` if you use `RDoc::Task`
+          - `main_page: #{param}` in your `.rdoc_options` file
+        MSG
         ''
       when 'title' then
         @options.default_title = param if @options.respond_to? :default_title=
+
+        warn <<~MSG
+          The :title: directive is deprecated and will be removed in RDoc 7.
+
+          You can use these options to specify the title displayed instead:
+          - `--title=#{param}` via the command line
+          - `rdoc.title = "#{param}"` if you use `RDoc::Task`
+          - `title: #{param}` in your `.rdoc_options` file
+        MSG
         ''
       end
     end

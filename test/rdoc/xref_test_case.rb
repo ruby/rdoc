@@ -20,8 +20,7 @@ class XrefTestCase < RDoc::TestCase
 
     stats = RDoc::Stats.new @store, 0
 
-    parser = RDoc::Parser::Ruby.new @xref_data, @file_name, XREF_DATA, @options,
-                                    stats
+    parser = RDoc::Parser::Ruby.new @xref_data, XREF_DATA, @options, stats
 
     @example_md = @store.add_file 'EXAMPLE.md'
     @example_md.parser = RDoc::Parser::Markdown
