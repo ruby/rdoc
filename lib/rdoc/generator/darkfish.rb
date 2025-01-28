@@ -316,11 +316,14 @@ class RDoc::Generator::Darkfish
     asset_rel_prefix = rel_prefix + @asset_rel_path
 
     @title = @options.title
+    @main_page = @files.find { |f| f.full_name == @options.main_page }
 
     render_template template_file, out_file do |io|
       here = binding
       # suppress 1.9.3 warning
       here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
+      # some partials rely on the presence of current variable to render
+      here.local_variable_set(:current, @main_page) if @main_page
       here
     end
   rescue => e

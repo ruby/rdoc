@@ -134,6 +134,88 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     )
   end
 
+  def test_generate_index_with_main_page
+    top_level = @store.add_file 'file.rb'
+    top_level.comment = <<~RDOC
+    = Heading 1
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+    == Heading 1.1
+    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+    === Heading 1.1.1
+    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+    ==== Heading 1.1.1.1
+    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+    == Heading 1.2
+    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+    == Heading 1.3
+    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    === Heading 1.3.1
+    etc etc...
+    RDOC
+
+    @options.main_page = 'file.rb'
+    @options.title = 'My awesome Ruby project'
+
+    @g.generate
+
+    assert_file 'index.html'
+    assert_file 'table_of_contents.html'
+    assert_file 'js/search_index.js'
+
+    assert_hard_link 'css/rdoc.css'
+    assert_hard_link 'css/fonts.css'
+
+    assert_hard_link 'fonts/SourceCodePro-Bold.ttf'
+    assert_hard_link 'fonts/SourceCodePro-Regular.ttf'
+
+    index_html = File.binread('index.html')
+
+    assert_include index_html, "<h3>Table of Contents</h3>"
+    assert_include index_html, '<h1 id="label-Heading+1">Heading 1'
+    # When there's a main page, the default description should not be shown
+    assert_not_include index_html, 'This is the API documentation for My awesome Ruby project.'
+  end
+
+  def test_generate_index_without_main_page
+    top_level = @store.add_file 'file.rb'
+    top_level.comment = <<~RDOC
+    = Heading 1
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+    == Heading 1.1
+    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+    === Heading 1.1.1
+    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+    ==== Heading 1.1.1.1
+    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+    == Heading 1.2
+    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+    == Heading 1.3
+    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    === Heading 1.3.1
+    etc etc...
+    RDOC
+
+    @options.title = 'My awesome Ruby project'
+
+    @g.generate
+
+    assert_file 'index.html'
+    assert_file 'table_of_contents.html'
+    assert_file 'js/search_index.js'
+
+    assert_hard_link 'css/rdoc.css'
+    assert_hard_link 'css/fonts.css'
+
+    assert_hard_link 'fonts/SourceCodePro-Bold.ttf'
+    assert_hard_link 'fonts/SourceCodePro-Regular.ttf'
+
+    index_html = File.binread('index.html')
+
+    # If there is no main page, the index page should not have a table of contents
+    assert_not_include index_html, "<h3>Table of Contents</h3>"
+    assert_include index_html, 'This is the API documentation for My awesome Ruby project.'
+  end
+
   def test_generate_page
     @store.add_file 'outer.rdoc', parser: RDoc::Parser::Simple
     @store.add_file 'outer/inner.rdoc', parser: RDoc::Parser::Simple

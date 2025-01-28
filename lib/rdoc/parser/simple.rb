@@ -14,7 +14,7 @@ class RDoc::Parser::Simple < RDoc::Parser
   ##
   # Prepare to parse a plain file
 
-  def initialize(top_level, file_name, content, options, stats)
+  def initialize(top_level, content, options, stats)
     super
 
     preprocess = RDoc::Markup::PreProcess.new @file_name, @options.rdoc_include

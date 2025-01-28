@@ -138,7 +138,7 @@ class TestRDocParserC < RDoc::TestCase
       @fn => { 'cSomeExtSingle' => 'SomeExtSingle' }
     }
 
-    parser = RDoc::Parser::C.new @top_level, @fn, '', @options, @stats
+    parser = RDoc::Parser::C.new @top_level, '', @options, @stats
 
     expected = { 'cSomeExt' => some_ext }
     assert_equal expected, parser.classes
@@ -2144,7 +2144,7 @@ void Init_Blah(void) {
   end
 
   def util_parser content = ''
-    RDoc::Parser::C.new @top_level, @fn, content, @options, @stats
+    RDoc::Parser::C.new @top_level, content, @options, @stats
   end
 
 end

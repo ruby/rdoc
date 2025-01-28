@@ -18,7 +18,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   attr_accessor :visibility
   attr_reader :container, :singleton
 
-  def initialize(top_level, file_name, content, options, stats)
+  def initialize(top_level, content, options, stats)
     super
 
     content = handle_tab_width(content)
@@ -642,14 +642,16 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
     owner, name = find_or_create_constant_owner_name(module_name)
     if is_class
-      mod = owner.classes_hash[name] || owner.add_class(RDoc::NormalClass, name, superclass_name || '::Object')
-
       # RDoc::NormalClass resolves superclass name despite of the lack of module nesting information.
       # We need to fix it when RDoc::NormalClass resolved to a wrong constant name
       if superclass_name
         superclass_full_path = resolve_constant_path(superclass_name)
         superclass = @store.find_class_or_module(superclass_full_path) if superclass_full_path
         superclass_full_path ||= superclass_name
+      end
+      # add_class should be done after resolving superclass
+      mod = owner.classes_hash[name] || owner.add_class(RDoc::NormalClass, name, superclass_name || '::Object')
+      if superclass_name
         if superclass
           mod.superclass = superclass
         elsif mod.superclass.is_a?(String) && mod.superclass != superclass_full_path

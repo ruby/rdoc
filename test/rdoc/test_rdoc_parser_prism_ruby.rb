@@ -201,6 +201,25 @@ module RDocParserPrismTestCases
     assert_equal ['A::B', 'A::B', 'A::A::B', 'A::B'], classes.drop(1).map(&:superclass).map(&:full_name)
   end
 
+  def test_pseudo_recursive_superclass
+    util_parser <<~RUBY
+      module Foo
+        class Bar
+          class Foo < Bar; end
+          # This class definition is used in OpenSSL::Cipher::Cipher
+          class Bar < Bar; end
+          class Baz < Bar; end
+        end
+      end
+    RUBY
+    foo_klass = @store.find_class_named 'Foo::Bar::Foo'
+    bar_klass = @store.find_class_named 'Foo::Bar::Bar'
+    baz_klass = @store.find_class_named 'Foo::Bar::Baz'
+    assert_equal 'Foo::Bar', foo_klass.superclass.full_name
+    assert_equal 'Foo::Bar', bar_klass.superclass.full_name
+    assert_equal 'Foo::Bar::Bar', baz_klass.superclass.full_name
+  end
+
   def test_class_module_nodoc
     util_parser <<~RUBY
       class Foo # :nodoc:
@@ -1977,7 +1996,7 @@ class TestRDocParserPrismRuby < RDoc::TestCase
   end
 
   def util_parser(content)
-    @parser = RDoc::Parser::PrismRuby.new @top_level, @filename, content, @options, @stats
+    @parser = RDoc::Parser::PrismRuby.new @top_level, content, @options, @stats
     @parser.scan
   end
 end
@@ -1991,7 +2010,7 @@ class TestRDocParserRubyWithPrismRubyTestCases < RDoc::TestCase
   end
 
   def util_parser(content)
-    @parser = RDoc::Parser::Ruby.new @top_level, @filename, content, @options, @stats
+    @parser = RDoc::Parser::Ruby.new @top_level, content, @options, @stats
     @parser.scan
   end
 end unless ENV['RDOC_USE_PRISM_PARSER']
