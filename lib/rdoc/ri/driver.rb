@@ -518,7 +518,7 @@ or the PAGER environment variable.
     with.each do |incl|
       out << RDoc::Markup::Paragraph.new(incl.name)
       out << RDoc::Markup::BlankLine.new
-      out << incl.comment
+      out << incl.comment.parse
     end
 
     unless wout.empty? then
@@ -542,7 +542,7 @@ or the PAGER environment variable.
 
     if include.comment then
       out << RDoc::Markup::BlankLine.new
-      out << include.comment
+      out << include.comment.parse
     end
   end
 
@@ -657,12 +657,12 @@ or the PAGER environment variable.
   ##
   # Adds the class +comment+ to +out+.
 
-  def class_document_comment out, comment # :nodoc:
-    unless comment.empty? then
+  def class_document_comment out, document # :nodoc:
+    unless document.empty? then
       out << RDoc::Markup::Rule.new(1)
 
-      if comment.merged? then
-        parts = comment.parts
+      if document.merged? then
+        parts = document.parts
         parts = parts.zip [RDoc::Markup::BlankLine.new] * parts.length
         parts.flatten!
         parts.pop
@@ -687,7 +687,7 @@ or the PAGER environment variable.
     constants = klass.constants.sort_by { |constant| constant.name }
 
     list.items.concat constants.map { |constant|
-      parts = constant.comment.parts if constant.comment
+      parts = constant.comment.parse.parts
       parts << RDoc::Markup::Paragraph.new('[not documented]') if
         parts.empty?
 
@@ -906,7 +906,7 @@ or the PAGER environment variable.
 
     page = store.load_page page_name
 
-    display page.comment
+    display page.comment.parse
   end
 
   ##
@@ -1207,7 +1207,8 @@ or the PAGER environment variable.
 
     store.load_method klass, "#{type}#{method}"
   rescue RDoc::Store::MissingFileError => e
-    comment = RDoc::Comment.new("missing documentation at #{e.file}").parse
+    comment = RDoc::Comment.new("missing documentation at #{e.file}")
+    comment.parse
 
     method = RDoc::AnyMethod.new nil, name
     method.comment = comment
@@ -1367,13 +1368,13 @@ or the PAGER environment variable.
   # documentable items the class is added to +also_in+ instead.
 
   def render_class out, store, klass, also_in # :nodoc:
-    comment = klass.comment
+    document = klass.comment.parse
     # TODO the store's cache should always return an empty Array
     class_methods    = store.class_methods[klass.full_name]    || []
     instance_methods = store.instance_methods[klass.full_name] || []
     attributes       = store.attributes[klass.full_name]       || []
 
-    if comment.empty? and
+    if document.empty? and
        instance_methods.empty? and class_methods.empty? then
       also_in << store
       return
@@ -1381,7 +1382,7 @@ or the PAGER environment variable.
 
     add_from out, store
 
-    class_document_comment out, comment
+    class_document_comment out, document
 
     if class_methods or instance_methods or not klass.constants.empty? then
       out << RDoc::Markup::Rule.new(1)
@@ -1429,16 +1430,16 @@ or the PAGER environment variable.
     if alias_for
       unless method.comment.nil? or method.comment.empty?
         out << RDoc::Markup::BlankLine.new
-        out << method.comment
+        out << method.comment.parse
       end
       out << RDoc::Markup::BlankLine.new
       out << RDoc::Markup::Paragraph.new("(This method is an alias for #{alias_for.full_name}.)")
       out << RDoc::Markup::BlankLine.new
-      out << alias_for.comment
+      out << alias_for.comment.parse
       out << RDoc::Markup::BlankLine.new
     else
       out << RDoc::Markup::BlankLine.new
-      out << method.comment
+      out << method.comment.parse
       out << RDoc::Markup::BlankLine.new
     end
   end
@@ -1551,7 +1552,7 @@ or the PAGER environment variable.
     found_pages.each do |page|
       out << RDoc::Markup::Heading.new(4, "Expanded from #{page.full_name}")
       out << RDoc::Markup::BlankLine.new
-      out << page.comment
+      out << page.comment.parse
     end
   end
 end

@@ -126,7 +126,7 @@ class RDoc::Comment
   # A comment is empty if its text String is empty.
 
   def empty?
-    @text.empty?
+    @text.empty? && (@document.nil? || @document.empty?)
   end
 
   ##
@@ -224,6 +224,16 @@ class RDoc::Comment
 
   def tomdoc?
     @format == 'tomdoc'
+  end
+
+  ##
+  # Create a new parsed comment from a document
+
+  def self.from_document(document) # :nodoc:
+    comment = RDoc::Comment.new('')
+    comment.document = document
+    comment.location = RDoc::TopLevel.new(document.file) if document.file
+    comment
   end
 
 end

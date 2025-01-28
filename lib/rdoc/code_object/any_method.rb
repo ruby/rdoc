@@ -198,7 +198,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @full_name     = array[2]
     @singleton     = array[3]
     @visibility    = array[4]
-    @comment       = array[5]
+    @comment       = RDoc::Comment.from_document array[5]
     @call_seq      = array[6]
     @block_params  = array[7]
     #                      8 handled below
@@ -210,8 +210,8 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @section_title = array[14]
     @is_alias_for  = array[15]
 
-    array[8].each do |new_name, comment|
-      add_alias RDoc::Alias.new(nil, @name, new_name, comment, @singleton)
+    array[8].each do |new_name, document|
+      add_alias RDoc::Alias.new(nil, @name, new_name, RDoc::Comment.from_document(document), @singleton)
     end
 
     @parent_name ||= if @full_name =~ /#/ then

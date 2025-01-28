@@ -860,9 +860,9 @@ Foo::Bar#bother
     other = @store1.add_file 'README.md'
     other.parser = RDoc::Parser::Simple
     other.comment =
-      doc(
+      RDoc::Comment.from_document(doc(
         head(1, 'README.md'),
-        para('This is the other README'))
+        para('This is the other README')))
 
     @store1.save_page other
 
@@ -881,9 +881,9 @@ Foo::Bar#bother
     other = @store1.add_file 'README.EXT'
     other.parser = RDoc::Parser::Simple
     other.comment =
-      doc(
+      RDoc::Comment.from_document(doc(
         head(1, 'README.EXT'),
-        para('This is the other README'))
+        para('This is the other README')))
 
     @store1.save_page other
 
@@ -900,9 +900,9 @@ Foo::Bar#bother
     other = @store1.add_file 'doc/globals.rdoc'
     other.parser = RDoc::Parser::Simple
     other.comment =
-      doc(
+      RDoc::Comment.from_document(doc(
         head(1, 'globals.rdoc'),
-        para('Globals go here'))
+        para('Globals go here')))
 
     @store1.save_page other
 
@@ -934,9 +934,9 @@ Foo::Bar#bother
     other = @store1.add_file 'OTHER.rdoc'
     other.parser = RDoc::Parser::Simple
     other.comment =
-      doc(
+      RDoc::Comment.from_document(doc(
         head(1, 'OTHER'),
-        para('This is OTHER'))
+        para('This is OTHER')))
 
     @store1.save_page other
 
@@ -1543,10 +1543,7 @@ Foo::Bar#bother
 
     @readme = @store1.add_file 'README.rdoc'
     @readme.parser = RDoc::Parser::Simple
-    @readme.comment =
-      doc(
-        head(1, 'README'),
-        para('This is a README'))
+    @readme.comment = RDoc::Comment.from_document(doc(head(1, 'README'), para('This is a README')))
 
     @cFoo = @top_level.add_class RDoc::NormalClass, 'Foo'
     @mExt = @top_level.add_module RDoc::NormalModule, 'Ext'
@@ -1554,10 +1551,10 @@ Foo::Bar#bother
     @cAmbiguous = @top_level.add_class RDoc::NormalClass, 'Ambiguous'
 
     doc = @RM::Document.new @RM::Paragraph.new('Extend thingy')
-    @cFooExt = @cFoo.add_extend RDoc::Extend.new('Ext', doc)
+    @cFooExt = @cFoo.add_extend RDoc::Extend.new('Ext', RDoc::Comment.from_document(doc))
     @cFooExt.record_location @top_level
     doc = @RM::Document.new @RM::Paragraph.new('Include thingy')
-    @cFooInc = @cFoo.add_include RDoc::Include.new('Inc', doc)
+    @cFooInc = @cFoo.add_include RDoc::Include.new('Inc', RDoc::Comment.from_document(doc))
     @cFooInc.record_location @top_level
 
     @cFoo_Bar = @cFoo.add_class RDoc::NormalClass, 'Bar'
