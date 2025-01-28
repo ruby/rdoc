@@ -199,6 +199,19 @@ nav h3,
   font-size: 1em;
 }
 
+ol.breadcrumb {
+  display: flex;
+
+  padding: 0;
+  margin: 0 0 1em;
+}
+
+ol.breadcrumb li {
+  display: block;
+  list-style: none;
+  font-size: 125%;
+}
+
 nav ul,
 nav dl,
 nav p {
