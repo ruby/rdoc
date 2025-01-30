@@ -1927,6 +1927,35 @@ module RDocParserPrismTestCases
     assert_equal ['a', 'f'], mod.method_list.map(&:name)
   end
 
+  def test_include_extend_suppressed_within_block
+    util_parser <<~RUBY
+      module M; end
+      module N; end
+      module O: end
+      class A
+        metaprogramming do
+          include M
+          extend N
+          class B
+            include M
+            extend N
+          end
+          include M
+          extend N
+        end
+        include O
+        extend O
+      end
+    RUBY
+    a, b = @store.all_classes
+    unless accept_legacy_bug?
+      assert_equal ['O'], a.includes.map(&:name)
+      assert_equal ['O'], a.extends.map(&:name)
+    end
+    assert_equal ['M'], b.includes.map(&:name)
+    assert_equal ['N'], b.extends.map(&:name)
+  end
+
   def test_multibyte_method_name
     content = <<~RUBY
       class Foo

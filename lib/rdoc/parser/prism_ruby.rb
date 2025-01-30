@@ -35,6 +35,17 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     @container = top_level
     @visibility = :public
     @singleton = false
+    @include_extend_suppressed = false
+  end
+
+  # Suppress `extend` and `include` within block
+  # because they might be a metaprogramming block
+  # example: `Module.new { include M }` `M.module_eval { include N }`
+
+  def suppress_include_extend
+    @include_extend_suppressed = true
+    yield
+    @include_extend_suppressed = false
   end
 
   # Dive into another container
@@ -43,9 +54,11 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     old_container = @container
     old_visibility = @visibility
     old_singleton = @singleton
+    old_include_extend_suppressed = @include_extend_suppressed
     @visibility = :public
     @container = container
     @singleton = singleton
+    @include_extend_suppressed = false
     unless singleton
       @module_nesting.push container
 
@@ -58,6 +71,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     @container = old_container
     @visibility = old_visibility
     @singleton = old_singleton
+    @include_extend_suppressed = old_include_extend_suppressed
     @module_nesting.pop unless singleton
   end
 
@@ -471,6 +485,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   end
 
   def add_includes_extends(names, rdoc_class, line_no) # :nodoc:
+    return if @include_extend_suppressed
     comment = consecutive_comment(line_no)
     handle_consecutive_comment_directive(@container, comment)
     names.each do |name|
@@ -736,9 +751,18 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         when :private_class_method
           _visit_call_public_private_class_method(node, :private) { super }
         else
+          node.arguments&.accept(self)
           super
         end
       else
+        super
+      end
+    end
+
+    def visit_block_node(node)
+      @scanner.suppress_include_extend do
+        # include and extend inside block are not documentable
+        # method definition might also not work but document it for now.
         super
       end
     end
