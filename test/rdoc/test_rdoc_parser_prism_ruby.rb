@@ -281,7 +281,7 @@ module RDocParserPrismTestCases
     assert_equal ['Foo', 'Bar', 'Baz'], @top_level.classes.map(&:full_name)
     foo, bar, baz = @top_level.classes
     assert_equal foo, bar.superclass
-    assert_equal 'Object', baz.superclass unless accept_legacy_bug?
+    assert_equal '(any expression)', baz.superclass
   end
 
   def test_class_new_notnew
@@ -534,6 +534,27 @@ module RDocParserPrismTestCases
     assert_equal @top_level, three.file
   end
 
+  def test_method_with_modifier_if_unless
+    util_parser <<~RUBY
+      class Foo
+        # my method one
+        def one
+        end if foo
+
+        # my method two
+        def two
+        end unless foo
+      end
+    RUBY
+
+    klass = @store.find_class_named 'Foo'
+    one, two = klass.method_list
+    assert_equal 'Foo#one', one.full_name
+    assert_equal 'my method one', one.comment.text.strip
+    assert_equal 'Foo#two', two.full_name
+    assert_equal 'my method two', two.comment.text.strip
+  end
+
   def test_method_toplevel
     util_parser <<~RUBY
       # comment
@@ -769,14 +790,22 @@ module RDocParserPrismTestCases
 
   def test_undefined_singleton_class_defines_module
     util_parser <<~RUBY
-      class << Foo
-      end
-      class << ::Bar
+      module A
+        class << Foo
+        end
+        class << ::Bar
+        end
+        Baz1 = ''
+        class << Baz1
+        end
+        class << Baz2 # :nodoc:
+        end
       end
     RUBY
 
     modules = @store.all_modules
-    assert_equal ['Foo', 'Bar'], modules.map(&:name)
+    modules = modules.take(3) if accept_legacy_bug?
+    assert_equal ['A', 'A::Foo', 'Bar'], modules.map(&:full_name)
   end
 
   def test_singleton_class
@@ -1037,6 +1066,23 @@ module RDocParserPrismTestCases
     RUBY
     klass = @store.find_class_named 'A'
     assert_equal [:public] * 4, klass.method_list.map(&:visibility)
+  end
+
+  def test_singleton_class_def_with_visibility
+    util_parser <<~RUBY
+      class A
+        class <<self
+          private def m1; end
+        end
+        private def self.m2; end
+      end
+      class <<A
+        private def m3; end
+      end
+    RUBY
+    klass = @store.find_class_named 'A'
+    assert_equal [true, true, true], klass.method_list.map(&:singleton)
+    assert_equal [:private, :public, :private], klass.method_list.map(&:visibility)
   end
 
   def test_method_visibility_change_in_subclass

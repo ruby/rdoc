@@ -204,6 +204,10 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     @stats.add_method meth
   end
 
+  def has_modifier_nodoc?(line_no) # :nodoc:
+    @modifier_comments[line_no]&.text&.match?(/\A#\s*:nodoc:/)
+  end
+
   def handle_modifier_directive(code_object, line_no) # :nodoc:
     comment = @modifier_comments[line_no]
     @preprocess.handle(comment.text, code_object) if comment
@@ -568,9 +572,12 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       @module_nesting.reverse_each do |nesting|
         mod = nesting.find_module_named(root_name)
         break if mod
+        # If a constant is found and it is not a module or class, RDoc can't document about it.
+        # Return an anonymous module to avoid wrong document creation.
+        return RDoc::NormalModule.new(nil) if nesting.find_constant_named(root_name)
       end
-      return mod || add_module.call(@top_level, root_name, create_mode) unless name
-      mod ||= add_module.call(@top_level, root_name, :module)
+      return mod || add_module.call(@module_nesting.last, root_name, create_mode) unless name
+      mod ||= add_module.call(@module_nesting.last, root_name, :module)
     end
     path.each do |name|
       mod = mod.find_module_named(name) || add_module.call(mod, name, :module)
@@ -635,7 +642,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   # Adds module or class
 
-  def add_module_or_class(module_name, start_line, end_line, is_class: false, superclass_name: nil)
+  def add_module_or_class(module_name, start_line, end_line, is_class: false, superclass_name: nil, superclass_expr: nil)
     comment = consecutive_comment(start_line)
     handle_consecutive_comment_directive(@container, comment)
     return unless @container.document_children
@@ -650,7 +657,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         superclass_full_path ||= superclass_name
       end
       # add_class should be done after resolving superclass
-      mod = owner.classes_hash[name] || owner.add_class(RDoc::NormalClass, name, superclass_name || '::Object')
+      mod = owner.classes_hash[name] || owner.add_class(RDoc::NormalClass, name, superclass_name || superclass_expr || '::Object')
       if superclass_name
         if superclass
           mod.superclass = superclass
@@ -677,6 +684,20 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       @top_level = top_level
       @store = store
     end
+
+    def visit_if_node(node)
+      if node.end_keyword
+        super
+      else
+        # Visit with the order in text representation to handle this method comment
+        # # comment
+        # def f
+        # end if call_node
+        node.statements.accept(self)
+        node.predicate.accept(self)
+      end
+    end
+    alias visit_unless_node visit_if_node
 
     def visit_call_node(node)
       @scanner.process_comments_until(node.location.start_line - 1)
@@ -745,8 +766,9 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     def visit_class_node(node)
       @scanner.process_comments_until(node.location.start_line - 1)
       superclass_name = constant_path_string(node.superclass) if node.superclass
+      superclass_expr = node.superclass.slice if node.superclass && !superclass_name
       class_name = constant_path_string(node.constant_path)
-      klass = @scanner.add_module_or_class(class_name, node.location.start_line, node.location.end_line, is_class: true, superclass_name: superclass_name) if class_name
+      klass = @scanner.add_module_or_class(class_name, node.location.start_line, node.location.end_line, is_class: true, superclass_name: superclass_name, superclass_expr: superclass_expr) if class_name
       if klass
         @scanner.with_container(klass) do
           super
@@ -759,6 +781,12 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
     def visit_singleton_class_node(node)
       @scanner.process_comments_until(node.location.start_line - 1)
+
+      if @scanner.has_modifier_nodoc?(node.location.start_line)
+        # Skip visiting inside the singleton class. Also skips creation of node.expression as a module
+        @scanner.skip_comments_until(node.location.end_line)
+        return
+      end
 
       expression = node.expression
       expression = expression.body.body.first if expression.is_a?(Prism::ParenthesesNode) && expression.body&.body&.size == 1
@@ -944,7 +972,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         @scanner.visibility = visibility
       else # `public :foo, :bar`, `private def foo; end`
         yield
-        names = visibility_method_arguments(call_node, singleton: @scanner.singleton)
+        names = visibility_method_arguments(call_node, singleton: false)
         @scanner.change_method_visibility(names, visibility) if names
       end
     end
