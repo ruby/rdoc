@@ -358,7 +358,6 @@ module RDocParserPrismTestCases
     assert_equal ['DidYouMean::NameErrorCheckers::new'], mod.method_list.map(&:full_name)
   end
 
-
   def test_ghost_method
     util_parser <<~RUBY
       class Foo
@@ -1593,6 +1592,37 @@ module RDocParserPrismTestCases
     assert_equal ['Foo::A', 'Foo::C'], klass.constants.map(&:full_name)
     assert_equal 'Foo::A', klass.find_module_named('A').full_name
     assert_equal 'Foo::C', klass.find_module_named('C').full_name
+  end
+
+  def test_constant_with_singleton_class
+    pend if accept_legacy_bug?
+    util_parser <<~RUBY
+      class Foo
+        class Bar; end
+        A = 1
+        class <<Bar
+          B = 1
+          Foo::Bar::B2 = 1
+        end
+        class Bar
+          C = 1
+        end
+        class <<(p(D = 1))
+          E = 1
+        end
+        class (F = 1)::Baz
+          G = 1
+        end
+        module (H = 1)::Baz
+          I = 1
+        end
+      end
+      J = 1
+    RUBY
+    foo, bar = @store.all_classes
+    assert_equal ['J'], @store.find_class_named('Object').constants.map(&:name)
+    assert_equal ['A', 'D', 'F', 'H'], foo.constants.map(&:name)
+    assert_equal ['B2', 'C'], bar.constants.map(&:name)
   end
 
   def test_constant_method

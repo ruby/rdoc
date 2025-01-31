@@ -31,7 +31,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     @track_visibility = :nodoc != @options.visibility
     @encoding = @options.encoding
 
-    @module_nesting = [top_level]
+    @module_nesting = [[top_level, false]]
     @container = top_level
     @visibility = :public
     @singleton = false
@@ -60,19 +60,18 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     @singleton = singleton
     @include_extend_suppressed = false
     unless singleton
-      @module_nesting.push container
-
       # Need to update module parent chain to emulate Module.nesting.
       # This mechanism is inaccurate and needs to be fixed.
       container.parent = old_container
     end
+    @module_nesting.push([container, singleton])
     yield container
   ensure
     @container = old_container
     @visibility = old_visibility
     @singleton = old_singleton
     @include_extend_suppressed = old_include_extend_suppressed
-    @module_nesting.pop unless singleton
+    @module_nesting.pop
   end
 
   # Records the location of this +container+ in the file for this parser and
@@ -584,15 +583,17 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     if root_name.empty?
       mod = @top_level
     else
-      @module_nesting.reverse_each do |nesting|
+      @module_nesting.reverse_each do |nesting, singleton|
+        next if singleton
         mod = nesting.find_module_named(root_name)
         break if mod
         # If a constant is found and it is not a module or class, RDoc can't document about it.
         # Return an anonymous module to avoid wrong document creation.
         return RDoc::NormalModule.new(nil) if nesting.find_constant_named(root_name)
       end
-      return mod || add_module.call(@module_nesting.last, root_name, create_mode) unless name
-      mod ||= add_module.call(@module_nesting.last, root_name, :module)
+      last_nesting, = @module_nesting.reverse_each.find { |_, singleton| !singleton }
+      return mod || add_module.call(last_nesting, root_name, create_mode) unless name
+      mod ||= add_module.call(last_nesting, root_name, :module)
     end
     path.each do |name|
       mod = mod.find_module_named(name) || add_module.call(mod, name, :module)
@@ -606,7 +607,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     owner_name, path = constant_path.split('::', 2)
     return constant_path if owner_name.empty? # ::Foo, ::Foo::Bar
     mod = nil
-    @module_nesting.reverse_each do |nesting|
+    @module_nesting.reverse_each do |nesting, singleton|
+      next if singleton
       mod = nesting.find_module_named(owner_name)
       break if mod
     end
@@ -620,7 +622,10 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   def find_or_create_constant_owner_name(constant_path)
     const_path, colon, name = constant_path.rpartition('::')
     if colon.empty? # class Foo
-      [@container, name]
+      # Within `class C` or `module C`, owner is C(== current container)
+      # Within `class <<C`, owner is C.singleton_class
+      # but RDoc don't track constants of a singleton class of module
+      [(@singleton ? nil : @container), name]
     elsif const_path.empty? # class ::Foo
       [@top_level, name]
     else # `class Foo::Bar` or `class ::Foo::Bar`
@@ -634,6 +639,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     comment = consecutive_comment(start_line)
     handle_consecutive_comment_directive(@container, comment)
     owner, name = find_or_create_constant_owner_name(constant_name)
+    return unless owner
+
     constant = RDoc::Constant.new(name, rhs_name, comment)
     constant.store = @store
     constant.line = start_line
@@ -663,6 +670,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     return unless @container.document_children
 
     owner, name = find_or_create_constant_owner_name(module_name)
+    return unless owner
+
     if is_class
       # RDoc::NormalClass resolves superclass name despite of the lack of module nesting information.
       # We need to fix it when RDoc::NormalClass resolved to a wrong constant name
@@ -774,12 +783,13 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     end
 
     def visit_module_node(node)
+      node.constant_path.accept(self)
       @scanner.process_comments_until(node.location.start_line - 1)
       module_name = constant_path_string(node.constant_path)
       mod = @scanner.add_module_or_class(module_name, node.location.start_line, node.location.end_line) if module_name
       if mod
         @scanner.with_container(mod) do
-          super
+          node.body&.accept(self)
           @scanner.process_comments_until(node.location.end_line)
         end
       else
@@ -788,6 +798,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     end
 
     def visit_class_node(node)
+      node.constant_path.accept(self)
+      node.superclass&.accept(self)
       @scanner.process_comments_until(node.location.start_line - 1)
       superclass_name = constant_path_string(node.superclass) if node.superclass
       superclass_expr = node.superclass.slice if node.superclass && !superclass_name
@@ -795,7 +807,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       klass = @scanner.add_module_or_class(class_name, node.location.start_line, node.location.end_line, is_class: true, superclass_name: superclass_name, superclass_expr: superclass_expr) if class_name
       if klass
         @scanner.with_container(klass) do
-          super
+          node.body&.accept(self)
           @scanner.process_comments_until(node.location.end_line)
         end
       else
@@ -826,9 +838,10 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       when Prism::SelfNode
         mod = @scanner.container if @scanner.container != @top_level
       end
+      expression.accept(self)
       if mod
         @scanner.with_container(mod, singleton: true) do
-          super
+          node.body&.accept(self)
           @scanner.process_comments_until(node.location.end_line)
         end
       else
