@@ -527,16 +527,6 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     handle_modifier_directive(meth, end_line)
     return unless should_document?(meth)
 
-    if meth.name == 'initialize' && !singleton
-      if meth.dont_rename_initialize
-        meth.visibility = :protected
-      else
-        meth.name = 'new'
-        meth.singleton = true
-        meth.visibility = :public
-      end
-    end
-
     internal_add_method(
       receiver,
       meth,
@@ -548,6 +538,18 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       block_params: block_params,
       tokens: tokens
     )
+
+    # Rename after add_method to register duplicated 'new' and 'initialize'
+    # defined in c and ruby just like the old parser did.
+    if meth.name == 'initialize' && !singleton
+      if meth.dont_rename_initialize
+        meth.visibility = :protected
+      else
+        meth.name = 'new'
+        meth.singleton = true
+        meth.visibility = :public
+      end
+    end
   end
 
   private def internal_add_method(container, meth, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:) # :nodoc:
