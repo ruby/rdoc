@@ -663,25 +663,22 @@ module RDocParserPrismTestCases
           add_my_method :bar
         end
 
-        tap do
-          # comment baz1
+        metaprogramming do
+          # class that defines this method is unknown
           def baz1; end
         end
 
-        self.tap do
-          # comment baz2
-          def baz2; end
-        end
+        my_decorator def self.baz2; end
 
-        my_decorator def self.baz3; end
-
-        self.my_decorator def baz4; end
+        self.my_decorator def baz3; end
       end
     RUBY
     mod = @store.find_module_named 'A'
     methods = mod.method_list
-    assert_equal ['A::foo', 'A#bar', 'A#baz1', 'A#baz2', 'A::baz3', 'A#baz4'], methods.map(&:full_name)
-    assert_equal ['comment foo', 'comment bar', 'comment baz1', 'comment baz2'], methods.take(4).map { |m| m.comment.text.strip }
+    unless accept_legacy_bug?
+      assert_equal ['A::foo', 'A#bar', 'A::baz2', 'A#baz3'], methods.map(&:full_name)
+    end
+    assert_equal ['comment foo', 'comment bar'], methods.take(2).map { |m| m.comment.text.strip }
   end
 
   def test_method_yields_directive

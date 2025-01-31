@@ -35,17 +35,17 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     @container = top_level
     @visibility = :public
     @singleton = false
-    @include_extend_suppressed = false
+    @in_proc_block = false
   end
 
   # Suppress `extend` and `include` within block
   # because they might be a metaprogramming block
   # example: `Module.new { include M }` `M.module_eval { include N }`
 
-  def suppress_include_extend
-    @include_extend_suppressed = true
+  def with_in_proc_block
+    @in_proc_block = true
     yield
-    @include_extend_suppressed = false
+    @in_proc_block = false
   end
 
   # Dive into another container
@@ -54,11 +54,11 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     old_container = @container
     old_visibility = @visibility
     old_singleton = @singleton
-    old_include_extend_suppressed = @include_extend_suppressed
+    old_in_proc_block = @in_proc_block
     @visibility = :public
     @container = container
     @singleton = singleton
-    @include_extend_suppressed = false
+    @in_proc_block = false
     unless singleton
       # Need to update module parent chain to emulate Module.nesting.
       # This mechanism is inaccurate and needs to be fixed.
@@ -70,7 +70,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     @container = old_container
     @visibility = old_visibility
     @singleton = old_singleton
-    @include_extend_suppressed = old_include_extend_suppressed
+    @in_proc_block = old_in_proc_block
     @module_nesting.pop
   end
 
@@ -484,7 +484,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   end
 
   def add_includes_extends(names, rdoc_class, line_no) # :nodoc:
-    return if @include_extend_suppressed
+    return if @in_proc_block
     comment = consecutive_comment(line_no)
     handle_consecutive_comment_directive(@container, comment)
     names.each do |name|
@@ -511,6 +511,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   # Adds a method defined by `def` syntax
 
   def add_method(name, receiver_name:, receiver_fallback_type:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, start_line:, end_line:)
+    return if @in_proc_block
+
     receiver = receiver_name ? find_or_create_module_path(receiver_name, receiver_fallback_type) : @container
     meth = RDoc::AnyMethod.new(nil, name)
     if (comment = consecutive_comment(start_line))
@@ -525,14 +527,13 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     handle_modifier_directive(meth, end_line)
     return unless should_document?(meth)
 
-
     if meth.name == 'initialize' && !singleton
       if meth.dont_rename_initialize
-        visibility = :protected
+        meth.visibility = :protected
       else
         meth.name = 'new'
-        singleton = true
-        visibility = :public
+        meth.singleton = true
+        meth.visibility = :public
       end
     end
 
@@ -770,9 +771,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     end
 
     def visit_block_node(node)
-      @scanner.suppress_include_extend do
-        # include and extend inside block are not documentable
-        # method definition might also not work but document it for now.
+      @scanner.with_in_proc_block do
+        # include, extend and method definition inside block are not documentable
         super
       end
     end
