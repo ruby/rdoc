@@ -679,6 +679,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         superclass_full_path = resolve_constant_path(superclass_name)
         superclass = @store.find_class_or_module(superclass_full_path) if superclass_full_path
         superclass_full_path ||= superclass_name
+        superclass_full_path = superclass_full_path.sub(/^::/, '')
       end
       # add_class should be done after resolving superclass
       mod = owner.classes_hash[name] || owner.add_class(RDoc::NormalClass, name, superclass_name || superclass_expr || '::Object')
