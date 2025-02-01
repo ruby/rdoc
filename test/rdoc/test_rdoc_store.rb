@@ -66,6 +66,10 @@ class TestRDocStore < XrefTestCase
     @mod.record_location @top_level
   end
 
+  def using_prism_ruby_parser?
+    RDoc::Parser::Ruby.name == 'RDoc::Parser::PrismRuby'
+  end
+
   def teardown
     super
 
@@ -161,12 +165,16 @@ class TestRDocStore < XrefTestCase
 
   def test_all_classes_and_modules
     expected = %w[
-      C1 C10 C10::C11 C11 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1 C6 C7 C8 C8::S1 C9 C9::A C9::B
+      C1 C10 C10::C11 C11 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1 C6 C7 C8 C9 C9::A C9::B
       Child
       M1 M1::M2
       Object
       Parent
     ]
+
+    # C8::S1 does not exist. It should not be in the list.
+    # class C8; class << something; class S1; end; end; end
+    expected = (expected + ['C8::S1']).sort unless using_prism_ruby_parser?
 
     assert_equal expected,
                  @store.all_classes_and_modules.map { |m| m.full_name }.sort
@@ -213,11 +221,15 @@ class TestRDocStore < XrefTestCase
 
   def test_classes
     expected = %w[
-      C1 C10 C10::C11 C11 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1 C6 C7 C8 C8::S1 C9 C9::A C9::B
+      C1 C10 C10::C11 C11 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1 C6 C7 C8 C9 C9::A C9::B
       Child
       Object
       Parent
     ]
+
+    # C8::S1 does not exist. It should not be in the list.
+    # class C8; class << something; class S1; end; end; end
+    expected = (expected + ['C8::S1']).sort unless using_prism_ruby_parser?
 
     assert_equal expected, @store.all_classes.map { |m| m.full_name }.sort
   end
@@ -550,6 +562,13 @@ class TestRDocStore < XrefTestCase
   end
 
   def test_load_single_class
+    if using_prism_ruby_parser?
+      # Class defined inside singleton class is not documentable.
+      # @c8_s1 should be nil because C8::S1 does not exist.
+      assert_nil @c8_s1
+      return
+    end
+
     @s.save_class @c8_s1
     @s.classes_hash.clear
 
