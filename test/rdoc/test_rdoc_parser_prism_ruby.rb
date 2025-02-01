@@ -173,6 +173,50 @@ module RDocParserPrismTestCases
     assert_equal ['m1', 'm2'], c.method_list.map(&:name)
   end
 
+  def test_open_class_with_superclass_specified_later
+    util_parser <<~RUBY
+      # file_2
+      require 'file_1'
+      class A; end
+      class B; end
+      class C; end
+    RUBY
+    _a, b, c = @top_level.classes
+    assert_equal 'Object', b.superclass
+    assert_equal 'Object', c.superclass
+
+    util_parser <<~RUBY
+      # file_1
+      class B < A; end
+      class C < Unknown; end
+    RUBY
+    assert_equal 'A', b.superclass.full_name
+    assert_equal 'Unknown', c.superclass
+  end
+
+  def test_open_class_with_superclass_specified_later_with_object_defined
+    util_parser <<~RUBY
+      # file_2
+      require 'file_1'
+      class Object; end
+      class A; end
+      class B; end
+      class C; end
+    RUBY
+    _object, _a, b, c = @top_level.classes
+    # If Object exists, superclass will be a NormalClass(Object) instead of string "Object"
+    assert_equal 'Object', b.superclass.full_name
+    assert_equal 'Object', c.superclass.full_name
+
+    util_parser <<~RUBY
+      # file_1
+      class B < A; end
+      class C < Unknown; end
+    RUBY
+    assert_equal 'A', b.superclass.full_name
+    assert_equal 'Unknown', c.superclass
+  end
+
   def test_confusing_superclass
     util_parser <<~RUBY
       module A

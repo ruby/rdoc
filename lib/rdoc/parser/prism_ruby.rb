@@ -689,7 +689,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       if superclass_name
         if superclass
           mod.superclass = superclass
-        elsif mod.superclass.is_a?(String) && mod.superclass != superclass_full_path
+        elsif (mod.superclass.is_a?(String) || mod.superclass.name == 'Object') && mod.superclass != superclass_full_path
           mod.superclass = superclass_full_path
         end
       end
