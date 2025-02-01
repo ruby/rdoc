@@ -1391,9 +1391,12 @@ module RDocParserPrismTestCases
         def doc3; end
         def nodoc3
         end # :nodoc:
+        def nodoc4(arg1,
+                   arg2) # :nodoc:
+        end
         def doc4; end
         # :stopdoc:
-        def nodoc4; end
+        def nodoc5; end
       end
     RUBY
     klass = @store.find_class_named 'Foo'

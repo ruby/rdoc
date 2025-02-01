@@ -510,7 +510,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   # Adds a method defined by `def` syntax
 
-  def add_method(name, receiver_name:, receiver_fallback_type:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, start_line:, end_line:)
+  def add_method(name, receiver_name:, receiver_fallback_type:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, start_line:, args_end_line:, end_line:)
     return if @in_proc_block
 
     receiver = receiver_name ? find_or_create_module_path(receiver_name, receiver_fallback_type) : @container
@@ -524,6 +524,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       meth.comment = comment
     end
     handle_modifier_directive(meth, start_line)
+    handle_modifier_directive(meth, args_end_line)
     handle_modifier_directive(meth, end_line)
     return unless should_document?(meth)
 
@@ -854,6 +855,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
     def visit_def_node(node)
       start_line = node.location.start_line
+      args_end_line = node.parameters&.location&.end_line || start_line
       end_line = node.location.end_line
       @scanner.process_comments_until(start_line - 1)
 
@@ -904,6 +906,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         calls_super: calls_super,
         tokens: tokens,
         start_line: start_line,
+        args_end_line: args_end_line,
         end_line: end_line
       )
     ensure
