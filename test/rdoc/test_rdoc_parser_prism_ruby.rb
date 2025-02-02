@@ -1091,7 +1091,7 @@ module RDocParserPrismTestCases
   end
 
   def test_undocumentable_change_visibility
-    pend if accept_legacy_bug?
+    omit if accept_legacy_bug?
     util_parser <<~RUBY
       class A
         def m1; end
@@ -1126,7 +1126,7 @@ module RDocParserPrismTestCases
   end
 
   def test_method_visibility_change_in_subclass
-    pend 'not implemented' if accept_legacy_bug?
+    omit 'not implemented' if accept_legacy_bug?
     util_parser <<~RUBY
       class A
         def m1; end
@@ -1237,7 +1237,7 @@ module RDocParserPrismTestCases
   end
 
   def test_invalid_alias_method
-    pend if accept_legacy_bug?
+    omit if accept_legacy_bug?
     util_parser <<~RUBY
       class Foo
         def foo; end
@@ -1639,7 +1639,7 @@ module RDocParserPrismTestCases
   end
 
   def test_constant_with_singleton_class
-    pend if accept_legacy_bug?
+    omit if accept_legacy_bug?
     util_parser <<~RUBY
       class Foo
         class Bar; end
@@ -1728,7 +1728,7 @@ module RDocParserPrismTestCases
   end
 
   def test_include_extend_to_singleton_class
-    pend 'not implemented' if accept_legacy_bug?
+    omit 'not implemented' if accept_legacy_bug?
     util_parser <<~RUBY
       class Foo
         class << self
@@ -1777,7 +1777,7 @@ module RDocParserPrismTestCases
   end
 
   def test_various_argument_include
-    pend 'not implemented' if accept_legacy_bug?
+    omit 'not implemented' if accept_legacy_bug?
     util_parser <<~RUBY
       module A; end
       module B; end
