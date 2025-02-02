@@ -173,6 +173,50 @@ module RDocParserPrismTestCases
     assert_equal ['m1', 'm2'], c.method_list.map(&:name)
   end
 
+  def test_open_class_with_superclass_specified_later
+    util_parser <<~RUBY
+      # file_2
+      require 'file_1'
+      class A; end
+      class B; end
+      class C; end
+    RUBY
+    _a, b, c = @top_level.classes
+    assert_equal 'Object', b.superclass
+    assert_equal 'Object', c.superclass
+
+    util_parser <<~RUBY
+      # file_1
+      class B < A; end
+      class C < Unknown; end
+    RUBY
+    assert_equal 'A', b.superclass.full_name
+    assert_equal 'Unknown', c.superclass
+  end
+
+  def test_open_class_with_superclass_specified_later_with_object_defined
+    util_parser <<~RUBY
+      # file_2
+      require 'file_1'
+      class Object; end
+      class A; end
+      class B; end
+      class C; end
+    RUBY
+    _object, _a, b, c = @top_level.classes
+    # If Object exists, superclass will be a NormalClass(Object) instead of string "Object"
+    assert_equal 'Object', b.superclass.full_name
+    assert_equal 'Object', c.superclass.full_name
+
+    util_parser <<~RUBY
+      # file_1
+      class B < A; end
+      class C < Unknown; end
+    RUBY
+    assert_equal 'A', b.superclass.full_name
+    assert_equal 'Unknown', c.superclass
+  end
+
   def test_confusing_superclass
     util_parser <<~RUBY
       module A
@@ -281,7 +325,7 @@ module RDocParserPrismTestCases
     assert_equal ['Foo', 'Bar', 'Baz'], @top_level.classes.map(&:full_name)
     foo, bar, baz = @top_level.classes
     assert_equal foo, bar.superclass
-    assert_equal 'Object', baz.superclass unless accept_legacy_bug?
+    assert_equal '(any expression)', baz.superclass
   end
 
   def test_class_new_notnew
@@ -357,7 +401,6 @@ module RDocParserPrismTestCases
     assert_equal 'DidYouMean::NameErrorCheckers', mod.full_name
     assert_equal ['DidYouMean::NameErrorCheckers::new'], mod.method_list.map(&:full_name)
   end
-
 
   def test_ghost_method
     util_parser <<~RUBY
@@ -534,6 +577,27 @@ module RDocParserPrismTestCases
     assert_equal @top_level, three.file
   end
 
+  def test_method_with_modifier_if_unless
+    util_parser <<~RUBY
+      class Foo
+        # my method one
+        def one
+        end if foo
+
+        # my method two
+        def two
+        end unless foo
+      end
+    RUBY
+
+    klass = @store.find_class_named 'Foo'
+    one, two = klass.method_list
+    assert_equal 'Foo#one', one.full_name
+    assert_equal 'my method one', one.comment.text.strip
+    assert_equal 'Foo#two', two.full_name
+    assert_equal 'my method two', two.comment.text.strip
+  end
+
   def test_method_toplevel
     util_parser <<~RUBY
       # comment
@@ -643,25 +707,22 @@ module RDocParserPrismTestCases
           add_my_method :bar
         end
 
-        tap do
-          # comment baz1
+        metaprogramming do
+          # class that defines this method is unknown
           def baz1; end
         end
 
-        self.tap do
-          # comment baz2
-          def baz2; end
-        end
+        my_decorator def self.baz2; end
 
-        my_decorator def self.baz3; end
-
-        self.my_decorator def baz4; end
+        self.my_decorator def baz3; end
       end
     RUBY
     mod = @store.find_module_named 'A'
     methods = mod.method_list
-    assert_equal ['A::foo', 'A#bar', 'A#baz1', 'A#baz2', 'A::baz3', 'A#baz4'], methods.map(&:full_name)
-    assert_equal ['comment foo', 'comment bar', 'comment baz1', 'comment baz2'], methods.take(4).map { |m| m.comment.text.strip }
+    unless accept_legacy_bug?
+      assert_equal ['A::foo', 'A#bar', 'A::baz2', 'A#baz3'], methods.map(&:full_name)
+    end
+    assert_equal ['comment foo', 'comment bar'], methods.take(2).map { |m| m.comment.text.strip }
   end
 
   def test_method_yields_directive
@@ -769,14 +830,22 @@ module RDocParserPrismTestCases
 
   def test_undefined_singleton_class_defines_module
     util_parser <<~RUBY
-      class << Foo
-      end
-      class << ::Bar
+      module A
+        class << Foo
+        end
+        class << ::Bar
+        end
+        Baz1 = ''
+        class << Baz1
+        end
+        class << Baz2 # :nodoc:
+        end
       end
     RUBY
 
     modules = @store.all_modules
-    assert_equal ['Foo', 'Bar'], modules.map(&:name)
+    modules = modules.take(3) if accept_legacy_bug?
+    assert_equal ['A', 'A::Foo', 'Bar'], modules.map(&:full_name)
   end
 
   def test_singleton_class
@@ -1022,7 +1091,7 @@ module RDocParserPrismTestCases
   end
 
   def test_undocumentable_change_visibility
-    pend if accept_legacy_bug?
+    omit if accept_legacy_bug?
     util_parser <<~RUBY
       class A
         def m1; end
@@ -1039,8 +1108,25 @@ module RDocParserPrismTestCases
     assert_equal [:public] * 4, klass.method_list.map(&:visibility)
   end
 
+  def test_singleton_class_def_with_visibility
+    util_parser <<~RUBY
+      class A
+        class <<self
+          private def m1; end
+        end
+        private def self.m2; end
+      end
+      class <<A
+        private def m3; end
+      end
+    RUBY
+    klass = @store.find_class_named 'A'
+    assert_equal [true, true, true], klass.method_list.map(&:singleton)
+    assert_equal [:private, :public, :private], klass.method_list.map(&:visibility)
+  end
+
   def test_method_visibility_change_in_subclass
-    pend 'not implemented' if accept_legacy_bug?
+    omit 'not implemented' if accept_legacy_bug?
     util_parser <<~RUBY
       class A
         def m1; end
@@ -1151,7 +1237,7 @@ module RDocParserPrismTestCases
   end
 
   def test_invalid_alias_method
-    pend if accept_legacy_bug?
+    omit if accept_legacy_bug?
     util_parser <<~RUBY
       class Foo
         def foo; end
@@ -1305,9 +1391,12 @@ module RDocParserPrismTestCases
         def doc3; end
         def nodoc3
         end # :nodoc:
+        def nodoc4(arg1,
+                   arg2) # :nodoc:
+        end
         def doc4; end
         # :stopdoc:
-        def nodoc4; end
+        def nodoc5; end
       end
     RUBY
     klass = @store.find_class_named 'Foo'
@@ -1549,6 +1638,37 @@ module RDocParserPrismTestCases
     assert_equal 'Foo::C', klass.find_module_named('C').full_name
   end
 
+  def test_constant_with_singleton_class
+    omit if accept_legacy_bug?
+    util_parser <<~RUBY
+      class Foo
+        class Bar; end
+        A = 1
+        class <<Bar
+          B = 1
+          Foo::Bar::B2 = 1
+        end
+        class Bar
+          C = 1
+        end
+        class <<(p(D = 1))
+          E = 1
+        end
+        class (F = 1)::Baz
+          G = 1
+        end
+        module (H = 1)::Baz
+          I = 1
+        end
+      end
+      J = 1
+    RUBY
+    foo, bar = @store.all_classes
+    assert_equal ['J'], @store.find_class_named('Object').constants.map(&:name)
+    assert_equal ['A', 'D', 'F', 'H'], foo.constants.map(&:name)
+    assert_equal ['B2', 'C'], bar.constants.map(&:name)
+  end
+
   def test_constant_method
     util_parser <<~RUBY
       def Object.foo; end
@@ -1608,7 +1728,7 @@ module RDocParserPrismTestCases
   end
 
   def test_include_extend_to_singleton_class
-    pend 'not implemented' if accept_legacy_bug?
+    omit 'not implemented' if accept_legacy_bug?
     util_parser <<~RUBY
       class Foo
         class << self
@@ -1657,7 +1777,7 @@ module RDocParserPrismTestCases
   end
 
   def test_various_argument_include
-    pend 'not implemented' if accept_legacy_bug?
+    omit 'not implemented' if accept_legacy_bug?
     util_parser <<~RUBY
       module A; end
       module B; end
@@ -1879,6 +1999,35 @@ module RDocParserPrismTestCases
     RUBY
     mod = @top_level.modules.first
     assert_equal ['a', 'f'], mod.method_list.map(&:name)
+  end
+
+  def test_include_extend_suppressed_within_block
+    util_parser <<~RUBY
+      module M; end
+      module N; end
+      module O: end
+      class A
+        metaprogramming do
+          include M
+          extend N
+          class B
+            include M
+            extend N
+          end
+          include M
+          extend N
+        end
+        include O
+        extend O
+      end
+    RUBY
+    a, b = @store.all_classes
+    unless accept_legacy_bug?
+      assert_equal ['O'], a.includes.map(&:name)
+      assert_equal ['O'], a.extends.map(&:name)
+    end
+    assert_equal ['M'], b.includes.map(&:name)
+    assert_equal ['N'], b.extends.map(&:name)
   end
 
   def test_multibyte_method_name
