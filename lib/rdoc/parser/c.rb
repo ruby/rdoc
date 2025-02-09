@@ -810,7 +810,7 @@ class RDoc::Parser::C < RDoc::Parser
 
   def find_modifiers comment, meth_obj
     comment.normalize
-    comment.extract_call_seq meth_obj
+    meth_obj.call_seq = comment.extract_call_seq
 
     look_for_directives_in meth_obj, comment
   end

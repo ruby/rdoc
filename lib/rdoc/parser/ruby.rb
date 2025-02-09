@@ -1153,7 +1153,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
 
     comment.normalize
-    comment.extract_call_seq meth
+    meth.call_seq = comment.extract_call_seq
 
     return unless meth.name
 
@@ -1417,7 +1417,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       look_for_directives_in meth, comment
       comment.normalize
-      comment.extract_call_seq meth
+      meth.call_seq = comment.extract_call_seq
 
       container.add_method meth
 
@@ -1485,7 +1485,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     parse_method_params_and_body container, single, meth, added_container
 
     comment.normalize
-    comment.extract_call_seq meth
+    meth.call_seq = comment.extract_call_seq
 
     meth.comment = comment
 

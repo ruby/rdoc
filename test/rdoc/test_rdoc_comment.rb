@@ -3,7 +3,7 @@
 
 require_relative 'helper'
 
-class TestRDocComment < RDoc::TestCase
+class RDocCommentTest < RDoc::TestCase
 
   def setup
     super
@@ -42,8 +42,6 @@ class TestRDocComment < RDoc::TestCase
   end
 
   def test_extract_call_seq
-    m = RDoc::AnyMethod.new nil, 'm'
-
     comment = RDoc::Comment.new <<-COMMENT, @top_level
 call-seq:
   bla => true or false
@@ -51,28 +49,20 @@ call-seq:
 moar comment
     COMMENT
 
-    comment.extract_call_seq m
-
-    assert_equal "bla => true or false\n", m.call_seq
+    assert_equal "bla => true or false\n", comment.extract_call_seq
   end
 
   def test_extract_call_seq_blank
-    m = RDoc::AnyMethod.new nil, 'm'
-
     comment = RDoc::Comment.new <<-COMMENT, @top_level
 call-seq:
   bla => true or false
 
     COMMENT
 
-    comment.extract_call_seq m
-
-    assert_equal "bla => true or false\n", m.call_seq
+    assert_equal "bla => true or false\n", comment.extract_call_seq
   end
 
   def test_extract_call_seq_commented
-    m = RDoc::AnyMethod.new nil, 'm'
-
     comment = RDoc::Comment.new <<-COMMENT, @top_level
 # call-seq:
 #   bla => true or false
@@ -80,36 +70,26 @@ call-seq:
 # moar comment
     COMMENT
 
-    comment.extract_call_seq m
-
-    assert_nil m.call_seq
+    assert_nil comment.extract_call_seq
   end
 
   def test_extract_call_seq_no_blank
-    m = RDoc::AnyMethod.new nil, 'm'
-
     comment = RDoc::Comment.new <<-COMMENT, @top_level
 call-seq:
   bla => true or false
     COMMENT
 
-    comment.extract_call_seq m
-
-    assert_equal "bla => true or false\n", m.call_seq
+    assert_equal "bla => true or false\n", comment.extract_call_seq
   end
 
   def test_extract_call_seq_undent
-    m = RDoc::AnyMethod.new nil, 'm'
-
     comment = RDoc::Comment.new <<-COMMENT, @top_level
 call-seq:
   bla => true or false
 moar comment
     COMMENT
 
-    comment.extract_call_seq m
-
-    assert_equal "bla => true or false\nmoar comment\n", m.call_seq
+    assert_equal "bla => true or false\nmoar comment\n", comment.extract_call_seq
   end
 
   def test_extract_call_seq_c
@@ -128,10 +108,6 @@ Otherwise, returns a +Date+ for the commercial week year, commercial week,
 and commercial week day given. Ignores the 4th argument.
     COMMENT
 
-    method_obj = RDoc::AnyMethod.new nil, 'blah'
-
-    comment.extract_call_seq method_obj
-
     expected = <<-CALL_SEQ.chomp
 commercial() -> Date <br />
 commercial(cwyear, cweek=41, cwday=5, sg=nil) -> Date [ruby 1.8] <br />
@@ -139,7 +115,7 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
 
     CALL_SEQ
 
-    assert_equal expected, method_obj.call_seq
+    assert_equal expected, comment.extract_call_seq
   end
 
   def test_extract_call_seq_c_no_blank
@@ -150,10 +126,6 @@ call-seq:
   commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
     COMMENT
 
-    method_obj = RDoc::AnyMethod.new nil, 'blah'
-
-    comment.extract_call_seq method_obj
-
     expected = <<-CALL_SEQ.chomp
 commercial() -> Date <br />
 commercial(cwyear, cweek=41, cwday=5, sg=nil) -> Date [ruby 1.8] <br />
@@ -161,7 +133,7 @@ commercial(cwyear, cweek=1, cwday=1, sg=nil) -> Date [ruby 1.9]
 
     CALL_SEQ
 
-    assert_equal expected, method_obj.call_seq
+    assert_equal expected, comment.extract_call_seq
   end
 
   def test_extract_call_seq_c_separator
@@ -183,10 +155,6 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
 
     COMMENT
 
-    method_obj = RDoc::AnyMethod.new nil, 'blah'
-
-    comment.extract_call_seq method_obj
-
     expected = <<-CALL_SEQ
 ARGF.readlines(sep=$/)     -> array
 ARGF.readlines(limit)      -> array
@@ -196,7 +164,7 @@ ARGF.to_a(limit)      -> array
 ARGF.to_a(sep, limit) -> array
     CALL_SEQ
 
-    assert_equal expected, method_obj.call_seq
+    assert_equal expected, comment.extract_call_seq
 
     expected = <<-'COMMENT'
 
@@ -211,11 +179,12 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
     assert_equal expected, comment.text
   end
 
+  # This test relies on AnyMethod#call_seq's behaviour as well
   def test_extract_call_linear_performance
     pre = ->(n) {[n, RDoc::Comment.new("\n"*n + 'call-seq:' + 'a'*n)]}
     method_obj = RDoc::AnyMethod.new nil, 'blah'
     assert_linear_performance((2..5).map {|i| 10**i}, pre: pre) do |n, comment|
-      comment.extract_call_seq method_obj
+      method_obj.call_seq = comment.extract_call_seq
       assert_equal n, method_obj.call_seq.size
     end
   end
