@@ -92,7 +92,7 @@ class RDoc::Comment
   #   #   ARGF.to_a(limit)      -> array
   #   #   ARGF.to_a(sep, limit) -> array
 
-  def extract_call_seq method
+  def extract_call_seq
     # we must handle situations like the above followed by an unindented first
     # comment.  The difficulty is to make sure not to match lines starting
     # with ARGF at the same indent, but that are after the first description
@@ -116,10 +116,7 @@ class RDoc::Comment
       @text.slice! all_start...all_stop
 
       seq.gsub!(/^\s*/, '')
-      method.call_seq = seq
     end
-
-    method
   end
 
   ##

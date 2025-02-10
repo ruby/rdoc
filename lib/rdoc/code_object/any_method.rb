@@ -110,7 +110,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   # See also #param_seq
 
   def call_seq= call_seq
-    return if call_seq.empty?
+    return if call_seq.nil? || call_seq.empty?
 
     @call_seq = call_seq
   end

@@ -303,7 +303,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       meth.singleton = @singleton || singleton_method
       handle_consecutive_comment_directive(meth, comment)
       comment.normalize
-      comment.extract_call_seq(meth)
+      meth.call_seq = comment.extract_call_seq
       meth.comment = comment
       if node
         tokens = visible_tokens_from_location(node.location)
@@ -520,7 +520,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       handle_consecutive_comment_directive(meth, comment)
 
       comment.normalize
-      comment.extract_call_seq(meth)
+      meth.call_seq = comment.extract_call_seq
       meth.comment = comment
     end
     handle_modifier_directive(meth, start_line)
