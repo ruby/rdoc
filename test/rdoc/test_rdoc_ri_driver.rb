@@ -560,7 +560,7 @@ class RDocRIDriverTest < RDoc::TestCase
     assert_equal %w[    Foo::Bar], @driver.complete('Foo::B')
 
     assert_equal %w[Foo#Bar],           @driver.complete('Foo#'),   'Foo#'
-    assert_equal %w[Foo#Bar  Foo::bar], @driver.complete('Foo.'),   'Foo.'
+    assert_equal %w[Foo.Bar  Foo.bar],  @driver.complete('Foo.'),   'Foo.'
     assert_equal %w[Foo::Bar Foo::bar], @driver.complete('Foo::'),  'Foo::'
 
     assert_equal %w[         Foo::bar], @driver.complete('Foo::b'), 'Foo::b'
@@ -571,7 +571,9 @@ class RDocRIDriverTest < RDoc::TestCase
 
     assert_equal %w[Foo::Bar#i_method], @driver.complete('Foo::Bar#')
 
-    assert_equal %w[Foo::Bar#i_method Foo::Bar::c_method Foo::Bar::new],
+    assert_equal %w[Foo::Bar::c_method Foo::Bar::new], @driver.complete('Foo::Bar::')
+
+    assert_equal %w[Foo::Bar.c_method Foo::Bar.i_method Foo::Bar.new],
                  @driver.complete('Foo::Bar.')
   end
 
