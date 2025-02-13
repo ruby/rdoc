@@ -29,10 +29,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   # The section title of the method (if defined in a C file via +:category:+)
   attr_accessor :section_title
 
-  # Parameters for this method
-
-  attr_accessor :params
-
   ##
   # If true this method uses +super+ to call a superclass version
 
