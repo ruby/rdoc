@@ -1394,4 +1394,15 @@ Usage: #{opt.program_name} [options] [names...]
     options
   end
 
+  def self.boolean(flag, message = nil)
+    if flag == true or flag == false
+      flag
+    elsif "yes".casecmp(flag) == 0 or "true".casecmp(flag) == 0
+      true
+    elsif "no".casecmp(flag) == 0 or "false".casecmp(flag) == 0
+      false
+    else
+      raise ArgumentError, [message, flag.inspect].compact.join(": ")
+    end
+  end
 end
