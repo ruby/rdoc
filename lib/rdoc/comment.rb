@@ -353,16 +353,26 @@ class RDoc::Comment
         end
         line_no += read_lines
       end
-      # normalize comment
-      min_spaces = nil
-      comment_lines.each do |l|
-        next if l.match?(/\A\s*\z/)
-        n = l[/\A */].size
-        min_spaces = n if !min_spaces || n < min_spaces
+
+      normalized_comment = String.new(encoding: text.encoding) << normalize_comment_lines(comment_lines).join("\n")
+      [normalized_comment, directives]
+    end
+
+    # Remove preceding indent spaces and blank lines from the comment lines
+
+    private def normalize_comment_lines(lines)
+      blank_line_regexp = /\A\s*\z/
+      min_spaces = lines.map do |l|
+        l[/\A */].size unless l.match?(blank_line_regexp)
+      end.compact.min
+      if min_spaces && min_spaces > 0
+        lines = lines.map { |l| l[min_spaces..] || '' }
+      else
+        lines = lines.dup
       end
-      comment_lines.map! { |l| l[min_spaces..] || '' } if min_spaces
-      comment_lines.shift while comment_lines.first&.match?(/\A\s*\z/)
-      [String.new(encoding: text.encoding) << comment_lines.join("\n"), directives]
+      lines.shift while lines.first&.match?(blank_line_regexp)
+      lines.pop while lines.last&.match?(blank_line_regexp)
+      lines
     end
 
     # Take value lines of multiline directive
