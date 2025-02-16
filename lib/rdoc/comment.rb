@@ -234,7 +234,9 @@ class RDoc::Comment
   # There are more, but already handled by RDoc::Parser::C
   COLON_LESS_DIRECTIVES = %w[call-seq Document-method].freeze # :nodoc:
 
-  private_constant :MULTILINE_DIRECTIVES, :COLON_LESS_DIRECTIVES
+  DIRECTIVE_OR_ESCAPED_DIRECTIV_REGEXP = /\A(?<colon>\\?:|:?)(?<directive>[\w-]+):(?<param>.*)/
+
+  private_constant :MULTILINE_DIRECTIVES, :COLON_LESS_DIRECTIVES, :DIRECTIVE_OR_ESCAPED_DIRECTIV_REGEXP
 
   class << self
 
@@ -271,7 +273,7 @@ class RDoc::Comment
     #   # private comment
     #   #++
 
-    def parse(text, filename, line_no, type)
+    def parse(text, filename, line_no, type, &include_callback)
       case type
       when :ruby
         text = text.gsub(/^#+/, '') if text.start_with?('#')
@@ -283,8 +285,6 @@ class RDoc::Comment
         private_end_regexp = /^(\s*\*)?\+{2}$/
         indent_regexp = /^\s*(\/\*+|\*)?\s*/
         text = text.gsub(/\s*\*+\/\s*\z/, '')
-        # TODO: should not be here. Looks like another type of directive
-        # text = text.gsub %r%Document-method:\s+[\w:.#=!?|^&<>~+\-/*\%@`\[\]]+%, ''
       when :simple
         # Unlike other types, this implementation only looks for two dashes at
         # the beginning of the line. Three or more dashes are considered to be
@@ -302,10 +302,12 @@ class RDoc::Comment
         line = lines.shift
         read_lines = 1
         if in_private
+          # If `++` appears in a private section that starts with `--`, private section ends.
           in_private = false if line.match?(private_end_regexp)
           line_no += read_lines
           next
         elsif line.match?(private_start_regexp)
+          # If `--` appears in a line, private section starts.
           in_private = true
           line_no += read_lines
           next
@@ -314,20 +316,29 @@ class RDoc::Comment
         prefix = line[indent_regexp]
         prefix_indent = ' ' * prefix.size
         line = line.byteslice(prefix.bytesize..)
-        /\A(?<colon>\\?:|:?)(?<directive>[\w-]+):(?<param>.*)/ =~ line
 
-        if colon == '\\:'
-          # unescape if escaped
+        if (directive_match = DIRECTIVE_OR_ESCAPED_DIRECTIV_REGEXP.match(line))
+          colon = directive_match[:colon]
+          directive = directive_match[:directive]
+          raw_param = directive_match[:param]
+          param = raw_param.strip
+        else
+          colon = directive = raw_param = param = nil
+        end
+
+        if !directive
+          comment_lines << prefix_indent + line
+        elsif colon == '\\:'
+          # If directive is escaped, unescape it
           comment_lines << prefix_indent + line.sub('\\:', ':')
-        elsif !directive || param.start_with?(':') || (colon.empty? && !COLON_LESS_DIRECTIVES.include?(directive))
+        elsif raw_param.start_with?(':') || (colon.empty? && !COLON_LESS_DIRECTIVES.include?(directive))
           # Something like `:toto::` is not a directive
           # Only few directives allows to start without a colon
           comment_lines << prefix_indent + line
         elsif directive == 'include'
-          filename_to_include = param.strip
-          yield(filename_to_include, prefix_indent).lines.each { |l| comment_lines << l.chomp }
+          filename_to_include = param
+          include_callback.call(filename_to_include, prefix_indent).lines.each { |l| comment_lines << l.chomp }
         elsif MULTILINE_DIRECTIVES.include?(directive)
-          param = param.strip
           value_lines = take_multiline_directive_value_lines(directive, filename, line_no, lines, prefix_indent.size, indent_regexp, !param.empty?)
           read_lines += value_lines.size
           lines.shift(value_lines.size)
@@ -338,8 +349,7 @@ class RDoc::Comment
           value = value_lines.join("\n")
           directives[directive] = [value.empty? ? nil : value, line_no]
         else
-          value = param.strip
-          directives[directive] = [value.empty? ? nil : value, line_no]
+          directives[directive] = [param.empty? ? nil : param, line_no]
         end
         line_no += read_lines
       end
