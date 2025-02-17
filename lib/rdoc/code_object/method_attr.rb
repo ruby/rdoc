@@ -64,12 +64,6 @@ class RDoc::MethodAttr < RDoc::CodeObject
   attr_reader :arglists
 
   ##
-  # Pretty parameter list for this method
-
-  attr_reader :param_seq
-
-
-  ##
   # Creates a new MethodAttr from token stream +text+ and method or attribute
   # name +name+.
   #
@@ -91,7 +85,6 @@ class RDoc::MethodAttr < RDoc::CodeObject
     @arglists     = nil
     @block_params = nil
     @call_seq     = nil
-    @param_seq    = nil
     @params       = nil
   end
 
