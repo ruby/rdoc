@@ -3,8 +3,8 @@
 
   <%-
   all_classes = group_classes_by_namespace_for_sidebar(@classes)
-  link = proc do |index_klass, display = index_klass.display?|
-    if display
+  link = proc do |index_klass|
+    if index_klass.display?
       -%><code><a href="<%= rel_prefix %>/<%= index_klass.path %>"><%= index_klass.name %></a></code><%-
     else
       -%><code><%= index_klass.name %></code><%-
@@ -20,7 +20,7 @@
           <%- traverse.call(children) -%>
   </ul></details>
         <%- elsif index_klass.display? -%>
-  <li><% link.call(index_klass, true) %>
+  <li><% link.call(index_klass) %>
         <%- end -%>
       <%- end -%>
     <%- end -%>
