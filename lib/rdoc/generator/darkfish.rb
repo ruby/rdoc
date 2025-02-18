@@ -824,6 +824,17 @@ class RDoc::Generator::Darkfish
     content << '</li></ul>'
   end
 
+  def group_classes_by_namespace_for_sidebar(classes)
+    grouped_classes = classes.group_by do |klass|
+      klass.full_name[/\A[^:]++(?:::[^:]++(?=::))*+(?=::[^:]*+\z)/]
+    end.select do |_, klasses|
+      klasses.any?(&:display?)
+    end
+
+    grouped_classes.values.each(&:uniq!)
+    grouped_classes
+  end
+
   private
 
   def nesting_namespaces_to_class_modules klass
