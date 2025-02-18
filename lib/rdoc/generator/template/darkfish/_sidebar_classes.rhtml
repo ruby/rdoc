@@ -1,29 +1,5 @@
 <div id="classindex-section" class="nav-section">
   <h3>Class and Module Index</h3>
 
-  <%-
-  all_classes = group_classes_by_namespace_for_sidebar(@classes)
-  link = proc do |index_klass|
-    if index_klass.display?
-      -%><code><a href="<%= rel_prefix %>/<%= index_klass.path %>"><%= index_klass.name %></a></code><%-
-    else
-      -%><code><%= index_klass.name %></code><%-
-    end
-  end
-  if top = all_classes[nil]
-    solo = top.one? {|klass| klass.display?}
-    traverse = proc do |klasses| -%>
-  <ul class="link-list">
-      <%- klasses.each do |index_klass| -%>
-        <%- if children = all_classes[index_klass.full_name] -%>
-  <li><details<% if solo; solo = false %> open<% end %>><summary><% link.call(index_klass) %></summary>
-          <%- traverse.call(children) -%>
-  </ul></details>
-        <%- elsif index_klass.display? -%>
-  <li><% link.call(index_klass) %>
-        <%- end -%>
-      <%- end -%>
-    <%- end -%>
-    <%- traverse.call(top) -%>
-  <%- end -%>
+  <%= generate_class_index_content(@classes, rel_prefix) %>
 </div>
