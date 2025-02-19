@@ -824,6 +824,50 @@ class RDoc::Generator::Darkfish
     content << '</li></ul>'
   end
 
+  def generate_class_link(klass, rel_prefix)
+    if klass.display?
+      %(<code><a href="#{rel_prefix}/#{klass.path}">#{klass.name}</a></code>)
+    else
+      %(<code>#{klass.name}</code>)
+    end
+  end
+
+  def generate_class_index_content(classes, rel_prefix)
+    grouped_classes = group_classes_by_namespace_for_sidebar(classes)
+    return '' unless top = grouped_classes[nil]
+
+    solo = top.one? { |klass| klass.display? }
+    traverse_classes(top, grouped_classes, rel_prefix, solo)
+  end
+
+  def traverse_classes(klasses, grouped_classes, rel_prefix, solo = false)
+    content = +'<ul class="link-list">'
+
+    klasses.each do |index_klass|
+      if children = grouped_classes[index_klass.full_name]
+        content << %(<li><details#{solo ? ' open' : ''}><summary>#{generate_class_link(index_klass, rel_prefix)}</summary>)
+        content << traverse_classes(children, grouped_classes, rel_prefix)
+        content << '</details></li>'
+        solo = false
+      elsif index_klass.display?
+        content << %(<li>#{generate_class_link(index_klass, rel_prefix)}</li>)
+      end
+    end
+
+    "#{content}</ul>"
+  end
+
+  def group_classes_by_namespace_for_sidebar(classes)
+    grouped_classes = classes.group_by do |klass|
+      klass.full_name[/\A[^:]++(?:::[^:]++(?=::))*+(?=::[^:]*+\z)/]
+    end.select do |_, klasses|
+      klasses.any?(&:display?)
+    end
+
+    grouped_classes.values.each(&:uniq!)
+    grouped_classes
+  end
+
   private
 
   def nesting_namespaces_to_class_modules klass
