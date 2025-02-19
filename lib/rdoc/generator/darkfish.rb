@@ -847,14 +847,14 @@ class RDoc::Generator::Darkfish
       if children = grouped_classes[index_klass.full_name]
         content << %(<li><details#{solo ? ' open' : ''}><summary>#{generate_class_link(index_klass, rel_prefix)}</summary>)
         content << traverse_classes(children, grouped_classes, rel_prefix)
-        content << '</ul></details>'
+        content << '</details></li>'
         solo = false
       elsif index_klass.display?
-        content << %(<li>#{generate_class_link(index_klass, rel_prefix)})
+        content << %(<li>#{generate_class_link(index_klass, rel_prefix)}</li>)
       end
     end
 
-    content
+    "#{content}</ul>"
   end
 
   def group_classes_by_namespace_for_sidebar(classes)
