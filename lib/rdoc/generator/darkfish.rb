@@ -800,6 +800,43 @@ class RDoc::Generator::Darkfish
     grouped_classes
   end
 
+  def generate_page_link(file, rel_prefix)
+    %(<a href="#{rel_prefix}/#{h file.path}">#{h file.page_name}</a>)
+  end
+
+  def generate_pages_index_content(page_files, rel_prefix, current)
+    return '' if page_files.empty?
+
+    dir = current&.full_name&.[](/\A[^\/]+(?=\/)/) || current&.page_name
+
+    content = +'<ul class="link-list">'
+    page_files.group_by do |f|
+      f.full_name[/\A[^\/]+(?=\/)/] || f.page_name
+    end.each do |n, grouped_files|
+      f = grouped_files.shift
+      if grouped_files.empty?
+        content << %(<li>#{generate_page_link(f, rel_prefix)}</li>)
+        next
+      end
+
+      content << %(<li><details#{dir == n ? ' open' : ''}><summary>)
+      if n == f.page_name
+        content << generate_page_link(f, rel_prefix)
+      else
+        content << h(n)
+        grouped_files.unshift(f)
+      end
+      content << '</summary><ul class="link-list">'
+
+      grouped_files.each do |f|
+        content << %(<li>#{generate_page_link(f, rel_prefix)}</li>)
+      end
+
+      content << '</ul></details>'
+    end
+    content << '</ul>'
+  end
+
   private
 
   def nesting_namespaces_to_class_modules klass
