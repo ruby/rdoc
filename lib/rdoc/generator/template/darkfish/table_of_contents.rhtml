@@ -13,11 +13,10 @@
 <main role="main">
 <h1 class="class"><%= h @title %></h1>
 
-<%- simple_files = @files.select { |f| f.text? } -%>
-<%- unless simple_files.empty? then -%>
+<%- if @page_files.any? -%>
 <h2 id="pages">Pages</h2>
 <ul>
-<%- simple_files.sort.each do |file| -%>
+<%- @page_files.sort.each do |file| -%>
   <li class="file">
     <a href="<%= h file.path %>"><%= h file.page_name %></a>
 <%

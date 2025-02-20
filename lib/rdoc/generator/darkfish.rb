@@ -600,6 +600,7 @@ class RDoc::Generator::Darkfish
     @files   = @store.all_files.sort
     @methods = @classes.flat_map { |m| m.method_list }.sort
     @modsort = get_sorted_module_list @classes
+    @page_files = @files.select { |f| f.text? }
   end
 
   ##
