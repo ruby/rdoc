@@ -13,6 +13,7 @@ require 'tempfile'
 require 'tmpdir'
 require 'stringio'
 
+require_relative '../../lib/helper'
 require_relative '../../../lib/rdoc'
 
 ##

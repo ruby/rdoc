@@ -38,8 +38,6 @@ end
 Rake::TestTask.new(:normal_test) do |t|
   t.verbose = true
   t.deps = :generate
-  t.libs << "test/lib"
-  t.ruby_opts << "-rhelper"
   t.test_files = FileList["test/**/test_*.rb"].exclude("test/rdoc/test_rdoc_rubygems_hook.rb")
 end
 
