@@ -758,7 +758,7 @@ class RDoc::Generator::Darkfish
 
   def generate_class_link(klass, rel_prefix)
     if klass.display?
-      %(<code><a href="#{rel_prefix}/#{klass.path}">#{klass.name}</a></code>)
+      %(<code>#{generate_sidebar_link(klass.name, klass.path, rel_prefix)}</code>)
     else
       %(<code>#{klass.name}</code>)
     end
@@ -768,25 +768,21 @@ class RDoc::Generator::Darkfish
     grouped_classes = group_classes_by_namespace_for_sidebar(classes)
     return '' unless top = grouped_classes[nil]
 
-    solo = top.one? { |klass| klass.display? }
-    traverse_classes(top, grouped_classes, rel_prefix, solo)
+    open = top.one? { |klass| klass.display? }
+    traverse_classes(top, grouped_classes, rel_prefix, open)
   end
 
-  def traverse_classes(klasses, grouped_classes, rel_prefix, solo = false)
-    content = +'<ul class="link-list">'
-
-    klasses.each do |index_klass|
-      if children = grouped_classes[index_klass.full_name]
-        content << %(<li><details#{solo ? ' open' : ''}><summary>#{generate_class_link(index_klass, rel_prefix)}</summary>)
-        content << traverse_classes(children, grouped_classes, rel_prefix)
-        content << '</details></li>'
-        solo = false
-      elsif index_klass.display?
-        content << %(<li>#{generate_class_link(index_klass, rel_prefix)}</li>)
+  def traverse_classes(klasses, grouped_classes, rel_prefix, open)
+    traverse_tree(klasses) do |index_klass|
+      {
+        label: generate_class_link(index_klass, rel_prefix),
+        children: grouped_classes[index_klass.full_name],
+        display: index_klass.display?,
+        open: open
+      }.tap do
+        open = false
       end
     end
-
-    "#{content}</ul>"
   end
 
   def group_classes_by_namespace_for_sidebar(classes)
@@ -800,41 +796,43 @@ class RDoc::Generator::Darkfish
     grouped_classes
   end
 
-  def generate_page_link(file, rel_prefix)
-    %(<a href="#{rel_prefix}/#{h file.path}">#{h file.page_name}</a>)
+  def generate_sidebar_link(name, path, rel_prefix)
+    name = CGI.escapeHTML(name)
+    path = CGI.escapeHTML(path)
+    %(<a href="#{rel_prefix}/#{path}">#{name}</a>)
   end
 
   def generate_pages_index_content(page_files, rel_prefix, current)
     return '' if page_files.empty?
 
     dir = current&.full_name&.[](/\A[^\/]+(?=\/)/) || current&.page_name
+    grouped_files = page_files.group_by { |f| f.full_name[/\A[^\/]+(?=\/)/] || f.page_name }
 
-    content = +'<ul class="link-list">'
-    page_files.group_by do |f|
-      f.full_name[/\A[^\/]+(?=\/)/] || f.page_name
-    end.each do |n, grouped_files|
-      f = grouped_files.shift
-      if grouped_files.empty?
-        content << %(<li>#{generate_page_link(f, rel_prefix)}</li>)
-        next
-      end
-
-      content << %(<li><details#{dir == n ? ' open' : ''}><summary>)
-      if n == f.page_name
-        content << generate_page_link(f, rel_prefix)
+    traverse_tree(grouped_files) do |name, files|
+      f = files.shift
+      # If the group has only one file, we can just link to it
+      if files.empty?
+        { label: generate_sidebar_link(f.page_name, f.path, rel_prefix), display: true }
       else
-        content << h(n)
-        grouped_files.unshift(f)
+        label =
+          # If the group has multiple files and the current file matches the group name
+          # the label should be a link to the current file
+          if name == f.page_name
+            generate_sidebar_link(f.page_name, f.path, rel_prefix)
+          # Otherwise, the label should be the group name
+          else
+            files.unshift(f)
+            h(name)
+          end
+        {
+          label: label,
+          children: files,
+          display: true,
+          open: dir == name,
+          child_renderer: ->(f) { { label: generate_sidebar_link(f.page_name, f.path, rel_prefix), display: true } }
+        }
       end
-      content << '</summary><ul class="link-list">'
-
-      grouped_files.each do |f|
-        content << %(<li>#{generate_page_link(f, rel_prefix)}</li>)
-      end
-
-      content << '</ul></details>'
     end
-    content << '</ul>'
   end
 
   private
@@ -854,5 +852,28 @@ class RDoc::Generator::Darkfish
       path = class_module ? (rel_prefix + class_module.path).to_s : ""
       { name: namespace, path: path, self: klass.full_name == class_module&.full_name }
     end
+  end
+
+  def traverse_tree(items, &block)
+    content = +'<ul class="link-list">'
+
+    items.each do |*args|
+      result = yield(*args)
+      next unless result[:display]
+
+      if result[:children]
+        content << %(<li><details#{result[:open] ? ' open' : ''}><summary>#{result[:label]}</summary>)
+        if result[:child_renderer]
+          content << traverse_tree(result[:children]) { |item| result[:child_renderer].call(item) }
+        else
+          content << traverse_tree(result[:children], &block)
+        end
+        content << '</details></li>'
+      else
+        content << %(<li>#{result[:label]}</li>)
+      end
+    end
+
+    "#{content}</ul>"
   end
 end
