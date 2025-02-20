@@ -1,13 +1,12 @@
-<%- simple_files = @files.select { |f| f.text? } %>
 <%- if defined?(current) -%>
   <%- dir = current.full_name[%r{\A[^/]+(?=/)}] || current.page_name -%>
 <%- end -%>
-<%- unless simple_files.empty? then -%>
+<%- if @page_files.any? -%>
 <div id="fileindex-section" class="nav-section">
   <h3>Pages</h3>
 
   <ul class="link-list">
-  <%- simple_files.group_by do |f| -%>
+  <%- @page_files.group_by do |f| -%>
     <%- f.full_name[%r{\A[^/]+(?=/)}] || f.page_name -%>
   <%- end.each do |n, files| -%>
     <%- f = files.shift -%>
