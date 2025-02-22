@@ -700,6 +700,8 @@ class RDoc::Generator::Darkfish
     template
   end
 
+  ParagraphExcerptRegexp = /[A-Z][^\.:\/]+\./
+
   # Returns an excerpt of the comment for usage in meta description tags
   def excerpt(comment)
     text = case comment
@@ -711,11 +713,11 @@ class RDoc::Generator::Darkfish
 
     # Match from a capital letter to the first period, discarding any links, so
     # that we don't end up matching badges in the README
-    first_paragraph_match = text.match(/[A-Z][^\.:\/]+\./)
+    first_paragraph_match = text.match(ParagraphExcerptRegexp)
     return text[0...150].gsub(/\n/, " ").squeeze(" ") unless first_paragraph_match
 
     extracted_text = first_paragraph_match[0]
-    second_paragraph = first_paragraph_match.post_match.match(/[A-Z][^\.:\/]+\./)
+    second_paragraph = first_paragraph_match.post_match.match(ParagraphExcerptRegexp)
     extracted_text << " " << second_paragraph[0] if second_paragraph
 
     extracted_text[0...150].gsub(/\n/, " ").squeeze(" ")
