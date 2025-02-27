@@ -9,12 +9,12 @@
 
   <%= render '_sidebar_table_of_contents.rhtml' %>
 
-  <%- unless klass.sections.length == 1 then %>
+  <%- if klass_sections.any? %>
   <div id="sections-section" class="nav-section">
     <h3>Sections</h3>
 
     <ul class="link-list" role="directory">
-      <%- klass.sort_sections.each do |section| -%>
+      <%- klass_sections.each do |section| -%>
         <li><a href="#<%= section.aref %>"><%= h section.title %></a></li>
       <%- end -%>
     </ul>
@@ -28,54 +28,54 @@
   </div>
   <%- end -%>
 
-  <%- unless klass.includes.empty? then %>
+  <%- if klass_includes.any? %>
   <div id="includes-section" class="nav-section">
     <h3>Included Modules</h3>
 
     <ul class="link-list">
-    <%- klass.each_include do |inc| -%>
-    <%- unless String === inc.module then -%>
+    <%- klass_includes.each do |inc| -%>
+      <%- unless String === inc.module -%>
       <li><a class="include" href="<%= klass.aref_to inc.module.path %>"><%= inc.module.full_name %></a>
-    <%- else -%>
+      <%- else -%>
       <li><span class="include"><%= inc.name %></span>
-    <%- end -%>
+      <%- end -%>
     <%- end -%>
     </ul>
   </div>
   <%- end -%>
 
-  <%- unless klass.extends.empty? then %>
+  <%- if klass_extends.any? %>
   <div id="extends-section" class="nav-section">
     <h3>Extended With Modules</h3>
 
     <ul class="link-list">
-      <%- klass.each_extend do |ext| -%>
-    <%- unless String === ext.module then -%>
+    <%- klass_extends.each do |ext| -%>
+      <%- unless String === ext.module -%>
       <li><a class="extend" href="<%= klass.aref_to ext.module.path %>"><%= ext.module.full_name %></a>
-    <%- else -%>
+      <%- else -%>
       <li><span class="extend"><%= ext.name %></span>
-    <%- end -%>
+      <%- end -%>
     <%- end -%>
     </ul>
   </div>
   <%- end -%>
 
-  <% if (class_methods = klass.class_method_list.sort).any? %>
+  <% if klass_class_methods.any? %>
     <div class="nav-section">
       <h3>Class Methods</h3>
       <ul class="link-list" role="directory">
-        <%- class_methods.each do |meth| -%>
+        <%- klass_class_methods.each do |meth| -%>
         <li <%- if meth.calls_super %>class="calls-super" <%- end %>><a href="#<%= meth.aref %>"><%= h meth.name -%></a></li>
         <%- end -%>
       </ul>
     </div>
   <% end %>
 
-  <% if (instance_methods = klass.instance_methods.sort).any? %>
+  <% if klass_instance_methods.any? %>
   <div class="nav-section">
     <h3>Instance Methods</h3>
     <ul class="link-list" role="directory">
-      <%- instance_methods.each do |meth| -%>
+      <%- klass_instance_methods.each do |meth| -%>
       <li <%- if meth.calls_super %>class="calls-super" <%- end %>><a href="#<%= meth.aref %>"><%= h meth.name -%></a></li>
       <%- end -%>
     </ul>

@@ -350,11 +350,22 @@ class RDoc::Generator::Darkfish
 
     @title = "#{klass.type} #{klass.full_name} - #{@options.title}"
 
+    klass_class_methods = klass.class_method_list.sort
+    klass_instance_methods = klass.instance_methods.sort
+    klass_extends = klass.extends
+    klass_includes = klass.includes
+    klass_sections = klass.sort_sections
+
     debug_msg "  rendering #{out_file}"
     render_template template_file, out_file do |io|
       here = binding
       here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
       here.local_variable_set(:breadcrumb, breadcrumb)
+      here.local_variable_set(:klass_class_methods, klass_class_methods)
+      here.local_variable_set(:klass_instance_methods, klass_instance_methods)
+      here.local_variable_set(:klass_extends, klass_extends)
+      here.local_variable_set(:klass_includes, klass_includes)
+      here.local_variable_set(:klass_sections, klass_sections)
       here
     end
   end
