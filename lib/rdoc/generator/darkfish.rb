@@ -318,10 +318,8 @@ class RDoc::Generator::Darkfish
 
     render_template template_file, out_file do |io|
       here = binding
-      # suppress 1.9.3 warning
       here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
-      # some partials rely on the presence of current variable to render
-      here.local_variable_set(:current, @main_page)
+      here.local_variable_set(:target, @main_page)
       here
     end
   rescue => e
@@ -336,7 +334,7 @@ class RDoc::Generator::Darkfish
   # Generates a class file for +klass+
 
   def generate_class klass, template_file = nil
-    current = klass
+    target = klass
 
     template_file ||= @template_dir + 'class.rhtml'
 
@@ -348,16 +346,15 @@ class RDoc::Generator::Darkfish
 
     asset_rel_prefix = rel_prefix + @asset_rel_path
 
-    breadcrumb = # used in templates
-    breadcrumb = generate_nesting_namespaces_breadcrumb(current, rel_prefix)
+    breadcrumb = generate_nesting_namespaces_breadcrumb(target, rel_prefix)
 
     @title = "#{klass.type} #{klass.full_name} - #{@options.title}"
 
     debug_msg "  rendering #{out_file}"
     render_template template_file, out_file do |io|
       here = binding
-      # suppress 1.9.3 warning
       here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
+      here.local_variable_set(:breadcrumb, breadcrumb)
       here
     end
   end
@@ -372,16 +369,16 @@ class RDoc::Generator::Darkfish
     return unless template_file.exist?
     debug_msg "Generating class documentation in #{@outputdir}"
 
-    current = nil
+    target = nil
 
     @classes.each do |klass|
-      current = klass
+      target = klass
 
       generate_class klass, template_file
     end
   rescue => e
     error = RDoc::Error.new \
-      "error generating #{current.path}: #{e.message} (#{e.class})"
+      "error generating #{target.path}: #{e.message} (#{e.class})"
     error.set_backtrace e.backtrace
 
     raise error
@@ -404,10 +401,10 @@ class RDoc::Generator::Darkfish
     debug_msg "Generating file documentation in #{@outputdir}"
 
     out_file = nil
-    current = nil
+    target = nil
 
     @files.each do |file|
-      current = file
+      target = file
 
       if file.text? and page_file.exist? then
         generate_page file
@@ -440,9 +437,8 @@ class RDoc::Generator::Darkfish
 
       render_template template_file, out_file do |io|
         here = binding
-        # suppress 1.9.3 warning
         here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
-        here.local_variable_set(:current, current)
+        here.local_variable_set(:target, target)
         here
       end
     end
@@ -466,7 +462,7 @@ class RDoc::Generator::Darkfish
     search_index_rel_prefix = rel_prefix
     search_index_rel_prefix += @asset_rel_path if @file_output
 
-    current          = file
+    target = file
     asset_rel_prefix = rel_prefix + @asset_rel_path
 
     @title = "#{file.page_name} - #{@options.title}"
@@ -474,8 +470,7 @@ class RDoc::Generator::Darkfish
     debug_msg "  rendering #{out_file}"
     render_template template_file, out_file do |io|
       here = binding
-      # suppress 1.9.3 warning
-      here.local_variable_set(:current, current)
+      here.local_variable_set(:target, target)
       here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
       here
     end
@@ -500,7 +495,6 @@ class RDoc::Generator::Darkfish
 
     render_template template_file do |io|
       here = binding
-      # suppress 1.9.3 warning
       here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
       here
     end
@@ -557,7 +551,6 @@ class RDoc::Generator::Darkfish
 
     render_template template_file, out_file do |io|
       here = binding
-      # suppress 1.9.3 warning
       here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
       here
     end
@@ -738,15 +731,15 @@ class RDoc::Generator::Darkfish
     extracted_text[0...150].gsub(/\n/, " ").squeeze(" ")
   end
 
-  def generate_table_from_the_current_object(current)
-    return '' if current.nil?
+  def generate_table_from_target(target)
+    return '' if target.nil?
     comment =
-      if current.respond_to? :comment_location then
-        current.comment_location
+      if target.respond_to? :comment_location then
+        target.comment_location
       else
-        current.comment
+        target.comment
       end
-    current.parse(comment).table_of_contents.dup
+    target.parse(comment).table_of_contents.dup
   end
 
   def generate_ancestor_list(ancestors, klass)
@@ -813,10 +806,10 @@ class RDoc::Generator::Darkfish
     %(<a href="#{rel_prefix}/#{path}">#{name}</a>)
   end
 
-  def generate_pages_index_content(page_files, rel_prefix, current)
+  def generate_pages_index_content(page_files, rel_prefix, target)
     return '' if page_files.empty?
 
-    dir = current&.full_name&.[](/\A[^\/]+(?=\/)/) || current&.page_name
+    dir = target&.full_name&.[](/\A[^\/]+(?=\/)/) || target&.page_name
     grouped_files = page_files.group_by { |f| f.full_name[/\A[^\/]+(?=\/)/] || f.page_name }
 
     traverse_tree(grouped_files) do |name, files|
