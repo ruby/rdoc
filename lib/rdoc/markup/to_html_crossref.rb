@@ -58,7 +58,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # Creates a link to the reference +name+ if the name exists.  If +text+ is
   # given it is used as the link text, otherwise +name+ is used.
 
-  def cross_reference name, text = nil, code = true, rdoc_ref: false
+  def cross_reference name, text = nil, code = true, rdoc_ref: false, autolink: true
     lookup = name
 
     name = name[1..-1] unless @show_hash if name[0, 1] == '#'
@@ -70,7 +70,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       text ||= name
     end
 
-    link lookup, text, code, rdoc_ref: rdoc_ref
+    link lookup, text, code, rdoc_ref: rdoc_ref, autolink: autolink
   end
 
   ##
@@ -94,7 +94,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       return name if name =~ /\A[a-z]*\z/
     end
 
-    cross_reference name, rdoc_ref: false
+    cross_reference name, rdoc_ref: false, autolink: false
   end
 
   ##
@@ -147,7 +147,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   ##
   # Creates an HTML link to +name+ with the given +text+.
 
-  def link name, text, code = true, rdoc_ref: false
+  def link name, text, code = true, rdoc_ref: false, autolink: true
     if !(name.end_with?('+@', '-@')) and name =~ /(.*[^#:])?@/
       name = $1
       label = $'
@@ -165,6 +165,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       path = ref ? ref.as_href(@from_path) : +""
 
       if code and RDoc::CodeObject === ref and !(RDoc::TopLevel === ref)
+        return text unless autolink or ref.autolink?
         text = "<code>#{CGI.escapeHTML text}</code>"
       end
 
