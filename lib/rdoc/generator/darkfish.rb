@@ -321,7 +321,7 @@ class RDoc::Generator::Darkfish
       # suppress 1.9.3 warning
       here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
       # some partials rely on the presence of current variable to render
-      here.local_variable_set(:current, @main_page) if @main_page
+      here.local_variable_set(:current, @main_page)
       here
     end
   rescue => e
@@ -736,6 +736,17 @@ class RDoc::Generator::Darkfish
     extracted_text << " " << second_paragraph[0] if second_paragraph
 
     extracted_text[0...150].gsub(/\n/, " ").squeeze(" ")
+  end
+
+  def generate_table_from_the_current_object(current)
+    return '' if current.nil?
+    comment =
+      if current.respond_to? :comment_location then
+        current.comment_location
+      else
+        current.comment
+      end
+    current.parse(comment).table_of_contents.dup
   end
 
   def generate_ancestor_list(ancestors, klass)

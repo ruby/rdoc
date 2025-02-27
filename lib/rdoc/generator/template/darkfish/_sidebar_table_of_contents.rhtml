@@ -1,11 +1,5 @@
-<%- comment = if current.respond_to? :comment_location then
-               current.comment_location
-             else
-               current.comment
-             end
-   table = current.parse(comment).table_of_contents.dup
-
-   if table.length > 1 then %>
+<%- table = generate_table_from_the_current_object(current) -%>
+<%- if table.length > 1 %>
 <div class="nav-section">
   <h3>Table of Contents</h3>
 
