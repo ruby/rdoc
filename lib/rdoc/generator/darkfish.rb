@@ -353,6 +353,7 @@ class RDoc::Generator::Darkfish
     asset_rel_prefix = rel_prefix + @asset_rel_path
     svninfo          = get_svninfo(current)
 
+    breadcrumb = # used in templates
     breadcrumb = generate_nesting_namespaces_breadcrumb(current, rel_prefix)
 
     @title = "#{klass.type} #{klass.full_name} - #{@options.title}"
