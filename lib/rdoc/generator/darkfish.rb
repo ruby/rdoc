@@ -129,16 +129,6 @@ class RDoc::Generator::Darkfish
   attr_reader :json_index
 
   ##
-  # Methods to be displayed by this generator
-
-  attr_reader :methods
-
-  ##
-  # Sorted list of classes and modules to be displayed by this generator
-
-  attr_reader :modsort
-
-  ##
   # The RDoc::Store that is the source of the generated content
 
   attr_reader :store
@@ -170,8 +160,6 @@ class RDoc::Generator::Darkfish
     @classes = nil
     @context = nil
     @files   = nil
-    @methods = nil
-    @modsort = nil
 
     @json_index = RDoc::Generator::JsonIndex.new self, options
   end
@@ -602,8 +590,6 @@ class RDoc::Generator::Darkfish
 
     @classes = @store.all_classes_and_modules.sort
     @files   = @store.all_files.sort
-    @methods = @classes.flat_map { |m| m.method_list }.sort
-    @modsort = get_sorted_module_list @classes
     @page_files = @files.select { |f| f.text? }
   end
 
