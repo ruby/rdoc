@@ -68,6 +68,54 @@ class TestRDocRDoc < RDoc::TestCase
     assert_equal 'title',          store.title
   end
 
+  def test_load_ri_dir
+    temp_dir do
+      # generate ri files
+      options = RDoc::Options.new
+      options.files = [File.expand_path('../xref_test_case.rb', __FILE__)]
+      options.setup_generator 'ri'
+      options.main_page = 'MAIN_PAGE.rdoc'
+      options.root      = Pathname File.expand_path('..', __FILE__)
+      options.title     = 'title'
+      options.op_dir    = 'ri'
+
+      rdoc = RDoc::RDoc.new
+
+      capture_io do
+        rdoc.document options
+      end
+
+      assert File.directory? 'ri'
+      assert_equal rdoc, rdoc.store.rdoc
+
+      store = rdoc.store
+
+      assert_equal 'MAIN_PAGE.rdoc', store.main
+      assert_equal 'title',          store.title
+
+      # generate HTML from ri files
+      options = RDoc::Options.new
+      options.setup_generator 'darkfish'
+      options.load_ri_dir = 'ri'
+      options.op_dir      = 'another'
+
+      rdoc = RDoc::RDoc.new
+
+      capture_io do
+        rdoc.document options
+      end
+
+      assert File.directory? 'another'
+      assert_equal rdoc, rdoc.store.rdoc
+
+      store = rdoc.store
+
+      assert_equal 'MAIN_PAGE.rdoc', store.main
+      assert_equal 'title',          store.title
+      assert_file 'another/XrefTestCase.html'
+    end
+  end
+
   def test_gather_files
     a = File.expand_path __FILE__
     b = File.expand_path '../test_rdoc_text.rb', __FILE__
