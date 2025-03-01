@@ -286,9 +286,6 @@ class RDoc::Generator::Darkfish
 
     out_file = @base_dir + @options.op_dir + 'index.html'
     rel_prefix = @outputdir.relative_path_from out_file.dirname
-    search_index_rel_prefix = rel_prefix
-    search_index_rel_prefix += @asset_rel_path if @file_output
-
     asset_rel_prefix = rel_prefix + @asset_rel_path
 
     @title = @options.title
@@ -318,8 +315,6 @@ class RDoc::Generator::Darkfish
     debug_msg "  working on %s (%s)" % [klass.full_name, klass.path]
     out_file   = @outputdir + klass.path
     rel_prefix = @outputdir.relative_path_from out_file.dirname
-    search_index_rel_prefix = rel_prefix
-    search_index_rel_prefix += @asset_rel_path if @file_output
 
     asset_rel_prefix = rel_prefix + @asset_rel_path
 
@@ -404,8 +399,6 @@ class RDoc::Generator::Darkfish
       out_file = @outputdir + file.path
       debug_msg "  working on %s (%s)" % [file.full_name, out_file]
       rel_prefix = @outputdir.relative_path_from out_file.dirname
-      search_index_rel_prefix = rel_prefix
-      search_index_rel_prefix += @asset_rel_path if @file_output
 
       asset_rel_prefix = rel_prefix + @asset_rel_path
 
@@ -448,8 +441,6 @@ class RDoc::Generator::Darkfish
     out_file = @outputdir + file.path
     debug_msg "  working on %s (%s)" % [file.full_name, out_file]
     rel_prefix = @outputdir.relative_path_from out_file.dirname
-    search_index_rel_prefix = rel_prefix
-    search_index_rel_prefix += @asset_rel_path if @file_output
 
     target = file
     asset_rel_prefix = rel_prefix + @asset_rel_path
@@ -475,8 +466,6 @@ class RDoc::Generator::Darkfish
     debug_msg "Rendering the servlet 404 Not Found page..."
 
     rel_prefix = rel_prefix = ''
-    search_index_rel_prefix = rel_prefix
-    search_index_rel_prefix += @asset_rel_path if @file_output
 
     asset_rel_prefix = ''
 
@@ -506,8 +495,6 @@ class RDoc::Generator::Darkfish
 
     rel_prefix = '.'
     asset_rel_prefix = rel_prefix
-    search_index_rel_prefix = asset_rel_prefix
-    search_index_rel_prefix += @asset_rel_path if @file_output
 
     @title = 'Local RDoc Documentation'
 
@@ -535,8 +522,6 @@ class RDoc::Generator::Darkfish
 
     out_file = @outputdir + 'table_of_contents.html'
     rel_prefix = @outputdir.relative_path_from out_file.dirname
-    search_index_rel_prefix = rel_prefix
-    search_index_rel_prefix += @asset_rel_path if @file_output
 
     asset_rel_prefix = rel_prefix + @asset_rel_path
 
