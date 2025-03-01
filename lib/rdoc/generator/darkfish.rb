@@ -294,12 +294,11 @@ class RDoc::Generator::Darkfish
     @title = @options.title
     @main_page = @files.find { |f| f.full_name == @options.main_page }
 
-    render_template template_file, out_file do |io|
-      here = binding
-      here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
-      here.local_variable_set(:target, @main_page)
-      here
-    end
+    render_template template_file, out_file: out_file, locals: {
+      rel_prefix: rel_prefix,
+      asset_rel_prefix: asset_rel_prefix,
+      target: @main_page,
+    }
   rescue => e
     error = RDoc::Error.new \
       "error generating index.html: #{e.message} (#{e.class})"
@@ -335,17 +334,18 @@ class RDoc::Generator::Darkfish
     klass_sections = klass.sort_sections
 
     debug_msg "  rendering #{out_file}"
-    render_template template_file, out_file do |io|
-      here = binding
-      here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
-      here.local_variable_set(:breadcrumb, breadcrumb)
-      here.local_variable_set(:klass_class_methods, klass_class_methods)
-      here.local_variable_set(:klass_instance_methods, klass_instance_methods)
-      here.local_variable_set(:klass_extends, klass_extends)
-      here.local_variable_set(:klass_includes, klass_includes)
-      here.local_variable_set(:klass_sections, klass_sections)
-      here
-    end
+    render_template template_file, out_file: out_file, locals: {
+      asset_rel_prefix: asset_rel_prefix,
+      rel_prefix: rel_prefix,
+      target: target,
+      klass: klass,
+      breadcrumb: breadcrumb,
+      klass_class_methods: klass_class_methods,
+      klass_instance_methods: klass_instance_methods,
+      klass_extends: klass_extends,
+      klass_includes: klass_includes,
+      klass_sections: klass_sections,
+    }
   end
 
   ##
@@ -424,12 +424,12 @@ class RDoc::Generator::Darkfish
       @title += " - #{@options.title}"
       template_file ||= filepage_file
 
-      render_template template_file, out_file do |io|
-        here = binding
-        here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
-        here.local_variable_set(:target, target)
-        here
-      end
+      render_template template_file, out_file: out_file, locals: {
+        rel_prefix: rel_prefix,
+        asset_rel_prefix: asset_rel_prefix,
+        file: file,
+        target: target,
+      }
     end
   rescue => e
     error =
@@ -457,12 +457,12 @@ class RDoc::Generator::Darkfish
     @title = "#{file.page_name} - #{@options.title}"
 
     debug_msg "  rendering #{out_file}"
-    render_template template_file, out_file do |io|
-      here = binding
-      here.local_variable_set(:target, target)
-      here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
-      here
-    end
+    render_template template_file, out_file: out_file, locals: {
+      file: file,
+      target: target,
+      asset_rel_prefix: asset_rel_prefix,
+      rel_prefix: rel_prefix,
+    }
   end
 
   ##
@@ -482,11 +482,11 @@ class RDoc::Generator::Darkfish
 
     @title = 'Not Found'
 
-    render_template template_file do |io|
-      here = binding
-      here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
-      here
-    end
+    render_template template_file, locals: {
+      asset_rel_prefix: asset_rel_prefix,
+      rel_prefix: rel_prefix,
+      message: message
+    }
   rescue => e
     error = RDoc::Error.new \
       "error generating servlet_not_found: #{e.message} (#{e.class})"
@@ -511,7 +511,11 @@ class RDoc::Generator::Darkfish
 
     @title = 'Local RDoc Documentation'
 
-    render_template template_file do |io| binding end
+    render_template template_file, locals: {
+      asset_rel_prefix: asset_rel_prefix,
+      rel_prefix: rel_prefix,
+      installed: installed
+    }
   rescue => e
     error = RDoc::Error.new \
       "error generating servlet_root: #{e.message} (#{e.class})"
@@ -538,11 +542,10 @@ class RDoc::Generator::Darkfish
 
     @title = "Table of Contents - #{@options.title}"
 
-    render_template template_file, out_file do |io|
-      here = binding
-      here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
-      here
-    end
+    render_template template_file, out_file: out_file, locals: {
+      rel_prefix: rel_prefix,
+      asset_rel_prefix: asset_rel_prefix,
+    }
   rescue => e
     error = RDoc::Error.new \
       "error generating table_of_contents.html: #{e.message} (#{e.class})"
@@ -628,11 +631,16 @@ class RDoc::Generator::Darkfish
   #
   # An io will be yielded which must be captured by binding in the caller.
 
-  def render_template template_file, out_file = nil # :yield: io
+  def render_template template_file, out_file: nil, locals: {}
     io_output = out_file && !@dry_run && @file_output
     erb_klass = io_output ? RDoc::ERBIO : ERB
 
     template = template_for template_file, true, erb_klass
+
+    @context = binding
+    locals.each do |key, value|
+      @context.local_variable_set(key, value)
+    end
 
     if io_output then
       debug_msg "Outputting to %s" % [out_file.expand_path]
@@ -640,14 +648,11 @@ class RDoc::Generator::Darkfish
       out_file.dirname.mkpath
       out_file.open 'w', 0644 do |io|
         io.set_encoding @options.encoding
-
-        @context = yield io
+        @context.local_variable_set(:io, io)
 
         template_result template, @context, template_file
       end
     else
-      @context = yield nil
-
       output = template_result template, @context, template_file
 
       debug_msg "  would have written %d characters to %s" % [
