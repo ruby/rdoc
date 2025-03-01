@@ -286,14 +286,13 @@ class RDoc::Generator::Darkfish
 
     out_file = @base_dir + @options.op_dir + 'index.html'
     rel_prefix = @outputdir.relative_path_from out_file.dirname
-    asset_rel_prefix = rel_prefix + @asset_rel_path
 
     @title = @options.title
     @main_page = @files.find { |f| f.full_name == @options.main_page }
 
     render_template template_file, out_file: out_file, locals: {
       rel_prefix: rel_prefix,
-      asset_rel_prefix: asset_rel_prefix,
+      asset_rel_prefix: rel_prefix + @asset_rel_path,
       target: @main_page,
     }
   rescue => e
@@ -316,8 +315,6 @@ class RDoc::Generator::Darkfish
     out_file   = @outputdir + klass.path
     rel_prefix = @outputdir.relative_path_from out_file.dirname
 
-    asset_rel_prefix = rel_prefix + @asset_rel_path
-
     breadcrumb = generate_nesting_namespaces_breadcrumb(target, rel_prefix)
 
     @title = "#{klass.type} #{klass.full_name} - #{@options.title}"
@@ -330,7 +327,7 @@ class RDoc::Generator::Darkfish
 
     debug_msg "  rendering #{out_file}"
     render_template template_file, out_file: out_file, locals: {
-      asset_rel_prefix: asset_rel_prefix,
+      asset_rel_prefix: rel_prefix + @asset_rel_path,
       rel_prefix: rel_prefix,
       target: target,
       klass: klass,
@@ -400,8 +397,6 @@ class RDoc::Generator::Darkfish
       debug_msg "  working on %s (%s)" % [file.full_name, out_file]
       rel_prefix = @outputdir.relative_path_from out_file.dirname
 
-      asset_rel_prefix = rel_prefix + @asset_rel_path
-
       unless filepage_file then
         if file.text? then
           next unless page_file.exist?
@@ -419,7 +414,7 @@ class RDoc::Generator::Darkfish
 
       render_template template_file, out_file: out_file, locals: {
         rel_prefix: rel_prefix,
-        asset_rel_prefix: asset_rel_prefix,
+        asset_rel_prefix: rel_prefix + @asset_rel_path,
         file: file,
         target: target,
       }
@@ -443,7 +438,6 @@ class RDoc::Generator::Darkfish
     rel_prefix = @outputdir.relative_path_from out_file.dirname
 
     target = file
-    asset_rel_prefix = rel_prefix + @asset_rel_path
 
     @title = "#{file.page_name} - #{@options.title}"
 
@@ -451,7 +445,7 @@ class RDoc::Generator::Darkfish
     render_template template_file, out_file: out_file, locals: {
       file: file,
       target: target,
-      asset_rel_prefix: asset_rel_prefix,
+      asset_rel_prefix: rel_prefix + @asset_rel_path,
       rel_prefix: rel_prefix,
     }
   end
@@ -465,15 +459,11 @@ class RDoc::Generator::Darkfish
 
     debug_msg "Rendering the servlet 404 Not Found page..."
 
-    rel_prefix = rel_prefix = ''
-
-    asset_rel_prefix = ''
-
     @title = 'Not Found'
 
     render_template template_file, locals: {
-      asset_rel_prefix: asset_rel_prefix,
-      rel_prefix: rel_prefix,
+      asset_rel_prefix: '',
+      rel_prefix: '',
       message: message
     }
   rescue => e
@@ -493,14 +483,11 @@ class RDoc::Generator::Darkfish
 
     debug_msg 'Rendering the servlet root page...'
 
-    rel_prefix = '.'
-    asset_rel_prefix = rel_prefix
-
     @title = 'Local RDoc Documentation'
 
     render_template template_file, locals: {
-      asset_rel_prefix: asset_rel_prefix,
-      rel_prefix: rel_prefix,
+      asset_rel_prefix: '.',
+      rel_prefix: '.',
       installed: installed
     }
   rescue => e
@@ -523,13 +510,11 @@ class RDoc::Generator::Darkfish
     out_file = @outputdir + 'table_of_contents.html'
     rel_prefix = @outputdir.relative_path_from out_file.dirname
 
-    asset_rel_prefix = rel_prefix + @asset_rel_path
-
     @title = "Table of Contents - #{@options.title}"
 
     render_template template_file, out_file: out_file, locals: {
       rel_prefix: rel_prefix,
-      asset_rel_prefix: asset_rel_prefix,
+      asset_rel_prefix: rel_prefix + @asset_rel_path,
     }
   rescue => e
     error = RDoc::Error.new \
