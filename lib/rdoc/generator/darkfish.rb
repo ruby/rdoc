@@ -276,16 +276,6 @@ class RDoc::Generator::Darkfish
   end
 
   ##
-  # Return a list of the documented modules sorted by salience first, then
-  # by name.
-
-  def get_sorted_module_list classes
-    classes.select do |klass|
-      klass.display?
-    end.sort
-  end
-
-  ##
   # Generate an index page which lists all the classes which are documented.
 
   def generate_index

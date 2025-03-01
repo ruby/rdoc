@@ -36,7 +36,7 @@
 
 <h2 id="classes">Classes and Modules</h2>
 <ul>
-<%- get_sorted_module_list(@classes).each do |klass| -%>
+<%- @classes.select(&:display?).each do |klass| -%>
   <li class="<%= klass.type %>">
     <a href="<%= klass.path %>"><%= klass.full_name %></a>
 <%- table = []
@@ -57,9 +57,7 @@
 
 <h2 id="methods">Methods</h2>
 <ul>
-<%- @store.all_classes_and_modules.flat_map do |mod|
-     mod.method_list
-   end.sort.each do |method| %>
+<%- @classes.flat_map(&:method_list).sort.each do |method| %>
   <li class="method">
     <a href="<%= method.path %>"><%= h method.pretty_name %></a>
     &mdash;
