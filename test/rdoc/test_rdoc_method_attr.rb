@@ -185,7 +185,7 @@ class TestRDocMethodAttr < XrefTestCase
 
   def test_pretty_print
     temp_dir do |tmpdir|
-      s = RDoc::RI::Store.new tmpdir
+      s = RDoc::RI::Store.new(path: tmpdir)
       s.rdoc = @rdoc
 
       top_level = s.add_file 'file.rb'

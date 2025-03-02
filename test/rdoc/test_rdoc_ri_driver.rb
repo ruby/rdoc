@@ -460,7 +460,7 @@ class RDocRIDriverTest < RDoc::TestCase
     #
     # Y is not chosen randomly, it has to be after Object in the alphabet
     # to reproduce https://github.com/ruby/rdoc/issues/814.
-    store = RDoc::RI::Store.new @home_ri
+    store = RDoc::RI::Store.new(path: @home_ri)
     store.cache[:ancestors] = { "Z" => ["Object", "Y"], "Y" => ["X"] }
     store.cache[:modules] = %W[X Y Z]
     @driver.stores = [store]
@@ -538,7 +538,7 @@ class RDocRIDriverTest < RDoc::TestCase
   end
 
   def test_complete
-    store = RDoc::RI::Store.new @home_ri
+    store = RDoc::RI::Store.new(path: @home_ri)
     store.cache[:ancestors] = {
       'Foo'      => %w[Object],
       'Foo::Bar' => %w[Object],
@@ -963,7 +963,7 @@ Foo::Bar#bother
   end
 
   def test_expand_class_2
-    @store1 = RDoc::RI::Store.new @home_ri, :home
+    @store1 = RDoc::RI::Store.new(path: @home_ri, type: :home)
 
     @top_level = @store1.add_file 'file.rb'
 
@@ -981,7 +981,7 @@ Foo::Bar#bother
   end
 
   def test_expand_class_3
-    @store1 = RDoc::RI::Store.new @home_ri, :home
+    @store1 = RDoc::RI::Store.new(path: @home_ri, type: :home)
 
     @top_level = @store1.add_file 'file.rb'
 
@@ -1007,7 +1007,7 @@ Foo::Bar#bother
 
     assert_equal 'Z', e.name
 
-    @driver.stores << RDoc::Store.new(nil, :system)
+    @driver.stores << RDoc::Store.new(path: nil, type: :system)
 
     assert_equal 'ruby:README', @driver.expand_name('ruby:README')
     assert_equal 'ruby:',       @driver.expand_name('ruby:')
@@ -1084,8 +1084,8 @@ Foo::Bar#bother
   end
 
   def test_find_store
-    @driver.stores << RDoc::Store.new(nil,              :system)
-    @driver.stores << RDoc::Store.new('doc/gem-1.0/ri', :gem)
+    @driver.stores << RDoc::Store.new(path: nil, type: :system)
+    @driver.stores << RDoc::Store.new(path: 'doc/gem-1.0/ri', type: :gem)
 
     assert_equal 'ruby',    @driver.find_store('ruby')
     assert_equal 'gem-1.0', @driver.find_store('gem-1.0')
@@ -1466,7 +1466,7 @@ Foo::Bar#bother
   end
 
   def util_ancestors_store
-    store1 = RDoc::RI::Store.new @home_ri
+    store1 = RDoc::RI::Store.new(path: @home_ri)
     store1.cache[:ancestors] = {
       'Foo'      => %w[Object],
       'Foo::Bar' => %w[Foo],
@@ -1483,7 +1483,7 @@ Foo::Bar#bother
       Foo::Bar
     ]
 
-    store2 = RDoc::RI::Store.new @home_ri
+    store2 = RDoc::RI::Store.new(path: @home_ri)
     store2.cache[:ancestors] = {
       'Foo'    => %w[Mixin Object],
       'Mixin'  => %w[],
@@ -1514,7 +1514,7 @@ Foo::Bar#bother
     util_store
 
     @home_ri2 = "#{@home_ri}2"
-    @store2 = RDoc::RI::Store.new @home_ri2
+    @store2 = RDoc::RI::Store.new(path: @home_ri2)
 
     @top_level = @store2.add_file 'file.rb'
 
@@ -1539,7 +1539,7 @@ Foo::Bar#bother
   end
 
   def util_store
-    @store1 = RDoc::RI::Store.new @home_ri, :home
+    @store1 = RDoc::RI::Store.new(path: @home_ri, type: :home)
 
     @top_level = @store1.add_file 'file.rb'
 

@@ -120,7 +120,7 @@ class RDoc::Store
   ##
   # Creates a new Store of +type+ that will load or save to +path+
 
-  def initialize path = nil, type = nil
+  def initialize path: nil, type: nil
     @dry_run  = false
     @encoding = nil
     @path     = path

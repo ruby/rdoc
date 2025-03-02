@@ -532,7 +532,7 @@ class TestRDocServlet < RDoc::TestCase
   end
 
   def touch_system_cache_path
-    store = RDoc::Store.new @system_dir
+    store = RDoc::Store.new(path: @system_dir)
     store.title = 'Standard Library Documentation'
 
     FileUtils.mkdir_p File.dirname store.cache_path
@@ -541,7 +541,7 @@ class TestRDocServlet < RDoc::TestCase
   end
 
   def touch_extra_cache_path
-    store = RDoc::Store.new @extra_dirs.first
+    store = RDoc::Store.new(path: @extra_dirs.first)
     store.title = 'My Extra Documentation'
 
     FileUtils.mkdir_p File.dirname store.cache_path

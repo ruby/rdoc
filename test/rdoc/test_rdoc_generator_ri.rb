@@ -52,7 +52,7 @@ class TestRDocGeneratorRI < RDoc::TestCase
     assert_file File.join(@tmpdir, 'Object', 'method-i.ri')
     assert_file File.join(@tmpdir, 'Object', 'method%21-i.ri')
 
-    store = RDoc::RI::Store.new @tmpdir
+    store = RDoc::RI::Store.new(path: @tmpdir)
     store.load_cache
 
     encoding = Encoding::UTF_8

@@ -420,7 +420,7 @@ or the PAGER environment variable.
                          *options[:extra_doc_dirs]) do |path, type|
       @doc_dirs << path
 
-      store = RDoc::RI::Store.new path, type
+      store = RDoc::RI::Store.new(path: path, type: type)
       store.load_cache
       @stores << store
     end
