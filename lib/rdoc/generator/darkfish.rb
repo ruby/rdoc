@@ -619,25 +619,6 @@ class RDoc::Generator::Darkfish
   end
 
   ##
-  # Return a string describing the amount of time in the given number of
-  # seconds in terms a human can understand easily.
-
-  def time_delta_string seconds
-    return 'less than a minute'          if seconds < 60
-    return "#{seconds / 60} minute#{seconds / 60 == 1 ? '' : 's'}" if
-                                            seconds < 3000     # 50 minutes
-    return 'about one hour'              if seconds < 5400     # 90 minutes
-    return "#{seconds / 3600} hours"     if seconds < 64800    # 18 hours
-    return 'one day'                     if seconds < 86400    #  1 day
-    return 'about one day'               if seconds < 172800   #  2 days
-    return "#{seconds / 86400} days"     if seconds < 604800   #  1 week
-    return 'about one week'              if seconds < 1209600  #  2 week
-    return "#{seconds / 604800} weeks"   if seconds < 7257600  #  3 months
-    return "#{seconds / 2419200} months" if seconds < 31536000 #  1 year
-    return "#{seconds / 31536000} years"
-  end
-
-  ##
   # Creates a template from its components and the +body_file+.
   #
   # For backwards compatibility, if +body_file+ contains "<html" the body is
