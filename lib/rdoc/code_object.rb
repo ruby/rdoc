@@ -301,7 +301,7 @@ class RDoc::CodeObject
 
   def options
     if @store and @store.rdoc then
-      @store.rdoc.options
+      @store.options
     else
       RDoc::Options.new
     end

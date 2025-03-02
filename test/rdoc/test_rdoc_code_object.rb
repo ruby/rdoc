@@ -122,7 +122,7 @@ class TestRDocCodeObject < XrefTestCase
 
     refute @co.document_children
 
-    @store.rdoc.options.visibility = :nodoc
+    @store.options.visibility = :nodoc
 
     @co.store = @store
 
@@ -137,7 +137,7 @@ class TestRDocCodeObject < XrefTestCase
     @co.document_self = false
     refute @co.document_self
 
-    @store.rdoc.options.visibility = :nodoc
+    @store.options.visibility = :nodoc
 
     @co.store = @store
 
@@ -190,7 +190,7 @@ class TestRDocCodeObject < XrefTestCase
 
     @co.done_documenting = true
 
-    @store.rdoc.options.visibility = :nodoc
+    @store.options.visibility = :nodoc
 
     @co.store = @store
 
@@ -236,7 +236,7 @@ class TestRDocCodeObject < XrefTestCase
     refute @co.document_children
     assert @co.ignored?
 
-    @store.rdoc.options.visibility = :nodoc
+    @store.options.visibility = :nodoc
 
     @co.store = @store
 
@@ -381,7 +381,7 @@ class TestRDocCodeObject < XrefTestCase
 
     refute @co.document_self
 
-    @store.rdoc.options.visibility = :nodoc
+    @store.options.visibility = :nodoc
 
     @co.store = @store
 
@@ -397,7 +397,7 @@ class TestRDocCodeObject < XrefTestCase
     refute @co.document_self
     refute @co.document_children
 
-    @store.rdoc.options.visibility = :nodoc
+    @store.options.visibility = :nodoc
 
     @co.store = @store
 
@@ -417,7 +417,7 @@ class TestRDocCodeObject < XrefTestCase
     refute @co.document_children
     assert @co.suppressed?
 
-    @store.rdoc.options.visibility = :nodoc
+    @store.options.visibility = :nodoc
 
     @co.store = @store
 

@@ -482,7 +482,7 @@ class RDoc::Context < RDoc::CodeObject
         known.comment = method.comment if known.comment.empty?
         previously = ", previously in #{known.file}" unless
           method.file == known.file
-        @store.rdoc.options.warn \
+        @store.options.warn \
           "Duplicate method #{known.full_name} in #{method.file}#{previously}"
       end
     else

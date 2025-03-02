@@ -981,6 +981,10 @@ class RDoc::Store
     @unique_modules
   end
 
+  def options
+    @rdoc.options
+  end
+
   private
   def marshal_load(file)
     File.open(file, 'rb') {|io| Marshal.load(io, MarshalFilter)}

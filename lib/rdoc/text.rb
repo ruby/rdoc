@@ -99,8 +99,8 @@ module RDoc::Text
   # Requires the including class to implement #formatter
 
   def markup text
-    if @store.rdoc.options
-      locale = @store.rdoc.options.locale
+    if @store.options
+      locale = @store.options.locale
     else
       locale = nil
     end
