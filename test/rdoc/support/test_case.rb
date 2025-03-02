@@ -53,9 +53,7 @@ class RDoc::TestCase < Test::Unit::TestCase
     @rdoc.store = @store
     @rdoc.options = RDoc::Options.new
 
-    g = Object.new
-    def g.file_dir() end
-    @rdoc.generator = g
+    @rdoc.generator = Object.new
 
     RDoc::Markup::PreProcess.reset
   end

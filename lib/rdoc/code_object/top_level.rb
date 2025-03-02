@@ -246,7 +246,7 @@ class RDoc::TopLevel < RDoc::Context
   # Path to this file for use with HTML generator output.
 
   def path
-    http_url @store.rdoc.generator.file_dir
+    http_url(nil)
   end
 
   def pretty_print q # :nodoc:

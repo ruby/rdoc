@@ -80,10 +80,6 @@ class TestRDocGeneratorJsonIndex < RDoc::TestCase
     assert_equal expected, index
   end
 
-  def test_file_dir
-    assert_equal @darkfish.file_dir, @g.file_dir
-  end
-
   def test_generate
     @g.generate
 

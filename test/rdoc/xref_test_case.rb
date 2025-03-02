@@ -30,7 +30,6 @@ class XrefTestCase < RDoc::TestCase
     @top_levels.push @example_md
 
     generator = Object.new
-    def generator.file_dir() nil end
     @rdoc.options = @options
     @rdoc.generator = generator
 
