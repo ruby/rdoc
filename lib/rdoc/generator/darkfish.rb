@@ -301,8 +301,6 @@ class RDoc::Generator::Darkfish
   # Generate an index page which lists all the classes which are documented.
 
   def generate_index
-    setup
-
     template_file = @template_dir + 'index.rhtml'
     return unless template_file.exist?
 
@@ -338,8 +336,6 @@ class RDoc::Generator::Darkfish
   # Generates a class file for +klass+
 
   def generate_class klass, template_file = nil
-    setup
-
     current = klass
 
     template_file ||= @template_dir + 'class.rhtml'
@@ -372,8 +368,6 @@ class RDoc::Generator::Darkfish
   # Generate a documentation file for each class and module
 
   def generate_class_files
-    setup
-
     template_file = @template_dir + 'class.rhtml'
     template_file = @template_dir + 'classpage.rhtml' unless
       template_file.exist?
@@ -399,8 +393,6 @@ class RDoc::Generator::Darkfish
   # Generate a documentation file for each file
 
   def generate_file_files
-    setup
-
     page_file     = @template_dir + 'page.rhtml'
     fileinfo_file = @template_dir + 'fileinfo.rhtml'
 
@@ -468,8 +460,6 @@ class RDoc::Generator::Darkfish
   # Generate a page file for +file+
 
   def generate_page file
-    setup
-
     template_file = @template_dir + 'page.rhtml'
 
     out_file = @outputdir + file.path
@@ -497,8 +487,6 @@ class RDoc::Generator::Darkfish
   # Generates the 404 page for the RDoc servlet
 
   def generate_servlet_not_found message
-    setup
-
     template_file = @template_dir + 'servlet_not_found.rhtml'
     return unless template_file.exist?
 
@@ -530,8 +518,6 @@ class RDoc::Generator::Darkfish
   # Generates the servlet root page for the RDoc servlet
 
   def generate_servlet_root installed
-    setup
-
     template_file = @template_dir + 'servlet_root.rhtml'
     return unless template_file.exist?
 
@@ -557,8 +543,6 @@ class RDoc::Generator::Darkfish
   # Generate an index page which lists all the classes which are documented.
 
   def generate_table_of_contents
-    setup
-
     template_file = @template_dir + 'table_of_contents.rhtml'
     return unless template_file.exist?
 
