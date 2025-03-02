@@ -973,10 +973,10 @@ class RDoc::Context < RDoc::CodeObject
   ##
   # URL for this with a +prefix+
 
-  def http_url(prefix)
+  def http_url
     path = name_for_path
     path = path.gsub(/<<\s*(\w*)/, 'from-\1') if path =~ /<</
-    path = [prefix] + path.split('::')
+    path = path.split('::')
 
     File.join(*path.compact) + '.html'
   end

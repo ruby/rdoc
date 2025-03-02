@@ -173,10 +173,8 @@ class RDoc::TopLevel < RDoc::Context
   ##
   # URL for this with a +prefix+
 
-  def http_url(prefix)
-    path = [prefix, @relative_name.tr('.', '_')]
-
-    File.join(*path.compact) + '.html'
+  def http_url
+    @relative_name.tr('.', '_') + '.html'
   end
 
   def inspect # :nodoc:
@@ -246,7 +244,7 @@ class RDoc::TopLevel < RDoc::Context
   # Path to this file for use with HTML generator output.
 
   def path
-    http_url(nil)
+    http_url
   end
 
   def pretty_print q # :nodoc:
