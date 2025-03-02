@@ -351,7 +351,6 @@ class RDoc::Generator::Darkfish
     search_index_rel_prefix += @asset_rel_path if @file_output
 
     asset_rel_prefix = rel_prefix + @asset_rel_path
-    svninfo          = get_svninfo(current)
 
     breadcrumb = # used in templates
     breadcrumb = generate_nesting_namespaces_breadcrumb(current, rel_prefix)
@@ -363,7 +362,6 @@ class RDoc::Generator::Darkfish
       here = binding
       # suppress 1.9.3 warning
       here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
-      here.local_variable_set(:svninfo, svninfo)
       here
     end
   end
@@ -637,39 +635,6 @@ class RDoc::Generator::Darkfish
     return "#{seconds / 604800} weeks"   if seconds < 7257600  #  3 months
     return "#{seconds / 2419200} months" if seconds < 31536000 #  1 year
     return "#{seconds / 31536000} years"
-  end
-
-  # %q$Id: darkfish.rb 52 2009-01-07 02:08:11Z deveiant $"
-  SVNID_PATTERN = /
-    \$Id:\s
-    (\S+)\s                # filename
-    (\d+)\s                # rev
-    (\d{4}-\d{2}-\d{2})\s  # Date (YYYY-MM-DD)
-    (\d{2}:\d{2}:\d{2}Z)\s # Time (HH:MM:SSZ)
-    (\w+)\s                # committer
-    \$$
-  /x
-
-  ##
-  # Try to extract Subversion information out of the first constant whose
-  # value looks like a subversion Id tag. If no matching constant is found,
-  # and empty hash is returned.
-
-  def get_svninfo klass
-    constants = klass.constants or return {}
-
-    constants.find { |c| c.value =~ SVNID_PATTERN } or return {}
-
-    filename, rev, date, time, committer = $~.captures
-    commitdate = Time.parse "#{date} #{time}"
-
-    return {
-      :filename    => filename,
-      :rev         => Integer(rev),
-      :commitdate  => commitdate,
-      :commitdelta => time_delta_string(Time.now - commitdate),
-      :committer   => committer,
-    }
   end
 
   ##
