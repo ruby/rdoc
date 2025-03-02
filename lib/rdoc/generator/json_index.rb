@@ -87,7 +87,7 @@ class RDoc::Generator::JsonIndex
 
   ##
   # Creates a new generator.  +parent_generator+ is used to determine the
-  # class_dir and file_dir of links in the output index.
+  # file_dir of links in the output index.
   #
   # +options+ are the same options passed to the parent generator.
 
@@ -263,13 +263,6 @@ class RDoc::Generator::JsonIndex
       record.shift
       @index[:info]            << record
     end
-  end
-
-  ##
-  # The directory classes are written to
-
-  def class_dir
-    @parent_generator.class_dir
   end
 
   ##

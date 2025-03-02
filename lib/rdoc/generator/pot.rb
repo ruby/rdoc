@@ -81,11 +81,6 @@ class RDoc::Generator::POT
     end
   end
 
-  # :nodoc:
-  def class_dir
-    nil
-  end
-
   private
   def extract_messages
     extractor = MessageExtractor.new(@store)

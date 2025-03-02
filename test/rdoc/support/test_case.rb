@@ -54,7 +54,6 @@ class RDoc::TestCase < Test::Unit::TestCase
     @rdoc.options = RDoc::Options.new
 
     g = Object.new
-    def g.class_dir() end
     def g.file_dir() end
     @rdoc.generator = g
 
