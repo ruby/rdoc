@@ -247,6 +247,7 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
     generator = RDoc::Generator::Darkfish.new store, @options
     generator.file_output = false
     generator.asset_rel_path = '..'
+    generator.setup
 
     rdoc = RDoc::RDoc.new
     rdoc.store     = store
