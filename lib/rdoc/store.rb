@@ -982,7 +982,7 @@ class RDoc::Store
   end
 
   def options
-    @rdoc.options
+    @rdoc&.options
   end
 
   private
