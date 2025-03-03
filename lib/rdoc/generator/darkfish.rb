@@ -185,22 +185,6 @@ class RDoc::Generator::Darkfish
   end
 
   ##
-  # Directory where generated class HTML files live relative to the output
-  # dir.
-
-  def class_dir
-    nil
-  end
-
-  ##
-  # Directory where generated class HTML files live relative to the output
-  # dir.
-
-  def file_dir
-    nil
-  end
-
-  ##
   # Create the directories the generated docs will live in if they don't
   # already exist.
 
