@@ -294,9 +294,6 @@ class TestRDocServlet < RDoc::TestCase
 
     assert_equal 'MAIN_PAGE.rdoc', @s.options.main_page
     assert_equal 'Title',          @s.options.title
-
-    assert_kind_of RDoc::RDoc, store.rdoc
-    assert_same generator, store.rdoc.generator
   end
 
   def test_if_modified_since

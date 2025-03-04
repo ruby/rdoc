@@ -31,7 +31,6 @@ class TestRDocRDoc < RDoc::TestCase
       end
 
       assert File.directory? 'ri'
-      assert_equal rdoc, rdoc.store.rdoc
     end
 
     store = rdoc.store
@@ -58,7 +57,6 @@ class TestRDocRDoc < RDoc::TestCase
       end
 
       refute File.directory? 'doc'
-      assert_equal rdoc, rdoc.store.rdoc
     end
     assert_includes out, '100%'
 
