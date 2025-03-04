@@ -12,7 +12,6 @@ jobs:
       # 2.7 breaks `test_parse_statements_nodoc_identifier_alias_method`
       min_version: 3.0
       versions: '["mswin"]'
-      engine: cruby-truffleruby
 
   test:
     needs: ruby-versions
@@ -26,6 +25,10 @@ jobs:
             ruby: truffleruby
           - os: windows-latest
             ruby: truffleruby-head
+          - os: windows-latest
+            ruby: jruby
+          - os: windows-latest
+            ruby: jruby-head
           - os: macos-latest
             ruby: mswin
           - os: ubuntu-latest
