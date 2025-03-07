@@ -454,8 +454,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     top_level.comment = <<~MARKDOWN
       # Distributed Ruby: dRuby
 
-      dRuby is a distributed object system for Ruby.  It allows an object in one
-      Ruby process to invoke methods on an object in another Ruby process.
+      dRuby is a distributed object system for Ruby.  It allows an object.
     MARKDOWN
 
     @g.generate
@@ -466,7 +465,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
       "<meta name=\"description\" content=\"" \
       "README: dRuby " \
       "dRuby is a distributed object system for Ruby. " \
-      "It allows an object in one Ruby process to invoke methods on an object"
+      "It allows an object."
     )
   end
 
