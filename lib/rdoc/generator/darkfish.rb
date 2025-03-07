@@ -722,7 +722,7 @@ class RDoc::Generator::Darkfish
       first_paragraph_match = text.match(pattern)
     rescue Encoding::CompatibilityError
       # The doc is non-ASCII text and encoded in other than Unicode base encodings.
-      raise unless pattern.eaual?(ParagraphExcerptRegexpUnicode)
+      raise if pattern == ParagraphExcerptRegexpOther
       pattern = ParagraphExcerptRegexpOther
       retry
     end
