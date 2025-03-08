@@ -449,6 +449,26 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     )
   end
 
+  def test_meta_tags_for_markdwon_files_paragraph
+    top_level = @store.add_file("README.md", parser: RDoc::Parser::Simple)
+    top_level.comment = <<~MARKDOWN
+      # Distributed Ruby: dRuby
+
+      dRuby is a distributed object system for Ruby.  It allows an object.
+    MARKDOWN
+
+    @g.generate
+
+    content = File.binread("README_md.html")
+    assert_include(
+      content,
+      "<meta name=\"description\" content=\"" \
+      "README: dRuby " \
+      "dRuby is a distributed object system for Ruby. " \
+      "It allows an object."
+    )
+  end
+
   def test_meta_tags_for_markdown_files
     top_level = @store.add_file("MyPage.md", parser: RDoc::Parser::Markdown)
     top_level.comment = <<~MARKDOWN

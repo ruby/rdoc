@@ -700,6 +700,12 @@ class RDoc::Generator::Darkfish
     template
   end
 
+  # :stopdoc:
+  ParagraphExcerptRegexpOther = %r[\b\w[^./:]++\.]
+  # use \p/\P{letter} instead of \w/\W in Unicode
+  ParagraphExcerptRegexpUnicode = %r[\b\p{letter}[^./:]++\.]
+  # :startdoc:
+
   # Returns an excerpt of the comment for usage in meta description tags
   def excerpt(comment)
     text = case comment
@@ -711,14 +717,22 @@ class RDoc::Generator::Darkfish
 
     # Match from a capital letter to the first period, discarding any links, so
     # that we don't end up matching badges in the README
-    first_paragraph_match = text.match(/[A-Z][^\.:\/]+\./)
-    return text[0...150].gsub(/\n/, " ").squeeze(" ") unless first_paragraph_match
+    pattern = ParagraphExcerptRegexpUnicode
+    begin
+      first_paragraph_match = text.match(pattern)
+    rescue Encoding::CompatibilityError
+      # The doc is non-ASCII text and encoded in other than Unicode base encodings.
+      raise if pattern == ParagraphExcerptRegexpOther
+      pattern = ParagraphExcerptRegexpOther
+      retry
+    end
+    return text[0...150].tr_s("\n", " ").squeeze(" ") unless first_paragraph_match
 
     extracted_text = first_paragraph_match[0]
-    second_paragraph = first_paragraph_match.post_match.match(/[A-Z][^\.:\/]+\./)
+    second_paragraph = text.match(pattern, first_paragraph_match.end(0))
     extracted_text << " " << second_paragraph[0] if second_paragraph
 
-    extracted_text[0...150].gsub(/\n/, " ").squeeze(" ")
+    extracted_text[0...150].tr_s("\n", " ").squeeze(" ")
   end
 
   def generate_ancestor_list(ancestors, klass)
