@@ -74,12 +74,6 @@ class RDoc::Generator::Darkfish
   ]
 
   ##
-  # Path to this file's parent directory. Used to find templates and other
-  # resources.
-
-  GENERATOR_DIR = File.join 'rdoc', 'generator'
-
-  ##
   # Release Version
 
   VERSION = '3'
