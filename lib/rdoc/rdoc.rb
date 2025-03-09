@@ -69,7 +69,7 @@ class RDoc::RDoc
   ##
   # The current documentation store
 
-  attr_reader :store
+  attr_accessor :store
 
   ##
   # Add +klass+ that can generate output after parsing
@@ -206,14 +206,6 @@ option)
     end
 
     last
-  end
-
-  ##
-  # Sets the current documentation tree to +store+ and sets the store's rdoc
-  # driver to this instance.
-
-  def store= store
-    @store = store
   end
 
   ##
@@ -457,7 +449,7 @@ The internal error was:
     end
     @options.finish
 
-    self.store = RDoc::Store.new(@options)
+    @store = RDoc::Store.new(@options)
 
     if @options.pipe then
       handle_pipe
