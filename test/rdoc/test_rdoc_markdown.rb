@@ -136,9 +136,27 @@ a block quote
 
   def test_parse_code
     doc = parse "Code: `text`"
-
     expected = doc(para("Code: <code>text</code>"))
+    assert_equal expected, doc
 
+    doc = parse "Code: ` text `"
+    expected = doc(para("Code: <code>text</code>"))
+    assert_equal expected, doc
+
+    doc = parse "Code: ``text`s``"
+    expected = doc(para("Code: <code>text`s</code>"))
+    assert_equal expected, doc
+
+    doc = parse "Code: `` text`s ``"
+    expected = doc(para("Code: <code>text`s</code>"))
+    assert_equal expected, doc
+
+    doc = parse "Code: ```text`s```"
+    expected = doc(para("Code: <code>text`s</code>"))
+    assert_equal expected, doc
+
+    doc = parse "Code: ``` text`s ```"
+    expected = doc(para("Code: <code>text`s</code>"))
     assert_equal expected, doc
   end
 
