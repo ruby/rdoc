@@ -9,8 +9,7 @@ class TestRDocStore < XrefTestCase
     super
 
     @tmpdir = File.join Dir.tmpdir, "test_rdoc_ri_store_#{$$}"
-    @s = RDoc::RI::Store.new(path: @tmpdir)
-    @s.rdoc = @rdoc
+    @s = RDoc::RI::Store.new(RDoc::Options.new, path: @tmpdir)
 
     @top_level = @s.add_file 'file.rb'
 
@@ -397,7 +396,7 @@ class TestRDocStore < XrefTestCase
 
     @s.save
 
-    s = RDoc::Store.new(path: @tmpdir)
+    s = RDoc::Store.new(RDoc::Options.new, path: @tmpdir)
 
     s.load_all
 
@@ -838,13 +837,13 @@ class TestRDocStore < XrefTestCase
     meth.record_location @top_level
 
     # load original, save newly updated class
-    @s = RDoc::RI::Store.new(path: @tmpdir)
+    @s = RDoc::RI::Store.new(RDoc::Options.new, path: @tmpdir)
     @s.load_cache
     @s.save_class klass
     @s.save_cache
 
     # load from disk again
-    @s = RDoc::RI::Store.new(path: @tmpdir)
+    @s = RDoc::RI::Store.new(RDoc::Options.new, path: @tmpdir)
     @s.load_cache
 
     @s.load_class 'Object'
@@ -882,7 +881,7 @@ class TestRDocStore < XrefTestCase
     assert_file @s.method_file(@klass.full_name, @meth.full_name)
     assert_file @s.method_file(@klass.full_name, @meth_bang.full_name)
 
-    s = RDoc::Store.new(path: @s.path)
+    s = RDoc::Store.new(RDoc::Options.new, path: @s.path)
     s.load_cache
 
     loaded = s.load_class 'Object'
@@ -891,7 +890,7 @@ class TestRDocStore < XrefTestCase
 
     s.save_class loaded
 
-    s = RDoc::Store.new(path: @s.path)
+    s = RDoc::Store.new(RDoc::Options.new, path: @s.path)
     s.load_cache
 
     reloaded = s.load_class 'Object'
@@ -911,10 +910,10 @@ class TestRDocStore < XrefTestCase
     klass = RDoc::NormalClass.new 'Object'
     klass.add_comment 'new comment', @top_level
 
-    s = RDoc::RI::Store.new(path: @tmpdir)
+    s = RDoc::RI::Store.new(RDoc::Options.new, path: @tmpdir)
     s.save_class klass
 
-    s = RDoc::RI::Store.new(path: @tmpdir)
+    s = RDoc::RI::Store.new(RDoc::Options.new, path: @tmpdir)
 
     inner = @RM::Document.new @RM::Paragraph.new 'new comment'
     inner.file = @top_level
@@ -926,7 +925,7 @@ class TestRDocStore < XrefTestCase
 
   # This is a functional test
   def test_save_class_merge_constant
-    store = RDoc::Store.new
+    store = RDoc::Store.new(RDoc::Options.new)
     tl = store.add_file 'file.rb'
 
     klass = tl.add_class RDoc::NormalClass, 'C'
@@ -938,16 +937,16 @@ class TestRDocStore < XrefTestCase
     @s.save_class klass
 
     # separate parse run, independent store
-    store = RDoc::Store.new
+    store = RDoc::Store.new(RDoc::Options.new)
     tl = store.add_file 'file.rb'
     klass2 = tl.add_class RDoc::NormalClass, 'C'
     klass2.record_location tl
 
-    s = RDoc::RI::Store.new(path: @tmpdir)
+    s = RDoc::RI::Store.new(RDoc::Options.new, path: @tmpdir)
     s.save_class klass2
 
     # separate `ri` run, independent store
-    s = RDoc::RI::Store.new(path: @tmpdir)
+    s = RDoc::RI::Store.new(RDoc::Options.new, path: @tmpdir)
 
     result = s.load_class 'C'
 

@@ -47,11 +47,12 @@ class RDoc::TestCase < Test::Unit::TestCase
 
     @pwd = Dir.pwd
 
-    @store = RDoc::Store.new
+    @options = RDoc::Options.new
+    @store = RDoc::Store.new(@options)
 
     @rdoc = RDoc::RDoc.new
     @rdoc.store = @store
-    @rdoc.options = RDoc::Options.new
+    @rdoc.options = @options
 
     @rdoc.generator = Object.new
 

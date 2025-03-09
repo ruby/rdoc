@@ -94,7 +94,7 @@ class RDoc::Store
 
   attr_accessor :path
 
-  attr_writer :rdoc
+  attr_reader :options
 
   ##
   # Type of ri datastore this was loaded from.  See RDoc::RI::Driver,
@@ -120,12 +120,12 @@ class RDoc::Store
   ##
   # Creates a new Store of +type+ that will load or save to +path+
 
-  def initialize path: nil, type: nil
+  def initialize(options, path: nil, type: nil)
     @dry_run  = false
     @encoding = nil
     @path     = path
-    @rdoc     = nil
     @type     = type
+    @options  = options
 
     @cache = {
       :ancestors                   => {},
@@ -975,10 +975,6 @@ class RDoc::Store
 
   def unique_modules
     @unique_modules
-  end
-
-  def options
-    @rdoc&.options
   end
 
   private

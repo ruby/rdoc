@@ -214,7 +214,6 @@ option)
 
   def store= store
     @store = store
-    @store.rdoc = self
   end
 
   ##
@@ -450,8 +449,6 @@ The internal error was:
   # current directory, so make sure you're somewhere writable before invoking.
 
   def document options
-    self.store = RDoc::Store.new
-
     if RDoc::Options === options then
       @options = options
     else
@@ -459,6 +456,8 @@ The internal error was:
       @options.parse options
     end
     @options.finish
+
+    self.store = RDoc::Store.new(@options)
 
     if @options.pipe then
       handle_pipe
