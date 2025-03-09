@@ -300,11 +300,7 @@ class RDoc::CodeObject
   # This is used by Text#snippet
 
   def options
-    if @store and @store.rdoc then
-      @store.rdoc.options
-    else
-      RDoc::Options.new
-    end
+    @store&.options || RDoc::Options.new
   end
 
   ##

@@ -219,7 +219,7 @@ class TestRDocContext < XrefTestCase
   end
 
   def test_add_method_duplicate
-    @store.rdoc.options.verbosity = 2
+    @store.options.verbosity = 2
 
     meth1 = RDoc::AnyMethod.new nil, 'name'
     meth1.record_location @store.add_file 'first.rb'
