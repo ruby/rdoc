@@ -188,7 +188,7 @@ class RDoc::RubyGemsHook
     @rdoc = new_rdoc
     @rdoc.options = options
 
-    store = RDoc::Store.new
+    store = RDoc::Store.new(options)
     store.encoding = options.encoding
     store.dry_run  = options.dry_run
     store.main     = options.main_page

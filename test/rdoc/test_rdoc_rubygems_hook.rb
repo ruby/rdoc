@@ -94,7 +94,7 @@ class TestRDocRubyGemsHook < Test::Unit::TestCase
     options.files = []
 
     rdoc = @hook.new_rdoc
-    rdoc.store = RDoc::Store.new
+    rdoc.store = RDoc::Store.new(options)
     @hook.instance_variable_set :@rdoc, rdoc
     @hook.instance_variable_set :@file_info, []
 

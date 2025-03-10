@@ -180,7 +180,7 @@ each_line(foo)
 <span class="ruby-constant">B</span>
     EXPECTED
 
-    @options.line_numbers = true
+    @c2_a.options.line_numbers = true
     assert_equal <<-EXPECTED.chomp, @c2_a.markup_code
   <span class="ruby-comment"># File xref_data.rb</span>
 <span class="line-num">1</span> <span class="ruby-constant">A</span>

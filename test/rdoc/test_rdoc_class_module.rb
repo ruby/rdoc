@@ -791,7 +791,7 @@ class TestRDocClassModule < XrefTestCase
     const = cm1.add_constant RDoc::Constant.new('C3', nil, 'one')
     const.record_location tl1
 
-    store = RDoc::Store.new
+    store = RDoc::Store.new(RDoc::Options.new)
     tl = store.add_file 'one.rb'
     cm2 = tl.add_class RDoc::ClassModule, 'Klass'
     cm2.instance_variable_set :@comment, @RM::Document.new
@@ -826,7 +826,7 @@ class TestRDocClassModule < XrefTestCase
     const = cm1.add_constant RDoc::Constant.new('C3', nil, 'one')
     const.record_location tl1
 
-    store = RDoc::Store.new
+    store = RDoc::Store.new(RDoc::Options.new)
     tl = store.add_file 'one.rb'
     cm2 = tl.add_class RDoc::ClassModule, 'Klass'
     cm2.instance_variable_set :@comment, @RM::Document.new
@@ -859,7 +859,7 @@ class TestRDocClassModule < XrefTestCase
     ext.record_location tl1
 
     tl2 = @store.add_file 'two.rb'
-    tl2.store = RDoc::Store.new
+    tl2.store = RDoc::Store.new(RDoc::Options.new)
 
     cm2 = tl2.add_class RDoc::ClassModule, 'Klass'
     cm2.instance_variable_set :@comment, @RM::Document.new
@@ -895,7 +895,7 @@ class TestRDocClassModule < XrefTestCase
     incl.record_location tl1
 
     tl2 = @store.add_file 'two.rb'
-    tl2.store = RDoc::Store.new
+    tl2.store = RDoc::Store.new(RDoc::Options.new)
 
     cm2 = tl2.add_class RDoc::ClassModule, 'Klass'
     cm2.instance_variable_set :@comment, @RM::Document.new
@@ -931,7 +931,7 @@ class TestRDocClassModule < XrefTestCase
     incl.record_location tl1
 
     tl2 = @store.add_file 'one.rb'
-    tl2.store = RDoc::Store.new
+    tl2.store = RDoc::Store.new(RDoc::Options.new)
 
     cm2 = tl2.add_class RDoc::ClassModule, 'Klass'
     cm2.instance_variable_set :@comment, @RM::Document.new
@@ -1034,7 +1034,7 @@ class TestRDocClassModule < XrefTestCase
            cm1.add_section 'section 2', comment('comment 2 a', tl1_1)
            cm1.add_section 'section 4', comment('comment 4 a', tl1_1)
 
-    store2 = RDoc::Store.new
+    store2 = RDoc::Store.new(RDoc::Options.new)
     tl2_1 = store2.add_file 'one.rb'
     tl2_2 = store2.add_file 'two.rb'
 
@@ -1086,7 +1086,7 @@ class TestRDocClassModule < XrefTestCase
     cm1.add_section 'section', comment('comment 1 a', tl1_1)
     cm1.add_section 'section', comment('comment 3',   tl1_3)
 
-    store2 = RDoc::Store.new
+    store2 = RDoc::Store.new(RDoc::Options.new)
     tl2_1 = store2.add_file 'one.rb'
     tl2_2 = store2.add_file 'two.rb'
     tl2_3 = store2.add_file 'three.rb'
@@ -1382,7 +1382,7 @@ class TestRDocClassModule < XrefTestCase
   end
 
   def test_update_aliases_reparent_root
-    store = RDoc::Store.new
+    store = RDoc::Store.new(RDoc::Options.new)
 
     top_level = store.add_file 'file.rb'
 

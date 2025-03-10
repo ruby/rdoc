@@ -133,7 +133,7 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
       show_documentation req, res
     end
   rescue WEBrick::HTTPStatus::NotFound => e
-    generator = generator_for RDoc::Store.new
+    generator = generator_for RDoc::Store.new(@options)
 
     not_found generator, req, res, e.message
   rescue WEBrick::HTTPStatus::Status
@@ -291,7 +291,7 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
   def installed_docs
     extra_counter = 0
     ri_paths.map do |path, type|
-      store = RDoc::Store.new path, type
+      store = RDoc::Store.new(@options, path: path, type: type)
       exists = File.exist? store.cache_path
 
       case type
@@ -420,15 +420,15 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
   def store_for source_name
     case source_name
     when 'home' then
-      RDoc::Store.new RDoc::RI::Paths.home_dir, :home
+      RDoc::Store.new(@options, path: RDoc::RI::Paths.home_dir, type: :home)
     when 'ruby' then
-      RDoc::Store.new RDoc::RI::Paths.system_dir, :system
+      RDoc::Store.new(@options, path: RDoc::RI::Paths.system_dir, type: :system)
     when 'site' then
-      RDoc::Store.new RDoc::RI::Paths.site_dir, :site
+      RDoc::Store.new(@options, path: RDoc::RI::Paths.site_dir, type: :site)
     when /\Aextra-(\d+)\z/ then
       index = $1.to_i - 1
       ri_dir = installed_docs[index][4]
-      RDoc::Store.new ri_dir, :extra
+      RDoc::Store.new(@options, path: ri_dir, type: :extra)
     else
       ri_dir, type = ri_paths.find do |dir, dir_type|
         next unless dir_type == :gem
@@ -439,7 +439,7 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
       raise WEBrick::HTTPStatus::NotFound,
             "Could not find gem \"#{ERB::Util.html_escape(source_name)}\". Are you sure you installed it?" unless ri_dir
 
-      store = RDoc::Store.new ri_dir, type
+      store = RDoc::Store.new(@options, path: ri_dir, type: type)
 
       return store if File.exist? store.cache_path
 

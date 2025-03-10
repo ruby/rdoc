@@ -45,6 +45,7 @@ class TestRDocServlet < RDoc::TestCase
     @system_dir  = File.join @tempdir, 'base', 'system'
     @home_dir    = File.join @tempdir, 'home'
     @gem_doc_dir = File.join @tempdir, 'doc'
+    @options     = RDoc::Options.new
 
     @orig_base = RDoc::RI::Paths::BASE
     RDoc::RI::Paths::BASE.replace @base
@@ -199,7 +200,7 @@ class TestRDocServlet < RDoc::TestCase
   end
 
   def test_documentation_page_class
-    store = RDoc::Store.new
+    store = RDoc::Store.new(@options)
 
     generator = @s.generator_for store
 
@@ -214,7 +215,7 @@ class TestRDocServlet < RDoc::TestCase
   end
 
   def test_documentation_page_not_found
-    store = RDoc::Store.new
+    store = RDoc::Store.new(@options)
 
     generator = @s.generator_for store
 
@@ -226,7 +227,7 @@ class TestRDocServlet < RDoc::TestCase
   end
 
   def test_documentation_page_page
-    store = RDoc::Store.new
+    store = RDoc::Store.new(@options)
 
     generator = @s.generator_for store
 
@@ -239,7 +240,7 @@ class TestRDocServlet < RDoc::TestCase
   end
 
   def test_documentation_page_page_with_nesting
-    store = RDoc::Store.new
+    store = RDoc::Store.new(@options)
 
     generator = @s.generator_for store
 
@@ -259,7 +260,7 @@ class TestRDocServlet < RDoc::TestCase
   end
 
   def test_documentation_source_cached
-    cached_store = RDoc::Store.new
+    cached_store = RDoc::Store.new(@options)
 
     @stores['ruby'] = cached_store
 
@@ -282,7 +283,7 @@ class TestRDocServlet < RDoc::TestCase
   end
 
   def test_generator_for
-    store = RDoc::Store.new
+    store = RDoc::Store.new(@options)
     store.main  = 'MAIN_PAGE.rdoc'
     store.title = 'Title'
 
@@ -349,7 +350,7 @@ class TestRDocServlet < RDoc::TestCase
   end
 
   def test_not_found
-    generator = @s.generator_for RDoc::Store.new
+    generator = @s.generator_for RDoc::Store.new(@options)
 
     @req.path = '/ruby/Missing.html'
 
@@ -361,7 +362,7 @@ class TestRDocServlet < RDoc::TestCase
   end
 
   def test_not_found_message
-    generator = @s.generator_for RDoc::Store.new
+    generator = @s.generator_for RDoc::Store.new(@options)
 
     @req.path = '/ruby/Missing.html'
 
@@ -532,7 +533,7 @@ class TestRDocServlet < RDoc::TestCase
   end
 
   def touch_system_cache_path
-    store = RDoc::Store.new @system_dir
+    store = RDoc::Store.new(@options, path: @system_dir)
     store.title = 'Standard Library Documentation'
 
     FileUtils.mkdir_p File.dirname store.cache_path
@@ -541,7 +542,7 @@ class TestRDocServlet < RDoc::TestCase
   end
 
   def touch_extra_cache_path
-    store = RDoc::Store.new @extra_dirs.first
+    store = RDoc::Store.new(@options, path: @extra_dirs.first)
     store.title = 'My Extra Documentation'
 
     FileUtils.mkdir_p File.dirname store.cache_path
