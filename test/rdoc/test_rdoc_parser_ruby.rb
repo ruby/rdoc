@@ -3383,6 +3383,7 @@ end
   end
 
   def test_read_directive_linear_performance
+    omit "JRuby intermittently times out" if RUBY_ENGINE == 'jruby'
     pre = ->(i) {util_parser '# ' + '0'*i + '=000:'}
     assert_linear_performance((1..5).map{|i|10**i}, pre: pre) do |parser|
       assert_nil parser.read_directive []
