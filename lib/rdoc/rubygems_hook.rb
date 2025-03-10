@@ -188,13 +188,7 @@ class RDoc::RubyGemsHook
     @rdoc = new_rdoc
     @rdoc.options = options
 
-    store = RDoc::Store.new(options)
-    store.encoding = options.encoding
-    store.dry_run  = options.dry_run
-    store.main     = options.main_page
-    store.title    = options.title
-
-    @rdoc.store = store
+    @rdoc.store = RDoc::Store.new(options)
 
     say "Parsing documentation for #{@spec.full_name}"
 

@@ -121,11 +121,11 @@ class RDoc::Store
   # Creates a new Store of +type+ that will load or save to +path+
 
   def initialize(options, path: nil, type: nil)
-    @dry_run  = false
-    @encoding = nil
-    @path     = path
-    @type     = type
     @options  = options
+    @dry_run  = options.dry_run
+    @encoding = options.encoding
+    @path     = path || options.op_dir
+    @type     = type
 
     @cache = {
       :ancestors                   => {},
@@ -135,10 +135,10 @@ class RDoc::Store
       :c_singleton_class_variables => {},
       :encoding                    => @encoding,
       :instance_methods            => {},
-      :main                        => nil,
+      :main                        => options.main_page,
       :modules                     => [],
       :pages                       => [],
-      :title                       => nil,
+      :title                       => options.title,
     }
 
     @classes_hash = {}

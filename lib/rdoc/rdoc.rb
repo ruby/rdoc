@@ -460,12 +460,6 @@ The internal error was:
       @last_modified = setup_output_dir @options.op_dir, @options.force_update
     end
 
-    @store.encoding = @options.encoding
-    @store.dry_run  = @options.dry_run
-    @store.main     = @options.main_page
-    @store.title    = @options.title
-    @store.path     = @options.op_dir
-
     @start_time = Time.now
 
     @store.load_cache

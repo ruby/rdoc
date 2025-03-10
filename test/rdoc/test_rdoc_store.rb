@@ -90,7 +90,7 @@ class TestRDocStore < XrefTestCase
       :class_methods               => cmethods,
       :c_class_variables           => {},
       :c_singleton_class_variables => {},
-      :encoding                    => nil,
+      :encoding                    => Encoding::UTF_8,
       :instance_methods            => imethods,
       :modules                     => modules,
       :pages                       => pages,
@@ -447,6 +447,10 @@ class TestRDocStore < XrefTestCase
       Marshal.dump cache, io
     end
 
+    # Store prioritize @encoding over the cached value
+    # See we need to unset @encoding to test the cached value
+    @s.encoding = nil
+
     @s.load_cache
 
     assert_equal cache, @s.cache
@@ -497,7 +501,7 @@ class TestRDocStore < XrefTestCase
       :class_methods               => {},
       :c_class_variables           => {},
       :c_singleton_class_variables => {},
-      :encoding                    => nil,
+      :encoding                    => Encoding::UTF_8,
       :instance_methods            => {},
       :main                        => nil,
       :modules                     => [],
@@ -529,6 +533,10 @@ class TestRDocStore < XrefTestCase
     File.open File.join(@tmpdir, 'cache.ri'), 'wb' do |io|
       Marshal.dump cache, io
     end
+
+    # Store prioritize @encoding over the cached value
+    # See we need to unset @encoding to test the cached value
+    @s.encoding = nil
 
     @s.load_cache
 
@@ -685,7 +693,7 @@ class TestRDocStore < XrefTestCase
       },
       :main => nil,
       :modules => %w[Mod Object Object::SubClass],
-      :encoding => nil,
+      :encoding => Encoding::UTF_8,
       :pages => %w[README.txt],
       :title => nil,
     }
