@@ -1008,7 +1008,7 @@ Foo::Bar#bother
 
     assert_equal 'Z', e.name
 
-    @driver.stores << RDoc::Store.new(@rdoc_options, path: nil, type: :system)
+    @driver.stores << RDoc::Store.new(@rdoc_options, type: :system)
 
     assert_equal 'ruby:README', @driver.expand_name('ruby:README')
     assert_equal 'ruby:',       @driver.expand_name('ruby:')
@@ -1085,7 +1085,7 @@ Foo::Bar#bother
   end
 
   def test_find_store
-    @driver.stores << RDoc::Store.new(@rdoc_options, path: nil, type: :system)
+    @driver.stores << RDoc::Store.new(@rdoc_options, type: :system)
     @driver.stores << RDoc::Store.new(@rdoc_options, path: 'doc/gem-1.0/ri', type: :gem)
 
     assert_equal 'ruby',    @driver.find_store('ruby')
