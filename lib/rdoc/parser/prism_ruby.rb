@@ -452,8 +452,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     comment = consecutive_comment(line_no)
     handle_consecutive_comment_directive(@container, comment)
     visibility = @container.find_method(old_name, @singleton)&.visibility || :public
-    a = RDoc::Alias.new(nil, old_name, new_name, comment, @singleton)
-    a.comment = comment
+    a = RDoc::Alias.new(nil, old_name, new_name, comment, singleton: @singleton)
     handle_modifier_directive(a, line_no)
     a.store = @store
     a.line = line_no

@@ -248,9 +248,7 @@ class RDoc::Parser::C < RDoc::Parser
   # method that reference the same function.
 
   def add_alias(var_name, class_obj, old_name, new_name, comment)
-    al = RDoc::Alias.new '', old_name, new_name, ''
-    al.singleton = @singleton_classes.key? var_name
-    al.comment = comment
+    al = RDoc::Alias.new '', old_name, new_name, comment, singleton: @singleton_classes.key?(var_name)
     al.record_location @top_level
     class_obj.add_alias al
     @stats.add_alias al

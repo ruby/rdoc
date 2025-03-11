@@ -92,8 +92,7 @@ class TestRDocContext < XrefTestCase
     meth = RDoc::AnyMethod.new nil, 'old_name'
     meth.singleton = true
 
-    as = RDoc::Alias.new nil, 'old_name', 'new_name', 'comment'
-    as.singleton = true
+    as = RDoc::Alias.new nil, 'old_name', 'new_name', 'comment', singleton: true
 
     as.parent = @context
 

@@ -207,7 +207,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @is_alias_for  = array[15]
 
     array[8].each do |new_name, document|
-      add_alias RDoc::Alias.new(nil, @name, new_name, RDoc::Comment.from_document(document), @singleton)
+      add_alias RDoc::Alias.new(nil, @name, new_name, RDoc::Comment.from_document(document), singleton: @singleton)
     end
 
     @parent_name ||= if @full_name =~ /#/ then

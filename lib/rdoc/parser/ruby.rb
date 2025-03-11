@@ -792,8 +792,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       return
     end
 
-    al = RDoc::Alias.new(get_tkread, old_name, new_name, comment,
-                         single == SINGLE)
+    al = RDoc::Alias.new(get_tkread, old_name, new_name, comment, singleton: single == SINGLE)
     record_location al
     al.line   = line_no
 
