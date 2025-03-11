@@ -69,7 +69,7 @@ class RDoc::RDoc
   ##
   # The current documentation store
 
-  attr_reader :store
+  attr_accessor :store
 
   ##
   # Add +klass+ that can generate output after parsing
@@ -206,15 +206,6 @@ option)
     end
 
     last
-  end
-
-  ##
-  # Sets the current documentation tree to +store+ and sets the store's rdoc
-  # driver to this instance.
-
-  def store= store
-    @store = store
-    @store.rdoc = self
   end
 
   ##
@@ -450,8 +441,6 @@ The internal error was:
   # current directory, so make sure you're somewhere writable before invoking.
 
   def document options
-    self.store = RDoc::Store.new
-
     if RDoc::Options === options then
       @options = options
     else
@@ -459,6 +448,8 @@ The internal error was:
       @options.parse options
     end
     @options.finish
+
+    @store = RDoc::Store.new(@options)
 
     if @options.pipe then
       handle_pipe
@@ -468,12 +459,6 @@ The internal error was:
     unless @options.coverage_report then
       @last_modified = setup_output_dir @options.op_dir, @options.force_update
     end
-
-    @store.encoding = @options.encoding
-    @store.dry_run  = @options.dry_run
-    @store.main     = @options.main_page
-    @store.title    = @options.title
-    @store.path     = @options.op_dir
 
     @start_time = Time.now
 

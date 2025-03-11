@@ -290,7 +290,7 @@ class TestRDocContext < XrefTestCase
   end
 
   def test_add_module_alias_top_level
-    store = RDoc::Store.new
+    store = RDoc::Store.new(RDoc::Options.new)
 
     top_level = store.add_file 'file.rb'
 

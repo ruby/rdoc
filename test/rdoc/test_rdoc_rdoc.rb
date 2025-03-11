@@ -7,7 +7,8 @@ class TestRDocRDoc < RDoc::TestCase
     super
 
     @rdoc = RDoc::RDoc.new
-    @rdoc.options = RDoc::Options.new
+    @options = RDoc::Options.new
+    @rdoc.options = @options
 
     @stats = RDoc::Stats.new @store, 0, 0
     @rdoc.instance_variable_set :@stats, @stats
@@ -244,7 +245,7 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_parse_file
-    @rdoc.store = RDoc::Store.new
+    @rdoc.store = RDoc::Store.new(@options)
 
     temp_dir do |dir|
       @rdoc.options.root = Pathname(Dir.pwd)
@@ -261,7 +262,7 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_parse_file_binary
-    @rdoc.store = RDoc::Store.new
+    @rdoc.store = RDoc::Store.new(@options)
 
     root = File.dirname __FILE__
 
@@ -278,7 +279,7 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_parse_file_include_root
-    @rdoc.store = RDoc::Store.new
+    @rdoc.store = RDoc::Store.new(@options)
 
     test_path = File.expand_path('..', __FILE__)
     top_level = nil
@@ -300,7 +301,7 @@ class TestRDocRDoc < RDoc::TestCase
   end
 
   def test_parse_file_page_dir
-    @rdoc.store = RDoc::Store.new
+    @rdoc.store = RDoc::Store.new(@options)
 
     temp_dir do |dir|
       FileUtils.mkdir 'pages'
@@ -321,7 +322,7 @@ class TestRDocRDoc < RDoc::TestCase
   def test_parse_file_relative
     pwd = Dir.pwd
 
-    @rdoc.store = RDoc::Store.new
+    @rdoc.store = RDoc::Store.new(@options)
 
     temp_dir do |dir|
       @rdoc.options.root = Pathname(dir)
@@ -343,7 +344,7 @@ class TestRDocRDoc < RDoc::TestCase
 
   def test_parse_file_encoding
     @rdoc.options.encoding = Encoding::ISO_8859_1
-    @rdoc.store = RDoc::Store.new
+    @rdoc.store = RDoc::Store.new(@options)
 
     tf = Tempfile.open 'test.txt' do |io|
       io.write 'hi'
@@ -361,7 +362,7 @@ class TestRDocRDoc < RDoc::TestCase
     omit 'chmod not supported' if Gem.win_platform?
     omit "assumes that euid is not root" if Process.euid == 0
 
-    @rdoc.store = RDoc::Store.new
+    @rdoc.store = RDoc::Store.new(@options)
 
     tf = Tempfile.open 'test.txt' do |io|
       io.write 'hi'
