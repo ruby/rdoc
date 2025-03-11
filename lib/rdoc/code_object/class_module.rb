@@ -392,7 +392,7 @@ class RDoc::ClassModule < RDoc::Context
       singleton  ||= false
       visibility ||= :public
 
-      attr = RDoc::Attr.new nil, name, rw, nil, singleton
+      attr = RDoc::Attr.new nil, name, rw, nil, singleton: singleton
 
       add_attribute attr
       attr.visibility = visibility

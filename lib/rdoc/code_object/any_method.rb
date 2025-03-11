@@ -39,8 +39,8 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   ##
   # Creates a new AnyMethod with a token stream +text+ and +name+
 
-  def initialize text, name
-    super
+  def initialize(text, name, singleton: false)
+    super(text, name, singleton: singleton)
 
     @c_function = nil
     @dont_rename_initialize = false

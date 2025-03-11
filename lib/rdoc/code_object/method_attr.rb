@@ -69,7 +69,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
   #
   # Usually this is called by super from a subclass.
 
-  def initialize text, name
+  def initialize(text, name, singleton: false)
     super()
 
     @text = text
@@ -78,7 +78,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
     @aliases      = []
     @is_alias_for = nil
     @parent_name  = nil
-    @singleton    = nil
+    @singleton    = singleton
     @visibility   = :public
     @see = false
 

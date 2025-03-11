@@ -289,10 +289,9 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
     if attributes
       attributes.each do |attr|
-        a = RDoc::Attr.new(@container, attr, rw, processed_comment)
+        a = RDoc::Attr.new(@container, attr, rw, processed_comment, singleton: @singleton)
         a.store = @store
         a.line = line_no
-        a.singleton = @singleton
         record_location(a)
         @container.add_attribute(a)
         a.visibility = visibility
@@ -471,10 +470,9 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     return unless @container.document_children
 
     names.each do |symbol|
-      a = RDoc::Attr.new(nil, symbol.to_s, rw, comment)
+      a = RDoc::Attr.new(nil, symbol.to_s, rw, comment, singleton: @singleton)
       a.store = @store
       a.line = line_no
-      a.singleton = @singleton
       record_location(a)
       handle_modifier_directive(a, line_no)
       @container.add_attribute(a) if should_document?(a)

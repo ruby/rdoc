@@ -293,7 +293,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Creates a new attribute in +container+ with +name+.
 
   def create_attr container, single, name, rw, comment # :nodoc:
-    att = RDoc::Attr.new get_tkread, name, rw, comment, single == SINGLE
+    att = RDoc::Attr.new get_tkread, name, rw, comment, singleton: single == SINGLE
     record_location att
 
     container.add_attribute att
