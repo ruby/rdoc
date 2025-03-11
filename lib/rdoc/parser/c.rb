@@ -1013,10 +1013,9 @@ class RDoc::Parser::C < RDoc::Parser
         type = 'method' # force public
       end
 
-      meth_obj = RDoc::AnyMethod.new '', meth_name
+      singleton = singleton || %w[singleton_method module_function].include?(type)
+      meth_obj = RDoc::AnyMethod.new '', meth_name, singleton: singleton
       meth_obj.c_function = function
-      meth_obj.singleton =
-        singleton || %w[singleton_method module_function].include?(type)
 
       p_count = Integer(param_count) rescue -1
 

@@ -53,10 +53,9 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   # Adds +an_alias+ as an alias for this method in +context+.
 
   def add_alias an_alias, context = nil
-    method = self.class.new an_alias.text, an_alias.new_name
+    method = self.class.new an_alias.text, an_alias.new_name, singleton: singleton
 
     method.record_location an_alias.file
-    method.singleton = self.singleton
     method.params = self.params
     method.visibility = self.visibility
     method.comment = an_alias.comment

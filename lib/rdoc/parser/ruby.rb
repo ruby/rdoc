@@ -1357,10 +1357,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     return unless name
 
-    meth = RDoc::MetaMethod.new get_tkread, name
+    meth = RDoc::MetaMethod.new get_tkread, name, singleton: singleton
     record_location meth
     meth.line   = line_no
-    meth.singleton = singleton
 
     remove_token_listener self
 
@@ -1460,9 +1459,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     return unless name
 
-    meth = RDoc::AnyMethod.new get_tkread, name
+    meth = RDoc::AnyMethod.new get_tkread, name, singleton: single == SINGLE ? true : singleton
     look_for_directives_in meth, comment
-    meth.singleton = single == SINGLE ? true : singleton
     if singleton
       # `current_line_visibility' is useless because it works against
       # the normal method named as same as the singleton method, after

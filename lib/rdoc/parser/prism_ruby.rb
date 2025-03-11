@@ -298,8 +298,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       end
     elsif line_no || node
       method_name ||= call_node_name_arguments(node).first if is_call_node
-      meth = RDoc::AnyMethod.new(@container, method_name)
-      meth.singleton = @singleton || singleton_method
+      meth = RDoc::AnyMethod.new(@container, method_name, singleton: @singleton || singleton_method)
       handle_consecutive_comment_directive(meth, comment)
       comment.normalize
       meth.call_seq = comment.extract_call_seq
@@ -315,7 +314,6 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         meth,
         line_no: line_no,
         visibility: visibility,
-        singleton: @singleton || singleton_method,
         params: '()',
         calls_super: false,
         block_params: nil,
@@ -511,7 +509,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     return if @in_proc_block
 
     receiver = receiver_name ? find_or_create_module_path(receiver_name, receiver_fallback_type) : @container
-    meth = RDoc::AnyMethod.new(nil, name)
+    meth = RDoc::AnyMethod.new(nil, name, singleton: singleton)
     if (comment = consecutive_comment(start_line))
       handle_consecutive_comment_directive(@container, comment)
       handle_consecutive_comment_directive(meth, comment)
@@ -530,7 +528,6 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       meth,
       line_no: start_line,
       visibility: visibility,
-      singleton: singleton,
       params: params,
       calls_super: calls_super,
       block_params: block_params,
@@ -550,12 +547,11 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     end
   end
 
-  private def internal_add_method(container, meth, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:) # :nodoc:
+  private def internal_add_method(container, meth, line_no:, visibility:, params:, calls_super:, block_params:, tokens:) # :nodoc:
     meth.name ||= meth.call_seq[/\A[^()\s]+/] if meth.call_seq
     meth.name ||= 'unknown'
     meth.store = @store
     meth.line = line_no
-    meth.singleton = singleton
     container.add_method(meth) # should add after setting singleton and before setting visibility
     meth.visibility = visibility
     meth.params ||= params
