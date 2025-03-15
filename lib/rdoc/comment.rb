@@ -362,17 +362,18 @@ class RDoc::Comment
 
     private def normalize_comment_lines(lines)
       blank_line_regexp = /\A\s*\z/
-      min_spaces = lines.map do |l|
-        l[/\A */].size unless l.match?(blank_line_regexp)
-      end.compact.min
-      if min_spaces && min_spaces > 0
-        lines = lines.map { |l| l[min_spaces..] || '' }
-      else
-        lines = lines.dup
-      end
+      lines = lines.dup
       lines.shift while lines.first&.match?(blank_line_regexp)
       lines.pop while lines.last&.match?(blank_line_regexp)
-      lines
+
+      min_spaces = lines.map do |l|
+        l.match(/\A *(?=\S)/)&.end(0)
+      end.compact.min
+      if min_spaces && min_spaces > 0
+        lines.map { |l| l[min_spaces..] || '' }
+      else
+        lines
+      end
     end
 
     # Take value lines of multiline directive
@@ -380,7 +381,7 @@ class RDoc::Comment
     private def take_multiline_directive_value_lines(directive, filename, line_no, lines, base_indent_size, indent_regexp, has_param)
       return [] if lines.empty?
 
-      first_indent_size = lines.first[indent_regexp].size
+      first_indent_size = lines.first.match(indent_regexp).end(0)
 
       # Blank line or unindented line is not part of multiline-directive value
       return [] if first_indent_size <= base_indent_size
@@ -391,9 +392,9 @@ class RDoc::Comment
         #   line3
         #
         value_lines = lines.take_while do |l|
-          l.rstrip[indent_regexp].size > base_indent_size
+          l.rstrip.match(indent_regexp).end(0) > base_indent_size
         end
-        min_indent = value_lines.map { |l| l[indent_regexp].size }.min
+        min_indent = value_lines.map { |l| l.match(indent_regexp).end(0) }.min
         value_lines.map { |l| l[min_indent..] }
       else
         # Take indented lines accepting blank lines between them
