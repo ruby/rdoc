@@ -23,7 +23,7 @@ class RDoc::Alias < RDoc::CodeObject
   ##
   # Is this an alias declared in a singleton context?
 
-  attr_accessor :singleton
+  attr_reader :singleton
 
   ##
   # Source file token stream
@@ -34,7 +34,7 @@ class RDoc::Alias < RDoc::CodeObject
   # Creates a new Alias with a token stream of +text+ that aliases +old_name+
   # to +new_name+, has +comment+ and is a +singleton+ context.
 
-  def initialize(text, old_name, new_name, comment, singleton = false)
+  def initialize(text, old_name, new_name, comment, singleton: false)
     super()
 
     @text = text

@@ -176,11 +176,9 @@ class TestRDocCrossReference < XrefTestCase
     @c1.methods_hash.clear
 
     i_op = RDoc::AnyMethod.new nil, x
-    i_op.singleton = false
     @c1.add_method i_op
 
-    c_op = RDoc::AnyMethod.new nil, x
-    c_op.singleton = true
+    c_op = RDoc::AnyMethod.new nil, x, singleton: true
     @c1.add_method c_op
 
     assert_ref i_op, x

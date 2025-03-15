@@ -1214,8 +1214,7 @@ Foo::Bar#bother
     @cFoo.add_method index
     @store1.save_method @cFoo, index
 
-    c_index = RDoc::AnyMethod.new nil, '[]'
-    c_index.singleton = true
+    c_index = RDoc::AnyMethod.new nil, '[]', singleton: true
     c_index.record_location @top_level
     @cFoo.add_method c_index
     @store1.save_method @cFoo, c_index
@@ -1577,9 +1576,8 @@ Foo::Bar#bother
     @bother.params = "(things)"
     @bother.record_location @top_level
 
-    @new = @cFoo_Bar.add_method RDoc::AnyMethod.new nil, 'new'
+    @new = @cFoo_Bar.add_method RDoc::AnyMethod.new nil, 'new', singleton: true
     @new.record_location @top_level
-    @new.singleton = true
 
     @attr = @cFoo_Bar.add_attribute RDoc::Attr.new nil, 'attr', 'RW', ''
     @attr.record_location @top_level

@@ -293,7 +293,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Creates a new attribute in +container+ with +name+.
 
   def create_attr container, single, name, rw, comment # :nodoc:
-    att = RDoc::Attr.new get_tkread, name, rw, comment, single == SINGLE
+    att = RDoc::Attr.new get_tkread, name, rw, comment, singleton: single == SINGLE
     record_location att
 
     container.add_attribute att
@@ -792,8 +792,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       return
     end
 
-    al = RDoc::Alias.new(get_tkread, old_name, new_name, comment,
-                         single == SINGLE)
+    al = RDoc::Alias.new(get_tkread, old_name, new_name, comment, singleton: single == SINGLE)
     record_location al
     al.line   = line_no
 
@@ -1358,10 +1357,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     return unless name
 
-    meth = RDoc::MetaMethod.new get_tkread, name
+    meth = RDoc::MetaMethod.new get_tkread, name, singleton: singleton
     record_location meth
     meth.line   = line_no
-    meth.singleton = singleton
 
     remove_token_listener self
 
@@ -1461,9 +1459,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     return unless name
 
-    meth = RDoc::AnyMethod.new get_tkread, name
+    meth = RDoc::AnyMethod.new get_tkread, name, singleton: single == SINGLE ? true : singleton
     look_for_directives_in meth, comment
-    meth.singleton = single == SINGLE ? true : singleton
     if singleton
       # `current_line_visibility' is useless because it works against
       # the normal method named as same as the singleton method, after

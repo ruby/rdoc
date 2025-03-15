@@ -89,11 +89,9 @@ class TestRDocContext < XrefTestCase
   end
 
   def test_add_alias_method_singleton
-    meth = RDoc::AnyMethod.new nil, 'old_name'
-    meth.singleton = true
+    meth = RDoc::AnyMethod.new nil, 'old_name', singleton: true
 
-    as = RDoc::Alias.new nil, 'old_name', 'new_name', 'comment'
-    as.singleton = true
+    as = RDoc::Alias.new nil, 'old_name', 'new_name', 'comment', singleton: true
 
     as.parent = @context
 

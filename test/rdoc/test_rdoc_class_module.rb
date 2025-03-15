@@ -171,7 +171,7 @@ class TestRDocClassModule < XrefTestCase
 
     a1 = RDoc::Attr.new nil, 'a1', 'RW', ''
     a1.record_location tl
-    a2 = RDoc::Attr.new nil, 'a2', 'RW', '', true
+    a2 = RDoc::Attr.new nil, 'a2', 'RW', '', singleton: true
     a2.record_location tl
 
     m1 = RDoc::AnyMethod.new nil, 'm1'
@@ -358,7 +358,7 @@ class TestRDocClassModule < XrefTestCase
 
     a1 = RDoc::Attr.new nil, 'a1', 'RW', ''
     a1.record_location tl
-    a2 = RDoc::Attr.new nil, 'a2', 'RW', '', true
+    a2 = RDoc::Attr.new nil, 'a2', 'RW', '', singleton: true
     a2.record_location tl
 
     m1 = RDoc::AnyMethod.new nil, 'm1'
@@ -437,7 +437,7 @@ class TestRDocClassModule < XrefTestCase
 
     a1 = RDoc::Attr.new nil, 'a1', 'RW', ''
     a1.record_location tl
-    a2 = RDoc::Attr.new nil, 'a2', 'RW', '', true
+    a2 = RDoc::Attr.new nil, 'a2', 'RW', '', singleton: true
     a2.record_location tl
 
     m1 = RDoc::AnyMethod.new nil, 'm1'
@@ -522,7 +522,7 @@ class TestRDocClassModule < XrefTestCase
 
     a1 = RDoc::Attr.new nil, 'a1', 'RW', ''
     a1.record_location tl
-    a2 = RDoc::Attr.new nil, 'a2', 'RW', '', true
+    a2 = RDoc::Attr.new nil, 'a2', 'RW', '', singleton: true
     a2.record_location tl
 
     m1 = RDoc::AnyMethod.new nil, 'm1'
@@ -1583,14 +1583,14 @@ class TestRDocClassModule < XrefTestCase
       extmod_method = @extmod.add_method(RDoc::AnyMethod.new(nil, "extmod_method"))
       extmod_method.section = @extmod.add_section("Extmod method section")
 
-      extmod_attr = @extmod.add_attribute(RDoc::Attr.new(nil, "extmod_attr_without_a_section", "RW", "", true))
-      extmod_attr = @extmod.add_attribute(RDoc::Attr.new(nil, "extmod_attr", "RW", "", true))
+      extmod_attr = @extmod.add_attribute(RDoc::Attr.new(nil, "extmod_attr_without_a_section", "RW", "", singleton: true))
+      extmod_attr = @extmod.add_attribute(RDoc::Attr.new(nil, "extmod_attr", "RW", "", singleton: true))
       extmod_attr.section = @extmod.add_section("Extmod attr section")
 
       extmod_private_method = @extmod.add_method(RDoc::AnyMethod.new(nil, "extmod_private_method"))
       extmod_private_method.visibility = :private
 
-      extmod_private_attr = @extmod.add_attribute(RDoc::Attr.new(nil, "extmod_private_attr", "RW", "", true))
+      extmod_private_attr = @extmod.add_attribute(RDoc::Attr.new(nil, "extmod_private_attr", "RW", "", singleton: true))
       extmod_private_attr.visibility = :private
 
       @klass.add_include(RDoc::Include.new("Incmod", nil))

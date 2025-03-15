@@ -392,7 +392,7 @@ class RDoc::ClassModule < RDoc::Context
       singleton  ||= false
       visibility ||= :public
 
-      attr = RDoc::Attr.new nil, name, rw, nil, singleton
+      attr = RDoc::Attr.new nil, name, rw, nil, singleton: singleton
 
       add_attribute attr
       attr.visibility = visibility
@@ -419,8 +419,7 @@ class RDoc::ClassModule < RDoc::Context
         @visibility = visibility
 
         methods.each do |name, file|
-          method = RDoc::AnyMethod.new nil, name
-          method.singleton = true if type == 'class'
+          method = RDoc::AnyMethod.new nil, name, singleton: type == 'class'
           method.record_location RDoc::TopLevel.new file
           add_method method
         end

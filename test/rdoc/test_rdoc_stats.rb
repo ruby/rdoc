@@ -397,14 +397,12 @@ class TestRDocStats < RDoc::TestCase
     c.record_location @tl
     c.add_comment 'C', @tl
 
-    m1 = RDoc::AnyMethod.new nil, 'm1'
+    m1 = RDoc::AnyMethod.new nil, 'm1', singleton: true
     m1.record_location @tl
-    m1.singleton = true
     c.add_method m1
 
-    m2 = RDoc::AnyMethod.new nil, 'm2'
+    m2 = RDoc::AnyMethod.new nil, 'm2', singleton: true
     m2.record_location @tl
-    m2.singleton = true
     c.add_method m2
     m2.comment = 'm2'
 

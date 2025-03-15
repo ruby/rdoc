@@ -20,8 +20,7 @@ class TestRDocStore < XrefTestCase
     @klass.add_comment 'original', @top_level
     @klass.record_location @top_level
 
-    @cmeth = RDoc::AnyMethod.new nil, 'cmethod'
-    @cmeth.singleton = true
+    @cmeth = RDoc::AnyMethod.new nil, 'cmethod', singleton: true
     @cmeth.record_location @top_level
 
     @meth_comment = RDoc::Comment.new 'method comment'

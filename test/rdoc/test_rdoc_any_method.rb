@@ -236,7 +236,7 @@ each_line(foo)
     assert_equal 'Klass#method', loaded.full_name
     assert_equal 'method',       loaded.name
     assert_equal 'param',        loaded.params
-    assert_nil                   loaded.singleton # defaults to nil
+    assert_equal false,          loaded.singleton
     assert_equal :public,        loaded.visibility
     assert_equal cm,             loaded.parent
     assert_equal section,        loaded.section
