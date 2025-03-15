@@ -289,12 +289,12 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
     if attributes
       attributes.each do |attr|
-        a = RDoc::Attr.new(@container, attr, rw, processed_comment, singleton: @singleton)
-        a.store = @store
-        a.line = line_no
-        record_location(a)
-        @container.add_attribute(a)
-        a.visibility = visibility
+        attr_obj = RDoc::Attr.new(@container, attr, rw, processed_comment, singleton: @singleton)
+        attr_obj.store = @store
+        attr_obj.line = line_no
+        record_location(attr_obj)
+        @container.add_attribute(attr_obj)
+        attr_obj.visibility = visibility
       end
     elsif line_no || node
       method_name ||= call_node_name_arguments(node).first if is_call_node
@@ -401,13 +401,13 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   def change_method_visibility(names, visibility, singleton: @singleton)
     new_methods = []
-    @container.methods_matching(names, singleton) do |m|
-      if m.parent != @container
-        m = m.dup
-        record_location(m)
-        new_methods << m
+    @container.methods_matching(names, singleton) do |method|
+      if method.parent != @container
+        method = method.dup
+        record_location(method)
+        new_methods << method
       else
-        m.visibility = visibility
+        method.visibility = visibility
       end
     end
     new_methods.each do |method|
@@ -449,13 +449,13 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     comment = consecutive_comment(line_no)
     handle_consecutive_comment_directive(@container, comment)
     visibility = @container.find_method(old_name, @singleton)&.visibility || :public
-    a = RDoc::Alias.new(nil, old_name, new_name, comment, singleton: @singleton)
-    handle_modifier_directive(a, line_no)
-    a.store = @store
-    a.line = line_no
-    record_location(a)
-    if should_document?(a)
-      @container.add_alias(a)
+    alias_obj = RDoc::Alias.new(nil, old_name, new_name, comment, singleton: @singleton)
+    handle_modifier_directive(alias_obj, line_no)
+    alias_obj.store = @store
+    alias_obj.line = line_no
+    record_location(alias_obj)
+    if should_document?(alias_obj)
+      @container.add_alias(alias_obj)
       @container.find_method(new_name, @singleton)&.visibility = visibility
     end
   end
@@ -468,13 +468,13 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     return unless @container.document_children
 
     names.each do |symbol|
-      a = RDoc::Attr.new(nil, symbol.to_s, rw, comment, singleton: @singleton)
-      a.store = @store
-      a.line = line_no
-      record_location(a)
-      handle_modifier_directive(a, line_no)
-      @container.add_attribute(a) if should_document?(a)
-      a.visibility = visibility # should set after adding to container
+      attr_obj = RDoc::Attr.new(nil, symbol.to_s, rw, comment, singleton: @singleton)
+      attr_obj.store = @store
+      attr_obj.line = line_no
+      record_location(attr_obj)
+      handle_modifier_directive(attr_obj, line_no)
+      @container.add_attribute(attr_obj) if should_document?(attr_obj)
+      attr_obj.visibility = visibility # should set after adding to container
     end
   end
 
@@ -483,11 +483,11 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     comment = consecutive_comment(line_no)
     handle_consecutive_comment_directive(@container, comment)
     names.each do |name|
-      ie = @container.add(rdoc_class, name, '')
-      ie.store = @store
-      ie.line = line_no
-      ie.comment = comment
-      record_location(ie)
+      include_extend_obj = @container.add(rdoc_class, name, '')
+      include_extend_obj.store = @store
+      include_extend_obj.line = line_no
+      include_extend_obj.comment = comment
+      record_location(include_extend_obj)
     end
   end
 
@@ -652,10 +652,10 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         @container.find_module_named(rhs_name)
       end
     if mod && constant.document_self
-      a = @container.add_module_alias(mod, rhs_name, constant, @top_level)
-      a.store = @store
-      a.line = start_line
-      record_location(a)
+      module_alias = @container.add_module_alias(mod, rhs_name, constant, @top_level)
+      module_alias.store = @store
+      module_alias.line = start_line
+      record_location(module_alias)
     end
   end
 

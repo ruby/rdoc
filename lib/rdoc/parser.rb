@@ -74,17 +74,17 @@ class RDoc::Parser
   def self.binary?(file)
     return false if file =~ /\.(rdoc|txt)$/
 
-    s = File.read(file, 1024) or return false
+    string = File.read(file, 1024) or return false
 
-    return true if s[0, 2] == Marshal.dump('')[0, 2] or s.index("\x00")
+    return true if string[0, 2] == Marshal.dump('')[0, 2] or string.index("\x00")
 
     mode = 'r:utf-8' # default source encoding has been changed to utf-8
-    s.sub!(/\A#!.*\n/, '')     # assume shebang line isn't longer than 1024.
-    encoding = s[/^\s*\#\s*(?:-\*-\s*)?(?:en)?coding:\s*([^\s;]+?)(?:-\*-|[\s;])/, 1]
+    string.sub!(/\A#!.*\n/, '')     # assume shebang line isn't longer than 1024.
+    encoding = string[/^\s*\#\s*(?:-\*-\s*)?(?:en)?coding:\s*([^\s;]+?)(?:-\*-|[\s;])/, 1]
     mode = "rb:#{encoding}" if encoding
-    s = File.open(file, mode) {|f| f.gets(nil, 1024)}
+    string = File.open(file, mode) {|f| f.gets(nil, 1024)}
 
-    not s.valid_encoding?
+    !string.valid_encoding?
   end
 
   ##
