@@ -314,13 +314,6 @@ class RDoc::CodeObject
   end
 
   ##
-  # File name of our parent
-
-  def parent_file_name
-    @parent ? @parent.base_name : '(unknown)'
-  end
-
-  ##
   # Name of our parent
 
   def parent_name
