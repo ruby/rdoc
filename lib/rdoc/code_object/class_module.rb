@@ -34,8 +34,6 @@ class RDoc::ClassModule < RDoc::Context
 
   attr_accessor :comment_location
 
-  attr_accessor :diagram # :nodoc:
-
   ##
   # Class or module this constant is an alias for
 
@@ -109,7 +107,6 @@ class RDoc::ClassModule < RDoc::Context
 
   def initialize(name, superclass = nil)
     @constant_aliases = []
-    @diagram          = nil
     @is_alias_for     = nil
     @name             = name
     @superclass       = superclass

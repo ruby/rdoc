@@ -28,8 +28,6 @@ class RDoc::TopLevel < RDoc::Context
 
   attr_reader :classes_or_modules
 
-  attr_accessor :diagram # :nodoc:
-
   ##
   # The parser class that processed this file
 
@@ -46,7 +44,6 @@ class RDoc::TopLevel < RDoc::Context
     @absolute_name = absolute_name
     @relative_name = relative_name
     @file_stat     = File.stat(absolute_name) rescue nil # HACK for testing
-    @diagram       = nil
     @parser        = nil
 
     @classes_or_modules = []
