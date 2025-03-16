@@ -7,11 +7,6 @@ class RDoc::TopLevel < RDoc::Context
   MARSHAL_VERSION = 0 # :nodoc:
 
   ##
-  # This TopLevel's File::Stat struct
-
-  attr_accessor :file_stat
-
-  ##
   # Relative name of this file
 
   attr_accessor :relative_name
@@ -43,7 +38,6 @@ class RDoc::TopLevel < RDoc::Context
     @name = nil
     @absolute_name = absolute_name
     @relative_name = relative_name
-    @file_stat     = File.stat(absolute_name) rescue nil # HACK for testing
     @parser        = nil
 
     @classes_or_modules = []
@@ -184,13 +178,6 @@ class RDoc::TopLevel < RDoc::Context
   end
 
   ##
-  # Time this file was last modified, if known
-
-  def last_modified
-    @file_stat ? file_stat.mtime : nil
-  end
-
-  ##
   # Dumps this TopLevel for use by ri.  See also #marshal_load
 
   def marshal_dump
@@ -210,8 +197,6 @@ class RDoc::TopLevel < RDoc::Context
 
     @parser  = array[2]
     @comment = RDoc::Comment.from_document array[3]
-
-    @file_stat          = nil
   end
 
   ##
