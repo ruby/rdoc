@@ -218,20 +218,6 @@ class RDoc::CodeObject
   end
 
   ##
-  # Yields each parent of this CodeObject.  See also
-  # RDoc::ClassModule#each_ancestor
-
-  def each_parent
-    code_object = self
-
-    while code_object = code_object.parent do
-      yield code_object
-    end
-
-    self
-  end
-
-  ##
   # File name where this CodeObject was found.
   #
   # See also RDoc::Context#in_files

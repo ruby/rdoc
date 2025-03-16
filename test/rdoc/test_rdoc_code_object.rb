@@ -201,16 +201,6 @@ class TestRDocCodeObject < XrefTestCase
     refute @co.done_documenting
   end
 
-  def test_each_parent
-    parents = []
-
-    @parent_m.each_parent do |code_object|
-      parents << code_object
-    end
-
-    assert_equal [@parent, @xref_data], parents
-  end
-
   def test_file_name
     assert_nil @co.file_name
 
