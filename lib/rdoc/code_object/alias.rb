@@ -60,13 +60,6 @@ class RDoc::Alias < RDoc::CodeObject
   end
 
   ##
-  # Full old name including namespace
-
-  def full_old_name
-    @full_name || "#{parent.name}#{pretty_old_name}"
-  end
-
-  ##
   # HTML id-friendly version of +#new_name+.
 
   def html_name
