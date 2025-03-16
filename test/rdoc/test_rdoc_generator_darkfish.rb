@@ -300,8 +300,6 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     assert_equal [@klass_alias, @ignored, @klass, @object],
                  @g.classes.sort_by { |klass| klass.full_name }
     assert_equal [@top_level],                           @g.files
-    assert_equal [@meth, @meth, @meth_bang, @meth_bang, @meth_with_html_tag_yield, @meth_with_html_tag_yield], @g.methods
-    assert_equal [@klass_alias, @klass, @object], @g.modsort
   end
 
   def test_template_for

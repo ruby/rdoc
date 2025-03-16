@@ -13,11 +13,10 @@
 <main role="main">
 <h1 class="class"><%= h @title %></h1>
 
-<%- simple_files = @files.select { |f| f.text? } -%>
-<%- unless simple_files.empty? then -%>
+<%- if @page_files.any? -%>
 <h2 id="pages">Pages</h2>
 <ul>
-<%- simple_files.sort.each do |file| -%>
+<%- @page_files.sort.each do |file| -%>
   <li class="file">
     <a href="<%= h file.path %>"><%= h file.page_name %></a>
 <%
@@ -37,7 +36,7 @@
 
 <h2 id="classes">Classes and Modules</h2>
 <ul>
-<%- @modsort.each do |klass| -%>
+<%- @classes.select(&:display?).each do |klass| -%>
   <li class="<%= klass.type %>">
     <a href="<%= klass.path %>"><%= klass.full_name %></a>
 <%- table = []
@@ -58,9 +57,7 @@
 
 <h2 id="methods">Methods</h2>
 <ul>
-<%- @store.all_classes_and_modules.flat_map do |mod|
-     mod.method_list
-   end.sort.each do |method| %>
+<%- @classes.flat_map(&:method_list).sort.each do |method| %>
   <li class="method">
     <a href="<%= method.path %>"><%= h method.pretty_name %></a>
     &mdash;

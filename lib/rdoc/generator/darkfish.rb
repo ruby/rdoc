@@ -123,16 +123,6 @@ class RDoc::Generator::Darkfish
   attr_reader :json_index
 
   ##
-  # Methods to be displayed by this generator
-
-  attr_reader :methods
-
-  ##
-  # Sorted list of classes and modules to be displayed by this generator
-
-  attr_reader :modsort
-
-  ##
   # The RDoc::Store that is the source of the generated content
 
   attr_reader :store
@@ -164,8 +154,6 @@ class RDoc::Generator::Darkfish
     @classes = nil
     @context = nil
     @files   = nil
-    @methods = nil
-    @modsort = nil
 
     @json_index = RDoc::Generator::JsonIndex.new self, options
   end
@@ -266,16 +254,6 @@ class RDoc::Generator::Darkfish
   end
 
   ##
-  # Return a list of the documented modules sorted by salience first, then
-  # by name.
-
-  def get_sorted_module_list classes
-    classes.select do |klass|
-      klass.display?
-    end.sort
-  end
-
-  ##
   # Generate an index page which lists all the classes which are documented.
 
   def generate_index
@@ -286,22 +264,15 @@ class RDoc::Generator::Darkfish
 
     out_file = @base_dir + @options.op_dir + 'index.html'
     rel_prefix = @outputdir.relative_path_from out_file.dirname
-    search_index_rel_prefix = rel_prefix
-    search_index_rel_prefix += @asset_rel_path if @file_output
-
-    asset_rel_prefix = rel_prefix + @asset_rel_path
 
     @title = @options.title
     @main_page = @files.find { |f| f.full_name == @options.main_page }
 
-    render_template template_file, out_file do |io|
-      here = binding
-      # suppress 1.9.3 warning
-      here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
-      # some partials rely on the presence of current variable to render
-      here.local_variable_set(:current, @main_page) if @main_page
-      here
-    end
+    render_template template_file, out_file: out_file, locals: {
+      rel_prefix: rel_prefix,
+      asset_rel_prefix: rel_prefix + @asset_rel_path,
+      target: @main_page,
+    }
   rescue => e
     error = RDoc::Error.new \
       "error generating index.html: #{e.message} (#{e.class})"
@@ -314,30 +285,37 @@ class RDoc::Generator::Darkfish
   # Generates a class file for +klass+
 
   def generate_class klass, template_file = nil
-    current = klass
+    target = klass
 
     template_file ||= @template_dir + 'class.rhtml'
 
     debug_msg "  working on %s (%s)" % [klass.full_name, klass.path]
     out_file   = @outputdir + klass.path
     rel_prefix = @outputdir.relative_path_from out_file.dirname
-    search_index_rel_prefix = rel_prefix
-    search_index_rel_prefix += @asset_rel_path if @file_output
 
-    asset_rel_prefix = rel_prefix + @asset_rel_path
-
-    breadcrumb = # used in templates
-    breadcrumb = generate_nesting_namespaces_breadcrumb(current, rel_prefix)
+    breadcrumb = generate_nesting_namespaces_breadcrumb(target, rel_prefix)
 
     @title = "#{klass.type} #{klass.full_name} - #{@options.title}"
 
+    klass_class_methods = klass.class_method_list.sort
+    klass_instance_methods = klass.instance_methods.sort
+    klass_extends = klass.extends
+    klass_includes = klass.includes
+    klass_sections = klass.sort_sections
+
     debug_msg "  rendering #{out_file}"
-    render_template template_file, out_file do |io|
-      here = binding
-      # suppress 1.9.3 warning
-      here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
-      here
-    end
+    render_template template_file, out_file: out_file, locals: {
+      asset_rel_prefix: rel_prefix + @asset_rel_path,
+      rel_prefix: rel_prefix,
+      target: target,
+      klass: klass,
+      breadcrumb: breadcrumb,
+      klass_class_methods: klass_class_methods,
+      klass_instance_methods: klass_instance_methods,
+      klass_extends: klass_extends,
+      klass_includes: klass_includes,
+      klass_sections: klass_sections,
+    }
   end
 
   ##
@@ -350,16 +328,16 @@ class RDoc::Generator::Darkfish
     return unless template_file.exist?
     debug_msg "Generating class documentation in #{@outputdir}"
 
-    current = nil
+    target = nil
 
     @classes.each do |klass|
-      current = klass
+      target = klass
 
       generate_class klass, template_file
     end
   rescue => e
     error = RDoc::Error.new \
-      "error generating #{current.path}: #{e.message} (#{e.class})"
+      "error generating #{target.path}: #{e.message} (#{e.class})"
     error.set_backtrace e.backtrace
 
     raise error
@@ -382,10 +360,10 @@ class RDoc::Generator::Darkfish
     debug_msg "Generating file documentation in #{@outputdir}"
 
     out_file = nil
-    current = nil
+    target = nil
 
     @files.each do |file|
-      current = file
+      target = file
 
       if file.text? and page_file.exist? then
         generate_page file
@@ -396,10 +374,6 @@ class RDoc::Generator::Darkfish
       out_file = @outputdir + file.path
       debug_msg "  working on %s (%s)" % [file.full_name, out_file]
       rel_prefix = @outputdir.relative_path_from out_file.dirname
-      search_index_rel_prefix = rel_prefix
-      search_index_rel_prefix += @asset_rel_path if @file_output
-
-      asset_rel_prefix = rel_prefix + @asset_rel_path
 
       unless filepage_file then
         if file.text? then
@@ -416,13 +390,12 @@ class RDoc::Generator::Darkfish
       @title += " - #{@options.title}"
       template_file ||= filepage_file
 
-      render_template template_file, out_file do |io|
-        here = binding
-        # suppress 1.9.3 warning
-        here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
-        here.local_variable_set(:current, current)
-        here
-      end
+      render_template template_file, out_file: out_file, locals: {
+        rel_prefix: rel_prefix,
+        asset_rel_prefix: rel_prefix + @asset_rel_path,
+        file: file,
+        target: target,
+      }
     end
   rescue => e
     error =
@@ -441,22 +414,18 @@ class RDoc::Generator::Darkfish
     out_file = @outputdir + file.path
     debug_msg "  working on %s (%s)" % [file.full_name, out_file]
     rel_prefix = @outputdir.relative_path_from out_file.dirname
-    search_index_rel_prefix = rel_prefix
-    search_index_rel_prefix += @asset_rel_path if @file_output
 
-    current          = file
-    asset_rel_prefix = rel_prefix + @asset_rel_path
+    target = file
 
     @title = "#{file.page_name} - #{@options.title}"
 
     debug_msg "  rendering #{out_file}"
-    render_template template_file, out_file do |io|
-      here = binding
-      # suppress 1.9.3 warning
-      here.local_variable_set(:current, current)
-      here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
-      here
-    end
+    render_template template_file, out_file: out_file, locals: {
+      file: file,
+      target: target,
+      asset_rel_prefix: rel_prefix + @asset_rel_path,
+      rel_prefix: rel_prefix,
+    }
   end
 
   ##
@@ -468,20 +437,13 @@ class RDoc::Generator::Darkfish
 
     debug_msg "Rendering the servlet 404 Not Found page..."
 
-    rel_prefix = rel_prefix = ''
-    search_index_rel_prefix = rel_prefix
-    search_index_rel_prefix += @asset_rel_path if @file_output
-
-    asset_rel_prefix = ''
-
     @title = 'Not Found'
 
-    render_template template_file do |io|
-      here = binding
-      # suppress 1.9.3 warning
-      here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
-      here
-    end
+    render_template template_file, locals: {
+      asset_rel_prefix: '',
+      rel_prefix: '',
+      message: message
+    }
   rescue => e
     error = RDoc::Error.new \
       "error generating servlet_not_found: #{e.message} (#{e.class})"
@@ -499,14 +461,13 @@ class RDoc::Generator::Darkfish
 
     debug_msg 'Rendering the servlet root page...'
 
-    rel_prefix = '.'
-    asset_rel_prefix = rel_prefix
-    search_index_rel_prefix = asset_rel_prefix
-    search_index_rel_prefix += @asset_rel_path if @file_output
-
     @title = 'Local RDoc Documentation'
 
-    render_template template_file do |io| binding end
+    render_template template_file, locals: {
+      asset_rel_prefix: '.',
+      rel_prefix: '.',
+      installed: installed
+    }
   rescue => e
     error = RDoc::Error.new \
       "error generating servlet_root: #{e.message} (#{e.class})"
@@ -526,19 +487,13 @@ class RDoc::Generator::Darkfish
 
     out_file = @outputdir + 'table_of_contents.html'
     rel_prefix = @outputdir.relative_path_from out_file.dirname
-    search_index_rel_prefix = rel_prefix
-    search_index_rel_prefix += @asset_rel_path if @file_output
-
-    asset_rel_prefix = rel_prefix + @asset_rel_path
 
     @title = "Table of Contents - #{@options.title}"
 
-    render_template template_file, out_file do |io|
-      here = binding
-      # suppress 1.9.3 warning
-      here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
-      here
-    end
+    render_template template_file, out_file: out_file, locals: {
+      rel_prefix: rel_prefix,
+      asset_rel_prefix: rel_prefix + @asset_rel_path,
+    }
   rescue => e
     error = RDoc::Error.new \
       "error generating table_of_contents.html: #{e.message} (#{e.class})"
@@ -576,8 +531,7 @@ class RDoc::Generator::Darkfish
 
     @classes = @store.all_classes_and_modules.sort
     @files   = @store.all_files.sort
-    @methods = @classes.flat_map { |m| m.method_list }.sort
-    @modsort = get_sorted_module_list @classes
+    @page_files = @files.select { |f| f.text? }
   end
 
   ##
@@ -625,11 +579,16 @@ class RDoc::Generator::Darkfish
   #
   # An io will be yielded which must be captured by binding in the caller.
 
-  def render_template template_file, out_file = nil # :yield: io
+  def render_template template_file, out_file: nil, locals: {}
     io_output = out_file && !@dry_run && @file_output
     erb_klass = io_output ? RDoc::ERBIO : ERB
 
     template = template_for template_file, true, erb_klass
+
+    @context = binding
+    locals.each do |key, value|
+      @context.local_variable_set(key, value)
+    end
 
     if io_output then
       debug_msg "Outputting to %s" % [out_file.expand_path]
@@ -637,14 +596,11 @@ class RDoc::Generator::Darkfish
       out_file.dirname.mkpath
       out_file.open 'w', 0644 do |io|
         io.set_encoding @options.encoding
-
-        @context = yield io
+        @context.local_variable_set(:io, io)
 
         template_result template, @context, template_file
       end
     else
-      @context = yield nil
-
       output = template_result template, @context, template_file
 
       debug_msg "  would have written %d characters to %s" % [
@@ -729,6 +685,17 @@ class RDoc::Generator::Darkfish
     extracted_text[0...150].tr_s("\n", " ").squeeze(" ")
   end
 
+  def generate_table_from_target(target)
+    return '' if target.nil?
+    comment =
+      if target.respond_to? :comment_location then
+        target.comment_location
+      else
+        target.comment
+      end
+    target.parse(comment).table_of_contents.dup
+  end
+
   def generate_ancestor_list(ancestors, klass)
     return '' if ancestors.empty?
 
@@ -749,7 +716,7 @@ class RDoc::Generator::Darkfish
 
   def generate_class_link(klass, rel_prefix)
     if klass.display?
-      %(<code><a href="#{rel_prefix}/#{klass.path}">#{klass.name}</a></code>)
+      %(<code>#{generate_sidebar_link(klass.name, klass.path, rel_prefix)}</code>)
     else
       %(<code>#{klass.name}</code>)
     end
@@ -759,25 +726,21 @@ class RDoc::Generator::Darkfish
     grouped_classes = group_classes_by_namespace_for_sidebar(classes)
     return '' unless top = grouped_classes[nil]
 
-    solo = top.one? { |klass| klass.display? }
-    traverse_classes(top, grouped_classes, rel_prefix, solo)
+    open = top.one? { |klass| klass.display? }
+    traverse_classes(top, grouped_classes, rel_prefix, open)
   end
 
-  def traverse_classes(klasses, grouped_classes, rel_prefix, solo = false)
-    content = +'<ul class="link-list">'
-
-    klasses.each do |index_klass|
-      if children = grouped_classes[index_klass.full_name]
-        content << %(<li><details#{solo ? ' open' : ''}><summary>#{generate_class_link(index_klass, rel_prefix)}</summary>)
-        content << traverse_classes(children, grouped_classes, rel_prefix)
-        content << '</details></li>'
-        solo = false
-      elsif index_klass.display?
-        content << %(<li>#{generate_class_link(index_klass, rel_prefix)}</li>)
+  def traverse_classes(klasses, grouped_classes, rel_prefix, open)
+    traverse_tree(klasses) do |index_klass|
+      {
+        label: generate_class_link(index_klass, rel_prefix),
+        children: grouped_classes[index_klass.full_name],
+        display: index_klass.display?,
+        open: open
+      }.tap do
+        open = false
       end
     end
-
-    "#{content}</ul>"
   end
 
   def group_classes_by_namespace_for_sidebar(classes)
@@ -789,6 +752,45 @@ class RDoc::Generator::Darkfish
 
     grouped_classes.values.each(&:uniq!)
     grouped_classes
+  end
+
+  def generate_sidebar_link(name, path, rel_prefix)
+    name = CGI.escapeHTML(name)
+    path = CGI.escapeHTML(path)
+    %(<a href="#{rel_prefix}/#{path}">#{name}</a>)
+  end
+
+  def generate_pages_index_content(page_files, rel_prefix, target)
+    return '' if page_files.empty?
+
+    dir = target&.full_name&.[](/\A[^\/]+(?=\/)/) || target&.page_name
+    grouped_files = page_files.group_by { |f| f.full_name[/\A[^\/]+(?=\/)/] || f.page_name }
+
+    traverse_tree(grouped_files) do |name, files|
+      f = files.shift
+      # If the group has only one file, we can just link to it
+      if files.empty?
+        { label: generate_sidebar_link(f.page_name, f.path, rel_prefix), display: true }
+      else
+        label =
+          # If the group has multiple files and the current file matches the group name
+          # the label should be a link to the current file
+          if name == f.page_name
+            generate_sidebar_link(f.page_name, f.path, rel_prefix)
+          # Otherwise, the label should be the group name
+          else
+            files.unshift(f)
+            h(name)
+          end
+        {
+          label: label,
+          children: files,
+          display: true,
+          open: dir == name,
+          child_renderer: ->(f) { { label: generate_sidebar_link(f.page_name, f.path, rel_prefix), display: true } }
+        }
+      end
+    end
   end
 
   private
@@ -808,5 +810,28 @@ class RDoc::Generator::Darkfish
       path = class_module ? (rel_prefix + class_module.path).to_s : ""
       { name: namespace, path: path, self: klass.full_name == class_module&.full_name }
     end
+  end
+
+  def traverse_tree(items, &block)
+    content = +'<ul class="link-list">'
+
+    items.each do |*args|
+      result = yield(*args)
+      next unless result[:display]
+
+      if result[:children]
+        content << %(<li><details#{result[:open] ? ' open' : ''}><summary>#{result[:label]}</summary>)
+        if result[:child_renderer]
+          content << traverse_tree(result[:children]) { |item| result[:child_renderer].call(item) }
+        else
+          content << traverse_tree(result[:children], &block)
+        end
+        content << '</details></li>'
+      else
+        content << %(<li>#{result[:label]}</li>)
+      end
+    end
+
+    "#{content}</ul>"
   end
 end

@@ -1,16 +1,10 @@
-<%- comment = if current.respond_to? :comment_location then
-               current.comment_location
-             else
-               current.comment
-             end
-   table = current.parse(comment).table_of_contents.dup
-
-   if table.length > 1 then %>
+<%- table = generate_table_from_target(target) -%>
+<%- if table.length > 1 %>
 <div class="nav-section">
   <h3>Table of Contents</h3>
 
     <%- display_link = proc do |heading| -%>
-      <a href="#<%= heading.label current %>"><%= heading.plain_html %></a>
+      <a href="#<%= heading.label target %>"><%= heading.plain_html %></a>
     <%- end -%>
 
     <%- list_siblings = proc do -%>
