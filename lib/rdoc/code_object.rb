@@ -91,13 +91,6 @@ class RDoc::CodeObject
   attr_reader :store
 
   ##
-  # We are the model of the code, but we know that at some point we will be
-  # worked on by viewers. By implementing the Viewable protocol, viewers can
-  # associated themselves with these objects.
-
-  attr_accessor :viewer
-
-  ##
   # When mixed-in to a class, this points to the Context in which it was originally defined.
 
   attr_accessor :mixin_from

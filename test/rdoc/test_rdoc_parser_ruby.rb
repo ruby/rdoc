@@ -1277,7 +1277,6 @@ EOF
     assert_equal @top_level, foo.file
     assert_equal 1,          foo.line
 
-    assert_nil               foo.viewer
     assert_equal true,       foo.document_children
     assert_equal true,       foo.document_self
     assert_equal false,      foo.done_documenting
@@ -1344,7 +1343,6 @@ EOF
     assert_nil                foo.block_params
     assert_nil                foo.call_seq
     assert_nil                foo.is_alias_for
-    assert_nil                foo.viewer
     assert_equal true,        foo.document_children
     assert_equal true,        foo.document_self
     assert_equal '',          foo.params
@@ -1677,7 +1675,6 @@ end
     assert_equal klass,   foo.parent
     assert_equal false,   foo.singleton
     assert_equal 'add_my_method :foo', foo.text
-    assert_nil            foo.viewer
     assert_equal :public, foo.visibility
     assert_equal klass.current_section, foo.section
 
@@ -1878,7 +1875,6 @@ end
     assert_nil              foo.block_params
     assert_nil              foo.call_seq
     assert_nil              foo.is_alias_for
-    assert_nil              foo.viewer
     assert_equal true,      foo.document_children
     assert_equal true,      foo.document_self
     assert_equal '()',      foo.params

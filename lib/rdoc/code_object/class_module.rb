@@ -56,7 +56,6 @@ class RDoc::ClassModule < RDoc::Context
 
     klass.parent = mod.parent
     klass.section = mod.section
-    klass.viewer = mod.viewer
 
     klass.attributes.concat mod.attributes
     klass.method_list.concat mod.method_list
