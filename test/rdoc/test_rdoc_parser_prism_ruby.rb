@@ -1023,7 +1023,7 @@ module RDocParserPrismTestCases
 
   def test_module_function
     util_parser <<~RUBY
-      class A
+      module A
         def m1; end
         def m2; end
         def m3; end
@@ -1031,9 +1031,9 @@ module RDocParserPrismTestCases
         module_function def m4; end
       end
     RUBY
-    klass = @store.find_class_named 'A'
-    instance_methods = klass.method_list.reject(&:singleton)
-    singleton_methods = klass.method_list.select(&:singleton)
+    mod = @store.find_module_named 'A'
+    instance_methods = mod.method_list.reject(&:singleton)
+    singleton_methods = mod.method_list.select(&:singleton)
     if accept_legacy_bug?
       instance_methods.last.visibility = :private
       singleton_methods << singleton_methods.last.dup
