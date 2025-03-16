@@ -221,6 +221,7 @@ class RDoc::ClassModule < RDoc::Context
     remove_nodoc_children
     embed_mixins
     update_includes
+    update_extends
     remove_invisible min_visibility
   end
 
