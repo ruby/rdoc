@@ -437,12 +437,6 @@ class TestRDocContext < XrefTestCase
     assert_equal default_section, @context.current_section
   end
 
-  def test_defined_in_eh
-    assert @c1.defined_in?(@c1.top_level)
-
-    refute @c1.defined_in?(@store.add_file('name.rb'))
-  end
-
   def test_equals2
     assert_equal @c3,    @c3
     refute_equal @c2,    @c3
@@ -536,11 +530,6 @@ class TestRDocContext < XrefTestCase
     assert_nil        @c2_c3.find_enclosing_module_named('NONE')
     assert_equal @c1, @c2_c3.find_enclosing_module_named('C1')
     assert_equal @c2, @c2_c3.find_enclosing_module_named('C2')
-  end
-
-  def test_find_file_named
-    assert_nil               @c1.find_file_named('nonexistent.rb')
-    assert_equal @xref_data, @c1.find_file_named(@file_name)
   end
 
   def test_find_instance_method_named

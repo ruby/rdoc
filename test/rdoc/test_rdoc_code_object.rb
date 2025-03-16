@@ -201,16 +201,6 @@ class TestRDocCodeObject < XrefTestCase
     refute @co.done_documenting
   end
 
-  def test_each_parent
-    parents = []
-
-    @parent_m.each_parent do |code_object|
-      parents << code_object
-    end
-
-    assert_equal [@parent, @xref_data], parents
-  end
-
   def test_file_name
     assert_nil @co.file_name
 
@@ -273,11 +263,6 @@ class TestRDocCodeObject < XrefTestCase
     assert_equal expected, @co.metadata
 
     assert_equal 'not_rdoc', @co.metadata['markup']
-  end
-
-  def test_parent_file_name
-    assert_equal '(unknown)', @co.parent_file_name
-    assert_equal 'xref_data.rb', @c1.parent_file_name
   end
 
   def test_parent_name

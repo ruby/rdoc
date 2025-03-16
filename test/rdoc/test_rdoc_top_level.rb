@@ -162,14 +162,6 @@ class TestRDocTopLevel < XrefTestCase
     assert_equal 'path_other/level_rb.html', other_level.http_url
   end
 
-  def test_last_modified
-    assert_nil @top_level.last_modified
-    stat = Object.new
-    def stat.mtime() 0 end
-    @top_level.file_stat = stat
-    assert_equal 0, @top_level.last_modified
-  end
-
   def test_marshal_dump
     page = @store.add_file 'README.txt'
     page.parser = RDoc::Parser::Simple

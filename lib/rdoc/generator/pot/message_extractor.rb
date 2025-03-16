@@ -35,11 +35,11 @@ class RDoc::Generator::POT::MessageExtractor
       end
     end
 
-    klass.each_constant do |constant|
+    klass.constants.each do |constant|
       extract_text(constant.comment, constant.full_name)
     end
 
-    klass.each_attribute do |attribute|
+    klass.attributes.each do |attribute|
       extract_text(attribute.comment, attribute.full_name)
     end
 

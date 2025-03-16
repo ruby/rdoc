@@ -124,14 +124,6 @@ class TestRDocMethodAttr < XrefTestCase
     assert_equal @c2_b, @c2_a.is_alias_for
   end
 
-  def test_output_name
-    assert_equal '#m',  @c1_m.output_name(@c1)
-    assert_equal '::m', @c1__m.output_name(@c1)
-
-    assert_equal 'C1#m', @c1_m.output_name(@c2)
-    assert_equal 'C1.m', @c1__m.output_name(@c2)
-  end
-
   def test_search_record
     @c1_m.comment = 'This is a comment.'
 
