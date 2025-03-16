@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'xref_test_case'
 
-class TestRDocClassModule < XrefTestCase
+class RDocClassModuleTest < XrefTestCase
 
   def test_add_comment
     tl1 = @store.add_file 'one.rb'
@@ -1548,7 +1548,7 @@ class TestRDocClassModule < XrefTestCase
     assert_equal ["A", "A::B", "A::B::C"], cm3.fully_qualified_nesting_namespaces
   end
 
-  class TestRDocClassModuleMixins < XrefTestCase
+  class RDocClassModuleMixinsTest < XrefTestCase
     def setup
       super
 
@@ -1597,7 +1597,19 @@ class TestRDocClassModule < XrefTestCase
       @klass.add_extend(RDoc::Include.new("Extmod", nil))
 
       @klass.add_include(RDoc::Include.new("ExternalInclude", nil))
+      # Test duplicationg removal
+      @klass.add_include(RDoc::Include.new("ExternalInclude", nil))
+
       @klass.add_extend(RDoc::Include.new("ExternalExtend", nil))
+      # Test duplicationg removal
+      @klass.add_extend(RDoc::Include.new("ExternalExtend", nil))
+    end
+
+    def test_complete_clears_duplicated_includes_and_extends
+      @klass.complete(:protected)
+
+      assert_equal(["Incmod", "ExternalInclude"], @klass.includes.map(&:name))
+      assert_equal(["Extmod", "ExternalExtend"], @klass.extends.map(&:name))
     end
 
     def test_embed_mixin_when_false_does_not_embed_anything
