@@ -848,13 +848,6 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Finds a file with +name+ in this context
-
-  def find_file_named name
-    @store.find_file_named name
-  end
-
-  ##
   # Finds an instance method with +name+ in this context
 
   def find_instance_method_named(name)
@@ -871,7 +864,7 @@ class RDoc::Context < RDoc::CodeObject
     find_attribute_named(symbol) or
     find_external_alias_named(symbol) or
     find_module_named(symbol) or
-    find_file_named(symbol)
+    @store.find_file_named(symbol)
   end
 
   ##

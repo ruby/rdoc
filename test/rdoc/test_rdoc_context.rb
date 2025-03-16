@@ -538,11 +538,6 @@ class TestRDocContext < XrefTestCase
     assert_equal @c2, @c2_c3.find_enclosing_module_named('C2')
   end
 
-  def test_find_file_named
-    assert_nil               @c1.find_file_named('nonexistent.rb')
-    assert_equal @xref_data, @c1.find_file_named(@file_name)
-  end
-
   def test_find_instance_method_named
     assert_nil @c1.find_instance_method_named('none')
 
