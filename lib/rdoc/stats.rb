@@ -261,7 +261,7 @@ class RDoc::Stats
 
     report = []
 
-    cm.each_attribute do |attr|
+    cm.attributes.each do |attr|
       next if attr.documented?
       line = attr.line ? ":#{attr.line}" : nil
       report << "  #{attr.definition} :#{attr.name} # in file #{attr.file.full_name}#{line}\n"
@@ -331,7 +331,7 @@ class RDoc::Stats
 
     report = []
 
-    cm.each_constant do |constant|
+    cm.constants.each do |constant|
       # TODO constant aliases are listed in the summary but not reported
       # figure out what to do here
       next if constant.documented? || constant.is_alias_for

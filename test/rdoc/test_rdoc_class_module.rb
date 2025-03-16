@@ -1474,7 +1474,7 @@ class TestRDocClassModule < XrefTestCase
     @c1.add_extend a
     @c1.add_extend b
     @c1.add_extend c
-    @c1.each_extend do |extend| extend.module end # cache extended modules
+    @c1.extends.each do |extend| extend.module end # cache extended modules
 
     @m1_m2.document_self = nil
     assert @m1_m2.remove_from_documentation?
@@ -1495,7 +1495,7 @@ class TestRDocClassModule < XrefTestCase
 
     @c1.add_extend a
     @c1.add_extend b
-    @c1.each_extend do |extend| extend.module end # cache extended modules
+    @c1.extends.each do |extend| extend.module end # cache extended modules
 
     @c1.update_extends
 
@@ -1510,7 +1510,7 @@ class TestRDocClassModule < XrefTestCase
     @c1.add_extend a
     @c1.add_extend b
     @c1.add_extend c
-    @c1.each_extend do |extend| extend.module end # cache extended modules
+    @c1.extends.each do |extend| extend.module end # cache extended modules
 
     @m1_m2.document_self = nil
     assert @m1_m2.remove_from_documentation?

@@ -762,7 +762,7 @@ class RDoc::Store
         save_method klass, method
       end
 
-      klass.each_attribute do |attribute|
+      klass.attributes.each do |attribute|
         save_method klass, attribute
       end
     end

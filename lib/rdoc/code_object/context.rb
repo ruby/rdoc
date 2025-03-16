@@ -714,38 +714,10 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Iterator for attributes
-
-  def each_attribute # :yields: attribute
-    @attributes.each { |a| yield a }
-  end
-
-  ##
   # Iterator for classes and modules
 
   def each_classmodule(&block) # :yields: module
     classes_and_modules.sort.each(&block)
-  end
-
-  ##
-  # Iterator for constants
-
-  def each_constant # :yields: constant
-    @constants.each {|c| yield c}
-  end
-
-  ##
-  # Iterator for included modules
-
-  def each_include # :yields: include
-    @includes.each do |i| yield i end
-  end
-
-  ##
-  # Iterator for extension modules
-
-  def each_extend # :yields: extend
-    @extends.each do |e| yield e end
   end
 
   ##
