@@ -437,12 +437,6 @@ class TestRDocContext < XrefTestCase
     assert_equal default_section, @context.current_section
   end
 
-  def test_defined_in_eh
-    assert @c1.defined_in?(@c1.top_level)
-
-    refute @c1.defined_in?(@store.add_file('name.rb'))
-  end
-
   def test_equals2
     assert_equal @c3,    @c3
     refute_equal @c2,    @c3

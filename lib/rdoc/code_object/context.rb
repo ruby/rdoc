@@ -688,13 +688,6 @@ class RDoc::Context < RDoc::CodeObject
     section
   end
 
-  ##
-  # Is part of this thing was defined in +file+?
-
-  def defined_in?(file)
-    @in_files.include?(file)
-  end
-
   def display(method_attr) # :nodoc:
     if method_attr.is_a? RDoc::Attr
       "#{method_attr.definition} #{method_attr.pretty_name}"
