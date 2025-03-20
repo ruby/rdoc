@@ -68,8 +68,8 @@ RDoc::Markup::Heading =
   def plain_html
     text = self.text.dup
 
-    if text.match?(/rdoc-image:[^:]+:(.*)/)
-      text = text.match(/rdoc-image:[^:]+:(.*)/)[1]
+    if matched = text.match(/rdoc-image:[^:]+:(.*)/)
+      text = matched[1]
     end
 
     self.class.to_html.to_html(text)
