@@ -992,9 +992,14 @@ Strike = &{ strike? }
          "~~"
          { strike a.join }
 
-# TODO alt text support
-Image = "!" ( ExplicitLink | ReferenceLink ):a
-        { "rdoc-image:#{a[/\[(.*)\]/, 1]}" }
+Image = "!" ExplicitLink:a
+        {
+          # Extract alt text and URL
+          alt_text = a[/\{(.*?)\}/, 1] || ""
+          url = a[/\[(.*?)\]/, 1] || ""
+
+          "rdoc-image:#{url}:#{alt_text}"
+        }
 
 Link =  ExplicitLink | ReferenceLink | AutoLink
 

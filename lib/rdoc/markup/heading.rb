@@ -66,7 +66,13 @@ RDoc::Markup::Heading =
   # element.
 
   def plain_html
-    self.class.to_html.to_html(text.dup)
+    text = self.text.dup
+
+    if matched = text.match(/rdoc-image:[^:]+:(.*)/)
+      text = matched[1]
+    end
+
+    self.class.to_html.to_html(text)
   end
 
   def pretty_print q # :nodoc:

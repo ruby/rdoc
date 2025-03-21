@@ -98,7 +98,12 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
       gen_url CGI.escapeHTML(url), CGI.escapeHTML(text)
     when /^rdoc-image:/
-      %[<img src=\"#{CGI.escapeHTML($')}\">]
+      url, alt = $'.split(":", 2) # Split the string after "rdoc-image:" into url and alt
+      if alt && !alt.empty?
+        %[<img src="#{CGI.escapeHTML(url)}" alt="#{CGI.escapeHTML(alt)}">]
+      else
+        %[<img src="#{CGI.escapeHTML(url)}">]
+      end
     when /\Ardoc-[a-z]+:/
       CGI.escapeHTML($')
     end
