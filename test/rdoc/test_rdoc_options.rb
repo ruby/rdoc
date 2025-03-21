@@ -75,6 +75,7 @@ class TestRDocOptions < RDoc::TestCase
       'markup'                => 'rdoc',
       'output_decoration'     => true,
       'page_dir'              => nil,
+      'plugins'               => [],
       'rdoc_include'          => [],
       'show_hash'             => false,
       'static_path'           => [],
