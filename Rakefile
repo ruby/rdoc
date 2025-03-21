@@ -88,8 +88,17 @@ parsed_files = PARSER_FILES.map do |parser_file|
 end
 
 task "#{path}.gem" => package_parser_files
-desc "Generate all files used racc and kpeg"
+
+desc "Generate all files use racc and kpeg"
 task :generate => parsed_files
+
+unless ENV.key?('BUNDLE_GEMFILE')
+  task :gem_install do
+    Gem.install 'racc', '> 1.4.10'
+    Gem.install 'kpeg', '>= 1.3.3'
+  end
+  file parsed_files => :gem_install
+end
 
 task :clean do
   parsed_files.each do |path|
