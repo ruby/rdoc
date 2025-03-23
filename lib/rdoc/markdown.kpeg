@@ -992,14 +992,8 @@ Strike = &{ strike? }
          "~~"
          { strike a.join }
 
-Image = "!" ExplicitLink:a
-        {
-          # Extract alt text and URL
-          alt_text = a[/\{(.*?)\}/, 1] || ""
-          url = a[/\[(.*?)\]/, 1] || ""
-
-          "rdoc-image:#{url}:#{alt_text}"
-        }
+Image = "!" ExplicitLinkWithLabel:a
+        { "rdoc-image:#{a[:link]}:#{a[:label]}" }
 
 Link =  ExplicitLink | ReferenceLink | AutoLink
 
@@ -1011,8 +1005,11 @@ ReferenceLinkDouble = Label:content < Spnl > !"[]" Label:label
 ReferenceLinkSingle = Label:content < (Spnl "[]")? >
                       { link_to content, content, text }
 
-ExplicitLink =  Label:l "(" @Sp Source:s Spnl Title @Sp ")"
-                { "{#{l}}[#{s}]" }
+ExplicitLink = ExplicitLinkWithLabel:a
+               { "{#{a[:label]}}[#{a[:link]}]" }
+
+ExplicitLinkWithLabel = Label:label "(" @Sp Source:link Spnl Title @Sp ")"
+                        { { label: label, link: link } }
 
 Source  = ( "<" < SourceContents > ">" | < SourceContents > )
           { text }
