@@ -50,8 +50,13 @@ jobs:
         with:
           path: ruby/rdoc
       - name: Build RDoc locally
+        # The `build` task provided by `require 'bundler/gem_tasks'` seems to have a bug
+        # as described in https://github.com/rubygems/rubygems/issues/8477
+        # The manual `gem build` and `gem install` are used to work around this issue.
         run: |
           bundle install
+          gem build rdoc.gemspec
+          gem install rdoc-*.gem
           bundle exec rake build:local_ruby
         working-directory: ruby/rdoc
       - name: Generate Documentation with RDoc
