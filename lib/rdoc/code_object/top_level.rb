@@ -226,7 +226,9 @@ class RDoc::TopLevel < RDoc::Context
   # Path to this file for use with HTML generator output.
 
   def path
-    http_url
+    prefix = options.file_path_prefix
+    return http_url unless prefix
+    File.join(prefix, http_url)
   end
 
   def pretty_print q # :nodoc:

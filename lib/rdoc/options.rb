@@ -363,6 +363,16 @@ class RDoc::Options
   # Words to be ignored in autolink cross-references
   attr_accessor :autolink_excluded_words
 
+  ##
+  # The prefix to use for class and module page paths
+
+  attr_accessor :class_module_path_prefix
+
+  ##
+  # The prefix to use for file page paths
+
+  attr_accessor :file_path_prefix
+
   def initialize loaded_options = nil # :nodoc:
     init_ivars
     override loaded_options if loaded_options
@@ -417,6 +427,8 @@ class RDoc::Options
     @charset = @encoding.name
     @skip_tests = true
     @apply_default_exclude = true
+    @class_module_path_prefix = nil
+    @file_path_prefix = nil
   end
 
   def init_with map # :nodoc:
