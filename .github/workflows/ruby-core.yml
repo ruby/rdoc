@@ -56,6 +56,8 @@ jobs:
         run: |
           bundle install
           gem build rdoc.gemspec
+          # This gem isn't used for generating Ruby documentation.
+          # This is just for fixing `pkg/rdoc-X.Y.Z.gem` path.
           gem install rdoc-*.gem
           bundle exec rake build:local_ruby
         working-directory: ruby/rdoc
