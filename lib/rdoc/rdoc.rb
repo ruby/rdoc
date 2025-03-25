@@ -464,7 +464,14 @@ The internal error was:
 
     @store.load_cache
 
-    file_info = parse_files @options.files
+    if @options.load_ri_dir
+      @store.path = @options.load_ri_dir
+      @store.load_all
+      @stats = RDoc::Stats.new @store, @store.all_files.length, @options.verbosity
+      file_info = @store.all_files
+    else
+      file_info = parse_files @options.files
+    end
 
     @options.default_title = "RDoc Documentation"
 
