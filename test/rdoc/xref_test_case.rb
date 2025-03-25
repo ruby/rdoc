@@ -9,10 +9,7 @@ class XrefTestCase < RDoc::TestCase
   def setup
     super
 
-    @options = RDoc::Options.new
     @options.quiet = true
-
-    @rdoc.options = @options
 
     @file_name = 'xref_data.rb'
     @xref_data = @store.add_file @file_name
@@ -30,7 +27,6 @@ class XrefTestCase < RDoc::TestCase
     @top_levels.push @example_md
 
     generator = Object.new
-    @rdoc.options = @options
     @rdoc.generator = generator
 
     @c1       = @xref_data.find_module_named 'C1'
