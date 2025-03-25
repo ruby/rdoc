@@ -53,11 +53,8 @@ To generate documentation programmatically:
   gem 'rdoc'
   require 'rdoc/rdoc'
 
-  options = RDoc::Options.new
-  # see RDoc::Options
-
   rdoc = RDoc::RDoc.new
-  rdoc.document options
+  rdoc.document([]) # This generates documentation for all files in the current directory
   # see RDoc::RDoc
 
 You can specify the target files for document generation with +.document+ file in the project root directory.
