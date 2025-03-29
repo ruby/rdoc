@@ -1548,6 +1548,13 @@ class RDocClassModuleTest < XrefTestCase
     assert_equal ["A", "A::B", "A::B::C"], cm3.fully_qualified_nesting_namespaces
   end
 
+  def test_path
+    assert_equal 'C1.html', @c1.path
+
+    @options.class_module_path_prefix = 'class'
+    assert_equal 'class/C1.html', @c1.path
+  end
+
   class RDocClassModuleMixinsTest < XrefTestCase
     def setup
       super

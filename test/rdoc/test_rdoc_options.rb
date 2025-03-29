@@ -87,6 +87,8 @@ class TestRDocOptions < RDoc::TestCase
       'skip_tests'            => true,
       'apply_default_exclude' => true,
       'autolink_excluded_words' => [],
+      'class_module_path_prefix' => nil,
+      'file_path_prefix' => nil,
     }
 
     assert_equal expected, coder

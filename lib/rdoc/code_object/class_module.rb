@@ -630,7 +630,9 @@ class RDoc::ClassModule < RDoc::Context
   # Path to this class or module for use with HTML generator output.
 
   def path
-    http_url
+    prefix = options.class_module_path_prefix
+    return http_url unless prefix
+    File.join(prefix, http_url)
   end
 
   ##

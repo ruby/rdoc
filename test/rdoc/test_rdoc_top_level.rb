@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'xref_test_case'
 
-class TestRDocTopLevel < XrefTestCase
+class RDocTopLevelTest < XrefTestCase
 
   def setup
     super
@@ -160,6 +160,13 @@ class TestRDocTopLevel < XrefTestCase
 
     other_level = @store.add_file 'path.other/level.rb'
     assert_equal 'path_other/level_rb.html', other_level.http_url
+  end
+
+  def test_path
+    assert_equal 'path/top_level_rb.html', @top_level.path
+
+    @options.file_path_prefix = 'file'
+    assert_equal 'file/path/top_level_rb.html', @top_level.path
   end
 
   def test_marshal_dump
