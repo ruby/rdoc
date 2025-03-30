@@ -236,15 +236,67 @@ option)
   # The .document file contains a list of file and directory name patterns,
   # representing candidates for documentation. It may also contain comments
   # (starting with '#')
+  #
+  # If the first line is the comment starts with +rdoc.document:+
+  # (case-insensitive) followed by a version string, the file is
+  # parsed as per the version.  If a version is not written, it is
+  # defaulted to 0.
+  #
+  # version 0::
+  #
+  #   The file will be parsed as white-space separated glob patterns.
+  #
+  #   - A <tt>#</tt> in middle starts a comment.
+  #
+  #   - Multiple patterns can be in a single line.
+  #
+  #   - That means patterns cannot contain white-spaces and <tt>#</tt>
+  #     marks.
+  #
+  # version 1::
+  #
+  #   The file will be parsed as single glob pattern per each line.
+  #
+  #   - Only lines starting with <tt>#</tt> at the first colmun are
+  #     comments.  A <tt>#</tt> in middle is a part of the pattern.
+  #
+  #   - Patterns starting with <tt>#</tt> need to be prefixed with a
+  #     backslash (<tt>\\</tt>).
+  #
+  #   - Leading spaces are not stripped while trailing spaces which
+  #     are not escaped with a backslash are stripped.
+  #
+  #   - The pattern starting with <tt>!</tt> is a negative pattern,
+  #     which rejects matching files.
 
   def parse_dot_doc_file in_dir, filename
-    # read and strip comments
-    patterns = File.read(filename).gsub(/#.*/, '')
-
     result = {}
+    patterns = rejects = nil
 
-    patterns.split(' ').each do |patt|
-      candidates = Dir.glob(File.join(in_dir, patt))
+    content = File.read(filename)
+    version = content[/\A#+\s*rdoc\.document:\s*\K\S+/i]&.to_i || 0
+    if version >= 1
+      content.each_line(chomp: true) do |line|
+        next if line.start_with?("#") # skip comments
+        line.sub!(/(?<!\\)\s*$/, "") # rstrip unescaped trailing spaces
+        (line.sub!(/\A!/, "") ? (rejects ||= []) : (patterns ||= [])) << line
+      end
+    else
+      # read and strip comments
+      patterns = content.gsub(/#.*/, '').split(' ')
+    end
+
+    if patterns
+      patterns.each {|patt| patt.sub!(/\A\/+/, "")}
+      candidates = Dir.glob(patterns, base: in_dir)
+      if rejects
+        rejects.each {|patt| patt.sub!(/\A\/+/, "")}
+        flag = File::FNM_PATHNAME
+        candidates.delete_if do |name|
+          rejects.any? {|patt| File.fnmatch?(patt, name, flag)}
+        end
+      end
+      candidates.map! {|name| File.join(in_dir, name)}
       result.update normalized_file_list(candidates, false, @options.exclude)
     end
 
