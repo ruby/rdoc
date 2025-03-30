@@ -125,12 +125,14 @@ class RDoc::RDoc
 
     file_list = remove_unparseable(file_list)
 
+    result = []
     if file_list.count {|name, mtime|
+         result << name if mtime || @options.force_update
          file_list[name] = @last_modified[name] unless mtime
          mtime
        } > 0
       @last_modified.replace file_list
-      file_list.keys.sort
+      result.sort
     else
       []
     end
