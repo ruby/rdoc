@@ -966,6 +966,20 @@ rdoc_include:
     assert_not_match exclude, "foo~"
   end
 
+  def test_boolean
+    assert_equal true, RDoc::Options.boolean(true)
+    assert_equal true, RDoc::Options.boolean("true")
+    assert_equal true, RDoc::Options.boolean("yes")
+
+    assert_equal false, RDoc::Options.boolean(false)
+    assert_equal false, RDoc::Options.boolean("false")
+    assert_equal false, RDoc::Options.boolean("no")
+
+    assert_raise(ArgumentError) do
+      RDoc::Options.boolean("unknown")
+    end
+  end
+
   class DummyCoder < Hash
     alias add :[]=
     def tag=(tag)
