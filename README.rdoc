@@ -54,6 +54,8 @@ To generate documentation programmatically:
   require 'rdoc/rdoc'
 
   options = RDoc::Options.new
+  options.files = ['a.rb', 'b.rb']
+  options.setup_generator 'darkfish'
   # see RDoc::Options
 
   rdoc = RDoc::RDoc.new
