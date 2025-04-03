@@ -806,9 +806,9 @@ or the PAGER environment variable.
 
   def display document
     page do |io|
-      f = formatter(io)
-      f.width = @width if @width and f.respond_to?(:width)
-      text = document.accept f
+      formatter = formatter(io)
+      formatter.width = @width if @width and formatter.respond_to?(:width)
+      text = document.accept formatter
 
       io.write text
     end

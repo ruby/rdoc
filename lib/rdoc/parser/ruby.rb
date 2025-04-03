@@ -368,15 +368,15 @@ class RDoc::Parser::Ruby < RDoc::Parser
       container = container.find_module_named name_t[:text]
       container ||=
         if ignore_constants then
-          c = RDoc::NormalModule.new name_t[:text]
-          c.store = @store
-          new_modules << [prev_container, c]
-          c
+          module_obj = RDoc::NormalModule.new name_t[:text]
+          module_obj.store = @store
+          new_modules << [prev_container, module_obj]
+          module_obj
         else
-          c = prev_container.add_module RDoc::NormalModule, name_t[:text]
-          c.ignore unless prev_container.document_children
-          @top_level.add_to_classes_or_modules c
-          c
+          module_obj = prev_container.add_module RDoc::NormalModule, name_t[:text]
+          module_obj.ignore unless prev_container.document_children
+          @top_level.add_to_classes_or_modules module_obj
+          module_obj
         end
 
       record_location container
@@ -700,10 +700,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Creates a comment with the correct format
 
   def new_comment comment, line_no = nil
-    c = RDoc::Comment.new comment, @top_level, :ruby
-    c.line = line_no
-    c.format = @markup
-    c
+    comment_obj = RDoc::Comment.new comment, @top_level, :ruby
+    comment_obj.line = line_no
+    comment_obj.format = @markup
+    comment_obj
   end
 
   ##
