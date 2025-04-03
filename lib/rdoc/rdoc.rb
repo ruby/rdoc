@@ -442,7 +442,7 @@ The internal error was:
 
   def document options
     if RDoc::Options === options then
-      @options = options
+      @options = options.parse [] # Some logic only lives in `parse` method such as default generator
     else
       @options = RDoc::Options.load_options
       @options.parse options

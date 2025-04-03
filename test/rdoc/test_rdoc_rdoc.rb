@@ -14,6 +14,17 @@ class TestRDocRDoc < RDoc::TestCase
     @rdoc.instance_variable_set :@stats, @stats
   end
 
+  def test_document_with_bare_options
+    rdoc = RDoc::RDoc.new
+    options = RDoc::Options.new
+    temp_dir do
+      rdoc.document options
+    end
+    store = rdoc.store
+    assert_equal nil, store.main
+    assert_equal nil, store.title
+  end
+
   def test_document # functional test
     options = RDoc::Options.new
     options.files = [File.expand_path('../xref_data.rb', __FILE__)]
