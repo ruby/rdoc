@@ -208,4 +208,6 @@ module RDoc
   autoload :Extend,         "#{__dir__}/rdoc/code_object/extend"
   autoload :Require,        "#{__dir__}/rdoc/code_object/require"
 
+  autoload :BasePlugin,     "#{__dir__}/rdoc/base_plugin"
+  autoload :EventRegistry,  "#{__dir__}/rdoc/event_registry"
 end
