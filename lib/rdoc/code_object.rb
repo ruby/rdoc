@@ -392,4 +392,13 @@ class RDoc::CodeObject
     @suppressed
   end
 
+  ##
+  # Autolink in cross reference?
+
+  def autolink?
+    RDoc::Options.boolean(@metadata.fetch("autolink", true), "autolink")
+  end
+
+  # Process <tt>:autolink:</tt> directive and empty it.
+  RDoc::Markup::PreProcess.register("autolink") {""}
 end
