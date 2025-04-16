@@ -176,6 +176,49 @@ class TestRDocRDoc < RDoc::TestCase
     assert_equal expected_files, files
   end
 
+  def test_normalized_file_list_with_dot_doc_version_1
+    expected_files = []
+    files = temp_dir do |dir|
+      a = 'a.rb'
+      b = 'b.rb'
+      a_b = 'a.rb b.rb'
+      FileUtils.touch a
+      FileUtils.touch b
+      FileUtils.touch a_b
+
+      File.open('.document', 'w') do |f|
+        f.puts '# rdoc.document: 1'
+        f.puts a_b
+      end
+      expected_files << File.expand_path(a_b, dir)
+
+      @rdoc.normalized_file_list [dir]
+    end
+
+    assert_equal expected_files, files.keys
+  end
+
+  def test_normalized_file_list_with_dot_doc_negative_pattern
+    expected_files = []
+    files = temp_dir do |dir|
+      a = 'a.rb'
+      b = 'b.rb'
+      FileUtils.touch a
+      FileUtils.touch b
+
+      File.open('.document', 'w') do |f|
+        f.puts '# rdoc.document: 1'
+        f.puts '*.rb'
+        f.puts '!b.rb'
+      end
+      expected_files << File.expand_path(a, dir)
+
+      @rdoc.normalized_file_list [dir]
+    end
+
+    assert_equal expected_files, files.keys
+  end
+
   def test_normalized_file_list_with_dot_doc_overridden_by_exclude_option
     expected_files = []
     files = temp_dir do |dir|
