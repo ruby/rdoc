@@ -1133,7 +1133,7 @@ and an extra note.[^2]
     assert_equal expected, doc
   end
 
-  def parse text
+  def parse(text)
     @parser.parse text
   end
 

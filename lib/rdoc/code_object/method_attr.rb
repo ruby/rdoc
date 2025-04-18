@@ -91,7 +91,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
   ##
   # Resets cached data for the object so it can be rebuilt by accessor methods
 
-  def initialize_copy other # :nodoc:
+  def initialize_copy(other) # :nodoc:
     @full_name = nil
   end
 
@@ -111,7 +111,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
     [other.singleton ? 0 : 1, other.name_ord_range, other.name]
   end
 
-  def == other # :nodoc:
+  def ==(other) # :nodoc:
     equal?(other) or self.class == other.class and full_name == other.full_name
   end
 
@@ -150,7 +150,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
   ##
   # Sets the store for this class or module and its contained code objects.
 
-  def store= store
+  def store=(store)
     super
 
     @file = @store.add_file @file.full_name if @file
@@ -168,7 +168,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
     return find_method_or_attribute name[0..-2]
   end
 
-  def find_method_or_attribute name # :nodoc:
+  def find_method_or_attribute(name) # :nodoc:
     return nil unless parent.respond_to? :ancestors
 
     searched = parent.ancestors
@@ -341,7 +341,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
     @parent_name || super
   end
 
-  def pretty_print q # :nodoc:
+  def pretty_print(q) # :nodoc:
     alias_for =
       if @is_alias_for.respond_to? :name then
         "alias for #{@is_alias_for.name}"

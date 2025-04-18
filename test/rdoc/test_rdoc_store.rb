@@ -74,8 +74,8 @@ class TestRDocStore < XrefTestCase
     FileUtils.rm_rf @tmpdir
   end
 
-  def assert_cache imethods, cmethods, attrs, modules,
-                   ancestors = {}, pages = [], main = nil, title = nil
+  def assert_cache(imethods, cmethods, attrs, modules,
+                   ancestors = {}, pages = [], main = nil, title = nil)
     imethods ||= { 'Object' => %w[method method! method_bang] }
     cmethods ||= { 'Object' => %w[cmethod] }
     attrs    ||= { 'Object' => ['attr_accessor attr'] }

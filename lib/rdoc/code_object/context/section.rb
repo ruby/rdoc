@@ -39,7 +39,7 @@ class RDoc::Context::Section
   ##
   # Creates a new section with +title+ and +comment+
 
-  def initialize parent, title, comment
+  def initialize(parent, title, comment)
     @parent = parent
     @title = title ? title.strip : title
 
@@ -51,7 +51,7 @@ class RDoc::Context::Section
   ##
   # Sections are equal when they have the same #title
 
-  def == other
+  def ==(other)
     self.class === other and @title == other.title
   end
 
@@ -60,7 +60,7 @@ class RDoc::Context::Section
   ##
   # Adds +comment+ to this section
 
-  def add_comment comment
+  def add_comment(comment)
     comments = Array(comment)
     comments.each do |c|
       extracted_comment = extract_comment(c)
@@ -86,7 +86,7 @@ class RDoc::Context::Section
   #   # :section: The title
   #   # The body
 
-  def extract_comment comment
+  def extract_comment(comment)
     case comment
     when nil
       RDoc::Comment.new ''
@@ -138,7 +138,7 @@ class RDoc::Context::Section
   ##
   # De-serializes this Section.  The section parent must be restored manually.
 
-  def marshal_load array
+  def marshal_load(array)
     @parent  = nil
 
     @title    = array[1]
@@ -166,7 +166,7 @@ class RDoc::Context::Section
   # Removes a comment from this section if it is from the same file as
   # +comment+
 
-  def remove_comment target_comment
+  def remove_comment(target_comment)
     @comments.delete_if do |stored_comment|
       stored_comment.file == target_comment.file
     end

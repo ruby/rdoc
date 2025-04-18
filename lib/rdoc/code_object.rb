@@ -236,7 +236,7 @@ class RDoc::CodeObject
   #
   # Set to +nil+ to clear RDoc's cached value
 
-  def full_name= full_name
+  def full_name=(full_name)
     @full_name = full_name
   end
 
@@ -316,7 +316,7 @@ class RDoc::CodeObject
   ##
   # Records the RDoc::TopLevel (file) where this code object was defined
 
-  def record_location top_level
+  def record_location(top_level)
     @ignored    = false
     @suppressed = false
     @file       = top_level
@@ -358,7 +358,7 @@ class RDoc::CodeObject
   ##
   # Sets the +store+ that contains this CodeObject
 
-  def store= store
+  def store=(store)
     @store = store
 
     return unless @track_visibility

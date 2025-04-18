@@ -33,7 +33,7 @@ class RDoc::TopLevel < RDoc::Context
   # is being generated outside the source dir +relative_name+ is relative to
   # the source directory.
 
-  def initialize absolute_name, relative_name = absolute_name
+  def initialize(absolute_name, relative_name = absolute_name)
     super()
     @name = nil
     @absolute_name = absolute_name
@@ -55,7 +55,7 @@ class RDoc::TopLevel < RDoc::Context
   ##
   # An RDoc::TopLevel is equal to another with the same relative_name
 
-  def == other
+  def ==(other)
     self.class === other and @relative_name == other.relative_name
   end
 
@@ -73,7 +73,7 @@ class RDoc::TopLevel < RDoc::Context
   ##
   # Adds +constant+ to +Object+ instead of +self+.
 
-  def add_constant constant
+  def add_constant(constant)
     object_class.record_location self
     return constant unless @document_self
     object_class.add_constant constant
@@ -101,7 +101,7 @@ class RDoc::TopLevel < RDoc::Context
   # Adds class or module +mod+. Used in the building phase
   # by the Ruby parser.
 
-  def add_to_classes_or_modules mod
+  def add_to_classes_or_modules(mod)
     @classes_or_modules << mod
   end
 
@@ -128,7 +128,7 @@ class RDoc::TopLevel < RDoc::Context
   # TODO Why do we search through all classes/modules found, not just the
   #       ones of this instance?
 
-  def find_class_or_module name
+  def find_class_or_module(name)
     @store.find_class_or_module name
   end
 
@@ -192,7 +192,7 @@ class RDoc::TopLevel < RDoc::Context
   ##
   # Loads this TopLevel from +array+.
 
-  def marshal_load array # :nodoc:
+  def marshal_load(array) # :nodoc:
     initialize array[1]
 
     @parser  = array[2]
@@ -231,7 +231,7 @@ class RDoc::TopLevel < RDoc::Context
     File.join(prefix, http_url)
   end
 
-  def pretty_print q # :nodoc:
+  def pretty_print(q) # :nodoc:
     q.group 2, "[#{self.class}: ", "]" do
       q.text "base name: #{base_name.inspect}"
       q.breakable

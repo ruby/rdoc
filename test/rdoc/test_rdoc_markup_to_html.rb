@@ -947,7 +947,7 @@ EXPECTED
     assert_equal "\n<p><code>--</code></p>\n", util_format("<tt>--</tt>")
   end
 
-  def util_format text
+  def util_format(text)
     paragraph = RDoc::Markup::Paragraph.new text
 
     @to.start_accepting

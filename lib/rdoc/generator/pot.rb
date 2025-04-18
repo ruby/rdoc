@@ -65,7 +65,7 @@ class RDoc::Generator::POT
   ##
   # Set up a new .pot generator
 
-  def initialize store, options #:not-new:
+  def initialize(store, options) #:not-new:
     @options    = options
     @store      = store
   end

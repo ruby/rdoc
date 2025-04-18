@@ -171,7 +171,7 @@ class TestRDocRdInlineParser < RDoc::TestCase
     assert_equal '<tt>((*text*))</tt>', parse("(('((*text*))'))")
   end
 
-  def parse text
+  def parse(text)
     @inline_parser.parse text
   end
 

@@ -52,7 +52,7 @@ class TestRDocGeneratorMarkup < RDoc::TestCase
 
   attr_reader :path
 
-  def find_symbol name
+  def find_symbol(name)
     @symbols[name]
   end
 

@@ -5,21 +5,21 @@ class TestRDocMarkupFormatter < RDoc::TestCase
 
   class ToTest < RDoc::Markup::Formatter
 
-    def initialize markup
+    def initialize(markup)
       super nil, markup
 
       add_tag :TT, '<code>', '</code>'
     end
 
-    def accept_paragraph paragraph
+    def accept_paragraph(paragraph)
       @res += attributes(paragraph.text)
     end
 
-    def attributes text
+    def attributes(text)
       convert_flow @am.flow text.dup
     end
 
-    def handle_regexp_CAPS target
+    def handle_regexp_CAPS(target)
       "handled #{target.text}"
     end
 
@@ -73,7 +73,7 @@ class TestRDocMarkupFormatter < RDoc::TestCase
 
     assert_includes regexp_handling_names, 'RDOCLINK'
 
-    def @to.handle_regexp_RDOCLINK target
+    def @to.handle_regexp_RDOCLINK(target)
       "<#{target.text}>"
     end
 
@@ -89,7 +89,7 @@ class TestRDocMarkupFormatter < RDoc::TestCase
 
     assert_includes regexp_handling_names, 'TIDYLINK'
 
-    def @to.handle_regexp_TIDYLINK target
+    def @to.handle_regexp_TIDYLINK(target)
       "<#{target.text}>"
     end
 

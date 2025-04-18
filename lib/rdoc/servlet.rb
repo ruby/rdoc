@@ -66,7 +66,7 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
   # +server+ is provided automatically by WEBrick when mounting.  +stores+ and
   # +cache+ are provided automatically by the servlet.
 
-  def initialize server, stores, cache, mount_path = nil, extra_doc_dirs = []
+  def initialize(server, stores, cache, mount_path = nil, extra_doc_dirs = [])
     super server
 
     @cache      = cache
@@ -97,7 +97,7 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
   ##
   # Serves the asset at the path in +req+ for +generator_name+ via +res+.
 
-  def asset generator_name, req, res
+  def asset(generator_name, req, res)
     asset_dir = @asset_dirs[generator_name]
 
     asset_path = File.join asset_dir, req.path
@@ -116,7 +116,7 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
   ##
   # GET request entry point.  Fills in +res+ for the path, etc. in +req+.
 
-  def do_GET req, res
+  def do_GET(req, res)
     req.path.sub!(/\A#{Regexp.escape @mount_path}/, '') if @mount_path
 
     case req.path
@@ -149,7 +149,7 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
   # module or page name (/RDoc/Servlet.html becomes RDoc::Servlet).
   # +generator+ is used to create the page.
 
-  def documentation_page store, generator, path, req, res
+  def documentation_page(store, generator, path, req, res)
     text_name = path.chomp '.html'
     name = text_name.gsub '/', '::'
 
@@ -168,7 +168,7 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
   # Creates the JSON search index on +res+ for the given +store+.  +generator+
   # must respond to \#json_index to build.  +req+ is ignored.
 
-  def documentation_search store, generator, req, res
+  def documentation_search(store, generator, req, res)
     json_index = @cache[store].fetch :json_index do
       @cache[store][:json_index] =
         JSON.dump generator.json_index.build_index
@@ -182,7 +182,7 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
   # Returns the RDoc::Store and path relative to +mount_path+ for
   # documentation at +path+.
 
-  def documentation_source path
+  def documentation_source(path)
     _, source_name, path = path.split '/', 3
 
     store = @stores[source_name]
@@ -200,7 +200,7 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
   ##
   # Generates an error page for the +exception+ while handling +req+ on +res+.
 
-  def error exception, req, res
+  def error(exception, req, res)
     backtrace = exception.backtrace.join "\n"
 
     res.content_type = 'text/html'
@@ -243,7 +243,7 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
   ##
   # Instantiates a Darkfish generator for +store+
 
-  def generator_for store
+  def generator_for(store)
     generator = RDoc::Generator::Darkfish.new store, @options
     generator.file_output = false
     generator.asset_rel_path = '..'
@@ -265,7 +265,7 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
   # file has not been modified a Not Modified response is returned.  If the
   # file has been modified a Last-Modified header is added to +res+.
 
-  def if_modified_since req, res, path = nil
+  def if_modified_since(req, res, path = nil)
     last_modified = File.stat(path).mtime if path
 
     res['last-modified'] = last_modified.httpdate
@@ -316,7 +316,7 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
   ##
   # Returns a 404 page built by +generator+ for +req+ on +res+.
 
-  def not_found generator, req, res, message = nil
+  def not_found(generator, req, res, message = nil)
     message ||= "The page <kbd>#{ERB::Util.h req.path}</kbd> was not found"
     res.body = generator.generate_servlet_not_found message
     res.status = 404
@@ -325,14 +325,14 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
   ##
   # Enumerates the ri paths.  See RDoc::RI::Paths#each
 
-  def ri_paths &block
+  def ri_paths(&block)
     RDoc::RI::Paths.each true, true, true, :all, *@extra_doc_dirs, &block #TODO: pass extra_dirs
   end
 
   ##
   # Generates the root page on +res+.  +req+ is ignored.
 
-  def root req, res
+  def root(req, res)
     generator = RDoc::Generator::Darkfish.new nil, @options
 
     res.body = generator.generate_servlet_root installed_docs
@@ -343,7 +343,7 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
   ##
   # Generates a search index for the root page on +res+.  +req+ is ignored.
 
-  def root_search req, res
+  def root_search(req, res)
     search_index = []
     info         = []
 
@@ -393,7 +393,7 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
   # Displays documentation for +req+ on +res+, whether that be HTML or some
   # asset.
 
-  def show_documentation req, res
+  def show_documentation(req, res)
     store, path = documentation_source req.path
 
     if_modified_since req, res, store.cache_path
@@ -417,7 +417,7 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
   ##
   # Returns an RDoc::Store for the given +source_name+ ('ruby' or a gem name).
 
-  def store_for source_name
+  def store_for(source_name)
     case source_name
     when 'home' then
       RDoc::Store.new(@options, path: RDoc::RI::Paths.home_dir, type: :home)

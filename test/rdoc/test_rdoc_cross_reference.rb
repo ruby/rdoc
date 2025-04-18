@@ -12,11 +12,11 @@ class TestRDocCrossReference < XrefTestCase
     @xref = RDoc::CrossReference.new @c1
   end
 
-  def assert_ref expected, name
+  def assert_ref(expected, name)
     assert_equal expected, @xref.resolve(name, 'fail')
   end
 
-  def refute_ref name
+  def refute_ref(name)
     assert_equal name, @xref.resolve(name, name)
   end
 

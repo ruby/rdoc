@@ -698,7 +698,7 @@ This routine modifies its +comment+ parameter.
     assert_equal 2, @to.characters
   end
 
-  def util_format text
+  def util_format(text)
     paragraph = RDoc::Markup::Paragraph.new text
 
     @to.start_accepting

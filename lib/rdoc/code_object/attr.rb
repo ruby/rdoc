@@ -32,7 +32,7 @@ class RDoc::Attr < RDoc::MethodAttr
   ##
   # Attributes are equal when their names, singleton and rw are identical
 
-  def == other
+  def ==(other)
     self.class == other.class and
       self.name == other.name and
       self.rw == other.rw and
@@ -118,7 +118,7 @@ class RDoc::Attr < RDoc::MethodAttr
   # * #full_name
   # * #parent_name
 
-  def marshal_load array
+  def marshal_load(array)
     initialize_visibility
 
     @aliases      = []
@@ -145,7 +145,7 @@ class RDoc::Attr < RDoc::MethodAttr
     @parent_name ||= @full_name.split('#', 2).first
   end
 
-  def pretty_print q # :nodoc:
+  def pretty_print(q) # :nodoc:
     q.group 2, "[#{self.class.name} #{full_name} #{rw} #{visibility}", "]" do
       unless comment.empty? then
         q.breakable

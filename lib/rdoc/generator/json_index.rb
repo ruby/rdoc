@@ -89,7 +89,7 @@ class RDoc::Generator::JsonIndex
   # Creates a new generator.
   # +options+ are the same options passed to the parent generator.
 
-  def initialize parent_generator, options
+  def initialize(parent_generator, options)
     @parent_generator = parent_generator
     @store            = parent_generator.store
     @options          = options
@@ -263,7 +263,7 @@ class RDoc::Generator::JsonIndex
     end
   end
 
-  def reset files, classes # :nodoc:
+  def reset(files, classes) # :nodoc:
     @files   = files
     @classes = classes
 
@@ -277,7 +277,7 @@ class RDoc::Generator::JsonIndex
   ##
   # Removes whitespace and downcases +string+
 
-  def search_string string
+  def search_string(string)
     string.downcase.gsub(/\s/, '')
   end
 

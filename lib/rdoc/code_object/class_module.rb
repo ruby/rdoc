@@ -45,7 +45,7 @@ class RDoc::ClassModule < RDoc::Context
   #--
   # TODO move to RDoc::NormalClass (I think)
 
-  def self.from_module class_type, mod
+  def self.from_module(class_type, mod)
     klass = class_type.new mod.name
 
     mod.comment_location.each do |comment, location|
@@ -120,7 +120,7 @@ class RDoc::ClassModule < RDoc::Context
   # method is preferred over #comment= since it allows ri data to be updated
   # across multiple runs.
 
-  def add_comment comment, location
+  def add_comment(comment, location)
     return unless document_self
 
     original = comment
@@ -141,7 +141,7 @@ class RDoc::ClassModule < RDoc::Context
     self.comment = original
   end
 
-  def add_things my_things, other_things # :nodoc:
+  def add_things(my_things, other_things) # :nodoc:
     other_things.each do |group, things|
       my_things[group].each { |thing| yield false, thing } if
         my_things.include? group
@@ -198,7 +198,7 @@ class RDoc::ClassModule < RDoc::Context
   # Appends +comment+ to the current comment, but separated by a rule.  Works
   # more like <tt>+=</tt>.
 
-  def comment= comment # :nodoc:
+  def comment=(comment) # :nodoc:
     comment = case comment
               when RDoc::Comment then
                 comment.normalize
@@ -216,7 +216,7 @@ class RDoc::ClassModule < RDoc::Context
   #
   # See RDoc::Store#complete
 
-  def complete min_visibility
+  def complete(min_visibility)
     update_aliases
     remove_nodoc_children
     embed_mixins
@@ -259,7 +259,7 @@ class RDoc::ClassModule < RDoc::Context
   ##
   # Looks for a symbol in the #ancestors. See Context#find_local_symbol.
 
-  def find_ancestor_local_symbol symbol
+  def find_ancestor_local_symbol(symbol)
     each_ancestor do |m|
       res = m.find_local_symbol(symbol)
       return res if res
@@ -271,7 +271,7 @@ class RDoc::ClassModule < RDoc::Context
   ##
   # Finds a class or module with +name+ in this namespace or its descendants
 
-  def find_class_named name
+  def find_class_named(name)
     return self if full_name == name
     return self if @name == name
 
@@ -360,7 +360,7 @@ class RDoc::ClassModule < RDoc::Context
     ]
   end
 
-  def marshal_load array # :nodoc:
+  def marshal_load(array) # :nodoc:
     initialize_visibility
     initialize_methods_etc
     @current_section   = nil
@@ -450,7 +450,7 @@ class RDoc::ClassModule < RDoc::Context
   #
   # The data in +class_module+ is preferred over the receiver.
 
-  def merge class_module
+  def merge(class_module)
     @parent      = class_module.parent
     @parent_name = class_module.parent_name
 
@@ -535,7 +535,7 @@ class RDoc::ClassModule < RDoc::Context
   #     end
   #   end
 
-  def merge_collections mine, other, other_files, &block # :nodoc:
+  def merge_collections(mine, other, other_files, &block) # :nodoc:
     my_things    = mine. group_by { |thing| thing.file }
     other_things = other.group_by { |thing| thing.file }
 
@@ -547,7 +547,7 @@ class RDoc::ClassModule < RDoc::Context
   # Merges the comments in this ClassModule with the comments in the other
   # ClassModule +cm+.
 
-  def merge_sections cm # :nodoc:
+  def merge_sections(cm) # :nodoc:
     my_sections    =    sections.group_by { |section| section.title }
     other_sections = cm.sections.group_by { |section| section.title }
 
@@ -595,7 +595,7 @@ class RDoc::ClassModule < RDoc::Context
   #
   # Used for modules and classes that are constant aliases.
 
-  def name= new_name
+  def name=(new_name)
     @name = new_name
   end
 
@@ -603,7 +603,7 @@ class RDoc::ClassModule < RDoc::Context
   # Parses +comment_location+ into an RDoc::Markup::Document composed of
   # multiple RDoc::Markup::Documents with their file set.
 
-  def parse comment_location
+  def parse(comment_location)
     case comment_location
     when String then
       super
@@ -675,7 +675,7 @@ class RDoc::ClassModule < RDoc::Context
     end
   end
 
-  def remove_things my_things, other_files # :nodoc:
+  def remove_things(my_things, other_files) # :nodoc:
     my_things.delete_if do |file, things|
       next false unless other_files.include? file
 
@@ -705,7 +705,7 @@ class RDoc::ClassModule < RDoc::Context
   ##
   # Sets the store for this class or module and its contained code objects.
 
-  def store= store
+  def store=(store)
     super
 
     @attributes .each do |attr|  attr.store  = store end
