@@ -1,4 +1,4 @@
-name: ruby-core
+name: Document generation test with ruby/ruby
 
 on:
   pull_request:
@@ -16,7 +16,7 @@ permissions: # added using https://github.com/step-security/secure-workflows
 jobs:
   ruby_core:
     name: Generate ruby/ruby documentation with the current RDoc commit
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
     timeout-minutes: 30
