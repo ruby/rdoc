@@ -3,6 +3,16 @@
 # Outputs RDoc markup as RDoc markup! (mostly)
 
 class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
+  DEFAULT_HEADINGS = {
+      1 => ['= ',      ''],
+      2 => ['== ',     ''],
+      3 => ['=== ',    ''],
+      4 => ['==== ',   ''],
+      5 => ['===== ',  ''],
+      6 => ['====== ', '']
+  }
+  DEFAULT_HEADINGS.default = []
+  DEFAULT_HEADINGS.freeze
 
   ##
   # Current indent amount for output in characters
@@ -49,16 +59,7 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
     @width = 78
     init_tags
 
-    @headings = {}
-    @headings.default = []
-
-    @headings[1] = ['= ',      '']
-    @headings[2] = ['== ',     '']
-    @headings[3] = ['=== ',    '']
-    @headings[4] = ['==== ',   '']
-    @headings[5] = ['===== ',  '']
-    @headings[6] = ['====== ', '']
-
+    @headings = DEFAULT_HEADINGS.dup
     @hard_break = "\n"
   end
 
