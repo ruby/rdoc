@@ -52,7 +52,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   ##
   # Adds +an_alias+ as an alias for this method in +context+.
 
-  def add_alias an_alias, context = nil
+  def add_alias(an_alias, context = nil)
     method = self.class.new an_alias.text, an_alias.new_name, singleton: singleton
 
     method.record_location an_alias.file
@@ -104,7 +104,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   #
   # See also #param_seq
 
-  def call_seq= call_seq
+  def call_seq=(call_seq)
     return if call_seq.nil? || call_seq.empty?
 
     @call_seq = call_seq
@@ -176,7 +176,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   # * #full_name
   # * #parent_name
 
-  def marshal_load array
+  def marshal_load(array)
     initialize_visibility
 
     @dont_rename_initialize = nil
@@ -309,7 +309,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   ##
   # Sets the store for this method and its referenced code objects.
 
-  def store= store
+  def store=(store)
     super
 
     @file = @store.add_file @file.full_name if @file

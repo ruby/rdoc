@@ -53,7 +53,7 @@ class RDoc::Comment
   # Creates a new comment with +text+ that is found in the RDoc::TopLevel
   # +location+.
 
-  def initialize text = nil, location = nil, language = nil
+  def initialize(text = nil, location = nil, language = nil)
     @location = location
     @text     = text.nil? ? nil : text.dup
     @language = language
@@ -67,11 +67,11 @@ class RDoc::Comment
   #--
   # TODO deep copy @document
 
-  def initialize_copy copy # :nodoc:
+  def initialize_copy(copy) # :nodoc:
     @text = copy.text.dup
   end
 
-  def == other # :nodoc:
+  def ==(other) # :nodoc:
     self.class === other and
       other.text == @text and other.location == @location
   end
@@ -129,7 +129,7 @@ class RDoc::Comment
   ##
   # HACK dubious
 
-  def encode! encoding
+  def encode!(encoding)
     @text = String.new @text, encoding: encoding
     self
   end
@@ -137,7 +137,7 @@ class RDoc::Comment
   ##
   # Sets the format of this comment and resets any parsed document
 
-  def format= format
+  def format=(format)
     @format = format
     @document = nil
   end
@@ -208,7 +208,7 @@ class RDoc::Comment
   #
   # An error is raised if the comment contains a document but no text.
 
-  def text= text
+  def text=(text)
     raise RDoc::Error, 'replacing document-only comment is not allowed' if
       @text.nil? and @document
 

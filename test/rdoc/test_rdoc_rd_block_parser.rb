@@ -543,7 +543,7 @@ two
     assert_equal expected, parse("one\ntwo")
   end
 
-  def parse text
+  def parse(text)
     text = ["=begin", text, "=end"].join "\n"
 
     doc = @block_parser.parse text.lines.to_a

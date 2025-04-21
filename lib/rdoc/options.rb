@@ -373,7 +373,7 @@ class RDoc::Options
 
   attr_accessor :file_path_prefix
 
-  def initialize loaded_options = nil # :nodoc:
+  def initialize(loaded_options = nil) # :nodoc:
     init_ivars
     override loaded_options if loaded_options
   end
@@ -431,7 +431,7 @@ class RDoc::Options
     @file_path_prefix = nil
   end
 
-  def init_with map # :nodoc:
+  def init_with(map) # :nodoc:
     init_ivars
 
     encoding = map['encoding']
@@ -462,11 +462,11 @@ class RDoc::Options
     @static_path  = sanitize_path map['static_path']
   end
 
-  def yaml_initialize tag, map # :nodoc:
+  def yaml_initialize(tag, map) # :nodoc:
     init_with map
   end
 
-  def override map # :nodoc:
+  def override(map) # :nodoc:
     if map.has_key?('encoding')
       encoding = map['encoding']
       @encoding = encoding ? Encoding.find(encoding) : encoding
@@ -503,7 +503,7 @@ class RDoc::Options
     end
   end
 
-  def == other # :nodoc:
+  def ==(other) # :nodoc:
     self.class === other and
       @encoding       == other.encoding       and
       @embed_mixins   == other.embed_mixins   and
@@ -695,7 +695,7 @@ class RDoc::Options
   ##
   # Parses command line options.
 
-  def parse argv
+  def parse(argv)
     ignore_invalid = true
 
     argv.insert(0, *ENV['RDOCOPT'].split) if ENV['RDOCOPT']
@@ -1274,14 +1274,14 @@ Usage: #{opt.program_name} [options] [names...]
   ##
   # Set quietness to +bool+
 
-  def quiet= bool
+  def quiet=(bool)
     @verbosity = bool ? 0 : 1
   end
 
   ##
   # Removes directories from +path+ that are outside the current directory
 
-  def sanitize_path path
+  def sanitize_path(path)
     require 'pathname'
     dot = Pathname.new('.').expand_path
 
@@ -1308,7 +1308,7 @@ Usage: #{opt.program_name} [options] [names...]
   # the options instance.  This allows generators to add custom options or set
   # default options.
 
-  def setup_generator generator_name = @generator_name
+  def setup_generator(generator_name = @generator_name)
     @generator = @generators[generator_name]
 
     unless @generator then
@@ -1330,7 +1330,7 @@ Usage: #{opt.program_name} [options] [names...]
   ##
   # Finds the template dir for +template+
 
-  def template_dir_for template
+  def template_dir_for(template)
     template_path = File.join 'rdoc', 'generator', 'template', template
 
     $LOAD_PATH.map do |path|
@@ -1347,7 +1347,7 @@ Usage: #{opt.program_name} [options] [names...]
   # When +:all+ is passed, visibility is set to +:private+, similarly to
   # RDOCOPT="--all", see #visibility for more information.
 
-  def visibility= visibility
+  def visibility=(visibility)
     case visibility
     when :all
       @visibility = :private
@@ -1359,7 +1359,7 @@ Usage: #{opt.program_name} [options] [names...]
   ##
   # Displays a warning using Kernel#warn if we're being verbose
 
-  def warn message
+  def warn(message)
     super message if @verbosity > 1
   end
 

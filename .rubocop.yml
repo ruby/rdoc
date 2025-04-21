@@ -2,6 +2,14 @@ AllCops:
   TargetRubyVersion: 3.0
   DisabledByDefault: true
   SuggestExtensions: false
+  Exclude:
+    # Exclude files that are auto generated
+    - "lib/rdoc/rd/block_parser.rb"
+    - "lib/rdoc/rd/inline_parser.rb"
+    - "lib/rdoc/markdown.rb"
+    - "lib/rdoc/markdown/literals.rb"
+    # Exclude dependency files when installing them under vendor
+    - "vendor/**/*"
 
 Layout/TrailingWhitespace:
   Enabled: true
@@ -19,4 +27,7 @@ Layout/SpaceAfterComma:
   Enabled: true
 
 Lint/UnreachableCode:
+  Enabled: true
+
+Style/MethodDefParentheses:
   Enabled: true

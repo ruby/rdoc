@@ -150,7 +150,7 @@ class RDoc::Generator::Darkfish
   ##
   # Initialize a few instance variables before we start
 
-  def initialize store, options
+  def initialize(store, options)
     @store   = store
     @options = options
 
@@ -269,7 +269,7 @@ class RDoc::Generator::Darkfish
   # Return a list of the documented modules sorted by salience first, then
   # by name.
 
-  def get_sorted_module_list classes
+  def get_sorted_module_list(classes)
     classes.select do |klass|
       klass.display?
     end.sort
@@ -313,7 +313,7 @@ class RDoc::Generator::Darkfish
   ##
   # Generates a class file for +klass+
 
-  def generate_class klass, template_file = nil
+  def generate_class(klass, template_file = nil)
     current = klass
 
     template_file ||= @template_dir + 'class.rhtml'
@@ -435,7 +435,7 @@ class RDoc::Generator::Darkfish
   ##
   # Generate a page file for +file+
 
-  def generate_page file
+  def generate_page(file)
     template_file = @template_dir + 'page.rhtml'
 
     out_file = @outputdir + file.path
@@ -462,7 +462,7 @@ class RDoc::Generator::Darkfish
   ##
   # Generates the 404 page for the RDoc servlet
 
-  def generate_servlet_not_found message
+  def generate_servlet_not_found(message)
     template_file = @template_dir + 'servlet_not_found.rhtml'
     return unless template_file.exist?
 
@@ -493,7 +493,7 @@ class RDoc::Generator::Darkfish
   ##
   # Generates the servlet root page for the RDoc servlet
 
-  def generate_servlet_root installed
+  def generate_servlet_root(installed)
     template_file = @template_dir + 'servlet_root.rhtml'
     return unless template_file.exist?
 
@@ -547,7 +547,7 @@ class RDoc::Generator::Darkfish
     raise error
   end
 
-  def install_rdoc_static_file source, destination, options # :nodoc:
+  def install_rdoc_static_file(source, destination, options) # :nodoc:
     return unless source.exist?
 
     begin
@@ -586,7 +586,7 @@ class RDoc::Generator::Darkfish
   # For backwards compatibility, if +body_file+ contains "<html" the body is
   # used directly.
 
-  def assemble_template body_file
+  def assemble_template(body_file)
     body = body_file.read
     return body if body =~ /<html/
 
@@ -607,7 +607,7 @@ class RDoc::Generator::Darkfish
   # Renders the ERb contained in +file_name+ relative to the template
   # directory and returns the result based on the current context.
 
-  def render file_name
+  def render(file_name)
     template_file = @template_dir + file_name
 
     template = template_for template_file, false, RDoc::ERBPartial
@@ -625,7 +625,7 @@ class RDoc::Generator::Darkfish
   #
   # An io will be yielded which must be captured by binding in the caller.
 
-  def render_template template_file, out_file = nil # :yield: io
+  def render_template(template_file, out_file = nil) # :yield: io
     io_output = out_file && !@dry_run && @file_output
     erb_klass = io_output ? RDoc::ERBIO : ERB
 
@@ -659,7 +659,7 @@ class RDoc::Generator::Darkfish
   # Creates the result for +template+ with +context+.  If an error is raised a
   # Pathname +template_file+ will indicate the file where the error occurred.
 
-  def template_result template, context, template_file
+  def template_result(template, context, template_file)
     template.filename = template_file.to_s
     template.result context
   rescue NoMethodError => e
@@ -672,7 +672,7 @@ class RDoc::Generator::Darkfish
   ##
   # Retrieves a cache template for +file+, if present, or fills the cache.
 
-  def template_for file, page = true, klass = ERB
+  def template_for(file, page = true, klass = ERB)
     template = @template_cache[file]
 
     return template if template
@@ -793,7 +793,7 @@ class RDoc::Generator::Darkfish
 
   private
 
-  def nesting_namespaces_to_class_modules klass
+  def nesting_namespaces_to_class_modules(klass)
     tree = {}
 
     klass.nesting_namespaces.zip(klass.fully_qualified_nesting_namespaces) do |ns, fqns|
@@ -803,7 +803,7 @@ class RDoc::Generator::Darkfish
     tree
   end
 
-  def generate_nesting_namespaces_breadcrumb klass, rel_prefix
+  def generate_nesting_namespaces_breadcrumb(klass, rel_prefix)
     nesting_namespaces_to_class_modules(klass).map do |namespace, class_module|
       path = class_module ? (rel_prefix + class_module.path).to_s : ""
       { name: namespace, path: path, self: klass.full_name == class_module&.full_name }

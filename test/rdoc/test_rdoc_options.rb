@@ -402,7 +402,7 @@ rdoc_include:
 
   def test_parse_help_extra_generator
     RDoc::RDoc::GENERATORS['test'] = Class.new do
-      def self.setup_options options
+      def self.setup_options(options)
         op = options.option_parser
 
         op.separator 'test generator options:'
@@ -423,7 +423,7 @@ rdoc_include:
 
   def test_parse_format_for_extra_generator
     RDoc::RDoc::GENERATORS['test'] = Class.new do
-      def self.setup_options options
+      def self.setup_options(options)
         op = options.option_parser
 
         op.separator 'test generator options:'
@@ -763,7 +763,7 @@ rdoc_include:
 
   def test_setup_generator
     test_generator = Class.new do
-      def self.setup_options op
+      def self.setup_options(op)
         @op = op
       end
 
@@ -784,7 +784,7 @@ rdoc_include:
 
   def test_setup_generator_no_option_parser
     test_generator = Class.new do
-      def self.setup_options op
+      def self.setup_options(op)
         op.option_parser.separator nil
         @op = op
       end

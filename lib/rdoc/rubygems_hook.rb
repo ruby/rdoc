@@ -51,7 +51,7 @@ class RDoc::RubyGemsHook
   # Post installs hook that generates documentation for each specification in
   # +specs+
 
-  def self.generate installer, specs
+  def self.generate(installer, specs)
     start = Time.now
     types = installer.document
 
@@ -70,7 +70,7 @@ class RDoc::RubyGemsHook
     say "Done installing documentation for #{names} after #{duration} seconds"
   end
 
-  def self.remove uninstaller
+  def self.remove(uninstaller)
     new(uninstaller.spec).remove
   end
 
@@ -92,7 +92,7 @@ class RDoc::RubyGemsHook
   #
   # Only +generate_ri+ is enabled by default.
 
-  def initialize spec, generate_rdoc = false, generate_ri = true
+  def initialize(spec, generate_rdoc = false, generate_ri = true)
     @doc_dir   = spec.doc_dir
     @force     = false
     @rdoc      = nil
@@ -110,7 +110,7 @@ class RDoc::RubyGemsHook
   #--
   # TODO move to RDoc::Options
 
-  def delete_legacy_args args
+  def delete_legacy_args(args)
     args.delete '--inline-source'
     args.delete '--promiscuous'
     args.delete '-p'
@@ -123,7 +123,7 @@ class RDoc::RubyGemsHook
   #
   # Documentation will be generated into +destination+
 
-  def document generator, options, destination
+  def document(generator, options, destination)
     generator_name = generator
 
     options = options.dup
@@ -297,7 +297,7 @@ module RDoc
       RubyGemsHook.new(@spec).remove
     end
 
-    def self.generation_hook installer, specs
+    def self.generation_hook(installer, specs)
       # Do nothing if this is NOT a default gem.
       return unless default_gem?
 

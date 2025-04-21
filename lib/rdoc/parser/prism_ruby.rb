@@ -77,7 +77,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   # Records the location of this +container+ in the file for this parser and
   # adds it to the list of classes and modules in the file.
 
-  def record_location container # :nodoc:
+  def record_location(container) # :nodoc:
     case container
     when RDoc::ClassModule then
       @top_level.add_to_classes_or_modules container

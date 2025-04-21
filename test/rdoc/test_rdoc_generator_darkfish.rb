@@ -518,7 +518,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
   # Asserts that +filename+ has a link count greater than 1 if hard links to
   # @tmpdir are supported.
 
-  def assert_hard_link filename
+  def assert_hard_link(filename)
     assert_file filename
 
     src = @g.template_dir + '_head.rhtml'

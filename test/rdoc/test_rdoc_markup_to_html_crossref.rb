@@ -302,23 +302,23 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
                  @to.link('Parent::m', 'Parent::m')
   end
 
-  def para text
+  def para(text)
     "\n<p>#{text}</p>\n"
   end
 
-  def REGEXP_HANDLING text
+  def REGEXP_HANDLING(text)
     @to.handle_regexp_CROSSREF regexp_handling text
   end
 
-  def hyper reference
+  def hyper(reference)
     RDoc::Markup::RegexpHandling.new 0, "rdoc-ref:#{reference}"
   end
 
-  def regexp_handling text
+  def regexp_handling(text)
     RDoc::Markup::RegexpHandling.new 0, text
   end
 
-  def tidy reference
+  def tidy(reference)
     RDoc::Markup::RegexpHandling.new 0, "{tidy}[rdoc-ref:#{reference}]"
   end
 

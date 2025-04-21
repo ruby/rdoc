@@ -473,7 +473,7 @@ ChangeLog
     assert_equal expected, @top_level.comment.parse
   end
 
-  def util_parser content = ''
+  def util_parser(content = '')
     RDoc::Parser::ChangeLog.new @top_level, content, @options, @stats
   end
 

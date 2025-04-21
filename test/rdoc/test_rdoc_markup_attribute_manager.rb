@@ -388,7 +388,7 @@ class TestRDocMarkupAttributeManager < RDoc::TestCase
                  @am.flow('<tt>"\n"</tt>')
   end
 
-  def output str
+  def output(str)
     @formatter.convert_flow @am.flow str
   end
 

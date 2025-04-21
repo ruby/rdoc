@@ -2136,14 +2136,14 @@ void Init_Blah(void) {
     assert_equal("markdown", klass.attributes.find {|a| a.name == "default_format"}.comment.format)
   end
 
-  def util_get_class content, name = nil
+  def util_get_class(content, name = nil)
     @parser = util_parser content
     @parser.scan
 
     @parser.classes[name] if name
   end
 
-  def util_parser content = ''
+  def util_parser(content = '')
     RDoc::Parser::C.new @top_level, content, @options, @stats
   end
 

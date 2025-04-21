@@ -200,7 +200,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Retrieves the read token stream and replaces +pattern+ with +replacement+
   # using gsub.  If the result is only a ";" returns an empty string.
 
-  def get_tkread_clean pattern, replacement # :nodoc:
+  def get_tkread_clean(pattern, replacement) # :nodoc:
     read = get_tkread.gsub(pattern, replacement).strip
     return '' if read == ';'
     read
@@ -214,7 +214,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # +singleton+ if the methods following should be converted to singleton
   # methods.
 
-  def get_visibility_information tk, single # :nodoc:
+  def get_visibility_information(tk, single) # :nodoc:
     vis_type  = tk[:text]
     singleton = single == SINGLE
 
@@ -292,7 +292,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Creates a new attribute in +container+ with +name+.
 
-  def create_attr container, single, name, rw, comment # :nodoc:
+  def create_attr(container, single, name, rw, comment) # :nodoc:
     att = RDoc::Attr.new get_tkread, name, rw, comment, singleton: single == SINGLE
     record_location att
 
@@ -306,7 +306,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Creates a module alias in +container+ at +rhs_name+ (or at the top-level
   # for "::") with the name from +constant+.
 
-  def create_module_alias container, constant, rhs_name # :nodoc:
+  def create_module_alias(container, constant, rhs_name) # :nodoc:
     mod = if rhs_name =~ /^::/ then
             @store.find_class_or_module rhs_name
           else
@@ -346,7 +346,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # with :: separated named) and return the ultimate name, the associated
   # container, and the given name (with the ::).
 
-  def get_class_or_module container, ignore_constants = false
+  def get_class_or_module(container, ignore_constants = false)
     skip_tkspace
     name_t = get_tk
     given_name = ''.dup
@@ -564,7 +564,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # We see the RPAREN as the next token, so we need to exit early.  This still
   # won't catch all cases (such as "a = yield + 1"
 
-  def get_end_token tk # :nodoc:
+  def get_end_token(tk) # :nodoc:
     case tk[:kind]
     when :on_lparen
       token = RDoc::Parser::RipperStateLex::Token.new
@@ -584,7 +584,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Retrieves the method container for a singleton method.
 
-  def get_method_container container, name_t # :nodoc:
+  def get_method_container(container, name_t) # :nodoc:
     prev_container = container
     container = container.find_module_named(name_t[:text])
 
@@ -652,7 +652,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Marks containers between +container+ and +ancestor+ as ignored
 
-  def suppress_parents container, ancestor # :nodoc:
+  def suppress_parents(container, ancestor) # :nodoc:
     while container and container != ancestor do
       container.suppress unless container.documented?
       container = container.parent
@@ -667,7 +667,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   #
   # This routine modifies its +comment+ parameter.
 
-  def look_for_directives_in container, comment
+  def look_for_directives_in(container, comment)
     @preprocess.handle comment, container do |directive, param|
       case directive
       when 'method', 'singleton-method',
@@ -687,7 +687,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Adds useful info about the parser to +message+
 
-  def make_message message
+  def make_message(message)
     prefix = "#{@file_name}:".dup
 
     tk = peek_tk
@@ -699,7 +699,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Creates a comment with the correct format
 
-  def new_comment comment, line_no = nil
+  def new_comment(comment, line_no = nil)
     c = RDoc::Comment.new comment, @top_level, :ruby
     c.line = line_no
     c.format = @markup
@@ -851,7 +851,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Parses a class in +context+ with +comment+
 
-  def parse_class container, single, tk, comment
+  def parse_class(container, single, tk, comment)
     line_no = tk[:line_no]
 
     declaration_context = container
@@ -885,8 +885,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Parses and creates a regular class
 
-  def parse_class_regular container, declaration_context, single, # :nodoc:
-                          name_t, given_name, comment
+  def parse_class_regular(container, declaration_context, single, # :nodoc:
+                          name_t, given_name, comment)
     superclass = '::Object'
 
     if given_name =~ /^::/ then
@@ -925,7 +925,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Parses a singleton class in +container+ with the given +name+ and
   # +comment+.
 
-  def parse_class_singleton container, name, comment # :nodoc:
+  def parse_class_singleton(container, name, comment) # :nodoc:
     other = @store.find_class_named name
 
     unless other then
@@ -964,7 +964,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Parses a constant in +context+ with +comment+.  If +ignore_constants+ is
   # true, no found constants will be added to RDoc.
 
-  def parse_constant container, tk, comment, ignore_constants = false
+  def parse_constant(container, tk, comment, ignore_constants = false)
     line_no = tk[:line_no]
 
     name = tk[:text]
@@ -1031,7 +1031,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     true
   end
 
-  def parse_constant_body container, constant, is_array_or_hash # :nodoc:
+  def parse_constant_body(container, constant, is_array_or_hash) # :nodoc:
     nest     = 0
     rhs_name = ''.dup
 
@@ -1090,7 +1090,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Generates an RDoc::Method or RDoc::Attr from +comment+ by looking for
   # :method: or :attr: directives in +comment+.
 
-  def parse_comment container, tk, comment
+  def parse_comment(container, tk, comment)
     return parse_comment_tomdoc container, tk, comment if @markup == 'tomdoc'
     column  = tk[:char_no]
     line_no = comment.line.nil? ? tk[:line_no] : comment.line
@@ -1118,7 +1118,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Parse a comment that is describing an attribute in +container+ with the
   # given +name+ and +comment+.
 
-  def parse_comment_attr container, type, name, comment # :nodoc:
+  def parse_comment_attr(container, type, name, comment) # :nodoc:
     return if name.empty?
 
     rw = case type
@@ -1130,8 +1130,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
     create_attr container, NORMAL, name, rw, comment
   end
 
-  def parse_comment_ghost container, text, name, column, line_no, # :nodoc:
-                          comment
+  def parse_comment_ghost(container, text, name, column, line_no, # :nodoc:
+                          comment)
     name = nil if name.empty?
 
     meth = RDoc::GhostMethod.new get_tkread, name
@@ -1169,7 +1169,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Creates an RDoc::Method on +container+ from +comment+ if there is a
   # Signature section in the comment
 
-  def parse_comment_tomdoc container, tk, comment
+  def parse_comment_tomdoc(container, tk, comment)
     return unless signature = RDoc::TomDoc.signature(comment)
     column  = tk[:char_no]
     line_no = tk[:line_no]
@@ -1204,7 +1204,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Parses an +include+ or +extend+, indicated by the +klass+ and adds it to
   # +container+ # with +comment+
 
-  def parse_extend_or_include klass, container, comment # :nodoc:
+  def parse_extend_or_include(klass, container, comment) # :nodoc:
     loop do
       skip_tkspace_comment
 
@@ -1224,7 +1224,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Parses an +included+ with a block feature of ActiveSupport::Concern.
 
-  def parse_included_with_activesupport_concern container, comment # :nodoc:
+  def parse_included_with_activesupport_concern(container, comment) # :nodoc:
     skip_tkspace_without_nl
     tk = get_tk
     unless tk[:kind] == :on_lbracket || (tk[:kind] == :on_kw && tk[:text] == 'do')
@@ -1242,7 +1242,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   #
   # Returns true if the comment was not consumed.
 
-  def parse_identifier container, single, tk, comment # :nodoc:
+  def parse_identifier(container, single, tk, comment) # :nodoc:
     case tk[:text]
     when 'private', 'protected', 'public', 'private_class_method',
          'public_class_method', 'module_function' then
@@ -1385,7 +1385,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # determine the name while +tk+ is used in an error message if the name
   # cannot be determined.
 
-  def parse_meta_method_name comment, tk # :nodoc:
+  def parse_meta_method_name(comment, tk) # :nodoc:
     if comment.text.sub!(/^# +:?method: *(\S*).*?\n/i, '') then
       return $1 unless $1.empty?
     end
@@ -1409,7 +1409,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Parses the parameters and block for a meta-programmed method.
 
-  def parse_meta_method_params container, single, meth, tk, comment # :nodoc:
+  def parse_meta_method_params(container, single, meth, tk, comment) # :nodoc:
     token_listener meth do
       meth.params = ''
 
@@ -1495,7 +1495,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Parses the parameters and body of +meth+
 
-  def parse_method_params_and_body container, single, meth, added_container
+  def parse_method_params_and_body(container, single, meth, added_container)
     token_listener meth do
       parse_method_parameters meth
 
@@ -1525,7 +1525,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Parses a method that needs to be ignored.
 
-  def parse_method_dummy container
+  def parse_method_dummy(container)
     dummy = RDoc::Context.new
     dummy.parent = container
     dummy.store  = container.store
@@ -1538,7 +1538,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Returns the method name, the container it is in (for def Foo.name) and if
   # it is a singleton or regular method.
 
-  def parse_method_name container # :nodoc:
+  def parse_method_name(container) # :nodoc:
     skip_tkspace
     name_t = get_tk
     back_tk = skip_tkspace_without_nl
@@ -1565,7 +1565,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # For the given +container+ and initial name token +name_t+ the method name
   # is parsed from the token stream for a regular method.
 
-  def parse_method_name_regular container, name_t # :nodoc:
+  def parse_method_name_regular(container, name_t) # :nodoc:
     if :on_op == name_t[:kind] && (%w{* & [] []= <<}.include?(name_t[:text])) then
       name_t[:text]
     else
@@ -1583,7 +1583,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # and the new +container+ (if necessary) are parsed from the token stream
   # for a singleton method.
 
-  def parse_method_name_singleton container, name_t # :nodoc:
+  def parse_method_name_singleton(container, name_t) # :nodoc:
     skip_tkspace
     name_t2 = get_tk
 
@@ -1694,7 +1694,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   #
   # and add this as the block_params for the method
 
-  def parse_method_parameters method
+  def parse_method_parameters(method)
     res = parse_method_or_yield_parameters method
 
     res = "(#{res})" unless res =~ /\A\(/
@@ -1709,7 +1709,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Parses an RDoc::NormalModule in +container+ with +comment+
 
-  def parse_module container, single, tk, comment
+  def parse_module(container, single, tk, comment)
     container, name_t, = get_class_or_module container
 
     name = name_t[:text]
@@ -1989,7 +1989,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Parses up to +no+ symbol arguments surrounded by () and places them in
   # +args+.
 
-  def parse_symbol_arg_paren no # :nodoc:
+  def parse_symbol_arg_paren(no) # :nodoc:
     args = []
 
     loop do
@@ -2017,7 +2017,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Parses up to +no+ symbol arguments separated by spaces and places them in
   # +args+.
 
-  def parse_symbol_arg_space no, tk # :nodoc:
+  def parse_symbol_arg_space(no, tk) # :nodoc:
     args = []
 
     unget_tk tk
@@ -2065,7 +2065,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Parses statements in the top-level +container+
 
-  def parse_top_level_statements container
+  def parse_top_level_statements(container)
     comment = collect_first_comment
 
     look_for_directives_in container, comment
@@ -2143,7 +2143,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # the name is in +allowed+.  A directive can be found anywhere up to the end
   # of the current line.
 
-  def read_directive allowed
+  def read_directive(allowed)
     tokens = []
 
     while tk = get_tk do
@@ -2175,7 +2175,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   #
   # See also RDoc::Markup::PreProcess#handle_directive
 
-  def read_documentation_modifiers context, allowed
+  def read_documentation_modifiers(context, allowed)
     skip_tkspace_without_nl
     directive, value = read_directive allowed
 
@@ -2194,7 +2194,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Records the location of this +container+ in the file for this parser and
   # adds it to the list of classes and modules in the file.
 
-  def record_location container # :nodoc:
+  def record_location(container) # :nodoc:
     case container
     when RDoc::ClassModule then
       @top_level.add_to_classes_or_modules container
@@ -2305,7 +2305,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Skips the next method in +container+
 
-  def skip_method container
+  def skip_method(container)
     meth = RDoc::AnyMethod.new "", "anon"
     parse_method_parameters meth
     parse_statements container, false, meth
@@ -2326,7 +2326,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Updates visibility in +container+ from +vis_type+ and +vis+.
 
-  def update_visibility container, vis_type, vis, singleton # :nodoc:
+  def update_visibility(container, vis_type, vis, singleton) # :nodoc:
     new_methods = []
 
     case vis_type
@@ -2371,7 +2371,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Prints +message+ to +$stderr+ unless we're being quiet
 
-  def warn message
+  def warn(message)
     @options.warn make_message message
   end
 
