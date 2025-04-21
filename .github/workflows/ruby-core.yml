@@ -43,6 +43,11 @@ jobs:
           sudo apt-get install --no-install-recommends -q -y build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm-dev bison autoconf ruby
       - name: Build Ruby
         run: |
+          # Download the required auxiliary files for autoconf
+          # This is necessary because autoconf 2.71+ (included in Ubuntu latest)
+          # fails with "cannot find required auxiliary files" error
+          # These files (config.guess and config.sub) are needed for system detection
+          ruby tool/downloader.rb -d tool -e gnu config.guess config.sub
           autoconf
           ./configure -C --disable-install-doc
         working-directory: ruby/ruby
