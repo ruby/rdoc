@@ -241,6 +241,18 @@ class TestRDocRubyGemsHook < Test::Unit::TestCase
     assert_path_not_exist File.join(@a.doc_dir('ri'),   'cache.ri')
   end
 
+  def test_generate_with_ri_opt
+    @a.rdoc_options << '--ri'
+    FileUtils.mkdir_p @a.doc_dir
+    FileUtils.mkdir_p File.join(@a.gem_dir, 'lib')
+    @hook.generate_rdoc = true
+    @hook.generate_ri   = true
+    @hook.generate
+
+    assert_path_exist File.join(@a.doc_dir('rdoc'), 'index.html')
+    assert_path_exist File.join(@a.doc_dir('ri'),   'cache.ri')
+  end
+
   def test_new_rdoc
     assert_kind_of RDoc::RDoc, @hook.new_rdoc
   end
