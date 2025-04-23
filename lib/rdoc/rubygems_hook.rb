@@ -182,18 +182,21 @@ class RDoc::RubyGemsHook
       options.default_title = "#{@spec.full_name} Documentation"
       options.parse args
       options.quiet = !Gem.configuration.really_verbose
-      options.finish
     end
 
     @rdoc = new_rdoc
-    @rdoc.options = options
-
-    @rdoc.store = RDoc::Store.new(options)
 
     say "Parsing documentation for #{@spec.full_name}"
 
     Dir.chdir @spec.full_gem_path do
-      @rdoc.parse_files options.files
+      # RDoc::Options#finish must be called before parse_files.
+      # RDoc::Options#finish is also called after ri/darkfish generator setup.
+      # We need to dup the options to avoid modifying it after finish is called.
+      parse_options = options.dup
+      parse_options.finish
+      @rdoc.options = parse_options
+      @rdoc.store = RDoc::Store.new(parse_options)
+      @rdoc.parse_files parse_options.files
     end
 
     document 'ri',       options, @ri_dir if
