@@ -189,6 +189,9 @@ class RDoc::RubyGemsHook
     say "Parsing documentation for #{@spec.full_name}"
 
     Dir.chdir @spec.full_gem_path do
+      # RDoc::Options#finish must be called before parse_files.
+      # RDoc::Options#finish is also called after ri/darkfish generator setup.
+      # We need to dup the options to avoid modifying it after finish is called.
       parse_options = options.dup
       parse_options.finish
       @rdoc.options = parse_options
