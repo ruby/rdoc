@@ -98,11 +98,10 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
       gen_url CGI.escapeHTML(url), CGI.escapeHTML(text)
     when /^rdoc-image:/
-      # Split the string after "rdoc-image:" into url and alt
-      url_alt = $'
-      split_pos = url_alt.index(%r{:[^/]})
-      url = split_pos ? url_alt[0, split_pos] : url_alt
-      alt = split_pos ? url_alt[split_pos + 1, url_alt.size] : nil
+     # Split the string after "rdoc-image:" into url and alt.
+      #   "path/to/image.jpg:alt text" => ["path/to/image.jpg", "alt text"]
+      #   "http://example.com/path/to/image.jpg:alt text" => ["http://example.com/path/to/image.jpg", "alt text"]
+      url, alt = $'.split(/:(?!\/)/, 2)
       if alt && !alt.empty?
         %[<img src="#{CGI.escapeHTML(url)}" alt="#{CGI.escapeHTML(alt)}">]
       else
