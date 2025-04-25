@@ -749,6 +749,36 @@ EXPECTED
     assert_not_include result, "<script>"
   end
 
+  def test_convert_TIDYLINK_image_with_alt
+    result =
+      @to.convert '{rdoc-image:path/to/image.jpg:alt text}[http://example.com]'
+
+    expected =
+      "\n<p><a href=\"http://example.com\"><img src=\"path/to/image.jpg\" alt=\"alt text\"></a></p>\n"
+
+    assert_equal expected, result
+  end
+
+  def test_convert_TIDYLINK_image_external
+    result =
+      @to.convert '{rdoc-image:http://example.com/path/to/image.jpg}[http://example.com]'
+
+    expected =
+      "\n<p><a href=\"http://example.com\"><img src=\"http://example.com/path/to/image.jpg\"></a></p>\n"
+
+    assert_equal expected, result
+  end
+
+  def test_convert_TIDYLINK_image_external_with_alt
+    result =
+      @to.convert '{rdoc-image:http://example.com/path/to/image.jpg:alt text}[http://example.com]'
+
+    expected =
+      "\n<p><a href=\"http://example.com\"><img src=\"http://example.com/path/to/image.jpg\" alt=\"alt text\"></a></p>\n"
+
+    assert_equal expected, result
+  end
+
   def test_convert_TIDYLINK_rdoc_label
     result = @to.convert '{foo}[rdoc-label:foottext-1]'
 
