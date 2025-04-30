@@ -1,6 +1,11 @@
 name: Lint
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - '**'
+      - '!dependabot/**'
+  pull_request:
 
 permissions:  # added using https://github.com/step-security/secure-workflows
   contents: read
