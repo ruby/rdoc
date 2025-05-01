@@ -449,7 +449,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     )
   end
 
-  def test_meta_tags_for_markdwon_files_paragraph
+  def test_meta_tags_for_markdown_files_paragraph
     top_level = @store.add_file("README.md", parser: RDoc::Parser::Simple)
     top_level.comment = <<~MARKDOWN
       # Distributed Ruby: dRuby
