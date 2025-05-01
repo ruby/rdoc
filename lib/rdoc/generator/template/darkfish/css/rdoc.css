@@ -96,6 +96,8 @@ main .anchor-link:target {
 a {
   color: var(--link-color);
   transition: color 0.3s ease;
+  text-decoration: underline;
+  text-underline-offset: 0.2em; /* Make sure it doesn't overlap with underscores in a method name. */
 }
 
 a:hover {
