@@ -595,7 +595,7 @@ class RDoc::Generator::Darkfish
     <<-TEMPLATE
 <!DOCTYPE html>
 
-<html>
+<html lang="#{@options.locale&.name || 'en'}">
 <head>
 #{head_file.read}
 

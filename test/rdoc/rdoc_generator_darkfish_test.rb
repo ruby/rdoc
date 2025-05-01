@@ -388,6 +388,21 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     assert_include File.binread('index.html'), %Q[href="./#{base}"]
   end
 
+  def test_html_lang
+    @g.generate
+
+    content = File.binread("index.html")
+    assert_include(content, '<html lang="en">')
+  end
+
+  def test_html_lang_from_locale
+    @options.locale = RDoc::I18n::Locale.new 'ja'
+    @g.generate
+
+    content = File.binread("index.html")
+    assert_include(content, '<html lang="ja">')
+  end
+
   def test_title
     title = "RDoc Test".freeze
     @options.title = title
