@@ -373,6 +373,11 @@ class RDoc::Options
 
   attr_accessor :file_path_prefix
 
+  ##
+  # The preferred root URL for the documentation
+
+  attr_accessor :canonical_root
+
   def initialize(loaded_options = nil) # :nodoc:
     init_ivars
     override loaded_options if loaded_options
@@ -429,6 +434,7 @@ class RDoc::Options
     @apply_default_exclude = true
     @class_module_path_prefix = nil
     @file_path_prefix = nil
+    @canonical_root = nil
   end
 
   def init_with(map) # :nodoc:
@@ -492,6 +498,7 @@ class RDoc::Options
     @webcvs         = map['webcvs']         if map.has_key?('webcvs')
     @autolink_excluded_words = map['autolink_excluded_words'] if map.has_key?('autolink_excluded_words')
     @apply_default_exclude = map['apply_default_exclude'] if map.has_key?('apply_default_exclude')
+    @canonical_root = map['canonical_root'] if map.has_key?('canonical_root')
 
     @warn_missing_rdoc_ref = map['warn_missing_rdoc_ref'] if map.has_key?('warn_missing_rdoc_ref')
 

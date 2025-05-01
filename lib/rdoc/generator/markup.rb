@@ -55,6 +55,18 @@ module RDoc::Generator::Markup
     end
   end
 
+  ##
+  # The preferred URL for this object.
+
+  def canonical_url
+    options = @store.options
+    if path
+      File.join(options.canonical_root, path.to_s)
+    else
+      options.canonical_root
+    end
+  end
+
 end
 
 class RDoc::CodeObject
