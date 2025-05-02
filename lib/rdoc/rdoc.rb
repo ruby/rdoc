@@ -72,6 +72,11 @@ class RDoc::RDoc
   attr_accessor :store
 
   ##
+  # Event registry for RDoc plugins
+
+  attr_accessor :event_registry
+
+  ##
   # Add +klass+ that can generate output after parsing
 
   def self.add_generator(klass)
@@ -105,6 +110,7 @@ class RDoc::RDoc
     @options       = nil
     @stats         = nil
     @store         = nil
+    @event_registry = ::RDoc::EventRegistry.new
   end
 
   ##
@@ -449,6 +455,9 @@ The internal error was:
     end
     @options.finish
 
+    ::RDoc::BasePlugin.activate_with(self)
+    @options.load_plugins
+
     @store = RDoc::Store.new(@options)
 
     if @options.pipe then
@@ -469,6 +478,7 @@ The internal error was:
     @options.default_title = "RDoc Documentation"
 
     @store.complete @options.visibility
+    @event_registry.trigger :rdoc_store_complete, @store
 
     @stats.coverage_level = @options.coverage_report
 

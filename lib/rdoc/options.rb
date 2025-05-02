@@ -269,6 +269,11 @@ class RDoc::Options
   attr_accessor :pipe
 
   ##
+  # Currently enabled plugins
+
+  attr_reader :plugins
+
+  ##
   # Array of directories to search for files to satisfy an :include:
 
   attr_accessor :rdoc_include
@@ -405,6 +410,7 @@ class RDoc::Options
     @coverage_report = false
     @op_dir = nil
     @page_dir = nil
+    @plugins = []
     @pipe = false
     @output_decoration = true
     @rdoc_include = []
@@ -448,6 +454,7 @@ class RDoc::Options
     @main_page      = map['main_page']
     @markup         = map['markup']
     @op_dir         = map['op_dir']
+    @plugins        = map['plugins']
     @show_hash      = map['show_hash']
     @tab_width      = map['tab_width']
     @template_dir   = map['template_dir']
@@ -515,6 +522,7 @@ class RDoc::Options
       @main_page      == other.main_page      and
       @markup         == other.markup         and
       @op_dir         == other.op_dir         and
+      @plugins        == other.plugins        and
       @rdoc_include   == other.rdoc_include   and
       @show_hash      == other.show_hash      and
       @static_path    == other.static_path    and
@@ -876,6 +884,12 @@ Usage: #{opt.program_name} [options] [names...]
       opt.on("--pipe", "-p",
              "Convert RDoc on stdin to HTML") do
         @pipe = true
+      end
+
+      opt.separator nil
+
+      opt.on("--plugins=PLUGINS", "-P", Array, "Use plugins") do |value|
+        @plugins.concat value
       end
 
       opt.separator nil
@@ -1353,6 +1367,16 @@ Usage: #{opt.program_name} [options] [names...]
       @visibility = :private
     else
       @visibility = visibility
+    end
+  end
+
+  # Load plugins specified with options
+  # Currently plugin search logic is very simple, but it's not practical.
+  # TODO: We will improve this later.
+
+  def load_plugins
+    @plugins.each do |plugin_name|
+      require_relative "./#{plugin_name}.rb"
     end
   end
 
