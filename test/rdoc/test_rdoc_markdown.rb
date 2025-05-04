@@ -5,7 +5,7 @@ require_relative 'helper'
 require_relative '../../lib/rdoc/markup/block_quote'
 require_relative '../../lib/rdoc/markdown'
 
-class TestRDocMarkdown < RDoc::TestCase
+class RDocMarkdownTest < RDoc::TestCase
 
   def setup
     super

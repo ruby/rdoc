@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'xref_test_case'
 
-class TestRDocStore < XrefTestCase
+class RDocStoreTest < XrefTestCase
 
   OBJECT_ANCESTORS = %w[BasicObject]
 

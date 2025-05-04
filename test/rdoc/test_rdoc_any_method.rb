@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'xref_test_case'
 
-class TestRDocAnyMethod < XrefTestCase
+class RDocAnyMethodTest < XrefTestCase
 
   def test_aref
     m = RDoc::AnyMethod.new nil, 'method?'

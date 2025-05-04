@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocMarkupParagraph < RDoc::TestCase
+class RDocMarkupParagraphTest < RDoc::TestCase
 
   def test_accept
     visitor = Object.new

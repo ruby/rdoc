@@ -3,7 +3,7 @@
 require_relative 'helper'
 require 'timeout'
 
-class TestRDocText < RDoc::TestCase
+class RDocTextTest < RDoc::TestCase
 
   include RDoc::Text
 

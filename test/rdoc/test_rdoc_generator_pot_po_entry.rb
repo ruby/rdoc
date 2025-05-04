@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocGeneratorPOTPOEntry < RDoc::TestCase
+class RDocGeneratorPOTPOEntryTest < RDoc::TestCase
 
   def test_msgid_normal
     assert_equal <<-'ENTRY', entry("Hello", {}).to_s

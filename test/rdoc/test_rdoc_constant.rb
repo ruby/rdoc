@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'xref_test_case'
 
-class TestRDocConstant < XrefTestCase
+class RDocConstantTest < XrefTestCase
 
   def setup
     super

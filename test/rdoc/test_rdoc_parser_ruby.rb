@@ -4,7 +4,7 @@ require_relative 'helper'
 
 return if ENV['RDOC_USE_PRISM_PARSER']
 
-class TestRDocParserRuby < RDoc::TestCase
+class RDocParserRubyTest < RDoc::TestCase
 
   def setup
     super

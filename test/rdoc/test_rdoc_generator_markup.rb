@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocGeneratorMarkup < RDoc::TestCase
+class RDocGeneratorMarkupTest < RDoc::TestCase
 
   include RDoc::Text
   include RDoc::Generator::Markup

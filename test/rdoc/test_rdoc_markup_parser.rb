@@ -3,7 +3,7 @@
 
 require_relative 'helper'
 
-class TestRDocMarkupParser < RDoc::TestCase
+class RDocMarkupParserTest < RDoc::TestCase
 
   def setup
     super

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocMarkupToLabel < RDoc::Markup::FormatterTestCase
+class RDocMarkupToLabelTest < RDoc::Markup::FormatterTestCase
 
   add_visitor_tests
 

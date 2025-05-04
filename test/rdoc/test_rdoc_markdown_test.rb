@@ -5,7 +5,7 @@ require 'pp'
 require_relative '../../lib/rdoc'
 require_relative '../../lib/rdoc/markdown'
 
-class TestRDocMarkdownTest < RDoc::TestCase
+class RDocMarkdownTestTest < RDoc::TestCase
 
   MARKDOWN_TEST_PATH = File.expand_path '../MarkdownTest_1.0.3/', __FILE__
 

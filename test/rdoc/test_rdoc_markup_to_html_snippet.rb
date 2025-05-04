@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocMarkupToHtmlSnippet < RDoc::Markup::FormatterTestCase
+class RDocMarkupToHtmlSnippetTest < RDoc::Markup::FormatterTestCase
 
   add_visitor_tests
 

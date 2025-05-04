@@ -5,7 +5,7 @@ begin
 rescue LoadError
 end
 
-class TestRDocTask < RDoc::TestCase
+class RDocTaskTest < RDoc::TestCase
 
   def setup
     super

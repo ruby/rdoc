@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocMarkupAttributes < RDoc::TestCase
+class RDocMarkupAttributesTest < RDoc::TestCase
 
   def setup
     super

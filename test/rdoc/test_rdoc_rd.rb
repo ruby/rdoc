@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocRd < RDoc::TestCase
+class RDocRdTest < RDoc::TestCase
 
   def test_class_parse
     expected =

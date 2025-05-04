@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocMarkupFormatter < RDoc::TestCase
+class RDocMarkupFormatterTest < RDoc::TestCase
 
   class ToTest < RDoc::Markup::Formatter
 

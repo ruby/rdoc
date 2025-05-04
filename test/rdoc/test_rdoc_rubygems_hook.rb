@@ -5,7 +5,7 @@ require 'tmpdir'
 require_relative '../../lib/rdoc/rubygems_hook'
 require 'test/unit'
 
-class TestRDocRubyGemsHook < Test::Unit::TestCase
+class RDocRubyGemsHookTest < Test::Unit::TestCase
   def setup
     @a = Gem::Specification.new do |s|
       s.platform    = Gem::Platform::RUBY

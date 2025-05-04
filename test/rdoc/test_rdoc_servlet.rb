@@ -5,7 +5,7 @@ begin
 rescue LoadError
 end
 
-class TestRDocServlet < RDoc::TestCase
+class RDocServletTest < RDoc::TestCase
 
   def setup
     super

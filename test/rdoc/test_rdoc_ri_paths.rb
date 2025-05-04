@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocRIPaths < RDoc::TestCase
+class RDocRIPathsTest < RDoc::TestCase
 
   def setup
     super

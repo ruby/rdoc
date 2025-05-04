@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocMarkup < RDoc::TestCase
+class RDocMarkupTest < RDoc::TestCase
 
   def test_class_parse
     expected = @RM::Document.new(

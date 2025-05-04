@@ -3,7 +3,7 @@
 
 require_relative 'helper'
 
-class TestRDocEncoding < RDoc::TestCase
+class RDocEncodingTest < RDoc::TestCase
 
   def setup
     super

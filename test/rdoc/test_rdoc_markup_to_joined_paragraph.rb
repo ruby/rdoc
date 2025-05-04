@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocMarkupToJoinedParagraph < RDoc::TestCase
+class RDocMarkupToJoinedParagraphTest < RDoc::TestCase
 
   def setup
     super

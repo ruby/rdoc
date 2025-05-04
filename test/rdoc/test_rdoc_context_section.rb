@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocContextSection < RDoc::TestCase
+class RDocContextSectionTest < RDoc::TestCase
 
   def setup
     super

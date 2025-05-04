@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocMarkupVerbatim < RDoc::TestCase
+class RDocMarkupVerbatimTest < RDoc::TestCase
 
   def test_equals2
     v1 = verb('1 + 1')

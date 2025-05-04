@@ -41,7 +41,7 @@ assert call-seq correct
 
 =end
 
-class TestRDocParserC < RDoc::TestCase
+class RDocParserCTest < RDoc::TestCase
 
   def setup
     super

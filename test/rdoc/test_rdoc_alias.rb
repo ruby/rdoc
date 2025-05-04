@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'xref_test_case'
 
-class TestRDocAlias < XrefTestCase
+class RDocAliasTest < XrefTestCase
 
   def test_to_s
     a = RDoc::Alias.new nil, 'a', 'b', ''

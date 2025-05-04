@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocMarkupToTtOnly < RDoc::Markup::FormatterTestCase
+class RDocMarkupToTtOnlyTest < RDoc::Markup::FormatterTestCase
 
   add_visitor_tests
 

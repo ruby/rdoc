@@ -2137,7 +2137,7 @@ module RDocParserPrismTestCases
   end
 end
 
-class TestRDocParserPrismRuby < RDoc::TestCase
+class RDocParserPrismRubyTest < RDoc::TestCase
   include RDocParserPrismTestCases
 
   def accept_legacy_bug?
@@ -2151,7 +2151,7 @@ class TestRDocParserPrismRuby < RDoc::TestCase
 end
 
 # Run the same test with the original RDoc::Parser::Ruby
-class TestRDocParserRubyWithPrismRubyTestCases < RDoc::TestCase
+class RDocParserRubyWithPrismRubyTestCasesTest < RDoc::TestCase
   include RDocParserPrismTestCases
 
   def accept_legacy_bug?

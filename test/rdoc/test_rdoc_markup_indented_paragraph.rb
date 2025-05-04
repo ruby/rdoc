@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocMarkupIndentedParagraph < RDoc::TestCase
+class RDocMarkupIndentedParagraphTest < RDoc::TestCase
 
   def setup
     super

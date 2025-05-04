@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocI18nText < RDoc::TestCase
+class RDocI18nTextTest < RDoc::TestCase
 
   def test_multiple_paragraphs
     paragraph1 = <<-PARAGRAPH.strip

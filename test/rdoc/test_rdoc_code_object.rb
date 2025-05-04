@@ -3,7 +3,7 @@
 
 require_relative 'xref_test_case'
 
-class TestRDocCodeObject < XrefTestCase
+class RDocCodeObjectTest < XrefTestCase
 
   def setup
     super

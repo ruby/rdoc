@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocAttr < RDoc::TestCase
+class RDocAttrTest < RDoc::TestCase
 
   def setup
     super

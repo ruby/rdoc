@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'xref_test_case'
 
-class TestRDocNormalClass < XrefTestCase
+class RDocNormalClassTest < XrefTestCase
 
   def test_ancestors
     klass = @top_level.add_class RDoc::NormalClass, 'Klass'

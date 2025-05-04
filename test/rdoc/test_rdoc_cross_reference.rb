@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'xref_test_case'
 
-class TestRDocCrossReference < XrefTestCase
+class RDocCrossReferenceTest < XrefTestCase
   EXAMPLE_METHODS = %w'== === != =~ !~ < > <= >= <=> [] []= << >>
     -@ +@ ! - + * / % ** !@ ` | & ^ ~ __id__
   '

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'helper'
 
-class TestRDocTokenStream < RDoc::TestCase
+class RDocTokenStreamTest < RDoc::TestCase
 
   def test_class_to_html
     tokens = [

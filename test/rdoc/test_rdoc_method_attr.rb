@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative 'xref_test_case'
 
-class TestRDocMethodAttr < XrefTestCase
+class RDocMethodAttrTest < XrefTestCase
 
   def test_initialize_copy
     refute_same @c1_m.full_name, @c1_m.dup.full_name

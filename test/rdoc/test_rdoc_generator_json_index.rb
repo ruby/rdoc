@@ -3,7 +3,7 @@
 
 require_relative 'helper'
 
-class TestRDocGeneratorJsonIndex < RDoc::TestCase
+class RDocGeneratorJsonIndexTest < RDoc::TestCase
 
   def setup
     super
