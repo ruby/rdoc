@@ -38,13 +38,13 @@ end
 Rake::TestTask.new(:normal_test) do |t|
   t.verbose = true
   t.deps = :generate
-  t.test_files = FileList["test/**/test_*.rb"].exclude("test/rdoc/test_rdoc_rubygems_hook.rb")
+  t.test_files = FileList["test/**/*_test.rb"].exclude("test/rdoc/rdoc_rubygems_hook_test.rb")
 end
 
 Rake::TestTask.new(:rubygems_test) do |t|
   t.verbose = true
   t.deps = :generate
-  t.pattern = "test/rdoc/test_rdoc_rubygems_hook.rb"
+  t.pattern = "test/rdoc/rdoc_rubygems_hook_test.rb"
 end
 
 path = "pkg/#{Bundler::GemHelper.gemspec.full_name}"
