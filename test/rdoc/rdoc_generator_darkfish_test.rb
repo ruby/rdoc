@@ -514,6 +514,39 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     )
   end
 
+  def test_canonical_url_for_index
+    @store.options.canonical_root = @options.canonical_root = "https://docs.ruby-lang.org/en/master/"
+    @g.generate
+
+    content = File.binread("index.html")
+
+    assert_include(content, '<link rel="canonical" href="https://docs.ruby-lang.org/en/master/">')
+  end
+
+  def test_canonical_url_for_classes
+    top_level = @store.add_file("file.rb")
+    top_level.add_class(@klass.class, @klass.name)
+    inner = @klass.add_class(RDoc::NormalClass, "Inner")
+
+    @store.options.canonical_root = @options.canonical_root = "https://docs.ruby-lang.org/en/master/"
+    @g.generate
+
+    content = File.binread("Klass/Inner.html")
+
+    assert_include(content, '<link rel="canonical" href="https://docs.ruby-lang.org/en/master/Klass/Inner.html">')
+  end
+
+  def test_canonical_url_for_rdoc_files
+    top_level = @store.add_file("CONTRIBUTING.rdoc", parser: RDoc::Parser::Simple)
+
+    @store.options.canonical_root = @options.canonical_root = "https://docs.ruby-lang.org/en/master/"
+    @g.generate
+
+    content = File.binread("CONTRIBUTING_rdoc.html")
+
+    assert_include(content, '<link rel="canonical" href="https://docs.ruby-lang.org/en/master/CONTRIBUTING_rdoc.html">')
+  end
+
   ##
   # Asserts that +filename+ has a link count greater than 1 if hard links to
   # @tmpdir are supported.

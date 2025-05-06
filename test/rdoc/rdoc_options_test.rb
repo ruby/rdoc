@@ -89,6 +89,7 @@ class RDocOptionsTest < RDoc::TestCase
       'autolink_excluded_words' => [],
       'class_module_path_prefix' => nil,
       'file_path_prefix' => nil,
+      'canonical_root' => nil,
     }
 
     assert_equal expected, coder
