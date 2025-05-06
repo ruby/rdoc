@@ -69,7 +69,7 @@ class RDocRDocTest < RDoc::TestCase
 
   def test_gather_files
     a = File.expand_path __FILE__
-    b = File.expand_path '../test_rdoc_text.rb', __FILE__
+    b = File.expand_path '../rdoc_text_test.rb', __FILE__
 
     assert_equal [a, b], @rdoc.gather_files([b, a, b])
 
