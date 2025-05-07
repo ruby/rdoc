@@ -579,11 +579,6 @@ main .method-detail {
   margin-bottom: 2.5em;
 }
 
-main .method-detail:target {
-  margin-left: -10px;
-  border-left: 10px solid var(--border-color);
-}
-
 main .method-header {
   display: inline-block;
 }
