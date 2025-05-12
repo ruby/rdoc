@@ -1,5 +1,7 @@
 # frozen_string_literal: true
-require 'cgi/util'
+require 'cgi/escape'
+# For CGI.unescape on earlier rubies
+require 'cgi/util' if RUBY_VERSION < '3.5'
 
 ##
 # Outputs RDoc markup as HTML.

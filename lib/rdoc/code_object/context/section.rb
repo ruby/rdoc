@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'cgi/util'
+require 'cgi/escape'
 
 ##
 # A section of documentation like:
