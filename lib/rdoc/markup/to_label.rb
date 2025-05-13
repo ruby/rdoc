@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'cgi/util'
+require 'cgi/escape'
 
 ##
 # Creates HTML-safe labels suitable for use in id attributes.  Tidylinks are
