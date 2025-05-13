@@ -120,7 +120,7 @@ require_relative 'ripper_state_lex'
 #   # :singleton-method: some_method!
 #
 # You can define arguments for metaprogrammed methods via either the
-# :call-seq:, :arg: or :args: directives.
+# \:call-seq:, :arg: or :args: directives.
 #
 # Additionally you can mark a method as an attribute by
 # using :attr:, :attr_reader:, :attr_writer: or :attr_accessor:.  Just like
@@ -1088,7 +1088,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   ##
   # Generates an RDoc::Method or RDoc::Attr from +comment+ by looking for
-  # :method: or :attr: directives in +comment+.
+  # \:method: or :attr: directives in +comment+.
 
   def parse_comment(container, tk, comment)
     return parse_comment_tomdoc container, tk, comment if @markup == 'tomdoc'

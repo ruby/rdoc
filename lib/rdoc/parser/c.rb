@@ -607,8 +607,6 @@ class RDoc::Parser::C < RDoc::Parser
       body = args[1]
       offset, = args[2]
 
-      comment.remove_private if comment
-
       # try to find the whole body
       body = $& if /#{Regexp.escape body}[^(]*?\{.*?^\}/m =~ file_content
 
@@ -621,7 +619,6 @@ class RDoc::Parser::C < RDoc::Parser
       override_comment = find_override_comment class_name, meth_obj
       comment = override_comment if override_comment
 
-      comment.normalize
       find_modifiers comment, meth_obj if comment
 
       #meth_obj.params = params
@@ -639,7 +636,6 @@ class RDoc::Parser::C < RDoc::Parser
 
       find_body class_name, args[3], meth_obj, file_content, true
 
-      comment.normalize
       find_modifiers comment, meth_obj
 
       meth_obj.start_collecting_tokens
@@ -663,7 +659,6 @@ class RDoc::Parser::C < RDoc::Parser
       comment = find_override_comment class_name, meth_obj
 
       if comment then
-        comment.normalize
         find_modifiers comment, meth_obj
         meth_obj.comment = comment
 
@@ -742,7 +737,6 @@ class RDoc::Parser::C < RDoc::Parser
     end
 
     comment = new_comment comment, @top_level, :c
-    comment.normalize
 
     look_for_directives_in class_mod, comment
 
@@ -807,9 +801,6 @@ class RDoc::Parser::C < RDoc::Parser
   # Handles modifiers in +comment+ and updates +meth_obj+ as appropriate.
 
   def find_modifiers(comment, meth_obj)
-    comment.normalize
-    meth_obj.call_seq = comment.extract_call_seq
-
     look_for_directives_in meth_obj, comment
   end
 
@@ -823,10 +814,10 @@ class RDoc::Parser::C < RDoc::Parser
     comment = if @content =~ %r%Document-method:
                                 \s+#{class_name}#{prefix}#{name}
                                 \s*?\n((?>.*?\*/))%xm then
-                "/*#{$1}"
+                "/*\n#{$1}"
               elsif @content =~ %r%Document-method:
                                    \s#{name}\s*?\n((?>.*?\*/))%xm then
-                "/*#{$1}"
+                "/*\n#{$1}"
               end
 
     return unless comment
@@ -1102,35 +1093,10 @@ class RDoc::Parser::C < RDoc::Parser
   # Both :main: and :title: directives are deprecated and will be removed in RDoc 7.
 
   def look_for_directives_in(context, comment)
-    @preprocess.handle comment, context do |directive, param|
-      case directive
-      when 'main' then
-        @options.main_page = param
-
-        warn <<~MSG
-          The :main: directive is deprecated and will be removed in RDoc 7.
-
-          You can use these options to specify the initial page displayed instead:
-          - `--main=#{param}` via the command line
-          - `rdoc.main = "#{param}"` if you use `RDoc::Task`
-          - `main_page: #{param}` in your `.rdoc_options` file
-        MSG
-        ''
-      when 'title' then
-        @options.default_title = param if @options.respond_to? :default_title=
-
-        warn <<~MSG
-          The :title: directive is deprecated and will be removed in RDoc 7.
-
-          You can use these options to specify the title displayed instead:
-          - `--title=#{param}` via the command line
-          - `rdoc.title = "#{param}"` if you use `RDoc::Task`
-          - `title: #{param}` in your `.rdoc_options` file
-        MSG
-        ''
-      end
-    end
-
+    comment.text, format = @preprocess.run_pre_processes(comment.text, context, comment.line || 1, :c)
+    comment.format = format if format
+    @preprocess.run_post_processes(comment, context)
+    comment.normalized = true
     comment
   end
 
