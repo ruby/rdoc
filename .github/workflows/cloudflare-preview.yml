@@ -15,15 +15,13 @@ on:
         description: 'The repository to checkout (owner/repo)'
         required: true
         type: string
-      # Reusable workflow doesn't have directly access to secrets, so we need to pass them in as inputs
+    secrets:
       cloudflare_api_token:
         description: 'Cloudflare API Token'
         required: true
-        type: string
       cloudflare_account_id:
         description: 'Cloudflare Account ID'
         required: true
-        type: string
 
 permissions:
   pull-requests: write # To allow commenting on the PR
@@ -52,8 +50,8 @@ jobs:
         id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ inputs.cloudflare_api_token }}
-          accountId: ${{ inputs.cloudflare_account_id }}
+          apiToken: ${{ secrets.cloudflare_api_token }}
+          accountId: ${{ secrets.cloudflare_account_id }}
           command: pages deploy ./_site --project-name=rdoc --branch="${{ inputs.pr_number }}-preview"
 
       - name: Comment on PR with preview URL

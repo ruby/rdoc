@@ -13,6 +13,7 @@ jobs:
       pr_number: ${{ github.event.pull_request.number }}
       pr_head_sha: ${{ github.event.pull_request.head.sha }}
       pr_checkout_repository: ${{ github.repository }}
+    secrets:
       cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
@@ -36,5 +37,6 @@ jobs:
       pr_number: ${{ github.event.pull_request.number }}
       pr_head_sha: ${{ github.event.pull_request.head.sha }}
       pr_checkout_repository: ${{ github.event.pull_request.head.repo.full_name }}
+    secrets:
       cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN_FOR_FORKS }}
       cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID_FOR_FORKS }}
