@@ -43,7 +43,7 @@ jobs:
         run: bundle install
 
       - name: Build site
-        run: bundle exec rake build
+        run: bundle exec rake rdoc
 
       - name: Set PR Number
         id: pr_number
