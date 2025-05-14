@@ -72,6 +72,15 @@ jobs:
             const url = "${{ steps.deploy.outputs.deployment-url }}";
             const commentMarker = "🚀 Preview deployment available at:";
 
+            // Get commit SHA based on event type
+            let commitSha;
+            if ('${{ github.event_name }}' === 'pull_request') {
+              commitSha = '${{ github.event.pull_request.head.sha }}';
+            } else {
+              // For workflow_dispatch, get the SHA from the current commit
+              commitSha = '${{ github.sha }}';
+            }
+
             // Get all comments on the PR
             const comments = await github.rest.issues.listComments({
               issue_number: prNumber,
@@ -85,7 +94,7 @@ jobs:
               comment.body.includes(commentMarker)
             );
 
-            const commentBody = `${commentMarker} [${url}](${url})`;
+            const commentBody = `${commentMarker} [${url}](${url}) (commit: ${commitSha})`;
 
             if (existingComment) {
               // Update existing comment
