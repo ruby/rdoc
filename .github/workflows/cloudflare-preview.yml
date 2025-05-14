@@ -70,10 +70,39 @@ jobs:
           script: |
             const prNumber = ${{ env.PR_NUMBER }};
             const url = "${{ steps.deploy.outputs.deployment-url }}";
+            const commentMarker = "🚀 Preview deployment available at:";
 
-            await github.rest.issues.createComment({
+            // Get all comments on the PR
+            const comments = await github.rest.issues.listComments({
               issue_number: prNumber,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `🚀 Preview deployment available at: [${url}](${url})`
+              per_page: 100
             });
+
+            // Look for our previous bot comment
+            const existingComment = comments.data.find(comment =>
+              comment.body.includes(commentMarker)
+            );
+
+            const commentBody = `${commentMarker} [${url}](${url})`;
+
+            if (existingComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                comment_id: existingComment.id,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody
+              });
+              console.log("Updated existing preview comment");
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                issue_number: prNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody
+              });
+              console.log("Created new preview comment");
+            }

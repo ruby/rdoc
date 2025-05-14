@@ -13,23 +13,56 @@ jobs:
       - name: Comment on PR with manual deployment instructions
         uses: actions/github-script@v7
         with:
-          script: |
+          script: |-
             const prNumber = context.payload.pull_request.number;
             const workflowUrl = `https://github.com/ruby/rdoc/actions/workflows/cloudflare-preview.yml`;
             const branch = context.payload.pull_request.head.ref;
+            const commentMarker = "## Cloudflare Preview Deployment";
 
             // Create a direct link that pre-fills the PR number input
             const dispatchUrl = `${workflowUrl}/dispatch?ref=main&inputs%5Bpull_request_number%5D=${prNumber}`;
 
-            await github.rest.issues.createComment({
+            // Get all comments on the PR
+            const comments = await github.rest.issues.listComments({
               issue_number: prNumber,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `## Cloudflare Preview Deployment
-⚠️ This PR is from a fork, so the preview deployment workflow doesn't run automatically for security reasons.
-If you're a maintainer and want to preview this PR:
-
-[➡️ Click here to run the workflow with PR #${prNumber} pre-filled](${dispatchUrl})
-
-This will trigger a Cloudflare Pages preview deployment for this PR.`
+              per_page: 100
             });
+
+            // Look for our previous bot comment
+            const existingComment = comments.data.find(comment =>
+              comment.body.includes(commentMarker)
+            );
+
+            const messageLines = [
+              `${commentMarker}`,
+              `⚠️ This PR is from a fork, so the preview deployment workflow doesn't run automatically for security reasons.`,
+              `If you're a maintainer and want to preview this PR:`,
+              ``,
+              `[➡️ Click here to run the workflow with PR #${prNumber} pre-filled](${dispatchUrl})`,
+              ``,
+              `This will trigger a Cloudflare Pages preview deployment for this PR.`
+            ];
+
+            const commentBody = messageLines.join('\n');
+
+            if (existingComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                comment_id: existingComment.id,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody
+              });
+              console.log("Updated existing fork PR comment");
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                issue_number: prNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody
+              });
+              console.log("Created new fork PR comment");
+            }
