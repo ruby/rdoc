@@ -1,0 +1,117 @@
+name: Cloudflare Pages Preview Deployment
+
+on:
+  # Runs automatically for PRs from ruby/rdoc
+  # Fork PRs will be filtered out by the if condition
+  pull_request:
+
+  # Allows manual triggering for fork PRs
+  workflow_dispatch:
+    inputs:
+      pull_request_number:
+        description: 'Pull Request Number (for fork PRs)'
+        required: true
+        type: string
+
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    # Skip if PR from fork and NOT manually triggered
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == 'ruby/rdoc' }}
+
+    steps:
+      - name: Checkout for PR from main repo
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Checkout for manually triggered fork PR
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+
+      - name: Install dependencies
+        run: bundle install
+
+      - name: Build site
+        run: bundle exec rake rdoc
+
+      - name: Set PR Number
+        id: pr_number
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+          else
+            echo "PR_NUMBER=${{ inputs.pull_request_number }}" >> $GITHUB_ENV
+          fi
+
+      # Deploy to Cloudflare Pages using wrangler-action
+      - name: Deploy to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./_site --project-name=rdoc --branch="${{ env.PR_NUMBER }}-preview"
+
+      # Comment on PR with preview URL - works for both regular PRs and fork PRs
+      - name: Comment on PR with preview URL
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = ${{ env.PR_NUMBER }};
+            const url = "${{ steps.deploy.outputs.deployment-url }}";
+            const commentMarker = "🚀 Preview deployment available at:";
+
+            // Get commit SHA based on event type
+            let commitSha;
+            if ('${{ github.event_name }}' === 'pull_request') {
+              commitSha = '${{ github.event.pull_request.head.sha }}';
+            } else {
+              // For workflow_dispatch, get the SHA from the current commit
+              commitSha = '${{ github.sha }}';
+            }
+
+            // Get all comments on the PR
+            const comments = await github.rest.issues.listComments({
+              issue_number: prNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100
+            });
+
+            // Look for our previous bot comment
+            const existingComment = comments.data.find(comment =>
+              comment.body.includes(commentMarker)
+            );
+
+            const commentBody = `${commentMarker} [${url}](${url}) (commit: ${commitSha})`;
+
+            if (existingComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                comment_id: existingComment.id,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody
+              });
+              console.log("Updated existing preview comment");
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                issue_number: prNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody
+              });
+              console.log("Created new preview comment");
+            }
