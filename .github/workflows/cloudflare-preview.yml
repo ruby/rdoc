@@ -30,7 +30,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' }}
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ github.sha }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Setup Ruby
