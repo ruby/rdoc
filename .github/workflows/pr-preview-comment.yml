@@ -26,12 +26,10 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: `## Cloudflare Preview Deployment
+⚠️ This PR is from a fork, so the preview deployment workflow doesn't run automatically for security reasons.
+If you're a maintainer and want to preview this PR:
 
-                ⚠️ This PR is from a fork, so the preview deployment workflow doesn't run automatically for security reasons.
+[➡️ Click here to run the workflow with PR #${prNumber} pre-filled](${dispatchUrl})
 
-                If you're a maintainer and want to preview this PR:
-
-                [➡️ Click here to run the workflow with PR #${prNumber} pre-filled](${dispatchUrl})
-
-                This will trigger a Cloudflare Pages preview deployment for this PR.`
+This will trigger a Cloudflare Pages preview deployment for this PR.`
             });
