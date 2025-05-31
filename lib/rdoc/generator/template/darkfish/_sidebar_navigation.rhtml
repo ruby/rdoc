@@ -1,6 +1,14 @@
 <div id="home-section" role="region" title="Quick navigation" class="nav-section">
   <h2>
     <a href="<%= rel_prefix %>/index.html" rel="home">Home</a>
+    <% if version_urls = @options.version_roots %>
+    <% version_urls = current.version_urls if defined?(current) %>
+    <select id="version-select">
+      <% version_urls.each do |version, url| %>
+        <option value="<%= url %>"><%= version %></option>
+      <% end %>
+    </select>
+    <% end %>
   </h2>
 
   <div id="table-of-contents-navigation">

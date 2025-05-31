@@ -67,6 +67,22 @@ module RDoc::Generator::Markup
     end
   end
 
+  ##
+  # URL's to other versions for this object.
+
+  def version_urls
+    options = @store.options
+    if options.version_roots
+      options.version_roots.map do |version, root|
+        if path
+          url = File.join(root, path.to_s)
+          [version, url]
+        else
+          [version, root]
+        end
+      end
+    end
+  end
 end
 
 class RDoc::CodeObject
