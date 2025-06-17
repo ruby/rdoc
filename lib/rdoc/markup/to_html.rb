@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 require 'cgi/escape'
-# For CGI.unescape on earlier rubies
-require 'cgi/util' if RUBY_VERSION < '3.5'
+require 'cgi/util' unless defined?(CGI::EscapeExt)
 
 ##
 # Outputs RDoc markup as HTML.
