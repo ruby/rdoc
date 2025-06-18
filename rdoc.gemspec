@@ -51,6 +51,7 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
     "exe/rdoc",
     "exe/ri",
     "man/ri.1",
+    "rdoc.gemspec",
   ]
   template_files = Dir.glob("lib/rdoc/generator/template/**/*")
   lib_files = Dir.glob("lib/**/*.{rb,kpeg,ry}")
