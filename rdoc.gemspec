@@ -54,9 +54,7 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
     "rdoc.gemspec",
   ]
   template_files = Dir.glob("lib/rdoc/generator/template/**/*")
-  lib_files = Dir.chdir(File.expand_path('..', __FILE__)) do
-    Dir.glob("lib/**/*.{rb,kpeg,ry}")
-  end
+  lib_files = Dir.glob("lib/**/*.{rb,kpeg,ry}", base: File.expand_path('..', __FILE__))
 
   s.files = (non_lib_files + template_files + lib_files).uniq
 
