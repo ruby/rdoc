@@ -98,6 +98,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     assert_file 'Klass/Inner.html'
     assert_file 'table_of_contents.html'
     assert_file 'js/search_index.js'
+    assert_file 'file_rb.html'
 
     assert_hard_link 'css/rdoc.css'
     assert_hard_link 'css/fonts.css'
