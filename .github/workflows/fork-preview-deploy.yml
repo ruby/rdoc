@@ -1,0 +1,53 @@
+name: Dispatch Fork PR Preview Deployment
+
+on:
+  workflow_run:
+    workflows: ["PR Preview Check"]
+    types: [completed]
+
+jobs:
+  deploy-fork:
+    name: Trigger Preview Build and Deploy (Fork)
+    runs-on: ubuntu-latest
+    if: |
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request'
+    steps:
+      - name: Check and deploy approved fork PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Get the PR that triggered the workflow
+            const pr = context.payload.workflow_run.pull_requests[0];
+            if (!pr) {
+              core.setFailed('No PR found in workflow run');
+              return;
+            }
+
+            // Check if this was a fork PR by checking if approve-fork job ran
+            const jobs = await github.rest.actions.listJobsForWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.payload.workflow_run.id,
+            });
+
+            const approveJob = jobs.data.jobs.find(job => job.name === 'Approve Fork PR');
+            if (!approveJob || approveJob.conclusion !== 'success') {
+              core.setFailed('Not a fork PR approval workflow run');
+              return;
+            }
+
+            console.log(`Deploying approved fork PR #${pr.number}`);
+
+            // Trigger deployment via repository dispatch
+            await github.rest.repos.createDispatchEvent({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              event_type: 'pr-preview-deploy',
+              client_payload: {
+                pr_number: String(pr.number),
+                pr_head_sha: pr.head.sha,
+                pr_checkout_repository: pr.head.repo.full_name,
+                is_fork: 'true'
+              }
+            });
