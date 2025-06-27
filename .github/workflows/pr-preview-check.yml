@@ -16,7 +16,7 @@ jobs:
     secrets:
       cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      github_token: ${{ secrets.MATZBOT_GITHUB_TOKEN }}
+      matzbot_github_token: ${{ secrets.MATZBOT_GITHUB_TOKEN }}
 
   # For fork PRs - this job requires approval
   wait-for-approval:
@@ -41,4 +41,4 @@ jobs:
     secrets:
       cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      github_token: ${{ secrets.MATZBOT_GITHUB_TOKEN }}
+      matzbot_github_token: ${{ secrets.MATZBOT_GITHUB_TOKEN }}
