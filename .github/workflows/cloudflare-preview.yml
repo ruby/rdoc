@@ -1,30 +1,8 @@
 name: Build and Deploy Cloudflare Preview
 
 on:
-  workflow_call:
-    inputs:
-      pr_number:
-        description: 'The pull request number'
-        required: true
-        type: string
-      pr_head_sha:
-        description: 'The SHA of the PR head commit'
-        required: true
-        type: string
-      pr_checkout_repository:
-        description: 'The repository to checkout (owner/repo)'
-        required: true
-        type: string
-    secrets:
-      cloudflare_api_token:
-        description: 'Cloudflare API Token'
-        required: true
-      cloudflare_account_id:
-        description: 'Cloudflare Account ID'
-        required: true
-      matzbot_github_token:
-        description: 'GitHub Token for Matzbot'
-        required: true
+  repository_dispatch:
+    types: [pr-preview-deploy]
 
 permissions:
   pull-requests: write # To allow commenting on the PR
@@ -37,8 +15,8 @@ jobs:
       - name: Checkout PR Code
         uses: actions/checkout@v4
         with:
-          repository: ${{ inputs.pr_checkout_repository }}
-          ref: ${{ inputs.pr_head_sha }}
+          repository: ${{ github.event.client_payload.pr_checkout_repository }}
+          ref: ${{ github.event.client_payload.pr_head_sha }}
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -53,19 +31,19 @@ jobs:
         id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.cloudflare_api_token }}
-          accountId: ${{ secrets.cloudflare_account_id }}
-          command: pages deploy ./_site --project-name=rdoc --branch="${{ inputs.pr_number }}-preview"
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./_site --project-name=rdoc --branch="${{ github.event.client_payload.pr_number }}-preview"
 
       - name: Comment on PR with preview URL
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.matzbot_github_token }}
+          github-token: ${{ secrets.MATZBOT_GITHUB_TOKEN }}
           script: |
-            const prNumber = ${{ inputs.pr_number }};
+            const prNumber = ${{ github.event.client_payload.pr_number }};
             const url = "${{ steps.deploy.outputs.deployment-url }}";
             const commentMarker = "🚀 Preview deployment available at:";
-            const commitSha = '${{ inputs.pr_head_sha }}';
+            const commitSha = '${{ github.event.client_payload.pr_head_sha }}';
 
             const comments = await github.rest.issues.listComments({
               issue_number: prNumber,
