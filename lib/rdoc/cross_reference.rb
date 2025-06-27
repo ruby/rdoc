@@ -200,7 +200,7 @@ class RDoc::CrossReference
     ref = resolve_method name unless ref
 
     # Try a page name
-    ref = @store.page name if not ref and name =~ /^[\w.]+$/
+    ref = @store.page name if not ref and name =~ /^[\w.\/]+$/
 
     ref = nil if RDoc::Alias === ref # external alias, can't link to it
 
