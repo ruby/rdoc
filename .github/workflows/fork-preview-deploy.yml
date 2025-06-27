@@ -13,17 +13,19 @@ jobs:
       github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.event == 'pull_request'
     steps:
-      - name: Check and deploy approved fork PR
+      - name: Download PR information
+        uses: actions/download-artifact@v4
+        with:
+          name: pr
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+          
+      - name: Read PR information and trigger deployment
         uses: actions/github-script@v7
         with:
           script: |
-            // Get the PR that triggered the workflow
-            const pr = context.payload.workflow_run.pull_requests[0];
-            if (!pr) {
-              core.setFailed('No PR found in workflow run');
-              return;
-            }
-
+            const fs = require('fs');
+            
             // Check if this was a fork PR by checking if approve-fork job ran
             const jobs = await github.rest.actions.listJobsForWorkflowRun({
               owner: context.repo.owner,
@@ -36,8 +38,19 @@ jobs:
               core.setFailed('Not a fork PR approval workflow run');
               return;
             }
+            
+            // Read PR information from artifacts
+            let prNumber, prHeadSha, prCheckoutRepo;
+            try {
+              prNumber = fs.readFileSync('./pr_number', 'utf8').trim();
+              prHeadSha = fs.readFileSync('./pr_head_sha', 'utf8').trim();
+              prCheckoutRepo = fs.readFileSync('./pr_checkout_repository', 'utf8').trim();
+            } catch (error) {
+              core.setFailed(`Failed to read PR information: ${error.message}`);
+              return;
+            }
 
-            console.log(`Deploying approved fork PR #${pr.number}`);
+            console.log(`Deploying approved fork PR #${prNumber}`);
 
             // Trigger deployment via repository dispatch
             await github.rest.repos.createDispatchEvent({
@@ -45,9 +58,9 @@ jobs:
               repo: context.repo.repo,
               event_type: 'pr-preview-deploy',
               client_payload: {
-                pr_number: String(pr.number),
-                pr_head_sha: pr.head.sha,
-                pr_checkout_repository: pr.head.repo.full_name,
+                pr_number: prNumber,
+                pr_head_sha: prHeadSha,
+                pr_checkout_repository: prCheckoutRepo,
                 is_fork: 'true'
               }
             });
