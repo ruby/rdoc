@@ -1,0 +1,44 @@
+name: PR Preview Check and Trigger
+
+on:
+  pull_request:
+
+jobs:
+  # For PRs from the main repo - direct call to the shared workflow
+  trigger-main-repo-preview:
+    name: Trigger Preview (Main Repo)
+    uses: ./.github/workflows/cloudflare-preview.yml
+    if: github.event.pull_request.head.repo.fork == false
+    with:
+      pr_number: ${{ github.event.pull_request.number }}
+      pr_head_sha: ${{ github.event.pull_request.head.sha }}
+      pr_checkout_repository: ${{ github.repository }}
+    secrets:
+      cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      matzbot_github_token: ${{ secrets.MATZBOT_GITHUB_TOKEN }}
+
+  # For fork PRs - this job requires approval
+  wait-for-approval:
+    name: Wait for Approval (Fork PR)
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.fork == true
+    environment: fork-preview-protection
+    # This job only serves as an approval gate - it doesn't do anything else
+    steps:
+      - run: echo "Approval granted. Proceeding with preview deployment for commit ${{ github.event.pull_request.head.sha }}."
+
+  # Once approval is granted, call the shared workflow
+  trigger-fork-preview:
+    name: Trigger Preview (Fork - After Approval)
+    needs: wait-for-approval
+    uses: ./.github/workflows/cloudflare-preview.yml
+    if: github.event.pull_request.head.repo.fork == true
+    with:
+      pr_number: ${{ github.event.pull_request.number }}
+      pr_head_sha: ${{ github.event.pull_request.head.sha }}
+      pr_checkout_repository: ${{ github.event.pull_request.head.repo.full_name }}
+    secrets:
+      cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      matzbot_github_token: ${{ secrets.MATZBOT_GITHUB_TOKEN }}

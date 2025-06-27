@@ -283,6 +283,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
 
   def html_name
     require 'cgi/escape'
+    require 'cgi/util' unless defined?(CGI::EscapeExt)
 
     CGI.escape(@name.gsub('-', '-2D')).gsub('%', '-').sub(/^-/, '')
   end

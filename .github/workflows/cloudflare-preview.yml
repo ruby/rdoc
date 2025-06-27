@@ -1,62 +1,44 @@
-name: Cloudflare Pages Preview Deployment
+name: Build and Deploy Cloudflare Preview
 
 on:
-  # Runs automatically for PRs from ruby/rdoc
-  # Fork PRs will be filtered out by the if condition
-  pull_request:
-
-  # Allows manual triggering for fork PRs
-  workflow_dispatch:
+  workflow_call:
     inputs:
-      pull_request_number:
-        description: 'Pull Request Number (for fork PRs)'
+      pr_number:
+        description: 'The pull request number'
         required: true
         type: string
+      pr_head_sha:
+        description: 'The SHA of the PR head commit'
+        required: true
+        type: string
+      pr_checkout_repository:
+        description: 'The repository to checkout (owner/repo)'
+        required: true
+        type: string
+    secrets:
+      cloudflare_api_token:
+        description: 'Cloudflare API Token'
+        required: true
+      cloudflare_account_id:
+        description: 'Cloudflare Account ID'
+        required: true
+      matzbot_github_token:
+        description: 'GitHub Token for Matzbot'
+        required: true
+
+permissions:
+  pull-requests: write # To allow commenting on the PR
 
 jobs:
-  deploy-preview:
+  build-deploy-and-comment:
+    name: Build, Deploy, and Comment
     runs-on: ubuntu-latest
-    # Skip if PR from fork and NOT manually triggered
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == 'ruby/rdoc' }}
-
     steps:
-      - name: Checkout for PR from main repo
-        if: ${{ github.event_name == 'pull_request' }}
+      - name: Checkout PR Code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
-
-      # For fork PRs that are manually triggered, we need to get the PR details first
-      - name: Get PR details for fork
-        if: ${{ github.event_name == 'workflow_dispatch' }}
-        id: pr_details
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const prNumber = ${{ inputs.pull_request_number }};
-
-            // Get PR details to find the head SHA
-            const { data: pr } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber
-            });
-
-            console.log(`Fork PR head SHA: ${pr.head.sha}`);
-            console.log(`Fork PR head ref: ${pr.head.ref}`);
-            console.log(`Fork PR repo: ${pr.head.repo.full_name}`);
-
-            // Set outputs for checkout step
-            core.setOutput('head_sha', pr.head.sha);
-            core.setOutput('head_ref', pr.head.ref);
-            core.setOutput('repo_full_name', pr.head.repo.full_name);
-
-      - name: Checkout for manually triggered fork PR
-        if: ${{ github.event_name == 'workflow_dispatch' }}
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ steps.pr_details.outputs.head_sha }}
-          repository: ${{ steps.pr_details.outputs.repo_full_name }}
+          repository: ${{ inputs.pr_checkout_repository }}
+          ref: ${{ inputs.pr_head_sha }}
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -64,49 +46,27 @@ jobs:
           ruby-version: '3.4'
           bundler-cache: true
 
-      - name: Install dependencies
-        run: bundle install
-
       - name: Build site
         run: bundle exec rake rdoc
 
-      - name: Set PR Number
-        id: pr_number
-        run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
-          else
-            echo "PR_NUMBER=${{ inputs.pull_request_number }}" >> $GITHUB_ENV
-          fi
-
-      # Deploy to Cloudflare Pages using wrangler-action
       - name: Deploy to Cloudflare Pages
         id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./_site --project-name=rdoc --branch="${{ env.PR_NUMBER }}-preview"
+          apiToken: ${{ secrets.cloudflare_api_token }}
+          accountId: ${{ secrets.cloudflare_account_id }}
+          command: pages deploy ./_site --project-name=rdoc --branch="${{ inputs.pr_number }}-preview"
 
-      # Comment on PR with preview URL - works for both regular PRs and fork PRs
       - name: Comment on PR with preview URL
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.matzbot_github_token }}
           script: |
-            const prNumber = ${{ env.PR_NUMBER }};
+            const prNumber = ${{ inputs.pr_number }};
             const url = "${{ steps.deploy.outputs.deployment-url }}";
             const commentMarker = "🚀 Preview deployment available at:";
+            const commitSha = '${{ inputs.pr_head_sha }}';
 
-            // Get commit SHA based on event type
-            let commitSha;
-            if ('${{ github.event_name }}' === 'pull_request') {
-              commitSha = '${{ github.event.pull_request.head.sha }}';
-            } else {
-              // For workflow_dispatch, get the SHA from the PR details
-              commitSha = '${{ steps.pr_details.outputs.head_sha }}';
-            }
-
-            // Get all comments on the PR
             const comments = await github.rest.issues.listComments({
               issue_number: prNumber,
               owner: context.repo.owner,
@@ -114,7 +74,6 @@ jobs:
               per_page: 100
             });
 
-            // Look for our previous bot comment
             const existingComment = comments.data.find(comment =>
               comment.body.includes(commentMarker)
             );
@@ -122,7 +81,6 @@ jobs:
             const commentBody = `${commentMarker} [${url}](${url}) (commit: ${commitSha})`;
 
             if (existingComment) {
-              // Update existing comment
               await github.rest.issues.updateComment({
                 comment_id: existingComment.id,
                 owner: context.repo.owner,
@@ -131,7 +89,6 @@ jobs:
               });
               console.log("Updated existing preview comment");
             } else {
-              // Create new comment
               await github.rest.issues.createComment({
                 issue_number: prNumber,
                 owner: context.repo.owner,
