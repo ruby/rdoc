@@ -1,0 +1,66 @@
+name: Dispatch Fork PR Preview Deployment
+
+on:
+  workflow_run:
+    workflows: ["PR Preview Check"]
+    types: [completed]
+
+jobs:
+  deploy-fork:
+    name: Trigger Preview Build and Deploy (Fork)
+    runs-on: ubuntu-latest
+    if: |
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request'
+    steps:
+      - name: Download PR information
+        uses: actions/download-artifact@v4
+        with:
+          name: pr
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+          
+      - name: Read PR information and trigger deployment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            // Check if this was a fork PR by checking if approve-fork job ran
+            const jobs = await github.rest.actions.listJobsForWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.payload.workflow_run.id,
+            });
+
+            const approveJob = jobs.data.jobs.find(job => job.name === 'Approve Fork PR');
+            if (!approveJob || approveJob.conclusion !== 'success') {
+              core.setFailed('Not a fork PR approval workflow run');
+              return;
+            }
+            
+            // Read PR information from artifacts
+            let prNumber, prHeadSha, prCheckoutRepo;
+            try {
+              prNumber = fs.readFileSync('./pr_number', 'utf8').trim();
+              prHeadSha = fs.readFileSync('./pr_head_sha', 'utf8').trim();
+              prCheckoutRepo = fs.readFileSync('./pr_checkout_repository', 'utf8').trim();
+            } catch (error) {
+              core.setFailed(`Failed to read PR information: ${error.message}`);
+              return;
+            }
+
+            console.log(`Deploying approved fork PR #${prNumber}`);
+
+            // Trigger deployment via repository dispatch
+            await github.rest.repos.createDispatchEvent({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              event_type: 'pr-preview-deploy',
+              client_payload: {
+                pr_number: prNumber,
+                pr_head_sha: prHeadSha,
+                pr_checkout_repository: prCheckoutRepo,
+                is_fork: 'true'
+              }
+            });

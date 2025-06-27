@@ -1,0 +1,51 @@
+name: PR Preview Check
+
+on:
+  pull_request:
+
+jobs:
+  # Deploy main repo PRs directly
+  deploy-for-main:
+    name: Trigger Preview Build and Deploy (Main Repo)
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.fork == false
+    steps:
+      - name: Trigger preview deployment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.repos.createDispatchEvent({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              event_type: 'pr-preview-deploy',
+              client_payload: {
+                pr_number: '${{ github.event.pull_request.number }}',
+                pr_head_sha: '${{ github.event.pull_request.head.sha }}',
+                pr_checkout_repository: '${{ github.repository }}',
+                is_fork: 'false'
+              }
+            });
+            console.log('Triggered main repo preview deployment');
+
+  # Approval gate for fork PRs
+  approve-for-fork:
+    name: Approve Fork PR
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.fork == true
+    environment: fork-preview-protection
+    steps:
+      - name: Save PR information
+        run: |
+          echo "Fork PR #${{ github.event.pull_request.number }} approved for preview deployment"
+          mkdir -p ./pr
+          echo "${{ github.event.pull_request.number }}" > ./pr/pr_number
+          echo "${{ github.event.pull_request.head.sha }}" > ./pr/pr_head_sha
+          echo "${{ github.event.pull_request.head.repo.full_name }}" > ./pr/pr_checkout_repository
+      
+      - name: Upload PR information
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr
+          path: pr/
+          retention-days: 1

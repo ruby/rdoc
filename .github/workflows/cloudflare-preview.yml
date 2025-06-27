@@ -1,0 +1,77 @@
+name: Build and Deploy Cloudflare Preview
+
+on:
+  repository_dispatch:
+    types: [pr-preview-deploy]
+
+permissions:
+  pull-requests: write # To allow commenting on the PR
+
+jobs:
+  build-deploy-and-comment:
+    name: Build, Deploy, and Comment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR Code
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.client_payload.pr_checkout_repository }}
+          ref: ${{ github.event.client_payload.pr_head_sha }}
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+
+      - name: Build site
+        run: bundle exec rake rdoc
+
+      - name: Deploy to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./_site --project-name=rdoc --branch="${{ github.event.client_payload.pr_number }}-preview"
+
+      - name: Comment on PR with preview URL
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.MATZBOT_GITHUB_TOKEN }}
+          script: |
+            const prNumber = ${{ github.event.client_payload.pr_number }};
+            const url = "${{ steps.deploy.outputs.deployment-url }}";
+            const commentMarker = "🚀 Preview deployment available at:";
+            const commitSha = '${{ github.event.client_payload.pr_head_sha }}';
+
+            const comments = await github.rest.issues.listComments({
+              issue_number: prNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100
+            });
+
+            const existingComment = comments.data.find(comment =>
+              comment.body.includes(commentMarker)
+            );
+
+            const commentBody = `${commentMarker} [${url}](${url}) (commit: ${commitSha})`;
+
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                comment_id: existingComment.id,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody
+              });
+              console.log("Updated existing preview comment");
+            } else {
+              await github.rest.issues.createComment({
+                issue_number: prNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody
+              });
+              console.log("Created new preview comment");
+            }

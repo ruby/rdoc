@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'cgi/util'
+require 'cgi/escape'
+require 'cgi/util' unless defined?(CGI::EscapeExt)
 
 ##
 # A section of documentation like:
