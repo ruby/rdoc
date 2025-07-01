@@ -90,6 +90,7 @@ class RDocOptionsTest < RDoc::TestCase
       'class_module_path_prefix' => nil,
       'file_path_prefix' => nil,
       'canonical_root' => nil,
+      'version_roots' => nil,
     }
 
     assert_equal expected, coder
