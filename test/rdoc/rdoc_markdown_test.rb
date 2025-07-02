@@ -1133,6 +1133,30 @@ and an extra note.[^2]
     assert_equal expected, doc
   end
 
+  def test_gfm_table_with_links_and_code
+    doc = parse <<~MD
+    | Feature | Description | Example |
+    |---------|-------------|---------|
+    | Link    | [RDoc](https://github.com/ruby/rdoc) | See docs |
+    | Code    | `puts "hello"` | Inline code |
+    | Both    | Link to [`method`](https://example.com) | Combined |
+    MD
+
+    head = %w[Feature Description Example]
+    align = [nil, nil, nil]
+
+    # Expected behavior: table cells should contain parsed markup
+    body = [
+      ['Link', '{RDoc}[https://github.com/ruby/rdoc]', 'See docs'],
+      ['Code', '<code>puts "hello"</code>', 'Inline code'],
+      ['Both', 'Link to {<code>method</code>}[https://example.com]', 'Combined'],
+    ]
+
+    expected = doc(@RM::Table.new(head, align, body))
+
+    assert_equal expected, doc
+  end
+
   def parse(text)
     @parser.parse text
   end
