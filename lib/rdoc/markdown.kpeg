@@ -496,6 +496,46 @@
       "<s>#{text}</s>"
     end
   end
+
+  ##
+  # Parses inline markdown in table cells
+
+  def parse_table_cells(table)
+    # Parse header cells
+    table.header = table.header.map { |cell| parse_cell_inline(cell) }
+
+    # Parse body cells
+    table.body = table.body.map do |row|
+      row.map { |cell| parse_cell_inline(cell) }
+    end
+
+    table
+  end
+
+  ##
+  # Parses inline markdown in a single table cell
+
+  def parse_cell_inline(text)
+    return text if text.nil? || text.empty?
+
+    # Create a new parser instance for the cell
+    cell_parser = RDoc::Markdown.new(@extensions, @debug)
+
+    # Parse the cell content
+    doc = cell_parser.parse(text)
+
+    # Extract the parsed content
+    if doc && doc.parts && !doc.parts.empty?
+      para = doc.parts.first
+      if para.is_a?(RDoc::Markup::Paragraph)
+        para.parts.join
+      else
+        text
+      end
+    else
+      text
+    end
+  end
 }
 
 root = Doc
@@ -1201,7 +1241,10 @@ CodeFence = &{ github? }
 
 Table = &{ github? }
         TableHead:header TableLine:line TableRow+:body
-        { table = RDoc::Markup::Table.new(header, line, body) }
+        {
+          table = RDoc::Markup::Table.new(header, line, body)
+          parse_table_cells(table)
+        }
 
 TableHead = TableItem2+:items "|"? @Newline
             { items }
