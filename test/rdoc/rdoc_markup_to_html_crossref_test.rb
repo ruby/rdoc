@@ -33,6 +33,22 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     assert_equal para("<code># :stopdoc:</code>:"), result
   end
 
+  def test_convert_CROSSREF_backslash_escapes_in_monofont
+    # Test that backslash escapes in monofont don't create unwanted links
+    result = @to.convert '<tt>.bar.hello(\)</tt>'
+    assert_equal para("<code>.bar.hello(\\)</code>"), result
+
+    result = @to.convert '<tt>.bar.hello(\\\\)</tt>'
+    assert_equal para("<code>.bar.hello(\\)</code>"), result
+
+    # Regular method references should still work
+    result = @to.convert '<tt>C1#m</tt>'
+    assert_equal para("<a href=\"C1.html#method-i-m\"><code>C1#m</code></a>"), result
+
+    result = @to.convert '<tt>C1.m</tt>'
+    assert_equal para("<a href=\"C1.html#method-c-m\"><code>C1.m</code></a>"), result
+  end
+
   def test_convert_CROSSREF_ignored_excluded_words
     @options.autolink_excluded_words = ['C1']
 

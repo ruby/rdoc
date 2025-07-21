@@ -94,6 +94,18 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       return name if name =~ /\A[a-z]*\z/
     end
 
+    # Check if the match is solely due to an escaped character pattern.
+    # If the text contains backslash escapes but doesn't match any
+    # valid cross-reference pattern (class, method, etc.), return as-is
+    if name =~ /\\/ && 
+       name !~ /\A#{CLASS_REGEXP_STR}(?:[.#]|::)#{METHOD_REGEXP_STR}\z/o &&
+       name !~ /\A\\?#{CLASS_REGEXP_STR}\z/o &&
+       name !~ /\A\\?\##{METHOD_REGEXP_STR}\z/o &&
+       name !~ /\A::#{METHOD_REGEXP_STR}\z/o &&
+       name !~ /\A\.\.\/|[-\/\w]+[_\/.][-\w\/.]+\z/ # filepath pattern
+      return name
+    end
+
     cross_reference name, rdoc_ref: false
   end
 
@@ -198,13 +210,29 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
           String === (str = flow[i]) and
           RDoc::Markup::AttrChanger === flow[i+1] and
           tt_tag?(flow[i+1].turn_off, true) and
-          (@options.hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP).match?(str) and
-          (text = cross_reference str) != str
+          (@options.hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP).match?(str)
         then
-          text = yield text, res if defined?(yield)
-          res << text
-          i += 2
-          next
+          # Check if the match is solely due to an escaped character pattern.
+          # If the text contains backslash escapes but doesn't match any
+          # valid cross-reference pattern (class, method, etc.), skip cross-referencing
+          if str =~ /\\/ && 
+             str !~ /\A#{CLASS_REGEXP_STR}(?:[.#]|::)#{METHOD_REGEXP_STR}\z/o &&
+             str !~ /\A\\?#{CLASS_REGEXP_STR}\z/o &&
+             str !~ /\A\\?\##{METHOD_REGEXP_STR}\z/o &&
+             str !~ /\A::#{METHOD_REGEXP_STR}\z/o &&
+             str !~ /\A\.\.\/|[-\/\w]+[_\/.][-\w\/.]+\z/ # filepath pattern
+            # Don't cross-reference, just output the text wrapped in code tags
+            text = "<code>#{CGI.escapeHTML(str)}</code>"
+            text = yield text, res if defined?(yield)
+            res << text
+            i += 2
+            next
+          elsif (text = cross_reference str) != str
+            text = yield text, res if defined?(yield)
+            res << text
+            i += 2
+            next
+          end
         end
         off_tags res, item
         on_tags res, item
