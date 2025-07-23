@@ -48,7 +48,7 @@ the [Ruby online documentation](https://docs.ruby-lang.org/en/master):
 - If you are working in a terminal window, typing `ri _whatever_` (or just `ri`)
   may be faster than navigating to a browser window and searching for documentation.
 - If you are working in an
-  [irb \(interactive Ruby\)](https://docs.ruby-lang.org/en/master/IRB.html)
+  [irb \(interactive Ruby\)](https://ruby.github.io/irb/index.html)
   session, you _already_ have immediate access to `ri`:
   just type `'show_doc'`.
 
