@@ -720,7 +720,7 @@ class RDoc::Store
   end
 
   ##
-  # Returns the RDoc::TopLevel that is a text file and has the given +name+
+  # Returns the RDoc::TopLevel that is a file and has the given +name+
 
   def page(name)
     @files_hash.each_value.find do |file|
