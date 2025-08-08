@@ -294,7 +294,7 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
 
   def handle_regexp_SUPPRESSED_CROSSREF(target)
     text = target.text
-    text = text.sub('\\', '') unless in_tt?
+    text = text.gsub('\\', '') unless in_tt?
     text
   end
 
