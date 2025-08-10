@@ -115,14 +115,6 @@ class RDoc::TopLevel < RDoc::Context
   alias name base_name
 
   ##
-  # Only a TopLevel that contains text file) will be displayed.  See also
-  # RDoc::CodeObject#display?
-
-  def display?
-    text? and super
-  end
-
-  ##
   # See RDoc::TopLevel::find_class_or_module
   #--
   # TODO Why do we search through all classes/modules found, not just the

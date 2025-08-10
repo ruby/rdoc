@@ -110,12 +110,7 @@ class RDocTopLevelTest < XrefTestCase
   end
 
   def test_display_eh
-    refute @top_level.display?
-
-    page = @store.add_file 'README.txt'
-    page.parser = RDoc::Parser::Simple
-
-    assert page.display?
+    assert @top_level.display?
   end
 
   def test_eql_eh
