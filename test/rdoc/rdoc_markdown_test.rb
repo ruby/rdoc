@@ -1157,6 +1157,36 @@ and an extra note.[^2]
     assert_equal expected, doc
   end
 
+  def test_gfm_table_with_backslashes_in_code_spans
+    doc = parse <<~MD
+    Plain text: `$\\\\` and `$\\\\ ` should work.
+
+    | Context | Code | Expected |
+    |---------|------|----------|
+    | Plain   | `$\\\\` | Should show backslash |
+    | Escaped | `$\\\\ ` | Should show backslash |
+    | Multiple| `\\\\n\\\\t` | Should show backslashes |
+    MD
+
+    head = %w[Context Code Expected]
+    align = [nil, nil, nil]
+
+    body = [
+      ['Plain', '<code>$\\\\</code>', 'Should show backslash'],
+      ['Escaped', '<code>$\\\\</code>', 'Should show backslash'],
+      ['Multiple', '<code>\\\\n\\\\t</code>', 'Should show backslashes'],
+    ]
+
+    expected_table = @RM::Table.new(head, align, body)
+
+    expected = doc(
+      para('Plain text: <code>$\\\\</code> and <code>$\\\\</code> should work.'),
+      expected_table
+    )
+
+    assert_equal expected, doc
+  end
+
   def parse(text)
     @parser.parse text
   end
