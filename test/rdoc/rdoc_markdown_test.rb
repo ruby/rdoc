@@ -139,6 +139,14 @@ a block quote
     expected = doc(para("Code: <code>text</code>"))
     assert_equal expected, doc
 
+    doc = parse "Code: ` text`"
+    expected = doc(para("Code: <code> text</code>"))
+    assert_equal expected, doc
+
+    doc = parse "Code: `text `"
+    expected = doc(para("Code: <code>text </code>"))
+    assert_equal expected, doc
+
     doc = parse "Code: ` text `"
     expected = doc(para("Code: <code>text</code>"))
     assert_equal expected, doc
@@ -147,12 +155,28 @@ a block quote
     expected = doc(para("Code: <code>text`s</code>"))
     assert_equal expected, doc
 
+    doc = parse "Code: `` text`s``"
+    expected = doc(para("Code: <code> text`s</code>"))
+    assert_equal expected, doc
+
+    doc = parse "Code: ``text`s ``"
+    expected = doc(para("Code: <code>text`s </code>"))
+    assert_equal expected, doc
+
     doc = parse "Code: `` text`s ``"
     expected = doc(para("Code: <code>text`s</code>"))
     assert_equal expected, doc
 
     doc = parse "Code: ```text`s```"
     expected = doc(para("Code: <code>text`s</code>"))
+    assert_equal expected, doc
+
+    doc = parse "Code: ``` text`s```"
+    expected = doc(para("Code: <code> text`s</code>"))
+    assert_equal expected, doc
+
+    doc = parse "Code: ```text`s ```"
+    expected = doc(para("Code: <code>text`s </code>"))
     assert_equal expected, doc
 
     doc = parse "Code: ``` text`s ```"
@@ -223,7 +247,7 @@ code goes here
     doc = <<-MD
 Example:
 
-``` ruby
+```ruby
 code goes here
 ```
     MD
@@ -1201,14 +1225,14 @@ and an extra note.[^2]
 
     body = [
       ['Plain', '<code>$\\\\</code>', 'Should show backslash'],
-      ['Escaped', '<code>$\\\\</code>', 'Should show backslash'],
+      ['Escaped', '<code>$\\\\ </code>', 'Should show backslash'],
       ['Multiple', '<code>\\\\n\\\\t</code>', 'Should show backslashes'],
     ]
 
     expected_table = @RM::Table.new(head, align, body)
 
     expected = doc(
-      para('Plain text: <code>$\\\\</code> and <code>$\\\\</code> should work.'),
+      para('Plain text: <code>$\\\\</code> and <code>$\\\\ </code> should work.'),
       expected_table
     )
 

@@ -501,6 +501,8 @@
   # Wraps `text` in code markup for rdoc inline formatting
 
   def code text
+    # trim even spaces
+    text = $2 while /\A( +|\t+)(.*)\1\z/ =~ text
     # escape unescaped backslash at the end
     backslash_at_end = "\\" if /(?<!\\)(?:\\\\)*\\\z/.match?(text)
     "<code>#{text}#{backslash_at_end}</code>"
@@ -1113,30 +1115,30 @@ Ticks3 = "```" !"`"
 Ticks4 = "````" !"`"
 Ticks5 = "`````" !"`"
 
-Code = ( Ticks1 @Sp < (
+Code = ( Ticks1 < (
            ( !"`" Nonspacechar )+ | !Ticks1 /`+/ |
-           !( @Sp Ticks1 ) ( @Spacechar | @Newline !@BlankLine )
-         )+ > @Sp Ticks1 |
-         Ticks2 @Sp < (
+           !Ticks1 ( @Spacechar | @Newline !@BlankLine )
+         )+ > Ticks1 |
+         Ticks2 < (
            ( !"`" Nonspacechar )+ |
            !Ticks2 /`+/ |
-           !( @Sp Ticks2 ) ( @Spacechar | @Newline !@BlankLine )
-         )+ > @Sp Ticks2 |
-         Ticks3 @Sp < (
+           !Ticks2 ( @Spacechar | @Newline !@BlankLine )
+         )+ > Ticks2 |
+         Ticks3 < (
            ( !"`" Nonspacechar )+ |
            !Ticks3 /`+/ |
-           !( @Sp Ticks3 ) ( @Spacechar | @Newline !@BlankLine )
-         )+ > @Sp Ticks3 |
-         Ticks4 @Sp < (
+           !Ticks3 ( @Spacechar | @Newline !@BlankLine )
+         )+ > Ticks3 |
+         Ticks4 < (
            ( !"`" Nonspacechar )+ |
            !Ticks4 /`+/ |
-           !( @Sp Ticks4 ) ( @Spacechar | @Newline !@BlankLine )
-         )+ > @Sp Ticks4 |
-         Ticks5 @Sp < (
+           !Ticks4 ( @Spacechar | @Newline !@BlankLine )
+         )+ > Ticks4 |
+         Ticks5 < (
            ( !"`" Nonspacechar )+ |
            !Ticks5 /`+/ |
-           !( @Sp Ticks5 ) ( @Spacechar | @Newline !@BlankLine )
-         )+ > @Sp Ticks5
+           !Ticks5 ( @Spacechar | @Newline !@BlankLine )
+         )+ > Ticks5
        )
        { code text }
 
