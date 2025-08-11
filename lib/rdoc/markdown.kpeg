@@ -498,6 +498,15 @@
   end
 
   ##
+  # Wraps `text` in code markup for rdoc inline formatting
+
+  def code text
+    # escape unescaped backslash at the end
+    backslash_at_end = "\\" if /(?<!\\)(?:\\\\)*\\\z/.match?(text)
+    "<code>#{text}#{backslash_at_end}</code>"
+  end
+
+  ##
   # Parses inline markdown in table cells
 
   def parse_table_cells(table)
@@ -1129,7 +1138,7 @@ Code = ( Ticks1 @Sp < (
            !( @Sp Ticks5 ) ( @Spacechar | @Newline !@BlankLine )
          )+ > @Sp Ticks5
        )
-       { "<code>#{text}</code>" }
+       { code text }
 
 RawHtml = < (HtmlComment | HtmlBlockScript | HtmlTag) >
           { if html? then text else '' end }
