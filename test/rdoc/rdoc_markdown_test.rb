@@ -151,6 +151,14 @@ a block quote
     expected = doc(para("Code: <code>text</code>"))
     assert_equal expected, doc
 
+    doc = parse "Code: ` text\t`"
+    expected = doc(para("Code: <code> text\t</code>"))
+    assert_equal expected, doc
+
+    doc = parse "Code: `\ttext `"
+    expected = doc(para("Code: <code>\ttext </code>"))
+    assert_equal expected, doc
+
     doc = parse "Code: ``text`s``"
     expected = doc(para("Code: <code>text`s</code>"))
     assert_equal expected, doc
@@ -167,6 +175,14 @@ a block quote
     expected = doc(para("Code: <code>text`s</code>"))
     assert_equal expected, doc
 
+    doc = parse "Code: `` text`s\t``"
+    expected = doc(para("Code: <code> text`s\t</code>"))
+    assert_equal expected, doc
+
+    doc = parse "Code: ``\ttext`s ``"
+    expected = doc(para("Code: <code>\ttext`s </code>"))
+    assert_equal expected, doc
+
     doc = parse "Code: ```text`s```"
     expected = doc(para("Code: <code>text`s</code>"))
     assert_equal expected, doc
@@ -181,6 +197,14 @@ a block quote
 
     doc = parse "Code: ``` text`s ```"
     expected = doc(para("Code: <code>text`s</code>"))
+    assert_equal expected, doc
+
+    doc = parse "Code: ``` text`s\t```"
+    expected = doc(para("Code: <code> text`s\t</code>"))
+    assert_equal expected, doc
+
+    doc = parse "Code: ```\ttext`s ```"
+    expected = doc(para("Code: <code>\ttext`s </code>"))
     assert_equal expected, doc
 
     doc = parse "Code: `\\`"
