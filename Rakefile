@@ -5,6 +5,7 @@ $:.unshift File.expand_path('lib', __dir__) # default template dir
 require_relative 'lib/rdoc/task'
 require 'bundler/gem_tasks'
 require 'rake/testtask'
+require 'rubocop/rake_task'
 
 task :test    => [:normal_test, :rubygems_test]
 
@@ -37,13 +38,11 @@ end
 
 Rake::TestTask.new(:normal_test) do |t|
   t.verbose = true
-  t.deps = :generate
   t.test_files = FileList["test/**/*_test.rb"].exclude("test/rdoc/rdoc_rubygems_hook_test.rb")
 end
 
 Rake::TestTask.new(:rubygems_test) do |t|
   t.verbose = true
-  t.deps = :generate
   t.pattern = "test/rdoc/rdoc_rubygems_hook_test.rb"
 end
 
@@ -87,9 +86,33 @@ parsed_files = PARSER_FILES.map do |parser_file|
   parsed_file
 end
 
+RuboCop::RakeTask.new(:format_generated_files) do |t|
+  t.options = parsed_files + ["--config=.generated_files_rubocop.yml"]
+end
+
 task "#{path}.gem" => package_parser_files
 desc "Generate all files used racc and kpeg"
-task :generate => parsed_files
+task generate: [*parsed_files, "format_generated_files:autocorrect"]
+
+desc "Verify that generated parser files are up to date"
+task verify_generated: :generate do
+  # Check if there are any uncommitted changes to the generated files
+  parsed_files.each do |file|
+    unless File.exist?(file)
+      abort "Generated file #{file} does not exist!"
+    end
+  end
+
+  diff_output = `git diff --exit-code #{parsed_files.join(' ')} 2>&1`
+  unless $?.success?
+    puts "Generated parser files are out of date!"
+    puts "Please run 'rake generate' and commit the changes."
+    puts "\nDifferences found:"
+    puts diff_output
+    exit 1
+  end
+  puts "Generated parser files are up to date."
+end
 
 task :clean do
   parsed_files.each do |path|
@@ -108,14 +131,4 @@ namespace :build do
 
     mv("#{path}.gem", target)
   end
-end
-
-begin
-  require 'rubocop/rake_task'
-rescue LoadError
-else
-  RuboCop::RakeTask.new(:format_generated_files) do |t|
-    t.options = parsed_files + ["--config=.generated_files_rubocop.yml"]
-  end
-  task :build => [:generate, "format_generated_files:autocorrect"]
 end
