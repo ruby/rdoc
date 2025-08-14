@@ -210,6 +210,7 @@ https://github.com/ruby/rdoc/issues
   autoload :BlankLine,             "#{__dir__}/markup/blank_line"
   autoload :BlockQuote,            "#{__dir__}/markup/block_quote"
   autoload :Document,              "#{__dir__}/markup/document"
+  autoload :Element,               "#{__dir__}/markup/element"
   autoload :HardBreak,             "#{__dir__}/markup/hard_break"
   autoload :Heading,               "#{__dir__}/markup/heading"
   autoload :Include,               "#{__dir__}/markup/include"
