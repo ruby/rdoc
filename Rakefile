@@ -67,18 +67,16 @@ parsed_files = PARSER_FILES.map do |parser_file|
     puts "Generating #{parsed_file}..."
     case ext
     when '.ry' # need racc
-      racc = Gem.bin_path 'racc', 'racc'
       rb_file = parser_file.gsub(/\.ry\z/, ".rb")
-      ruby "#{racc} -l -E -o #{rb_file} #{parser_file}"
+      sh "bundle exec racc -l -E -o #{rb_file} #{parser_file}"
       File.open(rb_file, 'r+') do |f|
         newtext = "# frozen_string_literal: true\n#{f.read}"
         f.rewind
         f.write newtext
       end
     when '.kpeg' # need kpeg
-      kpeg = Gem.bin_path 'kpeg', 'kpeg'
       rb_file = parser_file.gsub(/\.kpeg\z/, ".rb")
-      ruby "#{kpeg} -fsv -o #{rb_file} #{parser_file}"
+      sh "bundle exec kpeg -fsv -o #{rb_file} #{parser_file}"
       File.write(rb_file, File.read(rb_file).gsub(/ +$/, '')) # remove trailing spaces
     end
   end
