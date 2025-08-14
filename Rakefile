@@ -46,19 +46,6 @@ Rake::TestTask.new(:rubygems_test) do |t|
   t.pattern = "test/rdoc/rdoc_rubygems_hook_test.rb"
 end
 
-path = "pkg/#{Bundler::GemHelper.gemspec.full_name}"
-
-package_parser_files = PARSER_FILES.map do |parser_file|
-  name = File.basename(parser_file, File.extname(parser_file))
-  _path = File.dirname(parser_file)
-  package_parser_file = "#{path}/#{name}.rb"
-  parsed_file = "#{_path}/#{name}.rb"
-
-  file package_parser_file => parsed_file # ensure copy runs before racc
-
-  package_parser_file
-end
-
 parsed_files = PARSER_FILES.map do |parser_file|
   ext = File.extname(parser_file)
   parsed_file = "#{parser_file.chomp(ext)}.rb"
@@ -88,7 +75,6 @@ RuboCop::RakeTask.new(:format_generated_files) do |t|
   t.options = parsed_files + ["--config=.generated_files_rubocop.yml"]
 end
 
-task "#{path}.gem" => package_parser_files
 desc "Generate all files used racc and kpeg"
 task generate: [*parsed_files, "format_generated_files:autocorrect"]
 
@@ -127,6 +113,6 @@ namespace :build do
       abort("Expected Ruby to be cloned under the same parent directory as RDoc to use this task")
     end
 
-    mv("#{path}.gem", target)
+    mv("pkg/#{Bundler::GemHelper.gemspec.full_name}.gem", target)
   end
 end
