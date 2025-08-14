@@ -327,7 +327,7 @@ class RDoc::Options
 
   ##
   # Warn if rdoc-ref links can't be resolved
-  # Default is +false+
+  # Default is +true+
 
   attr_accessor :warn_missing_rdoc_ref
 
