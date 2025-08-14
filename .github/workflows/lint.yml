@@ -27,6 +27,3 @@ jobs:
         bundler-cache: true
     - name: Run rubocop
       run: bundle exec rubocop
-    - name: Sanity check for the format_generated_files task
-      run: bundle exec rake generate format_generated_files
-

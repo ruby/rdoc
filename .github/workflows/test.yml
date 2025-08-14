@@ -50,6 +50,8 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true # 'bundle install' and cache
+    - name: Verify generated parser files
+      run: bundle exec rake verify_generated
     - name: Run test
       run: bundle exec rake
       env:

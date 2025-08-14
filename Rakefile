@@ -5,6 +5,7 @@ $:.unshift File.expand_path('lib', __dir__) # default template dir
 require_relative 'lib/rdoc/task'
 require 'bundler/gem_tasks'
 require 'rake/testtask'
+require 'rubocop/rake_task'
 
 task :test    => [:normal_test, :rubygems_test]
 
@@ -37,27 +38,12 @@ end
 
 Rake::TestTask.new(:normal_test) do |t|
   t.verbose = true
-  t.deps = :generate
   t.test_files = FileList["test/**/*_test.rb"].exclude("test/rdoc/rdoc_rubygems_hook_test.rb")
 end
 
 Rake::TestTask.new(:rubygems_test) do |t|
   t.verbose = true
-  t.deps = :generate
   t.pattern = "test/rdoc/rdoc_rubygems_hook_test.rb"
-end
-
-path = "pkg/#{Bundler::GemHelper.gemspec.full_name}"
-
-package_parser_files = PARSER_FILES.map do |parser_file|
-  name = File.basename(parser_file, File.extname(parser_file))
-  _path = File.dirname(parser_file)
-  package_parser_file = "#{path}/#{name}.rb"
-  parsed_file = "#{_path}/#{name}.rb"
-
-  file package_parser_file => parsed_file # ensure copy runs before racc
-
-  package_parser_file
 end
 
 parsed_files = PARSER_FILES.map do |parser_file|
@@ -68,18 +54,16 @@ parsed_files = PARSER_FILES.map do |parser_file|
     puts "Generating #{parsed_file}..."
     case ext
     when '.ry' # need racc
-      racc = Gem.bin_path 'racc', 'racc'
       rb_file = parser_file.gsub(/\.ry\z/, ".rb")
-      ruby "#{racc} -l -E -o #{rb_file} #{parser_file}"
+      sh "bundle exec racc -l -E -o #{rb_file} #{parser_file}"
       File.open(rb_file, 'r+') do |f|
         newtext = "# frozen_string_literal: true\n#{f.read}"
         f.rewind
         f.write newtext
       end
     when '.kpeg' # need kpeg
-      kpeg = Gem.bin_path 'kpeg', 'kpeg'
       rb_file = parser_file.gsub(/\.kpeg\z/, ".rb")
-      ruby "#{kpeg} -fsv -o #{rb_file} #{parser_file}"
+      sh "bundle exec kpeg -fsv -o #{rb_file} #{parser_file}"
       File.write(rb_file, File.read(rb_file).gsub(/ +$/, '')) # remove trailing spaces
     end
   end
@@ -87,9 +71,32 @@ parsed_files = PARSER_FILES.map do |parser_file|
   parsed_file
 end
 
-task "#{path}.gem" => package_parser_files
+RuboCop::RakeTask.new(:format_generated_files) do |t|
+  t.options = parsed_files + ["--config=.generated_files_rubocop.yml"]
+end
+
 desc "Generate all files used racc and kpeg"
-task :generate => parsed_files
+task generate: [*parsed_files, "format_generated_files:autocorrect"]
+
+desc "Verify that generated parser files are up to date"
+task verify_generated: :generate do
+  # Check if there are any uncommitted changes to the generated files
+  parsed_files.each do |file|
+    unless File.exist?(file)
+      abort "Generated file #{file} does not exist!"
+    end
+  end
+
+  diff_output = `git diff --exit-code #{parsed_files.join(' ')} 2>&1`
+  unless $?.success?
+    puts "Generated parser files are out of date!"
+    puts "Please run 'rake generate' and commit the changes."
+    puts "\nDifferences found:"
+    puts diff_output
+    exit 1
+  end
+  puts "Generated parser files are up to date."
+end
 
 task :clean do
   parsed_files.each do |path|
@@ -106,16 +113,6 @@ namespace :build do
       abort("Expected Ruby to be cloned under the same parent directory as RDoc to use this task")
     end
 
-    mv("#{path}.gem", target)
+    mv("pkg/#{Bundler::GemHelper.gemspec.full_name}.gem", target)
   end
-end
-
-begin
-  require 'rubocop/rake_task'
-rescue LoadError
-else
-  RuboCop::RakeTask.new(:format_generated_files) do |t|
-    t.options = parsed_files + ["--config=.generated_files_rubocop.yml"]
-  end
-  task :build => [:generate, "format_generated_files:autocorrect"]
 end

@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'rake'
-gem 'racc', '> 1.4.10'
+gem 'racc', '1.8.1'
 gem 'kpeg', '>= 1.3.3'
 gem 'test-unit'
 gem 'test-unit-ruby-core'
