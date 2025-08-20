@@ -59,7 +59,7 @@ require 'rdoc'
 # - The entire markup (<tt>.rdoc</tt>) file or markdown (<tt>.md</tt>) file
 #   (which is usually multi-line).
 #
-# === Blocks
+# == Blocks
 #
 # It's convenient to think of an \RDoc document as a sequence of _blocks_
 # of various types (details at the links):
@@ -97,7 +97,7 @@ require 'rdoc'
 #   which becomes the <em>base margin</em> for the block
 #   and is the initial <em>current margin</em> for the block.
 #
-# ==== Paragraphs
+# === Paragraphs
 #
 # A paragraph consists of one or more non-empty lines of ordinary text,
 # each beginning at the current margin.
@@ -134,7 +134,7 @@ require 'rdoc'
 # - {Horizontal rules}[rdoc-ref:RDoc::MarkupReference@Horizontal+Rules].
 # - {Text Markup}[rdoc-ref:RDoc:MarkupReference@Text+Markup].
 #
-# ==== Verbatim Text Blocks
+# === Verbatim Text Blocks
 #
 # Text indented farther than the current margin becomes a <em>verbatim text block</em>
 # (or a code block, described next).
@@ -172,7 +172,7 @@ require 'rdoc'
 # A verbatim text block may not contain nested blocks of any kind
 # -- it's verbatim.
 #
-# ==== Code Blocks
+# === Code Blocks
 #
 # A special case of verbatim text is the <em>code block</em>,
 # which is merely verbatim text that \RDoc recognizes as Ruby code:
@@ -208,7 +208,7 @@ require 'rdoc'
 # A code block may not contain nested blocks of any kind
 # -- it's verbatim.
 #
-# ==== Block Quotes
+# === Block Quotes
 #
 # You can use the characters <tt>>>></tt> (unindented),
 # followed by indented text, to treat the text
@@ -255,7 +255,7 @@ require 'rdoc'
 # - {Horizontal rules}[rdoc-ref:RDoc::MarkupReference@Horizontal+Rules].
 # - {Text Markup}[rdoc-ref:RDoc:MarkupReference@Text+Markup].
 #
-# ==== Lists
+# === Lists
 #
 # Each type of list item is marked by a special beginning:
 #
@@ -287,7 +287,7 @@ require 'rdoc'
 # - {Horizontal rules}[rdoc-ref:RDoc::MarkupReference@Horizontal+Rules].
 # - {Text Markup}[rdoc-ref:RDoc:MarkupReference@Text+Markup].
 #
-# ===== Bullet Lists
+# ==== Bullet Lists
 #
 # A bullet list item begins with a hyphen or asterisk.
 #
@@ -311,7 +311,7 @@ require 'rdoc'
 #   * Yet another.
 #   - Last one.
 #
-# ===== Numbered Lists
+# ==== Numbered Lists
 #
 # A numbered list item begins with digits and a period.
 #
@@ -337,7 +337,7 @@ require 'rdoc'
 #   1. Yet another.
 #   1000. Last one.
 #
-# ===== Lettered Lists
+# ==== Lettered Lists
 #
 # A lettered list item begins with letters and a period.
 #
@@ -361,7 +361,7 @@ require 'rdoc'
 #   x. Yet another.
 #   a. Last one.
 #
-# ===== Labeled Lists
+# ==== Labeled Lists
 #
 # A labeled list item begins with one of:
 #
@@ -388,7 +388,7 @@ require 'rdoc'
 #   [bar baz] Yet another.
 #   bam:: Last one.
 #
-# ==== Headings
+# === Headings
 #
 # A heading begins with up to six equal-signs, followed by heading text.
 # Whitespace between those and the heading text is optional.
@@ -414,7 +414,7 @@ require 'rdoc'
 #
 # - {Text Markup}[rdoc-ref:RDoc:MarkupReference@Text+Markup].
 #
-# ==== Horizontal Rules
+# === Horizontal Rules
 #
 # A horizontal rule consists of a line with three or more hyphens
 # and nothing more.
@@ -435,9 +435,9 @@ require 'rdoc'
 #   -- Also not a horizontal rule.
 #   ---
 #
-# ==== Directives
+# === Directives
 #
-# ===== Directives for Allowing or Suppressing Documentation
+# ==== Directives for Allowing or Suppressing Documentation
 #
 # - <tt># :stopdoc:</tt>:
 #
@@ -526,7 +526,7 @@ require 'rdoc'
 #   /* :stopdoc: */
 #   /* :enddoc: */
 #
-# ===== Directive for Specifying \RDoc Source Format
+# ==== Directive for Specifying \RDoc Source Format
 #
 # - <tt># :markup: _type_</tt>:
 #
@@ -535,7 +535,7 @@ require 'rdoc'
 #     parameter +type+ is one of: +rdoc+ (the default), +markdown+, +rd+, +tomdoc+.
 #     See {Markup Formats}[rdoc-ref:RDoc::Markup@Markup+Formats].
 #
-# ===== Directives for Method Documentation
+# ==== Directives for Method Documentation
 #
 # - <tt># :call-seq:</tt>:
 #
@@ -568,7 +568,7 @@ require 'rdoc'
 #     overriding the actual yield in the code.
 #     See method #yields_directive.
 #
-# ===== Directives for Organizing Documentation
+# ==== Directives for Organizing Documentation
 #
 # By default, \RDoc groups:
 #
@@ -621,7 +621,7 @@ require 'rdoc'
 #     in the given section, or in the default section if no title is given.
 #     Subsequent methods are to be grouped into the current section.
 #
-# ===== Directive for Including a File
+# ==== Directive for Including a File
 #
 # - <tt># :include: _filepath_</tt>:
 #
@@ -637,7 +637,7 @@ require 'rdoc'
 #
 #   For C code, the directive may appear in a stand-alone comment
 #
-# ==== Text Markup
+# === Text Markup
 #
 # Text markup is metatext that affects HTML rendering:
 #
@@ -646,7 +646,7 @@ require 'rdoc'
 # - Links.
 # - Escapes: marking text as "not markup."
 #
-# ===== Typeface Markup
+# ==== Typeface Markup
 #
 # Typeface markup can specify that text is to be rendered
 # as italic, bold, or monofont.
@@ -656,7 +656,7 @@ require 'rdoc'
 # - More typeface markup:
 #   italic, bold, monofont.
 #
-# ====== Italic
+# ===== Italic
 #
 # Text may be marked as italic via HTML tag <tt><i></tt> or <tt><em></tt>.
 #
@@ -711,7 +711,7 @@ require 'rdoc'
 #
 #   ====== _Italic_ in a Heading
 #
-# ====== Bold
+# ===== Bold
 #
 # Text may be marked as bold via HTML tag <tt><b></tt>.
 #
@@ -768,7 +768,7 @@ require 'rdoc'
 #
 #   ===== *Bold* in a Heading
 #
-# ====== Monofont
+# ===== Monofont
 #
 # Text may be marked as monofont
 # -- sometimes called 'typewriter font' --
@@ -827,7 +827,7 @@ require 'rdoc'
 #
 #   ====== +Monofont+ in a Heading
 #
-# ==== Character Conversions
+# === Character Conversions
 #
 # Certain combinations of characters may be converted to special characters;
 # whether the conversion occurs depends on whether the special character
@@ -847,7 +847,7 @@ require 'rdoc'
 #
 # - <tt>foo --- bar</tt> converts to foo --- bar (1-character em-dash).
 #
-# ==== Links
+# === Links
 #
 # Certain strings in \RDoc text are converted to links.
 # Any such link may be suppressed by prefixing a backslash.
