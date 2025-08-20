@@ -1246,7 +1246,7 @@ class RDoc::MarkupReference
   #
   # Here is the <tt>:call-seq:</tt> directive given for the method:
   #
-  #   :call-seq:
+  #   \:call-seq:
   #     call_seq_directive(foo, bar)
   #     Can be anything -> bar
   #     Also anything more -> baz or bat
