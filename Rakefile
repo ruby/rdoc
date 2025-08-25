@@ -46,61 +46,86 @@ Rake::TestTask.new(:rubygems_test) do |t|
   t.pattern = "test/rdoc/rdoc_rubygems_hook_test.rb"
 end
 
-parsed_files = PARSER_FILES.map do |parser_file|
+def generate_parser_file(parser_file)
   ext = File.extname(parser_file)
   parsed_file = "#{parser_file.chomp(ext)}.rb"
 
-  file parsed_file => parser_file do |t|
-    puts "Generating #{parsed_file}..."
-    case ext
-    when '.ry' # need racc
-      rb_file = parser_file.gsub(/\.ry\z/, ".rb")
-      sh "bundle exec racc -l -E -o #{rb_file} #{parser_file}"
-      File.open(rb_file, 'r+') do |f|
-        newtext = "# frozen_string_literal: true\n#{f.read}"
-        f.rewind
-        f.write newtext
-      end
-    when '.kpeg' # need kpeg
-      rb_file = parser_file.gsub(/\.kpeg\z/, ".rb")
-      sh "bundle exec kpeg -fsv -o #{rb_file} #{parser_file}"
-      File.write(rb_file, File.read(rb_file).gsub(/ +$/, '')) # remove trailing spaces
+  puts "Generating #{parsed_file}..."
+  case ext
+  when '.ry' # need racc
+    sh "bundle", "exec", "racc", "-l", "-E", "-o", parsed_file, parser_file
+    File.open(parsed_file, 'r+') do |f|
+      newtext = "# frozen_string_literal: true\n#{f.read}"
+      f.rewind
+      f.write newtext
     end
+  when '.kpeg' # need kpeg
+    sh "bundle", "exec", "kpeg", "-fsv", "-o", parsed_file, parser_file
+    File.write(parsed_file, File.read(parsed_file).gsub(/ +$/, '')) # remove trailing spaces
   end
 
   parsed_file
 end
 
-RuboCop::RakeTask.new(:format_generated_files) do |t|
-  t.options = parsed_files + ["--config=.generated_files_rubocop.yml"]
+desc "Generate all files used racc and kpeg"
+task :generate do
+  generated_files = PARSER_FILES.map { |f| generate_parser_file(f) }
+
+  # Run RuboCop autocorrect on generated files
+  require 'rubocop'
+  cli = RuboCop::CLI.new
+  cli.run([
+    "--config=.generated_files_rubocop.yml",
+    "--autocorrect",
+    *generated_files
+  ])
 end
 
-desc "Generate all files used racc and kpeg"
-task generate: [*parsed_files, "format_generated_files:autocorrect"]
-
 desc "Verify that generated parser files are up to date"
-task verify_generated: :generate do
-  # Check if there are any uncommitted changes to the generated files
+# Note: This task generates files to verify changes in the parser files.
+# So the result is not deterministic with multiple runs.
+# We can improve this by using a temporary directory and checking the diff but it's more complex to maintain.
+task :verify_generated do
+  parsed_files = PARSER_FILES.map { |f| f.sub(/\.(ry|kpeg)\z/, '.rb') }
+
+  # Save current state of generated files
+  original_content = {}
+  parsed_files.each do |file|
+    original_content[file] = File.read(file)
+  end
+
+  # Generate files from current source
+  Rake::Task[:generate].invoke
+
+  # Check if any files changed
+  changed_files = []
   parsed_files.each do |file|
     unless File.exist?(file)
       abort "Generated file #{file} does not exist!"
     end
+
+    new_content = File.read(file)
+    if original_content[file] != new_content
+      changed_files << file
+    end
   end
 
-  diff_output = `git diff --exit-code #{parsed_files.join(' ')} 2>&1`
-  unless $?.success?
+  if changed_files.empty?
+    puts "Generated parser files are up to date."
+  else
     puts "Generated parser files are out of date!"
-    puts "Please run 'rake generate' and commit the changes."
-    puts "\nDifferences found:"
-    puts diff_output
+    puts "Please run 'rake generate' to update the files."
+    puts
+    puts "Files that are out of date:"
+    changed_files.each { |f| puts "  - #{f}" }
     exit 1
   end
-  puts "Generated parser files are up to date."
 end
 
 task :clean do
-  parsed_files.each do |path|
-    File.delete(path) if File.exist?(path)
+  PARSER_FILES.each do |parser_file|
+    parsed_file = parser_file.sub(/\.(ry|kpeg)\z/, '.rb')
+    File.delete(parsed_file) if File.exist?(parsed_file)
   end
 end
 
