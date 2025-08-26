@@ -57,6 +57,12 @@ require 'rdoc'
 #   but may (depending on how the documentation is built)
 #   become a separate page.
 #
+# Note that all of the above applies to \RDoc <tt>markup</tt>-formatted documentation:
+#
+# - A C- or \Ruby-coded file may contain <tt>markdown</tt>-formatted documentation,
+#   though that format must be declared (because the default is +markup+).
+# - A markdown (<tt>.md</tt>) file contains only <tt>markdown</tt>-formatted documentation.
+#
 # == Markup Document
 #
 # The term <i>markup document</i> refers to one of:
