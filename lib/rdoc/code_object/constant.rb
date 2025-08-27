@@ -174,6 +174,20 @@ class RDoc::Constant < RDoc::CodeObject
     @file = @store.add_file @file.full_name if @file
   end
 
+  ##
+  # Process comment as YARD comment
+  def comment=(comment)
+    # Process YARD tags while we still have the RDoc::Comment object
+    if comment.is_a?(RDoc::Comment)
+      RDoc::YARD.process(comment, self)
+    end
+
+    # Then set the comment normally
+    super(comment)
+
+    @comment
+  end
+
   def to_s # :nodoc:
     parent_name = parent ? parent.full_name : '(unknown)'
     if is_alias_for
