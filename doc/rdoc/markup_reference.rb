@@ -124,14 +124,8 @@ require 'rdoc'
 #
 #   You'll love it.
 #
-# A paragraph may contain nested blocks, including:
+# A paragraph may contain only one type of nested block:
 #
-# - {Verbatim text blocks}[rdoc-ref:RDoc::MarkupReference@Verbatim+Text+Blocks].
-# - {Code blocks}[rdoc-ref:RDoc::MarkupReference@Code+Blocks].
-# - {Block quotes}[rdoc-ref:RDoc::MarkupReference@Block+Quotes].
-# - {Lists}[rdoc-ref:RDoc::MarkupReference@Lists].
-# - {Headings}[rdoc-ref:RDoc::MarkupReference@Headings].
-# - {Horizontal rules}[rdoc-ref:RDoc::MarkupReference@Horizontal+Rules].
 # - {Text Markup}[rdoc-ref:RDoc:MarkupReference@Text+Markup].
 #
 # ==== Verbatim Text Blocks
