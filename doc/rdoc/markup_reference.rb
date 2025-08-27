@@ -1,5 +1,10 @@
 require 'rdoc'
 
+# This page is about RDoc's +rdoc+ input format,
+# which here we'll call "RDoc markup" or simply "markup."
+#
+# == About This \Class
+#
 # \Class \RDoc::MarkupReference exists only to provide a suitable home
 # for a reference document for \RDoc markup.
 #
@@ -21,9 +26,9 @@ require 'rdoc'
 #   >>>
 #     Some stuff
 #
-# == \RDoc Sources
+# == Markup Sources
 #
-# The sources of \RDoc documentation vary according to the type of file:
+# The sources of markup documentation vary according to the type of file:
 #
 # - <tt>.rb</tt> (Ruby code file):
 #
@@ -31,7 +36,7 @@ require 'rdoc'
 #     A comment that immediately precedes the definition
 #     of a Ruby class, module, method, alias, constant, or attribute
 #     becomes the documentation for that defined object.
-#   - An \RDoc directive may be found in:
+#   - A markup directive may be found in:
 #
 #     - A trailing comment (on the same line as code);
 #       see <tt>:nodoc:</tt>, <tt>:doc:</tt>, and <tt>:notnew:</tt>.
@@ -39,25 +44,32 @@ require 'rdoc'
 #       see other {Directives}[rdoc-ref:RDoc::MarkupReference@Directives].
 #
 #   - Documentation may be derived from the Ruby code itself;
-#     see {Documentation Derived from Ruby Code}[rdoc-ref:RDoc::MarkupReference@Documentation+Derived+from+Ruby+Code].
+#     see {Derived Documentation}[rdoc-ref:RDoc::MarkupReference@Derived+Documentation].
 #
 # - <tt>.c</tt> (C code file): markup is parsed from C comments.
 #   A comment that immediately precedes
 #   a function that implements a Ruby method,
 #   or otherwise immediately precedes the definition of a Ruby object,
 #   becomes the documentation for that object.
-# - <tt>.rdoc</tt> (\RDoc markup text file) or <tt>.md</tt> (\RDoc markdown text file):
+# - <tt>.rdoc</tt> (markup file):
 #   markup is parsed from the entire file.
 #   The text is not associated with any code object,
 #   but may (depending on how the documentation is built)
 #   become a separate page.
 #
-# An <i>RDoc document</i>:
+# Note that all of the above applies to \RDoc <tt>markup</tt>-formatted documentation:
+#
+# - A C- or \Ruby-coded file may contain <tt>markdown</tt>-formatted documentation,
+#   though that format must be declared (because the default is +markup+).
+# - A markdown (<tt>.md</tt>) file contains only <tt>markdown</tt>-formatted documentation.
+#
+# == Markup Document
+#
+# The term <i>markup document</i> refers to one of:
 #
 # - A (possibly multi-line) comment in a Ruby or C file
-#   that generates \RDoc documentation (as above).
-# - The entire markup (<tt>.rdoc</tt>) file or markdown (<tt>.md</tt>) file
-#   (which is usually multi-line).
+#   that generates documentation (as above).
+# - An entire markup file (i.e., a file with extension <tt>.rdoc</tt>).
 #
 # == Blocks
 #
@@ -1141,7 +1153,7 @@ require 'rdoc'
 #     - A double escape character \\ that is rendered
 #       as a single backslash.
 #
-# == Documentation Derived from Ruby Code
+# == Derived Documentation
 #
 # [Class]
 #
@@ -1149,6 +1161,7 @@ require 'rdoc'
 #
 #   - \Class name.
 #   - Parent class.
+#   - Included modules.
 #   - Singleton methods.
 #   - Instance methods.
 #   - Aliases.
@@ -1160,6 +1173,7 @@ require 'rdoc'
 #   By default, \RDoc documents:
 #
 #   - \Module name.
+#   - Included modules.
 #   - \Singleton methods.
 #   - Instance methods.
 #   - Aliases.
