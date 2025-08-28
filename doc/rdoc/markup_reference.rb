@@ -509,7 +509,7 @@ require 'rdoc'
 # Aliased as <tt>:not_new:</tt> and <tt>:not-new:</tt>.
 #
 # For Ruby code, but not for other \RDoc sources,
-# there is a shorthand for <tt>:stopdoc:</tt> and <tt>:startdoc:</tt>
+# there is a shorthand for <tt>:stopdoc:</tt> and <tt>:startdoc:</tt>:
 #
 #   # Documented.
 #   #--
