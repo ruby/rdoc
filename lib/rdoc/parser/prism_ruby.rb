@@ -510,13 +510,21 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
     receiver = receiver_name ? find_or_create_module_path(receiver_name, receiver_fallback_type) : @container
     meth = RDoc::AnyMethod.new(nil, name, singleton: singleton)
+
     if (comment = consecutive_comment(start_line))
       handle_consecutive_comment_directive(@container, comment)
       handle_consecutive_comment_directive(meth, comment)
 
       comment.normalize
       meth.call_seq = comment.extract_call_seq
+
+      # Save visibility before comment assignment (where YARD processing happens)
+      visibility_before = meth.visibility
       meth.comment = comment
+      # Check if YARD tags changed the visibility
+      if meth.visibility != visibility_before
+        visibility = meth.visibility
+      end
     end
     handle_modifier_directive(meth, start_line)
     handle_modifier_directive(meth, args_end_line)
@@ -527,7 +535,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       receiver,
       meth,
       line_no: start_line,
-      visibility: visibility,
+      visibility: visibility,  # Use YARD visibility if set, otherwise use Ruby visibility
       params: params,
       calls_super: calls_super,
       block_params: block_params,
