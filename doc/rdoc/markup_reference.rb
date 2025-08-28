@@ -459,7 +459,8 @@ require 'rdoc'
 # ====== <tt>:nodoc:</tt>
 #
 # - Appended to a line of code
-#   that defines a class, module, method, alias, constant, or attribute.
+#   that defines a class, module, method, alias, constant, or attribute;
+#   takes optional argument +all+ (<tt>:nodoc: all</tt>).
 # - Specifies that the defined object should not be documented.
 #
 # For a method definition in C code, it the directive must be in the comment line
@@ -485,7 +486,7 @@ require 'rdoc'
 # For a constant definition in C code, this directive <em>can not work</em>
 # because there is no "implementation" place for a constant.
 #
-# With argument +all+:
+# With argument +all+ (<tt>:nodoc: all</tt>),
 # specifies that the class or module should not be documented.
 # By default, however, a nested class or module _will_ be documented.
 #
@@ -528,8 +529,7 @@ require 'rdoc'
 #
 # ====== <tt>:markup:</tt>
 #
-# - Appears on a line by itself.
-# - Takes argument +format+.
+# - Appears on a line by itself; takes argument +format+ (<tt>:markup: _format_</tt>).
 # - Specifies the format for the \RDoc input;
 #   argument +format+ is one of: +rdoc+ (the default), +markdown+, +rd+, +tomdoc+.
 #   See {Markup Formats}[rdoc-ref:RDoc::Markup@Markup+Formats].
@@ -555,8 +555,7 @@ require 'rdoc'
 #
 # ====== <tt>:args:</tt>
 #
-# - Appears on a line by itself.
-# - Takes argument +arg_names+.
+# - Appears on a line by itself; takes argument +arg_names+ (<tt>:args: _arg_names_</tt>).
 # - Specifies the arguments to be reported in the HTML,
 #   overriding the actual arguments in the code.
 #   See method #args_directive.
@@ -565,8 +564,7 @@ require 'rdoc'
 #
 # ====== <tt>:yields:</tt>
 #
-# - Appears on a line by itself.
-# - Takes argument +arg_names+.
+# - Appears on a line by itself; takes argument +arg_names+ (<tt>:yields: _arg_names_</tt>).
 # - Specifies the yield arguments to be reported in the HTML,
 #   overriding the actual yield in the code.
 #   See method #yields_directive.
@@ -585,10 +583,9 @@ require 'rdoc'
 #
 # ====== <tt>:section:</tt>
 #
-# - Appears on a line by itself.
-# - Takes argument +section_title+.
+# - Appears on a line by itself; takes argument +section_title+ (<tt>:section: _section_title_</tt>).
 # - Specifies that following methods are to be grouped into the section
-#   with the given <em>section_title</em>,
+#   with the given +section_title+,
 #   or into the default section if no title is given.
 #   The directive remains in effect until another such directive is given,
 #   but may be temporarily overridden by directive <tt>:category:</tt>.
@@ -622,8 +619,7 @@ require 'rdoc'
 #
 # ====== <tt>:category:</tt>
 #
-# - Appears on a line by itself.
-# - Takes argument +section_title+.
+# - Appears on a line by itself; takes argument +section_title+ (<tt>:category: _section_title_</tt>).
 # - Specifies that just one following method is to be included
 #   in the given section, or in the default section if no title is given.
 #   Subsequent methods are to be grouped into the current section.
@@ -632,8 +628,7 @@ require 'rdoc'
 #
 # ====== <tt>:include:</tt>
 #
-# - Appears on a line by itself.
-# - Takes argument +filepath+.
+# - Appears on a line by itself; takes argument +filepath+ (<tt>:include: _filepath_</tt>).
 # - Specifies that the contents of the given file
 #   are to be included at this point.
 #
