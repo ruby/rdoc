@@ -506,7 +506,7 @@ require 'rdoc'
 #   Note that instance method +initialize+ is private, and so by default
 #   is not documented.
 #
-# Aliased as <tt>:not_new:</tt> and <tt>:not-new:</tt>).
+# Aliased as <tt>:not_new:</tt> and <tt>:not-new:</tt>.
 #
 # For Ruby code, but not for other \RDoc sources,
 # there is a shorthand for <tt>:stopdoc:</tt> and <tt>:startdoc:</tt>
