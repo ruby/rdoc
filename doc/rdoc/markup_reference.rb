@@ -571,7 +571,7 @@ require 'rdoc'
 #   overriding the actual yield in the code.
 #   See method #yields_directive.
 #
-# Aliased as <tt>:yield:</tt>).
+# Aliased as <tt>:yield:</tt>.
 #
 # ===== Directives for Organizing Documentation
 #
