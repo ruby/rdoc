@@ -451,76 +451,75 @@ require 'rdoc'
 #
 # ==== Directives for Allowing or Suppressing Documentation
 #
-# - <tt># :stopdoc:</tt>:
+# ====== <tt>:stopdoc:</tt>
 #
-#   - Appears on a line by itself.
-#   - Specifies that \RDoc should ignore markup
-#     until next <tt>:startdoc:</tt> directive or end-of-file.
+# - Appears on a line by itself.
+# - Specifies that \RDoc should ignore markup
+#   until next <tt>:startdoc:</tt> directive or end-of-file.
 #
-# - <tt># :startdoc:</tt>:
+# ====== <tt>:startdoc:</tt>
 #
-#   - Appears on a line by itself.
-#   - Specifies that \RDoc should resume parsing markup.
+# - Appears on a line by itself.
+# - Specifies that \RDoc should resume parsing markup.
 #
-# - <tt># :enddoc:</tt>:
+# ====== <tt>:enddoc:</tt>
 #
-#   - Appears on a line by itself.
-#   - Specifies that \RDoc should ignore markup to end-of-file
-#     regardless of other directives.
+# - Appears on a line by itself.
+# - Specifies that \RDoc should ignore markup to end-of-file
+#   regardless of other directives.
 #
-# - <tt># :nodoc:</tt>:
+# ====== <tt>:nodoc:</tt>
 #
-#   - Appended to a line of code
-#     that defines a class, module, method, alias, constant, or attribute.
+# - Appended to a line of code
+#   that defines a class, module, method, alias, constant, or attribute;
+#   takes optional argument +all+ (<tt>:nodoc: all</tt>).
+# - Specifies that the defined object should not be documented.
 #
-#   - Specifies that the defined object should not be documented.
+# For a method definition in C code, it the directive must be in the comment line
+# immediately preceding the definition:
 #
-#   - For a method definition in C code, it the directive must be in the comment line
-#     immediately preceding the definition:
+#   /* :nodoc: */
+#   static VALUE
+#   some_method(VALUE self)
+#   {
+#     return self;
+#   }
 #
-#         /* :nodoc: */
-#         static VALUE
-#         some_method(VALUE self)
-#         {
-#             return self;
-#         }
+# Note that this directive has <em>no effect at all</em>
+# when placed at the method declaration:
 #
-#     Note that this directive has <em>no effect at all</em>
-#     when placed at the method declaration:
+#   /* :nodoc: */
+#   rb_define_method(cMyClass, "do_something", something_func, 0);
 #
-#         /* :nodoc: */
-#         rb_define_method(cMyClass, "do_something", something_func, 0);
+# The above comment is just a comment and has nothing to do with \RDoc.
+# Therefore, +do_something+ method will be reported as "undocumented"
+# unless that method or function is documented elsewhere.
 #
-#     The above comment is just a comment and has nothing to do with \RDoc.
-#     Therefore, +do_something+ method will be reported as "undocumented"
-#     unless that method or function is documented elsewhere.
+# For a constant definition in C code, this directive <em>can not work</em>
+# because there is no "implementation" place for a constant.
 #
-#   - For a constant definition in C code, this directive <em>can not work</em>
-#     because there is no "implementation" place for a constant.
+# With argument +all+ (<tt>:nodoc: all</tt>),
+# specifies that the class or module should not be documented.
+# By default, however, a nested class or module _will_ be documented.
 #
-# - <tt># :nodoc: all</tt>:
+# ====== <tt>:doc:</tt>
 #
-#   - Appended to a line of code
-#     that defines a class or module.
-#   - Specifies that the class or module should not be documented.
-#     By default, however, a nested class or module _will_ be documented.
+# - Appended to a line of code
+#   that defines a class, module, method, alias, constant, or attribute.
+# - Specifies the defined object should be documented, even if it otherwise
+#   would not be documented.
 #
-# - <tt># :doc:</tt>:
+# ====== <tt>:notnew:</tt>
 #
-#   - Appended to a line of code
-#     that defines a class, module, method, alias, constant, or attribute.
-#   - Specifies the defined object should be documented, even if it otherwise
-#     would not be documented.
+# - Appended to a line of code
+#   that defines instance method +initialize+.
+# - Specifies that singleton method +new+ should not be documented.
+#   By default, Ruby fakes a corresponding singleton method +new+,
+#   which \RDoc includes in the documentation.
+#   Note that instance method +initialize+ is private, and so by default
+#   is not documented.
 #
-# - <tt># :notnew:</tt> (aliased as <tt>:not_new:</tt> and <tt>:not-new:</tt>):
-#
-#   - Appended to a line of code
-#     that defines instance method +initialize+.
-#   - Specifies that singleton method +new+ should not be documented.
-#     By default, Ruby fakes a corresponding singleton method +new+,
-#     which \RDoc includes in the documentation.
-#     Note that instance method +initialize+ is private, and so by default
-#     is not documented.
+# Aliased as <tt>:not_new:</tt> and <tt>:not-new:</tt>.
 #
 # For Ruby code, but not for other \RDoc sources,
 # there is a shorthand for <tt>:stopdoc:</tt> and <tt>:startdoc:</tt>:
@@ -540,45 +539,49 @@ require 'rdoc'
 #
 # ==== Directive for Specifying \RDoc Source Format
 #
-# - <tt># :markup: _type_</tt>:
+# ====== <tt>:markup:</tt>
 #
-#   - Appears on a line by itself.
-#   - Specifies the format for the \RDoc input;
-#     parameter +type+ is one of: +rdoc+ (the default), +markdown+, +rd+, +tomdoc+.
-#     See {Markup Formats}[rdoc-ref:RDoc::Markup@Markup+Formats].
+# - Appears on a line by itself; takes argument +format+ (<tt>:markup: _format_</tt>).
+# - Specifies the format for the \RDoc input;
+#   argument +format+ is one of: +rdoc+ (the default), +markdown+, +rd+, +tomdoc+.
+#   See {Markup Formats}[rdoc-ref:RDoc::Markup@Markup+Formats].
 #
 # ==== Directives for Method Documentation
 #
-# - <tt># :call-seq:</tt>:
+# ====== <tt>:call-seq:</tt>
 #
-#   - Appears on a line by itself.
-#   - Specifies the calling sequence to be reported in the HTML,
-#     overriding the actual calling sequence in the code.
-#     See method #call_seq_directive.
+# - Appears on a line by itself.
+# - Specifies the calling sequence to be reported in the HTML,
+#   overriding the actual calling sequence in the code.
+#   See method #call_seq_directive.
 #
-#   Note that \RDoc can build the calling sequence for a Ruby-coded method,
-#   but not for other languages.
-#   You may want to override that by explicitly giving a <tt>:call-seq:</tt>
-#   directive if you want to include:
+# Note that \RDoc can build the calling sequence for a Ruby-coded method,
+# but not for other languages.
+# You may want to override that by explicitly giving a <tt>:call-seq:</tt>
+# directive if you want to include:
 #
-#   - A return type, which is not automatically inferred.
-#   - Multiple calling sequences.
+# - A return type, which is not automatically inferred.
+# - Multiple calling sequences.
 #
-#   For C code, the directive may appear in a stand-alone comment.
+# For C code, the directive may appear in a stand-alone comment.
 #
-# - <tt># :args: _arg_names_</tt> (aliased as <tt>:arg:</tt>):
+# ====== <tt>:args:</tt>
 #
-#   - Appears on a line by itself.
-#   - Specifies the arguments to be reported in the HTML,
-#     overriding the actual arguments in the code.
-#     See method #args_directive.
+# - Appears on a line by itself; takes argument +arg_names+ (<tt>:args: _arg_names_</tt>).
+# - Specifies the arguments to be reported in the HTML,
+#   overriding the actual arguments in the code.
+#   See method #args_directive.
 #
-# - <tt># :yields: _arg_names_</tt> (aliased as <tt>:yield:</tt>):
+# Aliased as <tt>:arg:</tt>.
 #
-#   - Appears on a line by itself.
-#   - Specifies the yield arguments to be reported in the HTML,
-#     overriding the actual yield in the code.
-#     See method #yields_directive.
+# ====== <tt>:yields:</tt>
+#
+# - Appears on a line by itself; takes argument +arg_names+ (<tt>:yields: _arg_names_</tt>).
+# - Specifies the yield arguments to be reported in the HTML,
+#   overriding the actual yield in the code.
+#   See method #yields_directive.
+#
+# Aliased as <tt>:yield:</tt>.
 #
 # ==== Directives for Organizing Documentation
 #
@@ -590,64 +593,65 @@ require 'rdoc'
 #
 # You can use directives to modify those behaviors.
 #
-# - <tt># :section: _section_title_</tt>:
+# ====== <tt>:section:</tt>
 #
-#   - Appears on a line by itself.
-#   - Specifies that following methods are to be grouped into the section
-#     with the given <em>section_title</em>,
-#     or into the default section if no title is given.
-#     The directive remains in effect until another such directive is given,
-#     but may be temporarily overridden by directive <tt>:category:</tt>.
-#     See below.
+# - Appears on a line by itself; takes argument +section_title+ (<tt>:section: _section_title_</tt>).
+# - Specifies that following methods are to be grouped into the section
+#   with the given +section_title+,
+#   or into the default section if no title is given.
+#   The directive remains in effect until another such directive is given,
+#   but may be temporarily overridden by directive <tt>:category:</tt>.
+#   See below.
 #
-#   The comment block containing this directive:
+# The comment block containing this directive:
 #
-#   - Must be separated by a blank line from the documentation for the next item.
-#   - May have one or more lines preceding the directive.
-#     These will be removed, along with any trailing lines that match them.
-#     Such lines may be visually helpful.
-#   - Lines of text that are not so removed become the descriptive text
-#     for the section.
+# - Must be separated by a blank line from the documentation for the next item.
+# - May have one or more lines preceding the directive.
+#   These will be removed, along with any trailing lines that match them.
+#   Such lines may be visually helpful.
+# - Lines of text that are not so removed become the descriptive text
+#   for the section.
 #
-#   Example:
+# Example:
 #
-#     # ----------------------------------------
-#     # :section: My Section
-#     # This is the section that I wrote.
-#     # See it glisten in the noon-day sun.
-#     # ----------------------------------------
+#   # ----------------------------------------
+#   # :section: My Section
+#   # This is the section that I wrote.
+#   # See it glisten in the noon-day sun.
+#   # ----------------------------------------
 #
-#     ##
-#     # Comment for some_method
-#     def some_method
-#       # ...
-#     end
+#   ##
+#   # Comment for some_method
+#   def some_method
+#     # ...
+#   end
 #
-#   You can use directive <tt>:category:</tt> to temporarily
-#   override the current section.
+# You can use directive <tt>:category:</tt> to temporarily
+# override the current section.
 #
-# - <tt># :category: _section_title_</tt>:
+# ====== <tt>:category:</tt>
 #
-#   - Appears on a line by itself.
-#   - Specifies that just one following method is to be included
-#     in the given section, or in the default section if no title is given.
-#     Subsequent methods are to be grouped into the current section.
+# - Appears on a line by itself; takes argument +section_title+ (<tt>:category: _section_title_</tt>).
+# - Specifies that just one following method is to be included
+#   in the given section, or in the default section if no title is given.
+#   Subsequent methods are to be grouped into the current section.
 #
 # ==== Directive for Including a File
 #
-# - <tt># :include: _filepath_</tt>:
+# ====== <tt>:include:</tt>
 #
-#   - Appears on a line by itself.
-#   - Specifies that the contents of the given file
-#     are to be included at this point.
-#     The file content is shifted to have the same indentation as the colon
-#     at the start of the directive.
+# - Appears on a line by itself; takes argument +filepath+ (<tt>:include: _filepath_</tt>).
+# - Specifies that the contents of the given file
+#   are to be included at this point.
 #
-#     The file is searched for in the directory containing the current file,
-#     and then in each of the directories given with the <tt>--include</tt>
-#     command-line option.
+# The file content is shifted to have the same indentation as the colon
+# at the start of the directive.
 #
-#   For C code, the directive may appear in a stand-alone comment
+# The file is searched for in the directory containing the current file,
+# and then in each of the directories given with the <tt>--include</tt>
+# command-line option.
+#
+# For C code, the directive may appear in a stand-alone comment
 #
 # === Text Markup
 #
