@@ -563,6 +563,39 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     assert_include(content, '<link rel="canonical" href="https://docs.ruby-lang.org/en/master/CONTRIBUTING_rdoc.html">')
   end
 
+  def test_version_select_for_index
+    @store.options.version_roots = @options.version_roots = {
+      "master" => "https://docs.ruby-lang.org/en/master/",
+      "3.4"    => "https://docs.ruby-lang.org/en/3.4/"
+    }
+    @g.generate
+
+    content = File.binread("index.html")
+
+    assert_include(content, '<select id="version-select">')
+    assert_include(content, '<option value="https://docs.ruby-lang.org/en/master/">master</option>')
+    assert_include(content, '<option value="https://docs.ruby-lang.org/en/3.4/">3.4</option>')
+  end
+
+  def test_version_select_for_classes
+    top_level = @store.add_file("file.rb")
+    top_level.add_class(@klass.class, @klass.name)
+    inner = @klass.add_class(RDoc::NormalClass, "Inner")
+
+    @store.options.version_roots = @options.version_roots = {
+      "master" => "https://docs.ruby-lang.org/en/master/",
+      "3.4"    => "https://docs.ruby-lang.org/en/3.4/"
+    }
+    @g.generate
+
+    content = File.binread("Klass/Inner.html")
+
+    assert_include(content, '<select id="version-select">')
+    assert_include(content, '<option value="https://docs.ruby-lang.org/en/master/Klass/Inner.html">master</option>')
+    assert_include(content, '<option value="https://docs.ruby-lang.org/en/3.4/Klass/Inner.html">3.4</option>')
+  end
+
+
   ##
   # Asserts that +filename+ has a link count greater than 1 if hard links to
   # @tmpdir are supported.
