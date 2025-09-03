@@ -3,10 +3,11 @@
 \RDoc derives Ruby documentation from files
 that are selected by \RDoc defaults and by user specifications.
 
-\RDoc reads files and directories specified as arguments on the `rdoc` command line
-(`'.'` if no arguments given).
+\RDoc reads files and directories specified as arguments on the `rdoc` command line;
+if no arguments are given, reads files and directories starting in `'.'`
+the current working directory.
 
-When the argument is:
+When anq argument is:
 
 - A file path: \RDoc reads the file.
 - A directory path:
@@ -19,7 +20,7 @@ When the argument is:
 Based on the file extension of a file name,
 \RDoc assumes its content to be one of these:
 
-- `.rb`: Ruby code.
+- `.rb`, `.rbw`: Ruby code.
 - `.c`, `.h`, `.C`, `.H`: C code.
 - `.rdoc`: Text file in `rdoc` (markup) format.
 - `.md`: Text file in `markdown` format.
@@ -68,7 +69,7 @@ Each directory in the filetree may (or may not) contain a document-control file.
 Note that a document-control file in a subdirectory is read _after_ document-control files
 in directories above it;
 therefore if file `parent/.document` specifies `child/foo.rb`,
-then `child/foo.rb` is to be read regardless of the content of `child/.document`.
+then `child/foo.rb` is read regardless of the content of `child/.document`.
 
 [document-control files]: rdoc-ref:rdoc_sources.md@Document-Control+Files
 [directive markup]: https://ruby.github.io/rdoc/RDoc/MarkupReference.html#class-RDoc::MarkupReference-label-3Amarkup-3A
