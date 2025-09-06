@@ -58,14 +58,14 @@ Paragraph containing *bold_word*.
 
 = Heading containing *bold_word*.
 
-Paragraph containing <tt>bold phrase</tt>.
+Paragraph containing <b>bold phrase</b>.
 
 >>>
-  Block quote containing <tt>bold phrase</tt>.
+  Block quote containing <b>bold phrase</b>.
 
-- List item containing <tt>bold phrase</tt>.
+- List item containing <b>bold phrase</b>.
 
-= Heading containing <tt>bold phrase</tt>.
+= Heading containing <b>bold phrase</b>.
 
 MARKUP
     Helper.run_rdoc(__method__, markup) do |html_lines|
@@ -76,7 +76,7 @@ MARKUP
       # Check count of bold phrases.
       bold_phrase_lines = Helper.select_lines(html_lines, '<strong>bold phrase</strong>')
       # (Five, not four, b/c the heading generates two.)
-      assert_equal(5, bold_word_lines.size)
+      assert_equal(5, bold_phrase_lines.size)
     end
   end
 
