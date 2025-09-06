@@ -80,4 +80,70 @@ MARKUP
     end
   end
 
+  def test_monofont
+    markup = <<MARKUP
+
+Paragraph containing +monofont_word+.
+
+>>>
+  Block quote containing +monofont_word+.
+
+- List item containing +monofont_word+.
+
+= Heading containing +monofont_word+.
+
+Paragraph containing <tt>monofont phrase</tt>.
+
+>>>
+  Block quote containing <tt>monofont phrase</tt>.
+
+- List item containing <tt>monofont phrase</tt>.
+
+= Heading containing <tt>monofont phrase</tt>.
+
+Paragraph containing <code>monofont phrase</code>.
+
+>>>
+  Block quote containing <code>monofont phrase</code>.
+
+- List item containing <code>monofont phrase</code>.
+
+= Heading containing <code>monofont phrase</code>.
+
+MARKUP
+    Helper.run_rdoc(__method__, markup) do |html_lines|
+      monofont_word_lines = Helper.select_lines(html_lines, '<code>monofont_word</code>')
+      # Check count of monofont words.
+      # (Five, not four, b/c the heading generates two.)
+      assert_equal(5, monofont_word_lines.size)
+      monofont_phrase_lines = Helper.select_lines(html_lines, '<code>monofont phrase</code>')
+      # Check count of monofont phrases.
+      # (Ten, not eight, b/c each heading generates two.)
+      assert_equal(10, monofont_phrase_lines.size)
+    end
+  end
+
+  def test_character_conversions
+    convertible_characters = %w[(c) (r) ... -- --- 'foo' "bar"].join(' ')
+
+    markup = <<MARKUP
+
+Paragraph containing #{convertible_characters}.
+
+>>>
+  Block quote containing #{convertible_characters}.
+
+- List item containing #{convertible_characters}.
+
+= Heading containing #{convertible_characters}.
+
+MARKUP
+    Helper.run_rdoc(__method__, markup) do |html_lines|
+      converted_character_lines = Helper.select_lines(html_lines, '© ® … – — ‘foo’ “bar”')
+      # Check count of converted character lines.
+      # (The heading line contains escapes, and so does not match.)
+      assert_equal(4, converted_character_lines.size)
+    end
+  end
+
 end
