@@ -32,8 +32,9 @@ class Helper
 
     # Run rdoc, to create the HTML file.
     Dir.chdir(@dirpath) do
-      command = "rdoc #{rdoc_filepath}"
-      system(command)
+      `rdoc #{rdoc_filepath}`
+      # command = "rdoc #{rdoc_filepath}"
+      # system(command)
     end
 
     # Get the HTML as lines.
