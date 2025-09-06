@@ -141,7 +141,7 @@ MARKUP
     Helper.run_rdoc(__method__, markup) do |html_lines|
       converted_character_lines = Helper.select_lines(html_lines, '© ® … – — ‘foo’ “bar”')
       # Check count of converted character lines.
-      # (The heading line contains escapes, and so does not match.)
+      # (The generated heading line contains escapes, and so does not match.)
       assert_equal(4, converted_character_lines.size)
     end
   end
