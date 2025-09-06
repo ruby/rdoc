@@ -6,21 +6,25 @@ include REXML
 
 class Helper
 
+  # Create temporary directory.
   def self.setup(filestem)
     @dirpath = File.join(Dir.tmpdir, 'MarkupTest-' + filestem)
     FileUtils.rm_rf(@dirpath)
     Dir.mkdir(@dirpath)
   end
 
+  # Remove temporary directory.
   def self.teardown
     FileUtils.rm_rf(@dirpath)
   end
 
+  # Convenience method for selecting lines.
   def self.select_lines(lines, pattern)
     lines.select { |line| line.match(pattern) }
   end
 
-  def self.run_rdoc(method, markup)
+  # Run rdoc for given markup; method is used in setup.
+  def self.run_rdoc(markup, method)
 
     filestem = method.to_s
     self.setup(filestem)

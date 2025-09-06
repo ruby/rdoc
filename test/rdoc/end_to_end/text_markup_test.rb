@@ -34,7 +34,7 @@ Paragraph containing <em>italic phrase</em>.
 = Heading containing <em>italic phrase</em>.
 
 MARKUP
-    Helper.run_rdoc(__method__, markup) do |html_lines|
+    Helper.run_rdoc(markup, __method__) do |html_lines|
       italic_word_lines = Helper.select_lines(html_lines, '<em>italic_word</em>')
       # Check count of italic words.
       # (Five, not four, b/c the heading generates two.)
@@ -68,7 +68,7 @@ Paragraph containing <b>bold phrase</b>.
 = Heading containing <b>bold phrase</b>.
 
 MARKUP
-    Helper.run_rdoc(__method__, markup) do |html_lines|
+    Helper.run_rdoc(markup, __method__) do |html_lines|
       # Check count of bold words.
       bold_word_lines = Helper.select_lines(html_lines, '<strong>bold_word</strong>')
       # (Five, not four, b/c the heading generates two.)
@@ -111,7 +111,7 @@ Paragraph containing <code>monofont phrase</code>.
 = Heading containing <code>monofont phrase</code>.
 
 MARKUP
-    Helper.run_rdoc(__method__, markup) do |html_lines|
+    Helper.run_rdoc(markup, __method__) do |html_lines|
       monofont_word_lines = Helper.select_lines(html_lines, '<code>monofont_word</code>')
       # Check count of monofont words.
       # (Five, not four, b/c the heading generates two.)
@@ -138,7 +138,7 @@ Paragraph containing #{convertible_characters}.
 = Heading containing #{convertible_characters}.
 
 MARKUP
-    Helper.run_rdoc(__method__, markup) do |html_lines|
+    Helper.run_rdoc(markup, __method__) do |html_lines|
       converted_character_lines = Helper.select_lines(html_lines, '© ® … – — ‘foo’ “bar”')
       # Check count of converted character lines.
       # (The generated heading line contains escapes, and so does not match.)

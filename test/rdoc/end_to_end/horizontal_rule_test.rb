@@ -14,12 +14,12 @@ class HorizontalRuleTest < XrefTestCase
 ---
 
 MARKUP
-    Helper.run_rdoc(__method__, markup) do |html_lines|
+    Helper.run_rdoc(markup, __method__) do |html_lines|
       # Check count of horizontal rules.
       hr_lines = Helper.select_lines(html_lines, '<hr>')
       assert_equal(2, hr_lines.size)
       # Check count of not horizontal rules.
-      # One of the above generates an M dash, the other an N dash.
+      # One of the above generates an M-dash, the other an N-dash.
       pattern = /<p>(—|–) Not a horizontal rule.<\/p>/
       not_hr_lines = html_lines.select {|line| line.match(pattern) }
       assert_equal(2, not_hr_lines.size)

@@ -18,7 +18,7 @@ class HeadingTest < XrefTestCase
 ===== Section 2.1.1.1.1
 ====== Section 2.1.1.1.1.1
 MARKUP
-    Helper.run_rdoc(__method__, markup) do |html_lines|
+    Helper.run_rdoc(markup, __method__) do |html_lines|
       heading_lines = Helper.select_lines(html_lines, /^<h\d/)
       # Check count of headings.
       markup_lines = markup.lines
