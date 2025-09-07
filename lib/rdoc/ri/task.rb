@@ -26,8 +26,8 @@ require_relative '../task'
 #   require 'rdoc/ri/task'
 #
 #   RDoc::RI::Task.new do |ri|
-#     ri.main = 'README.rdoc'
-#     ri.rdoc_files.include 'README.rdoc', 'lib/**/*.rb'
+#     ri.main = 'README.md'
+#     ri.rdoc_files.include 'README.md', 'lib/**/*.rb'
 #   end
 #
 # For further configuration details see RDoc::Task.

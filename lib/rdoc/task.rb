@@ -58,8 +58,8 @@ require 'rake/tasklib'
 #   require 'rdoc/task'
 #
 #   RDoc::Task.new do |rdoc|
-#     rdoc.main = "README.rdoc"
-#     rdoc.rdoc_files.include("README.rdoc", "lib/**/*.rb")
+#     rdoc.main = "README.md"
+#     rdoc.rdoc_files.include("README.md", "lib/**/*.rb")
 #   end
 #
 # The +rdoc+ object passed to the block is an RDoc::Task object. See the
@@ -74,8 +74,8 @@ require 'rake/tasklib'
 #   require 'rdoc/task'
 #
 #   RDoc::Task.new :rdoc_dev do |rdoc|
-#     rdoc.main = "README.rdoc"
-#     rdoc.rdoc_files.include("README.rdoc", "lib/**/*.rb")
+#     rdoc.main = "README.md"
+#     rdoc.rdoc_files.include("README.md", "lib/**/*.rb")
 #     rdoc.options << "--all"
 #   end
 #
