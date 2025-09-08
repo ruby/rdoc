@@ -21,7 +21,7 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
           
       - name: Read PR information and trigger deployment
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const fs = require('fs');
