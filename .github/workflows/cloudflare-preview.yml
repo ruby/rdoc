@@ -36,7 +36,7 @@ jobs:
           command: pages deploy ./_site --project-name=rdoc --branch="${{ github.event.client_payload.pr_number }}-preview"
 
       - name: Comment on PR with preview URL
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.MATZBOT_GITHUB_TOKEN }}
           script: |
