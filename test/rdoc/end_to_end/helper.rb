@@ -1,8 +1,5 @@
 require 'fileutils'
-require 'rexml/document'
 require_relative '../xref_test_case'
-
-include REXML
 
 class Helper
 

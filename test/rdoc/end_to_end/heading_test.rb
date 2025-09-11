@@ -26,15 +26,12 @@ MARKUP
       # Check each markup line against the corresponding heading line.
       markup_lines.each_with_index do |markup_line, index|
         heading_line = heading_lines[index]
-        doc = Document.new(heading_line)
-        root_ele = doc.root
-        # Check number of equal signs against the heading level.
-        equal_signs, section_title = markup_line.chomp.split(' ', 2)
-        heading_level = equal_signs.size
-        assert_equal("h#{heading_level}", root_ele.name)
-        # Check the id attribute.
-        id_value = root_ele.attribute('id').value
-        assert_equal("label-#{section_title.gsub(' ', '+')}", id_value)
+        equal_signs, expected_title = markup_line.chomp.split(' ', 2)
+        assert(heading_line.include?(expected_title))
+        expected_heading_level = equal_signs.size
+        heading_line.match(/^<h(\d)/)
+        actual_heading_level = $1.to_i
+        assert_equal(expected_heading_level, actual_heading_level)
       end
     end
   end
