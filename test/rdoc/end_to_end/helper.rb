@@ -8,6 +8,7 @@ class Helper
     @dirpath = File.join(Dir.tmpdir, 'MarkupTest-' + filestem)
     FileUtils.rm_rf(@dirpath)
     Dir.mkdir(@dirpath)
+    FileUtils.chmod(0700, @dirpath)
   end
 
   # Remove temporary directory.
