@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'open3'
 require_relative '../xref_test_case'
 
 class Helper
@@ -22,11 +23,17 @@ class Helper
       rdoc_filename = filestem + '.rdoc'
       File.write(rdoc_filename, markup)
       # Run rdoc, to create the HTML file.
-      html_dirname = 'html'
-      `rdoc --op html #{rdoc_filename} #{html_dirname}`
+      command = "rdoc #{rdoc_filename + 'xxx'}"
+      puts command
+      Open3.popen3(command) do |_, stdout, stderr|
+        stdout_s = stdout.read
+        raise RuntimeError.new(stdout_s) unless stdout_s.match('Parsing')
+        stderr_s = stderr.read
+        raise RuntimeError.new(stderr_s) unless stderr_s.match('Generating')
+      end
       # Get the HTML as lines.
       html_filename = filestem + '_rdoc.html'
-      html_filepath = File.join(html_dirname, html_filename)
+      html_filepath = File.join('doc', html_filename)
       html_lines = File.readlines(html_filepath)
       # Yield them.
       yield html_lines
