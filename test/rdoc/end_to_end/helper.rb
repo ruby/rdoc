@@ -3,48 +3,36 @@ require_relative '../xref_test_case'
 
 class Helper
 
-  # Create temporary directory.
-  def self.setup(filestem)
-    @dirpath = File.join(Dir.tmpdir, 'MarkupTest-' + filestem)
-    FileUtils.rm_rf(@dirpath)
-    Dir.mkdir(@dirpath)
-    FileUtils.chmod(0700, @dirpath)
-  end
-
-  # Remove temporary directory.
-  def self.teardown
-    FileUtils.rm_rf(@dirpath)
-  end
-
   # Convenience method for selecting lines.
   def self.select_lines(lines, pattern)
     lines.select { |line| line.match(pattern) }
   end
 
-  # Run rdoc for given markup; method is used in setup.
+  # Run rdoc for given markup; method is the caller's __method__, used for filename uniqueness.
   def self.run_rdoc(markup, method)
-
+    # Make the temp dirpath; remove the dir and re-create it.
     filestem = method.to_s
-    self.setup(filestem)
-
-    # Create the markdown file.
-    rdoc_filename = filestem + '.rdoc'
-    rdoc_filepath = File.join(@dirpath, rdoc_filename)
-    File.write(rdoc_filepath, markup)
-
-    # Run rdoc, to create the HTML file.
-    Dir.chdir(@dirpath) do
-      `rdoc #{rdoc_filepath}`
+    tmpdirpath = File.join(Dir.tmpdir, 'MarkupTest-' + filestem)
+    FileUtils.rm_rf(tmpdirpath)
+    Dir.mkdir(tmpdirpath)
+    FileUtils.chmod(0700, tmpdirpath)
+    # Do all the work in the temporary directory.
+    Dir.chdir(tmpdirpath) do
+      # Create the markdown file.
+      rdoc_filename = filestem + '.rdoc'
+      File.write(rdoc_filename, markup)
+      # Run rdoc, to create the HTML file.
+      html_dirname = 'html'
+      `rdoc --op html #{rdoc_filename} #{html_dirname}`
+      # Get the HTML as lines.
+      html_filename = filestem + '_rdoc.html'
+      html_filepath = File.join(html_dirname, html_filename)
+      html_lines = File.readlines(html_filepath)
+      # Yield them.
+      yield html_lines
     end
-
-    # Get the HTML as lines.
-    html_filename = filestem + '_rdoc.html'
-    html_filepath = File.join(@dirpath, 'doc', html_filename)
-    html_lines = File.readlines(html_filepath)
-
-    yield html_lines
-
-    self.teardown
+    # Clean up.
+    FileUtils.rm_rf(tmpdirpath)
 
   end
 
