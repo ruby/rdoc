@@ -231,9 +231,9 @@ class RDocServletTest < RDoc::TestCase
 
     generator = @s.generator_for store
 
-    store.add_file 'README.rdoc', parser: RDoc::Parser::Simple
+    store.add_file 'README.md', parser: RDoc::Parser::Simple
 
-    @s.documentation_page store, generator, 'README_rdoc.html', @req, @res
+    @s.documentation_page store, generator, 'README_md.html', @req, @res
 
     assert_match %r%<title>README - </title>%, @res.body
     assert_match %r%<body [^>]+ class="file">%,      @res.body
@@ -244,9 +244,9 @@ class RDocServletTest < RDoc::TestCase
 
     generator = @s.generator_for store
 
-    store.add_file 'nesting/README.rdoc', parser: RDoc::Parser::Simple
+    store.add_file 'nesting/README.md', parser: RDoc::Parser::Simple
 
-    @s.documentation_page store, generator, 'nesting/README_rdoc.html', @req, @res
+    @s.documentation_page store, generator, 'nesting/README_md.html', @req, @res
 
     assert_equal 200, @res.status
   end

@@ -258,7 +258,7 @@ class RDocRIDriverTest < RDoc::TestCase
         para("(from #{@rdoc_home})"),
         head(3, 'Implementation from Bar'),
         rule(1),
-        verb("blah(5) => 5\n", "See also {Doc}[rdoc-ref:README.rdoc]\n"),
+        verb("blah(5) => 5\n", "See also {Doc}[rdoc-ref:README.md]\n"),
         rule(1),
         blank_line,
         blank_line
@@ -653,9 +653,9 @@ class RDocRIDriverTest < RDoc::TestCase
     assert_match %r%Foo::Bar#blah%, out
     assert_match %r%Foo::Bar#blah_with_rdoc_ref%, out
     # From Foo::Bar and Foo::Bar#blah_with_rdoc_ref
-    assert_equal 2, out.scan(/rdoc-ref:README.rdoc/).length
-    # But README.rdoc should only be displayed once
-    assert_equal 1, out.scan(/Expanded from README.rdoc/).length
+    assert_equal 2, out.scan(/rdoc-ref:README.md/).length
+    # But README.md should only be displayed once
+    assert_equal 1, out.scan(/Expanded from README.md/).length
   end
 
   def test_rdoc_refs_expansion_can_be_disabled
@@ -668,9 +668,9 @@ class RDocRIDriverTest < RDoc::TestCase
     end
 
     # From Foo::Bar
-    assert_equal 1, out.scan(/rdoc-ref:README.rdoc/).length
-    # But README.rdoc should not be expanded
-    assert_empty out.scan(/Expanded from README.rdoc/)
+    assert_equal 1, out.scan(/rdoc-ref:README.md/).length
+    # But README.md should not be expanded
+    assert_empty out.scan(/Expanded from README.md/)
   end
 
   def test_display_class_ambiguous
@@ -773,7 +773,7 @@ class RDocRIDriverTest < RDoc::TestCase
     util_store
 
     out, = capture_output do
-      assert_equal true, @driver.display_name('home:README.rdoc')
+      assert_equal true, @driver.display_name('home:README.md')
     end
 
     expected = <<-EXPECTED
@@ -841,7 +841,7 @@ Foo::Bar#bother
     util_store
 
     out, = capture_output do
-      @driver.display_page 'home:README.rdoc'
+      @driver.display_page 'home:README.md'
     end
 
     assert_match %r%= README%, out
@@ -874,7 +874,6 @@ Foo::Bar#bother
     end
 
     assert_match %r%= README pages in #{@rdoc_home}%, out
-    assert_match %r%README\.rdoc%,               out
     assert_match %r%README\.md%,                 out
   end
 
@@ -928,7 +927,7 @@ Foo::Bar#bother
     end
 
     assert_match %r%= Pages in #{@rdoc_home}%, out
-    assert_match %r%README\.rdoc%,        out
+    assert_match %r%README\.md%,        out
   end
 
   def test_display_page_list
@@ -948,7 +947,7 @@ Foo::Bar#bother
     end
 
     assert_match %r%= Pages in #{@rdoc_home}%, out
-    assert_match %r%README\.rdoc%,        out
+    assert_match %r%README\.md%,        out
     assert_match %r%OTHER\.rdoc%,         out
   end
 
@@ -1543,7 +1542,7 @@ Foo::Bar#bother
 
     @top_level = @store1.add_file 'file.rb'
 
-    @readme = @store1.add_file 'README.rdoc'
+    @readme = @store1.add_file 'README.md'
     @readme.parser = RDoc::Parser::Simple
     @readme.comment = RDoc::Comment.from_document(doc(head(1, 'README'), para('This is a README')))
 
@@ -1560,7 +1559,7 @@ Foo::Bar#bother
     @cFooInc.record_location @top_level
 
     @cFoo_Bar = @cFoo.add_class RDoc::NormalClass, 'Bar'
-    @cFoo_Bar.add_comment "See also {Doc}[rdoc-ref:README.rdoc]", @top_level
+    @cFoo_Bar.add_comment "See also {Doc}[rdoc-ref:README.md]", @top_level
     @cFoo_Bar.record_location @top_level
 
     @blah = @cFoo_Bar.add_method RDoc::AnyMethod.new(nil, 'blah')
@@ -1568,7 +1567,7 @@ Foo::Bar#bother
     @blah.record_location @top_level
 
     @blah_with_rdoc_ref = @cFoo_Bar.add_method RDoc::AnyMethod.new(nil, 'blah_with_rdoc_ref')
-    @blah_with_rdoc_ref.call_seq = "blah(5) => 5\nSee also {Doc}[rdoc-ref:README.rdoc]"
+    @blah_with_rdoc_ref.call_seq = "blah(5) => 5\nSee also {Doc}[rdoc-ref:README.md]"
     @blah_with_rdoc_ref.record_location @top_level
 
     @bother = @cFoo_Bar.add_method RDoc::AnyMethod.new(nil, 'bother')
