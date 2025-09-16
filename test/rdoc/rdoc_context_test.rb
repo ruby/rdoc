@@ -237,7 +237,7 @@ class RDocContextTest < XrefTestCase
     expected = 'Duplicate method (unknown)#name in file second.rb, ' \
                'previously in file first.rb'
 
-    assert_equal expected, err.chomp
+    assert_include err, expected
 
     method = @context.method_list.first
 

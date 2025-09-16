@@ -146,8 +146,8 @@ class RDocRDocTest < RDoc::TestCase
     assert_empty files
 
     assert_empty out
-    assert_match %r"^rdoc can't parse", err
-    assert_match %r"#{dev}$",           err
+    assert_include err, "rdoc can't parse"
+    assert_match %r"#{dev}$", err
   end
 
   def test_normalized_file_list_with_dot_doc

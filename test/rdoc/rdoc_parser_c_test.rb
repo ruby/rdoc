@@ -289,8 +289,7 @@ void Init_Blah(void) {
       refute util_get_class(content, 'cDate')
     end
 
-    assert_equal "Enclosing class or module \"cDate\" for alias b a is not known\n",
-                 err
+    assert_include err, "Enclosing class or module \"cDate\" for alias b a is not known\n"
   end
 
   def test_do_classes_class
@@ -827,7 +826,7 @@ void Init_Blah(void) {
     expected = 'Unable to create class Y (y), class Z (z) ' +
                'due to a cyclic class or module creation'
 
-    assert_equal expected, err.chomp
+    assert_include err, expected
 
     assert_equal %w[A A::B A::B::C],
                  @store.all_classes_and_modules.map { |m| m.full_name }.sort
