@@ -45,7 +45,7 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
     "History.rdoc",
     "LEGAL.rdoc",
     "LICENSE.rdoc",
-    "README.rdoc",
+    "README.md",
     "RI.md",
     "TODO.rdoc",
     "exe/rdoc",
@@ -60,7 +60,7 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
 
   s.files = (non_lib_files + template_files + lib_files).uniq
 
-  s.rdoc_options = ["--main", "README.rdoc"]
+  s.rdoc_options = ["--main", "README.md"]
   s.extra_rdoc_files += s.files.grep(%r[\A[^\/]+\.(?:rdoc|md)\z])
 
   s.required_ruby_version = Gem::Requirement.new(">= 2.6.0")

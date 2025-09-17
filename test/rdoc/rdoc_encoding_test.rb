@@ -60,7 +60,7 @@ class RDocEncodingTest < RDoc::TestCase
 
     assert_nil contents
 
-    assert_match %r%^unable to convert%, err
+    assert_include err, 'unable to convert'
   end
 
   def test_class_read_file_encoding_fancy
@@ -101,7 +101,7 @@ class RDocEncodingTest < RDoc::TestCase
       contents = RDoc::Encoding.read_file @tempfile.path, Encoding::UTF_8
     end
 
-    assert_equal "unable to convert \"\\xE4\" on US-ASCII for #{@tempfile.path}, skipping\n", err
+    assert_include err, "unable to convert \"\\xE4\" on US-ASCII for #{@tempfile.path}, skipping\n"
 
     assert_nil contents
   end

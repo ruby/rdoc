@@ -1007,7 +1007,7 @@ require 'rdoc'
 #     generates baz[rdoc-ref:RDoc::MarkupReference#dummy_attribute].
 #   - Alias: <tt>bad[rdoc-ref:RDoc::MarkupReference#dummy_instance_alias]</tt>
 #     generates bad[rdoc-ref:RDoc::MarkupReference#dummy_instance_alias].
-#   - File: <tt>README[rdoc-ref:README.rdoc]</tt> generates README[rdoc-ref:README.rdoc].
+#   - File: <tt>README[rdoc-ref:README.md]</tt> generates README[rdoc-ref:README.md].
 #
 #   If the referenced item does not exist, no link is generated
 #   and entire <tt>rdoc-ref:</tt> square-bracketed clause is removed
@@ -1050,7 +1050,7 @@ require 'rdoc'
 #
 # [<tt>link:</tt> Scheme]
 #
-#   - <tt>link:README_rdoc.html</tt> links to link:README_rdoc.html.
+#   - <tt>link:README_md.html</tt> links to link:README_md.html.
 #
 # [<tt>rdoc-image</tt> Scheme]
 #

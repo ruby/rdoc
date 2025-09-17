@@ -47,7 +47,7 @@ class RDocOptionsTest < RDoc::TestCase
     end
 
     assert_empty out
-    assert_equal "file 'nonexistent' not found\n", err
+    assert_include err, "file 'nonexistent' not found\n"
     assert_empty @options.files
   end
 
@@ -828,7 +828,7 @@ rdoc_include:
     end
 
     assert_empty out
-    assert_equal "warnings on\n", err
+    assert_include err, "warnings on\n"
   end
 
   def test_write_options

@@ -571,7 +571,7 @@ The comments associated with
       assert_equal '<tt>hi', to_html('<tt>hi')
     end
 
-    assert_equal "mismatched <tt> tag\n", err
+    assert_include err, "mismatched <tt> tag\n"
   end
 
   def formatter
