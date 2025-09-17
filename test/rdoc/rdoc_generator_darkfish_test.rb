@@ -542,7 +542,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
   def test_canonical_url_for_classes
     top_level = @store.add_file("file.rb")
     top_level.add_class(@klass.class, @klass.name)
-    inner = @klass.add_class(RDoc::NormalClass, "Inner")
+    @klass.add_class(RDoc::NormalClass, "Inner")
 
     @store.options.canonical_root = @options.canonical_root = "https://docs.ruby-lang.org/en/master/"
     @g.generate
@@ -553,7 +553,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
   end
 
   def test_canonical_url_for_rdoc_files
-    top_level = @store.add_file("CONTRIBUTING.rdoc", parser: RDoc::Parser::Simple)
+    @store.add_file("CONTRIBUTING.rdoc", parser: RDoc::Parser::Simple)
 
     @store.options.canonical_root = @options.canonical_root = "https://docs.ruby-lang.org/en/master/"
     @g.generate
