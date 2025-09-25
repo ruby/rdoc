@@ -163,7 +163,7 @@
   * Moved old DEVELOPERS file to CONTRIBUTING to match github conventions.
   * TomDoc output now has a "Returns" heading.  Issue #234 by Brian Henderson
   * Metaprogrammed methods can now use the :args: directive in addition to the
-    :call-seq: directive.  Issue #236 by Mike Moore.
+    \:call-seq: directive.  Issue #236 by Mike Moore.
   * Sections can be linked to using "@" like labels.  If a section and a label
     have the same name the section will be preferred.  Issue #233 by Brian
     Henderson.

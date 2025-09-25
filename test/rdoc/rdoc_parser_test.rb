@@ -120,7 +120,7 @@ class RDocParserTest < RDoc::TestCase
 
       assert_kind_of RDoc::Parser::Simple, parser
 
-      assert_equal "= NEWS\n", parser.content
+      assert_equal "= NEWS", parser.content.chomp
     end
   end
 

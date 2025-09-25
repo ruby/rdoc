@@ -2135,6 +2135,58 @@ module RDocParserPrismTestCases
 
     assert_equal expected, m.comment.parse
   end
+
+  def test_tomdoc_postprocess
+    RDoc::TomDoc.add_post_processor
+    util_parser <<~RUBY
+      # :markup: tomdoc
+
+      class C
+        # Public: foo
+        # bar
+        def m1; end
+
+        # Internal: baz
+        # blah
+        def m2; end
+      end
+    RUBY
+    klass = @top_level.classes.first
+    m1, m2 = klass.method_list
+    assert_equal 'Public', m1.section.title
+    assert_equal 'Internal', m2.section.title
+    assert_equal "foo\nbar", m1.comment.text.chomp
+    assert_equal "baz\nblah", m2.comment.text.chomp
+  end
+
+  def test_various_callseq
+    util_parser <<~RUBY
+      class Foo
+        # Undocumented form, maybe we should treat it as a single line call-seq
+        # :call-seq: foo1
+        #   bar1
+        #
+        # comment
+        def m1; end
+
+        # Blank line between
+        # :call-seq:
+        #   ARGF.readlines(a)
+        #   ARGF.readlines(b)
+        #
+        #   ARGF.readlines(c)
+        #
+        #   ARGF.readlines(d)
+        #
+        # comment
+        def m2; end
+      end
+    RUBY
+
+    m1, m2 = @top_level.classes.first.method_list
+    assert_equal "foo1\nbar1", m1.call_seq.chomp
+    assert_equal "ARGF.readlines(a)\nARGF.readlines(b)\nARGF.readlines(c)\nARGF.readlines(d)", m2.call_seq.chomp
+  end
 end
 
 class RDocParserPrismRubyTest < RDoc::TestCase

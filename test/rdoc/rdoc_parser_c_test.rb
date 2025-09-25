@@ -1466,12 +1466,7 @@ If no arguments are given:
 
     parser.find_modifiers comment, method_obj
 
-    expected = <<-CALL_SEQ.chomp
-commercial() -> Date <br />
-
-    CALL_SEQ
-
-    assert_equal expected, method_obj.call_seq
+    assert_equal "commercial() -> Date <br />", method_obj.call_seq.chomp
   end
 
   def test_find_modifiers_nodoc
@@ -1507,7 +1502,7 @@ commercial() -> Date <br />
 
     assert_equal 'a, b', method_obj.block_params
 
-    assert_equal "\n\nBlah", comment.text
+    assert_equal "Blah", comment.text
   end
 
   def test_handle_method_args_minus_1
@@ -1629,11 +1624,11 @@ void Init_Blah(void) {
   def test_look_for_directives_in
     parser = util_parser
 
-    comment = RDoc::Comment.new "# :other: not_handled\n"
+    comment = RDoc::Comment.new "* :other: not_handled\n"
 
     parser.look_for_directives_in @top_level, comment
 
-    assert_equal "# :other: not_handled\n", comment.text
+    assert_equal "", comment.text
     assert_equal 'not_handled', @top_level.metadata['other']
   end
 
@@ -1736,7 +1731,7 @@ Init_IO(void) {
     klass = util_get_class content, 'rb_cIO'
     read_method = klass.method_list.first
     assert_equal "read", read_method.name
-    assert_equal "Method Comment!   ", read_method.comment.text
+    assert_equal "Method Comment!", read_method.comment.text
     assert_equal "rb_io_s_read", read_method.c_function
     assert read_method.singleton
     assert_nil read_method.section.title
@@ -1813,7 +1808,7 @@ Init_IO(void) {
     klass = util_get_class content, 'rb_cIO'
     read_method = klass.method_list.first
     assert_equal "read", read_method.name
-    assert_equal "Method Comment!   ", read_method.comment.text
+    assert_equal "Method Comment!", read_method.comment.text
     assert_equal "rb_io_s_read", read_method.c_function
     assert read_method.singleton
   end
@@ -1843,7 +1838,7 @@ Init_IO(void) {
     read_method = klass.method_list.first
     assert_equal 'IO#read', read_method.full_name
     assert_equal :private, read_method.visibility
-    assert_equal "Method Comment!   ", read_method.comment.text
+    assert_equal "Method Comment!", read_method.comment.text
   end
 
   def test_define_method_private_singleton
@@ -1871,7 +1866,7 @@ Init_IO(void) {
     klass = util_get_class content, 'rb_cIO'
     read_method = klass.method_list.first
     assert_equal "read", read_method.name
-    assert_equal "Method Comment!   ", read_method.comment.text
+    assert_equal "Method Comment!", read_method.comment.text
     assert_equal :private, read_method.visibility
     assert read_method.singleton
   end
@@ -1901,7 +1896,7 @@ Init_IO(void) {
     klass = util_get_class content, 'rb_cIO'
     read_method = klass.method_list.first
     assert_equal "read", read_method.name
-    assert_equal "Method Comment!   ", read_method.comment.text
+    assert_equal "Method Comment!", read_method.comment.text
     assert read_method.singleton
   end
 

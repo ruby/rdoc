@@ -19,17 +19,17 @@ class RDoc::Parser::Simple < RDoc::Parser
 
     preprocess = RDoc::Markup::PreProcess.new @file_name, @options.rdoc_include
 
-    @content = preprocess.handle @content, @top_level
+    content = RDoc::Text.expand_tabs(@content)
+    @content, = preprocess.run_pre_processes(content, @top_level, 1, :simple)
   end
 
   ##
   # Extract the file contents and attach them to the TopLevel as a comment
 
   def scan
-    comment = remove_coding_comment @content
-    comment = remove_private_comment comment
+    content = remove_coding_comment @content
 
-    comment = RDoc::Comment.new comment, @top_level
+    comment = RDoc::Comment.new content, @top_level
 
     @top_level.comment = comment
     @top_level
@@ -41,21 +41,4 @@ class RDoc::Parser::Simple < RDoc::Parser
   def remove_coding_comment(text)
     text.sub(/\A# .*coding[=:].*$/, '')
   end
-
-  ##
-  # Removes private comments.
-  #
-  # Unlike RDoc::Comment#remove_private this implementation only looks for two
-  # dashes at the beginning of the line.  Three or more dashes are considered
-  # to be a rule and ignored.
-
-  def remove_private_comment(comment)
-    # Workaround for gsub encoding for Ruby 1.9.2 and earlier
-    empty = ''
-    empty = RDoc::Encoding.change_encoding empty, comment.encoding
-
-    comment = comment.gsub(%r%^--\n.*?^\+\+\n?%m, empty)
-    comment.sub(%r%^--\n.*%m, empty)
-  end
-
 end

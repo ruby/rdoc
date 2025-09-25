@@ -97,18 +97,15 @@ class RDoc::Markup::PreProcess
   # RDoc::CodeObject#metadata for details.
 
   def handle(text, code_object = nil, &block)
-    first_line = 1
     if RDoc::Comment === text then
       comment = text
       text = text.text
-      first_line = comment.line || 1
     end
 
     # regexp helper (square brackets for optional)
     # $1      $2  $3        $4      $5
     # [prefix][\]:directive:[spaces][param]newline
-    text = text.lines.map.with_index(first_line) do |line, num|
-      next line unless line =~ /\A([ \t]*(?:#|\/?\*)?[ \t]*)(\\?):([\w-]+):([ \t]*)(.+)?(\r?\n|$)/
+    text = text.gsub(/^([ \t]*(?:#|\/?\*)?[ \t]*)(\\?):([\w-]+):([ \t]*)(.+)?(\r?\n|$)/) do
       # skip something like ':toto::'
       next $& if $4.empty? and $5 and $5[0, 1] == ':'
 
@@ -122,9 +119,8 @@ class RDoc::Markup::PreProcess
         comment.format = $5.downcase
         next "#{$1.strip}\n"
       end
-
-      handle_directive $1, $3, $5, code_object, text.encoding, num, &block
-    end.join
+      handle_directive $1, $3, $5, code_object, text.encoding, &block
+    end
 
     if comment then
       comment.text = text
@@ -132,11 +128,40 @@ class RDoc::Markup::PreProcess
       comment = text
     end
 
+    run_post_processes(comment, code_object)
+
+    text
+  end
+
+  # Apply directives to a code object
+
+  def run_pre_processes(comment_text, code_object, start_line_no, type)
+    comment_text, directives = parse_comment(comment_text, start_line_no, type)
+    directives.each do |directive, (param, line_no)|
+      handle_directive('', directive, param, code_object)
+    end
+    if code_object.is_a?(RDoc::AnyMethod) && (call_seq, = directives['call-seq']) && call_seq
+      code_object.call_seq = call_seq.lines.map(&:chomp).reject(&:empty?).join("\n") if call_seq
+    end
+    format, = directives['markup']
+    [comment_text, format]
+  end
+
+
+  # Perform post preocesses to a code object
+
+  def run_post_processes(comment, code_object)
     self.class.post_processors.each do |handler|
       handler.call comment, code_object
     end
+  end
 
-    text
+  # Parse comment and return [normalized_comment_text, directives_hash]
+
+  def parse_comment(text, line_no, type)
+    RDoc::Comment.parse(text, @input_file_name, line_no, type) do |filename, prefix_indent|
+      include_file(filename, prefix_indent, text.encoding)
+    end
   end
 
   ##
@@ -151,7 +176,7 @@ class RDoc::Markup::PreProcess
   # When 1.8.7 support is ditched prefix can be defaulted to ''
 
   def handle_directive(prefix, directive, param, code_object = nil,
-                       encoding = nil, line = nil)
+                       encoding = nil)
     blankline = "#{prefix.strip}\n"
     directive = directive.downcase
 
@@ -244,7 +269,7 @@ class RDoc::Markup::PreProcess
 
       blankline
     else
-      result = yield directive, param, line if block_given?
+      result = yield directive, param if block_given?
 
       case result
       when nil then
