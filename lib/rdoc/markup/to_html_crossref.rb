@@ -193,9 +193,9 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
       case item
       when RDoc::Markup::AttrChanger
-        if (text = convert_tt_crossref(flow_items, i))
+        if !tidy_link_capturing? && (text = convert_tt_crossref(flow_items, i))
           text = block.call(text, res) if block
-          res << text
+          append_flow_fragment res, text
           i += 3
           next
         end
@@ -206,12 +206,12 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       when String
         text = convert_string(item)
         text = block.call(text, res) if block
-        res << text
+        append_flow_fragment res, text
         i += 1
       when RDoc::Markup::RegexpHandling
         text = convert_regexp_handling(item)
         text = block.call(text, res) if block
-        res << text
+        append_flow_fragment res, text
         i += 1
       else
         raise "Unknown flow element: #{item.inspect}"

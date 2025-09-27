@@ -158,19 +158,16 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   def handle_regexp_TIDYLINK(target)
     text = target.text
 
-    return text unless
-      text =~ /^\{(.*)\}\[(.*?)\]$/ or text =~ /^(\S+)\[(.*?)\]$/
-
-    label = $1
-    url   = CGI.escapeHTML($2)
-
-    if /^rdoc-image:/ =~ label
-      label = handle_RDOCLINK(label)
-    else
-      label = CGI.escapeHTML(label)
+    if tidy_link_capturing?
+      return finish_tidy_link(text)
     end
 
-    gen_url url, label
+    if text.start_with?('{') && !text.include?('}')
+      start_tidy_link text
+      return ''
+    end
+
+    convert_complete_tidy_link(text)
   end
 
   # :section: Visitor
@@ -458,4 +455,153 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     super convert_flow @am.flow item
   end
 
+  private
+
+  def convert_flow(flow_items)
+    res = []
+
+    flow_items.each do |item|
+      case item
+      when String
+        append_flow_fragment res, convert_string(item)
+      when RDoc::Markup::AttrChanger
+        off_tags res, item
+        on_tags  res, item
+      when RDoc::Markup::RegexpHandling
+        append_flow_fragment res, convert_regexp_handling(item)
+      else
+        raise "Unknown flow element: #{item.inspect}"
+      end
+    end
+
+    res.join
+  end
+
+  def append_flow_fragment(res, fragment)
+    return if fragment.nil? || fragment.empty?
+
+    emit_tidy_link_fragment(res, fragment)
+  end
+
+  def append_to_tidy_label(fragment)
+    @tidy_link_buffer << fragment
+  end
+
+  ##
+  # Matches an entire tidy link with a braced label "{label}[url]".
+  #
+  # Capture 1: label contents.
+  # Capture 2: URL text.
+  # Capture 3: trailing content.
+  TIDY_LINK_WITH_BRACES = /\A\{(.*?)\}\[(.*?)\](.*)\z/
+
+  ##
+  # Matches the tail of a braced tidy link when the opening brace was
+  # consumed earlier while accumulating the label text.
+  #
+  # Capture 1: remaining label content.
+  # Capture 2: URL text.
+  # Capture 3: trailing content.
+  TIDY_LINK_WITH_BRACES_TAIL = /\A(.*?)\}\[(.*?)\](.*)\z/
+
+  ##
+  # Matches a tidy link with a single-word label "label[url]".
+  #
+  # Capture 1: the single-word label (no whitespace).
+  # Capture 2: URL text between the brackets.
+  TIDY_LINK_SINGLE_WORD = /\A(\S+)\[(.*?)\](.*)\z/
+
+  def convert_complete_tidy_link(text)
+    return text unless
+      text =~ TIDY_LINK_WITH_BRACES or text =~ TIDY_LINK_SINGLE_WORD
+
+    label = $1
+    url   = CGI.escapeHTML($2)
+
+    label_html = if /^rdoc-image:/ =~ label
+                   handle_RDOCLINK(label)
+                 else
+                   render_tidy_link_label(label)
+                 end
+
+    gen_url url, label_html
+  end
+
+  def emit_tidy_link_fragment(res, fragment)
+    if tidy_link_capturing?
+      append_to_tidy_label fragment
+    else
+      res << fragment
+    end
+  end
+
+  def finish_tidy_link(text)
+    label_tail, url, trailing = extract_tidy_link_parts(text)
+    append_to_tidy_label CGI.escapeHTML(label_tail) unless label_tail.empty?
+
+    return '' unless url
+
+    label_html = @tidy_link_buffer
+    @tidy_link_buffer = nil
+    link = gen_url(url, label_html)
+
+    return link if trailing.empty?
+
+    link + CGI.escapeHTML(trailing)
+  end
+
+  def extract_tidy_link_parts(text)
+    if text =~ TIDY_LINK_WITH_BRACES
+      [$1, CGI.escapeHTML($2), $3]
+    elsif text =~ TIDY_LINK_WITH_BRACES_TAIL
+      [$1, CGI.escapeHTML($2), $3]
+    elsif text =~ TIDY_LINK_SINGLE_WORD
+      [$1, CGI.escapeHTML($2), $3]
+    else
+      [text, nil, '']
+    end
+  end
+
+  def on_tags(res, item)
+    each_attr_tag(item.turn_on) do |tag|
+      emit_tidy_link_fragment(res, annotate(tag.on))
+      @in_tt += 1 if tt? tag
+    end
+  end
+
+  def off_tags(res, item)
+    each_attr_tag(item.turn_off, true) do |tag|
+      emit_tidy_link_fragment(res, annotate(tag.off))
+      @in_tt -= 1 if tt? tag
+    end
+  end
+
+  def start_tidy_link(text)
+    @tidy_link_buffer = String.new
+    append_to_tidy_label CGI.escapeHTML(text.delete_prefix('{'))
+  end
+
+  def tidy_link_capturing?
+    !!@tidy_link_buffer
+  end
+
+  def render_tidy_link_label(label)
+    RDoc::Markup::LinkLabelToHtml.render(label, @options, @from_path)
+  end
+end
+
+##
+# Formatter dedicated to rendering tidy link labels without mutating the
+# calling formatter's state.
+
+class RDoc::Markup::LinkLabelToHtml < RDoc::Markup::ToHtml
+  def self.render(label, options, from_path)
+    new(options, from_path).to_html(label)
+  end
+
+  def initialize(options, from_path = nil)
+    super(options)
+
+    self.from_path = from_path if from_path
+  end
 end
