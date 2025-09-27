@@ -184,53 +184,73 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     end
   end
 
-  def convert_flow(flow)
+  def convert_flow(flow_items, &block)
     res = []
 
     i = 0
-    while i < flow.size
-      item = flow[i]
-      i += 1
+    while i < flow_items.size
+      item = flow_items[i]
+
       case item
-      when RDoc::Markup::AttrChanger then
-        # Make "+Class#method+" a cross reference
-        if tt_tag?(item.turn_on) and
-          String === (str = flow[i]) and
-          RDoc::Markup::AttrChanger === flow[i+1] and
-          tt_tag?(flow[i+1].turn_off, true)
-        then
-          crossref_re = @options.hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
-
-          if match = crossref_re.match(str)
-            trailing = str[match.end(1)..-1] || ''
-
-            if match.begin(1).zero? and
-               trailing.match?(/\A[[:punct:]\s]*\z/) and
-               trailing !~ /[#@]/ and
-               (text = cross_reference str) != str
-            then
-              text = yield text, res if defined?(yield)
-              res << text
-              i += 2
-              next
-            end
-          end
+      when RDoc::Markup::AttrChanger
+        if (text = convert_tt_crossref(flow_items, i))
+          text = block.call(text, res) if block
+          res << text
+          i += 3
+          next
         end
+
         off_tags res, item
-        on_tags res, item
-      when String then
+        on_tags  res, item
+        i += 1
+      when String
         text = convert_string(item)
-        text = yield text, res if defined?(yield)
+        text = block.call(text, res) if block
         res << text
-      when RDoc::Markup::RegexpHandling then
+        i += 1
+      when RDoc::Markup::RegexpHandling
         text = convert_regexp_handling(item)
-        text = yield text, res if defined?(yield)
+        text = block.call(text, res) if block
         res << text
+        i += 1
       else
         raise "Unknown flow element: #{item.inspect}"
       end
     end
 
     res.join('')
+  end
+
+  private
+
+  ##
+  # Detects <tt>...</tt> spans that contain a single cross-reference candidate.
+  # When the candidate occupies the whole span (aside from trailing
+  # punctuation), the tt markup is replaced by the resolved cross-reference.
+
+  def convert_tt_crossref(flow, index)
+    opener = flow[index]
+    return unless tt_tag?(opener.turn_on)
+
+    string = flow[index + 1]
+    closer = flow[index + 2]
+
+    return unless String === string
+    return unless RDoc::Markup::AttrChanger === closer
+    return unless tt_tag?(closer.turn_off, true)
+
+    crossref_regexp = @options.hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
+    match = crossref_regexp.match(string)
+    return unless match
+    return unless match.begin(1).zero?
+
+    trailing = match.post_match
+    # Only convert when the remainder is punctuation/whitespace so other tt text stays literal.
+    return unless trailing.match?(/\A[[:punct:]\s]*\z/)
+
+    text = cross_reference(string)
+    return if text == string
+
+    text
   end
 end
