@@ -228,12 +228,12 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # When the candidate occupies the whole span (aside from trailing
   # punctuation), the tt markup is replaced by the resolved cross-reference.
 
-  def convert_tt_crossref(flow, index)
-    opener = flow[index]
+  def convert_tt_crossref(flow_items, index)
+    opener = flow_items[index]
     return unless tt_tag?(opener.turn_on)
 
-    string = flow[index + 1]
-    closer = flow[index + 2]
+    string = flow_items[index + 1]
+    closer = flow_items[index + 2]
 
     return unless String === string
     return unless RDoc::Markup::AttrChanger === closer

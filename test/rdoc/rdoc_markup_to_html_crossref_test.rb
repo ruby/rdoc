@@ -34,30 +34,21 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
   end
 
   def test_convert_CROSSREF_backslash_in_tt
-    hyperlink_all = @options.hyperlink_all
     @options.hyperlink_all = false
 
-    formatter = RDoc::Markup::ToHtmlCrossref.new @options, 'C9.html', @c9_b
-    result = formatter.convert '<tt>C1</tt>'
+    formatter = RDoc::Markup::ToHtmlCrossref.new(@options, 'C9.html', @c9_b)
 
+    result = formatter.convert '<tt>C1</tt>'
     assert_equal para('<a href="C1.html"><code>C1</code></a>'), result
 
-    formatter = RDoc::Markup::ToHtmlCrossref.new @options, 'C9.html', @c9_b
     result = formatter.convert '<tt>.bar.hello()</tt>'
-
     assert_equal para('<code>.bar.hello()</code>'), result
 
-    formatter = RDoc::Markup::ToHtmlCrossref.new @options, 'C9.html', @c9_b
     result = formatter.convert '<tt>.bar.hello(\)</tt>'
-
     assert_equal para('<code>.bar.hello(\)</code>'), result
 
-    formatter = RDoc::Markup::ToHtmlCrossref.new @options, 'C9.html', @c9_b
     result = formatter.convert '<tt>.bar.hello(\\\\)</tt>'
-
     assert_equal para('<code>.bar.hello(\\)</code>'), result
-  ensure
-    @options.hyperlink_all = hyperlink_all
   end
 
   def test_convert_CROSSREF_ignored_excluded_words
