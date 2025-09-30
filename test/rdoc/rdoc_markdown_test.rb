@@ -1263,6 +1263,26 @@ and an extra note.[^2]
     assert_equal expected, doc
   end
 
+  def test_markdown_link_with_styled_label
+    markdown = <<~MD
+      [Link to Foo](https://example.com)
+
+      [Link to `Foo`](https://example.com)
+
+      [Link to **Foo**](https://example.com)
+
+      [Link to `Foo` and `\Bar` and `Baz`](https://example.com)
+    MD
+
+    doc = parse markdown
+    html = @to_html.convert doc
+
+    assert_includes html, '<a href="https://example.com">Link to Foo</a>'
+    assert_includes html, '<a href="https://example.com">Link to <code>Foo</code></a>'
+    assert_includes html, '<a href="https://example.com">Link to <strong>Foo</strong></a>'
+    assert_includes html, '<a href="https://example.com">Link to <code>Foo</code> and <code>Bar</code> and <code>Baz</code></a>'
+  end
+
   def parse(text)
     @parser.parse text
   end

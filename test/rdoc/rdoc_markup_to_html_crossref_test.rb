@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require_relative 'xref_test_case'
+require 'rdoc/markdown'
 
 class RDocMarkupToHtmlCrossrefTest < XrefTestCase
 
@@ -286,6 +287,14 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
 
     assert_equal "<a href=\"C1.html#method-i-m-label-foo\">tidy</a>",
                  link, 'C1#m@foo'
+  end
+
+  def test_convert_TIDYLINK_markdown_with_crossrefs
+    markdown = RDoc::Markdown.parse('[Link to `C1` and `Foo` and `\\C1` and `Bar`](https://example.com)')
+
+    result = markdown.accept(@to)
+
+    assert_equal para('<a href="https://example.com">Link to <code>C1</code> and <code>Foo</code> and <code>\\C1</code> and <code>Bar</code></a>'), result
   end
 
   def test_to_html_CROSSREF_email

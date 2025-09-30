@@ -734,6 +734,28 @@ EXPECTED
     assert_equal expected, result
   end
 
+  def test_convert_TIDYLINK_with_code_label
+    result = @to.convert '{Link to +Foo+}[https://example.com]'
+
+    expected = "\n<p><a href=\"https://example.com\">Link to <code>Foo</code></a></p>\n"
+
+    assert_equal expected, result
+
+    result = @to.convert '{Link to +Foo+ and +Bar+ and +Baz+}[https://example.com]'
+
+    expected = "\n<p><a href=\"https://example.com\">Link to <code>Foo</code> and <code>Bar</code> and <code>Baz</code></a></p>\n"
+
+    assert_equal expected, result
+  end
+
+  def test_convert_TIDYLINK_with_bold_label
+    result = @to.convert '{Link to *Foo*}[https://example.com]'
+
+    expected = "\n<p><a href=\"https://example.com\">Link to <strong>Foo</strong></a></p>\n"
+
+    assert_equal expected, result
+  end
+
   def test_convert_TIDYLINK_image
     result =
       @to.convert '{rdoc-image:path/to/image.jpg}[http://example.com]'
