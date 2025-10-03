@@ -156,6 +156,20 @@ class RDoc::MethodAttr < RDoc::CodeObject
     @file = @store.add_file @file.full_name if @file
   end
 
+  ##
+  # Process comment as YARD comment
+  def comment=(comment)
+    # Process YARD tags while we still have the RDoc::Comment object
+    if comment.is_a?(RDoc::Comment)
+      RDoc::YARD.process(comment, self)
+    end
+
+    # Then set the comment normally
+    super(comment)
+
+    @comment
+  end
+
   def find_see # :nodoc:
     return nil if singleton || is_alias_for
 
