@@ -6,12 +6,9 @@ require 'tmpdir'
 class IntegrationTestCase < Test::Unit::TestCase
 
   # Run rdoc with the given markup as input; suffix is used for temp dirname uniqueness.
-  def run_rdoc(markup, suffix = nil)
-    # Default suffix is the name of the calling test, extracted from caller array.
-    suffix ||= caller[0].partition(/test\w+/)[1]
-    p suffix
+  def run_rdoc(markup)
     # Make the temp dirpath.
-    filestem = suffix.to_s
+    filestem = get_test_name
     tmpdirpath = File.join(Dir.tmpdir, 'MarkupTest-' + filestem)
     # Remove the dir and re-create it (belt and suspenders).
     FileUtils.rm_rf(tmpdirpath)
@@ -39,6 +36,15 @@ class IntegrationTestCase < Test::Unit::TestCase
     end
     # Clean up.
     FileUtils.rm_rf(tmpdirpath)
+  end
+
+  # Get the test name from the caller array.
+  def get_test_name
+    caller.each do |entry|
+      entry.match(/#(test\w+)/)
+      return $1 if $1
+    end
+    fail 'Could not determine test name.'
   end
 
   # Convenience method for selecting lines.
