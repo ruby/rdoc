@@ -8,7 +8,7 @@ class IntegrationTestCase < Test::Unit::TestCase
   # Run rdoc with the given markup as input; suffix is used for temp dirname uniqueness.
   def run_rdoc(markup, suffix = nil)
     # Default suffix is the name of the calling test, extracted from caller array.
-    suffix ||= caller[0].split('#').last.sub("'", '')
+    suffix ||= caller[0].split('#').last.chop
     # Make the temp dirpath.
     filestem = suffix.to_s
     tmpdirpath = File.join(Dir.tmpdir, 'MarkupTest-' + filestem)
