@@ -41,7 +41,7 @@ class IntegrationTestCase < Test::Unit::TestCase
   # Get the test name from the caller array.
   def get_test_name
     caller.each do |entry|
-      entry.match(/#(test\w+)/)
+      entry.match(/\W(test\w+)/)
       return $1 if $1
     end
     fail 'Could not determine test name.'
