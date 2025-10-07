@@ -5,7 +5,12 @@ $:.unshift File.expand_path('lib', __dir__) # default template dir
 require_relative 'lib/rdoc/task'
 require 'bundler/gem_tasks'
 require 'rake/testtask'
-require 'rubocop/rake_task'
+
+begin
+  require 'rubocop/rake_task'
+rescue LoadError
+  puts "RuboCop is not installed"
+end
 
 task :test    => [:normal_test, :rubygems_test]
 
