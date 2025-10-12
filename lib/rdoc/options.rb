@@ -399,7 +399,6 @@ class RDoc::Options
     @generator_name = "darkfish"
     @generators = RDoc::RDoc::GENERATORS
     @generator_options = []
-    setup_generator
     @hyperlink_all = false
     @line_numbers = false
     @locale = nil
@@ -1230,10 +1229,7 @@ Usage: #{opt.program_name} [options] [names...]
       retry
     end
 
-    unless @generator then
-      @generator = RDoc::Generator::Darkfish
-      @generator_name = 'darkfish'
-    end
+    setup_generator unless @generator
 
     if @pipe and not argv.empty? then
       @pipe = false
