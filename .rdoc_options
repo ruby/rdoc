@@ -1,5 +1,5 @@
 op_dir: _site # for GitHub Pages and should match the config of RDoc task in Rakefile
-title: rdoc Documentation
+title: RDoc
 main_page: README.md
 autolink_excluded_words:
 - RDoc
