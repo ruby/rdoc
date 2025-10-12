@@ -4,6 +4,8 @@ main_page: README.md
 autolink_excluded_words:
 - RDoc
 
+generator_name: aliki
+
 exclude:
 - AGENTS.md
 - CLAUDE.md
