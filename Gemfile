@@ -11,3 +11,9 @@ gem 'rubocop', '>= 1.31.0'
 gem 'gettext'
 gem 'prism', '>= 0.30.0'
 gem 'webrick'
+
+platforms :ruby do
+  if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.2')
+    gem 'mini_racer' # For testing the searcher.js file
+  end
+end
