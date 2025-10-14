@@ -80,28 +80,52 @@ class RDocGeneratorJsonIndexSearcherTest < Test::Unit::TestCase
     assert_equal 'RDoc::Markup::AttributeManager', strip_highlights(results[0]['namespace'])
   end
 
-  def test_exact_class_beats_exact_method
+  def test_capitalized_query_prioritizes_exact_class
     results = run_search(
-      query: 'attribute',
+      query: 'String',
       data: {
-        searchIndex: ['attribute()', 'attribute'],
-        longSearchIndex: ['rdoc::markup#attribute()', 'attribute'],
+        searchIndex: ['string', 'string()'],
+        longSearchIndex: ['string', 'object#string()'],
         info: [
-          ['attribute', 'RDoc::Markup', 'RDoc/Markup.html#method-i-attribute', '()', 'Attribute method', '', 'method'],
-          ['Attribute', '', 'Attribute.html', '', 'Attribute class (hypothetical)', '', 'class']
+          ['String', '', 'String.html', '', 'String class', '', 'class'],
+          ['string', 'Object', 'Object.html#method-i-string', '()', 'String method', '', 'method']
         ]
       }
     )
 
     assert_equal 2, results.length
-    # Exact class match (Pass 0) should beat exact method match (Pass 1)
-    assert_equal 'Attribute', strip_highlights(results[0]['title'])
+    # Capitalized query: exact class (Pass 0) beats exact method (Pass 1)
+    assert_equal 'String', strip_highlights(results[0]['title'])
     assert_equal '', results[0]['namespace']
-    assert_equal 'Attribute.html', results[0]['path']
+    assert_equal 'String.html', results[0]['path']
 
     # Method comes second
-    assert_equal 'attribute', strip_highlights(results[1]['title'])
-    assert_equal 'RDoc::Markup', strip_highlights(results[1]['namespace'])
+    assert_equal 'string', strip_highlights(results[1]['title'])
+    assert_equal 'Object', strip_highlights(results[1]['namespace'])
+  end
+
+  def test_lowercase_query_prioritizes_method
+    results = run_search(
+      query: 'options',
+      data: {
+        searchIndex: ['options', 'options()'],
+        longSearchIndex: ['rdoc::options', 'rdoc::codeobject#options()'],
+        info: [
+          ['Options', 'RDoc', 'RDoc/Options.html', '', 'Options class', '', 'class'],
+          ['options', 'RDoc::CodeObject', 'RDoc/CodeObject.html#method-i-options', '()', 'Options method', '', 'method']
+        ]
+      }
+    )
+
+    assert_equal 2, results.length
+    # Lowercase query should prioritize method over class
+    assert_equal 'options', strip_highlights(results[0]['title'])
+    assert_equal 'RDoc::CodeObject', strip_highlights(results[0]['namespace'])
+    assert_equal 'RDoc/CodeObject.html#method-i-options', results[0]['path']
+
+    # Class comes second
+    assert_equal 'Options', strip_highlights(results[1]['title'])
+    assert_equal 'RDoc', strip_highlights(results[1]['namespace'])
   end
 
   def test_beginning_match
