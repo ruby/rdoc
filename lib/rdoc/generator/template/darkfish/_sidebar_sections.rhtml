@@ -3,9 +3,9 @@
   <h3>Sections</h3>
 
   <ul class="link-list" role="directory">
-    <%- klass.sort_sections.each do |section| -%>
+    <%- klass.sort_sections.each do |section| %>
       <li><a href="#<%= section.aref %>"><%= h section.title %></a></li>
-    <%- end -%>
+    <%- end %>
   </ul>
 </div>
-<%- end -%>
+<%- end %>

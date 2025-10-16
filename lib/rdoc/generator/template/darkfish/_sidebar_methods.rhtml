@@ -2,9 +2,9 @@
   <div class="nav-section">
     <h3>Class Methods</h3>
     <ul class="link-list" role="directory">
-      <%- class_methods.each do |meth| -%>
-      <li <%- if meth.calls_super %>class="calls-super" <%- end %>><a href="#<%= meth.aref %>"><%= h meth.name -%></a></li>
-      <%- end -%>
+      <%- class_methods.each do |meth| %>
+      <li <%- if meth.calls_super %>class="calls-super" <%- end %>><a href="#<%= meth.aref %>"><%= h meth.name %></a></li>
+      <%- end %>
     </ul>
   </div>
 <% end %>
@@ -13,9 +13,9 @@
   <div class="nav-section">
     <h3>Instance Methods</h3>
     <ul class="link-list" role="directory">
-      <%- instance_methods.each do |meth| -%>
-      <li <%- if meth.calls_super %>class="calls-super" <%- end %>><a href="#<%= meth.aref %>"><%= h meth.name -%></a></li>
-      <%- end -%>
+      <%- instance_methods.each do |meth| %>
+      <li <%- if meth.calls_super %>class="calls-super" <%- end %>><a href="#<%= meth.aref %>"><%= h meth.name %></a></li>
+      <%- end %>
     </ul>
   </div>
 <% end %>

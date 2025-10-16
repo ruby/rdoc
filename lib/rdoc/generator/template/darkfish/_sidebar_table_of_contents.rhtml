@@ -9,31 +9,31 @@
 <div class="nav-section">
   <h3>Table of Contents</h3>
 
-    <%- display_link = proc do |heading| -%>
+    <%- display_link = proc do |heading| %>
       <a href="#<%= heading.label current %>"><%= heading.plain_html %></a>
-    <%- end -%>
+    <%- end %>
 
-    <%- list_siblings = proc do -%>
-      <%- level = table.first&.level -%>
-      <%- while table.first && table.first.level >= level -%>
-        <%- heading = table.shift -%>
-        <%- if table.first.nil? || table.first.level <= heading.level -%>
-          <li><% display_link.call heading -%></li>
-        <%- else -%>
+    <%- list_siblings = proc do %>
+      <%- level = table.first&.level %>
+      <%- while table.first && table.first.level >= level %>
+        <%- heading = table.shift %>
+        <%- if table.first.nil? || table.first.level <= heading.level %>
+          <li><% display_link.call heading %></li>
+        <%- else %>
           <li>
             <details open>
-              <summary><%- display_link.call heading -%></summary>
+              <summary><%- display_link.call heading %></summary>
               <ul class="link-list" role="directory">
                 <% list_siblings.call %>
               </ul>
             </details>
           </li>
-        <%- end -%>
-      <%- end -%>
-    <%- end -%>
+        <%- end %>
+      <%- end %>
+    <%- end %>
 
   <ul class="link-list" role="directory">
     <% list_siblings.call %>
   </ul>
 </div>
-<%- end -%>
+<%- end %>
