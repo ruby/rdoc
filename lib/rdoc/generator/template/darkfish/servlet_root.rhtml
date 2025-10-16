@@ -20,7 +20,7 @@
   <h1>Local RDoc Documentation</h1>
 
   <p>Here you can browse local documentation from the ruby standard library and
-  your installed gems.
+  your installed gems.</p>
 
 <%- extra_dirs = installed.select { |_, _, _, type,| type == :extra } -%>
 <%- unless extra_dirs.empty? -%>
@@ -50,16 +50,17 @@
   You can install missing documentation for gems by running
   <kbd>gem rdoc --all</kbd>.  After installing the missing documentation you
   only need to reload this page.  The newly created documentation will
-  automatically appear.
+  automatically appear.</p>
 
   <p>You can also install documentation for a specific gem by running one of
-  the following commands.
+  the following commands.</p>
 
   <ul>
   <%- names = missing.map { |name,| name.sub(/-([^-]*)$/, '') }.uniq -%>
   <%- names.each do |name| -%>
-    <li><kbd>gem rdoc <%=h name %></kbd>
+    <li><kbd>gem rdoc <%=h name %></kbd></li>
   <%- end -%>
   </ul>
 <%- end -%>
 </main>
+</body>

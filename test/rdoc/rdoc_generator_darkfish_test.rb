@@ -121,7 +121,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
       klassnav
     )
     assert_match(
-      %r[<li>\s*<a href=\S+>Heading 1.1.1.1</a>\s*</ul>\s*</details>\s*</li>]m,
+      %r[<li>\s*<a href=\S+>Heading 1.1.1.1</a>\s*</li>\s*</ul>\s*</details>\s*</li>]m,
       klassnav
     )
 

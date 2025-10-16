@@ -5,9 +5,9 @@
   <ul class="link-list">
   <%- klass.includes.each do |inc| -%>
   <%- unless String === inc.module then -%>
-    <li><a class="include" href="<%= klass.aref_to inc.module.path %>"><%= inc.module.full_name %></a>
+    <li><a class="include" href="<%= klass.aref_to inc.module.path %>"><%= inc.module.full_name %></a></li>
   <%- else -%>
-    <li><span class="include"><%= inc.name %></span>
+    <li><span class="include"><%= inc.name %></span></li>
   <%- end -%>
   <%- end -%>
   </ul>

@@ -25,9 +25,9 @@
    table = file.parse(file.comment).table_of_contents
    unless table.empty? then %>
     <ul>
-<%- table.each do |heading| -%>
-      <li><a href="<%= h file.path %>#<%= heading.aref %>"><%= heading.plain_html %></a>
-<%-   end -%>
+    <%- table.each do |heading| -%>
+      <li><a href="<%= h file.path %>#<%= heading.aref %>"><%= heading.plain_html %></a></li>
+    <%- end -%>
     </ul>
 <%- end -%>
   </li>
@@ -48,7 +48,7 @@
     <ul>
 <%- table.each do |item| -%>
 <%-   label = item.respond_to?(:label) ? item.label(klass) : item.aref -%>
-      <li><a href="<%= klass.path %>#<%= label %>"><%= item.plain_html %></a>
+      <li><a href="<%= klass.path %>#<%= label %>"><%= item.plain_html %></a></li>
 <%- end -%>
     </ul>
 <%- end -%>
@@ -65,6 +65,8 @@
     <a href="<%= method.path %>"><%= h method.pretty_name %></a>
     &mdash;
     <span class="container"><%= method.parent.full_name %></span>
+  </li>
 <%- end -%>
 </ul>
 </main>
+</body>

@@ -67,7 +67,7 @@
       </header>
       <dl>
       <%- constants.each do |const| -%>
-        <dt id="<%= const.name %>"><%= const.name %>
+        <dt id="<%= const.name %>"><%= const.name %></dt>
         <%- if const.comment then -%>
         <dd>
           <%- if const.mixin_from then -%>
@@ -76,8 +76,9 @@
             </div>
           <%- end -%>
           <%= const.description.strip %>
+        </dd>
         <%- else -%>
-        <dd class="missing-docs">(Not documented)
+        <dd class="missing-docs">(Not documented)</dd>
         <%- end -%>
       <%- end -%>
       </dl>
@@ -108,7 +109,7 @@
         <%- if attrib.comment then -%>
         <%= attrib.description.strip %>
         <%- else -%>
-        <p class="missing-docs">(Not documented)
+        <p class="missing-docs">(Not documented)</p>
         <%- end -%>
         </div>
       </div>
@@ -179,7 +180,7 @@
           <%- if method.comment then -%>
           <%= method.description.strip %>
           <%- else -%>
-          <p class="missing-docs">(Not documented)
+          <p class="missing-docs">(Not documented)</p>
           <%- end -%>
           <%- if method.calls_super then -%>
             <div class="method-calls-super">
@@ -219,3 +220,4 @@
   </section>
 <%- end -%>
 </main>
+</body>

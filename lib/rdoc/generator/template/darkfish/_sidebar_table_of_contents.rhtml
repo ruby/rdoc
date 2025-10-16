@@ -18,7 +18,7 @@
       <%- while table.first && table.first.level >= level -%>
         <%- heading = table.shift -%>
         <%- if table.first.nil? || table.first.level <= heading.level -%>
-          <li><% display_link.call heading -%>
+          <li><% display_link.call heading -%></li>
         <%- else -%>
           <li>
             <details open>
