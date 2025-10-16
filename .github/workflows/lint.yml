@@ -27,3 +27,10 @@ jobs:
         bundler-cache: true
     - name: Run rubocop
       run: bundle exec rubocop
+    - name: Set up Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: '20'
+    - name: Run herb linter
+      # Don't lint erb files outside of lib as the current directory also includes vendor/bundle
+      run: npx @herb-tools/linter "lib/**/*.rhtml"
