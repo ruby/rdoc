@@ -582,6 +582,7 @@ main .method-detail {
 main .method-detail:target {
   margin-left: -10px;
   border-left: 10px solid var(--border-color);
+  padding-inline-start: 1em;
 }
 
 main .method-header {
