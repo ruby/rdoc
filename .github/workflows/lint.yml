@@ -27,3 +27,7 @@ jobs:
         bundler-cache: true
     - name: Run rubocop
       run: bundle exec rubocop
+    - name: Run herb linter
+      # npx should be available by default so we don't need `setup-node` action
+      # Don't lint erb files outside of lib as the current directory also includes vendor/bundle
+      run: npx @herb-tools/linter "lib/**/*.rhtml"
