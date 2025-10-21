@@ -43,6 +43,7 @@ module RDoc::Generator
 
   autoload :Markup,   "#{__dir__}/generator/markup"
 
+  autoload :Aliki,     "#{__dir__}/generator/aliki"
   autoload :Darkfish,  "#{__dir__}/generator/darkfish"
   autoload :JsonIndex, "#{__dir__}/generator/json_index"
   autoload :RI,        "#{__dir__}/generator/ri"
