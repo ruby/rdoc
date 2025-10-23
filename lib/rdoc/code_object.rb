@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+require_relative 'yard'
+
 ##
 # Base class for the RDoc code tree.
 #
