@@ -3,3 +3,8 @@ title: rdoc Documentation
 main_page: README.md
 autolink_excluded_words:
 - RDoc
+
+exclude:
+- AGENTS.md
+- CLAUDE.md
+- lib/rdoc/markdown.kpeg
