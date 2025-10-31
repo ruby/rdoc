@@ -381,6 +381,95 @@ pre {
   font-size: var(--font-size-sm);
   line-height: var(--line-height-normal);
   margin: var(--space-4) 0;
+  position: relative;
+}
+
+/* Code block wrapper for copy button */
+.code-block-wrapper {
+  position: relative;
+  margin: var(--space-4) 0;
+}
+
+.code-block-wrapper pre {
+  margin: 0;
+}
+
+/* Copy button styling */
+.copy-code-button {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  padding: var(--space-2);
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  z-index: 10;
+}
+
+.copy-code-button:hover,
+.copy-code-button:focus {
+  opacity: 1;
+  background: var(--color-background-tertiary);
+  border-color: var(--color-border-emphasis);
+}
+
+.copy-code-button:active {
+  transform: scale(0.95);
+}
+
+.copy-code-button svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  color: var(--color-text-secondary);
+  transition: color var(--transition-fast);
+}
+
+.copy-code-button:hover svg {
+  color: var(--color-text-primary);
+}
+
+/* Copied state - subtle green checkmark */
+.copy-code-button.copied {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: var(--color-green-500);
+  opacity: 1;
+}
+
+.copy-code-button.copied svg {
+  color: var(--color-green-600);
+}
+
+[data-theme="dark"] .copy-code-button.copied {
+  background: rgba(34, 197, 94, 0.15);
+  border-color: var(--color-green-400);
+}
+
+[data-theme="dark"] .copy-code-button.copied svg {
+  color: var(--color-green-400);
+}
+
+/* Mobile adjustments */
+@media (hover: none) {
+  .copy-code-button {
+    opacity: 0.7;
+  }
+
+  .copy-code-button:active {
+    opacity: 1;
+  }
 }
 
 pre code {
