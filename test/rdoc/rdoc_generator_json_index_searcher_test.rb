@@ -16,13 +16,6 @@ class RDocGeneratorJsonIndexSearcherTest < Test::Unit::TestCase
   def setup
     @context = MiniRacer::Context.new
 
-    # Add RegExp.escape polyfill to avoid `RegExp.escape is not a function` error
-    @context.eval(<<~JS)
-      RegExp.escape = function(string) {
-        return string.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');
-      };
-    JS
-
     searcher_js_path = File.expand_path(
       '../../lib/rdoc/generator/template/json_index/js/searcher.js',
       __dir__
