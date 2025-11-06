@@ -9,8 +9,13 @@ module Test::Unit::CoreAssertions
     rjit_enabled = defined?(RubyVM::RJIT) && RubyVM::RJIT.enabled?
     measure = proc do |arg, message|
       st = Process.clock_gettime(PERFORMANCE_CLOCK)
+      puts "st: #{st}"
       yield(*arg)
-      t = (Process.clock_gettime(PERFORMANCE_CLOCK) - st)
+      value = Process.clock_gettime(PERFORMANCE_CLOCK)
+      puts "after yield"
+      puts "value: #{value}"
+      t = value - st
+      puts "t: #{t}"
       assert_operator 0, :<=, t, message unless rjit_enabled
       t
     end
