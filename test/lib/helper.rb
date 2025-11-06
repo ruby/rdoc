@@ -18,7 +18,9 @@ module Test::Unit::CoreAssertions
     first = seq.first
     *arg = pre.call(first)
     times = (0..(rehearsal || (2 * first))).map do
-      measure[arg, "rehearsal"].nonzero?
+      value = measure[arg, "rehearsal"]
+      puts "value: #{value}"
+      value.nonzero?
     end
 
     times.compact!
