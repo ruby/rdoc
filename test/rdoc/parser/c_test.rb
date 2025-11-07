@@ -1628,7 +1628,7 @@ void Init_Blah(void) {
 
     parser.look_for_directives_in @top_level, comment
 
-    assert_equal "", comment.text
+    assert_empty comment.text
     assert_equal 'not_handled', @top_level.metadata['other']
   end
 

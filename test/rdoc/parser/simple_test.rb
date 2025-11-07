@@ -26,7 +26,7 @@ class RDocParserSimpleTest < RDoc::TestCase
 
     assert_includes @top_level.metadata, 'unhandled'
 
-    assert_equal "", parser.content
+    assert_empty parser.content
   end
 
   def test_remove_coding_comment
