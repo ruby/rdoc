@@ -141,12 +141,11 @@ class RDoc::Markup::PreProcess
       handle_directive('', directive, param, code_object)
     end
     if code_object.is_a?(RDoc::AnyMethod) && (call_seq, = directives['call-seq']) && call_seq
-      code_object.call_seq = call_seq.lines.map(&:chomp).reject(&:empty?).join("\n") if call_seq
+      code_object.call_seq = call_seq.lines.map(&:chomp).reject(&:empty?).join("\n")
     end
     format, = directives['markup']
     [comment_text, format]
   end
-
 
   # Perform post preocesses to a code object
 
