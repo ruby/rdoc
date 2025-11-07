@@ -521,7 +521,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       receiver,
       comment: comment,
       directives: directives,
-      modifier_comment_lines: [start_line, args_end_line, end_line],
+      modifier_comment_lines: [start_line, args_end_line, end_line].uniq,
       line_no: start_line,
       visibility: visibility,
       singleton: singleton,
