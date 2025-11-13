@@ -49,7 +49,7 @@ class RDoc::TomDoc < RDoc::Markup::Parser
       next unless code_object and
                   RDoc::Comment === comment and comment.format == 'tomdoc'
 
-      comment.text.gsub!(/(\A\s*# )(Public|Internal|Deprecated):\s+/) do
+      comment.text.gsub!(/\A(\s*# |)(Public|Internal|Deprecated):\s+/) do
         section = code_object.add_section $2
         code_object.temporary_section = section
 

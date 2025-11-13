@@ -98,9 +98,9 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     prepare_comments(result.comments)
     return if @top_level.done_documenting
 
-    @first_non_meta_comment = nil
-    if (_line_no, start_line, rdoc_comment = @unprocessed_comments.first)
-      @first_non_meta_comment = rdoc_comment if start_line < @program_node.location.start_line
+    @first_non_meta_comment_start_line = nil
+    if (_line_no, start_line = @unprocessed_comments.first)
+      @first_non_meta_comment_start_line = start_line if start_line < @program_node.location.start_line
     end
 
     @program_node.accept(RDocVisitor.new(self, @top_level, @store))
@@ -150,7 +150,9 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       if comment.is_a? Prism::EmbDocComment
         consecutive_comments << [comment] << (current = [])
       elsif comment.location.start_line_slice.match?(/\S/)
-        @modifier_comments[comment.location.start_line] = RDoc::Comment.new(comment.slice, @top_level, :ruby)
+        text = comment.slice
+        text = RDoc::Encoding.change_encoding(text, @encoding) if @encoding
+        @modifier_comments[comment.location.start_line] = text
       elsif current.empty? || current.last.location.end_line + 1 == comment.location.start_line
         current << comment
       else
@@ -172,22 +174,18 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       texts = comments.map do |c|
         c.is_a?(Prism::EmbDocComment) ? c.slice.lines[1...-1].join : c.slice
       end
-      text = RDoc::Encoding.change_encoding(texts.join("\n"), @encoding) if @encoding
+      text = texts.join("\n")
+      text = RDoc::Encoding.change_encoding(text, @encoding) if @encoding
       line_no += 1 while @lines[line_no - 1]&.match?(/\A\s*$/)
-      comment = RDoc::Comment.new(text, @top_level, :ruby)
-      comment.line = start_line
-      [line_no, start_line, comment]
+      [line_no, start_line, text]
     end
 
     # The first comment is special. It defines markup for the rest of the comments.
     _, first_comment_start_line, first_comment_text = @unprocessed_comments.first
     if first_comment_text && @lines[0...first_comment_start_line - 1].all? { |l| l.match?(/\A\s*$/) }
-      comment = RDoc::Comment.new(first_comment_text.text, @top_level, :ruby)
-      handle_consecutive_comment_directive(@container, comment)
-      @markup = comment.format
-    end
-    @unprocessed_comments.each do |_, _, comment|
-      comment.format = @markup
+      _text, directives = @preprocess.parse_comment(first_comment_text, first_comment_start_line, :ruby)
+      markup, = directives['markup']
+      @markup = markup.downcase if markup
     end
   end
 
@@ -211,36 +209,19 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     tokens.each { |token| meth.token_stream << token }
 
     container.add_method meth
-    comment.remove_private
-    comment.normalize
     meth.comment = comment
     @stats.add_method meth
   end
 
   def has_modifier_nodoc?(line_no) # :nodoc:
-    @modifier_comments[line_no]&.text&.match?(/\A#\s*:nodoc:/)
+    @modifier_comments[line_no]&.match?(/\A#\s*:nodoc:/)
   end
 
   def handle_modifier_directive(code_object, line_no) # :nodoc:
-    comment = @modifier_comments[line_no]
-    @preprocess.handle(comment.text, code_object) if comment
-  end
-
-  def handle_consecutive_comment_directive(code_object, comment) # :nodoc:
-    return unless comment
-    @preprocess.handle(comment, code_object) do |directive, param|
-      case directive
-      when 'method', 'singleton-method',
-           'attr', 'attr_accessor', 'attr_reader', 'attr_writer' then
-        # handled elsewhere
-        ''
-      when 'section' then
-        @container.set_current_section(param, comment.dup)
-        comment.text = ''
-        break
-      end
+    if (comment_text = @modifier_comments[line_no])
+      _text, directives = @preprocess.parse_comment(comment_text, line_no, :ruby)
+      handle_code_object_directives(code_object, directives)
     end
-    comment.remove_private
   end
 
   def call_node_name_arguments(call_node) # :nodoc:
@@ -257,39 +238,32 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   # Handles meta method comments
 
-  def handle_meta_method_comment(comment, node)
+  def handle_meta_method_comment(comment, directives, node)
+    handle_code_object_directives(@container, directives)
     is_call_node = node.is_a?(Prism::CallNode)
     singleton_method = false
     visibility = @visibility
     attributes = rw = line_no = method_name = nil
-
-    processed_comment = comment.dup
-    @preprocess.handle(processed_comment, @container) do |directive, param, line|
+    directives.each do |directive, (param, line)|
       case directive
       when 'attr', 'attr_reader', 'attr_writer', 'attr_accessor'
         attributes = [param] if param
         attributes ||= call_node_name_arguments(node) if is_call_node
         rw = directive == 'attr_writer' ? 'W' : directive == 'attr_accessor' ? 'RW' : 'R'
-        ''
       when 'method'
-        method_name = param
+        method_name = param if param
         line_no = line
-        ''
       when 'singleton-method'
-        method_name = param
+        method_name = param if param
         line_no = line
         singleton_method = true
         visibility = :public
-        ''
-      when 'section' then
-        @container.set_current_section(param, comment.dup)
-        return # If the comment contains :section:, it is not a meta method comment
       end
     end
 
     if attributes
       attributes.each do |attr|
-        a = RDoc::Attr.new(@container, attr, rw, processed_comment, singleton: @singleton)
+        a = RDoc::Attr.new(@container, attr, rw, comment, singleton: @singleton)
         a.store = @store
         a.line = line_no
         record_location(a)
@@ -298,11 +272,6 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       end
     elsif line_no || node
       method_name ||= call_node_name_arguments(node).first if is_call_node
-      meth = RDoc::AnyMethod.new(@container, method_name, singleton: @singleton || singleton_method)
-      handle_consecutive_comment_directive(meth, comment)
-      comment.normalize
-      meth.call_seq = comment.extract_call_seq
-      meth.comment = comment
       if node
         tokens = visible_tokens_from_location(node.location)
         line_no = node.location.start_line
@@ -310,37 +279,41 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         tokens = [file_line_comment_token(line_no)]
       end
       internal_add_method(
+        method_name,
         @container,
-        meth,
+        comment: comment,
+        directives: directives,
+        dont_rename_initialize: false,
         line_no: line_no,
         visibility: visibility,
-        params: '()',
+        singleton: @singleton || singleton_method,
+        params: nil,
         calls_super: false,
         block_params: nil,
-        tokens: tokens
+        tokens: tokens,
       )
     end
   end
 
-  def normal_comment_treat_as_ghost_method_for_now?(comment_text, line_no) # :nodoc:
+  INVALID_GHOST_METHOD_ACCEPT_DIRECTIVE_LIST = %w[
+    method singleton-method attr attr_reader attr_writer attr_accessor
+  ].freeze
+  private_constant :INVALID_GHOST_METHOD_ACCEPT_DIRECTIVE_LIST
+
+  def normal_comment_treat_as_ghost_method_for_now?(directives, line_no) # :nodoc:
     # Meta method comment should start with `##` but some comments does not follow this rule.
     # For now, RDoc accepts them as a meta method comment if there is no node linked to it.
-    !@line_nodes[line_no] && comment_text.match?(/^#\s+:(method|singleton-method|attr|attr_reader|attr_writer|attr_accessor):/)
+    !@line_nodes[line_no] && INVALID_GHOST_METHOD_ACCEPT_DIRECTIVE_LIST.any? { |directive| directives.has_key?(directive) }
   end
 
-  def handle_standalone_consecutive_comment_directive(comment, line_no, start_line) # :nodoc:
-    if @markup == 'tomdoc'
-      parse_comment_tomdoc(@container, comment, line_no, start_line)
-      return
-    end
-
-    if comment.text =~ /\A#\#$/ && comment != @first_non_meta_comment
+  def handle_standalone_consecutive_comment_directive(comment, directives, start_with_sharp_sharp, line_no, start_line) # :nodoc:
+    if start_with_sharp_sharp && start_line != @first_non_meta_comment_start_line
       node = @line_nodes[line_no]
-      handle_meta_method_comment(comment, node)
-    elsif normal_comment_treat_as_ghost_method_for_now?(comment.text, line_no) && comment != @first_non_meta_comment
-      handle_meta_method_comment(comment, nil)
+      handle_meta_method_comment(comment, directives, node)
+    elsif normal_comment_treat_as_ghost_method_for_now?(directives, line_no) && start_line != @first_non_meta_comment_start_line
+      handle_meta_method_comment(comment, directives, nil)
     else
-      handle_consecutive_comment_directive(@container, comment)
+      handle_code_object_directives(@container, directives)
     end
   end
 
@@ -348,8 +321,15 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   def process_comments_until(line_no_until)
     while !@unprocessed_comments.empty? && @unprocessed_comments.first[0] <= line_no_until
-      line_no, start_line, rdoc_comment = @unprocessed_comments.shift
-      handle_standalone_consecutive_comment_directive(rdoc_comment, line_no, start_line)
+      line_no, start_line, text = @unprocessed_comments.shift
+      if @markup == 'tomdoc'
+        comment = RDoc::Comment.new(text, @top_level, :ruby)
+        comment.format = 'tomdoc'
+        parse_comment_tomdoc(@container, comment, line_no, start_line)
+        @preprocess.run_post_processes(comment, @container)
+      elsif (comment_text, directives = parse_comment_text_to_directives(text, start_line))
+        handle_standalone_consecutive_comment_directive(comment_text, directives, text.start_with?(/#\#$/), line_no, start_line)
+      end
     end
   end
 
@@ -365,9 +345,27 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   # Returns consecutive comment linked to the given line number
 
   def consecutive_comment(line_no)
-    if @unprocessed_comments.first&.first == line_no
-      @unprocessed_comments.shift.last
+    return unless @unprocessed_comments.first&.first == line_no
+    _line_no, start_line, text = @unprocessed_comments.shift
+    parse_comment_text_to_directives(text, start_line)
+  end
+
+  # Parses comment text and retuns a pair of RDoc::Comment and directives
+
+  def parse_comment_text_to_directives(comment_text, start_line) # :nodoc:
+    comment_text, directives = @preprocess.parse_comment(comment_text, start_line, :ruby)
+    comment = RDoc::Comment.new(comment_text, @top_level, :ruby)
+    comment.normalized = true
+    comment.line = start_line
+    markup, = directives['markup']
+    comment.format = markup&.downcase || @markup
+    if (section, = directives['section'])
+      # If comment has :section:, it is not a documentable comment for a code object
+      @container.set_current_section(section, comment.dup)
+      return
     end
+    @preprocess.run_post_processes(comment, @container)
+    [comment, directives]
   end
 
   def slice_tokens(start_pos, end_pos) # :nodoc:
@@ -443,11 +441,17 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     end
   end
 
+  def handle_code_object_directives(code_object, directives) # :nodoc:
+    directives.each do |directive, (param)|
+      @preprocess.handle_directive('', directive, param, code_object)
+    end
+  end
+
   # Handles `alias foo bar` and `alias_method :foo, :bar`
 
   def add_alias_method(old_name, new_name, line_no)
-    comment = consecutive_comment(line_no)
-    handle_consecutive_comment_directive(@container, comment)
+    comment, directives = consecutive_comment(line_no)
+    handle_code_object_directives(@container, directives) if directives
     visibility = @container.find_method(old_name, @singleton)&.visibility || :public
     a = RDoc::Alias.new(nil, old_name, new_name, comment, singleton: @singleton)
     handle_modifier_directive(a, line_no)
@@ -463,8 +467,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   # Handles `attr :a, :b`, `attr_reader :a, :b`, `attr_writer :a, :b` and `attr_accessor :a, :b`
 
   def add_attributes(names, rw, line_no)
-    comment = consecutive_comment(line_no)
-    handle_consecutive_comment_directive(@container, comment)
+    comment, directives = consecutive_comment(line_no)
+    handle_code_object_directives(@container, directives) if directives
     return unless @container.document_children
 
     names.each do |symbol|
@@ -480,8 +484,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   def add_includes_extends(names, rdoc_class, line_no) # :nodoc:
     return if @in_proc_block
-    comment = consecutive_comment(line_no)
-    handle_consecutive_comment_directive(@container, comment)
+    comment, directives = consecutive_comment(line_no)
+    handle_code_object_directives(@container, directives) if directives
     names.each do |name|
       ie = @container.add(rdoc_class, name, '')
       ie.store = @store
@@ -505,38 +509,59 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   # Adds a method defined by `def` syntax
 
-  def add_method(name, receiver_name:, receiver_fallback_type:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, start_line:, args_end_line:, end_line:)
+  def add_method(method_name, receiver_name:, receiver_fallback_type:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, start_line:, args_end_line:, end_line:)
     return if @in_proc_block
 
     receiver = receiver_name ? find_or_create_module_path(receiver_name, receiver_fallback_type) : @container
-    meth = RDoc::AnyMethod.new(nil, name, singleton: singleton)
-    if (comment = consecutive_comment(start_line))
-      handle_consecutive_comment_directive(@container, comment)
-      handle_consecutive_comment_directive(meth, comment)
-
-      comment.normalize
-      meth.call_seq = comment.extract_call_seq
-      meth.comment = comment
-    end
-    handle_modifier_directive(meth, start_line)
-    handle_modifier_directive(meth, args_end_line)
-    handle_modifier_directive(meth, end_line)
-    return unless should_document?(meth)
+    comment, directives = consecutive_comment(start_line)
+    handle_code_object_directives(@container, directives) if directives
 
     internal_add_method(
+      method_name,
       receiver,
-      meth,
+      comment: comment,
+      directives: directives,
+      modifier_comment_lines: [start_line, args_end_line, end_line].uniq,
       line_no: start_line,
       visibility: visibility,
+      singleton: singleton,
       params: params,
       calls_super: calls_super,
       block_params: block_params,
       tokens: tokens
     )
+  end
+
+  private def internal_add_method(method_name, container, comment:, dont_rename_initialize: false, directives:, modifier_comment_lines: nil, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:) # :nodoc:
+    meth = RDoc::AnyMethod.new(nil, method_name, singleton: singleton)
+    meth.comment = comment
+    handle_code_object_directives(meth, directives) if directives
+    modifier_comment_lines&.each do |line|
+      handle_modifier_directive(meth, line)
+    end
+    return unless should_document?(meth)
+
+    if directives && (call_seq, = directives['call-seq'])
+      meth.call_seq = call_seq.lines.map(&:chomp).reject(&:empty?).join("\n") if call_seq
+    end
+    meth.name ||= meth.call_seq[/\A[^()\s]+/] if meth.call_seq
+    meth.name ||= 'unknown'
+    meth.store = @store
+    meth.line = line_no
+    container.add_method(meth) # should add after setting singleton and before setting visibility
+    meth.visibility = visibility
+    meth.params ||= params || '()'
+    meth.calls_super = calls_super
+    meth.block_params ||= block_params if block_params
+    record_location(meth)
+    meth.start_collecting_tokens
+    tokens.each do |token|
+      meth.token_stream << token
+    end
 
     # Rename after add_method to register duplicated 'new' and 'initialize'
     # defined in c and ruby just like the old parser did.
-    if meth.name == 'initialize' && !singleton
+    if !dont_rename_initialize && method_name == 'initialize' && !singleton
       if meth.dont_rename_initialize
         meth.visibility = :protected
       else
@@ -544,23 +569,6 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         meth.singleton = true
         meth.visibility = :public
       end
-    end
-  end
-
-  private def internal_add_method(container, meth, line_no:, visibility:, params:, calls_super:, block_params:, tokens:) # :nodoc:
-    meth.name ||= meth.call_seq[/\A[^()\s]+/] if meth.call_seq
-    meth.name ||= 'unknown'
-    meth.store = @store
-    meth.line = line_no
-    container.add_method(meth) # should add after setting singleton and before setting visibility
-    meth.visibility = visibility
-    meth.params ||= params
-    meth.calls_super = calls_super
-    meth.block_params ||= block_params if block_params
-    record_location(meth)
-    meth.start_collecting_tokens
-    tokens.each do |token|
-      meth.token_stream << token
     end
   end
 
@@ -633,8 +641,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   # Adds a constant
 
   def add_constant(constant_name, rhs_name, start_line, end_line)
-    comment = consecutive_comment(start_line)
-    handle_consecutive_comment_directive(@container, comment)
+    comment, directives = consecutive_comment(start_line)
+    handle_code_object_directives(@container, directives) if directives
     owner, name = find_or_create_constant_owner_name(constant_name)
     return unless owner
 
@@ -662,8 +670,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   # Adds module or class
 
   def add_module_or_class(module_name, start_line, end_line, is_class: false, superclass_name: nil, superclass_expr: nil)
-    comment = consecutive_comment(start_line)
-    handle_consecutive_comment_directive(@container, comment)
+    comment, directives = consecutive_comment(start_line)
+    handle_code_object_directives(@container, directives) if directives
     return unless @container.document_children
 
     owner, name = find_or_create_constant_owner_name(module_name)

@@ -60,7 +60,7 @@ module RDoc::Text
   ##
   # Expands tab characters in +text+ to eight spaces
 
-  def expand_tabs(text)
+  module_function def expand_tabs(text)
     expanded = []
 
     text.each_line do |line|
