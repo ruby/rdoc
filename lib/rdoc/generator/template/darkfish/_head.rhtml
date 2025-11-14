@@ -16,13 +16,8 @@
   <meta name="description" content="<%= h "#{file.page_name}: #{excerpt(file.comment)}" %>">
 <%- elsif @title %>
   <meta name="keywords" content="ruby,documentation,<%= h @title %>">
-
-  <%- if @options.main_page and
-      main_page = @files.find { |f| f.full_name == @options.main_page } then %>
-    <meta name="description" content="<%= h "#{@title}: #{excerpt(main_page.comment)}" %>">
-  <%- else %>
-    <meta name="description" content="Documentation for <%= h @title %>">
-  <%- end %>
+<% description = @main_page ? "#{@title}: #{excerpt(@main_page.comment)}" : "Documentation for #{@title}" %>
+  <meta name="description" content="<%= h description %>">
 <%- end %>
 
 <%- if canonical_url = @options.canonical_root %>
