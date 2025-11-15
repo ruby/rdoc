@@ -396,10 +396,10 @@ class RDoc::Options
     @files = nil
     @force_output = false
     @force_update = true
-    @generator = nil
-    @generator_name = nil
-    @generator_options = []
+    @generator_name = "darkfish"
     @generators = RDoc::RDoc::GENERATORS
+    @generator_options = []
+    setup_generator
     @hyperlink_all = false
     @line_numbers = false
     @locale = nil
@@ -1212,9 +1212,6 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
     end
-
-    setup_generator 'darkfish' if
-      argv.grep(/\A(-f|--fmt|--format|-r|-R|--ri|--ri-site)\b/).empty?
 
     deprecated = []
     invalid = []
