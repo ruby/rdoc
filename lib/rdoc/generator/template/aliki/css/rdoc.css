@@ -231,6 +231,7 @@ body {
   color: var(--text-color);
   line-height: var(--line-height-relaxed);
   margin: 0;
+  overflow-wrap: break-word; /* Avoid overflow on mobile */
 
   /* Grid layout with header, sidebar, main, and footer */
   display: grid;
@@ -1292,7 +1293,6 @@ aside.table-of-contents * {
   transition: color var(--transition-fast);
   line-height: var(--line-height-relaxed);
   word-wrap: break-word;
-  overflow-wrap: break-word;
   hyphens: auto;
 }
 
