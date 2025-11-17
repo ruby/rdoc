@@ -308,7 +308,6 @@ h6:target {
   margin-left: calc(-1 * var(--space-5));
   padding-left: calc(var(--space-5) / 2);
   border-left: calc(var(--space-5) / 2) solid var(--border-color);
-  scroll-margin-top: calc(var(--layout-header-height) + 2rem);
 }
 
 main .anchor-link:target {
@@ -944,6 +943,7 @@ main h5,
 main h6 {
   font-family: var(--font-heading);
   color: var(--highlight-color);
+  scroll-margin-top: calc(var(--layout-header-height) + 2rem);
 }
 
 /* Heading size hierarchy */
