@@ -1052,10 +1052,13 @@ class RDoc::Parser::C < RDoc::Parser
   # Registers a singleton class +sclass_var+ as a singleton of +class_var+
 
   def handle_singleton(sclass_var, class_var)
-    class_name = @known_classes[class_var]
-
-    @known_classes[sclass_var]     = class_name
-    @singleton_classes[sclass_var] = class_name
+    if (klass = @classes[class_var])
+      @classes[sclass_var] = klass
+    end
+    if (class_name = @known_classes[class_var])
+      @known_classes[sclass_var]     = class_name
+      @singleton_classes[sclass_var] = class_name
+    end
   end
 
   ##
