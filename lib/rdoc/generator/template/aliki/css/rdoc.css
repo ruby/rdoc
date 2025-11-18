@@ -1209,6 +1209,92 @@ main header h3 {
   border-width: 0;
 }
 
+/* Floating go-to-top button */
+.back-to-top {
+  position: fixed;
+  bottom: var(--space-6);
+  right: var(--space-4);
+  width: 3rem;
+  height: 3rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--color-accent-primary);
+  color: var(--color-neutral-100);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition:
+    opacity var(--transition-base),
+    transform var(--transition-base),
+    background var(--transition-fast),
+    box-shadow var(--transition-fast);
+  z-index: calc(var(--z-fixed) + 5);
+}
+
+.back-to-top-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: currentColor;
+}
+
+.back-to-top:hover,
+.back-to-top:focus-visible {
+  background: var(--color-accent-hover);
+}
+
+.back-to-top:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-accent-subtle), var(--shadow-lg);
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+body.has-toc .back-to-top {
+  right: calc(var(--layout-toc-width-min) + var(--space-4));
+}
+
+@media (max-width: 1279px) {
+  body.has-toc .back-to-top {
+    right: var(--space-4);
+  }
+}
+
+@media (max-width: 600px) {
+  .back-to-top {
+    width: 2.75rem;
+    height: 2.75rem;
+    right: var(--space-3);
+    bottom: var(--space-4);
+  }
+}
+
+@supports (bottom: calc(1px + env(safe-area-inset-bottom))) {
+  .back-to-top {
+    bottom: calc(var(--space-6) + env(safe-area-inset-bottom));
+  }
+
+  @media (max-width: 600px) {
+    .back-to-top {
+      bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .back-to-top {
+    transition: none;
+  }
+}
+
 /* 10. Right Sidebar - Table of Contents */
 aside.table-of-contents {
   grid-area: toc;
