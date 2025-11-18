@@ -863,11 +863,6 @@ nav a:hover {
   }
 }
 
-nav ul li details {
-  position: relative;
-  padding-right: 1.5em;  /* Add space for the marker on the right */
-}
-
 nav ul li details > summary {
   list-style: none;  /* Remove the default marker */
   position: relative; /* So that the open/close triangle can position itself absolutely inside */
