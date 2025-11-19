@@ -781,6 +781,40 @@ void Init_Blah(void) {
     assert               methods.first.singleton
   end
 
+  def test_do_methods_nested_module_singleton_class
+    parser = util_parser <<~EOF
+      VALUE baz(VALUE klass, VALUE year) {
+      }
+      void Init_Foo(void) {
+        VALUE mFoo = rb_define_module("Foo");
+        VALUE mBar = rb_define_module_under(mFoo, "Bar");
+        VALUE mBarS = rb_singleton_class(mBar);
+        rb_define_method(mBarS, "baz", baz, 0);
+      }
+    EOF
+    parser.scan
+
+    klass = parser.classes['mBarS']
+    assert_equal 'Foo::Bar', klass.full_name
+    assert_equal 'Foo::Bar', parser.singleton_classes['mBarS']
+    methods = klass.method_list
+    assert_equal 1,      methods.length
+    assert_equal 'baz',  methods.first.name
+    assert               methods.first.singleton
+  end
+
+  def test_do_singleton_class_undocumentable
+    parser = util_parser <<~EOF
+      void Func(VALUE v) {
+        VALUE k = rb_singleton_class(v);
+        rb_define_method(k, "baz", baz, 0);
+      }
+    EOF
+    parser.scan
+    assert_empty parser.classes
+    assert_empty parser.singleton_classes
+  end
+
   def test_do_missing
     parser = util_parser
 
@@ -1973,7 +2007,8 @@ void Init(void) {
     expected = {
       @fn => {
         'mM' => 'M',
-        'cC' => 'C', }}
+        'cC' => 'C',
+        'sC' => 'C' }}
     assert_equal expected, @store.c_class_variables
 
     expected = {
