@@ -59,10 +59,9 @@
   --color-background-primary: #ffffff;
   --color-background-secondary: var(--color-neutral-50);
   --color-background-tertiary: var(--color-neutral-100);
-  --color-background-elevated: #ffffff;
 
-  --color-border-default: var(--color-neutral-300);
   --color-border-subtle: var(--color-neutral-200);
+  --color-border-default: var(--color-neutral-300);
   --color-border-emphasis: var(--color-neutral-400);
 
   --color-link-default: var(--color-primary-600);
@@ -77,6 +76,9 @@
 
   --color-nav-bg: #ffffff;
   --color-nav-text: var(--color-neutral-700);
+
+  --color-th-background: var(--color-neutral-100);
+  --color-td-background: var(--color-neutral-50);
 
   /* RGBA Colors (theme-agnostic) */
   --color-overlay: rgba(0, 0, 0, 0.5);
@@ -106,6 +108,11 @@
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
+
+  /* Font Shortcuts */
+  --font-primary: var(--font-family-base);
+  --font-heading: var(--font-family-heading);
+  --font-code: var(--font-family-mono);
 
   /* Line Heights */
   --line-height-tight: 1.25;
@@ -151,22 +158,6 @@
   --z-fixed: 300;
   --z-modal: 400;
   --z-popover: 500;
-
-  /* Legacy Compatibility (maps to new tokens) */
-  --sidebar-width: var(--layout-sidebar-width);
-  --highlight-color: var(--color-accent-primary);
-  --secondary-highlight-color: var(--color-accent-hover);
-  --text-color: var(--color-text-primary);
-  --background-color: var(--color-background-primary);
-  --code-block-background-color: var(--color-code-bg);
-  --link-color: var(--color-link-default);
-  --border-color: var(--color-border-default);
-  --source-code-toggle-color: var(--color-accent-hover);
-  --table-header-background-color: var(--color-neutral-100);
-  --table-td-background-color: var(--color-neutral-50);
-  --font-primary: var(--font-family-base);
-  --font-heading: var(--font-family-heading);
-  --font-code: var(--font-family-mono);
 }
 
 /* Dark Theme */
@@ -186,7 +177,6 @@
   --color-background-primary: var(--color-neutral-900);
   --color-background-secondary: var(--color-neutral-800);
   --color-background-tertiary: var(--color-neutral-700);
-  --color-background-elevated: var(--color-neutral-800);
 
   --color-border-default: var(--color-neutral-600);
   --color-border-subtle: var(--color-neutral-700);
@@ -205,30 +195,21 @@
   --color-nav-bg: var(--color-neutral-900);
   --color-nav-text: var(--color-neutral-50);
 
+  --color-th-background: var(--color-background-tertiary);
+  --color-td-background: var(--color-background-secondary);
+
   /* Dark theme shadows (slightly more subtle) */
   --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
-
-  /* Legacy Compatibility - Dark Theme */
-  --highlight-color: var(--color-accent-primary);
-  --secondary-highlight-color: var(--color-accent-hover);
-  --text-color: var(--color-text-primary);
-  --background-color: var(--color-background-primary);
-  --code-block-background-color: var(--color-code-bg);
-  --link-color: var(--color-link-default);
-  --border-color: var(--color-border-default);
-  --source-code-toggle-color: var(--color-accent-hover);
-  --table-header-background-color: var(--color-background-tertiary);
-  --table-td-background-color: var(--color-background-secondary);
 }
 
 /* 2. Global Styles & Layout */
 body {
-  background: var(--background-color);
+  background: var(--color-background-primary);
   font-family: var(--font-primary);
   font-weight: 400;
-  color: var(--text-color);
+  color: var(--color-text-primary);
   line-height: var(--line-height-relaxed);
   margin: 0;
   overflow-wrap: break-word; /* Avoid overflow on mobile */
@@ -307,7 +288,7 @@ h5:target,
 h6:target {
   margin-left: calc(-1 * var(--space-5));
   padding-left: calc(var(--space-5) / 2);
-  border-left: calc(var(--space-5) / 2) solid var(--border-color);
+  border-left: calc(var(--space-5) / 2) solid var(--color-border-default);
 }
 
 main .anchor-link:target {
@@ -316,7 +297,7 @@ main .anchor-link:target {
 
 /* 4. Links */
 a {
-  color: var(--link-color);
+  color: var(--color-link-default);
   transition: color var(--transition-base);
   text-decoration: underline;
   text-underline-offset: 0.2em; /* Make sure it doesn't overlap with underscores in a method name. */
@@ -458,15 +439,15 @@ table {
 
 table tr th, table tr td {
   padding: 0.2em 0.4em;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border-default);
 }
 
 table tr th {
-  background-color: var(--table-header-background-color);
+  background-color: var(--color-th-background);
 }
 
 table tr:nth-child(even) td {
-  background-color: var(--table-td-background-color);
+  background-color: var(--color-td-background);
 }
 
 /* 6. Header (Top Navbar) */
@@ -476,7 +457,7 @@ header.top-navbar {
   top: 0;
   z-index: var(--z-fixed);
   background: var(--color-background-primary);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--color-border-default);
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -537,8 +518,8 @@ header.top-navbar #search-results {
   left: 0;
   width: var(--layout-search-width);
   max-height: 60vh;
-  background: var(--color-background-elevated);
-  border: 1px solid var(--border-color);
+  background: var(--color-background-primary);
+  border: 1px solid var(--color-border-default);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   overflow-y: auto;
@@ -647,7 +628,7 @@ header.top-navbar #search-results[aria-expanded="false"] {
 footer.site-footer {
   grid-area: footer;
   background: var(--color-background-secondary);
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--color-border-default);
   padding: var(--space-12) var(--space-6);
 }
 
@@ -692,7 +673,7 @@ footer.site-footer a:hover {
 footer.site-footer .footer-bottom {
   margin-top: var(--space-8);
   padding-top: var(--space-6);
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--color-border-default);
   text-align: center;
   font-size: var(--font-size-xs);
   color: var(--color-text-tertiary);
@@ -703,7 +684,7 @@ nav {
   grid-area: nav;
   font-family: var(--font-heading);
   font-size: var(--font-size-base);
-  border-right: 1px solid var(--border-color);
+  border-right: 1px solid var(--color-border-default);
   background: var(--color-nav-bg);
   color: var(--color-nav-text);
   overflow-y: auto;
@@ -723,7 +704,7 @@ nav {
     top: var(--layout-header-height);
     bottom: 0;
     left: 0;
-    width: var(--sidebar-width);
+    width: var(--layout-sidebar-width);
     z-index: calc(var(--z-fixed) - 10); /* Below header */
     box-shadow: var(--shadow-lg);
     /* Don't set height - let top/bottom define it */
@@ -764,11 +745,11 @@ nav {
 
 nav footer {
   padding: var(--space-4);
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--color-border-default);
 }
 
 nav footer a {
-  color: var(--secondary-highlight-color);
+  color: var(--color-accent-hover);
 }
 
 nav .nav-section {
@@ -781,8 +762,8 @@ nav h2, nav h3 {
   font-weight: var(--font-weight-semibold);
   margin: 0 0 var(--space-4);
   padding: var(--space-2) 0;
-  color: var(--highlight-color);
-  border-bottom: 1px solid var(--border-color);
+  color: var(--color-accent-primary);
+  border-bottom: 1px solid var(--color-border-default);
 }
 
 ol.breadcrumb {
@@ -927,7 +908,7 @@ main h1[class] {
   margin-top: 0;
   margin-bottom: 1em;
   font-size: 2.5em;
-  color: var(--highlight-color);
+  color: var(--color-accent-primary);
 }
 
 main h1,
@@ -937,7 +918,7 @@ main h4,
 main h5,
 main h6 {
   font-family: var(--font-heading);
-  color: var(--highlight-color);
+  color: var(--color-accent-primary);
   scroll-margin-top: calc(var(--layout-header-height) + 2rem);
 }
 
@@ -982,8 +963,8 @@ main h5, main h6 {
 /* Search */
 #search-section {
   padding: var(--space-6);
-  background-color: var(--background-color);
-  border-bottom: 1px solid var(--border-color);
+  background-color: var(--color-background-primary);
+  border-bottom: 1px solid var(--color-border-default);
 }
 
 #search-field-wrapper {
@@ -995,20 +976,20 @@ main h5, main h6 {
 #search-field {
   width: 100%;
   padding: var(--space-2) var(--space-4) var(--space-2) 2.5rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border-default);
   border-radius: 1.25rem;
   font-size: var(--font-size-sm);
   outline: none;
   transition: border-color var(--transition-base);
-  color: var(--text-color);
+  color: var(--color-text-primary);
 }
 
 #search-field:focus {
-  border-color: var(--highlight-color);
+  border-color: var(--color-accent-primary);
 }
 
 #search-field::placeholder {
-  color: var(--text-color);
+  color: var(--color-text-primary);
 }
 
 #search-field-wrapper::before {
@@ -1018,7 +999,7 @@ main h5, main h6 {
   top: 50%;
   transform: translateY(-50%);
   font-size: var(--font-size-sm);
-  color: var(--text-color);
+  color: var(--color-text-primary);
   opacity: 0.6;
 }
 
@@ -1042,13 +1023,13 @@ main h5, main h6 {
 }
 
 #search-results .search-selected {
-  background: var(--code-block-background-color);
+  background: var(--color-code-bg);
   border-bottom: 1px solid transparent;
 }
 
 #search-results li {
   list-style: none;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--color-border-default);
   margin-bottom: 0.5em;
 }
 
@@ -1109,7 +1090,7 @@ em {
 
 strong,
 em {
-  color: var(--highlight-color);
+  color: var(--color-accent-primary);
   background-color: var(--color-emphasis-bg);
 }
 
@@ -1130,14 +1111,14 @@ main pre {
 /* Horizontal Rules */
 main hr {
   margin: 1.5em 1em;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--color-border-default);
 }
 
 /* Blockquotes */
 main blockquote {
   margin: 0 2em 1.2em 1.2em;
   padding-left: 0.5em;
-  border-left: 2px solid var(--border-color);
+  border-left: 2px solid var(--color-border-default);
 }
 
 /* Lists */
@@ -1181,14 +1162,14 @@ main dd p:first-child {
 main header h2 {
   margin-top: 2em;
   border-width: 0;
-  border-top: 4px solid var(--border-color);
+  border-top: 4px solid var(--color-border-default);
   font-size: 130%;
 }
 
 main header h3 {
   margin: 2em 0 1.5em;
   border-width: 0;
-  border-top: 3px solid var(--border-color);
+  border-top: 3px solid var(--color-border-default);
   font-size: 120%;
 }
 
@@ -1217,7 +1198,7 @@ aside.table-of-contents {
   top: var(--layout-header-height);
   padding: var(--space-8) var(--space-6);
   border: none;
-  border-left: 1px solid var(--border-color);
+  border-left: 1px solid var(--color-border-default);
   font-size: var(--font-size-base);
 }
 
@@ -1273,7 +1254,7 @@ aside.table-of-contents * {
 .table-of-contents ul ul {
   margin-top: var(--space-3);
   margin-left: var(--space-5);
-  border-left: 1px solid var(--border-color);
+  border-left: 1px solid var(--color-border-default);
   padding-left: var(--space-4);
 }
 
@@ -1309,7 +1290,7 @@ main .method-source-code {
 }
 
 main .method-source-code pre {
-  border-color: var(--source-code-toggle-color);
+  border-color: var(--color-accent-hover);
 }
 
 main .method-source-code.active-menu {
@@ -1318,7 +1299,7 @@ main .method-source-code.active-menu {
 }
 
 main .method-description .method-calls-super {
-  color: var(--text-color);
+  color: var(--color-text-primary);
   font-weight: bold;
 }
 
@@ -1329,7 +1310,7 @@ main .method-detail {
 main .method-detail:target {
   margin-left: calc(-1 * var(--space-5));
   padding-left: calc(var(--space-5) / 2);
-  border-left: calc(var(--space-5) / 2) solid var(--border-color);
+  border-left: calc(var(--space-5) / 2) solid var(--color-border-default);
 }
 
 main .method-header {
@@ -1358,7 +1339,7 @@ main .method-heading::after {
   content: '¶';
   position: absolute;
   visibility: hidden;
-  color: var(--highlight-color);
+  color: var(--color-accent-primary);
   font-size: 0.5em;
 }
 
@@ -1369,14 +1350,14 @@ main .method-heading:hover::after {
 main .method-controls {
   line-height: 20px;
   float: right;
-  color: var(--source-code-toggle-color);
+  color: var(--color-accent-hover);
   cursor: pointer;
 }
 
 main .method-description,
 main .aliases {
   margin-top: 0.75em;
-  color: var(--text-color);
+  color: var(--color-text-primary);
 }
 
 main .aliases {
@@ -1386,7 +1367,7 @@ main .aliases {
 }
 
 main .aliases a {
-  color: var(--secondary-highlight-color);
+  color: var(--color-accent-hover);
 }
 
 main .mixin-from {
