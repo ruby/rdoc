@@ -62,6 +62,26 @@ npx @herb-tools/linter "lib/**/*.rhtml"
 **Template Location:** `lib/rdoc/generator/template/**/*.rhtml`
 **CI Workflow:** `.github/workflows/lint.yml`
 
+#### Stylelint (CSS Files)
+
+```bash
+# Lint CSS files
+npm run lint:css
+
+# Auto-fix style issues
+npm run lint:css -- --fix
+
+# Lint specific file
+npx stylelint "lib/rdoc/generator/template/aliki/css/rdoc.css"
+```
+
+**Configuration:** `.stylelintrc.json`
+**Features:**
+- Detects undefined CSS custom properties (variables)
+- Detects missing `var()` function for custom properties
+- Style and formatting checks
+- Many issues auto-fixable with `--fix`
+
 ### Documentation Generation
 
 ```bash
@@ -198,6 +218,7 @@ Use Red, Green, Refactor approach:
 6. **Lint your changes**:
    - Ruby code: `bundle exec rubocop -A` (auto-fix when possible)
    - ERB templates: `npx @herb-tools/linter "**/*.rhtml"` (if modified)
+   - CSS files: `npm run lint:css -- --fix` (if modified)
 
 ### Modifying Parsers
 
@@ -228,7 +249,9 @@ When making changes to theme CSS or templates (e.g., Darkfish or Aliki themes):
 6. **Verify with sub-agent**: Use Task tool again to launch agent that uses Browser MCP to verify fixes
    - Agent takes screenshots and compares to original issues
    - Agent reports back whether issues are resolved
-7. **Lint templates** (if modified): Run `npx @herb-tools/linter "lib/rdoc/generator/template/**/*.rhtml"`
+7. **Lint changes** (if modified):
+   - ERB templates: `npx @herb-tools/linter "lib/rdoc/generator/template/**/*.rhtml"`
+   - CSS files: `npm run lint:css -- --fix`
 8. **Stop server**: Kill the HTTP server process when done
 
 **Tip:** Keep HTTP server running during iteration. Just regenerate with `bundle exec rake rerdoc` between changes.
@@ -236,7 +259,10 @@ When making changes to theme CSS or templates (e.g., Darkfish or Aliki themes):
 ## Notes for AI Agents
 
 1. **Always run tests** after making changes: `bundle exec rake`
-2. **Check both RuboCop and Herb** for linting
+2. **Lint your changes**:
+   - RuboCop for Ruby: `bundle exec rubocop -A`
+   - Herb for ERB templates: `npx @herb-tools/linter "**/*.rhtml"`
+   - Stylelint for CSS: `npm run lint:css -- --fix`
 3. **Regenerate parsers** if you modify `.ry` or `.kpeg` files
 4. **Use `rake rerdoc`** to regenerate documentation (not just `rdoc`)
 5. **Verify generated files** with `rake verify_generated`
