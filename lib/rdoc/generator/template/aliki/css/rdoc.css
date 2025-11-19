@@ -1226,6 +1226,18 @@ aside.table-of-contents * {
   outline: none !important;
 }
 
+aside.table-of-contents .toc-sticky {
+  display: flex;
+  flex-direction: column;
+
+  /* Exclude header height and top/bottom padding of aside.table-of-contents */
+  height: calc(100vh - var(--layout-header-height) - var(--space-8) * 2);
+}
+
+aside.table-of-contents .toc-sticky nav {
+  height: auto;
+}
+
 /* Hide TOC on mobile/tablet */
 @media (max-width: 1279px) {
   aside.table-of-contents {
