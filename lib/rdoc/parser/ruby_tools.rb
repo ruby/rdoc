@@ -20,7 +20,7 @@ module RDoc::Parser::RubyTools
 
     if @tokens.empty? then
       if @scanner_point >= @scanner.size
-        return nil
+        return
       else
         tk = @scanner[@scanner_point]
         @scanner_point += 1
@@ -31,16 +31,14 @@ module RDoc::Parser::RubyTools
       tk = @tokens.shift
     end
 
-    if tk == nil || :on___end__ == tk[:kind]
-      tk = nil
+    if tk.nil? || :on___end__ == tk[:kind]
+      return
     end
 
-    return nil unless tk
-
     # inform any listeners of our shiny new token
-    @token_listeners.each do |obj|
+    @token_listeners&.each do |obj|
       obj.add_token(tk)
-    end if @token_listeners
+    end
 
     tk
   end
