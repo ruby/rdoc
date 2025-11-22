@@ -312,10 +312,13 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
             else
               "\n<h#{level}>"
             end
-    @res << to_html(heading.text)
-    unless @options.pipe then
-      @res << "<span><a href=\"##{label}\">&para;</a></span>"
+
+    if @options.pipe
+      @res << to_html(heading.text)
+    else
+      @res << "<a href=\"##{label}\">#{to_html(heading.text)}</a>"
     end
+
     @res << "</h#{level}>\n"
   end
 

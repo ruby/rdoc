@@ -38,9 +38,7 @@ class RDocGeneratorMarkupTest < RDoc::TestCase
   def test_description
     @comment = '= Hello'
 
-    links = '<span><a href="#label-Hello">&para;</a></span>'
-
-    assert_equal "\n<h1 id=\"label-Hello\">Hello#{links}</h1>\n", description
+    assert_equal "\n<h1 id=\"label-Hello\"><a href=\"#label-Hello\">Hello</a></h1>\n", description
   end
 
   def test_formatter
