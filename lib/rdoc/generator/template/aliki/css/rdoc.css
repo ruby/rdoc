@@ -61,8 +61,8 @@
   --color-border-default: var(--color-neutral-300);
   --color-border-subtle: var(--color-neutral-200);
   --color-border-emphasis: var(--color-neutral-400);
-  --color-link-default: var(--color-primary-600);
-  --color-link-hover: var(--color-primary-700);
+  --color-link-default: var(--color-text-primary);
+  --color-link-hover: var(--color-primary-600);
   --color-accent-primary: var(--color-primary-600);
   --color-accent-hover: var(--color-primary-700);
   --color-accent-subtle: var(--color-primary-50);
@@ -635,7 +635,6 @@ nav ul ul ul ul {
 }
 
 nav a {
-  color: var(--color-text-primary);
   text-decoration: none;
 }
 
@@ -1006,12 +1005,10 @@ main .method-heading {
 }
 
 main .method-heading .method-name {
-  color: var(--color-text-primary);
   font-weight: var(--font-weight-semibold);
 }
 
 main .method-heading .method-args {
-  color: var(--color-text-secondary);
   font-weight: var(--font-weight-normal);
 }
 
