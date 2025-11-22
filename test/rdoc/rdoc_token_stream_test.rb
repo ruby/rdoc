@@ -39,11 +39,29 @@ class RDocTokenStreamTest < RDoc::TestCase
     assert_equal '', RDoc::TokenStream.to_html([])
   end
 
+  def test_source_language_ruby
+    foo = Class.new do
+      include RDoc::TokenStream
+    end.new
+
+    foo.collect_tokens(:ruby)
+    assert_equal 'ruby', foo.source_language
+  end
+
+  def test_source_language_c
+    foo = Class.new do
+      include RDoc::TokenStream
+    end.new
+
+    foo.collect_tokens(:c)
+    assert_equal 'c', foo.source_language
+  end
+
   def test_add_tokens
     foo = Class.new do
       include RDoc::TokenStream
     end.new
-    foo.collect_tokens
+    foo.collect_tokens(:ruby)
     foo.add_tokens([:token])
     assert_equal [:token], foo.token_stream
   end
@@ -52,7 +70,7 @@ class RDocTokenStreamTest < RDoc::TestCase
     foo = Class.new do
       include RDoc::TokenStream
     end.new
-    foo.collect_tokens
+    foo.collect_tokens(:ruby)
     foo.add_token(:token)
     assert_equal [:token], foo.token_stream
   end
@@ -61,7 +79,7 @@ class RDocTokenStreamTest < RDoc::TestCase
     foo = Class.new do
       include RDoc::TokenStream
     end.new
-    foo.collect_tokens
+    foo.collect_tokens(:ruby)
     assert_equal [], foo.token_stream
   end
 
@@ -69,7 +87,7 @@ class RDocTokenStreamTest < RDoc::TestCase
     foo = Class.new do
       include RDoc::TokenStream
     end.new
-    foo.collect_tokens
+    foo.collect_tokens(:ruby)
     foo.add_token(:token)
     foo.pop_token
     assert_equal [], foo.token_stream

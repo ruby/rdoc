@@ -622,7 +622,7 @@ class RDoc::Parser::C < RDoc::Parser
       find_modifiers comment, meth_obj if comment
 
       #meth_obj.params = params
-      meth_obj.start_collecting_tokens
+      meth_obj.start_collecting_tokens(:c)
       tk = { :line_no => 1, :char_no => 1, :text => body }
       meth_obj.add_token tk
       meth_obj.comment = comment
@@ -638,7 +638,7 @@ class RDoc::Parser::C < RDoc::Parser
 
       find_modifiers comment, meth_obj
 
-      meth_obj.start_collecting_tokens
+      meth_obj.start_collecting_tokens(:c)
       tk = { :line_no => 1, :char_no => 1, :text => body }
       meth_obj.add_token tk
       meth_obj.comment = comment

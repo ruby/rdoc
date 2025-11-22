@@ -161,7 +161,7 @@
         <div class="method-description">
           <%- if method.token_stream then %>
           <div class="method-source-code" id="<%= method.html_name %>-source">
-            <pre><%= method.markup_code %></pre>
+            <pre class="<%= method.source_language %>" data-language="<%= method.source_language %>"><%= method.markup_code %></pre>
           </div>
           <%- end %>
           <%- if method.mixin_from then %>
