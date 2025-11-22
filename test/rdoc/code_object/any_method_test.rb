@@ -153,7 +153,7 @@ each_line(foo)
       { :line_no => 0, :char_no => 0, :kind => :on_const, :text => 'CONSTANT' },
     ]
 
-    @c2_a.collect_tokens
+    @c2_a.collect_tokens(:ruby)
     @c2_a.add_tokens(tokens)
 
     expected = '<span class="ruby-constant">CONSTANT</span>'
@@ -171,7 +171,7 @@ each_line(foo)
       { :line_no => 3, :char_no => 0, :kind => :on_const, :text => 'B' }
     ]
 
-    @c2_a.collect_tokens
+    @c2_a.collect_tokens(:ruby)
     @c2_a.add_tokens(tokens)
 
     assert_equal <<-EXPECTED.chomp, @c2_a.markup_code

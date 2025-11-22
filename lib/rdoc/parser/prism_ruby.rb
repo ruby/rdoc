@@ -203,7 +203,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     meth.call_seq = signature
     return unless meth.name
 
-    meth.start_collecting_tokens
+    meth.start_collecting_tokens(:ruby)
     node = @line_nodes[line_no]
     tokens = node ? visible_tokens_from_location(node.location) : [file_line_comment_token(start_line)]
     tokens.each { |token| meth.token_stream << token }
@@ -554,7 +554,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     meth.calls_super = calls_super
     meth.block_params ||= block_params if block_params
     record_location(meth)
-    meth.start_collecting_tokens
+    meth.start_collecting_tokens(:ruby)
     tokens.each do |token|
       meth.token_stream << token
     end
