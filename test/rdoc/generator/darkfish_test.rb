@@ -125,7 +125,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
       klassnav
     )
 
-    assert_match(/<h1 id="class-Klass-label-Heading\+1">Heading 1(?!\.)/,
+    assert_match(/<h1 id="class-Klass-label-Heading\+1"><a href="#class-Klass-label-Heading\+1">Heading 1<\/a>(?!\.)/,
                  klass[%r[<section class=\"description\">.*</section>]m])
     toc = File.binread('table_of_contents.html')
     assert_match(
@@ -171,7 +171,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     index_html = File.binread('index.html')
 
     assert_include index_html, "<h3>Table of Contents</h3>"
-    assert_include index_html, '<h1 id="label-Heading+1">Heading 1'
+    assert_include index_html, '<h1 id="label-Heading+1"><a href="#label-Heading+1">Heading 1</a>'
     # When there's a main page, the default description should not be shown
     assert_not_include index_html, 'This is the API documentation for My awesome Ruby project.'
   end

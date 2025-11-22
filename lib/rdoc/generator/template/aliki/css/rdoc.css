@@ -225,35 +225,6 @@ body.has-toc {
 }
 
 /* 3. Typography */
-h1 span,
-h2 span,
-h3 span,
-h4 span,
-h5 span,
-h6 span {
-  position: relative;
-  display: none;
-  padding-left: 1em;
-  line-height: 0;
-  vertical-align: baseline;
-  font-size: 10px;
-}
-
-h1 span { top: -1.3em; }
-h2 span { top: -1.2em; }
-h3 span { top: -1.0em; }
-h4 span { top: -0.8em; }
-h5 span { top: -0.5em; }
-h6 span { top: -0.5em; }
-
-h1:hover span,
-h2:hover span,
-h3:hover span,
-h4:hover span,
-h5:hover span,
-h6:hover span {
-  display: inline;
-}
 
 /* 4. Links */
 a {
@@ -797,6 +768,26 @@ main h5, main h6 {
   margin-bottom: var(--space-2);
 }
 
+/* Heading links */
+main h1 a,
+main h2 a,
+main h3 a,
+main h4 a,
+main h5 a,
+main h6 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+main h1 a:hover,
+main h2 a:hover,
+main h3 a:hover,
+main h4 a:hover,
+main h5 a:hover,
+main h6 a:hover {
+  text-decoration: underline;
+}
+
 /* Syntax Highlighting - Light Theme */
 .ruby-constant   { color: var(--code-orange); }
 .ruby-keyword    { color: var(--code-red); }
@@ -1010,18 +1001,6 @@ main .method-heading .method-name {
 
 main .method-heading .method-args {
   font-weight: var(--font-weight-normal);
-}
-
-main .method-heading::after {
-  content: '¶';
-  position: absolute;
-  visibility: hidden;
-  color: var(--color-accent-primary);
-  font-size: 0.5em;
-}
-
-main .method-heading:hover::after {
-  visibility: visible;
 }
 
 main .method-controls {
