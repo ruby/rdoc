@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'cgi/escape'
 require 'cgi/util' unless defined?(CGI::EscapeExt)
+require_relative '../parser/c_state_lex'
 
 ##
 # Outputs RDoc markup as HTML.
@@ -224,7 +225,18 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
     klass = nil
 
-    content = if verbatim.ruby? or parseable? text then
+    content = if verbatim.c?
+                begin
+                  tokens = RDoc::Parser::CStateLex.parse text
+                  klass  = ' class="c"'
+
+                  result = RDoc::TokenStream.to_html_c tokens
+                  result = result + "\n" unless "\n" == result[-1]
+                  result
+                rescue
+                  CGI.escapeHTML text
+                end
+              elsif verbatim.ruby? || parseable?(text)
                 begin
                   tokens = RDoc::Parser::RipperStateLex.parse text
                   klass  = ' class="ruby"'

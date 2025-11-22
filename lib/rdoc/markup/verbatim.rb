@@ -74,6 +74,13 @@ class RDoc::Markup::Verbatim < RDoc::Markup::Raw
   end
 
   ##
+  # Is this verbatim section C code?
+
+  def c?
+    @format == :c
+  end
+
+  ##
   # The text of the section
 
   def text

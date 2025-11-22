@@ -39,6 +39,38 @@ class RDocTokenStreamTest < RDoc::TestCase
     assert_equal '', RDoc::TokenStream.to_html([])
   end
 
+  def test_class_to_html_c
+    tokens = [
+      { line_no: 0, char_no: 0, kind: :on_kw, text: 'int' },
+      { line_no: 0, char_no: 0, kind: :on_ident, text: 'main' },
+      { line_no: 0, char_no: 0, kind: :on_op, text: '+' },
+      { line_no: 0, char_no: 0, kind: :on_int, text: '42' },
+      { line_no: 0, char_no: 0, kind: :on_tstring, text: '"hello"' },
+      { line_no: 0, char_no: 0, kind: :on_char, text: "'c'" },
+      { line_no: 0, char_no: 0, kind: :on_comment, text: '// comment' },
+      { line_no: 0, char_no: 0, kind: :on_preprocessor, text: '#include' },
+      { line_no: 0, char_no: 0, kind: :on_unknown, text: '\\' }
+    ]
+
+    expected = [
+      '<span class="c-keyword">int</span>',
+      '<span class="c-identifier">main</span>',
+      '<span class="c-operator">+</span>',
+      '<span class="c-value">42</span>',
+      '<span class="c-string">&quot;hello&quot;</span>',
+      '<span class="c-value">&#39;c&#39;</span>',
+      '<span class="c-comment">// comment</span>',
+      '<span class="c-preprocessor">#include</span>',
+      '\\'
+    ].join
+
+    assert_equal expected, RDoc::TokenStream.to_html_c(tokens)
+  end
+
+  def test_class_to_html_c_empty
+    assert_equal '', RDoc::TokenStream.to_html_c([])
+  end
+
   def test_add_tokens
     foo = Class.new do
       include RDoc::TokenStream

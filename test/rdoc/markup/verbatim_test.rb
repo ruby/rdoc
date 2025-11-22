@@ -26,4 +26,14 @@ class RDocMarkupVerbatimTest < RDoc::TestCase
     assert verbatim.ruby?
   end
 
+  def test_c_eh
+    verbatim = RDoc::Markup::Verbatim.new
+
+    refute verbatim.c?
+
+    verbatim.format = :c
+
+    assert verbatim.c?
+  end
+
 end

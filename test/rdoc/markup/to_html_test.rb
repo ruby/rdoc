@@ -633,6 +633,22 @@ end
     assert_equal expected, @to.res.join
   end
 
+  def test_accept_verbatim_c
+    verb = @RM::Verbatim.new("int x = 42;\n")
+    verb.format = :c
+
+    @to.start_accepting
+    @to.accept_verbatim verb
+
+    expected = <<-EXPECTED
+
+<pre class="c"><span class="c-keyword">int</span> <span class="c-identifier">x</span> <span class="c-operator">=</span> <span class="c-value">42</span>;
+</pre>
+    EXPECTED
+
+    assert_equal expected, @to.res.join
+  end
+
   def test_accept_verbatim_redefinable_operators
     functions = %w[| ^ & <=> == === =~ > >= < <= << >> + - * / % ** ~ +@ -@ [] []= ` !  != !~].flat_map { |redefinable_op|
       ["def #{redefinable_op}\n", "end\n"]

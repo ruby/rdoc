@@ -72,6 +72,44 @@ module RDoc::TokenStream
   end
 
   ##
+  # Converts C +token_stream+ to HTML wrapping various tokens with
+  # <tt><span></tt> elements. Maps C token types to CSS class names.
+
+  def self.to_html_c(token_stream)
+    token_stream.map do |t|
+      next unless t
+
+      style = case t[:kind]
+              when :on_kw           then 'c-keyword'
+              when :on_ident        then 'c-identifier'
+              when :on_comment      then 'c-comment'
+              when :on_tstring      then 'c-string'
+              when :on_char         then 'c-value'
+              when :on_int          then 'c-value'
+              when :on_float        then 'c-value'
+              when :on_op           then 'c-operator'
+              when :on_preprocessor then 'c-preprocessor'
+              end
+
+      comment_with_nl = false
+      if :on_comment == t[:kind]
+        comment_with_nl = true if "\n" == t[:text][-1]
+        text = t[:text].rstrip
+      else
+        text = t[:text]
+      end
+
+      text = CGI.escapeHTML text
+
+      if style then
+        "<span class=\"#{style}\">#{text}</span>#{"\n" if comment_with_nl}"
+      else
+        text
+      end
+    end.join
+  end
+
+  ##
   # Adds +tokens+ to the collected tokens
 
   def add_tokens(tokens)

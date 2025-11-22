@@ -829,6 +829,32 @@ main h5, main h6 {
 [data-theme="dark"] .ruby-value      { color: var(--code-orange); }
 [data-theme="dark"] .ruby-string     { color: var(--code-green); }
 
+/* C Syntax Highlighting - Light Theme */
+.c-keyword       { color: var(--code-red); }
+.c-identifier    { color: var(--code-blue); }
+.c-operator      { color: var(--code-green); }
+.c-preprocessor  { color: var(--code-purple); }
+.c-value         { color: var(--code-orange); }
+.c-string        { color: var(--code-green); }
+
+.c-comment {
+  color: var(--color-neutral-500);
+  font-style: italic;
+}
+
+/* C Syntax Highlighting - Dark Theme */
+[data-theme="dark"] .c-keyword       { color: var(--code-red); }
+[data-theme="dark"] .c-identifier    { color: var(--code-blue); }
+[data-theme="dark"] .c-operator      { color: var(--code-green); }
+[data-theme="dark"] .c-preprocessor  { color: var(--code-purple); }
+[data-theme="dark"] .c-value         { color: var(--code-orange); }
+[data-theme="dark"] .c-string        { color: var(--code-green); }
+
+[data-theme="dark"] .c-comment {
+  color: var(--color-neutral-400);
+  font-style: italic;
+}
+
 /* Emphasis */
 em {
   text-decoration-color: var(--color-emphasis-decoration);
