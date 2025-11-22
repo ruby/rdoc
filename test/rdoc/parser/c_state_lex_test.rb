@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require_relative '../helper'
-require 'rdoc/parser/c_state_lex'
 
 class RDocParserCStateLexTest < RDoc::TestCase
 

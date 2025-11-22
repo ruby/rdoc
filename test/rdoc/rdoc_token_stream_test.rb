@@ -71,6 +71,54 @@ class RDocTokenStreamTest < RDoc::TestCase
     assert_equal '', RDoc::TokenStream.to_html_c([])
   end
 
+  def test_source_language_ruby
+    foo = Class.new do
+      include RDoc::TokenStream
+    end.new
+
+    # Default is :ruby
+    foo.collect_tokens
+    assert_equal 'ruby', foo.source_language
+
+    # Explicit :ruby
+    foo.collect_tokens(:ruby)
+    assert_equal 'ruby', foo.source_language
+  end
+
+  def test_source_language_c
+    foo = Class.new do
+      include RDoc::TokenStream
+    end.new
+
+    foo.collect_tokens(:c)
+    assert_equal 'c', foo.source_language
+  end
+
+  def test_to_html_dispatches_based_on_language
+    foo = Class.new do
+      include RDoc::TokenStream
+    end.new
+
+    # Ruby tokens
+    foo.collect_tokens(:ruby)
+    ruby_tokens = [
+      { line_no: 1, char_no: 0, kind: :on_kw, text: 'def', state: nil },
+      { line_no: 1, char_no: 4, kind: :on_ident, text: 'foo', state: nil }
+    ]
+    foo.add_tokens(ruby_tokens)
+    html = foo.to_html
+    assert_includes html, 'ruby-keyword'
+
+    # C tokens
+    foo.collect_tokens(:c)
+    c_tokens = [
+      { line_no: 1, char_no: 0, kind: :on_kw, text: 'int', state: nil }
+    ]
+    foo.add_tokens(c_tokens)
+    html = foo.to_html
+    assert_includes html, 'c-keyword'
+  end
+
   def test_add_tokens
     foo = Class.new do
       include RDoc::TokenStream

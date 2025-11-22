@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 ##
 # A TokenStream is a list of tokens, gathered during the parse of some entity
 # (say a method). Entities populate these streams by being registered with the
@@ -125,9 +126,12 @@ module RDoc::TokenStream
 
   ##
   # Starts collecting tokens
+  #
+  # @param language [Symbol] the language of the token stream (:ruby or :c)
 
-  def collect_tokens
+  def collect_tokens(language = :ruby)
     @token_stream = []
+    @token_stream_language = language
   end
 
   alias start_collecting_tokens collect_tokens
@@ -151,6 +155,31 @@ module RDoc::TokenStream
 
   def tokens_to_s
     (token_stream or return '').compact.map { |token| token[:text] }.join ''
+  end
+
+  ##
+  # Returns the source language of the token stream as a string
+  #
+  # Returns 'c' or 'ruby'
+
+  def source_language
+    @token_stream_language == :c ? 'c' : 'ruby'
+  end
+
+  ##
+  # Converts the token stream to HTML with appropriate syntax highlighting
+  # based on the source language
+  #
+  # Returns HTML string with syntax highlighting
+
+  def to_html
+    return '' unless @token_stream
+
+    if @token_stream_language == :c
+      RDoc::TokenStream.to_html_c @token_stream
+    else
+      RDoc::TokenStream.to_html @token_stream
+    end
   end
 
 end

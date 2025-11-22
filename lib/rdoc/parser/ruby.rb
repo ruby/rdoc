@@ -1137,7 +1137,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth = RDoc::GhostMethod.new get_tkread, name
     record_location meth
 
-    meth.start_collecting_tokens
+    meth.start_collecting_tokens(:ruby)
     indent = RDoc::Parser::RipperStateLex::Token.new(1, 1, :on_sp, ' ' * column)
     position_comment = RDoc::Parser::RipperStateLex::Token.new(line_no, 1, :on_comment)
     position_comment[:text] = "# File #{@top_level.relative_name}, line #{line_no}"
@@ -1180,7 +1180,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     record_location meth
     meth.line      = line_no
 
-    meth.start_collecting_tokens
+    meth.start_collecting_tokens(:ruby)
     indent = RDoc::Parser::RipperStateLex::Token.new(1, 1, :on_sp, ' ' * column)
     position_comment = RDoc::Parser::RipperStateLex::Token.new(line_no, 1, :on_comment)
     position_comment[:text] = "# File #{@top_level.relative_name}, line #{line_no}"
@@ -1363,7 +1363,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     remove_token_listener self
 
-    meth.start_collecting_tokens
+    meth.start_collecting_tokens(:ruby)
     indent = RDoc::Parser::RipperStateLex::Token.new(1, 1, :on_sp, ' ' * column)
     position_comment = RDoc::Parser::RipperStateLex::Token.new(line_no, 1, :on_comment)
     position_comment[:text] = "# File #{@top_level.relative_name}, line #{line_no}"
@@ -1471,7 +1471,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     record_location meth
     meth.line   = line_no
 
-    meth.start_collecting_tokens
+    meth.start_collecting_tokens(:ruby)
     indent = RDoc::Parser::RipperStateLex::Token.new(1, 1, :on_sp, ' ' * column)
     token = RDoc::Parser::RipperStateLex::Token.new(line_no, 1, :on_comment)
     token[:text] = "# File #{@top_level.relative_name}, line #{line_no}"

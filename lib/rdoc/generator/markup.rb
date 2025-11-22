@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 ##
 # Handle common RDoc::Markup tasks for various CodeObjects
 #
@@ -113,7 +114,8 @@ class RDoc::MethodAttr
   def markup_code
     return '' unless @token_stream
 
-    src = RDoc::TokenStream.to_html @token_stream
+    # Convert tokens to HTML with language-appropriate highlighting
+    src = to_html
 
     # dedent the source
     indent = src.length

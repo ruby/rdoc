@@ -1174,7 +1174,8 @@ Init_Foo(void) {
                  other_function.comment.text
     assert_equal '()', other_function.params
 
-    code = other_function.token_stream.first[:text]
+    # Token stream is now tokenized, not raw text
+    code = other_function.token_stream.map { |t| t[:text] }.join
 
     assert_equal "VALUE\nother_function() {\n}", code
   end
@@ -1244,7 +1245,8 @@ Init_Foo(void) {
                  other_function.comment.text
     assert_equal '()', other_function.params
 
-    code = other_function.token_stream.first[:text]
+    # Token stream is now tokenized, not raw text
+    code = other_function.token_stream.map { |t| t[:text] }.join
 
     assert_equal "VALUE\nother_function() {\n}", code
   end
@@ -1278,7 +1280,8 @@ Init_Foo(void) {
     assert_equal '()', other_function.params
     assert_equal 8, other_function.line
 
-    code = other_function.token_stream.first[:text]
+    # Token stream is now tokenized, not raw text
+    code = other_function.token_stream.map { |t| t[:text] }.join
 
     assert_equal "VALUE\nrb_other_function() {\n}", code
   end
@@ -1311,7 +1314,8 @@ Init_Foo(void) {
     assert_equal '()', other_function.params
     assert_equal 4, other_function.line
 
-    code = other_function.token_stream.first[:text]
+    # Token stream is now tokenized, not raw text
+    code = other_function.token_stream.map { |t| t[:text] }.join
 
     assert_equal "#define other_function rb_other_function", code
   end
@@ -1451,7 +1455,8 @@ Init_Foo(void) {
                  other_function.comment.text
     assert_equal '()', other_function.params
 
-    code = other_function.token_stream.first[:text]
+    # Token stream is now tokenized, not raw text
+    code = other_function.token_stream.map { |t| t[:text] }.join
 
     assert_equal "DLL_LOCAL VALUE\nother_function() {\n}", code
   end
@@ -1481,7 +1486,8 @@ Init_Foo(void) {
                  other_function.comment.text
     assert_equal '()', other_function.params
 
-    code = other_function.token_stream.first[:text]
+    # Token stream is now tokenized, not raw text
+    code = other_function.token_stream.map { |t| t[:text] }.join
 
     assert_equal "static inline VALUE\nother_function() {\n}", code
   end

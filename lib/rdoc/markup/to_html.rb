@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 require 'cgi/escape'
 require 'cgi/util' unless defined?(CGI::EscapeExt)
-require_relative '../parser/c_state_lex'
 
 ##
 # Outputs RDoc markup as HTML.

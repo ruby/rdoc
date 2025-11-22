@@ -192,6 +192,63 @@ each_line(foo)
     assert_equal '', @c2_a.markup_code
   end
 
+  def test_markup_code_c_function
+    # C source code is tokenized immediately by the C parser
+    c_code = <<~C
+      static VALUE
+      rb_ary_all_p(int argc, VALUE *argv, VALUE ary)
+      {
+          return Qtrue;
+      }
+    C
+
+    # Simulate what the C parser does: tokenize immediately and set language
+    c_tokens = RDoc::Parser::CStateLex.parse(c_code)
+
+    @c2_a.collect_tokens(:c)
+    @c2_a.add_tokens(c_tokens)
+    @c2_a.c_function = 'rb_ary_all_p'
+
+    result = @c2_a.markup_code
+
+    # Verify C syntax highlighting is applied
+    assert_includes result, '<span class="c-keyword">static</span>'
+    assert_includes result, '<span class="c-identifier">VALUE</span>' # VALUE is a typedef, not a keyword
+    assert_includes result, '<span class="c-identifier">rb_ary_all_p</span>'
+    assert_includes result, '<span class="c-keyword">int</span>'
+    assert_includes result, '<span class="c-identifier">argc</span>'
+    assert_includes result, '<span class="c-keyword">return</span>'
+    assert_includes result, '<span class="c-identifier">Qtrue</span>'
+  end
+
+  def test_markup_code_c_function_with_preprocessor
+    # Test C code with preprocessor directives
+    c_code = <<~C
+      #define rb_obj_singleton_method_added rb_obj_dummy1
+
+      static VALUE
+      bsock_do_not_rev_lookup(VALUE _)
+      {
+          return rsock_do_not_reverse_lookup?Qtrue:Qfalse;
+      }
+    C
+
+    # Simulate what the C parser does: tokenize immediately and set language
+    c_tokens = RDoc::Parser::CStateLex.parse(c_code)
+
+    @c2_a.collect_tokens(:c)
+    @c2_a.add_tokens(c_tokens)
+    @c2_a.c_function = 'bsock_do_not_rev_lookup'
+
+    result = @c2_a.markup_code
+
+    # Verify preprocessor directive is highlighted
+    assert_includes result, '<span class="c-preprocessor">#define'
+    assert_includes result, '<span class="c-keyword">static</span>'
+    assert_includes result, '<span class="c-keyword">return</span>'
+    assert_includes result, '<span class="c-identifier">rsock_do_not_reverse_lookup</span>'
+  end
+
   def test_markup_code_with_variable_expansion
     m = RDoc::AnyMethod.new nil, 'method'
     m.parent = @c1
