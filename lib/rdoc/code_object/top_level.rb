@@ -17,6 +17,16 @@ class RDoc::TopLevel < RDoc::Context
   attr_accessor :absolute_name
 
   ##
+  # Base name of this file
+
+  attr_reader :base_name
+
+  ##
+  # Base name of this file without the extension
+
+  attr_reader :page_name
+
+  ##
   # All the classes or modules that were declared in
   # this file. These are assigned to either +#classes_hash+
   # or +#modules_hash+ once we know what they really are.
@@ -39,6 +49,14 @@ class RDoc::TopLevel < RDoc::Context
     @absolute_name = absolute_name
     @relative_name = relative_name
     @parser        = nil
+
+    if relative_name
+      @base_name = File.basename(relative_name)
+      @page_name = @base_name.sub(/\.(rb|rdoc|txt|md)$/i, '')
+    else
+      @base_name = nil
+      @page_name = nil
+    end
 
     @classes_or_modules = []
   end
@@ -103,13 +121,6 @@ class RDoc::TopLevel < RDoc::Context
 
   def add_to_classes_or_modules(mod)
     @classes_or_modules << mod
-  end
-
-  ##
-  # Base name of this file
-
-  def base_name
-    File.basename @relative_name
   end
 
   alias name base_name
@@ -202,16 +213,6 @@ class RDoc::TopLevel < RDoc::Context
       oc.record_location self
       oc
     end
-  end
-
-  ##
-  # Base name of this file without the extension
-
-  def page_name
-    basename = File.basename @relative_name
-    basename =~ /\.(rb|rdoc|txt|md)$/i
-
-    $` || basename
   end
 
   ##
