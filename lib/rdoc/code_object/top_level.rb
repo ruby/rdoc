@@ -52,7 +52,7 @@ class RDoc::TopLevel < RDoc::Context
 
     if relative_name
       @base_name = File.basename(relative_name)
-      @page_name = @base_name.sub(/\.(rb|rdoc|txt|md)$/i, '')
+      @page_name = @base_name.sub(/\.(rb|rdoc|txt|md)\z/i, '')
     else
       @base_name = nil
       @page_name = nil
