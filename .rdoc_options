@@ -10,3 +10,10 @@ exclude:
 - AGENTS.md
 - CLAUDE.md
 - lib/rdoc/markdown.kpeg
+
+footer_content:
+  DOCUMENTATION:
+    Home: index.html
+  RESOURCES:
+    GitHub Repository: https://github.com/ruby/rdoc
+    Issue Tracker: https://github.com/ruby/rdoc/issues

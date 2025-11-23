@@ -378,6 +378,21 @@ class RDoc::Options
 
   attr_accessor :canonical_root
 
+  ##
+  # Custom footer content configuration for themes that support it.
+  # Currently only supported by the Aliki theme.
+  #
+  # A hash where keys are column titles and values are hashes of link text => URL pairs.
+  # Each column will be displayed in the upper footer section.
+  #
+  # Example:
+  #   {
+  #     "DOCUMENTATION" => {"Home" => "/index.html", "Guide" => "/guide.html"},
+  #     "RESOURCES" => {"RDoc" => "https://ruby.github.io/rdoc/", "GitHub" => "https://github.com/ruby/rdoc"}
+  #   }
+
+  attr_accessor :footer_content
+
   def initialize(loaded_options = nil) # :nodoc:
     init_ivars
     override loaded_options if loaded_options
@@ -434,6 +449,7 @@ class RDoc::Options
     @class_module_path_prefix = nil
     @file_path_prefix = nil
     @canonical_root = nil
+    @footer_content = nil
   end
 
   def init_with(map) # :nodoc:
@@ -462,6 +478,7 @@ class RDoc::Options
 
     @apply_default_exclude   = map['apply_default_exclude']
     @autolink_excluded_words = map['autolink_excluded_words']
+    @footer_content          = map['footer_content']
 
     @rdoc_include = sanitize_path map['rdoc_include']
     @static_path  = sanitize_path map['static_path']
@@ -498,6 +515,7 @@ class RDoc::Options
     @autolink_excluded_words = map['autolink_excluded_words'] if map.has_key?('autolink_excluded_words')
     @apply_default_exclude = map['apply_default_exclude'] if map.has_key?('apply_default_exclude')
     @canonical_root = map['canonical_root'] if map.has_key?('canonical_root')
+    @footer_content = map['footer_content'] if map.has_key?('footer_content')
 
     @warn_missing_rdoc_ref = map['warn_missing_rdoc_ref'] if map.has_key?('warn_missing_rdoc_ref')
 
