@@ -64,38 +64,32 @@ class RDoc::Parser::RipperStateLex
     end
     return nil if tk.nil?
     case tk[:kind]
-    when :on_symbeg then
+    when :on_symbeg
       tk = get_symbol_tk(tk)
-    when :on_tstring_beg then
+    when :on_tstring_beg
       tk = get_string_tk(tk)
-    when :on_backtick then
+    when :on_backtick
       if (tk[:state] & (EXPR_FNAME | EXPR_ENDFN)) != 0
         tk[:kind] = :on_ident
         tk[:state] = EXPR_ARG
       else
         tk = get_string_tk(tk)
       end
-    when :on_regexp_beg then
+    when :on_regexp_beg
       tk = get_regexp_tk(tk)
-    when :on_embdoc_beg then
+    when :on_embdoc_beg
       tk = get_embdoc_tk(tk)
-    when :on_heredoc_beg then
+    when :on_heredoc_beg
       @heredoc_queue << retrieve_heredoc_info(tk)
-    when :on_nl, :on_ignored_nl, :on_comment, :on_heredoc_end then
+    when :on_nl, :on_ignored_nl, :on_comment, :on_heredoc_end
       if !@heredoc_queue.empty?
         get_heredoc_tk(*@heredoc_queue.shift)
       elsif tk[:text].nil? # :on_ignored_nl sometimes gives nil
         tk[:text] = ''
       end
-    when :on_words_beg then
+    when :on_words_beg, :on_qwords_beg, :on_symbols_beg, :on_qsymbols_beg
       tk = get_words_tk(tk)
-    when :on_qwords_beg then
-      tk = get_words_tk(tk)
-    when :on_symbols_beg then
-      tk = get_words_tk(tk)
-    when :on_qsymbols_beg then
-      tk = get_words_tk(tk)
-    when :on_op then
+    when :on_op
       if '&.' == tk[:text]
         tk[:kind] = :on_period
       else
@@ -116,31 +110,10 @@ class RDoc::Parser::RipperStateLex
       symbol_tk[:state] = tk1[:state]
     else
       case (tk1 = get_squashed_tk)[:kind]
-      when :on_ident
-        symbol_tk[:text] = ":#{tk1[:text]}"
-        symbol_tk[:state] = tk1[:state]
       when :on_tstring_content
         symbol_tk[:text] = ":#{tk1[:text]}"
         symbol_tk[:state] = get_squashed_tk[:state] # skip :on_tstring_end
-      when :on_tstring_end
-        symbol_tk[:text] = ":#{tk1[:text]}"
-        symbol_tk[:state] = tk1[:state]
-      when :on_op
-        symbol_tk[:text] = ":#{tk1[:text]}"
-        symbol_tk[:state] = tk1[:state]
-      when :on_ivar
-        symbol_tk[:text] = ":#{tk1[:text]}"
-        symbol_tk[:state] = tk1[:state]
-      when :on_cvar
-        symbol_tk[:text] = ":#{tk1[:text]}"
-        symbol_tk[:state] = tk1[:state]
-      when :on_gvar
-        symbol_tk[:text] = ":#{tk1[:text]}"
-        symbol_tk[:state] = tk1[:state]
-      when :on_const
-        symbol_tk[:text] = ":#{tk1[:text]}"
-        symbol_tk[:state] = tk1[:state]
-      when :on_kw
+      when :on_ident, :on_tstring_end, :on_op, :on_ivar, :on_cvar, :on_const, :on_kw
         symbol_tk[:text] = ":#{tk1[:text]}"
         symbol_tk[:state] = tk1[:state]
       else
@@ -173,7 +146,7 @@ class RDoc::Parser::RipperStateLex
         break
       else
         string = string + inner_str_tk[:text]
-        if :on_embexpr_beg == inner_str_tk[:kind] then
+        if :on_embexpr_beg == inner_str_tk[:kind]
           kind = :on_dstring if :on_tstring == kind
         end
       end
@@ -209,15 +182,15 @@ class RDoc::Parser::RipperStateLex
   end
 
   def get_heredoc_tk(heredoc_name, indent)
-    string = ''
+    string = +''
     start_tk = nil
     prev_tk = nil
     until heredoc_end?(heredoc_name, indent, tk = @tokens.shift) do
       start_tk = tk unless start_tk
       if (prev_tk.nil? or "\n" == prev_tk[:text][-1]) and 0 != tk[:char_no]
-        string = string + (' ' * tk[:char_no])
+        string << (' ' * tk[:char_no])
       end
-      string = string + tk[:text]
+      string << tk[:text]
       prev_tk = tk
     end
     start_tk = tk unless start_tk
@@ -235,7 +208,7 @@ class RDoc::Parser::RipperStateLex
 
   def heredoc_end?(name, indent, tk)
     result = false
-    if :on_heredoc_end == tk[:kind] then
+    if :on_heredoc_end == tk[:kind]
       tk_name = tk[:text].chomp
       tk_name.lstrip! if indent
       if name == tk_name
@@ -246,7 +219,7 @@ class RDoc::Parser::RipperStateLex
   end
 
   def get_words_tk(tk)
-    string = ''
+    string = +''
     start_token = tk[:text]
     start_quote = tk[:text].rstrip[-1]
     line_no = tk[:line_no]
@@ -266,17 +239,17 @@ class RDoc::Parser::RipperStateLex
       if tk.nil?
         end_token = end_quote
         break
-      elsif :on_tstring_content == tk[:kind] then
-        string += tk[:text]
-      elsif :on_words_sep == tk[:kind] or :on_tstring_end == tk[:kind] then
-        if end_quote == tk[:text].strip then
+      elsif :on_tstring_content == tk[:kind]
+        string << tk[:text]
+      elsif :on_words_sep == tk[:kind] or :on_tstring_end == tk[:kind]
+        if end_quote == tk[:text].strip
           end_token = tk[:text]
           break
         else
-          string += tk[:text]
+          string << tk[:text]
         end
       else
-        string += tk[:text]
+        string << tk[:text]
       end
     end
     text = "#{start_token}#{string}#{end_token}"
@@ -284,17 +257,13 @@ class RDoc::Parser::RipperStateLex
   end
 
   def get_op_tk(tk)
-    if REDEFINABLE_OPERATORS.include?(tk[:text]) and tk[:state] == EXPR_ARG then
+    if REDEFINABLE_OPERATORS.include?(tk[:text]) and tk[:state] == EXPR_ARG
       tk[:state] = EXPR_ARG
       tk[:kind] = :on_ident
-    elsif tk[:text] =~ /^[-+]$/ then
+    elsif tk[:text] =~ /^[-+]$/
       tk_ahead = get_squashed_tk
       case tk_ahead[:kind]
-      when :on_int, :on_float, :on_rational, :on_imaginary then
-        tk[:text] += tk_ahead[:text]
-        tk[:kind] = tk_ahead[:kind]
-        tk[:state] = tk_ahead[:state]
-      when :on_heredoc_beg, :on_tstring, :on_dstring # frozen/non-frozen string literal
+      when :on_int, :on_float, :on_rational, :on_imaginary, :on_heredoc_beg, :on_tstring, :on_dstring
         tk[:text] += tk_ahead[:text]
         tk[:kind] = tk_ahead[:kind]
         tk[:state] = tk_ahead[:state]
