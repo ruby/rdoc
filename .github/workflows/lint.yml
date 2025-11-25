@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5 # v3.3.0
+    - uses: actions/checkout@v6 # v3.3.0
     # libyaml-dev is needed for psych, see https://github.com/ruby/setup-ruby/issues/409
     - if: ${{ matrix.os == 'ubuntu-latest' }}
       run: sudo apt install libyaml-dev

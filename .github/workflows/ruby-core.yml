@@ -28,7 +28,7 @@ jobs:
           bundler: none
       - name: Save latest buildable revision to environment
         run: echo "REF=$(ruby -v | cut -d')' -f1 | cut -d' ' -f5)" >> $GITHUB_ENV
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v3.1.0
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v3.1.0
         with:
           repository: ruby/ruby
           path: ruby/ruby
@@ -51,7 +51,7 @@ jobs:
           autoconf
           ./configure -C --disable-install-doc
         working-directory: ruby/ruby
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v3.1.0
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v3.1.0
         with:
           path: ruby/rdoc
       - name: Build RDoc locally
