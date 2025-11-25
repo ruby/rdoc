@@ -125,9 +125,6 @@ class RDoc::MethodAttr
 
     src = RDoc::TokenStream.to_html @token_stream
 
-    # add initial whitespace so that the indent gets calculated correctly
-    src.prepend(' ' * @token_stream.first[:char_no]) if source_language == 'ruby' && @token_stream.first
-
     # dedent the source
     common_indent = src.length
     src.scan(/^ *(?=\S)/) do |whitespace|

@@ -19,28 +19,17 @@ module RDoc::TokenStream
       next unless t
 
       style = case t[:kind]
-              when :on_const   then 'ruby-constant'
-              when :on_kw      then 'ruby-keyword'
-              when :on_ivar    then 'ruby-ivar'
-              when :on_cvar    then 'ruby-identifier'
-              when :on_gvar    then 'ruby-identifier'
-              when '=' != t[:text] && :on_op
-                               then 'ruby-operator'
-              when :on_tlambda then 'ruby-operator'
-              when :on_ident   then 'ruby-identifier'
-              when :on_label   then 'ruby-value'
-              when :on_backref, :on_dstring
-                               then 'ruby-node'
-              when :on_comment then 'ruby-comment'
-              when :on_embdoc  then 'ruby-comment'
-              when :on_regexp  then 'ruby-regexp'
-              when :on_tstring then 'ruby-string'
-              when :on_int, :on_float,
-                   :on_rational, :on_imaginary,
-                   :on_heredoc,
-                   :on_symbol, :on_CHAR then 'ruby-value'
-              when :on_heredoc_beg, :on_heredoc_end
-                               then 'ruby-identifier'
+              when :operator   then 'ruby-operator'
+              when :keyword    then 'ruby-keyword'
+              when :constant   then 'ruby-constant'
+              when :ivar       then 'ruby-ivar'
+              when :comment    then 'ruby-comment'
+              when :value      then 'ruby-value'
+              when :string     then 'ruby-string'
+              when :symbol     then 'ruby-value'
+              when :x_string   then 'ruby-string'
+              when :regexp     then 'ruby-regexp'
+              when :identifier then 'ruby-identifier'
               end
 
       text = t[:text]

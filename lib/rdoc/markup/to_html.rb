@@ -2,6 +2,7 @@
 require 'cgi/escape'
 require 'cgi/util' unless defined?(CGI::EscapeExt)
 require 'prism'
+require 'rdoc/parser/ruby_colorizer'
 
 ##
 # Outputs RDoc markup as HTML.
@@ -321,6 +322,15 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << "</p>\n"
   end
 
+  # Generate syntax highlighted html for ruby-like text.
+
+  def parsable_text_to_html(text)
+    tokens = RDoc::Parser::RubyColorizer.colorize(text)
+    result = RDoc::TokenStream.to_html tokens
+    result = result + "\n" unless result.end_with?("\n")
+    result
+  end
+
   ##
   # Adds +verbatim+ to the output
 
@@ -328,27 +338,17 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     text = verbatim.text.rstrip
     format = verbatim.format
 
-    klass = nil
-
     # Apply Ruby syntax highlighting if
     # - explicitly marked as Ruby (via ruby? which accepts :ruby or :rb)
     # - no format specified but the text is parseable as Ruby
     # Otherwise, add language class when applicable and skip Ruby highlighting
-    content = if verbatim.ruby? || (format.nil? && parseable?(text))
-                begin
-                  tokens = RDoc::Parser::RipperStateLex.parse text
-                  klass  = ' class="ruby"'
-
-                  result = RDoc::TokenStream.to_html tokens
-                  result = result + "\n" unless "\n" == result[-1]
-                  result
-                rescue
-                  CGI.escapeHTML text
-                end
-              else
-                klass = " class=\"#{format}\"" if format
-                CGI.escapeHTML text
-              end
+    if verbatim.ruby? || (format.nil? && parseable?(text))
+      content = parsable_text_to_html(text)
+      klass = ' class="ruby"'
+    else
+      content = CGI.escapeHTML text
+      klass = " class=\"#{format}\"" if format
+    end
 
     if @pipe
       @res << "\n<pre><code>#{CGI.escapeHTML text}\n</code></pre>\n"

@@ -2406,6 +2406,23 @@ class RDocParserRubyTest < RDoc::TestCase
     end
   end
 
+  def test_code_object_token_stream
+    util_parser <<~RUBY
+      class Foo
+        def foo
+          42
+        end
+
+        private def bar
+          baz
+        end
+      end
+    RUBY
+
+    foo, bar = @top_level.classes.first.method_list
+    assert_equal(['  ', 'def', ' ', 'foo', "\n", '    ', '42', "\n", '  ', 'end'], foo.token_stream.map(&:text))
+    assert_equal(['          ', 'def', ' ', 'bar', "\n", '    ', 'baz', "\n", '  ', 'end'], bar.token_stream.map(&:text))
+  end
 
   def test_markup_first_comment
     util_parser <<~RUBY
