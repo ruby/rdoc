@@ -9,6 +9,8 @@
 
 module RDoc::TokenStream
 
+  RipperStateLexCompatToken = Struct.new(:kind, :text, :line_no, :char_no, :state)
+
   ##
   # Converts +token_stream+ to HTML wrapping various tokens with
   # <tt><span></tt> elements. Some tokens types are wrapped in spans

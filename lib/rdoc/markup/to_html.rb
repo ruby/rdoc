@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'cgi/escape'
 require 'cgi/util' unless defined?(CGI::EscapeExt)
+require 'rdoc/parser/ripper_state_lex'
 
 ##
 # Outputs RDoc markup as HTML.
@@ -216,6 +217,23 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << "</p>\n"
   end
 
+  # Generate syntax highlighted html for ruby-like text.
+
+  def parsable_text_to_html(text)
+    if defined?(RDoc::Parser::PrismRuby) && RDoc::Parser::Ruby == RDoc::Parser::PrismRuby
+      tokens = RDoc::Parser::Tokenizer.tokenize(text).map do |type, text|
+        RDoc::TokenStream::RipperStateLexCompatToken.new(type, text)
+      end
+    else
+      # RipperStateLex.parse is assumed to fail in some cases.
+      # Failing input is unknown.
+      tokens = RDoc::Parser::RipperStateLex.parse(text) rescue return
+    end
+    result = RDoc::TokenStream.to_html tokens
+    result = result + "\n" unless "\n" == result[-1]
+    result
+  end
+
   ##
   # Adds +verbatim+ to the output
 
@@ -224,20 +242,12 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
     klass = nil
 
-    content = if verbatim.ruby? or parseable? text then
-                begin
-                  tokens = RDoc::Parser::RipperStateLex.parse text
-                  klass  = ' class="ruby"'
+    if verbatim.ruby? || parseable?(text)
+      content = parsable_text_to_html(text)
+      klass = ' class="ruby"' if content # RDoc::Parser::RipperStateLex.parse may fail
+    end
 
-                  result = RDoc::TokenStream.to_html tokens
-                  result = result + "\n" unless "\n" == result[-1]
-                  result
-                rescue
-                  CGI.escapeHTML text
-                end
-              else
-                CGI.escapeHTML text
-              end
+    content ||= CGI.escapeHTML text
 
     if @options.pipe then
       @res << "\n<pre><code>#{CGI.escapeHTML text}\n</code></pre>\n"
