@@ -1429,7 +1429,6 @@ footer.site-footer h3 {
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   margin: 0 0 var(--space-4) 0;
-  text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
