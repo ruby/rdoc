@@ -664,6 +664,8 @@ nav footer a {
     cursor: pointer;
     transition: color var(--transition-fast);
     line-height: 1;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   #navigation-toggle:hover {
