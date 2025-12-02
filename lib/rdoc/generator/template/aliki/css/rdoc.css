@@ -1318,6 +1318,14 @@ aside.table-of-contents .toc-sticky nav {
   height: auto;
 }
 
+aside.table-of-contents .toc-list > .toc-h2 {
+  margin-left: var(--space-4);
+}
+
+aside.table-of-contents .toc-list > .toc-h3 {
+  margin-left: var(--space-8);
+}
+
 /* Hide TOC on mobile/tablet */
 @media (width <= 1279px) {
   aside.table-of-contents {
