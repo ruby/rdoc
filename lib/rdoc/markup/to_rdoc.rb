@@ -250,6 +250,11 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   # Adds +table+ to the output
 
   def accept_table(header, body, aligns)
+    body = body.map do |row|
+      row.map do |cell|
+        attributes cell
+      end
+    end
     widths = header.zip(*body).map do |cols|
       cols.map(&:size).max
     end

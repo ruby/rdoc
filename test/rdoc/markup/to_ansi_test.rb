@@ -350,11 +350,11 @@ words words words words
 
   def accept_table_align
     expected = "\e[0m" + <<-EXPECTED
- AA |BB |CCCCC|DDDDD
-----|---|-----|-----
+ AA |BB |CCCCC|  DDDDD
+----|---|-----|---------
     |bbb|    c|
-aaaa|b  |     | dd
- a  |   |   cc| dd
+aaaa|b  |     |   dd
+ a  |   |   cc|\e[7mdd\e[m
     EXPECTED
     assert_equal expected, @to.end_accepting
   end

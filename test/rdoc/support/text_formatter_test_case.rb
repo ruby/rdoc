@@ -107,7 +107,7 @@ class RDoc::Markup::TextFormatterTestCase < RDoc::Markup::FormatterTestCase
         body = [
           ['', 'bbb', 'c', ''],
           ['aaaa', 'b', '', 'dd'],
-          ['a', '', 'cc', 'dd']
+          ['a', '', 'cc', '<code>dd</code>']
         ]
         aligns = [nil, :left, :right, :center]
         @to.start_accepting
