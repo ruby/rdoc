@@ -6,7 +6,7 @@
 
 <%- unless simple_files.empty? then %>
   <div id="fileindex-section" class="nav-section">
-    <details class="nav-section-collapsible" open>
+    <details class="nav-section-collapsible" <%= 'open' unless @inside_class_file %>>
       <summary class="nav-section-header">
         <span class="nav-section-icon">
           <svg>
