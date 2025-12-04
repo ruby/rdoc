@@ -146,8 +146,8 @@
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%);
 
   /* Layout Dimensions */
-  --layout-sidebar-width: 280px;
-  --layout-sidebar-width-min: 240px;
+  --layout-sidebar-width: 300px;
+  --layout-sidebar-width-min: 300px;
   --layout-sidebar-width-max: 15%;
   --layout-toc-width-min: 240px;
   --layout-toc-width-max: 18%;
@@ -228,13 +228,13 @@ body {
 
   /* Grid layout with header, sidebar, main, and footer */
   display: grid;
-  grid-template: "header header" var(--layout-header-height) "nav main" 1fr "nav footer" auto / minmax(var(--layout-sidebar-width-min), var(--layout-sidebar-width-max)) 1fr;
+  grid-template: "header header" var(--layout-header-height) "nav main" 1fr "nav footer" auto / var(--layout-sidebar-width) 1fr;
   min-height: 100vh;
 }
 
 /* Three-column layout when TOC is present */
 body.has-toc {
-  grid-template: "header header header" var(--layout-header-height) "nav main toc" 1fr "nav footer toc" auto / minmax(var(--layout-sidebar-width-min), var(--layout-sidebar-width-max)) 1fr minmax(var(--layout-toc-width-min), var(--layout-toc-width-max));
+  grid-template: "header header header" var(--layout-header-height) "nav main toc" 1fr "nav footer toc" auto / var(--layout-sidebar-width) 1fr minmax(var(--layout-toc-width-min), var(--layout-toc-width-max));
   min-height: 100vh;
 }
 
@@ -1333,7 +1333,7 @@ aside.table-of-contents .toc-list > .toc-h3 {
   }
 
   body.has-toc {
-    grid-template-columns: minmax(var(--layout-sidebar-width-min), var(--layout-sidebar-width-max)) 1fr;
+    grid-template-columns: var(--layout-sidebar-width) 1fr;
     grid-template-areas:
       "header header"
       "nav main"
@@ -1619,4 +1619,158 @@ header.top-navbar #search-results.initially-hidden {
 
 header.top-navbar #search-results[aria-expanded="false"] {
   display: none;
+}
+
+/* 12. Collapsible Navigation Sections */
+
+/* Remove default h3 styling in nav-sections that have collapsible details */
+nav .nav-section > .nav-section-collapsible {
+  margin: 0;
+}
+
+nav .nav-section-collapsible {
+  border: none;
+}
+
+/* Section header (clickable summary) */
+nav .nav-section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  -webkit-user-select: none;
+  border-bottom: 1px solid var(--color-border-default);
+  margin-bottom: var(--space-3);
+  transition: color var(--transition-fast);
+}
+
+nav .nav-section-header::-webkit-details-marker {
+  display: none;
+}
+
+nav .nav-section-header:hover {
+  color: var(--color-accent-primary);
+}
+
+/* Section icon */
+nav .nav-section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  color: var(--color-accent-primary);
+}
+
+nav .nav-section-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Section title */
+nav .nav-section-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: inherit;
+}
+
+/* Chevron icon */
+nav .nav-section-chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  color: var(--color-text-tertiary);
+  transition: transform var(--transition-base);
+}
+
+nav .nav-section-chevron svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Rotate chevron when open */
+nav .nav-section-collapsible[open] > .nav-section-header .nav-section-chevron {
+  transform: rotate(90deg);
+}
+
+/* Override old h2/h3 styles for collapsible sections */
+nav .nav-section-collapsible h2,
+nav .nav-section-collapsible h3 {
+  display: none;
+}
+
+/* Content inside details - smooth animation */
+nav .nav-section-collapsible > ul,
+nav .nav-section-collapsible > dl,
+nav .nav-section-collapsible > p {
+  margin-top: 0;
+}
+
+/* List items in collapsible sections - nav-list gets border */
+nav .nav-section-collapsible > .nav-list {
+  padding-left: var(--space-5);
+  border-left: 1px solid var(--color-border-subtle);
+  margin-left: var(--space-3);
+}
+
+/* Nested lists inside nav-list don't get border */
+nav .nav-section-collapsible .nav-list .link-list {
+  border-left: none;
+  margin-left: 0;
+  padding-left: var(--space-4);
+}
+
+/* Nested subsections (details within list items) */
+nav .nav-subsection {
+  margin: 0;
+}
+
+nav .nav-subsection > summary {
+  position: relative;
+  padding-left: var(--space-5);
+  list-style: none;
+  cursor: pointer;
+}
+
+nav .nav-subsection > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Chevron for subsections */
+nav .nav-subsection > summary::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid var(--color-text-tertiary);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  transition: transform var(--transition-base);
+}
+
+nav .nav-subsection[open] > summary::before {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+/* Remove the old triangle style for nested details inside nav-section-collapsible */
+nav .nav-section-collapsible .nav-subsection > summary::after {
+  display: none;
+}
+
+/* Nested list styling */
+nav .nav-subsection > ul {
+  margin-top: var(--space-2);
+  margin-left: var(--space-3);
+  padding-left: var(--space-4);
+  border-left: 1px solid var(--color-border-subtle);
 }
