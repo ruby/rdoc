@@ -764,7 +764,7 @@ class RDoc::Generator::Darkfish
   end
 
   def traverse_classes(klasses, grouped_classes, rel_prefix, solo = false)
-    content = +'<ul class="link-list">'
+    content = +'<ul class="link-list nav-list">'
 
     klasses.each do |index_klass|
       if children = grouped_classes[index_klass.full_name]
