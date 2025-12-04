@@ -768,7 +768,7 @@ nav .nav-section-collapsible > p {
 nav .nav-section-collapsible > .nav-list {
   padding-left: var(--space-5);
   border-left: 1px solid var(--color-border-subtle);
-  margin-left: var(--space-3);
+  margin-left: 9px; /* Align with the section icon center */
 }
 
 nav .nav-section-collapsible .nav-list .link-list {
@@ -1460,10 +1460,6 @@ aside.table-of-contents .toc-list > .toc-h3 {
 
 /* Tablet adjustments (between mobile and desktop) */
 @media (width >= 768px) and (width <= 1023px) {
-  nav {
-    width: 240px;
-  }
-
   header.top-navbar {
     padding: 0 var(--space-6);
   }
