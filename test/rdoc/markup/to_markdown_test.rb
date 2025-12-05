@@ -350,7 +350,7 @@ words words words words
     expected = <<-EXPECTED
  AA |BB |CCCCC|DDDDD
 ----|---|-----|-----
-    |bbb|    c|
+    |bbb|**c**|
 aaaa|b  |     | dd
  a  |   |   cc|`dd`
     EXPECTED

@@ -250,13 +250,10 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   # Adds +table+ to the output
 
   def accept_table(header, body, aligns)
-    body = body.map do |row|
-      row.map do |cell|
-        attributes cell
-      end
-    end
+    header = header.map { |h| attributes h }
+    body = body.map { |row| row.map { |t| attributes t } }
     widths = header.zip(*body).map do |cols|
-      cols.map(&:size).max
+      cols.map { |col| calculate_text_width(col) }.max
     end
     aligns = aligns.map do |a|
       case a
@@ -269,14 +266,20 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
       end
     end
     @res << header.zip(widths, aligns).map do |h, w, a|
-      h.__send__(a, w)
+      extra_width = h.size - calculate_text_width(h)
+      h.__send__(a, w + extra_width)
     end.join("|").rstrip << "\n"
     @res << widths.map {|w| "-" * w }.join("|") << "\n"
     body.each do |row|
       @res << row.zip(widths, aligns).map do |t, w, a|
-        t.__send__(a, w)
+        extra_width = t.size - calculate_text_width(t)
+        t.__send__(a, w + extra_width)
       end.join("|").rstrip << "\n"
     end
+  end
+
+  def calculate_text_width(text)
+    text.size
   end
 
   ##

@@ -348,11 +348,11 @@ words words words words
 
   def accept_table_align
     expected = <<-EXPECTED
- AA |BB |CCCCC|   DDDDD
-----|---|-----|-----------
-    |bbb|    c|
-aaaa|b  |     |    dd
- a  |   |   cc|<tt>dd</tt>
+ AA |BB |   CCCCC|   DDDDD
+----|---|--------|-----------
+    |bbb|<b>c</b>|
+aaaa|b  |        |    dd
+ a  |   |      cc|<tt>dd</tt>
     EXPECTED
     assert_equal expected, @to.end_accepting
   end
