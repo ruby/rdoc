@@ -105,9 +105,9 @@ class RDoc::Markup::TextFormatterTestCase < RDoc::Markup::FormatterTestCase
       def test_accept_table_align
         header = ['AA', 'BB', 'CCCCC', 'DDDDD']
         body = [
-          ['', 'bbb', 'c', ''],
+          ['', 'bbb', '<b>c</b>', ''],
           ['aaaa', 'b', '', 'dd'],
-          ['a', '', 'cc', 'dd']
+          ['a', '', 'cc', '<code>dd</code>']
         ]
         aligns = [nil, :left, :right, :center]
         @to.start_accepting

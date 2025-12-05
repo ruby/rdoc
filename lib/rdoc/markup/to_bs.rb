@@ -65,6 +65,10 @@ class RDoc::Markup::ToBs < RDoc::Markup::ToRdoc
     end
   end
 
+  def calculate_text_width(text)
+    text.gsub(/_\x08/, '').gsub(/\x08./, '').size
+  end
+
   ##
   # Turns on or off regexp handling for +convert_string+
 

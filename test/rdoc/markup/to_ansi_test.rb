@@ -352,9 +352,9 @@ words words words words
     expected = "\e[0m" + <<-EXPECTED
  AA |BB |CCCCC|DDDDD
 ----|---|-----|-----
-    |bbb|    c|
+    |bbb|    \e[1mc\e[m|
 aaaa|b  |     | dd
- a  |   |   cc| dd
+ a  |   |   cc| \e[7mdd\e[m
     EXPECTED
     assert_equal expected, @to.end_accepting
   end

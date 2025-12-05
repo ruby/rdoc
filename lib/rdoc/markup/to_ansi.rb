@@ -81,6 +81,10 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
     end
   end
 
+  def calculate_text_width(text)
+    text.gsub(/\e\[[\d;]*m/, '').size
+  end
+
   ##
   # Starts accepting with a reset screen
 
