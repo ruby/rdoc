@@ -67,6 +67,7 @@ class RDocOptionsTest < RDoc::TestCase
       'encoding'              => encoding,
       'embed_mixins'          => false,
       'exclude'               => [],
+      'hide'                  => [],
       'hyperlink_all'         => false,
       'line_numbers'          => false,
       'locale_dir'            => 'locale',
@@ -966,6 +967,28 @@ rdoc_include:
     exclude = @options.exclude
     assert_match exclude, "foo.old"
     assert_not_match exclude, "foo~"
+  end
+
+  def test_hide_option
+    @options.parse %w[--hide=doc/internal/.*]
+    hide = @options.hide
+    assert_kind_of Regexp, hide
+    assert_match hide, "doc/internal/foo.md"
+    assert_not_match hide, "doc/public/bar.md"
+  end
+
+  def test_hide_option_multiple
+    @options.parse %w[--hide=doc/internal/.* --hide=doc/fragments/.*]
+    hide = @options.hide
+    assert_kind_of Regexp, hide
+    assert_match hide, "doc/internal/foo.md"
+    assert_match hide, "doc/fragments/bar.md"
+    assert_not_match hide, "doc/public/baz.md"
+  end
+
+  def test_hide_option_empty
+    @options.parse %w[]
+    assert_nil @options.hide
   end
 
   class DummyCoder < Hash
