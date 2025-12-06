@@ -146,8 +146,8 @@
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%);
 
   /* Layout Dimensions */
-  --layout-sidebar-width: 280px;
-  --layout-sidebar-width-min: 240px;
+  --layout-sidebar-width: 300px;
+  --layout-sidebar-width-min: 300px;
   --layout-sidebar-width-max: 15%;
   --layout-toc-width-min: 240px;
   --layout-toc-width-max: 18%;
@@ -228,13 +228,13 @@ body {
 
   /* Grid layout with header, sidebar, main, and footer */
   display: grid;
-  grid-template: "header header" var(--layout-header-height) "nav main" 1fr "nav footer" auto / minmax(var(--layout-sidebar-width-min), var(--layout-sidebar-width-max)) 1fr;
+  grid-template: "header header" var(--layout-header-height) "nav main" 1fr "nav footer" auto / var(--layout-sidebar-width) 1fr;
   min-height: 100vh;
 }
 
 /* Three-column layout when TOC is present */
 body.has-toc {
-  grid-template: "header header header" var(--layout-header-height) "nav main toc" 1fr "nav footer toc" auto / minmax(var(--layout-sidebar-width-min), var(--layout-sidebar-width-max)) 1fr minmax(var(--layout-toc-width-min), var(--layout-toc-width-max));
+  grid-template: "header header header" var(--layout-header-height) "nav main toc" 1fr "nav footer toc" auto / var(--layout-sidebar-width) 1fr minmax(var(--layout-toc-width-min), var(--layout-toc-width-max));
   min-height: 100vh;
 }
 
@@ -673,31 +673,148 @@ nav footer a {
   }
 }
 
-nav ul li details > summary {
-  list-style: none;  /* Remove the default marker */
-  position: relative; /* So that the open/close triangle can position itself absolutely inside */
+/*
+ * Shared Collapsible Animation using ::details-content pseudo-element.
+ * This is the modern CSS approach for animating <details> elements.
+ * Uses block-size animation with interpolate-size for smooth height transitions.
+ * Both nav-section-collapsible and nested link-list details share this pattern.
+ */
+nav details {
+  interpolate-size: allow-keywords;
 }
 
-nav ul li details > summary::-webkit-details-marker {
-  display: none;  /* Removes the default marker, in Safari 18. */
+nav details::details-content {
+  overflow: hidden;
+  block-size: 0;
+  transition: block-size 200ms ease, content-visibility 200ms ease allow-discrete;
 }
 
-nav ul li details > summary::after {
-  content: '▶';  /* Unicode right-pointing triangle */
-  position: absolute;
-  font-size: 0.8em;
-  bottom: 0.1em;
-  margin-left: 0.3em;
+nav details[open]::details-content {
+  block-size: auto;
+}
+
+/* Collapsible Navigation Section Headers */
+
+nav .nav-section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  -webkit-user-select: none;
+  border-bottom: 1px solid var(--color-border-default);
+  margin-bottom: var(--space-3);
+  transition: color var(--transition-fast);
+}
+
+nav .nav-section-header::-webkit-details-marker {
+  display: none;
+}
+
+nav .nav-section-header:hover {
+  color: var(--color-accent-primary);
+}
+
+nav .nav-section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  color: var(--color-accent-primary);
+}
+
+nav .nav-section-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+nav .nav-section-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: inherit;
+}
+
+nav .nav-section-chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  color: var(--color-text-tertiary);
   transition: transform var(--transition-base);
 }
 
-nav ul li details[open] > summary::after {
-  transform: rotate(90deg);  /* Rotate the triangle when open */
+nav .nav-section-chevron svg {
+  width: 100%;
+  height: 100%;
 }
 
-/* Global link hover state is defined after navigation to keep specificity ordering */
-a:hover {
-  color: var(--color-link-hover);
+/* Rotate chevron when open */
+nav .nav-section-collapsible[open] > .nav-section-header .nav-section-chevron {
+  transform: rotate(90deg);
+}
+
+nav .nav-section-collapsible > ul,
+nav .nav-section-collapsible > dl,
+nav .nav-section-collapsible > p {
+  margin-top: 0;
+}
+
+nav .nav-section-collapsible > .nav-list {
+  padding-left: var(--space-5);
+  border-left: 1px solid var(--color-border-subtle);
+  margin-left: 9px; /* Align with the section icon center */
+}
+
+nav .nav-section-collapsible .nav-list .link-list {
+  border-left: none;
+  margin-left: 0;
+  padding-left: var(--space-5);
+}
+
+/*
+  Improve chevron styling for details under link-list, using SVG chevron that matches nav-section-chevron
+  We need to avoid adding the element in class content generation so it doesn't break darkfish styles
+*/
+nav li details:has(.link-list) > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+}
+
+nav li details:has(.link-list) > summary::after {
+  content: '';
+  position: static;
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  margin-left: 0;
+  background-color: var(--color-text-secondary);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 18 15 12 9 6'%3E%3C/polyline%3E%3C/svg%3E");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 18 15 12 9 6'%3E%3C/polyline%3E%3C/svg%3E");
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  transition: transform var(--transition-base), background-color var(--transition-fast);
+}
+
+nav li details:has(.link-list) > summary:hover::after {
+  background-color: var(--color-accent-primary);
+}
+
+nav li details:has(.link-list)[open] > summary::after {
+  transform: rotate(90deg);
+  background-color: var(--color-accent-primary);
 }
 
 /* 8. Main Content (Center Column) */
@@ -1333,7 +1450,7 @@ aside.table-of-contents .toc-list > .toc-h3 {
   }
 
   body.has-toc {
-    grid-template-columns: minmax(var(--layout-sidebar-width-min), var(--layout-sidebar-width-max)) 1fr;
+    grid-template-columns: var(--layout-sidebar-width) 1fr;
     grid-template-areas:
       "header header"
       "nav main"
@@ -1343,10 +1460,6 @@ aside.table-of-contents .toc-list > .toc-h3 {
 
 /* Tablet adjustments (between mobile and desktop) */
 @media (width >= 768px) and (width <= 1023px) {
-  nav {
-    width: 240px;
-  }
-
   header.top-navbar {
     padding: 0 var(--space-6);
   }

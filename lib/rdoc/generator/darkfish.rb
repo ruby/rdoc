@@ -314,6 +314,8 @@ class RDoc::Generator::Darkfish
   # Generates a class file for +klass+
 
   def generate_class(klass, template_file = nil)
+    # This is used to auto-collapse Pages section on class/module pages
+    @inside_class_file = true
     current = klass
 
     template_file ||= @template_dir + 'class.rhtml'
@@ -338,6 +340,8 @@ class RDoc::Generator::Darkfish
       here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
       here
     end
+  ensure
+    @inside_class_file = false
   end
 
   ##
@@ -764,7 +768,7 @@ class RDoc::Generator::Darkfish
   end
 
   def traverse_classes(klasses, grouped_classes, rel_prefix, solo = false)
-    content = +'<ul class="link-list">'
+    content = +'<ul class="link-list nav-list">'
 
     klasses.each do |index_klass|
       if children = grouped_classes[index_klass.full_name]
