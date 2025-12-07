@@ -1119,6 +1119,8 @@ main .method-source-code {
 
 main .method-source-code pre {
   border-color: var(--color-accent-hover);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 main .method-source-code.active-menu {
@@ -1143,6 +1145,7 @@ main .method-detail:target {
 
 main .method-header {
   display: inline-block;
+  max-width: calc(100% - 6em); /* 6em is the width of the source code toggle */
 }
 
 main .method-heading {
