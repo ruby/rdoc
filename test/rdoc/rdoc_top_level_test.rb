@@ -281,4 +281,17 @@ class RDocTopLevelTest < XrefTestCase
     refute rd.text?
   end
 
+  def test_hidden_default
+    t = RDoc::TopLevel.new 'path/file.rb'
+
+    refute t.hidden
+  end
+
+  def test_hidden_set
+    t = RDoc::TopLevel.new 'path/file.rb'
+    t.hidden = true
+
+    assert t.hidden
+  end
+
 end

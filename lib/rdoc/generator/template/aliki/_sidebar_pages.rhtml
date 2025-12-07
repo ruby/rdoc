@@ -1,4 +1,4 @@
-<%- simple_files = @files.select { |f| f.text? } %>
+<%- simple_files = @files.select { |f| f.text? && !f.hidden } %>
 
 <%- if defined?(current) && current.respond_to?(:page_name) %>
   <%- dir = current.full_name[%r{\A[^/]+(?=/)}] || current.page_name %>

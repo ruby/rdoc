@@ -358,6 +358,11 @@ option)
       cm.done_documenting = false
     end
 
+    # Mark page as hidden if it matches hide patterns
+    if @options.hide&.match?(top_level.relative_name)
+      top_level.hidden = true
+    end
+
     top_level
 
   rescue Errno::EACCES => e
@@ -427,6 +432,32 @@ The internal error was:
   end
 
   ##
+  # Validates that hide patterns match files that will actually be generated.
+  # Emits warnings for patterns that match files that are excluded or not
+  # included for documentation.
+
+  def validate_hide_patterns
+    processed_files = @store.all_files.map(&:relative_name)
+
+    # Find all files that match hide patterns by checking what was actually marked hidden
+    hidden_files = @store.all_files.select(&:hidden).map(&:relative_name)
+
+    # Check each file that matches hide pattern to see if it was actually processed
+    Dir.glob("**/*").each do |file|
+      next unless File.file?(file)
+      next unless @options.hide.match?(file)
+      next if hidden_files.include?(file) || processed_files.include?(file)
+
+      # File matches hide pattern but wasn't processed
+      if @options.exclude&.match?(file)
+        warn "WARNING: '#{file}' is in `hide` but won't be generated because it's also excluded"
+      else
+        warn "WARNING: '#{file}' is in `hide` but won't be generated because it's not included for documentation"
+      end
+    end
+  end
+
+  ##
   # Generates documentation or a coverage report depending upon the settings
   # in +options+.
   #
@@ -465,6 +496,8 @@ The internal error was:
     @store.load_cache
 
     file_info = parse_files @options.files
+
+    validate_hide_patterns if @options.hide
 
     @options.default_title = "RDoc Documentation"
 

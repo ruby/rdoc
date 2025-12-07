@@ -11,6 +11,11 @@ exclude:
 - CLAUDE.md
 - lib/rdoc/markdown.kpeg
 
+hide:
+- CVE-2013-0256.rdoc
+- LEGAL.rdoc
+- LICENSE.rdoc
+
 footer_content:
   DOCUMENTATION:
     Home: index.html
