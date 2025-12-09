@@ -351,7 +351,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     return call_seq unless is_alias_for || !aliases.empty?
 
     method_name = self.name
-    method_name = method_name[0, 1] if method_name =~ /\A\[/
 
     entries = call_seq.split "\n"
 
@@ -360,15 +359,24 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       ignore << is_alias_for.name
       ignore.concat is_alias_for.aliases.map(&:name)
     end
-    ignore.map! { |n| n =~ /\A\[/ ? /\[.*\]/ : n}
-    ignore.delete(method_name)
-    ignore = Regexp.union(ignore)
 
-    matching = entries.reject do |entry|
-      entry =~ /^\w*\.?#{ignore}[$\(\s]/ or
-        entry =~ /\s#{ignore}\s/
+    ignore.delete(method_name)
+    ignore_bracket_methods, ignore_other_methods = ignore.partition {|i| i.start_with?('[') }
+
+    if ignore_other_methods.any?
+      ignore_union = Regexp.union(ignore_other_methods)
+      entries.reject! do |entry|
+        /\A(?:\w*\.)?#{ignore_union}(?:[(\s]|\z)/.match?(entry) ||
+          /\s#{ignore_union}\s/.match?(entry)
+      end
+    end
+    if ignore_bracket_methods.any?
+      entries.reject! do |entry|
+        # Ignore `receiver[arg] -> return_type` `[](arg)` `[]`
+        /\A\w*\[.*?\](?:[(\s]|\z)/.match?(entry)
+      end
     end
 
-    matching.empty? ? nil : matching.join("\n")
+    entries.empty? ? nil : entries.join("\n")
   end
 end

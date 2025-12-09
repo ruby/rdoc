@@ -2107,6 +2107,57 @@ str.slice(start, length) -> new_str or nil
     assert_match 'str === obj', equals3.call_seq
   end
 
+  def test_scan_method_copy_bracket_name
+    parser = util_parser <<~C
+      /*
+      *  call-seq:
+      *    obj[index] -> nil
+      *    obj.aref(index) -> nil
+      */
+      static VALUE
+      rb_obj_aref(VALUE obj, VALUE index) { return Qnil; }
+
+      Init_Blah(void)
+      {
+        rb_define_method(rb_cObject, "[]", rb_obj_aref, 1);
+        rb_define_method(rb_cObject, "aref", rb_obj_aref, 1);
+      }
+    C
+
+    parser.scan
+
+    object = @store.classes_hash['Object']
+    bracket_method = object.method_list.find { |m| m.name == '[]' }
+    non_bracket_method = object.method_list.find { |m| m.name == 'aref' }
+    assert_equal 'obj[index] -> nil', bracket_method.call_seq
+    assert_equal 'obj.aref(index) -> nil', non_bracket_method.call_seq
+  end
+
+  def test_scan_method_copy_name_overlap
+    parser = util_parser <<~C
+      /*
+      *  call-seq:
+      *    value?(value) -> true or false
+      *    has_value?(value) -> true or false
+      */
+      static VALUE
+      rb_hash_has_value(VALUE hash, VALUE val) { return Qtrue; }
+      Init_Hash(void)
+      {
+        rb_define_method(rb_cHash, "has_value?", rb_hash_has_value, 1);
+        rb_define_method(rb_cHash, "value?", rb_hash_has_value, 1);
+      }
+    C
+
+    parser.scan
+
+    hash = @store.classes_hash['Hash']
+    value_method = hash.method_list.find { |m| m.name == 'value?' }
+    has_value_method = hash.method_list.find { |m| m.name == 'has_value?' }
+    assert_equal 'value?(value) -> true or false', value_method.call_seq
+    assert_equal 'has_value?(value) -> true or false', has_value_method.call_seq
+  end
+
   def test_scan_order_dependent
     parser = util_parser <<-C
 void a(void) {
