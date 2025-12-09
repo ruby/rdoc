@@ -156,15 +156,13 @@
               <summary>Source</summary>
             </details>
           </div>
+          <div class="method-source-code" id="<%= method.html_name %>-source">
+            <pre class="<%= method.source_language %>" data-language="<%= method.source_language %>"><%= method.markup_code %></pre>
+          </div>
         <%- end %>
 
         <%- unless method.skip_description? then %>
         <div class="method-description">
-          <%- if method.token_stream then %>
-          <div class="method-source-code" id="<%= method.html_name %>-source">
-            <pre class="<%= method.source_language %>" data-language="<%= method.source_language %>"><%= method.markup_code %></pre>
-          </div>
-          <%- end %>
           <%- if method.mixin_from then %>
             <div class="mixin-from">
               <%= method.singleton ? "Extended" : "Included" %> from <a href="<%= klass.aref_to(method.mixin_from.path) %>"><%= method.mixin_from.full_name %></a>
