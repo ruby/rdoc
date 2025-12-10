@@ -69,4 +69,5 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
   s.add_dependency 'psych', '>= 4.0.0'
   s.add_dependency 'erb'
   s.add_dependency 'tsort'
+  s.add_dependency 'prism'
 end
