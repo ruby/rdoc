@@ -99,7 +99,7 @@ Please follow the theme's README for usage instructions.
 
 ## Bugs
 
-See CONTRIBUTING.rdoc for information on filing a bug report.  It's OK to file a bug report for anything you're having a problem with.  If you can't figure out how to make RDoc produce the output you like that is probably a documentation bug.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for information on filing a bug report.  It's OK to file a bug report for anything you're having a problem with.  If you can't figure out how to make RDoc produce the output you like that is probably a documentation bug.
 
 ## License
 
