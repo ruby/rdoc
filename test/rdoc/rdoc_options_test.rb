@@ -276,9 +276,9 @@ rdoc_include:
     @options.parse []
     @options.finish
 
-    assert_equal RDoc::Generator::Darkfish,             @options.generator
-    assert_equal 'darkfish',                            @options.template
-    assert_match %r%rdoc/generator/template/darkfish$%, @options.template_dir
+    assert_equal RDoc::Generator::Aliki,             @options.generator
+    assert_equal 'aliki',                            @options.template
+    assert_match %r%rdoc/generator/template/aliki$%, @options.template_dir
   end
 
   def test_parse_deprecated
@@ -653,8 +653,8 @@ rdoc_include:
     assert_equal "could not find template NONEXISTENT\n", err
 
     @options.finish
-    assert_equal 'darkfish', @options.template
-    assert_match %r%rdoc/generator/template/darkfish$%, @options.template_dir
+    assert_equal 'aliki', @options.template
+    assert_match %r%rdoc/generator/template/aliki$%, @options.template_dir
   end
 
   def test_parse_template_load_path

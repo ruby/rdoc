@@ -118,7 +118,7 @@ class RDoc::RubyGemsHook
   end
 
   ##
-  # Generates documentation using the named +generator+ ("darkfish" or "ri")
+  # Generates documentation using the named +generator+ ("aliki" or "ri")
   # and following the given +options+.
   #
   # Documentation will be generated into +destination+
@@ -190,7 +190,7 @@ class RDoc::RubyGemsHook
 
     Dir.chdir @spec.full_gem_path do
       # RDoc::Options#finish must be called before parse_files.
-      # RDoc::Options#finish is also called after ri/darkfish generator setup.
+      # RDoc::Options#finish is also called after ri/aliki generator setup.
       # We need to dup the options to avoid modifying it after finish is called.
       parse_options = options.dup
       parse_options.finish
@@ -202,7 +202,7 @@ class RDoc::RubyGemsHook
     document 'ri',       options, @ri_dir if
       @generate_ri   and (@force or not File.exist? @ri_dir)
 
-    document 'darkfish', options, @rdoc_dir if
+    document 'aliki', options, @rdoc_dir if
       @generate_rdoc and (@force or not File.exist? @rdoc_dir)
   end
 
