@@ -816,6 +816,107 @@ nav li details:has(.link-list)[open] > summary::after {
   background-color: var(--color-accent-primary);
 }
 
+/* Sidebar Filter */
+.class-module-filter {
+  position: relative;
+  margin-bottom: var(--space-4);
+}
+
+.class-module-filter-input {
+  width: 100%;
+  padding: var(--space-2) var(--space-4);
+  padding-left: 2.25rem;
+  padding-right: 2.25rem;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  box-sizing: border-box;
+}
+
+.class-module-filter-input:focus {
+  outline: none;
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 0 0 3px var(--color-accent-subtle);
+}
+
+.class-module-filter-input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.class-module-filter-icon {
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  transform: translateY(calc(-50% - 2px));
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-text-tertiary);
+  pointer-events: none;
+}
+
+.class-module-filter-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.class-module-filter-clear {
+  position: absolute;
+  right: var(--space-2);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.class-module-filter-clear:hover {
+  color: var(--color-text-primary);
+  background: var(--color-background-tertiary);
+}
+
+.class-module-filter-clear svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.class-module-filter-no-results {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  text-align: center;
+  padding: var(--space-4) var(--space-2);
+  margin: 0;
+}
+
+/* Filter highlight for matching text */
+.filter-highlight {
+  background-color: #fef08a; /* Yellow-200 for light mode */
+  color: var(--color-neutral-900);
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+[data-theme="dark"] .filter-highlight {
+  background-color: #a16207; /* Amber-700 for dark mode */
+  color: #fef9c3; /* Yellow-100 text */
+}
+
+/* Hide filtered items */
+nav .nav-list li.filter-hidden {
+  display: none;
+}
+
 /* 8. Main Content (Center Column) */
 main {
   grid-area: main;

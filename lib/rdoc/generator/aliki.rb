@@ -39,4 +39,16 @@ class RDoc::Generator::Aliki < RDoc::Generator::Darkfish
       install_rdoc_static_file @template_dir + path, dst, options
     end
   end
+
+  ##
+  # Generate a link for a class/module in the sidebar.
+  # Adds a class for easier JavaScript targeting.
+
+  def generate_class_link(klass, rel_prefix)
+    if klass.display?
+      %(<code><a class="sidebar-class-link" href="#{rel_prefix}/#{klass.path}">#{klass.name}</a></code>)
+    else
+      %(<code>#{klass.name}</code>)
+    end
+  end
 end

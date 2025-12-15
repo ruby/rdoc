@@ -10,6 +10,27 @@
       </span>
     </summary>
 
-    <%= generate_class_index_content(@classes, rel_prefix) %>
+    <div class="class-module-filter">
+      <input
+        type="text"
+        id="class-module-filter-input"
+        class="class-module-filter-input"
+        placeholder="Filter classes..."
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="Filter classes and modules"
+      >
+      <span class="class-module-filter-icon" aria-hidden="true">
+        <svg><use href="#icon-search"></use></svg>
+      </span>
+      <button type="button" class="class-module-filter-clear" id="class-module-filter-clear" aria-label="Clear filter" hidden>
+        <svg><use href="#icon-x"></use></svg>
+      </button>
+    </div>
+
+    <div id="sidebar-class-list">
+      <%= generate_class_index_content(@classes, rel_prefix) %>
+    </div>
+    <p id="class-module-filter-no-results" class="class-module-filter-no-results" hidden>No matching classes/modules</p>
   </details>
 </div>
