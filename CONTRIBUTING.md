@@ -136,8 +136,8 @@ bundle exec rake coverage
 
 RDoc ships with two HTML themes:
 
-- **Aliki** - Modern theme with improved styling and navigation (will become the default)
-- **Darkfish** - Classic theme (entering maintenance mode)
+- **Aliki** (default) - Modern theme with improved styling and navigation
+- **Darkfish** (deprecated) - Classic theme, will be removed in v8.0
 
 New feature development should focus on the Aliki theme. Darkfish will continue to receive bug fixes but no new features.
 
@@ -156,12 +156,13 @@ lib/rdoc/
 │   ├── prism_ruby.rb          # Prism-based Ruby parser
 │   └── ...
 ├── generator/                 # Documentation generators
-│   ├── darkfish.rb            # HTML generator (default theme)
+│   ├── aliki.rb               # HTML generator (default theme)
+│   ├── darkfish.rb            # HTML generator (deprecated, will be removed in v8.0)
 │   ├── markup.rb              # Markup format generator
 │   ├── ri.rb                  # RI command generator
 │   └── template/              # ERB templates
-│       ├── darkfish/          # Darkfish theme (maintenance mode)
-│       └── aliki/             # Aliki theme (active development)
+│       ├── aliki/             # Aliki theme (default)
+│       └── darkfish/          # Darkfish theme (deprecated)
 ├── markup/                    # Markup parsing and formatting
 ├── code_object/               # AST objects for documented items
 ├── markdown.kpeg              # Parser source (edit this)

@@ -8,20 +8,20 @@ class RDocGeneratorJsonIndexTest < RDoc::TestCase
   def setup
     super
 
-    @tmpdir = Dir.mktmpdir "test_rdoc_generator_darkfish_#{$$}_"
+    @tmpdir = Dir.mktmpdir "test_rdoc_generator_aliki_#{$$}_"
     FileUtils.mkdir_p @tmpdir
 
     @options = RDoc::Options.new
     @options.files = []
     # JsonIndex is used in conjunction with another generator
-    @options.setup_generator 'darkfish'
+    @options.setup_generator 'aliki'
     @options.template_dir = ''
     @options.op_dir = @tmpdir
     @options.option_parser = OptionParser.new
     @options.finish
 
-    @darkfish = RDoc::Generator::Darkfish.new @store, @options
-    @g = RDoc::Generator::JsonIndex.new @darkfish, @options
+    @aliki = RDoc::Generator::Aliki.new @store, @options
+    @g = RDoc::Generator::JsonIndex.new @aliki, @options
 
     @rdoc.options = @options
     @rdoc.generator = @g

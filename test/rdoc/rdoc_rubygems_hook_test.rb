@@ -98,7 +98,7 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
     @hook.instance_variable_set :@rdoc, rdoc
     @hook.instance_variable_set :@file_info, []
 
-    @hook.document 'darkfish', options, @a.doc_dir('rdoc')
+    @hook.document 'aliki', options, @a.doc_dir('rdoc')
 
     assert @hook.rdoc_installed?
   end
