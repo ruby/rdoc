@@ -19,7 +19,7 @@ jobs:
           ref: ${{ github.event.client_payload.pr_head_sha }}
 
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@ac793fdd38cc468a4dd57246fa9d0e868aba9085 # v1.270.0
         with:
           ruby-version: '3.4'
           bundler-cache: true
