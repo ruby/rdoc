@@ -63,7 +63,9 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     # Aliki should have these assets
     assert_file 'css/rdoc.css'
     assert_file 'js/aliki.js'
-    assert_file 'js/search.js'
+    assert_file 'js/search_controller.js'
+    assert_file 'js/search_navigation.js'
+    assert_file 'js/search_ranker.js'
     assert_file 'js/theme-toggle.js'
     assert_file 'js/c_highlighter.js'
 
@@ -83,7 +85,10 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
 
     # JS files should have version query strings
     assert_match %r{js/aliki\.js\?v=#{Regexp.escape(RDoc::VERSION)}}, content
-    assert_match %r{js/search\.js\?v=#{Regexp.escape(RDoc::VERSION)}}, content
+    assert_match %r{js/search_controller\.js\?v=#{Regexp.escape(RDoc::VERSION)}}, content
+    assert_match %r{js/search_navigation\.js\?v=#{Regexp.escape(RDoc::VERSION)}}, content
+    assert_match %r{js/search_ranker\.js\?v=#{Regexp.escape(RDoc::VERSION)}}, content
+    assert_match %r{js/search_data\.js\?v=#{Regexp.escape(RDoc::VERSION)}}, content
     assert_match %r{js/theme-toggle\.js\?v=#{Regexp.escape(RDoc::VERSION)}}, content
   end
 
@@ -202,7 +207,7 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     assert_file 'Klass/Inner.html'
 
     # Aliki assets
-    assert_file 'js/search_index.js'
+    assert_file 'js/search_data.js'
     assert_file 'css/rdoc.css'
     assert_file 'js/aliki.js'
 

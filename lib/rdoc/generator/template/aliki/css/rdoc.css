@@ -85,6 +85,16 @@
   --color-th-background: var(--color-neutral-100);
   --color-td-background: var(--color-neutral-50);
 
+  /* Search Type Badge Colors */
+  --color-search-type-class-bg: #e6f0ff;
+  --color-search-type-class-text: #0050a0;
+  --color-search-type-module-bg: #e6ffe6;
+  --color-search-type-module-text: #060;
+  --color-search-type-constant-bg: #fff0e6;
+  --color-search-type-constant-text: #995200;
+  --color-search-type-method-bg: #f0e6ff;
+  --color-search-type-method-text: #5200a0;
+
   /* RGBA Colors (theme-agnostic) */
   --color-overlay: rgb(0 0 0 / 50%);
   --color-emphasis-bg: rgb(255 111 97 / 10%);
@@ -217,6 +227,16 @@
   --color-nav-text: var(--color-neutral-50);
   --color-th-background: var(--color-background-tertiary);
   --color-td-background: var(--color-background-secondary);
+
+  /* Search Type Badge Colors - Dark Theme */
+  --color-search-type-class-bg: #1e3a5f;
+  --color-search-type-class-text: #93c5fd;
+  --color-search-type-module-bg: #14532d;
+  --color-search-type-module-text: #86efac;
+  --color-search-type-constant-bg: #451a03;
+  --color-search-type-constant-text: #fcd34d;
+  --color-search-type-method-bg: #3b0764;
+  --color-search-type-method-text: #d8b4fe;
 
   /* Dark theme shadows (slightly more subtle) */
   --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 40%), 0 1px 2px -1px rgb(0 0 0 / 40%);
@@ -1832,6 +1852,39 @@ footer.site-footer .footer-bottom:first-child {
 
 #search-results .search-namespace {
   font-weight: bold;
+}
+
+#search-results .search-type {
+  display: inline-block;
+  margin-left: var(--space-2);
+  padding: 0 var(--space-2);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  vertical-align: middle;
+  background: var(--color-background-tertiary);
+  color: var(--color-text-secondary);
+}
+
+#search-results .search-type-class {
+  background: var(--color-search-type-class-bg);
+  color: var(--color-search-type-class-text);
+}
+
+#search-results .search-type-module {
+  background: var(--color-search-type-module-bg);
+  color: var(--color-search-type-module-text);
+}
+
+#search-results .search-type-constant {
+  background: var(--color-search-type-constant-bg);
+  color: var(--color-search-type-constant-text);
+}
+
+#search-results .search-type-instance-method,
+#search-results .search-type-class-method {
+  background: var(--color-search-type-method-bg);
+  color: var(--color-search-type-method-text);
 }
 
 #search-results li em {
