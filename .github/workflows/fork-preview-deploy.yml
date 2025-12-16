@@ -14,7 +14,7 @@ jobs:
       github.event.workflow_run.event == 'pull_request'
     steps:
       - name: Download PR information
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: pr
           github-token: ${{ secrets.GITHUB_TOKEN }}
