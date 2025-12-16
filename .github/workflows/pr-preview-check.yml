@@ -44,7 +44,7 @@ jobs:
           echo "${{ github.event.pull_request.head.repo.full_name }}" > ./pr/pr_checkout_repository
       
       - name: Upload PR information
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: pr
           path: pr/
