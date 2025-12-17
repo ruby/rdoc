@@ -11,13 +11,13 @@ module RDocParserPrismTestCases
     @tempfile = Tempfile.new self.class.name
     @filename = @tempfile.path
 
-    @top_level = @store.add_file @filename
+    @file = @store.add_file @filename
 
     @options = RDoc::Options.new
     @options.quiet = true
     @options.option_parser = OptionParser.new
 
-    @comment = RDoc::Comment.new '', @top_level
+    @comment = RDoc::Comment.new '', @file
 
     @stats = RDoc::Stats.new @store, 0
   end
@@ -32,7 +32,7 @@ module RDocParserPrismTestCases
     util_parser <<~RUBY
       # :section: new section
     RUBY
-    section = @top_level.current_section
+    section = @file.current_section
     assert_equal 'new section', section.title
   end
 
@@ -41,7 +41,7 @@ module RDocParserPrismTestCases
       # how to make a section:
       # # :section: new section
     RUBY
-    section = @top_level.current_section
+    section = @file.current_section
     assert_nil   section.title
   end
 
@@ -49,7 +49,7 @@ module RDocParserPrismTestCases
     util_parser <<~RUBY
       # :unhandled: blah
     RUBY
-    assert_equal 'blah', @top_level.metadata['unhandled']
+    assert_equal 'blah', @file.metadata['unhandled']
   end
 
   def test_block_comment
@@ -65,7 +65,7 @@ module RDocParserPrismTestCases
         def f; end
       end
     RUBY
-    klass = @top_level.classes.first
+    klass = @file.classes.first
     meth = klass.method_list.first
     assert_equal 'foo', klass.comment.text.strip
     assert_equal "bar\nbaz", meth.comment.text.strip
@@ -77,10 +77,10 @@ module RDocParserPrismTestCases
       module Foo
       end
     RUBY
-    mod = @top_level.modules.first
+    mod = @file.modules.first
     assert_equal 'Foo', mod.full_name
     assert_equal 'my module', mod.comment.text
-    assert_equal [@top_level], mod.in_files
+    assert_equal [@file], mod.in_files
   end
 
   def test_nested_module_with_colon
@@ -113,10 +113,10 @@ module RDocParserPrismTestCases
       class Foo
       end
     RUBY
-    klass = @top_level.classes.first
+    klass = @file.classes.first
     assert_equal 'Foo', klass.full_name
     assert_equal 'my class', klass.comment.text
-    assert_equal [@top_level], klass.in_files
+    assert_equal [@file], klass.in_files
     assert_equal 2, klass.line
   end
 
@@ -164,7 +164,7 @@ module RDocParserPrismTestCases
         def m2; end
       end
     RUBY
-    classes = @top_level.classes
+    classes = @file.classes
     assert_equal 3, classes.size
     _a, b, c = classes
     assert_equal 'A', b.superclass.full_name
@@ -181,7 +181,7 @@ module RDocParserPrismTestCases
       class B; end
       class C; end
     RUBY
-    _a, b, c = @top_level.classes
+    _a, b, c = @file.classes
     assert_equal 'Object', b.superclass
     assert_equal 'Object', c.superclass
 
@@ -203,7 +203,7 @@ module RDocParserPrismTestCases
       class B; end
       class C; end
     RUBY
-    _object, _a, b, c = @top_level.classes
+    _object, _a, b, c = @file.classes
     # If Object exists, superclass will be a NormalClass(Object) instead of string "Object"
     assert_equal 'Object', b.superclass.full_name
     assert_equal 'Object', c.superclass.full_name
@@ -239,7 +239,7 @@ module RDocParserPrismTestCases
 
       class A::C4 < A::B; end
     RUBY
-    mod = @top_level.modules.first
+    mod = @file.modules.first
     classes = mod.classes
     assert_equal ['A::B', 'A::C1', 'A::C2', 'A::C3', 'A::C4'], classes.map(&:full_name)
     assert_equal ['A::B', 'A::B', 'A::A::B', 'A::B'], classes.drop(1).map(&:superclass).map(&:full_name)
@@ -306,8 +306,8 @@ module RDocParserPrismTestCases
         module B; end
       end
     RUBY
-    klass = @top_level.classes.first
-    mod = @top_level.modules.first
+    klass = @file.classes.first
+    mod = @file.modules.first
     assert_equal 'comment', klass.comment.text.strip
     assert_equal 'comment', mod.comment.text.strip
     assert_equal ['Foo::A'], klass.classes.select(&:document_self).map(&:full_name)
@@ -322,8 +322,8 @@ module RDocParserPrismTestCases
       class Baz < (any expression)
       end
     RUBY
-    assert_equal ['Foo', 'Bar', 'Baz'], @top_level.classes.map(&:full_name)
-    foo, bar, baz = @top_level.classes
+    assert_equal ['Foo', 'Bar', 'Baz'], @file.classes.map(&:full_name)
+    foo, bar, baz = @file.classes
     assert_equal foo, bar.superclass
     assert_equal '(any expression)', baz.superclass
   end
@@ -370,7 +370,7 @@ module RDocParserPrismTestCases
       'initialize(*args)', 'initialize(*args)',
       'initialize(*args)'
     ]
-    arglists = @top_level.classes.map { |c| c.method_list.first.arglists }
+    arglists = @file.classes.map { |c| c.method_list.first.arglists }
     assert_equal expected, arglists
   end
 
@@ -383,8 +383,8 @@ module RDocParserPrismTestCases
       class A; end
       class X < C; end
     RUBY
-    assert_equal ['A', 'C', 'X'], @top_level.classes.map(&:full_name)
-    assert_equal ['B', 'D'], @top_level.modules.map(&:full_name)
+    assert_equal ['A', 'C', 'X'], @file.classes.map(&:full_name)
+    assert_equal ['B', 'D'], @file.modules.map(&:full_name)
   end
 
   def test_parenthesized_cdecl
@@ -453,9 +453,9 @@ module RDocParserPrismTestCases
     assert_equal 3, one.line
     assert_equal 8, two.line
     assert_equal 15, three.line
-    assert_equal @top_level, one.file
-    assert_equal @top_level, two.file
-    assert_equal @top_level, three.file
+    assert_equal @file, one.file
+    assert_equal @file, two.file
+    assert_equal @file, three.file
   end
 
   def test_invalid_meta_method
@@ -572,9 +572,9 @@ module RDocParserPrismTestCases
     assert_equal 3, one.line
     assert_equal 5, two.line
     assert_equal 7, three.line
-    assert_equal @top_level, one.file
-    assert_equal @top_level, two.file
-    assert_equal @top_level, three.file
+    assert_equal @file, one.file
+    assert_equal @file, two.file
+    assert_equal @file, three.file
   end
 
   def test_method_with_modifier_if_unless
@@ -608,7 +608,7 @@ module RDocParserPrismTestCases
     foo = object.method_list.first
     assert_equal 'Object#foo', foo.full_name
     assert_equal 'comment', foo.comment.text.strip
-    assert_equal @top_level, foo.file
+    assert_equal @file, foo.file
   end
 
   def test_meta_method
@@ -626,7 +626,7 @@ module RDocParserPrismTestCases
     assert_equal 'Foo#method_foo', method.full_name
     assert_equal 'my method', method.comment.text.strip
     assert_equal 4, method.line
-    assert_equal @top_level, method.file
+    assert_equal @file, method.file
   end
 
   def test_first_comment_is_not_a_meta_method
@@ -659,7 +659,7 @@ module RDocParserPrismTestCases
     assert_equal 'Foo#unknown', method.full_name
     assert_equal 'my method', method.comment.text.strip
     assert_equal 4, method.line
-    assert_equal @top_level, method.file
+    assert_equal @file, method.file
   end
 
   def test_meta_define_method
@@ -688,7 +688,7 @@ module RDocParserPrismTestCases
     assert_equal [false, false, true], klass.method_list.map(&:singleton)
     assert_equal ['comment 1', 'comment 2', 'comment 3'], klass.method_list.map { |m| m.comment.text.strip }
     assert_equal [4, 7, 13], klass.method_list.map(&:line)
-    assert_equal [@top_level] * 3, klass.method_list.map(&:file)
+    assert_equal [@file] * 3, klass.method_list.map(&:file)
   end
 
   def test_method_definition_nested_inside_block
@@ -758,7 +758,7 @@ module RDocParserPrismTestCases
       end
     RUBY
 
-    klass = @top_level.classes.first
+    klass = @file.classes.first
     methods = klass.method_list
     expected = [
       'f1(a, &b)',
@@ -804,7 +804,7 @@ module RDocParserPrismTestCases
       end
     RUBY
 
-    klass = @top_level.classes.first
+    klass = @file.classes.first
     methods = klass.method_list
     assert_equal ['method1(a, b, c)', 'method2(d, e, f)', 'method3(g, h)'], methods.map(&:arglists)
   end
@@ -1221,7 +1221,7 @@ module RDocParserPrismTestCases
         public :bar
       end
     RUBY
-    foo, foo2, bar, bar2 = @top_level.classes.first.method_list
+    foo, foo2, bar, bar2 = @file.classes.first.method_list
     assert_equal 'foo', foo.name
     assert_equal 'bar', bar.name
     assert_equal 'foo2', foo2.name
@@ -1247,7 +1247,7 @@ module RDocParserPrismTestCases
         alias_method 42, :foo
       end
     RUBY
-    assert_equal ['foo'], @top_level.classes.first.method_list.map(&:name)
+    assert_equal ['foo'], @file.classes.first.method_list.map(&:name)
   end
 
   def test_alias_method_stopdoc_nodoc
@@ -1261,7 +1261,7 @@ module RDocParserPrismTestCases
         alias_method :foo4, :foo
       end
     RUBY
-    assert_equal ['foo', 'foo4'], @top_level.classes.first.method_list.map(&:name)
+    assert_equal ['foo', 'foo4'], @file.classes.first.method_list.map(&:name)
   end
 
   def test_attributes
@@ -1309,7 +1309,7 @@ module RDocParserPrismTestCases
     assert_equal [5, 5], [r1.line, r2.line]
     assert_equal [7, 7], [w1.line, w2.line]
     assert_equal [9, 9], [rw1.line, rw2.line]
-    assert_equal [@top_level] * 8, [a1, a2, r1, r2, w1, w2, rw1, rw2].map(&:file)
+    assert_equal [@file] * 8, [a1, a2, r1, r2, w1, w2, rw1, rw2].map(&:file)
   end
 
   def test_undocumentable_attributes
@@ -1475,7 +1475,7 @@ module RDocParserPrismTestCases
     assert_equal ['readers', 'readers'], [r1.comment.text, r2.comment.text]
     assert_equal ['writers', 'writers'], [w1.comment.text, w2.comment.text]
     assert_equal ['accessors', 'accessors'], [rw1.comment.text, rw2.comment.text]
-    assert_equal [@top_level] * 8, [a1, a2, r1, r2, w1, w2, rw1, rw2].map(&:file)
+    assert_equal [@file] * 8, [a1, a2, r1, r2, w1, w2, rw1, rw2].map(&:file)
   end
 
   def test_meta_attributes_named
@@ -1530,7 +1530,7 @@ module RDocParserPrismTestCases
     assert_equal 'comment r', r.comment.text
     assert_equal 'comment w', w.comment.text
     assert_equal 'comment rw', rw.comment.text
-    assert_equal [@top_level] * 4, [a, r, w, rw].map(&:file)
+    assert_equal [@file] * 4, [a, r, w, rw].map(&:file)
   end
 
   def test_constant
@@ -1554,15 +1554,15 @@ module RDocParserPrismTestCases
       end
       G = (any expression 8)
     RUBY
-    foo = @top_level.classes.first
+    foo = @file.classes.first
     bar = foo.classes.first
-    object = @top_level.find_class_or_module('Object')
+    object = @file.find_class_or_module('Object')
     assert_equal ['A', 'D', 'E', 'F'], foo.constants.map(&:name) unless accept_legacy_bug?
     assert_equal '(any expression 1)', foo.constants.first.value
     assert_equal ['B'], bar.constants.map(&:name)
     assert_equal ['C', 'G'], object.constants.map(&:name) unless accept_legacy_bug?
     all_constants = foo.constants + bar.constants + object.constants
-    assert_equal [@top_level] * 7, all_constants.map(&:file) unless accept_legacy_bug?
+    assert_equal [@file] * 7, all_constants.map(&:file) unless accept_legacy_bug?
     assert_equal [2, 12, 13, 14, 7, 8, 18], all_constants.map(&:line) unless accept_legacy_bug?
   end
 
@@ -1580,7 +1580,7 @@ module RDocParserPrismTestCases
       Foo::B = 2
       Foo::D = 2
     RUBY
-    mod = @top_level.modules.first
+    mod = @file.modules.first
     assert_equal ['A', 'B', 'C', 'D'], mod.constants.map(&:name)
     assert_equal [false, true, true, false], mod.constants.map(&:received_nodoc)
   end
@@ -1615,7 +1615,7 @@ module RDocParserPrismTestCases
     util_parser <<~RUBY
       A::B::C = 1
     RUBY
-    a = @top_level.find_module_named 'A'
+    a = @file.find_module_named 'A'
     b = a.find_module_named 'B'
     c = b.constants.first
     assert_equal 'A::B::C', c.full_name
@@ -1630,7 +1630,7 @@ module RDocParserPrismTestCases
         C = Foo::Bar
       end
     RUBY
-    klass = @top_level.classes.first
+    klass = @file.classes.first
     assert_equal [], klass.modules.map(&:full_name)
     assert_equal ['Foo::Bar', 'Foo::A', 'Foo::C'], klass.classes.map(&:full_name)
     assert_equal ['Foo::A', 'Foo::C'], klass.constants.map(&:full_name)
@@ -1740,7 +1740,7 @@ module RDocParserPrismTestCases
       end
     RUBY
 
-    klass = @top_level.classes.first
+    klass = @file.classes.first
     assert_equal [], klass.includes.map(&:name)
     assert_equal ['I'], klass.extends.map(&:name)
   end
@@ -1788,7 +1788,7 @@ module RDocParserPrismTestCases
         include 42, C # Maybe not Module#include
       end
     RUBY
-    klass = @top_level.classes.first
+    klass = @file.classes.first
     assert_equal ['A', 'B'], klass.includes.map(&:name)
   end
 
@@ -1800,7 +1800,7 @@ module RDocParserPrismTestCases
       require "\#{embed}"
       require (any expression)
     RUBY
-    assert_equal ['foo/bar'], @top_level.requires.map(&:name)
+    assert_equal ['foo/bar'], @file.requires.map(&:name)
   end
 
   def test_statements_identifier_alias_method_before_original_method
@@ -1821,22 +1821,22 @@ module RDocParserPrismTestCases
       end
     RUBY
 
-    foo = @top_level.classes.first.method_list[0]
+    foo = @file.classes.first.method_list[0]
     assert_equal 'foo', foo.name
 
-    foo2 = @top_level.classes.first.method_list[1]
+    foo2 = @file.classes.first.method_list[1]
     assert_equal 'foo2', foo2.name
     assert_equal 'foo', foo2.is_alias_for.name
 
-    foo3 = @top_level.classes.first.method_list[2]
+    foo3 = @file.classes.first.method_list[2]
     assert_equal 'foo3', foo3.name
     assert_equal 'foo', foo3.is_alias_for.name
 
-    foo4 = @top_level.classes.first.method_list.last
+    foo4 = @file.classes.first.method_list.last
     assert_equal 'foo4', foo4.name
     assert_equal 'foo', foo4.is_alias_for.name
 
-    assert_equal 'unknown', @top_level.classes.first.external_aliases[0].old_name
+    assert_equal 'unknown', @file.classes.first.external_aliases[0].old_name
   end
 
   def test_class_definition_encountered_after_class_reference
@@ -1855,7 +1855,7 @@ module RDocParserPrismTestCases
     assert_empty @store.modules_hash
     assert_empty @store.all_modules
 
-    klass = @top_level.classes.first
+    klass = @file.classes.first
     assert_equal 'Foo', klass.full_name
     assert_equal 'IO', klass.superclass
 
@@ -1873,11 +1873,11 @@ module RDocParserPrismTestCases
       end
     RUBY
 
-    mod = @top_level.modules.first
+    mod = @file.modules.first
 
     expected = [
-      RDoc::Comment.new('comment a', @top_level),
-      RDoc::Comment.new('comment b', @top_level)
+      RDoc::Comment.new('comment a', @file),
+      RDoc::Comment.new('comment b', @file)
     ]
 
     assert_equal expected, mod.comment_location.map { |c, _l| c }
@@ -1909,7 +1909,7 @@ module RDocParserPrismTestCases
       class C; end
     RUBY
 
-    assert_equal ['A'], @top_level.classes.reject(&:ignored?).map(&:name)
+    assert_equal ['A'], @file.classes.reject(&:ignored?).map(&:name)
   end
 
   def test_section
@@ -1935,7 +1935,7 @@ module RDocParserPrismTestCases
         def m6; end
       end
     RUBY
-    foo = @top_level.classes.first
+    foo = @file.classes.first
     bar = foo.modules.first
     assert_equal ['section1', nil, 'section2', 'section2'], foo.attributes.map { |m| m.section.title }
     assert_equal ['section1', nil, 'section2', 'section2'], foo.method_list.map { |m| m.section.title }
@@ -1973,7 +1973,7 @@ module RDocParserPrismTestCases
         # :method: m6
       end
     RUBY
-    klass = @top_level.classes.first
+    klass = @file.classes.first
     assert_equal ['cat1', nil, nil, nil], klass.attributes.map { |m| m.section.title }
     assert_equal [nil, 'cat2', nil, nil, 'cat3', 'cat4'], klass.method_list.map { |m| m.section.title }
   end
@@ -1997,7 +1997,7 @@ module RDocParserPrismTestCases
         # :method: f
       end
     RUBY
-    mod = @top_level.modules.first
+    mod = @file.modules.first
     assert_equal ['a', 'f'], mod.method_list.map(&:name)
   end
 
@@ -2039,7 +2039,7 @@ module RDocParserPrismTestCases
     RUBY
     util_parser content
     assert_equal Encoding::UTF_8, content.encoding
-    method = @top_level.classes.first.method_list.first
+    method = @file.classes.first.method_list.first
     assert_equal 'comment ω', method.comment.text.strip
     assert_equal 'ω', method.name
   end
@@ -2053,7 +2053,7 @@ module RDocParserPrismTestCases
         add_my_method :foo
       end
     RUBY
-    foo = @top_level.classes.first.method_list.first
+    foo = @file.classes.first.method_list.first
     assert_equal 'foo', foo.name
     assert_equal 'this is my method', foo.comment.text
     assert_equal Encoding::CP852, foo.comment.text.encoding
@@ -2078,7 +2078,7 @@ module RDocParserPrismTestCases
       end
     RUBY
 
-    c = @top_level.classes.first
+    c = @file.classes.first
     assert_equal 'rd', c.comment.format
     assert_equal 'rd', c.method_list.first.comment.format
   end
@@ -2096,7 +2096,7 @@ module RDocParserPrismTestCases
       end
     RUBY
 
-    c = @top_level.classes.first
+    c = @file.classes.first
 
     assert_equal 'rdoc', c.comment.format
 
@@ -2118,7 +2118,7 @@ module RDocParserPrismTestCases
       end
     RUBY
 
-    c = @top_level.classes.first
+    c = @file.classes.first
 
     m = c.method_list.first
 
@@ -2131,7 +2131,7 @@ module RDocParserPrismTestCases
         list(:NOTE,
           item(%w[field],
             para('A field name.'))))
-    expected.file = @top_level
+    expected.file = @file
 
     assert_equal expected, m.comment.parse
   end
@@ -2151,7 +2151,7 @@ module RDocParserPrismTestCases
         def m2; end
       end
     RUBY
-    klass = @top_level.classes.first
+    klass = @file.classes.first
     m1, m2 = klass.method_list
     assert_equal 'Public', m1.section.title
     assert_equal 'Internal', m2.section.title
@@ -2183,7 +2183,7 @@ module RDocParserPrismTestCases
       end
     RUBY
 
-    m1, m2 = @top_level.classes.first.method_list
+    m1, m2 = @file.classes.first.method_list
     assert_equal "foo1\nbar1", m1.call_seq.chomp
     assert_equal "ARGF.readlines(a)\nARGF.readlines(b)\nARGF.readlines(c)\nARGF.readlines(d)", m2.call_seq.chomp
   end
@@ -2197,7 +2197,7 @@ class RDocParserPrismRubyTest < RDoc::TestCase
   end
 
   def util_parser(content)
-    @parser = RDoc::Parser::PrismRuby.new @top_level, content, @options, @stats
+    @parser = RDoc::Parser::PrismRuby.new @file, content, @options, @stats
     @parser.scan
   end
 end
@@ -2211,7 +2211,7 @@ class RDocParserRubyWithPrismRubyTestCasesTest < RDoc::TestCase
   end
 
   def util_parser(content)
-    @parser = RDoc::Parser::Ruby.new @top_level, content, @options, @stats
+    @parser = RDoc::Parser::Ruby.new @file, content, @options, @stats
     @parser.scan
   end
 end unless ENV['RDOC_USE_PRISM_PARSER']

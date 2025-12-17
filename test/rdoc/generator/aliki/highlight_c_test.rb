@@ -11,13 +11,13 @@ rescue LoadError
 end
 
 class RDocGeneratorAlikiHighlightCTest < Test::Unit::TestCase
-  HIGHLIGHT_C_JS_PATH = File.expand_path(
+  HIGHLIGHT_C_JS_PATH = ::File.expand_path(
     '../../../../lib/rdoc/generator/template/aliki/js/c_highlighter.js',
     __dir__
   )
 
   HIGHLIGHT_C_JS = begin
-    highlight_c_js = File.read(HIGHLIGHT_C_JS_PATH)
+    highlight_c_js = ::File.read(HIGHLIGHT_C_JS_PATH)
 
     # We need to modify the JS slightly to make it work in the context of a test.
     highlight_c_js.gsub(

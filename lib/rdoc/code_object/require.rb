@@ -33,15 +33,15 @@ class RDoc::Require < RDoc::CodeObject
   end
 
   ##
-  # The RDoc::TopLevel corresponding to this require, or +nil+ if not found.
+  # The RDoc::File corresponding to this require, or +nil+ if not found.
 
   def top_level
     @top_level ||= begin
-      tl = RDoc::TopLevel.all_files_hash[name + '.rb']
+      tl = RDoc::File.all_files_hash[name + '.rb']
 
-      if tl.nil? and RDoc::TopLevel.all_files.first.full_name =~ %r(^lib/) then
+      if tl.nil? and RDoc::File.all_files.first.full_name =~ %r(^lib/) then
         # second chance
-        tl = RDoc::TopLevel.all_files_hash['lib/' + name + '.rb']
+        tl = RDoc::File.all_files_hash['lib/' + name + '.rb']
       end
 
       tl

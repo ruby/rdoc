@@ -217,7 +217,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
                        name.join '::'
                      end
 
-    @file = RDoc::TopLevel.new array[10] if version > 0
+    @file = RDoc::File.new array[10] if version > 0
   end
 
   ##

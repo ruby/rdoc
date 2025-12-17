@@ -164,7 +164,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     else
       path = ref ? ref.as_href(@from_path) : +""
 
-      if code and RDoc::CodeObject === ref and !(RDoc::TopLevel === ref)
+      if code and RDoc::CodeObject === ref and !(RDoc::File === ref)
         text = "<code>#{CGI.escapeHTML text}</code>"
       end
 

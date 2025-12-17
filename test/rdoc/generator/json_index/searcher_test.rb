@@ -16,11 +16,11 @@ class RDocGeneratorJsonIndexSearcherTest < Test::Unit::TestCase
   def setup
     @context = MiniRacer::Context.new
 
-    searcher_js_path = File.expand_path(
+    searcher_js_path = ::File.expand_path(
       '../../../../lib/rdoc/generator/template/json_index/js/searcher.js',
       __dir__
     )
-    searcher_js = File.read(searcher_js_path)
+    searcher_js = ::File.read(searcher_js_path)
     @context.eval(searcher_js)
   end
 

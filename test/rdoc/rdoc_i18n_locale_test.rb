@@ -7,7 +7,7 @@ class RDocI18nLocaleTest < RDoc::TestCase
     super
     @locale = locale('fr')
 
-    @tmpdir = File.join Dir.tmpdir, "test_rdoc_i18n_locale_#{$$}"
+    @tmpdir = ::File.join Dir.tmpdir, "test_rdoc_i18n_locale_#{$$}"
     FileUtils.mkdir_p @tmpdir
 
     @locale_dir = @tmpdir
@@ -23,7 +23,7 @@ class RDocI18nLocaleTest < RDoc::TestCase
   end
 
   def test_load_nonexistent_po
-    locale = File.join(@locale_dir, 'nonexsitent-locale')
+    locale = ::File.join(@locale_dir, 'nonexsitent-locale')
     refute_file locale
     refute @locale.load(locale)
   end
@@ -35,9 +35,9 @@ class RDocI18nLocaleTest < RDoc::TestCase
       omit 'gettext gem is not found'
     end
 
-    fr_locale_dir = File.join @locale_dir, 'fr'
+    fr_locale_dir = ::File.join @locale_dir, 'fr'
     FileUtils.mkdir_p fr_locale_dir
-    File.open File.join(fr_locale_dir, 'rdoc.po'), 'w' do |po|
+    ::File.open ::File.join(fr_locale_dir, 'rdoc.po'), 'w' do |po|
       po.puts <<-PO
 msgid ""
 msgstr ""

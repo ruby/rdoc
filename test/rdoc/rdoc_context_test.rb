@@ -48,12 +48,12 @@ class RDocContextTest < XrefTestCase
   end
 
   def test_add_alias_method_attr
-    top_level = @store.add_file 'file.rb'
+    file = @store.add_file 'file.rb'
 
     attr = RDoc::Attr.new nil, 'old_name', 'R', ''
 
     as = RDoc::Alias.new nil, 'old_name', 'new_name', 'comment'
-    as.record_location top_level
+    as.record_location file
     as.parent = @context
 
     @context.add_attribute attr
@@ -64,17 +64,17 @@ class RDocContextTest < XrefTestCase
     assert_equal %w[old_name new_name], @context.attributes.map { |m| m.name }
 
     new = @context.attributes.last
-    assert_equal top_level, new.file
+    assert_equal file, new.file
   end
 
   def test_add_alias_method
-    top_level = @store.add_file 'file.rb'
+    file = @store.add_file 'file.rb'
 
     meth = RDoc::AnyMethod.new nil, 'old_name'
     meth.singleton = false
 
     as = RDoc::Alias.new nil, 'old_name', 'new_name', 'comment'
-    as.record_location top_level
+    as.record_location file
     as.parent = @context
 
     @context.add_method meth
@@ -85,7 +85,7 @@ class RDocContextTest < XrefTestCase
     assert_equal %w[old_name new_name], @context.method_list.map { |m| m.name }
 
     new = @context.method_list.last
-    assert_equal top_level, new.file
+    assert_equal file, new.file
   end
 
   def test_add_alias_method_singleton
@@ -166,9 +166,9 @@ class RDocContextTest < XrefTestCase
                     'c1 modules'
 
     assert_includes @store.all_classes.map { |k| k.full_name }, 'C1::Klass',
-                    'TopLevel classes'
+                    'File classes'
     refute_includes @store.all_modules.map { |k| k.full_name }, 'C1::Klass',
-                    'TopLevel modules'
+                    'File modules'
   end
 
   def test_add_constant
@@ -290,15 +290,15 @@ class RDocContextTest < XrefTestCase
   def test_add_module_alias_top_level
     store = RDoc::Store.new(RDoc::Options.new)
 
-    top_level = store.add_file 'file.rb'
+    file = store.add_file 'file.rb'
 
-    klass  = top_level.add_class RDoc::NormalClass, 'Klass'
+    klass  = file.add_class RDoc::NormalClass, 'Klass'
     klass.comment = 'klass comment'
 
-    object = top_level.add_class RDoc::NormalClass, 'Object'
+    object = file.add_class RDoc::NormalClass, 'Object'
 
     a = RDoc::Constant.new 'A', '', ''
-    top_level.add_module_alias klass, klass.name, a, top_level
+    file.add_module_alias klass, klass.name, a, file
 
     refute_empty object.constants
 
@@ -326,20 +326,20 @@ class RDocContextTest < XrefTestCase
   def test_add_section
     default_section = @context.sections.first
 
-    @context.add_section nil, comment('comment', @top_level)
+    @context.add_section nil, comment('comment', @file)
 
     assert_equal 1, @context.sections.length
-    assert_equal [comment("comment", @top_level)],
+    assert_equal [comment("comment", @file)],
                  @context.sections.first.comments
 
-    @context.add_section nil, comment('new comment', @top_level)
+    @context.add_section nil, comment('new comment', @file)
 
     assert_equal 1, @context.sections.length
-    assert_equal [comment('comment', @top_level),
-                  comment('new comment', @top_level)],
+    assert_equal [comment('comment', @file),
+                  comment('new comment', @file)],
                  @context.sections.first.comments
 
-    @context.add_section 'other', comment('', @top_level)
+    @context.add_section 'other', comment('', @file)
 
     assert_equal 2, @context.sections.length
 
@@ -379,7 +379,7 @@ class RDocContextTest < XrefTestCase
     incl = RDoc::Include.new 'Name', 'comment'
     arr = []
     section =
-      @context.add_section 'temporary', RDoc::Comment.new('', @top_level)
+      @context.add_section 'temporary', RDoc::Comment.new('', @file)
     @context.temporary_section = section
 
     @context.add_to arr, incl
@@ -430,7 +430,7 @@ class RDocContextTest < XrefTestCase
     default_section = @context.current_section
 
     new_section =
-      @context.add_section 'other', RDoc::Comment.new('', @top_level)
+      @context.add_section 'other', RDoc::Comment.new('', @file)
     @context.temporary_section = new_section
 
     assert_equal new_section, @context.current_section
@@ -850,11 +850,11 @@ class RDocContextTest < XrefTestCase
   def test_set_current_section
     default_section = @context.sections.first
 
-    @context.set_current_section nil, RDoc::Comment.new('', @top_level)
+    @context.set_current_section nil, RDoc::Comment.new('', @file)
 
     assert_equal default_section, @context.current_section
 
-    @context.set_current_section 'other', RDoc::Comment.new('', @top_level)
+    @context.set_current_section 'other', RDoc::Comment.new('', @file)
 
     new_section = @context.sections.find { |section|
       section != default_section

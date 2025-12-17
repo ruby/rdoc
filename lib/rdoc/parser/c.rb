@@ -160,20 +160,20 @@ class RDoc::Parser::C < RDoc::Parser
   attr_reader :singleton_classes
 
   ##
-  # The TopLevel items in the parsed file belong to
+  # The File items in the parsed file belong to
 
-  attr_reader :top_level
+  attr_reader :file
 
   ##
   # Prepares for parsing a C file.  See RDoc::Parser#initialize for details on
   # the arguments.
 
-  def initialize(top_level, content, options, stats)
+  def initialize(file, content, options, stats)
     super
 
     @known_classes = RDoc::KNOWN_CLASSES.dup
     @content = handle_tab_width handle_ifdefs_in @content
-    @file_dir = File.dirname @file_name
+    @file_dir = ::File.dirname @file_name
 
     @classes           = load_variable_map :c_class_variables
     @singleton_classes = load_variable_map :c_singleton_class_variables
@@ -249,7 +249,7 @@ class RDoc::Parser::C < RDoc::Parser
 
   def add_alias(var_name, class_obj, old_name, new_name, comment)
     al = RDoc::Alias.new '', old_name, new_name, comment, singleton: @singleton_classes.key?(var_name)
-    al.record_location @top_level
+    al.record_location @file
     class_obj.add_alias al
     @stats.add_alias al
     al
@@ -443,9 +443,9 @@ class RDoc::Parser::C < RDoc::Parser
       next unless cls = @classes[c]
       m = @known_classes[m] || m
 
-      comment = new_comment '', @top_level, :c
+      comment = new_comment '', @file, :c
       incl = cls.add_include RDoc::Include.new(m, comment)
-      incl.record_location @top_level
+      incl.record_location @file
     end
   end
 
@@ -525,7 +525,7 @@ class RDoc::Parser::C < RDoc::Parser
                                    \s*"#{Regexp.escape new_name}"\s*,
                                    \s*"#{Regexp.escape old_name}"\s*\);%xm
 
-    new_comment($1 || '', @top_level, :c)
+    new_comment($1 || '', @file, :c)
   end
 
   ##
@@ -564,7 +564,7 @@ class RDoc::Parser::C < RDoc::Parser
                 ''
               end
 
-    new_comment comment, @top_level, :c
+    new_comment comment, @file, :c
   end
 
   ##
@@ -603,7 +603,7 @@ class RDoc::Parser::C < RDoc::Parser
 
     case type
     when :func_def
-      comment = new_comment args[0], @top_level, :c
+      comment = new_comment args[0], @file, :c
       body = args[1]
       offset, = args[2]
 
@@ -630,7 +630,7 @@ class RDoc::Parser::C < RDoc::Parser
 
       body
     when :macro_def
-      comment = new_comment args[0], @top_level, :c
+      comment = new_comment args[0], @file, :c
       body = args[1]
       offset, = args[2]
 
@@ -676,13 +676,13 @@ class RDoc::Parser::C < RDoc::Parser
   def find_class(raw_name, name, base_name = nil)
     unless @classes[raw_name]
       if raw_name =~ /^rb_m/
-        container = @top_level.add_module RDoc::NormalModule, name
+        container = @file.add_module RDoc::NormalModule, name
       else
-        container = @top_level.add_class RDoc::NormalClass, name
+        container = @file.add_class RDoc::NormalClass, name
       end
       container.name = base_name if base_name
 
-      container.record_location @top_level
+      container.record_location @file
       @classes[raw_name] = container
     end
     @classes[raw_name]
@@ -736,11 +736,11 @@ class RDoc::Parser::C < RDoc::Parser
       comment = ''
     end
 
-    comment = new_comment comment, @top_level, :c
+    comment = new_comment comment, @file, :c
 
     look_for_directives_in class_mod, comment
 
-    class_mod.add_comment comment, @top_level
+    class_mod.add_comment comment, @file
   end
 
   ##
@@ -794,7 +794,7 @@ class RDoc::Parser::C < RDoc::Parser
       table[const_name] ||
       ''
 
-    new_comment comment, @top_level, :c
+    new_comment comment, @file, :c
   end
 
   ##
@@ -822,7 +822,7 @@ class RDoc::Parser::C < RDoc::Parser
 
     return unless comment
 
-    new_comment comment, @top_level, :c
+    new_comment comment, @file, :c
   end
 
   ##
@@ -849,7 +849,7 @@ class RDoc::Parser::C < RDoc::Parser
 
     attr = RDoc::Attr.new '', name, rw, comment
 
-    attr.record_location @top_level
+    attr.record_location @file
     class_obj.add_attribute attr
     @stats.add_attribute attr
   end
@@ -878,7 +878,7 @@ class RDoc::Parser::C < RDoc::Parser
         return
       end
     else
-      enclosure = @top_level
+      enclosure = @file
     end
 
     if type == :class then
@@ -955,7 +955,7 @@ class RDoc::Parser::C < RDoc::Parser
 
         new_comment = "#{$1}#{new_comment.lstrip}"
 
-        new_comment = self.new_comment(new_comment, @top_level, :c)
+        new_comment = self.new_comment(new_comment, @file, :c)
 
         con = RDoc::Constant.new const_name, new_definition, new_comment
       else
@@ -965,7 +965,7 @@ class RDoc::Parser::C < RDoc::Parser
       con = RDoc::Constant.new const_name, definition, comment
     end
 
-    con.record_location @top_level
+    con.record_location @file
     @stats.add_constant con
     class_obj.add_constant con
   end
@@ -1011,10 +1011,10 @@ class RDoc::Parser::C < RDoc::Parser
       p_count = Integer(param_count) rescue -1
 
       if source_file then
-        file_name = File.join @file_dir, source_file
+        file_name = ::File.join @file_dir, source_file
 
-        if File.exist? file_name then
-          file_content = File.read file_name
+        if ::File.exist? file_name then
+          file_content = ::File.read file_name
         else
           @options.warn "unknown source #{source_file} for #{meth_name} in #{@file_name}"
         end
@@ -1035,7 +1035,7 @@ class RDoc::Parser::C < RDoc::Parser
                           end
 
 
-        meth_obj.record_location @top_level
+        meth_obj.record_location @file
 
         if meth_obj.section_title
           class_obj.temporary_section = class_obj.add_section(meth_obj.section_title)
@@ -1196,7 +1196,7 @@ class RDoc::Parser::C < RDoc::Parser
 
   ##
   # Extracts the classes, modules, methods, attributes, constants and aliases
-  # from a C file and returns an RDoc::TopLevel for this file
+  # from a C file and returns an RDoc::File for this file
 
   def scan
     remove_commented_out_lines
@@ -1212,7 +1212,7 @@ class RDoc::Parser::C < RDoc::Parser
 
     @store.add_c_variables self
 
-    @top_level
+    @file
   end
 
   ##

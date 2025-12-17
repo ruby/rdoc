@@ -9,7 +9,7 @@ class RDocParserSimpleTest < RDoc::TestCase
     @tempfile = Tempfile.new self.class.name
     filename = @tempfile.path
 
-    @top_level = @store.add_file filename
+    @file = @store.add_file filename
     @fn = filename
     @options = RDoc::Options.new
     @stats = RDoc::Stats.new @store, 0
@@ -24,7 +24,7 @@ class RDocParserSimpleTest < RDoc::TestCase
   def test_initialize_metadata
     parser = util_parser ":unhandled: \n"
 
-    assert_includes @top_level.metadata, 'unhandled'
+    assert_includes @file.metadata, 'unhandled'
 
     assert_empty parser.content
   end
@@ -44,7 +44,7 @@ Regular expressions (<i>regexp</i>s) are patterns which describe the
 contents of a string.
     TEXT
 
-    assert_equal expected, @top_level.comment.text
+    assert_equal expected, @file.comment.text
   end
 
   # RDoc stops processing comments if it finds a comment line CONTAINING
@@ -79,7 +79,7 @@ contents of a string.
 
     expected = "foo\n\n\nbaz"
 
-    assert_equal expected, @top_level.comment.text
+    assert_equal expected, @file.comment.text
   end
 
   def test_remove_private_comments_rule
@@ -89,7 +89,7 @@ contents of a string.
 
     expected = "foo\n---\nbar"
 
-    assert_equal expected, @top_level.comment.text
+    assert_equal expected, @file.comment.text
   end
 
   def test_remove_private_comments_star
@@ -97,7 +97,7 @@ contents of a string.
 
     parser.scan
 
-    assert_equal "* foo\n* bar", @top_level.comment.text
+    assert_equal "* foo\n* bar", @file.comment.text
   end
 
   def test_scan
@@ -105,11 +105,11 @@ contents of a string.
 
     parser.scan
 
-    assert_equal 'it *really* works', @top_level.comment.text
+    assert_equal 'it *really* works', @file.comment.text
   end
 
   def util_parser(content)
-    RDoc::Parser::Simple.new @top_level, content, @options, @stats
+    RDoc::Parser::Simple.new @file, content, @options, @stats
   end
 
 end

@@ -556,8 +556,8 @@ class RDoc::Options
 
   def check_files
     @files.delete_if do |file|
-      if File.exist? file then
-        if File.readable? file then
+      if ::File.exist? file then
+        if ::File.readable? file then
           false
         else
           warn "file '#{file}' not readable"
@@ -726,7 +726,7 @@ class RDoc::Options
 
     opts = OptionParser.new do |opt|
       @option_parser = opt
-      opt.program_name = File.basename $0
+      opt.program_name = ::File.basename $0
       opt.version = RDoc::VERSION
       opt.release = nil
       opt.summary_indent = ' ' * 4
@@ -789,17 +789,17 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.accept Directory do |directory|
-        directory = File.expand_path directory
+        directory = ::File.expand_path directory
 
-        raise OptionParser::InvalidArgument unless File.directory? directory
+        raise OptionParser::InvalidArgument unless ::File.directory? directory
 
         directory
       end
 
       opt.accept Path do |path|
-        path = File.expand_path path
+        path = ::File.expand_path path
 
-        raise OptionParser::InvalidArgument unless File.exist? path
+        raise OptionParser::InvalidArgument unless ::File.exist? path
 
         path
       end
@@ -810,9 +810,9 @@ Usage: #{opt.program_name} [options] [names...]
                 end
 
         paths.map do |path|
-          path = File.expand_path path
+          path = ::File.expand_path path
 
-          raise OptionParser::InvalidArgument unless File.exist? path
+          raise OptionParser::InvalidArgument unless ::File.exist? path
 
           path
         end
@@ -1349,12 +1349,12 @@ Usage: #{opt.program_name} [options] [names...]
   # Finds the template dir for +template+
 
   def template_dir_for(template)
-    template_path = File.join 'rdoc', 'generator', 'template', template
+    template_path = ::File.join 'rdoc', 'generator', 'template', template
 
     $LOAD_PATH.map do |path|
-      File.join File.expand_path(path), template_path
+      ::File.join ::File.expand_path(path), template_path
     end.find do |dir|
-      File.directory? dir
+      ::File.directory? dir
     end
   end
 
@@ -1388,7 +1388,7 @@ Usage: #{opt.program_name} [options] [names...]
   def write_options
     RDoc.load_yaml
 
-    File.open '.rdoc_options', 'w' do |io|
+    ::File.open '.rdoc_options', 'w' do |io|
       io.set_encoding Encoding::UTF_8
 
       io.print to_yaml
@@ -1400,13 +1400,13 @@ Usage: #{opt.program_name} [options] [names...]
   # new RDoc::Options instance.
 
   def self.load_options
-    options_file = File.expand_path '.rdoc_options'
-    return RDoc::Options.new unless File.exist? options_file
+    options_file = ::File.expand_path '.rdoc_options'
+    return RDoc::Options.new unless ::File.exist? options_file
 
     RDoc.load_yaml
 
     begin
-      options = YAML.safe_load File.read('.rdoc_options'), permitted_classes: [RDoc::Options, Symbol]
+      options = YAML.safe_load ::File.read('.rdoc_options'), permitted_classes: [RDoc::Options, Symbol]
     rescue Psych::SyntaxError
       raise RDoc::Error, "#{options_file} is not a valid rdoc options file"
     end

@@ -174,11 +174,11 @@ class RDoc::RDoc
 
     if @options.dry_run then
       # do nothing
-    elsif File.exist? dir then
-      error "#{dir} exists and is not a directory" unless File.directory? dir
+    elsif ::File.exist? dir then
+      error "#{dir} exists and is not a directory" unless ::File.directory? dir
 
       begin
-        File.open flag_file do |io|
+        ::File.open flag_file do |io|
           unless force then
             Time.parse io.gets
 
@@ -217,7 +217,7 @@ option)
       time = Time.at(ENV['SOURCE_DATE_EPOCH'].to_i).gmtime
     end
 
-    File.open output_flag_file(op_dir), "w" do |f|
+    ::File.open output_flag_file(op_dir), "w" do |f|
       f.puts time.rfc2822
       last.each do |n, t|
         f.puts "#{n}\t#{t.rfc2822}"
@@ -229,7 +229,7 @@ option)
   # Return the path name of the flag file in an output directory.
 
   def output_flag_file(op_dir)
-    File.join op_dir, "created.rid"
+    ::File.join op_dir, "created.rid"
   end
 
   ##
@@ -239,12 +239,12 @@ option)
 
   def parse_dot_doc_file(in_dir, filename)
     # read and strip comments
-    patterns = File.read(filename).gsub(/#.*/, '')
+    patterns = ::File.read(filename).gsub(/#.*/, '')
 
     result = {}
 
     patterns.split(' ').each do |patt|
-      candidates = Dir.glob(File.join(in_dir, patt))
+      candidates = Dir.glob(::File.join(in_dir, patt))
       result.update normalized_file_list(candidates, false, @options.exclude)
     end
 
@@ -271,7 +271,7 @@ option)
       rel_file_name = rel_file_name.sub(/^\.\//, '')
       next if rel_file_name.end_with? 'created.rid'
       next if exclude_pattern && exclude_pattern =~ rel_file_name
-      stat = File.stat rel_file_name rescue next
+      stat = ::File.stat rel_file_name rescue next
 
       case type = stat.ftype
       when "file" then
@@ -284,15 +284,15 @@ option)
       when "directory" then
         next if UNCONDITIONALLY_SKIPPED_DIRECTORIES.include?(rel_file_name)
 
-        basename = File.basename(rel_file_name)
+        basename = ::File.basename(rel_file_name)
         next if options.skip_tests && TEST_SUITE_DIRECTORY_NAMES.include?(basename)
 
-        created_rid = File.join rel_file_name, "created.rid"
-        next if File.file? created_rid
+        created_rid = ::File.join rel_file_name, "created.rid"
+        next if ::File.file? created_rid
 
-        dot_doc = File.join rel_file_name, RDoc::DOT_DOC_FILENAME
+        dot_doc = ::File.join rel_file_name, RDoc::DOT_DOC_FILENAME
 
-        if File.file? dot_doc then
+        if ::File.file? dot_doc then
           file_list.update(parse_dot_doc_file(rel_file_name, dot_doc))
         else
           file_list.update(list_files_in_directory(rel_file_name))
@@ -312,13 +312,13 @@ option)
   # for .document files.
 
   def list_files_in_directory(dir)
-    files = Dir.glob File.join(dir, "*")
+    files = Dir.glob ::File.join(dir, "*")
 
     normalized_file_list files, false, @options.exclude
   end
 
   ##
-  # Parses +filename+ and returns an RDoc::TopLevel
+  # Parses +filename+ and returns an RDoc::File
 
   def parse_file(filename)
     encoding = @options.encoding
@@ -345,20 +345,20 @@ option)
         relative_path.relative_path_from @options.page_dir
     end
 
-    top_level = @store.add_file filename, relative_name: relative_path.to_s
+    file = @store.add_file filename, relative_name: relative_path.to_s
 
-    parser = RDoc::Parser.for top_level, content, @options, @stats
+    parser = RDoc::Parser.for file, content, @options, @stats
 
     return unless parser
 
     parser.scan
 
     # restart documentation for the classes & modules found
-    top_level.classes_or_modules.each do |cm|
+    file.classes_or_modules.each do |cm|
       cm.done_documenting = false
     end
 
-    top_level
+    file
 
   rescue Errno::EACCES => e
     $stderr.puts <<-EOF
@@ -422,7 +422,7 @@ The internal error was:
     files.reject do |file, *|
       file =~ /\.(?:class|eps|erb|scpt\.txt|svg|ttf|yml)$/i or
         (file =~ /tags$/i and
-         /\A(\f\n[^,]+,\d+$|!_TAG_)/.match?(File.binread(file, 100)))
+         /\A(\f\n[^,]+,\d+$|!_TAG_)/.match?(::File.binread(file, 100)))
     end
   end
 

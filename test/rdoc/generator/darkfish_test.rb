@@ -12,15 +12,15 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     @options = RDoc::Options.new
     @options.option_parser = OptionParser.new
 
-    @tmpdir = File.join Dir.tmpdir, "test_rdoc_generator_darkfish_#{$$}"
+    @tmpdir = ::File.join Dir.tmpdir, "test_rdoc_generator_darkfish_#{$$}"
     FileUtils.mkdir_p @tmpdir
     Dir.chdir @tmpdir
     @options.op_dir = @tmpdir
     @options.generator = RDoc::Generator::Darkfish
 
     $LOAD_PATH.each do |path|
-      darkfish_dir = File.join path, 'rdoc/generator/template/darkfish/'
-      next unless File.directory? darkfish_dir
+      darkfish_dir = ::File.join path, 'rdoc/generator/template/darkfish/'
+      next unless ::File.directory? darkfish_dir
       @options.template_dir = darkfish_dir
       break
     end
@@ -30,16 +30,16 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     @g = @options.generator.new @store, @options
     @rdoc.generator = @g
 
-    @top_level = @store.add_file 'file.rb'
-    @top_level.parser = RDoc::Parser::Ruby
-    @klass = @top_level.add_class RDoc::NormalClass, 'Klass'
+    @file = @store.add_file 'file.rb'
+    @file.parser = RDoc::Parser::Ruby
+    @klass = @file.add_class RDoc::NormalClass, 'Klass'
 
     @alias_constant = RDoc::Constant.new 'A', nil, ''
-    @alias_constant.record_location @top_level
+    @alias_constant.record_location @file
 
-    @top_level.add_constant @alias_constant
+    @file.add_constant @alias_constant
 
-    @klass.add_module_alias @klass, @klass.name, @alias_constant, @top_level
+    @klass.add_module_alias @klass, @klass.name, @alias_constant, @file
 
     @meth = RDoc::AnyMethod.new nil, 'method'
     @meth_bang = RDoc::AnyMethod.new nil, 'method!'
@@ -52,7 +52,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     @klass.add_method @meth_with_html_tag_yield
     @klass.add_attribute @attr
 
-    @ignored = @top_level.add_class RDoc::NormalClass, 'Ignored'
+    @ignored = @file.add_class RDoc::NormalClass, 'Ignored'
     @ignored.ignore
 
     @store.complete :private
@@ -70,10 +70,10 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
   end
 
   def test_generate
-    top_level = @store.add_file 'file.rb'
-    top_level.add_class @klass.class, @klass.name
+    file = @store.add_file 'file.rb'
+    file.add_class @klass.class, @klass.name
     @klass.add_class RDoc::NormalClass, 'Inner'
-    @klass.add_comment <<~RDOC, top_level
+    @klass.add_comment <<~RDOC, file
     = Heading 1
     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
     == Heading 1.1
@@ -107,14 +107,14 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
 
     encoding = Regexp.escape Encoding::UTF_8.name
 
-    assert_match %r%<meta charset="#{encoding}">%, File.binread('index.html')
-    assert_match %r%<meta charset="#{encoding}">%, File.binread('Object.html')
+    assert_match %r%<meta charset="#{encoding}">%, ::File.binread('index.html')
+    assert_match %r%<meta charset="#{encoding}">%, ::File.binread('Object.html')
 
-    refute_match(/Ignored/, File.binread('index.html'))
-    summary = File.binread('index.html')[%r[<summary.*Klass\.html.*</summary>.*</details>]m]
+    refute_match(/Ignored/, ::File.binread('index.html'))
+    summary = ::File.binread('index.html')[%r[<summary.*Klass\.html.*</summary>.*</details>]m]
     assert_match(%r[Klass/Inner\.html".*>Inner<], summary)
 
-    klass = File.binread('Klass.html')
+    klass = ::File.binread('Klass.html')
     klassnav = klass[%r[<div class="nav-section">.*]m]
     assert_match(
       %r[<li>\s*<details open>\s*<summary>\s*<a href=\S+>Heading 1</a>\s*</summary>\s*<ul]m,
@@ -127,7 +127,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
 
     assert_match(/<h1 id="class-Klass-label-Heading\+1"><a href="#class-Klass-label-Heading\+1">Heading 1<\/a>(?!\.)/,
                  klass[%r[<section class=\"description\">.*</section>]m])
-    toc = File.binread('table_of_contents.html')
+    toc = ::File.binread('table_of_contents.html')
     assert_match(
       %r[<a\s+href="Klass\.html#class-Klass-label-Heading\+1">Heading 1</a>]m,
       toc[%r[<h2\s+id=\"classes\">.*(?=<h2\b)]m][%r[<a\s+href="Klass\.html".*(?=</li\b)]m]
@@ -135,8 +135,8 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
   end
 
   def test_generate_index_with_main_page
-    top_level = @store.add_file 'file.rb'
-    top_level.comment = <<~RDOC
+    file = @store.add_file 'file.rb'
+    file.comment = <<~RDOC
     = Heading 1
     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
     == Heading 1.1
@@ -168,7 +168,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     assert_hard_link 'fonts/SourceCodePro-Bold.ttf'
     assert_hard_link 'fonts/SourceCodePro-Regular.ttf'
 
-    index_html = File.binread('index.html')
+    index_html = ::File.binread('index.html')
 
     assert_include index_html, "<h3>Table of Contents</h3>"
     assert_include index_html, '<h1 id="label-Heading+1"><a href="#label-Heading+1">Heading 1</a>'
@@ -177,8 +177,8 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
   end
 
   def test_generate_index_without_main_page
-    top_level = @store.add_file 'file.rb'
-    top_level.comment = <<~RDOC
+    file = @store.add_file 'file.rb'
+    file.comment = <<~RDOC
     = Heading 1
     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
     == Heading 1.1
@@ -209,7 +209,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     assert_hard_link 'fonts/SourceCodePro-Bold.ttf'
     assert_hard_link 'fonts/SourceCodePro-Regular.ttf'
 
-    index_html = File.binread('index.html')
+    index_html = ::File.binread('index.html')
 
     # If there is no main page, the index page should not have a table of contents
     assert_not_include index_html, "<h3>Table of Contents</h3>"
@@ -222,21 +222,21 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     @g.generate
     assert_file 'outer_rdoc.html'
     assert_file 'outer/inner_rdoc.html'
-    index = File.binread('index.html')
+    index = ::File.binread('index.html')
     re = %r[<summary><a href="\./outer_rdoc\.html">outer</a></summary>.*?</details>]m
     assert_match(re, index)
     summary = index[re]
     assert_match %r[<a href="\./outer/inner_rdoc.html">inner</a>], summary
     re = %r[<details open><summary><a href="\./outer_rdoc\.html">outer</a></summary>.*?</details>]m
-    assert_match(re, File.binread('outer_rdoc.html'))
+    assert_match(re, ::File.binread('outer_rdoc.html'))
     re = %r[<details open><summary><a href="\.\./outer_rdoc\.html">outer</a></summary>.*?</details>]m
-    assert_match(re, File.binread('outer/inner_rdoc.html'))
+    assert_match(re, ::File.binread('outer/inner_rdoc.html'))
   end
 
   def test_generate_dry_run
     @g.dry_run = true
-    top_level = @store.add_file 'file.rb'
-    top_level.add_class @klass.class, @klass.name
+    file = @store.add_file 'file.rb'
+    file.add_class @klass.class, @klass.name
 
     @g.generate
 
@@ -251,8 +251,8 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     FileUtils.touch 'file/file.txt'
 
     @options.static_path = [
-      File.expand_path('dir'),
-      File.expand_path('file/file.txt'),
+      ::File.expand_path('dir'),
+      ::File.expand_path('file/file.txt'),
     ]
 
     @g.generate
@@ -265,7 +265,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     FileUtils.mkdir 'static'
     FileUtils.touch 'static/image.png'
 
-    @options.static_path = [File.expand_path('static')]
+    @options.static_path = [::File.expand_path('static')]
     @g.dry_run = true
 
     @g.generate
@@ -274,8 +274,8 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
   end
 
   def test_install_rdoc_static_file
-    src = Pathname File.expand_path(__FILE__, @pwd)
-    dst = File.join @tmpdir, File.basename(src)
+    src = Pathname ::File.expand_path(__FILE__, @pwd)
+    dst = ::File.join @tmpdir, ::File.basename(src)
     options = {}
 
     @g.install_rdoc_static_file src, dst, options
@@ -286,7 +286,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
 
   def test_install_rdoc_static_file_missing
     src = Pathname(__FILE__) + 'nonexistent'
-    dst = File.join @tmpdir, File.basename(src)
+    dst = ::File.join @tmpdir, ::File.basename(src)
     options = {}
 
     @g.install_rdoc_static_file src, dst, options
@@ -299,7 +299,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
 
     assert_equal [@klass_alias, @ignored, @klass, @object],
                  @g.classes.sort_by { |klass| klass.full_name }
-    assert_equal [@top_level],                           @g.files
+    assert_equal [@file],                           @g.files
     assert_equal [@meth, @meth, @meth_bang, @meth_bang, @meth_with_html_tag_yield, @meth_with_html_tag_yield], @g.methods
     assert_equal [@klass_alias, @klass, @object], @g.modsort
   end
@@ -333,12 +333,12 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
   end
 
   def test_generated_method_with_html_tag_yield
-    top_level = @store.add_file 'file.rb'
-    top_level.add_class @klass.class, @klass.name
+    file = @store.add_file 'file.rb'
+    file.add_class @klass.class, @klass.name
 
     @g.generate
 
-    path = File.join @tmpdir, 'A.html'
+    path = ::File.join @tmpdir, 'A.html'
 
     f = open(path)
     internal_file = f.read
@@ -353,12 +353,12 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
   def test_generated_filename_with_html_tag
     filename = '"><em>should be escaped'
     begin # in @tmpdir
-      File.write(filename, '')
+      ::File.write(filename, '')
     rescue SystemCallError
       # ", <, > chars are prohibited as filename
       return
     else
-      File.unlink(filename)
+      ::File.unlink(filename)
     end
     @store.add_file filename
     doc = @store.all_files.last
@@ -367,7 +367,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     @g.generate
 
     Dir.glob("*.html", base: @tmpdir) do |html|
-      File.binread(File.join(@tmpdir, html)).scan(/.*should be escaped.*/) do |line|
+      ::File.binread(::File.join(@tmpdir, html)).scan(/.*should be escaped.*/) do |line|
         assert_not_include line, "<em>", html
       end
     end
@@ -375,9 +375,9 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
 
   def test_template_stylesheets
     css = Tempfile.create(%W'hoge .css', Dir.mktmpdir('tmp', '.'))
-    File.write(css, '')
+    ::File.write(css, '')
     css.close
-    base = File.basename(css)
+    base = ::File.basename(css)
     refute_file(base)
 
     @options.template_stylesheets << css
@@ -385,13 +385,13 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     @g.generate
 
     assert_file base
-    assert_include File.binread('index.html'), %Q[href="./#{base}"]
+    assert_include ::File.binread('index.html'), %Q[href="./#{base}"]
   end
 
   def test_html_lang
     @g.generate
 
-    content = File.binread("index.html")
+    content = ::File.binread("index.html")
     assert_include(content, '<html lang="en">')
   end
 
@@ -399,7 +399,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     @options.locale = RDoc::I18n::Locale.new 'ja'
     @g.generate
 
-    content = File.binread("index.html")
+    content = ::File.binread("index.html")
     assert_include(content, '<html lang="ja">')
   end
 
@@ -408,7 +408,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     @options.title = title
     @g.generate
 
-    assert_main_title(File.binread('index.html'), title)
+    assert_main_title(::File.binread('index.html'), title)
   end
 
   def test_title_escape
@@ -416,28 +416,28 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     @options.title = title
     @g.generate
 
-    assert_main_title(File.binread('index.html'), title)
+    assert_main_title(::File.binread('index.html'), title)
   end
 
   def test_meta_tags_for_index
     @options.title = "My awesome Ruby project"
     @g.generate
 
-    content = File.binread("index.html")
+    content = ::File.binread("index.html")
 
     assert_include(content, '<meta name="keywords" content="ruby,documentation,My awesome Ruby project">')
     assert_include(content, '<meta name="description" content="Documentation for My awesome Ruby project">')
   end
 
   def test_meta_tags_for_classes
-    top_level = @store.add_file("file.rb")
-    top_level.add_class(@klass.class, @klass.name)
+    file = @store.add_file("file.rb")
+    file.add_class(@klass.class, @klass.name)
     inner = @klass.add_class(RDoc::NormalClass, "Inner")
-    inner.add_comment("This is a normal class. It is fully documented.", top_level)
+    inner.add_comment("This is a normal class. It is fully documented.", file)
 
     @g.generate
 
-    content = File.binread("Klass/Inner.html")
+    content = ::File.binread("Klass/Inner.html")
     assert_include(content, '<meta name="keywords" content="ruby,class,Klass::Inner">')
     assert_include(
       content,
@@ -446,8 +446,8 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
   end
 
   def test_meta_tags_for_rdoc_files
-    top_level = @store.add_file("CONTRIBUTING.rdoc", parser: RDoc::Parser::Simple)
-    top_level.comment = <<~RDOC
+    file = @store.add_file("CONTRIBUTING.rdoc", parser: RDoc::Parser::Simple)
+    file.comment = <<~RDOC
       = Contributing
 
       Here are the instructions for contributing. Begin by installing Ruby.
@@ -455,7 +455,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
 
     @g.generate
 
-    content = File.binread("CONTRIBUTING_rdoc.html")
+    content = ::File.binread("CONTRIBUTING_rdoc.html")
     assert_include(content, '<meta name="keywords" content="ruby,documentation,CONTRIBUTING">')
     assert_include(
       content,
@@ -465,8 +465,8 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
   end
 
   def test_meta_tags_for_markdown_files_paragraph
-    top_level = @store.add_file("README.md", parser: RDoc::Parser::Simple)
-    top_level.comment = <<~MARKDOWN
+    file = @store.add_file("README.md", parser: RDoc::Parser::Simple)
+    file.comment = <<~MARKDOWN
       # Distributed Ruby: dRuby
 
       dRuby is a distributed object system for Ruby.  It allows an object in one
@@ -475,7 +475,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
 
     @g.generate
 
-    content = File.binread("README_md.html")
+    content = ::File.binread("README_md.html")
     assert_include(
       content,
       "<meta name=\"description\" content=\"" \
@@ -486,8 +486,8 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
   end
 
   def test_meta_tags_for_markdown_files
-    top_level = @store.add_file("MyPage.md", parser: RDoc::Parser::Markdown)
-    top_level.comment = <<~MARKDOWN
+    file = @store.add_file("MyPage.md", parser: RDoc::Parser::Markdown)
+    file.comment = <<~MARKDOWN
       # MyPage
 
       This is a comment
@@ -495,7 +495,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
 
     @g.generate
 
-    content = File.binread("MyPage_md.html")
+    content = ::File.binread("MyPage_md.html")
     assert_include(content, '<meta name="keywords" content="ruby,documentation,MyPage">')
     assert_include(
       content,
@@ -504,25 +504,25 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
   end
 
   def test_meta_tags_for_raw_pages
-    top_level = @store.add_file("MyPage", parser: RDoc::Parser::Simple)
+    file = @store.add_file("MyPage", parser: RDoc::Parser::Simple)
     comment = RDoc::Comment.new('this is a comment')
     comment.document = RDoc::Markup::Document.new(RDoc::Markup::Paragraph.new('this is a comment'))
-    top_level.comment = comment
+    file.comment = comment
 
     @g.generate
 
-    content = File.binread("MyPage.html")
+    content = ::File.binread("MyPage.html")
     assert_include(content, '<meta name="keywords" content="ruby,documentation,MyPage">')
     assert_include(content, '<meta name="description" content="MyPage: this is a comment">')
   end
 
   def test_meta_tags_for_empty_document
-    top_level = @store.add_file("MyPage", parser: RDoc::Parser::Simple)
-    top_level.comment = RDoc::Comment.from_document(RDoc::Markup::Document.new)
+    file = @store.add_file("MyPage", parser: RDoc::Parser::Simple)
+    file.comment = RDoc::Comment.from_document(RDoc::Markup::Document.new)
 
     @g.generate
 
-    content = File.binread("MyPage.html")
+    content = ::File.binread("MyPage.html")
     assert_include(content, '<meta name="keywords" content="ruby,documentation,MyPage">')
     assert_include(
       content,
@@ -534,20 +534,20 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     @store.options.canonical_root = @options.canonical_root = "https://docs.ruby-lang.org/en/master/"
     @g.generate
 
-    content = File.binread("index.html")
+    content = ::File.binread("index.html")
 
     assert_include(content, '<link rel="canonical" href="https://docs.ruby-lang.org/en/master/">')
   end
 
   def test_canonical_url_for_classes
-    top_level = @store.add_file("file.rb")
-    top_level.add_class(@klass.class, @klass.name)
+    file = @store.add_file("file.rb")
+    file.add_class(@klass.class, @klass.name)
     @klass.add_class(RDoc::NormalClass, "Inner")
 
     @store.options.canonical_root = @options.canonical_root = "https://docs.ruby-lang.org/en/master/"
     @g.generate
 
-    content = File.binread("Klass/Inner.html")
+    content = ::File.binread("Klass/Inner.html")
 
     assert_include(content, '<link rel="canonical" href="https://docs.ruby-lang.org/en/master/Klass/Inner.html">')
   end
@@ -558,7 +558,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     @store.options.canonical_root = @options.canonical_root = "https://docs.ruby-lang.org/en/master/"
     @g.generate
 
-    content = File.binread("CONTRIBUTING_rdoc.html")
+    content = ::File.binread("CONTRIBUTING_rdoc.html")
 
     assert_include(content, '<link rel="canonical" href="https://docs.ruby-lang.org/en/master/CONTRIBUTING_rdoc.html">')
   end
@@ -571,18 +571,18 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     assert_file filename
 
     src = @g.template_dir + '_head.rhtml'
-    dst = File.join @tmpdir, 'hardlinktest'
+    dst = ::File.join @tmpdir, 'hardlinktest'
 
     begin
       FileUtils.ln src, dst
-      nlink = File.stat(dst).nlink if File.identical? src, dst
+      nlink = ::File.stat(dst).nlink if ::File.identical? src, dst
       FileUtils.rm dst
       return if nlink == 1
     rescue SystemCallError
       return
     end
 
-    assert_operator File.stat(filename).nlink, :>, 1,
+    assert_operator ::File.stat(filename).nlink, :>, 1,
                     "#{filename} is not hard-linked"
   end
 

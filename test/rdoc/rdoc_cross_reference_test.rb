@@ -115,7 +115,7 @@ class RDocCrossReferenceTest < XrefTestCase
   end
 
   def test_resolve_file
-    assert_ref @top_level, 'xref_data.rb'
+    assert_ref @file, 'xref_data.rb'
   end
 
   def test_resolve_method

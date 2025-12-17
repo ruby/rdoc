@@ -81,7 +81,7 @@ class RDoc::Generator::JsonIndex
   ##
   # Where the search index lives in the generated output
 
-  SEARCH_INDEX_FILE = File.join 'js', 'search_index.js'
+  SEARCH_INDEX_FILE = ::File.join 'js', 'search_index.js'
 
   attr_reader :index # :nodoc:
 
@@ -94,7 +94,7 @@ class RDoc::Generator::JsonIndex
     @store            = parent_generator.store
     @options          = options
 
-    @template_dir = File.expand_path '../template/json_index', __FILE__
+    @template_dir = ::File.expand_path '../template/json_index', __FILE__
     @base_dir = @parent_generator.base_dir
 
     @classes = nil
@@ -151,7 +151,7 @@ class RDoc::Generator::JsonIndex
 
     Dir.chdir @template_dir do
       Dir['**/*.js'].each do |source|
-        dest = File.join out_dir, source
+        dest = ::File.join out_dir, source
 
         FileUtils.install source, dest, :mode => 0644, :preserve => true, :verbose => $DEBUG_RDOC
       end
@@ -176,7 +176,7 @@ class RDoc::Generator::JsonIndex
     debug_msg "Writing gzipped search index to %s" % outfile
 
     Zlib::GzipWriter.open(outfile) do |gz|
-      gz.mtime = File.mtime(search_index_file)
+      gz.mtime = ::File.mtime(search_index_file)
       gz.orig_name = search_index_file.basename.to_s
       gz.write search_index
       gz.close
@@ -194,7 +194,7 @@ class RDoc::Generator::JsonIndex
         debug_msg "Writing gzipped file to %s" % outfile
 
         Zlib::GzipWriter.open(outfile) do |gz|
-          gz.mtime = File.mtime(dest)
+          gz.mtime = ::File.mtime(dest)
           gz.orig_name = dest.basename.to_s
           gz.write data
           gz.close

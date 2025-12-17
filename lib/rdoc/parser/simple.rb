@@ -14,25 +14,25 @@ class RDoc::Parser::Simple < RDoc::Parser
   ##
   # Prepare to parse a plain file
 
-  def initialize(top_level, content, options, stats)
+  def initialize(file, content, options, stats)
     super
 
     preprocess = RDoc::Markup::PreProcess.new @file_name, @options.rdoc_include
 
     content = RDoc::Text.expand_tabs(@content)
-    @content, = preprocess.run_pre_processes(content, @top_level, 1, :simple)
+    @content, = preprocess.run_pre_processes(content, @file, 1, :simple)
   end
 
   ##
-  # Extract the file contents and attach them to the TopLevel as a comment
+  # Extract the file contents and attach them to the File as a comment
 
   def scan
     content = remove_coding_comment @content
 
-    comment = RDoc::Comment.new content, @top_level
+    comment = RDoc::Comment.new content, @file
 
-    @top_level.comment = comment
-    @top_level
+    @file.comment = comment
+    @file
   end
 
   ##

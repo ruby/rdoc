@@ -159,7 +159,7 @@ class RDocRdBlockParserTest < RDoc::TestCase
       io.flush
 
       str = <<-STR
-<<< #{File.basename io.path}
+<<< #{::File.basename io.path}
       STR
 
       assert_equal expected, parse(str)

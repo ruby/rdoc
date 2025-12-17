@@ -21,7 +21,7 @@ require 'ripper'
 require_relative 'ripper_state_lex'
 
 ##
-# Extracts code elements from a source file returning a TopLevel object
+# Extracts code elements from a source file returning a File object
 # containing the constituent file elements.
 #
 # This file is based on rtags
@@ -170,7 +170,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   ##
   # Creates a new Ruby parser.
 
-  def initialize(top_level, content, options, stats)
+  def initialize(file, content, options, stats)
     super
 
     content = handle_tab_width(content)
@@ -313,7 +313,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
             container.find_module_named rhs_name
           end
 
-    container.add_module_alias mod, rhs_name, constant, @top_level
+    container.add_module_alias mod, rhs_name, constant, @file
   end
 
   ##
@@ -354,7 +354,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     # class ::A -> A is in the top level
     if :on_op == name_t[:kind] and '::' == name_t[:text] then # bug
       name_t = get_tk
-      container = @top_level
+      container = @file
       given_name << '::'
     end
 
@@ -375,7 +375,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         else
           c = prev_container.add_module RDoc::NormalModule, name_t[:text]
           c.ignore unless prev_container.document_children
-          @top_level.add_to_classes_or_modules c
+          @file.add_to_classes_or_modules c
           c
         end
 
@@ -700,7 +700,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Creates a comment with the correct format
 
   def new_comment(comment, line_no = nil)
-    c = RDoc::Comment.new comment, @top_level, :ruby
+    c = RDoc::Comment.new comment, @file, :ruby
     c.line = line_no
     c.format = @markup
     c
@@ -890,7 +890,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     superclass = '::Object'
 
     if given_name =~ /^::/ then
-      declaration_context = @top_level
+      declaration_context = @file
       given_name = $'
     end
 
@@ -909,9 +909,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     read_documentation_modifiers cls, RDoc::CLASS_MODIFIERS
     record_location cls
 
-    cls.add_comment comment, @top_level
+    cls.add_comment comment, @file
 
-    @top_level.add_to_classes_or_modules cls
+    @file.add_to_classes_or_modules cls
     @stats.add_class cls
 
     suppress_parents container, declaration_context unless cls.document_self
@@ -931,7 +931,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     unless other then
       if name =~ /^::/ then
         name = $'
-        container = @top_level
+        container = @file
       end
 
       other = container.add_module RDoc::NormalModule, name
@@ -940,7 +940,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       # class << $gvar
       other.ignore if name.empty?
 
-      other.add_comment comment, @top_level
+      other.add_comment comment, @file
     end
 
     # notify :nodoc: all if not a constant-named class/module
@@ -951,7 +951,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       other.clear_comment
     end
 
-    @top_level.add_to_classes_or_modules other
+    @file.add_to_classes_or_modules other
     @stats.add_class other
 
     read_documentation_modifiers other, RDoc::CLASS_MODIFIERS
@@ -1007,7 +1007,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       new_modules.each do |prev_c, new_module|
         prev_c.add_module_by_normal_module new_module
         new_module.ignore unless prev_c.document_children
-        @top_level.add_to_classes_or_modules new_module
+        @file.add_to_classes_or_modules new_module
       end
     end
 
@@ -1140,7 +1140,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.start_collecting_tokens(:ruby)
     indent = RDoc::Parser::RipperStateLex::Token.new(1, 1, :on_sp, ' ' * column)
     position_comment = RDoc::Parser::RipperStateLex::Token.new(line_no, 1, :on_comment)
-    position_comment[:text] = "# File #{@top_level.relative_name}, line #{line_no}"
+    position_comment[:text] = "# File #{@file.relative_name}, line #{line_no}"
     newline = RDoc::Parser::RipperStateLex::Token.new(0, 0, :on_nl, "\n")
     meth.add_tokens [position_comment, newline, indent]
 
@@ -1183,7 +1183,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.start_collecting_tokens(:ruby)
     indent = RDoc::Parser::RipperStateLex::Token.new(1, 1, :on_sp, ' ' * column)
     position_comment = RDoc::Parser::RipperStateLex::Token.new(line_no, 1, :on_comment)
-    position_comment[:text] = "# File #{@top_level.relative_name}, line #{line_no}"
+    position_comment[:text] = "# File #{@file.relative_name}, line #{line_no}"
     newline = RDoc::Parser::RipperStateLex::Token.new(0, 0, :on_nl, "\n")
     meth.add_tokens [position_comment, newline, indent]
 
@@ -1366,7 +1366,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.start_collecting_tokens(:ruby)
     indent = RDoc::Parser::RipperStateLex::Token.new(1, 1, :on_sp, ' ' * column)
     position_comment = RDoc::Parser::RipperStateLex::Token.new(line_no, 1, :on_comment)
-    position_comment[:text] = "# File #{@top_level.relative_name}, line #{line_no}"
+    position_comment[:text] = "# File #{@file.relative_name}, line #{line_no}"
     newline = RDoc::Parser::RipperStateLex::Token.new(0, 0, :on_nl, "\n")
     meth.add_tokens [position_comment, newline, indent]
     meth.add_tokens @token_stream
@@ -1474,7 +1474,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.start_collecting_tokens(:ruby)
     indent = RDoc::Parser::RipperStateLex::Token.new(1, 1, :on_sp, ' ' * column)
     token = RDoc::Parser::RipperStateLex::Token.new(line_no, 1, :on_comment)
-    token[:text] = "# File #{@top_level.relative_name}, line #{line_no}"
+    token[:text] = "# File #{@file.relative_name}, line #{line_no}"
     newline = RDoc::Parser::RipperStateLex::Token.new(0, 0, :on_nl, "\n")
     meth.add_tokens [token, newline, indent]
     meth.add_tokens @token_stream
@@ -1610,7 +1610,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     elsif (:on_kw == name_t[:kind]) && ('true' == name_t[:text] || 'false' == name_t[:text] || 'nil' == name_t[:text]) then
       klass_name = "#{name_t[:text].capitalize}Class"
       container = @store.find_class_named klass_name
-      container ||= @top_level.add_class RDoc::NormalClass, klass_name
+      container ||= @file.add_class RDoc::NormalClass, klass_name
 
       name = name_t2[:text]
     else
@@ -1719,7 +1719,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     record_location mod
 
     read_documentation_modifiers mod, RDoc::CLASS_MODIFIERS
-    mod.add_comment comment, @top_level
+    mod.add_comment comment, @file
     parse_statements mod
 
     # after end modifiers
@@ -1743,7 +1743,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     name = tk[:text][1..-2] if :on_tstring == tk[:kind]
 
     if name then
-      @top_level.add_require RDoc::Require.new(name, comment)
+      @file.add_require RDoc::Require.new(name, comment)
     else
       unget_tk tk
     end
@@ -1852,7 +1852,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
             look_for_directives_in container, comment
 
             if container.done_documenting then
-              throw :eof if RDoc::TopLevel === container
+              throw :eof if RDoc::File === container
               container.ongoing_visibility = save_visibility
             end
           end
@@ -2197,10 +2197,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def record_location(container) # :nodoc:
     case container
     when RDoc::ClassModule then
-      @top_level.add_to_classes_or_modules container
+      @file.add_to_classes_or_modules container
     end
 
-    container.record_location @top_level
+    container.record_location @file
   end
 
   ##
@@ -2211,7 +2211,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     catch :eof do
       begin
-        parse_top_level_statements @top_level
+        parse_top_level_statements @file
 
       rescue StandardError => e
         if @content.include?('<%') and @content.include?('%>') then
@@ -2247,7 +2247,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
     end
 
-    @top_level
+    @file
   end
 
   ##

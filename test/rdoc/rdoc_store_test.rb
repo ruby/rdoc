@@ -8,41 +8,41 @@ class RDocStoreTest < XrefTestCase
   def setup
     super
 
-    @tmpdir = File.join Dir.tmpdir, "test_rdoc_ri_store_#{$$}"
+    @tmpdir = ::File.join Dir.tmpdir, "test_rdoc_ri_store_#{$$}"
     @s = RDoc::RI::Store.new(RDoc::Options.new, path: @tmpdir)
 
-    @top_level = @s.add_file 'file.rb'
+    @file = @s.add_file 'file.rb'
 
     @page = @s.add_file 'README.txt', parser: RDoc::Parser::Simple
     @page.comment = RDoc::Comment.new 'This is a page', @page
 
-    @klass = @top_level.add_class RDoc::NormalClass, 'Object'
-    @klass.add_comment 'original', @top_level
-    @klass.record_location @top_level
+    @klass = @file.add_class RDoc::NormalClass, 'Object'
+    @klass.add_comment 'original', @file
+    @klass.record_location @file
 
     @cmeth = RDoc::AnyMethod.new nil, 'cmethod', singleton: true
-    @cmeth.record_location @top_level
+    @cmeth.record_location @file
 
     @meth_comment = RDoc::Comment.new 'method comment'
-    @meth_comment.location = @top_level
+    @meth_comment.location = @file
 
     @meth = RDoc::AnyMethod.new nil, 'method'
-    @meth.record_location @top_level
+    @meth.record_location @file
     @meth.comment = @meth_comment
 
     @meth_bang = RDoc::AnyMethod.new nil, 'method!'
-    @meth_bang.record_location @top_level
+    @meth_bang.record_location @file
 
     @meth_bang_alias = RDoc::Alias.new nil, 'method!', 'method_bang', ''
-    @meth_bang_alias.record_location @top_level
+    @meth_bang_alias.record_location @file
 
     @meth_bang.add_alias @meth_bang_alias, @klass
 
     @attr_comment = RDoc::Comment.new 'attribute comment'
-    @attr_comment.location = @top_level
+    @attr_comment.location = @file
 
     @attr = RDoc::Attr.new nil, 'attr', 'RW', ''
-    @attr.record_location @top_level
+    @attr.record_location @file
     @attr.comment = @attr_comment
 
     @klass.add_method @cmeth
@@ -52,16 +52,16 @@ class RDocStoreTest < XrefTestCase
 
     @nest_klass = @klass.add_class RDoc::NormalClass, 'SubClass'
     @nest_meth = RDoc::AnyMethod.new nil, 'method'
-    @nest_meth.record_location @top_level
+    @nest_meth.record_location @file
 
     @nest_incl = RDoc::Include.new 'Incl', ''
-    @nest_incl.record_location @top_level
+    @nest_incl.record_location @file
 
     @nest_klass.add_method @nest_meth
     @nest_klass.add_include @nest_incl
 
-    @mod = @top_level.add_module RDoc::NormalModule, 'Mod'
-    @mod.record_location @top_level
+    @mod = @file.add_module RDoc::NormalModule, 'Mod'
+    @mod.record_location @file
   end
 
   def using_prism_ruby_parser?
@@ -135,30 +135,30 @@ class RDocStoreTest < XrefTestCase
   end
 
   def test_add_file
-    top_level = @store.add_file 'file.rb'
+    file = @store.add_file 'file.rb'
 
-    assert_kind_of RDoc::TopLevel, top_level
-    assert_equal @store, top_level.store
-    assert_equal 'file.rb', top_level.name
-    assert_includes @store.all_files, top_level
+    assert_kind_of RDoc::File, file
+    assert_equal @store, file.store
+    assert_equal 'file.rb', file.name
+    assert_includes @store.all_files, file
 
-    assert_same top_level, @store.add_file('file.rb')
-    refute_same top_level, @store.add_file('other.rb')
+    assert_same file, @store.add_file('file.rb')
+    refute_same file, @store.add_file('other.rb')
   end
 
   def test_add_file_relative
-    top_level = @store.add_file 'path/file.rb', relative_name: 'file.rb'
+    file = @store.add_file 'path/file.rb', relative_name: 'file.rb'
 
-    assert_kind_of RDoc::TopLevel, top_level
-    assert_equal @store, top_level.store
+    assert_kind_of RDoc::File, file
+    assert_equal @store, file.store
 
-    assert_equal 'path/file.rb', top_level.absolute_name
-    assert_equal 'file.rb',      top_level.relative_name
+    assert_equal 'path/file.rb', file.absolute_name
+    assert_equal 'file.rb',      file.relative_name
 
-    assert_includes @store.all_files, top_level
+    assert_includes @store.all_files, file
 
-    assert_same top_level, @store.add_file('file.rb')
-    refute_same top_level, @store.add_file('other.rb')
+    assert_same file, @store.add_file('file.rb')
+    refute_same file, @store.add_file('other.rb')
   end
 
   def test_all_classes_and_modules
@@ -197,9 +197,9 @@ class RDocStoreTest < XrefTestCase
   end
 
   def test_class_file
-    assert_equal File.join(@tmpdir, 'Object', 'cdesc-Object.ri'),
+    assert_equal ::File.join(@tmpdir, 'Object', 'cdesc-Object.ri'),
                  @s.class_file('Object')
-    assert_equal File.join(@tmpdir, 'Object', 'SubClass', 'cdesc-SubClass.ri'),
+    assert_equal ::File.join(@tmpdir, 'Object', 'SubClass', 'cdesc-SubClass.ri'),
                  @s.class_file('Object::SubClass')
   end
 
@@ -212,8 +212,8 @@ class RDocStoreTest < XrefTestCase
   end
 
   def test_class_path
-    assert_equal File.join(@tmpdir, 'Object'), @s.class_path('Object')
-    assert_equal File.join(@tmpdir, 'Object', 'SubClass'),
+    assert_equal ::File.join(@tmpdir, 'Object'), @s.class_path('Object')
+    assert_equal ::File.join(@tmpdir, 'Object', 'SubClass'),
                  @s.class_path('Object::SubClass')
   end
 
@@ -234,7 +234,7 @@ class RDocStoreTest < XrefTestCase
 
   def test_complete
     a1 = RDoc::Constant.new 'A1', '', ''
-    @c2.add_module_alias @c2_c3, @c2_c3.name, a1, @top_level
+    @c2.add_module_alias @c2_c3, @c2_c3.name, a1, @file
 
     @store.complete :public
 
@@ -245,8 +245,8 @@ class RDocStoreTest < XrefTestCase
   end
 
   def test_complete_nodoc
-    c_nodoc = @top_level.add_class RDoc::NormalClass, 'Nodoc'
-    c_nodoc.record_location @top_level
+    c_nodoc = @file.add_class RDoc::NormalClass, 'Nodoc'
+    c_nodoc.record_location @file
     c_nodoc.document_self = nil
 
     @s.complete :nodoc
@@ -274,7 +274,7 @@ class RDocStoreTest < XrefTestCase
     assert_equal @klass, klass
 
     assert_empty klass.comment_location
-    assert_equal @top_level, klass.parent
+    assert_equal @file, klass.parent
 
     assert_includes @s.c_enclosure_classes, 'cObject'
   end
@@ -365,7 +365,7 @@ class RDocStoreTest < XrefTestCase
     assert_equal "ruby site", @s.friendly_path
 
     @s.type = :home
-    assert_equal File.expand_path("~/.local/share/rdoc"), @s.friendly_path
+    assert_equal ::File.expand_path("~/.local/share/rdoc"), @s.friendly_path
 
     @s.type = :gem
     @s.path = "#{@tmpdir}/gem_repository/doc/gem_name-1.0/ri"
@@ -401,7 +401,7 @@ class RDocStoreTest < XrefTestCase
 
     assert_equal [@klass, @nest_klass], s.all_classes.sort
     assert_equal [@mod],                s.all_modules.sort
-    assert_equal [@page, @top_level],   s.all_files.sort
+    assert_equal [@page, @file],   s.all_files.sort
 
     methods = s.all_classes_and_modules.flat_map do |mod|
       mod.method_list
@@ -442,7 +442,7 @@ class RDocStoreTest < XrefTestCase
 
     Dir.mkdir @tmpdir
 
-    File.open File.join(@tmpdir, 'cache.ri'), 'wb' do |io|
+    ::File.open ::File.join(@tmpdir, 'cache.ri'), 'wb' do |io|
       Marshal.dump cache, io
     end
 
@@ -480,7 +480,7 @@ class RDocStoreTest < XrefTestCase
 
     Dir.mkdir @tmpdir
 
-    File.open File.join(@tmpdir, 'cache.ri'), 'wb' do |io|
+    ::File.open ::File.join(@tmpdir, 'cache.ri'), 'wb' do |io|
       Marshal.dump cache, io
     end
 
@@ -529,7 +529,7 @@ class RDocStoreTest < XrefTestCase
 
     Dir.mkdir @tmpdir
 
-    File.open File.join(@tmpdir, 'cache.ri'), 'wb' do |io|
+    ::File.open ::File.join(@tmpdir, 'cache.ri'), 'wb' do |io|
       Marshal.dump cache, io
     end
 
@@ -597,7 +597,7 @@ class RDocStoreTest < XrefTestCase
 
     file = @s.method_file @klass.full_name, @meth.full_name
 
-    File.open file, 'wb' do |io|
+    ::File.open file, 'wb' do |io|
       io.write "\x04\bU:\x14RDoc::AnyMethod[\x0Fi\x00I" +
                "\"\vmethod\x06:\x06EF\"\x11Klass#method0:\vpublic" +
                "o:\eRDoc::Markup::Document\x06:\v@parts[\x06" +
@@ -630,16 +630,16 @@ class RDocStoreTest < XrefTestCase
   end
 
   def test_method_file
-    assert_equal File.join(@tmpdir, 'Object', 'method-i.ri'),
+    assert_equal ::File.join(@tmpdir, 'Object', 'method-i.ri'),
                  @s.method_file('Object', 'Object#method')
 
-    assert_equal File.join(@tmpdir, 'Object', 'method%21-i.ri'),
+    assert_equal ::File.join(@tmpdir, 'Object', 'method%21-i.ri'),
                  @s.method_file('Object', 'Object#method!')
 
-    assert_equal File.join(@tmpdir, 'Object', 'SubClass', 'method%21-i.ri'),
+    assert_equal ::File.join(@tmpdir, 'Object', 'SubClass', 'method%21-i.ri'),
                  @s.method_file('Object::SubClass', 'Object::SubClass#method!')
 
-    assert_equal File.join(@tmpdir, 'Object', 'method-c.ri'),
+    assert_equal ::File.join(@tmpdir, 'Object', 'method-c.ri'),
                  @s.method_file('Object', 'Object::method')
   end
 
@@ -670,13 +670,13 @@ class RDocStoreTest < XrefTestCase
 
     @s.save
 
-    assert_directory File.join(@tmpdir, 'Object')
+    assert_directory ::File.join(@tmpdir, 'Object')
 
-    assert_file File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
-    assert_file File.join(@tmpdir, 'Object', 'method-i.ri')
-    assert_file File.join(@tmpdir, 'page-README_txt.ri')
+    assert_file ::File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
+    assert_file ::File.join(@tmpdir, 'Object', 'method-i.ri')
+    assert_file ::File.join(@tmpdir, 'page-README_txt.ri')
 
-    assert_file File.join(@tmpdir, 'cache.ri')
+    assert_file ::File.join(@tmpdir, 'cache.ri')
 
     expected = {
       :ancestors => {
@@ -699,7 +699,7 @@ class RDocStoreTest < XrefTestCase
 
     expected[:ancestors]['Object'] = %w[BasicObject]
 
-    File.open File.join(@tmpdir, 'cache.ri'), 'rb' do |io|
+    ::File.open ::File.join(@tmpdir, 'cache.ri'), 'rb' do |io|
       cache = Marshal.load io.read
 
       assert_equal expected, cache
@@ -732,7 +732,7 @@ class RDocStoreTest < XrefTestCase
 
     @s.save_cache
 
-    assert_file File.join(@tmpdir, 'cache.ri')
+    assert_file ::File.join(@tmpdir, 'cache.ri')
 
     c_class_variables = {
       'ext.c' => {
@@ -767,7 +767,7 @@ class RDocStoreTest < XrefTestCase
 
     expected[:ancestors]['Object'] = %w[BasicObject]
 
-    File.open File.join(@tmpdir, 'cache.ri'), 'rb' do |io|
+    ::File.open ::File.join(@tmpdir, 'cache.ri'), 'rb' do |io|
       cache = Marshal.load io.read
 
       assert_equal expected, cache
@@ -784,7 +784,7 @@ class RDocStoreTest < XrefTestCase
 
     @s.save_cache
 
-    refute_file File.join(@tmpdir, 'cache.ri')
+    refute_file ::File.join(@tmpdir, 'cache.ri')
   end
 
   def test_save_cache_duplicate_methods
@@ -808,8 +808,8 @@ class RDocStoreTest < XrefTestCase
   def test_save_class
     @s.save_class @klass
 
-    assert_directory File.join(@tmpdir, 'Object')
-    assert_file File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
+    assert_directory ::File.join(@tmpdir, 'Object')
+    assert_file ::File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
 
     assert_cache nil, nil, nil, %w[Object], 'Object' => OBJECT_ANCESTORS
 
@@ -821,8 +821,8 @@ class RDocStoreTest < XrefTestCase
 
     @s.save_class @klass
 
-    assert_directory File.join(@tmpdir, 'Object')
-    assert_file File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
+    assert_directory ::File.join(@tmpdir, 'Object')
+    assert_file ::File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
 
     assert_cache(nil, nil, nil, %w[Object])
 
@@ -841,7 +841,7 @@ class RDocStoreTest < XrefTestCase
     klass = RDoc::NormalClass.new 'Object'
 
     meth = klass.add_method RDoc::AnyMethod.new(nil, 'replace')
-    meth.record_location @top_level
+    meth.record_location @file
 
     # load original, save newly updated class
     @s = RDoc::RI::Store.new(RDoc::Options.new, path: @tmpdir)
@@ -873,15 +873,15 @@ class RDocStoreTest < XrefTestCase
 
     @s.save_class @klass
 
-    refute_file File.join(@tmpdir, 'Object')
-    refute_file File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
+    refute_file ::File.join(@tmpdir, 'Object')
+    refute_file ::File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
   end
 
   def test_save_class_loaded
     @s.save
 
-    assert_directory File.join(@tmpdir, 'Object')
-    assert_file      File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
+    assert_directory ::File.join(@tmpdir, 'Object')
+    assert_file      ::File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
 
     assert_file @s.method_file(@klass.full_name, @attr.full_name)
     assert_file @s.method_file(@klass.full_name, @cmeth.full_name)
@@ -915,7 +915,7 @@ class RDocStoreTest < XrefTestCase
     @s.save_class @klass
 
     klass = RDoc::NormalClass.new 'Object'
-    klass.add_comment 'new comment', @top_level
+    klass.add_comment 'new comment', @file
 
     s = RDoc::RI::Store.new(RDoc::Options.new, path: @tmpdir)
     s.save_class klass
@@ -923,7 +923,7 @@ class RDocStoreTest < XrefTestCase
     s = RDoc::RI::Store.new(RDoc::Options.new, path: @tmpdir)
 
     inner = @RM::Document.new @RM::Paragraph.new 'new comment'
-    inner.file = @top_level
+    inner.file = @file
 
     document = @RM::Document.new inner
 
@@ -963,8 +963,8 @@ class RDocStoreTest < XrefTestCase
   def test_save_class_methods
     @s.save_class @klass
 
-    assert_directory File.join(@tmpdir, 'Object')
-    assert_file File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
+    assert_directory ::File.join(@tmpdir, 'Object')
+    assert_file ::File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
 
     assert_cache nil, nil, nil, %w[Object], 'Object' => OBJECT_ANCESTORS
 
@@ -974,8 +974,8 @@ class RDocStoreTest < XrefTestCase
   def test_save_class_nested
     @s.save_class @nest_klass
 
-    assert_directory File.join(@tmpdir, 'Object', 'SubClass')
-    assert_file File.join(@tmpdir, 'Object', 'SubClass', 'cdesc-SubClass.ri')
+    assert_directory ::File.join(@tmpdir, 'Object', 'SubClass')
+    assert_file ::File.join(@tmpdir, 'Object', 'SubClass', 'cdesc-SubClass.ri')
 
     assert_cache({ 'Object::SubClass' => %w[method] }, {}, {},
                  %w[Object::SubClass], 'Object::SubClass' => %w[Incl Object])
@@ -984,8 +984,8 @@ class RDocStoreTest < XrefTestCase
   def test_save_method
     @s.save_method @klass, @meth
 
-    assert_directory File.join(@tmpdir, 'Object')
-    assert_file File.join(@tmpdir, 'Object', 'method-i.ri')
+    assert_directory ::File.join(@tmpdir, 'Object')
+    assert_file ::File.join(@tmpdir, 'Object', 'method-i.ri')
 
     assert_cache({ 'Object' => %w[method] }, {}, {}, [])
 
@@ -997,15 +997,15 @@ class RDocStoreTest < XrefTestCase
 
     @s.save_method @klass, @meth
 
-    refute_file File.join(@tmpdir, 'Object')
-    refute_file File.join(@tmpdir, 'Object', 'method-i.ri')
+    refute_file ::File.join(@tmpdir, 'Object')
+    refute_file ::File.join(@tmpdir, 'Object', 'method-i.ri')
   end
 
   def test_save_method_nested
     @s.save_method @nest_klass, @nest_meth
 
-    assert_directory File.join(@tmpdir, 'Object', 'SubClass')
-    assert_file File.join(@tmpdir, 'Object', 'SubClass', 'method-i.ri')
+    assert_directory ::File.join(@tmpdir, 'Object', 'SubClass')
+    assert_file ::File.join(@tmpdir, 'Object', 'SubClass', 'method-i.ri')
 
     assert_cache({ 'Object::SubClass' => %w[method] }, {}, {}, [])
   end
@@ -1013,15 +1013,15 @@ class RDocStoreTest < XrefTestCase
   def test_save_page
     @s.save_page @page
 
-    assert_file File.join(@tmpdir, 'page-README_txt.ri')
+    assert_file ::File.join(@tmpdir, 'page-README_txt.ri')
 
     assert_cache({}, {}, {}, [], {}, %w[README.txt])
   end
 
   def test_save_page_file
-    @s.save_page @top_level
+    @s.save_page @file
 
-    refute_file File.join(@tmpdir, 'page-file_rb.ri')
+    refute_file ::File.join(@tmpdir, 'page-file_rb.ri')
   end
 
   def test_source

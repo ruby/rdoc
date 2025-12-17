@@ -81,8 +81,8 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
 
     # HACK dup
     $LOAD_PATH.each do |path|
-      darkfish_dir = File.join path, 'rdoc/generator/template/darkfish/'
-      next unless File.directory? darkfish_dir
+      darkfish_dir = ::File.join path, 'rdoc/generator/template/darkfish/'
+      next unless ::File.directory? darkfish_dir
       @options.template_dir = darkfish_dir
       break
     end
@@ -90,7 +90,7 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
     @asset_dirs = {
       :darkfish   => darkfish_dir,
       :json_index =>
-        File.expand_path('../generator/template/json_index/', __FILE__),
+        ::File.expand_path('../generator/template/json_index/', __FILE__),
     }
   end
 
@@ -100,11 +100,11 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
   def asset(generator_name, req, res)
     asset_dir = @asset_dirs[generator_name]
 
-    asset_path = File.join asset_dir, req.path
+    asset_path = ::File.join asset_dir, req.path
 
     if_modified_since req, res, asset_path
 
-    res.body = File.read asset_path
+    res.body = ::File.read asset_path
 
     res.content_type = case req.path
                        when /\.css\z/ then 'text/css'
@@ -266,7 +266,7 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
   # file has been modified a Last-Modified header is added to +res+.
 
   def if_modified_since(req, res, path = nil)
-    last_modified = File.stat(path).mtime if path
+    last_modified = ::File.stat(path).mtime if path
 
     res['last-modified'] = last_modified.httpdate
 
@@ -292,7 +292,7 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
     extra_counter = 0
     ri_paths.map do |path, type|
       store = RDoc::Store.new(@options, path: path, type: type)
-      exists = File.exist? store.cache_path
+      exists = ::File.exist? store.cache_path
 
       case type
       when :gem then
@@ -441,7 +441,7 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
 
       store = RDoc::Store.new(@options, path: ri_dir, type: type)
 
-      return store if File.exist? store.cache_path
+      return store if ::File.exist? store.cache_path
 
       raise WEBrick::HTTPStatus::NotFound,
             "Could not find documentation for \"#{ERB::Util.html_escape(source_name)}\". Please run `gem rdoc --ri gem_name`"

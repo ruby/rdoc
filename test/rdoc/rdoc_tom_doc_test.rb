@@ -6,7 +6,7 @@ class RDocTomDocTest < RDoc::TestCase
   def setup
     super
 
-    @top_level = @store.add_file 'file.rb'
+    @file = @store.add_file 'file.rb'
 
     @TD = RDoc::TomDoc
     @td = @TD.new
@@ -66,7 +66,7 @@ here - something
         list(:NOTE,
           item(%w[here],
             para('something'))))
-    expected.file = @top_level
+    expected.file = @file
 
     assert_equal expected, c.parse
   end
@@ -114,7 +114,7 @@ here - something
         list(:NOTE,
           item(%w[here],
             para('something'))))
-    expected.file = @top_level
+    expected.file = @file
 
     assert_equal expected, c.parse
   end

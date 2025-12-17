@@ -61,7 +61,7 @@ module RDoc::Generator::Markup
   def canonical_url
     options = @store.options
     if path
-      File.join(options.canonical_root, path.to_s)
+      ::File.join(options.canonical_root, path.to_s)
     else
       options.canonical_root
     end
@@ -152,7 +152,7 @@ class RDoc::Context::Section
 
 end
 
-class RDoc::TopLevel
+class RDoc::File
 
   ##
   # Returns a URL for this source file on some web repository.  Use the -W

@@ -19,7 +19,7 @@ class RDoc::Comment
   attr_reader :format
 
   ##
-  # The RDoc::TopLevel this comment was found in
+  # The RDoc::File this comment was found in
 
   attr_accessor :location
 
@@ -50,7 +50,7 @@ class RDoc::Comment
   attr_writer   :document
 
   ##
-  # Creates a new comment with +text+ that is found in the RDoc::TopLevel
+  # Creates a new comment with +text+ that is found in the RDoc::File
   # +location+.
 
   def initialize(text = nil, location = nil, language = nil)
@@ -246,7 +246,7 @@ class RDoc::Comment
     def from_document(document) # :nodoc:
       comment = RDoc::Comment.new('')
       comment.document = document
-      comment.location = RDoc::TopLevel.new(document.file) if document.file
+      comment.location = RDoc::File.new(document.file) if document.file
       comment
     end
 

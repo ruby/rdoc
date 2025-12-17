@@ -11,7 +11,7 @@ class RDocParserMarkdownTest < RDoc::TestCase
     @tempfile = Tempfile.new self.class.name
     filename = @tempfile.path
 
-    @top_level = @store.add_file filename
+    @file = @store.add_file filename
     @fn = filename
     @options = RDoc::Options.new
     @stats = RDoc::Stats.new @store, 0
@@ -47,15 +47,15 @@ class RDocParserMarkdownTest < RDoc::TestCase
     expected =
       @RM::Document.new(
         @RM::Paragraph.new('it _really_ works'))
-    expected.file = @top_level
+    expected.file = @file
 
     parser.scan
 
-    assert_equal expected, @top_level.comment.parse
+    assert_equal expected, @file.comment.parse
   end
 
   def util_parser(content)
-    RDoc::Parser::Markdown.new @top_level, content, @options, @stats
+    RDoc::Parser::Markdown.new @file, content, @options, @stats
   end
 
 end

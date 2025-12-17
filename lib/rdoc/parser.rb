@@ -3,13 +3,13 @@
 
 ##
 # A parser is simple a class that subclasses RDoc::Parser and implements #scan
-# to fill in an RDoc::TopLevel with parsed data.
+# to fill in an RDoc::File with parsed data.
 #
-# The initialize method takes an RDoc::TopLevel to fill with parsed content,
+# The initialize method takes an RDoc::File to fill with parsed content,
 # the name of the file to be parsed, the content of the file, an RDoc::Options
 # object and an RDoc::Stats object to inform the user of parsed items.  The
 # scan method is then called to parse the file and must return the
-# RDoc::TopLevel object.  By calling super these items will be set for you.
+# RDoc::File object.  By calling super these items will be set for you.
 #
 # In order to be used by RDoc the parser needs to register the file extensions
 # it can parse.  Use ::parse_files_matching to register extensions.
@@ -19,14 +19,14 @@
 #   class RDoc::Parser::Xyz < RDoc::Parser
 #     parse_files_matching /\.xyz$/
 #
-#     def initialize top_level, file_name, content, options, stats
+#     def initialize file, file_name, content, options, stats
 #       super
 #
 #       # extra initialization if needed
 #     end
 #
 #     def scan
-#       # parse file and fill in @top_level
+#       # parse file and fill in @file
 #     end
 #   end
 
@@ -74,7 +74,7 @@ class RDoc::Parser
   def self.binary?(file)
     return false if file =~ /\.(rdoc|txt)$/
 
-    s = File.read(file, 1024) or return false
+    s = ::File.read(file, 1024) or return false
 
     return true if s[0, 2] == Marshal.dump('')[0, 2] or s.index("\x00")
 
@@ -82,7 +82,7 @@ class RDoc::Parser
     s.sub!(/\A#!.*\n/, '')     # assume shebang line isn't longer than 1024.
     encoding = s[/^\s*\#\s*(?:-\*-\s*)?(?:en)?coding:\s*([^\s;]+?)(?:-\*-|[\s;])/, 1]
     mode = "rb:#{encoding}" if encoding
-    s = File.open(file, mode) {|f| f.gets(nil, 1024)}
+    s = ::File.open(file, mode) {|f| f.gets(nil, 1024)}
 
     not s.valid_encoding?
   end
@@ -92,7 +92,7 @@ class RDoc::Parser
   # http://www.garykessler.net/library/file_sigs.html
 
   def self.zip?(file)
-    zip_signature = File.read file, 4
+    zip_signature = ::File.read file, 4
 
     zip_signature == "PK\x03\x04" or
       zip_signature == "PK\x05\x06" or
@@ -121,7 +121,7 @@ class RDoc::Parser
     _, parser = RDoc::Parser.parsers.find { |regexp,| regexp =~ file_name }
 
     # The default parser must not parse binary files
-    ext_name = File.extname file_name
+    ext_name = ::File.extname file_name
     return parser if ext_name.empty?
 
     if parser == RDoc::Parser::Simple and ext_name !~ /txt|rdoc/ then
@@ -141,7 +141,7 @@ class RDoc::Parser
   # Returns the file type from the modeline in +file_name+
 
   def self.check_modeline(file_name)
-    line = File.open file_name do |io|
+    line = ::File.open file_name do |io|
       io.gets
     end
 
@@ -166,8 +166,8 @@ class RDoc::Parser
   # Finds and instantiates the correct parser for the given +file_name+ and
   # +content+.
 
-  def self.for(top_level, content, options, stats)
-    file_name = top_level.absolute_name
+  def self.for(file, content, options, stats)
+    file_name = file.absolute_name
     return if binary? file_name
 
     parser = use_markup content
@@ -191,7 +191,7 @@ class RDoc::Parser
 
     content = remove_modeline content
 
-    parser.new top_level, content, options, stats
+    parser.new file, content, options, stats
   rescue SystemCallError
     nil
   end
@@ -247,17 +247,17 @@ class RDoc::Parser
   end
 
   ##
-  # Creates a new Parser storing +top_level+, +file_name+, +content+,
+  # Creates a new Parser storing +file+, +file_name+, +content+,
   # +options+ and +stats+ in instance variables.  In +@preprocess+ an
   # RDoc::Markup::PreProcess object is created which allows processing of
   # directives.
 
-  def initialize(top_level, content, options, stats)
-    @top_level = top_level
-    @top_level.parser = self.class
-    @store = @top_level.store
+  def initialize(file, content, options, stats)
+    @file = file
+    @file.parser = self.class
+    @store = @file.store
 
-    @file_name = top_level.absolute_name
+    @file_name = file.absolute_name
     @content = content
     @options = options
     @stats = stats

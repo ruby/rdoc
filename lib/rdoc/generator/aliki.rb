@@ -11,7 +11,7 @@ class RDoc::Generator::Aliki < RDoc::Generator::Darkfish
 
   def initialize(store, options)
     super
-    aliki_template_dir = File.expand_path(File.join(__dir__, 'template', 'aliki'))
+    aliki_template_dir = ::File.expand_path(::File.join(__dir__, 'template', 'aliki'))
     @template_dir = Pathname.new(aliki_template_dir)
   end
 
@@ -31,8 +31,8 @@ class RDoc::Generator::Aliki < RDoc::Generator::Darkfish
     end
 
     Dir[(@template_dir + 'js/**/*').to_s].each do |path|
-      next if File.directory?(path)
-      next if File.basename(path).start_with?('.')
+      next if ::File.directory?(path)
+      next if ::File.basename(path).start_with?('.')
 
       dst = Pathname.new(path).relative_path_from(@template_dir)
 

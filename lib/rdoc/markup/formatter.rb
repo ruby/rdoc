@@ -22,8 +22,8 @@ class RDoc::Markup::Formatter
   # Converts a target url to one that is relative to a given path
 
   def self.gen_relative_url(path, target)
-    from        = File.dirname path
-    to, to_file = File.split target
+    from        = ::File.dirname path
+    to, to_file = ::File.split target
 
     from = from.split "/"
     to   = to.split "/"
@@ -39,7 +39,7 @@ class RDoc::Markup::Formatter
     from.fill ".."
     from.concat to
     from << to_file
-    File.join(*from)
+    ::File.join(*from)
   end
 
   ##

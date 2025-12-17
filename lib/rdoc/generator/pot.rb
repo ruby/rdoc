@@ -76,7 +76,7 @@ class RDoc::Generator::POT
   def generate
     po = extract_messages
     pot_path = 'rdoc.pot'
-    File.open(pot_path, "w") do |pot|
+    ::File.open(pot_path, "w") do |pot|
       pot.print(po.to_s)
     end
   end

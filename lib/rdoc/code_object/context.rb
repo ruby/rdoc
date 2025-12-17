@@ -361,7 +361,7 @@ class RDoc::Context < RDoc::CodeObject
     klass = @store.classes_hash[full_name]
 
     if klass then
-      # if TopLevel, it may not be registered in the classes:
+      # if File, it may not be registered in the classes:
       enclosing.classes_hash[name] = klass
 
       # update the superclass if needed
@@ -397,7 +397,7 @@ class RDoc::Context < RDoc::CodeObject
   ##
   # Adds the class or module +mod+ to the modules or
   # classes Hash +self_hash+, and to +all_hash+ (either
-  # <tt>TopLevel::modules_hash</tt> or <tt>TopLevel::classes_hash</tt>),
+  # <tt>File::modules_hash</tt> or <tt>File::classes_hash</tt>),
   # unless #done_documenting is +true+. Sets the #parent of +mod+
   # to +self+, and its #section to #current_section. Returns +mod+.
 
@@ -568,7 +568,7 @@ class RDoc::Context < RDoc::CodeObject
   def add_require(require)
     return require unless @document_self
 
-    if RDoc::TopLevel === self then
+    if RDoc::File === self then
       add_to @requires, require
     else
       parent.add_require require
@@ -632,7 +632,7 @@ class RDoc::Context < RDoc::CodeObject
   def child_name(name)
     if name =~ /^:+/
       $'  #'
-    elsif RDoc::TopLevel === self then
+    elsif RDoc::File === self then
       name
     else
       "#{self.full_name}::#{name}"
@@ -894,14 +894,14 @@ class RDoc::Context < RDoc::CodeObject
         mod = searched.find_module_named(top)
         break unless mod
         result = @store.find_class_or_module "#{mod.full_name}::#{suffix}"
-        break if result || searched.is_a?(RDoc::TopLevel)
+        break if result || searched.is_a?(RDoc::File)
         searched = searched.parent
       end
     else
       searched = self
       while searched do
         result = searched.find_module_named(symbol)
-        break if result || searched.is_a?(RDoc::TopLevel)
+        break if result || searched.is_a?(RDoc::File)
         searched = searched.parent
       end
     end
@@ -936,7 +936,7 @@ class RDoc::Context < RDoc::CodeObject
     path = path.gsub(/<<\s*(\w*)/, 'from-\1') if path =~ /<</
     path = path.split('::')
 
-    File.join(*path.compact) + '.html'
+    ::File.join(*path.compact) + '.html'
   end
 
   ##
@@ -1033,10 +1033,10 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Record +top_level+ as a file +self+ is in.
+  # Record +file+ as a file +self+ is in.
 
-  def record_location(top_level)
-    @in_files << top_level unless @in_files.include?(top_level)
+  def record_location(file)
+    @in_files << file unless @in_files.include?(file)
   end
 
   ##
@@ -1197,7 +1197,7 @@ class RDoc::Context < RDoc::CodeObject
   def top_level
     return @top_level if defined? @top_level
     @top_level = self
-    @top_level = @top_level.parent until RDoc::TopLevel === @top_level
+    @top_level = @top_level.parent until RDoc::File === @top_level
     @top_level
   end
 

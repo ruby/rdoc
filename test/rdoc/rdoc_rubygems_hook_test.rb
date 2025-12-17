@@ -14,7 +14,7 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
       s.rdoc_options = %w[--main MyTitle]
       s.extra_rdoc_files = %w[README]
     end
-    @tempdir = File.realpath(Dir.mktmpdir("test_rubygems_hook_"))
+    @tempdir = ::File.realpath(Dir.mktmpdir("test_rubygems_hook_"))
 
     @orig_envs = %w[
       GEM_VENDOR
@@ -31,19 +31,19 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
 
     Gem.configuration = nil
 
-    @a.instance_variable_set(:@doc_dir, File.join(@tempdir, "doc"))
-    @a.instance_variable_set(:@gem_dir, File.join(@tempdir, "a-2"))
-    @a.instance_variable_set(:@full_gem_path, File.join(@tempdir, "a-2"))
-    @a.loaded_from = File.join(@tempdir, 'a-2', 'a-2.gemspec')
+    @a.instance_variable_set(:@doc_dir, ::File.join(@tempdir, "doc"))
+    @a.instance_variable_set(:@gem_dir, ::File.join(@tempdir, "a-2"))
+    @a.instance_variable_set(:@full_gem_path, ::File.join(@tempdir, "a-2"))
+    @a.loaded_from = ::File.join(@tempdir, 'a-2', 'a-2.gemspec')
 
-    FileUtils.mkdir_p File.join(@tempdir, 'a-2', 'lib')
-    FileUtils.touch   File.join(@tempdir, 'a-2', 'README')
-    File.open(File.join(@tempdir, 'a-2', 'lib', 'a.rb'), 'w') do |f|
+    FileUtils.mkdir_p ::File.join(@tempdir, 'a-2', 'lib')
+    FileUtils.touch   ::File.join(@tempdir, 'a-2', 'README')
+    ::File.open(::File.join(@tempdir, 'a-2', 'lib', 'a.rb'), 'w') do |f|
       f.puts '# comment'
       f.puts '# :include: include.txt'
       f.puts 'class A; end'
     end
-    File.open(File.join(@tempdir, 'a-2', 'include.txt'), 'w') do |f|
+    ::File.open(::File.join(@tempdir, 'a-2', 'include.txt'), 'w') do |f|
       f.puts 'included content'
     end
 
@@ -105,7 +105,7 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
 
   def test_generate
     FileUtils.mkdir_p @a.doc_dir
-    FileUtils.mkdir_p File.join(@a.gem_dir, 'lib')
+    FileUtils.mkdir_p ::File.join(@a.gem_dir, 'lib')
 
     @hook.generate
 
@@ -130,7 +130,7 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
     @hook.generate_ri   = true
 
     FileUtils.mkdir_p @a.doc_dir
-    FileUtils.mkdir_p File.join(@a.gem_dir, 'lib')
+    FileUtils.mkdir_p ::File.join(@a.gem_dir, 'lib')
 
     @hook.generate
 
@@ -150,7 +150,7 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
     Gem.configuration[:rdoc] = %w[-A]
 
     FileUtils.mkdir_p @a.doc_dir
-    FileUtils.mkdir_p File.join(@a.gem_dir, 'lib')
+    FileUtils.mkdir_p ::File.join(@a.gem_dir, 'lib')
 
     @hook.generate
 
@@ -163,7 +163,7 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
     Gem.configuration[:rdoc] = '-A'
 
     FileUtils.mkdir_p @a.doc_dir
-    FileUtils.mkdir_p File.join(@a.gem_dir, 'lib')
+    FileUtils.mkdir_p ::File.join(@a.gem_dir, 'lib')
 
     @hook.generate
 
@@ -179,7 +179,7 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
       else
         klass = Gem::Specification
       end
-      @a.loaded_from = File.join klass.default_specifications_dir, 'a.gemspec'
+      @a.loaded_from = ::File.join klass.default_specifications_dir, 'a.gemspec'
     end
 
     @hook.generate
@@ -201,14 +201,14 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
   def test_generate_force
     FileUtils.mkdir_p @a.doc_dir 'ri'
     FileUtils.mkdir_p @a.doc_dir 'rdoc'
-    FileUtils.mkdir_p File.join(@a.gem_dir, 'lib')
+    FileUtils.mkdir_p ::File.join(@a.gem_dir, 'lib')
 
     @hook.force = true
 
     @hook.generate
 
-    assert_path_not_exist File.join(@a.doc_dir('rdoc'), 'index.html')
-    assert_path_exist File.join(@a.doc_dir('ri'),   'cache.ri')
+    assert_path_not_exist ::File.join(@a.doc_dir('rdoc'), 'index.html')
+    assert_path_exist ::File.join(@a.doc_dir('ri'),   'cache.ri')
   end
 
   def test_generate_rubygems_compatible
@@ -217,14 +217,14 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
     RDoc::RubygemsHook.define_singleton_method(:default_gem?) { true }
     FileUtils.mkdir_p @a.doc_dir 'ri'
     FileUtils.mkdir_p @a.doc_dir 'rdoc'
-    FileUtils.mkdir_p File.join(@a.gem_dir, 'lib')
+    FileUtils.mkdir_p ::File.join(@a.gem_dir, 'lib')
 
     # rubygems/lib/rubygems/commands/rdoc_command.rb calls this
     hook = RDoc::RubygemsHook.new @a, true, true
     hook.force = true
     hook.generate
 
-    assert_path_exist File.join(@a.doc_dir('rdoc'), 'index.html')
+    assert_path_exist ::File.join(@a.doc_dir('rdoc'), 'index.html')
   ensure
     RDoc::RubygemsHook.singleton_class.remove_method(:default_gem?)
     RDoc::RubygemsHook.define_singleton_method(:default_gem?, &original_default_gem_method)
@@ -233,24 +233,24 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
   def test_generate_no_overwrite
     FileUtils.mkdir_p @a.doc_dir 'ri'
     FileUtils.mkdir_p @a.doc_dir 'rdoc'
-    FileUtils.mkdir_p File.join(@a.gem_dir, 'lib')
+    FileUtils.mkdir_p ::File.join(@a.gem_dir, 'lib')
 
     @hook.generate
 
-    assert_path_not_exist File.join(@a.doc_dir('rdoc'), 'index.html')
-    assert_path_not_exist File.join(@a.doc_dir('ri'),   'cache.ri')
+    assert_path_not_exist ::File.join(@a.doc_dir('rdoc'), 'index.html')
+    assert_path_not_exist ::File.join(@a.doc_dir('ri'),   'cache.ri')
   end
 
   def test_generate_with_ri_opt
     @a.rdoc_options << '--ri'
     FileUtils.mkdir_p @a.doc_dir
-    FileUtils.mkdir_p File.join(@a.gem_dir, 'lib')
+    FileUtils.mkdir_p ::File.join(@a.gem_dir, 'lib')
     @hook.generate_rdoc = true
     @hook.generate_ri   = true
     @hook.generate
 
-    assert_path_exist File.join(@a.doc_dir('rdoc'), 'index.html')
-    assert_path_exist File.join(@a.doc_dir('ri'),   'cache.ri')
+    assert_path_exist ::File.join(@a.doc_dir('rdoc'), 'index.html')
+    assert_path_exist ::File.join(@a.doc_dir('ri'),   'cache.ri')
   end
 
   def test_new_rdoc
@@ -290,7 +290,7 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
 
     assert_equal @a.base_dir, e.directory
   ensure
-    FileUtils.chmod(0755, @a.base_dir) if File.directory?(@a.base_dir)
+    FileUtils.chmod(0755, @a.base_dir) if ::File.directory?(@a.base_dir)
   end
 
   def test_ri_installed?
@@ -320,7 +320,7 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
 
     assert_equal @a.doc_dir, e.directory
   ensure
-    if File.exist? @a.doc_dir
+    if ::File.exist? @a.doc_dir
       FileUtils.chmod 0755, @a.doc_dir
       FileUtils.rm_r @a.doc_dir
     end

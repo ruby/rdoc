@@ -16,7 +16,7 @@
 #
 # Here is a brief example of using this parse to read a markdown file by hand.
 #
-#     data = File.read("README.md")
+#     data = ::File.read("README.md")
 #     formatter = RDoc::Markup::ToHtml.new(RDoc::Options.new, nil)
 #     html = RDoc::Markdown.parse(data).accept(formatter)
 #

@@ -18,7 +18,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   attr_accessor :visibility
   attr_reader :container, :singleton
 
-  def initialize(top_level, content, options, stats)
+  def initialize(file, content, options, stats)
     super
 
     content = handle_tab_width(content)
@@ -31,8 +31,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     @track_visibility = :nodoc != @options.visibility
     @encoding = @options.encoding
 
-    @module_nesting = [[top_level, false]]
-    @container = top_level
+    @module_nesting = [[file, false]]
+    @container = file
     @visibility = :public
     @singleton = false
     @in_proc_block = false
@@ -80,10 +80,10 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   def record_location(container) # :nodoc:
     case container
     when RDoc::ClassModule then
-      @top_level.add_to_classes_or_modules container
+      @file.add_to_classes_or_modules container
     end
 
-    container.record_location @top_level
+    container.record_location @file
   end
 
   # Scans this Ruby file for Ruby constructs
@@ -96,14 +96,14 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     @line_nodes = {}
     prepare_line_nodes(@program_node)
     prepare_comments(result.comments)
-    return if @top_level.done_documenting
+    return if @file.done_documenting
 
     @first_non_meta_comment_start_line = nil
     if (_line_no, start_line = @unprocessed_comments.first)
       @first_non_meta_comment_start_line = start_line if start_line < @program_node.location.start_line
     end
 
-    @program_node.accept(RDocVisitor.new(self, @top_level, @store))
+    @program_node.accept(RDocVisitor.new(self, @file, @store))
     process_comments_until(@lines.size + 1)
   end
 
@@ -323,7 +323,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     while !@unprocessed_comments.empty? && @unprocessed_comments.first[0] <= line_no_until
       line_no, start_line, text = @unprocessed_comments.shift
       if @markup == 'tomdoc'
-        comment = RDoc::Comment.new(text, @top_level, :ruby)
+        comment = RDoc::Comment.new(text, @file, :ruby)
         comment.format = 'tomdoc'
         parse_comment_tomdoc(@container, comment, line_no, start_line)
         @preprocess.run_post_processes(comment, @container)
@@ -354,7 +354,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   def parse_comment_text_to_directives(comment_text, start_line) # :nodoc:
     comment_text, directives = @preprocess.parse_comment(comment_text, start_line, :ruby)
-    comment = RDoc::Comment.new(comment_text, @top_level, :ruby)
+    comment = RDoc::Comment.new(comment_text, @file, :ruby)
     comment.normalized = true
     comment.line = start_line
     markup, = directives['markup']
@@ -378,7 +378,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   def file_line_comment_token(line_no) # :nodoc:
     position_comment = RDoc::Parser::RipperStateLex::Token.new(line_no - 1, 0, :on_comment)
-    position_comment[:text] = "# File #{@top_level.relative_name}, line #{line_no}"
+    position_comment[:text] = "# File #{@file.relative_name}, line #{line_no}"
     position_comment
   end
 
@@ -586,7 +586,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       end
     }
     if root_name.empty?
-      mod = @top_level
+      mod = @file
     else
       @module_nesting.reverse_each do |nesting, singleton|
         next if singleton
@@ -617,7 +617,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       mod = nesting.find_module_named(owner_name)
       break if mod
     end
-    mod ||= @top_level.find_module_named(owner_name)
+    mod ||= @file.find_module_named(owner_name)
     [mod.full_name, path].compact.join('::') if mod
   end
 
@@ -632,7 +632,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       # but RDoc don't track constants of a singleton class of module
       [(@singleton ? nil : @container), name]
     elsif const_path.empty? # class ::Foo
-      [@top_level, name]
+      [@file, name]
     else # `class Foo::Bar` or `class ::Foo::Bar`
       [find_or_create_module_path(const_path, :module), name]
     end
@@ -660,7 +660,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         @container.find_module_named(rhs_name)
       end
     if mod && constant.document_self
-      a = @container.add_module_alias(mod, rhs_name, constant, @top_level)
+      a = @container.add_module_alias(mod, rhs_name, constant, @file)
       a.store = @store
       a.line = start_line
       record_location(a)
@@ -704,14 +704,14 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     record_location(mod)
     handle_modifier_directive(mod, start_line)
     handle_modifier_directive(mod, end_line)
-    mod.add_comment(comment, @top_level) if comment
+    mod.add_comment(comment, @file) if comment
     mod
   end
 
   class RDocVisitor < Prism::Visitor # :nodoc:
-    def initialize(scanner, top_level, store)
+    def initialize(scanner, file, store)
       @scanner = scanner
-      @top_level = top_level
+      @file = file
       @store = store
     end
 
@@ -841,7 +841,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         # If a constant_path does not exist, RDoc creates a module
         mod = @scanner.find_or_create_module_path(expression_name, :module) if expression_name
       when Prism::SelfNode
-        mod = @scanner.container if @scanner.container != @top_level
+        mod = @scanner.container if @scanner.container != @file
       end
       expression.accept(self)
       if mod

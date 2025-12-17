@@ -200,10 +200,10 @@ class RDoc::RubyGemsHook
     end
 
     document 'ri',       options, @ri_dir if
-      @generate_ri   and (@force or not File.exist? @ri_dir)
+      @generate_ri   and (@force or not ::File.exist? @ri_dir)
 
     document 'aliki', options, @rdoc_dir if
-      @generate_rdoc and (@force or not File.exist? @rdoc_dir)
+      @generate_rdoc and (@force or not ::File.exist? @rdoc_dir)
   end
 
   ##
@@ -218,7 +218,7 @@ class RDoc::RubyGemsHook
   # Is rdoc documentation installed?
 
   def rdoc_installed?
-    File.exist? @rdoc_dir
+    ::File.exist? @rdoc_dir
   end
 
   ##
@@ -227,7 +227,7 @@ class RDoc::RubyGemsHook
   def remove
     base_dir = @spec.base_dir
 
-    raise Gem::FilePermissionError, base_dir unless File.writable? base_dir
+    raise Gem::FilePermissionError, base_dir unless ::File.writable? base_dir
 
     FileUtils.rm_rf @rdoc_dir
     FileUtils.rm_rf @ri_dir
@@ -237,7 +237,7 @@ class RDoc::RubyGemsHook
   # Is ri data installed?
 
   def ri_installed?
-    File.exist? @ri_dir
+    ::File.exist? @ri_dir
   end
 
   ##
@@ -247,9 +247,9 @@ class RDoc::RubyGemsHook
     self.class.load_rdoc
 
     raise Gem::FilePermissionError, @doc_dir if
-      File.exist?(@doc_dir) and not File.writable?(@doc_dir)
+      ::File.exist?(@doc_dir) and not ::File.writable?(@doc_dir)
 
-    FileUtils.mkdir_p @doc_dir unless File.exist? @doc_dir
+    FileUtils.mkdir_p @doc_dir unless ::File.exist? @doc_dir
   end
 
 end
@@ -271,7 +271,7 @@ module RDoc
     attr_accessor :generate_rdoc, :generate_ri, :force
 
     def self.default_gem?
-      !File.exist?(File.join(__dir__, "..", "rubygems_plugin.rb"))
+      !::File.exist?(::File.join(__dir__, "..", "rubygems_plugin.rb"))
     end
 
     def initialize(spec, generate_rdoc = false, generate_ri = true)

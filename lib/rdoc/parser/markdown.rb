@@ -10,13 +10,13 @@ class RDoc::Parser::Markdown < RDoc::Parser
   parse_files_matching(/\.(md|markdown)(?:\.[^.]+)?$/)
 
   ##
-  # Creates an Markdown-format TopLevel for the given file.
+  # Creates an Markdown-format File for the given file.
 
   def scan
-    comment = RDoc::Comment.new @content, @top_level
+    comment = RDoc::Comment.new @content, @file
     comment.format = 'markdown'
 
-    @top_level.comment = comment
+    @file.comment = comment
   end
 
 end

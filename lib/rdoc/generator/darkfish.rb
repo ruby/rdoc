@@ -203,8 +203,8 @@ class RDoc::Generator::Darkfish
     end
 
     Dir[(@template_dir + "{js,images}/**/*").to_s].each do |path|
-      next if File.directory? path
-      next if File.basename(path) =~ /^\./
+      next if ::File.directory? path
+      next if ::File.basename(path) =~ /^\./
 
       dst = Pathname.new(path).relative_path_from @template_dir
 
@@ -213,7 +213,7 @@ class RDoc::Generator::Darkfish
   end
 
   ##
-  # Build the initial indices and output objects based on an array of TopLevel
+  # Build the initial indices and output objects based on an array of File
   # objects containing the extracted information.
 
   def generate
@@ -246,16 +246,16 @@ class RDoc::Generator::Darkfish
     fu_options = { :verbose => $DEBUG_RDOC, :noop => @dry_run }
 
     @options.static_path.each do |path|
-      unless File.directory? path then
+      unless ::File.directory? path then
         FileUtils.install path, @outputdir, **fu_options.merge(:mode => 0644)
         next
       end
 
       Dir.chdir path do
-        Dir[File.join('**', '*')].each do |entry|
+        Dir[::File.join('**', '*')].each do |entry|
           dest_file = @outputdir + entry
 
-          if File.directory? entry then
+          if ::File.directory? entry then
             FileUtils.mkdir_p entry, **fu_options
           else
             FileUtils.install entry, dest_file, **fu_options.merge(:mode => 0644)
@@ -555,7 +555,7 @@ class RDoc::Generator::Darkfish
     return unless source.exist?
 
     begin
-      FileUtils.mkdir_p File.dirname(destination), **options
+      FileUtils.mkdir_p ::File.dirname(destination), **options
 
       begin
         FileUtils.ln source, destination, **options
@@ -688,7 +688,7 @@ class RDoc::Generator::Darkfish
       template = file.read
       template = template.encode @options.encoding
 
-      file_var = File.basename(file).sub(/\..*/, '')
+      file_var = ::File.basename(file).sub(/\..*/, '')
 
       erbout = "_erbout_#{file_var}"
     end
