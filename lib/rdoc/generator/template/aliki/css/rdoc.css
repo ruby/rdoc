@@ -142,6 +142,7 @@
 
   /* Shadows */
   --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
+  --shadow-md: 0 2px 8px rgb(0 0 0 / 10%);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%);
 
@@ -158,6 +159,13 @@
   /* Transitions */
   --transition-fast: 150ms ease-in-out;
   --transition-base: 200ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+  --ease-out-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Animation Durations */
+  --duration-fast: 250ms;
+  --duration-base: 300ms;
+  --duration-medium: 350ms;
 
   /* Z-Index Scale */
   --z-fixed: 300;
@@ -202,6 +210,7 @@
   --color-accent-primary: var(--color-primary-500);
   --color-accent-hover: var(--color-primary-400);
   --color-accent-subtle: rgb(235 84 79 / 10%);
+  --color-accent-subtle-hover: rgb(235 84 79 / 20%);
   --color-code-bg: var(--color-neutral-800);
   --color-code-border: var(--color-neutral-700);
   --color-nav-bg: var(--color-neutral-900);
@@ -211,6 +220,7 @@
 
   /* Dark theme shadows (slightly more subtle) */
   --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 40%), 0 1px 2px -1px rgb(0 0 0 / 40%);
+  --shadow-md: 0 2px 8px rgb(0 0 0 / 40%);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 40%), 0 4px 6px -4px rgb(0 0 0 / 40%);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 40%), 0 8px 10px -6px rgb(0 0 0 / 40%);
 
@@ -291,7 +301,12 @@ pre {
   border-radius: var(--radius-sm);
   cursor: pointer;
   opacity: 0.6;
-  transition: opacity var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+  transition:
+    opacity var(--transition-fast),
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -305,10 +320,18 @@ pre {
   opacity: 1;
   background: var(--color-background-tertiary);
   border-color: var(--color-border-emphasis);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.copy-code-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-accent-subtle);
 }
 
 .copy-code-button:active {
-  transform: scale(0.95);
+  transform: scale(0.92);
+  box-shadow: none;
 }
 
 .copy-code-button svg {
@@ -320,7 +343,7 @@ pre {
   stroke-linecap: round;
   stroke-linejoin: round;
   color: var(--color-text-secondary);
-  transition: color var(--transition-fast);
+  transition: color var(--transition-fast), transform var(--transition-base);
 }
 
 .copy-code-button:hover svg {
@@ -457,7 +480,11 @@ header.top-navbar .navbar-search form {
   border-radius: var(--radius-md);
   color: var(--color-text-primary);
   cursor: pointer;
-  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
   font-size: var(--font-size-lg);
   line-height: 1;
   width: 2.5rem;
@@ -468,6 +495,7 @@ header.top-navbar .navbar-search form {
   background: var(--color-background-secondary);
   border-color: var(--color-accent-primary);
   color: var(--color-accent-primary);
+  transform: scale(1.05);
 }
 
 .theme-toggle:focus {
@@ -476,13 +504,17 @@ header.top-navbar .navbar-search form {
   box-shadow: 0 0 0 3px var(--color-accent-subtle);
 }
 
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
 .theme-toggle-icon {
   display: inline-block;
-  transition: transform var(--transition-base);
+  transition: transform var(--duration-base) var(--ease-out-smooth);
 }
 
 .theme-toggle:hover .theme-toggle-icon {
-  transform: rotate(20deg);
+  transform: rotate(15deg) scale(1.1);
 }
 
 /* Mobile navbar */
@@ -537,11 +569,33 @@ nav {
   background: var(--color-nav-bg);
   color: var(--color-nav-text);
   overflow: hidden auto;
+  overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
   position: sticky;
   top: var(--layout-header-height);
   height: calc(100vh - var(--layout-header-height));
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-default) transparent;
+}
+
+/* Custom scrollbar for WebKit browsers */
+nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+nav::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+nav::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-emphasis);
 }
 
 /* Mobile navigation */
@@ -615,6 +669,18 @@ nav ul li {
   line-height: var(--line-height-relaxed);
 }
 
+nav ul li a {
+  padding: var(--space-1) 0;
+  transition:
+    color var(--transition-fast),
+    transform var(--transition-fast),
+    padding var(--transition-fast);
+}
+
+nav ul li a:hover {
+  padding-left: var(--space-1);
+}
+
 nav ul ul {
   padding-left: var(--space-5);
   margin-top: var(--space-2);
@@ -630,6 +696,17 @@ nav ul ul ul ul {
 
 nav a {
   text-decoration: none;
+}
+
+/* Truncation for direct nav links (not links inside code tags) */
+nav .nav-list > li > a,
+nav .nav-section > ul > li > a,
+nav .nav-section > dl > dd > a {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 nav footer {
@@ -735,6 +812,11 @@ nav .nav-section-title {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   color: inherit;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 nav .nav-section-chevron {
@@ -1113,19 +1195,54 @@ main .anchor-link:target {
 main .method-source-code {
   visibility: hidden;
   max-height: 0;
-  overflow: auto;
-  transition: max-height var(--transition-base), visibility var(--transition-base);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition:
+    max-height var(--duration-medium) var(--ease-out-smooth),
+    visibility var(--duration-medium),
+    opacity var(--duration-fast) ease-out,
+    transform var(--duration-fast) ease-out;
 }
 
 main .method-source-code pre {
   border-color: var(--color-accent-hover);
+  border-left: 3px solid var(--color-accent-primary);
   width: 100%;
   box-sizing: border-box;
+  transition: border-color var(--transition-fast);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-default) transparent;
+}
+
+main .method-source-code pre::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+main .method-source-code pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+main .method-source-code pre::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: var(--radius-sm);
+}
+
+main .method-source-code pre::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-emphasis);
+}
+
+main .method-source-code pre::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 main .method-source-code.active-menu {
   visibility: visible;
   max-height: 100vh;
+  overflow: auto;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 main .method-description .method-calls-super {
@@ -1165,10 +1282,47 @@ main .method-heading .method-args {
 }
 
 main .method-controls {
-  line-height: 20px;
   float: right;
-  color: var(--color-accent-hover);
+}
+
+main .method-controls summary {
+  display: inline-block;
+  line-height: 20px;
+  color: var(--color-accent-primary);
   cursor: pointer;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  background: var(--color-accent-subtle);
+  border: 1px solid transparent;
+  transition:
+    color var(--transition-fast),
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast);
+  user-select: none;
+  -webkit-user-select: none;
+  list-style: none;
+}
+
+main .method-controls summary::-webkit-details-marker {
+  display: none;
+}
+
+main .method-controls summary:hover {
+  background: var(--color-primary-100);
+  border-color: var(--color-primary-300);
+  transform: translateY(-1px);
+}
+
+main .method-controls summary:active {
+  transform: scale(0.96);
+}
+
+[data-theme="dark"] main .method-controls summary:hover {
+  background: var(--color-accent-subtle-hover);
+  border-color: var(--color-primary-500);
 }
 
 main .method-description,
