@@ -166,11 +166,6 @@
   --duration-fast: 250ms;
   --duration-base: 300ms;
   --duration-medium: 350ms;
-  --duration-slow: 400ms;
-
-  /* Animation Colors */
-  --color-success-pulse: rgb(34 197 94 / 40%);
-  --color-success-pulse-fade: rgb(34 197 94 / 0%);
 
   /* Z-Index Scale */
   --z-fixed: 300;
@@ -355,123 +350,15 @@ pre {
   color: var(--color-text-primary);
 }
 
-/* Copied state - success animation with pulse */
+/* Copied state - subtle green checkmark */
 .copy-code-button.copied {
   background: var(--color-success-bg);
   border-color: var(--color-green-500);
   opacity: 1;
-  animation: copy-success-pulse var(--duration-slow) ease-out;
 }
 
 .copy-code-button.copied svg {
   color: var(--color-green-600);
-  animation: copy-checkmark-pop var(--duration-base) ease-out;
-}
-
-@keyframes copy-success-pulse {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 var(--color-success-pulse);
-  }
-
-  50% {
-    transform: scale(1.08);
-    box-shadow: 0 0 0 8px var(--color-success-pulse-fade);
-  }
-
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 var(--color-success-pulse-fade);
-  }
-}
-
-@keyframes copy-checkmark-pop {
-  0% {
-    transform: scale(0.5);
-    opacity: 0;
-  }
-
-  50% {
-    transform: scale(1.2);
-  }
-
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-/* Tooltip for copy button - positioned below to avoid Source button overlap */
-.copy-code-button::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 50%;
-  transform: translateX(-50%) translateY(-4px);
-  padding: var(--space-1) var(--space-2);
-  background: var(--color-neutral-800);
-  color: var(--color-neutral-50);
-  font-size: var(--font-size-xs);
-  font-family: var(--font-primary);
-  white-space: nowrap;
-  border-radius: var(--radius-sm);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity var(--transition-fast), transform var(--transition-fast), visibility var(--transition-fast);
-  pointer-events: none;
-  z-index: 20;
-}
-
-.copy-code-button::before {
-  content: '';
-  position: absolute;
-  top: calc(100% + 2px);
-  left: 50%;
-  transform: translateX(-50%);
-  border: 4px solid transparent;
-  border-bottom-color: var(--color-neutral-800);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity var(--transition-fast), visibility var(--transition-fast);
-  pointer-events: none;
-  z-index: 20;
-}
-
-.copy-code-button[data-tooltip]:hover::after,
-.copy-code-button[data-tooltip]:focus::after {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
-}
-
-.copy-code-button[data-tooltip]:hover::before,
-.copy-code-button[data-tooltip]:focus::before {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Copied tooltip state */
-.copy-code-button.copied::after {
-  content: 'Copied!';
-  background: var(--color-green-600);
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
-}
-
-.copy-code-button.copied::before {
-  border-bottom-color: var(--color-green-600);
-  opacity: 1;
-  visibility: visible;
-}
-
-[data-theme="dark"] .copy-code-button::after {
-  background: var(--color-neutral-100);
-  color: var(--color-neutral-900);
-}
-
-[data-theme="dark"] .copy-code-button::before {
-  border-bottom-color: var(--color-neutral-100);
 }
 
 [data-theme="dark"] .copy-code-button.copied {
@@ -480,15 +367,6 @@ pre {
 
 [data-theme="dark"] .copy-code-button.copied svg {
   color: var(--color-green-400);
-}
-
-[data-theme="dark"] .copy-code-button.copied::after {
-  background: var(--color-green-500);
-  color: white;
-}
-
-[data-theme="dark"] .copy-code-button.copied::before {
-  border-bottom-color: var(--color-green-500);
 }
 
 /* Mobile adjustments */
