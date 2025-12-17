@@ -12,7 +12,7 @@ class RDocServletTest < RDoc::TestCase
 
     @orig_gem_path = Gem.path
 
-    @tempdir = File.join Dir.tmpdir, "test_rdoc_servlet_#{$$}"
+    @tempdir = ::File.join Dir.tmpdir, "test_rdoc_servlet_#{$$}"
     Gem.use_paths @tempdir
     Gem.ensure_gem_subdirectories @tempdir
 
@@ -28,7 +28,7 @@ class RDocServletTest < RDoc::TestCase
     @stores = {}
     @cache  = Hash.new { |hash, store| hash[store] = {} }
 
-    @extra_dirs = [File.join(@tempdir, 'extra1'), File.join(@tempdir, 'extra2')]
+    @extra_dirs = [::File.join(@tempdir, 'extra1'), ::File.join(@tempdir, 'extra2')]
 
     @s = RDoc::Servlet.new @server, @stores, @cache, nil, @extra_dirs
 
@@ -41,10 +41,10 @@ class RDocServletTest < RDoc::TestCase
 
     @req.instance_variable_set :@header, Hash.new { |h, k| h[k] = [] }
 
-    @base        = File.join @tempdir, 'base'
-    @system_dir  = File.join @tempdir, 'base', 'system'
-    @home_dir    = File.join @tempdir, 'home'
-    @gem_doc_dir = File.join @tempdir, 'doc'
+    @base        = ::File.join @tempdir, 'base'
+    @system_dir  = ::File.join @tempdir, 'base', 'system'
+    @home_dir    = ::File.join @tempdir, 'home'
+    @gem_doc_dir = ::File.join @tempdir, 'doc'
     @options     = RDoc::Options.new
 
     @orig_base = RDoc::RI::Paths::BASE
@@ -76,8 +76,8 @@ class RDocServletTest < RDoc::TestCase
       FileUtils.mkdir 'css'
 
       now = Time.now
-      File.open 'css/rdoc.css', 'w' do |io| io.write 'h1 { color: red }' end
-      File.utime now, now, 'css/rdoc.css'
+      ::File.open 'css/rdoc.css', 'w' do |io| io.write 'h1 { color: red }' end
+      ::File.utime now, now, 'css/rdoc.css'
 
       @s.asset_dirs[:darkfish] = '.'
 
@@ -298,11 +298,11 @@ class RDocServletTest < RDoc::TestCase
   end
 
   def test_if_modified_since
-    omit 'File.utime on directory not supported' if Gem.win_platform?
+    omit '::File.utime on directory not supported' if Gem.win_platform?
 
     temp_dir do
       now = Time.now
-      File.utime now, now, '.'
+      ::File.utime now, now, '.'
 
       @s.if_modified_since @req, @res, '.'
 
@@ -311,11 +311,11 @@ class RDocServletTest < RDoc::TestCase
   end
 
   def test_if_modified_since_not_modified
-    omit 'File.utime on directory not supported' if Gem.win_platform?
+    omit '::File.utime on directory not supported' if Gem.win_platform?
 
     temp_dir do
       now = Time.now
-      File.utime now, now, '.'
+      ::File.utime now, now, '.'
 
       @req.header['if-modified-since'] = [(now + 10).httpdate]
 
@@ -339,11 +339,11 @@ class RDocServletTest < RDoc::TestCase
       ['Ruby Documentation', 'ruby/', true,  :system,
         @system_dir],
       ['Site Documentation', 'site/', false, :site,
-        File.join(@base, 'site')],
+        ::File.join(@base, 'site')],
       ['Home Documentation', 'home/', false, :home,
         RDoc::RI::Paths::HOMEDIR],
       ['spec-1.0', 'spec-1.0/',       false, :gem,
-        File.join(@spec.doc_dir, 'ri')],
+        ::File.join(@spec.doc_dir, 'ri')],
     ]
 
     assert_equal expected, @s.installed_docs
@@ -380,9 +380,9 @@ class RDocServletTest < RDoc::TestCase
       [@extra_dirs[0],                 :extra],
       [@extra_dirs[1],                 :extra],
       [@system_dir,                    :system],
-      [File.join(@base, 'site'),       :site],
+      [::File.join(@base, 'site'),       :site],
       [RDoc::RI::Paths::HOMEDIR,       :home],
-      [File.join(@spec.doc_dir, 'ri'), :gem],
+      [::File.join(@spec.doc_dir, 'ri'), :gem],
     ]
 
     assert_equal expected, paths.to_a
@@ -474,13 +474,13 @@ class RDocServletTest < RDoc::TestCase
   end
 
   def test_store_for_gem
-    ri_dir = File.join @gem_doc_dir, 'spec-1.0', 'ri'
+    ri_dir = ::File.join @gem_doc_dir, 'spec-1.0', 'ri'
     FileUtils.mkdir_p ri_dir
-    FileUtils.touch File.join ri_dir, 'cache.ri'
+    FileUtils.touch ::File.join ri_dir, 'cache.ri'
 
     store = @s.store_for 'spec-1.0'
 
-    assert_equal File.join(@gem_doc_dir, 'spec-1.0', 'ri'), store.path
+    assert_equal ::File.join(@gem_doc_dir, 'spec-1.0', 'ri'), store.path
     assert_equal :gem, store.type
   end
 
@@ -492,7 +492,7 @@ class RDocServletTest < RDoc::TestCase
   end
 
   def test_store_for_missing_documentation
-    FileUtils.mkdir_p(File.join @gem_doc_dir, 'spec-1.0', 'ri')
+    FileUtils.mkdir_p(::File.join @gem_doc_dir, 'spec-1.0', 'ri')
 
     e = assert_raise WEBrick::HTTPStatus::NotFound do
       @s.store_for 'spec-1.0'
@@ -521,7 +521,7 @@ class RDocServletTest < RDoc::TestCase
   def test_store_for_site
     store = @s.store_for 'site'
 
-    assert_equal File.join(@base, 'site'), store.path
+    assert_equal ::File.join(@base, 'site'), store.path
     assert_equal :site, store.type
   end
 
@@ -536,7 +536,7 @@ class RDocServletTest < RDoc::TestCase
     store = RDoc::Store.new(@options, path: @system_dir)
     store.title = 'Standard Library Documentation'
 
-    FileUtils.mkdir_p File.dirname store.cache_path
+    FileUtils.mkdir_p ::File.dirname store.cache_path
 
     store.save
   end
@@ -545,7 +545,7 @@ class RDocServletTest < RDoc::TestCase
     store = RDoc::Store.new(@options, path: @extra_dirs.first)
     store.title = 'My Extra Documentation'
 
-    FileUtils.mkdir_p File.dirname store.cache_path
+    FileUtils.mkdir_p ::File.dirname store.cache_path
 
     store.save
   end

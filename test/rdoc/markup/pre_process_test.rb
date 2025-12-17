@@ -8,10 +8,10 @@ class RDoc::Markup::PreProcessTest < RDoc::TestCase
     super
 
     @tempfile = Tempfile.new 'test_rdoc_markup_pre_process'
-    @file_name = File.basename @tempfile.path
-    @dir  = File.dirname @tempfile.path
+    @file_name = ::File.basename @tempfile.path
+    @dir  = ::File.dirname @tempfile.path
 
-    @pp = RDoc::Markup::PreProcess.new @tempfile.path, [@dir, File.expand_path('..', File.dirname(__FILE__))]
+    @pp = RDoc::Markup::PreProcess.new @tempfile.path, [@dir, ::File.expand_path('..', ::File.dirname(__FILE__))]
   end
 
   def teardown

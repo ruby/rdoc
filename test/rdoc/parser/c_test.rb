@@ -49,7 +49,7 @@ class RDocParserCTest < RDoc::TestCase
     @tempfile = Tempfile.new self.class.name
     filename = @tempfile.path
 
-    @top_level = @store.add_file filename
+    @file = @store.add_file filename
     @fn = filename
     @options = RDoc::Options.new
     @options.verbosity = 2
@@ -127,8 +127,8 @@ class RDocParserCTest < RDoc::TestCase
   end
 
   def test_initialize
-    some_ext        = @top_level.add_class RDoc::NormalClass, 'SomeExt'
-                      @top_level.add_class RDoc::SingleClass, 'SomeExtSingle'
+    some_ext        = @file.add_class RDoc::NormalClass, 'SomeExt'
+                      @file.add_class RDoc::SingleClass, 'SomeExtSingle'
 
     @store.cache[:c_class_variables] = {
       @fn => { 'cSomeExt' => 'SomeExt' }
@@ -138,7 +138,7 @@ class RDocParserCTest < RDoc::TestCase
       @fn => { 'cSomeExtSingle' => 'SomeExtSingle' }
     }
 
-    parser = RDoc::Parser::C.new @top_level, '', @options, @stats
+    parser = RDoc::Parser::C.new @file, '', @options, @stats
 
     expected = { 'cSomeExt' => some_ext }
     assert_equal expected, parser.classes
@@ -188,7 +188,7 @@ void Init_Blah(void) {
     assert_equal 'accessor',            accessor.name
     assert_equal 'RW',                  accessor.rw
     assert_equal 'This is an accessor', accessor.comment.text
-    assert_equal @top_level,            accessor.file
+    assert_equal @file,            accessor.file
 
     reader = attrs.shift
     assert_equal 'reader',           reader.name
@@ -242,8 +242,8 @@ void Init_Blah(void) {
     assert_equal 'bleh', methods.last.name
     assert_equal 'blah', methods.last.is_alias_for.name
 
-    assert_equal @top_level, methods.last.is_alias_for.file
-    assert_equal @top_level, methods.last.file
+    assert_equal @file, methods.last.is_alias_for.file
+    assert_equal @file, methods.last.file
   end
 
   def test_do_aliases_singleton
@@ -528,7 +528,7 @@ void Init_foo(){
     constants = klass.constants
     assert !klass.constants.empty?
 
-    assert_equal @top_level, constants.first.file
+    assert_equal @file, constants.first.file
 
     constants = constants.map { |c| [c.name, c.value, c.comment.text] }
 
@@ -599,7 +599,7 @@ void Init_foo(){
     constants = klass.constants
     assert !klass.constants.empty?
 
-    assert_equal @top_level, constants.first.file
+    assert_equal @file, constants.first.file
 
     constants = constants.map { |c| [c.name, c.value, c.comment.text] }
     assert_equal ['ANSWER', 'INT2FIX(42)', "Toplevel const   "],
@@ -688,7 +688,7 @@ Init_foo() {
     incl = klass.includes.first
     assert_equal 'Inc',      incl.name
     assert_equal '',         incl.comment.text
-    assert_equal @top_level, incl.file
+    assert_equal @file, incl.file
   end
 
   # HACK parsing warning instead of setting up in file
@@ -818,7 +818,7 @@ void Init_Blah(void) {
   def test_do_missing
     parser = util_parser
 
-    klass_a = @top_level.add_class RDoc::ClassModule, 'A'
+    klass_a = @file.add_class RDoc::ClassModule, 'A'
     parser.classes['a'] = klass_a
 
     parser.enclosure_dependencies['c'] << 'b'
@@ -838,7 +838,7 @@ void Init_Blah(void) {
   def test_do_missing_cycle
     parser = util_parser
 
-    klass_a = @top_level.add_class RDoc::ClassModule, 'A'
+    klass_a = @file.add_class RDoc::ClassModule, 'A'
     parser.classes['a'] = klass_a
 
     parser.enclosure_dependencies['c'] << 'b'
@@ -928,7 +928,7 @@ rb_define_alias(C, "[]", "index");
   end
 
   def test_find_class_comment
-    @options.rdoc_include << File.dirname(__FILE__)
+    @options.rdoc_include << ::File.dirname(__FILE__)
 
     content = <<-EOF
 /*
@@ -1521,7 +1521,7 @@ If no arguments are given:
   end
 
   def test_find_modifiers_yields
-    comment = RDoc::Comment.new <<-COMMENT, @top_level, :c
+    comment = RDoc::Comment.new <<-COMMENT, @file, :c
 /* :yields: a, b
  *
  * Blah
@@ -1558,10 +1558,10 @@ rb_m(int argc, VALUE *argv, VALUE obj) {
 
     parser.handle_method 'method', 'rb_cObject', 'm', 'rb_m', -1
 
-    m = @top_level.find_module_named('Object').method_list.first
+    m = @file.find_module_named('Object').method_list.first
 
     assert_equal 'm', m.name
-    assert_equal @top_level, m.file
+    assert_equal @file, m.file
     assert_equal 7, m.line
 
     assert_equal '(p1)', m.params
@@ -1572,7 +1572,7 @@ rb_m(int argc, VALUE *argv, VALUE obj) {
 
     parser.handle_method 'method', 'rb_cBasicObject', '==', 'rb_obj_equal', 0
 
-    bo = @top_level.find_module_named 'BasicObject'
+    bo = @file.find_module_named 'BasicObject'
 
     assert_equal 1, bo.method_list.length
 
@@ -1586,7 +1586,7 @@ rb_m(int argc, VALUE *argv, VALUE obj) {
 
     parser.handle_method 'method', 'rb_cBasicObject', '==', 'rb_obj_equal', 1
 
-    bo = @top_level.find_module_named 'BasicObject'
+    bo = @file.find_module_named 'BasicObject'
 
     assert_equal 1, bo.method_list.length
 
@@ -1600,7 +1600,7 @@ rb_m(int argc, VALUE *argv, VALUE obj) {
 
     parser.handle_method 'method', 'rb_cBasicObject', '==', 'rb_obj_equal', 2
 
-    bo = @top_level.find_module_named 'BasicObject'
+    bo = @file.find_module_named 'BasicObject'
 
     assert_equal 1, bo.method_list.length
 
@@ -1616,7 +1616,7 @@ rb_m(int argc, VALUE *argv, VALUE obj) {
 
     parser.handle_method 'method', 'rb_cBasicObject', '==', 'rb_obj_equal', -2
 
-    bo = @top_level.find_module_named 'BasicObject'
+    bo = @file.find_module_named 'BasicObject'
 
     assert_equal 1, bo.method_list.length
 
@@ -1631,7 +1631,7 @@ rb_m(int argc, VALUE *argv, VALUE obj) {
     parser.handle_method('private_method', 'rb_cBasicObject',
                          'initialize', 'rb_obj_dummy', -1)
 
-    bo = @top_level.find_module_named 'BasicObject'
+    bo = @file.find_module_named 'BasicObject'
 
     assert_equal 1, bo.method_list.length
 
@@ -1660,15 +1660,15 @@ void Init_Blah(void) {
 
     comment = RDoc::Comment.new "* :other: not_handled\n"
 
-    parser.look_for_directives_in @top_level, comment
+    parser.look_for_directives_in @file, comment
 
     assert_empty comment.text
-    assert_equal 'not_handled', @top_level.metadata['other']
+    assert_equal 'not_handled', @file.metadata['other']
   end
 
   def test_load_variable_map
-    some_ext = @top_level.add_class RDoc::NormalClass, 'SomeExt'
-               @top_level.add_class RDoc::NormalClass, 'OtherExt'
+    some_ext = @file.add_class RDoc::NormalClass, 'SomeExt'
+               @file.add_class RDoc::NormalClass, 'OtherExt'
 
     @store.cache[:c_class_variables][@fn]       = { 'cSomeExt'  => 'SomeExt'  }
     @store.cache[:c_class_variables]['other.c'] = { 'cOtherExt' => 'OtherExt' }
@@ -1704,8 +1704,8 @@ void Init_Blah(void) {
   end
 
   def test_load_variable_map_singleton
-    @top_level.add_class RDoc::NormalClass, 'SomeExt'
-    @top_level.add_class RDoc::NormalClass, 'OtherExt'
+    @file.add_class RDoc::NormalClass, 'SomeExt'
+    @file.add_class RDoc::NormalClass, 'OtherExt'
 
     @store.cache[:c_singleton_class_variables][@fn] =
       { 'cSomeExt'  => 'SomeExt'  }
@@ -1725,7 +1725,7 @@ void Init_Blah(void) {
   end
 
   def test_load_variable_map_trim
-    a = @top_level.add_class RDoc::NormalClass, 'A'
+    a = @file.add_class RDoc::NormalClass, 'A'
 
     @store.cache[:c_class_variables][@fn] = {
       'cA'  => 'A',
@@ -2026,7 +2026,7 @@ void Init(void) {
  *
  *  Return the path as a String.
  *
- *  to_path is implemented so Pathname objects are usable with File.open, etc.
+ *  to_path is implemented so Pathname objects are usable with ::File.open, etc.
  */
 static VALUE
 path_to_s(VALUE self) { }
@@ -2224,7 +2224,7 @@ void Init_Blah(void) {
   end
 
   def util_parser(content = '')
-    RDoc::Parser::C.new @top_level, content, @options, @stats
+    RDoc::Parser::C.new @file, content, @options, @stats
   end
 
 end

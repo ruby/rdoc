@@ -170,7 +170,7 @@ class RDoc::Store
   # Adds C variables from an RDoc::Parser::C
 
   def add_c_variables(c_parser)
-    filename = c_parser.top_level.relative_name
+    filename = c_parser.file.relative_name
 
     @c_class_variables[filename] = make_variable_map c_parser.classes
 
@@ -178,19 +178,19 @@ class RDoc::Store
   end
 
   ##
-  # Adds the file with +name+ as an RDoc::TopLevel to the store.  Returns the
-  # created RDoc::TopLevel.
+  # Adds the file with +name+ as an RDoc::File to the store.  Returns the
+  # created RDoc::File.
 
   def add_file(absolute_name, relative_name: absolute_name, parser: nil)
-    unless top_level = @files_hash[relative_name] then
-      top_level = RDoc::TopLevel.new absolute_name, relative_name
-      top_level.parser = parser if parser
-      top_level.store = self
-      @files_hash[relative_name] = top_level
-      @text_files_hash[relative_name] = top_level if top_level.text?
+    unless file = @files_hash[relative_name] then
+      file = RDoc::File.new absolute_name, relative_name
+      file.parser = parser if parser
+      file.store = self
+      @files_hash[relative_name] = file
+      @text_files_hash[relative_name] = file if file.text?
     end
 
-    top_level
+    file
   end
 
   ##
@@ -209,8 +209,8 @@ class RDoc::Store
   # Sets the parser of +absolute_name+, unless it from a source code file.
 
   def update_parser_of_file(absolute_name, parser)
-    if top_level = @files_hash[absolute_name] then
-      @text_files_hash[absolute_name] = top_level if top_level.text?
+    if file = @files_hash[absolute_name] then
+      @text_files_hash[absolute_name] = file if file.text?
     end
   end
 
@@ -262,7 +262,7 @@ class RDoc::Store
   # Path to the cache file
 
   def cache_path
-    File.join @path, 'cache.ri'
+    ::File.join @path, 'cache.ri'
   end
 
   ##
@@ -270,7 +270,7 @@ class RDoc::Store
 
   def class_file(klass_name)
     name = klass_name.split('::').last
-    File.join class_path(klass_name), "cdesc-#{name}.ri"
+    ::File.join class_path(klass_name), "cdesc-#{name}.ri"
   end
 
   ##
@@ -285,7 +285,7 @@ class RDoc::Store
   # Path where data for +klass_name+ will be stored (methods or class data)
 
   def class_path(klass_name)
-    File.join @path, *klass_name.split('::')
+    ::File.join @path, *klass_name.split('::')
   end
 
   ##
@@ -409,7 +409,7 @@ class RDoc::Store
   def find_class_named_from(name, from)
     from = find_class_named from unless RDoc::Context === from
 
-    until RDoc::TopLevel === from do
+    until RDoc::File === from do
       return nil unless from
 
       klass = from.find_class_named name
@@ -444,7 +444,7 @@ class RDoc::Store
   end
 
   ##
-  # Returns the RDoc::TopLevel that is a text file and has the given
+  # Returns the RDoc::File that is a text file and has the given
   # +file_name+
 
   def find_text_page(file_name)
@@ -491,8 +491,8 @@ class RDoc::Store
   def friendly_path
     case type
     when :gem    then
-      parent = File.expand_path '..', @path
-      "gem #{File.basename parent}"
+      parent = ::File.expand_path '..', @path
+      "gem #{::File.basename parent}"
     when :home   then RDoc.home
     when :site   then 'ruby site'
     when :system then 'ruby core'
@@ -701,7 +701,7 @@ class RDoc::Store
     method_name = $1 if $1
     method_name = method_name.gsub(/\W/) { "%%%02x" % $&[0].ord }
 
-    File.join class_path(klass_name), "#{method_name}-#{method_type}.ri"
+    ::File.join class_path(klass_name), "#{method_name}-#{method_type}.ri"
   end
 
   ##
@@ -720,7 +720,7 @@ class RDoc::Store
   end
 
   ##
-  # Returns the RDoc::TopLevel that is a file and has the given +name+
+  # Returns the RDoc::File that is a file and has the given +name+
 
   def page(name)
     @files_hash.each_value.find do |file|
@@ -732,9 +732,9 @@ class RDoc::Store
   # Path to the ri data for +page_name+
 
   def page_file(page_name)
-    file_name = File.basename(page_name).gsub('.', '_')
+    file_name = ::File.basename(page_name).gsub('.', '_')
 
-    File.join @path, File.dirname(page_name), "page-#{file_name}.ri"
+    ::File.join @path, ::File.dirname(page_name), "page-#{file_name}.ri"
   end
 
   ##
@@ -796,7 +796,7 @@ class RDoc::Store
 
     return if @dry_run
 
-    File.open cache_path, 'wb' do |io|
+    ::File.open cache_path, 'wb' do |io|
       Marshal.dump @cache, io
     end
   end
@@ -870,7 +870,7 @@ class RDoc::Store
 
     FileUtils.rm_f to_delete
 
-    File.open path, 'wb' do |io|
+    ::File.open path, 'wb' do |io|
       Marshal.dump klass, io
     end
   end
@@ -893,7 +893,7 @@ class RDoc::Store
 
     return if @dry_run
 
-    File.open method_file(full_name, method.full_name), 'wb' do |io|
+    ::File.open method_file(full_name, method.full_name), 'wb' do |io|
       Marshal.dump method, io
     end
   end
@@ -906,14 +906,14 @@ class RDoc::Store
 
     path = page_file page.full_name
 
-    FileUtils.mkdir_p File.dirname(path) unless @dry_run
+    FileUtils.mkdir_p ::File.dirname(path) unless @dry_run
 
     cache[:pages] ||= []
     cache[:pages] << page.full_name
 
     return if @dry_run
 
-    File.open path, 'wb' do |io|
+    ::File.open path, 'wb' do |io|
       Marshal.dump page, io
     end
   end
@@ -929,7 +929,7 @@ class RDoc::Store
 
   def source
     case type
-    when :gem    then File.basename File.expand_path '..', @path
+    when :gem    then ::File.basename ::File.expand_path '..', @path
     when :home   then 'home'
     when :site   then 'site'
     when :system then 'ruby'
@@ -979,7 +979,7 @@ class RDoc::Store
 
   private
   def marshal_load(file)
-    File.open(file, 'rb') {|io| Marshal.load(io, MarshalFilter)}
+    ::File.open(file, 'rb') {|io| Marshal.load(io, MarshalFilter)}
   end
 
   MarshalFilter = proc do |obj|

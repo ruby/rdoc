@@ -8,9 +8,9 @@ class RDocCommentTest < RDoc::TestCase
   def setup
     super
 
-    @top_level = @store.add_file 'file.rb'
+    @file = @store.add_file 'file.rb'
     @comment = RDoc::Comment.new
-    @comment.location = @top_level
+    @comment.location = @file
     @comment.text = 'this is a comment'
   end
 
@@ -42,7 +42,7 @@ class RDocCommentTest < RDoc::TestCase
   end
 
   def test_extract_call_seq
-    comment = RDoc::Comment.new <<-COMMENT, @top_level
+    comment = RDoc::Comment.new <<-COMMENT, @file
 call-seq:
   bla => true or false
 
@@ -53,7 +53,7 @@ moar comment
   end
 
   def test_extract_call_seq_blank
-    comment = RDoc::Comment.new <<-COMMENT, @top_level
+    comment = RDoc::Comment.new <<-COMMENT, @file
 call-seq:
   bla => true or false
 
@@ -63,7 +63,7 @@ call-seq:
   end
 
   def test_extract_call_seq_commented
-    comment = RDoc::Comment.new <<-COMMENT, @top_level
+    comment = RDoc::Comment.new <<-COMMENT, @file
 # call-seq:
 #   bla => true or false
 #
@@ -74,7 +74,7 @@ call-seq:
   end
 
   def test_extract_call_seq_no_blank
-    comment = RDoc::Comment.new <<-COMMENT, @top_level
+    comment = RDoc::Comment.new <<-COMMENT, @file
 call-seq:
   bla => true or false
     COMMENT
@@ -83,7 +83,7 @@ call-seq:
   end
 
   def test_extract_call_seq_undent
-    comment = RDoc::Comment.new <<-COMMENT, @top_level
+    comment = RDoc::Comment.new <<-COMMENT, @file
 call-seq:
   bla => true or false
 moar comment
@@ -217,7 +217,7 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
   end
 
   def test_location
-    assert_equal @top_level, @comment.location
+    assert_equal @file, @comment.location
   end
 
   def test_normalize
@@ -274,7 +274,7 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
   end
 
   def test_text_equals_no_text
-    c = RDoc::Comment.new nil, @top_level
+    c = RDoc::Comment.new nil, @file
     c.document = @RM::Document.new
 
     e = assert_raise RDoc::Error do
@@ -306,26 +306,26 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
     expected = @RM::Document.new(
       @RM::Paragraph.new('this is a comment'))
 
-    expected.file = @top_level
+    expected.file = @file
 
     assert_equal expected, parsed
     assert_same  parsed, @comment.parse
   end
 
   def test_parse_rd
-    c = comment 'it ((*works*))'
+    c = comment 'it ((*works*))', @file
     c.format = 'rd'
 
     expected =
       @RM::Document.new(
         @RM::Paragraph.new('it <em>works</em>'))
-    expected.file = @top_level
+    expected.file = @file
 
     assert_equal expected, c.parse
   end
 
   def test_remove_private_encoding
-    comment = RDoc::Comment.new <<-EOS, @top_level
+    comment = RDoc::Comment.new <<-EOS, @file
 # This is text
 #--
 # this is private
@@ -352,13 +352,13 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
   end
 
   def test_remove_private_hash_trail
-    comment = RDoc::Comment.new <<-EOS, @top_level
+    comment = RDoc::Comment.new <<-EOS, @file
 # This is text
 #--
 # this is private
     EOS
 
-    expected = RDoc::Comment.new <<-EOS, @top_level
+    expected = RDoc::Comment.new <<-EOS, @file
 # This is text
     EOS
 
@@ -368,14 +368,14 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
   end
 
   def test_remove_private_long
-    comment = RDoc::Comment.new <<-EOS, @top_level
+    comment = RDoc::Comment.new <<-EOS, @file
 #-----
 #++
 # this is text
 #-----
     EOS
 
-    expected = RDoc::Comment.new <<-EOS, @top_level
+    expected = RDoc::Comment.new <<-EOS, @file
 # this is text
     EOS
 
@@ -385,7 +385,7 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
   end
 
   def test_remove_private_rule
-    comment = RDoc::Comment.new <<-EOS, @top_level
+    comment = RDoc::Comment.new <<-EOS, @file
 # This is text with a rule:
 # ---
 # this is also text
@@ -428,7 +428,7 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
   end
 
   def test_remove_private_toggle
-    comment = RDoc::Comment.new <<-EOS, @top_level
+    comment = RDoc::Comment.new <<-EOS, @file
 # This is text
 #--
 # this is private
@@ -436,7 +436,7 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
 # This is text again.
     EOS
 
-    expected = RDoc::Comment.new <<-EOS, @top_level
+    expected = RDoc::Comment.new <<-EOS, @file
 # This is text
 # This is text again.
     EOS
@@ -447,7 +447,7 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
   end
 
   def test_remove_private_toggle_encoding
-    comment = RDoc::Comment.new <<-EOS, @top_level
+    comment = RDoc::Comment.new <<-EOS, @file
 # This is text
 #--
 # this is private
@@ -463,7 +463,7 @@ lines, one line per element. Lines are assumed to be separated by _sep_.
   end
 
   def test_remove_private_toggle_encoding_ruby_bug?
-    comment = RDoc::Comment.new <<-EOS, @top_level
+    comment = RDoc::Comment.new <<-EOS, @file
 #--
 # this is private
 #++

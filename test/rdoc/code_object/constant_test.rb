@@ -10,10 +10,10 @@ class RDocConstantTest < XrefTestCase
   end
 
   def test_documented_eh
-    top_level = @store.add_file 'file.rb'
+    file = @store.add_file 'file.rb'
 
     const = RDoc::Constant.new 'CONST', nil, nil
-    top_level.add_constant const
+    file.add_constant const
 
     refute const.documented?
 
@@ -23,10 +23,10 @@ class RDocConstantTest < XrefTestCase
   end
 
   def test_documented_eh_alias
-    top_level = @store.add_file 'file.rb'
+    file = @store.add_file 'file.rb'
 
     const = RDoc::Constant.new 'CONST', nil, nil
-    top_level.add_constant const
+    file.add_constant const
 
     refute const.documented?
 
@@ -34,7 +34,7 @@ class RDocConstantTest < XrefTestCase
 
     refute const.documented?
 
-    @c1.add_comment comment('comment'), @top_level
+    @c1.add_comment comment('comment'), @file
 
     assert const.documented?
   end
@@ -44,10 +44,10 @@ class RDocConstantTest < XrefTestCase
   end
 
   def test_is_alias_for
-    top_level = @store.add_file 'file.rb'
+    file = @store.add_file 'file.rb'
 
     c = RDoc::Constant.new 'CONST', nil, 'comment'
-    top_level.add_constant c
+    file.add_constant c
 
     assert_nil c.is_alias_for
 
@@ -61,15 +61,15 @@ class RDocConstantTest < XrefTestCase
   end
 
   def test_marshal_dump
-    top_level = @store.add_file 'file.rb'
+    file = @store.add_file 'file.rb'
 
     c = RDoc::Constant.new 'CONST', nil, 'this is a comment'
-    c.record_location top_level
+    c.record_location file
 
-    aliased = top_level.add_class RDoc::NormalClass, 'Aliased'
+    aliased = file.add_class RDoc::NormalClass, 'Aliased'
     c.is_alias_for = aliased
 
-    cm = top_level.add_class RDoc::NormalClass, 'Klass'
+    cm = file.add_class RDoc::NormalClass, 'Klass'
     cm.add_constant c
 
     section = cm.sections.first
@@ -83,7 +83,7 @@ class RDocConstantTest < XrefTestCase
 
     assert_equal aliased,        loaded.is_alias_for
     assert_equal document,       loaded.comment.parse
-    assert_equal top_level,      loaded.file
+    assert_equal file,      loaded.file
     assert_equal 'Klass::CONST', loaded.full_name
     assert_equal 'CONST',        loaded.name
     assert_equal :public,        loaded.visibility
@@ -92,12 +92,12 @@ class RDocConstantTest < XrefTestCase
   end
 
   def test_marshal_load
-    top_level = @store.add_file 'file.rb'
+    file = @store.add_file 'file.rb'
 
     c = RDoc::Constant.new 'CONST', nil, 'this is a comment'
-    c.record_location top_level
+    c.record_location file
 
-    cm = top_level.add_class RDoc::NormalClass, 'Klass'
+    cm = file.add_class RDoc::NormalClass, 'Klass'
     cm.add_constant c
 
     section = cm.sections.first
@@ -111,7 +111,7 @@ class RDocConstantTest < XrefTestCase
 
     assert_nil                   loaded.is_alias_for
     assert_equal document,       loaded.comment.parse
-    assert_equal top_level,      loaded.file
+    assert_equal file,      loaded.file
     assert_equal 'Klass::CONST', loaded.full_name
     assert_equal 'CONST',        loaded.name
     assert_equal :public,        loaded.visibility
@@ -122,10 +122,10 @@ class RDocConstantTest < XrefTestCase
   end
 
   def test_marshal_load_version_0
-    top_level = @store.add_file 'file.rb'
+    file = @store.add_file 'file.rb'
 
-    aliased = top_level.add_class RDoc::NormalClass, 'Aliased'
-    cm      = top_level.add_class RDoc::NormalClass, 'Klass'
+    aliased = file.add_class RDoc::NormalClass, 'Aliased'
+    cm      = file.add_class RDoc::NormalClass, 'Klass'
     section = cm.sections.first
 
     loaded = Marshal.load "\x04\bU:\x13RDoc::Constant[\x0Fi\x00I" +
@@ -143,7 +143,7 @@ class RDocConstantTest < XrefTestCase
 
     assert_equal aliased,        loaded.is_alias_for
     assert_equal document,       loaded.comment.parse
-    assert_equal top_level,      loaded.file
+    assert_equal file,      loaded.file
     assert_equal 'Klass::CONST', loaded.full_name
     assert_equal 'CONST',        loaded.name
     assert_equal :public,        loaded.visibility
@@ -154,13 +154,13 @@ class RDocConstantTest < XrefTestCase
   end
 
   def test_marshal_round_trip
-    top_level = @store.add_file 'file.rb'
+    file = @store.add_file 'file.rb'
 
     c = RDoc::Constant.new 'CONST', nil, 'this is a comment'
-    c.record_location top_level
+    c.record_location file
     c.is_alias_for = 'Unknown'
 
-    cm = top_level.add_class RDoc::NormalClass, 'Klass'
+    cm = file.add_class RDoc::NormalClass, 'Klass'
     cm.add_constant c
 
     section = cm.sections.first

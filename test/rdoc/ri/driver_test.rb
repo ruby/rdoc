@@ -6,12 +6,12 @@ class RDocRIDriverTest < RDoc::TestCase
   def setup
     super
 
-    @home_ri = File.join @test_home, 'dot_ri'
+    @home_ri = ::File.join @test_home, 'dot_ri'
 
     FileUtils.mkdir_p @home_ri
 
     @orig_ri = ENV.delete('RI')
-    @rdoc_home = File.join @test_home, ".rdoc"
+    @rdoc_home = ::File.join @test_home, ".rdoc"
     FileUtils.mkdir_p @rdoc_home
 
     @options = RDoc::RI::Driver.default_options
@@ -965,10 +965,10 @@ Foo::Bar#bother
   def test_expand_class_2
     @store1 = RDoc::RI::Store.new(@rdoc_options, path: @home_ri, type: :home)
 
-    @top_level = @store1.add_file 'file.rb'
+    @file = @store1.add_file 'file.rb'
 
-    @cFoo = @top_level.add_class RDoc::NormalClass, 'Foo'
-    @mFox = @top_level.add_module RDoc::NormalModule, 'Fox'
+    @cFoo = @file.add_class RDoc::NormalClass, 'Foo'
+    @mFox = @file.add_module RDoc::NormalModule, 'Fox'
     @cFoo_Bar = @cFoo.add_class RDoc::NormalClass, 'Bar'
     @store1.save
 
@@ -983,10 +983,10 @@ Foo::Bar#bother
   def test_expand_class_3
     @store1 = RDoc::RI::Store.new(@rdoc_options, path: @home_ri, type: :home)
 
-    @top_level = @store1.add_file 'file.rb'
+    @file = @store1.add_file 'file.rb'
 
-    @cFoo = @top_level.add_class RDoc::NormalClass, 'Foo'
-    @mFox = @top_level.add_module RDoc::NormalModule, 'FooBar'
+    @cFoo = @file.add_class RDoc::NormalClass, 'Foo'
+    @mFox = @file.add_module RDoc::NormalModule, 'FooBar'
     @store1.save
 
     @driver.stores = [@store1]
@@ -1209,12 +1209,12 @@ Foo::Bar#bother
     util_store
 
     index = RDoc::AnyMethod.new nil, '[]'
-    index.record_location @top_level
+    index.record_location @file
     @cFoo.add_method index
     @store1.save_method @cFoo, index
 
     c_index = RDoc::AnyMethod.new nil, '[]', singleton: true
-    c_index.record_location @top_level
+    c_index.record_location @file
     @cFoo.add_method c_index
     @store1.save_method @cFoo, c_index
 
@@ -1515,22 +1515,22 @@ Foo::Bar#bother
     @home_ri2 = "#{@home_ri}2"
     @store2 = RDoc::RI::Store.new(@rdoc_options, path: @home_ri2)
 
-    @top_level = @store2.add_file 'file.rb'
+    @file = @store2.add_file 'file.rb'
 
     # as if seen in a namespace like class Ambiguous::Other
-    @mAmbiguous = @top_level.add_module RDoc::NormalModule, 'Ambiguous'
+    @mAmbiguous = @file.add_module RDoc::NormalModule, 'Ambiguous'
 
-    @cFoo = @top_level.add_class RDoc::NormalClass, 'Foo'
+    @cFoo = @file.add_class RDoc::NormalClass, 'Foo'
 
-    @cBar = @top_level.add_class RDoc::NormalClass, 'Bar', 'Foo'
+    @cBar = @file.add_class RDoc::NormalClass, 'Bar', 'Foo'
     @cFoo_Baz = @cFoo.add_class RDoc::NormalClass, 'Baz'
 
     @baz = @cBar.add_method RDoc::AnyMethod.new(nil, 'baz')
-    @baz.record_location @top_level
+    @baz.record_location @file
 
     @override = @cBar.add_method RDoc::AnyMethod.new(nil, 'override')
     @override.comment = 'must be displayed'
-    @override.record_location @top_level
+    @override.record_location @file
 
     @store2.save
 
@@ -1540,66 +1540,66 @@ Foo::Bar#bother
   def util_store
     @store1 = RDoc::RI::Store.new(@rdoc_options, path: @home_ri, type: :home)
 
-    @top_level = @store1.add_file 'file.rb'
+    @file = @store1.add_file 'file.rb'
 
     @readme = @store1.add_file 'README.md'
     @readme.parser = RDoc::Parser::Simple
     @readme.comment = RDoc::Comment.from_document(doc(head(1, 'README'), para('This is a README')))
 
-    @cFoo = @top_level.add_class RDoc::NormalClass, 'Foo'
-    @mExt = @top_level.add_module RDoc::NormalModule, 'Ext'
-    @mInc = @top_level.add_module RDoc::NormalModule, 'Inc'
-    @cAmbiguous = @top_level.add_class RDoc::NormalClass, 'Ambiguous'
+    @cFoo = @file.add_class RDoc::NormalClass, 'Foo'
+    @mExt = @file.add_module RDoc::NormalModule, 'Ext'
+    @mInc = @file.add_module RDoc::NormalModule, 'Inc'
+    @cAmbiguous = @file.add_class RDoc::NormalClass, 'Ambiguous'
 
     doc = @RM::Document.new @RM::Paragraph.new('Extend thingy')
     @cFooExt = @cFoo.add_extend RDoc::Extend.new('Ext', RDoc::Comment.from_document(doc))
-    @cFooExt.record_location @top_level
+    @cFooExt.record_location @file
     doc = @RM::Document.new @RM::Paragraph.new('Include thingy')
     @cFooInc = @cFoo.add_include RDoc::Include.new('Inc', RDoc::Comment.from_document(doc))
-    @cFooInc.record_location @top_level
+    @cFooInc.record_location @file
 
     @cFoo_Bar = @cFoo.add_class RDoc::NormalClass, 'Bar'
-    @cFoo_Bar.add_comment "See also {Doc}[rdoc-ref:README.md]", @top_level
-    @cFoo_Bar.record_location @top_level
+    @cFoo_Bar.add_comment "See also {Doc}[rdoc-ref:README.md]", @file
+    @cFoo_Bar.record_location @file
 
     @blah = @cFoo_Bar.add_method RDoc::AnyMethod.new(nil, 'blah')
     @blah.call_seq = "blah(5) => 5\nblah(6) => 6\n"
-    @blah.record_location @top_level
+    @blah.record_location @file
 
     @blah_with_rdoc_ref = @cFoo_Bar.add_method RDoc::AnyMethod.new(nil, 'blah_with_rdoc_ref')
     @blah_with_rdoc_ref.call_seq = "blah(5) => 5\nSee also {Doc}[rdoc-ref:README.md]"
-    @blah_with_rdoc_ref.record_location @top_level
+    @blah_with_rdoc_ref.record_location @file
 
     @bother = @cFoo_Bar.add_method RDoc::AnyMethod.new(nil, 'bother')
     @bother.block_params = "stuff"
     @bother.params = "(things)"
-    @bother.record_location @top_level
+    @bother.record_location @file
 
     @new = @cFoo_Bar.add_method RDoc::AnyMethod.new nil, 'new', singleton: true
-    @new.record_location @top_level
+    @new.record_location @file
 
     @attr = @cFoo_Bar.add_attribute RDoc::Attr.new nil, 'attr', 'RW', ''
-    @attr.record_location @top_level
+    @attr.record_location @file
 
     @cFoo_Baz = @cFoo.add_class RDoc::NormalClass, 'Baz'
-    @cFoo_Baz.record_location @top_level
+    @cFoo_Baz.record_location @file
 
     @inherit = @cFoo.add_method RDoc::AnyMethod.new(nil, 'inherit')
-    @inherit.record_location @top_level
+    @inherit.record_location @file
 
     # overridden by Bar in multi_store
     @overridden = @cFoo.add_method RDoc::AnyMethod.new(nil, 'override')
     @overridden.comment = 'must not be displayed in Bar#override'
-    @overridden.record_location @top_level
+    @overridden.record_location @file
 
-    @cQux = @top_level.add_class RDoc::NormalClass, 'Qux'
+    @cQux = @file.add_class RDoc::NormalClass, 'Qux'
 
     @original = @cQux.add_method RDoc::AnyMethod.new(nil, 'original')
     @original.comment = 'original comment'
-    @original.record_location @top_level
+    @original.record_location @file
 
     @aliased = @original.add_alias RDoc::Alias.new(nil, 'original', 'aliased', 'alias comment'), @cQux
-    @aliased.record_location @top_level
+    @aliased.record_location @file
 
     @store1.save
 

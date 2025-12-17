@@ -44,7 +44,7 @@ class RDoc::TestCase < Test::Unit::TestCase
     FileUtils.mkdir_p(@test_home = Dir.mktmpdir("test_rdoc_"))
     ENV["HOME"] = @test_home
 
-    @top_level = nil
+    @file = nil
 
     @RM = RDoc::Markup
 
@@ -76,21 +76,21 @@ class RDoc::TestCase < Test::Unit::TestCase
   # Asserts +path+ is a file
 
   def assert_file(path)
-    assert File.file?(path), "#{path} is not a file"
+    assert ::File.file?(path), "#{path} is not a file"
   end
 
   ##
   # Asserts +path+ is a directory
 
   def assert_directory(path)
-    assert File.directory?(path), "#{path} is not a directory"
+    assert ::File.directory?(path), "#{path} is not a directory"
   end
 
   ##
   # Refutes +path+ exists
 
   def refute_file(path)
-    refute File.exist?(path), "#{path} exists"
+    refute ::File.exist?(path), "#{path} exists"
   end
 
   ##
@@ -108,11 +108,11 @@ class RDoc::TestCase < Test::Unit::TestCase
   end
 
   ##
-  # Creates an RDoc::Comment with +text+ which was defined on +top_level+.
+  # Creates an RDoc::Comment with +text+ which was defined on +file+.
   # By default the comment has the 'rdoc' format.
 
-  def comment(text, top_level = @top_level, language = nil)
-    comment = RDoc::Comment.new text, top_level, language
+  def comment(text, file = @file, language = nil)
+    comment = RDoc::Comment.new text, file, language
     comment
   end
 

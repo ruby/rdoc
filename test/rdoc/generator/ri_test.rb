@@ -10,22 +10,22 @@ class RDocGeneratorRITest < RDoc::TestCase
     @options.encoding = Encoding::UTF_8
     @store.encoding = Encoding::UTF_8
 
-    @tmpdir = File.join Dir.tmpdir, "test_rdoc_generator_ri_#{$$}"
+    @tmpdir = ::File.join Dir.tmpdir, "test_rdoc_generator_ri_#{$$}"
     FileUtils.mkdir_p @tmpdir
 
     @g = RDoc::Generator::RI.new @store, @options
 
-    @top_level = @store.add_file 'file.rb'
-    @klass = @top_level.add_class RDoc::NormalClass, 'Object'
+    @file = @store.add_file 'file.rb'
+    @klass = @file.add_class RDoc::NormalClass, 'Object'
 
     @meth = RDoc::AnyMethod.new nil, 'method'
-    @meth.record_location @top_level
+    @meth.record_location @file
 
     @meth_bang = RDoc::AnyMethod.new nil, 'method!'
-    @meth_bang.record_location @top_level
+    @meth_bang.record_location @file
 
     @attr = RDoc::Attr.new nil, 'attr', 'RW', ''
-    @attr.record_location @top_level
+    @attr.record_location @file
 
     @klass.add_method @meth
     @klass.add_method @meth_bang
@@ -44,13 +44,13 @@ class RDocGeneratorRITest < RDoc::TestCase
   def test_generate
     @g.generate
 
-    assert_file File.join(@tmpdir, 'cache.ri')
+    assert_file ::File.join(@tmpdir, 'cache.ri')
 
-    assert_file File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
+    assert_file ::File.join(@tmpdir, 'Object', 'cdesc-Object.ri')
 
-    assert_file File.join(@tmpdir, 'Object', 'attr-i.ri')
-    assert_file File.join(@tmpdir, 'Object', 'method-i.ri')
-    assert_file File.join(@tmpdir, 'Object', 'method%21-i.ri')
+    assert_file ::File.join(@tmpdir, 'Object', 'attr-i.ri')
+    assert_file ::File.join(@tmpdir, 'Object', 'method-i.ri')
+    assert_file ::File.join(@tmpdir, 'Object', 'method%21-i.ri')
 
     store = RDoc::RI::Store.new(@options, path: @tmpdir)
     store.load_cache
@@ -64,13 +64,13 @@ class RDocGeneratorRITest < RDoc::TestCase
     @store.dry_run = true
     @g = RDoc::Generator::RI.new @store, @options
 
-    top_level = @store.add_file 'file.rb'
-    top_level.add_class @klass.class, @klass.name
+    file = @store.add_file 'file.rb'
+    file.add_class @klass.class, @klass.name
 
     @g.generate
 
-    refute_file File.join(@tmpdir, 'cache.ri')
-    refute_file File.join(@tmpdir, 'Object')
+    refute_file ::File.join(@tmpdir, 'cache.ri')
+    refute_file ::File.join(@tmpdir, 'Object')
   end
 
 end

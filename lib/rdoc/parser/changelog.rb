@@ -44,9 +44,9 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
   def create_document(groups)
     doc = RDoc::Markup::Document.new
     doc.omit_headings_below = 2
-    doc.file = @top_level
+    doc.file = @file
 
-    doc << RDoc::Markup::Heading.new(1, File.basename(@file_name))
+    doc << RDoc::Markup::Heading.new(1, ::File.basename(@file_name))
     doc << RDoc::Markup::BlankLine.new
 
     groups.sort_by do |day,| day end.reverse_each do |day, entries|
@@ -212,9 +212,9 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
     doc = create_document grouped_entries
     comment = RDoc::Comment.new(@content)
     comment.document = doc
-    @top_level.comment = comment
+    @file.comment = comment
 
-    @top_level
+    @file
   end
 
   ##

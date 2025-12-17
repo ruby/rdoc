@@ -8,7 +8,7 @@ class RDocIncludeTest < XrefTestCase
 
     @inc = RDoc::Include.new 'M1', 'comment'
     @inc.parent = @m1
-    @inc.record_location @top_level
+    @inc.record_location @file
     @inc.store = @store
   end
 
@@ -98,11 +98,11 @@ class RDocIncludeTest < XrefTestCase
 
   def test_store_equals
     incl = RDoc::Include.new 'M', nil
-    incl.record_location RDoc::TopLevel.new @top_level.name
+    incl.record_location RDoc::File.new @file.name
 
     incl.store = @store
 
-    assert_same @top_level, incl.file
+    assert_same @file, incl.file
     assert_same @store,     incl.file.store
   end
 

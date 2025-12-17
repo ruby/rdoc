@@ -8,7 +8,7 @@
 # Here's the tree of the CodeObject subclasses:
 #
 # * RDoc::Context
-#   * RDoc::TopLevel
+#   * RDoc::File
 #   * RDoc::ClassModule
 #     * RDoc::AnonClass (never used so far)
 #     * RDoc::NormalClass
@@ -291,7 +291,7 @@ class RDoc::CodeObject
     return @parent if @parent
     return nil unless @parent_name
 
-    if @parent_class == RDoc::TopLevel then
+    if @parent_class == RDoc::File then
       @parent = @store.add_file @parent_name
     else
       @parent = @store.find_class_or_module @parent_name
@@ -314,12 +314,12 @@ class RDoc::CodeObject
   end
 
   ##
-  # Records the RDoc::TopLevel (file) where this code object was defined
+  # Records the RDoc::File (file) where this code object was defined
 
-  def record_location(top_level)
+  def record_location(file)
     @ignored    = false
     @suppressed = false
-    @file       = top_level
+    @file       = file
   end
 
   ##

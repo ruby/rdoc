@@ -12,7 +12,7 @@ module RDoc::RI::Paths
 
   version = RbConfig::CONFIG['ruby_version']
 
-  BASE    = File.join RbConfig::CONFIG['ridir'], version
+  BASE    = ::File.join RbConfig::CONFIG['ridir'], version
 
   HOMEDIR = RDoc.home
   #:startdoc:
@@ -57,7 +57,7 @@ module RDoc::RI::Paths
 
     spec = Gem::Specification.find_by_name name, req
 
-    File.join spec.doc_dir, 'ri'
+    ::File.join spec.doc_dir, 'ri'
   end
 
   ##
@@ -71,7 +71,7 @@ module RDoc::RI::Paths
     ri_paths = {}
 
     all = Gem::Specification.map do |spec|
-      [File.join(spec.doc_dir, 'ri'), spec.name, spec.version]
+      [::File.join(spec.doc_dir, 'ri'), spec.name, spec.version]
     end
 
     if filter == :all then
@@ -93,7 +93,7 @@ module RDoc::RI::Paths
     end
 
     all.each do |dir, name, ver|
-      next unless File.exist? dir
+      next unless ::File.exist? dir
 
       if ri_paths[name].nil? or ver > ri_paths[name].first then
         ri_paths[name] = [ver, name, dir]
@@ -125,7 +125,7 @@ module RDoc::RI::Paths
   def self.path(system = true, site = true, home = true, gems = :latest, *extra_dirs)
     path = raw_path system, site, home, gems, *extra_dirs
 
-    path.select { |directory| File.directory? directory }
+    path.select { |directory| ::File.directory? directory }
   end
 
   ##
@@ -152,7 +152,7 @@ module RDoc::RI::Paths
   # modern Ruby installations.
 
   def self.site_dir
-    File.join BASE, 'site'
+    ::File.join BASE, 'site'
   end
 
   ##
@@ -165,7 +165,7 @@ module RDoc::RI::Paths
   # rdoc-data gem to install system ri data for common versions of Ruby.
 
   def self.system_dir
-    File.join BASE, 'system'
+    ::File.join BASE, 'system'
   end
 
 end

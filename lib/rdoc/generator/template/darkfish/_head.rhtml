@@ -39,5 +39,5 @@
 <link href="<%= h asset_rel_prefix %>/css/fonts.css" rel="stylesheet">
 <link href="<%= h asset_rel_prefix %>/css/rdoc.css" rel="stylesheet">
 <%- @options.template_stylesheets.each do |stylesheet| %>
-<link href="<%= h asset_rel_prefix %>/<%= File.basename stylesheet %>" rel="stylesheet">
+<link href="<%= h asset_rel_prefix %>/<%= ::File.basename stylesheet %>" rel="stylesheet">
 <%- end %>

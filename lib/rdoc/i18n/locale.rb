@@ -64,11 +64,11 @@ class RDoc::I18n::Locale
     return false if @name.nil?
 
     po_file_candidates = [
-      File.join(locale_directory, @name, 'rdoc.po'),
-      File.join(locale_directory, "#{@name}.po"),
+      ::File.join(locale_directory, @name, 'rdoc.po'),
+      ::File.join(locale_directory, "#{@name}.po"),
     ]
     po_file = po_file_candidates.find do |po_file_candidate|
-      File.exist?(po_file_candidate)
+      ::File.exist?(po_file_candidate)
     end
     return false unless po_file
 

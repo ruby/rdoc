@@ -108,7 +108,7 @@ class RDocOptionsTest < RDoc::TestCase
       FileUtils.touch 'file'
 
       Dir.chdir 'project' do
-        subdir = File.expand_path 'subdir'
+        subdir = ::File.expand_path 'subdir'
         FileUtils.mkdir 'subdir'
         @options.parse %w[
           --copy subdir
@@ -179,10 +179,10 @@ rdoc_include:
   end
 
   def test_parse_copy_files_file_relative
-    file = File.basename __FILE__
-    expected = File.expand_path __FILE__
+    file = ::File.basename __FILE__
+    expected = ::File.expand_path __FILE__
 
-    Dir.chdir File.expand_path('..', __FILE__) do
+    Dir.chdir ::File.expand_path('..', __FILE__) do
       @options.parse %W[--copy-files #{file}]
 
       assert_equal [expected], @options.static_path
@@ -190,9 +190,9 @@ rdoc_include:
   end
 
   def test_parse_copy_files_file_absolute
-    @options.parse %W[--copy-files #{File.expand_path __FILE__}]
+    @options.parse %W[--copy-files #{::File.expand_path __FILE__}]
 
-    assert_equal [File.expand_path(__FILE__)], @options.static_path
+    assert_equal [::File.expand_path(__FILE__)], @options.static_path
   end
 
   def test_parse_copy_files_directory_relative
@@ -262,7 +262,7 @@ rdoc_include:
 
   def test_parse_dash_p_files
     out, err = capture_output do
-      @options.parse ['-p', File.expand_path(__FILE__)]
+      @options.parse ['-p', ::File.expand_path(__FILE__)]
     end
 
     refute @options.pipe
@@ -558,7 +558,7 @@ rdoc_include:
 
     Dir.mktmpdir do |dir|
       abs_root     = dir
-      abs_page_dir = File.join dir, 'pages'
+      abs_page_dir = ::File.join dir, 'pages'
       FileUtils.mkdir abs_page_dir
 
       out, err = capture_output do
@@ -665,7 +665,7 @@ rdoc_include:
     Dir.mktmpdir do |dir|
       $LOAD_PATH << dir
 
-      template_dir = File.join dir, 'rdoc', 'generator', 'template', 'load_path'
+      template_dir = ::File.join dir, 'rdoc', 'generator', 'template', 'load_path'
 
       FileUtils.mkdir_p template_dir
 
@@ -686,8 +686,8 @@ rdoc_include:
   def test_parse_template_stylesheets
     css = nil
     Dir.mktmpdir do |dir|
-      css = File.join(dir, "hoge.css")
-      File.write(css, "")
+      css = ::File.join(dir, "hoge.css")
+      ::File.write(css, "")
       out, err = capture_output do
         @options.parse %W[--template-stylesheets #{css}]
       end
@@ -713,7 +713,7 @@ rdoc_include:
   end
 
   def test_parse_write_options
-    tmpdir = File.join Dir.tmpdir, "test_rdoc_options_#{$$}"
+    tmpdir = ::File.join Dir.tmpdir, "test_rdoc_options_#{$$}"
     FileUtils.mkdir_p tmpdir
 
     Dir.chdir tmpdir do
@@ -724,7 +724,7 @@ rdoc_include:
 
       assert_equal 0, e.status
 
-      assert File.exist? '.rdoc_options'
+      assert ::File.exist? '.rdoc_options'
     end
   ensure
     FileUtils.rm_rf tmpdir
@@ -836,9 +836,9 @@ rdoc_include:
     temp_dir do |dir|
       @options.write_options
 
-      assert File.exist? '.rdoc_options'
+      assert ::File.exist? '.rdoc_options'
 
-      options = File.read('.rdoc_options')
+      options = ::File.read('.rdoc_options')
       options = YAML.safe_load(options, permitted_classes: [Symbol])
       assert_equal @options, RDoc::Options.new(options)
     end
@@ -883,7 +883,7 @@ rdoc_include:
 
   def test_load_options_invalid
     temp_dir do
-      File.open '.rdoc_options', 'w' do |io|
+      ::File.open '.rdoc_options', 'w' do |io|
         io.write "a: !ruby.yaml.org,2002:str |\nfoo"
       end
 
@@ -891,14 +891,14 @@ rdoc_include:
         RDoc::Options.load_options
       end
 
-      options_file = File.expand_path '.rdoc_options'
+      options_file = ::File.expand_path '.rdoc_options'
       assert_equal "#{options_file} is not a valid rdoc options file", e.message
     end
   end
 
   def test_load_options_empty_file
     temp_dir do
-      File.open '.rdoc_options', 'w' do |io|
+      ::File.open '.rdoc_options', 'w' do |io|
       end
 
       options = RDoc::Options.load_options
@@ -909,7 +909,7 @@ rdoc_include:
 
   def test_load_options_partial_override
     temp_dir do
-      File.open '.rdoc_options', 'w' do |io|
+      ::File.open '.rdoc_options', 'w' do |io|
         io.puts "markup: Markdown"
         io.puts "encoding: iso-8859-1"
         io.puts "static_path: [static]"

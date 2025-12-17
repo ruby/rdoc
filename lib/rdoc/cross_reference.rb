@@ -159,7 +159,7 @@ class RDoc::CrossReference
     end
 
     if container then
-      unless RDoc::TopLevel === container then
+      unless RDoc::File === container then
         if '.' == type then
           if 'new' == method then # AnyClassName.new will be class method
             ref = container.find_local_symbol method

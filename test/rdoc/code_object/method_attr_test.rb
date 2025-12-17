@@ -179,14 +179,14 @@ class RDocMethodAttrTest < XrefTestCase
     temp_dir do |tmpdir|
       s = RDoc::RI::Store.new(RDoc::Options.new, path: tmpdir)
 
-      top_level = s.add_file 'file.rb'
+      file = s.add_file 'file.rb'
       meth_bang = RDoc::AnyMethod.new nil, 'method!'
-      meth_bang.record_location top_level
+      meth_bang.record_location file
 
       meth_bang_alias = RDoc::Alias.new nil, 'method!', 'method_bang', ''
-      meth_bang_alias.record_location top_level
+      meth_bang_alias.record_location file
 
-      klass = top_level.add_class RDoc::NormalClass, 'Object'
+      klass = file.add_class RDoc::NormalClass, 'Object'
       klass.add_method meth_bang
 
       meth_bang.add_alias meth_bang_alias, klass

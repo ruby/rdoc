@@ -1,24 +1,24 @@
 # frozen_string_literal: true
 require_relative 'xref_test_case'
 
-class RDocTopLevelTest < XrefTestCase
+class RDocFileTest < XrefTestCase
 
   def setup
     super
 
-    @top_level = @store.add_file 'path/top_level.rb'
-    @top_level.parser = RDoc::Parser::Ruby
+    @file = @store.add_file 'path/file.rb'
+    @file.parser = RDoc::Parser::Ruby
   end
 
   def test_initialize
-    t = RDoc::TopLevel.new 'path/file.rb'
+    t = RDoc::File.new 'path/file.rb'
 
     assert_equal 'path/file.rb', t.absolute_name
     assert_equal 'path/file.rb', t.relative_name
   end
 
   def test_initialize_relative
-    t = RDoc::TopLevel.new 'path/file.rb', 'file.rb'
+    t = RDoc::File.new 'path/file.rb', 'file.rb'
 
     assert_equal 'path/file.rb', t.absolute_name
     assert_equal 'file.rb',      t.relative_name
@@ -26,109 +26,109 @@ class RDocTopLevelTest < XrefTestCase
 
   def test_add_alias
     a = RDoc::Alias.new nil, 'old', 'new', nil
-    @top_level.add_alias a
+    @file.add_alias a
 
     object = @store.find_class_named 'Object'
     expected = { '#old' => [a] }
     assert_equal expected, object.unmatched_alias_lists
-    assert_includes object.in_files, @top_level
+    assert_includes object.in_files, @file
   end
 
   def test_add_alias_nodoc
-    @top_level.document_self = false
+    @file.document_self = false
 
     a = RDoc::Alias.new nil, 'old', 'new', nil
-    @top_level.add_alias a
+    @file.add_alias a
 
     object = @store.find_class_named('Object')
     assert_empty object.unmatched_alias_lists
-    assert_includes object.in_files, @top_level
+    assert_includes object.in_files, @file
   end
 
   def test_add_constant
     const = RDoc::Constant.new 'C', nil, nil
-    @top_level.add_constant const
+    @file.add_constant const
 
     object = @store.find_class_named 'Object'
     assert_equal [const], object.constants
-    assert_includes object.in_files, @top_level
+    assert_includes object.in_files, @file
   end
 
   def test_add_constant_nodoc
-    @top_level.document_self = false
+    @file.document_self = false
 
     const = RDoc::Constant.new 'C', nil, nil
-    @top_level.add_constant const
+    @file.add_constant const
 
     object = @store.find_class_named 'Object'
     assert_empty object.constants
-    assert_includes object.in_files, @top_level
+    assert_includes object.in_files, @file
   end
 
   def test_add_include
     include = RDoc::Include.new 'C', nil
-    @top_level.add_include include
+    @file.add_include include
 
     object = @store.find_class_named 'Object'
     assert_equal [include], object.includes
-    assert_includes object.in_files, @top_level
+    assert_includes object.in_files, @file
   end
 
   def test_add_include_nodoc
-    @top_level.document_self = false
+    @file.document_self = false
 
     include = RDoc::Include.new 'C', nil
-    @top_level.add_include include
+    @file.add_include include
 
     object = @store.find_class_named('Object')
     assert_empty object.includes
-    assert_includes object.in_files, @top_level
+    assert_includes object.in_files, @file
   end
 
   def test_add_method
     method = RDoc::AnyMethod.new nil, 'm'
-    @top_level.add_method method
+    @file.add_method method
 
     object = @store.find_class_named 'Object'
     assert_equal [@c10_method, @c11_method, method], object.method_list
-    assert_includes object.in_files, @top_level
+    assert_includes object.in_files, @file
   end
 
   def test_add_method_stopdoc
-    @top_level.document_self = false
+    @file.document_self = false
 
     method = RDoc::AnyMethod.new nil, 'm'
-    @top_level.add_method method
+    @file.add_method method
 
     object = @store.find_class_named('Object')
     assert_equal [@c10_method, @c11_method], object.method_list
-    assert_includes object.in_files, @top_level
+    assert_includes object.in_files, @file
   end
 
   def test_base_name
-    assert_equal 'top_level.rb', @top_level.base_name
+    assert_equal 'file.rb', @file.base_name
   end
 
   def test_display_eh
-    assert @top_level.display?
+    assert @file.display?
   end
 
   def test_eql_eh
-    top_level2 = @store.add_file 'path/top_level.rb'
+    file2 = @store.add_file 'path/file.rb'
     other_level = @store.add_file 'path/other_level.rb'
 
-    assert_operator @top_level, :eql?, top_level2
+    assert_operator @file, :eql?, file2
 
-    refute_operator other_level, :eql?, @top_level
+    refute_operator other_level, :eql?, @file
   end
 
   def test_equals2
-    top_level2 = @store.add_file 'path/top_level.rb'
+    file2 = @store.add_file 'path/file.rb'
     other_level = @store.add_file 'path/other_level.rb'
 
-    assert_equal @top_level, top_level2
+    assert_equal @file, file2
 
-    refute_equal other_level, @top_level
+    refute_equal other_level, @file
   end
 
   def test_find_class_or_module
@@ -139,29 +139,29 @@ class RDocTopLevelTest < XrefTestCase
   end
 
   def test_full_name
-    assert_equal 'path/top_level.rb', @top_level.full_name
+    assert_equal 'path/file.rb', @file.full_name
   end
 
   def test_hash
-    tl2 = @store.add_file 'path/top_level.rb'
-    tl3 = @store.add_file 'other/top_level.rb'
+    tl2 = @store.add_file 'path/file.rb'
+    tl3 = @store.add_file 'other/file.rb'
 
-    assert_equal @top_level.hash, tl2.hash
-    refute_equal @top_level.hash, tl3.hash
+    assert_equal @file.hash, tl2.hash
+    refute_equal @file.hash, tl3.hash
   end
 
   def test_http_url
-    assert_equal 'path/top_level_rb.html', @top_level.http_url
+    assert_equal 'path/file_rb.html', @file.http_url
 
     other_level = @store.add_file 'path.other/level.rb'
     assert_equal 'path_other/level_rb.html', other_level.http_url
   end
 
   def test_path
-    assert_equal 'path/top_level_rb.html', @top_level.path
+    assert_equal 'path/file_rb.html', @file.path
 
     @options.file_path_prefix = 'file'
-    assert_equal 'file/path/top_level_rb.html', @top_level.path
+    assert_equal 'file/path/file_rb.html', @file.path
   end
 
   def test_marshal_dump
@@ -186,6 +186,7 @@ class RDocTopLevelTest < XrefTestCase
   end
 
   def test_marshal_load_version_0
+    # Uses RDoc::TopLevel to test backwards compatibility with old marshal data
     loaded = Marshal.load "\x04\bU:\x13RDoc::TopLevel" +
                           "[\ti\x00I\"\x0FREADME.txt\x06:\x06EF" +
                           "c\x19RDoc::Parser::Simple" +
@@ -208,11 +209,11 @@ class RDocTopLevelTest < XrefTestCase
   end
 
   def test_name
-    assert_equal 'top_level.rb', @top_level.name
+    assert_equal 'file.rb', @file.name
   end
 
   def test_page_name
-    assert_equal 'top_level', @top_level.page_name
+    assert_equal 'file', @file.page_name
 
     tl = @store.add_file 'README.ja'
 

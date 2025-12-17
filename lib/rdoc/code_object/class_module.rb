@@ -393,7 +393,7 @@ class RDoc::ClassModule < RDoc::Context
 
       add_attribute attr
       attr.visibility = visibility
-      attr.record_location RDoc::TopLevel.new file
+      attr.record_location RDoc::File.new file
     end
 
     array[6].each do |constant, document, file|
@@ -402,13 +402,13 @@ class RDoc::ClassModule < RDoc::Context
         add_constant constant
       else
         constant = add_constant RDoc::Constant.new(constant, nil, RDoc::Comment.from_document(document))
-        constant.record_location RDoc::TopLevel.new file
+        constant.record_location RDoc::File.new file
       end
     end
 
     array[7].each do |name, document, file|
       incl = add_include RDoc::Include.new(name, RDoc::Comment.from_document(document))
-      incl.record_location RDoc::TopLevel.new file
+      incl.record_location RDoc::File.new file
     end
 
     array[8].each do |type, visibilities|
@@ -417,7 +417,7 @@ class RDoc::ClassModule < RDoc::Context
 
         methods.each do |name, file|
           method = RDoc::AnyMethod.new nil, name, singleton: type == 'class'
-          method.record_location RDoc::TopLevel.new file
+          method.record_location RDoc::File.new file
           add_method method
         end
       end
@@ -425,7 +425,7 @@ class RDoc::ClassModule < RDoc::Context
 
     array[9].each do |name, document, file|
       ext = add_extend RDoc::Extend.new(name, RDoc::Comment.from_document(document))
-      ext.record_location RDoc::TopLevel.new file
+      ext.record_location RDoc::File.new file
     end if array[9] # Support Marshal version 1
 
     sections = (array[10] || []).map do |section|
@@ -438,7 +438,7 @@ class RDoc::ClassModule < RDoc::Context
     @in_files = []
 
     (array[11] || []).each do |filename|
-      record_location RDoc::TopLevel.new filename
+      record_location RDoc::File.new filename
     end
 
     @parent_name  = array[12]
@@ -632,7 +632,7 @@ class RDoc::ClassModule < RDoc::Context
   def path
     prefix = options.class_module_path_prefix
     return http_url unless prefix
-    File.join(prefix, http_url)
+    ::File.join(prefix, http_url)
   end
 
   ##
@@ -795,7 +795,7 @@ class RDoc::ClassModule < RDoc::Context
       cm_alias.name = const.name
 
       # Don't move top-level aliases under Object, they look ugly there
-      unless RDoc::TopLevel === cm_alias.parent then
+      unless RDoc::File === cm_alias.parent then
         cm_alias.parent = self
         cm_alias.full_name = nil # force update for new parent
       end

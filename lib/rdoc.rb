@@ -131,21 +131,21 @@ module RDoc
 
   def self.home
     rdoc_dir = begin
-                File.expand_path('~/.rdoc')
+                ::File.expand_path('~/.rdoc')
               rescue ArgumentError
               end
 
-    if File.directory?(rdoc_dir)
+    if ::File.directory?(rdoc_dir)
       rdoc_dir
     else
       require 'fileutils'
       begin
         # XDG
-        xdg_data_home = ENV["XDG_DATA_HOME"] || File.join(File.expand_path("~"), '.local', 'share')
-        unless File.exist?(xdg_data_home)
+        xdg_data_home = ENV["XDG_DATA_HOME"] || ::File.join(::File.expand_path("~"), '.local', 'share')
+        unless ::File.exist?(xdg_data_home)
           FileUtils.mkdir_p xdg_data_home
         end
-        File.join xdg_data_home, "rdoc"
+        ::File.join xdg_data_home, "rdoc"
       rescue Errno::EACCES
       end
     end
@@ -187,7 +187,8 @@ module RDoc
   autoload :CodeObject,     "#{__dir__}/rdoc/code_object"
 
   autoload :Context,        "#{__dir__}/rdoc/code_object/context"
-  autoload :TopLevel,       "#{__dir__}/rdoc/code_object/top_level"
+  autoload :File,           "#{__dir__}/rdoc/code_object/file"
+  autoload :TopLevel,       "#{__dir__}/rdoc/code_object/top_level" # @deprecated Use RDoc::File instead
 
   autoload :AnonClass,      "#{__dir__}/rdoc/code_object/anon_class"
   autoload :ClassModule,    "#{__dir__}/rdoc/code_object/class_module"

@@ -26,26 +26,26 @@ class RDocGeneratorJsonIndexTest < RDoc::TestCase
     @rdoc.options = @options
     @rdoc.generator = @g
 
-    @top_level = @store.add_file 'file.rb'
-    @top_level.parser = RDoc::Parser::Ruby
+    @file = @store.add_file 'file.rb'
+    @file.parser = RDoc::Parser::Ruby
 
-    @klass = @top_level.add_class RDoc::NormalClass, 'C'
+    @klass = @file.add_class RDoc::NormalClass, 'C'
 
     @meth = @klass.add_method RDoc::AnyMethod.new(nil, 'meth')
-    @meth.record_location @top_level
+    @meth.record_location @file
 
     @nest_klass = @klass.add_class RDoc::NormalClass, 'D'
-    @nest_klass.record_location @top_level
+    @nest_klass.record_location @file
 
     @nest_meth = @nest_klass.add_method RDoc::AnyMethod.new(nil, 'meth')
 
-    @ignored = @top_level.add_class RDoc::NormalClass, 'Ignored'
+    @ignored = @file.add_class RDoc::NormalClass, 'Ignored'
     @ignored.ignore
 
     @page = @store.add_file 'page.rdoc'
     @page.parser = RDoc::Parser::Simple
 
-    @top_levels = [@top_level, @page].sort
+    @files = [@file, @page].sort
     @klasses    = [@klass, @nest_klass, @ignored]
 
     Dir.chdir @tmpdir
@@ -87,14 +87,14 @@ class RDocGeneratorJsonIndexTest < RDoc::TestCase
     assert_file 'js/navigation.js'
     assert_file 'js/search_index.js'
 
-    srcdir = File.expand_path('lib/rdoc', @pwd)
-    if !File.directory? srcdir
+    srcdir = ::File.expand_path('lib/rdoc', @pwd)
+    if !::File.directory? srcdir
       # for Ruby core repository
-      srcdir = File.expand_path("../../../lib/rdoc", __FILE__)
+      srcdir = ::File.expand_path("../../../lib/rdoc", __FILE__)
     end
 
-    orig_file = Pathname(File.join srcdir, 'generator/template/json_index/js/navigation.js')
-    generated_file = Pathname(File.join @tmpdir, 'js/navigation.js')
+    orig_file = Pathname(::File.join srcdir, 'generator/template/json_index/js/navigation.js')
+    generated_file = Pathname(::File.join @tmpdir, 'js/navigation.js')
 
     # The following assertion for the generated file's modified time randomly
     # fails in a ppc64le environment.
@@ -112,7 +112,7 @@ class RDocGeneratorJsonIndexTest < RDoc::TestCase
     assert_equal orig_file.mtime.inspect, generated_file.mtime.inspect,
       '.js files should be the same timestamp of original'
 
-    json = File.read 'js/search_index.js'
+    json = ::File.read 'js/search_index.js'
 
     json =~ /\Avar search_data = /
 
@@ -162,7 +162,7 @@ class RDocGeneratorJsonIndexTest < RDoc::TestCase
     @g.generate
 
     assert_file 'js/search_index.js'
-    generated_search_index = Pathname(File.join @tmpdir, 'js/search_index.js')
+    generated_search_index = Pathname(::File.join @tmpdir, 'js/search_index.js')
     assert_equal ruby_birthday, generated_search_index.mtime
 
     ENV['SOURCE_DATE_EPOCH'] = backup_epoch
@@ -184,7 +184,7 @@ class RDocGeneratorJsonIndexTest < RDoc::TestCase
     assert_file 'js/search_index.js'
     assert_file 'js/search_index.js.gz'
 
-    json = File.open('js/search_index.js.gz', 'rb') {|gzip|
+    json = ::File.open('js/search_index.js.gz', 'rb') {|gzip|
       Zlib::GzipReader.new(gzip).read
     }
 
@@ -241,11 +241,11 @@ class RDocGeneratorJsonIndexTest < RDoc::TestCase
 
     text = "5\xB0"
     text = RDoc::Encoding.change_encoding text, Encoding::ISO_8859_1
-    @klass.add_comment comment(text), @top_level
+    @klass.add_comment comment(text), @file
 
     @g.generate
 
-    json = File.read 'js/search_index.js'
+    json = ::File.read 'js/search_index.js'
     json.force_encoding Encoding::UTF_8
 
     json =~ /\Avar search_data = /
@@ -290,7 +290,7 @@ class RDocGeneratorJsonIndexTest < RDoc::TestCase
   end
 
   def test_index_classes
-    @g.reset @top_levels, @klasses
+    @g.reset @files, @klasses
 
     @g.index_classes
 
@@ -312,7 +312,7 @@ class RDocGeneratorJsonIndexTest < RDoc::TestCase
     @meth.document_self       = false
     @nest_meth.document_self  = false
 
-    @g.reset @top_levels, @klasses
+    @g.reset @files, @klasses
 
     @g.index_classes
 
@@ -326,7 +326,7 @@ class RDocGeneratorJsonIndexTest < RDoc::TestCase
   end
 
   def test_index_methods
-    @g.reset @top_levels, @klasses
+    @g.reset @files, @klasses
 
     @g.index_methods
 
@@ -343,7 +343,7 @@ class RDocGeneratorJsonIndexTest < RDoc::TestCase
   end
 
   def test_index_pages
-    @g.reset @top_levels, @klasses
+    @g.reset @files, @klasses
 
     @g.index_pages
 

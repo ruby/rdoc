@@ -43,7 +43,6 @@ Forward Looking Statements applies.
   the middle of a method section.
 * RDoc::CodeObject
   * Move into own namespace
-  * Rename TopLevel to File
   * Rename Context to Container
   * Rename NormalClass to Class
 

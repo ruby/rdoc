@@ -7,24 +7,24 @@ class RDocGeneratorPOTTest < RDoc::TestCase
     super
 
     @options = RDoc::Options.new
-    @tmpdir = File.join Dir.tmpdir, "test_rdoc_generator_pot_#{$$}"
+    @tmpdir = ::File.join Dir.tmpdir, "test_rdoc_generator_pot_#{$$}"
     FileUtils.mkdir_p @tmpdir
 
     @generator = RDoc::Generator::POT.new @store, @options
 
-    @top_level = @store.add_file 'file.rb'
-    @klass = @top_level.add_class RDoc::NormalClass, 'Object'
-    @klass.add_comment 'This is a class', @top_level
+    @file = @store.add_file 'file.rb'
+    @klass = @file.add_class RDoc::NormalClass, 'Object'
+    @klass.add_comment 'This is a class', @file
     @klass.add_section 'This is a section', comment('This is a section comment')
 
     @const = RDoc::Constant.new "CONSTANT", "29", "This is a constant"
 
     @meth = RDoc::AnyMethod.new nil, 'method'
-    @meth.record_location @top_level
+    @meth.record_location @file
     @meth.comment = 'This is a method'
 
     @attr = RDoc::Attr.new nil, 'attr', 'RW', ''
-    @attr.record_location @top_level
+    @attr.record_location @file
     @attr.comment = 'This is an attribute'
 
     @klass.add_constant @const
@@ -44,7 +44,7 @@ class RDocGeneratorPOTTest < RDoc::TestCase
   def test_generate
     @generator.generate
 
-    assert_equal <<-POT, File.read(File.join(@tmpdir, 'rdoc.pot'))
+    assert_equal <<-POT, ::File.read(::File.join(@tmpdir, 'rdoc.pot'))
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.

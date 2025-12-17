@@ -7,7 +7,7 @@ class RDocParserChangeLogTest < RDoc::TestCase
     super
 
     @tempfile  = Tempfile.new 'ChangeLog'
-    @top_level = @store.add_file @tempfile.path
+    @file = @store.add_file @tempfile.path
     @options   = RDoc::Options.new
     @stats     = RDoc::Stats.new @store, 0
   end
@@ -78,7 +78,7 @@ class RDocParserChangeLogTest < RDoc::TestCase
 
     expected =
       doc(
-        head(1, File.basename(@tempfile.path)),
+        head(1, ::File.basename(@tempfile.path)),
         blank_line,
         head(2, '2012-12-04'),
         blank_line,
@@ -94,7 +94,7 @@ class RDocParserChangeLogTest < RDoc::TestCase
         blank_line,
         list(:NOTE, item('e', para('five')), item('f', para('six'))))
 
-    expected.file = @top_level
+    expected.file = @file
 
     document = parser.create_document(groups)
 
@@ -307,7 +307,7 @@ Mon Dec  3 20:37:22 2012  Koichi Sasada  <ko1@atdot.net>
     parser.scan
 
     expected = doc(
-      head(1, File.basename(@tempfile.path)),
+      head(1, ::File.basename(@tempfile.path)),
       blank_line,
       head(2, '2012-12-04'),
       blank_line,
@@ -324,9 +324,9 @@ Mon Dec  3 20:37:22 2012  Koichi Sasada  <ko1@atdot.net>
       list(:NOTE,
         item('vm_exec.c', para('check VM_COLLECT_USAGE_DETAILS.'))))
 
-    expected.file = @top_level
+    expected.file = @file
 
-    assert_equal expected, @top_level.comment.parse
+    assert_equal expected, @file.comment.parse
   end
 
   def test_scan_git
@@ -388,7 +388,7 @@ ChangeLog
     parser.scan
 
     expected = doc(
-      head(1, File.basename(@tempfile.path)),
+      head(1, ::File.basename(@tempfile.path)),
       blank_line,
       head(2, '2021-01-24'),
       blank_line,
@@ -428,9 +428,9 @@ ChangeLog
                  head(5, 'Solution'),
                  para('Call <code>new_args</code> on this case.')]))
 
-    expected.file = @top_level
+    expected.file = @file
 
-    assert_equal expected, @top_level.comment.parse
+    assert_equal expected, @file.comment.parse
   end
 
   def test_scan_git_commit_date
@@ -455,7 +455,7 @@ ChangeLog
     parser.scan
 
     expected = doc(
-      head(1, File.basename(@tempfile.path)),
+      head(1, ::File.basename(@tempfile.path)),
       blank_line,
       head(2, "2021-01-07"),
       blank_line,
@@ -468,13 +468,13 @@ ChangeLog
                 '2021-01-07 10:21:34 +0900',
                 [list(:BULLET, item(nil, para("2021-01-07 [ci skip]")))]))
 
-    expected.file = @top_level
+    expected.file = @file
 
-    assert_equal expected, @top_level.comment.parse
+    assert_equal expected, @file.comment.parse
   end
 
   def util_parser(content = '')
-    RDoc::Parser::ChangeLog.new @top_level, content, @options, @stats
+    RDoc::Parser::ChangeLog.new @file, content, @options, @stats
   end
 
   def log_entry(*a)

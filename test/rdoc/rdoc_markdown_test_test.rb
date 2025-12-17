@@ -7,7 +7,7 @@ require_relative '../../lib/rdoc/markdown'
 
 class RDocMarkdownTestTest < RDoc::TestCase
 
-  MARKDOWN_TEST_PATH = File.expand_path '../MarkdownTest_1.0.3/', __FILE__
+  MARKDOWN_TEST_PATH = ::File.expand_path '../MarkdownTest_1.0.3/', __FILE__
 
   def setup
     super
@@ -16,7 +16,7 @@ class RDocMarkdownTestTest < RDoc::TestCase
   end
 
   def test_amps_and_angle_encoding
-    input = File.read "#{MARKDOWN_TEST_PATH}/Amps and angle encoding.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Amps and angle encoding.text"
 
     doc = @parser.parse input
 
@@ -38,7 +38,7 @@ class RDocMarkdownTestTest < RDoc::TestCase
   end
 
   def test_auto_links
-    input = File.read "#{MARKDOWN_TEST_PATH}/Auto links.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Auto links.text"
 
     doc = @parser.parse input
 
@@ -61,7 +61,7 @@ class RDocMarkdownTestTest < RDoc::TestCase
   end
 
   def test_backslash_escapes
-    input = File.read "#{MARKDOWN_TEST_PATH}/Backslash escapes.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Backslash escapes.text"
 
     doc = @parser.parse input
 
@@ -159,7 +159,7 @@ class RDocMarkdownTestTest < RDoc::TestCase
   end
 
   def test_blockquotes_with_code_blocks
-    input = File.read "#{MARKDOWN_TEST_PATH}/Blockquotes with code blocks.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Blockquotes with code blocks.text"
 
     doc = @parser.parse input
 
@@ -179,7 +179,7 @@ class RDocMarkdownTestTest < RDoc::TestCase
   end
 
   def test_code_blocks
-    input = File.read "#{MARKDOWN_TEST_PATH}/Code Blocks.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Code Blocks.text"
 
     doc = @parser.parse input
 
@@ -201,7 +201,7 @@ class RDocMarkdownTestTest < RDoc::TestCase
   end
 
   def test_code_spans
-    input = File.read "#{MARKDOWN_TEST_PATH}/Code Spans.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Code Spans.text"
 
     doc = @parser.parse input
 
@@ -215,7 +215,7 @@ class RDocMarkdownTestTest < RDoc::TestCase
   end
 
   def test_hard_wrapped_paragraphs_with_list_like_lines
-    input = File.read "#{MARKDOWN_TEST_PATH}/Hard-wrapped paragraphs with list-like lines.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Hard-wrapped paragraphs with list-like lines.text"
 
     doc = @parser.parse input
 
@@ -233,7 +233,7 @@ class RDocMarkdownTestTest < RDoc::TestCase
   end
 
   def test_horizontal_rules
-    input = File.read "#{MARKDOWN_TEST_PATH}/Horizontal rules.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Horizontal rules.text"
 
     doc = @parser.parse input
 
@@ -285,7 +285,7 @@ class RDocMarkdownTestTest < RDoc::TestCase
   end
 
   def test_inline_html_advanced
-    input = File.read "#{MARKDOWN_TEST_PATH}/Inline HTML (Advanced).text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Inline HTML (Advanced).text"
 
     @parser.html = true
 
@@ -312,7 +312,7 @@ foo
   end
 
   def test_inline_html_simple
-    input = File.read "#{MARKDOWN_TEST_PATH}/Inline HTML (Simple).text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Inline HTML (Simple).text"
 
     @parser.html = true
 
@@ -367,7 +367,7 @@ foo
   end
 
   def test_inline_html_comments
-    input = File.read "#{MARKDOWN_TEST_PATH}/Inline HTML comments.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Inline HTML comments.text"
 
     doc = @parser.parse input
 
@@ -389,7 +389,7 @@ foo
   end
 
   def test_links_inline_style
-    input = File.read "#{MARKDOWN_TEST_PATH}/Links, inline style.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Links, inline style.text"
 
     doc = @parser.parse input
 
@@ -406,7 +406,7 @@ foo
   end
 
   def test_links_reference_style
-    input = File.read "#{MARKDOWN_TEST_PATH}/Links, reference style.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Links, reference style.text"
 
     doc = @parser.parse input
 
@@ -453,7 +453,7 @@ foo
   end
 
   def test_links_shortcut_references
-    input = File.read "#{MARKDOWN_TEST_PATH}/Links, shortcut references.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Links, shortcut references.text"
 
     doc = @parser.parse input
 
@@ -468,7 +468,7 @@ foo
   end
 
   def test_literal_quotes_in_titles
-    input = File.read "#{MARKDOWN_TEST_PATH}/Literal quotes in titles.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Literal quotes in titles.text"
 
     doc = @parser.parse input
 
@@ -482,7 +482,7 @@ foo
   end
 
   def test_markdown_documentation_basics
-    input = File.read "#{MARKDOWN_TEST_PATH}/Markdown Documentation - Basics.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Markdown Documentation - Basics.text"
 
     doc = @parser.parse input
 
@@ -782,7 +782,7 @@ foo
   end
 
   def test_markdown_documentation_syntax
-    input = File.read "#{MARKDOWN_TEST_PATH}/Markdown Documentation - Syntax.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Markdown Documentation - Syntax.text"
 
     doc = @parser.parse input
 
@@ -1679,7 +1679,7 @@ foo
   end
 
   def test_nested_blockquotes
-    input = File.read "#{MARKDOWN_TEST_PATH}/Nested blockquotes.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Nested blockquotes.text"
 
     doc = @parser.parse input
 
@@ -1695,7 +1695,7 @@ foo
   end
 
   def test_ordered_and_unordered_lists
-    input = File.read "#{MARKDOWN_TEST_PATH}/Ordered and unordered lists.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Ordered and unordered lists.text"
 
     doc = @parser.parse input
 
@@ -1816,7 +1816,7 @@ foo
   end
 
   def test_strong_and_em_together
-    input = File.read "#{MARKDOWN_TEST_PATH}/Strong and em together.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Strong and em together.text"
 
     doc = @parser.parse input
 
@@ -1831,7 +1831,7 @@ foo
   end
 
   def test_tabs
-    input = File.read "#{MARKDOWN_TEST_PATH}/Tabs.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Tabs.text"
 
     doc = @parser.parse input
 
@@ -1864,7 +1864,7 @@ foo
   end
 
   def test_tidiness
-    input = File.read "#{MARKDOWN_TEST_PATH}/Tidiness.text"
+    input = ::File.read "#{MARKDOWN_TEST_PATH}/Tidiness.text"
 
     doc = @parser.parse input
 

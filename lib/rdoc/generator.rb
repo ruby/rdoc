@@ -31,9 +31,9 @@
 # #initialize with an RDoc::Store instance and an RDoc::Options instance.
 #
 # The RDoc::Store instance holds documentation for parsed source code.  In
-# RDoc 3 and earlier the RDoc::TopLevel class held this data.  When upgrading
+# RDoc 3 and earlier the RDoc::File class held this data.  When upgrading
 # a generator from RDoc 3 and earlier you should only need to replace
-# RDoc::TopLevel with the store instance.
+# RDoc::File with the store instance.
 #
 # RDoc will then call #generate on the generator instance.  You can use the
 # various methods on RDoc::Store and in the RDoc::CodeObject tree to create

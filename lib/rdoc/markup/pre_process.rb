@@ -330,10 +330,10 @@ class RDoc::Markup::PreProcess
   # and then in each of the directories specified in the RDOC_INCLUDE path
 
   def find_include_file(name)
-    to_search = [File.dirname(@input_file_name)].concat @include_path
+    to_search = [::File.dirname(@input_file_name)].concat @include_path
     to_search.each do |dir|
-      full_name = File.join(dir, name)
-      stat = File.stat(full_name) rescue next
+      full_name = ::File.join(dir, name)
+      stat = ::File.stat(full_name) rescue next
       return full_name if stat.readable?
     end
     nil

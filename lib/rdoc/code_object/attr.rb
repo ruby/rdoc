@@ -140,7 +140,7 @@ class RDoc::Attr < RDoc::MethodAttr
     @parent_class  = array[9]
     @section_title = array[10]
 
-    @file = RDoc::TopLevel.new array[7] if version > 1
+    @file = RDoc::File.new array[7] if version > 1
 
     @parent_name ||= @full_name.split('#', 2).first
   end

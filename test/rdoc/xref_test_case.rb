@@ -2,7 +2,7 @@
 ENV['RDOC_TEST'] = 'yes'
 
 require_relative 'helper'
-require File.expand_path '../xref_data', __FILE__
+require ::File.expand_path '../xref_data', __FILE__
 
 class XrefTestCase < RDoc::TestCase
 
@@ -13,7 +13,7 @@ class XrefTestCase < RDoc::TestCase
 
     @file_name = 'xref_data.rb'
     @xref_data = @store.add_file @file_name
-    @top_level = @xref_data
+    @file = @xref_data
 
     stats = RDoc::Stats.new @store, 0
 
@@ -22,9 +22,9 @@ class XrefTestCase < RDoc::TestCase
     @example_md = @store.add_file 'EXAMPLE.md'
     @example_md.parser = RDoc::Parser::Markdown
 
-    @top_levels = []
-    @top_levels.push parser.scan
-    @top_levels.push @example_md
+    @files = []
+    @files.push parser.scan
+    @files.push @example_md
 
     generator = Object.new
     @rdoc.generator = generator

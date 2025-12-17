@@ -6,12 +6,12 @@ class RDocContextSectionTest < RDoc::TestCase
   def setup
     super
 
-    @top_level = @store.add_file 'file.rb'
+    @file = @store.add_file 'file.rb'
 
-    @klass = @top_level.add_class RDoc::NormalClass, 'Object'
+    @klass = @file.add_class RDoc::NormalClass, 'Object'
 
     @S = RDoc::Context::Section
-    @s = @S.new @klass, 'section', comment('# comment', @top_level, :ruby)
+    @s = @S.new @klass, 'section', comment('# comment', @file, :ruby)
   end
 
   def test_add_comment
@@ -49,7 +49,7 @@ class RDocContextSectionTest < RDoc::TestCase
   end
 
   def test_eql_eh
-    other = @S.new @klass, 'other', comment('# comment', @top_level)
+    other = @S.new @klass, 'other', comment('# comment', @file)
 
     assert @s.eql? @s
     assert @s.eql? @s.dup
@@ -57,7 +57,7 @@ class RDocContextSectionTest < RDoc::TestCase
   end
 
   def test_equals
-    other = @S.new @klass, 'other', comment('# comment', @top_level)
+    other = @S.new @klass, 'other', comment('# comment', @file)
 
     assert_equal @s, @s
     assert_equal @s, @s.dup
@@ -73,7 +73,7 @@ class RDocContextSectionTest < RDoc::TestCase
   end
 
   def test_hash
-    other = @S.new @klass, 'other', comment('# comment', @top_level)
+    other = @S.new @klass, 'other', comment('# comment', @file)
 
     assert_equal @s.hash, @s.hash
     assert_equal @s.hash, @s.dup.hash
@@ -83,7 +83,7 @@ class RDocContextSectionTest < RDoc::TestCase
   def test_marshal_dump
     loaded = Marshal.load Marshal.dump @s
 
-    expected = doc RDoc::Comment.new('comment', @top_level).parse
+    expected = doc RDoc::Comment.new('comment', @file).parse
 
     assert_equal 'section', loaded.title
     assert_equal expected,  loaded.parse
@@ -109,7 +109,7 @@ class RDocContextSectionTest < RDoc::TestCase
                           "[\x06I\"\fcomment\x06;\x06F:\n@fileI" +
                           "\"\ffile.rb\x06;\x06F;\n0"
 
-    expected = doc RDoc::Comment.new('comment', @top_level).parse
+    expected = doc RDoc::Comment.new('comment', @file).parse
 
     assert_equal 'section', loaded.title
     assert_equal expected,  loaded.parse
@@ -123,7 +123,7 @@ class RDocContextSectionTest < RDoc::TestCase
 
     @s.add_comment other_comment
 
-    @s.remove_comment comment('bogus', @top_level)
+    @s.remove_comment comment('bogus', @file)
 
     assert_equal [other_comment], @s.comments
   end
@@ -137,7 +137,7 @@ class RDocContextSectionTest < RDoc::TestCase
 
     loaded = Marshal.load Marshal.dump @s
 
-    loaded.remove_comment comment('bogus', @top_level)
+    loaded.remove_comment comment('bogus', @file)
 
     assert_equal doc(other_comment.parse), loaded.parse
   end

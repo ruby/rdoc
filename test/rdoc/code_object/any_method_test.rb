@@ -103,8 +103,8 @@ each_line(foo)
   def test_call_seq_handles_aliases
     # see 0ead786
     @store.path = Dir.tmpdir
-    top_level = @store.add_file 'file.rb'
-    cm = top_level.add_class RDoc::ClassModule, 'Klass'
+    file = @store.add_file 'file.rb'
+    cm = file.add_class RDoc::ClassModule, 'Klass'
 
     method_with_call_seq = RDoc::AnyMethod.new(nil, "method_with_call_seq")
     method_with_call_seq.call_seq = <<~SEQ
@@ -128,8 +128,8 @@ each_line(foo)
 
   def test_call_seq_returns_nil_if_alias_is_missing_from_call_seq
     @store.path = Dir.tmpdir
-    top_level = @store.add_file 'file.rb'
-    cm = top_level.add_class RDoc::ClassModule, 'Klass'
+    file = @store.add_file 'file.rb'
+    cm = file.add_class RDoc::ClassModule, 'Klass'
 
     method_with_call_seq = RDoc::AnyMethod.new(nil, "method_with_call_seq")
     method_with_call_seq.call_seq = <<~SEQ
@@ -203,16 +203,16 @@ each_line(foo)
 
   def test_marshal_dump
     @store.path = Dir.tmpdir
-    top_level = @store.add_file 'file.rb'
+    file = @store.add_file 'file.rb'
 
     m = RDoc::AnyMethod.new nil, 'method'
     m.block_params = 'some_block'
     m.call_seq     = 'call_seq'
     m.comment      = 'this is a comment'
     m.params       = 'param'
-    m.record_location top_level
+    m.record_location file
 
-    cm = top_level.add_class RDoc::ClassModule, 'Klass'
+    cm = file.add_class RDoc::ClassModule, 'Klass'
     cm.add_method m
 
     section = cm.sections.first
@@ -232,7 +232,7 @@ each_line(foo)
     assert_equal 'some_block',   loaded.block_params
     assert_equal 'call_seq',     loaded.call_seq
     assert_equal document,       loaded.comment.parse
-    assert_equal top_level,      loaded.file
+    assert_equal file,      loaded.file
     assert_equal 'Klass#method', loaded.full_name
     assert_equal 'method',       loaded.name
     assert_equal 'param',        loaded.params
@@ -287,11 +287,11 @@ each_line(foo)
 
   def test_marshal_load_version_0
     @store.path = Dir.tmpdir
-    top_level = @store.add_file 'file.rb'
+    file = @store.add_file 'file.rb'
 
     m = RDoc::AnyMethod.new nil, 'method'
 
-    cm = top_level.add_class RDoc::ClassModule, 'Klass'
+    cm = file.add_class RDoc::ClassModule, 'Klass'
     cm.add_method m
 
     section = cm.sections.first
@@ -335,16 +335,16 @@ each_line(foo)
 
   def test_marshal_dump_version_2
     @store.path = Dir.tmpdir
-    top_level = @store.add_file 'file.rb'
+    file = @store.add_file 'file.rb'
 
     m = RDoc::AnyMethod.new nil, 'method'
     m.block_params = 'some_block'
     m.call_seq     = 'call_seq'
     m.comment      = 'this is a comment'
     m.params       = 'param'
-    m.record_location top_level
+    m.record_location file
 
-    cm = top_level.add_class RDoc::ClassModule, 'Klass'
+    cm = file.add_class RDoc::ClassModule, 'Klass'
     cm.add_method m
 
     section = cm.sections.first
@@ -376,7 +376,7 @@ each_line(foo)
     assert_equal 'some_block',   loaded.block_params
     assert_equal 'call_seq',     loaded.call_seq
     assert_equal document,       loaded.comment.parse
-    assert_equal top_level,      loaded.file
+    assert_equal file,      loaded.file
     assert_equal 'Klass#method', loaded.full_name
     assert_equal 'method',       loaded.name
     assert_equal 'param',        loaded.params

@@ -86,7 +86,7 @@ class RDocEncodingTest < RDoc::TestCase
   end
 
   def test_class_read_file_encoding_guess
-    path = File.expand_path '../test.ja.txt', __FILE__
+    path = ::File.expand_path '../test.ja.txt', __FILE__
     content = RDoc::Encoding.read_file path, Encoding::UTF_8
 
     assert_equal Encoding::UTF_8, content.encoding

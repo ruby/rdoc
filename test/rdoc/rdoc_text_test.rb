@@ -12,7 +12,7 @@ class RDocTextTest < RDoc::TestCase
 
     @options = RDoc::Options.new
 
-    @top_level = @store.add_file 'file.rb'
+    @file = @store.add_file 'file.rb'
     @language = nil
   end
 
@@ -189,7 +189,7 @@ The comments associated with
 
   def test_parse_comment
     expected = RDoc::Markup::Document.new
-    expected.file = @top_level
+    expected.file = @file
 
     c = comment ''
     parsed = parse c

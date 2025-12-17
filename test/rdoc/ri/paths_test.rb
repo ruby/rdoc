@@ -9,7 +9,7 @@ class RDocRIPathsTest < RDoc::TestCase
     @orig_env = ENV.to_hash
     @orig_gem_path = Gem.path
 
-    @tempdir = File.join Dir.tmpdir, "test_rdoc_ri_paths_#{$$}"
+    @tempdir = ::File.join Dir.tmpdir, "test_rdoc_ri_paths_#{$$}"
     Gem.use_paths @tempdir
     Gem.ensure_gem_subdirectories @tempdir
 
@@ -23,11 +23,11 @@ class RDocRIPathsTest < RDoc::TestCase
     specs.each do |spec|
       spec.loaded_from = spec.spec_file
 
-      File.open spec.spec_file, 'w' do |file|
+      ::File.open spec.spec_file, 'w' do |file|
         file.write spec.to_ruby_for_cache
       end
 
-      FileUtils.mkdir_p File.join(spec.doc_dir, 'ri') unless
+      FileUtils.mkdir_p ::File.join(spec.doc_dir, 'ri') unless
         spec.name == 'nodoc'
     end
 
@@ -52,10 +52,10 @@ class RDocRIPathsTest < RDoc::TestCase
     assert_equal RDoc::RI::Paths.system_dir,          path.shift
     assert_equal RDoc::RI::Paths.site_dir,            path.shift
     assert_equal RDoc::RI::Paths.home_dir,            path.shift if RDoc::RI::Paths.home_dir
-    assert_equal File.join(@nodoc.doc_dir, 'ri'),     path.shift
-    assert_equal File.join(@rake_10.doc_dir, 'ri'),   path.shift
-    assert_equal File.join(@rdoc_4_0.doc_dir, 'ri'),  path.shift
-    assert_equal File.join(@rdoc_3_12.doc_dir, 'ri'), path.shift
+    assert_equal ::File.join(@nodoc.doc_dir, 'ri'),     path.shift
+    assert_equal ::File.join(@rake_10.doc_dir, 'ri'),   path.shift
+    assert_equal ::File.join(@rdoc_4_0.doc_dir, 'ri'),  path.shift
+    assert_equal ::File.join(@rdoc_3_12.doc_dir, 'ri'), path.shift
     assert_empty path
   end
 
@@ -64,8 +64,8 @@ class RDocRIPathsTest < RDoc::TestCase
       gemdirs = RDoc::RI::Paths.gemdirs :latest
 
       expected = [
-        File.join(@rake_10.doc_dir, 'ri'),
-        File.join(@rdoc_4_0.doc_dir, 'ri'),
+        ::File.join(@rake_10.doc_dir, 'ri'),
+        ::File.join(@rdoc_4_0.doc_dir, 'ri'),
       ]
 
       assert_equal expected, gemdirs
@@ -77,8 +77,8 @@ class RDocRIPathsTest < RDoc::TestCase
       gemdirs = RDoc::RI::Paths.gemdirs true
 
       expected = [
-        File.join(@rake_10.doc_dir, 'ri'),
-        File.join(@rdoc_4_0.doc_dir, 'ri'),
+        ::File.join(@rake_10.doc_dir, 'ri'),
+        ::File.join(@rdoc_4_0.doc_dir, 'ri'),
       ]
 
       assert_equal expected, gemdirs
@@ -90,10 +90,10 @@ class RDocRIPathsTest < RDoc::TestCase
       gemdirs = RDoc::RI::Paths.gemdirs :all
 
       expected = [
-        File.join(@nodoc.doc_dir,     'ri'),
-        File.join(@rake_10.doc_dir,   'ri'),
-        File.join(@rdoc_4_0.doc_dir,  'ri'),
-        File.join(@rdoc_3_12.doc_dir, 'ri'),
+        ::File.join(@nodoc.doc_dir,     'ri'),
+        ::File.join(@rake_10.doc_dir,   'ri'),
+        ::File.join(@rdoc_4_0.doc_dir,  'ri'),
+        ::File.join(@rdoc_3_12.doc_dir, 'ri'),
       ]
 
       assert_equal expected, gemdirs
@@ -103,7 +103,7 @@ class RDocRIPathsTest < RDoc::TestCase
   def test_class_gem_dir
     dir = RDoc::RI::Paths.gem_dir 'rake', '10.0.1'
 
-    expected = File.join @rake_10.doc_dir, 'ri'
+    expected = ::File.join @rake_10.doc_dir, 'ri'
 
     assert_equal expected, dir
   end
@@ -116,7 +116,7 @@ class RDocRIPathsTest < RDoc::TestCase
 
   def test_class_path_nonexistent
     temp_dir do |dir|
-      nonexistent = File.join dir, 'nonexistent'
+      nonexistent = ::File.join dir, 'nonexistent'
       dir = RDoc::RI::Paths.path true, true, true, true, nonexistent
 
       refute_includes dir, nonexistent
@@ -129,7 +129,7 @@ class RDocRIPathsTest < RDoc::TestCase
     assert_equal RDoc::RI::Paths.system_dir,        path.shift
     assert_equal RDoc::RI::Paths.site_dir,          path.shift
     assert_equal RDoc::RI::Paths.home_dir,          path.shift if RDoc::RI::Paths.home_dir
-    assert_equal File.join(@rake_10.doc_dir, 'ri'), path.shift
+    assert_equal ::File.join(@rake_10.doc_dir, 'ri'), path.shift
   end
 
   def test_class_raw_path_extra_dirs
@@ -139,19 +139,19 @@ class RDocRIPathsTest < RDoc::TestCase
     assert_equal RDoc::RI::Paths.system_dir,        path.shift
     assert_equal RDoc::RI::Paths.site_dir,          path.shift
     assert_equal RDoc::RI::Paths.home_dir,          path.shift if RDoc::RI::Paths.home_dir
-    assert_equal File.join(@rake_10.doc_dir, 'ri'), path.shift
+    assert_equal ::File.join(@rake_10.doc_dir, 'ri'), path.shift
   end
 
   def test_class_site_dir
     dir = RDoc::RI::Paths.site_dir
 
-    assert_equal File.join(RDoc::RI::Paths::BASE, 'site'), dir
+    assert_equal ::File.join(RDoc::RI::Paths::BASE, 'site'), dir
   end
 
   def test_class_system_dir
     dir = RDoc::RI::Paths.system_dir
 
-    assert_equal File.join(RDoc::RI::Paths::BASE, 'system'), dir
+    assert_equal ::File.join(RDoc::RI::Paths::BASE, 'system'), dir
   end
 
 end

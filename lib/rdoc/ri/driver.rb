@@ -99,7 +99,7 @@ class RDoc::RI::Driver
   def self.dump(data_path)
     require 'pp'
 
-    File.open data_path, 'rb' do |io|
+    ::File.open data_path, 'rb' do |io|
       pp Marshal.load(io.read)
     end
   end
@@ -111,7 +111,7 @@ class RDoc::RI::Driver
     options = default_options
 
     opts = OptionParser.new do |opt|
-      opt.program_name = File.basename $0
+      opt.program_name = ::File.basename $0
       opt.version = RDoc::VERSION
       opt.release = nil
       opt.summary_indent = ' ' * 4
@@ -148,7 +148,7 @@ For example:
 
     #{opt.program_name} Fil
     #{opt.program_name} File
-    #{opt.program_name} File.new
+    #{opt.program_name} ::File.new
     #{opt.program_name} zip
     #{opt.program_name} rdoc:README
     #{opt.program_name} ruby:comments
@@ -283,11 +283,11 @@ or the PAGER environment variable.
              "documentation in addition to the standard",
              "directories.  May be repeated.") do |value|
         value.each do |dir|
-          unless File.directory? dir then
+          unless ::File.directory? dir then
             raise OptionParser::InvalidArgument, "#{dir} is not a directory"
           end
 
-          options[:extra_doc_dirs] << File.expand_path(dir)
+          options[:extra_doc_dirs] << ::File.expand_path(dir)
         end
       end
 
@@ -350,15 +350,15 @@ or the PAGER environment variable.
 
       opt.on("--dump=CACHE",
              "Dump data from an ri cache or data file.") do |value|
-        unless File.readable?(value)
+        unless ::File.readable?(value)
           abort "#{value.inspect} is not readable"
         end
 
-        if File.directory?(value)
+        if ::File.directory?(value)
           abort "#{value.inspect} is a directory"
         end
 
-        options[:dump_path] = File.new(value)
+        options[:dump_path] = ::File.new(value)
       end
     end
 
