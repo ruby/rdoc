@@ -81,6 +81,23 @@ class RDocGeneratorAlikiSearchRankerTest < Test::Unit::TestCase
     assert_equal 'filter', results[0]['name']
   end
 
+  # Fuzzy matching support (characters in order)
+  def test_fuzzy_match_finds_non_contiguous_matches
+    results = run_search(
+      query: 'addalias',
+      data: [
+        { name: 'add_foo_alias', full_name: 'RDoc::Context#add_foo_alias', type: 'instance_method', path: 'x' },
+        { name: 'add_alias', full_name: 'RDoc::Context#add_alias', type: 'instance_method', path: 'x' },
+        { name: 'Hash', full_name: 'Hash', type: 'class', path: 'x' }
+      ]
+    )
+
+    assert_equal 2, results.length
+    # Both are fuzzy matches; shorter name wins
+    assert_equal 'add_alias', results[0]['name']
+    assert_equal 'add_foo_alias', results[1]['name']
+  end
+
   # Case-based type priority: uppercase query prioritizes classes/modules
   def test_uppercase_query_prioritizes_class_over_method
     results = run_search(
