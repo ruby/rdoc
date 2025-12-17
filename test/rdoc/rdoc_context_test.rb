@@ -320,7 +320,7 @@ class RDocContextTest < XrefTestCase
     @c1.add_require req
 
     assert_empty @c1.requires
-    assert_includes @c1.top_level.requires, req
+    assert_includes @c1.file_context.requires, req
   end
 
   def test_add_section

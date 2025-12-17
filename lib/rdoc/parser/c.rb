@@ -897,7 +897,7 @@ class RDoc::Parser::C < RDoc::Parser
       cm = enclosure.add_module RDoc::NormalModule, class_name
     end
 
-    cm.record_location enclosure.top_level
+    cm.record_location enclosure.file_context
 
     find_class_comment cm.full_name, cm
 

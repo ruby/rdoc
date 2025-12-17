@@ -297,7 +297,7 @@ class RDoc::Context < RDoc::CodeObject
     # find the name & enclosing context
     if given_name =~ /^:+(\w+)$/ then
       full_name = $1
-      enclosing = top_level
+      enclosing = file_context
       name = full_name.split(/:+/).last
     else
       full_name = child_name given_name
@@ -1189,17 +1189,19 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Return the TopLevel that owns us
+  # Return the File that owns us
   #--
-  # FIXME we can be 'owned' by several TopLevel (see #record_location &
+  # FIXME we can be 'owned' by several Files (see #record_location &
   # #in_files)
 
-  def top_level
-    return @top_level if defined? @top_level
-    @top_level = self
-    @top_level = @top_level.parent until RDoc::File === @top_level
-    @top_level
+  def file_context
+    return @file_context if defined? @file_context
+    @file_context = self
+    @file_context = @file_context.parent until @file_context.nil? or RDoc::File === @file_context
+    @file_context
   end
+
+  alias_method :top_level, :file_context # :nodoc:
 
   ##
   # Upgrades NormalModule +mod+ in +enclosing+ to a +class_type+
