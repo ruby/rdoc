@@ -48,7 +48,7 @@ require 'rdoc/rdoc'
 
 options = RDoc::Options.new
 options.files = ['a.rb', 'b.rb']
-options.setup_generator 'darkfish'
+options.setup_generator 'aliki'
 # see RDoc::Options
 
 rdoc = RDoc::RDoc.new
@@ -90,7 +90,24 @@ To determine how well your project is documented run `rdoc -C lib` to get a docu
 
 ## Theme Options
 
-There are a few community-maintained themes for RDoc:
+RDoc ships with two built-in themes:
+
+- **Aliki** (default) - A modern, clean theme with improved navigation and search
+- **Darkfish** (deprecated) - The classic theme, will be removed in v8.0
+
+To use the Darkfish theme instead of the default Aliki theme:
+
+```shell
+rdoc --format darkfish
+```
+
+Or in your `.rdoc_options` file:
+
+```yaml
+generator_name: darkfish
+```
+
+There are also a few community-maintained themes for RDoc:
 
 - [rorvswild-theme-rdoc](https://github.com/BaseSecrete/rorvswild-theme-rdoc)
 - [hanna](https://github.com/jeremyevans/hanna) (a fork maintained by [Jeremy Evans](https://github.com/jeremyevans))

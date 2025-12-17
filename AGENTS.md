@@ -146,10 +146,13 @@ lib/rdoc/
 │   ├── prism_ruby.rb          # Prism-based Ruby parser
 │   └── ...
 ├── generator/                 # Documentation generators
-│   ├── darkfish.rb            # HTML generator (default theme)
+│   ├── aliki.rb               # HTML generator (default theme)
+│   ├── darkfish.rb            # HTML generator (deprecated, will be removed in v8.0)
 │   ├── markup.rb              # Markup format generator
 │   ├── ri.rb                  # RI command generator
-│   └── template/darkfish/     # ERB templates (.rhtml files)
+│   └── template/              # ERB templates (.rhtml files)
+│       ├── aliki/             # Aliki theme (default)
+│       └── darkfish/          # Darkfish theme (deprecated)
 ├── markup/                    # Markup parsing and formatting
 ├── code_object/               # AST objects for documented items
 ├── markdown/                  # Markdown parsing
@@ -196,7 +199,7 @@ exe/
 ### Pluggable System
 
 - **Parsers:** Ruby, C, Markdown, RD, Prism-based Ruby (experimental)
-- **Generators:** HTML/Darkfish, RI, POT (gettext), JSON, Markup
+- **Generators:** HTML/Aliki (default), HTML/Darkfish (deprecated), RI, POT (gettext), JSON, Markup
 
 ## Common Workflows
 

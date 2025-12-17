@@ -411,7 +411,7 @@ class RDoc::Options
     @files = nil
     @force_output = false
     @force_update = true
-    @generator_name = "darkfish"
+    @generator_name = "aliki"
     @generators = RDoc::RDoc::GENERATORS
     @generator_options = []
     @hyperlink_all = false

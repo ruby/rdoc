@@ -43,7 +43,7 @@ class RDocRDocTest < RDoc::TestCase
   def test_document_with_dry_run # functional test
     options = RDoc::Options.new
     options.files = [File.expand_path('../xref_data.rb', __FILE__)]
-    options.setup_generator 'darkfish'
+    options.setup_generator 'aliki'
     options.main_page = 'MAIN_PAGE.rdoc'
     options.root      = Pathname File.expand_path('..', __FILE__)
     options.title     = 'title'
