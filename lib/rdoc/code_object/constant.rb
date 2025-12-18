@@ -154,6 +154,15 @@ class RDoc::Constant < RDoc::CodeObject
     "#{@parent.path}##{@name}"
   end
 
+  ##
+  # Returns an HTML snippet of the comment for search results.
+
+  def search_snippet
+    return '' if comment.empty?
+
+    snippet(comment)
+  end
+
   def pretty_print(q) # :nodoc:
     q.group 2, "[#{self.class.name} #{full_name}", "]" do
       unless comment.empty? then
