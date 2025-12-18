@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'uri'
+
 ##
 # Aliki theme for RDoc documentation
 #
@@ -113,6 +115,21 @@ class RDoc::Generator::Aliki < RDoc::Generator::Darkfish
 
     data = { index: index }
     File.write search_index_path, "var search_data = #{JSON.generate(data)};"
+  end
+
+  ##
+  # Resolves a URL for use in templates. Absolute URLs are returned unchanged.
+  # Relative URLs are prefixed with rel_prefix to ensure they resolve correctly from any page.
+
+  def resolve_url(rel_prefix, url)
+    uri = URI.parse(url)
+    if uri.absolute?
+      url
+    else
+      "#{rel_prefix}/#{url}"
+    end
+  rescue URI::InvalidURIError
+    "#{rel_prefix}/#{url}"
   end
 
   private
