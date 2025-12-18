@@ -6,7 +6,7 @@
       <h3><%= h column_title %></h3>
       <ul>
         <% links.each do |text, url| %>
-        <li><a href="<%= h url %>"><%= h text %></a></li>
+        <li><a href="<%= h resolve_url(rel_prefix, url) %>"><%= h text %></a></li>
         <% end %>
       </ul>
     </div>
