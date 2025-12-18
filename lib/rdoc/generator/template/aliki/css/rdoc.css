@@ -1811,50 +1811,50 @@ footer.site-footer .footer-bottom:first-child {
 }
 
 /* Search Results */
-#search-results {
+.search-results {
   font-family: var(--font-primary);
   font-weight: 300;
 }
 
-#search-results a {
+.search-results a {
   color: var(--color-text-primary);
 }
 
-#search-results a:hover {
+.search-results a:hover {
   color: var(--color-accent-primary);
 }
 
-#search-results .search-match {
+.search-results .search-match {
   font-family: var(--font-heading);
   font-weight: normal;
 }
 
-#search-results .search-selected {
+.search-results .search-selected {
   background: var(--color-code-bg);
   border-bottom: 1px solid transparent;
 }
 
-#search-results li {
+.search-results li {
   list-style: none;
   border-bottom: 1px solid var(--color-border-default);
   margin-bottom: 0.5em;
 }
 
-#search-results li:last-child {
+.search-results li:last-child {
   border-bottom: none;
   margin-bottom: 0;
 }
 
-#search-results li p {
+.search-results li p {
   padding: 0;
   margin: 0.5em;
 }
 
-#search-results .search-namespace {
+.search-results .search-namespace {
   font-weight: bold;
 }
 
-#search-results .search-type {
+.search-results .search-type {
   display: inline-block;
   margin-left: var(--space-2);
   padding: 0 var(--space-2);
@@ -1866,33 +1866,33 @@ footer.site-footer .footer-bottom:first-child {
   color: var(--color-text-secondary);
 }
 
-#search-results .search-type-class {
+.search-results .search-type-class {
   background: var(--color-search-type-class-bg);
   color: var(--color-search-type-class-text);
 }
 
-#search-results .search-type-module {
+.search-results .search-type-module {
   background: var(--color-search-type-module-bg);
   color: var(--color-search-type-module-text);
 }
 
-#search-results .search-type-constant {
+.search-results .search-type-constant {
   background: var(--color-search-type-constant-bg);
   color: var(--color-search-type-constant-text);
 }
 
-#search-results .search-type-instance-method,
-#search-results .search-type-class-method {
+.search-results .search-type-instance-method,
+.search-results .search-type-class-method {
   background: var(--color-search-type-method-bg);
   color: var(--color-search-type-method-text);
 }
 
-#search-results li em {
+.search-results li em {
   background-color: var(--color-search-highlight-bg);
   font-style: normal;
 }
 
-#search-results pre {
+.search-results pre {
   margin: 0.5em;
   font-family: var(--font-code);
 }
@@ -1919,7 +1919,7 @@ header.top-navbar #search-field::placeholder {
 }
 
 /* Search results dropdown in navbar */
-header.top-navbar #search-results {
+header.top-navbar #search-results-desktop {
   position: absolute;
   top: calc(100% + var(--space-2));
   left: 0;
@@ -1935,10 +1935,10 @@ header.top-navbar #search-results {
   padding: 0;
 }
 
-header.top-navbar #search-results.initially-hidden {
+header.top-navbar #search-results-desktop.initially-hidden {
   display: none;
 }
 
-header.top-navbar #search-results[aria-expanded="false"] {
+header.top-navbar #search-results-desktop[aria-expanded="false"] {
   display: none;
 }
