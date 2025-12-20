@@ -807,11 +807,13 @@ class RDoc::ClassModule < RDoc::Context
       cm_alias = cm.dup
       cm_alias.name = const.name
 
-      # Don't move top-level aliases under Object, they look ugly there
-      unless RDoc::TopLevel === cm_alias.parent then
+      if full_name == 'Object'
+        # Don't move top-level aliases under Object, they look ugly there
+        cm_alias.parent = top_level
+      else
         cm_alias.parent = self
-        cm_alias.full_name = nil # force update for new parent
       end
+      cm_alias.full_name = nil # force update for new parent
 
       cm_alias.aliases.clear
       cm_alias.is_alias_for = cm

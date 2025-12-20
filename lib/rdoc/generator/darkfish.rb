@@ -356,7 +356,9 @@ class RDoc::Generator::Darkfish
 
     current = nil
 
-    @classes.each do |klass|
+    # Document files are generated only for non-alias classes/modules
+    @classes.reject(&:is_alias_for).each do |klass|
+
       current = klass
 
       generate_class klass, template_file
