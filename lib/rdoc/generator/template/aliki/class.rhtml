@@ -110,10 +110,10 @@
     </section>
     <%- end %>
 
-    <%- klass.methods_by_type(section).each do |type, visibilities|
-       next if visibilities.empty?
-       visibilities.each do |visibility, methods|
-         next if methods.empty? %>
+    <%- klass.methods_by_type(section).each do |type, visibilities| %>
+    <%- next if visibilities.empty? %>
+    <%- visibilities.each do |visibility, methods| %>
+    <%- next if methods.empty? %>
      <section id="<%= visibility %>-<%= type %>-<%= section.aref %>-method-details" class="method-section anchor-link">
        <header>
          <h3 id="<%= visibility %>-<%= type %>-methods"><a href="#<%= visibility %>-<%= type %>-methods"><%= visibility.to_s.capitalize %> <%= type.capitalize %> Methods</a></h3>
@@ -206,8 +206,8 @@
 
     <%- end %>
     </section>
-  <%- end
-     end %>
+  <%- end %>
+  <%- end %>
   </section>
 <%- end %>
 </main>
