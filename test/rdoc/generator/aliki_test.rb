@@ -34,6 +34,13 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     @top_level.parser = RDoc::Parser::Ruby
     @klass = @top_level.add_class RDoc::NormalClass, 'Klass'
 
+    @alias_constant = RDoc::Constant.new 'A', nil, ''
+    @alias_constant.record_location @top_level
+
+    @top_level.add_constant @alias_constant
+
+    @klass.add_module_alias @klass, @klass.name, @alias_constant, @top_level
+
     @meth = RDoc::AnyMethod.new nil, 'method'
     @meth_with_html_tag_yield = RDoc::AnyMethod.new nil, 'method_with_html_tag_yield'
     @meth_with_html_tag_yield.block_params = '%<<script>alert("atui")</script>>, yield_arg'
@@ -55,6 +62,12 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
   def test_inheritance_and_template_dir
     assert_kind_of RDoc::Generator::Darkfish, @g
     assert_match %r{/template/aliki\z}, @g.template_dir.to_s
+  end
+
+  def test_aliased_classes_full_name
+    @g.generate
+
+    assert_equal(%w[Klass Klass::A Object], @g.classes.map(&:full_name).sort)
   end
 
   def test_write_style_sheet_copies_css_and_js_only

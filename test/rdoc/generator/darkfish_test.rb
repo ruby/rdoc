@@ -297,11 +297,13 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
   def test_setup
     @g.setup
 
-    assert_equal [@klass_alias, @ignored, @klass, @object],
+    assert_equal %w[Ignored Klass Klass::A Object],
+                 [@ignored, @klass, @klass_alias, @object].map(&:full_name)
+    assert_equal [@ignored, @klass, @klass_alias, @object],
                  @g.classes.sort_by { |klass| klass.full_name }
     assert_equal [@top_level],                           @g.files
     assert_equal [@meth, @meth, @meth_bang, @meth_bang, @meth_with_html_tag_yield, @meth_with_html_tag_yield], @g.methods
-    assert_equal [@klass_alias, @klass, @object], @g.modsort
+    assert_equal [@klass, @klass_alias, @object], @g.modsort
   end
 
   def test_template_for
@@ -338,7 +340,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
 
     @g.generate
 
-    path = File.join @tmpdir, 'A.html'
+    path = File.join @tmpdir, 'Klass.html'
 
     f = open(path)
     internal_file = f.read
