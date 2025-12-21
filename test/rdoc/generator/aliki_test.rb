@@ -228,7 +228,7 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     index = File.binread('index.html')
     assert_match %r{<html lang="en">}, index
     assert_match %r{<body role="document"}, index
-    assert_match %r{<nav id="navigation" role="navigation">}, index
+    assert_match %r{<nav id="navigation" role="navigation" hidden>}, index
     assert_match %r{<main role="main">}, index
   end
 
