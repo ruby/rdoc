@@ -690,7 +690,6 @@ nav ul li {
 }
 
 nav ul li a {
-  padding: var(--space-1) 0;
   transition:
     color var(--transition-fast),
     transform var(--transition-fast),
