@@ -13,7 +13,7 @@
     <%- f = files.shift %>
     <%- if files.empty? %>
     <li><a href="<%= rel_prefix %>/<%= h f.path %>"><%= h f.page_name %></a></li>
-      <%- next %>
+      <%- next -%>
     <%- end %>
     <li><details<%= ' open' if dir == n %>><summary><%
     if n == f.page_name
