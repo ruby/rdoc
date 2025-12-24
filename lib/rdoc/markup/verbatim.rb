@@ -1,83 +1,74 @@
 # frozen_string_literal: true
-##
-# A section of verbatim text
 
-class RDoc::Markup::Verbatim < RDoc::Markup::Raw
+module RDoc
+  class Markup
+    # A section of verbatim text
+    class Verbatim < Raw
+      # Format of this verbatim section
+      #: Symbol?
+      attr_accessor :format
 
-  ##
-  # Format of this verbatim section
+      #: (*String) -> void
+      def initialize(*parts) # :nodoc:
+        super
+        @format = nil
+      end
 
-  attr_accessor :format
+      #: (top) -> bool
+      def ==(other) # :nodoc:
+        super && @format == other.format
+      end
 
-  def initialize *parts # :nodoc:
-    super
+      # Calls #accept_verbatim on +visitor+
+      # @override
+      #: (untyped) -> void
+      def accept(visitor)
+        visitor.accept_verbatim self
+      end
 
-    @format = nil
-  end
+      # Collapses 2+ newlines into a single one
+      #: () -> void
+      def normalize
+        # Chunk the parts into groups of entries that are only line breaks and other content. For line break groups,
+        # take only 1
+        parts = @parts
+          .chunk { |part| part.match?(/^\s*\n/) }
+          .flat_map { |is_newline, group| is_newline ? group.take(1) : group }
 
-  def ==(other) # :nodoc:
-    super and @format == other.format
-  end
+        # Remove any trailing line breaks
+        parts.pop if @parts.last&.match?(/\A\r?\n\z/)
+        @parts = parts
+      end
 
-  ##
-  # Calls #accept_verbatim on +visitor+
+      # @override
+      #: (PP) -> void
+      def pretty_print(q) # :nodoc:
+        self.class.name =~ /.*::(\w{1,4})/i
 
-  def accept(visitor)
-    visitor.accept_verbatim self
-  end
+        q.group(2, "[#{$1.downcase}: ", ']') do
+          if @format
+            q.text("format: #{@format}")
+            q.breakable
+          end
 
-  ##
-  # Collapses 3+ newlines into two newlines
+          q.seplist(@parts) do |part|
+            q.pp(part)
+          end
+        end
+      end
 
-  def normalize
-    parts = []
+      # Is this verbatim section Ruby code?
+      #: () -> bool
+      def ruby?
+        @format ||= nil # TODO for older ri data, switch the tree to marshal_dump
+        @format == :ruby
+      end
 
-    newlines = 0
-
-    @parts.each do |part|
-      case part
-      when /^\s*\n/ then
-        newlines += 1
-        parts << part if newlines == 1
-      else
-        newlines = 0
-        parts << part
+      # The text of the section
+      #: () -> String
+      def text
+        @parts.join
       end
     end
-
-    parts.pop if parts.last =~ /\A\r?\n\z/
-
-    @parts = parts
   end
-
-  def pretty_print(q) # :nodoc:
-    self.class.name =~ /.*::(\w{1,4})/i
-
-    q.group 2, "[#{$1.downcase}: ", ']' do
-      if @format then
-        q.text "format: #{@format}"
-        q.breakable
-      end
-
-      q.seplist @parts do |part|
-        q.pp part
-      end
-    end
-  end
-
-  ##
-  # Is this verbatim section Ruby code?
-
-  def ruby?
-    @format ||= nil # TODO for older ri data, switch the tree to marshal_dump
-    @format == :ruby
-  end
-
-  ##
-  # The text of the section
-
-  def text
-    @parts.join
-  end
-
 end

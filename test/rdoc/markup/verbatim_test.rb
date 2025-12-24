@@ -1,8 +1,8 @@
 # frozen_string_literal: true
-require_relative '../helper'
+
+require_relative "../helper"
 
 class RDocMarkupVerbatimTest < RDoc::TestCase
-
   def test_equals2
     v1 = verb('1 + 1')
     v2 = verb('1 + 1')
@@ -11,19 +11,25 @@ class RDocMarkupVerbatimTest < RDoc::TestCase
     v4.format = :ruby
 
     assert_equal v1, v2
-
     refute_equal v1, v3
     refute_equal v1, v4
   end
 
   def test_ruby_eh
     verbatim = RDoc::Markup::Verbatim.new
-
     refute verbatim.ruby?
 
     verbatim.format = :ruby
-
     assert verbatim.ruby?
   end
 
+  def test_normalize
+    verbatim = verb("a\n", "  \n", "  \n", "  \n", "  \n", "more text\n")
+    verbatim.normalize
+    assert_equal(["a\n", "  \n", "more text\n"], verbatim.parts)
+
+    verbatim = verb("foo\n", "\n")
+    verbatim.normalize
+    assert_equal(["foo\n"], verbatim.parts)
+  end
 end

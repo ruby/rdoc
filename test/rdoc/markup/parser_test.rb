@@ -1637,21 +1637,6 @@ Example heading:
     assert_equal expected, @RMP.tokenize(str)
   end
 
-  # HACK move to Verbatim test case
-  def test_verbatim_normalize
-    v = @RM::Verbatim.new "foo\n", "\n", "\n", "bar\n"
-
-    v.normalize
-
-    assert_equal ["foo\n", "\n", "bar\n"], v.parts
-
-    v = @RM::Verbatim.new "foo\n", "\n"
-
-    v.normalize
-
-    assert_equal ["foo\n"], v.parts
-  end
-
   def test_unget
     parser = util_parser
 
