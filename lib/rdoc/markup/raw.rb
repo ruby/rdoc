@@ -1,69 +1,66 @@
 # frozen_string_literal: true
-##
-# A section of text that is added to the output document as-is
 
-class RDoc::Markup::Raw
+module RDoc
+  class Markup
+    # A section of text that is added to the output document as-is
+    class Raw
+      # The component parts of the list
+      #: Array[String]
+      attr_reader :parts
 
-  ##
-  # The component parts of the list
+      # Creates a new Raw containing +parts+
+      #: (*String) -> void
+      def initialize(*parts)
+        @parts = parts
+      end
 
-  attr_reader :parts
+      # Appends +text+
+      #: (String) -> void
+      def <<(text)
+        @parts << text
+      end
 
-  ##
-  # Creates a new Raw containing +parts+
+      #: (top) -> bool
+      def ==(other) # :nodoc:
+        self.class == other.class && @parts == other.parts
+      end
 
-  def initialize *parts
-    @parts = []
-    @parts.concat parts
-  end
+      # Calls #accept_raw+ on +visitor+
+      # @override
+      #: (untyped) -> void
+      def accept(visitor)
+        visitor.accept_raw(self)
+      end
 
-  ##
-  # Appends +text+
+      # Appends +other+'s parts
+      #: (Raw) -> void
+      def merge(other)
+        @parts.concat(other.parts)
+      end
 
-  def <<(text)
-    @parts << text
-  end
+      # @override
+      #: (PP) -> void
+      def pretty_print(q) # :nodoc:
+        self.class.name =~ /.*::(\w{1,4})/i
 
-  def ==(other) # :nodoc:
-    self.class == other.class and @parts == other.parts
-  end
+        q.group(2, "[#{$1.downcase}: ", ']') do
+          q.seplist(@parts) do |part|
+            q.pp(part)
+          end
+        end
+      end
 
-  ##
-  # Calls #accept_raw+ on +visitor+
+      # Appends +texts+ onto this Paragraph
+      #: (*String) -> void
+      def push(*texts)
+        self.parts.concat(texts)
+      end
 
-  def accept(visitor)
-    visitor.accept_raw self
-  end
-
-  ##
-  # Appends +other+'s parts
-
-  def merge(other)
-    @parts.concat other.parts
-  end
-
-  def pretty_print(q) # :nodoc:
-    self.class.name =~ /.*::(\w{1,4})/i
-
-    q.group 2, "[#{$1.downcase}: ", ']' do
-      q.seplist @parts do |part|
-        q.pp part
+      # The raw text
+      #: () -> String
+      def text
+        @parts.join(" ")
       end
     end
   end
-
-  ##
-  # Appends +texts+ onto this Paragraph
-
-  def push *texts
-    self.parts.concat texts
-  end
-
-  ##
-  # The raw text
-
-  def text
-    @parts.join ' '
-  end
-
 end
