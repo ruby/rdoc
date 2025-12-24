@@ -1,27 +1,29 @@
 # frozen_string_literal: true
-##
-# An empty line.  This class is a singleton.
 
-class RDoc::Markup::BlankLine
+module RDoc
+  class Markup
+    # An empty line
+    class BlankLine < Element
+      @instance = new
 
-  @instance = new
+      # RDoc::Markup::BlankLine is a singleton
+      #: () -> BlankLine
+      def self.new
+        @instance
+      end
 
-  ##
-  # RDoc::Markup::BlankLine is a singleton
+      # Calls #accept_blank_line on +visitor+
+      # @override
+      #: (untyped) -> void
+      def accept(visitor)
+        visitor.accept_blank_line(self)
+      end
 
-  def self.new
-    @instance
+      # @override
+      #: (PP) -> void
+      def pretty_print(q) # :nodoc:
+        q.text("blankline")
+      end
+    end
   end
-
-  ##
-  # Calls #accept_blank_line on +visitor+
-
-  def accept(visitor)
-    visitor.accept_blank_line self
-  end
-
-  def pretty_print(q) # :nodoc:
-    q.text 'blankline'
-  end
-
 end
