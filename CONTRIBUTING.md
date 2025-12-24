@@ -86,6 +86,15 @@ npm run lint:css
 npm run lint:css -- --fix
 ```
 
+## Type annotations
+
+RDoc is currently not a typed codebase. Despite not running a type checker, contributors have been
+adding some comment annotations to make the codebase easier to navigate and understand.
+
+These annotations use [Sorbet flavored RBS](https://sorbet.org/docs/rbs-support) annotations,
+so that we can tag definitions as abstract and override. For more information on RBS syntax,
+see the [documentation](https://github.com/ruby/rbs/blob/master/docs/syntax.md).
+
 ## Parser Generation
 
 RDoc uses generated parsers for Markdown and RD formats.
