@@ -1,20 +1,37 @@
 # frozen_string_literal: true
-##
-# A horizontal rule with a weight
 
-class RDoc::Markup::Rule < Struct.new :weight
+module RDoc
+  class Markup
+    # A horizontal rule with a weight
+    class Rule < Element
+      #: Integer
+      attr_reader :weight
 
-  ##
-  # Calls #accept_rule on +visitor+
+      #: (Integer) -> void
+      def initialize(weight)
+        super()
+        @weight = weight
+      end
 
-  def accept(visitor)
-    visitor.accept_rule self
-  end
+      #: (top) -> bool
+      def ==(other)
+        other.is_a?(Rule) && other.weight == @weight
+      end
 
-  def pretty_print(q) # :nodoc:
-    q.group 2, '[rule:', ']' do
-      q.pp weight
+      # Calls #accept_rule on +visitor+
+      # @override
+      #: (untyped) -> void
+      def accept(visitor)
+        visitor.accept_rule(self)
+      end
+
+      # @override
+      #: (PP) -> void
+      def pretty_print(q) # :nodoc:
+        q.group(2, '[rule:', ']') do
+          q.pp(weight)
+        end
+      end
     end
   end
-
 end
