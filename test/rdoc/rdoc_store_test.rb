@@ -922,12 +922,17 @@ class RDocStoreTest < XrefTestCase
 
     s = RDoc::RI::Store.new(RDoc::Options.new, path: @tmpdir)
 
-    inner = @RM::Document.new @RM::Paragraph.new 'new comment'
-    inner.file = @top_level
+    loaded = s.load_class('Object')
 
-    document = @RM::Document.new inner
+    # After loading, comment_location is an array (not a Document)
+    assert_kind_of Array, loaded.comment_location
+    assert_equal 1, loaded.comment_location.length
 
-    assert_equal document, s.load_class('Object').comment_location
+    # Verify content is preserved
+    comment, location = loaded.comment_location.first
+    assert_kind_of @RM::Document, comment
+    assert_equal 'new comment', comment.parts[0].text
+    assert_equal @top_level.relative_name, location
   end
 
   # This is a functional test
