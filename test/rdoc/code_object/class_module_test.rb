@@ -614,6 +614,43 @@ class RDocClassModuleTest < XrefTestCase
     assert_equal tl, loaded.method_list.first.file
   end
 
+  def test_search_snippet_after_marshal
+    @store.path = Dir.tmpdir
+    tl = @store.add_file 'file.rb'
+
+    ns = tl.add_module RDoc::NormalModule, 'Namespace'
+    cm = ns.add_class RDoc::NormalClass, 'Klass', 'Super'
+    cm.add_comment 'This is a class comment', tl
+
+    loaded = Marshal.load Marshal.dump cm
+    loaded.store = @store
+
+    # search_snippet should be able to handle post-marshalling comment_location
+    snippet = loaded.search_snippet
+    assert_kind_of String, snippet
+    assert_match(/class comment/, snippet)
+  end
+
+  def test_comment_location_is_array_after_marshal
+    @store.path = Dir.tmpdir
+    tl = @store.add_file 'file.rb'
+
+    ns = tl.add_module RDoc::NormalModule, 'Namespace'
+    cm = ns.add_class RDoc::NormalClass, 'Klass', 'Super'
+    cm.add_comment 'This is a class comment', tl
+
+    loaded = Marshal.load Marshal.dump cm
+    loaded.store = @store
+
+    assert_kind_of Array, loaded.comment_location
+    assert_equal 1, loaded.comment_location.length
+
+    comment, location = loaded.comment_location.first
+    assert_kind_of RDoc::Markup::Document, comment
+    # After marshal, location is the filename string (from doc.file)
+    assert_equal tl.relative_name, location
+  end
+
   def test_merge
     tl = @store.add_file 'one.rb'
     p1  = tl.add_class RDoc::NormalClass, 'Parent'
@@ -1174,14 +1211,24 @@ class RDocClassModuleTest < XrefTestCase
     cm.add_comment 'comment 1', tl1
     cm.add_comment 'comment 2', tl2
 
+    assert_kind_of Array, cm.comment_location
+    assert_equal 2, cm.comment_location.length
+    assert_equal 'comment 1', cm.comment_location[0][0]
+    assert_equal tl1, cm.comment_location[0][1]
+    assert_equal 'comment 2', cm.comment_location[1][0]
+    assert_equal tl2, cm.comment_location[1][1]
+
     cm = Marshal.load Marshal.dump cm
 
-    doc1 = @RM::Document.new @RM::Paragraph.new 'comment 1'
-    doc1.file = tl1
-    doc2 = @RM::Document.new @RM::Paragraph.new 'comment 2'
-    doc2.file = tl2
+    # After marshal, comment_location should still be an array
+    assert_kind_of Array, cm.comment_location
 
-    assert_same cm.comment_location, cm.parse(cm.comment_location)
+    # parse() produces a Document with parts for each comment
+    parsed = cm.parse(cm.comment_location)
+    assert_kind_of RDoc::Markup::Document, parsed
+    assert_equal 2, parsed.parts.length
+    assert_equal 'comment 1', parsed.parts[0].parts[0].text
+    assert_equal 'comment 2', parsed.parts[1].parts[0].text
   end
 
   def test_remove_nodoc_children

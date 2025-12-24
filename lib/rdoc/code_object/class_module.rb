@@ -30,7 +30,22 @@ class RDoc::ClassModule < RDoc::Context
   attr_accessor :constant_aliases
 
   ##
-  # Comment and the location it came from.  Use #add_comment to add comments
+  # An array of `[comment, location]` pairs documenting this class/module.
+  # Use #add_comment to add comments.
+  #
+  # Before marshalling:
+  # - +comment+ is a String
+  # - +location+ is an RDoc::TopLevel
+  #
+  # After unmarshalling:
+  # - +comment+ is an RDoc::Markup::Document
+  # - +location+ is a filename String
+  #
+  # These type changes are acceptable (for now) because:
+  # - +comment+: Both String and Document respond to #empty?, and #parse
+  #   returns Document as-is (see RDoc::Text#parse)
+  # - +location+: Only used by #parse to set Document#file, which accepts
+  #   both TopLevel (extracts relative_name) and String
 
   attr_accessor :comment_location
 
@@ -110,7 +125,7 @@ class RDoc::ClassModule < RDoc::Context
     @is_alias_for     = nil
     @name             = name
     @superclass       = superclass
-    @comment_location = [] # [[comment, location]]
+    @comment_location = [] # Array of [comment, location] pairs
 
     super()
   end
@@ -379,10 +394,10 @@ class RDoc::ClassModule < RDoc::Context
 
     @comment    = RDoc::Comment.from_document document
 
-    @comment_location = if RDoc::Markup::Document === document.parts.first then
-                          document
+    @comment_location = if document.parts.first.is_a?(RDoc::Markup::Document)
+                          document.parts.map { |doc| [doc, doc.file] }
                         else
-                          RDoc::Markup::Document.new document
+                          [[document, document.file]]
                         end
 
     array[5].each do |name, rw, visibility, singleton, file|
