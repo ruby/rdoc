@@ -82,6 +82,37 @@ npx stylelint "lib/rdoc/generator/template/aliki/css/rdoc.css"
 - Style and formatting checks
 - Many issues auto-fixable with `--fix`
 
+### Type annotations
+
+Annotate method types using [Sorbet flavored RBS](https://sorbet.org/docs/rbs-support) in inline comments.
+For more information about RBS syntax, see the [documentation](https://github.com/ruby/rbs/blob/master/docs/syntax.md).
+
+A few examples:
+
+```ruby
+# Method that receives an integer and doesn't return anything
+#: (Integer) -> void
+def foo(something); end
+
+# Method that receives a string and returns an integer
+#: (String) -> Integer
+def bar(something)
+   123
+end
+
+# Method that doesn't accept arguments and returns a hash of symbol to string
+#: () -> Hash[Symbol, String]
+def bar
+   { key: "value" }
+end
+
+# Method that accepts a block, which yields a single integer argument and returns whatever the block returns
+#: [T] () { (Integer) -> T } -> T
+def bar
+   yield(5)
+end
+```
+
 ### Documentation Generation
 
 ```bash
