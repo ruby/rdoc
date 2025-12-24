@@ -329,6 +329,23 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
                  @to.link('Parent::m', 'Parent::m')
   end
 
+  def test_convert_CROSSREF_file_path_not_linked
+    # Must use hyperlink_all = false for file path pattern to match the right regex
+    @options.hyperlink_all = false
+    @to = RDoc::Markup::ToHtmlCrossref.new @options, 'index.html', @c1
+
+    file = @store.add_file 'lib/foo/bar.rb'
+    file.parser = RDoc::Parser::Ruby
+
+    # Verify the file IS resolvable via rdoc-ref (sanity check)
+    result = @to.convert 'rdoc-ref:lib/foo/bar.rb'
+    assert_equal para('<a href="lib/foo/bar_rb.html">lib/foo/bar.rb</a>'), result
+
+    # But file paths inside backticks should NOT be converted to links
+    result = @to.convert '+lib/foo/bar.rb+'
+    assert_equal para('<code>lib/foo/bar.rb</code>'), result
+  end
+
   def para(text)
     "\n<p>#{text}</p>\n"
   end

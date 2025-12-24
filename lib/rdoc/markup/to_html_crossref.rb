@@ -156,7 +156,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     ref = @cross_reference.resolve name, text if name
 
     case ref
-    when String then
+    when String
       if rdoc_ref && @options.warn_missing_rdoc_ref
         puts "#{@from_path}: `rdoc-ref:#{name}` can't be resolved for `#{text}`"
       end
@@ -164,8 +164,18 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     else
       path = ref ? ref.as_href(@from_path) : +""
 
-      if code and RDoc::CodeObject === ref and !(RDoc::TopLevel === ref)
-        text = "<code>#{CGI.escapeHTML text}</code>"
+      text = if code && RDoc::TopLevel === ref
+        # Allow explicit rdoc-ref links to files, but don't wrap in code tags
+        if rdoc_ref
+          text
+        else
+          # Don't auto-link file paths in backticks
+          return "<code>#{CGI.escapeHTML text}</code>"
+        end
+      elsif code && RDoc::CodeObject === ref
+        "<code>#{CGI.escapeHTML text}</code>"
+      else
+        text
       end
 
       if label
