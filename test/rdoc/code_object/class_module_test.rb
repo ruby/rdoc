@@ -655,8 +655,10 @@ class RDocClassModuleTest < XrefTestCase
     tl = @store.add_file 'one.rb'
     p1  = tl.add_class RDoc::NormalClass, 'Parent'
     c1  = p1.add_class RDoc::NormalClass, 'Klass'
+    c1.add_comment 'comment1', tl
 
     c2 = RDoc::NormalClass.new 'Klass'
+    c2.add_comment 'comment2', tl
 
     c2.merge c1
 
@@ -665,6 +667,10 @@ class RDocClassModuleTest < XrefTestCase
 
     assert c1.current_section, 'original current_section'
     assert c2.current_section, 'merged current_section'
+
+    comment, location = c2.comment_location.first
+    assert_kind_of RDoc::Markup::Document, comment
+    assert_equal tl.relative_name, location
   end
 
   def test_merge_attributes
