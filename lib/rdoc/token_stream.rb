@@ -45,13 +45,7 @@ module RDoc::TokenStream
                                then 'ruby-identifier'
               end
 
-      comment_with_nl = false
-      if :on_comment == t[:kind] or :on_embdoc == t[:kind] or :on_heredoc_end == t[:kind]
-        comment_with_nl = true if "\n" == t[:text][-1]
-        text = t[:text].rstrip
-      else
-        text = t[:text]
-      end
+      text = t[:text]
 
       if :on_ident == t[:kind] && starting_title
         starting_title = false
@@ -65,7 +59,11 @@ module RDoc::TokenStream
       text = CGI.escapeHTML text
 
       if style then
-        "<span class=\"#{style}\">#{text}</span>#{"\n" if comment_with_nl}"
+        if text.end_with?("\n")
+          newline = "\n"
+          text = text.byteslice(0...-1)
+        end
+        "<span class=\"#{style}\">#{text}</span>#{newline}"
       else
         text
       end
