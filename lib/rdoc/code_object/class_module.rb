@@ -477,7 +477,12 @@ class RDoc::ClassModule < RDoc::Context
       document = document.merge other_document
 
       @comment = RDoc::Comment.from_document(document)
-      @comment_location = document
+
+      @comment_location = if document.parts.first.is_a?(RDoc::Markup::Document)
+                            document.parts.map { |doc| [doc, doc.file] }
+                          else
+                            [[document, document.file]]
+                          end
     end
 
     cm = class_module
