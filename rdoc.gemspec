@@ -40,8 +40,8 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
   non_lib_files = [
     "CONTRIBUTING.md",
     "CVE-2013-0256.rdoc",
-    "ExampleMarkdown.md",
-    "ExampleRDoc.rdoc",
+    "doc/markup_reference/markdown.md",
+    "doc/markup_reference/rdoc.rdoc",
     "History.rdoc",
     "LEGAL.rdoc",
     "LICENSE.rdoc",

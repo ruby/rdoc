@@ -220,10 +220,10 @@ exe/
 
 ### Documentation
 
-- `README.md` - Basic usage guide
-- `ExampleRDoc.rdoc` - RDoc markup examples
-- `doc/rdoc/markup_reference.rb` - RDoc markup references
-- `ExampleMarkdown.md` - Markdown examples
+- `README.md` - Basic usage guide and markup format reference
+- `markup_reference/rdoc.rdoc` - Comprehensive RDoc markup syntax reference
+- `markup_reference/markdown.md` - Markdown syntax reference
+- `doc/rdoc/example.rb` - Ruby code examples for cross-references and directives
 
 ## Architecture Notes
 
