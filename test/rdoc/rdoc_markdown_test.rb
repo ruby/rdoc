@@ -1283,6 +1283,16 @@ and an extra note.[^2]
     assert_includes html, '<a href="https://example.com">Link to <code>Foo</code> and <code>Bar</code> and <code>Baz</code></a>'
   end
 
+  def test_code_span_preserves_inline_formatting_chars
+    # Code spans should display formatting characters literally, not as styling
+    doc = parse "Code: `*bold*` and `_em_` and `+tt+`"
+    html = @to_html.convert doc
+
+    assert_includes html, '<code>*bold*</code>'
+    assert_includes html, '<code>_em_</code>'
+    assert_includes html, '<code>+tt+</code>'
+  end
+
   def parse(text)
     @parser.parse text
   end
