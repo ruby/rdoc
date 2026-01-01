@@ -221,10 +221,15 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   def accept_verbatim(verbatim)
     text = verbatim.text.rstrip
+    format = verbatim.format
 
     klass = nil
 
-    content = if verbatim.ruby? or parseable? text then
+    # Apply Ruby syntax highlighting if
+    # - explicitly marked as Ruby
+    # - no format specified but the text is parseable as Ruby
+    # Otherwise, add language class when applicable and skips Ruby highlighting
+    content = if format == :ruby || (format.nil? && parseable?(text))
                 begin
                   tokens = RDoc::Parser::RipperStateLex.parse text
                   klass  = ' class="ruby"'
@@ -236,6 +241,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
                   CGI.escapeHTML text
                 end
               else
+                klass = " class=\"#{format}\"" if format
                 CGI.escapeHTML text
               end
 
