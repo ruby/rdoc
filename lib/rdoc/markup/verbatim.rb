@@ -70,7 +70,7 @@ class RDoc::Markup::Verbatim < RDoc::Markup::Raw
 
   def ruby?
     @format ||= nil # TODO for older ri data, switch the tree to marshal_dump
-    @format == :ruby
+    @format == :ruby || @format == :rb
   end
 
   ##

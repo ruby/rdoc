@@ -226,10 +226,10 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     klass = nil
 
     # Apply Ruby syntax highlighting if
-    # - explicitly marked as Ruby
+    # - explicitly marked as Ruby (via ruby? which accepts :ruby or :rb)
     # - no format specified but the text is parseable as Ruby
-    # Otherwise, add language class when applicable and skips Ruby highlighting
-    content = if format == :ruby || (format.nil? && parseable?(text))
+    # Otherwise, add language class when applicable and skip Ruby highlighting
+    content = if verbatim.ruby? || (format.nil? && parseable?(text))
                 begin
                   tokens = RDoc::Parser::RipperStateLex.parse text
                   klass  = ' class="ruby"'
