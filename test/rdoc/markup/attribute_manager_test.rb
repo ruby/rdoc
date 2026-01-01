@@ -202,6 +202,30 @@ class RDocMarkupAttributeManagerTest < RDoc::TestCase
     assert_equal 'foo <CODE>__send__</CODE> bar', output('foo <code>__send__</code> bar')
   end
 
+  def test_convert_attrs_ignores_bold_inside_code
+    assert_equal 'foo <CODE>*bold*</CODE> bar', output('foo <code>*bold*</code> bar')
+  end
+
+  def test_convert_attrs_ignores_em_inside_code
+    assert_equal 'foo <CODE>_em_</CODE> bar', output('foo <code>_em_</code> bar')
+  end
+
+  def test_convert_attrs_ignores_tt_inside_code
+    assert_equal 'foo <CODE>+tt+</CODE> bar', output('foo <code>+tt+</code> bar')
+  end
+
+  def test_convert_attrs_ignores_bold_inside_tt
+    assert_equal 'foo <CODE>*bold*</CODE> bar', output('foo <tt>*bold*</tt> bar')
+  end
+
+  def test_convert_attrs_ignores_em_inside_tt
+    assert_equal 'foo <CODE>_em_</CODE> bar', output('foo <tt>_em_</tt> bar')
+  end
+
+  def test_convert_attrs_ignores_tt_inside_tt
+    assert_equal 'foo <CODE>+tt+</CODE> bar', output('foo <tt>+tt+</tt> bar')
+  end
+
   def test_convert_attrs_ignores_tt
     assert_equal 'foo <CODE>__send__</CODE> bar', output('foo <tt>__send__</tt> bar')
   end

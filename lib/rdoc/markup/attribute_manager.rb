@@ -95,6 +95,12 @@ class RDoc::Markup::AttributeManager
     add_html "b",  :BOLD, true
     add_html "tt",   :TT, true
     add_html "code", :TT, true
+
+    @word_pair_chars = @matching_word_pairs.keys.join
+
+    # Matches a word pair delimiter (*, _, +) that is NOT already protected.
+    # Used by #protect_code_markup to escape delimiters inside <code>/<tt> tags.
+    @unprotected_word_pair_regexp = /([#{@word_pair_chars}])(?!#{PROTECT_ATTR})/
   end
 
   ##
@@ -164,7 +170,7 @@ class RDoc::Markup::AttributeManager
     }.keys
     return if tags.empty?
     tags = "[#{tags.join("")}](?!#{PROTECT_ATTR})"
-    all_tags = "[#{@matching_word_pairs.keys.join("")}](?!#{PROTECT_ATTR})"
+    all_tags = "[#{@word_pair_chars}](?!#{PROTECT_ATTR})"
 
     re = /(?:^|\W|#{all_tags})\K(#{tags})(\1*[#\\]?[\w:#{PROTECT_ATTR}.\/\[\]-]+?\S?)\1(?!\1)(?=#{all_tags}|\W|$)/
 
@@ -246,6 +252,20 @@ class RDoc::Markup::AttributeManager
   end
 
   ##
+  # Protects word pair delimiters (*, _, +) inside
+  # <code> and <tt> tags from being processed as inline formatting.
+  # For example, *bold* in +*bold*+ will NOT be rendered as bold.
+
+  def protect_code_markup
+    @str.gsub!(/<(code|tt)>(.*?)<\/\1>/im) do
+      tag = $1
+      content = $2
+      escaped = content.gsub(@unprotected_word_pair_regexp, "\\1#{PROTECT_ATTR}")
+      "<#{tag}>#{escaped}</#{tag}>"
+    end
+  end
+
+  ##
   # Unescapes regexp handling sequences of text
 
   def unmask_protected_sequences
@@ -308,6 +328,7 @@ class RDoc::Markup::AttributeManager
     @str = str.dup
 
     mask_protected_sequences
+    protect_code_markup
 
     @attrs = RDoc::Markup::AttrSpan.new @str.length, @exclusive_bitmap
 
