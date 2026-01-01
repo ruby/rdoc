@@ -125,11 +125,13 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
       klassnav
     )
 
-    assert_match(/<h1 id="class-Klass-label-Heading\+1"><a href="#class-Klass-label-Heading\+1">Heading 1<\/a>(?!\.)/,
+    # GitHub-style: heading-1 (lowercase, dot removed)
+    # Legacy anchor preserves original casing (class-Klass), while new anchor is lowercase (class-klass)
+    assert_match(/<span id="class-Klass-label-Heading\+1" class="legacy-anchor"><\/span>\s*<h1 id="class-klass-heading-1"><a href="#class-klass-heading-1">Heading 1<\/a>(?!\.)/,
                  klass[%r[<section class=\"description\">.*</section>]m])
     toc = File.binread('table_of_contents.html')
     assert_match(
-      %r[<a\s+href="Klass\.html#class-Klass-label-Heading\+1">Heading 1</a>]m,
+      %r[<a\s+href="Klass\.html#class-klass-heading-1">Heading 1</a>]m,
       toc[%r[<h2\s+id=\"classes\">.*(?=<h2\b)]m][%r[<a\s+href="Klass\.html".*(?=</li\b)]m]
     )
   end
@@ -171,8 +173,8 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     index_html = File.binread('index.html')
 
     assert_include index_html, "<h3>Table of Contents</h3>"
-    assert_include index_html, '<h1 id="label-Heading+1"><a href="#label-Heading+1">Heading 1</a>'
-    # When there's a main page, the default description should not be shown
+    assert_include index_html, '<span id="label-Heading+1" class="legacy-anchor"></span>'
+    assert_include index_html, '<h1 id="heading-1"><a href="#heading-1">Heading 1</a>'
     assert_not_include index_html, 'This is the API documentation for My awesome Ruby project.'
   end
 

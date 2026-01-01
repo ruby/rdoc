@@ -293,11 +293,19 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
       end
 
       def aref
+        commit
+      end
+
+      def legacy_aref
         "label-#{commit}"
       end
 
       def label(context = nil)
         aref
+      end
+
+      def legacy_label(context = nil)
+        legacy_aref
       end
 
       def text

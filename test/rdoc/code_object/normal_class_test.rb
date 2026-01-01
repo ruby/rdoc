@@ -23,8 +23,8 @@ class RDocNormalClassTest < XrefTestCase
   end
 
   def test_aref
-    assert_equal 'class-C1',     @c1.aref
-    assert_equal 'class-C2::C3', @c2_c3.aref
+    assert_equal 'class-c1',    @c1.aref
+    assert_equal 'class-c2-c3', @c2_c3.aref
   end
 
   def test_direct_ancestors

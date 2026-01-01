@@ -28,9 +28,19 @@ class RDoc::Markup::ToLabel < RDoc::Markup::Formatter
   end
 
   ##
-  # Converts +text+ to an HTML-safe label
+  # Converts +text+ to an HTML-safe label using GitHub-style anchor formatting.
 
   def convert(text)
+    label = convert_flow @am.flow text
+
+    RDoc::Text.to_anchor(label)
+  end
+
+  ##
+  # Converts +text+ to an HTML-safe label using legacy RDoc formatting.
+  # Used for generating backward-compatible anchor aliases.
+
+  def convert_legacy(text)
     label = convert_flow @am.flow text
 
     CGI.escape(label).gsub('%', '-').sub(/^-/, '')

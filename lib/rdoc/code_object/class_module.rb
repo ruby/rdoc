@@ -188,10 +188,26 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
-  # HTML fragment reference for this module or class.  See
-  # RDoc::NormalClass#aref and RDoc::NormalModule#aref
+  # HTML fragment reference for this module or class using GitHub-style
+  # anchor format (lowercase, :: replaced with -).
+  #
+  # Examples:
+  #   Foo      -> class-foo
+  #   Foo::Bar -> class-foo-bar
 
   def aref
+    "#{aref_prefix}-#{full_name.downcase.gsub('::', '-')}"
+  end
+
+  ##
+  # Legacy HTML fragment reference for backward compatibility.
+  # Returns the old RDoc-style anchor format.
+  #
+  # Examples:
+  #   Foo      -> class-Foo
+  #   Foo::Bar -> class-Foo::Bar
+
+  def legacy_aref
     "#{aref_prefix}-#{full_name}"
   end
 

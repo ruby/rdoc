@@ -1190,6 +1190,26 @@ main .anchor-link:target {
   scroll-margin-top: calc(var(--layout-header-height) + 2rem);
 }
 
+/* Legacy anchor for backward compatibility with old label- prefix links */
+.legacy-anchor {
+  display: block;
+  position: relative;
+  visibility: hidden;
+  scroll-margin-top: calc(var(--layout-header-height) + 2rem);
+}
+
+/* When a legacy anchor is targeted, highlight the next heading sibling */
+.legacy-anchor:target + h1,
+.legacy-anchor:target + h2,
+.legacy-anchor:target + h3,
+.legacy-anchor:target + h4,
+.legacy-anchor:target + h5,
+.legacy-anchor:target + h6 {
+  margin-left: calc(-1 * var(--space-5));
+  padding-left: calc(var(--space-5) / 2);
+  border-left: calc(var(--space-5) / 2) solid var(--color-border-default);
+}
+
 
 /* Utility Classes */
 .hide { display: none !important; }

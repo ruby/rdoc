@@ -74,26 +74,26 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
 
   def test_convert_CROSSREF_label
     result = @to.convert 'C1@foo'
-    assert_equal para("<a href=\"C1.html#class-C1-label-foo\">foo at <code>C1</code></a>"), result
+    assert_equal para("<a href=\"C1.html#class-c1-foo\">foo at <code>C1</code></a>"), result
 
     result = @to.convert 'C1#m@foo'
-    assert_equal para("<a href=\"C1.html#method-i-m-label-foo\">foo at <code>C1#m</code></a>"),
+    assert_equal para("<a href=\"C1.html#method-i-m-foo\">foo at <code>C1#m</code></a>"),
                  result
   end
 
   def test_convert_CROSSREF_label_for_md
     result = @to.convert 'EXAMPLE@foo'
-    assert_equal para("<a href=\"EXAMPLE_md.html#label-foo\">foo at <code>EXAMPLE</code></a>"), result
+    assert_equal para("<a href=\"EXAMPLE_md.html#foo\">foo at <code>EXAMPLE</code></a>"), result
   end
 
   def test_convert_CROSSREF_label_period
     result = @to.convert 'C1@foo.'
-    assert_equal para("<a href=\"C1.html#class-C1-label-foo\">foo at <code>C1</code></a>."), result
+    assert_equal para("<a href=\"C1.html#class-c1-foo\">foo at <code>C1</code></a>."), result
   end
 
   def test_convert_CROSSREF_label_space
     result = @to.convert 'C1@foo+bar'
-    assert_equal para("<a href=\"C1.html#class-C1-label-foo+bar\">foo bar at <code>C1</code></a>"),
+    assert_equal para("<a href=\"C1.html#class-c1-foo-bar\">foo bar at <code>C1</code></a>"),
                  result
   end
 
@@ -101,7 +101,14 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     @c1.add_section 'Section'
 
     result = @to.convert 'C1@Section'
-    assert_equal para("<a href=\"C1.html#Section\">Section at <code>C1</code></a>"), result
+    assert_equal para("<a href=\"C1.html#section\">Section at <code>C1</code></a>"), result
+  end
+
+  def test_convert_CROSSREF_section_with_spaces
+    @c1.add_section 'Public Methods'
+
+    result = @to.convert 'C1@Public+Methods'
+    assert_equal para("<a href=\"C1.html#public-methods\">Public Methods at <code>C1</code></a>"), result
   end
 
   def test_convert_CROSSREF_constant
@@ -135,7 +142,7 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
   def test_convert_RDOCLINK_rdoc_ref_method_label
     result = @to.convert 'rdoc-ref:C1#m@foo'
 
-    assert_equal para("<a href=\"C1.html#method-i-m-label-foo\">foo at <code>C1#m</code></a>"),
+    assert_equal para("<a href=\"C1.html#method-i-m-foo\">foo at <code>C1#m</code></a>"),
                  result, 'rdoc-ref:C1#m@foo'
   end
 
@@ -171,33 +178,33 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
 
     result = @to.convert 'rdoc-ref:C1#%@f'
 
-    assert_equal para("<a href=\"C1.html#method-i-25-label-f\">f at <code>C1#%</code></a>"),
+    assert_equal para("<a href=\"C1.html#method-i-25-f\">f at <code>C1#%</code></a>"),
                  result
 
     m.singleton = true
 
     result = @to.convert 'rdoc-ref:C1::%@f'
 
-    assert_equal para("<a href=\"C1.html#method-c-25-label-f\">f at <code>C1::%</code></a>"),
+    assert_equal para("<a href=\"C1.html#method-c-25-f\">f at <code>C1::%</code></a>"),
                  result
   end
 
   def test_convert_RDOCLINK_rdoc_ref_label
     result = @to.convert 'rdoc-ref:C1@foo'
 
-    assert_equal para("<a href=\"C1.html#class-C1-label-foo\">foo at <code>C1</code></a>"), result,
+    assert_equal para("<a href=\"C1.html#class-c1-foo\">foo at <code>C1</code></a>"), result,
                  'rdoc-ref:C1@foo'
   end
 
   def test_convert_RDOCLINK_rdoc_ref_label_in_current_file
     result = @to.convert 'rdoc-ref:@foo'
 
-    assert_equal para("<a href=\"#label-foo\">foo</a>"), result,
+    assert_equal para("<a href=\"#foo\">foo</a>"), result,
                  'rdoc-ref:@foo'
 
     result = @to.convert '{Foo}[rdoc-ref:@foo]'
 
-    assert_equal para("<a href=\"#label-foo\">Foo</a>"), result,
+    assert_equal para("<a href=\"#foo\">Foo</a>"), result,
                  '{Foo}[rdoc-ref:@foo]'
   end
 
@@ -222,7 +229,7 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
   end
 
   def test_handle_regexp_CROSSREF_label
-    assert_equal "<a href=\"C1.html#method-i-m-label-foo\">foo at <code>C1#m</code></a>",
+    assert_equal "<a href=\"C1.html#method-i-m-foo\">foo at <code>C1#m</code></a>",
                  REGEXP_HANDLING('C1#m@foo')
   end
 
@@ -285,7 +292,7 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
   def test_handle_regexp_TIDYLINK_label
     link = @to.handle_regexp_TIDYLINK tidy 'C1#m@foo'
 
-    assert_equal "<a href=\"C1.html#method-i-m-label-foo\">tidy</a>",
+    assert_equal "<a href=\"C1.html#method-i-m-foo\">tidy</a>",
                  link, 'C1#m@foo'
   end
 

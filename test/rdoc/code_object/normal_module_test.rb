@@ -25,8 +25,8 @@ class RDocNormalModuleTest < XrefTestCase
   end
 
   def test_aref
-    assert_equal 'module-M1',     @m1.aref
-    assert_equal 'module-M1::M2', @m1_m2.aref
+    assert_equal 'module-m1',    @m1.aref
+    assert_equal 'module-m1-m2', @m1_m2.aref
   end
 
   def test_definition

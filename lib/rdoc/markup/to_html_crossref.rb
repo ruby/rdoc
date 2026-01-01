@@ -169,14 +169,33 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       end
 
       if label
+        # Convert label to GitHub-style anchor format
+        # First convert + to space (URL encoding), then apply GitHub-style rules
+        formatted_label = RDoc::Text.to_anchor(label.tr('+', ' '))
+
+        # Case 1: Path already has an anchor (e.g., method link)
+        #   Input:  C1#method@label -> path="C1.html#method-i-m"
+        #   Output: C1.html#method-i-m-label
         if path =~ /#/
-          path << "-label-#{label}"
-        elsif ref&.sections&.any? { |section| label == section.title }
-          path << "##{label}"
+          path << "-#{formatted_label}"
+
+        # Case 2: Label matches a section title
+        #   Input:  C1@Section -> path="C1.html", section "Section" exists
+        #   Output: C1.html#section (uses section.aref for GitHub-style)
+        elsif (section = ref&.sections&.find { |s| label.tr('+', ' ') == s.title })
+          path << "##{section.aref}"
+
+        # Case 3: Ref has an aref (class/module context)
+        #   Input:  C1@heading -> path="C1.html", ref=C1 class
+        #   Output: C1.html#class-c1-heading
         elsif ref.respond_to?(:aref)
-          path << "##{ref.aref}-label-#{label}"
+          path << "##{ref.aref}-#{formatted_label}"
+
+        # Case 4: No context, just the label (e.g., TopLevel/file)
+        #   Input:  README@section -> path="README_md.html"
+        #   Output: README_md.html#section
         else
-          path << "#label-#{label}"
+          path << "##{formatted_label}"
         end
       end
 
