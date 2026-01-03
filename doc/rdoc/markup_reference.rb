@@ -957,22 +957,30 @@ require 'rdoc'
 #
 # [Heading]
 #
-#   - Link: <tt>RDoc::RD@LICENSE</tt> links to RDoc::RDoc::RD@LICENSE.
+#   Headings generate GitHub-style anchors: lowercase, spaces as hyphens,
+#   special characters removed. For example, <tt>== Hello World</tt> generates
+#   anchor <tt>hello-world</tt>.
 #
-#   Note that spaces in the actual heading are represented by <tt>+</tt> characters
-#   in the linkable text.
+#   Link to headings are recommended to use the GitHub-style anchor format:
 #
-#   - Link: <tt>RDoc::Options@Saved+Options</tt>
-#     links to RDoc::Options@Saved+Options.
+#   - <tt>RDoc::Options@saved-options</tt> links to RDoc::Options@saved-options.
+#   - <tt>RDoc::RD@license</tt> links to RDoc::RD@license.
 #
-#   Punctuation and other special characters must be escaped like CGI.escape.
+#   To link to headings on the same page, you can also use Markdown-style anchor links:
+#
+#   - <tt>{link text}[#hello-world]</tt> links to the heading <tt>== Hello World</tt>.
+#   - <tt>{link text}[#saved-options]</tt> links to the heading <tt>== Saved Options</tt>.
+#
+#   The legacy format with <tt>+</tt> for spaces is also supported, but not recommended:
+#
+#   - <tt>RDoc::Options@Saved+Options</tt> links to RDoc::Options@Saved+Options.
 #
 #   Pro tip: The link to any heading is available in the alphabetical table of contents
-#   at the top left of the page for the class or module.
+#   at the right sidebar of the page.
 #
 # [Section]
 #
-#   See {Directives for Organizing Documentation}[#class-RDoc::MarkupReference-label-Directives+for+Organizing+Documentation].
+#   See {Directives for Organizing Documentation}[#class-rdoc-markupreference-directives-for-organizing-documentation].
 #
 #   - Link: <tt>RDoc::Markup::ToHtml@Visitor</tt> links to RDoc::Markup::ToHtml@Visitor.
 #
