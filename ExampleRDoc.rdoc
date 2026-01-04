@@ -3,6 +3,18 @@
 This document contains example output to show RDoc styling.  This file was
 created from a RDoc Markup file.
 
+== Anchor Links
+
+RDoc generates GitHub-style anchors for headings.  The anchor is the heading
+text converted to lowercase with spaces replaced by hyphens and special
+characters removed.
+
+You can link to headings using Markdown-style syntax:
+
+- {Link to Headings}[#headings]
+- {Link to Paragraphs}[#paragraphs]
+- {Link to Verbatim sections}[#verbatim-sections]
+
 == Headings
 
 You should not use headings beyond level 3, it is a sign of poor organization

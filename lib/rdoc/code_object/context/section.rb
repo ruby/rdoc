@@ -70,9 +70,28 @@ class RDoc::Context::Section
   end
 
   ##
-  # Anchor reference for linking to this section
+  # Anchor reference for linking to this section using GitHub-style format.
+  #
+  # Examples:
+  #   "Section"     -> "section"
+  #   "One Two"     -> "one-two"
+  #   "[untitled]"  -> "untitled"
 
   def aref
+    title = @title || '[untitled]'
+
+    RDoc::Text.to_anchor(title)
+  end
+
+  ##
+  # Legacy anchor reference for backward compatibility.
+  #
+  # Examples:
+  #   "Section"     -> "section"
+  #   "One Two"     -> "one+two"
+  #   "[untitled]"  -> "5Buntitled-5D"
+
+  def legacy_aref
     title = @title || '[untitled]'
 
     CGI.escape(title).gsub('%', '-').sub(/^-/, '')

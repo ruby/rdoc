@@ -43,9 +43,9 @@ class RDocContextSectionTest < RDoc::TestCase
   def test_aref
     assert_equal 'section', @s.aref
 
-    assert_equal '5Buntitled-5D', @S.new(nil, nil, nil).aref
+    assert_equal 'untitled', @S.new(nil, nil, nil).aref
 
-    assert_equal 'one+two', @S.new(nil, 'one two', nil).aref
+    assert_equal 'one-two', @S.new(nil, 'one two', nil).aref
   end
 
   def test_eql_eh

@@ -29,6 +29,7 @@
     </ol>
   <% end %>
 
+  <span id="<%= h klass.legacy_aref %>" class="legacy-anchor"></span>
   <h1 id="<%= h klass.aref %>" class="anchor-link <%= klass.type %>">
     <%= klass.type %> <%= klass.full_name %>
   </h1>
@@ -38,6 +39,7 @@
   </section>
 
   <%- klass.each_section do |section, constants, attributes| %>
+  <span id="<%= section.legacy_aref %>" class="legacy-anchor"></span>
   <section id="<%= section.aref %>" class="documentation-section anchor-link">
     <%- if section.title then %>
     <header class="documentation-section-title">

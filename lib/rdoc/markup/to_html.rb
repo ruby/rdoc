@@ -312,6 +312,13 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     level = [6, heading.level].min
 
     label = heading.label @code_object
+    legacy_label = heading.legacy_label @code_object
+
+    # Add legacy anchor before the heading for backward compatibility.
+    # This allows old links with label- prefix to still work.
+    if @options.output_decoration && !@options.pipe
+      @res << "\n<span id=\"#{legacy_label}\" class=\"legacy-anchor\"></span>"
+    end
 
     @res << if @options.output_decoration
               "\n<h#{level} id=\"#{label}\">"
@@ -368,14 +375,18 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   end
 
   ##
-  # Generate a link to +url+ with content +text+.  Handles the special cases
-  # for img: and link: described under handle_regexp_HYPERLINK
+  # Generates an HTML link or image tag for the given +url+ and +text+.
+  #
+  # - Image URLs (http/https/link ending in .gif, .png, .jpg, .jpeg, .bmp)
+  #   become <img> tags
+  # - File references (.rb, .rdoc, .md) are converted to .html paths
+  # - Anchor URLs (#foo) pass through unchanged for GitHub-style header linking
+  # - Footnote links get wrapped in <sup> tags
 
   def gen_url(url, text)
     scheme, url, id = parse_url url
 
-    if %w[http https link].include?(scheme) and
-       url =~ /\.(gif|png|jpg|jpeg|bmp)$/ then
+    if %w[http https link].include?(scheme) && url =~ /\.(gif|png|jpg|jpeg|bmp)\z/
       "<img src=\"#{url}\" />"
     else
       if scheme != 'link' and %r%\A((?!https?:)(?:[^/#]*/)*+)([^/#]+)\.(rb|rdoc|md)(?=\z|#)%i =~ url
@@ -387,9 +398,11 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
       link = "<a#{id} href=\"#{url}\">#{text}</a>"
 
-      link = "<sup>#{link}</sup>" if /"foot/ =~ id
-
-      link
+      if /"foot/.match?(id)
+        "<sup>#{link}</sup>"
+      else
+        link
+      end
     end
   end
 

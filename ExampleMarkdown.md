@@ -14,6 +14,18 @@ For the following styles, see ExampleRDoc.rdoc for style examples:
 
 These items all use the same styles as RDoc format files.
 
+## Anchor Links
+
+RDoc supports GitHub-style anchor links. You can link to any heading using its
+anchor, which is the heading text converted to lowercase with spaces replaced
+by hyphens and special characters removed.
+
+For example:
+
+* [Link to Footnotes](#footnotes)
+* [Link to Blockquotes](#blockquotes)
+* [Link to Anchor Links](#anchor-links)
+
 ## Footnotes
 
 Footnotes are rendered at the bottom of the documentation section[^1].  For
@@ -36,4 +48,3 @@ Here is how a blockquote looks.
 > > 75 years?
 
 This text is from [Riker Ipsum](http://rikeripsum.com)
-

@@ -77,14 +77,15 @@ class RDocMarkupToLabelTest < RDoc::Markup::FormatterTestCase
   end
 
   def test_convert_crossref
-    assert_equal 'SomeClass', @to.convert('SomeClass')
-    assert_equal 'SomeClass', @to.convert('\\SomeClass')
+    # GitHub-style: lowercase, remove non-alphanumeric except space/hyphen
+    assert_equal 'someclass', @to.convert('SomeClass')
+    assert_equal 'someclass', @to.convert('\\SomeClass')
 
-    assert_equal 'some_method', @to.convert('some_method')
-    assert_equal 'some_method', @to.convert('\\some_method')
+    assert_equal 'somemethod', @to.convert('some_method')
+    assert_equal 'somemethod', @to.convert('\\some_method')
 
-    assert_equal '23some_method', @to.convert('#some_method')
-    assert_equal '23some_method', @to.convert('\\#some_method')
+    assert_equal 'somemethod', @to.convert('#some_method')
+    assert_equal 'somemethod', @to.convert('\\#some_method')
   end
 
   def test_convert_em
@@ -93,11 +94,12 @@ class RDocMarkupToLabelTest < RDoc::Markup::FormatterTestCase
   end
 
   def test_convert_em_dash # for HTML conversion
-    assert_equal '-', @to.convert('--')
+    assert_equal '--', @to.convert('--')
   end
 
   def test_convert_escape
-    assert_equal 'a+-3E+b', @to.convert('a > b')
+    # GitHub-style: spaces become hyphens, special chars removed
+    assert_equal 'a--b', @to.convert('a > b')
   end
 
   def test_convert_tidylink

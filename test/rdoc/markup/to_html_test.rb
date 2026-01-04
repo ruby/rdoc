@@ -24,34 +24,34 @@ class RDocMarkupToHtmlTest < RDoc::Markup::FormatterTestCase
   end
 
   def accept_heading
-    assert_equal "\n<h5 id=\"label-Hello\"><a href=\"#label-Hello\">Hello</a></h5>\n", @to.res.join
+    assert_equal "\n<span id=\"label-Hello\" class=\"legacy-anchor\"></span>\n<h5 id=\"hello\"><a href=\"#hello\">Hello</a></h5>\n", @to.res.join
   end
 
   def accept_heading_1
-    assert_equal "\n<h1 id=\"label-Hello\"><a href=\"#label-Hello\">Hello</a></h1>\n", @to.res.join
+    assert_equal "\n<span id=\"label-Hello\" class=\"legacy-anchor\"></span>\n<h1 id=\"hello\"><a href=\"#hello\">Hello</a></h1>\n", @to.res.join
   end
 
   def accept_heading_2
-    assert_equal "\n<h2 id=\"label-Hello\"><a href=\"#label-Hello\">Hello</a></h2>\n", @to.res.join
+    assert_equal "\n<span id=\"label-Hello\" class=\"legacy-anchor\"></span>\n<h2 id=\"hello\"><a href=\"#hello\">Hello</a></h2>\n", @to.res.join
   end
 
   def accept_heading_3
-    assert_equal "\n<h3 id=\"label-Hello\"><a href=\"#label-Hello\">Hello</a></h3>\n", @to.res.join
+    assert_equal "\n<span id=\"label-Hello\" class=\"legacy-anchor\"></span>\n<h3 id=\"hello\"><a href=\"#hello\">Hello</a></h3>\n", @to.res.join
   end
 
   def accept_heading_4
-    assert_equal "\n<h4 id=\"label-Hello\"><a href=\"#label-Hello\">Hello</a></h4>\n", @to.res.join
+    assert_equal "\n<span id=\"label-Hello\" class=\"legacy-anchor\"></span>\n<h4 id=\"hello\"><a href=\"#hello\">Hello</a></h4>\n", @to.res.join
   end
 
   def accept_heading_b
     inner = "<strong>Hello</strong>"
 
-    assert_equal "\n<h1 id=\"label-Hello\"><a href=\"#label-Hello\">#{inner}</a></h1>\n",
+    assert_equal "\n<span id=\"label-Hello\" class=\"legacy-anchor\"></span>\n<h1 id=\"hello\"><a href=\"#hello\">#{inner}</a></h1>\n",
                  @to.res.join
   end
 
   def accept_heading_suppressed_crossref
-    assert_equal "\n<h1 id=\"label-Hello\"><a href=\"#label-Hello\">Hello</a></h1>\n", @to.res.join
+    assert_equal "\n<span id=\"label-Hello\" class=\"legacy-anchor\"></span>\n<h1 id=\"hello\"><a href=\"#hello\">Hello</a></h1>\n", @to.res.join
   end
 
   def accept_list_end_bullet
@@ -327,7 +327,7 @@ class RDocMarkupToHtmlTest < RDoc::Markup::FormatterTestCase
 
     @to.accept_heading @RM::Heading.new(7, 'Hello')
 
-    assert_equal "\n<h6 id=\"label-Hello\"><a href=\"#label-Hello\">Hello</a></h6>\n", @to.res.join
+    assert_equal "\n<span id=\"label-Hello\" class=\"legacy-anchor\"></span>\n<h6 id=\"hello\"><a href=\"#hello\">Hello</a></h6>\n", @to.res.join
   end
 
   def test_accept_heading_aref_class
@@ -336,7 +336,7 @@ class RDocMarkupToHtmlTest < RDoc::Markup::FormatterTestCase
 
     @to.accept_heading head(1, 'Hello')
 
-    assert_equal "\n<h1 id=\"class-Foo-label-Hello\"><a href=\"#class-Foo-label-Hello\">Hello</a></h1>\n",
+    assert_equal "\n<span id=\"class-Foo-label-Hello\" class=\"legacy-anchor\"></span>\n<h1 id=\"class-foo-hello\"><a href=\"#class-foo-hello\">Hello</a></h1>\n",
                  @to.res.join
   end
 
@@ -346,7 +346,7 @@ class RDocMarkupToHtmlTest < RDoc::Markup::FormatterTestCase
 
     @to.accept_heading @RM::Heading.new(1, 'Hello')
 
-    assert_equal "\n<h1 id=\"method-i-foo-label-Hello\"><a href=\"#method-i-foo-label-Hello\">Hello</a></h1>\n",
+    assert_equal "\n<span id=\"method-i-foo-label-Hello\" class=\"legacy-anchor\"></span>\n<h1 id=\"method-i-foo-hello\"><a href=\"#method-i-foo-hello\">Hello</a></h1>\n",
                  @to.res.join
   end
 
@@ -357,7 +357,7 @@ class RDocMarkupToHtmlTest < RDoc::Markup::FormatterTestCase
 
     @to.accept_heading @RM::Heading.new(1, 'Hello')
 
-    assert_equal "\n<h1 id=\"label-Hello\">Hello</h1>\n", @to.res.join
+    assert_equal "\n<h1 id=\"hello\">Hello</h1>\n", @to.res.join
   end
 
   def test_accept_paragraph_newline
@@ -407,7 +407,7 @@ class RDocMarkupToHtmlTest < RDoc::Markup::FormatterTestCase
 
     @to.accept_heading @RM::Heading.new(1, 'Hello')
 
-    assert_equal "\n<h1><a href=\"#label-Hello\">Hello</a></h1>\n", @to.res.join
+    assert_equal "\n<h1><a href=\"#hello\">Hello</a></h1>\n", @to.res.join
   end
 
   def test_accept_heading_output_decoration_with_pipe
@@ -1038,6 +1038,15 @@ EXPECTED
     assert_include(res[%r<<td[^<>]*>.*em.*</td>>], '<em>em</em>')
     assert_include(res[%r<<td[^<>]*>.*strong.*</td>>], '<strong>strong</strong>')
     assert_include(res[%r<<td[^<>]*>C1</td>>], 'C1')
+  end
+
+  def test_gen_url_markdown_anchor
+    assert_equal '<a href="#hello-world">link</a>', @to.gen_url('#hello-world', 'link')
+  end
+
+  def test_convert_tidy_link_markdown_anchor
+    result = @to.convert('{link}[#hello]')
+    assert_equal "\n<p><a href=\"#hello\">link</a></p>\n", result
   end
 
   def assert_escaped(unexpected, code)

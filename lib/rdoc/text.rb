@@ -319,4 +319,19 @@ module RDoc::Text
 
   SPACE_SEPARATED_LETTER_CLASS = /[\p{Nd}\p{Lc}\p{Pc}]|[!-~&&\W]/
 
+  ##
+  # Converts +text+ to a GitHub-style anchor ID:
+  # - Lowercase
+  # - Remove characters that aren't alphanumeric, space, or hyphen
+  # - Replace spaces with hyphens
+  #
+  # Examples:
+  #   "Hello World"  -> "hello-world"
+  #   "Foo::Bar"     -> "foobar"
+  #   "What's New?"  -> "whats-new"
+
+  module_function def to_anchor(text)
+    text.downcase.gsub(/[^a-z0-9 \-]/, '').gsub(' ', '-')
+  end
+
 end
