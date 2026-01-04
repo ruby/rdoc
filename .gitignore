@@ -12,3 +12,6 @@
 /tmp
 /node_modules
 Gemfile.lock
+
+# Playwright MCP uses this folder to store screenshots
+.playwright-mcp/
