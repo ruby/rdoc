@@ -1114,6 +1114,34 @@ and an extra note.[^2]
     assert_equal expected, doc
   end
 
+  def test_strike_to_html_single_word
+    doc = parse "This is ~~strikethrough~~ text.\n"
+    html = @to_html.convert doc
+
+    assert_match %r{<del>strikethrough</del>}, html
+  end
+
+  def test_strike_to_html_multiple_words
+    doc = parse "This is ~~multiple words~~ text.\n"
+    html = @to_html.convert doc
+
+    assert_match %r{<del>multiple words</del>}, html
+  end
+
+  def test_strike_to_html_with_s_tag
+    doc = parse "This has <s>deleted</s> text.\n"
+    html = @to_html.convert doc
+
+    assert_match %r{<del>deleted</del>}, html
+  end
+
+  def test_strike_to_html_with_del_tag
+    doc = parse "This has <del>deleted</del> text.\n"
+    html = @to_html.convert doc
+
+    assert_match %r{<del>deleted</del>}, html
+  end
+
   def test_parse_style
     @parser.css = true
 
