@@ -220,10 +220,10 @@ exe/
 
 ### Documentation
 
-- `README.md` - Basic usage guide
-- `ExampleRDoc.rdoc` - RDoc markup examples
-- `doc/rdoc/markup_reference.rb` - RDoc markup references
-- `ExampleMarkdown.md` - Markdown examples
+- `README.md` - Basic usage guide and markup format reference
+- `markup_reference/rdoc.rdoc` - Comprehensive RDoc markup syntax reference
+- `markup_reference/markdown.md` - Markdown syntax reference
+- `doc/rdoc/example.rb` - Ruby code examples for cross-references and directives
 
 ## Architecture Notes
 
@@ -267,6 +267,53 @@ Use Red, Green, Refactor approach:
 2. Regenerate: `bundle exec rake rerdoc`
 3. Check output in `_site/` directory
 4. Check coverage: `bundle exec rake coverage`
+
+### Modifying Markup Reference Documentation
+
+When editing markup reference documentation, such as `doc/markup_reference/markdown.md` and `doc/markup_reference/rdoc.rdoc`:
+
+1. **Always verify rendering** - After making changes, test that the content renders correctly using Ruby:
+
+   For Markdown files:
+
+   ```ruby
+   ruby -r rdoc -r rdoc/markdown -e '
+   md = RDoc::Markdown.new
+   doc = md.parse("YOUR CONTENT HERE")
+   formatter = RDoc::Markup::ToHtml.new(RDoc::Options.new)
+   puts formatter.convert(doc)
+   '
+   ```
+
+   For RDoc files:
+
+   ```ruby
+   ruby -r rdoc -e '
+   parser = RDoc::Markup::Parser.new
+   doc = parser.parse("YOUR CONTENT HERE")
+   formatter = RDoc::Markup::ToHtml.new(RDoc::Options.new)
+   puts formatter.convert(doc)
+   '
+   ```
+
+2. **Watch for rendering issues:**
+   - Backtick escaping (especially nested code blocks)
+   - Tilde characters being interpreted as strikethrough
+   - Special characters in examples
+   - Anchor links pointing to correct headings
+
+3. **Known RDoc Markdown limitations:**
+   - Only triple backticks for fenced code blocks (no tildes, no quad-backticks)
+   - Tilde fences (`~~~`) conflict with strikethrough syntax
+   - Use 4-space indentation to show literal code fence examples
+
+4. **Full verification**: Generate documentation and inspect the HTML output:
+
+   ```bash
+   bundle exec rake rerdoc
+   # Inspect the generated HTML file directly
+   grep -A5 "your content" _site/path/to/file.html
+   ```
 
 ### Modifying Themes/Styling
 
