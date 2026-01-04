@@ -1059,6 +1059,18 @@ main h6 a:hover {
   font-style: italic;
 }
 
+/* Shell Syntax Highlighting */
+.sh-prompt { color: var(--code-gray); }
+.sh-command { color: var(--code-blue); }
+.sh-option { color: var(--code-cyan); }
+.sh-string { color: var(--code-green); }
+.sh-envvar { color: var(--code-purple); }
+
+.sh-comment {
+  color: var(--code-gray);
+  font-style: italic;
+}
+
 /* Emphasis */
 em {
   text-decoration-color: var(--color-emphasis-decoration);
