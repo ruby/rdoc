@@ -274,6 +274,18 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
       def initialize(base, commit, author, email, date, contents)
         case contents
         when String
+          if base&.match(%r[\A([^:/]+:/+[^/]+/)[^/]+/[^/]+/])
+            repo, host = $&, $1
+            contents = contents.dup
+            contents.gsub!(/\b(?:(?i:fix(?:e[sd])?) +)\K#(\d+\b)|\bGH-(\d+)\b|\(\K\#(\d+)(?=\))/) do
+              "[#$&](#{repo}pull/#{$1 || $2 || $3})"
+            end
+            contents.gsub!(%r[(?<![-\w#/@]|\]\[)([-\w]+/[-\w]+)(?:@(\h{8,40})|\#(\d+))(?![-\w#/@]|\]\[)]) do
+              path = defined?($2) ? "commit/#{$2}" : "pull/#{$3}"
+              "[#$&](#{host}#{$1}/#{path})"
+            end
+          end
+
           contents = RDoc::Markdown.parse(contents).parts.each do |body|
             case body
             when RDoc::Markup::Heading
