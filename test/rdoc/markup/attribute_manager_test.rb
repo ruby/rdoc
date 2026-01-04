@@ -17,6 +17,9 @@ class RDocMarkupAttributeManagerTest < RDoc::TestCase
     @em_on    = @am.changed_attribute_by_name([], [:EM])
     @em_off   = @am.changed_attribute_by_name([:EM], [])
 
+    @strike_on  = @am.changed_attribute_by_name([], [:STRIKE])
+    @strike_off = @am.changed_attribute_by_name([:STRIKE], [])
+
     @bold_em_on   = @am.changed_attribute_by_name([], [:BOLD] | [:EM])
     @bold_em_off  = @am.changed_attribute_by_name([:BOLD] | [:EM], [])
 
@@ -54,7 +57,7 @@ class RDocMarkupAttributeManagerTest < RDoc::TestCase
   def test_add_html_tag
     @am.add_html("Test", :TEST)
     tags = @am.html_tags
-    assert_equal(6, tags.size)
+    assert_equal(8, tags.size)
     assert(tags.has_key?("test"))
   end
 
@@ -162,6 +165,40 @@ class RDocMarkupAttributeManagerTest < RDoc::TestCase
 
   def test_bold_html_escaped
     assert_equal ['cat <b>dog</b>'], @am.flow('cat \<b>dog</b>')
+  end
+
+  def test_strike
+    assert_equal [@strike_on, 'strike', @strike_off],
+                 @am.flow("~strike~")
+
+    assert_equal [@strike_on, 'Strike:', @strike_off],
+                 @am.flow("~Strike:~")
+
+    assert_equal ["cat ", @strike_on, "and", @strike_off, " dog"],
+                 @am.flow("cat ~and~ dog")
+  end
+
+  def test_strike_html_escaped
+    assert_equal ['cat <s>dog</s>'], @am.flow('cat \<s>dog</s>')
+    assert_equal ['cat <del>dog</del>'], @am.flow('cat \<del>dog</del>')
+  end
+
+  def test_html_like_strike
+    assert_equal ["cat ", @strike_on, "dog", @strike_off],
+                  @am.flow("cat <s>dog</s>")
+  end
+
+  def test_html_like_strike_del
+    assert_equal ["cat ", @strike_on, "dog", @strike_off],
+                  @am.flow("cat <del>dog</del>")
+  end
+
+  def test_convert_attrs_ignores_strike_inside_code
+    assert_equal 'foo <CODE>~strike~</CODE> bar', output('foo <code>~strike~</code> bar')
+  end
+
+  def test_convert_attrs_ignores_strike_inside_tt
+    assert_equal 'foo <CODE>~strike~</CODE> bar', output('foo <tt>~strike~</tt> bar')
   end
 
   def test_combined
@@ -331,13 +368,13 @@ class RDocMarkupAttributeManagerTest < RDoc::TestCase
   def test_initial_html
     html_tags = @am.html_tags
     assert html_tags.is_a?(Hash)
-    assert_equal(5, html_tags.size)
+    assert_equal(7, html_tags.size)
   end
 
   def test_initial_word_pairs
     word_pairs = @am.matching_word_pairs
     assert word_pairs.is_a?(Hash)
-    assert_equal(3, word_pairs.size)
+    assert_equal(4, word_pairs.size)
   end
 
   def test_mask_protected_sequence

@@ -89,12 +89,15 @@ class RDoc::Markup::AttributeManager
     add_word_pair "*", "*", :BOLD, true
     add_word_pair "_", "_", :EM, true
     add_word_pair "+", "+", :TT, true
+    add_word_pair "~", "~", :STRIKE, true
 
     add_html "em", :EM, true
     add_html "i",  :EM, true
     add_html "b",  :BOLD, true
     add_html "tt",   :TT, true
     add_html "code", :TT, true
+    add_html "s",   :STRIKE, true
+    add_html "del", :STRIKE, true
 
     @word_pair_chars = @matching_word_pairs.keys.join
 
