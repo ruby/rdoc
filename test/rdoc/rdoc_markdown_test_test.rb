@@ -25,7 +25,7 @@ class RDocMarkdownTestTest < RDoc::TestCase
         para("AT&T has an ampersand in their name."),
         para("AT&T is another way to write it."),
         para("This & that."),
-        para("4 < 5."),
+        para("4 \\< 5."),
         para("6 > 5."),
         para("Here's a {link}[http://example.com/?foo=1&bar=2] with " +
              "an ampersand in the URL."),
@@ -69,10 +69,10 @@ class RDocMarkdownTestTest < RDoc::TestCase
       doc(
         para("These should all get escaped:"),
 
-        para("Backslash: \\"),
+        para("Backslash: \\\\"),
         para("Backtick: `"),
-        para("Asterisk: *"),
-        para("Underscore: _"),
+        para("Asterisk: \\*"),
+        para("Underscore: \\_"),
         para("Left brace: {"),
         para("Right brace: }"),
         para("Left bracket: ["),
@@ -83,7 +83,7 @@ class RDocMarkdownTestTest < RDoc::TestCase
         para("Hash: #"),
         para("Period: ."),
         para("Bang: !"),
-        para("Plus: +"),
+        para("Plus: \\+"),
         para("Minus: -"),
 
         para("These should not, because they occur within a code block:"),
@@ -142,8 +142,8 @@ class RDocMarkdownTestTest < RDoc::TestCase
         para("These should get escaped, even though they're matching pairs for\n" +
              "other Markdown constructs:"),
 
-        para("\*asterisks\*"),
-        para("\_underscores\_"),
+        para("\\*asterisks\\*"),
+        para("\\_underscores\\_"),
         para("`backticks`"),
 
         para("This is a code span with a literal backslash-backtick " +
@@ -227,7 +227,7 @@ class RDocMarkdownTestTest < RDoc::TestCase
              "middle of a paragraph looked like a\n"    +
              "list item."),
         para("Here's one with a bullet.\n" +
-             "* criminey."))
+             "\\* criminey."))
 
     assert_equal expected, doc
   end
@@ -866,7 +866,7 @@ foo
         para("To this end, Markdown's syntax is comprised entirely of punctuation\n" +
              "characters, which punctuation characters have been carefully chosen so\n" +
              "as to look like what they mean. E.g., asterisks around a word actually\n" +
-             "look like \*emphasis\*. Markdown lists look like, well, lists. Even\n" +
+             "look like \\*emphasis\\*. Markdown lists look like, well, lists. Even\n" +
              "blockquotes look like quoted passages of text, assuming you've ever\n" +
              "used email."),
 

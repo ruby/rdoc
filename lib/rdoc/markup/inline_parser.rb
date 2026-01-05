@@ -303,9 +303,10 @@ class RDoc::Markup::InlineParser
   # Returns nil if no valid URL part is found.
   # URL part is enclosed in square brackets and may contain escaped brackets.
   # Example: <tt>[http://example.com/?q=\[\]]</tt> represents <tt>http://example.com/?q=[]</tt>.
+  # If we're accepting rdoc-style links in markdown, url may include <tt>*+<_</tt> with backslash escape.
 
   def read_tidylink_url
-    bracketed_url = strscan(/\[([^\s\[\]\\]|\\[\[\]\\])+\]/)
+    bracketed_url = strscan(/\[([^\s\[\]\\]|\\[\[\]\\*+<_])+\]/)
     bracketed_url[1...-1].gsub(/\\(.)/, '\1') if bracketed_url
   end
 end
