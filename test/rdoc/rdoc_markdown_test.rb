@@ -1411,4 +1411,85 @@ and an extra note.[^2]
     @parser.parse text
   end
 
+  def render(markdown_source)
+    @to_html.convert(parse(markdown_source))
+  end
+
+  def test_atx_heading_closing_hashes_stripped
+    html = render("## Heading ##\n")
+    assert_match(%r{<h2.*>.*Heading.*</h2>}, html)
+    assert_not_match(/##/, html.gsub(/<[^>]+>/, "").strip)
+  end
+
+  def test_fenced_code_4_backticks_not_supported
+    html = render("````\ncode\n````\n")
+    assert_not_match(%r{<pre>code\n</pre>}, html)
+  end
+
+  def test_tilde_is_strikethrough_not_fence
+    html = render("~~~\ncode\n~~~\n")
+    assert_not_match(%r{<pre>code\n</pre>}, html)
+
+    html = render("~~strike~~\n")
+    assert_match(%r{<del>strike</del>}, html)
+  end
+
+  def test_info_string_css_classes
+    assert_match(/class="ruby"/, render("```rb\ndef hello; end\n```\n"))
+    assert_match(/class="c"/, render("```c\nint main() {}\n```\n"))
+    assert_match(/class="bash"/, render("```bash\necho hello\n```\n"))
+    assert_match(/class="python"/, render("```python\nprint('hi')\n```\n"))
+  end
+
+  def test_lazy_continuation_in_blockquote
+    html = render("> Foo\nBar\n")
+    assert_match(%r{<blockquote>.*Foo.*Bar.*</blockquote>}m, html)
+    assert_match(%r{Foo Bar}, html)
+  end
+
+  def test_ordered_list_paren_delimiter_not_supported
+    html = render("1) first\n2) second\n")
+    assert_not_match(%r{<ol>}, html)
+  end
+
+  def test_style_block_not_supported
+    html = render("<style>body { color: red; }</style>\n")
+    assert_not_match(%r{<style>}, html)
+  end
+
+  def test_inline_html_tag_conversion
+    assert_match(%r{<strong>bold</strong>}, render("This has <b>bold</b> HTML.\n"))
+    assert_match(%r{<em>emphasized</em>}, render("This has <em>emphasized</em> HTML.\n"))
+
+    html = render("This has <strong>bold</strong> HTML.\n")
+    assert_match(/&lt;strong&gt;/, html)
+  end
+
+  def test_link_title_not_rendered
+    html = render('[text](https://example.com "My Title")' + "\n")
+    assert_match(%r{<a href="https://example.com">text</a>}, html)
+    assert_not_match(/My Title/, html)
+  end
+
+  def test_task_list_not_supported
+    html = render("- [ ] unchecked\n- [x] checked\n")
+    assert_not_match(%r{<input}, html)
+  end
+
+  def test_autolinks
+    assert_match(%r{<a href.*www\.example\.com}, render("Visit www.example.com for help.\n"))
+    assert_match(%r{<a href="https://example\.com"}, render("Visit https://example.com for help.\n"))
+    assert_not_match(%r{<a href="mailto:user@example\.com"}, render("Contact user@example.com for help.\n"))
+  end
+
+  def test_backslash_line_break_not_supported
+    html = render("Line one\\\nLine two\n")
+    assert_not_match(%r{<br>}, html)
+  end
+
+  def test_escape_tilde_not_supported
+    html = render("\\~not escaped\n")
+    assert_match(/\\~/, html)
+  end
+
 end
