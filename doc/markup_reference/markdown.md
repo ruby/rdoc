@@ -540,7 +540,7 @@ See [rdoc.rdoc](rdoc.rdoc) for complete directive documentation.
 | Code blocks | Indent beyond margin | Indent 4 spaces or fence |
 | Block quotes | `>>>` | `>` |
 | Tables | Not supported | Supported |
-| Strikethrough | Not supported | `~~text~~` |
+| Strikethrough | `<del>text</del>` | `~~text~~` |
 | Footnotes | Not supported | `[^1]` |
 
 ## Notes and Limitations

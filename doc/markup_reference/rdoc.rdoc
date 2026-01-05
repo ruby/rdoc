@@ -664,7 +664,7 @@ For C code, the directive may appear in a stand-alone comment.
 
 Text markup is metatext that affects HTML rendering:
 
-- {Typeface}[rdoc-ref:rdoc@Typeface+Markup]: italic, bold, monofont.
+- {Typeface}[rdoc-ref:rdoc@Typeface+Markup]: italic, bold, monofont, strikethrough.
 - {Character conversions}[rdoc-ref:rdoc@Character+Conversions]: copyright, trademark, certain punctuation.
 - {Links}[rdoc-ref:rdoc@Links].
 - {Escapes}[rdoc-ref:rdoc@Escaping+Text]: marking text as "not markup."
@@ -672,12 +672,13 @@ Text markup is metatext that affects HTML rendering:
 === Typeface Markup
 
 Typeface markup can specify that text is to be rendered
-as italic, bold, or monofont.
+as italic, bold, monofont, or strikethrough.
 
 Typeface markup may contain only one type of nested block:
 
 - More typeface markup:
-  {italic}[rdoc-ref:rdoc@Italic], {bold}[rdoc-ref:rdoc@Bold], {monofont}[rdoc-ref:rdoc@Monofont].
+  {italic}[rdoc-ref:rdoc@Italic], {bold}[rdoc-ref:rdoc@Bold], {monofont}[rdoc-ref:rdoc@Monofont],
+  {strikethrough}[rdoc-ref:rdoc@Strikethrough].
 
 ==== Italic
 
@@ -765,6 +766,23 @@ Rendered HTML:
 
 >>>
   +Monofont+ in a paragraph.
+
+==== Strikethrough
+
+Text may be marked as strikethrough via HTML tag <tt><del></tt> or <tt><s></tt>.
+
+Example input:
+
+  <del>Strikethrough words</del> in a paragraph.
+
+  <del>Deleted passage containing _italics_ and *bold*.</del>
+
+Rendered HTML:
+
+>>>
+  <del>Strikethrough words</del> in a paragraph.
+
+  <del>Deleted passage containing _italics_ and *bold*.</del>
 
 === Character Conversions
 

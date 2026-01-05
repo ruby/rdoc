@@ -875,11 +875,7 @@ class RDoc::Markdown
   # Wraps `text` in strike markup for rdoc inline formatting
 
   def strike text
-    if text =~ /\A[a-z\d.\/-]+\z/i then
-      "~#{text}~"
-    else
-      "<s>#{text}</s>"
-    end
+    "<del>#{text}</del>"
   end
 
   ##

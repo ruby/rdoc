@@ -167,17 +167,6 @@ class RDocMarkupAttributeManagerTest < RDoc::TestCase
     assert_equal ['cat <b>dog</b>'], @am.flow('cat \<b>dog</b>')
   end
 
-  def test_strike
-    assert_equal [@strike_on, 'strike', @strike_off],
-                 @am.flow("~strike~")
-
-    assert_equal [@strike_on, 'Strike:', @strike_off],
-                 @am.flow("~Strike:~")
-
-    assert_equal ["cat ", @strike_on, "and", @strike_off, " dog"],
-                 @am.flow("cat ~and~ dog")
-  end
-
   def test_strike_html_escaped
     assert_equal ['cat <s>dog</s>'], @am.flow('cat \<s>dog</s>')
     assert_equal ['cat <del>dog</del>'], @am.flow('cat \<del>dog</del>')
@@ -191,14 +180,6 @@ class RDocMarkupAttributeManagerTest < RDoc::TestCase
   def test_html_like_strike_del
     assert_equal ["cat ", @strike_on, "dog", @strike_off],
                   @am.flow("cat <del>dog</del>")
-  end
-
-  def test_convert_attrs_ignores_strike_inside_code
-    assert_equal 'foo <CODE>~strike~</CODE> bar', output('foo <code>~strike~</code> bar')
-  end
-
-  def test_convert_attrs_ignores_strike_inside_tt
-    assert_equal 'foo <CODE>~strike~</CODE> bar', output('foo <tt>~strike~</tt> bar')
   end
 
   def test_combined
@@ -261,6 +242,18 @@ class RDocMarkupAttributeManagerTest < RDoc::TestCase
 
   def test_convert_attrs_ignores_tt_inside_tt
     assert_equal 'foo <CODE>+tt+</CODE> bar', output('foo <tt>+tt+</tt> bar')
+  end
+
+  def test_convert_attrs_ignores_del_inside_code
+    assert_equal 'foo <CODE><del>strike</del></CODE> bar', output('foo <code><del>strike</del></code> bar')
+  end
+
+  def test_convert_attrs_ignores_del_inside_tt
+    assert_equal 'foo <CODE><del>strike</del></CODE> bar', output('foo <tt><del>strike</del></tt> bar')
+  end
+
+  def test_convert_attrs_ignores_s_inside_code
+    assert_equal 'foo <CODE><s>strike</s></CODE> bar', output('foo <code><s>strike</s></code> bar')
   end
 
   def test_convert_attrs_ignores_tt
@@ -374,7 +367,7 @@ class RDocMarkupAttributeManagerTest < RDoc::TestCase
   def test_initial_word_pairs
     word_pairs = @am.matching_word_pairs
     assert word_pairs.is_a?(Hash)
-    assert_equal(4, word_pairs.size)
+    assert_equal(3, word_pairs.size)
   end
 
   def test_mask_protected_sequence

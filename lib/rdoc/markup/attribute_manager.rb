@@ -89,7 +89,6 @@ class RDoc::Markup::AttributeManager
     add_word_pair "*", "*", :BOLD, true
     add_word_pair "_", "_", :EM, true
     add_word_pair "+", "+", :TT, true
-    add_word_pair "~", "~", :STRIKE, true
 
     add_html "em", :EM, true
     add_html "i",  :EM, true
@@ -263,7 +262,10 @@ class RDoc::Markup::AttributeManager
     @str.gsub!(/<(code|tt)>(.*?)<\/\1>/im) do
       tag = $1
       content = $2
+      # Protect word pair delimiters (*, _, +) from being processed
       escaped = content.gsub(@unprotected_word_pair_regexp, "\\1#{PROTECT_ATTR}")
+      # Protect HTML-like tags from being processed (e.g., <del> inside code)
+      escaped = escaped.gsub(/<(?!#{PROTECT_ATTR})/, "<#{PROTECT_ATTR}")
       "<#{tag}>#{escaped}</#{tag}>"
     end
   end

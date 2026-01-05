@@ -1089,7 +1089,7 @@ and an extra note.[^2]
     doc = parse "it ~~works~~\n"
 
     expected = @RM::Document.new(
-      @RM::Paragraph.new("it ~works~"))
+      @RM::Paragraph.new("it <del>works</del>"))
 
     assert_equal expected, doc
   end
@@ -1098,7 +1098,7 @@ and an extra note.[^2]
     doc = parse "it ~~works fine~~\n"
 
     expected = @RM::Document.new(
-      @RM::Paragraph.new("it <s>works fine</s>"))
+      @RM::Paragraph.new("it <del>works fine</del>"))
 
     assert_equal expected, doc
   end
