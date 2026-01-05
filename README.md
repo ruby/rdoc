@@ -136,7 +136,7 @@ rdoc --markup markdown
 | Cross-references | Automatic | Automatic |
 | Directives (`:nodoc:`, etc.) | Supported | Supported |
 | Tables | Not supported | Supported |
-| Strikethrough | Not supported | Supported |
+| Strikethrough | `<del>text</del>` | `~~text~~` |
 | Footnotes | Not supported | Supported |
 
 For complete syntax documentation, see:
