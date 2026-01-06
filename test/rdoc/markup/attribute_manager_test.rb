@@ -244,6 +244,31 @@ class RDocMarkupAttributeManagerTest < RDoc::TestCase
     assert_equal 'foo <CODE>+tt+</CODE> bar', output('foo <tt>+tt+</tt> bar')
   end
 
+  def test_backtick_basic
+    assert_equal(["cat ", @tt_on, "and", @tt_off, " dog"],
+                  @am.flow("cat `and` dog"))
+
+    assert_equal(["cat ", @tt_on, "X::Y", @tt_off, " dog"],
+                  @am.flow("cat `X::Y` dog"))
+  end
+
+  def test_backtick_output
+    assert_equal 'cat <CODE>and</CODE> dog', output('cat `and` dog')
+    assert_equal 'cat <CODE>X::Y</CODE> dog', output('cat `X::Y` dog')
+  end
+
+  def test_convert_attrs_ignores_backtick_inside_code
+    assert_equal 'foo <CODE>`text`</CODE> bar', output('foo <code>`text`</code> bar')
+  end
+
+  def test_convert_attrs_ignores_backtick_inside_tt
+    assert_equal 'foo <CODE>`text`</CODE> bar', output('foo <tt>`text`</tt> bar')
+  end
+
+  def test_backtick_escaped
+    assert_equal ['`text`'], @am.flow('\`text`')
+  end
+
   def test_convert_attrs_ignores_del_inside_code
     assert_equal 'foo <CODE><del>strike</del></CODE> bar', output('foo <code><del>strike</del></code> bar')
   end
@@ -367,7 +392,7 @@ class RDocMarkupAttributeManagerTest < RDoc::TestCase
   def test_initial_word_pairs
     word_pairs = @am.matching_word_pairs
     assert word_pairs.is_a?(Hash)
-    assert_equal(3, word_pairs.size)
+    assert_equal(4, word_pairs.size)
   end
 
   def test_mask_protected_sequence

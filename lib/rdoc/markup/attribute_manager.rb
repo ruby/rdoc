@@ -89,6 +89,7 @@ class RDoc::Markup::AttributeManager
     add_word_pair "*", "*", :BOLD, true
     add_word_pair "_", "_", :EM, true
     add_word_pair "+", "+", :TT, true
+    add_word_pair "`", "`", :TT, true
 
     add_html "em", :EM, true
     add_html "i",  :EM, true
@@ -100,7 +101,7 @@ class RDoc::Markup::AttributeManager
 
     @word_pair_chars = @matching_word_pairs.keys.join
 
-    # Matches a word pair delimiter (*, _, +) that is NOT already protected.
+    # Matches a word pair delimiter (*, _, +, `) that is NOT already protected.
     # Used by #protect_code_markup to escape delimiters inside <code>/<tt> tags.
     @unprotected_word_pair_regexp = /([#{@word_pair_chars}])(?!#{PROTECT_ATTR})/
   end

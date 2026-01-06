@@ -756,16 +756,31 @@ Rendered HTML:
   <tt>Monofont passage containing _italics_ and *bold*.</tt>
 
 A single word may be made monofont by a shorthand:
-prefixed and suffixed plus-signs.
+prefixed and suffixed plus-signs or backticks.
 
 Example input:
 
   +Monofont+ in a paragraph.
 
+  `Monofont` in a paragraph.
+
 Rendered HTML:
 
 >>>
   +Monofont+ in a paragraph.
+
+  `Monofont` in a paragraph.
+
+Note: The shorthand (<tt>+...+</tt> and <tt>`...`</tt>) only works for simple content
+containing word characters, colons, periods, slashes, brackets, and hyphens.
+Content containing HTML tags or other markup delimiters will not be matched.
+For complex content, use the HTML tags <tt><tt></tt> or <tt><code></tt> instead:
+
+  <tt>+literal_plus+</tt> shows: +literal_plus+
+
+  <tt>`literal_backtick`</tt> shows: `literal_backtick`
+
+  <tt><code>content</code></tt> shows: <code>content</code>
 
 ==== Strikethrough
 
