@@ -2,6 +2,33 @@
 
 module RDoc
   class Markup
+    # IMPORTANT! This weird workaround is required to ensure that RDoc can correctly deserializing Marshal data from
+    # older rubies. Older rubies have `Heading` as a struct, so if we change it to a class, deserialization fails
+    if RUBY_VERSION.start_with?("4.")
+      class Heading < Element
+        #: String
+        attr_reader :text
+
+        #: Integer
+        attr_accessor :level
+
+        #: (Integer, String) -> void
+        def initialize(level, text)
+          super()
+
+          @level = level
+          @text = text
+        end
+
+        #: (Object) -> bool
+        def ==(other)
+          other.is_a?(Heading) && other.level == @level && other.text == @text
+        end
+      end
+    else
+      Heading = Struct.new(:level, :text)
+    end
+
     # A heading with a level (1-6) and text
     #
     #  RDoc syntax:
@@ -13,13 +40,8 @@ module RDoc
     #   # Heading 1
     #   ## Heading 2
     #   ### Heading 3
-    class Heading < Element
-      #: String
-      attr_reader :text
-
-      #: Integer
-      attr_accessor :level
-
+    #
+    class Heading
       # A singleton RDoc::Markup::ToLabel formatter for headings.
       #: () -> RDoc::Markup::ToLabel
       def self.to_label
@@ -41,19 +63,6 @@ module RDoc
 
           to_html
         end
-      end
-
-      #: (Integer, String) -> void
-      def initialize(level, text)
-        super()
-
-        @level = level
-        @text = text
-      end
-
-      #: (Object) -> bool
-      def ==(other)
-        other.is_a?(Heading) && other.level == @level && other.text == @text
       end
 
       # @override
