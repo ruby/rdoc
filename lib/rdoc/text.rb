@@ -193,11 +193,15 @@ module RDoc::Text
     text.gsub(/^\s+$/, empty)
   end
 
+  def to_html(text)
+    to_html_characters(text)
+  end
+
   ##
   # Converts ampersand, dashes, ellipsis, quotes, copyright and registered
   # trademark symbols in +text+ to properly encoded characters.
 
-  def to_html(text)
+  def to_html_characters(text)
     html = (''.encode text.encoding).dup
 
     encoded = RDoc::Text::TO_HTML_CHARACTERS[text.encoding]

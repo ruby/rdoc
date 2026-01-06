@@ -907,7 +907,7 @@ EXPECTED
   end
 
   def test_handle_regexp_HYPERLINK_link
-    target = RDoc::Markup::RegexpHandling.new 0, 'link:README.txt'
+    target = 'link:README.txt'
 
     link = @to.handle_regexp_HYPERLINK target
 
@@ -915,7 +915,7 @@ EXPECTED
   end
 
   def test_handle_regexp_HYPERLINK_irc
-    target = RDoc::Markup::RegexpHandling.new 0, 'irc://irc.freenode.net/#ruby-lang'
+    target = 'irc://irc.freenode.net/#ruby-lang'
 
     link = @to.handle_regexp_HYPERLINK target
 

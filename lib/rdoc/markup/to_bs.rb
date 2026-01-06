@@ -17,14 +17,29 @@ class RDoc::Markup::ToBs < RDoc::Markup::ToRdoc
     @in_em = false
   end
 
-  ##
-  # Sets a flag that is picked up by #annotate to do the right thing in
-  # #convert_string
+  def handle_inline(text)
+    initial_style = []
+    initial_style << :BOLD if @in_b
+    initial_style << :EM   if @in_em
+    super(text, initial_style)
+  end
 
-  def init_tags
-    add_tag :BOLD, '+b', '-b'
-    add_tag :EM,   '+_', '-_'
-    add_tag :TT,   '', ''   # we need in_tt information maintained
+  def add_text(text)
+    attrs = @attributes.keys
+    if attrs.include? :BOLD
+      styled = +''
+      text.chars.each do |c|
+        styled << "#{c}\b#{c}"
+      end
+      text = styled
+    elsif attrs.include? :EM
+      styled = +''
+      text.chars.each do |c|
+        styled << "_\b#{c}"
+      end
+      text = styled
+    end
+    emit_inline(text)
   end
 
   ##
@@ -68,39 +83,4 @@ class RDoc::Markup::ToBs < RDoc::Markup::ToRdoc
   def calculate_text_width(text)
     text.gsub(/_\x08/, '').gsub(/\x08./, '').size
   end
-
-  ##
-  # Turns on or off regexp handling for +convert_string+
-
-  def annotate(tag)
-    case tag
-    when '+b' then @in_b = true
-    when '-b' then @in_b = false
-    when '+_' then @in_em = true
-    when '-_' then @in_em = false
-    end
-    ''
-  end
-
-  ##
-  # Calls convert_string on the result of convert_regexp_handling
-
-  def convert_regexp_handling(target)
-    convert_string super
-  end
-
-  ##
-  # Adds bold or underline mixed with backspaces
-
-  def convert_string(string)
-    return string unless @in_b or @in_em
-    chars = if @in_b then
-              string.chars.map do |char| "#{char}\b#{char}" end
-            elsif @in_em then
-              string.chars.map do |char| "_\b#{char}" end
-            end
-
-    chars.join
-  end
-
 end

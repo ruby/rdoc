@@ -19,10 +19,43 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
   ##
   # Maps attributes to ANSI sequences
 
-  def init_tags
-    add_tag :BOLD, "\e[1m", "\e[m"
-    add_tag :TT,   "\e[7m", "\e[m"
-    add_tag :EM,   "\e[4m", "\e[m"
+  ANSI_STYLE_CODES = {
+    BOLD: 1,
+    TT: 7,
+    EM: 4,
+    STRIKE: 9
+  }
+
+  def change_attribute(before, after)
+    before, after = [before, after].map do |attrs|
+      attrs.map { |attr| ANSI_STYLE_CODES[attr] }.compact
+    end
+    return if before == after
+
+    if after.empty?
+      emit_inline("\e[m")
+    elsif (before - after).empty?
+      emit_inline("\e[#{(after - before).join(';')}m")
+    else
+      emit_inline("\e[#{[0, after].join(';')}m")
+    end
+  end
+
+  def add_text(text)
+    attrs = @attributes.keys
+    if @current_attributes != attrs && @current_attributes != attrs.sort!
+      change_attribute(@current_attributes, attrs)
+      @current_attributes = attrs
+    end
+    emit_inline(text)
+  end
+
+  def handle_inline(text)
+    @current_attributes = []
+    res = super
+    res << "\e[m" unless @current_attributes.empty?
+    @current_attributes = nil
+    res
   end
 
   ##

@@ -7,20 +7,38 @@ class RDocMarkupFormatterTest < RDoc::TestCase
 
     def initialize(markup)
       super nil, markup
-
-      add_tag :TT, '<code>', '</code>'
     end
 
     def accept_paragraph(paragraph)
       @res += attributes(paragraph.text)
     end
 
-    def attributes(text)
-      convert_flow @am.flow text.dup
+    def handle_PLAIN_TEXT(text)
+      @res << text
     end
 
-    def handle_regexp_CAPS(target)
-      "handled #{target.text}"
+    def handle_REGEXP_HANDLING_TEXT(text)
+      @res << text
+    end
+
+    def handle_TT(text)
+      @res << "<code>#{text}</code>"
+    end
+
+    def handle_TIDYLINK(label_part, url)
+      @res << '{'
+      super
+      @res << '}[' + url + ']'
+    end
+
+    def attributes(text)
+      @res = +""
+      handle_inline(text)
+      @res
+    end
+
+    def handle_regexp_CAPS(text)
+      "handled #{text}"
     end
 
     def start_accepting
@@ -39,14 +57,7 @@ class RDocMarkupFormatterTest < RDoc::TestCase
     @markup = @RM.new
     @markup.add_regexp_handling(/[A-Z]+/, :CAPS)
 
-    @attribute_manager = @markup.attribute_manager
-    @attributes = @attribute_manager.attributes
-
     @to = ToTest.new @markup
-
-    @caps            = @attributes.bitmap_for :CAPS
-    @regexp_handling = @attributes.bitmap_for :_REGEXP_HANDLING_
-    @tt              = @attributes.bitmap_for :TT
   end
 
   def test_class_gen_relative_url
@@ -63,9 +74,7 @@ class RDocMarkupFormatterTest < RDoc::TestCase
   end
 
   def regexp_handling_names
-    @attribute_manager.regexp_handlings.map do |_, mask|
-      @attributes.as_string mask
-    end
+    @to.instance_variable_get(:@markup).regexp_handlings.map(&:last).map(&:to_s)
   end
 
   def test_add_regexp_handling_RDOCLINK
@@ -73,43 +82,15 @@ class RDocMarkupFormatterTest < RDoc::TestCase
 
     assert_includes regexp_handling_names, 'RDOCLINK'
 
-    def @to.handle_regexp_RDOCLINK(target)
-      "<#{target.text}>"
+    def @to.handle_regexp_RDOCLINK(text)
+      "<#{text}>"
     end
 
-    document = doc(para('{foo}[rdoc-label:bar].'))
+    document = doc(para('{foo rdoc-label:bar baz}[url]'))
 
     formatted = document.accept @to
 
-    assert_equal '{foo}[<rdoc-label:bar>].', formatted
-  end
-
-  def test_add_regexp_handling_TIDYLINK
-    @to.add_regexp_handling_TIDYLINK
-
-    assert_includes regexp_handling_names, 'TIDYLINK'
-
-    def @to.handle_regexp_TIDYLINK(target)
-      "<#{target.text}>"
-    end
-
-    document = doc(para('foo[rdoc-label:bar].'))
-
-    formatted = document.accept @to
-
-    assert_equal '<foo[rdoc-label:bar]>.', formatted
-
-    document = doc(para('{foo}[rdoc-label:bar].'))
-
-    formatted = document.accept @to
-
-    assert_equal '<{foo}[rdoc-label:bar]>.', formatted
-
-    document = doc(para('<tt>{abc}</tt>: {foo}[rdoc-label:bar].'))
-
-    formatted = document.accept @to
-
-    assert_equal '<code>{abc}</code>: <{foo}[rdoc-label:bar]>.', formatted
+    assert_equal '{foo <rdoc-label:bar> baz}[url]', formatted
   end
 
   def test_parse_url

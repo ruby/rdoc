@@ -11,7 +11,7 @@ require 'strscan'
 # The parser only handles the block-level constructs Paragraph, List,
 # ListItem, Heading, Verbatim, BlankLine, Rule and BlockQuote.
 # Inline markup such as <tt>\+blah\+</tt> is handled separately by
-# RDoc::Markup::AttributeManager.
+# RDoc::Markup::InlineParser.
 #
 # To see what markup the Parser implements read RDoc.  To see how to use
 # RDoc markup to format text in your program read RDoc::Markup.

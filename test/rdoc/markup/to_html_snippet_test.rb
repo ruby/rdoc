@@ -651,7 +651,7 @@ This routine modifies its +comment+ parameter.
   end
 
   def test_handle_regexp_HYPERLINK_link
-    target = RDoc::Markup::RegexpHandling.new 0, 'link:README.txt'
+    target = 'link:README.txt'
 
     link = @to.handle_regexp_HYPERLINK target
 
@@ -673,24 +673,6 @@ This routine modifies its +comment+ parameter.
 
     assert_equal expected, @m.convert(str, @to)
     assert_equal 17, @to.characters
-  end
-
-  def test_on_tags
-    on = RDoc::Markup::AttrChanger.new 2, 0
-
-    @to.on_tags [], on
-
-    assert_equal 2, @to.mask
-  end
-
-  def test_off_tags
-    on  = RDoc::Markup::AttrChanger.new 2, 0
-    off = RDoc::Markup::AttrChanger.new 0, 2
-
-    @to.on_tags  [], on
-    @to.off_tags [], off
-
-    assert_equal 0, @to.mask
   end
 
   def test_to_html
