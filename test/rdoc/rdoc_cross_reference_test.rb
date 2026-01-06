@@ -118,7 +118,7 @@ class RDocCrossReferenceTest < XrefTestCase
     assert_ref @top_level, 'xref_data.rb'
   end
 
-  def test_resolve_method
+  def test_resolve_local_symbol
     assert_ref @c1__m,    'm'
     assert_ref @c1__m,    '::m'
     assert_ref @c1_m,     '#m'
@@ -172,7 +172,7 @@ class RDocCrossReferenceTest < XrefTestCase
     assert_ref page, 'README'
   end
 
-  def assert_resolve_method(x)
+  def assert_resolve_local_symbol(x)
     @c1.methods_hash.clear
 
     i_op = RDoc::AnyMethod.new nil, x
@@ -190,8 +190,8 @@ class RDocCrossReferenceTest < XrefTestCase
   end
 
   EXAMPLE_METHODS.each do |x|
-    define_method("test_resolve_method:#{x}") do
-      assert_resolve_method(x)
+    define_method("test_resolve_local_symbol:#{x}") do
+      assert_resolve_local_symbol(x)
     end
   end
 
