@@ -549,7 +549,7 @@ and <tt>:enddoc:</tt> may appear in a stand-alone comment:
 
 ==== <tt>:markup:</tt>
 
-- Appears on a line by itself; takes argument +format+ (<tt>:markup: _format_</tt>).
+- Appears on a line by itself; takes argument +format+ (<tt>:markup: format</tt>).
 - Specifies the format for the RDoc input;
   argument +format+ is one of: +rdoc+ (the default), +markdown+, +rd+, +tomdoc+.
 
@@ -574,7 +574,7 @@ For C code, the directive may appear in a stand-alone comment.
 
 ==== <tt>:args:</tt>
 
-- Appears on a line by itself; takes argument +arg_names+ (<tt>:args: _arg_names_</tt>).
+- Appears on a line by itself; takes argument +arg_names+ (<tt>:args: arg_names</tt>).
 - Specifies the arguments to be reported in the HTML,
   overriding the actual arguments in the code.
   See RDoc::Example#args_example for a demonstration.
@@ -583,7 +583,7 @@ Aliased as <tt>:arg:</tt>.
 
 ==== <tt>:yields:</tt>
 
-- Appears on a line by itself; takes argument +arg_names+ (<tt>:yields: _arg_names_</tt>).
+- Appears on a line by itself; takes argument +arg_names+ (<tt>:yields: arg_names</tt>).
 - Specifies the yield arguments to be reported in the HTML,
   overriding the actual yield in the code.
   See RDoc::Example#yields_example for a demonstration.
@@ -602,7 +602,7 @@ You can use directives to modify those behaviors.
 
 ==== <tt>:section:</tt>
 
-- Appears on a line by itself; takes argument +section_title+ (<tt>:section: _section_title_</tt>).
+- Appears on a line by itself; takes argument +section_title+ (<tt>:section: section_title</tt>).
 - Specifies that following methods are to be grouped into the section
   with the given +section_title+,
   or into the default section if no title is given.
@@ -638,7 +638,7 @@ override the current section.
 
 ==== <tt>:category:</tt>
 
-- Appears on a line by itself; takes argument +section_title+ (<tt>:category: _section_title_</tt>).
+- Appears on a line by itself; takes argument +section_title+ (<tt>:category: section_title</tt>).
 - Specifies that just one following method is to be included
   in the given section, or in the default section if no title is given.
   Subsequent methods are to be grouped into the current section.
@@ -647,7 +647,7 @@ override the current section.
 
 ==== <tt>:include:</tt>
 
-- Appears on a line by itself; takes argument +filepath+ (<tt>:include: _filepath_</tt>).
+- Appears on a line by itself; takes argument +filepath+ (<tt>:include: filepath</tt>).
 - Specifies that the contents of the given file
   are to be included at this point.
 
@@ -746,14 +746,14 @@ Example input:
 
   <tt>Monofont words</tt> in a paragraph.
 
-  <tt>Monofont passage containing _italics_ and *bold*.</tt>
+  <tt>Monofont stylings are disabled: _italics_ and *bold*.</tt>
 
 Rendered HTML:
 
 >>>
   <tt>Monofont words</tt> in a paragraph.
 
-  <tt>Monofont passage containing _italics_ and *bold*.</tt>
+  <tt>Monofont stylings are disabled: _italics_ and *bold*.</tt>
 
 A single word may be made monofont by a shorthand:
 prefixed and suffixed plus-signs.
@@ -1042,18 +1042,18 @@ Example input:
 
   This list is about escapes; it contains:
 
-  - <tt>Monofont text with unescaped nested _italic_</tt>.
-  - <tt>Monofont text with escaped nested \_italic_</tt>.
-  - <tt>Monofont text with an escape character \</tt>.
+  - <b>Bold text with unescaped nested _italic_</b>.
+  - <b>Bold text with escaped nested \_italic_</b>.
+  - <b>Bold text with an escape character \</b>.
 
 Rendered HTML:
 
 >>>
   This list is about escapes; it contains:
 
-  - <tt>Monofont text with unescaped nested _italic_</tt>.
-  - <tt>Monofont text with escaped nested \_italic_</tt>.
-  - <tt>Monofont text with an escape character \ </tt>.
+  - <b>Bold text with unescaped nested _italic_</b>.
+  - <b>Bold text with escaped nested \_italic_</b>.
+  - <b>Bold text with an escape character \ </b>.
 
 In other text-bearing blocks
 (paragraphs, block quotes, list items, headings):
